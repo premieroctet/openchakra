@@ -35,6 +35,8 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import Input from '@material-ui/core/Input';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
+const {ADMIN} = require('../../../utils/consts');
+
 
 
 const DialogTitle = withStyles(styles)((props) => {
@@ -116,6 +118,7 @@ class Team extends React.Component{
       dialogRemoveAdmin: false,
       dialogUpdateAdmin: false,
       adminSelected: '',
+      canUpgrade:[],
       listOfCollab: [{name: 'Solene', email: 'solene@email.fr'},{name: 'Edwin', email: 'edwin@email.fr'},{name: 'wilfrid', email: 'wilfrid@email.fr'}, {name: 'armand', email:'armand@email.fr'},{name: 'sebastien', email: 'sebastien@email.fr'}]
     }
   }
@@ -124,12 +127,8 @@ class Team extends React.Component{
     setAxiosAuthentication();
     axios.get('/myAlfred/api/companies/users').then(res =>{
       let data = res.data;
-      data.map((res) =>{
-        if(res.roles.includes('ADMIN')){
-          this.setState({listOfAdmin:data})
-        }
-      });
-      this.setState({user: data})
+      const admins = data.filter( e => e.roles.includes(ADMIN));
+      this.setState({user: data, listOfAdmin:admins})
     }).catch(err =>{
       console.error(err)
     });
@@ -220,10 +219,19 @@ class Team extends React.Component{
 
 
   addAdmin = () =>{
-    const{listOfAdmin, listOfNewAdmin} = this.state;
-    const newArray = listOfAdmin.concat(listOfNewAdmin);
-    this.setState({listOfAdmin: newArray, dialogAdmin: false});
+    const{listOfAdmin, listOfNewAdmin, canUpgrade} = this.state;
     setAxiosAuthentication();
+
+    if(canUpgrade.length > 0){
+      canUpgrade.map( res =>{
+        axios.put('/myAlfred/api/companies/admin', { user_id: res})
+          .then ( () => {
+            snackBarSuccess('Statut admin ok')
+            this.componentDidMount()
+          })
+          .catch ( err => snackBarError(err.response.data.error))
+      })
+    }
 
 
     listOfNewAdmin.map((res,index) =>{
@@ -233,11 +241,13 @@ class Team extends React.Component{
         email: res.emailAdmin
       };
       axios.post('/myAlfred/api/companies/admin', data).then( res =>{
-        console.log(res,'res')
+
       }).catch(err =>{
         console.error(err)
       })
-    });
+    }, snackBarSuccess('admin ajouté'));
+
+    this.setState({dialogAdmin: false}, () =>  this.componentDidMount());
   };
 
   removeAdmin = () =>{
@@ -245,8 +255,8 @@ class Team extends React.Component{
     setAxiosAuthentication();
 
     axios.delete(`/myAlfred/api/companies/admin/${adminSelected._id}`).then( res =>{
-      snackBarSuccess('admin add');
-      this.setState({ dialogRemoveAdmin: false})
+      snackBarSuccess('admin delete');
+      this.setState({ dialogRemoveAdmin: false}, this.componentDidMount)
     }).catch(err =>{
       snackBarError(err.data);
       console.error(err)
@@ -255,12 +265,70 @@ class Team extends React.Component{
   };
 
   dialogAdmin = (classes)=>{
-    const{dialogAdmin, listOfNewAdmin} = this.state;
+    const{dialogAdmin, listOfNewAdmin, user,canUpgrade} = this.state;
+
+    let userNotAdmin = user ? user.filter( e => !e.roles.includes(ADMIN)) : '';
+
+    console.log(userNotAdmin, 'my array')
 
     return(
       <Dialog open={dialogAdmin} onClose={() => this.setState({dialogAdmin: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdmin: false})} onClick={() => this.addNewLine('nbAdmin')} >Ajouter un Administrateurs</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdmin: false})}>Ajouter un Administrateurs</DialogTitle>
         <DialogContent dividers>
+          {
+            userNotAdmin.length === 0 ? null :
+              <Grid style={{paddingBottom: 20 }}>
+                <Grid container spacing={2} style={{width: '100%', margin: 0, paddingBottom: 40}}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <h3>Utilisateur existants</h3>
+                  </Grid>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                      <InputLabel id="demo-mutiple-chip-label">Users</InputLabel>
+                      <Select
+                        labelId="demo-mutiple-chip-label"
+                        id="demo-mutiple-chip"
+                        multiple
+                        onChange={(e) => this.handleChange(e)}
+                        name={'canUpgrade'}
+                        value={canUpgrade}
+                        input={<OutlinedInput label={'RIB'}  id="select-multiple-chip" />}
+                        renderValue={(selected) => (
+                          <div className={classes.chips}>
+                            {selected.map((user) => (
+                              <Chip key={user._id} label={user.email} className={classes.chip} />
+                            ))}
+                          </div>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {!userNotAdmin ? null :
+                          userNotAdmin.map((user) => (
+                            <MenuItem key={user._id} value={user} style={this.getStyles(user.email, canUpgrade)}>
+                              {user.email}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                <Divider/>
+              </Grid>
+          }
+          <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid style={{display: 'flex', alignItems: 'center'}}>
+                <Grid>
+                  <h3>Créer user</h3>
+                </Grid>
+                <Grid>
+                  <IconButton onClick={() => this.addNewLine('nbAdmin')}>
+                    <AddCircleOutlineOutlinedIcon/>
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
           {
             listOfNewAdmin.map((res, index) => (
               <Grid container spacing={2} style={{width: '100%', margin: 0}} key={index} id={index}>
