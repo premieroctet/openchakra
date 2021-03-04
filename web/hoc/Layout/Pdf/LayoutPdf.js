@@ -159,7 +159,6 @@ class LayoutPdf extends React.Component {
       alfred: '',
       documentDate: null,
       datePayment: null,
-      paymentMethod: '',
       paymentId: '',
       prestations: [],
       amount: '',
@@ -169,7 +168,8 @@ class LayoutPdf extends React.Component {
       isContractor: false,
       numPages: null,
       setNumPages: null,
-      charges: false
+      charges: false,
+      RCS: 'default'
     };
   }
 
@@ -177,15 +177,13 @@ class LayoutPdf extends React.Component {
 
     this.setState({
       bookingId: resBooking.BookingObj.reference,
-      client: resBooking.BookingObj.user.full_name,
-      clientAddress: resBooking.BookingObj.user.billing_address.address,
+      client: resBooking.BookingObj.user.billing_address.address,
       clientZipCode: resBooking.BookingObj.user.billing_address.zip_code,
       clientCity: resBooking.BookingObj.user.billing_address.city,
       clientCountry: resBooking.BookingObj.user.billing_address.country,
       alfred: resBooking.BookingObj.alfred.full_name,
       documentDate: todayDate(),
       datePayment: '',
-      paymentMethod: 'Carte bancaire',
       paymentId: resBooking.BookingObj.id,
       prestations: resBooking.BookingObj.prestations,
       amount: moneyFormat(resBooking.BookingObj.amount),
@@ -198,25 +196,33 @@ class LayoutPdf extends React.Component {
         isCesu: true
       })
     }
-    axios.get('/myAlfred/api/shop/alfred/:alfred_id')
+    axios.get(`/myAlfred/api/shop/alfred/${resBooking.BookingObj.alfred._id}`)
       .then(res => {
-          const is_pro = res.data.is_professional
-          if (is_pro) {
-            this.setState({isContractor: true})
+          const status = res.data;
+          console.log(status.is_professional)
+          if (status.is_professional) {
+            console.log('test')
+            this.setState({
+              isContractor: true,
+            })
           }
         }
       ).catch(err => {
       console.error(err)
     })
+    this.setState({
+      RCS: 'test'
+    })
+    console.log(this.state)
   }
 
   render() {
     const {
       bookingId, client, clientAddress, clientZipCode, clientCity, clientCountry,
-      alfred, documentDate, paymentId, paymentMethod, prestations, amount, fees, isIndividual,
+      alfred, documentDate, paymentId, prestations, amount, fees, isIndividual,
       isCesu, isContractor, numPages, setNumPages, charges
     } = this.state
-
+    console.log('render')
     return (
       <Document
         onLoadSuccess={({numPages}) => setNumPages(numPages)}
@@ -225,14 +231,14 @@ class LayoutPdf extends React.Component {
           .map((x, i) => i + 1)
           .map(page =>
             <Page pageNumber={page} size="A4" style={styles.body}>
-              <View style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexDirection: 'row'
-              }}>
-                <View style={{
-                  backgroundColor: 'black'
-                }}>
+              <View
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'row'
+                }}
+              >
+                <View>
                   <Image src={"https://www.my-alfred.io/static/assets/icon/logo.svg"}
                          alt={'logo_myAlfred'}
                          style={{
@@ -267,7 +273,7 @@ class LayoutPdf extends React.Component {
                     </View>
                     <View>
                       <Text>
-                        RCS : 850 148 867
+                        RCS : {this.state.RCS}
                       </Text>
                     </View>
                   </View>
@@ -373,7 +379,7 @@ class LayoutPdf extends React.Component {
                         <View style={styles.tableCol}>
                           <Text
                             style={styles.tableCellNum}>{(moneyFormat(
-                            (Number(prestations[presta].price) * 1.18) * prestations[presta].value))} €
+                            (Number(prestations[presta].price)) * prestations[presta].value))} €
                           </Text>
                         </View>
                       </View>
@@ -387,7 +393,7 @@ class LayoutPdf extends React.Component {
                     <Text style={styles.tableCellTTC}>TOTAL TTC</Text>
                   </View>
                   <View style={styles.tableCol}>
-                    <Text style={styles.TableCellResult}>{amount} €</Text>
+                    <Text style={styles.TableCellResult}>{moneyFormat(amount - fees)} €</Text>
                   </View>
                 </View>
               </View>
@@ -409,14 +415,14 @@ class LayoutPdf extends React.Component {
                     <Text>12 octobre 2020</Text>
                   </View>
                 </View>
-                <View style={{display: 'flex', flexDirection: 'row'}}>
-                  <View>
-                    <Text style={styles.object}>Méthode de paiement : </Text>
-                  </View>
-                  <View>
-                    <Text>{paymentMethod}</Text>
-                  </View>
-                </View>
+                {/*<View style={{display: 'flex', flexDirection: 'row'}}>*/}
+                {/*  <View>*/}
+                {/*    <Text style={styles.object}>Méthode de paiement : </Text>*/}
+                {/*  </View>*/}
+                {/*  <View>*/}
+                {/*    <Text>{paymentMethod}</Text>*/}
+                {/*  </View>*/}
+                {/*</View>*/}
               </View>
               <View style={{display: 'flex', flexDirection: 'row'}}>
                 <View>

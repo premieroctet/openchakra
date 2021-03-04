@@ -1,5 +1,15 @@
 {
   "BookingObj": {
+    "address": {
+      "gps": {
+        "lat": 49.4466,
+        "lng": 1.0955
+      },
+      "address": "5 Rue de la Glacière",
+      "zip_code": "76000",
+      "city": "Rouen",
+      "country": "France"
+    },
     "equipments": [],
     "fileUpload": [],
     "alfred_evaluated": false,
@@ -7,36 +17,36 @@
     "paid": false,
     "travel_tax": 0,
     "pick_tax": 0,
-    "cesu_amount": 5,
-    "_id": "60379fe0f073561d7c07b45e",
-    "reference": "AAFB_25022021_96207",
-    "service": "Création de site web",
-    "amount": 991.2,
+    "cesu_amount": 0,
+    "_id": "6040a7cd959d382c9c678e69",
+    "reference": "AACB_04032021_e9b5f",
+    "service": "Cours niveau secondaire",
+    "amount": 230.1,
     "alfred": {
       "billing_address": {
         "gps": {
-          "lat": 49.447127,
-          "lng": 1.09194
+          "lat": 49.4457,
+          "lng": 1.09654
         },
-        "address": "42 Rampe Bouvreuil",
+        "address": "23 Rue du Cordier",
         "zip_code": "76000",
-        "city": "ROUEN",
+        "city": "Rouen",
         "country": "France"
       },
       "notifications_message": {
         "email": true,
         "push": true,
-        "sms": false
+        "sms": true
       },
       "notifications_rappel": {
         "email": true,
         "push": true,
-        "sms": false
+        "sms": true
       },
       "notifications_promotions": {
         "email": true,
         "push": true,
-        "phone": true,
+        "phone": false,
         "sms": false
       },
       "notifications_community": {
@@ -47,13 +57,10 @@
       "notifications_assistance": {
         "email": true,
         "push": true,
-        "sms": false
+        "sms": true
       },
       "languages": [
-        "Français",
-        "Anglais",
-        "Espagnol",
-        "Arabe"
+        "Français"
       ],
       "score": 0,
       "score_client": 0,
@@ -61,49 +68,59 @@
       "number_of_reviews_client": 0,
       "number_of_views": 0,
       "active": true,
-      "is_confirmed": false,
+      "is_confirmed": true,
       "id_confirmed": false,
-      "phone_confirmed": false,
+      "phone_confirmed": true,
       "last_login": [
-        "2020-12-17T14:19:50.606Z",
-        "2020-12-17T14:15:08.375Z"
+        "2020-07-07T10:06:23.330Z"
       ],
       "is_alfred": true,
-      "index_google": false,
+      "index_google": true,
       "super_alfred": false,
       "is_admin": false,
-      "id_mangopay": null,
-      "mangopay_provider_id": "99270091",
+      "id_mangopay": "85288427",
+      "mangopay_provider_id": "94438330",
       "roles": [],
-      "_id": "5e6528db1bee64541cfc089e",
-      "name": "Benjoudar",
-      "firstname": "Fouad",
-      "email": "fouadb@ucx-digital.com",
-      "password": "$2a$10$y5dLciRLzDp4RgIibVzvOenaIqFUcRTFNdQFF9CW.ult8m0gBPVEC",
-      "birthday": "1970-04-02T23:00:00.000Z",
-      "service_address": [],
-      "creation_date": "2020-03-08T17:18:19.982Z",
-      "__v": 4,
-      "phone": "33977218108",
-      "resetToken": "5ea05682f6e27550c661fed9",
+      "_id": "5f04479a32f892605c7af9f0",
+      "name": "Basset",
+      "firstname": "Chloé",
+      "email": "chloe7627@live.fr",
+      "password": "$2a$10$uUMPeGZ8.9V6wz412WHl/e24BA8MQLMVcitV/UFN6K7Nhu8jprgsi",
+      "birthday": "2002-02-13T23:00:00.000Z",
+      "service_address": [
+        {
+          "_id": "5f044dc632f892605c7afa6b",
+          "address": "157 Rue Lesage",
+          "city": "La Londe",
+          "zip_code": "76500",
+          "lat": 49.304,
+          "lng": 0.9537,
+          "label": "",
+          "note": "",
+          "phone_address": ""
+        }
+      ],
+      "creation_date": "2020-07-07T09:59:54.485Z",
+      "__v": 0,
+      "phone": "33622589831",
+      "picture": "static/profile/1594116103722_74327d2544_A.jpg",
+      "sms_code": null,
       "mangopay_provider_status": "NATURAL",
-      "picture": "static/profile/1604485769682_09e7661a01_logo-2-3d-trns-min.png",
       "emergency_phone": null,
-      "job": "Consultant",
-      "school": null,
-      "diplomes": null,
-      "description": "27 ans d'expérience en France & à l'International dans le domaine du numérique et digital. ",
-      "gender": "Homme",
+      "job": "Étudiante ",
+      "school": "Fenelon Elbeuf",
+      "diplomes": "Bac Scientifique ",
+      "description": "Bonjour,\nje m’appelle Chloé, j’ai 18 ans et je suis actuellement en Terminale S et je rentre en 1ere année de médecine l’année prochaine \n\nJe vous propose mes services pour garder vos enfants en journée comme pendant la soirée.\nJ’ai beaucoup d’expérience avec les enfants de différents âges ( 9 mois à 8ans ) de part les babysitting que j’ai déjà réalisés ainsi que par le fait d’avoir deux petites sœurs ainsi que des cousins et cousines que je garde assez régulièrement. \nJe sais m’occuper des plus petits comme leur préparer et donner à manger, changer des couches, les endormir et les divertir; néanmoins je sais aussi m’occuper des enfants plus grands en leur faisant faire différentes activités ainsi qu’en jouant avec eux à des jeux de sociétés par exemple.\n\nJ’ai un très bon relationnel avec les enfants, et suis très à l’aise avec eux.\n\nDe plus, je détiens ma formation de premier secours depuis juillet, ainsi que le permis B et ma propre voiture ce qui me rend disponible 24h/24.\n\nEnsuite je vous propose aussi mes services pour donner des cours de Mathématiques, Physique-Chimie ou SVT selon vos besoins, niveau terminales ou moins. (Possibilité d’enseigner d’autres matières en fonction du niveau.)\n\nJ'aide régulièrement mes camarades de classe lorsque j'en ai l'occasion afin de les aider à réaliser des exercices ou à comprendre les cours. \n\nJ'explique d'une façon différente de celle des professeurs ce qui permet souvent une nouvelle approche et une meilleure compréhension. \n\nMe concernant j'ai toujours eu les félicitations et j'ai toujours eu une moyenne générale supérieure à 16/20 et j’ai mon bac Scientifique spécialité SVT avec mention Très Bien.\n\nJe suis joignable pour tout autre renseignement si besoin.\n\nCordialement.",
+      "gender": "Femme",
+      "identity_proof_id": "1048801417",
       "id_card_status": "REFUSED",
-      "identity_proof_id": "1228956072",
-      "id_card_error": "DOCUMENT_UNREADABLE",
-      "id_card_error_text": "Pièce d'identité illisible",
+      "id_card_error_text": null,
       "id_card_status_text": "Pièce d'identité refusée, merci d'en fournir une valide",
-      "avatar_letters": "FB",
-      "full_name": "Fouad Benjoudar",
-      "age": 50,
+      "avatar_letters": "CB",
+      "full_name": "Chloé Basset",
+      "age": 19,
       "is_employee": false,
-      "id": "5e6528db1bee64541cfc089e"
+      "id": "5f04479a32f892605c7af9f0"
     },
     "user": {
       "billing_address": {
@@ -153,8 +170,8 @@
       "id_confirmed": false,
       "phone_confirmed": false,
       "last_login": [
-        "2021-02-25T13:00:41.091Z",
-        "2021-02-12T15:15:14.350Z"
+        "2021-03-04T09:24:38.966Z",
+        "2021-02-25T13:00:41.091Z"
       ],
       "is_alfred": false,
       "index_google": true,
@@ -171,7 +188,7 @@
       "birthday": "1995-08-22T08:38:58.151Z",
       "service_address": [],
       "creation_date": "2021-02-12T09:39:30.960Z",
-      "__v": 7,
+      "__v": 8,
       "picture": "",
       "id_card_error_text": null,
       "id_card_status_text": null,
@@ -181,31 +198,43 @@
       "is_employee": false,
       "id": "60264cd27029b749241f38a2"
     },
-    "chatroom": "60379fe0f073561d7c07b45d",
-    "date_prestation": "07/04/2021",
-    "time_prestation": "2021-04-07T12:30:00.000Z",
+    "chatroom": "6040a7cd959d382c9c678e68",
+    "date_prestation": "24/03/2021",
+    "time_prestation": "2021-03-04T08:00:00.189Z",
     "prestations": [
       {
-        "_id": "60379fe0f073561d7c07b45f",
-        "price": 590,
-        "value": 1,
-        "name": "Site Web E-Commerce"
+        "_id": "6040a7cd959d382c9c678e6a",
+        "price": 15,
+        "value": 2,
+        "name": "Cours de biologie"
       },
       {
-        "_id": "bc113cc2780f11eb94390242",
-        "price": 125,
+        "_id": "6040a7cd959d382c9c678e6b",
+        "price": 15,
+        "value": 4,
+        "name": "Cours de chimie"
+      },
+      {
+        "_id": "6040a7cd959d382c9c678e6c",
+        "price": 15,
         "value": 2,
-        "name": "Backup serveurs"
+        "name": "Cours de mathématiques"
+      },
+      {
+        "_id": "6040a7cd959d382c9c678e6d",
+        "price": 15,
+        "value": 5,
+        "name": "Cours de physique"
       }
     ],
-    "fees": 106.2,
-    "status": "En attente de paiement",
-    "serviceUserId": "5fa2751e5a565501f403ce8f",
-    "date": "2021-02-25T13:02:24.362Z",
+    "fees": 35.1,
+    "status": "terminée",
+    "serviceUserId": "5f044c8432f892605c7afa3d",
+    "date": "2021-03-04T09:26:37.711Z",
     "__v": 0,
-    "alfred_amount": 840,
-    "date_prestation_moment": 1617798600000,
+    "alfred_amount": 195,
+    "date_prestation_moment": 1616572800000,
     "calendar_display": true,
-    "id": "60379fe0f073561d7c07b45e"
+    "id": "6040a7cd959d382c9c678e69"
   }
 }
