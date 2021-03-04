@@ -10,14 +10,15 @@ import Hidden from "@material-ui/core/Hidden";
 import Topic from "../../hoc/Topic/Topic";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
-
+const {setAxiosAuthentication} = require('../../utils/authentication')
 
 class ProfileCalendar extends React.Component {
 
   constructor(props) {
     super(props);
     this.state={
-      availabilities:[]
+      availabilities:[],
+      bookings : [],
     }
   }
 
@@ -31,13 +32,20 @@ class ProfileCalendar extends React.Component {
         this.setState({availabilities: res.data});
       })
       .catch(err => console.error(err));
+    setAxiosAuthentication()
+    Promise.all(['alfredBooking', 'userBooking'].map( u => axios.get(`/myAlfred/api/booking/${u}`)))
+      .then(res => {
+        const bookings = res[0].data.concat(res[1].data)
+        this.setState({bookings : bookings})
+      })
+      .catch(err => console.error(err));
   };
 
   componentDidMount() {
     this.loadAvailabilities()
   }
 
-  content = (classes, user, readOnly) =>{
+  content = (classes, bookings, user, readOnly) =>{
     return(
       <Grid container className={classes.mainContainerSchedule}>
         <Grid item xs={12} xl={12}>
@@ -56,7 +64,9 @@ class ProfileCalendar extends React.Component {
                 onAvailabilityChanged={this.loadAvailabilities}
                 selectable={!readOnly}
                 ref={this.scheduleDrawer}
-                readOnly={readOnly}/>
+                readOnly={readOnly}
+                bookings={bookings}
+              />
             </Topic>
           </Box>
         </Grid>
@@ -66,6 +76,7 @@ class ProfileCalendar extends React.Component {
 
   render() {
     const {user, classes, index}=this.props;
+    const {bookings}=this.state
     const readOnly = this.props.user!==getLoggedUserId();
 
     if (!user) {
@@ -76,12 +87,12 @@ class ProfileCalendar extends React.Component {
       <React.Fragment>
         <Hidden only={['xs']}>
           <ProfileLayout user={user} index={index}>
-            {this.content(classes, user, readOnly)}
+            {this.content(classes, bookings, user, readOnly)}
           </ProfileLayout>
         </Hidden>
         <Hidden  only={['lg', 'xl','sm', 'md']}>
           <LayoutMobileProfile user={user} index={index} currentIndex={2}>
-            {this.content(classes)}
+            {this.content(classes, bookings)}
           </LayoutMobileProfile>
         </Hidden>
       </React.Fragment>
