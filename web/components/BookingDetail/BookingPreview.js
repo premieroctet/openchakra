@@ -74,6 +74,12 @@ class BookingPreview extends React.Component {
   componentDidMount() {
     const booking_id = this.props.booking_id;
 
+
+    axios.get(`/myAlfred/api/shop/alfred/${booking_id}`).then().catch(err => {
+      console.error(err)
+    })
+
+
     this.setState({booking_id: booking_id});
 
     setAxiosAuthentication()
@@ -81,6 +87,7 @@ class BookingPreview extends React.Component {
     axios.get('/myAlfred/api/users/current').then(res => {
       let result = res.data;
       this.setState({currentUser: result});
+
       axios.get(`/myAlfred/api/booking/${booking_id}`).then(res => {
         const booking = res.data
         const end_datetime = moment(`${booking.date_prestation} $${moment(booking.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')

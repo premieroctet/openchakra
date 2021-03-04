@@ -149,80 +149,31 @@ const styles = StyleSheet.create({
 class LayoutPdf extends React.Component {
   constructor(props) {
     super(props)
+    this.child = React.createRef();
     this.state = {
-      bookingId: '',
-      client: '',
-      clientAddress: '',
-      clientZipCode: '',
-      clientCity: '',
-      clientCountry: '',
-      alfred: '',
-      documentDate: null,
-      datePayment: null,
-      paymentId: '',
-      prestations: [],
-      amount: '',
-      fees: '',
+      isContractor: false,
       isIndividual: true,
       isCesu: false,
-      isContractor: false,
       numPages: null,
-      setNumPages: null,
-      charges: false,
-      RCS: 'default'
+      setNumPages: null
+    }
+  }
+
+  static getInitialProps() {
+    return {
+      data: resBooking
     };
   }
 
-  componentDidMount() {
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
 
-    this.setState({
-      bookingId: resBooking.BookingObj.reference,
-      client: resBooking.BookingObj.user.billing_address.address,
-      clientZipCode: resBooking.BookingObj.user.billing_address.zip_code,
-      clientCity: resBooking.BookingObj.user.billing_address.city,
-      clientCountry: resBooking.BookingObj.user.billing_address.country,
-      alfred: resBooking.BookingObj.alfred.full_name,
-      documentDate: todayDate(),
-      datePayment: '',
-      paymentId: resBooking.BookingObj.id,
-      prestations: resBooking.BookingObj.prestations,
-      amount: moneyFormat(resBooking.BookingObj.amount),
-      fees: resBooking.BookingObj.fees,
-
-    });
-    if (resBooking.BookingObj.cesu_amount > 0) {
-      this.setState({
-        isIndividual: false,
-        isCesu: true
-      })
-    }
-    axios.get(`/myAlfred/api/shop/alfred/${resBooking.BookingObj.alfred._id}`)
-      .then(res => {
-          const status = res.data;
-          console.log(status.is_professional)
-          if (status.is_professional) {
-            console.log('test')
-            this.setState({
-              isContractor: true,
-            })
-          }
-        }
-      ).catch(err => {
-      console.error(err)
-    })
-    this.setState({
-      RCS: 'test'
-    })
-    console.log(this.state)
   }
 
+  //
   render() {
-    const {
-      bookingId, client, clientAddress, clientZipCode, clientCity, clientCountry,
-      alfred, documentDate, paymentId, prestations, amount, fees, isIndividual,
-      isCesu, isContractor, numPages, setNumPages, charges
-    } = this.state
-    console.log('render')
+    const {children} = this.props;
+    const {isContractor, isIndividual, isCesu, numPages, setNumPages} = this.state;
+    console.log(data);
     return (
       <Document
         onLoadSuccess={({numPages}) => setNumPages(numPages)}
@@ -273,7 +224,7 @@ class LayoutPdf extends React.Component {
                     </View>
                     <View>
                       <Text>
-                        RCS : {this.state.RCS}
+                        RCS :
                       </Text>
                     </View>
                   </View>
@@ -291,7 +242,7 @@ class LayoutPdf extends React.Component {
                   <Text style={styles.objectHead}>Objet :</Text>
                 </View>
                 <View>
-                  <Text>Réservation {bookingId}</Text>
+                  <Text>Réservation {children.resBooking.BookingObj.reference}</Text>
                 </View>
               </View>
 
@@ -415,14 +366,14 @@ class LayoutPdf extends React.Component {
                     <Text>12 octobre 2020</Text>
                   </View>
                 </View>
-                {/*<View style={{display: 'flex', flexDirection: 'row'}}>*/}
-                {/*  <View>*/}
-                {/*    <Text style={styles.object}>Méthode de paiement : </Text>*/}
-                {/*  </View>*/}
-                {/*  <View>*/}
-                {/*    <Text>{paymentMethod}</Text>*/}
-                {/*  </View>*/}
-                {/*</View>*/}
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                  <View>
+                    <Text style={styles.object}>Méthode de paiement : </Text>
+                  </View>
+                  <View>
+                    <Text>{paymentMethod}</Text>
+                  </View>
+                </View>
               </View>
               <View style={{display: 'flex', flexDirection: 'row'}}>
                 <View>
@@ -439,8 +390,7 @@ class LayoutPdf extends React.Component {
                   }, veuillez <Link
                   src={'https://www.my-alfred.io/contact'}>nous contacter.</Link></Text>
               </View>
-              {/*Footer*/
-              }
+              {/*Footer*/}
               <View fixed style={styles.footer}>
                 <Text>Page {page}</Text>
               </View>
