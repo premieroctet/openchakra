@@ -824,23 +824,26 @@ class Team extends React.Component{
                               secondary={res.email}
                             />
                             <ListItemSecondaryAction>
-                              <FormControl className={classes.formControl}>
-                                <InputLabel id="demo-simple-select-label">Départements</InputLabel>
-                                  <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={departementsName}
-                                    onChange={(e) => this.handleChange(e, null, res)}
-                                    name={'departementsName'}
-                                  >
-                                    {
-                                      !listOfRoles.length > 0 ? null :
+                              {
+                                !listOfRoles.length > 0 ? null :
+                                  <FormControl className={classes.formControl}>
+                                    <InputLabel id="demo-simple-select-label">Départements</InputLabel>
+                                    <Select
+                                      labelId="demo-simple-select-label"
+                                      id="demo-simple-select"
+                                      value={departementsName}
+                                      onChange={(e) => this.handleChange(e, null, res)}
+                                      name={'departementsName'}
+                                    >
+                                      {
+
                                         listOfRoles.map((res,index) =>(
                                           <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
-                                       ))
-                                    }
-                                </Select>
-                              </FormControl>
+                                        ))
+                                      }
+                                    </Select>
+                                  </FormControl>
+                              }
                             </ListItemSecondaryAction>
                           </ListItem>
                           <Divider/>
