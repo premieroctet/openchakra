@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const {normalize} = require('../../utils/text');
+const {BUDGET_PERIOD}=require('../../utils/consts');
+
 
 const GroupSchema = new Schema({
   name: {
@@ -18,6 +20,10 @@ const GroupSchema = new Schema({
   }],
   budget : {
     type : Number,
+  },
+  budget_period:{
+    type : String,
+    enum : Object.keys(BUDGET_PERIOD),
   }
 });
 

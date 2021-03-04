@@ -528,7 +528,7 @@ router.get('/groups', passport.authenticate('b2badmin', {session: false}), (req,
   const company_id = req.user.company
 
   Group.find({company : company_id})
-    .populate('members', 'firstname name email roles')
+    .populate('members', 'firstname name email roles budget_period budget')
     .then ( groups => {
       res.json(groups)
     })
@@ -556,7 +556,7 @@ router.post('/groups', passport.authenticate('b2badmin', {session: false}), (req
         res.status(400).json({error : 'Ce groupe existe déjà'})
         return
       }
-      Group.create({name : req.body.name, company : company_id})
+      Group.create({name : req.body.name, company : company_id, budget_period: req.body.budget_period, budget: req.body.budget})
         .then ( group => { res.json(group) })
         .catch ( err => {
           console.error(err)

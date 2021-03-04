@@ -35,8 +35,8 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import Input from '@material-ui/core/Input';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
-const {ADMIN} = require('../../../utils/consts');
-
+const {ADMIN, BUDGET_PERIOD} = require('../../../utils/consts');
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 
 const DialogTitle = withStyles(styles)((props) => {
@@ -113,45 +113,46 @@ class Team extends React.Component{
       email: '',
       nbNewUser: 1,
       nbAdmin:1,
-      chipRibs: [],
+      paymentMethod: [],
       dialogAdmin:false,
       dialogRemoveAdmin: false,
       dialogUpdateAdmin: false,
-      adminSelected: '',
+      selected: '',
+      plafondGroupe: '',
+      nameGroupe: '',
+      budget_periode: '',
+      roleOfGroupe: '',
       canUpgrade:[],
+      listOfGroups:[],
       listOfCollab: [{name: 'Solene', email: 'solene@email.fr'},{name: 'Edwin', email: 'edwin@email.fr'},{name: 'wilfrid', email: 'wilfrid@email.fr'}, {name: 'armand', email:'armand@email.fr'},{name: 'sebastien', email: 'sebastien@email.fr'}]
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     setAxiosAuthentication();
-    axios.get('/myAlfred/api/companies/users').then(res =>{
+
+    axios.get('/myAlfred/api/companies/users').then(res => {
       let data = res.data;
-      const admins = data.filter( e => e.roles.includes(ADMIN));
-      this.setState({user: data, listOfAdmin:admins})
-    }).catch(err =>{
+      const admins = data.filter(e => e.roles.includes(ADMIN));
+      this.setState({user: data, listOfAdmin: admins})
+    }).catch(err => {
       console.error(err)
     });
 
-    axios.get('/myAlfred/api/companies/groups').then(res =>{
+    axios.get('/myAlfred/api/companies/groups').then(res => {
       let data = res.data;
       this.setState({listOfRoles: data})
-    }).catch(err =>{
+    }).catch(err => {
       console.error(err)
-    })
-  };
+    });
 
-
-  addGroupe = () => {
-    const{nameService, items} = this.state;
-    this.setState({ items: [...items, nameService],  dialogState: false});
-  };
-
-  handleDeleteChip = (chip) =>{
-    const{listOfRoles} = this.state;
-    let newArray = listOfRoles.filter(word => word !== chip);
-    this.setState({listOfRoles : newArray})
-  };
+    axios.get('/myAlfred/api/companies/groups').then(res => {
+      let data = res.data;
+      this.setState({listOfGroups: data})
+    }).catch(err => {
+      console.error(err)
+    });
+  }
 
   handleChange = (event, index) =>{
     const {value, name} = event.target;
@@ -168,7 +169,6 @@ class Team extends React.Component{
       this.setState({[name]: value})
     }
   };
-
 
   getStyles = (name, personName) => {
     return {
@@ -203,20 +203,21 @@ class Team extends React.Component{
 
   };
 
-  handleOnchangeListOfRoles = (event) =>{
-
-    this.setState({ listOfRoles: [...listOfRoles, value]});
-
-  };
-
-
   handleClickOpen = (name, user) =>{
-    if(name === 'dialogRemoveAdmin' || name === 'dialogUpdateAdmin'){
-      this.setState({adminSelected: user})
+    if(user){
+      this.setState({selected: user})
+    }else{
+      this.setState({selected: ''})
     }
+
+    if(name === 'dialogGroupe' && user){
+      this.setState({selected: user, nameGroupe: user.name, plafondGroupe: user.budget, budget_periode: user.budget_period})
+    }else{
+      this.setState({nameGroupe: '', plafondGroupe: '', budget_periode: ''})
+    }
+
     this.setState({[name]: true})
   };
-
 
   addAdmin = () =>{
     const{listOfNewAdmin, canUpgrade} = this.state;
@@ -224,10 +225,11 @@ class Team extends React.Component{
 
     if(canUpgrade.length > 0){
       canUpgrade.map( res =>{
-        axios.put('/myAlfred/api/companies/admin', { user_id: res}).catch ( err => snackBarError(err.response.data.error))
+        axios.put('/myAlfred/api/companies/admin', { user_id: res}).then(res=>{
+          this.setState({dialogAdmin: false}, () =>  this.componentDidMount());
+        }).catch ( err => snackBarError(err.response.data.error))
       })
     }
-
 
     listOfNewAdmin.map((res) =>{
       if(res && res.firstNameAdmin !== '' && res.nameAdmin !== '' && res.emailAdmin !== ''){
@@ -236,27 +238,69 @@ class Team extends React.Component{
           name: res.nameAdmin,
           email: res.emailAdmin
         };
-        axios.post('/myAlfred/api/companies/admin', data).catch(err =>{
+        axios.post('/myAlfred/api/companies/admin', data).then( res =>{
+            this.setState({dialogAdmin: false}, () =>  this.componentDidMount());
+          }
+        ).catch(err =>{
           snackBarError(err.response.data.error)
         })
       }
     });
-
-    this.setState({dialogAdmin: false}, () =>  this.componentDidMount());
-
   };
 
   removeAdmin = () =>{
-    const{adminSelected} = this.state;
+    const{selected} = this.state;
     setAxiosAuthentication();
 
-    axios.delete(`/myAlfred/api/companies/admin/${adminSelected._id}`).then( res =>{
-      snackBarSuccess('admin delete');
-      this.setState({ dialogRemoveAdmin: false}, this.componentDidMount)
+    axios.delete(`/myAlfred/api/companies/admin/${selected._id}`).then( res =>{
+      snackBarSuccess(`${selected.name} à été supprimé des administrateurs`);
+      this.setState({ dialogRemoveAdmin: false}, () => this.componentDidMount())
     }).catch(err =>{
-      snackBarError(err.response.data.error);
+      snackBarError(err.response.data.error.message)
     })
 
+  };
+
+  addGroupe = () => {
+    const{plafondGroupe, nameGroupe, budget_periode} = this.state;
+
+    const data = {
+      name: nameGroupe,
+      budget: plafondGroupe,
+      budget_period: budget_periode,
+    };
+
+    axios.post('/myAlfred/api/companies/groups', data).then(res =>{
+      snackBarSuccess(`Groupe ${nameGroupe} créé`);
+      this.setState({dialogGroupe: false}, () => this.componentDidMount());
+    }).catch( err => {snackBarError(err.response.data.error)});
+  };
+
+  updateGroupe = () =>{
+    const{selected, plafondGroupe, nameGroupe, budget_periode} = this.state;
+
+    const data = {
+      name: nameGroupe,
+      budget: plafondGroupe,
+      budget_period: budget_periode,
+    };
+
+    axios.put(`/myAlfred/api/companies/groups/${selected._id}`, data).then(res =>{
+      snackBarSuccess(`${selected.name} modifé`);
+      this.setState({dialogGroupe: false},() => this.componentDidMount())
+    }).catch(err =>{
+      snackBarError(err.response.data.error)
+    })
+  };
+
+  removeGroupe = () =>{
+    const{selected} = this.state;
+    axios.delete(`/myAlfred/api/companies/groups/${selected._id}`).then( res => {
+      snackBarSuccess(`Groupe ${selected.name} supprimé`);
+      this.setState({dialogRemoveGroupe: false},() => this.componentDidMount())
+    }).catch(err =>{
+      snackBarError(err.response.data.error)
+    })
   };
 
   dialogAdmin = (classes)=>{
@@ -377,7 +421,7 @@ class Team extends React.Component{
   };
 
   dialogRemoveAdmin = (classes) => {
-    const{dialogRemoveAdmin, adminSelected} = this.state;
+    const{dialogRemoveAdmin, selected} = this.state;
 
     return(
       <Dialog
@@ -390,7 +434,7 @@ class Team extends React.Component{
         <MuiDialogTitle id="alert-dialog-title">{"Supprimer"}</MuiDialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Voulez vous supprimer {adminSelected.email} ?
+            Voulez vous supprimer {selected.email} ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -405,67 +449,8 @@ class Team extends React.Component{
     )
   };
 
-  dialogUpdateAdmin = (classes) => {
-    const{dialogUpdateAdmin, adminSelected, listOfAdmin} = this.state;
-    let res = listOfAdmin.find(obj => (obj.emailAdmin === adminSelected)) || '';
-
-    return(
-      <Dialog
-        open={dialogUpdateAdmin}
-        onClose={() => this.setState({dialogUpdateAdmin: false})}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        classes={{paper: classes.dialogPaper}}
-      >
-        <MuiDialogTitle id="alert-dialog-title">{"Update admin"}</MuiDialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} style={{width: '100%', margin: 0}}>
-            <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
-              <TextField
-                label="Nom"
-                name={'nameAdmin'}
-                value={res.nameAdmin || ''}
-                onChange={(e) => this.handleChange(e)}
-                variant={'outlined'}
-                classes={{root: classes.textField}}
-              />
-            </Grid>
-            <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
-              <TextField
-                label="Prénom"
-                value={res.firstNameAdmin || ''}
-                name={'firstNameAdmin'}
-                onChange={(e) => this.handleChange(e)}
-                variant={'outlined'}
-                classes={{root: classes.textField}}
-              />
-            </Grid>
-            <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
-              <TextField
-                label="Email"
-                name={'emailAdmin'}
-                value={res.emailAdmin || ''}
-                onChange={(e) => this.handleChange(e)}
-                variant={'outlined'}
-                classes={{root: classes.textField}}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.setState({dialogUpdateAdmin: false})} color="primary">
-            Annuler
-          </Button>
-          <Button onClick={() => this.setState({dialogUpdateAdmin: false})} color="primary">
-            Mettre à jour
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  };
-
   dialogGroupe = (classes)=>{
-    const{dialogGroupe, newChipField, listOfNewGroupes, chipRibs, ribNames} = this.state;
+    const{dialogGroupe, selected, paymentMethod, chipRibs, ribNames, nameGroupe, plafondGroupe, budget_periode} = this.state;
 
     return(
       <Dialog open={dialogGroupe} onClose={() => this.setState({dialogGroupe: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
@@ -475,63 +460,50 @@ class Team extends React.Component{
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <h3>Configuration groupe</h3>
             </Grid>
-            {
-              listOfNewGroupes.map((res, index) => (
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container spacing={2} style={{width: '100%', margin: 0}}>
-                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
-                    <TextField
-                      label="Nom"
-                      name={'nameGroup'}
-                      value={newChipField[index]}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-                    />
-                  </Grid>
-                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
-                    <TextField
-                      label="Plafond"
-                      name={'plafondGroupe'}
-                      value={newChipField[index]}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-                      InputProps={{
-                        endAdornment: <InputAdornment position="end">€</InputAdornment>,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
-                    <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                      <InputLabel id="demo-simple-select-outlined-label">Mode</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        value={newChipField[index]}
-                        name={'modeTarif'}
-                        label={'Mode'}
-                      >
-                        <MenuItem value={10}>Month</MenuItem>
-                        <MenuItem value={20}>Year</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
-                    <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                      <InputLabel id="demo-simple-select-outlined-label">Equipe/Manager</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        value={newChipField[index]}
-                        name={'roleOfGroupe'}
-                        label={'Equipe/Manager'}
-                      >
-                        <MenuItem value={10}>Equipe</MenuItem>
-                        <MenuItem value={20}>Manager</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container spacing={2} style={{width: '100%', margin: 0}}>
+                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                  <TextField
+                    label="Nom"
+                    name={'nameGroupe'}
+                    value={nameGroupe}
+                    variant={'outlined'}
+                    classes={{root: classes.textField}}
+                    onChange={this.handleChange}
+                  />
                 </Grid>
-              ))
-            }
+                <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                  <TextField
+                    label="Plafond"
+                    name={'plafondGroupe'}
+                    value={plafondGroupe}
+                    variant={'outlined'}
+                    classes={{root: classes.textField}}
+                    onChange={this.handleChange}
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                    }}
+                  />
+                </Grid>
+                <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                  <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                    <InputLabel id="demo-simple-select-outlined-label">Période</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={budget_periode}
+                      name={'budget_periode'}
+                      label={'Période'}
+                      onChange={this.handleChange}
+                    >
+                      {
+                        Object.keys(BUDGET_PERIOD).map( (res, index) =>(
+                          <MenuItem key={index} value={res}>{BUDGET_PERIOD[res]}</MenuItem>
+                        ))
+                      }
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
             <Grid item spacing={2} style={{width: '100%', margin: 0}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <h3>Facturation</h3>
@@ -545,8 +517,8 @@ class Team extends React.Component{
                       id="demo-mutiple-chip"
                       multiple
                       onChange={(e) => this.handleChange(e)}
-                      name={'chipRibs'}
-                      value={chipRibs}
+                      name={'paymentMethod'}
+                      value={paymentMethod}
                       input={<OutlinedInput label={'RIB'}  id="select-multiple-chip" />}
                       renderValue={(selected) => (
                         <div className={classes.chips}>
@@ -558,7 +530,7 @@ class Team extends React.Component{
                       MenuProps={MenuProps}
                     >
                       {ribNames.map((name) => (
-                        <MenuItem key={name} value={name} style={this.getStyles(name, chipRibs)}>
+                        <MenuItem key={name} value={name} style={this.getStyles(name, paymentMethod)}>
                           {name}
                         </MenuItem>
                       ))}
@@ -573,8 +545,37 @@ class Team extends React.Component{
           <Button onClick={() => this.setState({dialogGroupe: false})} color="secondary">
             Annuler
           </Button>
-          <Button onClick={this.addGroupe} color="primary">
-            Confirmé
+          <Button onClick={selected === '' ? this.addGroupe : this.updateGroupe} color="primary">
+            {selected === '' ? 'Confirmer' : 'Modifier'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
+  dialogRemoveGroupe = (classes) =>{
+    const{dialogRemoveGroupe, selected} = this.state;
+
+    return(
+      <Dialog
+        open={dialogRemoveGroupe}
+        onClose={() => this.setState({dialogRemoveGroupe: false})}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        classes={{paper: classes.dialogPaper}}
+      >
+        <MuiDialogTitle id="alert-dialog-title">{"Supprimer"}</MuiDialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Voulez vous supprimer {selected.name} ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({dialogRemoveGroupe: false})} color="primary">
+            Annuler
+          </Button>
+          <Button onClick={this.removeGroupe} color="primary">
+            Supprimer
           </Button>
         </DialogActions>
       </Dialog>
@@ -666,7 +667,7 @@ class Team extends React.Component{
 
   render() {
     const{classes} = this.props;
-    const{filters, listOfCollab, roles, listOfRoles, isMicroService, listOfAdmin} = this.state;
+    const{filters, listOfCollab, roles, listOfGroups, isMicroService, listOfAdmin} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -694,9 +695,6 @@ class Team extends React.Component{
                           primary={`${res.name},${res.firstname} - ${res.email}`}
                         />
                         <ListItemSecondaryAction>
-                          <IconButton edge="end" aria-label="update" onClick={() => this.handleClickOpen('dialogUpdateAdmin', res)}>
-                            <SettingsIcon />
-                          </IconButton>
                           <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemoveAdmin', res)}>
                             <DeleteIcon />
                           </IconButton>
@@ -726,23 +724,33 @@ class Team extends React.Component{
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
             <Grid className={classes.listChipContainer}>
-              {
-                listOfRoles.map((res,index) =>(
-                  <>
-                    <ListItem key={index}>
-                      <ListItemText
-                        primary={res.name}
-                        secondary={res.email}
-                      />
-                      <ListItemSecondaryAction>
-                        <Grid>
-
-                        </Grid>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                    <Divider/>
-                  </>
-                ))
+              {listOfGroups.length > 0 ?
+                <List>
+                  {
+                  listOfGroups.map((res,index) =>(
+                    <>
+                      <ListItem key={index}>
+                        <ListItemText
+                          primary={res.name}
+                          secondary={`${res.budget}€ / ${BUDGET_PERIOD[res.budget_period]}`}
+                        />
+                        <ListItemSecondaryAction>
+                          <IconButton edge="end" aria-label="update" onClick={() => this.handleClickOpen('dialogGroupe', res)}>
+                            <SettingsIcon />
+                          </IconButton>
+                          <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemoveGroupe', res)}>
+                            <DeleteIcon/>
+                          </IconButton>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                      <Divider/>
+                    </>
+                  ))}
+                </List>
+                  :
+                <Grid>
+                  <Typography>Pas de groupe</Typography>
+                </Grid>
               }
             </Grid>
           </Box>
@@ -837,7 +845,7 @@ class Team extends React.Component{
         {this.dialogGroupe(classes)}
         {this.dialogAdmin(classes)}
         {this.dialogRemoveAdmin(classes)}
-        {this.dialogUpdateAdmin(classes)}
+        {this.dialogRemoveGroupe(classes)}
       </Grid>
     );
   }

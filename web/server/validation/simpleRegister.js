@@ -204,10 +204,14 @@ const validateCompanyGroup = data =>{
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : '';
-  data.budget = 'budget' in data ? data.budget : null
+  data.budget = 'budget' in data ? data.budget : null;
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
+  }
+
+  if (Validator.isEmpty(data.budget_period)) {
+    errors.name = 'Veuillez selectionner une période';
   }
 
   if (data.budget != null && data.budget < 0 ) {

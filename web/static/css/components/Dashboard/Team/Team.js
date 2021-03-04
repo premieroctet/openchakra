@@ -37,11 +37,6 @@ export default theme => ({
     margin: 2,
   },
   listChipContainer:{
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    '& > *': {
-      margin: theme.spacing(0.5),
-    }
+
   }
 })
