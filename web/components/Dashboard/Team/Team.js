@@ -219,47 +219,42 @@ class Team extends React.Component{
 
 
   addAdmin = () =>{
-    const{listOfAdmin, listOfNewAdmin, canUpgrade} = this.state;
+    const{listOfNewAdmin, canUpgrade} = this.state;
     setAxiosAuthentication();
 
     if(canUpgrade.length > 0){
       canUpgrade.map( res =>{
-        axios.put('/myAlfred/api/companies/admin', { user_id: res})
-          .then ( () => {
-            snackBarSuccess('Statut admin ok')
-            this.componentDidMount()
-          })
-          .catch ( err => snackBarError(err.response.data.error))
+        axios.put('/myAlfred/api/companies/admin', { user_id: res}).catch ( err => snackBarError(err.response.data.error))
       })
     }
 
 
-    listOfNewAdmin.map((res,index) =>{
-      const data = {
-        firstname: res.firstNameAdmin,
-        name: res.nameAdmin,
-        email: res.emailAdmin
-      };
-      axios.post('/myAlfred/api/companies/admin', data).then( res =>{
-
-      }).catch(err =>{
-        console.error(err)
-      })
-    }, snackBarSuccess('admin ajouté'));
+    listOfNewAdmin.map((res) =>{
+      if(res && res.firstNameAdmin !== '' && res.nameAdmin !== '' && res.emailAdmin !== ''){
+        const data = {
+          firstname: res.firstNameAdmin,
+          name: res.nameAdmin,
+          email: res.emailAdmin
+        };
+        axios.post('/myAlfred/api/companies/admin', data).catch(err =>{
+          snackBarError(err.response.data.error)
+        })
+      }
+    });
 
     this.setState({dialogAdmin: false}, () =>  this.componentDidMount());
+
   };
 
   removeAdmin = () =>{
-    const{listOfAdmin, adminSelected} = this.state;
+    const{adminSelected} = this.state;
     setAxiosAuthentication();
 
     axios.delete(`/myAlfred/api/companies/admin/${adminSelected._id}`).then( res =>{
       snackBarSuccess('admin delete');
       this.setState({ dialogRemoveAdmin: false}, this.componentDidMount)
     }).catch(err =>{
-      snackBarError(err.data);
-      console.error(err)
+      snackBarError(err.response.data.error);
     })
 
   };
@@ -268,8 +263,6 @@ class Team extends React.Component{
     const{dialogAdmin, listOfNewAdmin, user,canUpgrade} = this.state;
 
     let userNotAdmin = user ? user.filter( e => !e.roles.includes(ADMIN)) : '';
-
-    console.log(userNotAdmin, 'my array')
 
     return(
       <Dialog open={dialogAdmin} onClose={() => this.setState({dialogAdmin: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
