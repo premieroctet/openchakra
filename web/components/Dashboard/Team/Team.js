@@ -124,7 +124,7 @@ class Team extends React.Component{
       roleOfGroupe: '',
       canUpgrade:[],
       listOfGroups:[],
-      listOfCollab: [{name: 'Solene', email: 'solene@email.fr'},{name: 'Edwin', email: 'edwin@email.fr'},{name: 'wilfrid', email: 'wilfrid@email.fr'}, {name: 'armand', email:'armand@email.fr'},{name: 'sebastien', email: 'sebastien@email.fr'}]
+      departementsName:''
     }
   }
 
@@ -154,7 +154,7 @@ class Team extends React.Component{
     });
   }
 
-  handleChange = (event, index) =>{
+  handleChange = (event, index, user) =>{
     const {value, name} = event.target;
     if(name === 'nameAdmin' || name === 'firstNameAdmin' || name === 'emailAdmin'){
     let updatedObj = Object.assign({}, this.state.listOfNewAdmin[index],{[name]: value});
@@ -164,6 +164,17 @@ class Team extends React.Component{
           updatedObj,
           ...this.state.listOfNewAdmin.slice(index + 1)
         ]
+      })
+    }else if(name === 'departementsName'){
+      const data ={
+        member_id: user._id
+      };
+
+      axios.put(`/myAlfred/api/companies/groups/${value}/member`,data).then(res => {
+        snackBarSuccess(`Membre ajouté au groupe`);
+        this.componentDidMount()
+      }).catch( err => {
+        snackBarError(err.response.data)
       })
     }else{
       this.setState({[name]: value})
@@ -258,7 +269,6 @@ class Team extends React.Component{
     }).catch(err =>{
       snackBarError(err.response.data.error.message)
     })
-
   };
 
   addGroupe = () => {
@@ -667,7 +677,7 @@ class Team extends React.Component{
 
   render() {
     const{classes} = this.props;
-    const{filters, listOfCollab, roles, listOfGroups, isMicroService, listOfAdmin} = this.state;
+    const{filters, listOfRoles, departementsName, listOfGroups, isMicroService, listOfAdmin, user} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -690,16 +700,19 @@ class Team extends React.Component{
                 <Grid>
                   <List>
                     {listOfAdmin.map((res, index) =>(
-                      <ListItem key={index}>
-                        <ListItemText
-                          primary={`${res.name},${res.firstname} - ${res.email}`}
-                        />
-                        <ListItemSecondaryAction>
-                          <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemoveAdmin', res)}>
-                            <DeleteIcon />
-                          </IconButton>
-                        </ListItemSecondaryAction>
-                      </ListItem>
+                      <>
+                        <ListItem key={index}>
+                          <ListItemText
+                            primary={`${res.name},${res.firstname} - ${res.email}`}
+                          />
+                          <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemoveAdmin', res)}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                        <Divider/>
+                      </>
                     ))}
                   </List>
                 </Grid> :
@@ -712,7 +725,7 @@ class Team extends React.Component{
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid  style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>Classification</h3>
+              <h3>Départements</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogGroupe')}>
@@ -802,32 +815,36 @@ class Team extends React.Component{
               <Box>
                 <Grid>
                   <List>
-                    {listOfCollab.map( (res,index) =>(
-                      <Grid key={index}>
-                        <ListItem key={index}>
-                          <ListItemText
-                            primary={res.name}
-                            secondary={res.email}
-                          />
-                          <ListItemSecondaryAction>
-                            <FormControl className={classes.formControl}>
-                              <InputLabel id="demo-simple-select-label">Roles</InputLabel>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={roles}
-                                onChange={this.handleChange}
-                                name={'roles'}
-                              >
-                                <MenuItem value={10}>Admin</MenuItem>
-                                <MenuItem value={20}>Alternant</MenuItem>
-                                <MenuItem value={30}>Collaborateur de niv 1</MenuItem>
-                              </Select>
-                            </FormControl>
-                          </ListItemSecondaryAction>
-                        </ListItem>
-                        <Divider/>
-                      </Grid>
+                    {!user ? null :
+                      user.map( (res,index) =>(
+                        <Grid key={index}>
+                          <ListItem key={index}>
+                            <ListItemText
+                              primary={res.name}
+                              secondary={res.email}
+                            />
+                            <ListItemSecondaryAction>
+                              <FormControl className={classes.formControl}>
+                                <InputLabel id="demo-simple-select-label">Départements</InputLabel>
+                                  <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={departementsName}
+                                    onChange={(e) => this.handleChange(e, null, res)}
+                                    name={'departementsName'}
+                                  >
+                                    {
+                                      !listOfRoles.length > 0 ? null :
+                                        listOfRoles.map((res,index) =>(
+                                          <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
+                                       ))
+                                    }
+                                </Select>
+                              </FormControl>
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                          <Divider/>
+                        </Grid>
                       )
                     )}
                   </List>
