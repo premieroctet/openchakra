@@ -1,7 +1,7 @@
 import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 
-const {clearAuthenticationToken}=require('../../utils/authentication')
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {clearAuthenticationToken} = require('../../utils/authentication')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Grid from '@material-ui/core/Grid';
@@ -15,11 +15,16 @@ import styles from '../../static/css/components/BookingDetail/BookingPreview/Boo
 import Button from '@material-ui/core/Button';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 import Router from 'next/router';
-const {BOOK_STATUS}=require('../../utils/consts')
+
+const {BOOK_STATUS} = require('../../utils/consts')
 import DatePicker, {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import Hidden from "@material-ui/core/Hidden";
-const {BOOKING}=require('../../utils/i18n')
+import {PDFDownloadLink} from "@react-pdf/renderer";
+import PdfGeneration from "../PdfGeneration/PdfGeneration";
+import NoSSR from "react-no-ssr";
+
+const {BOOKING} = require('../../utils/i18n')
 registerLocale('fr', fr);
 moment.locale('fr');
 
@@ -41,6 +46,7 @@ class BookingPreview extends React.Component {
       currentUser: null,
       is_alfred: null,
       end_datetime: null,
+      loading: false
     };
     this.routingDetailsMessage = this.routingDetailsMessage.bind(this)
     this.getPrestationMinMoment = this.getPrestationMinMoment.bind(this)
@@ -53,12 +59,16 @@ class BookingPreview extends React.Component {
   }
 
   getPrestationMinMoment = () => {
-    const {bookingObj}=this.state
+    const {bookingObj} = this.state
     if (!bookingObj) {
       return null
     }
-    const mini=moment(`${bookingObj.date_prestation} $${moment(bookingObj.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
+    const mini = moment(`${bookingObj.date_prestation} $${moment(bookingObj.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
     return mini
+  }
+  setLoading = () => {
+    this.setState({loading: true})
+
   }
 
   componentDidMount() {
@@ -72,8 +82,8 @@ class BookingPreview extends React.Component {
       let result = res.data;
       this.setState({currentUser: result});
       axios.get(`/myAlfred/api/booking/${booking_id}`).then(res => {
-        const booking=res.data
-        const end_datetime=moment(`${booking.date_prestation} $${moment(booking.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
+        const booking = res.data
+        const end_datetime = moment(`${booking.date_prestation} $${moment(booking.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
         this.setState(
           {
             bookingObj: booking,
@@ -114,7 +124,7 @@ class BookingPreview extends React.Component {
   }
 
   changeStatus(status) {
-    axios.put(`/myAlfred/api/booking/modifyBooking/${this.state.booking_id}`,{status: status})
+    axios.put(`/myAlfred/api/booking/modifyBooking/${this.state.booking_id}`, {status: status})
       .then(res => {
         this.setState({bookingObj: res.data});
         this.socket.emit('changeStatus', this.state.bookingObj);
@@ -125,14 +135,14 @@ class BookingPreview extends React.Component {
   onChangeEndDate = ev => {
     const m = moment(`${moment(ev).format('DD/MM/YYYY')} $${moment(this.state.end_datetime).format('HH:mm')}`, 'DD/MM/YYYY HH:mm')
     if (m.isAfter(this.getPrestationMinMoment())) {
-      this.setState({ end_datetime: m})
+      this.setState({end_datetime: m})
     }
   }
 
   onChangeEndTime = ev => {
     const m = moment(`$${moment(this.state.end_datetime).format('DD/MM/YYYY')} ${moment(ev).format('HH:mm')}`, 'DD/MM/YYYY HH:mm')
     if (m.isAfter(this.getPrestationMinMoment())) {
-      this.setState({ end_datetime: m})
+      this.setState({end_datetime: m})
     }
   }
 
@@ -157,7 +167,7 @@ class BookingPreview extends React.Component {
   }
 
   onConfirm = () => {
-    const {end_datetime}=this.state
+    const {end_datetime} = this.state
     const endDate = moment(end_datetime).format('YYYY-MM-DD');
     const endHour = moment(end_datetime).format('HH:mm');
     const modifyObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.CONFIRMED};
@@ -171,7 +181,7 @@ class BookingPreview extends React.Component {
   }
 
   routingDetailsMessage() {
-    const {currentUser, bookingObj}=this.state
+    const {currentUser, bookingObj} = this.state
     const displayUser = currentUser._id === bookingObj.alfred._id ? bookingObj.user : bookingObj.alfred
     Router.push({
       pathname: '/profile/messages',
@@ -186,14 +196,14 @@ class BookingPreview extends React.Component {
     this.child.current.handleDrawerToggle();
   };
 
-  phoneDigit(str,index,chr) {
-    if(index > str.length-1) return str;
-    return str.substring(0,index) + chr + str.substring(index+1);
+  phoneDigit(str, index, chr) {
+    if (index > str.length - 1) return str;
+    return str.substring(0, index) + chr + str.substring(index + 1);
   }
 
   render() {
     const {classes} = this.props;
-    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime} = this.state;
+    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime, loading} = this.state;
 
     if (!bookingObj || !currentUser) {
       return null
@@ -209,11 +219,11 @@ class BookingPreview extends React.Component {
     const amIAlfred = currentUser._id === bookingObj.alfred._id;
     const displayUser = amIAlfred ? bookingObj.user : bookingObj.alfred;
 
-    const status=bookingObj.status;
+    const status = bookingObj.status;
     const paymentTitle =
       amIAlfred ?
         status === BOOK_STATUS.REFUSED ? 'Paiement non réalisé'
-          : [BOOK_STATUS.FINISHED, BOOK_STATUS.CONFIRMED].includes(status) ? 'Versement' :  'Revenus potentiels'
+          : [BOOK_STATUS.FINISHED, BOOK_STATUS.CONFIRMED].includes(status) ? 'Versement' : 'Revenus potentiels'
         :
         [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED].includes(status) ?
           'Paiement non réalisé'
@@ -229,8 +239,8 @@ class BookingPreview extends React.Component {
     const momentTitle = [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
       `du ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}
        au ${moment(bookingObj.end_date).format('DD/MM/YYYY')} à ${bookingObj.end_time}`
-       :
-       `le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`;
+      :
+      `le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`;
 
     const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone;
 
@@ -252,33 +262,58 @@ class BookingPreview extends React.Component {
                     <Grid item xs={9} sm={9} md={9} xl={9} lg={9}>
                       <Grid>
                         <Typography>
-                            {`${displayUser.firstname} ${displayUser.name}`}
+                          {`${displayUser.firstname} ${displayUser.name}`}
                         </Typography>
                       </Grid>
                       <Grid style={{marginTop: '2%'}}>
                         <Typography>
-                          { `${bookingObj.service} le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`}
+                          {`${bookingObj.service} le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`}
                         </Typography>
                       </Grid>
                       <Grid>
-                      <h2>
-                        {status === BOOK_STATUS.PREAPPROVED ?
-                           amIAlfred ? 'Pré-approuvée': 'Invitation à réserver'
-                          :
-                          status
-                        }
-                      </h2>
+                        <h2>
+                          {status === BOOK_STATUS.PREAPPROVED ?
+                            amIAlfred ? 'Pré-approuvée' : 'Invitation à réserver'
+                            :
+                            status
+                          }
+                        </h2>
                       </Grid>
                     </Grid>
                   </Grid>
+                  {status === BOOK_STATUS.FINISHED ?
+                    <NoSSR>
+                      <Grid style={{
+                        textAlign: 'center',
+                        fontSize: '20px'
+                      }}>
+                        {
+                          loading ? "Chargement en cours..." :
+                            <Grid onClick={this.setLoading}
+                            >
+                              <PDFDownloadLink
+                                document={<PdfGeneration/>}
+                                fileName="facture.pdf"
+                                style={{
+                                  textDecoration: 'none',
+                                  color: '#CCDCFB'
+                                }}
+                              >
+                                Télécharger ma facture
+                              </PDFDownloadLink>
+                            </Grid>
+                        }
+                      </Grid>
+                    </NoSSR> : null}
                   <hr className={classes.hrSeparator}/>
                   {bookingObj === null ||
                   currentUser === null ? null : bookingObj.status ===
                   BOOK_STATUS.FINISHED ? (
                     currentUser._id === bookingObj.alfred._id ? (
-                      <Grid container style={{ borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%'}}>
+                      <Grid container
+                            style={{borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%'}}>
                         <Grid container>
-                          <Typography style={{marginBottom: '5%', }}>
+                          <Typography style={{marginBottom: '5%',}}>
                             Commentaires
                           </Typography>
                         </Grid>
@@ -311,9 +346,10 @@ class BookingPreview extends React.Component {
                         </div>
                       </Grid>
                     ) : (
-                      <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%',}}>
+                      <Grid container
+                            style={{borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%',}}>
                         <Grid container>
-                          <Typography style={{ marginTop: '-3%', fontSize: '1.7rem', marginBottom: '5%'}}>
+                          <Typography style={{marginTop: '-3%', fontSize: '1.7rem', marginBottom: '5%'}}>
                             Commentaires
                           </Typography>
                         </Grid>
@@ -374,12 +410,12 @@ class BookingPreview extends React.Component {
                         A propos de {displayUser.firstname}
                       </Typography>
                     </Grid>
-                    <Grid container  className={classes.reservationContainer}>
+                    <Grid container className={classes.reservationContainer}>
                       <Grid item xl={6}>
                         <Grid container>
                           <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
                             <Grid item>
-                              { displayUser.id_confirmed ?
+                              {displayUser.id_confirmed ?
                                 <Typography>
                                   Pièce d'identité vérifiée
                                 </Typography>
@@ -396,7 +432,8 @@ class BookingPreview extends React.Component {
                       <Grid item xl={6} className={classes.mainContainerAbout}>
                         <Grid item container className={classes.containerButtonGroup}>
                           <Grid item>
-                            <Button variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage} style={{textTransform: 'initial', color:'white'}}>Envoyer un message</Button>
+                            <Button variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage}
+                                    style={{textTransform: 'initial', color: 'white'}}>Envoyer un message</Button>
                           </Grid>
                           {bookingObj.status === BOOK_STATUS.CONFIRMED ?
                             <Grid item className={classes.containerPhone}>
@@ -424,7 +461,8 @@ class BookingPreview extends React.Component {
                             </Grid>
                             <Grid item xl={6}>
                               <Grid>
-                                <Typography style={{textAlign: 'center'}}> {this.phoneDigit(phone.substring(1),0, "0")}</Typography>
+                                <Typography
+                                  style={{textAlign: 'center'}}> {this.phoneDigit(phone.substring(1), 0, "0")}</Typography>
                               </Grid>
                             </Grid>
 
@@ -444,7 +482,7 @@ class BookingPreview extends React.Component {
                           <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
                             <Grid item>
                               <Typography>
-                              { bookingObj.service}
+                                {bookingObj.service}
                               </Typography>
                               <Typography>
                                 {momentTitle}
@@ -458,37 +496,37 @@ class BookingPreview extends React.Component {
                                   `au ${bookingObj.address.address}, ${bookingObj.address.zip_code} ${bookingObj.address.city}` : 'en visio'}
                               </Typography>
                               <Typography>
-                                { `créée le ${moment(bookingObj.date).format('DD/MM/YYYY')} à ${moment(bookingObj.date).format('HH:mm')}` }
+                                {`créée le ${moment(bookingObj.date).format('DD/MM/YYYY')} à ${moment(bookingObj.date).format('HH:mm')}`}
                               </Typography>
                             </Grid>
                           </Grid>
-                          { bookingObj.status === BOOK_STATUS.TO_CONFIRM && amIAlfred ?
+                          {bookingObj.status === BOOK_STATUS.TO_CONFIRM && amIAlfred ?
                             <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
                               <Grid item>
                                 <Typography>
-                                Date de fin:
+                                  Date de fin:
                                 </Typography>
-                                  <DatePicker
-                                    selected={moment(end_datetime).toDate()}
-                                    onChange={this.onChangeEndDate}
-                                    locale='fr'
-                                    showMonthDropdown
-                                    dateFormat="dd/MM/yyyy"
-                                    customInput={<Input2/>}
-                                  />
-                                  -
-                                  <DatePicker
-                                    selected={moment(end_datetime).toDate()}
-                                    onChange={this.onChangeEndTime}
-                                    customInput={<Input2/>}
-                                    showTimeSelect
-                                    showTimeSelectOnly
-                                    timeIntervals={15}
-                                    timeCaption="Heure"
-                                    dateFormat="HH:mm"
-                                    locale='fr'
-                                    minDate={new Date()}
-                                  />
+                                <DatePicker
+                                  selected={moment(end_datetime).toDate()}
+                                  onChange={this.onChangeEndDate}
+                                  locale='fr'
+                                  showMonthDropdown
+                                  dateFormat="dd/MM/yyyy"
+                                  customInput={<Input2/>}
+                                />
+                                -
+                                <DatePicker
+                                  selected={moment(end_datetime).toDate()}
+                                  onChange={this.onChangeEndTime}
+                                  customInput={<Input2/>}
+                                  showTimeSelect
+                                  showTimeSelectOnly
+                                  timeIntervals={15}
+                                  timeCaption="Heure"
+                                  dateFormat="HH:mm"
+                                  locale='fr'
+                                  minDate={new Date()}
+                                />
                               </Grid>
                             </Grid>
                             :
@@ -499,68 +537,74 @@ class BookingPreview extends React.Component {
                       <Grid container className={classes.mainContainerStateResa}>
                         <Grid>
                           {status === BOOK_STATUS.TO_CONFIRM ? (
-                            amIAlfred ? (
-                              <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                <Grid className={classes.labelReservation}>
-                                  <Typography>
-                                    Votre réservation doit être confirmée avant le{' '}
-                                    {moment(bookingObj.date)
-                                      .add(1, 'd')
-                                      .format('DD/MM/YYYY')}{' '}
-                                    à {moment(bookingObj.date).format('HH:mm')}
-                                  </Typography>
-                                </Grid>
-                                <Grid className={classes.buttonConfirmResa}>
-                                  <Button variant={'contained'} className={classes.buttonConfirm}
-                                  onClick={this.onConfirm}>Confirmer</Button>
-                                </Grid>
-                                <Grid>
-                                  <Button variant={'outlined'} color={'primary'}
-                                          onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}>Refuser</Button>
-                                </Grid>
-                              </Grid>
+                              amIAlfred ? (
+                                  <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                    <Grid className={classes.labelReservation}>
+                                      <Typography>
+                                        Votre réservation doit être confirmée avant le{' '}
+                                        {moment(bookingObj.date)
+                                          .add(1, 'd')
+                                          .format('DD/MM/YYYY')}{' '}
+                                        à {moment(bookingObj.date).format('HH:mm')}
+                                      </Typography>
+                                    </Grid>
+                                    <Grid className={classes.buttonConfirmResa}>
+                                      <Button variant={'contained'} className={classes.buttonConfirm}
+                                              onClick={this.onConfirm}>Confirmer</Button>
+                                    </Grid>
+                                    <Grid>
+                                      <Button variant={'outlined'} color={'primary'}
+                                              onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}>Refuser</Button>
+                                    </Grid>
+                                  </Grid>
+                                )
+                                :
+                                null
                             )
                             :
-                            null
-                          )
-                          :
-                          bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.alfred._id ? (
-                            <Grid container className={classes.groupButtonsContainer} spacing={1}>
-                              <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-                                <Button onClick={()=>this.props.onConfirmPreapproved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
-                              </Grid>
-                              <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-                                <Button
-                                  onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}
-                                  variant={'outlined'}
-                                  style={{textTransform: 'initial'}}
-                                  color={'primary'}>
-                                  Refuser
-                                </Button>
-                              </Grid>
-                            </Grid>
-                          )
-                          :
-                          bookingObj.status === BOOK_STATUS.TO_PAY && currentUser._id === bookingObj.user._id ? (
-                            <Grid className={classes.groupButtonsContainer}>
-                              <Button onClick={()=>Router.push(`/confirmPayment?booking_id=${booking_id}`)}
-                                color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
-                            </Grid>
-                          )
-                          :
-                          bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.user._id ?
-                          (
-                            null
-                          )
-                          :
-                          bookingObj.status === BOOK_STATUS.PREAPPROVED && currentUser._id === bookingObj.user._id ? (
-                            <Grid className={classes.groupButtonsContainer}>
-                              <Button onClick={()=>Router.push(`/confirmPayment?booking_id=${booking_id}`)}
-                                color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
-                            </Grid>
-                          )
-                          :
-                          null}
+                            bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.alfred._id ? (
+                                <Grid container className={classes.groupButtonsContainer} spacing={1}>
+                                  <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
+                                    <Button onClick={() => this.props.onConfirmPreapproved(booking_id)} color={'primary'}
+                                            variant={'contained'}
+                                            style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
+                                  </Grid>
+                                  <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
+                                    <Button
+                                      onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}
+                                      variant={'outlined'}
+                                      style={{textTransform: 'initial'}}
+                                      color={'primary'}>
+                                      Refuser
+                                    </Button>
+                                  </Grid>
+                                </Grid>
+                              )
+                              :
+                              bookingObj.status === BOOK_STATUS.TO_PAY && currentUser._id === bookingObj.user._id ? (
+                                  <Grid className={classes.groupButtonsContainer}>
+                                    <Button onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
+                                            color={'primary'} variant={'contained'}
+                                            style={{color: 'white', textTransform: 'initial'}}>Payer ma
+                                      réservation</Button>
+                                  </Grid>
+                                )
+                                :
+                                bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.user._id ?
+                                  (
+                                    null
+                                  )
+                                  :
+                                  bookingObj.status === BOOK_STATUS.PREAPPROVED && currentUser._id === bookingObj.user._id ? (
+                                      <Grid className={classes.groupButtonsContainer}>
+                                        <Button onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
+                                                color={'primary'} variant={'contained'}
+                                                style={{color: 'white', textTransform: 'initial'}}>Payer ma
+                                          réservation</Button>
+                                      </Grid>
+                                    )
+                                    :
+                                    null}
                         </Grid>
                       </Grid>
                     </Grid>
@@ -622,7 +666,7 @@ class BookingPreview extends React.Component {
                     </Grid>
                   </Grid>
                   {([BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.INFO].includes(status) && !amIAlfred) ||
-                    status === BOOK_STATUS.CONFIRMED || status === BOOK_STATUS.PREAPPROVED ? (
+                  status === BOOK_STATUS.CONFIRMED || status === BOOK_STATUS.PREAPPROVED ? (
                     <Grid
                       container
                       style={{
@@ -631,10 +675,10 @@ class BookingPreview extends React.Component {
                         paddingTop: '3%',
                       }}
                     >
-                        <a style={{ textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}
-                          onClick={()=> this.props.onCancel(booking_id)}>
-                          Annuler la réservation
-                        </a>
+                      <a style={{textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}
+                         onClick={() => this.props.onCancel(booking_id)}>
+                        Annuler la réservation
+                      </a>
                     </Grid>
                   ) : null}
                   <Grid
@@ -684,7 +728,7 @@ class BookingPreview extends React.Component {
             </Grid>
           </Grid>
         )}
-        </Grid>
+      </Grid>
     );
   }
 }
