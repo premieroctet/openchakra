@@ -97,6 +97,13 @@ const hideIllegal = text => {
   return text
 }
 
+const formatAddress = addr => {
+  if (!addr) {
+    return null
+  }
+  return `${addr.address}, ${addr.city} ${addr.zip_code}`
+}
+
 module.exports = {
   normalize,
   createQuery,
@@ -110,4 +117,5 @@ module.exports = {
   normalizePhone,
   bufferToString,
   hideIllegal,
+  formatAddress,
 };

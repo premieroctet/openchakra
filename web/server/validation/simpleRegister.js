@@ -2,6 +2,7 @@ const Validator = require('validator');
 const isEmpty = require('./is-empty');
 const moment = require('moment');
 const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE}=require('../../utils/consts');
+const _ = require('lodash')
 moment.locale('fr');
 
 const validateSimpleRegisterInput = data => {
@@ -144,6 +145,9 @@ const validateCompanyProfile = data =>{
   data.siret = !isEmpty(data.siret) ? data.siret : '';
   data.vat_number = !isEmpty(data.vat_number) ? data.vat_number : '';
   data.admin_email = !isEmpty(data.admin_email) ? data.admin_email : '';
+  data.admin_firstname = !isEmpty(data.admin_firstname) ? data.admin_firstname : '';
+  data.admin_name = !isEmpty(data.admin_name) ? data.admin_name : '';
+  data.billing_address = !isEmpty(data.billing_address) ? data.billing_address : null;
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
@@ -161,8 +165,22 @@ const validateCompanyProfile = data =>{
     errors.size = "Effectif de l'entreprise incorrect"
   }
 
+  if (!data.billing_address) {
+    errors.billing_address = "Veuillez saisir une adresse"
+  }
+
   if (data.admin_email && !Validator.isEmail(data.admin_email)) {
     errors.admin_email = "Email de l'administrateur incorrect"
+  }
+
+  // Admin : all or nothing
+  const admin_empties = _.uniq(['admin_firstname', 'admin_name', 'admin_email'].map( f => Validator.isEmpty(data[f])))
+  if (admin_empties.length>1) {
+    ['admin_firstname', 'admin_name', 'admin_email'].forEach( att => {
+      if (!data[att]) {
+        errors[att]='Valeur attendue'
+      }
+    })
   }
 
   return {
