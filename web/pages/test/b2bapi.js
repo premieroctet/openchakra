@@ -7,7 +7,7 @@ import Select from "@material-ui/core/Select";
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 import MenuItem from '@material-ui/core/MenuItem'
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-const {ADMIN} = require('../../utils/consts')
+const {ADMIN, ROLES} = require('../../utils/consts')
 class B2BApiTest extends React.Component {
 
   constructor(props) {
@@ -19,12 +19,16 @@ class B2BApiTest extends React.Component {
       group_name : '',
       group_action : 'add',
       group_service_action : 'add',
+      firstname : '',
+      name : '',
+      email : '',
+      role : null,
     }
   }
 
   componentDidMount() {
     setAxiosAuthentication()
-    axios.get('/myAlfred/api/companies/users')
+    axios.get('/myAlfred/api/companies/members')
       .then (response => {
         this.setState({employees: response.data})
       })
@@ -48,8 +52,8 @@ class B2BApiTest extends React.Component {
 
   createAdmin = () => {
     setAxiosAuthentication()
-    const {firstname, name, email} = this.state
-    axios.post('/myAlfred/api/companies/admin', { firstname, name, email})
+    const {firstname, name, email, role} = this.state
+    axios.post('/myAlfred/api/companies/members', { firstname, name, email, role})
       .then ( response => {
         console.log(`Received ${JSON.stringify(response)}`)
         snackBarSuccess(`Création ok, password à changer : ${response.data.password}`)
@@ -180,6 +184,14 @@ class B2BApiTest extends React.Component {
       <TextField name="name" onChange={this.onChange}/>
       Email
       <TextField name="email" onChange={this.onChange}/>
+      <Select
+        name="role"
+        onChange={this.onChange}
+        multi={false}
+      >
+        { Object.keys(ROLES).map( role => <MenuItem value={role}>{ROLES[role]}</MenuItem>)}
+      </Select>
+
       <Button onClick={this.createAdmin}>Créer</Button>
      </div>
 

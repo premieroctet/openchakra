@@ -189,12 +189,13 @@ const validateCompanyProfile = data =>{
   };
 };
 
-const validateCompanyAdmin = data =>{
+const validateCompanyMember = data =>{
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : '';
   data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
   data.email = !isEmpty(data.email) ? data.email : '';
+  data.role = !isEmpty(data.role) ? data.role : '';
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
@@ -210,6 +211,10 @@ const validateCompanyAdmin = data =>{
 
   if (!Validator.isEmail(data.email)) {
     errors.email = 'Email invalide';
+  }
+
+  if (Validator.isEmpty(data.role)) {
+    errors.role = 'Vous devez fournir un rôle';
   }
 
   return {
@@ -241,5 +246,5 @@ const validateCompanyGroup = data =>{
 
 module.exports = {
   validateSimpleRegisterInput, validateEditProfile, validateCompanyProfile,
-  validateEditProProfile, validateCompanyAdmin, validateCompanyGroup,
+  validateEditProProfile, validateCompanyMember, validateCompanyGroup,
 };
