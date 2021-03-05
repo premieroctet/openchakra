@@ -13,8 +13,8 @@ const {validateCompanyProfile, validateCompanyAdmin, validateCompanyGroup} = req
 const moment = require('moment');
 moment.locale('fr');
 const Company = require('../../models/Company');
-const Group  = require('../../models/Group');
-const ServiceAccess = require('../../models/ServiceAccess');
+const Group = require('../../models/Group');
+const Service = require('../../models/Service');
 const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
@@ -266,47 +266,53 @@ router.get('/companies/:id', (req, res) => {
     .catch(err => res.status(404).json({company: 'No company found'}));
 });
 
-// @Route GET /myAlfred/api/companies/allowedServices
-// Get allowed services for current company
-router.get('/allowedServices', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  ServiceAccess.find({company_allow: req.user.company})
-    .populate('service', 'label')
-    .then(serviceAccesses => {
-      if (!serviceAccesses) {
-        return res.status(400).json({msg: 'No company found'});
-      }
-      res.json(serviceAccesses.map( sa => sa.service));
-
-    })
-    .catch(err => res.status(404).json({company: 'No company found'}));
-});
-
-// @Route PUT /myAlfred/api/companies/allowedService
+// @Route PUT /myAlfred/api/companies/groups/:group_id/allowedServices
+// Data : service_id
 // Put allowed service for current company
-router.put('/allowedService', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  ServiceAccess.create({service: req.body.service_id, company_allow: req.user.company})
-    .then(serviceAccess => {
-      if (!serviceAccess) {
-        return res.status(400).json({msg: 'No company found'});
-      }
-      res.json(serviceAccess);
+router.put('/groups/:group_id/allowedServices', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
+  const group_id = req.params.group_id
+  const service_id = req.body.service_id
+
+  Service.findById(service_id, 'label professional_access')
+    .then ( service => {
+      if (!service) {
+        return res.status(404).json({error : `Service ${service._id} introuvable`})
+      }
+      if (!service.professional_access) {
+        return res.status(400).json({error : `Le service ${service.label} n'est pas destiné aux professionnels`})
+      }
+      Group.findByIdAndUpdate(group_id, {  $addToSet : { allowed_services : service_id}})
+        .then(group => {
+          if (!group) {
+            return res.status(400).json({msg: 'No group found'});
+          }
+          res.json(group);
+
+        })
+        .catch(err => res.status(404).json({company: 'No group found'}));
     })
-    .catch(err => res.status(404).json({company: 'No company found'}));
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({company: 'No group found'})
+    })
 });
 
-// @Route DELETE /myAlfred/api/companies/allowedService
+// @Route DELETE /myAlfred/api/companies/groups/:group_id/allowedServices/:service_id
 // Delete allowed service for current company
-router.delete('/allowedService/:service_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  ServiceAccess.deleteOne({service: req.params.service_id, company_allow: req.user.company})
-    .then(serviceAccess => {
-      if (!serviceAccess) {
-        return res.status(400).json({msg: 'No company found'});
+router.delete('/groups/:group_id/allowedServices/:service_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+  const group_id = req.params.group_id
+  const service_id = req.params.service_id
+
+  Group.findByIdAndUpdate(group_id, {  $pull : { allowed_services : service_id}})
+    .then(group => {
+      if (!group) {
+        return res.status(400).json({msg: 'No group found'});
       }
-      res.json(serviceAccess);
+      res.json(group);
 
     })
-    .catch(err => res.status(404).json({company: 'No company found'}));
+    .catch(err => res.status(404).json({company: 'No group found'}));
 });
 
 // @Route PUT /myAlfred/api/companies/alfredViews/:id
@@ -483,25 +489,30 @@ router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: fa
 
   const admin_id = req.params.admin_id
 
-  /**
   const company_id = req.user.company
   User.find({company: company_id, roles: { "$in" : [ADMIN]}, _id : { $ne : admin_id } })
     .then( users => {
-      console.log(users)
-      return res.json(users)
-    })
-    */
-  User.findByIdAndUpdate(admin_id, { $pull : { roles : ADMIN}}, { new : true })
-    .then(user => {
-      if (!user) {
-        return res.status(404).json({error : 'Utilisateur inconnu'})
+      if (users.length==0) {
+        return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
       }
-      return res.json(user)
+      else {
+        User.findByIdAndUpdate(admin_id, { $pull : { roles : ADMIN}}, { new : true })
+          .then(user => {
+            if (!user) {
+              return res.status(404).json({error : 'Utilisateur inconnu'})
+            }
+            return res.json(user)
+          })
+          .catch(err => {
+            console.error(err)
+            res.status(500).json({error: err})
+          })
+      }
     })
     .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
-    });
+    })
 });
 
 // @Route GET /myAlfred/api/companies/users
@@ -528,7 +539,8 @@ router.get('/groups', passport.authenticate('b2badmin', {session: false}), (req,
   const company_id = req.user.company
 
   Group.find({company : company_id})
-    .populate('members', 'firstname name email roles budget_period budget')
+    .populate('members', 'firstname name email roles company')
+    .populate('allowed_services', 'label')
     .then ( groups => {
       res.json(groups)
     })
@@ -556,7 +568,7 @@ router.post('/groups', passport.authenticate('b2badmin', {session: false}), (req
         res.status(400).json({error : 'Ce groupe existe déjà'})
         return
       }
-      Group.create({name : req.body.name, company : company_id, budget_period: req.body.budget_period, budget: req.body.budget})
+      Group.create({name : req.body.name, company : company_id})
         .then ( group => { res.json(group) })
         .catch ( err => {
           console.error(err)

@@ -37,10 +37,10 @@ router.get('/pro', (req, res) => {
   Service.find({ professional_access: true}, 'label')
   .sort({'label': 1})
     .then(services => {
-      if (typeof services !== 'undefined' && services.length > 0) {
-        res.json(services);
-      } else {
+      if (!services) {
         return res.status(400).json({msg: 'No service found'});
+      } else {
+        res.json(services);
       }
     })
     .catch(err => res.status(404).json({service: 'No service found'}));
