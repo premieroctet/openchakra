@@ -23,6 +23,7 @@ class B2BApiTest extends React.Component {
       name : '',
       email : '',
       role : null,
+      group_id:null,
     }
   }
 
@@ -50,10 +51,10 @@ class B2BApiTest extends React.Component {
     this.setState({[name]: value})
   }
 
-  createAdmin = () => {
+  createMember = () => {
     setAxiosAuthentication()
-    const {firstname, name, email, role} = this.state
-    axios.post('/myAlfred/api/companies/members', { firstname, name, email, role})
+    const {firstname, name, email, role, group_id} = this.state
+    axios.post('/myAlfred/api/companies/members', { firstname, name, email, role, group_id})
       .then ( response => {
         console.log(`Received ${JSON.stringify(response)}`)
         snackBarSuccess(`Création ok, password à changer : ${response.data.password}`)
@@ -184,15 +185,13 @@ class B2BApiTest extends React.Component {
       <TextField name="name" onChange={this.onChange}/>
       Email
       <TextField name="email" onChange={this.onChange}/>
-      <Select
-        name="role"
-        onChange={this.onChange}
-        multi={false}
-      >
+      <Select name="role" onChange={this.onChange} multi={false} >
         { Object.keys(ROLES).map( role => <MenuItem value={role}>{ROLES[role]}</MenuItem>)}
       </Select>
-
-      <Button onClick={this.createAdmin}>Créer</Button>
+      <Select name="group_id" onChange={this.onChange} multi={false} >
+        { groups.map(group => <MenuItem value={group._id}>{group.name}</MenuItem>)}
+      </Select>
+      <Button onClick={this.createMember}>Créer</Button>
      </div>
 
      <div>

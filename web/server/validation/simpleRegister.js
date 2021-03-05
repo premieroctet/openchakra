@@ -1,7 +1,7 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 const moment = require('moment');
-const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE}=require('../../utils/consts');
+const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE, MANAGER}=require('../../utils/consts');
 const _ = require('lodash')
 moment.locale('fr');
 
@@ -196,6 +196,7 @@ const validateCompanyMember = data =>{
   data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
   data.email = !isEmpty(data.email) ? data.email : '';
   data.role = !isEmpty(data.role) ? data.role : '';
+  data.group_id = !isEmpty(data.group_id) ? data.group_id : '';
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
@@ -215,6 +216,11 @@ const validateCompanyMember = data =>{
 
   if (Validator.isEmpty(data.role)) {
     errors.role = 'Vous devez fournir un rôle';
+  }
+  else {
+    if (data.role==MANAGER && Validator.isEmpty(data.group_id)) {
+      errors.group_id = 'Vous devez fournir un groupe pour le manager';
+    }
   }
 
   return {

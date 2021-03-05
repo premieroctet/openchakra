@@ -439,7 +439,16 @@ router.post('/members', passport.authenticate('b2badmin', {session: false}), (re
         })
         newUser.save()
           .then( newUser => {
-            res.json(newUser)
+            const group_id = req.body.group_id
+            if (group_id) {
+              Group.update( {_id : group_id}, { $addToSet : {members : newUser._id}})
+                .then( () => {
+                  res.json(newUser)
+                })
+            }
+            else {
+              res.json(newUser)
+            }
           })
           .catch( err => {
             console.error(err)
