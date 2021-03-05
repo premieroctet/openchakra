@@ -207,14 +207,6 @@ class NavBar extends Component {
     this.setState({anchorEl: false})
   };
 
-  b2bSide = () => {
-    localStorage.setItem('b2b', 'true');
-    window.location.reload();
-  }
-  cleanB2b = () => {
-    localStorage.removeItem('b2b');
-    window.location.reload();
-  }
   findService = () => {
     var queryParams = {search: 1};
     if (this.state.keyword) {
@@ -734,11 +726,11 @@ class NavBar extends Component {
                         }
                         {
                           !is_b2b_style(user) ?
-                            <Link href={'/'} onClick={this.b2bSide}>
+                            <Link href={'/professional'}>
                               <Tab classes={{root: classes.navbarTabRoot}}
                                    label={NAVBAR_MENU.businessSide}/>
                             </Link> : is_development() ?
-                            <Link href={'/'} onClick={this.cleanB2b}>
+                            <Link href={'/particular'}>
                               <Tab classes={{root: classes.navbarTabRoot}}
                                    label={'Retour Alfred Particuliers'}/>
                             </Link> : null

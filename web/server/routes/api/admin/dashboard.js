@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
+const crypto = require('crypto');
 
 const validateBillingInput = require('../../../validation/billing');
 const {validateCompanyProfile} = require('../../../validation/simpleRegister');
@@ -36,6 +37,8 @@ const {ADMIN, MANAGER, EMPLOYEE} = require('../../../../utils/consts')
 const parse = require('url-parse')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 var _ = require('lodash')
+const axios=require('axios')
+
 // @Route POST /myAlfred/api/admin/billing/all
 // Add billing for prestation
 // @Access private
@@ -2654,57 +2657,69 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
       return res.status(400).json(errors);
     }
 
-    const promise=req.body._id ? Company.findByIdAndUpdate(req.body._id, req.body, { new: true})
-                  :
-                  new Company(req.body).save()
-    promise
-      .then(company => {
-        if (!company) {
-          return res.status(400).json({msg: 'No company found'});
+    Company.findOne({ name : req.body.name})
+      .then( company => {
+        if (company._id != req.body._id) {
+          return res.status(400).json({error : 'Cette entreprise existe déjà'})
         }
-        if (req.body.admin_email) {
-          User.findOne({email: req.body.admin_email})
-            .then( user => {
-              if (!user) {
-                console.error('no user found')
-              }
-              else {
-                user.company=company
-                user.roles = _.uniq([...(user.roles||[]), ADMIN, EMPLOYEE])
-                user.save().then().catch(err => console.error(err))
-              }
-            })
-            .catch (err => console.error(err))
-        }
-        if (req.body.manager_email) {
-          User.findOne({email: req.body.manager_email})
-            .then( user => {
-              if (!user) {
-                console.error('no user found')
-              }
-              else {
-                user.company=company
-                user.roles = _.uniq([...(user.roles||[]), MANAGER, EMPLOYEE])
-                user.save().then().catch(err => console.error(err))
-              }
-            })
-            .catch (err => console.error(err))
-        }
-        if (req.body.employee_email) {
-          User.findOne({email: req.body.employee_email})
-            .then( user => {
-              if (!user) {
-                console.error('no user found')
-              }
-              else {
-                user.company=company
-                user.roles = _.uniq([...(user.roles||[]), EMPLOYEE])
-                user.save().then().catch(err => console.error(err))
-              }
-            })
-            .catch (err => console.error(err))
-        }
-        res.json(company);
+        const promise=req.body._id ? Company.findByIdAndUpdate(req.body._id, req.body, { new: true})
+                      :
+                      new Company(req.body).save()
+        promise
+          .then(company => {
+            if (!company) {
+              return res.status(400).json({msg: 'No company found'});
+            }
+            if (req.body.admin_email) {
+              User.findOne({email: req.body.admin_email})
+                .then( user => {
+                  if (user) {
+                    return res.status(400).json({error : 'Un compte avec cet email existe déjà'})
+                  }
+                  else {
+                    const newUser= new User({
+                      firstname : req.body.admin_firstname,
+                      name : req.body.admin_name,
+                      email : req.body.admin_email,
+                      company : company._id,
+                      password: crypto.randomBytes(10).toString('hex'),
+                      roles: [ADMIN, EMPLOYEE]
+                    })
+                    console.log(`Generated user with password ${newUser.password}`)
+                    bcrypt.genSalt(10, (err, salt) => {
+                      bcrypt.hash(newUser.password, salt, (err, hash) => {
+                        if (err) {
+                          throw err;
+                        }
+                        newUser.password = hash;
+                        newUser.save()
+                          .then(() => {
+                            axios.post(`/myAlfred/api/users/forgotPassword`, { email:req.body.admin_email})
+                              .then(() => {
+                                return res.json(company)
+                              })
+                              .catch (err => {
+                                console.error(err)
+                              })
+                          })
+                          .catch(err => {
+                            console.error(err)
+                            return res.status(500).json({error : err})
+                          });
+                      });
+                    });
+                  }
+                })
+                .catch (err => console.error(err))
+            }
+            else {
+              return res.json(company);
+            }
+          })
+          .catch( err => {
+            console.error(err)
+            return res.status(500).json( {error: err})
+          })
       })
 });
 

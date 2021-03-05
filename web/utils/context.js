@@ -25,30 +25,22 @@ const is_b2b_employee = user => {
    return true;
   const is_admin = Boolean(user) && user.roles && user.roles.includes(ADMIN)
   if (!is_admin) {
-    console.debug(`Not B2B admin : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
     return false
   }
 
   const token=getAuthToken()
   const result = token && token.role==ADMIN
-  if (!result) {
-    console.debug(`Not B2B admin : role:${token ? token.role : 'no token'}`)
-  }
   return result
 }
 
 const is_b2b_manager = user => {
   const is_manager = Boolean(user) && user.roles && user.roles.includes(MANAGER)
   if (!is_manager) {
-    console.debug(`Not B2B manager : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
     return false
   }
 
   const token=getAuthToken()
   const result = token && token.role==MANAGER
-  if (!result) {
-    console.debug(`Not B2B manager : role:${token ? token.role : 'no token'}`)
-  }
   return result
 }
 

@@ -9,7 +9,7 @@ const path = require('path');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
 const {is_production, is_validation}=require('../../../config/config');
-const {validateCompanyProfile, validateCompanyAdmin, validateCompanyGroup} = require('../../validation/simpleRegister');
+const {validateCompanyProfile, validateCompanyMember, validateCompanyGroup} = require('../../validation/simpleRegister');
 const moment = require('moment');
 moment.locale('fr');
 const Company = require('../../models/Company');
@@ -415,9 +415,9 @@ router.put('/account/rib', passport.authenticate('b2badmin', {session: false}), 
 // @Route POST /myAlfred/api/companies/admin
 // Creates an admin for this company
 // @Access private
-router.post('/admin', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+router.post('/members', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  const {errors, isValid} = validateCompanyAdmin(req.body);
+  const {errors, isValid} = validateCompanyMember(req.body);
   if (!isValid) {
     return res.status(400).json({error: errors});
   }
@@ -435,11 +435,20 @@ router.post('/admin', passport.authenticate('b2badmin', {session: false}), (req,
           email : req.body.email,
           company : company_id,
           password: crypto.randomBytes(10).toString('hex'),
-          roles: [ADMIN, EMPLOYEE]
+          roles: _.uniq([EMPLOYEE, req.body.role])
         })
         newUser.save()
           .then( newUser => {
-            res.json(newUser)
+            const group_id = req.body.group_id
+            if (group_id) {
+              Group.update( {_id : group_id}, { $addToSet : {members : newUser._id}})
+                .then( () => {
+                  res.json(newUser)
+                })
+            }
+            else {
+              res.json(newUser)
+            }
           })
           .catch( err => {
             console.error(err)
@@ -453,39 +462,10 @@ router.post('/admin', passport.authenticate('b2badmin', {session: false}), (req,
     });
 });
 
-// @Route PUT /myAlfred/api/companies/admin
-// Sets admin role for a user
-// @Access private
-router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-
-  User.findById(req.body.user_id)
-    .then(user => {
-
-      if (user.company.toString() != req.user.company.toString()) {
-        res.status(404).json({error: 'Cet utilisateur ne fait pas partie de cette société'})
-        return
-      }
-
-      user.roles = _.uniq([...(user.roles||[]), ADMIN, EMPLOYEE])
-      user.save()
-        .then( newUser => {
-          res.json(newUser)
-        })
-        .catch( err => {
-          console.error(err)
-          res.status(500).json({error: err})
-        })
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(500).json({error: err})
-    });
-});
-
 // @Route DELETE /myAlfred/api/companies/admin/:admin_id
 // removes admin role for a user
 // @Access private
-router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+router.delete('/members/:member_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
   const admin_id = req.params.admin_id
 
@@ -496,7 +476,7 @@ router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: fa
         return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
       }
       else {
-        User.findByIdAndUpdate(admin_id, { $pull : { roles : ADMIN}}, { new : true })
+        User.findByIdAndUpdate(admin_id, { $pull : { roles : req.body.role}}, { new : true })
           .then(user => {
             if (!user) {
               return res.status(404).json({error : 'Utilisateur inconnu'})
@@ -518,7 +498,7 @@ router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: fa
 // @Route GET /myAlfred/api/companies/users
 // Returns all employees from current company
 // @Access private
-router.get('/users', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+router.get('/members', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   const company_id = req.user.company
 
   User.find({company : company_id}, 'firstname name email company roles')
