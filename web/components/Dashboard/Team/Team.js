@@ -35,7 +35,7 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import Input from '@material-ui/core/Input';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
-const {ADMIN, BUDGET_PERIOD} = require('../../../utils/consts');
+const {ADMIN, BUDGET_PERIOD, MANAGER} = require('../../../utils/consts');
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 
@@ -131,7 +131,7 @@ class Team extends React.Component{
   componentDidMount() {
     setAxiosAuthentication();
 
-    axios.get('/myAlfred/api/companies/users').then(res => {
+    axios.get('/myAlfred/api/companies/members').then(res => {
       let data = res.data;
       const admins = data.filter(e => e.roles.includes(ADMIN));
       this.setState({user: data, listOfAdmin: admins})
@@ -247,9 +247,10 @@ class Team extends React.Component{
         const data = {
           firstname: res.firstNameAdmin,
           name: res.nameAdmin,
-          email: res.emailAdmin
+          email: res.emailAdmin,
+          role: ADMIN
         };
-        axios.post('/myAlfred/api/companies/admin', data).then( res =>{
+        axios.post('/myAlfred/api/companies/members', data).then( res =>{
             this.setState({dialogAdmin: false}, () =>  this.componentDidMount());
           }
         ).catch(err =>{
@@ -263,7 +264,7 @@ class Team extends React.Component{
     const{selected} = this.state;
     setAxiosAuthentication();
 
-    axios.delete(`/myAlfred/api/companies/admin/${selected._id}`).then( res =>{
+    axios.delete(`/myAlfred/api/companies/members/${selected._id}`).then( res =>{
       snackBarSuccess(`${selected.name} à été supprimé des administrateurs`);
       this.setState({ dialogRemoveAdmin: false}, () => this.componentDidMount())
     }).catch(err =>{
@@ -679,6 +680,19 @@ class Team extends React.Component{
     const{classes} = this.props;
     const{filters, listOfRoles, departementsName, listOfGroups, isMicroService, listOfAdmin, user} = this.state;
 
+    var arrayOfMembers = [];
+
+    if(listOfGroups){
+      listOfGroups.map((res) =>{
+        if(typeof res.members === 'object'){
+          res.members.map((x) =>{
+             arrayOfMembers = x._id;
+        })
+          }
+      })
+    }
+
+
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -816,39 +830,39 @@ class Team extends React.Component{
                 <Grid>
                   <List>
                     {!user ? null :
-                      user.map( (res,index) =>(
-                        <Grid key={index}>
-                          <ListItem key={index}>
-                            <ListItemText
-                              primary={res.name}
-                              secondary={res.email}
-                            />
-                            <ListItemSecondaryAction>
-                              {
-                                !listOfRoles.length > 0 ? null :
-                                  <FormControl className={classes.formControl}>
-                                    <InputLabel id="demo-simple-select-label">Départements</InputLabel>
-                                    <Select
-                                      labelId="demo-simple-select-label"
-                                      id="demo-simple-select"
-                                      value={departementsName}
-                                      onChange={(e) => this.handleChange(e, null, res)}
-                                      name={'departementsName'}
-                                    >
-                                      {
-
-                                        listOfRoles.map((res,index) =>(
-                                          <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
-                                        ))
-                                      }
-                                    </Select>
-                                  </FormControl>
-                              }
-                            </ListItemSecondaryAction>
-                          </ListItem>
-                          <Divider/>
-                        </Grid>
-                      )
+                      user.map( (res,index) => {
+                        return(
+                          <Grid key={index}>
+                            <ListItem key={index}>
+                              <ListItemText
+                                primary={res.name}
+                                secondary={res.email}
+                              />
+                              <ListItemSecondaryAction>
+                                {
+                                  !listOfRoles.length > 0 ? null :
+                                    <FormControl className={classes.formControl}>
+                                      <InputLabel id="demo-simple-select-label">Départements</InputLabel>
+                                      <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={arrayOfMembers.includes(res._id) ? listOfRoles._id : ''}
+                                        onChange={(e) => this.handleChange(e, null, res)}
+                                        name={'departementsName'}
+                                      >
+                                        {
+                                          listOfRoles.map((res, index) => (
+                                            <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
+                                          ))
+                                        }
+                                      </Select>
+                                    </FormControl>
+                                }
+                              </ListItemSecondaryAction>
+                            </ListItem>
+                            <Divider/>
+                          </Grid>
+                        )}
                     )}
                   </List>
                 </Grid>

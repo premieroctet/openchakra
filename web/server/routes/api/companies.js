@@ -13,6 +13,7 @@ const {validateCompanyProfile, validateCompanyMember, validateCompanyGroup} = re
 const moment = require('moment');
 moment.locale('fr');
 const Company = require('../../models/Company');
+const User = require('../../models/User');
 const Group = require('../../models/Group');
 const Service = require('../../models/Service');
 const crypto = require('crypto');
@@ -467,16 +468,16 @@ router.post('/members', passport.authenticate('b2badmin', {session: false}), (re
 // @Access private
 router.delete('/members/:member_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  const admin_id = req.params.admin_id
+  const member_id = req.params.member_id;
 
-  const company_id = req.user.company
-  User.find({company: company_id, roles: { "$in" : [ADMIN]}, _id : { $ne : admin_id } })
+  const company_id = req.user.company;
+  User.find({company: company_id, roles: { "$in" : [ADMIN]}, _id : { $ne : member_id } })
     .then( users => {
       if (users.length==0) {
         return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
       }
       else {
-        User.findByIdAndUpdate(admin_id, { $pull : { roles : req.body.role}}, { new : true })
+        User.findByIdAndUpdate(member_id, { $pull : { roles : req.body.role}}, { new : true })
           .then(user => {
             if (!user) {
               return res.status(404).json({error : 'Utilisateur inconnu'})
