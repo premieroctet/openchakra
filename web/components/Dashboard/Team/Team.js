@@ -124,8 +124,16 @@ class Team extends React.Component{
       roleOfGroupe: '',
       canUpgrade:[],
       listOfGroups:[],
+      listOfManagers:[],
       departementsName:'',
       modeDialog: '',
+      departementSelected: '',
+      listOfNewManagers: [{
+        nameManager: '',
+        firstNameManager: '',
+        emailManager: '',
+        groupSelected: ''
+      }]
     }
   }
 
@@ -135,7 +143,8 @@ class Team extends React.Component{
     axios.get('/myAlfred/api/companies/members').then(res => {
       let data = res.data;
       const admins = data.filter(e => e.roles.includes(ADMIN));
-      this.setState({user: data, listOfAdmin: admins})
+      const managers = data.filter(e => e.roles.includes(MANAGER));
+      this.setState({user: data, listOfAdmin: admins, listOfManagers: managers})
     }).catch(err => {
       console.error(err)
     });
@@ -151,7 +160,7 @@ class Team extends React.Component{
   handleChange = (event, index, user) =>{
     const {value, name} = event.target;
     if(name === 'nameAdmin' || name === 'firstNameAdmin' || name === 'emailAdmin'){
-    let updatedObj = Object.assign({}, this.state.listOfNewAdmin[index],{[name]: value});
+      let updatedObj = Object.assign({}, this.state.listOfNewAdmin[index],{[name]: value});
       this.setState({
         listOfNewAdmin: [
           ...this.state.listOfNewAdmin.slice(0, index),
@@ -159,7 +168,17 @@ class Team extends React.Component{
           ...this.state.listOfNewAdmin.slice(index + 1)
         ]
       })
-    }else if(name === 'departementsName'){
+    }else if(name === 'nameManager' || name === 'firstNameManager' || name === 'emailManager' || name === 'groupSelected'){
+      let updatedObj = Object.assign({}, this.state.listOfNewManagers[index],{[name]: value});
+      this.setState({
+        listOfNewManagers: [
+          ...this.state.listOfNewManagers.slice(0, index),
+          updatedObj,
+          ...this.state.listOfNewManagers.slice(index + 1)
+        ]
+      })
+    }
+    else if(name === 'departementsName'){
       const data ={
         member_id: user._id
       };
@@ -190,6 +209,14 @@ class Team extends React.Component{
       this.setState({
         listOfNewAdmin: [
           ...this.state.listOfNewAdmin, updatedObj
+        ]
+      })
+    }
+    if(name === 'nbManager'){
+      let updatedObj = {nameManager: '',firstNameManager: '', emailManager: '', groupSelected: ''};
+      this.setState({
+        listOfNewManagers: [
+          ...this.state.listOfNewManagers, updatedObj
         ]
       })
     }
@@ -269,12 +296,12 @@ class Team extends React.Component{
   };
 
   addManager = () =>{
-    const{canUpgrade} = this.state;
+    const{canUpgrade, departementSelected} = this.state;
     setAxiosAuthentication();
 
     if(canUpgrade.length > 0){
       canUpgrade.map( res =>{
-        axios.put(`/myAlfred/api/groups/${group_id}/managers`, { admin_id: res}).then(res=>{
+        axios.put(`/myAlfred/api/groups/${departementSelected}/managers`, { member_id: res._id}).then(res=>{
           this.setState({dialogAdd: false}, () =>  this.componentDidMount());
         }).catch ( err => snackBarError(err.response.data.error))
       })
@@ -337,9 +364,11 @@ class Team extends React.Component{
   };
 
   dialogAdd = (classes)=>{
-    const{dialogAdd, listOfNewAdmin, user,canUpgrade, modeDialog} = this.state;
+    const{dialogAdd, listOfNewAdmin, user,canUpgrade, modeDialog, listOfGroups, departementSelected, listOfNewManagers} = this.state;
 
     let userEmploye = modeDialog === 'admin' ? user ? user.filter( e => !e.roles.includes(ADMIN)) : '' :  user ? user.filter( e => !e.roles.includes(MANAGER)) : '';
+
+    let objectToMap = modeDialog === 'admin' ? listOfNewAdmin : listOfNewManagers;
 
 
     return(
@@ -382,6 +411,32 @@ class Team extends React.Component{
                       </Select>
                     </FormControl>
                   </Grid>
+                  { canUpgrade.length > 0 ?
+                    <>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                        <h3>Affecter un département aux managers selectionner</h3>
+                      </Grid>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                        <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                          <InputLabel id="demo-simple-select-outlined-label">Departements</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            name={'departementSelected'}
+                            onChange={this.handleChange}
+                            label="Departements"
+                            value={departementSelected}
+                          >
+                            {
+                              listOfGroups.map((res, index) => (
+                                <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
+                              ))
+                            }
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </> : null
+                  }
                 </Grid>
                 <Divider/>
               </Grid>
@@ -393,7 +448,7 @@ class Team extends React.Component{
                   <h3>Créer user</h3>
                 </Grid>
                 <Grid>
-                  <IconButton onClick={() => this.addNewLine('nbAdmin')}>
+                  <IconButton onClick={() => this.addNewLine(modeDialog === 'admin' ? 'nbAdmin' : 'nbManager')}>
                     <AddCircleOutlineOutlinedIcon/>
                   </IconButton>
                 </Grid>
@@ -401,13 +456,14 @@ class Team extends React.Component{
             </Grid>
           </Grid>
           {
-            listOfNewAdmin.map((res, index) => (
+            objectToMap.map((res, index) => (
               <Grid container spacing={2} style={{width: '100%', margin: 0}} key={index} id={index}>
+                
                 <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
                   <TextField
                     label="Nom"
-                    name={'nameAdmin'}
-                    value={res.nameAdmin || ''}
+                    name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
+                    value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
                     onChange={(e) => this.handleChange(e, index)}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
@@ -416,8 +472,8 @@ class Team extends React.Component{
                 <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
                   <TextField
                     label="Prénom"
-                    value={res.firstNameAdmin || ''}
-                    name={'firstNameAdmin'}
+                    value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
+                    name={modeDialog === 'admin' ?  'firstNameAdmin' : 'firstNameManager'}
                     onChange={(e) => this.handleChange(e, index)}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
@@ -426,13 +482,34 @@ class Team extends React.Component{
                 <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
                   <TextField
                     label="Email"
-                    name={'emailAdmin'}
-                    value={res.emailAdmin || ''}
+                    name={modeDialog === 'admin' ? 'emailAdmin' : 'emailManager'}
+                    value={modeDialog === 'admin' ? res.emailAdmin || '' : res.emailManager || ''}
                     onChange={(e) => this.handleChange(e, index)}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
                   />
                 </Grid>
+                { modeDialog === 'manager' ?
+                  <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
+                    <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                      <InputLabel id="demo-simple-select-outlined-label">Departements</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        name={'groupSelected'}
+                        onChange={(e) => this.handleChange(e, index)}
+                        label="Departements"
+                        value={res.groupSelected || ''}
+                      >
+                        {
+                          listOfGroups.map((res, index) => (
+                            <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                  </Grid> : null
+                }
                 <Grid item xl={3} lg={3} sm={3} md={3} xs={3} style={{display: 'flex', justifyContent: 'center'}}>
                   <IconButton edge="end" aria-label="delete" onClick={(e) => this.removeLine('nbAdmin',index, e)}>
                     <DeleteIcon />
@@ -618,7 +695,7 @@ class Team extends React.Component{
 
   render() {
     const{classes} = this.props;
-    const{filters, listOfRoles, departementsName, listOfGroups, isMicroService, listOfAdmin, user} = this.state;
+    const{filters, listOfRoles, departementsName, listOfGroups, isMicroService, listOfAdmin, user, listOfManagers} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -756,8 +833,8 @@ class Team extends React.Component{
               <Box>
                 <Grid>
                   <List>
-                    {!user ? null :
-                      user.map( (res,index) => {
+                    {!listOfManagers ? null :
+                      listOfManagers.map( (res,index) => {
                         return(
                           <Grid key={index}>
                             <ListItem key={index}>
@@ -792,11 +869,6 @@ class Team extends React.Component{
                         )}
                     )}
                   </List>
-                </Grid>
-                <Grid style={{display: 'flex', flexDirection: 'row-reverse', marginTop: '3vh'}}>
-                  <Button variant={'contained'} style={{textTransform: 'initial', color: 'white', fontWeight: 'bold'}} color={'primary'}>
-                    Enregistrer
-                  </Button>
                 </Grid>
               </Box>
             </Grid>

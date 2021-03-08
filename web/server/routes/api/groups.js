@@ -21,7 +21,7 @@ const multer = require('multer');
 const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise');
-const {ADMIN, EMPLOYEE} = require('../../../utils/consts')
+const {ADMIN, EMPLOYEE, MANAGER} = require('../../../utils/consts')
 var _ = require('lodash')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
 
