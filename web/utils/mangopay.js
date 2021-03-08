@@ -96,6 +96,51 @@ const createMangoProvider = (user, shop) => {
     });
 };
 
+const createMangoCompany = (user, company) => {
+
+  console.log(`Creating mango company for company ${company.name}, representative is ${user.name}`);
+  var companyData = {
+    PersonType: PersonType.Legal,
+    Name: company.name,
+    Email: user.email,
+    LegalPersonType: 'BUSINESS',
+    LegalRepresentativeFirstName: user.firstname,
+    LegalRepresentativeLastName: user.name,
+    LegalRepresentativeEmail: user.email,
+    HeadquartersAddress: new mangoApi.models.Address({
+        AddressLine1: company.billing_address.address,
+        AddressLine2: '',
+        City: company.billing_address.city,
+        Region: '',
+        PostalCode: company.billing_address.zip_code,
+        Country: 'FR',
+    }),
+    LegalRepresentativeBirthday: moment(user.birthday).unix(),
+    LegalRepresentativeNationality: 'FR',
+    LegalRepresentativeCountryOfResidence: 'FR',
+    CompanyNumber: company.siret,
+    Tag: `Company ${company.name}/Repr. ${user.firstname} ${user.name}`
+  };
+
+  mangoApi.Users.create(companyData)
+    .then(company => {
+      console.log(`Created Mango company ${JSON.stringify(company)}`);
+      company.mangopay_id = newUser.Id;
+      user.save().then().catch();
+      mangoApi.Wallets.create({
+        Owners: [company.Id],
+        Description: `Wallet ${company._id} / ${company.name}company`,
+        Currency: 'EUR',
+      })
+        .then(wallet => {
+          console.log(`Created Wallet ${JSON.stringify(wallet)}`);
+        });
+        .catch(err => {
+          console.log(`Could not create Wallet:${err}`);
+        });
+    });
+};
+
 const addIdIfRequired = user => {
   console.log('addIdIfRequired');
 
@@ -324,6 +369,7 @@ module.exports = {
   mangoApi,
   createMangoClient,
   createMangoProvider,
+  createMangoCompany,
   addIdIfRequired,
   addRegistrationProof,
   payAlfred,

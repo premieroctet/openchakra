@@ -47,6 +47,7 @@ class editProfileCompany extends React.Component{
       name: '',
       company: {},
       billing_address: {},
+      birthday : null,
     }
 
   }
@@ -159,13 +160,18 @@ class editProfileCompany extends React.Component{
 
   onSubmitAbout = () =>{
 
-    axios.put('/myAlfred/api/users/profile/editProProfile',
-      {
-        position: this.state.position,
-        email: this.state.email,
-        name: this.state.name,
-        firstname: this.state.firstName,
-      })
+    var postData = {
+      position: this.state.position,
+      email: this.state.email,
+      name: this.state.name,
+      firstname: this.state.firstName,
+    }
+
+    if (this.is_legal_representative()) {
+      postData.birthday=this.state.birthday
+    }
+
+    axios.put('/myAlfred/api/users/profile/editProProfile', postData)
       .then(res => {
         snackBarSuccess("Profil modifié avec succès");
        this.loadUser();
@@ -182,13 +188,12 @@ class editProfileCompany extends React.Component{
         snackBarSuccess("Mail envoyé")
       })
       .catch( err => {
-        snackBarError('email non envoyé')
+        snackBarError('Mail non envoyé')
       });
   };
 
   content = (classes) => {
-    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user, billing_address, placeholderAlgolia} = this.state;
-
+    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user, billing_address, placeholderAlgolia, birthday} = this.state;
 
     return(
       <Grid>
@@ -344,8 +349,9 @@ class editProfileCompany extends React.Component{
         </Grid>
         <Grid>
           <Grid>
-            <h2 style={{whiteSpace: 'nowrap'}}>A propos de vous</h2>
+            <h2 style={{whiteSpace: 'nowrap'}}>À propos de vous</h2>
           </Grid>
+          <h2>{ this.is_legal_representative() ? "Représentant légal" : "Simple admin" }</h2>
           <Grid container spacing={3} style={{marginTop: '5vh'}}>
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
@@ -396,15 +402,29 @@ class editProfileCompany extends React.Component{
                 {email === user.email && user.is_confirmed === true ? 'Votre email est vérifié' : email !== user.email ? 'Enregistrer votre nouvel email' : 'Vérifier votre email'}
               </Button>
             </Grid>
-            <Grid item xs={12} lg={12} md={12} sm={12} xl={12}>
+            <Grid item xs={6} lg={6} md={6} sm={6} xl={6}>
               <TextField
                 value={position}
                 name={'position'}
+                label={'Poste occupé'}
                 placeholder={'Poste occupé'}
                 variant={'outlined'}
                 label={'Poste occupé'}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
+              />
+            </Grid>
+            <Grid item xl={6} lg={6} xs={12} sm={6} md={6}>
+              <TextField
+                classes={{root: classes.textFieldDatePicker}}
+                id="filled-with-placeholder"
+                variant="outlined"
+                type="date"
+                label={'Date de naissance'}
+                name={'birthday'}
+                value={birthday}
+                onChange={this.handleChange}
+                InputProps={{inputProps: {min: "1900-01-01", max: new moment()}}}
               />
             </Grid>
           </Grid>
@@ -424,6 +444,15 @@ class editProfileCompany extends React.Component{
       </Grid>
     )
   };
+
+  is_legal_representative = () => {
+    const {user, company}=this.state
+    if (!user || !company) {
+      return false
+    }
+
+    return company.representative == user._id
+  }
 
   render() {
     const {classes, index} = this.props;
