@@ -115,7 +115,7 @@ class Team extends React.Component{
       nbAdmin:1,
       paymentMethod: [],
       dialogAdd:false,
-      dialogRemoveAdmin: false,
+      dialogRemove: false,
       dialogUpdateAdmin: false,
       selected: '',
       plafondGroupe: '',
@@ -235,10 +235,6 @@ class Team extends React.Component{
     }
   };
 
-  removeUser = () =>{
-    this.setState({nbNewUser: this.state.nbNewUser - 1})
-
-  };
 
   handleClickOpen = (name, user, mode) =>{
     if(user){
@@ -345,9 +341,19 @@ class Team extends React.Component{
 
     axios.delete(`/myAlfred/api/companies/admin/${selected._id}`).then( res =>{
       snackBarSuccess(`${selected.name} à été supprimé des administrateurs`);
-      this.setState({ dialogRemoveAdmin: false}, () => this.componentDidMount())
+      this.setState({ dialogRemove: false}, () => this.componentDidMount())
     }).catch(err =>{
       snackBarError(err.response.data.error)
+    })
+  };
+
+  removeManager = () =>{
+    const{selected} = this.state;
+    setAxiosAuthentication();
+    axios.delete(`/myAlfred/api/groups/${group_id}/managers/${selected._id}`).then(res =>{
+      this.componentDidMount()
+    }).catch(err =>{
+      console.error(err)
     })
   };
 
@@ -565,13 +571,13 @@ class Team extends React.Component{
     )
   };
 
-  dialogRemoveAdmin = (classes) => {
-    const{dialogRemoveAdmin, selected} = this.state;
+  dialogRemove = (classes) => {
+    const{dialogRemove, selected, modeDialog} = this.state;
 
     return(
       <Dialog
-        open={dialogRemoveAdmin}
-        onClose={() => this.setState({dialogRemoveAdmin: false})}
+        open={dialogRemove}
+        onClose={() => this.setState({dialogRemove: false})}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         classes={{paper: classes.dialogPaper}}
@@ -583,10 +589,10 @@ class Team extends React.Component{
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({dialogRemoveAdmin: false})} color="primary">
+          <Button onClick={() => this.setState({dialogRemove: false})} color="primary">
             Annuler
           </Button>
-          <Button onClick={this.removeAdmin} color="primary">
+          <Button onClick={modeDialog === 'admin' ? this.removeAdmin : this.removeManager} color="primary">
             Supprimer
           </Button>
         </DialogActions>
@@ -731,9 +737,6 @@ class Team extends React.Component{
     const{classes} = this.props;
     const{filters, listOfRoles, departementsName, listOfGroups, isMicroService, listOfAdmin, user, listOfManagers} = this.state;
 
-    let getGroupForMember = listOfGroups.find( group => group.members.includes('60464976f2c05534fcffb0d4'))
-    console.log(getGroupForMember, 'getGroupForMember')
-
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -761,7 +764,7 @@ class Team extends React.Component{
                             primary={`${res.name},${res.firstname} - ${res.email}`}
                           />
                           <ListItemSecondaryAction>
-                            <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemoveAdmin', res)}>
+                            <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemove', res, 'admin')}>
                               <DeleteIcon />
                             </IconButton>
                           </ListItemSecondaryAction>
@@ -899,6 +902,9 @@ class Team extends React.Component{
                                       </Select>
                                     </FormControl>
                                 }
+                                <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemove', res, 'manager')}>
+                                  <DeleteIcon/>
+                                </IconButton>
                               </ListItemSecondaryAction>
                             </ListItem>
                             <Divider/>
@@ -913,7 +919,7 @@ class Team extends React.Component{
         </Grid>
         {this.dialogGroupe(classes)}
         {this.dialogAdd(classes)}
-        {this.dialogRemoveAdmin(classes)}
+        {this.dialogRemove(classes)}
         {this.dialogRemoveGroupe(classes)}
       </Grid>
     );
