@@ -461,9 +461,9 @@ router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, 
   const company_id = req.user.company
   const admin_id = req.body.admin_id
 
-  User.findByIdAndUpdate(admin_id, {company : company_id, $addToSet : {roles : ADMIN}} )
-    .then (users => {
-      res.json(users)
+  User.findByIdAndUpdate(admin_id, {company : company_id, $addToSet : {roles : ADMIN}}, { new : true} )
+    .then (user => {
+      res.json(user)
     })
     .catch( err => {
       console.error(err)
@@ -478,17 +478,29 @@ router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: fa
   const company_id = req.user.company
   const admin_id = req.params.admin_id
 
-  User.findByIdAndUpdate(admin_id, {pull : {roles : ADMIN}} )
-    .then (user => {
-      if (!user) {
-        res.status(404).json({ error: 'Utilisateur inconnu'})
+  User.count({company: company_id, roles: { "$in" : [ADMIN]}, _id : { $ne : admin_id } })
+    .then( remainingAdmins => {
+      if (remainingAdmins==0) {
+        return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
       }
-      res.json(user)
+      else {
+        User.findByIdAndUpdate(admin_id, { $pull : { roles : ADMIN}}, { new : true })
+          .then(user => {
+            if (!user) {
+              return res.status(404).json({error : 'Utilisateur inconnu'})
+            }
+            return res.json(user)
+          })
+          .catch(err => {
+            console.error(err)
+            res.status(500).json({error: err})
+          })
+      }
     })
-    .catch( err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
     })
-})
+});
 
 module.exports = router;

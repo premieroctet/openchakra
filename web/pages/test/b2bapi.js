@@ -13,6 +13,7 @@ class B2BApiTest extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user : null,
       employees : [],
       groups : [],
       services : [],
@@ -28,6 +29,11 @@ class B2BApiTest extends React.Component {
 
   componentDidMount() {
     setAxiosAuthentication()
+    axios.get('/myAlfred/api/users/current')
+      .then (response => {
+        this.setState({user: response.data})
+      })
+      .catch (err => console.error(err))
     axios.get('/myAlfred/api/companies/members')
       .then (response => {
         this.setState({employees: response.data})
@@ -68,7 +74,7 @@ class B2BApiTest extends React.Component {
   setAdmin = () => {
     setAxiosAuthentication()
     const {admin_id} = this.state
-    axios.put('/myAlfred/api/companies/admin', { user_id: admin_id})
+    axios.put('/myAlfred/api/companies/admin', { admin_id: admin_id})
       .then ( () => {
         snackBarSuccess('Statut admin ok')
         this.componentDidMount()
@@ -162,12 +168,20 @@ class B2BApiTest extends React.Component {
   }
 
  render() {
-   const {firstname, name, email, employees, groups, services}=this.state
+   const {firstname, name, email, employees, groups, services, user}=this.state
 
    const admins = employees.filter( e => e.roles.includes(ADMIN))
 
+   if (!user){
+     return null
+   }
+
    return (
      <>
+     <div>
+     <h2>Utilisateur courant</h2>
+     { user.full_name}, rôles {user.roles.join(',')}
+     </div>
      <div>
       <h2>Création de membre</h2>
       Prénom
