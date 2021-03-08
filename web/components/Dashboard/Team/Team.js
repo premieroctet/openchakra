@@ -228,6 +228,11 @@ class Team extends React.Component{
       array.splice(index, 1);
       this.setState({listOfNewAdmin: array})
     }
+    if(name === 'nbManager'){
+      let array = [...this.state.listOfNewManagers];
+      array.splice(index, 1);
+      this.setState({listOfNewManagers: array})
+    }
   };
 
   removeUser = () =>{
@@ -296,7 +301,7 @@ class Team extends React.Component{
   };
 
   addManager = () =>{
-    const{canUpgrade, departementSelected} = this.state;
+    const{canUpgrade, departementSelected, listOfNewManagers} = this.state;
     setAxiosAuthentication();
 
     if(canUpgrade.length > 0){
@@ -306,6 +311,31 @@ class Team extends React.Component{
         }).catch ( err => snackBarError(err.response.data.error))
       })
     }
+
+    listOfNewManagers.map((res) =>{
+      if(res && res.firstNameManager !== '' && res.nameManager !== '' && res.emailManager !== '' && res.groupSelected !== ''){
+        const data = {
+          firstname: res.firstNameManager,
+          name: res.nameManager,
+          email: res.emailManager,
+        };
+
+        axios.post('/myAlfred/api/companies/members', data)
+          .then ( response => {
+            let data = response.data;
+            const member_id ={
+              member_id: data._id
+            };
+            axios.put(`/myAlfred/api/groups/${res.groupSelected}/managers`, member_id).then(res=>{
+              this.setState({dialogAdd: false}, () =>  this.componentDidMount());
+            }).catch ( err => snackBarError(err.response.data.error))
+          })
+          .catch ( err => {
+            console.error(err);
+            snackBarError(err.response.data.error)
+          })
+      }
+    });
 
   };
 
@@ -457,65 +487,69 @@ class Team extends React.Component{
           </Grid>
           {
             objectToMap.map((res, index) => (
+              <>
               <Grid container spacing={2} style={{width: '100%', margin: 0}} key={index} id={index}>
-                
-                <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
-                  <TextField
-                    label="Nom"
-                    name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
-                    value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
-                    onChange={(e) => this.handleChange(e, index)}
-                    variant={'outlined'}
-                    classes={{root: classes.textField}}
-                  />
+                <Grid item xl={11} lg={11} sm={11} md={11} xs={11} container spacing={2} style={{width: '100%', margin: 0}}>
+                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                    <TextField
+                      label="Nom"
+                      name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
+                      value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
+                      onChange={(e) => this.handleChange(e, index)}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+                    />
+                  </Grid>
+                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                    <TextField
+                      label="Prénom"
+                      value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
+                      name={modeDialog === 'admin' ?  'firstNameAdmin' : 'firstNameManager'}
+                      onChange={(e) => this.handleChange(e, index)}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+                    />
+                  </Grid>
+                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                    <TextField
+                      label="Email"
+                      name={modeDialog === 'admin' ? 'emailAdmin' : 'emailManager'}
+                      value={modeDialog === 'admin' ? res.emailAdmin || '' : res.emailManager || ''}
+                      onChange={(e) => this.handleChange(e, index)}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+                    />
+                  </Grid>
+                  { modeDialog === 'manager' ?
+                    <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+                      <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                        <InputLabel id="demo-simple-select-outlined-label">Departements</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-outlined-label"
+                          id="demo-simple-select-outlined"
+                          name={'groupSelected'}
+                          onChange={(e) => this.handleChange(e, index)}
+                          label="Departements"
+                          value={res.groupSelected || ''}
+                        >
+                          {
+                            listOfGroups.map((res, index) => (
+                              <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
+                            ))
+                          }
+                        </Select>
+                      </FormControl>
+                    </Grid> : null
+                  }
                 </Grid>
-                <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
-                  <TextField
-                    label="Prénom"
-                    value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
-                    name={modeDialog === 'admin' ?  'firstNameAdmin' : 'firstNameManager'}
-                    onChange={(e) => this.handleChange(e, index)}
-                    variant={'outlined'}
-                    classes={{root: classes.textField}}
-                  />
-                </Grid>
-                <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
-                  <TextField
-                    label="Email"
-                    name={modeDialog === 'admin' ? 'emailAdmin' : 'emailManager'}
-                    value={modeDialog === 'admin' ? res.emailAdmin || '' : res.emailManager || ''}
-                    onChange={(e) => this.handleChange(e, index)}
-                    variant={'outlined'}
-                    classes={{root: classes.textField}}
-                  />
-                </Grid>
-                { modeDialog === 'manager' ?
-                  <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
-                    <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                      <InputLabel id="demo-simple-select-outlined-label">Departements</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        name={'groupSelected'}
-                        onChange={(e) => this.handleChange(e, index)}
-                        label="Departements"
-                        value={res.groupSelected || ''}
-                      >
-                        {
-                          listOfGroups.map((res, index) => (
-                            <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
-                          ))
-                        }
-                      </Select>
-                    </FormControl>
-                  </Grid> : null
-                }
-                <Grid item xl={3} lg={3} sm={3} md={3} xs={3} style={{display: 'flex', justifyContent: 'center'}}>
-                  <IconButton edge="end" aria-label="delete" onClick={(e) => this.removeLine('nbAdmin',index, e)}>
+                <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                  <IconButton edge="end" aria-label="delete" onClick={(e) => this.removeLine(modeDialog === 'admin' ? 'nbAdmin' : 'nbManager',index, e)}>
                     <DeleteIcon />
                   </IconButton>
                 </Grid>
               </Grid>
+                <Divider/>
+              </>
             ))
           }
         </DialogContent>
@@ -697,6 +731,9 @@ class Team extends React.Component{
     const{classes} = this.props;
     const{filters, listOfRoles, departementsName, listOfGroups, isMicroService, listOfAdmin, user, listOfManagers} = this.state;
 
+    let getGroupForMember = listOfGroups.find( group => group.members.includes('60464976f2c05534fcffb0d4'))
+    console.log(getGroupForMember, 'getGroupForMember')
+
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -850,12 +887,12 @@ class Team extends React.Component{
                                       <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        value={''}
+                                        value={listOfGroups.find(group => group.members.includes(res._id))}
                                         onChange={(e) => this.handleChange(e, null, res)}
                                         name={'departementsName'}
                                       >
                                         {
-                                          listOfRoles.map((res, index) => (
+                                          listOfGroups.map((res, index) => (
                                             <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
                                           ))
                                         }
