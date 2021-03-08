@@ -95,11 +95,6 @@ class UserServicesPreview extends React.Component {
     this.isInPerimeter = this.isInPerimeter.bind(this)
   }
 
-  setState = (st, cb) => {
-    console.log(`setState:${Object.keys(st)}`)
-    return super.setState(st, cb)
-  }
-
   static getInitialProps({query: {id, address}}) {
     return {service_id: id, address: address};
   }
@@ -145,6 +140,16 @@ class UserServicesPreview extends React.Component {
           .catch (err => {})
           .then(res => {
             let user = res ? res.data : null
+            user.billing_address = {
+              "address":"Asson-Coffin",
+              "zip_code":"08300",
+              "city":"Tagnon",
+              "country":"France",
+              "gps":{
+                "lat":49.4674,
+                "lng":4.27936
+              }
+            }
             st['user']=user
             axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
               .then(res => {
@@ -841,7 +846,6 @@ class UserServicesPreview extends React.Component {
       return null
     }
 
-    console.count('Render')
     const res = (
       <React.Fragment>
         <Helmet>

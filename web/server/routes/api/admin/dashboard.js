@@ -2659,7 +2659,7 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
 
     Company.findOne({ name : req.body.name})
       .then( company => {
-        if (company._id != req.body._id) {
+        if (company && company._id != req.body._id) {
           return res.status(400).json({error : 'Cette entreprise existe déjà'})
         }
         const promise=req.body._id ? Company.findByIdAndUpdate(req.body._id, req.body, { new: true})

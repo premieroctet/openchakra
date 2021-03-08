@@ -23,6 +23,7 @@ const getAuthToken = () => {
   }
 
   const decoded = jwt.decode(token.split(' ')[1]);
+  console.log(`Token:${decoded}`)
   return decoded
 }
 

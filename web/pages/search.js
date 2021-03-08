@@ -26,7 +26,7 @@ const {getLoggedUserId}=require('../utils/functions')
 import withWidth from '@material-ui/core/withWidth';
 import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchResults=withSlide(withGrid(CardService));
-const {is_b2b_style} =require('../utils/context')
+const {is_b2b_style, is_b2b_admin, is_b2b_manager} =require('../utils/context')
 
 moment.locale('fr');
 
@@ -85,7 +85,6 @@ class SearchPage extends React.Component {
       focusedInput: null,
       statusFilterVisible: false,
       dateFilterVisible: false,
-      catCount: {}, // cat id => # of items to display
       isAdmin: false,
       mounting: true,
       searching: false,
@@ -159,9 +158,6 @@ class SearchPage extends React.Component {
       })
       .then(res => {
         st['categories'] = res.data;
-        let catCount = {};
-        res.data.forEach(c => catCount[c._id] = 8);
-        st['catCount'] = catCount;
         axios.get('/myAlfred/api/shop/allStatus')
           .catch(err => {
             console.error(err);
@@ -174,22 +170,29 @@ class SearchPage extends React.Component {
                 let user = res.data;
                 this.setState({isAdmin: user.is_admin});
                 st['user'] = user;
-                let allAddresses = {'main': user.billing_address.gps};
-                user.service_address.forEach(ad => allAddresses[ad._id] = {lat: ad.lat, lng: ad.lng});
-                st['allAddresses'] = allAddresses;
-                if ('selectedAddress' in this.props && this.props['selectedAddress'] !== 'all') {
-                  st['gps'] = allAddresses[this.props.selectedAddress];
-                }
-                if (!this.props['selectedAddress'] && !this.props['gps']) {
-                  st['gps'] = allAddresses['main'];
-                  st['selectedAddress'] = 'main';
-                }
-                this.setState(st, () => {
-                  if (this.props.search) {
-                    this.search('date' in this.props);
-                  }
-                  this.setState({mounting: false});
-                });
+
+                const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+                promise
+                  .then(res => {
+                    var allAddresses = {'main': res.data.billing_address.gps};
+                    res.data.service_address.forEach(addr => {
+                      allAddresses[addr._id] = {lat: addr.lat, lng: addr.lng}
+                    });
+                    st['allAddresses']=allAddresses
+                    if ('selectedAddress' in this.props && this.props['selectedAddress'] !== 'all') {
+                      st['gps'] = allAddresses[this.props.selectedAddress];
+                    }
+                    if (!this.props['selectedAddress'] && !this.props['gps']) {
+                      st['gps'] = allAddresses['main'];
+                      st['selectedAddress'] = 'main';
+                    }
+                    this.setState(st, () => {
+                      if (this.props.search) {
+                        this.search('date' in this.props)
+                      }
+                      this.setState({mounting: false});
+                    });
+                  })
               })
               .catch(err => {
                 this.setState(st, () => {
@@ -273,7 +276,6 @@ class SearchPage extends React.Component {
   }
 
   search(forceFilter) {
-
     const {user} = this.state
     this.setState({searching: true});
 

@@ -43,7 +43,9 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_style, is_b2b_admin} from "../../../utils/context";
+import {is_b2b_style, is_b2b_admin, is_b2b_manager} from "../../../utils/context";
+const emptyPromise = require('../../../utils/promise.js');
+const {formatAddress} = require('../../../utils/text.js');
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -87,9 +89,7 @@ class NavBar extends Component {
       startDate: null,
       endDate: null,
       focusedInput: null,
-      b2b: false,
       companyPage: false
-
     }
   }
 
@@ -111,15 +111,19 @@ class NavBar extends Component {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        var allAddresses = {'main': res.data.billing_address};
-        res.data.service_address.forEach(addr => {
-          allAddresses[addr._id] = addr
-        });
-
-        this.setState({
-          user: res.data,
-          allAddresses: allAddresses
-        })
+        const user = res.data
+        const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+        promise
+          .then(res => {
+            var allAddresses = {'main': res.data.billing_address};
+            res.data.service_address.forEach(addr => {
+              allAddresses[addr._id] = addr
+            });
+            this.setState({
+              user: res.data,
+              allAddresses: allAddresses
+            })
+          })
       }).catch(err => {
       console.error(err)
     });
@@ -337,7 +341,7 @@ class NavBar extends Component {
                         >
                           <MenuItem value={'main'} style={{whiteSpace: 'nowrap'}}>
                             Adresse
-                            principale, {' ' + this.state.user.billing_address.address} {this.state.user.billing_address.zip_code},{this.state.user.billing_address.city}
+                            principale, {formatAddress(this.state.allAddresses['main'])}
                           </MenuItem>
                           {this.state.user.service_address.map((e, index) => (
                             <MenuItem value={e._id} key={index}>
@@ -564,7 +568,7 @@ class NavBar extends Component {
                 >
                   <MenuItem value={'main'}>
                     Adresse
-                    principale, {' ' + this.state.user.billing_address.address} {this.state.user.billing_address.zip_code},{this.state.user.billing_address.city}
+                    principale, {formatAddress(this.state.allAddresses['main'])}
                   </MenuItem>
                   {this.state.user.service_address.map((e, index) => (
                     <MenuItem value={e._id} key={index}>
