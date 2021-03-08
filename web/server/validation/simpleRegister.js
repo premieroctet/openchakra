@@ -195,8 +195,6 @@ const validateCompanyMember = data =>{
   data.name = !isEmpty(data.name) ? data.name : '';
   data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
   data.email = !isEmpty(data.email) ? data.email : '';
-  data.role = !isEmpty(data.role) ? data.role : '';
-  data.group_id = !isEmpty(data.group_id) ? data.group_id : '';
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
@@ -214,15 +212,6 @@ const validateCompanyMember = data =>{
     errors.email = 'Email invalide';
   }
 
-  if (Validator.isEmpty(data.role)) {
-    errors.role = 'Vous devez fournir un rôle';
-  }
-  else {
-    if (data.role==MANAGER && Validator.isEmpty(data.group_id)) {
-      errors.group_id = 'Vous devez fournir un groupe pour le manager';
-    }
-  }
-
   return {
     errors,
     isValid: isEmpty(errors),
@@ -234,12 +223,13 @@ const validateCompanyGroup = data =>{
 
   data.name = !isEmpty(data.name) ? data.name : '';
   data.budget = 'budget' in data ? data.budget : null;
+  data.budget_period = 'budget_period' in data ? data.budget_period : null;
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
   }
 
-  if (Validator.isEmpty(data.budget_period)) {
+  if (data.budget && Validator.isEmpty(data.budget_period)) {
     errors.name = 'Veuillez selectionner une période';
   }
 
