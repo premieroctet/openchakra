@@ -114,7 +114,7 @@ class Team extends React.Component{
       nbNewUser: 1,
       nbAdmin:1,
       paymentMethod: [],
-      dialogAdmin:false,
+      dialogAdd:false,
       dialogRemoveAdmin: false,
       dialogUpdateAdmin: false,
       selected: '',
@@ -124,7 +124,8 @@ class Team extends React.Component{
       roleOfGroupe: '',
       canUpgrade:[],
       listOfGroups:[],
-      departementsName:''
+      departementsName:'',
+      modeDialog: '',
     }
   }
 
@@ -139,14 +140,7 @@ class Team extends React.Component{
       console.error(err)
     });
 
-    axios.get('/myAlfred/api/companies/groups').then(res => {
-      let data = res.data;
-      this.setState({listOfRoles: data})
-    }).catch(err => {
-      console.error(err)
-    });
-
-    axios.get('/myAlfred/api/companies/groups').then(res => {
+    axios.get('/myAlfred/api/groups').then(res => {
       let data = res.data;
       this.setState({listOfGroups: data})
     }).catch(err => {
@@ -214,11 +208,17 @@ class Team extends React.Component{
 
   };
 
-  handleClickOpen = (name, user) =>{
+  handleClickOpen = (name, user, mode) =>{
     if(user){
       this.setState({selected: user})
     }else{
       this.setState({selected: ''})
+    }
+
+    if(mode === 'manager'){
+      this.setState({modeDialog: mode})
+    }else{
+      this.setState({modeDialog: 'admin'})
     }
 
     if(name === 'dialogGroupe' && user){
@@ -236,8 +236,8 @@ class Team extends React.Component{
 
     if(canUpgrade.length > 0){
       canUpgrade.map( res =>{
-        axios.put('/myAlfred/api/companies/admin', { user_id: res}).then(res=>{
-          this.setState({dialogAdmin: false}, () =>  this.componentDidMount());
+        axios.put('/myAlfred/api/companies/admin', { admin_id: res}).then(res=>{
+          this.setState({dialogAdd: false}, () =>  this.componentDidMount());
         }).catch ( err => snackBarError(err.response.data.error))
       })
     }
@@ -248,27 +248,49 @@ class Team extends React.Component{
           firstname: res.firstNameAdmin,
           name: res.nameAdmin,
           email: res.emailAdmin,
-          role: ADMIN
         };
-        axios.post('/myAlfred/api/companies/members', data).then( res =>{
-            this.setState({dialogAdmin: false}, () =>  this.componentDidMount());
-          }
-        ).catch(err =>{
-          snackBarError(err.response.data.error)
-        })
+
+        axios.post('/myAlfred/api/companies/members', data)
+          .then ( response => {
+            let data = response.data;
+            const data_id ={
+              admin_id: data._id
+            };
+            axios.put('/myAlfred/api/companies/admin', data_id).then(res=>{
+              this.setState({dialogAdd: false}, () =>  this.componentDidMount());
+            }).catch ( err => snackBarError(err.response.data.error))
+          })
+          .catch ( err => {
+            console.error(err);
+            snackBarError(err.response.data.error)
+          })
       }
     });
+  };
+
+  addManager = () =>{
+    const{canUpgrade} = this.state;
+    setAxiosAuthentication();
+
+    if(canUpgrade.length > 0){
+      canUpgrade.map( res =>{
+        axios.put(`/myAlfred/api/groups/${group_id}/managers`, { admin_id: res}).then(res=>{
+          this.setState({dialogAdd: false}, () =>  this.componentDidMount());
+        }).catch ( err => snackBarError(err.response.data.error))
+      })
+    }
+
   };
 
   removeAdmin = () =>{
     const{selected} = this.state;
     setAxiosAuthentication();
 
-    axios.delete(`/myAlfred/api/companies/members/${selected._id}`).then( res =>{
+    axios.delete(`/myAlfred/api/companies/admin/${selected._id}`).then( res =>{
       snackBarSuccess(`${selected.name} à été supprimé des administrateurs`);
       this.setState({ dialogRemoveAdmin: false}, () => this.componentDidMount())
     }).catch(err =>{
-      snackBarError(err.response.data.error.message)
+      snackBarError(err.response.data.error)
     })
   };
 
@@ -314,17 +336,18 @@ class Team extends React.Component{
     })
   };
 
-  dialogAdmin = (classes)=>{
-    const{dialogAdmin, listOfNewAdmin, user,canUpgrade} = this.state;
+  dialogAdd = (classes)=>{
+    const{dialogAdd, listOfNewAdmin, user,canUpgrade, modeDialog} = this.state;
 
-    let userNotAdmin = user ? user.filter( e => !e.roles.includes(ADMIN)) : '';
+    let userEmploye = modeDialog === 'admin' ? user ? user.filter( e => !e.roles.includes(ADMIN)) : '' :  user ? user.filter( e => !e.roles.includes(MANAGER)) : '';
+
 
     return(
-      <Dialog open={dialogAdmin} onClose={() => this.setState({dialogAdmin: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdmin: false})}>Ajouter un Administrateurs</DialogTitle>
+      <Dialog open={dialogAdd} onClose={() => this.setState({dialogAdd: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{modeDialog === 'manager' ? 'Ajouter un Manager' : 'Ajouter un Administrateurs'}</DialogTitle>
         <DialogContent dividers>
           {
-            userNotAdmin.length === 0 ? null :
+            userEmploye.length === 0 ? null :
               <Grid style={{paddingBottom: 20 }}>
                 <Grid container spacing={2} style={{width: '100%', margin: 0, paddingBottom: 40}}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -350,8 +373,8 @@ class Team extends React.Component{
                         )}
                         MenuProps={MenuProps}
                       >
-                        {!userNotAdmin ? null :
-                          userNotAdmin.map((user) => (
+                        {!userEmploye ? null :
+                          userEmploye.map((user) => (
                             <MenuItem key={user._id} value={user} style={this.getStyles(user.email, canUpgrade)}>
                               {user.email}
                             </MenuItem>
@@ -420,10 +443,10 @@ class Team extends React.Component{
           }
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({dialogAdmin: false})} color="secondary">
+          <Button onClick={() => this.setState({dialogAdd: false})} color="secondary">
             Annuler
           </Button>
-          <Button onClick={this.addAdmin} color="primary">
+          <Button onClick={modeDialog === 'admin' ? this.addAdmin : this.addManager} color="primary">
             Confirmé
           </Button>
         </DialogActions>
@@ -593,105 +616,9 @@ class Team extends React.Component{
     )
   };
 
-  dialogAddService = (classes) => {
-    const{dialogState, email, name, firstname, roles, nbNewUser} = this.state;
-
-    return(
-      <Dialog open={dialogState} onClose={() => this.setState({dialogState: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClick={this.addNewLine} onClose={() => this.setState({dialogState: false})}>Ajouter un collaborateur</DialogTitle>
-        <DialogContent dividers>
-          {
-            [...Array(nbNewUser)].map((res, index) => (
-              <Grid style={{display:'flex', alignItems: 'center'}}>
-                <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                  <Grid item xl={3} lg={3} md={6} sm={6} xs={6}>
-                    <TextField
-                      label="Nom"
-                      name={'name'}
-                      onChange={this.handleOnchange}
-                      value={name}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-                    />
-                  </Grid>
-                  <Grid item xl={3} lg={3} md={6} sm={6} xs={6}>
-                    <TextField
-                      label="Prénom"
-                      name={'firstname'}
-                      onChange={this.handleOnchange}
-                      value={firstname}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-
-                    />
-                  </Grid>
-                  <Grid item xl={3} lg={3} md={6} sm={6} xs={6}>
-                    <TextField
-                      label="email"
-                      name={'email'}
-                      onChange={this.handleOnchange}
-                      value={email}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-                    />
-                  </Grid>
-                  <Grid item xl={3} lg={3} md={6} sm={6} xs={6}>
-                    <FormControl variant="outlined" style={{width: '100%'}}>
-                      <InputLabel id="demo-simple-select-outlined-label">Roles</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        value={roles}
-                        onChange={this.handleChange}
-                        label="Roles"
-                        name={"roles"}
-                        classes={{root: classes.textField}}
-
-                      >
-                        <MenuItem value={10}>Admin</MenuItem>
-                        <MenuItem value={20}>Alternant</MenuItem>
-                        <MenuItem value={30}>Collaborateur de niv 1</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                <Grid item>
-                  <IconButton edge="end" aria-label="delete" onClick={this.removeUser}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            ))
-          }
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.setState({dialogState: false})} color="secondary">
-            Annuler
-          </Button>
-          <Button onClick={this.addService} color="primary">
-            Confirmé
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  };
-
   render() {
     const{classes} = this.props;
     const{filters, listOfRoles, departementsName, listOfGroups, isMicroService, listOfAdmin, user} = this.state;
-
-    var arrayOfMembers = [];
-
-    if(listOfGroups){
-      listOfGroups.map((res) =>{
-        if(typeof res.members === 'object'){
-          res.members.map((x) =>{
-             arrayOfMembers = x._id;
-        })
-          }
-      })
-    }
-
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -701,7 +628,7 @@ class Team extends React.Component{
               <h3>Administrateurs</h3>
             </Grid>
             <Grid>
-              <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogAdmin')}>
+              <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogAdd', null, 'admin')}>
                 <AddCircleOutlineOutlinedIcon />
               </IconButton>
             </Grid>
@@ -789,7 +716,7 @@ class Team extends React.Component{
             </Grid>
             <Grid container style={{marginLeft: '1vh'}}>
               <Grid>
-                <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogState')}>
+                <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogAdd', null, 'manager')}>
                   <AddCircleOutlineOutlinedIcon />
                 </IconButton>
               </Grid>
@@ -840,13 +767,13 @@ class Team extends React.Component{
                               />
                               <ListItemSecondaryAction>
                                 {
-                                  !listOfRoles.length > 0 ? null :
+                                  !listOfGroups.length > 0 ? null :
                                     <FormControl className={classes.formControl}>
                                       <InputLabel id="demo-simple-select-label">Départements</InputLabel>
                                       <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        value={arrayOfMembers.includes(res._id) ? listOfRoles._id : ''}
+                                        value={''}
                                         onChange={(e) => this.handleChange(e, null, res)}
                                         name={'departementsName'}
                                       >
@@ -875,9 +802,8 @@ class Team extends React.Component{
             </Grid>
           </Grid>
         </Grid>
-        {this.dialogAddService(classes)}
         {this.dialogGroupe(classes)}
-        {this.dialogAdmin(classes)}
+        {this.dialogAdd(classes)}
         {this.dialogRemoveAdmin(classes)}
         {this.dialogRemoveGroupe(classes)}
       </Grid>
