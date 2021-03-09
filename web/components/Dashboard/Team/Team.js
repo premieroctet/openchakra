@@ -28,16 +28,11 @@ import Chip from '@material-ui/core/Chip';
 import CloseIcon from '@material-ui/icons/Close';
 import SettingsIcon from '@material-ui/icons/Settings';
 import axios from 'axios';
-import Router from 'next/router';
 const {setAxiosAuthentication}=require('../../../utils/authentication');
 import InputAdornment from '@material-ui/core/InputAdornment';
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import Input from '@material-ui/core/Input';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
 const {ADMIN, BUDGET_PERIOD, MANAGER} = require('../../../utils/consts');
-import FormHelperText from '@material-ui/core/FormHelperText';
-
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, onClick, ...other } = props;
@@ -84,25 +79,15 @@ class Team extends React.Component{
     this.state={
       isMicroService: true,
       filters: 10,
-      roles: '',
-      listOfRoles:[],
       listOfNewAdmin:[{
         nameAdmin: '',
         firstNameAdmin: '',
         emailAdmin: ''
       }],
-      listOfNewGroupes:[{
-        nameGroupe: '',
-        plafondGroupe: '',
-        modeTarif: '',
-        roleOfGroupe: ''
-      }],
       listOfAdmin:[],
-      dialogState: false,
       dialogGroupe: false,
       firstname: '',
       name: '',
-      newChipField: '',
       ribNames:[
         'ribNames A',
         'ribNames B',
@@ -111,17 +96,13 @@ class Team extends React.Component{
         'ribNames E',
       ],
       email: '',
-      nbNewUser: 1,
-      nbAdmin:1,
       paymentMethod: [],
       dialogAdd:false,
       dialogRemove: false,
-      dialogUpdateAdmin: false,
       selected: '',
       plafondGroupe: '',
       nameGroupe: '',
       budget_periode: '',
-      roleOfGroupe: '',
       canUpgrade:[],
       listOfGroups:[],
       listOfManagers:[],
@@ -179,7 +160,6 @@ class Team extends React.Component{
       })
     }
     else if(name === 'departementsName'){
-      console.log(value,'value')
       const data ={
         member_id: user._id
       };
@@ -607,7 +587,7 @@ class Team extends React.Component{
   };
 
   dialogGroupe = (classes)=>{
-    const{dialogGroupe, selected, paymentMethod, chipRibs, ribNames, nameGroupe, plafondGroupe, budget_periode} = this.state;
+    const{dialogGroupe, selected, paymentMethod, ribNames, nameGroupe, plafondGroupe, budget_periode} = this.state;
 
     return(
       <Dialog open={dialogGroupe} onClose={() => this.setState({dialogGroupe: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
@@ -741,7 +721,7 @@ class Team extends React.Component{
 
   render() {
     const{classes} = this.props;
-    const{filters, listOfRoles, departementsName, listOfGroups, isMicroService, listOfAdmin, user, listOfManagers} = this.state;
+    const{filters, listOfGroups, isMicroService, listOfAdmin, listOfManagers} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
