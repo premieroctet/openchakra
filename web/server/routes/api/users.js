@@ -25,7 +25,7 @@ const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise.js');
 const {ROLES}=require('../../../utils/consts')
-const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
+const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../../utils/mangopay');
 
 
 axios.defaults.withCredentials = true;
@@ -1014,6 +1014,7 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
 // @Access private
 router.put('/profile/editProProfile', passport.authenticate('jwt', {session: false}), (req, res) => {
 
+  console.log(`Received:${JSON.stringify(req.body)}`)
   const {errors, isValid} = validateEditProProfile(req.body);
 
   User.findOne({email: req.body.email})
@@ -1029,7 +1030,9 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
           name: req.body.name,
           firstname: req.body.firstname,
           position: req.body.position,
+          birthday: req.body.birthday,
         }, {new: true})
+          .populate('company')
           .then(user => {
             if(req.user.email !== req.body.email){
               User.findByIdAndUpdate(req.user.id,{
@@ -1040,6 +1043,9 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
               }).catch( err => console.error(err))
             }else{
               res.json({success: 'Profil mis à jour !'});
+            }
+            if (true) { //user.company && user.company.representative == user._id) {
+              createMangoCompany(user, user.company)
             }
           })
           .catch(err => console.error(err));

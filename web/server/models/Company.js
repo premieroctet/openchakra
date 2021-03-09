@@ -73,8 +73,11 @@ const CompanySchema = new Schema({
     type: String,
     set : text => hideIllegal(text)
   },
-
-
+  // Legal repesentative
+  representative : {
+    type: Schema.Types.ObjectId,
+    ref: 'users',
+  }
 }, {toJSON: {virtuals: true, getters: true}});
 
 
