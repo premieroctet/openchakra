@@ -131,7 +131,7 @@ const validateEditProProfile = data =>{
     errors.position = 'Veuillez saisir une fonction';
   }
 
-  if ('birthday' in data && data.birthday==null) {
+  if ('birthday' in data && !data.birthday) {
     errors.birthday = 'Veuillez saisir une date de naissance';
   }
 
