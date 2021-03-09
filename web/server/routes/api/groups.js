@@ -271,9 +271,9 @@ router.delete('/:group_id/managers/:manager_id', passport.authenticate('b2badmin
 
   const company_id = req.user.company
   const group_id = req.params.group_id
-  const manager_id = req.params.member_id
+  const manager_id = req.params.manager_id;
 
-  User.findByIdAndUpdate(member_id, { $pull : { roles : MANAGER }}, { new : true})
+  User.findByIdAndUpdate(manager_id, { $pull : { roles : MANAGER }}, { new : true})
     .then( user => {
       if (!user) {
         res.status(404).json({error: `User ${user_id} introuvable`})

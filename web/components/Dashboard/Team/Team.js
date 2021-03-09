@@ -179,15 +179,15 @@ class Team extends React.Component{
       })
     }
     else if(name === 'departementsName'){
+      console.log(value,'value')
       const data ={
         member_id: user._id
       };
-
-      axios.put(`/myAlfred/api/companies/groups/${value}/member`,data).then(res => {
+      axios.put(`/myAlfred/api/groups/${value}/managers`,data).then(res => {
         snackBarSuccess(`Membre ajouté au groupe`);
         this.componentDidMount()
       }).catch( err => {
-        snackBarError(err.response.data)
+        snackBarError(err.response.error)
       })
     }else{
       this.setState({[name]: value})
@@ -235,12 +235,17 @@ class Team extends React.Component{
     }
   };
 
-
-  handleClickOpen = (name, user, mode) =>{
+  handleClickOpen = (name, user, mode, groupeId) =>{
     if(user){
       this.setState({selected: user})
     }else{
       this.setState({selected: ''})
+    }
+
+    if(groupeId){
+      this.setState({groupeIdSelected: groupeId})
+    }else{
+      this.setState({groupeIdSelected: ''})
     }
 
     if(mode === 'manager'){
@@ -348,10 +353,11 @@ class Team extends React.Component{
   };
 
   removeManager = () =>{
-    const{selected} = this.state;
+    const{selected, groupeIdSelected} = this.state;
     setAxiosAuthentication();
-    axios.delete(`/myAlfred/api/groups/${group_id}/managers/${selected._id}`).then(res =>{
-      this.componentDidMount()
+    axios.delete(`/myAlfred/api/groups/${groupeIdSelected}/managers/${selected._id}`).then(res =>{
+      snackBarSuccess('Manager supprimé');
+      this.setState({dialogRemove:false}, () => this.componentDidMount())
     }).catch(err =>{
       console.error(err)
     })
@@ -826,97 +832,104 @@ class Team extends React.Component{
             </Grid>
           </Box>
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-          <Grid style={{display: 'flex', alignItems: 'center'}}>
-            <Grid>
-              <h3>{isMicroService ? 'Managers' : 'Collaborateurs'}</h3>
-            </Grid>
-            <Grid container style={{marginLeft: '1vh'}}>
-              <Grid>
-                <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogAdd', null, 'manager')}>
-                  <AddCircleOutlineOutlinedIcon />
-                </IconButton>
-              </Grid>
-              <Grid>
-                <IconButton aria-label="GetAppOutlinedIcon">
-                  <GetAppOutlinedIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid className={classes.searchFilterRightContainer}>
-            <Grid className={classes.searchFilterRightLabel}>
-              <Typography>Trier par</Typography>
-            </Grid>
-            <Grid>
-              <FormControl>
-                <Select
-                  labelId="simple-select-placeholder-label-label"
-                  id="simple-select-placeholder-label"
-                  value={filters}
-                  name={'filters'}
-                  onChange={this.handleChange}
-                  displayEmpty
-                  disableUnderline
-                  classes={{select: classes.searchSelectPadding}}
-                >
-                  <MenuItem value={10}><strong>Ordre alphabétique</strong></MenuItem>
-                  <MenuItem value={20}><strong>Test</strong></MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Grid container spacing={3}>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Box>
-                <Grid>
-                  <List>
-                    {!listOfManagers ? null :
-                      listOfManagers.map( (res,index) => {
-                        return(
-                          <Grid key={index}>
-                            <ListItem key={index}>
-                              <ListItemText
-                                primary={res.name}
-                                secondary={res.email}
-                              />
-                              <ListItemSecondaryAction>
-                                {
-                                  !listOfGroups.length > 0 ? null :
-                                    <FormControl className={classes.formControl}>
-                                      <InputLabel id="demo-simple-select-label">Départements</InputLabel>
-                                      <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={listOfGroups.find(group => group.members.includes(res._id))}
-                                        onChange={(e) => this.handleChange(e, null, res)}
-                                        name={'departementsName'}
-                                      >
-                                        {
-                                          listOfGroups.map((res, index) => (
-                                            <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
-                                          ))
-                                        }
-                                      </Select>
-                                    </FormControl>
-                                }
-                                <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemove', res, 'manager')}>
-                                  <DeleteIcon/>
-                                </IconButton>
-                              </ListItemSecondaryAction>
-                            </ListItem>
-                            <Divider/>
-                          </Grid>
-                        )}
-                    )}
-                  </List>
+        {
+          listOfGroups.length > 0 ?
+            <>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <Grid style={{display: 'flex', alignItems: 'center'}}>
+                  <Grid>
+                    <h3>{isMicroService ? 'Managers' : 'Collaborateurs'}</h3>
+                  </Grid>
+                  <Grid container style={{marginLeft: '1vh'}}>
+                    <Grid>
+                      <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogAdd', null, 'manager')}>
+                        <AddCircleOutlineOutlinedIcon />
+                      </IconButton>
+                    </Grid>
+                    <Grid>
+                      <IconButton aria-label="GetAppOutlinedIcon">
+                        <GetAppOutlinedIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
                 </Grid>
-              </Box>
-            </Grid>
-          </Grid>
-        </Grid>
+                <Grid className={classes.searchFilterRightContainer}>
+                  <Grid className={classes.searchFilterRightLabel}>
+                    <Typography>Trier par</Typography>
+                  </Grid>
+                  <Grid>
+                    <FormControl>
+                      <Select
+                        labelId="simple-select-placeholder-label-label"
+                        id="simple-select-placeholder-label"
+                        value={filters}
+                        name={'filters'}
+                        onChange={this.handleChange}
+                        displayEmpty
+                        disableUnderline
+                        classes={{select: classes.searchSelectPadding}}
+                      >
+                        <MenuItem value={10}><strong>Ordre alphabétique</strong></MenuItem>
+                        <MenuItem value={20}><strong>Test</strong></MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Grid container spacing={3}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Box>
+                      <Grid>
+                        <List>
+                          {!listOfManagers ? null :
+                            listOfManagers.map( (res,index) => {
+                              let groupe = listOfGroups.find( group => group.members.map( m => m._id).includes(res._id));
+                              let groupeId = groupe ? groupe._id : '';
+                              return(
+                                <Grid key={index}>
+                                  <ListItem key={index}>
+                                    <ListItemText
+                                      primary={res.name}
+                                      secondary={res.email}
+                                    />
+                                    <ListItemSecondaryAction>
+                                      {
+                                        !listOfGroups.length > 0 ? null :
+                                          <FormControl className={classes.formControl}>
+                                            <InputLabel id="demo-simple-select-label">Départements</InputLabel>
+                                            <Select
+                                              labelId="demo-simple-select-label"
+                                              id="demo-simple-select"
+                                              value={groupeId}
+                                              onChange={(e) => this.handleChange(e, null, res)}
+                                              name={'departementsName'}
+                                            >
+                                              {
+                                                listOfGroups.map((res, index) => (
+                                                  <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
+                                                ))
+                                              }
+                                            </Select>
+                                          </FormControl>
+                                      }
+                                      <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemove', res, 'manager', groupeId)}>
+                                        <DeleteIcon/>
+                                      </IconButton>
+                                    </ListItemSecondaryAction>
+                                  </ListItem>
+                                  <Divider/>
+                                </Grid>
+                              )}
+                            )}
+                        </List>
+                      </Grid>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </> : null
+        }
         {this.dialogGroupe(classes)}
         {this.dialogAdd(classes)}
         {this.dialogRemove(classes)}
