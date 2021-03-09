@@ -76,7 +76,9 @@ nextApp.prepare().then(() => {
 
 // Connect to MongoDB
   mongoose.connect(config.databaseUrl, {useNewUrlParser: true})
-    .then(() => console.log(`MongoDB connected to ${config.databaseUrl}`))
+    .then( () => {
+      console.log(`MongoDB connected to ${config.databaseUrl}`)
+    })
     .catch(err => console.error(err));
 
 // Passport middleware

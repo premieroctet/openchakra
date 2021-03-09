@@ -28,11 +28,6 @@ class PaymentChoice extends React.Component{
   render() {
     const{pricedPrestations, countPrestations, bookingObj, user, currentUser, classes} = this.props;
 
-    if (currentUser && bookingObj) {
-      var checkAdd = bookingObj.address && currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
-    }
-
-
     return(
       <Grid container style={{width: '90%',  marginBottom: '10vh'}}>
         <Grid item xl={7} lg={7} md={7} xs={12} sm={12}>
@@ -55,12 +50,15 @@ class PaymentChoice extends React.Component{
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)',paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
               <Topic
                 titleTopic={'Adresse du service'}
-                titleSummary={`Le service sera effectué ${bookingObj.address ?  checkAdd ? 'à votre domicile' : 'Chez' + user.firstname : 'En visio'}`}
                 underline={false}
               >
+              { bookingObj.address ?
                 <AddressService
                   {...this.props}
                 />
+                :
+                "En visio"
+              }
               </Topic>
             </Grid>
           </Grid>
