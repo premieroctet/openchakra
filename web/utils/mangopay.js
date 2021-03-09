@@ -134,10 +134,10 @@ const createMangoCompany = (user, company) => {
       })
         .then(wallet => {
           console.log(`Created Wallet ${JSON.stringify(wallet)}`);
-        });
+        })
         .catch(err => {
           console.log(`Could not create Wallet:${err}`);
-        });
+        })
     });
 };
 
