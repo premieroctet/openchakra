@@ -109,7 +109,6 @@ const validateEditProProfile = data =>{
   data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
   data.email = !isEmpty(data.email) ? data.email : '';
   data.position = !isEmpty(data.position) ? data.position : '';
-  data.birthday = 'birthday' in data ? data.birthday : null;
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';

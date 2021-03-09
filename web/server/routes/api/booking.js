@@ -18,6 +18,7 @@ const {
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
   sendLeaveCommentForClient, sendLeaveCommentForAlfred,
 } = require('../../../utils/mailing');
+const {get_role} = require('../../utils/context')
 const {payAlfred} = require('../../../utils/mangopay');
 
 moment.locale('fr');
@@ -150,6 +151,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.status = req.body.status;
   bookingFields.serviceUserId = req.body.serviceUserId;
   bookingFields.cesu_amount = req.body.cesu_amount;
+  bookingFields.user_role = get_role(req)
 
   const newBooking = new Booking(bookingFields);
 

@@ -893,7 +893,10 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
     .then(user => {
       res.json(user);
     })
-    .catch(err => res.status(404).json({alfred: 'No alfred found'}));
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({alfred: 'No alfred found'})
+    });
 });
 
 // @Route POST /myAlfred/api/users/email/check
