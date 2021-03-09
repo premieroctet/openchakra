@@ -195,6 +195,7 @@ class editProfileCompany extends React.Component{
   content = (classes) => {
     const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user, billing_address, placeholderAlgolia, birthday} = this.state;
 
+    const position_width = this.is_legal_representative() ? 6 : 12
     return(
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -349,9 +350,10 @@ class editProfileCompany extends React.Component{
         </Grid>
         <Grid>
           <Grid>
-            <h2 style={{whiteSpace: 'nowrap'}}>À propos de vous</h2>
+            <h2 style={{whiteSpace: 'nowrap'}}>À propos de vous
+            { this.is_legal_representative() ? " - vous êtes le représentant légal" : null }
+            </h2>
           </Grid>
-          <h2>{ this.is_legal_representative() ? "Représentant légal" : "Simple admin" }</h2>
           <Grid container spacing={3} style={{marginTop: '5vh'}}>
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
@@ -402,31 +404,35 @@ class editProfileCompany extends React.Component{
                 {email === user.email && user.is_confirmed === true ? 'Votre email est vérifié' : email !== user.email ? 'Enregistrer votre nouvel email' : 'Vérifier votre email'}
               </Button>
             </Grid>
-            <Grid item xs={6} lg={6} md={6} sm={6} xl={6}>
+            <Grid item xs={position_width} lg={position_width} md={position_width} sm={position_width} xl={position_width}>
               <TextField
                 value={position}
                 name={'position'}
-                label={'Poste occupé'}
-                placeholder={'Poste occupé'}
+                label={'Fonction'}
+                placeholder={'Fonction'}
                 variant={'outlined'}
-                label={'Poste occupé'}
+                label={'Fonction'}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
               />
             </Grid>
-            <Grid item xl={6} lg={6} xs={12} sm={6} md={6}>
-              <TextField
-                classes={{root: classes.textFieldDatePicker}}
-                id="filled-with-placeholder"
-                variant="outlined"
-                type="date"
-                label={'Date de naissance'}
-                name={'birthday'}
-                value={birthday}
-                onChange={this.handleChange}
-                InputProps={{inputProps: {min: "1900-01-01", max: new moment()}}}
-              />
-            </Grid>
+            { this.is_legal_representative() ?
+              <Grid item xl={6} lg={6} xs={6} sm={6} md={6}>
+                <TextField
+                  classes={{root: classes.textFieldDatePicker}}
+                  id="filled-with-placeholder"
+                  variant="outlined"
+                  type="date"
+                  label={'Date de naissance'}
+                  name={'birthday'}
+                  value={birthday}
+                  onChange={this.handleChange}
+                  InputProps={{inputProps: {min: "1900-01-01", max: new moment()}}}
+                />
+              </Grid>
+              :
+              null
+            }
           </Grid>
         </Grid>
         <Grid style={{marginBottom: '12vh'}}>
