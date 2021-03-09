@@ -109,6 +109,7 @@ const validateEditProProfile = data =>{
   data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
   data.email = !isEmpty(data.email) ? data.email : '';
   data.position = !isEmpty(data.position) ? data.position : '';
+  data.birthday = 'birthday' in data ? data.birthday : null;
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
@@ -128,6 +129,10 @@ const validateEditProProfile = data =>{
 
   if (Validator.isEmpty(data.position)) {
     errors.position = 'Veuillez saisir une fonction';
+  }
+
+  if ('birthday' in data && !data.birthday) {
+    errors.birthday = 'Veuillez saisir une date de naissance';
   }
 
   return {
