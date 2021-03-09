@@ -88,14 +88,8 @@ class Team extends React.Component{
       dialogGroupe: false,
       firstname: '',
       name: '',
-      ribNames:[
-        'ribNames A',
-        'ribNames B',
-        'ribNames C',
-        'ribNames D',
-        'ribNames E',
-      ],
       email: '',
+      haveAccount: false,
       paymentMethod: [],
       dialogAdd:false,
       dialogRemove: false,
@@ -114,7 +108,8 @@ class Team extends React.Component{
         firstNameManager: '',
         emailManager: '',
         groupSelected: ''
-      }]
+      }],
+      accounts: []
     }
   }
 
@@ -136,6 +131,14 @@ class Team extends React.Component{
     }).catch(err => {
       console.error(err)
     });
+
+    axios.get('/myAlfred/api/payment/activeAccount')
+      .then(response => {
+        let accounts = response.data;
+        if (accounts.length) {
+          this.setState({haveAccount: true, accounts: accounts});
+        }
+      });
   }
 
   handleChange = (event, index, user) =>{
@@ -502,7 +505,7 @@ class Team extends React.Component{
                       classes={{root: classes.textField}}
                     />
                   </Grid>
-                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                  <Grid item xl={modeDialog === 'manager' ? 6 : 12} lg={modeDialog === 'manager' ? 6 : 12} sm={modeDialog === 'manager' ? 6 : 12} md={modeDialog === 'manager' ? 6 : 12} xs={modeDialog === 'manager' ? 6 : 12}>
                     <TextField
                       label="Email"
                       name={modeDialog === 'admin' ? 'emailAdmin' : 'emailManager'}
@@ -587,7 +590,7 @@ class Team extends React.Component{
   };
 
   dialogGroupe = (classes)=>{
-    const{dialogGroupe, selected, paymentMethod, ribNames, nameGroupe, plafondGroupe, budget_periode} = this.state;
+    const{dialogGroupe, selected, paymentMethod, accounts, nameGroupe, plafondGroupe, budget_periode} = this.state;
 
     return(
       <Dialog open={dialogGroupe} onClose={() => this.setState({dialogGroupe: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
@@ -666,7 +669,7 @@ class Team extends React.Component{
                       )}
                       MenuProps={MenuProps}
                     >
-                      {ribNames.map((name) => (
+                      {accounts.map((name) => (
                         <MenuItem key={name} value={name} style={this.getStyles(name, paymentMethod)}>
                           {name}
                         </MenuItem>
