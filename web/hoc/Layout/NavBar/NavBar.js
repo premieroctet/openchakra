@@ -120,7 +120,7 @@ class NavBar extends Component {
               allAddresses[addr._id] = addr
             });
             this.setState({
-              user: res.data,
+              user: user,
               allAddresses: allAddresses
             })
           })
@@ -675,6 +675,7 @@ class NavBar extends Component {
     const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage} = this.state;
     const {classes} = this.props;
 
+    console.log(`User:${JSON.stringify(user)}`)
 
     const logged = user != null
     const modalLogin = () => {
