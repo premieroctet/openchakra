@@ -36,7 +36,4 @@ export default theme => ({
   chip: {
     margin: 2,
   },
-  listChipContainer:{
-
-  }
 })

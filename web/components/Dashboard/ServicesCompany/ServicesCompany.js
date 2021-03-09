@@ -17,7 +17,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Chip from '@material-ui/core/Chip';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -34,45 +34,87 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
+import axios from "axios";
+const {setAxiosAuthentication}=require('../../../utils/authentication');
+const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
+import CloseIcon from '@material-ui/icons/Close';
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, onClick, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="closeButton" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon  />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
 
 class ServicesCompany extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      items:[
-        'Paramètrez les services des administrateurs',
-        'Paramètrez les services des collaborateurs niv.1',
-        'Paramètrez les services des collaborateurs niv.2',
-        'Paramètrez les services des cadres supérieurs',
-        'Paramètrez les services des alternants'
-      ],
+      isMicroService: true,
+      dialogConfigService: false,
+      dialogRemove: false,
+      serviceSelected: '',
+      availableService: [],
+      valueInvoice: '',
+      rib: '',
+      takeInCharge: false,
+      priceInCharge: '',
+      timeTakeInCharge: '',
+      listOfGroups: [],
+      services:[],
+      dialogAddService: false,
+      servicesToAdd:[],
       serviceNames:[
         'Service A',
         'Service B',
         'Service C',
         'Service D',
         'Service E',
-        'Service F',
-        'Service G',
-        'Service H',
-        'Service I',
-        'Service J',
       ],
-      dialogConfigService: false,
-      serviceSelected: '',
-      availableService: [],
-      listOfServices: [{label: 'service A - service B - service C'}, {label: 'service D'}, {label: 'service E'}],
-      valueInvoice: '',
-      rib: '',
-      takeInCharge: false,
-      priceInCharge: '',
-      timeTakeInCharge: ''
+      groupeSelected: []
     }
   }
 
-  handleClickOpen = (name, selected) =>{
-    this.setState({[name]: true, serviceSelected: selected ? selected: ''})
+  componentDidMount() {
+    setAxiosAuthentication();
+
+    axios.get('/myAlfred/api/groups').then(res => {
+      let data = res.data;
+      this.setState({listOfGroups: data})
+    }).catch(err => {
+      console.error(err)
+    });
+
+    axios.get('/myAlfred/api/service/pro')
+      .then (response => {
+        this.setState({services: response.data})
+      })
+      .catch (err => console.error(err))
+  }
+
+  handleClickOpen = (name, selected, groupe) =>{
+    this.setState({[name]: true, serviceSelected: selected ? selected: '', groupeSelected: groupe ? groupe : ''})
   };
 
   handleOnchange = (event) =>{
@@ -92,11 +134,45 @@ class ServicesCompany extends React.Component{
     }
   };
 
+  getStyles = (name, personName) => {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? 'regular'
+          : 'bold',
+    };
+  };
+
+  addService = () =>{
+    const{serviceSelected, servicesToAdd} = this.state;
+
+    if(servicesToAdd.length > 0){
+      servicesToAdd.map(res => {
+        axios.put(`/myAlfred/api/groups/${serviceSelected._id}/allowedServices`, { service_id : res._id}).then(res =>{
+           this.setState({dialogAddService : false}, () => this.componentDidMount())
+          }
+        ).catch( err => {
+          console.error(err)
+        })
+      })
+    }
+  };
+
+  removeService = () => {
+    const{serviceSelected, groupeSelected} = this.state;
+    axios.delete(`/myAlfred/api/groups/${groupeSelected._id}/allowedServices/${serviceSelected._id}`).then( res =>{
+      snackBarSuccess('Service retiré');
+      this.setState({dialogRemove: false}, () => this.componentDidMount())
+    }).catch( err =>{
+      console.error(err)
+    })
+  };
+
   dialogConfigService = (classes) => {
     const{dialogConfigService, serviceSelected, availableService, serviceNames, valueInvoice, rib, takeInCharge, priceInCharge, timeTakeInCharge} = this.state;
     return(
       <Dialog open={dialogConfigService} onClose={() => this.setState({dialogConfigService: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.configService}}>
-        <DialogTitle id="form-dialog-title">{serviceSelected}</DialogTitle>
+        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogConfigService: false})}>{serviceSelected}</DialogTitle>
         <DialogContent>
           <Grid>
             <Grid>
@@ -232,9 +308,96 @@ class ServicesCompany extends React.Component{
     )
   };
 
+  dialogAddService = (classes) =>{
+    const{dialogAddService, serviceSelected, services, servicesToAdd, groupeSelected} = this.state;
+
+    let allowedServicesByGroup = groupeSelected.allowed_services;
+    let idAllowedServicesByGroup = allowedServicesByGroup ? allowedServicesByGroup.map(res => res._id) : '';
+    let servicesNotAllowed =  services.filter(service => !idAllowedServicesByGroup.includes(service._id ));
+
+    return(
+      <Dialog open={dialogAddService} onClose={() => this.setState({dialogAddService: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.configService}}>
+        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false})}>{serviceSelected.name}</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <h3>Choix parmi liste</h3>
+            </Grid>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                <InputLabel id="demo-mutiple-chip-label">Services</InputLabel>
+                <Select
+                  labelId="demo-mutiple-chip-label"
+                  id="demo-mutiple-chip"
+                  multiple
+                  onChange={(e) => this.handleOnchange(e)}
+                  name={'servicesToAdd'}
+                  value={servicesToAdd}
+                  input={<OutlinedInput label={'Services'}  id="select-multiple-chip" />}
+                  renderValue={(selected) => (
+                    <div className={classes.chips}>
+                      {selected.map((service) => (
+                        <Chip key={service._id} label={service.label} className={classes.chip} />
+                      ))}
+                    </div>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {!servicesNotAllowed ? null :
+                    servicesNotAllowed.map((service) => (
+                      <MenuItem key={service._id} value={service} style={this.getStyles(service.label, servicesToAdd)}>
+                        {service.label}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({dialogAddService: false})} color="secondary">
+            Annuler
+          </Button>
+          <Button onClick={this.addService} color="primary">
+            Confirmé
+          </Button>
+        </DialogActions>
+      </Dialog>
+      )
+  };
+
+  dialogRemove = (classes) =>{
+    const {dialogRemove, serviceSelected, groupeSelected} = this.state;
+    return(
+      <Dialog
+        open={dialogRemove}
+        onClose={() => this.setState({dialogRemove: false})}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        classes={{paper: classes.dialogPaper}}
+      >
+        <DialogTitle id="alert-dialog-title" onClose={() => this.setState({dialogRemove: false})}>{"Supprimer"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Voulez vous supprimer {serviceSelected.label} de {groupeSelected.name} ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({dialogRemove: false})} color="primary">
+            Annuler
+          </Button>
+          <Button onClick={this.removeService} color="primary">
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
   render() {
-    const{items, listOfServices} = this.state;
+    const{listOfGroups, isMicroservice} = this.state;
     const{classes} = this.props;
+
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
@@ -244,51 +407,62 @@ class ServicesCompany extends React.Component{
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
-            {items.map( (res, index) =>(
-              <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
-                <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-                  <Accordion key={index} classes={{root: classes.accordionStyle}}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id={index}
-                    >
-                      <Typography className={classes.heading}>{res}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Grid style={{width: '100%'}}>
-                        <List>
-                          {listOfServices.map( (res, index) =>(
-                            <ListItem key={index}>
-                              <ListItemText
-                                primary={res.label}
-                                secondary={'100% 100€/mois'}
-                              />
-                              <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="SettingsIcon" onClick={() => this.handleClickOpen('dialogConfigService', res.label)}>
-                                  <SettingsIcon />
-                                </IconButton>
-                                <IconButton edge="end" aria-label="delete">
-                                  <DeleteIcon />
-                                </IconButton>
-                              </ListItemSecondaryAction>
-                            </ListItem> )
-                          )}
-                        </List>
-                      </Grid>
-                    </AccordionDetails>
-                  </Accordion>
+            {listOfGroups ?
+              listOfGroups.map( (groupe, index) =>(
+                <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
+                  <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
+                    <Accordion key={index} classes={{root: classes.accordionStyle}}>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id={index}
+                      >
+                        <Typography className={classes.heading}>Paramètrage des services <strong>{groupe.name}</strong></Typography>
+                      </AccordionSummary>
+                      {
+                        groupe.allowed_services.length > 0 ?
+                          <AccordionDetails>
+                            <Grid style={{width: '100%'}}>
+                              <List>
+                                {
+                                  groupe.allowed_services.map( (service) => (
+                                    <ListItem key={index}>
+                                      <ListItemText
+                                        primary={service.label}
+                                      />
+                                      <ListItemSecondaryAction>
+                                        {
+                                          isMicroservice ?
+                                            <IconButton edge="end" aria-label="SettingsIcon" onClick={() => this.handleClickOpen('dialogConfigService', service.label)}>
+                                              <SettingsIcon />
+                                            </IconButton> : null
+                                        }
+                                        <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemove', service, groupe)}>
+                                          <DeleteIcon />
+                                        </IconButton>
+                                      </ListItemSecondaryAction>
+                                    </ListItem>
+                                  ))
+                                }
+                              </List>
+                            </Grid>
+                          </AccordionDetails> : null
+                      }
+                    </Accordion>
+                  </Grid>
+                  <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
+                    <IconButton edge="end" aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogAddService',groupe, groupe)}>
+                      <AddCircleOutlineOutlinedIcon />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-                <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
-                  <IconButton edge="end" aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogState')}>
-                    <AddCircleOutlineOutlinedIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            ))}
+            )): null
+            }
           </Box>
         </Grid>
         {this.dialogConfigService(classes)}
+        {this.dialogAddService(classes)}
+        {this.dialogRemove(classes)}
         </Grid>
     );
   }
