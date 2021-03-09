@@ -194,9 +194,16 @@ router.put('/:group_id/members', passport.authenticate('b2badmin', {session: fal
         res.status(404).json({error: `User ${user_id} ne fait pas partie de cette compagnie`})
         return
       }
-      Group.update( {_id : group_id}, { $addToSet : {members : member_id}})
+      Group.findByIdAndUpdate( group_id, { $addToSet : {members : member_id}})
         .then ( group => {
-          res.json(group)
+          Group.updateMany( {_id : { $ne : group_id}}, { $pull : {members : member_id}})
+            .then ( () => {
+              res.json(group)
+            })
+            .catch ( err => {
+              console.error(err)
+              res.status(500).json({error: JSON.stringify(err)})
+            })
         })
         .catch ( err => {
           console.error(err)
@@ -250,7 +257,14 @@ router.put('/:group_id/managers', passport.authenticate('b2badmin', {session: fa
       }
       Group.findByIdAndUpdate( group_id, { $addToSet : {members : manager_id}})
         .then ( group => {
-          res.json(group)
+          Group.updateMany({ _id : { $ne : group_id}} , { $pull : {members : manager_id}})
+            .then (() => {
+              res.json(group)
+            })
+            .catch ( err => {
+              console.error(err)
+              res.status(500).json({error: JSON.stringify(err)})
+            })
         })
         .catch ( err => {
           console.error(err)
@@ -271,9 +285,9 @@ router.delete('/:group_id/managers/:manager_id', passport.authenticate('b2badmin
 
   const company_id = req.user.company
   const group_id = req.params.group_id
-  const manager_id = req.params.member_id
+  const manager_id = req.params.manager_id
 
-  User.findByIdAndUpdate(member_id, { $pull : { roles : MANAGER }}, { new : true})
+  User.findByIdAndUpdate(manager_id, { $pull : { roles : MANAGER }}, { new : true})
     .then( user => {
       if (!user) {
         res.status(404).json({error: `User ${user_id} introuvable`})
