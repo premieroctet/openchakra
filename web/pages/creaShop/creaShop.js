@@ -490,20 +490,25 @@ class creaShop extends React.Component {
         </nav>
         <main className={classes.content}>
           <Grid>
-            <Box>
-              {this.renderSwitch(activeStep)}
-              <Grid style={{marginTop: '5vh', display: 'flex', flexDirection: 'row-reverse'}}>
+            <Box overWritteCSS={true}>
+              <Grid>
                 <Grid>
-                  <Button
-                    variant="contained"
-                    classes={{root :classes.nextButton}}
-                    onClick={this.handleNext}
-                    disabled={this.nextDisabled()}
-                  >
-                    {activeStep === 9 ? 'Envoyer' : 'Suivant'}
-                  </Button>
+                  {this.renderSwitch(activeStep)}
+                </Grid>
+                <Grid style={{position: 'fixed', bottom: 75, right: 100}}>
+                  <Grid>
+                    <Button
+                      variant="contained"
+                      classes={{root :classes.nextButton}}
+                      onClick={this.handleNext}
+                      disabled={this.nextDisabled()}
+                    >
+                      {activeStep === 9 ? 'Envoyer' : 'Suivant'}
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
+
             </Box>
           </Grid>
         </main>
