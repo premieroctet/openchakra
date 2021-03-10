@@ -454,6 +454,23 @@ router.get('/members', passport.authenticate('b2badmin', {session: false}), (req
     })
 })
 
+// @Route PUT /myAlfred/api/companies/representative
+// Sets the legal representative to this company
+// @Access private
+router.put('/representative', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+  const company_id = req.user.company
+  const representative_id = req.body.representative_id
+
+  Company.findByIdAndUpdate(company_id, {representative : representative_id}, { new : true} )
+    .then (company => {
+      res.json(company)
+    })
+    .catch( err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    })
+})
+
 // @Route PUT /myAlfred/api/companies/admins
 // Adds an admin to this company
 // @Access private
