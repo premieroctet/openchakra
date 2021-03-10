@@ -37,10 +37,7 @@ class SummaryCommentary extends React.Component{
     axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${userId}`)
       .then( res => {
         var reviews=res.data
-        console.log(`Got ${res.data.length} customer reviews`)
         if (serviceUser) {
-          console.log(reviews[0].serviceUser._id,)
-          console.log(serviceUser)
           reviews=reviews.filter( r => r.serviceUser._id==serviceUser)
         }
         this.setState( { customerReviews: reviews})

@@ -339,13 +339,9 @@ class NavBar extends Component {
                           }}
                           classes={{selectMenu: classes.fitlerMenuLogged}}
                         >
-                          <MenuItem value={'main'} style={{whiteSpace: 'nowrap'}}>
-                            Adresse
-                            principale, {formatAddress(this.state.allAddresses['main'])}
-                          </MenuItem>
-                          {this.state.user.service_address.map((e, index) => (
-                            <MenuItem value={e._id} key={index}>
-                              {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
+                          {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
+                            <MenuItem value={_id} key={index}>
+                              { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
                             </MenuItem>
                           ))}
                           <MenuItem value={'all'}>
@@ -566,13 +562,9 @@ class NavBar extends Component {
                   }}
                   classes={{root: classes.selectRoot}}
                 >
-                  <MenuItem value={'main'}>
-                    Adresse
-                    principale, {formatAddress(this.state.allAddresses['main'])}
-                  </MenuItem>
-                  {this.state.user.service_address.map((e, index) => (
-                    <MenuItem value={e._id} key={index}>
-                      {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
+                  {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
+                    <MenuItem value={_id} key={index}>
+                      { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
                     </MenuItem>
                   ))}
                   <MenuItem value={'all'}>
@@ -674,8 +666,6 @@ class NavBar extends Component {
   render() {
     const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage} = this.state;
     const {classes} = this.props;
-
-    console.log(`User:${JSON.stringify(user)}`)
 
     const logged = user != null
     const modalLogin = () => {

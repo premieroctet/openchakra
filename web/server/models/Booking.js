@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
-const {BOOK_STATUS}=require('../../utils/consts')
+const {BOOK_STATUS, ROLES}=require('../../utils/consts')
 const Schema = mongoose.Schema;
 
 const BookingSchema = new Schema({
@@ -146,6 +146,11 @@ const BookingSchema = new Schema({
     type: Number,
     default: 0,
   },
+  // User role when booking
+  user_role: {
+    type: String,
+    enum : [null, ...Object.keys(ROLES)],
+  }
 }, {toJSON: {virtuals: true, getters: true}});
 
 BookingSchema.virtual('alfred_amount').get(function () {
