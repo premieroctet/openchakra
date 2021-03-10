@@ -23,12 +23,15 @@ class SelectService extends React.Component {
       service: null,
       services: [],
       creation: this.props.creation,
+      loading: true,
     };
     this.onChange = this.onChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   setServices(pattern) {
+    const pro = this.props.professional_access
+    const part = this.props.particular_access
     pattern = pattern || '%20';
     var kw_url = `/myAlfred/api/service/keyword/${pattern}`;
     setAxiosAuthentication()
@@ -41,22 +44,26 @@ class SelectService extends React.Component {
             // FIX: passer les keyowrds autrement dans le back
             // Dont show services to exclude (i.e. already in the shop)
             if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
-              let srv_opt = {
-                label: `${s.label}`,
-                value: s.id,
-                keywords: s.keywords.map(k => normalize(k)).join(' ').toLowerCase(),
-              };
-              services.push(srv_opt);
+              s.keywords = s.keywords.map(k => normalize(k)).join(' ').toLowerCase(),
+              services.push(s);
               if (this.state.service == null && s.id == this.props.service) {
-                this.setState({service: srv_opt});
+                this.setState({service: s});
               }
             }
           });
         });
-        this.setState({services: services});
+        this.setState({services: services, loading: false});
       }).catch(error => {
       console.error(error);
     });
+  }
+
+  service2Option = service => {
+    return {
+      label: `${service.label}`,
+      value: service.id,
+      keywords: service.keywords,
+    }
   }
 
   componentDidMount() {
@@ -98,8 +105,33 @@ class SelectService extends React.Component {
   };
 
   render() {
-    const {classes, creationBoutique} = this.props;
-    const {service} = this.state;
+    const {classes, creationBoutique, professional_access, particular_access} = this.props;
+    const {service, services, loading} = this.state;
+
+    if (services.length==0) {
+      return null
+    }
+
+    const pro = professional_access
+    const part = particular_access
+    const groups = pro && part
+
+    const pro_services = services.filter( s => s.professional_access)
+    const part_services = services.filter( s => s.particular_access)
+
+    var options=[]
+    if (pro) {
+      if (groups) {
+        options.push({label: "Services aux enterprises", disabled: true})
+      }
+      options = options.concat(pro_services.map(s => this.service2Option(s)))
+    }
+    if (part) {
+      if (groups) {
+        options.push({label: "Services aux particuliers", disabled: true})
+      }
+      options = options.concat(part_services.map(s => this.service2Option(s)))
+    }
 
     return (
       <Grid className={classes.mainContainer}>
@@ -129,42 +161,19 @@ class SelectService extends React.Component {
                 {this.isCreation() ?
                   <Grid>
                     <Grid>
-                      {AUTOCOMPLETE ?
-                        <Autocomplete
-                          id="grouped-demo"
-                          className={classes.textFieldSelecteService}
-                          onChange={this.onChange}
-                          onKeyDown={(event) => {
-                            this.handleKeyDown(event);
-                          }}
-                          options={this.state.services}
-                          groupBy={option => option.category}
-                          getOptionLabel={option => option.label}
-                          value={this.state.service}
-                          disabled={!this.isCreation()}
-                          renderInput={params => (
-                            <TextField {...params} label={this.isCreation() ? 'Tapez votre service' : ''}
-                                       variant="outlined" fullWidth/>
-                          )}
-                          renderOption={(option, {value}) => {
-                            return (
-                              <div>
-                                {option ? option.label.split('/')[0] : ''}
-                              </div>
-                            );
-                          }}
-                        />
-                        :
-                        <Select
-                          options={this.state.services}
-                          onChange={this.onChange}
-                          //onKeyDown={(event) =>{ this.handleKeyDown(event) }}
-                          disabled={!this.isCreation()}
-                          searchable={true}
-                          searchBy={'label'}
-                          searchFn={this.searchFn}
-                        />
-                      }
+                      <Select
+                        options={options}
+                        onChange={this.onChange}
+                        disabled={!this.isCreation()}
+                        searchable={true}
+                        searchBy={'label'}
+                        searchFn={this.searchFn}
+                        disabledLabel={''}
+                        loading={loading}
+                        placeholder={'Recherche par mot-clés'}
+                        noDataRenderer={
+                          ({ props, state, methods }) => <div>Chargement...</div>}
+                      />
                     </Grid>
                   </Grid>
                   :

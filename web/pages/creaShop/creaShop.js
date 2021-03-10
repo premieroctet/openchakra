@@ -55,6 +55,8 @@ class creaShop extends React.Component {
       user_id: null,
       saving: false,
       availabilities: [],
+      particular_access: false,
+      professional_access: false,
       shop: {
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
@@ -362,13 +364,14 @@ class creaShop extends React.Component {
   }
 
   renderSwitch = (stepIndex) =>{
-    let shop = this.state.shop;
+    const {shop, professional_access, particular_access} = this.state;
     switch (stepIndex) {
       case 0:
         return <CreaShopPresentation/>;
       case 1:
         return <SelectService creation={true} onChange={this.onServiceChanged} service={shop.service}
-                              creationBoutique={true}/>;
+                              creationBoutique={true} particular_access={particular_access}
+                              professional_access={professional_access}/>;
       case 2:
         return <SelectPrestation service={shop.service} prestations={shop.prestations}
                                  onChange={this.onPrestaChanged}/>;
