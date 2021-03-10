@@ -1,7 +1,7 @@
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from '../creaShop/creaShopStyle';
+import styles from '../../static/css/pages/creaShop/creaShopStyle';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Stepper from '../../components/Stepper/Stepper';
