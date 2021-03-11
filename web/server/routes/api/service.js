@@ -227,10 +227,14 @@ router.get('/keyword/:kw', (req, res) => {
           .populate('category')
           .then(services => {
             services.forEach(s => {
-              result[s.category.label] ? result[s.category.label].push({
+              const opt={
                 label: s.label,
                 id: s._id,
-              }) : result[s.category.label] = [{label: s.label, id: s._id}];
+                particular_access: s.particular_access,
+                professional_access: s.professional_access,
+              }
+              result[s.category.label] ? result[s.category.label].push(opt)
+                : result[s.category.label] = [opt];
               let key = s.category.label + s.label;
               keywords[key] ? keywords[key].push(s.category.label) : keywords[key] = [s.category.label];
             });
@@ -238,10 +242,14 @@ router.get('/keyword/:kw', (req, res) => {
               .populate({path: 'service', populate: {path: 'category'}}).then(prestations => {
               prestations.forEach(p => {
                 let s = p.service;
-                result[s.category.label] ? result[s.category.label].push({
+                const opt={
                   label: s.label,
                   id: s._id,
-                }) : result[s.category.label] = [{label: s.label, id: s._id}];
+                  particular_access: s.particular_access,
+                  professional_access: s.professional_access,
+                }
+                result[s.category.label] ? result[s.category.label].push(opt)
+                  : result[s.category.label] = [opt];
                 let key = s.category.label + s.label;
                 keywords[key] ? keywords[key].push(p.label) : keywords[key] = [p.label];
               });
@@ -252,10 +260,14 @@ router.get('/keyword/:kw', (req, res) => {
                   prestations.forEach(p => {
                     if ('job' in p && p['job'] != null) {
                       let s = p.service;
-                      result[s.category.label] ? result[s.category.label].push({
+                      const opt={
                         label: s.label,
                         id: s._id,
-                      }) : result[s.category.label] = [{label: s.label, id: s._id}];
+                        particular_access: s.particular_access,
+                        professional_access: s.professional_access,
+                      }
+                      result[s.category.label] ? result[s.category.label].push(opt)
+                        : result[s.category.label] = [opt];
                       let key = s.category.label + s.label;
                       keywords[key] ? keywords[key].push(p['job'].label) : keywords[key] = [p['job'].label];
                     }
@@ -268,6 +280,8 @@ router.get('/keyword/:kw', (req, res) => {
                   Object.keys(result).sort().forEach(key => {
                     result[key].forEach(s => {
                       s.keywords = _.uniqWith(keywords[key + s.label], _.isEqual);
+                      // TODO : handle "Aucun"
+                      s.keywords=s.keywords.filter( kw => kw != 'Aucun')
                     });
                     ordered[key] = result[key];
                   });
