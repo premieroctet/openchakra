@@ -15,18 +15,22 @@ class ServicesProReport(object):
       self.db=DBAccess(db_name)
       
     def report(self):
+      categories = self.db.get_items("categories")
       shops = self.db.get_items("shops")
       pros = [s.alfred for s in shops if 'is_professional' in s and s.is_professional]
       serviceusers=self.db.get_items("serviceusers")
       services=self.db.get_items("services")
       
       total=0
-      print("service;alfreds;pros")
+      print("catégorie;service;alfreds;pros")
       for service in services:
+        category = next(iter(get_items(categories, service.category)), None)
+        if not category:
+          raise Exception('{} n''a pas de catégorie'.format(service.label))
         sus = get_items(serviceusers, service._id, 'service')
         sus_pro = [su for su in sus if su.user in pros]
         total+=len(sus)
-        print("{};{};{}".format(service.label, len(sus), len(sus_pro)))
+        print("{};{};{};{}".format(category.label, service.label, len(sus), len(sus_pro)))
 
 if __name__ == '__main__':
     ServicesProReport(sys.argv[1]).report()
