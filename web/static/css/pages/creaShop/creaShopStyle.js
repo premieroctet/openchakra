@@ -32,7 +32,7 @@ export default theme => ({
   drawerPaper: {
     width: drawerWidth,
     position: 'fixed',
-    backgroundColor: '#E2E2E2',
+    backgroundColor: theme.palette.primary.main,
     borderTopRightRadius: '30px 40px',
     border:0,
     height: '100vh'
@@ -62,41 +62,7 @@ export default theme => ({
     color: theme.palette.white.main,
     padding: '10px 50px'
   },
-  listItemText:{
-    '& span':{
-      fontWeight: 'bold'
-    }
-  },
-  activeButton:{
-    backgroundColor: 'white',
-    borderTopLeftRadius: '80px',
-    borderBottomLeftRadius: '80px',
-    transition: 'inherit',
-    paddingTop: 16,
-    paddingBottom: 16,
-    '& .MuiSvgIcon-root':{
-      color:'black'
-    }
-  },
-  standartButton:{
-    transition: 'inherit',
-    paddingTop: 16,
-    paddingBottom: 16,
-    color: 'white'
-  },
-  hoverButton:{
-    borderTopLeftRadius: '80px',
-    borderBottomLeftRadius: '80px',
-    '& :hover':{
-      color:'black',
-      backgroundColor: 'white',
-      borderTopLeftRadius: '80px',
-      borderBottomLeftRadius: '80px',
-      '& .MuiSvgIcon-root':{
-        color:'black'
-      }
-    }
-  },
+
   appBarContainer:{
     display:'flex',
     flexDirection: 'column',

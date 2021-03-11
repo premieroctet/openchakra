@@ -417,9 +417,6 @@ class creaShop extends React.Component {
             <Stepper activeStep={activeStep} isType={'creaShop'}/>
           </List>
           <Grid container style={{display:'flex', justifyContent:'center'}}>
-            <Grid>
-              <Button variant="outlined" classes={{root: classes.helpButton}}>Aide</Button>
-            </Grid>
             <Grid style={{height: '100%', display : 'flex', flexDirection: 'column-reverse'}}>
               <img
                 alt={'logo_myAlfred'}

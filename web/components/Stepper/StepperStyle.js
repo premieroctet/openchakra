@@ -40,7 +40,7 @@ export default theme => ({
     '& span':{
       fontSize: '1rem',
       lineHeight: 1.5,
-      fontWeight: 'bold',
+      color:'#E2E2E2'
     },
     '& .MuiStepLabel-label.MuiStepLabel-active':{
       fontWeight: 'bold',
@@ -52,13 +52,15 @@ export default theme => ({
       color: theme.palette.yellow.main
     },
     '& .MuiStepIcon-root.MuiStepIcon-completed':{
-      color: theme.palette.yellow.main
+      fill: 'white',
     },
     '& .MuiStepLabel-label.MuiStepLabel-completed':{
       fontSize: '1rem',
       lineHeight: 1.5,
-      color: 'white',
-
+      color: 'white'
+    },
+    '& .MuiSvgIcon-root':{
+      fill : 'white'
     }
   },
   stepShop:{
