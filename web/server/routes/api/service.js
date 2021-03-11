@@ -280,6 +280,8 @@ router.get('/keyword/:kw', (req, res) => {
                   Object.keys(result).sort().forEach(key => {
                     result[key].forEach(s => {
                       s.keywords = _.uniqWith(keywords[key + s.label], _.isEqual);
+                      // TODO : handle "Aucun"
+                      s.keywords=s.keywords.filter( kw => kw != 'Aucun')
                     });
                     ordered[key] = result[key];
                   });

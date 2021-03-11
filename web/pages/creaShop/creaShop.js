@@ -51,12 +51,12 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 0,
+      activeStep: 1,
       user_id: null,
       saving: false,
       availabilities: [],
-      particular_access: false,
-      professional_access: false,
+      particular_access: true,
+      professional_access: true,
       shop: {
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND

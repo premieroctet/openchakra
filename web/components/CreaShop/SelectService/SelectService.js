@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Select from 'react-dropdown-select';
+import Select from 'react-select'
 
 
 const {inspect} = require('util');
@@ -70,20 +70,10 @@ class SelectService extends React.Component {
     this.setServices('');
   }
 
-  onChange(item) {
-    if (item.length > 0) {
-      this.setState({service: item ? item[0].value : null});
-      if (item !== undefined && item !== null) {
-        this.props.onChange(item[0].value);
-      }
-    }
-  }
-
-  onChangeSelect(value) {
-    this.setState({service: value ? value : null});
-    if (value !== undefined && value !== null) {
-      this.props.onChange(value.id);
-    }
+  onChange(option) {
+    const opt_id = option ? option.value : null
+    this.setState({service: opt_id});
+    this.props.onChange(opt_id);
   }
 
   handleKeyDown(event) {
@@ -94,44 +84,47 @@ class SelectService extends React.Component {
     return this.state.creation;
   }
 
-  searchFn = st => {
-    const search = normalize(st.state.search);
-    const options = st.props.options;
-    const selected = options.filter(opt => {
-      const ok = matches(opt.keywords, search) || matches(opt.label, search);
-      return ok;
-    });
-    return selected;
+  searchFn = (candidate, input) => {
+    if (candidate) {
+      const search = normalize(input);
+      const ok = matches(candidate.data.keywords, search) || matches(candidate.label, search);
+      return ok
+    }
+    return true
   };
 
   render() {
     const {classes, creationBoutique, professional_access, particular_access} = this.props;
     const {service, services, loading} = this.state;
 
-    if (services.length==0) {
-      return null
-    }
-
     const pro = professional_access
     const part = particular_access
-    const groups = pro && part
 
-    const pro_services = services.filter( s => s.professional_access)
-    const part_services = services.filter( s => s.particular_access)
+    const pro_options = services.filter( s => s.professional_access).map(s => this.service2Option(s))
+    const part_options = services.filter( s => s.particular_access).map(s => this.service2Option(s))
 
-    var options=[]
-    if (pro) {
-      if (groups) {
-        options.push({label: "Services aux enterprises", disabled: true})
-      }
-      options = options.concat(pro_services.map(s => this.service2Option(s)))
+    var options
+    if (professional_access && particular_access) {
+      options=[
+        {
+          label: 'Services au professionnels',
+          options: pro_options
+        },
+        {
+          label: 'Services au particuliers',
+          options: part_options
+        }
+      ]
     }
-    if (part) {
-      if (groups) {
-        options.push({label: "Services aux particuliers", disabled: true})
-      }
-      options = options.concat(part_services.map(s => this.service2Option(s)))
+    else {
+      options = professional_access ? pro_options : part_options
     }
+
+    const tabbedStyle = {
+      option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+        return { ...styles, 'padding-left' : '2em', };
+      },
+    };
 
     return (
       <Grid className={classes.mainContainer}>
@@ -166,13 +159,10 @@ class SelectService extends React.Component {
                         onChange={this.onChange}
                         disabled={!this.isCreation()}
                         searchable={true}
-                        searchBy={'label'}
-                        searchFn={this.searchFn}
-                        disabledLabel={''}
-                        loading={loading}
+                        filterOption={this.searchFn}
+                        isLoading={loading}
                         placeholder={'Recherche par mot-clés'}
-                        noDataRenderer={
-                          ({ props, state, methods }) => <div>Chargement...</div>}
+                        styles={professional_access && particular_access ? tabbedStyle : ''}
                       />
                     </Grid>
                   </Grid>
