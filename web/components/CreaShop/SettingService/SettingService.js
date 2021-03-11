@@ -105,17 +105,13 @@ class SettingService extends React.Component {
                   <Grid className={classes.bottomSpacer}>
                     <Grid container spacing={1}>
                       {service.equipments.map((result, index) => {
+                        const selected=this.state.selectedEquipments.includes(result._id)
                         return (
                           <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
                             <label style={{cursor: 'pointer'}}>
-                              {
-                                this.state.selectedEquipments.includes(result._id) ?
-                                  <img src={`../../static/equipments/${result.logo.slice(0, -4)}_Selected.svg`}
-                                       height={100} width={100} alt={`${result.name_logo.slice(0, -4)}_Selected.svg`}/>
-                                  :
-                                  <img src={`../../static/equipments/${result.logo}`} height={100} width={100}
-                                       alt={result.name_logo}/>}
-
+                                <img src={`../../static/equipments/${result.logo.slice(0, -4)}.svg`}
+                                     height={100} width={100} alt={`${result.name_logo.slice(0, -4)}.svg`}
+                                     style={{backgroundColor: selected ? '#CEDEFC' : null}}/>
                               <Checkbox style={{display: 'none'}} color="primary" type="checkbox" name={result._id}
                                         checked={this.state.selectedEquipments.includes(result._id)}
                                         onChange={this.onEquipmentChecked}/>

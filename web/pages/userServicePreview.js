@@ -101,12 +101,10 @@ class UserServicesPreview extends React.Component {
     return {service_id: id, address: address};
   }
 
-  /**
-  setState = (st, cb) => {
-    console.log(`Setting state ${Object.keys(st)}`)
-    super.setState(st, cb)
+  // Converts 'all' to 'main'
+  get_prop_address = () => {
+    return this.props.address=='all' ? 'main' : this.props.address
   }
-  */
 
   componentDidMount() {
 
@@ -177,7 +175,7 @@ class UserServicesPreview extends React.Component {
                                   reviews = reviews.filter(r => r.serviceUser._id === id);
                                 }
                                 st['reviews']=reviews
-                                const equipmentsPromise=this.state.allEquipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
+                                const equipmentsPromise=serviceUser.service.equipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
                                 Promise.all(equipmentsPromise)
                                   .then( res => {
                                     st['allDetailEquipments']=res.map( r => r.data)
@@ -234,7 +232,7 @@ class UserServicesPreview extends React.Component {
     console.log('setDefaultLocation')
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
-    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.props.address || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
+    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.get_prop_address() || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
     this.setState({location: location});
   };
 
@@ -430,7 +428,7 @@ class UserServicesPreview extends React.Component {
       return null
     }
     const{address}=this.props
-    if (!address || ['client', 'main'].includes(address)) {
+    if (!address || ['client', 'main', 'all'].includes(address)) {
       return allAddresses['main']
     }
     var res = user ? allAddresses[address] : null
@@ -766,7 +764,7 @@ class UserServicesPreview extends React.Component {
                           getLocationLabel={this.getLocationLabel}
                           warningPerimeter={this.hasWarningPerimeter()}
                           clientAddress={this.getClientAddressLabel()}
-                          clientAddressId={this.props.address}
+                          clientAddressId={this.get_prop_address()}
                           book={this.book}
                           {...this.state}
                         />
@@ -792,7 +790,7 @@ class UserServicesPreview extends React.Component {
                       getLocationLabel={this.getLocationLabel}
                       warningPerimeter={this.hasWarningPerimeter()}
                       clientAddress={this.getClientAddressLabel()}
-                      clientAddressId={this.props.address}
+                      clientAddressId={this.get_prop_address()}
                       book={this.book}
                       {...this.state}
                     />
