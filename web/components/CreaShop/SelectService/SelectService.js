@@ -1,19 +1,14 @@
-const {setAxiosAuthentication}=require('../../../utils/authentication')
+const {setAxiosAuthentication}=require('../../../utils/authentication');
 const AUTOCOMPLETE = false;
-
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import styles from '../componentStyle';
+import styles from '../../../static/css/components/SelectService/SelectService';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Select from 'react-dropdown-select';
-
-
-const {inspect} = require('util');
 const {matches, normalize} = require('../../../utils/text');
 
 class SelectService extends React.Component {
@@ -24,11 +19,13 @@ class SelectService extends React.Component {
       services: [],
       creation: this.props.creation,
     };
-    this.onChange = this.onChange.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  setServices(pattern) {
+  componentDidMount() {
+    this.setServices('');
+  }
+
+  setServices = (pattern) => {
     pattern = pattern || '%20';
     var kw_url = `/myAlfred/api/service/keyword/${pattern}`;
     setAxiosAuthentication()
@@ -59,33 +56,29 @@ class SelectService extends React.Component {
     });
   }
 
-  componentDidMount() {
-    this.setServices('');
-  }
-
-  onChange(item) {
+  onChange = (item) => {
     if (item.length > 0) {
       this.setState({service: item ? item[0].value : null});
       if (item !== undefined && item !== null) {
         this.props.onChange(item[0].value);
       }
     }
-  }
+  };
 
-  onChangeSelect(value) {
+  onChangeSelect = (value) =>{
     this.setState({service: value ? value : null});
     if (value !== undefined && value !== null) {
       this.props.onChange(value.id);
     }
   }
 
-  handleKeyDown(event) {
+  handleKeyDown =(event) => {
     this.setServices(event.target.value);
-  }
+  };
 
-  isCreation() {
+  isCreation = () =>{
     return this.state.creation;
-  }
+  };
 
   searchFn = st => {
     const search = normalize(st.state.search);

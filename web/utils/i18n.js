@@ -140,6 +140,10 @@ const SHOP = {
     step3: 'Etape 3 : Présentez vous ! ',
     step3_subtitle: 'Présentez-vous !',
     step3_text: 'Renseignez votre profil Alfred, partagez vos réalisations, et décrivez-vous !',
+  },
+  creation:{
+    title: 'A propos de vous',
+    subtitle: 'Choisissez votre statut. Les particuliers peuvent proposer leurs services aux particuliers, mais seuls les professionnels peuvent proposer leurs services aux clients particuliers et entreprises.'
   }
 }
 

@@ -44,7 +44,7 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 0,
+      activeStep: 1,
       user_id: null,
       saving: false,
       availabilities: [],
@@ -358,22 +358,28 @@ class creaShop extends React.Component {
       case 0:
         return <CreaShopPresentation
           user={currentUser}/>;
-      case 1:
+      case 1 :
+        return <IntroduceYou
+          is_particular={shop.is_particular}
+          company={shop.company}
+          is_certified={shop.is_certified}
+          onChange={this.introduceChanged}/>;
+      case 2:
         return <SelectService
           creation={true}
           onChange={this.onServiceChanged}
           service={shop.service}
           creationBoutique={true}/>;
-      case 2:
+      case 3:
         return <SelectPrestation
           service={shop.service}
           prestations={shop.prestations}
           onChange={this.onPrestaChanged}/>;
-      case 3:
+      case 4:
         return <SettingService
           service={shop.service}
           onChange={this.settingsChanged}/>;
-      case 4:
+      case 5:
         return <BookingPreference
           service={shop.service}
           onChange={this.preferencesChanged}
@@ -381,12 +387,12 @@ class creaShop extends React.Component {
           deadline_unit={shop.deadline_unit}
           deadline_value={shop.deadline_value}
           minimum_basket={shop.minimum_basket}/>;
-      case 5:
+      case 6:
         return <AssetsService
           data={shop}
           onChange={this.assetsChanged}
           type={'creaShop'}/>;
-      case 6:
+      case 7:
         return <DrawerAndSchedule
           availabilities={this.state.availabilities}
           title={I18N.SCHEDULE_TITLE}
@@ -398,22 +404,16 @@ class creaShop extends React.Component {
           onDateSelectionCleared={this.onDateSelectionCleared}
           selectable={true}
           ref={this.scheduleDrawer}/>;
-      case 7:
+      case 8:
         return <BookingConditions
           conditions={shop.my_alfred_conditions}
           booking_request={shop.booking_request}
           onChange={this.conditionsChanged}/>;
-      case 8:
+      case 9:
         return <SettingShop
           welcome_message={shop.welcome_message}
           cancel_mode={shop.cancel_mode}
           onChange={this.shopSettingsChanged}/>;
-      case 9:
-        return <IntroduceYou
-          is_particular={shop.is_particular}
-          company={shop.company}
-          is_certified={shop.is_certified}
-          onChange={this.introduceChanged}/>;
     }
   };
 

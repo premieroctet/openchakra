@@ -35,7 +35,7 @@ class Stepper extends React.Component {
     return [
       'Bienvenue',
       'Création',
-      'Prestations',
+      'Services',
       'Paramétrage',
       'Préférences',
       'Atouts',
