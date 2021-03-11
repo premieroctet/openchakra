@@ -143,9 +143,18 @@ const SHOP = {
   },
   creation:{
     title: 'A propos de vous',
-    subtitle: 'Choisissez votre statut. Les particuliers peuvent proposer leurs services aux particuliers, mais seuls les professionnels peuvent proposer leurs services aux clients particuliers et entreprises.'
+    subtitle: 'Choisissez votre statut. Les particuliers peuvent proposer leurs services aux particuliers, mais seuls les professionnels peuvent proposer leurs services aux clients particuliers et entreprises.',
+    is_particular: 'Je suis un particulier',
+    is_particular_description:'En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés.',
+    is_particular_want_cesu: 'Je veux être déclaré(e) en CESU',
+    is_particular_accept_cesu: 'J\'accepte d\'être déclaré en CESU',
+    is_particular_decline_cesu: 'Je n\'accepte pas d\'être déclaré(e) en CESU',
+    is_professional: 'Je suis un professionnel/J\'ai un numéro de SIRET',
+    is_professional_description: 'Un statut professionnel avec un numéro de SIRET est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.',
+    is_professional_cis: 'Je suis éligible au Crédit Impôt Service',
+    is_professional_certif: 'Je certifie sur l’honneur qu’il s’agit bien de mon entreprise.',
   }
-}
+};
 
 const BOOKING = {
   MSG_EVALUATE: 'Vous avez 15 jours pour évaluer votre client. Une fois que votre client aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !'

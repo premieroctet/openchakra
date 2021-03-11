@@ -65,7 +65,9 @@ export default theme => ({
       color: 'white'
     },
     '& .MuiSvgIcon-root':{
-      fill : 'white'
+      fill : 'white',
+      height: '1.5em',
+      width: '1.5em'
     }
   },
   stepShop:{

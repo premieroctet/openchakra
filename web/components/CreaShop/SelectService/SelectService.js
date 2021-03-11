@@ -69,7 +69,7 @@ class SelectService extends React.Component {
     this.setState({service: opt_id});
     this.props.onChange(opt_id);
   }
-  
+
   isCreation = () =>{
     return this.state.creation;
   };
