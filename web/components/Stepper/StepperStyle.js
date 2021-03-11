@@ -40,7 +40,12 @@ export default theme => ({
     '& span':{
       fontSize: '1rem',
       lineHeight: 1.5,
-      color:'#E2E2E2'
+      color:'#E2E2E2',
+
+    },
+    '& .MuiStepLabel-labelContainer':{
+      marginTop: 4,
+      marginBottom: 4
     },
     '& .MuiStepLabel-label.MuiStepLabel-active':{
       fontWeight: 'bold',

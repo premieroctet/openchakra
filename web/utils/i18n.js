@@ -127,7 +127,20 @@ const getMangopayMessage = msg_id => {
 
 const SHOP = {
   addService: 'Ajoutez des services',
-  createShop: 'Proposez votre premier service'
+  createShop: 'Proposez votre premier service',
+  bienvenue:{
+    titre: 'Bienvenue',
+    subtitle: 'Nous allons vous aider à créer votre service et devenir Alfred en quelques minutes !',
+    step1: 'Etape 1 : Votre talent, votre service',
+    step1_subtitle: 'Choisissez votre premier super talent ! ',
+    step1_text: 'Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appelle un autre, vous pourrez ajouter autant de services que vous voulez.',
+    step2: 'Etape 2 : Fixez vos règles & conditions !',
+    step2_subtitle: 'Vous êtes chez vous ! Fixez vos règles et vos conditions…',
+    step2_text: 'Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation.',
+    step3: 'Etape 3 : Présentez vous ! ',
+    step3_subtitle: 'Présentez-vous !',
+    step3_text: 'Renseignez votre profil Alfred, partagez vos réalisations, et décrivez-vous !',
+  }
 }
 
 const BOOKING = {
@@ -327,7 +340,7 @@ const FAQ_CLIENT = {
     }
   ],
 
-}
+};
 
 const FAQ = {
   'alfred': FAQ_ALFRED,
@@ -356,5 +369,5 @@ module.exports = {
   SHOP,
   CMP_PRESENTATION,
   BOOKING,
-  FAQ
+  FAQ,
 };

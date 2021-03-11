@@ -1,6 +1,5 @@
 import CssBaseline from "@material-ui/core/CssBaseline";
 import MenuIcon from '@material-ui/icons/Menu';
-
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
@@ -16,7 +15,6 @@ import AssetsService from '../../components/CreaShop/AssetsService/AssetsService
 import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions';
 import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
-import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import {ALF_CONDS, CANCEL_MODE, GID_LEN} from '../../utils/consts.js';
@@ -34,13 +32,8 @@ import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerA
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "@material-ui/core/Drawer";
-import NavBar from "../../hoc/Layout/NavBar/NavBar";
-import MobileNavbar from "../../hoc/Layout/NavBar/MobileNavbar";
 import PropTypes from "prop-types";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import Box from "../../components/Box/Box";
 const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
@@ -55,6 +48,7 @@ class creaShop extends React.Component {
       user_id: null,
       saving: false,
       availabilities: [],
+      currentUser:{},
       shop: {
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
@@ -98,7 +92,7 @@ class creaShop extends React.Component {
       Router.push('/');
     }
 
-    setAxiosAuthentication()
+    setAxiosAuthentication();
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -107,6 +101,7 @@ class creaShop extends React.Component {
         this.setState({
           user_id: user._id,
           shop: shop,
+          currentUser: user
         });
       })
       .catch(error => {
@@ -274,10 +269,6 @@ class creaShop extends React.Component {
     }
   };
 
-  isRightPanelHidden = () => {
-    return this.state.activeStep === 2 || this.state.activeStep === 6;
-  };
-
   handleBack = () => {
     this.setState({activeStep: this.state.activeStep - 1});
   };
@@ -362,45 +353,67 @@ class creaShop extends React.Component {
   }
 
   renderSwitch = (stepIndex) =>{
-    let shop = this.state.shop;
+    const{shop , currentUser}= this.state;
     switch (stepIndex) {
       case 0:
-        return <CreaShopPresentation/>;
+        return <CreaShopPresentation
+          user={currentUser}/>;
       case 1:
-        return <SelectService creation={true} onChange={this.onServiceChanged} service={shop.service}
-                              creationBoutique={true}/>;
+        return <SelectService
+          creation={true}
+          onChange={this.onServiceChanged}
+          service={shop.service}
+          creationBoutique={true}/>;
       case 2:
-        return <SelectPrestation service={shop.service} prestations={shop.prestations}
-                                 onChange={this.onPrestaChanged}/>;
+        return <SelectPrestation
+          service={shop.service}
+          prestations={shop.prestations}
+          onChange={this.onPrestaChanged}/>;
       case 3:
-        return <SettingService service={shop.service} onChange={this.settingsChanged}/>;
+        return <SettingService
+          service={shop.service}
+          onChange={this.settingsChanged}/>;
       case 4:
-        return <BookingPreference service={shop.service} onChange={this.preferencesChanged} perimeter={shop.perimeter}
-                                  deadline_unit={shop.deadline_unit} deadline_value={shop.deadline_value}
-                                  minimum_basket={shop.minimum_basket}/>;
+        return <BookingPreference
+          service={shop.service}
+          onChange={this.preferencesChanged}
+          perimeter={shop.perimeter}
+          deadline_unit={shop.deadline_unit}
+          deadline_value={shop.deadline_value}
+          minimum_basket={shop.minimum_basket}/>;
       case 5:
-        return <AssetsService data={shop} onChange={this.assetsChanged} type={'creaShop'}/>;
+        return <AssetsService
+          data={shop}
+          onChange={this.assetsChanged}
+          type={'creaShop'}/>;
       case 6:
-        return <DrawerAndSchedule availabilities={this.state.availabilities}
-                                  title={I18N.SCHEDULE_TITLE}
-                                  subtitle={I18N.SCHEDULE_SUBTITLE}
-                                  nbSchedule={3}
-                                  availabilityUpdate={this.availabilityUpdate}
-                                  availabilityCreated={this.availabilityCreated}
-                                  onAvailabilityChanged={this.loadAvailabilities}
-                                  onDateSelectionCleared={this.onDateSelectionCleared}
-                                  selectable={true}
-                                  ref={this.scheduleDrawer}
-                                  />;
+        return <DrawerAndSchedule
+          availabilities={this.state.availabilities}
+          title={I18N.SCHEDULE_TITLE}
+          subtitle={I18N.SCHEDULE_SUBTITLE}
+          nbSchedule={3}
+          availabilityUpdate={this.availabilityUpdate}
+          availabilityCreated={this.availabilityCreated}
+          onAvailabilityChanged={this.loadAvailabilities}
+          onDateSelectionCleared={this.onDateSelectionCleared}
+          selectable={true}
+          ref={this.scheduleDrawer}/>;
       case 7:
-        return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}
-                                  onChange={this.conditionsChanged}/>;
+        return <BookingConditions
+          conditions={shop.my_alfred_conditions}
+          booking_request={shop.booking_request}
+          onChange={this.conditionsChanged}/>;
       case 8:
-        return <SettingShop welcome_message={shop.welcome_message} cancel_mode={shop.cancel_mode}
-                            onChange={this.shopSettingsChanged}/>;
+        return <SettingShop
+          welcome_message={shop.welcome_message}
+          cancel_mode={shop.cancel_mode}
+          onChange={this.shopSettingsChanged}/>;
       case 9:
-        return <IntroduceYou is_particular={shop.is_particular} company={shop.company} is_certified={shop.is_certified}
-                             onChange={this.introduceChanged}/>;
+        return <IntroduceYou
+          is_particular={shop.is_particular}
+          company={shop.company}
+          is_certified={shop.is_certified}
+          onChange={this.introduceChanged}/>;
     }
   };
 
@@ -409,7 +422,7 @@ class creaShop extends React.Component {
   };
 
   drawer = (classes) => {
-    const {sideBarLabels, activeStep} = this.state;
+    const {activeStep} = this.state;
     return (
       <Grid style={{height: '100%'}}>
         <Grid className={classes.appBarContainer}>
@@ -435,10 +448,7 @@ class creaShop extends React.Component {
 
     const {classes, window} = this.props;
     const {activeStep, mobileOpen} = this.state;
-    let hideRightPanel = this.isRightPanelHidden();
-
     const container = window !== undefined ? () => window().document.body : undefined;
-
 
     return (
       <Grid className={classes.root}>
