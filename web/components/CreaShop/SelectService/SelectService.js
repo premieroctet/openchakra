@@ -120,6 +120,12 @@ class SelectService extends React.Component {
       options = professional_access ? pro_options : part_options
     }
 
+    const tabbedStyle = {
+      option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+        return { ...styles, 'padding-left' : '2em', };
+      },
+    };
+
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -156,6 +162,7 @@ class SelectService extends React.Component {
                         filterOption={this.searchFn}
                         isLoading={loading}
                         placeholder={'Recherche par mot-clés'}
+                        styles={professional_access && particular_access ? tabbedStyle : ''}
                       />
                     </Grid>
                   </Grid>
