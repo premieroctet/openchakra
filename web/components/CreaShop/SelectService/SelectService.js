@@ -116,10 +116,10 @@ class SelectService extends React.Component {
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <h3 className={classes.policySizeSubtitle}>{SHOP.service.subtitle}</h3>
+            <Typography className={classes.policySizeContent}>{SHOP.service.subtitle}</Typography>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Typography className={classes.policySizeContent}>{SHOP.service.content}</Typography>
+            <h3 className={classes.policySizeSubtitle}>{SHOP.service.content}</h3>
           </Grid>
         </Grid>
           {this.isCreation() ?

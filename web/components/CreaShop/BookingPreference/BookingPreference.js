@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import axios from 'axios';
 import styles from '../componentStyle';
+import Checkbox from "@material-ui/core/Checkbox";
 
 // FIX : réafficher la ville de référence
 
@@ -19,9 +20,10 @@ class BookingPreference extends React.Component {
       deadline_unit: props.deadline_unit,
       deadline_value: props.deadline_value ? props.deadline_value : 1,
       minimum_basket: props.minimum_basket,
-      perimeter: props.perimeter,
       service: null,
+      selectedEquipments: props.equipments || [],
     };
+    this.onEquipmentChecked = this.onEquipmentChecked.bind(this);
   }
 
   handleChange(key, value) {
@@ -37,6 +39,19 @@ class BookingPreference extends React.Component {
       .catch(error => {
         console.error(error);
       });
+  }
+
+  onEquipmentChecked(event) {
+    if (this.state.selectedEquipments.includes(event.target.name)) {
+      let array = [...this.state.selectedEquipments];
+      let index = array.indexOf(event.target.name);
+      if (index !== -1) {
+        array.splice(index, 1);
+        this.setState({selectedEquipments: array}, () => this.props.onChange(this.state));
+      }
+    } else {
+      this.setState({selectedEquipments: [...this.state.selectedEquipments, event.target.name]}, () => this.fireOnChange());
+    }
   }
 
   render() {
@@ -125,54 +140,34 @@ class BookingPreference extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid style={{marginBottom: 100}}>
+                {service && service.equipments.length > 0 ?
                   <Grid>
                     <Grid>
-                      <Grid>
-                        <h3 className={classes.policySizeSubtitle}>Quel est votre périmètre d’intervention ?</h3>
-                      </Grid>
-                      <Grid>
-                        {false ? <Grid item xs={12}>
-                          <h3 style={{color: '#757575'}}>Ma ville de référence </h3>
-                        </Grid> : null}
-                        {false ? <Grid container className={classes.contentCityReferency}>
-                          <Grid item xs={8}>
-                            <p style={{paddingLeft: 20}}>address (code postal)</p>
-                          </Grid>
-                          <Grid item xs={4} className={classes.buttonContent}>
-                            <Button onClick={() => this.setState({clickAddress: true})} color={'secondary'}
-                                    variant={'contained'} className={classes.styleButton}>Modifier</Button>
-                          </Grid>
-                        </Grid> : null}
-                      </Grid>
+                      <h3 className={classes.policySizeSubtitle}>Quel(s) produit(s) / matériel(s) fournissez-vous dans le
+                        cadre de ce service ? </h3>
                     </Grid>
-                  </Grid>
-                  <Grid className={classes.contentIntervention}>
-                    <Grid>
-                      <Typography className={classes.policySizeContent}>
-                        Définissez à présent le périmètre que vous souhaitez couvrir :
-                      </Typography>
-                    </Grid>
-                    <Grid className={classes.contentTextSize}>
-                      <Grid item className={classes.contentAddandRemoveKm}>
-                        <Grid className={classes.subContentAddanRemoveKm}>
-                          <Grid className={classes.buttonRemove}
-                                onClick={() => this.handleChange('perimeter', Math.max(this.state.perimeter - 1, 0))}>-</Grid>
-                          <Grid style={{
-                            display: 'inline-block',
-                            fontSize: 20,
-                            lineHeight: 2.8,
-                          }}>{this.state.perimeter}</Grid>
-                          <Grid className={classes.buttonAdd}
-                                onClick={() => this.handleChange('perimeter', this.state.perimeter + 1)}>+</Grid>
-                        </Grid>
-                        <Grid className={classes.contentKilometers}>
-                          <Typography className={classes.policySizeContent}>kilomètre(s)</Typography>
-                        </Grid>
+                    <Grid className={classes.bottomSpacer}>
+                      <Grid container spacing={1}>
+                        {service.equipments.map((result, index) => {
+                          const selected=this.state.selectedEquipments.includes(result._id)
+                          return (
+                            <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
+                              <label style={{cursor: 'pointer'}}>
+                                <img src={`../../static/equipments/${result.logo.slice(0, -4)}.svg`}
+                                     height={100} width={100} alt={`${result.name_logo.slice(0, -4)}.svg`}
+                                     style={{backgroundColor: selected ? '#CEDEFC' : null}}/>
+                                <Checkbox style={{display: 'none'}} color="primary" type="checkbox" name={result._id}
+                                          checked={this.state.selectedEquipments.includes(result._id)}
+                                          onChange={this.onEquipmentChecked}/>
+                              </label>
+                            </Grid>
+                          );
+                        })
+                        }
                       </Grid>
                     </Grid>
-                  </Grid>
-                </Grid>
+                  </Grid> : null
+                }
               </Grid>
             </Grid>
           </Grid>

@@ -168,6 +168,11 @@ const SHOP = {
     placeholder: 'Recherche par mot-clés',
     section_particular: 'Services au particuliers',
     section_company: 'Services au professionnels',
+  },
+  parameter:{
+    title: 'Paramétrez vos prestations',
+    subtitle: 'Indiquez vos tarifs et votre méthode de facturation. Si vous êtes assujetti à la TVA, merci d’indiquer vos tarifs hors taxes. Vous ne trouvez pas une prestation ? Créez une prestation personnalisée qui vous sera propre ! ',
+    presta_perso: 'Ajouter une prestation personnalisée',
   }
 };
 

@@ -44,7 +44,7 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 2,
+      activeStep: 0,
       user_id: null,
       saving: false,
       availabilities: [],
@@ -148,7 +148,7 @@ class creaShop extends React.Component {
       return this.state.saving || introduceYou(shop);
     }
     return false;
-  }
+  };
 
   availabilityDeleted = (avail) => {
     let shop = this.state.shop;
@@ -382,12 +382,12 @@ class creaShop extends React.Component {
       case 4:
         return <SettingService
           service={shop.service}
+          perimeter={shop.perimeter}
           onChange={this.settingsChanged}/>;
       case 5:
         return <BookingPreference
           service={shop.service}
           onChange={this.preferencesChanged}
-          perimeter={shop.perimeter}
           deadline_unit={shop.deadline_unit}
           deadline_value={shop.deadline_value}
           minimum_basket={shop.minimum_basket}/>;
@@ -512,7 +512,7 @@ class creaShop extends React.Component {
                       variant="contained"
                       classes={{root :classes.nextButton}}
                       onClick={this.handleNext}
-                      disabled={this.nextDisabled()}
+                      //disabled={this.nextDisabled()}
                     >
                       {activeStep === 9 ? 'Envoyer' : 'Suivant'}
                     </Button>
