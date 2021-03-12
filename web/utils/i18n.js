@@ -153,6 +153,21 @@ const SHOP = {
     is_professional_description: 'Un statut professionnel avec un numéro de SIRET est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.',
     is_professional_cis: 'Je suis éligible au Crédit Impôt Service',
     is_professional_certif: 'Je certifie sur l’honneur qu’il s’agit bien de mon entreprise.',
+    is_professional_assujettie_tva: 'Votre entreprise est elle assujettie à la TVA ?',
+    is_profesionnal_propose_missions: 'Je souhaite proposer des missions : ',
+    textfield_ss1: 'N° sécurité sociale',
+    textfield_ntva: 'N° TVA',
+    textfield_particular: 'Aux particuliers',
+    textfield_company: 'Aux entreprises',
+    textfield_company_and_particular: 'Aux particuliers et aux entreprises',
+  },
+  service:{
+    title: 'Votre service',
+    subtitle: 'Configurez votre service. Si vous souhaitez en proposer plusieurs, vous pourrez en ajouter autant que vous le souhaitez par la suite.',
+    content: 'Liste des services aux particuliers & aux entreprises',
+    placeholder: 'Recherche par mot-clés',
+    section_particular: 'Services au particuliers',
+    section_company: 'Services au professionnels',
   }
 };
 
