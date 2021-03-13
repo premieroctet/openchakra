@@ -10,4 +10,12 @@ export default theme => ({
   policySizeContent: {
     color: '#696767',
   },
+  margin: {
+    margin: theme.spacing(1),
+    color: 'white',
+  },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
+    color: 'white',
+  },
 })

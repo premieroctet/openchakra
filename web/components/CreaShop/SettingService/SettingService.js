@@ -1,14 +1,14 @@
-const {setAxiosAuthentication}=require('../../../utils/authentication')
+import InputAdornment from "@material-ui/core/InputAdornment";
+const {setAxiosAuthentication}=require('../../../utils/authentication');
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from '../componentStyle';
-import PropTypes from 'prop-types';
+import styles from '../../../static/css/components/SettingService/SettingService';
 import {withStyles} from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import Typography from '@material-ui/core/Typography';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import axios from 'axios';
 import isEmpty from '../../../server/validation/is-empty';
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
 
 class SettingService extends React.Component {
@@ -20,17 +20,20 @@ class SettingService extends React.Component {
       service: null,
       travel_tax: props.travel_tax || null,
       pick_tax: props.pick_tax || null,
-      selectedEquipments: props.equipments || [],
+      perimeter: props.perimeter,
     };
     this.stateButton = this.stateButton.bind(this);
     this.onLocationChange = this.onLocationChange.bind(this);
     this.onOptionChanged = this.onOptionChanged.bind(this);
-    this.onEquipmentChecked = this.onEquipmentChecked.bind(this);
   }
 
   stateButton(e) {
     let name = e.target.name;
     this.setState({[e.target.name]: !this.state[name]});
+  }
+
+  handleChange(key, value) {
+    this.setState({[key]: value}, () => this.fireOnChange());
   }
 
   componentDidMount() {
@@ -66,21 +69,8 @@ class SettingService extends React.Component {
     this.setState({[opt_id]: checked ? price : null}, () => this.fireOnChange());
   }
 
-  onEquipmentChecked(event) {
-    if (this.state.selectedEquipments.includes(event.target.name)) {
-      let array = [...this.state.selectedEquipments];
-      let index = array.indexOf(event.target.name);
-      if (index !== -1) {
-        array.splice(index, 1);
-        this.setState({selectedEquipments: array}, () => this.fireOnChange());
-      }
-    } else {
-      this.setState({selectedEquipments: [...this.state.selectedEquipments, event.target.name]}, () => this.fireOnChange());
-    }
-  }
-
   fireOnChange() {
-    this.props.onChange(this.state.location, this.state.travel_tax, this.state.pick_tax, this.state.selectedEquipments);
+    this.props.onChange(this.state.location, this.state.travel_tax, this.state.pick_tax, this.state.perimeter);
   }
 
   render() {
@@ -88,97 +78,100 @@ class SettingService extends React.Component {
     const {service, location, pick_tax, travel_tax} = this.state;
 
     return (
-      <Grid className={classes.mainContainer}>
-        <Grid className={classes.contentContainer}>
-          <Grid>
-            <Grid className={classes.contentLeftTop}>
-              <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{service ? service.label : ''} :
-                  paramétrage</Typography>
-              </Grid>
-              {service && service.equipments.length > 0 ?
-                <React.Fragment>
-                  <Grid>
-                    <h3 className={classes.policySizeSubtitle}>Quel(s) produit(s) / matériel(s) fournissez-vous dans le
-                      cadre de ce service ? </h3>
-                  </Grid>
-                  <Grid className={classes.bottomSpacer}>
-                    <Grid container spacing={1}>
-                      {service.equipments.map((result, index) => {
-                        const selected=this.state.selectedEquipments.includes(result._id)
-                        return (
-                          <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
-                            <label style={{cursor: 'pointer'}}>
-                                <img src={`../../static/equipments/${result.logo.slice(0, -4)}.svg`}
-                                     height={100} width={100} alt={`${result.name_logo.slice(0, -4)}.svg`}
-                                     style={{backgroundColor: selected ? '#CEDEFC' : null}}/>
-                              <Checkbox style={{display: 'none'}} color="primary" type="checkbox" name={result._id}
-                                        checked={this.state.selectedEquipments.includes(result._id)}
-                                        onChange={this.onEquipmentChecked}/>
-                            </label>
-                          </Grid>
-                        );
-                      })
-                      }
-                    </Grid>
-                  </Grid>
-                </React.Fragment> : null
-              }
-              <Grid>
-                <Grid>
-                  <h3 className={classes.policySizeSubtitle}>Où acceptez-vous de réaliser votre prestation ?</h3>
-                </Grid>
-                <Grid style={{marginLeft: 15}}>
-                  {'client' in this.state.location ?
-                    <Grid>
-                      <ButtonSwitch checked={location.client === true} label={'A l\'adresse de mon client'} id='client'
-                                    onChange={this.onLocationChange}/>
-                    </Grid> : null
-                  }
-                  {'alfred' in location ?
-                    <Grid>
-                      <ButtonSwitch checked={location.alfred === true} label={'A mon adresse'} id='alfred'
-                                    onChange={this.onLocationChange}/>
-                    </Grid> : null
-                  }
-                  {'visio' in location ?
-                    <Grid>
-                      <ButtonSwitch checked={location.visio === true} label={'En visioconférence'} id='visio'
-                                    onChange={this.onLocationChange}/>
-                    </Grid> : null
-                  }
-                  {'ext' in location ?
-                    <Grid>
-                      <ButtonSwitch checked={location.ext === true} label={'En extérieur'} id='ext'
-                                    onChange={this.onLocationChange}/>
-                    </Grid> : null
-                  }
-                </Grid>
-              </Grid>
-              <Grid style={{marginLeft: 15}} className={classes.options}>
-                {service && (service.travel_tax || service.pick_tax) ?
-                  <Grid>
-                    <h3 className={classes.policySizeSubtitle}>Options</h3>
-                  </Grid> : null
-                }
-                {service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se checke pas
-                  <Grid>
-                    <ButtonSwitch ckecked={travel_tax != null} price={travel_tax} id='travel_tax'
-                                  label={'Appliquer un forfait déplacement de'} isPrice={true}
-                                  onChange={this.onOptionChanged}/>
-                  </Grid> : null
-                }
-                {service && service.pick_tax ?
-                  <Grid>
-                    <ButtonSwitch checked={pick_tax != null} price={pick_tax} id='pick_tax'
-                                  label={'Proposer un forfait retrait & livraison de'} isPrice={true}
-                                  onChange={this.onOptionChanged}/>
-                  </Grid> : null
-                }
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid className={classes.contentRight}/>
+      <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+          <h2 className={classes.policySizeTitle}>Paramétrage</h2>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Typography className={classes.policySizeContent}>Indiquez votre périmètre d’intervention ainsi que les options qui s’offrent à votre client quant à votre service. </Typography>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <h3 className={classes.policySizeSubtitle}>Quel est votre périmètre d’intervention ?</h3>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <TextField
+            id="standard-start-adornment"
+            variant={'outlined'}
+            InputProps={{
+              endAdornment: <InputAdornment position="start">Km</InputAdornment>,
+            }}
+          />
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <h3 className={classes.policySizeSubtitle}>Où acceptez-vous de réaliser votre prestation ?</h3>
+        </Grid>
+        <Grid container spacing={3} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
+          {'client' in this.state.location ?
+            <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                checked={location.client === true}
+                label={'A l\'adresse de mon client'}
+                id='client'
+                onChange={this.onLocationChange}
+              />
+            </Grid> : null
+          }
+          {'alfred' in location ?
+            <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                checked={location.alfred === true}
+                label={'A mon adresse'}
+                id='alfred'
+                onChange={this.onLocationChange}
+              />
+            </Grid> : null
+          }
+          {'visio' in location ?
+            <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                checked={location.visio === true}
+                label={'En visioconférence'}
+                id='visio'
+                onChange={this.onLocationChange}
+              />
+            </Grid> : null
+          }
+          {'ext' in location ?
+            <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                checked={location.ext === true}
+                label={'En extérieur'}
+                id='ext'
+                onChange={this.onLocationChange}
+              />
+            </Grid> : null
+          }
+        </Grid>
+        <Grid container spacing={3} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
+          {service && (service.travel_tax || service.pick_tax) ?
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <h3 className={classes.policySizeSubtitle}>Options</h3>
+            </Grid> : null
+          }
+          {service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se checke pas
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                ckecked={travel_tax != null}
+                price={travel_tax}
+                id='travel_tax'
+                label={'Appliquer un forfait déplacement de'}
+                isPrice={true}
+                onChange={this.onOptionChanged}
+              />
+            </Grid> : null
+          }
+          {service && service.pick_tax ?
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                checked={pick_tax != null}
+                price={pick_tax}
+                id='pick_tax'
+                label={'Proposer un forfait retrait & livraison de'}
+                isPrice={true}
+                onChange={this.onOptionChanged}
+              />
+            </Grid> : null
+          }
         </Grid>
       </Grid>
     );

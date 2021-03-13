@@ -1,16 +1,14 @@
 const {setAxiosAuthentication}=require('../../../utils/authentication');
-const AUTOCOMPLETE = false;
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../../static/css/components/SelectService/SelectService';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import Select from 'react-select'
-const {inspect} = require('util');
 const {matches, normalize} = require('../../../utils/text');
+import {SHOP} from '../../../utils/i18n';
+
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -28,8 +26,6 @@ class SelectService extends React.Component {
   }
 
   setServices = (pattern) => {
-    const pro = this.props.professional_access
-    const part = this.props.particular_access
     pattern = pattern || '%20';
     var kw_url = `/myAlfred/api/service/keyword/${pattern}`;
     setAxiosAuthentication()
@@ -54,7 +50,7 @@ class SelectService extends React.Component {
       }).catch(error => {
       console.error(error);
     });
-  }
+  };
 
   service2Option = service => {
     return {
@@ -65,10 +61,10 @@ class SelectService extends React.Component {
   };
 
   onChange = (option) =>{
-    const opt_id = option ? option.value : null
+    const opt_id = option ? option.value : null;
     this.setState({service: opt_id});
     this.props.onChange(opt_id);
-  }
+  };
 
   isCreation = () =>{
     return this.state.creation;
@@ -84,21 +80,21 @@ class SelectService extends React.Component {
   };
 
   render() {
-    const {classes, creationBoutique, professional_access, particular_access} = this.props;
-    const {service, services, loading} = this.state;
+    const {classes, professional_access, particular_access} = this.props;
+    const {services, loading} = this.state;
 
-    const pro_options = services.filter( s => s.professional_access).map(s => this.service2Option(s))
-    const part_options = services.filter( s => s.particular_access).map(s => this.service2Option(s))
+    const pro_options = services.filter( s => s.professional_access).map(s => this.service2Option(s));
+    const part_options = services.filter( s => s.particular_access).map(s => this.service2Option(s));
 
-    var options
+    var options;
     if (professional_access && particular_access) {
       options=[
         {
-          label: 'Services au professionnels',
+          label: SHOP.service.section_company,
           options: pro_options
         },
         {
-          label: 'Services au particuliers',
+          label: SHOP.service.section_particular,
           options: part_options
         }
       ]
@@ -114,52 +110,36 @@ class SelectService extends React.Component {
     };
 
     return (
-      <Grid className={classes.mainContainer}>
-        <Grid className={classes.contentContainer}>
-          <Grid>
-            <Grid className={classes.contentLeftTop}>
-              <Grid className={classes.contentTitle}>
-                <Typography
-                  className={classes.policySizeTitle}>{creationBoutique ? 'Créez votre boutique de services' : this.isCreation() ? 'Ajouter un service' : 'Modifier un service'}</Typography>
-              </Grid>
-              <Grid>
-                <Grid>
-                  <Grid>
-                    <h3
-                      className={classes.policySizeSubtitle}>{this.isCreation() ? 'Quel service souhaitez-vous réaliser ?' : `Vous allez modifier votre service "${service ? service.label : ''}"`} </h3>
-                  </Grid>
-                  {creationBoutique ?
-                    <Grid className={classes.bottomSpacer}>
-                      <Typography className={classes.policySizeContent}>Identifiez maintenant le premier service que vous
-                        souhaitez configurer dans
-                        votre boutique de services. Vous pourrez en ajouter autant que vous voulez dans
-                        votre boutique. Un service n’apparait pas ? Cliquez ici pour l’ajouter.
-                      </Typography>
-                    </Grid> : null
-                  }
-                </Grid>
-                {this.isCreation() ?
-                  <Grid>
-                    <Grid>
-                      <Select
-                        options={options}
-                        onChange={this.onChange}
-                        disabled={!this.isCreation()}
-                        searchable={true}
-                        filterOption={this.searchFn}
-                        isLoading={loading}
-                        placeholder={'Recherche par mot-clés'}
-                        styles={professional_access && particular_access ? tabbedStyle : ''}
-                      />
-                    </Grid>
-                  </Grid>
-                  :
-                  null
-                }
-              </Grid>
-            </Grid>
+      <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+          <h2 className={classes.policySizeTitle}>{SHOP.service.title}</h2>
+        </Grid>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <Typography className={classes.policySizeContent}>{SHOP.service.subtitle}</Typography>
+          </Grid>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <h3 className={classes.policySizeSubtitle}>{SHOP.service.content}</h3>
           </Grid>
         </Grid>
+          {this.isCreation() ?
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid>
+                <Select
+                  options={options}
+                  onChange={this.onChange}
+                  disabled={!this.isCreation()}
+                  searchable={true}
+                  filterOption={this.searchFn}
+                  isLoading={loading}
+                  placeholder={SHOP.service.placeholder}
+                  styles={professional_access && particular_access ? tabbedStyle : ''}
+                />
+              </Grid>
+            </Grid>
+            :
+            null
+          }
       </Grid>
     );
   }

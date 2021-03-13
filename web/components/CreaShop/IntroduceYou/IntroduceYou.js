@@ -106,7 +106,7 @@ class IntroduceYou extends React.Component {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex'}}>
           <Grid>
-            <h3 className={classes.policySizeSubtitle}>{SHOP.creation.subtitle}</h3>
+            <Typography className={classes.policySizeContent}>{SHOP.creation.subtitle}</Typography>
           </Grid>
           <Grid>
             <IconButton aria-label="info" className={classes.margin} onClick={() => this.setState({notice: true})}>
@@ -152,7 +152,7 @@ class IntroduceYou extends React.Component {
                               <TextField
                                 id="ss1"
                                 type="number"
-                                label={'N° sécurité sociale'}
+                                label={SHOP.creation.textfield_ss1}
                                 name='social_security'
                                 placeholder="N° SS (13+2 chiffres)"
                                 value={this.state.social_security}
@@ -176,7 +176,7 @@ class IntroduceYou extends React.Component {
                               <TextField
                                 id="ss1"
                                 type="number"
-                                label={'N° sécurité sociale'}
+                                label={SHOP.creation.textfield_ss1}
                                 name='social_security'
                                 placeholder="N° SS (13+2 chiffres)"
                                 value={this.state.social_security}
@@ -268,7 +268,7 @@ class IntroduceYou extends React.Component {
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <ButtonSwitch
-                    label={<Typography className={classes.policySizeContent}>Votre entreprise est elle assujettie à la TVA ?</Typography>}
+                    label={<Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_assujettie_tva}</Typography>}
                     onChange={this.assujettiTVA}
                     value={assujettie_tva}
                     name={'assujettie_tva'}
@@ -279,7 +279,7 @@ class IntroduceYou extends React.Component {
                     <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                       <TextField
                         id="outlined-basic"
-                        label="N° TVA"
+                        label={SHOP.creation.textfield_ntva}
                         variant="outlined"
                         onChange={this.onChange}
                         name={'tva_value'}
@@ -294,11 +294,11 @@ class IntroduceYou extends React.Component {
                   <Divider/>
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <h4 className={classes.policySizeSubtitle}>Je souhaite proposer des missions : </h4>
+                  <h4 className={classes.policySizeSubtitle}>{SHOP.creation.is_profesionnal_propose_missions}</h4>
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <ButtonSwitch
-                    label={<Typography className={classes.policySizeContent}>Aux entreprises</Typography>}
+                    label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_company}</Typography>}
                     onChange={this.handleChangeCompany}
                     value={company_mission}
                     name={'company_mission'}
@@ -307,7 +307,7 @@ class IntroduceYou extends React.Component {
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <ButtonSwitch
-                    label={<Typography className={classes.policySizeContent}>Aux particuliers</Typography>}
+                    label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_particular}</Typography>}
                     onChange={this.handleChangeParticular}
                     value={particular_mission}
                     name={'particular_mission'}
@@ -316,7 +316,7 @@ class IntroduceYou extends React.Component {
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <ButtonSwitch
-                    label={<Typography className={classes.policySizeContent}>Aux particuliers et aux entreprises</Typography>}
+                    label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_company_and_particular}</Typography>}
                     value={particular_company_mission}
                     name={'particular&company_mission'}
                     checked={particular_company_mission}
