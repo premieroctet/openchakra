@@ -301,7 +301,7 @@ class ServicesCompany extends React.Component{
             Annuler
           </Button>
           <Button onClick={this.addService} color="primary">
-            Confirmé
+            Confirmer
           </Button>
         </DialogActions>
       </Dialog>
@@ -317,11 +317,11 @@ class ServicesCompany extends React.Component{
 
     return(
       <Dialog open={dialogAddService} onClose={() => this.setState({dialogAddService: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.configService}}>
-        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false})}>{serviceSelected.name}</DialogTitle>
+        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false})}>Département {serviceSelected.name}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3>Choix parmi liste</h3>
+              <h3>Sélectionnez les services autorisés pour ce départemment</h3>
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
@@ -359,7 +359,7 @@ class ServicesCompany extends React.Component{
             Annuler
           </Button>
           <Button onClick={this.addService} color="primary">
-            Confirmé
+            Confirmer
           </Button>
         </DialogActions>
       </Dialog>
@@ -417,7 +417,7 @@ class ServicesCompany extends React.Component{
                         aria-controls="panel1a-content"
                         id={index}
                       >
-                        <Typography className={classes.heading}>Paramètrage des services <strong>{groupe.name}</strong></Typography>
+                        <Typography className={classes.heading}>Services disponibles pour le département <strong>{groupe.name}</strong></Typography>
                       </AccordionSummary>
                       {
                         groupe.allowed_services.length > 0 ?

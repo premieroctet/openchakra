@@ -156,7 +156,7 @@ router.put('/:group_id', passport.authenticate('b2badmin', {session: false}), (r
 // @Route DELETE /myAlfred/api/groups/:group_id
 // Deletes a group for the current company
 // @Access private
-router.delete('/groups/:group_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+router.delete('/:group_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
   const company_id = req.user.company
 
