@@ -151,36 +151,35 @@ class LayoutPdf extends React.Component {
     super(props)
     this.child = React.createRef();
     this.state = {
-      isContractor: false,
-      isIndividual: true,
-      isCesu: false,
       numPages: null,
       setNumPages: null
     }
   }
 
-  static getInitialProps() {
-    return {
-      data: resBooking
-    };
-  }
-
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-
-  }
 
   componentDidMount() {
-    const data = this.props.data
-    axios.get(`/myAlfred/api/booking/${data._id}`).then(res => {
-      this.setState({data: data})
-    }).catch(err => {
-      console.error(err)
+    const booking_id = this.props.booking_id
+    axios.get(`/myAlfred/api/booking/${booking_id}`)
+      .then(res => {
+        const booking = res.data;
+        this.setState({booking: booking});
+        axios.get(`/myAlfred/api/shop/alfred/${booking.alfred}`)
+          .then(res => {
+            const shop = res.data;
+            this.setState({shop: shop});
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      }).catch(err => {
+      console.error(err);
     })
+
+
   }
 
   //
   render() {
-    const {children} = this.props;
     const {isContractor, isIndividual, isCesu, numPages, setNumPages} = this.state;
     console.log(data);
     return (
@@ -239,9 +238,7 @@ class LayoutPdf extends React.Component {
                   </View>
                 </View>
               </View>
-
               <View>
-
                 <Text style={styles.title}>{isContractor ? 'Facture' :
                   'Récépissé'} vendeur n° 2021-0000380519</Text>
               </View>
@@ -251,7 +248,7 @@ class LayoutPdf extends React.Component {
                   <Text style={styles.objectHead}>Objet :</Text>
                 </View>
                 <View>
-                  <Text>Réservation {children.resBooking.BookingObj.reference}</Text>
+                  <Text>Réservation {reference}</Text>
                 </View>
               </View>
 

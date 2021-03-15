@@ -23,6 +23,7 @@ import Hidden from "@material-ui/core/Hidden";
 import {PDFDownloadLink} from "@react-pdf/renderer";
 import PdfGeneration from "../PdfGeneration/PdfGeneration";
 import NoSSR from "react-no-ssr";
+import LayoutPdf from "../../hoc/Layout/Pdf/LayoutPdf";
 
 const {BOOKING} = require('../../utils/i18n')
 registerLocale('fr', fr);
@@ -288,7 +289,7 @@ class BookingPreview extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  {status === BOOK_STATUS.FINISHED ?
+                  {bookingObj.billing_number != null && bookingObj.receipt_number != null ?
                     <NoSSR>
                       <Grid style={{
                         textAlign: 'center',
@@ -299,7 +300,7 @@ class BookingPreview extends React.Component {
                             <Grid onClick={this.setLoading}
                             >
                               <PDFDownloadLink
-                                document={<PdfGeneration/>}
+                                document={<LayoutPdf booking_id={booking_id}/>}
                                 fileName="facture.pdf"
                                 style={{
                                   textDecoration: 'none',

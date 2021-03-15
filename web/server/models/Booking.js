@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
-const {BOOK_STATUS}=require('../../utils/consts')
+const {BOOK_STATUS} = require('../../utils/consts')
 const Schema = mongoose.Schema;
 
 const BookingSchema = new Schema({
@@ -145,6 +145,12 @@ const BookingSchema = new Schema({
   cesu_amount: {
     type: Number,
     default: 0,
+  },
+  billing_number: {
+    type: String,
+  },
+  receipt_number: {
+    type: String,
   },
 }, {toJSON: {virtuals: true, getters: true}});
 
