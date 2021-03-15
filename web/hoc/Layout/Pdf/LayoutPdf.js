@@ -169,6 +169,15 @@ class LayoutPdf extends React.Component {
 
   }
 
+  componentDidMount() {
+    const data = this.props.data
+    axios.get(`/myAlfred/api/booking/${data._id}`).then(res => {
+      this.setState({data: data})
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
   //
   render() {
     const {children} = this.props;
