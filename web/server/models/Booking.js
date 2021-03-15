@@ -146,6 +146,12 @@ const BookingSchema = new Schema({
     type: Number,
     default: 0,
   },
+  billing_number: {
+    type: String,
+  },
+  receipt_number: {
+    type: String,
+  },
 }, {toJSON: {virtuals: true, getters: true}});
 
 BookingSchema.virtual('alfred_amount').get(function () {
