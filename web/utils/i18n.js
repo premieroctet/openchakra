@@ -187,6 +187,23 @@ const SHOP = {
     apply_moving_price : 'Appliquer un forfait déplacement de',
     propose_delivery: 'Proposer un forfait retrait & livraison de',
     section_option_title: 'Options'
+  },
+  preference:{
+    title: 'Préférences',
+    subtitle: 'Indiquez vos préférences de réservation. Ses préférences s’appliqueront lorsqu’un client souhaite vous réserver.',
+    title_delay_prevenance: 'De quel délai souhaitez-vous disposer entre la réservation et la réalisation du services ?',
+    units_dalay_prevenance: 'Heures/jours/semaines',
+    label_delay_prevenance: '',
+    hours: 'heure(s)',
+    days: 'jour(s)',
+    weeks: 'semaine(s)',
+    title_minimum_basket: 'Quel est le montant minimal pour réserver votre service ?',
+    subtitle_minimum_basket: ' Le client peut réserver mes services si le total des prestations sélectionnées est supérieur à :',
+    textfield_minimum_basket: 'Panier minimum',
+    unit_minimum_basket: '€',
+    title_equipments: 'De quels équipement disposez vous pour ce service ?',
+
+
   }
 };
 

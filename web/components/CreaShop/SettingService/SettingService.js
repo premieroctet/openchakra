@@ -83,10 +83,10 @@ class SettingService extends React.Component {
           <h2 className={classes.policySizeTitle}>{SHOP.settingService.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Typography className={classes.policySizeContent}>{SHOP.settingService.subtitle}</Typography>
+          <h3 style={{color: '#696767'}}>{SHOP.settingService.subtitle}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 className={classes.policySizeSubtitle}>{SHOP.settingService.title_perimeter}</h3>
+          <h4 className={classes.policySizeSubtitle}>{SHOP.settingService.title_perimeter}</h4>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <TextField
@@ -98,7 +98,7 @@ class SettingService extends React.Component {
           />
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 className={classes.policySizeSubtitle}>{SHOP.settingService.title_place_service}</h3>
+          <h4 className={classes.policySizeSubtitle}>{SHOP.settingService.title_place_service}</h4>
         </Grid>
         <Grid container spacing={3} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           {'client' in this.state.location ?
@@ -145,7 +145,7 @@ class SettingService extends React.Component {
         <Grid container spacing={3} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           {service && (service.travel_tax || service.pick_tax) ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3 className={classes.policySizeSubtitle}>{SHOP.settingService.section_option_title}</h3>
+              <h4 className={classes.policySizeSubtitle}>{SHOP.settingService.section_option_title}</h4>
             </Grid> : null
           }
           {service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se checke pas

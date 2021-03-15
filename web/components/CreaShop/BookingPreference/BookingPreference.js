@@ -8,6 +8,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import axios from 'axios';
 import styles from '../../../static/css/components/BookingPreference/BookingPreference';
 import Checkbox from "@material-ui/core/Checkbox";
+import {SHOP} from "../../../utils/i18n";
 
 // FIX : réafficher la ville de référence
 
@@ -57,119 +58,105 @@ class BookingPreference extends React.Component {
     const {service} = this.state;
 
     return (
-      <Grid className={classes.mainContainer}>
-        <Grid className={classes.contentContainer}>
+      <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+          <h2 className={classes.policySizeTitle}>{SHOP.preference.title}</h2>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid>
-            <Grid className={classes.contentLeftTop}>
-              <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{service ? service.label : ''} : vos préférences de
-                  réservation</Typography>
-              </Grid>
-              <Grid style={{width: '80%'}}>
-                <Grid>
-                  <Grid>
-                    <h3 className={classes.policySizeSubtitle}>De quel délai souhaitez-vous disposer entre la
-                      réservation et la réalisation du service ? </h3>
-                  </Grid>
-                </Grid>
-                <Grid>
-                  <Typography className={classes.policySizeContent}>
-                    Par exemple, si vous indiquez un délai de 24 heures, un client devra réserver votre service au moins
-                    24 heures avant votre intervention.
-                  </Typography>
-                </Grid>
-                <Grid className={classes.contentTextSize}>
-                  <Grid item className={classes.contentAddandRemove}>
-                    <Grid className={classes.subContentAddanRemove}>
-                      <Grid className={classes.buttonRemove}
-                            onClick={() => this.handleChange('deadline_value', Math.max(parseInt(this.state.deadline_value) - 1, 0))}>-</Grid>
-                      <Grid style={{
-                        display: 'inline-block',
-                        fontSize: 20,
-                        lineHeight: 2.8,
-                      }}>{this.state.deadline_value}</Grid>
-                      <Grid className={classes.buttonAdd}
-                            onClick={() => this.handleChange('deadline_value', parseInt(this.state.deadline_value) + 1)}>+</Grid>
-                    </Grid>
-                    <TextField
-                      value={this.state.deadline_unit}
-                      style={{width: '45%'}}
-                      className={classes.selectDelayInputRepsonsive}
-                      select
-                      margin="dense"
-                      variant="outlined"
-                      label="Heures/jours/semaines"
-                      onChange={v => this.handleChange('deadline_unit', v.target.value)}
-                    >
-                      <MenuItem value="heures">heure(s)</MenuItem>
-                      <MenuItem value="jours">jour(s)</MenuItem>
-                      <MenuItem value="semaines">semaine(s)</MenuItem>
-                    </TextField>
-                  </Grid>
-                </Grid>
-                <Grid style={{marginBottom: 10}}>
-                  <Grid>
-                    <h3 className={classes.policySizeSubtitle}>Quel est votre montant minimum de réservation ?</h3>
-                  </Grid>
-                  <Grid style={{marginBottom: 30}}>
-                    <Typography className={classes.policySizeContent}>
-                      Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service.
-                      Si vous indiquez un montant de 10€, les clients ne pourront pas réserver vos services si la somme
-                      des prestations n’atteint pas ce montant.
-                    </Typography>
-                  </Grid>
-                  <Grid>
-                    <TextField
-                      style={{width: 200}}
-                      type="number"
-                      value={this.state.minimum_basket}
-                      fullWidth
-                      label="Panier minimum"
-                      margin="dense"
-                      variant="outlined"
-                      onChange={e => this.handleChange('minimum_basket', parseInt(e.target.value))}
-                      InputProps={{
-                        inputProps: {
-                          min: 0,
-                        },
-                        endAdornment: <InputAdornment position="start">€</InputAdornment>,
-                      }
-                      }
-                    />
-                  </Grid>
-                </Grid>
-                {service && service.equipments.length > 0 ?
-                  <Grid>
-                    <Grid>
-                      <h3 className={classes.policySizeSubtitle}>Quel(s) produit(s) / matériel(s) fournissez-vous dans le
-                        cadre de ce service ? </h3>
-                    </Grid>
-                    <Grid className={classes.bottomSpacer}>
-                      <Grid container spacing={1}>
-                        {service.equipments.map((result, index) => {
-                          const selected=this.state.selectedEquipments.includes(result._id)
-                          return (
-                            <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
-                              <label style={{cursor: 'pointer'}}>
-                                <img src={`../../static/equipments/${result.logo.slice(0, -4)}.svg`}
-                                     height={100} width={100} alt={`${result.name_logo.slice(0, -4)}.svg`}
-                                     style={{backgroundColor: selected ? '#CEDEFC' : null}}/>
-                                <Checkbox style={{display: 'none'}} color="primary" type="checkbox" name={result._id}
-                                          checked={this.state.selectedEquipments.includes(result._id)}
-                                          onChange={this.onEquipmentChecked}/>
-                              </label>
-                            </Grid>
-                          );
-                        })
-                        }
-                      </Grid>
-                    </Grid>
-                  </Grid> : null
-                }
-              </Grid>
+            <h3 style={{color: '#696767'}}>{SHOP.preference.subtitle}</h3>
+          </Grid>
+        </Grid>
+        <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <h4 className={classes.policySizeSubtitle}>{SHOP.preference.title_delay_prevenance} </h4>
+        </Grid>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+          <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+            <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+              <TextField
+                id="standard-start-adornment"
+                variant={'outlined'}
+                value={this.state.deadline_value}
+                label={'deadline_value'}
+                style={{width: '100%'}}
+
+              />
+            </Grid>
+            <Grid  item xl={6} lg={6} md={6} sm={6} xs={6}>
+              <TextField
+                value={this.state.deadline_unit}
+                select
+                variant="outlined"
+                label={SHOP.preference.units_dalay_prevenance}
+                onChange={v => this.handleChange('deadline_unit', v.target.value)}
+                style={{width: '100%'}}
+              >
+                <MenuItem value="heures">{SHOP.preference.hours}</MenuItem>
+                <MenuItem value="jours">{SHOP.preference.days}</MenuItem>
+                <MenuItem value="semaines">{SHOP.preference.weeks}</MenuItem>
+              </TextField>
             </Grid>
           </Grid>
         </Grid>
+        <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <h4 className={classes.policySizeSubtitle}>{SHOP.preference.title_minimum_basket}</h4>
+        </Grid>
+        <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Typography className={classes.policySizeContent}>{SHOP.preference.subtitle_minimum_basket}</Typography>
+        </Grid>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <TextField
+              type="number"
+              style={{width: '100%'}}
+              value={this.state.minimum_basket}
+              label={SHOP.preference.textfield_minimum_basket}
+              variant="outlined"
+              onChange={e => this.handleChange('minimum_basket', parseInt(e.target.value))}
+              InputProps={{
+                inputProps: {
+                  min: 0,
+                },
+                endAdornment: <InputAdornment position="start">{SHOP.preference.unit_minimum_basket}</InputAdornment>,
+              }
+              }
+            />
+          </Grid>
+        </Grid>
+        {service && service.equipments.length > 0 ?
+          <>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <h4 className={classes.policySizeSubtitle}>{SHOP.preference.title_equipments}</h4>
+            </Grid>
+            <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+              <Grid container xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+                {service.equipments.map((result, index) => {
+                  const selected=this.state.selectedEquipments.includes(result._id);
+                  return (
+                    <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
+                      <label style={{cursor: 'pointer'}}>
+                        <img
+                          src={`../../static/equipments/${result.logo.slice(0, -4)}.svg`}
+                          height={100}
+                          width={100}
+                          alt={`${result.name_logo.slice(0, -4)}.svg`}
+                          style={{backgroundColor: selected ? '#CEDEFC' : null}}
+                        />
+                        <Checkbox
+                          style={{display: 'none'}}
+                          color="primary"
+                          type="checkbox"
+                          name={result._id}
+                          checked={this.state.selectedEquipments.includes(result._id)}
+                          onChange={this.onEquipmentChecked}/>
+                      </label>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </Grid>
+          </> : null
+        }
       </Grid>
     );
   }
