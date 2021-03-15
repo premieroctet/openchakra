@@ -63,9 +63,7 @@ class BookingPreference extends React.Component {
           <h2 className={classes.policySizeTitle}>{SHOP.preference.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Grid>
-            <h3 style={{color: '#696767'}}>{SHOP.preference.subtitle}</h3>
-          </Grid>
+          <h3 style={{color: '#696767'}}>{SHOP.preference.subtitle}</h3>
         </Grid>
         <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h4 className={classes.policySizeSubtitle}>{SHOP.preference.title_delay_prevenance} </h4>

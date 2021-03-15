@@ -39,10 +39,8 @@ export default theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
-    [theme.breakpoints.down('sm')]:{
-      padding: 0
-    }
+    padding: theme.spacing(2),
+
   },
   appBar: {
     [theme.breakpoints.up('sm')]: {
