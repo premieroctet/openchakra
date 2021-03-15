@@ -1,30 +1,4 @@
 export default theme => ({
-  mainContainer: {
-    width: '100%',
-    height: '100%',
-  },
-  contentContainer: {
-    display: 'flex',
-    width: '100%',
-  },
-  bottomSpacer: {
-    width: 500,
-    marginTop: 30,
-    marginBottom: 30,
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-  },
-  contentLeftTop: {
-    width: '100%',
-    [theme.breakpoints.down('md')]: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-  },
-  contentTitle: {
-    width: '80%',
-  },
   policySizeTitle: {
     fontSize: 24,
     lineHeight: '1.25em',
@@ -36,9 +10,5 @@ export default theme => ({
   policySizeContent: {
     color: '#696767',
   },
-  options: {
-    [theme.breakpoints.down('lg')]: {
-      marginBottom: 100,
-    },
-  },
+
 })

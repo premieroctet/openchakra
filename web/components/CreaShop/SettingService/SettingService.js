@@ -9,7 +9,7 @@ import axios from 'axios';
 import isEmpty from '../../../server/validation/is-empty';
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-
+import {SHOP} from '../../../utils/i18n';
 
 class SettingService extends React.Component {
   constructor(props) {
@@ -80,32 +80,32 @@ class SettingService extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-          <h2 className={classes.policySizeTitle}>Paramétrage</h2>
+          <h2 className={classes.policySizeTitle}>{SHOP.settingService.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Typography className={classes.policySizeContent}>Indiquez votre périmètre d’intervention ainsi que les options qui s’offrent à votre client quant à votre service. </Typography>
+          <Typography className={classes.policySizeContent}>{SHOP.settingService.subtitle}</Typography>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 className={classes.policySizeSubtitle}>Quel est votre périmètre d’intervention ?</h3>
+          <h3 className={classes.policySizeSubtitle}>{SHOP.settingService.title_perimeter}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <TextField
             id="standard-start-adornment"
             variant={'outlined'}
             InputProps={{
-              endAdornment: <InputAdornment position="start">Km</InputAdornment>,
+              endAdornment: <InputAdornment position="start">{SHOP.settingService.unity_perimeter}</InputAdornment>,
             }}
           />
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 className={classes.policySizeSubtitle}>Où acceptez-vous de réaliser votre prestation ?</h3>
+          <h3 className={classes.policySizeSubtitle}>{SHOP.settingService.title_place_service}</h3>
         </Grid>
         <Grid container spacing={3} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           {'client' in this.state.location ?
             <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
                 checked={location.client === true}
-                label={'A l\'adresse de mon client'}
+                label={SHOP.settingService.service_at_userHome}
                 id='client'
                 onChange={this.onLocationChange}
               />
@@ -115,7 +115,7 @@ class SettingService extends React.Component {
             <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
                 checked={location.alfred === true}
-                label={'A mon adresse'}
+                label={SHOP.settingService.service_at_myHome}
                 id='alfred'
                 onChange={this.onLocationChange}
               />
@@ -125,7 +125,7 @@ class SettingService extends React.Component {
             <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
                 checked={location.visio === true}
-                label={'En visioconférence'}
+                label={SHOP.settingService.service_withVisio}
                 id='visio'
                 onChange={this.onLocationChange}
               />
@@ -135,7 +135,7 @@ class SettingService extends React.Component {
             <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
                 checked={location.ext === true}
-                label={'En extérieur'}
+                label={SHOP.settingService.service_outside}
                 id='ext'
                 onChange={this.onLocationChange}
               />
@@ -145,7 +145,7 @@ class SettingService extends React.Component {
         <Grid container spacing={3} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           {service && (service.travel_tax || service.pick_tax) ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3 className={classes.policySizeSubtitle}>Options</h3>
+              <h3 className={classes.policySizeSubtitle}>{SHOP.settingService.section_option_title}</h3>
             </Grid> : null
           }
           {service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se checke pas
@@ -154,7 +154,7 @@ class SettingService extends React.Component {
                 ckecked={travel_tax != null}
                 price={travel_tax}
                 id='travel_tax'
-                label={'Appliquer un forfait déplacement de'}
+                label={SHOP.settingService.apply_moving_price}
                 isPrice={true}
                 onChange={this.onOptionChanged}
               />
@@ -166,7 +166,7 @@ class SettingService extends React.Component {
                 checked={pick_tax != null}
                 price={pick_tax}
                 id='pick_tax'
-                label={'Proposer un forfait retrait & livraison de'}
+                label={SHOP.settingService.propose_delivery}
                 isPrice={true}
                 onChange={this.onOptionChanged}
               />

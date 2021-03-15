@@ -173,6 +173,20 @@ const SHOP = {
     title: 'Paramétrez vos prestations',
     subtitle: 'Indiquez vos tarifs et votre méthode de facturation. Si vous êtes assujetti à la TVA, merci d’indiquer vos tarifs hors taxes. Vous ne trouvez pas une prestation ? Créez une prestation personnalisée qui vous sera propre ! ',
     presta_perso: 'Ajouter une prestation personnalisée',
+  },
+  settingService:{
+    title: 'Paramétrage',
+    subtitle: 'Indiquez votre périmètre d’intervention ainsi que les options qui s’offrent à votre client quant à votre service.',
+    title_perimeter: 'Quel est votre périmètre d’intervention ?',
+    unity_perimeter: 'Km',
+    title_place_service : 'Où acceptez-vous de réaliser votre prestation ?',
+    service_at_userHome: 'A l\' adresse de mon client',
+    service_at_myHome: 'A mon adresse',
+    service_withVisio: 'En visioconférence',
+    service_outside: 'En extérieur',
+    apply_moving_price : 'Appliquer un forfait déplacement de',
+    propose_delivery: 'Proposer un forfait retrait & livraison de',
+    section_option_title: 'Options'
   }
 };
 
