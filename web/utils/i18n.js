@@ -8,12 +8,9 @@ réunies dans l\'année civile :</b><ul><li>vos revenus dépassent 3000 euros</l
 
 const OUTSIDE_PERIMETER = 'Ce service est hors de votre périmètre.';
 
-const SCHEDULE_TITLE = 'Précisez vos disponibilités si vous le souhaitez !';
+const SCHEDULE_TITLE = 'Vos disponibilités';
 
-const SCHEDULE_SUBTITLE = "Votre calendrier vous permet d'ajouter vos disponibilités.\
- Lorsque vous ajoutez ou modifiez vos disponibilités, seules les plages horaires indiquées pourront être réservées.\
- Vous pouvez très facilement ajouter une période de disponibilité en indiquant les dates de début et fin, les jours correspondants et des tranches horaires.\
- Vous pouvez également sélectionner une date ou plusieurs, indiquer si vous êtes disponible et sélectionner les tranches horaires."
+const SCHEDULE_SUBTITLE = "Votre calendrier vous permet d’ajouter vos disponibilités. Lorsque vous ajoutez ou modifiez vos disponibilités, seules les plages horaires indiquées pourront être réservées. Vous pouvez très facilement ajouter une période de disponibilité en indiquant les dates de début et fin, les jours correspondants et des tranches horaires. Vous pouvez également sélectionner une date ou plusieurs, indiquer si vous êtes disponible et sélectionner les tranches horaires."
 
 
 const SHOP_CREATION_SUCCESSFUL = 'Vos services sont maintenant disponibles dans my Alfred';

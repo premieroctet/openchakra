@@ -13,7 +13,6 @@ import SettingService from '../../components/CreaShop/SettingService/SettingServ
 import BookingPreference from '../../components/CreaShop/BookingPreference/BookingPreference';
 import AssetsService from '../../components/CreaShop/AssetsService/AssetsService';
 import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions';
-import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -44,7 +43,7 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 7,
+      activeStep: 8,
       user_id: null,
       saving: false,
       availabilities: [],
@@ -330,9 +329,8 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  shopSettingsChanged = (welcome_message, cancel_mode) => {
+  shopSettingsChanged = (cancel_mode) => {
     let shop = this.state.shop;
-    shop.welcome_message = welcome_message;
     shop.cancel_mode = cancel_mode;
     this.setState({shop: shop});
   }
@@ -412,12 +410,9 @@ class creaShop extends React.Component {
         return <BookingConditions
           conditions={shop.my_alfred_conditions}
           booking_request={shop.booking_request}
-          onChange={this.conditionsChanged}/>;
-      case 9:
-        return <SettingShop
-          welcome_message={shop.welcome_message}
           cancel_mode={shop.cancel_mode}
-          onChange={this.shopSettingsChanged}/>;
+          onChangeLastPart={this.shopSettingsChanged}
+          onChange={this.conditionsChanged}/>;
     }
   };
 
