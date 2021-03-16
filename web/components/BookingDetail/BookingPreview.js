@@ -1,8 +1,6 @@
-import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
-
 const {clearAuthenticationToken} = require('../../utils/authentication')
 const {setAxiosAuthentication} = require('../../utils/authentication')
-import React, {Fragment} from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
@@ -21,7 +19,7 @@ import DatePicker, {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import Hidden from "@material-ui/core/Hidden";
 import {PDFDownloadLink} from "@react-pdf/renderer";
-import PdfGeneration from "../PdfGeneration/PdfGeneration";
+import BillingGeneration from "../BillingGeneration/BillingGeneration";
 import NoSSR from "react-no-ssr";
 
 const {BOOKING} = require('../../utils/i18n')
@@ -303,7 +301,7 @@ class BookingPreview extends React.Component {
                             <Grid onClick={this.setLoading}
                             >
                               <PDFDownloadLink
-                                document={<PdfGeneration bookingObj={bookingObj} is_pro={is_pro}/>}
+                                document={<BillingGeneration bookingObj={bookingObj} is_pro={is_pro}/>}
                                 fileName=
                                   {
                                     is_pro ? "facture" + bookingObj.billing_number + ".pdf"

@@ -3,7 +3,7 @@ import React from "react";
 import {PDFDownloadLink} from "@react-pdf/renderer";
 import NoSSR from 'react-no-ssr';
 import Grid from "@material-ui/core/Grid";
-import PdfGeneration from "../../components/PdfGeneration/PdfGeneration";
+import PdfGeneration from "../../components/BillingGeneration/PdfGeneration";
 
 class TestPdf extends React.Component {
   constructor(props) {
