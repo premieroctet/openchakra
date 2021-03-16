@@ -4,7 +4,7 @@ const {CESU} = require('../consts');
 const {checkSocialSecurity} = require('../social_security');
 
 const creaShopPresentation = () => {
-  return false;
+  return true;
 };
 
 const selectService = (shop) => {
@@ -42,12 +42,12 @@ const settingService = shop => {
 
 const assetsService = (shop) => {
   if (isEmpty(shop.diplomaName) != isEmpty(shop.diplomaYear)) {
-    return true;
+    return false;
   }
   if (isEmpty(shop.certificationName) != isEmpty(shop.certificationYear)) {
-    return true;
+    return false;
   }
-  return false;
+  return true;
 };
 
 const settingShop = (shop) => {

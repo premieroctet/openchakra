@@ -108,7 +108,7 @@ class SelectPrestation extends React.Component {
           <h2 className={classes.policySizeTitle}>{SHOP.parameter.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Typography className={classes.policySizeContent}>{SHOP.parameter.subtitle}</Typography>
+          <h3 style={{color: '#696767'}}>{SHOP.parameter.subtitle}</h3>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>

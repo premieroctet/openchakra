@@ -134,7 +134,7 @@ class IntroduceYou extends React.Component {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex'}}>
           <Grid>
-            <Typography className={classes.policySizeContent}>{SHOP.creation.subtitle}</Typography>
+            <h3 style={{color: '#696767'}}>{SHOP.creation.subtitle}</h3>
           </Grid>
           <Grid>
             <IconButton aria-label="info" className={classes.margin} onClick={() => this.setState({notice: true})}>

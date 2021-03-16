@@ -175,6 +175,37 @@ const SHOP = {
     title: 'Paramétrez vos prestations',
     subtitle: 'Indiquez vos tarifs et votre méthode de facturation. Si vous êtes assujetti à la TVA, merci d’indiquer vos tarifs hors taxes. Vous ne trouvez pas une prestation ? Créez une prestation personnalisée qui vous sera propre ! ',
     presta_perso: 'Ajouter une prestation personnalisée',
+  },
+  settingService:{
+    title: 'Paramétrage',
+    subtitle: 'Indiquez votre périmètre d’intervention ainsi que les options qui s’offrent à votre client quant à votre service.',
+    title_perimeter: 'Quel est votre périmètre d’intervention ?',
+    unity_perimeter: 'Km',
+    title_place_service : 'Où acceptez-vous de réaliser votre prestation ?',
+    service_at_userHome: 'A l\' adresse de mon client',
+    service_at_myHome: 'A mon adresse',
+    service_withVisio: 'En visioconférence',
+    service_outside: 'En extérieur',
+    apply_moving_price : 'Appliquer un forfait déplacement de',
+    propose_delivery: 'Proposer un forfait retrait & livraison de',
+    section_option_title: 'Options'
+  },
+  preference:{
+    title: 'Préférences',
+    subtitle: 'Indiquez vos préférences de réservation. Ses préférences s’appliqueront lorsqu’un client souhaite vous réserver.',
+    title_delay_prevenance: 'De quel délai souhaitez-vous disposer entre la réservation et la réalisation du services ?',
+    units_dalay_prevenance: 'Heures/jours/semaines',
+    label_delay_prevenance: '',
+    hours: 'heure(s)',
+    days: 'jour(s)',
+    weeks: 'semaine(s)',
+    title_minimum_basket: 'Quel est le montant minimal pour réserver votre service ?',
+    subtitle_minimum_basket: ' Le client peut réserver mes services si le total des prestations sélectionnées est supérieur à :',
+    textfield_minimum_basket: 'Panier minimum',
+    unit_minimum_basket: '€',
+    title_equipments: 'De quels équipement disposez vous pour ce service ?',
+
+
   }
 };
 
