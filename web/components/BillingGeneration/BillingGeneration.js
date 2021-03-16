@@ -5,13 +5,11 @@ import moment from "moment";
 import pdfStyle from '../../static/css/components/BillingGeneration/BillingGeneration';
 
 const styles = StyleSheet.create(pdfStyle())
-
 moment.locale('fr');
-
 
 Font.register({
   family: 'SourceSansPro', fonts: [
-    {src: 'https://fonts.gstatic.com/s/sourcesanspro/v14/6xK3dSBYKcSV-LCoeQqfX1RYOo3aPw.ttf'}, // font-style: normal, font-weight: normal
+    {src: 'https://fonts.gstatic.com/s/sourcesanspro/v14/6xK3dSBYKcSV-LCoeQqfX1RYOo3aPw.ttf'},
     {src: 'https://fonts.gstatic.com/s/sourcesanspro/v14/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rAkA.ttf', fontWeight: 600},
   ]
 });
@@ -26,7 +24,7 @@ class BillingGeneration extends React.Component {
     const {bookingObj, is_pro} = this.props;
     return (
       <Document>
-        <Page pageNumber={page} size="A4" style={styles.body}>
+        <Page pageNumber={"1"} size="A4" style={styles.body}>
           <View
             style={{
               display: 'flex',
@@ -242,8 +240,11 @@ class BillingGeneration extends React.Component {
           </View>
           {/*Footer*/}
           <View fixed style={styles.footer}>
-            <Text>Page {page}</Text>
+            <Text>Page {"1"}</Text>
           </View>
+        </Page>
+        <Page>
+
         </Page>
       </Document>
     )
