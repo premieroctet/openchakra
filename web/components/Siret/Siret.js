@@ -11,7 +11,7 @@ import {SHOP} from '../../utils/i18n';
 const moment = require('moment');
 const {SIRET} = require('../../config/config');
 const {ENTITES} = require('../../utils/consts');
-
+const {compact, compute_vat_number}=require('../../utils/text')
 moment.locale('fr');
 
 const DATE_COUPURE_INSEE = moment('2020-06-09');
@@ -45,28 +45,38 @@ class siret extends React.Component {
 
   onChange = e => {
     let {name, value} = e.target;
+    var st={}
     if (name === 'siret') {
-      value = value.replace(/ /g, '');
+      value = compact(value)
+      if (this.state.vat_subject) {
+        st['vat_number'] = compute_vat_number(value)
+      }
     }
     if (name === 'creation_date') {
       value = moment(value).format('DD/MM/YYYY');
     }
-    this.setState({[name]: value},
+    st[name]=value
+    this.setState(st,
       () => {
         this.props.onChange(this.state);
         if (name === 'siret') {
           this.onSubmit();
         }
       });
+  };
 
+  onVatSubjectChanged = (id, checked) =>{
+    var vat_number = checked ? this.state.vat_number : null
+    if (checked && !vat_number) {
+      vat_number = compute_vat_number(this.state.siret)
+    }
+    this.setState({vat_subject: checked, vat_number: vat_number},
+      () => this.props.onChange(this.state));
   };
 
 
   onSubmit = e => {
-
-
     const code = this.state.siret;
-
     const config = {
       headers: {Authorization: `Bearer ${SIRET.token}`},
     };
@@ -109,13 +119,6 @@ class siret extends React.Component {
       }, () => this.props.onChange(this.state),
     );
   }
-
-  onVatSubjectChanged = (id, checked) =>{
-    const vat_number = checked ? this.state.vat_number : null
-    this.setState({vat_subject: checked, vat_number: vat_number},
-      () => this.props.onChange(this.state));
-  };
-
 
   render() {
     const {classes} = this.props;

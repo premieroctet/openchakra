@@ -1,6 +1,8 @@
 const stripBom = require('strip-bom')
 
 const ARTICLES = 'le la les un une de des d l à'.split(/ /g);
+const SIREN_LENGTH=9
+const SIRET_LENGTH=14
 
 const normalize = str => {
   if (str) {
@@ -104,6 +106,40 @@ const formatAddress = addr => {
   return `${addr.address}, ${addr.city} ${addr.zip_code}`
 }
 
+const compact = string => {
+  const result = string.replace(/ /g, '')
+  return result
+}
+
+const to_siren = siretOrSiret => {
+  siretOrSiret = compact(siretOrSiret)
+  if (siretOrSiret.length==SIREN_LENGTH) {
+    return siretOrSiret
+  }
+  if (siretOrSiret.length==SIRET_LENGTH) {
+    return siretOrSiret.slice(0, 9)
+  }
+  return ''
+}
+
+const compute_vat_number = siren => {
+  if (!siren) {
+    return ''
+  }
+  const siren_formatted = to_siren(siren)
+  const siren_compact = compact(siren_formatted.toString())
+  if (siren_compact.length!=9) {
+    return ''
+  }
+  const siren_int = parseInt(siren_compact+'12')
+  if (isNaN(siren_int)) {
+    return ''
+  }
+  const siren_modulo = siren_int%97
+  const result = `FR${siren_modulo.toString().padStart(2, '0')}${siren_compact}`
+  return result
+}
+
 module.exports = {
   normalize,
   createQuery,
@@ -118,4 +154,6 @@ module.exports = {
   bufferToString,
   hideIllegal,
   formatAddress,
+  compact,
+  compute_vat_number,
 };
