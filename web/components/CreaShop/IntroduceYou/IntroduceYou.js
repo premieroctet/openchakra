@@ -16,7 +16,6 @@ const {CESU} = require('../../../utils/consts');
 const I18N = require('../../../utils/i18n');
 import InfoIcon from '@material-ui/icons/Info';
 import {SHOP} from '../../../utils/i18n';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
 import Divider from "@material-ui/core/Divider";
 import moment from 'moment'
@@ -142,7 +141,7 @@ class IntroduceYou extends React.Component {
             </IconButton>
           </Grid>
         </Grid>
-        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <FormControlLabel
               control={
@@ -157,19 +156,19 @@ class IntroduceYou extends React.Component {
                   checkedIcon={<RadioButtonCheckedIcon/>}
                 />
               }
-              label={<h4 className={classes.policySizeSubtitle}>{SHOP.creation.is_particular}</h4>}
+              label={<h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.creation.is_particular}</h4>}
             />
           </Grid>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
             {
               this.state.is_particular ?
-                <Grid container spacing={3} item  xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
-                  <Grid item  xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Grid container spacing={1} item  xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_description}</Typography>
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
-                      <Grid container spacing={3} style={{width: '100%', margin:0}}>
+                      <Grid container spacing={1} style={{width: '100%', margin:0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Radio color="primary" value={CESU[0]}/>
                           <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_want_cesu}</Typography>
@@ -193,7 +192,7 @@ class IntroduceYou extends React.Component {
                             null
                         }
                       </Grid>
-                      <Grid container spacing={3} style={{width: '100%', margin:0}}>
+                      <Grid container spacing={1} style={{width: '100%', margin:0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Radio color="primary" value={CESU[1]}/>
                           <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_accept_cesu}</Typography>
@@ -217,7 +216,7 @@ class IntroduceYou extends React.Component {
                             null
                         }
                       </Grid>
-                      <Grid container spacing={3} style={{width: '100%', margin:0}}>
+                      <Grid container spacing={1} style={{width: '100%', margin:0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Radio color="primary" value={CESU[2]}/>
                           <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_decline_cesu}</Typography>
@@ -248,7 +247,7 @@ class IntroduceYou extends React.Component {
                 />
               }
               label={
-                <h4 className={classes.policySizeSubtitle}>{SHOP.creation.is_professional}</h4>
+                <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.creation.is_professional}</h4>
               }
             />
           </Grid>

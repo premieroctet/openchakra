@@ -1,6 +1,6 @@
 import CssBaseline from "@material-ui/core/CssBaseline";
 import MenuIcon from '@material-ui/icons/Menu';
-const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication');
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from '../../static/css/pages/creaShop/creaShopStyle';
@@ -56,7 +56,7 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 0,
+      activeStep: 1,
       user_id: null,
       saving: false,
       availabilities: [],
@@ -369,10 +369,7 @@ class creaShop extends React.Component {
     if (pageIndex === BOOKCONDITIONS8) {
       return false
     }
-    if (pageIndex === SETTINGSHOP9) {
-      return !settingShop(shop);
-    }
-    if (pageIndex === 9) {
+    if (pageIndex === 8) {
       return !(this.state.saving || introduceYou(shop));
     }
     return false;
@@ -534,7 +531,7 @@ class creaShop extends React.Component {
                       variant="contained"
                       classes={{root :classes.nextButton}}
                       onClick={this.handleNext}
-                      disabled={this.nextDisabled()}
+                      //disabled={this.nextDisabled()}
                     >
                       {activeStep === 9 ? 'Envoyer' : 'Suivant'}
                     </Button>
