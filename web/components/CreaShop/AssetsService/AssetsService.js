@@ -1,22 +1,17 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from '../../../static/css/components/AssetsService/AssetsService';
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-const { Accordion, AccordionSummary, AccordionDetails }=require('@material-ui/core')
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import isEmpty from '../../../server/validation/is-empty';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import IconButton from '@material-ui/core/IconButton';
 import {SHOP} from "../../../utils/i18n";
 import Select from "@material-ui/core/Select";
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import {Icon} from "@material-ui/core";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Chip from "@material-ui/core/Chip";
 import Divider from "@material-ui/core/Divider";
@@ -70,19 +65,19 @@ class AssetsService extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-          <h2 className={classes.policySizeTitle}>Vos atouts</h2>
+          <h2 className={classes.policySizeTitle}>{SHOP.assets.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 className={classes.policySizeSubtitle}>Mettez en évidence vos compétences et votre expertise dans ce service. Vous pouvez également donner des précisions sur vos prestations. Précisez tout ce qui peut aider votre client à réserver correctement votre service !</h3>
+          <h3 className={classes.policySizeSubtitle}>{SHOP.assets.subtitle}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle}>Votre expertise</h4>
+          <h4 className={classes.policySizeSubtitle}>{SHOP.assets.expertise_title}</h4>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <TextField
             id="outlined-basic"
             style={{width: '100%'}}
-            label="Votre expertise"
+            label={SHOP.assets.expertise_label}
             variant="outlined"
             value={this.state.description}
             onChange={e => this.handleChange('description', e.target.value)}
@@ -94,23 +89,23 @@ class AssetsService extends React.Component {
           <Divider/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle}>Votre expérience</h4>
+          <h4 className={classes.policySizeSubtitle}>{SHOP.assets.experience_title}</h4>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
           <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
             <FormControl variant="outlined" style={{width: '100%'}}>
-              <InputLabel id="demo-simple-select-outlined-label">Experience</InputLabel>
+              <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.experience_label}</InputLabel>
               <Select
                 value={this.state.level}
                 style={{width: '100%'}}
                 variant="outlined"
                 onChange={e => this.handleChange('level', e.target.value)}
-                label={'Experience'}
+                label={SHOP.assets.experience_label}
               >
-                <MenuItem value="1">Entre 0 et 1 an</MenuItem>
-                <MenuItem value="2">Entre 1 et 5 ans</MenuItem>
-                <MenuItem value="3">Entre 5 et 10 ans</MenuItem>
-                <MenuItem value="4">Plus de 10 ans</MenuItem>
+                <MenuItem value="1">{SHOP.assets.experience_yearRange_0}</MenuItem>
+                <MenuItem value="2">{SHOP.assets.experience_yearRange_1}</MenuItem>
+                <MenuItem value="3">{SHOP.assets.experience_yearRange_2}</MenuItem>
+                <MenuItem value="4">{SHOP.assets.experience_yearRange_3}</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -126,7 +121,7 @@ class AssetsService extends React.Component {
             <TextField
               id="outlined-basic"
               style={{width: '100%'}}
-              label="Décrivrez votre expérience ici"
+              label={SHOP.assets.experience_label_dresciprtion}
               variant="outlined"
               value={''}
               multiline
@@ -137,7 +132,7 @@ class AssetsService extends React.Component {
             <TextField
               id="outlined-basic"
               style={{width: '100%'}}
-              label="Compétences acquises"
+              label={SHOP.assets.obtain_competence}
               variant="outlined"
               value={''}
             />
@@ -159,20 +154,19 @@ class AssetsService extends React.Component {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid>
-            <h4 className={classes.policySizeSubtitle}>Votre diplôme</h4>
+            <h4 className={classes.policySizeSubtitle}>{SHOP.assets.diploma_title}</h4>
           </Grid>
           <Grid>
-            <Typography style={{color: '#696767'}}><em>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié
-              auprès des utilisateurs mais il ne sera jamais visible par ces derniers.</em></Typography>
+            <Typography style={{color: '#696767'}}><em>{SHOP.assets.diploma_subtitle}</em></Typography>
           </Grid>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <FormControl variant={'outlined'} style={{width: '100%'}}>
-              <InputLabel id="demo-simple-select-outlined-label">Année d'obtention</InputLabel>
+              <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.year_obtain}</InputLabel>
               <Select
                 value={this.state.diplomaYear}
-                label={"Année d'obtention"}
+                label={SHOP.assets.year_obtain}
                 onChange={e => this.handleChange('diplomaYear', e.target.value)}
                 style={{width: '100%'}}
                 variant="outlined"
@@ -202,7 +196,7 @@ class AssetsService extends React.Component {
             <TextField
               id="outlined-basic"
               style={{width: '100%'}}
-              label="Compétences acquises"
+              label={SHOP.assets.obtain_competence}
               variant="outlined"
               value={''}
             />
@@ -231,7 +225,7 @@ class AssetsService extends React.Component {
               />
               <label htmlFor="contained-button-file">
                 <Button variant="contained" color="primary" component="span" classes={{root: classes.buttonUpload}}>
-                  Joindre un diplôme
+                  {SHOP.assets.button_joinFile}
                 </Button>
               </label>
             </Grid>
@@ -253,21 +247,19 @@ class AssetsService extends React.Component {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid>
-            <h4 className={classes.policySizeSubtitle}>Votre certification</h4>
+            <h4 className={classes.policySizeSubtitle}>{SHOP.assets.certification_title}</h4>
           </Grid>
           <Grid>
-            <Typography style={{color: '#696767'}}><em>En téléchargeant votre certification, votre certification aura le statut de
-              certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ces
-              derniers.</em></Typography>
+            <Typography style={{color: '#696767'}}><em>{SHOP.assets.certification_subtitle}</em></Typography>
           </Grid>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <FormControl variant={'outlined'} style={{width: '100%'}}>
-              <InputLabel id="demo-simple-select-outlined-label">Année d'obtention</InputLabel>
+              <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.year_obtain}</InputLabel>
               <Select
                 value={this.state.certificationYear}
-                label={"Année d'obtention"}
+                label={SHOP.assets.year_obtain}
                 onChange={e => this.handleChange('certificationYear', e.target.value)}
                 style={{width: '100%'}}
                 variant="outlined"
@@ -281,7 +273,7 @@ class AssetsService extends React.Component {
           <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
             <TextField
               value={this.state.certificationName}
-              label="Nom du certificat"
+              label={SHOP.assets.certification_name}
               variant="outlined"
               style={{width: '100%'}}
               onChange={e => this.handleChange('certificationName', e.target.value)}
@@ -291,7 +283,7 @@ class AssetsService extends React.Component {
             <TextField
               id="outlined-basic"
               style={{width: '100%'}}
-              label="Compétences acquises"
+              label={SHOP.assets.obtain_competence}
               variant="outlined"
               value={''}
             />
@@ -320,7 +312,7 @@ class AssetsService extends React.Component {
               />
               <label htmlFor="contained-button-file">
                 <Button variant="contained" color="primary" component="span" classes={{root: classes.buttonUpload}}>
-                  Joindre un diplôme
+                  {SHOP.assets.button_joinFile}
                 </Button>
               </label>
             </Grid>

@@ -202,6 +202,28 @@ const SHOP = {
     textfield_minimum_basket: 'Panier minimum',
     unit_minimum_basket: '€',
     title_equipments: 'De quels équipement disposez vous pour ce service ?',
+  },
+  assets:{
+    title: 'Vos atouts',
+    subtitle: 'Mettez en évidence vos compétences et votre expertise dans ce service. Vous pouvez également donner des précisions sur vos prestations. Précisez tout ce qui peut aider votre client à réserver correctement votre service !',
+    expertise_title: 'Votre expertise',
+    expertise_label: 'Votre expertise',
+    experience_title: 'Votre expérience',
+    experience_label: 'Experience',
+    experience_yearRange_0 : 'Entre 0 et 1 an',
+    experience_yearRange_1 : 'Entre 1 et 5 ans',
+    experience_yearRange_2 : 'Entre 5 et 10 ans',
+    experience_yearRange_3 : 'Plus de 10 ans',
+    experience_label_dresciprtion: 'Décrivrez votre expérience ici',
+    obtain_competence : 'Compétences acquises',
+    diploma_title: 'Votre diplôme',
+    diploma_subtitle: 'En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ces derniers.',
+    year_obtain: 'Année d\'obtention',
+    button_joinFile: 'Joindre un diplôme',
+    certification_title: 'Votre certification',
+    certification_subtitle: 'En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ces derniers.',
+    certification_name: 'Nom du certificat'
+
 
 
   }
