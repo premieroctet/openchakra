@@ -2,30 +2,31 @@ import isEmpty from '../../server/validation/is-empty';
 
 const {CESU} = require('../consts');
 const {checkSocialSecurity} = require('../social_security');
+
 const creaShopPresentation = () => {
   return false;
 };
 
 const selectService = (shop) => {
-  return shop.service == null;
+  return Boolean(shop.service)
 };
 
 const selectPrestation = (shop) => {
   if (Object.keys(shop.prestations).length === 0) {
-    return 'disabled';
+    return false;
   }
-  return !Object.values(shop.prestations)
+  return Object.values(shop.prestations)
     .every(v => {
       return !(!v.price || !v.billing || isEmpty(v.label) || Object.keys(v.billing).length === 0);
     });
 };
 
-const settingService = (shop) => {
-  if (shop.location == null) {
-    return true;
+const settingService = shop => {
+  if (!shop.location) {
+    return false
   }
   if (Object.values(shop.location).every(v => !v)) {
-    return true;
+    return false;
   }
   if (isNaN(shop.travel_tax)) {
     return false;
@@ -33,6 +34,10 @@ const settingService = (shop) => {
   if (isNaN(shop.pick_tax)) {
     return false;
   }
+  if (!shop.perimeter) {
+    return false;
+  }
+  return true
 };
 
 const assetsService = (shop) => {
@@ -46,35 +51,56 @@ const assetsService = (shop) => {
 };
 
 const settingShop = (shop) => {
-  if (shop.cancel_mode === '' || shop.cancel_mode == null) {
-    return true;
+  if (!shop.cancel_mode) {
+    return false
   }
+  return true
 };
+
+const bookingPreferences = shop => {
+  if (!shop) {
+    return false
+  }
+  if (isNaN(shop.minimum_basket)) {
+    return false
+  }
+  if (!shop.deadline_unit) {
+    return false
+  }
+  return true
+}
 
 const introduceYou = (shop) => {
   if (shop.is_particular) {
     if (!shop.cesu) {
-      return true;
+      return false;
     }
     if ([CESU[0], CESU[1]].includes(shop.cesu)) {
       const res = checkSocialSecurity(shop.social_security);
       if (res) {
-        return true;
+        return false;
       }
     }
-    return false;
+    return true;
   }
   // Pro
   if (shop.company == null) {
-    return true;
+    return false;
   }
   if (!shop.company.siret) {
-    return true;
+    return false;
   }
-  if (shop.is_certified === false) {
-    return true;
+  if (!shop.is_certified) {
+    return false;
   }
-  return false;
+  if (shop.company.vat_subject && !shop.company.vat_number) {
+    return false
+  }
+  if (!shop.particular_access && !shop.professional_access) {
+    return false
+  }
+  return true;
 };
 
-export {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou}
+export {creaShopPresentation, selectService, selectPrestation, settingService,
+  assetsService, settingShop, introduceYou, bookingPreferences}

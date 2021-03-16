@@ -119,7 +119,17 @@ class SelectService extends React.Component {
             <Typography className={classes.policySizeContent}>{SHOP.service.subtitle}</Typography>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <h3 className={classes.policySizeSubtitle}>{SHOP.service.content}</h3>
+            <h3 className={classes.policySizeSubtitle}>
+            {
+              particular_access && professional_access ?
+                SHOP.service.content_particular_professional
+              :
+              particular_access ?
+                SHOP.service.content_particular
+              :
+                SHOP.service.content_professional
+            }
+            </h3>
           </Grid>
         </Grid>
           {this.isCreation() ?

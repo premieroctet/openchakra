@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import {CANCEL_MODE} from '../../../utils/consts.js';
+import moment from "moment"
 
 class SettingShop extends React.Component {
   constructor(props) {
@@ -16,8 +17,6 @@ class SettingShop extends React.Component {
       cancel_mode: this.props.cancel_mode,
     };
 
-    this.cancel_buttons = {};
-    Object.values(CANCEL_MODE).forEach(v => this.cancel_buttons[v] = React.createRef());
     this.cancelModeChanged = this.cancelModeChanged.bind(this);
     this.welcomeMessageChanged = this.welcomeMessageChanged.bind(this);
 
@@ -29,10 +28,10 @@ class SettingShop extends React.Component {
   }
 
   cancelModeChanged(mode_id, checked) {
+    if (!checked) {
+      return
+    }
     this.setState({cancel_mode: mode_id}, () => this.props.onChange(this.state.welcome_message, mode_id));
-    Object.values(CANCEL_MODE).forEach(v => {
-      this.cancel_buttons[v].current.setState({checked: mode_id === v});
-    });
   }
 
   render() {
@@ -82,19 +81,19 @@ class SettingShop extends React.Component {
                 </Grid>
                 <Grid>
                   <Grid>
-                    <ButtonSwitch id={CANCEL_MODE.FLEXIBLE} checked={this.state.cancel_mode == CANCEL_MODE.FLEXIBLE}
+                    <ButtonSwitch key={moment()} id={CANCEL_MODE.FLEXIBLE} checked={this.state.cancel_mode == CANCEL_MODE.FLEXIBLE}
                                   label={'Flexibles: Remboursement intégral jusqu\'à 1 jour avant la prestation'}
-                                  onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.FLEXIBLE]}/>
+                                  onChange={this.cancelModeChanged} />
                   </Grid>
                   <Grid>
-                    <ButtonSwitch id={CANCEL_MODE.MODERATE} checked={this.state.cancel_mode == CANCEL_MODE.MODERATE}
+                    <ButtonSwitch key={moment()} id={CANCEL_MODE.MODERATE} checked={this.state.cancel_mode == CANCEL_MODE.MODERATE}
                                   label={'Modérées: Remboursement intégral jusqu\'à 5 jours avant la prestation'}
-                                  onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.MODERATE]}/>
+                                  onChange={this.cancelModeChanged} />
                   </Grid>
                   <Grid>
-                    <ButtonSwitch id={CANCEL_MODE.STRICT} checked={this.state.cancel_mode == CANCEL_MODE.STRICT}
+                    <ButtonSwitch key={moment()} id={CANCEL_MODE.STRICT} checked={this.state.cancel_mode == CANCEL_MODE.STRICT}
                                   label={'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation'}
-                                  onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.STRICT]}/>
+                                  onChange={this.cancelModeChanged} />
                   </Grid>
                 </Grid>
               </Grid>

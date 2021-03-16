@@ -19,28 +19,33 @@ import {SHOP} from '../../../utils/i18n';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
 import Divider from "@material-ui/core/Divider";
+import moment from 'moment'
 
 class IntroduceYou extends React.Component {
   constructor(props) {
     super(props);
+    const part_pro = this.props.particular_access && this.props.professional_access
     this.state = {
       is_particular: this.props.is_particular,
       company: this.props.company,
-      is_certified: this.props.is_certified,
       cesu: null,
       cis: false,
       social_security: null,
       notice: false,
-      assujettie_tva: false,
-      tva_value: '',
-      particular_mission: false,
-      company_mission: false,
-      particular_company_mission: false
+      particular_access: this.props.particular_access && !part_pro,
+      professional_access: this.props.professional_access && !part_pro,
+      particular_professional_access: part_pro,
     };
+    this.fireChange = this.fireChange.bind(this)
   }
 
   fireChange = () => {
-    this.props.onChange(this.state.is_particular, this.state.company, this.state.is_certified, this.state.cesu, this.state.cis, this.state.social_security, this.state.assujettie_tva, this.state.tva_value);
+    const st=this.state
+    this.props.onChange(this.state.is_particular, this.state.company,
+      st.is_certified, st.cesu, st.cis, st.social_security,
+      st.particular_access || st.particular_professional_access,
+      st.professional_access || st.particular_professional_access,
+    );
   };
 
   onChange = event => {
@@ -55,11 +60,22 @@ class IntroduceYou extends React.Component {
   };
 
   onStatusChanged = (event, checked) => {
+    if (!checked) {
+      return false
+    }
     let id = event.target.id;
-    let req = (id === 'particular' && checked) || (id === 'professional' && !checked);
-    const company = req ? null : this.state.company;
-    this.setState({is_particular: req, company: company, assujettie_tva: false},
-      () => this.fireChange());
+    let is_particular = (id === 'particular' && checked) || (id === 'professional' && !checked);
+    if (this.state.is_particular == is_particular) {
+      return
+    }
+    var st={
+      is_particular: is_particular,
+    }
+    if (is_particular) {
+      st['particular_access']=true
+      st['professional_access']=false
+    }
+    this.setState(st, this.fireChange);
 
   };
 
@@ -73,23 +89,35 @@ class IntroduceYou extends React.Component {
       () => this.fireChange());
   };
 
-  assujettiTVA = (id, checked) =>{
-    this.setState({assujettie_tva: checked});
-  };
-
   handleChangeCompany = (id, checked) =>{
-    this.setState({company_mission: checked}, () => this.checkHandleChange());
-  };
-
-  checkHandleChange = () =>{
-    const {company_mission, particular_mission} = this.state;
-    if(company_mission && particular_mission){
-      this.setState({particular_company_mission: true})
+    if (!checked) {
+      return
     }
+    this.checkHandleChange('professional_access')
   };
 
   handleChangeParticular = (id, checked) =>{
-    this.setState({particular_mission: checked}, () => this.checkHandleChange());
+    if (!checked) {
+      return
+    }
+    this.checkHandleChange('particular_access')
+  };
+
+  handleChangeBoth = (id, checked) =>{
+    if (!checked) {
+      return
+    }
+    this.checkHandleChange('particular_professional_access')
+  };
+
+  checkHandleChange = name =>{
+    var st={
+      particular_access: false,
+      professional_access: false,
+      particular_professional_access: false,
+    }
+    st[name]=true
+    this.setState(st, this.fireChange)
   };
 
 
@@ -97,7 +125,7 @@ class IntroduceYou extends React.Component {
   render() {
     const {classes} = this.props;
 
-    const {cesu, assujettie_tva, tva_value, particular_mission ,company_mission, particular_company_mission} = this.state;
+    const {cesu, particular_access ,professional_access, particular_professional_access} = this.state;
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
@@ -234,22 +262,6 @@ class IntroduceYou extends React.Component {
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Siret onChange={this.onCompanyChanged} company={this.state.company}/>
                 </Grid>
-                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={this.state.is_certified}
-                        onChange={this.onCertifiedChanged}
-                        color="primary"
-                        name="is_certified"
-                        value={this.state.is_certified}
-                      />
-                    }
-                    label={
-                      <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_certif}</Typography>
-                    }
-                  />
-                </Grid>
                 <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <FormControlLabel
                     control={
@@ -267,29 +279,21 @@ class IntroduceYou extends React.Component {
                   />
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <ButtonSwitch
-                    label={<Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_assujettie_tva}</Typography>}
-                    onChange={this.assujettiTVA}
-                    value={assujettie_tva}
-                    name={'assujettie_tva'}
-                    checked={assujettie_tva}/>
-                </Grid>
-                {
-                  assujettie_tva ?
-                    <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                      <TextField
-                        id="outlined-basic"
-                        label={SHOP.creation.textfield_ntva}
-                        variant="outlined"
-                        onChange={this.onChange}
-                        name={'tva_value'}
-                        value={tva_value}
-                        InputProps={{
-                          endAdornment: <InputAdornment position="end">€</InputAdornment>,
-                        }}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.is_certified}
+                        onChange={this.onCertifiedChanged}
+                        color="primary"
+                        name="is_certified"
+                        value={this.state.is_certified}
                       />
-                    </Grid> : null
-                }
+                    }
+                    label={
+                      <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_certif}</Typography>
+                    }
+                  />
+                </Grid>
                 <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Divider/>
                 </Grid>
@@ -298,28 +302,32 @@ class IntroduceYou extends React.Component {
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <ButtonSwitch
+                    key={moment()}
                     label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_company}</Typography>}
                     onChange={this.handleChangeCompany}
-                    value={company_mission}
-                    name={'company_mission'}
-                    checked={company_mission}
+                    value={professional_access}
+                    name={'professional_access'}
+                    checked={professional_access}
                   />
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <ButtonSwitch
+                    key={moment()}
                     label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_particular}</Typography>}
                     onChange={this.handleChangeParticular}
-                    value={particular_mission}
-                    name={'particular_mission'}
-                    checked={particular_mission}
+                    value={particular_access}
+                    name={'particular_access'}
+                    checked={particular_access}
                   />
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <ButtonSwitch
+                    key={moment()}
                     label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_company_and_particular}</Typography>}
-                    value={particular_company_mission}
-                    name={'particular&company_mission'}
-                    checked={particular_company_mission}
+                    onChange={this.handleChangeBoth}
+                    value={particular_professional_access}
+                    name={'particular_professional_access'}
+                    checked={particular_professional_access}
                   />
                 </Grid>
               </Grid>

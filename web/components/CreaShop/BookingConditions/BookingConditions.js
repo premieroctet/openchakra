@@ -6,6 +6,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import {ALF_CONDS} from '../../../utils/consts.js';
+import moment from 'moment'
 
 class BookingConditions extends React.Component {
   constructor(props) {
@@ -18,27 +19,24 @@ class BookingConditions extends React.Component {
     this.onAlfredConditionsChanged = this.onAlfredConditionsChanged.bind(this);
     this.onBookingChanged = this.onBookingChanged.bind(this);
 
-    this.booking_request = React.createRef();
-    this.booking_auto = React.createRef();
-
-    this.conditions = {};
-    Object.values(ALF_CONDS).forEach(k => this.conditions[k] = React.createRef());
   }
 
   onBookingChanged(id, checked) {
-    let req = (id === 'request' && checked) || (id === 'auto' && !checked);
-    this.setState({booking_request: req},
+    if (!checked) {
+      return false
+    }
+    this.setState({booking_request: id == 'request'},
       () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
-    this.booking_request.current.setState({checked: req});
-    this.booking_auto.current.setState({checked: !req});
 
   }
 
   onAlfredConditionsChanged(id, checked) {
-    let value = checked ? id : Math.max(id - 1, 0);
-    this.setState({my_alfred_conditions: value},
+    if (!checked) {
+      id = (parseInt(id)-1).toString()
+    }
+    id = Math.max(parseInt(id), 0).toString()
+    this.setState({my_alfred_conditions: id},
       () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
-    Object.values(ALF_CONDS).forEach(v => this.conditions[v].current.setState({checked: v <= value}));
   }
 
   render() {
@@ -61,14 +59,14 @@ class BookingConditions extends React.Component {
                 </Grid>
                 <Grid>
                   <Grid>
-                    <ButtonSwitch checked={this.state.booking_request} id='request' style={{width: '100%'}}
+                    <ButtonSwitch key={moment()} checked={this.state.booking_request} id='request' style={{width: '100%'}}
                                   label={'Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.'}
-                                  ref={this.booking_request} onChange={this.onBookingChanged}/>
+                                  onChange={this.onBookingChanged}/>
                   </Grid>
                   <Grid>
-                    <ButtonSwitch checked={!this.state.booking_request} id='auto'
+                    <ButtonSwitch key={moment()} checked={!this.state.booking_request} id='auto'
                                   label={'Les utilisateurs peuvent réserver mes services directement sans demande de réservation.'}
-                                  ref={this.booking_auto} onChange={this.onBookingChanged}/>
+                                  onChange={this.onBookingChanged}/>
                   </Grid>
                 </Grid>
               </Grid>
@@ -79,28 +77,28 @@ class BookingConditions extends React.Component {
                 </Grid>
                 <Grid>
                   <Grid style={{marginBottom: 10}}>
-                    <ButtonSwitch id={ALF_CONDS.BASIC} label={'Respecter les conditions My-Alfred (profil vérifié)'}
+                    <ButtonSwitch key={moment()} id={ALF_CONDS.BASIC} label={'Respecter les conditions My-Alfred (profil vérifié)'}
                                   onChange={this.onAlfredConditionsChanged}
                                   checked={this.state.my_alfred_conditions >= ALF_CONDS.BASIC}
-                                  ref={this.conditions[ALF_CONDS.BASIC]}/>
+                                  />
                   </Grid>
                   <Grid style={{marginBottom: 10}}>
-                    <ButtonSwitch id={ALF_CONDS.PICTURE} label={'Avoir une photo de profil'}
+                    <ButtonSwitch key={moment()} id={ALF_CONDS.PICTURE} label={'Avoir une photo de profil'}
                                   onChange={this.onAlfredConditionsChanged}
                                   checked={this.state.my_alfred_conditions >= ALF_CONDS.PICTURE}
-                                  ref={this.conditions[ALF_CONDS.PICTURE]}/>
+                                  />
                   </Grid>
                   <Grid style={{marginBottom: 10}}>
-                    <ButtonSwitch id={ALF_CONDS.ID_CARD} label={'Avoir déposé une pièce d’identité officielle'}
+                    <ButtonSwitch key={moment()} id={ALF_CONDS.ID_CARD} label={'Avoir déposé une pièce d’identité officielle'}
                                   onChange={this.onAlfredConditionsChanged}
                                   checked={this.state.my_alfred_conditions >= ALF_CONDS.ID_CARD}
-                                  ref={this.conditions[ALF_CONDS.ID_CARD]}/>
+                                  />
                   </Grid>
                   <Grid>
-                    <ButtonSwitch id={ALF_CONDS.RECOMMEND} label={'Etre recommandé par d’autres Alfred'}
+                    <ButtonSwitch key={moment()} id={ALF_CONDS.RECOMMEND} label={'Etre recommandé par d’autres Alfred'}
                                   onChange={this.onAlfredConditionsChanged}
                                   checked={this.state.my_alfred_conditions >= ALF_CONDS.RECOMMEND}
-                                  ref={this.conditions[ALF_CONDS.RECOMMEND]}/>
+                                  />
                   </Grid>
                 </Grid>
               </Grid>

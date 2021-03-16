@@ -59,6 +59,12 @@ class SettingService extends React.Component {
       });
   }
 
+  onChange = event => {
+    const {name, value}=event.target
+    this.setState({[name]: value}, this.fireOnChange
+    )
+  }
+
   onLocationChange(loc_id, checked) {
     let loc = this.state.location;
     loc[loc_id] = checked;
@@ -75,7 +81,7 @@ class SettingService extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {service, location, pick_tax, travel_tax} = this.state;
+    const {service, location, pick_tax, travel_tax, perimeter} = this.state;
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
@@ -95,6 +101,10 @@ class SettingService extends React.Component {
             InputProps={{
               endAdornment: <InputAdornment position="start">Km</InputAdornment>,
             }}
+            value={perimeter}
+            name={'perimeter'}
+            type={'number'}
+            onChange={this.onChange}
           />
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -127,16 +137,6 @@ class SettingService extends React.Component {
                 checked={location.visio === true}
                 label={'En visioconférence'}
                 id='visio'
-                onChange={this.onLocationChange}
-              />
-            </Grid> : null
-          }
-          {'ext' in location ?
-            <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <ButtonSwitch
-                checked={location.ext === true}
-                label={'En extérieur'}
-                id='ext'
                 onChange={this.onLocationChange}
               />
             </Grid> : null

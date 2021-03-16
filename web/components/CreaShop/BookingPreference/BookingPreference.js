@@ -21,7 +21,7 @@ class BookingPreference extends React.Component {
       deadline_value: props.deadline_value ? props.deadline_value : 1,
       minimum_basket: props.minimum_basket,
       service: null,
-      selectedEquipments: props.equipments || [],
+      equipments: props.equipments || [],
     };
     this.onEquipmentChecked = this.onEquipmentChecked.bind(this);
   }
@@ -42,16 +42,15 @@ class BookingPreference extends React.Component {
   }
 
   onEquipmentChecked(event) {
-    if (this.state.selectedEquipments.includes(event.target.name)) {
-      let array = [...this.state.selectedEquipments];
-      let index = array.indexOf(event.target.name);
-      if (index !== -1) {
-        array.splice(index, 1);
-        this.setState({selectedEquipments: array}, () => this.props.onChange(this.state));
-      }
-    } else {
-      this.setState({selectedEquipments: [...this.state.selectedEquipments, event.target.name]}, () => this.fireOnChange());
+    const equipment_id = event.target.name
+    var equipments = this.state.equipments
+    if (equipments.includes(equipment_id)) {
+      equipments = equipments.filter( id => id != equipment_id)
     }
+    else {
+      equipments.push(equipment_id)
+    }
+    this.setState({equipments: equipments}, () => this.props.onChange(this.state));
   }
 
   render() {
@@ -149,15 +148,16 @@ class BookingPreference extends React.Component {
                     <Grid className={classes.bottomSpacer}>
                       <Grid container spacing={1}>
                         {service.equipments.map((result, index) => {
-                          const selected=this.state.selectedEquipments.includes(result._id)
+                          const selected=this.state.equipments.includes(result._id)
                           return (
                             <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
                               <label style={{cursor: 'pointer'}}>
-                                <img src={`../../static/equipments/${result.logo.slice(0, -4)}.svg`}
+                                <img src={`/static/equipments/${result.logo.slice(0, -4)}.svg`}
                                      height={100} width={100} alt={`${result.name_logo.slice(0, -4)}.svg`}
-                                     style={{backgroundColor: selected ? '#CEDEFC' : null}}/>
+                                     style={{backgroundColor: selected ? '#CEDEFC' : null}}
+                                     title={result.label}/>
                                 <Checkbox style={{display: 'none'}} color="primary" type="checkbox" name={result._id}
-                                          checked={this.state.selectedEquipments.includes(result._id)}
+                                          checked={this.state.equipments.includes(result._id)}
                                           onChange={this.onEquipmentChecked}/>
                               </label>
                             </Grid>
