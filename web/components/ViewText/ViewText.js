@@ -8,8 +8,8 @@ class ViewText extends React.Component {
 
   render() {
     return (
-      <View>
-        <Text>
+      <View this.props.viewstyle>
+        <Text this.props textstyle>
           {this.props.content}
         </Text>
       </View>
