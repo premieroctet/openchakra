@@ -39,6 +39,7 @@ const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 
+const {is_development}=require('../../config/config')
 
 const PRESENTATION0=0
 const INTRODUCE1=1
@@ -50,30 +51,32 @@ const ASSETSSERVICE6=6
 const SCHEDULE7=7
 const BOOKCONDITIONS8=8
 
+const LASTSTEP=BOOKCONDITIONS8
+
 class creaShop extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 0,
+      activeStep: is_development() ? LASTSTEP : 0,
       user_id: null,
       saving: false,
       availabilities: [],
       currentUser:{},
       shop: {
-        particular_access: false,
-        professional_access: false,
+        particular_access: is_development() ? false : false,
+        professional_access: is_development() ? true : false,
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: 'Merci pour votre réservation!',
         cancel_mode: CANCEL_MODE.FLEXIBLE,            // FLEXIBLE/MODERATE/STRICT
-        is_particular: true,        // true/false : particulier.pro
-        company: {name: null, creation_date: null, siret: null, naf_ape: null, status: null}, //
-        is_certified: false,
-        service: null,
+        is_particular: is_development() ? false : true,        // true/false : particulier.pro
+        company: is_development() ? {"name":"BRASSERIE AU PIF","creation_date":"23/12/2016","siret":"825243512","naf_ape":"11.05Z","status":"Société à responsabilité limitée (sans autre indication)","errors":null} :{name: null, creation_date: null, siret: null, naf_ape: null, status: null}, //
+        is_certified: is_development() ? true : false,
+        service: is_development() ? '5e694c3a49342b093b96bbd2' : null,
         description: '', // Description de l'expertise
-        prestations: {},
+        prestations: is_development() ? {"5e694cb449342b093b96bbd3":{"_id":"5e694cb449342b093b96bbd3","label":"Création site wordpress","price":500,"billing":"5d66a0db08b3d612bd0864dd"}} : {},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
         travel_tax: 0, // Frais de déplacement
@@ -89,7 +92,7 @@ class creaShop extends React.Component {
         deadline_unit: 'jours', // Unité de prévenance (h:heures, j:jours, s:semaines)
         level: '',
         service_address: null,
-        perimeter: null,
+        perimeter: is_development() ? '10' : null,
         cesu: null,
         cis: false,
         social_security: null,
@@ -196,7 +199,7 @@ class creaShop extends React.Component {
   };
 
   handleNext = () => {
-    if (this.state.activeStep < 9) {
+    if (this.state.activeStep < LASTSTEP) {
       this.setState({activeStep: this.state.activeStep + 1});
     }
     // last page => post
@@ -240,11 +243,7 @@ class creaShop extends React.Component {
               .then()
               .catch(err => console.error(err));
           }
-          axios.get('/myAlfred/api/users/token')
-            .then (res => {
-              setAuthToken()
-              Router.push(`/profile/services?user=${this.state.user_id}`)
-            })
+          Router.push(`/profile/services?user=${this.state.user_id}`)
         })
         .catch(err => {
           this.setState({saving: false});
@@ -368,12 +367,6 @@ class creaShop extends React.Component {
     }
     if (pageIndex === BOOKCONDITIONS8) {
       return false
-    }
-    if (pageIndex === SETTINGSHOP9) {
-      return !settingShop(shop);
-    }
-    if (pageIndex === 9) {
-      return !(this.state.saving || introduceYou(shop));
     }
     return false;
   };
@@ -536,7 +529,7 @@ class creaShop extends React.Component {
                       onClick={this.handleNext}
                       disabled={this.nextDisabled()}
                     >
-                      {activeStep === 9 ? 'Envoyer' : 'Suivant'}
+                      {activeStep === LASTSTEP ? 'Envoyer' : 'Suivant'}
                     </Button>
                   </Grid>
                 </Grid>
