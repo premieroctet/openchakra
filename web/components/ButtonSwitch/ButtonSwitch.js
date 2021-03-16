@@ -8,35 +8,41 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import styles from './ButtonSwitchStyle';
+import Typography from "@material-ui/core/Typography";
 
 const {inspect} = require('util');
 
 
-const IOSSwitch = withStyles(theme => ({
+const IOSSwitch = withStyles((theme) => ({
   root: {
-    width: 42,
+    width: 52,
     height: 26,
     padding: 0,
     margin: theme.spacing(1),
   },
   switchBase: {
-    padding: 1,
+    paddingLeft: 2,
+    paddingRight: 2,
+    paddingBottom: 2,
+    paddingTop: 3,
     '&$checked': {
-      transform: 'translateX(16px)',
-      color: '#47bdd7',
+      padding: 2,
+      transform: 'translateX(26px)',
+      color: '#C7D4EE',
       '& + $track': {
         backgroundColor: 'white',
-
+        opacity: 1,
+        border: `1px solid ${theme.palette.grey[400]}`,
       },
     },
     '&$focusVisible $thumb': {
-      color: 'white',
+      color: '#C7D4EE',
       border: '6px solid #fff',
     },
   },
   thumb: {
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
   },
   track: {
     borderRadius: 26 / 2,
@@ -47,7 +53,7 @@ const IOSSwitch = withStyles(theme => ({
   },
   checked: {},
   focusVisible: {},
-}))(({classes, ...props}) => {
+}))(({ classes, ...props }) => {
   return (
     <Switch
       focusVisibleClassName={classes.focusVisible}
@@ -146,7 +152,8 @@ class ButtonSwitch extends React.Component {
             helperText={this.label ? null : 'Obligatoire'}
           />
           :
-          label === undefined ? 'label introuvable' : label}
+          <Typography style={{color: '#696767'}}>{label === undefined ? 'label introuvable' : label}</Typography>
+        }
             </span>
           </Grid>
         </Grid>
@@ -156,7 +163,7 @@ class ButtonSwitch extends React.Component {
               <Grid style={{display: 'flex'}}>
                 <CssTextField
                   value={this.price}
-                  label={'Tarif'}
+                  label={<Typography style={{color:'#696767'}}>'Tarif'</Typography>}
                   type="number"
                   className={classes.textField}
                   disabled={!checked || priceDisabled}

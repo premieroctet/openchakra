@@ -1,6 +1,6 @@
 import CssBaseline from "@material-ui/core/CssBaseline";
 import MenuIcon from '@material-ui/icons/Menu';
-const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication');
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from '../../static/css/pages/creaShop/creaShopStyle';
@@ -39,8 +39,6 @@ const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 
-const {is_development}=require('../../config/config')
-
 const PRESENTATION0=0
 const INTRODUCE1=1
 const SELECTSERVICE2=2
@@ -59,24 +57,24 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: is_development() ? LASTSTEP : 0,
+      activeStep: 0,
       user_id: null,
       saving: false,
       availabilities: [],
       currentUser:{},
       shop: {
-        particular_access: is_development() ? false : false,
-        professional_access: is_development() ? true : false,
+        particular_access: false,
+        professional_access: false,
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: 'Merci pour votre réservation!',
         cancel_mode: CANCEL_MODE.FLEXIBLE,            // FLEXIBLE/MODERATE/STRICT
-        is_particular: is_development() ? false : true,        // true/false : particulier.pro
-        company: is_development() ? {"name":"BRASSERIE AU PIF","creation_date":"23/12/2016","siret":"825243512","naf_ape":"11.05Z","status":"Société à responsabilité limitée (sans autre indication)","errors":null} :{name: null, creation_date: null, siret: null, naf_ape: null, status: null}, //
-        is_certified: is_development() ? true : false,
-        service: is_development() ? '5e694c3a49342b093b96bbd2' : null,
+        is_particular: true,        // true/false : particulier.pro
+        company: {name: null, creation_date: null, siret: null, naf_ape: null, status: null}, //
+        is_certified: false,
+        service: null,
         description: '', // Description de l'expertise
-        prestations: is_development() ? {"5e694cb449342b093b96bbd3":{"_id":"5e694cb449342b093b96bbd3","label":"Création site wordpress","price":500,"billing":"5d66a0db08b3d612bd0864dd"}} : {},
+        prestations: {},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
         travel_tax: 0, // Frais de déplacement
@@ -92,7 +90,7 @@ class creaShop extends React.Component {
         deadline_unit: 'jours', // Unité de prévenance (h:heures, j:jours, s:semaines)
         level: '',
         service_address: null,
-        perimeter: is_development() ? '10' : null,
+        perimeter: null,
         cesu: null,
         cis: false,
         social_security: null,
@@ -527,7 +525,7 @@ class creaShop extends React.Component {
                       variant="contained"
                       classes={{root :classes.nextButton}}
                       onClick={this.handleNext}
-                      disabled={this.nextDisabled()}
+                      //disabled={this.nextDisabled()}
                     >
                       {activeStep === LASTSTEP ? 'Envoyer' : 'Suivant'}
                     </Button>
