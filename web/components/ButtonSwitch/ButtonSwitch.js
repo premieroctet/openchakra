@@ -76,12 +76,10 @@ const CssTextField = withStyles({
 class ButtonSwitch extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      checked: this.props.checked,
-      billing: props.billing ? props.billing._id : props.isOption ? this.props.billings[0]._id : null,
-      price: this.props.price,
-      label: this.props.label,
-    };
+    this.checked = this.props.checked
+    this.billing = props.billing ? props.billing._id : props.isOption ? this.props.billings[0]._id : null
+    this.price = this.props.price
+    this.label = this.props.label
 
     this.onToggle = this.onToggle.bind(this);
     this.onChangeBilling = this.onChangeBilling.bind(this);
@@ -93,16 +91,18 @@ class ButtonSwitch extends React.Component {
 
   fireChange(id, checked, price, billing, label) {
     if (this.props.onChange) {
-      this.props.onChange(this.props.id, this.state.checked, this.state.checked ? this.state.price : null, this.state.billing, this.state.label);
+      this.props.onChange(this.props.id, this.checked, this.checked ? this.price : null, this.billing, this.label);
     }
   }
 
   onToggle(value) {
-    this.setState({checked: !this.state.checked}, () => this.fireChange());
+    this.checked = !this.checked
+    this.fireChange()
   };
 
   onChangeBilling(event, index) {
-    this.setState({billing: event.target.value}, () => this.fireChange());
+    this.billing = event.target.value
+    this.fireChange()
   }
 
   onChangePrice(event) {
@@ -110,16 +110,18 @@ class ButtonSwitch extends React.Component {
     if (isNaN(price)) {
       price = null;
     }
-    this.setState({price: price}, () => this.fireChange());
+    this.price = price
+    this.fireChange()
   }
 
   onChangeLabel(event) {
-    this.setState({label: event.target.value}, () => this.fireChange());
+    this.label = event.target.value
+    this.fireChange()
   }
 
   render() {
     const {classes, isEditable, isOption, isPrice, billings, priceDisabled} = this.props;
-    var {label, checked} = this.state;
+    var {label, checked} = this;
 
     return (
       <Grid className={classes.contentFiltre}>
@@ -138,10 +140,10 @@ class ButtonSwitch extends React.Component {
           <CssTextField
             label={'Intitulé'}
             placeholder={'Saisissez un intitulé'}
-            value={this.state.label}
+            value={this.label}
             onChange={this.onChangeLabel}
-            error={!this.state.label}
-            helperText={this.state.label ? null : 'Obligatoire'}
+            error={!this.label}
+            helperText={this.label ? null : 'Obligatoire'}
           />
           :
           label === undefined ? 'label introuvable' : label}
@@ -153,7 +155,7 @@ class ButtonSwitch extends React.Component {
             {checked === true ?
               <Grid style={{display: 'flex'}}>
                 <CssTextField
-                  value={this.state.price}
+                  value={this.price}
                   label={'Tarif'}
                   type="number"
                   className={classes.textField}
@@ -165,8 +167,8 @@ class ButtonSwitch extends React.Component {
                     },
                     endAdornment: <InputAdornment position="start">€</InputAdornment>,
                   }}
-                  error={!this.state.price}
-                  helperText={this.state.price ? null : 'Obligatoire'}
+                  error={!this.price}
+                  helperText={this.price ? null : 'Obligatoire'}
                 />
                 {isOption ?
                   <Select
@@ -177,7 +179,7 @@ class ButtonSwitch extends React.Component {
                     disabled={!checked}
                     margin="none"
                     onChange={this.onChangeBilling}
-                    value={this.state.billing}
+                    value={this.billing}
                   >
                     {billings.map(bill => {
                         return (

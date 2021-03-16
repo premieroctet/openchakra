@@ -5,6 +5,7 @@ import {withStyles} from '@material-ui/core/styles';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import {ALF_CONDS} from '../../../utils/consts.js';
 import {CANCEL_MODE} from "../../../utils/consts";
+import moment from 'moment'
 
 class BookingConditions extends React.Component {
   constructor(props) {
@@ -24,26 +25,27 @@ class BookingConditions extends React.Component {
     this.cancelModeChanged = this.cancelModeChanged.bind(this);
 
     this.booking_request = React.createRef();
-    this.booking_auto = React.createRef();
 
     this.conditions = {};
     Object.values(ALF_CONDS).forEach(k => this.conditions[k] = React.createRef());
   }
 
   onBookingChanged(id, checked) {
-    let req = (id === 'request' && checked) || (id === 'auto' && !checked);
-    this.setState({booking_request: req},
+    if (!checked) {
+      return false
+    }
+    this.setState({booking_request: id == 'request'},
       () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
-    this.booking_request.current.setState({checked: req});
-    this.booking_auto.current.setState({checked: !req});
 
   }
 
   onAlfredConditionsChanged(id, checked) {
-    let value = checked ? id : Math.max(id - 1, 0);
-    this.setState({my_alfred_conditions: value},
+    if (!checked) {
+      id = (parseInt(id)-1).toString()
+    }
+    id = Math.max(parseInt(id), 0).toString()
+    this.setState({my_alfred_conditions: id},
       () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
-    Object.values(ALF_CONDS).forEach(v => this.conditions[v].current.setState({checked: v <= value}));
   }
 
   cancelModeChanged(mode_id, checked) {

@@ -73,18 +73,20 @@ const MenuProps = {
   },
 };
 
+const FILTER_ALPHA='Ordre alphabétique'
+const FILTER_TEST='Test'
+
 class Team extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      isMicroService: true,
-      filters: 10,
-      listOfNewAdmin:[{
+      managers_sort: FILTER_ALPHA,
+      newAdmins:[{
         nameAdmin: '',
         firstNameAdmin: '',
         emailAdmin: ''
       }],
-      listOfAdmin:[],
+      admins:[],
       dialogGroupe: false,
       firstname: '',
       name: '',
@@ -94,16 +96,16 @@ class Team extends React.Component{
       dialogAdd:false,
       dialogRemove: false,
       selected: '',
-      plafondGroupe: '',
+      plafondGroupe: 0,
       nameGroupe: '',
-      budget_periode: '',
+      budget_period: null,
       canUpgrade:[],
-      listOfGroups:[],
-      listOfManagers:[],
-      departementsName:'',
+      groups:[],
+      managers:[],
+      groupName:'',
       modeDialog: '',
-      departementSelected: '',
-      listOfNewManagers: [{
+      selectedGroup: '',
+      newManagers: [{
         nameManager: '',
         firstNameManager: '',
         emailManager: '',
@@ -120,14 +122,14 @@ class Team extends React.Component{
       let data = res.data;
       const admins = data.filter(e => e.roles.includes(ADMIN));
       const managers = data.filter(e => e.roles.includes(MANAGER));
-      this.setState({user: data, listOfAdmin: admins, listOfManagers: managers})
+      this.setState({user: data, admins: admins, managers: managers})
     }).catch(err => {
       console.error(err)
     });
 
     axios.get('/myAlfred/api/groups').then(res => {
       let data = res.data;
-      this.setState({listOfGroups: data})
+      this.setState({groups: data})
     }).catch(err => {
       console.error(err)
     });
@@ -143,26 +145,17 @@ class Team extends React.Component{
 
   handleChange = (event, index, user) =>{
     const {value, name} = event.target;
-    if(name === 'nameAdmin' || name === 'firstNameAdmin' || name === 'emailAdmin'){
-      let updatedObj = Object.assign({}, this.state.listOfNewAdmin[index],{[name]: value});
-      this.setState({
-        listOfNewAdmin: [
-          ...this.state.listOfNewAdmin.slice(0, index),
-          updatedObj,
-          ...this.state.listOfNewAdmin.slice(index + 1)
-        ]
-      })
-    }else if(name === 'nameManager' || name === 'firstNameManager' || name === 'emailManager' || name === 'groupSelected'){
-      let updatedObj = Object.assign({}, this.state.listOfNewManagers[index],{[name]: value});
-      this.setState({
-        listOfNewManagers: [
-          ...this.state.listOfNewManagers.slice(0, index),
-          updatedObj,
-          ...this.state.listOfNewManagers.slice(index + 1)
-        ]
-      })
+    if(['nameAdmin', 'firstNameAdmin', 'emailAdmin'].includes(name)){
+      const admins=this.state.newAdmins
+      admins[index][name]=value
+      this.setState({newAdmins: admins})
     }
-    else if(name === 'departementsName'){
+    else if(['nameManager', 'firstNameManager', 'emailManager', 'groupSelected'].includes(name)){
+      const managers=this.state.newManagers
+      managers[index][name]=value
+      this.setState({newManagers:managers})
+    }
+    else if(name === 'groupName'){
       const data ={
         member_id: user._id
       };
@@ -188,77 +181,61 @@ class Team extends React.Component{
 
   addNewLine = (name) =>{
     if(name === 'nbAdmin'){
-      let updatedObj = {nameAdmin: '',firstNameAdmin: '', emailAdmin: ''};
-      this.setState({
-        listOfNewAdmin: [
-          ...this.state.listOfNewAdmin, updatedObj
-        ]
-      })
+      var admins=this.state.newAdmins
+      admins.push({nameAdmin: '',firstNameAdmin: '', emailAdmin: ''})
+      this.setState({newAdmins: admins})
     }
     if(name === 'nbManager'){
-      let updatedObj = {nameManager: '',firstNameManager: '', emailManager: '', groupSelected: ''};
-      this.setState({
-        listOfNewManagers: [
-          ...this.state.listOfNewManagers, updatedObj
-        ]
-      })
+      var managers=this.state.managers
+      managers.push({nameManager: '',firstNameManager: '', emailManager: '', groupSelected: ''})
+      this.setState({newManagers:managers})
     }
   };
 
   removeLine = (name, index, event) =>{
     if(name === 'nbAdmin'){
-      let array = [...this.state.listOfNewAdmin];
-      array.splice(index, 1);
-      this.setState({listOfNewAdmin: array})
+      let admins = [...this.state.newAdmins];
+      admins.splice(index, 1);
+      this.setState({newAdmins: admins})
     }
     if(name === 'nbManager'){
-      let array = [...this.state.listOfNewManagers];
-      array.splice(index, 1);
-      this.setState({listOfNewManagers: array})
+      let managers = [...this.state.newManagers];
+      managers.splice(index, 1);
+      this.setState({newManagers: managers})
     }
   };
 
   handleClickOpen = (name, user, mode, groupeId) =>{
-    if(user){
-      this.setState({selected: user})
-    }else{
-      this.setState({selected: ''})
-    }
-
-    if(groupeId){
-      this.setState({groupeIdSelected: groupeId})
-    }else{
-      this.setState({groupeIdSelected: ''})
-    }
-
-    if(mode === 'manager'){
-      this.setState({modeDialog: mode})
-    }else{
-      this.setState({modeDialog: 'admin'})
-    }
+    this.setState({selected: user || ''})
+    this.setState({groupeIdSelected: groupeId || ''})
+    this.setState({modeDialog: mode === 'manager' ? mode : 'admin'})
 
     if(name === 'dialogGroupe' && user){
-      this.setState({selected: user, nameGroupe: user.name, plafondGroupe: user.budget, budget_periode: user.budget_period})
+      this.setState({selected: user, nameGroupe: user.name, plafondGroupe: user.budget, budget_period: user.budget_period})
     }else{
-      this.setState({nameGroupe: '', plafondGroupe: '', budget_periode: ''})
+      this.setState({nameGroupe: '', plafondGroupe: '', budget_period: ''})
     }
 
     this.setState({[name]: true})
   };
 
   addAdmin = () =>{
-    const{listOfNewAdmin, canUpgrade} = this.state;
+    const{newAdmins, canUpgrade} = this.state;
     setAxiosAuthentication();
 
     if(canUpgrade.length > 0){
-      canUpgrade.map( res =>{
-        axios.put('/myAlfred/api/companies/admin', { admin_id: res}).then(res=>{
-          this.setState({dialogAdd: false}, () =>  this.componentDidMount());
-        }).catch ( err => snackBarError(err.response.data.error))
+      canUpgrade.forEach( res =>{
+        axios.put('/myAlfred/api/companies/admin', { admin_id: res})
+          .then(res=>{
+            this.setState({dialogAdd: false}, () =>  this.componentDidMount());
+          })
+          .catch ( err => {
+            snackBarError(err.response.data.error)
+          })
       })
     }
 
-    listOfNewAdmin.map((res) =>{
+    newAdmins.map((res) =>{
       if(res && res.firstNameAdmin !== '' && res.nameAdmin !== '' && res.emailAdmin !== ''){
         const data = {
           firstname: res.firstNameAdmin,
@@ -272,9 +249,13 @@ class Team extends React.Component{
             const data_id ={
               admin_id: data._id
             };
-            axios.put('/myAlfred/api/companies/admin', data_id).then(res=>{
-              this.setState({dialogAdd: false}, () =>  this.componentDidMount());
-            }).catch ( err => snackBarError(err.response.data.error))
+            axios.put('/myAlfred/api/companies/admin', data_id)
+              .then(res=>{
+                this.setState({dialogAdd: false}, () =>  this.componentDidMount());
+              })
+              .catch ( err => {
+                snackBarError(err.response.data.error)
+              })
           })
           .catch ( err => {
             console.error(err);
@@ -285,18 +266,20 @@ class Team extends React.Component{
   };
 
   addManager = () =>{
-    const{canUpgrade, departementSelected, listOfNewManagers} = this.state;
+    const{canUpgrade, selectedGroup, newManagers} = this.state;
     setAxiosAuthentication();
-
     if(canUpgrade.length > 0){
       canUpgrade.map( res =>{
-        axios.put(`/myAlfred/api/groups/${departementSelected}/managers`, { member_id: res._id}).then(res=>{
-          this.setState({dialogAdd: false}, () =>  this.componentDidMount());
-        }).catch ( err => snackBarError(err.response.data.error))
+        axios.put(`/myAlfred/api/groups/${selectedGroup}/managers`, { member_id: res._id})
+          .then(res=>{
+            this.setState({dialogAdd: false}, () =>  this.componentDidMount());
+          })
+          .catch ( err => {snackBarError(err.response.data.error)
+          })
       })
     }
 
-    listOfNewManagers.map((res) =>{
+    newManagers.map((res) =>{
       if(res && res.firstNameManager !== '' && res.nameManager !== '' && res.emailManager !== '' && res.groupSelected !== ''){
         const data = {
           firstname: res.firstNameManager,
@@ -327,73 +310,85 @@ class Team extends React.Component{
     const{selected} = this.state;
     setAxiosAuthentication();
 
-    axios.delete(`/myAlfred/api/companies/admin/${selected._id}`).then( res =>{
-      snackBarSuccess(`${selected.name} à été supprimé des administrateurs`);
-      this.setState({ dialogRemove: false}, () => this.componentDidMount())
-    }).catch(err =>{
-      snackBarError(err.response.data.error)
+    axios.delete(`/myAlfred/api/companies/admin/${selected._id}`)
+      .then( res =>{
+        snackBarSuccess(`${selected.name} a été supprimé des administrateurs`);
+        this.setState({ dialogRemove: false}, () => this.componentDidMount())
+      })
+      .catch(err =>{
+        snackBarError(err.response.data.error)
     })
   };
 
   removeManager = () =>{
     const{selected, groupeIdSelected} = this.state;
     setAxiosAuthentication();
-    axios.delete(`/myAlfred/api/groups/${groupeIdSelected}/managers/${selected._id}`).then(res =>{
-      snackBarSuccess('Manager supprimé');
-      this.setState({dialogRemove:false}, () => this.componentDidMount())
-    }).catch(err =>{
-      console.error(err)
-    })
+    axios.delete(`/myAlfred/api/groups/${groupeIdSelected}/managers/${selected._id}`)
+      .then(res =>{
+        snackBarSuccess('Manager supprimé');
+        this.setState({dialogRemove:false}, () => this.componentDidMount())
+      })
+      .catch(err =>{
+        console.error(err)
+      })
   };
 
   addGroupe = () => {
-    const{plafondGroupe, nameGroupe, budget_periode} = this.state;
+    const{plafondGroupe, nameGroupe, budget_period} = this.state;
 
     const data = {
       name: nameGroupe,
       budget: plafondGroupe,
-      budget_period: budget_periode,
+      budget_period: budget_period,
     };
 
-    axios.post('/myAlfred/api/companies/groups', data).then(res =>{
-      snackBarSuccess(`Groupe ${nameGroupe} créé`);
-      this.setState({dialogGroupe: false}, () => this.componentDidMount());
-    }).catch( err => {snackBarError(err.response.data.error)});
+    axios.post('/myAlfred/api/groups', data)
+      .then(res =>{
+        snackBarSuccess(`Groupe ${nameGroupe} créé`);
+        this.setState({dialogGroupe: false}, () => this.componentDidMount());
+      })
+      .catch( err => {
+        snackBarError(err.response.data.error)
+      });
   };
 
   updateGroupe = () =>{
-    const{selected, plafondGroupe, nameGroupe, budget_periode} = this.state;
+    const{selected, plafondGroupe, nameGroupe, budget_period} = this.state;
 
     const data = {
       name: nameGroupe,
       budget: plafondGroupe,
-      budget_period: budget_periode,
+      budget_period: budget_period,
     };
 
-    axios.put(`/myAlfred/api/companies/groups/${selected._id}`, data).then(res =>{
-      snackBarSuccess(`${selected.name} modifé`);
-      this.setState({dialogGroupe: false},() => this.componentDidMount())
-    }).catch(err =>{
-      snackBarError(err.response.data.error)
-    })
+    axios.put(`/myAlfred/api/groups/${selected._id}`, data)
+      .then(res =>{
+        snackBarSuccess(`${selected.name} modifé`);
+        this.setState({dialogGroupe: false},() => this.componentDidMount())
+      })
+      .catch(err =>{
+        snackBarError(err.response.data.error)
+      })
   };
 
   removeGroupe = () =>{
     const{selected} = this.state;
-    axios.delete(`/myAlfred/api/companies/groups/${selected._id}`).then( res => {
-      snackBarSuccess(`Groupe ${selected.name} supprimé`);
-      this.setState({dialogRemoveGroupe: false},() => this.componentDidMount())
-    }).catch(err =>{
-      snackBarError(err.response.data.error)
+    axios.delete(`/myAlfred/api/groups/${selected._id}`)
+      .then( res => {
+        snackBarSuccess(`Groupe ${selected.name} supprimé`);
+        this.setState({dialogRemoveGroupe: false},() => this.componentDidMount())
+      })
+      .catch(err =>{
+        snackBarError(err.response.data.error)
     })
   };
 
   dialogAdd = (classes)=>{
-    const{dialogAdd, listOfNewAdmin, user,canUpgrade, modeDialog, listOfGroups, departementSelected, listOfNewManagers} = this.state;
+    const{dialogAdd, newAdmins, user,canUpgrade, modeDialog, groups, selectedGroup, newManagers} = this.state;
 
     let userEmploye = modeDialog === 'admin' ? user ? user.filter( e => !e.roles.includes(ADMIN)) : '' :  user ? user.filter( e => !e.roles.includes(MANAGER)) : '';
 
-    let objectToMap = modeDialog === 'admin' ? listOfNewAdmin : listOfNewManagers;
+    let objectToMap = modeDialog === 'admin' ? newAdmins : newManagers;
 
 
     return(
@@ -439,7 +434,7 @@ class Team extends React.Component{
                   { canUpgrade.length > 0 ?
                     <>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <h3>Affecter un département aux managers selectionner</h3>
+                        <h3>Choisir le département</h3>
                       </Grid>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                         <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
@@ -447,13 +442,13 @@ class Team extends React.Component{
                           <Select
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
-                            name={'departementSelected'}
+                            name={'selectedGroup'}
                             onChange={this.handleChange}
                             label="Departements"
-                            value={departementSelected}
+                            value={selectedGroup}
                           >
                             {
-                              listOfGroups.map((res, index) => (
+                              groups.map((res, index) => (
                                 <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
                               ))
                             }
@@ -528,7 +523,7 @@ class Team extends React.Component{
                           value={res.groupSelected || ''}
                         >
                           {
-                            listOfGroups.map((res, index) => (
+                            groups.map((res, index) => (
                               <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
                             ))
                           }
@@ -553,7 +548,7 @@ class Team extends React.Component{
             Annuler
           </Button>
           <Button onClick={modeDialog === 'admin' ? this.addAdmin : this.addManager} color="primary">
-            Confirmé
+            Confirmer
           </Button>
         </DialogActions>
       </Dialog>
@@ -590,7 +585,7 @@ class Team extends React.Component{
   };
 
   dialogGroupe = (classes)=>{
-    const{dialogGroupe, selected, paymentMethod, accounts, nameGroupe, plafondGroupe, budget_periode} = this.state;
+    const{dialogGroupe, selected, paymentMethod, accounts, nameGroupe, plafondGroupe, budget_period} = this.state;
 
     return(
       <Dialog open={dialogGroupe} onClose={() => this.setState({dialogGroupe: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
@@ -616,6 +611,8 @@ class Team extends React.Component{
                     label="Plafond"
                     name={'plafondGroupe'}
                     value={plafondGroupe}
+                    type={'number'}
+                    InputProps={{ inputProps: { min: 0 } }}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
                     onChange={this.handleChange}
@@ -630,8 +627,8 @@ class Team extends React.Component{
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={budget_periode}
-                      name={'budget_periode'}
+                      value={budget_period}
+                      name={'budget_period'}
                       label={'Période'}
                       onChange={this.handleChange}
                     >
@@ -724,7 +721,7 @@ class Team extends React.Component{
 
   render() {
     const{classes} = this.props;
-    const{filters, listOfGroups, isMicroService, listOfAdmin, listOfManagers} = this.state;
+    const{managers_sort, groups, admins, managers} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -743,14 +740,15 @@ class Team extends React.Component{
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
             {
-              listOfAdmin.length > 0 ?
+              admins.length > 0 ?
                 <Grid>
                   <List>
-                    {listOfAdmin.map((res, index) =>(
+                    {admins.map((res, index) =>(
                       <>
                         <ListItem key={index}>
                           <ListItemText
-                            primary={`${res.name},${res.firstname} - ${res.email}`}
+                            primary={res.full_name}
+                            secondary={res.email}
                           />
                           <ListItemSecondaryAction>
                             <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemove', res, 'admin')}>
@@ -764,7 +762,7 @@ class Team extends React.Component{
                   </List>
                 </Grid> :
                 <Grid>
-                  <Typography>Pas d'admin</Typography>
+                  <Typography>Aucun administrateur n'est défini</Typography>
                 </Grid>
             }
           </Box>
@@ -784,15 +782,15 @@ class Team extends React.Component{
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
             <Grid className={classes.listChipContainer}>
-              {listOfGroups.length > 0 ?
+              {groups.length > 0 ?
                 <List>
                   {
-                  listOfGroups.map((res,index) =>(
+                  groups.map((res,index) =>(
                     <>
                       <ListItem key={index}>
                         <ListItemText
                           primary={res.name}
-                          secondary={`${res.budget}€ / ${BUDGET_PERIOD[res.budget_period]}`}
+                          secondary={res.budget ? `${res.budget}€ / ${BUDGET_PERIOD[res.budget_period]}` : 'Pas de budget défini'}
                         />
                         <ListItemSecondaryAction>
                           <IconButton edge="end" aria-label="update" onClick={() => this.handleClickOpen('dialogGroupe', res)}>
@@ -809,19 +807,19 @@ class Team extends React.Component{
                 </List>
                   :
                 <Grid>
-                  <Typography>Pas de groupe</Typography>
+                  <Typography>Aucun département n'est défini</Typography>
                 </Grid>
               }
             </Grid>
           </Box>
         </Grid>
         {
-          listOfGroups.length > 0 ?
+          groups.length > 0 ?
             <>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
                   <Grid>
-                    <h3>{isMicroService ? 'Managers' : 'Collaborateurs'}</h3>
+                    <h3>Managers</h3>
                   </Grid>
                   <Grid container style={{marginLeft: '1vh'}}>
                     <Grid>
@@ -845,15 +843,15 @@ class Team extends React.Component{
                       <Select
                         labelId="simple-select-placeholder-label-label"
                         id="simple-select-placeholder-label"
-                        value={filters}
-                        name={'filters'}
+                        value={managers_sort}
+                        name={'managers_sort'}
                         onChange={this.handleChange}
                         displayEmpty
                         disableUnderline
                         classes={{select: classes.searchSelectPadding}}
                       >
-                        <MenuItem value={10}><strong>Ordre alphabétique</strong></MenuItem>
-                        <MenuItem value={20}><strong>Test</strong></MenuItem>
+                        <MenuItem value={FILTER_ALPHA}><strong>{FILTER_ALPHA}</strong></MenuItem>
+                        <MenuItem value={FILTER_TEST}><strong>{FILTER_TEST}</strong></MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -865,32 +863,32 @@ class Team extends React.Component{
                     <Box>
                       <Grid>
                         <List>
-                          {!listOfManagers ? null :
-                            listOfManagers.map( (res,index) => {
-                              let groupe = listOfGroups.find( group => group.members.map( m => m._id).includes(res._id));
+                          {!managers ? null :
+                            managers.map( (res,index) => {
+                              let groupe = groups.find( group => group.members.map( m => m._id).includes(res._id));
                               let groupeId = groupe ? groupe._id : '';
                               return(
                                 <Grid key={index}>
                                   <ListItem key={index}>
                                     <ListItemText
-                                      primary={res.name}
+                                      primary={res.full_name}
                                       secondary={res.email}
                                     />
                                     <ListItemSecondaryAction>
                                       {
-                                        !listOfGroups.length > 0 ? null :
+                                        !groups.length > 0 ? null :
                                           <FormControl className={classes.formControl}>
-                                            <InputLabel id="demo-simple-select-label">Départements</InputLabel>
+                                            <InputLabel id="demo-simple-select-label">Département</InputLabel>
                                             <Select
                                               labelId="demo-simple-select-label"
                                               id="demo-simple-select"
                                               value={groupeId}
                                               onChange={(e) => this.handleChange(e, null, res)}
-                                              name={'departementsName'}
+                                              name={'groupName'}
                                             >
                                               {
-                                                listOfGroups.map((res, index) => (
-                                                  <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
+                                                groups.map((res, index) => (
+                                                  <MenuItem key={index} value={res._id}>{ res.name}</MenuItem>
                                                 ))
                                               }
                                             </Select>

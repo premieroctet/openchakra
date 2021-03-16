@@ -5,6 +5,8 @@ import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios';
 import styles from '../../static/css/components/Siret/Siret';
+import ButtonSwitch from '../ButtonSwitch/ButtonSwitch';
+import {SHOP} from '../../utils/i18n';
 
 const moment = require('moment');
 const {SIRET} = require('../../config/config');
@@ -25,6 +27,8 @@ class siret extends React.Component {
       creation_date: '',
       name: '',
       status: '',
+      vat_subject: false,
+      vat_number: null,
     };
     if (this.props.company) {
       this.state = this.props.company;
@@ -105,6 +109,13 @@ class siret extends React.Component {
       }, () => this.props.onChange(this.state),
     );
   }
+
+  onVatSubjectChanged = (id, checked) =>{
+    const vat_number = checked ? this.state.vat_number : null
+    this.setState({vat_subject: checked, vat_number: vat_number},
+      () => this.props.onChange(this.state));
+  };
+
 
   render() {
     const {classes} = this.props;
@@ -195,6 +206,26 @@ class siret extends React.Component {
                 classes={{root: classes.textField}}
               />
             </Grid>
+            <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+              <ButtonSwitch
+                label={<Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_vat_subject}</Typography>}
+                onChange={this.onVatSubjectChanged}
+                name={'vat_subject'}
+                checked={this.state.vat_subject}/>
+            </Grid>
+            {
+              this.state.vat_subject ?
+                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                  <TextField
+                    id="outlined-basic"
+                    label={SHOP.creation.textfield_ntva}
+                    variant="outlined"
+                    onChange={this.onChange}
+                    name={'vat_number'}
+                    value={this.state.vat_number}
+                  />
+                </Grid> : null
+            }
           </Grid>
         </Grid>
       </Grid>

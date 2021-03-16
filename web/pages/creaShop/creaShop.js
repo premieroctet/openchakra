@@ -26,6 +26,7 @@ import {
   selectService,
   settingService,
   settingShop,
+  bookingPreferences,
 } from '../../utils/validationSteps/validationSteps';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 import IconButton from "@material-ui/core/IconButton";
@@ -38,19 +39,31 @@ const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 
+
+const PRESENTATION0=0
+const INTRODUCE1=1
+const SELECTSERVICE2=2
+const SELECTPRESTATION3=3
+const SETTINGSERVICE4=4
+const BOOKINGPREFERENCE5=5
+const ASSETSSERVICE6=6
+const SCHEDULE7=7
+const BOOKCONDITIONS8=8
+
 class creaShop extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 8,
+      activeStep: 0,
       user_id: null,
       saving: false,
       availabilities: [],
       currentUser:{},
-      particular_access: true,
-      professional_access: true,
       shop: {
+        particular_access: false,
+        professional_access: false,
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: 'Merci pour votre réservation!',
@@ -76,10 +89,12 @@ class creaShop extends React.Component {
         deadline_unit: 'jours', // Unité de prévenance (h:heures, j:jours, s:semaines)
         level: '',
         service_address: null,
-        perimeter: 10,
+        perimeter: null,
         cesu: null,
         cis: false,
         social_security: null,
+        vat_subject: false,
+        vat_number: null,
         sideBarLabels: []
       },
     };
@@ -117,37 +132,6 @@ class creaShop extends React.Component {
   componentWillUnmount = () => {
     clearInterval(this.intervalId)
   }
-
-  nextDisabled = () => {
-
-    let shop = this.state.shop;
-    let pageIndex = this.state.activeStep;
-    if (pageIndex === 0) {
-      return creaShopPresentation();
-    }
-    if (pageIndex === 1) {
-      return selectService(shop);
-    }
-    if (pageIndex === 2) {
-      return selectPrestation(shop);
-    }
-    if (pageIndex === 3) {
-      return settingService(shop);
-    }
-    if (pageIndex === 5) {
-      return assetsService(shop);
-    }
-    if (pageIndex === 6) {
-      return this.scheduleDrawer.current && this.scheduleDrawer.current.isDirty()
-    }
-    if (pageIndex === 8) {
-      return settingShop(shop);
-    }
-    if (pageIndex === 9) {
-      return this.state.saving || introduceYou(shop);
-    }
-    return false;
-  };
 
   availabilityDeleted = (avail) => {
     let shop = this.state.shop;
@@ -286,12 +270,12 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  settingsChanged = (location, travel_tax, pick_tax, selectedStuff) => {
+  settingsChanged = (location, travel_tax, pick_tax, perimeter) => {
     let shop = this.state.shop;
     shop.location = location;
     shop.travel_tax = travel_tax;
     shop.pick_tax = pick_tax;
-    shop.equipments = selectedStuff;
+    shop.perimeter = perimeter;
     this.setState({shop: shop});
   }
 
@@ -302,6 +286,7 @@ class creaShop extends React.Component {
     shop.deadline_unit = state.deadline_unit;
     shop.deadline_value = state.deadline_value;
     shop.perimeter = state.perimeter;
+    shop.equipments = state.equipments;
 
     this.setState({shop: shop});
   }
@@ -335,10 +320,13 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  introduceChanged = (is_particular, company, is_certified, cesu, cis, social_security) => {
+  introduceChanged = (is_particular, company, is_certified, cesu, cis, social_security,
+    particular_access, professional_access) => {
     let shop = this.state.shop;
     shop.is_particular = is_particular;
     shop.is_certified = is_certified;
+    shop.particular_access = particular_access;
+    shop.professional_access = professional_access;
     if (is_particular) {
       shop.company = null;
       shop.cesu = cesu;
@@ -352,49 +340,88 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
+  nextDisabled = () => {
+
+    let shop = this.state.shop;
+
+    let pageIndex = this.state.activeStep;
+    if (pageIndex === PRESENTATION0) {
+      return !creaShopPresentation();
+    }
+    if (pageIndex === INTRODUCE1) {
+      return !introduceYou(shop);
+    }
+    if (pageIndex === SELECTSERVICE2) {
+      return !selectService(shop);
+    }
+    if (pageIndex === SELECTPRESTATION3) {
+      return !selectPrestation(shop);
+    }
+    if (pageIndex == SETTINGSERVICE4 ) {
+      return !settingService(shop)
+    }
+    if (pageIndex === BOOKINGPREFERENCE5) {
+      return !bookingPreferences(shop);
+    }
+    if (pageIndex === SCHEDULE7) {
+      return this.scheduleDrawer.current && this.scheduleDrawer.current.isDirty()
+    }
+    if (pageIndex === BOOKCONDITIONS8) {
+      return false
+    }
+    if (pageIndex === SETTINGSHOP9) {
+      return !settingShop(shop);
+    }
+    if (pageIndex === 9) {
+      return !(this.state.saving || introduceYou(shop));
+    }
+    return false;
+  };
+
+
   renderSwitch = (stepIndex) =>{
-    const{shop , currentUser,  professional_access, particular_access}= this.state;
+    const{shop , currentUser}= this.state;
     switch (stepIndex) {
-      case 0:
+      case PRESENTATION0:
         return <CreaShopPresentation
           user={currentUser}/>;
-      case 1 :
+      case INTRODUCE1 :
         return <IntroduceYou
           is_particular={shop.is_particular}
           company={shop.company}
           is_certified={shop.is_certified}
           onChange={this.introduceChanged}/>;
-      case 2:
+      case SELECTSERVICE2:
         return <SelectService
           creation={true}
           onChange={this.onServiceChanged}
           service={shop.service}
           creationBoutique={true}
-          particular_access={particular_access}
-          professional_access={professional_access}/>;
-      case 3:
+          particular_access={shop.particular_access}
+          professional_access={shop.professional_access}/>;
+      case SELECTPRESTATION3:
         return <SelectPrestation
           service={shop.service}
           prestations={shop.prestations}
           onChange={this.onPrestaChanged}/>;
-      case 4:
+      case SETTINGSERVICE4:
         return <SettingService
           service={shop.service}
           perimeter={shop.perimeter}
           onChange={this.settingsChanged}/>;
-      case 5:
+      case BOOKINGPREFERENCE5:
         return <BookingPreference
           service={shop.service}
           onChange={this.preferencesChanged}
           deadline_unit={shop.deadline_unit}
           deadline_value={shop.deadline_value}
           minimum_basket={shop.minimum_basket}/>;
-      case 6:
+      case ASSETSSERVICE6:
         return <AssetsService
           data={shop}
           onChange={this.assetsChanged}
           type={'creaShop'}/>;
-      case 7:
+      case SCHEDULE7:
         return <DrawerAndSchedule
           availabilities={this.state.availabilities}
           title={I18N.SCHEDULE_TITLE}
@@ -406,7 +433,7 @@ class creaShop extends React.Component {
           onDateSelectionCleared={this.onDateSelectionCleared}
           selectable={true}
           ref={this.scheduleDrawer}/>;
-      case 8:
+      case BOOKCONDITIONS8:
         return <BookingConditions
           conditions={shop.my_alfred_conditions}
           booking_request={shop.booking_request}
@@ -507,7 +534,7 @@ class creaShop extends React.Component {
                       variant="contained"
                       classes={{root :classes.nextButton}}
                       onClick={this.handleNext}
-                      //disabled={this.nextDisabled()}
+                      disabled={this.nextDisabled()}
                     >
                       {activeStep === 9 ? 'Envoyer' : 'Suivant'}
                     </Button>

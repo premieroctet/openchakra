@@ -226,20 +226,21 @@ const validateCompanyGroup = data =>{
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : '';
-  data.budget = 'budget' in data ? data.budget : null;
-  data.budget_period = 'budget_period' in data ? data.budget_period : null;
+  data.budget = 'budget' in data ? data.budget : '';
+  data.budget_period = 'budget_period' in data ? data.budget_period : '';
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
   }
 
-  if (data.budget && Validator.isEmpty(data.budget_period)) {
-    errors.name = 'Veuillez selectionner une période';
-  }
-
-  if (data.budget != null && data.budget < 0 ) {
-    errors.budget = 'Le budget doit être > 0';
-  }
+  if ('budget' in data && !Validator.isEmpty(data.budget)) {
+    if (parseInt(data.budget)<0) {
+      errors.budget = 'Le budget doit être un nombre positif';
+    }
+    if (Validator.isEmpty(data.budget_period)) {
+      errors.name = 'Veuillez sélectionner une période';
+    }
+}
 
   return {
     errors,

@@ -20,7 +20,7 @@ class BookingPreference extends React.Component {
       deadline_value: props.deadline_value ? props.deadline_value : 1,
       minimum_basket: props.minimum_basket,
       service: null,
-      selectedEquipments: props.equipments || [],
+      equipments: props.equipments || [],
     };
     this.onEquipmentChecked = this.onEquipmentChecked.bind(this);
   }
@@ -41,16 +41,15 @@ class BookingPreference extends React.Component {
   }
 
   onEquipmentChecked(event) {
-    if (this.state.selectedEquipments.includes(event.target.name)) {
-      let array = [...this.state.selectedEquipments];
-      let index = array.indexOf(event.target.name);
-      if (index !== -1) {
-        array.splice(index, 1);
-        this.setState({selectedEquipments: array}, () => this.props.onChange(this.state));
-      }
-    } else {
-      this.setState({selectedEquipments: [...this.state.selectedEquipments, event.target.name]}, () => this.fireOnChange());
+    const equipment_id = event.target.name
+    var equipments = this.state.equipments
+    if (equipments.includes(equipment_id)) {
+      equipments = equipments.filter( id => id != equipment_id)
     }
+    else {
+      equipments.push(equipment_id)
+    }
+    this.setState({equipments: equipments}, () => this.props.onChange(this.state));
   }
 
   render() {
