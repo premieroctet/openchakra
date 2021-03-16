@@ -200,7 +200,7 @@ const SHOP = {
     subtitle_minimum_basket: ' Le client peut réserver mes services si le total des prestations sélectionnées est supérieur à :',
     textfield_minimum_basket: 'Panier minimum',
     unit_minimum_basket: '€',
-    title_equipments: 'De quels équipement disposez vous pour ce service ?',
+    title_equipments: 'Les équipements que vous fournissez pour ce service:',
   },
   assets:{
     title: 'Vos atouts',
