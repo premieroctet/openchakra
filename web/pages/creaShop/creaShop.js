@@ -57,7 +57,7 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 8,
+      activeStep: 0,
       user_id: null,
       saving: false,
       availabilities: [],
@@ -525,7 +525,7 @@ class creaShop extends React.Component {
                       variant="contained"
                       classes={{root :classes.nextButton}}
                       onClick={this.handleNext}
-                      //disabled={this.nextDisabled()}
+                      disabled={this.nextDisabled()}
                     >
                       {activeStep === LASTSTEP ? 'Envoyer' : 'Suivant'}
                     </Button>
