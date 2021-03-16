@@ -3,7 +3,6 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../../static/css/components/SelectService/SelectService';
-import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import Select from 'react-select'
 const {matches, normalize} = require('../../../utils/text');
@@ -114,29 +113,27 @@ class SelectService extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
           <h2 className={classes.policySizeTitle}>{SHOP.service.title}</h2>
         </Grid>
-        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
             <h3 style={{color: '#696767'}}>{SHOP.service.subtitle}</h3>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <h4 className={classes.policySizeSubtitle}>{SHOP.service.content}</h4>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+            <h4 className={classes.policySizeSubtitle}>{SHOP.service.content_particular_professional}</h4>
           </Grid>
         </Grid>
           {this.isCreation() ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid>
-                <Select
-                  options={options}
-                  onChange={this.onChange}
-                  disabled={!this.isCreation()}
-                  searchable={true}
-                  filterOption={this.searchFn}
-                  isLoading={loading}
-                  loadingMessage={() => 'Recherche des services'}
-                  placeholder={SHOP.service.placeholder}
-                  styles={professional_access && particular_access ? tabbedStyle : ''}
-                />
-              </Grid>
+              <Select
+                options={options}
+                onChange={this.onChange}
+                disabled={!this.isCreation()}
+                searchable={true}
+                filterOption={this.searchFn}
+                isLoading={loading}
+                loadingMessage={() => 'Recherche des services'}
+                placeholder={SHOP.service.placeholder}
+                styles={professional_access && particular_access ? tabbedStyle : ''}
+              />
             </Grid>
             :
             null
