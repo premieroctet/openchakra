@@ -112,7 +112,6 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
             .catch(err => console.error(err));
           var su = data2ServiceUser(req.body, new ServiceUser());
           su.user = req.user.id;
-
           // FIX : créer les prestations custom avant
           req.body.prestations = JSON.parse(req.body.prestations);
           let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);

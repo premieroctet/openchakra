@@ -39,7 +39,6 @@ const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 
-
 const PRESENTATION0=0
 const INTRODUCE1=1
 const SELECTSERVICE2=2
@@ -50,13 +49,15 @@ const ASSETSSERVICE6=6
 const SCHEDULE7=7
 const BOOKCONDITIONS8=8
 
+const LASTSTEP=BOOKCONDITIONS8
+
 class creaShop extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 1,
+      activeStep: 0,
       user_id: null,
       saving: false,
       availabilities: [],
@@ -196,7 +197,7 @@ class creaShop extends React.Component {
   };
 
   handleNext = () => {
-    if (this.state.activeStep < 9) {
+    if (this.state.activeStep < LASTSTEP) {
       this.setState({activeStep: this.state.activeStep + 1});
     }
     // last page => post
@@ -240,11 +241,7 @@ class creaShop extends React.Component {
               .then()
               .catch(err => console.error(err));
           }
-          axios.get('/myAlfred/api/users/token')
-            .then (res => {
-              setAuthToken()
-              Router.push(`/profile/services?user=${this.state.user_id}`)
-            })
+          Router.push(`/profile/services?user=${this.state.user_id}`)
         })
         .catch(err => {
           this.setState({saving: false});
@@ -368,9 +365,6 @@ class creaShop extends React.Component {
     }
     if (pageIndex === BOOKCONDITIONS8) {
       return false
-    }
-    if (pageIndex === 8) {
-      return !(this.state.saving || introduceYou(shop));
     }
     return false;
   };
@@ -533,7 +527,7 @@ class creaShop extends React.Component {
                       onClick={this.handleNext}
                       //disabled={this.nextDisabled()}
                     >
-                      {activeStep === 9 ? 'Envoyer' : 'Suivant'}
+                      {activeStep === LASTSTEP ? 'Envoyer' : 'Suivant'}
                     </Button>
                   </Grid>
                 </Grid>

@@ -72,6 +72,7 @@ class BookingConditions extends React.Component {
         <Grid container spacing={3} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
+              key={moment()}
               checked={this.state.booking_request}
               id='request'
               style={{width: '100%'}}
@@ -82,6 +83,7 @@ class BookingConditions extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
+            key={moment()}
               checked={!this.state.booking_request}
               id='auto'
               label={'Les utilisateurs peuvent réserver mes services directement sans demande de réservation.'}
@@ -96,6 +98,7 @@ class BookingConditions extends React.Component {
         <Grid container spacing={3} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
+              key={moment()}
               id={ALF_CONDS.BASIC}
               label={'Respecter les conditions My-Alfred (profil vérifié)'}
               onChange={this.onAlfredConditionsChanged}
@@ -105,6 +108,7 @@ class BookingConditions extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
+              key={moment()}
               id={ALF_CONDS.PICTURE}
               label={'Avoir une photo de profil'}
               onChange={this.onAlfredConditionsChanged}
@@ -114,6 +118,7 @@ class BookingConditions extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
+              key={moment()}
               id={ALF_CONDS.ID_CARD}
               label={'Avoir déposé une pièce d’identité officielle'}
               onChange={this.onAlfredConditionsChanged}
@@ -123,6 +128,7 @@ class BookingConditions extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
+              key={moment()}
               id={ALF_CONDS.RECOMMEND}
               label={'Etre recommandé par d’autres Alfred'}
               onChange={this.onAlfredConditionsChanged}
@@ -137,6 +143,7 @@ class BookingConditions extends React.Component {
         <Grid container spacing={3} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
+              key={moment()}
               id={CANCEL_MODE.FLEXIBLE}
               checked={this.state.cancel_mode == CANCEL_MODE.FLEXIBLE}
               label={'Flexibles: Remboursement intégral jusqu\'à 1 jour avant la prestation'}
@@ -145,6 +152,7 @@ class BookingConditions extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
+              key={moment()}
               id={CANCEL_MODE.MODERATE}
               checked={this.state.cancel_mode == CANCEL_MODE.MODERATE}
               label={'Modérées: Remboursement intégral jusqu\'à 5 jours avant la prestation'}
@@ -154,6 +162,7 @@ class BookingConditions extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
+              key={moment()}
               id={CANCEL_MODE.STRICT}
               checked={this.state.cancel_mode == CANCEL_MODE.STRICT}
               label={'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation'}

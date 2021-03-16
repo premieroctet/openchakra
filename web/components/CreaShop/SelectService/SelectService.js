@@ -132,6 +132,7 @@ class SelectService extends React.Component {
                   searchable={true}
                   filterOption={this.searchFn}
                   isLoading={loading}
+                  loadingMessage={() => 'Recherche des services'}
                   placeholder={SHOP.service.placeholder}
                   styles={professional_access && particular_access ? tabbedStyle : ''}
                 />

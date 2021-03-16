@@ -128,15 +128,16 @@ class BookingPreference extends React.Component {
             <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
               <Grid container xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
                 {service.equipments.map((result, index) => {
-                  const selected=this.state.selectedEquipments.includes(result._id);
+                  const selected=this.state.equipments.includes(result._id);
                   return (
                     <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
                       <label style={{cursor: 'pointer'}}>
                         <img
-                          src={`../../static/equipments/${result.logo.slice(0, -4)}.svg`}
+                          src={`/static/equipments/${result.logo}`}
                           height={100}
                           width={100}
-                          alt={`${result.name_logo.slice(0, -4)}.svg`}
+                          alt={result.label}
+                          title={result.label}
                           style={{backgroundColor: selected ? '#CEDEFC' : null}}
                         />
                         <Checkbox
@@ -144,7 +145,7 @@ class BookingPreference extends React.Component {
                           color="primary"
                           type="checkbox"
                           name={result._id}
-                          checked={this.state.selectedEquipments.includes(result._id)}
+                          checked={this.state.equipments.includes(result._id)}
                           onChange={this.onEquipmentChecked}/>
                       </label>
                     </Grid>
