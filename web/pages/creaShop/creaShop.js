@@ -525,7 +525,7 @@ class creaShop extends React.Component {
                       variant="contained"
                       classes={{root :classes.nextButton}}
                       onClick={this.handleNext}
-                      //disabled={this.nextDisabled()}
+                      disabled={this.nextDisabled()}
                     >
                       {activeStep === LASTSTEP ? 'Envoyer' : 'Suivant'}
                     </Button>
