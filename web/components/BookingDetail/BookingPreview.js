@@ -23,7 +23,6 @@ import Hidden from "@material-ui/core/Hidden";
 import {PDFDownloadLink} from "@react-pdf/renderer";
 import PdfGeneration from "../PdfGeneration/PdfGeneration";
 import NoSSR from "react-no-ssr";
-import LayoutPdf from "../../hoc/Layout/Pdf/LayoutPdf";
 
 const {BOOKING} = require('../../utils/i18n')
 registerLocale('fr', fr);
@@ -76,9 +75,13 @@ class BookingPreview extends React.Component {
     const booking_id = this.props.booking_id;
 
 
-    axios.get(`/myAlfred/api/shop/alfred/${booking_id}`).then().catch(err => {
-      console.error(err)
-    })
+    axios.get(`/myAlfred/api/shop/alfred/${booking_id}`)
+      .then(res => {
+        this.setState({is_pro: !!res.data.is_professional})
+      })
+      .catch(err => {
+        console.error(err)
+      })
 
 
     this.setState({booking_id: booking_id});
@@ -211,7 +214,7 @@ class BookingPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime, loading} = this.state;
+    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime, loading, is_pro} = this.state;
 
     if (!bookingObj || !currentUser) {
       return null
@@ -289,7 +292,7 @@ class BookingPreview extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  {bookingObj.billing_number != null && bookingObj.receipt_number != null ?
+                  {bookingObj.billing_number !== null && bookingObj.receipt_number !== null ?
                     <NoSSR>
                       <Grid style={{
                         textAlign: 'center',
@@ -300,14 +303,21 @@ class BookingPreview extends React.Component {
                             <Grid onClick={this.setLoading}
                             >
                               <PDFDownloadLink
-                                document={<LayoutPdf booking_id={booking_id}/>}
-                                fileName="facture.pdf"
+                                document={<PdfGeneration bookingObj={bookingObj} is_pro={is_pro}/>}
+                                fileName=
+                                  {
+                                    is_pro ? "facture" + bookingObj.billing_number + ".pdf"
+                                      : "recepisse" + bookingObj.receipt_number + ".pdf"
+                                  }
                                 style={{
                                   textDecoration: 'none',
                                   color: '#CCDCFB'
                                 }}
                               >
-                                Télécharger ma facture
+                                Télécharger
+                                {
+                                  is_pro ? " ma facture" : " mon récépissé"
+                                }
                               </PDFDownloadLink>
                             </Grid>
                         }
