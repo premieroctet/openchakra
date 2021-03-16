@@ -261,73 +261,78 @@ class IntroduceYou extends React.Component {
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Siret onChange={this.onCompanyChanged} company={this.state.company}/>
                 </Grid>
-                <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={this.state.cis}
-                        onChange={this.onCISChange}
-                        color="primary"
-                        name="is_certified"
-                        value={this.state.is_certified}
-                      />
-                    }
-                    label={
-                      <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_cis}</Typography>
-                    }
-                  />
-                </Grid>
-                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={this.state.is_certified}
-                        onChange={this.onCertifiedChanged}
-                        color="primary"
-                        name="is_certified"
-                        value={this.state.is_certified}
-                      />
-                    }
-                    label={
-                      <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_certif}</Typography>
-                    }
-                  />
+                <Grid  container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+                  <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={this.state.cis}
+                          onChange={this.onCISChange}
+                          color="primary"
+                          name="is_certified"
+                          value={this.state.is_certified}
+                        />
+                      }
+                      label={
+                        <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_cis}</Typography>
+                      }
+                    />
+                  </Grid>
+                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={this.state.is_certified}
+                          onChange={this.onCertifiedChanged}
+                          color="primary"
+                          name="is_certified"
+                          value={this.state.is_certified}
+                        />
+                      }
+                      label={
+                        <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_certif}</Typography>
+                      }
+                    />
+                  </Grid>
                 </Grid>
                 <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Divider/>
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <h4 className={classes.policySizeSubtitle}>{SHOP.creation.is_profesionnal_propose_missions}</h4>
+                  <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.creation.is_profesionnal_propose_missions}</h4>
                 </Grid>
-                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <ButtonSwitch
-                    key={moment()}
-                    label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_company}</Typography>}
-                    onChange={this.handleChangeCompany}
-                    value={professional_access}
-                    name={'professional_access'}
-                    checked={professional_access}
-                  />
-                </Grid>
-                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <ButtonSwitch
-                    key={moment()}
-                    label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_particular}</Typography>}
-                    onChange={this.handleChangeParticular}
-                    value={particular_access}
-                    name={'particular_access'}
-                    checked={particular_access}
-                  />
-                </Grid>
-                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <ButtonSwitch
-                    key={moment()}
-                    label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_company_and_particular}</Typography>}
-                    onChange={this.handleChangeBoth}
-                    value={particular_professional_access}
-                    name={'particular_professional_access'}
-                    checked={particular_professional_access}
-                  />
+                <Grid item xl={12} lg={12} sm={12} md={12} xs={12} spacing={1} style={{width: '100%', margin:0}}>
+                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <ButtonSwitch
+                      key={moment()}
+                      label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_company}</Typography>}
+                      onChange={this.handleChangeCompany}
+                      value={professional_access}
+                      name={'professional_access'}
+                      checked={professional_access}
+                    />
+                  </Grid>
+                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <ButtonSwitch
+                      key={moment()}
+                      label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_particular}</Typography>}
+                      onChange={this.handleChangeParticular}
+                      value={particular_access}
+                      name={'particular_access'}
+                      checked={particular_access}
+                    />
+                  </Grid>
+
+                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <ButtonSwitch
+                      key={moment()}
+                      label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_company_and_particular}</Typography>}
+                      onChange={this.handleChangeBoth}
+                      value={particular_professional_access}
+                      name={'particular_professional_access'}
+                      checked={particular_professional_access}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             }

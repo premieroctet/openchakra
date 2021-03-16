@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import styles from './ButtonSwitchStyle';
+import Typography from "@material-ui/core/Typography";
 
 const {inspect} = require('util');
 
@@ -20,8 +21,12 @@ const IOSSwitch = withStyles((theme) => ({
     margin: theme.spacing(1),
   },
   switchBase: {
-    padding: 2,
+    paddingLeft: 2,
+    paddingRight: 2,
+    paddingBottom: 2,
+    paddingTop: 3,
     '&$checked': {
+      padding: 2,
       transform: 'translateX(26px)',
       color: '#C7D4EE',
       '& + $track': {
@@ -147,7 +152,8 @@ class ButtonSwitch extends React.Component {
             helperText={this.label ? null : 'Obligatoire'}
           />
           :
-          label === undefined ? 'label introuvable' : label}
+          <Typography style={{color: '#696767'}}>{label === undefined ? 'label introuvable' : label}</Typography>
+        }
             </span>
           </Grid>
         </Grid>
@@ -157,7 +163,7 @@ class ButtonSwitch extends React.Component {
               <Grid style={{display: 'flex'}}>
                 <CssTextField
                   value={this.price}
-                  label={'Tarif'}
+                  label={<Typography style={{color:'#696767'}}>'Tarif'</Typography>}
                   type="number"
                   className={classes.textField}
                   disabled={!checked || priceDisabled}
