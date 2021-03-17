@@ -3,11 +3,22 @@ const Schema = mongoose.Schema;
 const {normalize} = require('../../utils/text');
 
 const CategorySchema = new Schema({
-  label: {
+  particular_label: {
     type: String,
-    required: true,
   },
-  picture: {
+  s_particular_label: {
+    type: String,
+  },
+  professional_label: {
+    type: String,
+  },
+  s_professional_label: {
+    type: String,
+  },
+  particular_picture: {
+    type: String,
+  },
+  professional_picture: {
     type: String,
   },
   description: {
@@ -17,9 +28,6 @@ const CategorySchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'tag',
   }],
-  s_label: {
-    type: String,
-  },
 });
 
 CategorySchema.index({label: 'text'});

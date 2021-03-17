@@ -1434,24 +1434,30 @@ router.post('/category/all', uploadCat.single('picture'), passport.authenticate(
 // @Route POST /myAlfred/api/admin/category/editPicture/:id
 // Edit the picture of a category
 // @Access private
-router.post('/category/editPicture/:id', uploadCat.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
+router.put('/category/editPicture/:id', uploadCat.fields([
+  {name: 'particular_picture', maxCount: 1},
+  {name: 'professional_picture',  maxCount: 1,}]),
+   passport.authenticate('admin', {session: false}), (req, res) => {
 
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
 
   if (admin) {
-
-
-    Category.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+    var attributes = {}
+    if (req.files.particular_picture) {
+      attributes.particular_picture = req.files.particular_picture[0].path
+    }
+    if (req.files.professional_picture) {
+      attributes.professional_picture = req.files.professional_picture[0].path
+    }
+    Category.findByIdAndUpdate(req.params.id, attributes, {new: true})
       .then(category => {
         res.json(category);
       });
   } else {
     res.status(403).json({msg: 'Access denied'});
   }
-
-
 });
 
 // @Route GET /myAlfred/api/admin/category/all
@@ -1478,7 +1484,6 @@ router.get('/category/all', passport.authenticate('admin', {session: false}), (r
   } else {
     res.status(403).json({msg: 'Access denied'});
   }
-
 });
 
 // @Route GET /myAlfred/api/admin/category/all/:id
@@ -1527,23 +1532,32 @@ router.delete('/category/all/:id', passport.authenticate('admin', {session: fals
 // @Route PUT /myAlfred/api/admin/category/all/:id
 // Update a category
 // @Access private
-router.put('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+router.put('/category/all/:id?', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
 
   if (admin) {
-    Category.findOneAndUpdate({_id: req.params.id}, {
-      $set: {
-        label: req.body.label, tags: req.body.tags,
-        s_label: normalize(req.body.label),
-        description: req.body.description,
-      },
-    }, {new: true})
+    var attributes={
+      particular_label: req.body.particular_label,
+      s_particular_label: normalize(req.body.particular_label),
+      professional_label: req.body.professional_label,
+      s_professional_label: normalize(req.body.professional_label),
+      description: req.body.description,
+      tags: req.body.tags,
+    }
+    const promise=req.params.id ?
+      Category.findByIdAndUpdate(req.params.id, attributes, {new: true})
+      :
+      new Category(attributes).save()
+    promise
       .then(category => {
         res.json(category);
       })
-      .catch(err => res.status(404).json({categorynotfound: 'No category found'}));
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({categorynotfound: 'No category found'})
+      })
   } else {
     res.status(403).json({msg: 'Access denied'});
   }
