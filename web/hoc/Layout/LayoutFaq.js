@@ -7,12 +7,12 @@ import Footer from './About/Footer';
 import Router from 'next/router';
 
 
-class LayoutFaq extends React.Component{
-  constructor(props){
+class LayoutFaq extends React.Component {
+  constructor(props) {
     super(props);
     this.child = React.createRef();
 
-    this.state={
+    this.state = {
       becomeAlfredPage: false,
       search: ''
     }
@@ -20,26 +20,26 @@ class LayoutFaq extends React.Component{
   }
 
   componentDidMount() {
-    if(Router.pathname === '/footer/becomeAlfred'){
-      this.setState({becomeAlfredPage : true})
+    if (Router.pathname === '/footer/becomeAlfred') {
+      this.setState({becomeAlfredPage: true})
     }
   }
 
-  sendSearch = () =>{
+  sendSearch = () => {
     let state = this.child.current.state;
     this.setState({search: state.search}, () => this.props.onSearchChange());
   };
 
-  callClearFunction = () =>{
+  callClearFunction = () => {
     this.setState({search: ''}, () => this.props.callClearFunction());
   };
 
 
-  render(){
-    const{classes, children}= this.props;
-    const{becomeAlfredPage}= this.state;
+  render() {
+    const {classes, children} = this.props;
+    const {becomeAlfredPage} = this.state;
 
-    return(
+    return (
       <Grid className={classes.mainContainerLayoutFaq}>
         <Header ref={this.child} search={this.sendSearch} clearFuntion={this.callClearFunction}/>
         <Grid className={becomeAlfredPage ? classes.becomeAlfredPageContainer : classes.childrenContainer}>
@@ -53,4 +53,4 @@ class LayoutFaq extends React.Component{
   }
 }
 
-export default withStyles(styles) (LayoutFaq);
+export default withStyles(styles)(LayoutFaq);

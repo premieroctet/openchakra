@@ -1,3 +1,5 @@
+
+
 const {RRule, RRuleSet, rrulestr} = require('rrule');
 const {ALL_SERVICES, generate_id} = require('./consts.js');
 const moment = require('moment-timezone');
@@ -5,6 +7,7 @@ const EV_AVAIL_DAY_MAPPING = 'monday tuesday wednesday thursday friday saturday 
 
 const DAYS = 'Lundi Mardi Mercredi Jeudi Vendredi Samedi Dimanche'.split(' ');
 const LONG_DAYS = 'lundis mardis mercredis jeudis vendredis samedis dimanches'.split(' ');
+moment.locale('fr');
 
 const DAY_MAPPING = {
   'monday': RRule.MO,
@@ -159,8 +162,8 @@ const bookings2events = bookings => {
 };
 
 const counterArray = (data, xlabel, ylabel) => {
-  const summed=Object.entries(data.reduce((acc, value) => {
-    if(value in acc) {
+  const summed = Object.entries(data.reduce((acc, value) => {
+    if (value in acc) {
       acc[value] = acc[value] + 1
     } else {
       acc[value] = 1
@@ -171,9 +174,9 @@ const counterArray = (data, xlabel, ylabel) => {
 }
 
 const counterObjects = (data, attribute) => {
-  const summed=Object.entries(data.reduce((acc, value) => {
-    const age=value[attribute]
-    if(age in acc) {
+  const summed = Object.entries(data.reduce((acc, value) => {
+    const age = value[attribute]
+    if (age in acc) {
       acc[age] = acc[age] + 1
     } else {
       acc[age] = 1
@@ -183,9 +186,19 @@ const counterObjects = (data, attribute) => {
   return summed
 }
 
+const moneyFormat = (value) => {
+  return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+  // return parseFloat(value).toFixed(2)
+}
+
+
+const todayDate = () => {
+  return moment().format('L')
+}
+
 module.exports = {
   availabilities2events, eventUI2availability, availability2eventUI,
   DAYS, LONG_DAYS,
   bookings2events,
-  counterArray, counterObjects
+  counterArray, counterObjects, moneyFormat, todayDate
 };
