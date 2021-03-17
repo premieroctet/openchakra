@@ -75,7 +75,7 @@ class BillingGeneration extends React.Component {
           </View>
           <View>
             <Text style={styles.title}>{is_pro ? 'Facture' :
-              'Récépissé'} vendeur n° {bookingObj.receipt_number}</Text>
+              'Récépissé'} vendeur n° {moment().format('Y M') + bookingObj.receipt_number}</Text>
           </View>
 
           <View style={{display: 'flex', flexDirection: 'row'}}>
