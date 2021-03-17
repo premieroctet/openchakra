@@ -92,7 +92,7 @@ class SettingService extends React.Component {
           <h3 style={{color: '#696767'}}>{SHOP.settingService.subtitle}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle}>{SHOP.settingService.title_perimeter}</h4>
+          <h4 className={classes.policySizeSubtitle} style={{margin:0}}>{SHOP.settingService.title_perimeter}</h4>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <TextField
@@ -107,45 +107,45 @@ class SettingService extends React.Component {
             onChange={this.onChange}
           />
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle}>{SHOP.settingService.title_place_service}</h4>
+        <Grid container spacing={1} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <h4 className={classes.policySizeSubtitle} style={{margin:0}}>{SHOP.settingService.title_place_service}</h4>
+          </Grid>
+            {'client' in this.state.location ?
+              <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <ButtonSwitch
+                  checked={location.client === true}
+                  label={SHOP.settingService.service_at_userHome}
+                  id='client'
+                  onChange={this.onLocationChange}
+                />
+              </Grid> : null
+            }
+            {'alfred' in location ?
+              <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <ButtonSwitch
+                  checked={location.alfred === true}
+                  label={SHOP.settingService.service_at_myHome}
+                  id='alfred'
+                  onChange={this.onLocationChange}
+                />
+              </Grid> : null
+            }
+            {'visio' in location ?
+              <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <ButtonSwitch
+                  checked={location.visio === true}
+                  label={SHOP.settingService.service_withVisio}
+                  id='visio'
+                  onChange={this.onLocationChange}
+                />
+              </Grid> : null
+            }
         </Grid>
-        <Grid container spacing={3} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
-          {'client' in this.state.location ?
-            <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <ButtonSwitch
-                checked={location.client === true}
-                label={SHOP.settingService.service_at_userHome}
-                id='client'
-                onChange={this.onLocationChange}
-              />
-            </Grid> : null
-          }
-          {'alfred' in location ?
-            <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <ButtonSwitch
-                checked={location.alfred === true}
-                label={SHOP.settingService.service_at_myHome}
-                id='alfred'
-                onChange={this.onLocationChange}
-              />
-            </Grid> : null
-          }
-          {'visio' in location ?
-            <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <ButtonSwitch
-                checked={location.visio === true}
-                label={SHOP.settingService.service_withVisio}
-                id='visio'
-                onChange={this.onLocationChange}
-              />
-            </Grid> : null
-          }
-        </Grid>
-        <Grid container spacing={3} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid container spacing={1} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           {service && (service.travel_tax || service.pick_tax) ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h4 className={classes.policySizeSubtitle}>{SHOP.settingService.section_option_title}</h4>
+              <h4 className={classes.policySizeSubtitle} style={{margin:0}}>{SHOP.settingService.section_option_title}</h4>
             </Grid> : null
           }
           {service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se checke pas

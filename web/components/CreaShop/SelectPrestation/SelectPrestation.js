@@ -121,7 +121,7 @@ class SelectPrestation extends React.Component {
                 className={classes.margin}
               >
                 <AddIcon className={classes.extendedIcon}/>
-                <Typography style={{textTransform: 'initial'}}>{SHOP.parameter.presta_perso}</Typography>
+                <Typography style={{textTransform: 'initial', color: 'white'}}>{SHOP.parameter.presta_perso}</Typography>
               </Fab>
             </Grid>
             {Object.keys(this.state.grouped).map((fltr, i) => {
@@ -129,7 +129,7 @@ class SelectPrestation extends React.Component {
               return (
                 <Grid key={i} container spacing={3} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Typography>{fltr === 'Aucun' ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}</Typography>
+                    <Typography style={{color: '#696767'}}>{fltr === 'Aucun' ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}</Typography>
                   </Grid>
                   <Grid container spacing={3} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
                     {prestas.map((p, j) => {

@@ -65,21 +65,21 @@ class BookingPreference extends React.Component {
           <h3 style={{color: '#696767'}}>{SHOP.preference.subtitle}</h3>
         </Grid>
         <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle}>{SHOP.preference.title_delay_prevenance} </h4>
+          <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_delay_prevenance} </h4>
         </Grid>
-        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-          <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-            <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+          <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
               <TextField
                 id="standard-start-adornment"
                 variant={'outlined'}
                 value={this.state.deadline_value}
-                label={'deadline_value'}
+                label={'Délai'}
                 style={{width: '100%'}}
 
               />
             </Grid>
-            <Grid  item xl={6} lg={6} md={6} sm={6} xs={6}>
+            <Grid  item xl={10} lg={10} md={10} sm={10} xs={10}>
               <TextField
                 value={this.state.deadline_unit}
                 select
@@ -96,12 +96,12 @@ class BookingPreference extends React.Component {
           </Grid>
         </Grid>
         <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle}>{SHOP.preference.title_minimum_basket}</h4>
+          <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_minimum_basket}</h4>
         </Grid>
         <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Typography className={classes.policySizeContent}>{SHOP.preference.subtitle_minimum_basket}</Typography>
         </Grid>
-        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <TextField
               type="number"
@@ -115,17 +115,16 @@ class BookingPreference extends React.Component {
                   min: 0,
                 },
                 endAdornment: <InputAdornment position="start">{SHOP.preference.unit_minimum_basket}</InputAdornment>,
-              }
-              }
+              }}
             />
           </Grid>
         </Grid>
         {service && service.equipments.length > 0 ?
           <>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h4 className={classes.policySizeSubtitle}>{SHOP.preference.title_equipments}</h4>
+              <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_equipments}</h4>
             </Grid>
-            <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+            <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
               <Grid container xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
                 {service.equipments.map((result, index) => {
                   const selected=this.state.equipments.includes(result._id);

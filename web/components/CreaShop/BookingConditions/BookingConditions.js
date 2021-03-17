@@ -6,6 +6,7 @@ import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import {ALF_CONDS} from '../../../utils/consts.js';
 import {CANCEL_MODE} from "../../../utils/consts";
 import moment from 'moment'
+import {SHOP} from '../../../utils/i18n';
 
 class BookingConditions extends React.Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class BookingConditions extends React.Component {
     this.cancelModeChanged = this.cancelModeChanged.bind(this);
 
     this.booking_request = React.createRef();
+    this.booking_auto = React.createRef();
 
     this.conditions = {};
     Object.values(ALF_CONDS).forEach(k => this.conditions[k] = React.createRef());
@@ -61,46 +63,52 @@ class BookingConditions extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-          <h2 className={classes.policySizeTitle}>Vos conditions</h2>
+          <h2 className={classes.policySizeTitle}>{SHOP.bookingCondition.title}</h2>
         </Grid>
         <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 className={classes.policySizeSubtitle}>Fixez vos conditions et la façon dont vous acceptez qu’un client réserve vos services.</h3>
+          <h3 className={classes.policySizeSubtitle}>{SHOP.bookingCondition.subtitle}</h3>
         </Grid>
+        {
+          false ?
+            <>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.bookingCondition.title_firstSection}</h4>
+              </Grid>
+              <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <ButtonSwitch
+                    key={moment()}
+                    checked={this.state.booking_request}
+                    id='request'
+                    style={{width: '100%'}}
+                    label={SHOP.bookingCondition.booking_request}
+                    ref={this.booking_request}
+                    onChange={this.onBookingChanged}
+                  />
+                </Grid>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <ButtonSwitch
+                    key={moment()}
+                    checked={!this.state.booking_request}
+                    id='auto'
+                    label={SHOP.bookingCondition.booking_auto}
+                    ref={this.booking_auto}
+                    onChange={this.onBookingChanged}
+                  />
+                </Grid>
+              </Grid>
+            </> : null
+        }
+
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4>Comment les clients peuvent vous réserver? </h4>
+          <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.bookingCondition.title_secondSection}</h4>
         </Grid>
-        <Grid container spacing={3} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <ButtonSwitch
-              key={moment()}
-              checked={this.state.booking_request}
-              id='request'
-              style={{width: '100%'}}
-              label={'Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.'}
-              ref={this.booking_request}
-              onChange={this.onBookingChanged}
-            />
-          </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <ButtonSwitch
-            key={moment()}
-              checked={!this.state.booking_request}
-              id='auto'
-              label={'Les utilisateurs peuvent réserver mes services directement sans demande de réservation.'}
-              ref={this.booking_auto}
-              onChange={this.onBookingChanged}
-            />
-          </Grid>
-        </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4>Quelles sont les conditions pour réserver vos services ?</h4>
-        </Grid>
-        <Grid container spacing={3} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
               key={moment()}
               id={ALF_CONDS.BASIC}
-              label={'Respecter les conditions My-Alfred (profil vérifié)'}
+              label={SHOP.bookingCondition.conditions_bacsic}
               onChange={this.onAlfredConditionsChanged}
               checked={this.state.my_alfred_conditions >= ALF_CONDS.BASIC}
               ref={this.conditions[ALF_CONDS.BASIC]}
@@ -110,7 +118,7 @@ class BookingConditions extends React.Component {
             <ButtonSwitch
               key={moment()}
               id={ALF_CONDS.PICTURE}
-              label={'Avoir une photo de profil'}
+              label={SHOP.bookingCondition.conditions_picture}
               onChange={this.onAlfredConditionsChanged}
               checked={this.state.my_alfred_conditions >= ALF_CONDS.PICTURE}
               ref={this.conditions[ALF_CONDS.PICTURE]}
@@ -120,7 +128,7 @@ class BookingConditions extends React.Component {
             <ButtonSwitch
               key={moment()}
               id={ALF_CONDS.ID_CARD}
-              label={'Avoir déposé une pièce d’identité officielle'}
+              label={SHOP.bookingCondition.conditions_idCard}
               onChange={this.onAlfredConditionsChanged}
               checked={this.state.my_alfred_conditions >= ALF_CONDS.ID_CARD}
               ref={this.conditions[ALF_CONDS.ID_CARD]}
@@ -130,7 +138,7 @@ class BookingConditions extends React.Component {
             <ButtonSwitch
               key={moment()}
               id={ALF_CONDS.RECOMMEND}
-              label={'Etre recommandé par d’autres Alfred'}
+              label={SHOP.bookingCondition.conditions_recommend}
               onChange={this.onAlfredConditionsChanged}
               checked={this.state.my_alfred_conditions >= ALF_CONDS.RECOMMEND}
               ref={this.conditions[ALF_CONDS.RECOMMEND]}
@@ -138,16 +146,17 @@ class BookingConditions extends React.Component {
           </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4>Quelles sont vos conditions d’annulation ? </h4>
+          <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.bookingCondition.title_thirdSection}</h4>
         </Grid>
-        <Grid container spacing={3} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <ButtonSwitch
               key={moment()}
               id={CANCEL_MODE.FLEXIBLE}
               checked={this.state.cancel_mode == CANCEL_MODE.FLEXIBLE}
-              label={'Flexibles: Remboursement intégral jusqu\'à 1 jour avant la prestation'}
-              onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.FLEXIBLE]}
+              label={SHOP.bookingCondition.condition_flexible}
+              onChange={this.cancelModeChanged}
+              ref={this.cancel_buttons[CANCEL_MODE.FLEXIBLE]}
             />
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -155,7 +164,7 @@ class BookingConditions extends React.Component {
               key={moment()}
               id={CANCEL_MODE.MODERATE}
               checked={this.state.cancel_mode == CANCEL_MODE.MODERATE}
-              label={'Modérées: Remboursement intégral jusqu\'à 5 jours avant la prestation'}
+              label={SHOP.bookingCondition.condition_moderate}
               onChange={this.cancelModeChanged}
               ref={this.cancel_buttons[CANCEL_MODE.MODERATE]}
             />
@@ -165,8 +174,9 @@ class BookingConditions extends React.Component {
               key={moment()}
               id={CANCEL_MODE.STRICT}
               checked={this.state.cancel_mode == CANCEL_MODE.STRICT}
-              label={'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation'}
-              onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.STRICT]}
+              label={SHOP.bookingCondition.condition_strict}
+              onChange={this.cancelModeChanged}
+              ref={this.cancel_buttons[CANCEL_MODE.STRICT]}
             />
           </Grid>
         </Grid>

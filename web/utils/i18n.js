@@ -222,8 +222,22 @@ const SHOP = {
     certification_title: 'Votre certification',
     certification_subtitle: 'En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ces derniers.',
     certification_name: 'Nom du certificat'
-
-
+  },
+  bookingCondition:{
+    title: 'Vos conditions',
+    subtitle: 'Fixez vos conditions et la façon dont vous acceptez qu’un client réserve vos services.',
+    title_firstSection: 'Comment les clients peuvent vous réserver ?',
+    booking_request: 'Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.',
+    booking_auto: 'Les utilisateurs peuvent réserver mes services directement sans demande de réservation.',
+    title_secondSection: 'Quelles sont les conditions pour réserver vos services ?',
+    conditions_bacsic: 'Respecter les conditions My-Alfred (profil vérifié)',
+    conditions_picture: 'Avoir une photo de profil',
+    conditions_idCard: 'Avoir déposé une pièce d’identité officielle',
+    conditions_recommend: 'Etre recommandé par d’autres Alfred',
+    title_thirdSection: 'Quelles sont vos conditions d’annulation ?',
+    condition_flexible: 'Flexibles: Remboursement intégral jusqu\'à 1 jour avant la prestation',
+    condition_moderate: 'Modérées: Remboursement intégral jusqu\'à 5 jours avant la prestation',
+    condition_strict : 'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation'
 
   }
 };
