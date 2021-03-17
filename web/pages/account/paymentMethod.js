@@ -18,7 +18,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Cards from 'react-credit-cards';
 import {formatCreditCardNumber, formatCVC, formatExpirationDate} from '../../components/utils';
-import '../../static/creditcards.css';
 import {Helmet} from 'react-helmet';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
