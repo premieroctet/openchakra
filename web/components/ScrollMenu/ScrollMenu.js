@@ -75,7 +75,7 @@ class ScrollMenu extends React.Component{
                           :
                           ""
                 return(
-                  <Tab key={index} label={is_b2b_style() ? res.professional_label : res.particular_label} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={()=>this.controllerUrl(url)}/>
+                  <Tab key={index} label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={()=>this.controllerUrl(url)}/>
                 )
               }
               ) : null

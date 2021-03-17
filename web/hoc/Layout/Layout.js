@@ -31,6 +31,10 @@ class Layout extends React.Component {
     axios.get(`/myAlfred/api/category/${is_b2b_style() ? PRO : PART}`)
       .then(res => {
         let cat = res.data;
+        // Set label en fonction de PRO PART
+        cat.forEach( c => {
+          c.label=is_b2b_style() ? c.professional_label : c.particular_label
+        })
         this.setState({categories: cat})
       })
       .catch(err => {
