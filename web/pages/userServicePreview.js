@@ -51,6 +51,7 @@ const {is_b2b_admin, is_b2b_manager}=require('../utils/context')
 moment.locale('fr');
 registerLocale('fr', fr);
 
+// TODO : gérer affichage si utilisateur non connecté
 class UserServicesPreview extends React.Component {
   constructor(props) {
     super(props);

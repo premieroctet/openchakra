@@ -5,7 +5,7 @@ import styles from '../../../static/css/components/Card/CategoryCard/CategoryCar
 import withStyles from "@material-ui/core/styles/withStyles";
 import Link from 'next/link';
 import axios from "axios";
-
+const {is_b2b_style}=require('../../../utils/context')
 
 class CategoryCard extends React.Component {
 
@@ -26,7 +26,7 @@ class CategoryCard extends React.Component {
         let data = res.data;
         this.setState({
           user: data,
-          gps: data.billing_address.gps
+          gps: data.billing_address ? data.billing_address.gps : null
         });
       })
       .catch(err => {
@@ -47,12 +47,12 @@ class CategoryCard extends React.Component {
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer'}}>
           <Grid className={classes.categoryCardMedia}>
             <Grid
-              style={{backgroundImage: `url('${item.picture}')`}}
+              style={{backgroundImage: `url('${is_b2b_style() ? item.professional_picture : item.particular_picture}')`}}
               className={classes.categoryCardBackground}
             />
           </Grid>
           <Grid>
-            <h6>{item.label}</h6>
+            <h6>{is_b2b_style() ? item.professional_label : item.particular_label}</h6>
           </Grid>
         </Grid>
       </Link>

@@ -14,6 +14,8 @@ import axios from "axios";
 import TrustAndSecurity from "./TrustAndSecurity/TrustAndSecurity";
 import Divider from "@material-ui/core/Divider";
 const {getLoggedUserId}=require('../../utils/functions')
+const {is_b2b_style}=require('../../utils/context')
+const {PRO, PART}=require('../../utils/consts')
 
 class Layout extends React.Component {
   constructor(props) {
@@ -26,13 +28,17 @@ class Layout extends React.Component {
 
   componentDidMount() {
     setAxiosAuthentication()
-    axios.get('/myAlfred/api/category/all/sort').then(res => {
-      let cat = res.data;
-      this.setState({categories: cat})
-    }).catch(err => { console.error(err)})
-    if (getLoggedUserId()) {
-      this.setState({logged: true});
-    }
+    axios.get(`/myAlfred/api/category/${is_b2b_style() ? PRO : PART}`)
+      .then(res => {
+        let cat = res.data;
+        this.setState({categories: cat})
+      })
+      .catch(err => {
+        console.error(err)
+      })
+      if (getLoggedUserId()) {
+        this.setState({logged: true});
+      }
   }
 
   render() {

@@ -1,7 +1,7 @@
 const geolib = require('geolib');
 const isEmpty = require('../server/validation/is-empty');
 const {createRegExpOR, createRegExpAND} = require('./text');
-
+const {PRO, PART}=require('./consts')
 
 const isServiceAroundGPS = (serviceUser, coordinates) => {
 
@@ -70,15 +70,16 @@ const filterServicesGPS = (serviceUsers, coordinates, restrict) => {
 };
 
 // Check ANDed words first, then ORed if not result
-const filterServicesKeyword = (serviceUsers, keyword) => {
+const filterServicesKeyword = (serviceUsers, keyword, status) => {
   const regExpFunctions = [createRegExpAND, createRegExpOR];
 
+  const catLabel = status==PRO ? 's_professional_label' : 's_particular_label'
   for (i = 0; i < regExpFunctions.length; i++) {
     const regExpFn = regExpFunctions[i];
     const regexp = regExpFn(keyword);
     const filteredServices = serviceUsers.filter(su => {
       return regexp.test(su.service ? su.service.s_label : '') ||
-        regexp.test(su.service ? su.service.category.s_label : '') ||
+        regexp.test(su.service ? su.service.category[catLabel] : '') ||
         su.prestations.some(p => p.prestation &&
           (regexp.test(p.prestation.s_label) ||
             (p.prestation.job && regexp.test(p.prestation.job.s_label))),

@@ -27,6 +27,7 @@ import withWidth from '@material-ui/core/withWidth';
 import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchResults=withSlide(withGrid(CardService));
 const {is_b2b_style, is_b2b_admin, is_b2b_manager} =require('../utils/context')
+const {PRO, PART}=require('../utils/consts')
 
 moment.locale('fr');
 
@@ -151,7 +152,7 @@ class SearchPage extends React.Component {
     }
     setAxiosAuthentication()
 
-    axios.get('/myAlfred/api/category/all/sort')
+    axios.get(`/myAlfred/api/category/${is_b2b_style() ? PRO : PART}`)
       .catch(err => {
         console.error(err);
         this.setState({mounting: false});
@@ -310,7 +311,7 @@ class SearchPage extends React.Component {
       }
     }
 
-    filters.pro_only = is_b2b_style()
+    filters.status = is_b2b_style() ? PRO : PART
 
     axios.post('/myAlfred/api/serviceUser/search', filters)
       .then(res => {

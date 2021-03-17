@@ -18,7 +18,7 @@ import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Divider} from "@material-ui/core";
 import ResaService from "../components/HomePage/ResaService/ResaService";
 import {is_b2b_style} from "../utils/context";
-
+const {PRO, PART}=require('../utils/consts')
 const {getLoggedUserId} = require('../utils/functions');
 
 class Home extends React.Component {
@@ -36,15 +36,13 @@ class Home extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
-    const categoryUrl = is_b2b_style() ? '/myAlfred/api/category/pro' : '/myAlfred/api/category/all';
-    axios.get(categoryUrl)
+    axios.get(`/myAlfred/api/category/${is_b2b_style() ? PRO : PART}`)
       .then(res => {
         let category = res.data;
         this.setState({category: category});
       }).catch(err => console.error(err));
 
-    const userUrl = is_b2b_style() ? '/myAlfred/api/serviceUser/home/pro' : '/myAlfred/api/serviceUser/home/';
-    axios.get(userUrl)
+    axios.get(`/myAlfred/api/serviceUser/home/${is_b2b_style() ? PRO : PART}`)
       .then(response => {
         let alfred = response.data;
         this.setState({alfred: alfred});

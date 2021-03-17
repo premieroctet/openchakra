@@ -8,6 +8,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import querystring from 'querystring';
 import Router from 'next/router';
 import _ from 'lodash'
+const {is_b2b_style}=require('../../utils/context')
 
 function a11yProps(index, res) {
   return {
@@ -74,7 +75,7 @@ class ScrollMenu extends React.Component{
                           :
                           ""
                 return(
-                  <Tab key={index} label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={()=>this.controllerUrl(url)}/>
+                  <Tab key={index} label={is_b2b_style() ? res.professional_label : res.particular_label} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={()=>this.controllerUrl(url)}/>
                 )
               }
               ) : null

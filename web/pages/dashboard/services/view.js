@@ -275,7 +275,7 @@ class view extends React.Component {
     const {isChecked} = this.state;
 
     const categories = all_category.map(e => (
-      <MenuItem value={e._id}>{e.label}</MenuItem>
+      <MenuItem value={e._id}>{`${e.particular_label}/${e.professional_label}`}</MenuItem>
     ));
 
     const options = all_equipments.map(equipment => ({

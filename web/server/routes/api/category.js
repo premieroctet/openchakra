@@ -39,55 +39,30 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), asy
 
 // @Route GET /myAlfred/api/category/all
 // View all categories
-router.get('/all', (req, res) => {
-
-  Category.find()
-    .sort({'label': 1})
-    .populate('tags')
-    .then(category => {
-      if (typeof category !== 'undefined' && category.length > 0) {
-        res.json(category);
-      } else {
-        return res.status(400).json({msg: 'No category found'});
-      }
-
+router.get('/particular', (req, res) => {
+  Service.find({particular_access: true}, 'category')
+    .populate('category')
+    .then(services => {
+      var categories=_.uniqBy(services.map(s => s.category), c => c._id)
+      categories = _.orderBy(categories, 'professional_label')
+      res.json(categories);
     })
     .catch(err => res.status(404).json({category: 'No category found'}));
 });
 
 // @Route GET /myAlfred/api/category/pro
 // View all pro categories, i.e. having at least one service with professional_access
-router.get('/pro', (req, res) => {
+router.get('/professional', (req, res) => {
 
-  Service.find({}, 'professional_access')
+  Service.find({professional_access: true}, 'category')
     .populate('category')
     .then(services => {
-      services = services.filter( s => s.professional_access)
-      const categories=_.uniqBy(services.map(s => s.category), c => c._id)
+      var categories=_.uniqBy(services.map(s => s.category), c => c._id)
+      categories = _.orderBy(categories, 'professional_label')
       res.json(categories);
     })
     .catch(err => res.status(404).json({category: 'No category found'}));
 });
-
-// @Route GET /myAlfred/api/category/all/sort
-// View all categories sort by name
-router.get('/all/sort', (req, res) => {
-
-  Category.find()
-    .sort({label: 1})
-    .then(category => {
-      if (typeof category !== 'undefined' && category.length > 0) {
-        res.json(category);
-      } else {
-        return res.status(400).json({msg: 'No category found'});
-      }
-
-    })
-    .catch(err => res.status(404).json({category: 'No category found'}));
-
-
-});
-
 
 // @Route GET /myAlfred/api/category/random/home
 // View random categories homepage

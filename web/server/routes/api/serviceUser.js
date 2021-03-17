@@ -21,7 +21,7 @@ const {data2ServiceUser} = require('../../../utils/mapping');
 const emptyPromise = require('../../../utils/promise');
 const {computeUrl} = require('../../../config/config');
 const {filterServicesGPS, filterServicesKeyword} = require('../../../utils/filters');
-const {GID_LEN} = require('../../../utils/consts');
+const {GID_LEN, PRO, PART} = require('../../../utils/consts');
 const parse = require('url-parse')
 const {distanceComparator}=require('../../../utils/filters')
 
@@ -85,7 +85,6 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
         fields.diploma.year = req.body.diplomaYear;
         fields.diploma.file = req.files['diploma'][0].path;
       } else {
-        console.log(req.files);
         console.log('No file uploaded');
       }
       if (req.body.is_certified === 'true') {
@@ -499,7 +498,6 @@ router.get('/near', passport.authenticate('jwt', {session: false}), (req, res) =
             }
 
           });
-          console.log('Got services:' + allService.length);
           res.json(allService);
 
         })
@@ -562,15 +560,16 @@ router.post('/search', (req, res) => {
   const service = req.body.service;
   const prestation = req.body.prestation;
   const restrictPerimeter = req.body.perimeter;
-  const pro_only = req.body.pro_only;
+  const status = req.body.status; // PRO or PART
 
   console.log(`Searching ${JSON.stringify(req.body)}`);
 
-  ServiceUser.find({}, 'prestations.prestation service_address location perimeter professional_access')
+  const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
+  ServiceUser.find(filter, 'prestations.prestation service_address location perimeter')
     .populate({path: 'user', select: 'firstname'})
     .populate({
       path: 'service', select: 'label s_label',
-      populate: {path: 'category', select: 's_label'},
+      populate: {path: 'category', select: status==PRO ? 's_professional_label':'s_particular_label'},
     })
     .populate({
       path: 'prestations.prestation', select: 's_label',
@@ -587,7 +586,7 @@ router.post('/search', (req, res) => {
         sus = sus.filter(su => su.prestations.some(p => p.prestation && p.prestation._id.toString() == prestation));
       }
       if (kw) {
-        sus = filterServicesKeyword(sus, kw);
+        sus = filterServicesKeyword(sus, kw, status);
       }
       if (gps) {
         try {
@@ -595,10 +594,6 @@ router.post('/search', (req, res) => {
         } catch (err) {
           sus = filterServicesGPS(sus, req.body.gps, restrictPerimeter);
         }
-      }
-      // Filter pro
-      if (pro_only) {
-        sus = sus.filter(su => su.professional_access)
       }
       const elapsed = process.hrtime(start2);
       console.log(`Fast Search found ${sus.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`);
@@ -745,7 +740,7 @@ router.get('/all/nearOther/:id/:service', passport.authenticate('jwt', {session:
 // @Route GET /myAlfred/api/serviceUser/home(?gps=XXX)
 // View service for home, sorted according to GPS if provided
 // @Access public
-router.get('/home', (req, res) => {
+router.get('/home/:partpro', (req, res) => {
   const query=parse(req.originalUrl, true).query
 
   var gps=null
@@ -753,7 +748,7 @@ router.get('/home', (req, res) => {
   if (query.gps) {
     gps=JSON.parse(query.gps)
   }
-  
+
   const shuffleArray = array => {
     let i = array.length - 1;
     for (; i > 0; i--) {
@@ -765,8 +760,8 @@ router.get('/home', (req, res) => {
     return array;
   };
 
-
-  ServiceUser.find({}, 'user service service_address')
+  const filter= req.params.partpro==PRO ? { 'professional_access':true} : { 'particular_access':true}
+  ServiceUser.find(filter, 'user service service_address')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
     .populate('user', 'picture firstname score billing_address')
     .populate('service', 'label picture')
