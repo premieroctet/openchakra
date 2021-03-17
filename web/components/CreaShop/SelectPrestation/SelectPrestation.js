@@ -121,7 +121,7 @@ class SelectPrestation extends React.Component {
                 className={classes.margin}
               >
                 <AddIcon className={classes.extendedIcon}/>
-                <Typography style={{textTransform: 'initial'}}>{SHOP.parameter.presta_perso}</Typography>
+                <Typography style={{textTransform: 'initial', color: 'white'}}>{SHOP.parameter.presta_perso}</Typography>
               </Fab>
             </Grid>
             {Object.keys(this.state.grouped).map((fltr, i) => {

@@ -68,32 +68,38 @@ class BookingConditions extends React.Component {
         <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h3 className={classes.policySizeSubtitle}>{SHOP.bookingCondition.subtitle}</h3>
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.bookingCondition.title_firstSection}</h4>
-        </Grid>
-        <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <ButtonSwitch
-              key={moment()}
-              checked={this.state.booking_request}
-              id='request'
-              style={{width: '100%'}}
-              label={SHOP.bookingCondition.booking_request}
-              ref={this.booking_request}
-              onChange={this.onBookingChanged}
-            />
-          </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <ButtonSwitch
-              key={moment()}
-              checked={!this.state.booking_request}
-              id='auto'
-              label={SHOP.bookingCondition.booking_auto}
-              ref={this.booking_auto}
-              onChange={this.onBookingChanged}
-            />
-          </Grid>
-        </Grid>
+        {
+          false ?
+            <>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.bookingCondition.title_firstSection}</h4>
+              </Grid>
+              <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <ButtonSwitch
+                    key={moment()}
+                    checked={this.state.booking_request}
+                    id='request'
+                    style={{width: '100%'}}
+                    label={SHOP.bookingCondition.booking_request}
+                    ref={this.booking_request}
+                    onChange={this.onBookingChanged}
+                  />
+                </Grid>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <ButtonSwitch
+                    key={moment()}
+                    checked={!this.state.booking_request}
+                    id='auto'
+                    label={SHOP.bookingCondition.booking_auto}
+                    ref={this.booking_auto}
+                    onChange={this.onBookingChanged}
+                  />
+                </Grid>
+              </Grid>
+            </> : null
+        }
+
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.bookingCondition.title_secondSection}</h4>
         </Grid>
