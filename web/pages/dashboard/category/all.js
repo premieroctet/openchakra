@@ -64,8 +64,10 @@ class all extends React.Component {
       categories: [],
     };
   this.columnDefs=[
-      {headerName: "Label", field: "label"},
-      {headerName: "Illustration", field: "picture", cellRenderer:'pictureCellRenderer'},
+      {headerName: "Label particuliers", field: "particular_label"},
+      {headerName: "Label pro", field: "professional_label"},
+      {headerName: "Illustration particuliers", field: "particular_picture", cellRenderer:'pictureCellRenderer'},
+      {headerName: "Illustration pro", field: "professional_picture", cellRenderer:'pictureCellRenderer'},
       {headerName: "Tags", field: "tags"},
     ]
   }
@@ -99,7 +101,7 @@ class all extends React.Component {
   }
 
   onAddClick = () => {
-    window.open(`/dashboard/category/add`, '_blank')
+    window.open(`/dashboard/category/view`, '_blank')
   }
 
 

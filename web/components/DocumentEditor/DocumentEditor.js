@@ -12,14 +12,6 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 class DocumentEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      pageNumber: 1,
-      uploaded_type: null,
-      document_type: null,
-    };
-  }
-
-  componentDidMount() {
   }
 
   render() {
@@ -43,7 +35,7 @@ class DocumentEditor extends React.Component {
                   <Grid item>
                     {extension === 'pdf' ?
                       <Document file={doc} onLoadSuccess={this.onDocumentLoadSuccess}>
-                        <Page pageNumber={this.state.pageNumber} width={200}/>
+                        <Page pageNumber={1} width={200} />
                       </Document>
                       :
                       <img src={doc} alt={'recto'} width={200}/>
@@ -63,18 +55,25 @@ class DocumentEditor extends React.Component {
                         <EditIcon/>
                       </IconButton>
                     </label>
-                    <IconButton aria-label="delete" onClick={onDelete}>
-                      <DeleteForeverIcon />
-                    </IconButton>
+                    { onDelete ?
+                      <IconButton aria-label="delete" onClick={onDelete}>
+                        <DeleteForeverIcon />
+                      </IconButton>
+                      :
+                      null
+                    }
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={3}>
-                {confirmed ?
-                  <img src={'/static/Confiance et vérification active.svg'} alt={'check'} width={28}
+                {confirmed != undefined ?
+                    confirmed ?
+                      <img src={'/static/Confiance et vérification active.svg'} alt={'check'} width={28}
                        style={{marginLeft: 5}}/>
-                  :
-                  <img src={'/static/Confiance et vérification.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
+                       :
+                      <img src={'/static/Confiance et vérification.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
+                    :
+                    null
                 }
               </Grid>
             </Grid>
