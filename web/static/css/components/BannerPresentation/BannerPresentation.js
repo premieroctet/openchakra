@@ -13,25 +13,14 @@ export default theme => ({
     }
   },
   bannerPresentationTitle: {
-    fontFamily: theme.typography.title.fontFamily,
-    fontWeight: theme.typography.title.fontWeight,
     color: theme.palette.white.main,
-    fontSize: theme.typography.title.fontSize,
     margin: theme.typography.title.margin,
-    [theme.breakpoints.down('xs')]: {
-      fontSize: '25px'
-    }
   },
   bannerPresentationContainerText: {
     width: '75%'
   },
   bannerPresentationText: {
-    fontFamily: theme.typography.text.fontFamily,
     color: theme.palette.white.main,
-    fontWeight: theme.typography.text.fontWeight,
-    [theme.breakpoints.down('xs')]: {
-      fontSize: '15px'
-    }
   },
   bannerPresentationButton: {
     color: theme.palette.primary.main,

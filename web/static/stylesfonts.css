@@ -1,35 +1,34 @@
-@import url('https://fonts.googleapis.com/css?family=ABeeZee&display=swap');
-
-.textBox1 {
-    font-family: "ABeeZee", Sans-serif;
-}
-
 .fonts {
-    font-family: Helvetica, sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 p {
-    font-family: Helvetica, sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
+    color: #696767;
 }
 
 h2 {
-    font-family: Helvetica, sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
+    color: #696767;
 }
 
 h4 {
-    font-family: Helvetica, sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
+    color: #696767;
 }
 
 h1 {
-    font-family: Helvetica, sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
+    color: #696767;
 }
 
 h3 {
-    font-family: Helvetica, sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
+    color: #696767;
 }
 
 a {
-    font-family: Helvetica, sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 body {

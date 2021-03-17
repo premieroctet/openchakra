@@ -4,6 +4,9 @@ import {createGenerateClassName, createMuiTheme} from '@material-ui/core/styles'
 // A theme with custom primary and secondary color.
 // It's optional.
 const theme = createMuiTheme({
+  h3:{
+    fontFamily: 'Josefin Sans, sans-serif',
+  },
   palette: {
     primary: {
       main: 'rgba(178,204,251,1)',
@@ -36,73 +39,73 @@ const theme = createMuiTheme({
   typography: {
     fontSize: 14,
     lineHeight: '20px',
-    useNextVariants: true,
-    fontFamily: 'Futura, sans-serif',
+    fontFamily: 'Josefin Sans, sans-serif',
     textTransform: 'none',
     fontWeight: 'bold',
     letterSpacing: '2px',
+    color: '#696767',
     title:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontWeight: 'bold',
       fontSize: '32px',
       margin:0
     },
     subTitle:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontWeight: 'bold',
       fontSize: '20px',
       margin: 0
     },
     sectionTitle:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontWeight: 'bold',
       fontSize: '18px',
       margin: 0
     },
     text:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontWeight: '500',
       fontSize: '16px',
       margin: 0
     },
     textAlfredName:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontWeight: '800',
       fontSize: '12px',
       margin: 0
     },
     textLabel:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontWeight: '500',
       fontSize: '10px',
       margin: 0
     },
     buttonLink:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontWeight: '500',
       fontSize: '17px',
     },
     blackButton:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontWeight: 'bold',
     },
     whiteButton:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontWeight: 'bold',
     },
     whiteButtonContained:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontWeight: 'bold',
       fontSize: '18px'
     },
     infoBar:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       lineHeight: '23px',
       fontSize: 14,
       fontWeight: 'bold'
     },
     placeHolder:{
-      fontFamily: 'Futura, sans-serif',
+      fontFamily: 'Josefin Sans, sans-serif',
       fontSize: '1rem',
       fontWeight: '400',
       lineHeight: '1.1876em',
