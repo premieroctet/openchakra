@@ -51,7 +51,7 @@ export default theme => ({
 
 
   userServicePButtonResa:{
-    color: 'white !important',
+    color: 'white',
     borderRadius: 14,
     textTransform: 'initial',
     padding: '5%',

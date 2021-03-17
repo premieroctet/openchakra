@@ -1,7 +1,6 @@
 const {clearAuthenticationToken}=require('../utils/authentication')
 const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
 import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle';
