@@ -1,8 +1,9 @@
-const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
+import CssBaseline from "@material-ui/core/CssBaseline";
+import MenuIcon from '@material-ui/icons/Menu';
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication');
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from './creaShopStyle';
-import PropTypes from 'prop-types';
+import styles from '../../static/css/pages/creaShop/creaShopStyle';
 import {withStyles} from '@material-ui/core/styles';
 import CreaShopPresentation from '../../components/CreaShop/CreaShopPresentation/CreaShopPresentation';
 import Stepper from '../../components/Stepper/Stepper';
@@ -12,13 +13,10 @@ import SettingService from '../../components/CreaShop/SettingService/SettingServ
 import BookingPreference from '../../components/CreaShop/BookingPreference/BookingPreference';
 import AssetsService from '../../components/CreaShop/AssetsService/AssetsService';
 import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions';
-import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
-import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import {ALF_CONDS, CANCEL_MODE, GID_LEN} from '../../utils/consts.js';
-import {toast} from 'react-toastify';
 import Router from 'next/router';
 import {
   assetsService,
@@ -28,21 +26,45 @@ import {
   selectService,
   settingService,
   settingShop,
+  bookingPreferences,
 } from '../../utils/validationSteps/validationSteps';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
+import IconButton from "@material-ui/core/IconButton";
+import Hidden from "@material-ui/core/Hidden";
+import Drawer from "@material-ui/core/Drawer";
+import PropTypes from "prop-types";
+import List from "@material-ui/core/List";
+import Box from "../../components/Box/Box";
 const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 
+const PRESENTATION0=0
+const INTRODUCE1=1
+const SELECTSERVICE2=2
+const SELECTPRESTATION3=3
+const SETTINGSERVICE4=4
+const BOOKINGPREFERENCE5=5
+const ASSETSSERVICE6=6
+const SCHEDULE7=7
+const BOOKCONDITIONS8=8
+
+const LASTSTEP=BOOKCONDITIONS8
+
 class creaShop extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
+      mobileOpen: false,
       activeStep: 0,
       user_id: null,
       saving: false,
       availabilities: [],
+      currentUser:{},
       shop: {
+        particular_access: false,
+        professional_access: false,
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: 'Merci pour votre réservation!',
@@ -68,24 +90,15 @@ class creaShop extends React.Component {
         deadline_unit: 'jours', // Unité de prévenance (h:heures, j:jours, s:semaines)
         level: '',
         service_address: null,
-        perimeter: 10,
+        perimeter: null,
         cesu: null,
         cis: false,
         social_security: null,
+        vat_subject: false,
+        vat_number: null,
+        sideBarLabels: []
       },
     };
-    this.onServiceChanged = this.onServiceChanged.bind(this);
-    this.onPrestaChanged = this.onPrestaChanged.bind(this);
-    this.settingsChanged = this.settingsChanged.bind(this);
-    this.preferencesChanged = this.preferencesChanged.bind(this);
-    this.assetsChanged = this.assetsChanged.bind(this);
-    this.availabilityCreated = this.availabilityCreated.bind(this);
-    this.availabilityDeleted = this.availabilityDeleted.bind(this);
-    this.conditionsChanged = this.conditionsChanged.bind(this);
-    this.shopSettingsChanged = this.shopSettingsChanged.bind(this);
-    this.introduceChanged = this.introduceChanged.bind(this);
-    this.nextDisabled = this.nextDisabled.bind(this);
-
     this.scheduleDrawer = React.createRef()
     this.intervalId = null
   }
@@ -93,10 +106,10 @@ class creaShop extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     if (!getLoggedUserId()) {
-      Router.push('/login');
+      Router.push('/');
     }
 
-    setAxiosAuthentication()
+    setAxiosAuthentication();
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -105,6 +118,7 @@ class creaShop extends React.Component {
         this.setState({
           user_id: user._id,
           shop: shop,
+          currentUser: user
         });
       })
       .catch(error => {
@@ -120,45 +134,13 @@ class creaShop extends React.Component {
     clearInterval(this.intervalId)
   }
 
-  nextDisabled() {
-
-    let shop = this.state.shop;
-    let pageIndex = this.state.activeStep;
-    if (pageIndex === 0) {
-      return creaShopPresentation();
-    }
-    if (pageIndex === 1) {
-      return selectService(shop);
-    }
-    if (pageIndex === 2) {
-      return selectPrestation(shop);
-    }
-    if (pageIndex === 3) {
-      return settingService(shop);
-    }
-    if (pageIndex === 5) {
-      return assetsService(shop);
-    }
-    if (pageIndex === 6) {
-      return this.scheduleDrawer.current && this.scheduleDrawer.current.isDirty()
-    }
-    if (pageIndex === 8) {
-      return settingShop(shop);
-    }
-    if (pageIndex === 9) {
-      return this.state.saving || introduceYou(shop);
-    }
-    return false;
-  }
-
-  availabilityDeleted(avail) {
+  availabilityDeleted = (avail) => {
     let shop = this.state.shop;
     shop.availabilities = shop.availabilities.filter(av => av._id !== avail._id);
     this.setState({shop: shop});
   }
 
   addDefaultAvailability = () => {
-    console.log(`Adding default availability`)
     const avail=getDefaultAvailability()
     const data={
       startDate: avail.period.begin,
@@ -201,7 +183,7 @@ class creaShop extends React.Component {
       }).catch(err => console.error(err));
   };
 
-  loadAvailabilities = no_default => {
+  loadAvailabilities = (no_default) => {
     axios.get('/myAlfred/api/availability/currentAlfred')
       .then(res => {
         if (res.data.length==0 && !no_default) {
@@ -215,7 +197,7 @@ class creaShop extends React.Component {
   };
 
   handleNext = () => {
-    if (this.state.activeStep < 9) {
+    if (this.state.activeStep < LASTSTEP) {
       this.setState({activeStep: this.state.activeStep + 1});
     }
     // last page => post
@@ -259,11 +241,7 @@ class creaShop extends React.Component {
               .then()
               .catch(err => console.error(err));
           }
-          axios.get('/myAlfred/api/users/token')
-            .then (res => {
-              setAuthToken()
-              Router.push(`/profile/services?user=${this.state.user_id}`)
-            })
+          Router.push(`/profile/services?user=${this.state.user_id}`)
         })
         .catch(err => {
           this.setState({saving: false});
@@ -273,47 +251,44 @@ class creaShop extends React.Component {
     }
   };
 
-  isRightPanelHidden() {
-    return this.state.activeStep === 2 || this.state.activeStep === 6;
-  };
-
   handleBack = () => {
     this.setState({activeStep: this.state.activeStep - 1});
   };
 
-  onServiceChanged(service_id) {
+  onServiceChanged = (service_id) => {
     let shop = this.state.shop;
     shop.service = service_id;
     this.setState({shop: shop});
   }
 
-  onPrestaChanged(prestations) {
+  onPrestaChanged = (prestations) =>{
     let shop = this.state.shop;
     shop.prestations = prestations;
     this.setState({shop: shop});
   }
 
-  settingsChanged(location, travel_tax, pick_tax, selectedStuff) {
+  settingsChanged = (location, travel_tax, pick_tax, perimeter) => {
     let shop = this.state.shop;
     shop.location = location;
     shop.travel_tax = travel_tax;
     shop.pick_tax = pick_tax;
-    shop.equipments = selectedStuff;
+    shop.perimeter = perimeter;
     this.setState({shop: shop});
   }
 
-  preferencesChanged(state) {
+  preferencesChanged = (state) =>{
     let shop = this.state.shop;
 
     shop.minimum_basket = state.minimum_basket;
     shop.deadline_unit = state.deadline_unit;
     shop.deadline_value = state.deadline_value;
     shop.perimeter = state.perimeter;
+    shop.equipments = state.equipments;
 
     this.setState({shop: shop});
   }
 
-  assetsChanged(state, index) {
+  assetsChanged = (state, index) => {
     this.setState({
       shop: {
         ...this.state.shop,
@@ -329,24 +304,26 @@ class creaShop extends React.Component {
     });
   }
 
-  conditionsChanged(book_request, conditions) {
+  conditionsChanged = (book_request, conditions) => {
     let shop = this.state.shop;
     shop.booking_request = book_request;
     shop.my_alfred_conditions = conditions;
     this.setState({shop: shop});
   }
 
-  shopSettingsChanged(welcome_message, cancel_mode) {
+  shopSettingsChanged = (cancel_mode) => {
     let shop = this.state.shop;
-    shop.welcome_message = welcome_message;
     shop.cancel_mode = cancel_mode;
     this.setState({shop: shop});
   }
 
-  introduceChanged(is_particular, company, is_certified, cesu, cis, social_security) {
+  introduceChanged = (is_particular, company, is_certified, cesu, cis, social_security,
+    particular_access, professional_access) => {
     let shop = this.state.shop;
     shop.is_particular = is_particular;
     shop.is_certified = is_certified;
+    shop.particular_access = particular_access;
+    shop.professional_access = professional_access;
     if (is_particular) {
       shop.company = null;
       shop.cesu = cesu;
@@ -360,110 +337,216 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  renderSwitch(stepIndex) {
+  nextDisabled = () => {
+
     let shop = this.state.shop;
-    switch (stepIndex) {
-      case 0:
-        return <CreaShopPresentation/>;
-      case 1:
-        return <SelectService creation={true} onChange={this.onServiceChanged} service={shop.service}
-                              creationBoutique={true}/>;
-      case 2:
-        return <SelectPrestation service={shop.service} prestations={shop.prestations}
-                                 onChange={this.onPrestaChanged}/>;
-      case 3:
-        return <SettingService service={shop.service} onChange={this.settingsChanged}/>;
-      case 4:
-        return <BookingPreference service={shop.service} onChange={this.preferencesChanged} perimeter={shop.perimeter}
-                                  deadline_unit={shop.deadline_unit} deadline_value={shop.deadline_value}
-                                  minimum_basket={shop.minimum_basket}/>;
-      case 5:
-        return <AssetsService data={shop} onChange={this.assetsChanged} type={'creaShop'}/>;
-      case 6:
-        return <DrawerAndSchedule availabilities={this.state.availabilities}
-                                  title={I18N.SCHEDULE_TITLE}
-                                  subtitle={I18N.SCHEDULE_SUBTITLE}
-                                  nbSchedule={3}
-                                  availabilityUpdate={this.availabilityUpdate}
-                                  availabilityCreated={this.availabilityCreated}
-                                  onAvailabilityChanged={this.loadAvailabilities}
-                                  onDateSelectionCleared={this.onDateSelectionCleared}
-                                  selectable={true}
-                                  ref={this.scheduleDrawer}
-                                  />;
-      case 7:
-        return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}
-                                  onChange={this.conditionsChanged}/>;
-      case 8:
-        return <SettingShop welcome_message={shop.welcome_message} cancel_mode={shop.cancel_mode}
-                            onChange={this.shopSettingsChanged}/>;
-      case 9:
-        return <IntroduceYou is_particular={shop.is_particular} company={shop.company} is_certified={shop.is_certified}
-                             onChange={this.introduceChanged}/>;
+
+    let pageIndex = this.state.activeStep;
+    if (pageIndex === PRESENTATION0) {
+      return !creaShopPresentation();
     }
-  }
+    if (pageIndex === INTRODUCE1) {
+      return !introduceYou(shop);
+    }
+    if (pageIndex === SELECTSERVICE2) {
+      return !selectService(shop);
+    }
+    if (pageIndex === SELECTPRESTATION3) {
+      return !selectPrestation(shop);
+    }
+    if (pageIndex == SETTINGSERVICE4 ) {
+      return !settingService(shop)
+    }
+    if (pageIndex === BOOKINGPREFERENCE5) {
+      return !bookingPreferences(shop);
+    }
+    if (pageIndex === SCHEDULE7) {
+      return this.scheduleDrawer.current && this.scheduleDrawer.current.isDirty()
+    }
+    if (pageIndex === BOOKCONDITIONS8) {
+      return false
+    }
+    return false;
+  };
 
 
-  render() {
+  renderSwitch = (stepIndex) =>{
+    const{shop , currentUser}= this.state;
+    switch (stepIndex) {
+      case PRESENTATION0:
+        return <CreaShopPresentation
+          user={currentUser}/>;
+      case INTRODUCE1 :
+        return <IntroduceYou
+          is_particular={shop.is_particular}
+          company={shop.company}
+          is_certified={shop.is_certified}
+          onChange={this.introduceChanged}/>;
+      case SELECTSERVICE2:
+        return <SelectService
+          creation={true}
+          onChange={this.onServiceChanged}
+          service={shop.service}
+          creationBoutique={true}
+          particular_access={shop.particular_access}
+          professional_access={shop.professional_access}/>;
+      case SELECTPRESTATION3:
+        return <SelectPrestation
+          service={shop.service}
+          prestations={shop.prestations}
+          onChange={this.onPrestaChanged}/>;
+      case SETTINGSERVICE4:
+        return <SettingService
+          service={shop.service}
+          perimeter={shop.perimeter}
+          onChange={this.settingsChanged}/>;
+      case BOOKINGPREFERENCE5:
+        return <BookingPreference
+          service={shop.service}
+          onChange={this.preferencesChanged}
+          deadline_unit={shop.deadline_unit}
+          deadline_value={shop.deadline_value}
+          minimum_basket={shop.minimum_basket}/>;
+      case ASSETSSERVICE6:
+        return <AssetsService
+          data={shop}
+          onChange={this.assetsChanged}
+          type={'creaShop'}/>;
+      case SCHEDULE7:
+        return <DrawerAndSchedule
+          availabilities={this.state.availabilities}
+          title={I18N.SCHEDULE_TITLE}
+          subtitle={I18N.SCHEDULE_SUBTITLE}
+          nbSchedule={3}
+          availabilityUpdate={this.availabilityUpdate}
+          availabilityCreated={this.availabilityCreated}
+          onAvailabilityChanged={this.loadAvailabilities}
+          onDateSelectionCleared={this.onDateSelectionCleared}
+          selectable={true}
+          ref={this.scheduleDrawer}/>;
+      case BOOKCONDITIONS8:
+        return <BookingConditions
+          conditions={shop.my_alfred_conditions}
+          booking_request={shop.booking_request}
+          cancel_mode={shop.cancel_mode}
+          onChangeLastPart={this.shopSettingsChanged}
+          onChange={this.conditionsChanged}/>;
+    }
+  };
 
-    const {classes} = this.props;
-    let hideRightPanel = this.isRightPanelHidden();
+  handleDrawerToggle = () => {
+    this.setState({mobileOpen: !this.state.mobileOpen})
+  };
 
+  drawer = (classes) => {
+    const {activeStep} = this.state;
     return (
-      <Grid>
-        <Grid className={classes.mainHeader}>
-          <Grid className={classes.imageContentHeader}>
-            <Link href={'/'}>
-              <img alt={'logoMyAlfredGreen'} title={'logoMyAlfredGreen'} src={'../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={160} height={64}/>
-            </Link>
-          </Grid>
-          <Grid className={classes.contentStepper}>
-            <Stepper activeStep={this.state.activeStep} isType={'creaShop'}/>
-          </Grid>
-        </Grid>
-        <Grid className={classes.marginContainer}>
-          <Grid className={classes.mainContainer}>
-            <Grid className={hideRightPanel ? classes.mainContainerNoImg : classes.leftContentComponent}>
-              {this.renderSwitch(this.state.activeStep)}
-            </Grid>
-            {hideRightPanel ?
-              null :
-              <Grid className={classes.rightContentComponent}>
-                <Grid className={classes.contentRight}
-                      style={{backgroundImage: `url(../../static/assets/icon/creaShopBg.svg)`, height: '90vh'}}/>
-              </Grid>
-            }
-          </Grid>
-        </Grid>
-        <Grid className={classes.footerMainContainer}>
-          <Grid className={classes.footerContainer}>
-            <Grid className={classes.marginHr}>
-              <hr style={{color: 'rgb(255, 249, 249, 0.6)', borderRadius: 10}}/>
-            </Grid>
-            <Grid className={classes.navButtonContent}>
-              <Grid>
-                {false ? // FIX : corriger pb retour sur panel précédent
-                  <Button
-                    color="primary"
-                    disabled={this.state.activeStep === 0}
-                    onClick={this.handleBack}
-                  >
-                    Retour
-                  </Button> : null
-                }
-              </Grid>
-              <Grid>
-                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}
-                        disabled={this.nextDisabled()}>
-                  {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'}
-                </Button>
-              </Grid>
+      <Grid style={{height: '100%'}}>
+        <Grid className={classes.appBarContainer}>
+          <List classes={{root: classes.paddingList}}>
+            <Stepper activeStep={activeStep} isType={'creaShop'}/>
+          </List>
+          <Grid container style={{display:'flex', justifyContent:'center'}}>
+            <Grid style={{height: '100%', display : 'flex', flexDirection: 'column-reverse'}}>
+              <img
+                alt={'logo_myAlfred'}
+                title={'logo_myAlfred'}
+                src={'../../../static/assets/icon/logo.svg'}
+                height={64}
+                style={{filter: 'invert(1)'}}/>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
+    )
+  };
+
+  render() {
+
+    const {classes, window} = this.props;
+    const {activeStep, mobileOpen} = this.state;
+    const container = window !== undefined ? () => window().document.body : undefined;
+
+    return (
+      <Grid className={classes.root}>
+        <CssBaseline />
+        <Grid>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={this.handleDrawerToggle}
+            className={classes.menuButton}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Grid>
+        <nav className={classes.drawer} aria-label="mailbox folders">
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              anchor={'left'}
+              open={mobileOpen}
+              onClose={this.handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              {this.drawer(classes)}
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              variant="permanent"
+              open
+            >
+              {this.drawer(classes)}
+            </Drawer>
+          </Hidden>
+        </nav>
+        <main className={classes.content}>
+          <Grid>
+            <Box overWritteCSS={true}>
+              <Grid>
+                <Grid>
+                  {this.renderSwitch(activeStep)}
+                </Grid>
+                <Grid style={{position: 'fixed', bottom: 75, right: 100}}>
+                  <Grid>
+                    <Button
+                      variant="contained"
+                      classes={{root :classes.nextButton}}
+                      onClick={this.handleNext}
+                      disabled={this.nextDisabled()}
+                    >
+                      {activeStep === LASTSTEP ? 'Envoyer' : 'Suivant'}
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+
+            </Box>
+          </Grid>
+        </main>
+      </Grid>
     );
   }
 }
+
+creaShop.propTypes = {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  window: PropTypes.func,
+};
 
 export default withStyles(styles)(creaShop);

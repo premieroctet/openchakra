@@ -1,7 +1,8 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 const moment = require('moment');
-const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE}=require('../../utils/consts');
+const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE, MANAGER}=require('../../utils/consts');
+const _ = require('lodash')
 moment.locale('fr');
 
 const validateSimpleRegisterInput = data => {
@@ -129,6 +130,10 @@ const validateEditProProfile = data =>{
     errors.position = 'Veuillez saisir une fonction';
   }
 
+  if ('birthday' in data && !data.birthday) {
+    errors.birthday = 'Veuillez saisir une date de naissance';
+  }
+
   return {
     errors,
     isValid: isEmpty(errors),
@@ -144,6 +149,9 @@ const validateCompanyProfile = data =>{
   data.siret = !isEmpty(data.siret) ? data.siret : '';
   data.vat_number = !isEmpty(data.vat_number) ? data.vat_number : '';
   data.admin_email = !isEmpty(data.admin_email) ? data.admin_email : '';
+  data.admin_firstname = !isEmpty(data.admin_firstname) ? data.admin_firstname : '';
+  data.admin_name = !isEmpty(data.admin_name) ? data.admin_name : '';
+  data.billing_address = !isEmpty(data.billing_address) ? data.billing_address : null;
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
@@ -161,9 +169,78 @@ const validateCompanyProfile = data =>{
     errors.size = "Effectif de l'entreprise incorrect"
   }
 
+  if (!data.billing_address) {
+    errors.billing_address = "Veuillez saisir une adresse"
+  }
+
   if (data.admin_email && !Validator.isEmail(data.admin_email)) {
     errors.admin_email = "Email de l'administrateur incorrect"
   }
+
+  // Admin : all or nothing
+  const admin_empties = _.uniq(['admin_firstname', 'admin_name', 'admin_email'].map( f => Validator.isEmpty(data[f])))
+  if (admin_empties.length>1) {
+    ['admin_firstname', 'admin_name', 'admin_email'].forEach( att => {
+      if (!data[att]) {
+        errors[att]='Valeur attendue'
+      }
+    })
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+const validateCompanyMember = data =>{
+  let errors = {};
+
+  data.name = !isEmpty(data.name) ? data.name : '';
+  data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
+  data.email = !isEmpty(data.email) ? data.email : '';
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = 'Veuillez saisir un nom';
+  }
+
+  if (Validator.isEmpty(data.firstname)) {
+    errors.firstname = 'Veuillez saisir un prénom';
+  }
+
+  if (Validator.isEmpty(data.email)) {
+    errors.email = 'Veuillez saisir un email';
+  }
+
+  if (!Validator.isEmail(data.email)) {
+    errors.email = 'Email invalide';
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+const validateCompanyGroup = data =>{
+  let errors = {};
+
+  data.name = !isEmpty(data.name) ? data.name : '';
+  data.budget = 'budget' in data ? data.budget : '';
+  data.budget_period = 'budget_period' in data ? data.budget_period : '';
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = 'Veuillez saisir un nom';
+  }
+
+  if ('budget' in data && !Validator.isEmpty(data.budget)) {
+    if (parseInt(data.budget)<0) {
+      errors.budget = 'Le budget doit être un nombre positif';
+    }
+    if (Validator.isEmpty(data.budget_period)) {
+      errors.name = 'Veuillez sélectionner une période';
+    }
+}
 
   return {
     errors,
@@ -174,5 +251,5 @@ const validateCompanyProfile = data =>{
 
 module.exports = {
   validateSimpleRegisterInput, validateEditProfile, validateCompanyProfile,
-  validateEditProProfile
+  validateEditProProfile, validateCompanyMember, validateCompanyGroup,
 };

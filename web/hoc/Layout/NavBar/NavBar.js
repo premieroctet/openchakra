@@ -6,7 +6,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-
 const {clearAuthenticationToken} = require('../../../utils/authentication')
 import Router from 'next/router';
 import Grid from '@material-ui/core/Grid';
@@ -44,7 +43,9 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_style, is_b2b_admin} from "../../../utils/context";
+import {is_b2b_style, is_b2b_admin, is_b2b_manager} from "../../../utils/context";
+const emptyPromise = require('../../../utils/promise.js');
+const {formatAddress} = require('../../../utils/text.js');
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -88,8 +89,7 @@ class NavBar extends Component {
       startDate: null,
       endDate: null,
       focusedInput: null,
-      b2b: false
-
+      companyPage: false
     }
   }
 
@@ -97,6 +97,9 @@ class NavBar extends Component {
     let query = Router.query;
     if (Router.pathname === '/') {
       this.setState({ifHomePage: true})
+    }
+    if (Router.pathname === '/company/dashboard/companyDashboard') {
+      this.setState({companyPage: true})
     }
     if (Router.pathname === '/search') {
       this.setState({ifSearchPage: true})
@@ -108,15 +111,19 @@ class NavBar extends Component {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        var allAddresses = {'main': res.data.billing_address};
-        res.data.service_address.forEach(addr => {
-          allAddresses[addr._id] = addr
-        });
-
-        this.setState({
-          user: res.data,
-          allAddresses: allAddresses
-        })
+        const user = res.data
+        const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+        promise
+          .then(res => {
+            var allAddresses = {'main': res.data.billing_address};
+            res.data.service_address.forEach(addr => {
+              allAddresses[addr._id] = addr
+            });
+            this.setState({
+              user: user,
+              allAddresses: allAddresses
+            })
+          })
       }).catch(err => {
       console.error(err)
     });
@@ -204,14 +211,6 @@ class NavBar extends Component {
     this.setState({anchorEl: false})
   };
 
-  b2bSide = () => {
-    localStorage.setItem('b2b', 'true');
-    window.location.reload();
-  }
-  cleanB2b = () => {
-    localStorage.removeItem('b2b');
-    window.location.reload();
-  }
   findService = () => {
     var queryParams = {search: 1};
     if (this.state.keyword) {
@@ -340,13 +339,9 @@ class NavBar extends Component {
                           }}
                           classes={{selectMenu: classes.fitlerMenuLogged}}
                         >
-                          <MenuItem value={'main'} style={{whiteSpace: 'nowrap'}}>
-                            Adresse
-                            principale, {' ' + this.state.user.billing_address.address} {this.state.user.billing_address.zip_code},{this.state.user.billing_address.city}
-                          </MenuItem>
-                          {this.state.user.service_address.map((e, index) => (
-                            <MenuItem value={e._id} key={index}>
-                              {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
+                          {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
+                            <MenuItem value={_id} key={index}>
+                              { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
                             </MenuItem>
                           ))}
                           <MenuItem value={'all'}>
@@ -567,13 +562,9 @@ class NavBar extends Component {
                   }}
                   classes={{root: classes.selectRoot}}
                 >
-                  <MenuItem value={'main'}>
-                    Adresse
-                    principale, {' ' + this.state.user.billing_address.address} {this.state.user.billing_address.zip_code},{this.state.user.billing_address.city}
-                  </MenuItem>
-                  {this.state.user.service_address.map((e, index) => (
-                    <MenuItem value={e._id} key={index}>
-                      {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
+                  {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
+                    <MenuItem value={_id} key={index}>
+                      { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
                     </MenuItem>
                   ))}
                   <MenuItem value={'all'}>
@@ -673,9 +664,8 @@ class NavBar extends Component {
   };
 
   render() {
-    const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters, business} = this.state;
+    const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage} = this.state;
     const {classes} = this.props;
-
 
     const logged = user != null
     const modalLogin = () => {
@@ -692,18 +682,20 @@ class NavBar extends Component {
 
     return (
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}
-                style={{backgroundColor: is_b2b_style(user) ? '#3c4047' : null}}>
+        <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP} style={{backgroundColor: is_b2b_style(user) && companyPage ? 'transparent' : is_b2b_style(user) && !companyPage ?'#353A51' : null}}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
-              <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
-                <Grid className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP}
-                      onClick={() => Router.push('/')}>
-                  <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
-                       className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
-                </Grid>
+              <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP} style={{justifyContent: companyPage ? 'end' : 'space-between'}}>
                 {
-                  ifHomePage ?
+                  companyPage ? null :
+                    <Grid className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP}
+                          onClick={() => Router.push('/')}>
+                      <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
+                           className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
+                    </Grid>
+                }
+                {
+                 companyPage ? null : ifHomePage ?
                     <Grid className={ifHomePage ? classes.navabarHomepageMenu : classes.navabarHomepageMenuP}>
                       <Tabs value={false} aria-label="simple tabs example">
                         <Link href={'/search?search=1'}>
@@ -729,11 +721,11 @@ class NavBar extends Component {
                         }
                         {
                           !is_b2b_style(user) ?
-                            <Link href={'/'} onClick={this.b2bSide}>
+                            <Link href={'/professional'}>
                               <Tab classes={{root: classes.navbarTabRoot}}
                                    label={NAVBAR_MENU.businessSide}/>
                             </Link> : is_development() ?
-                            <Link href={'/'} onClick={this.cleanB2b}>
+                            <Link href={'/particular'}>
                               <Tab classes={{root: classes.navbarTabRoot}}
                                    label={'Retour Alfred Particuliers'}/>
                             </Link> : null
@@ -750,7 +742,7 @@ class NavBar extends Component {
                         aria-label="open drawer"
                         onClick={this.handleOpenMenuItem}
                       >
-                        <MenuIcon style={{color: 'white'}}/>
+                        <MenuIcon style={{color: companyPage ? '#353A51' : 'white'}}/>
                       </IconButton>
                       <Menu
                         anchorEl={anchorEl}

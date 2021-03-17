@@ -170,7 +170,6 @@ export default theme => ({
   navbarTopContainer:{
     width: '90%',
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
     [theme.breakpoints.down('md')]:{
       width: '100%'
@@ -424,7 +423,6 @@ export default theme => ({
   },
   navbarTopContainerP:{
     display: 'flex',
-    justifyContent: 'space-between',
     width: '90%',
     alignItems: 'center',
     [theme.breakpoints.down('md')]:{

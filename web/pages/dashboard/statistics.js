@@ -84,10 +84,8 @@ class statistics extends React.Component {
     axios.get('/myAlfred/api/admin/registrations')
       .then((response) => {
         var registrations=response.data
-        console.log(`Before:${JSON.stringify(registrations)}`)
         registrations.unshift({x:parseInt(registrations[0].x)-100, y:0})
         registrations.push({x:parseInt(registrations.slice(-1)[0].x)+100, y:0})
-        console.log(`After:${JSON.stringify(registrations)}`)
         this.setState( {registrations: registrations} );
       })
       .catch(error => console.error(error))

@@ -2,7 +2,7 @@ const isEmpty = require('../server/validation/is-empty');
 
 const data2ServiceUser = (data, su) => {
 
-  console.log('data2ServiceUser:data is ' + JSON.stringify(data));
+  console.log('data2ServiceUser:data is ' + JSON.stringify(data, null, 2));
   su.service = data.service;
   su.perimeter = data.perimeter || 0;
 
@@ -15,6 +15,10 @@ const data2ServiceUser = (data, su) => {
   su.pick_tax = data.pick_tax || 0;
   su.level = data.level;
   su.location = data.location;
+
+  su.professional_access = data.professional_access
+  su.particular_access = data.particular_access
+
 
   su.graduated = false;
   // FIX : reinsert diploma & certification files
@@ -48,6 +52,7 @@ const data2ServiceUser = (data, su) => {
   su.service_address = data.service_address;
   su.equipments = data.equipments;
 
+  console.log(`Mapped to ${JSON.stringify(su, null, 2)}`)
   return su;
 };
 

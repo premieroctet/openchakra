@@ -113,22 +113,12 @@ export default theme => ({
     },
   },
   schedule_policySizeTitle: {
-    margin: 0,
-    overflowWrap: 'break-word !important',
     fontSize: 24,
-    fontWeight: 800,
     lineHeight: '1.25em',
-    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
-    color: 'rgb(72, 72, 72)',
-    paddingTop: 2,
-    paddingBottom: 2,
+    color: '#696767',
   },
   schedule_policySizeContent: {
-    fontSize: '0.875rem',
-    fontWeight: 400,
-    lineHeight: '1.43em',
-    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
-    color: 'rgb(72, 72, 72)',
+    color: '#696767'
   },
   schedule_height:{
     height: 325

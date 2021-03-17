@@ -8,12 +8,9 @@ réunies dans l\'année civile :</b><ul><li>vos revenus dépassent 3000 euros</l
 
 const OUTSIDE_PERIMETER = 'Ce service est hors de votre périmètre.';
 
-const SCHEDULE_TITLE = 'Précisez vos disponibilités si vous le souhaitez !';
+const SCHEDULE_TITLE = 'Vos disponibilités';
 
-const SCHEDULE_SUBTITLE = "Votre calendrier vous permet d'ajouter vos disponibilités.\
- Lorsque vous ajoutez ou modifiez vos disponibilités, seules les plages horaires indiquées pourront être réservées.\
- Vous pouvez très facilement ajouter une période de disponibilité en indiquant les dates de début et fin, les jours correspondants et des tranches horaires.\
- Vous pouvez également sélectionner une date ou plusieurs, indiquer si vous êtes disponible et sélectionner les tranches horaires."
+const SCHEDULE_SUBTITLE = "Votre calendrier vous permet d’ajouter vos disponibilités. Lorsque vous ajoutez ou modifiez vos disponibilités, seules les plages horaires indiquées pourront être réservées. Vous pouvez très facilement ajouter une période de disponibilité en indiquant les dates de début et fin, les jours correspondants et des tranches horaires. Vous pouvez également sélectionner une date ou plusieurs, indiquer si vous êtes disponible et sélectionner les tranches horaires."
 
 
 const SHOP_CREATION_SUCCESSFUL = 'Vos services sont maintenant disponibles dans my Alfred';
@@ -127,8 +124,123 @@ const getMangopayMessage = msg_id => {
 
 const SHOP = {
   addService: 'Ajoutez des services',
-  createShop: 'Proposez votre premier service'
-}
+  createShop: 'Proposez votre premier service',
+  bienvenue:{
+    titre: 'Bienvenue',
+    subtitle: 'Nous allons vous aider à créer votre service et devenir Alfred en quelques minutes !',
+    step1: 'Etape 1 : Votre talent, votre service',
+    step1_subtitle: 'Choisissez votre premier super talent ! ',
+    step1_text: 'Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appelle un autre, vous pourrez ajouter autant de services que vous voulez.',
+    step2: 'Etape 2 : Fixez vos règles & conditions !',
+    step2_subtitle: 'Vous êtes chez vous ! Fixez vos règles et vos conditions…',
+    step2_text: 'Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation.',
+    step3: 'Etape 3 : Présentez vous ! ',
+    step3_subtitle: 'Présentez-vous !',
+    step3_text: 'Renseignez votre profil Alfred, partagez vos réalisations, et décrivez-vous !',
+  },
+  creation:{
+    title: 'A propos de vous',
+    subtitle: 'Choisissez votre statut. Les particuliers peuvent proposer leurs services aux particuliers, mais seuls les professionnels peuvent proposer leurs services aux clients particuliers et entreprises.',
+    is_particular: 'Je suis un particulier',
+    is_particular_description:'En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés.',
+    is_particular_want_cesu: 'Je veux être déclaré(e) en CESU',
+    is_particular_accept_cesu: 'J\'accepte d\'être déclaré en CESU',
+    is_particular_decline_cesu: 'Je n\'accepte pas d\'être déclaré(e) en CESU',
+    is_professional: 'Je suis un professionnel/J\'ai un numéro de SIRET',
+    is_professional_description: 'Un statut professionnel avec un numéro de SIRET est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.',
+    is_professional_cis: 'Mon enterprise est éligible au Crédit Impôt Service',
+    is_professional_certif: 'Je certifie sur l’honneur qu’il s’agit bien de mon entreprise.',
+    is_professional_vat_subject: 'Mon entreprise est assujettie à la TVA',
+    is_profesionnal_propose_missions: 'Je souhaite proposer des missions : ',
+    textfield_ss1: 'N° sécurité sociale',
+    textfield_ntva: 'N° TVA',
+    textfield_particular: 'Aux particuliers',
+    textfield_company: 'Aux entreprises',
+    textfield_company_and_particular: 'Aux particuliers et aux entreprises',
+  },
+  service:{
+    title: 'Votre service',
+    subtitle: 'Configurez votre service. Si vous souhaitez en proposer plusieurs, vous pourrez en ajouter autant que vous le souhaitez par la suite.',
+    content_particular: 'Liste des services aux particuliers',
+    content_professional: 'Liste des services aux entreprises',
+    content_particular_professional: 'Liste des services aux particuliers & aux entreprises',
+    placeholder: 'Recherche par mot-clés',
+    section_particular: 'Services au particuliers',
+    section_company: 'Services au professionnels',
+  },
+  parameter:{
+    title: 'Paramétrez vos prestations',
+    subtitle: 'Indiquez vos tarifs et votre méthode de facturation. Si vous êtes assujetti à la TVA, merci d’indiquer vos tarifs hors taxes. Vous ne trouvez pas une prestation ? Créez une prestation personnalisée qui vous sera propre ! ',
+    presta_perso: 'Ajouter une prestation personnalisée',
+  },
+  settingService:{
+    title: 'Paramétrage',
+    subtitle: 'Indiquez votre périmètre d’intervention ainsi que les options qui s’offrent à votre client quant à votre service.',
+    title_perimeter: 'Quel est votre périmètre d’intervention ?',
+    unity_perimeter: 'Km',
+    title_place_service : 'Où acceptez-vous de réaliser votre prestation ?',
+    service_at_userHome: 'A l\' adresse de mon client',
+    service_at_myHome: 'A mon adresse',
+    service_withVisio: 'En visioconférence',
+    service_outside: 'En extérieur',
+    apply_moving_price : 'Appliquer un forfait déplacement de',
+    propose_delivery: 'Proposer un forfait retrait & livraison de',
+    section_option_title: 'Options'
+  },
+  preference:{
+    title: 'Préférences',
+    subtitle: 'Indiquez vos préférences de réservation. Ses préférences s’appliqueront lorsqu’un client souhaite vous réserver.',
+    title_delay_prevenance: 'De quel délai souhaitez-vous disposer entre la réservation et la réalisation du services ?',
+    units_dalay_prevenance: 'Heures/jours/semaines',
+    label_delay_prevenance: '',
+    hours: 'heure(s)',
+    days: 'jour(s)',
+    weeks: 'semaine(s)',
+    title_minimum_basket: 'Quel est le montant minimal pour réserver votre service ?',
+    subtitle_minimum_basket: ' Le client peut réserver mes services si le total des prestations sélectionnées est supérieur à :',
+    textfield_minimum_basket: 'Panier minimum',
+    unit_minimum_basket: '€',
+    title_equipments: 'Les équipements que vous fournissez pour ce service:',
+  },
+  assets:{
+    title: 'Vos atouts',
+    subtitle: 'Mettez en évidence vos compétences et votre expertise dans ce service. Vous pouvez également donner des précisions sur vos prestations. Précisez tout ce qui peut aider votre client à réserver correctement votre service !',
+    expertise_title: 'Votre expertise',
+    expertise_label: 'Votre expertise',
+    experience_title: 'Votre expérience',
+    experience_label: 'Experience',
+    experience_yearRange_0 : 'Entre 0 et 1 an',
+    experience_yearRange_1 : 'Entre 1 et 5 ans',
+    experience_yearRange_2 : 'Entre 5 et 10 ans',
+    experience_yearRange_3 : 'Plus de 10 ans',
+    experience_label_dresciprtion: 'Décrivrez votre expérience ici',
+    obtain_competence : 'Compétences acquises',
+    diploma_title: 'Votre diplôme',
+    diploma_subtitle: 'En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ces derniers.',
+    year_obtain: 'Année d\'obtention',
+    button_joinFile: 'Joindre un diplôme',
+    certification_title: 'Votre certification',
+    certification_subtitle: 'En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ces derniers.',
+    certification_name: 'Nom du certificat'
+  },
+  bookingCondition:{
+    title: 'Vos conditions',
+    subtitle: 'Fixez vos conditions et la façon dont vous acceptez qu’un client réserve vos services.',
+    title_firstSection: 'Comment les clients peuvent vous réserver ?',
+    booking_request: 'Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.',
+    booking_auto: 'Les utilisateurs peuvent réserver mes services directement sans demande de réservation.',
+    title_secondSection: 'Quelles sont les conditions pour réserver vos services ?',
+    conditions_bacsic: 'Respecter les conditions My-Alfred (profil vérifié)',
+    conditions_picture: 'Avoir une photo de profil',
+    conditions_idCard: 'Avoir déposé une pièce d’identité officielle',
+    conditions_recommend: 'Etre recommandé par d’autres Alfred',
+    title_thirdSection: 'Quelles sont vos conditions d’annulation ?',
+    condition_flexible: 'Flexibles: Remboursement intégral jusqu\'à 1 jour avant la prestation',
+    condition_moderate: 'Modérées: Remboursement intégral jusqu\'à 5 jours avant la prestation',
+    condition_strict : 'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation'
+
+  }
+};
 
 const BOOKING = {
   MSG_EVALUATE: 'Vous avez 15 jours pour évaluer votre client. Une fois que votre client aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !'
@@ -327,7 +439,7 @@ const FAQ_CLIENT = {
     }
   ],
 
-}
+};
 
 const FAQ = {
   'alfred': FAQ_ALFRED,
@@ -356,5 +468,5 @@ module.exports = {
   SHOP,
   CMP_PRESENTATION,
   BOOKING,
-  FAQ
+  FAQ,
 };

@@ -1,20 +1,13 @@
-const {setAxiosAuthentication}=require('../../../utils/authentication')
-const AUTOCOMPLETE = false;
-
+const {setAxiosAuthentication}=require('../../../utils/authentication');
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import styles from '../componentStyle';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import styles from '../../../static/css/components/SelectService/SelectService';
 import axios from 'axios';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import Select from 'react-dropdown-select';
-
-
-const {inspect} = require('util');
+import Select from 'react-select'
 const {matches, normalize} = require('../../../utils/text');
+import {SHOP} from '../../../utils/i18n';
+
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -23,12 +16,15 @@ class SelectService extends React.Component {
       service: null,
       services: [],
       creation: this.props.creation,
+      loading: true,
     };
-    this.onChange = this.onChange.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  setServices(pattern) {
+  componentDidMount() {
+    this.setServices('');
+  }
+
+  setServices = (pattern) => {
     pattern = pattern || '%20';
     var kw_url = `/myAlfred/api/service/keyword/${pattern}`;
     setAxiosAuthentication()
@@ -41,139 +37,107 @@ class SelectService extends React.Component {
             // FIX: passer les keyowrds autrement dans le back
             // Dont show services to exclude (i.e. already in the shop)
             if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
-              let srv_opt = {
-                label: `${s.label}`,
-                value: s.id,
-                keywords: s.keywords.map(k => normalize(k)).join(' ').toLowerCase(),
-              };
-              services.push(srv_opt);
+              s.keywords = s.keywords.map(k => normalize(k)).join(' ').toLowerCase(),
+              services.push(s);
               if (this.state.service == null && s.id == this.props.service) {
-                this.setState({service: srv_opt});
+                this.setState({service: s});
               }
             }
           });
         });
-        this.setState({services: services});
+        this.setState({services: services, loading: false});
       }).catch(error => {
       console.error(error);
     });
-  }
+  };
 
-  componentDidMount() {
-    this.setServices('');
-  }
-
-  onChange(item) {
-    if (item.length > 0) {
-      this.setState({service: item ? item[0].value : null});
-      if (item !== undefined && item !== null) {
-        this.props.onChange(item[0].value);
-      }
+  service2Option = service => {
+    return {
+      label: `${service.label}`,
+      value: service.id,
+      keywords: service.keywords,
     }
-  }
+  };
 
-  onChangeSelect(value) {
-    this.setState({service: value ? value : null});
-    if (value !== undefined && value !== null) {
-      this.props.onChange(value.id);
-    }
-  }
+  onChange = (option) =>{
+    const opt_id = option ? option.value : null;
+    this.setState({service: opt_id});
+    this.props.onChange(opt_id);
+  };
 
-  handleKeyDown(event) {
-    this.setServices(event.target.value);
-  }
-
-  isCreation() {
+  isCreation = () =>{
     return this.state.creation;
-  }
+  };
 
-  searchFn = st => {
-    const search = normalize(st.state.search);
-    const options = st.props.options;
-    const selected = options.filter(opt => {
-      const ok = matches(opt.keywords, search) || matches(opt.label, search);
-      return ok;
-    });
-    return selected;
+  searchFn = (candidate, input) => {
+    if (candidate) {
+      const search = normalize(input);
+      const ok = matches(candidate.data.keywords, search) || matches(candidate.label, search);
+      return ok
+    }
+    return true
   };
 
   render() {
-    const {classes, creationBoutique} = this.props;
-    const {service} = this.state;
+    const {classes, professional_access, particular_access} = this.props;
+    const {services, loading} = this.state;
+
+    const pro_options = services.filter( s => s.professional_access).map(s => this.service2Option(s));
+    const part_options = services.filter( s => s.particular_access).map(s => this.service2Option(s));
+
+    var options;
+    if (professional_access && particular_access) {
+      options=[
+        {
+          label: SHOP.service.section_company,
+          options: pro_options
+        },
+        {
+          label: SHOP.service.section_particular,
+          options: part_options
+        }
+      ]
+    }
+    else {
+      options = professional_access ? pro_options : part_options
+    }
+
+    const tabbedStyle = {
+      option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+        return { ...styles, 'padding-left' : '2em', };
+      },
+    };
 
     return (
-      <Grid className={classes.mainContainer}>
-        <Grid className={classes.contentContainer}>
-          <Grid>
-            <Grid className={classes.contentLeftTop}>
-              <Grid className={classes.contentTitle}>
-                <Typography
-                  className={classes.policySizeTitle}>{creationBoutique ? 'Créez votre boutique de services' : this.isCreation() ? 'Ajouter un service' : 'Modifier un service'}</Typography>
-              </Grid>
-              <Grid>
-                <Grid>
-                  <Grid>
-                    <h3
-                      className={classes.policySizeSubtitle}>{this.isCreation() ? 'Quel service souhaitez-vous réaliser ?' : `Vous allez modifier votre service "${service ? service.label : ''}"`} </h3>
-                  </Grid>
-                  {creationBoutique ?
-                    <Grid className={classes.bottomSpacer}>
-                      <Typography className={classes.policySizeContent}>Identifiez maintenant le premier service que vous
-                        souhaitez configurer dans
-                        votre boutique de services. Vous pourrez en ajouter autant que vous voulez dans
-                        votre boutique. Un service n’apparait pas ? Cliquez ici pour l’ajouter.
-                      </Typography>
-                    </Grid> : null
-                  }
-                </Grid>
-                {this.isCreation() ?
-                  <Grid>
-                    <Grid>
-                      {AUTOCOMPLETE ?
-                        <Autocomplete
-                          id="grouped-demo"
-                          className={classes.textFieldSelecteService}
-                          onChange={this.onChange}
-                          onKeyDown={(event) => {
-                            this.handleKeyDown(event);
-                          }}
-                          options={this.state.services}
-                          groupBy={option => option.category}
-                          getOptionLabel={option => option.label}
-                          value={this.state.service}
-                          disabled={!this.isCreation()}
-                          renderInput={params => (
-                            <TextField {...params} label={this.isCreation() ? 'Tapez votre service' : ''}
-                                       variant="outlined" fullWidth/>
-                          )}
-                          renderOption={(option, {value}) => {
-                            return (
-                              <div>
-                                {option ? option.label.split('/')[0] : ''}
-                              </div>
-                            );
-                          }}
-                        />
-                        :
-                        <Select
-                          options={this.state.services}
-                          onChange={this.onChange}
-                          //onKeyDown={(event) =>{ this.handleKeyDown(event) }}
-                          disabled={!this.isCreation()}
-                          searchable={true}
-                          searchBy={'label'}
-                          searchFn={this.searchFn}
-                        />
-                      }
-                    </Grid>
-                  </Grid>
-                  :
-                  null
-                }
-              </Grid>
-            </Grid>
+      <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+          <h2 className={classes.policySizeTitle}>{SHOP.service.title}</h2>
+        </Grid>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+            <h3 style={{color: '#696767'}}>{SHOP.service.subtitle}</h3>
+          </Grid>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+            <h4 className={classes.policySizeSubtitle}>{SHOP.service.content_particular_professional}</h4>
           </Grid>
         </Grid>
+          {this.isCreation() ?
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Select
+                options={options}
+                onChange={this.onChange}
+                disabled={!this.isCreation()}
+                searchable={true}
+                filterOption={this.searchFn}
+                isLoading={loading}
+                loadingMessage={() => 'Recherche des services'}
+                placeholder={SHOP.service.placeholder}
+                styles={professional_access && particular_access ? tabbedStyle : ''}
+              />
+            </Grid>
+            :
+            null
+          }
       </Grid>
     );
   }

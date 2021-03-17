@@ -24,10 +24,12 @@ const util=require('util')
 const {Siret}=require('../../../components/Siret/Siret')
 import IconButton from "@material-ui/core/IconButton";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import AlgoliaPlaces from 'algolia-places-react';
 
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
-const {COMPANY_SIZE, COMPANY_ACTIVITY, ADMIN, BUYER, EMPLOYEE}=require('../../../utils/consts')
+const {COMPANY_SIZE, COMPANY_ACTIVITY, ADMIN, MANAGER, EMPLOYEE}=require('../../../utils/consts')
 const {SIRET}=require('../../../config/config')
+const {formatAddress}=require('../../../utils/text')
 
 const styles = theme => ({
   signupContainer: {
@@ -65,7 +67,7 @@ class view extends React.Component {
 
     this.state = {
       company: null,
-      users: [],
+      suggestion_address : null,
       errors:{},
     };
     this.onChange = this.onChange.bind(this);
@@ -101,20 +103,6 @@ class view extends React.Component {
           Router.push({pathname: '/login'});
         }
       });
-    axios.get(`/myAlfred/api/admin/companies/${id}/users`)
-      .then(response => {
-        let users = response.data;
-        this.setState({
-          users: users,
-        });
-      })
-      .catch(err => {
-        console.error(err);
-        if (err.response.status === 401 || err.response.status === 403) {
-          clearAuthenticationToken()
-          Router.push({pathname: '/login'});
-        }
-      });
   }
 
   checkSiret = siret => {
@@ -133,14 +121,14 @@ class view extends React.Component {
   }
 
   onChange = e => {
-    const state = this.state.company;
+    const {company} = this.state;
     var {name, value} = e.target
     if (name=='siret') {
       value = value.replaceAll(' ', '')
       this.checkSiret(value)
     }
-    state[name] = value;
-    this.setState({company: state});
+    company[name] = value;
+    this.setState({company: company});
   };
 
   onCheck = e => {
@@ -153,9 +141,30 @@ class view extends React.Component {
     this.setState({company: state});
   };
 
+  onAddressChange = suggestion => {
+    this.setState({suggestion_address : suggestion ? suggestion.suggestion : null})
+  }
+
   onSubmit = e => {
     e.preventDefault();
-    var {company}=this.state
+    var {company, suggestion_address}=this.state
+    const address = suggestion_address ? {
+      address: suggestion_address.name,
+      city: suggestion_address.city,
+      zip_code: suggestion_address.postcode,
+      country: suggestion_address.country,
+      gps: {
+        lat: suggestion_address.latlng.lat,
+        lng: suggestion_address.latlng.lng
+      }
+    }
+    :
+    null
+
+    if (address) {
+      company.billing_address = address
+    }
+
     axios.post(`/myAlfred/api/admin/companies`, {...company})
       .then ( res => {
         if (company._id) {
@@ -175,27 +184,14 @@ class view extends React.Component {
       })
   };
 
-  removeRole = (user_id, role) => {
-    setAxiosAuthentication()
-    axios.delete(`/myAlfred/api/users/${user_id}/role/${role}`)
-      .then(() => {
-        snackBarSuccess('Rôle supprimé')
-        this.componentDidMount()
-      })
-      .catch(err => console.error(err))
-  }
-
   render() {
     const {classes} = this.props;
-    const {company, users, errors} = this.state;
+    const {company, errors, suggestion_address} = this.state;
 
+    const placeholder = formatAddress(company ? company.billing_address : null) || "Modifiez votre adresse"
     if (!company) {
       return null
     }
-
-    const admins=users.filter(u => u.roles && u.roles.includes(ADMIN))
-    const buyers=users.filter(u => u.roles && u.roles.includes(BUYER))
-    const employees=users
 
     return (
       <Layout>
@@ -230,6 +226,23 @@ class view extends React.Component {
                     error={errors.website}
                   />
                 </Grid>
+                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                  <Typography style={{fontSize: 20}}>Adresse siège social</Typography>
+                </Grid>
+                <AlgoliaPlaces
+                  placeholder={placeholder}
+                  options={{
+                    appId: 'plKATRG826CP',
+                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                    language: 'fr',
+                    countries: ['fr'],
+                    type: 'address',
+                  }}
+                  onChange={this.onAddressChange}
+                  onClear={this.onAddressChange}
+                />
+
+
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <Typography style={{fontSize: 20}}>Effectif de l'entreprise</Typography>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
@@ -301,72 +314,36 @@ class view extends React.Component {
                   />
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <Typography style={{fontSize: 20}}>Ajouter un administrateur par son email</Typography>
+                  <Typography style={{fontSize: 20}}>Ajouter un administrateur</Typography>
                 </Grid>
                 <Grid item>
                   <TextField
-                    id={1}
                     margin="normal"
                     style={{width: '100%'}}
-                    type="text"
+                    name="admin_firstname"
+                    value={company.admin_firstname}
+                    onChange={this.onChange}
+                    error={errors.admin_firstname}
+                    placeholder={'Prénom'}
+                  />
+                  <TextField
+                    margin="normal"
+                    style={{width: '100%'}}
+                    name="admin_name"
+                    value={company.admin_name}
+                    onChange={this.onChange}
+                    error={errors.admin_name}
+                    placeholder={'Nom'}
+                  />
+                  <TextField
+                    margin="normal"
+                    style={{width: '100%'}}
                     name="admin_email"
                     value={company.admin_email}
                     onChange={this.onChange}
                     error={errors.admin_email}
+                    placeholder={'Email'}
                   />
-                  { admins.map( a => {
-                    return (<div>
-                      {a.full_name} {a.email}
-                      <IconButton aria-label="delete" onClick={() => this.removeRole(a._id, ADMIN)}>
-                        <DeleteForeverIcon />
-                      </IconButton>
-                    </div>)
-                  })}
-                </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <Typography style={{fontSize: 20}}>Ajouter un acheteur par son email</Typography>
-                </Grid>
-                <Grid item>
-                  <TextField
-                    id={2}
-                    margin="normal"
-                    style={{width: '100%'}}
-                    type="text"
-                    name="buyer_email"
-                    value={company.buyer_email}
-                    onChange={this.onChange}
-                    error={errors.buyer_email}
-                  />
-                  { buyers.map( a => {
-                    return (<div>{a.full_name} {a.email}
-                      <IconButton aria-label="delete" onClick={() => this.removeRole(a._id, BUYER)}>
-                        <DeleteForeverIcon />
-                      </IconButton>
-                      </div>)
-                  })}
-                </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <Typography style={{fontSize: 20}}>Ajouter un employé par son email</Typography>
-                </Grid>
-                <Grid item>
-                  <TextField
-                    id={3}
-                    margin="normal"
-                    style={{width: '100%'}}
-                    type="text"
-                    name="employee_email"
-                    value={company.employee_email}
-                    onChange={this.onChange}
-                    error={errors.employee_email}
-                  />
-                  { employees.map( a => {
-                    return (<div>{a.full_name} {a.email}
-                      <IconButton aria-label="delete" onClick={() => this.removeRole(a._id, EMPLOYEE)}>
-                        <DeleteForeverIcon />
-                      </IconButton>
-                      </div>)
-                  })}
-
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                   <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>

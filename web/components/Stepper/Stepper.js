@@ -1,12 +1,12 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import StepperMaterial from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Router from 'next/router';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import StepConnector from '@material-ui/core/StepConnector';
 
 import styles from './StepperStyle';
 
@@ -17,6 +17,11 @@ const ColorlibConnector = () =>{
   )
 };
 
+const PaddingConnector = () =>{
+  return(
+    <Grid style={{padding: 10}}/>
+  )
+};
 class Stepper extends React.Component {
   constructor(props) {
     super(props);
@@ -26,25 +31,17 @@ class Stepper extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const url = Router.pathname;
-    this.setState({urlName: url})
-
-  }
-
   getStepsCreaShop() {
     return [
       'Bienvenue',
       'Création',
+      'Services',
       'Prestations',
       'Paramétrage',
       'Préférences',
       'Atouts',
       'Disponibilités',
       'Conditions',
-      'Profil',
-      'Présentation',
-
     ];
   }
 
@@ -78,30 +75,27 @@ class Stepper extends React.Component {
   }
 
   handleReset = () => {
-    this.setState({setActiveStep: 0});
-    this.setState({activeStep: 0});
+    this.setState({setActiveStep: 0, activeStep: 0});
   };
 
   render() {
-    const {classes, activeStep} = this.props;
-    const {urlName} = this.state;
-
+    const {classes, activeStep, isType} = this.props;
 
     return (
       <Grid className={classes.root}>
         <StepperMaterial
           activeStep={activeStep}
-          nonLinear
-          classes={{root : classes.stepperRoot}}
+          orientation={isType === 'creaShop' ? 'vertical' : 'horizontal'}
+          classes={{root :   isType === 'creaShop' ? classes.stepperShop : classes.stepperRoot}}
           style={{
-            justifyContent : urlName === '/creaShop/creaShop' ? 'space-around' : 'center'
+            justifyContent : isType === 'creaShop' ? 'space-around' : 'center'
           }}
-          connector={<ColorlibConnector />}>
+          connector={isType === 'creaShop' ? <Grid/> : <ColorlibConnector />}>
           {this.state.steps.map(label => (
-            <Step key={label} classes={{root : classes.stepRoot}}>
+            <Step key={label} classes={{root : isType === 'creaShop' ? classes.stepShop : classes.stepRoot}}>
               <StepLabel
-                classes={{root: classes.stepLabelRoot}}
-                StepIconProps={{classes: {root: classes.stepIcon},
+                classes={{root: isType === 'creaShop' ? classes.stepLabelShop :classes.stepLabelRoot}}
+                StepIconProps={{classes: {root: isType === 'creaShop' ? classes.stepIconShop : classes.stepIcon},
               }}>
                 {label}
               </StepLabel>

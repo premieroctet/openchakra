@@ -40,7 +40,7 @@ class DrawerAndSchedule extends React.Component{
   };
 
   render(){
-    const {availabilities, selectable, title, subtitle, booking, nbSchedule, readOnly, classes} = this.props;
+    const {availabilities, selectable, title, subtitle, bookings, nbSchedule, readOnly, classes} = this.props;
 
     return(
       <Grid className={classes.drawerAndSchedule_mainContainer}>
@@ -56,7 +56,7 @@ class DrawerAndSchedule extends React.Component{
             nbSchedule={nbSchedule}
             handleSelection={this.onDateSelectionChanged}
             mode={'month'}
-            booking={booking}
+            bookings={bookings}
           />
         </Grid>
         {readOnly ? null:

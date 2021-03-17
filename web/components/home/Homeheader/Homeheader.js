@@ -239,7 +239,6 @@ class Homeheader extends React.Component {
     const {classes} = this.props;
     const {errors, popopen} = this.state;
 
-    console.log(JSON.stringify(this.state));
     return (
       <Fragment>
         <div className={classes.headerimg}/>

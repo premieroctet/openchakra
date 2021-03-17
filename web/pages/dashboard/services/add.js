@@ -204,7 +204,6 @@ class add extends React.Component {
       });
     }
 
-    console.log('Picture:' + JSON.stringify(this.state.picture));
     const formData = new FormData();
     formData.append('label', this.state.label);
     formData.append('picture', this.state.picture);

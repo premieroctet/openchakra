@@ -182,7 +182,6 @@ class add extends React.Component {
       });
     }
 
-    console.log('SelectedBilling:' + JSON.stringify(this.state.selectedBilling));
     if (this.state.selectedBilling != null) {
       this.state.selectedBilling.forEach(t => {
 
@@ -232,8 +231,6 @@ class add extends React.Component {
     const {all_job} = this.state;
     const {all_tags} = this.state;
     const {errors} = this.state;
-
-    console.log('State.billing:' + JSON.stringify(this.state.billing));
 
     const optionsTags = all_tags.map(tag => ({
       label: tag.label,

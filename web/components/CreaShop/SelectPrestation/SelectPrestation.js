@@ -1,18 +1,17 @@
-const {setAxiosAuthentication}=require('../../../utils/authentication')
+const {setAxiosAuthentication}=require('../../../utils/authentication');
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import {Typography} from '@material-ui/core';
 import axios from 'axios';
-import styles from '../componentStyle';
+import styles from '../../../static/css/components/SelectPrestation/SelectPrestation';
 import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN} from '../../../utils/consts';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-
+import {SHOP} from '../../../utils/i18n';
 import _ from 'lodash';
-const {getLoggedUserId}=require('../../../utils/functions')
+const {getLoggedUserId}=require('../../../utils/functions');
 
 class SelectPrestation extends React.Component {
   constructor(props) {
@@ -33,10 +32,10 @@ class SelectPrestation extends React.Component {
   componentDidMount() {
 
     // Get current alfred id
-    const alfred_id = getLoggedUserId()
+    const alfred_id = getLoggedUserId();
 
     let billings = null;
-    setAxiosAuthentication()
+    setAxiosAuthentication();
     axios.get(`/myAlfred/api/billing/all`)
       .then(res => {
         billings = res.data;
@@ -101,64 +100,64 @@ class SelectPrestation extends React.Component {
 
   render() {
     // FIX : le billing par défaut n'ets pas sélectionné
-    const {classes, prestations} = this.props;
+    const {classes} = this.props;
 
     return (
-      <Grid className={classes.mainContainer}>
-        <Grid className={classes.contentContainer}>
-          <Grid className={classes.maxWidth}>
-            <Grid className={classes.contentLeftTop}>
-              <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{this.state.service_name} : indiquez vos
-                  prestations</Typography>
-              </Grid>
+      <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+          <h2 className={classes.policySizeTitle}>{SHOP.parameter.title}</h2>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <h3 style={{color: '#696767'}}>{SHOP.parameter.subtitle}</h3>
+        </Grid>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+          <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Fab
+                variant="extended"
+                color="primary"
+                aria-label="add"
+                onClick={() => this.addCustomPrestation()}
+                className={classes.margin}
+              >
+                <AddIcon className={classes.extendedIcon}/>
+                <Typography style={{textTransform: 'initial'}}>{SHOP.parameter.presta_perso}</Typography>
+              </Fab>
             </Grid>
-            <Grid className={classes.containerPrestas}>
-              <Grid className={classes.bottomSpacer}>
-                <Typography className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos
-                  tarifs et votre unité de facturation. </Typography>
-              </Grid>
-              <Grid className={classes.buttonAddPrestas}>
-                <Grid item className={classes.maxWidth} style={{marginBottom: 100}}>
-                  <Grid style={{marginBottom: 10}}>
-                    <Fab variant="extended" color="primary" aria-label="add" onClick={() => this.addCustomPrestation()}
-                         className={classes.margin}>
-                      <AddIcon className={classes.extendedIcon}/>
-                      Ajouter une prestation personnalisée
-                    </Fab>
+            {Object.keys(this.state.grouped).map((fltr, i) => {
+              let prestas = this.state.grouped[fltr];
+              return (
+                <Grid key={i} container spacing={3} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Typography style={{color: '#696767'}}>{fltr === 'Aucun' ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}</Typography>
                   </Grid>
-                  {Object.keys(this.state.grouped).map((fltr, i) => {
-                    let prestas = this.state.grouped[fltr];
-                    return (
-                      <Grid key={i} className={classes.maxWidth}>
-                        <Grid className={classes.marginThirty}>
-                          <Grid item>
-                            {fltr === 'Aucun' ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}
-                          </Grid>
+                  <Grid container spacing={3} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
+                    {prestas.map((p, j) => {
+                      let isEditable = p._id.length == GID_LEN;
+                      let presta = this.state.prestations[p._id];
+                      return (
+                        <Grid key={p._id} item xl={6} lg={6} md={6} sm={12} xs={12}>
+                          <ButtonSwitch
+                            isOption={true}
+                            isPrice={true}
+                            width={'100%'}
+                            label={p.label}
+                            id={p._id}
+                            checked={presta != null}
+                            billings={p.billing}
+                            onChange={this.prestationSelected}
+                            isEditable={isEditable}
+                            price={presta ? presta.price : null}
+                            billing={presta ? presta.billing : null}/>
+                          <hr style={{color: 'rgb(255, 249, 249, 0.6)', borderRadius: 10}}/>
                         </Grid>
-                        <Grid container spacing={2}>
-                          {prestas.map((p, j) => {
-                            let isEditable = p._id.length == GID_LEN;
-                            let presta = this.state.prestations[p._id];
-                            return (
-                              <Grid key={p._id} item xl={6} lg={6} md={6} sm={12} xs={12}>
-                                <ButtonSwitch isOption={true} isPrice={true} width={'100%'} label={p.label} id={p._id}
-                                              checked={presta != null}
-                                              billings={p.billing} onChange={this.prestationSelected}
-                                              isEditable={isEditable} price={presta ? presta.price : null}
-                                              billing={presta ? presta.billing : null}/>
-                                <hr style={{color: 'rgb(255, 249, 249, 0.6)', borderRadius: 10}}/>
-                              </Grid>
-                            );
-                          })}
-                        </Grid>
-                      </Grid>
-                    );
-                  })
-                  }
+                      );
+                    })}
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Grid>
+              );
+            })
+            }
           </Grid>
         </Grid>
       </Grid>

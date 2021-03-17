@@ -12,17 +12,10 @@ class AddressService extends React.Component {
     if (!bookingObj) {
       return null
     }
-    console.log(`BookingObj:${JSON.stringify(bookingObj, null, 2)}`)
-    if (currentUser && bookingObj) {
-      var checkAdd = bookingObj.address && currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
-    }
 
     return(
       <Grid>
         <Grid style={{display: 'flex', flexDirection: 'column'}}>
-          <Grid>
-            <Typography>{bookingObj.address ? checkAdd ? currentUser.firstname + " " +  currentUser.name : user.firstname + " " + user.name : 'En visio' }</Typography>
-          </Grid>
           { bookingObj.address ?
             <>
               <Grid>
@@ -33,7 +26,7 @@ class AddressService extends React.Component {
               </Grid>
             </>
             :
-            null
+            "En visio"
           }
           {/*TODO UPDATE ADDRESS + CHECK ADDRESS FACTURE
           <Grid style={{marginTop: '2vh'}}>

@@ -84,7 +84,6 @@ class all extends React.Component {
     axios.get('/myAlfred/api/admin/prestation/all')
       .then((response) => {
         let prestation = response.data;
-        console.log(JSON.stringify(prestation[0],null, 2))
         this.setState({prestation: prestation});
       }).catch((error) => {
       console.log(error);

@@ -266,24 +266,24 @@ class Schedule extends React.Component {
     };
 
     return (
-      <Grid className={classes.schedule_heightContainer}>
+      <Grid container spacing={3} style={{margin: 0, width: '100%'}} className={classes.schedule_heightContainer}>
         {title || subtitle ?
-          <Grid>
+          <Grid container spacing={3} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12} >
             {title ?
-              <Grid>
-                <Typography className={classes.schedule_policySizeTitle}>{title}</Typography>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  style={{display: 'flex', justifyContent: 'center'}}>
+                <h2 className={classes.schedule_policySizeTitle}>{title}</h2>
               </Grid> : null
             }
             {subtitle ?
-              <Grid>
-                <p className={classes.schedule_policySizeContent}>{subtitle}</p>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} >
+                <h3 className={classes.schedule_policySizeContent}>{subtitle}</h3>
               </Grid> : null
             }
           </Grid>
           : null
         }
         { this.props.mode === 'month' ?
-          <Grid container style={{justifyContent: 'space-between'}}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container style={{justifyContent: 'space-between', margin: 0, width: '100%'}} spacing={3}>
             <Grid>
               <Button onClick={this.previousMonth} variant={'contained'}>&#8249;</Button>
             </Grid>
@@ -294,7 +294,7 @@ class Schedule extends React.Component {
           :
           null
         }
-        <Grid container spacing={2} style={{padding: 5}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container spacing={2} style={{padding: 5}}>
           {[...Array(nbSchedule)].map((x, i) => {
             let date = new Date(currentDate);
             date.setDate(1);

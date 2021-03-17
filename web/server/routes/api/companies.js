@@ -9,18 +9,20 @@ const path = require('path');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
 const {is_production, is_validation}=require('../../../config/config');
-const {validateCompanyProfile} = require('../../validation/simpleRegister');
+const {validateCompanyProfile, validateCompanyMember, validateCompanyGroup} = require('../../validation/simpleRegister');
 const moment = require('moment');
 moment.locale('fr');
 const Company = require('../../models/Company');
-const ServiceAccess = require('../../models/ServiceAccess');
+const User = require('../../models/User');
+const Group = require('../../models/Group');
+const Service = require('../../models/Service');
 const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
-const emptyPromise = require('../../../utils/promise.js');
-
-
+const emptyPromise = require('../../../utils/promise');
+const {ADMIN, EMPLOYEE} = require('../../../utils/consts')
+var _ = require('lodash')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
 
 
@@ -74,7 +76,7 @@ const uploadRegProof = multer({
 // @Route PUT /myAlfred/api/companies/profile/billingAddress
 // Set the main address in the profile
 // @Access private
-router.put('/profile/billingAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/profile/billingAddress', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
   Company.findById(req.user.company)
     .then(company => {
@@ -93,7 +95,7 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
 // @Route PUT /myAlfred/api/companies/profile/serviceAddress
 // Add an other address in the profile
 // @Access private
-router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/profile/serviceAddress', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
   Company.findById(req.user.company)
     .then(company => {
@@ -120,7 +122,7 @@ router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: fal
 // @Route GET /myAlfred/api/companies/profile/address/:id
 // Get service address by id
 // @Access private
-router.get('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/profile/address/:id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   Company.findById(req.user.company)
     .then(company => {
       const index = req.params.id;
@@ -136,7 +138,7 @@ router.get('/profile/address/:id', passport.authenticate('jwt', {session: false}
 // @Route PUT /myAlfred/api/companies/profile/address/:id
 // Edit service address by id
 // @Access private
-router.put('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/profile/address/:id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   Company.findById(req.user.company)
     .then(company => {
       const index = company.service_address
@@ -160,7 +162,7 @@ router.put('/profile/address/:id', passport.authenticate('jwt', {session: false}
 // @Route DELETE /myAlfred/api/companies/profile/address/:id
 // Delete service address by id
 // @Access private
-router.delete('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/profile/address/:id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   Company.findById(req.user.company)
     .then(company => {
       const index = company.service_address
@@ -176,7 +178,7 @@ router.delete('/profile/address/:id', passport.authenticate('jwt', {session: fal
 // @Route PUT /myAlfred/api/companies/profile/picture
 // Add a picture profile
 // @Access private
-router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.authenticate('b2badmin', {session: false}), (req, res) => {
   Company.findByIdAndUpdate(req.company.id, {
     picture: req.file ? req.file.path : '',
   }, {new: true})
@@ -191,7 +193,7 @@ router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.auth
 // @Route PUT /myAlfred/api/companies/profile/pictureLater
 // Add a picture profile
 // @Access private
-router.put('/profile/pictureLater', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/profile/pictureLater', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   Company.findByIdAndUpdate(req.company.id, {picture: req.body.picture}, {new: true})
     .then(company => {
       res.json(company);
@@ -202,7 +204,7 @@ router.put('/profile/pictureLater', passport.authenticate('jwt', {session: false
 // @Route POST /myAlfred/api/companies/profile/registrationProof/add
 // Add a registration proof
 // @Access private
-router.post('/profile/registrationProof/add', uploadRegProof.single('registrationProof'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/profile/registrationProof/add', uploadRegProof.single('registrationProof'), passport.authenticate('b2badmin', {session: false}), (req, res) => {
   Company.findById(req.company.id)
     .then(company => {
       company.registration_proof = req.file.path;
@@ -220,7 +222,7 @@ router.post('/profile/registrationProof/add', uploadRegProof.single('registratio
 // @Route DELETE /myAlfred/api/companies/profile/registrationProof
 // Deletes a registration proof
 // @Access private
-router.delete('/profile/registrationProof', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/profile/registrationProof', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   Company.findById(req.company.id)
     .then(company => {
       company.registration_proof = null;
@@ -236,7 +238,7 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
 
 // @Route GET /myAlfred/api/companies/current
 // Get the company for the current logged user
-router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/current', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   Company.findById(req.user.company)
     .then(company => {
       if (!company) {
@@ -265,49 +267,6 @@ router.get('/companies/:id', (req, res) => {
     .catch(err => res.status(404).json({company: 'No company found'}));
 });
 
-// @Route GET /myAlfred/api/companies/allowedServices
-// Get allowed services for current company
-router.get('/allowedServices', passport.authenticate('jwt', {session: false}), (req, res) => {
-  ServiceAccess.find({company_allow: req.user.company})
-    .populate('service', 'label')
-    .then(serviceAccesses => {
-      if (!serviceAccesses) {
-        return res.status(400).json({msg: 'No company found'});
-      }
-      res.json(serviceAccesses.map( sa => sa.service));
-
-    })
-    .catch(err => res.status(404).json({company: 'No company found'}));
-});
-
-// @Route PUT /myAlfred/api/companies/allowedService
-// Put allowed service for current company
-router.put('/allowedService', passport.authenticate('jwt', {session: false}), (req, res) => {
-  ServiceAccess.create({service: req.body.service_id, company_allow: req.user.company})
-    .then(serviceAccess => {
-      if (!serviceAccess) {
-        return res.status(400).json({msg: 'No company found'});
-      }
-      res.json(serviceAccess);
-
-    })
-    .catch(err => res.status(404).json({company: 'No company found'}));
-});
-
-// @Route DELETE /myAlfred/api/companies/allowedService
-// Delete allowed service for current company
-router.delete('/allowedService/:service_id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  ServiceAccess.deleteOne({service: req.params.service_id, company_allow: req.user.company})
-    .then(serviceAccess => {
-      if (!serviceAccess) {
-        return res.status(400).json({msg: 'No company found'});
-      }
-      res.json(serviceAccess);
-
-    })
-    .catch(err => res.status(404).json({company: 'No company found'}));
-});
-
 // @Route PUT /myAlfred/api/companies/alfredViews/:id
 // Update number of views for an alfred
 router.put('/alfredViews/:id', (req, res) => {
@@ -325,7 +284,7 @@ router.put('/alfredViews/:id', (req, res) => {
 // @Route PUT /myAlfred/api/companies/profile/editProfile
 // Edit email, job and phone
 // @Access private
-router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/profile/editProfile', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
   const {errors, isValid} = validateCompanyProfile(req.body);
   const companyId = req.user.company;
@@ -363,10 +322,10 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
     .catch(err => console.error(err));
 });
 
-// @Route PUT /myAlfred/api/companies/account/rib
-// Edit rib
+// @Route GET /myAlfred/api/companies/account/rib
+// Get comppany RIBs
 // @Access private
-router.put('/account/rib', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/account/rib', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
   Company.findById(req.company.id)
     .then(company => {
@@ -382,6 +341,183 @@ router.put('/account/rib', passport.authenticate('jwt', {session: false}), (req,
         .catch(err => console.error(err));
     })
     .catch(err => console.error(err));
+});
+
+// @Route PUT /myAlfred/api/companies/account/rib
+// Edit rib
+// @Access private
+router.put('/account/rib', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+
+  Company.findById(req.company.id)
+    .then(company => {
+      company.account = {};
+      company.account.name = req.body.name;
+      company.account.bank = req.body.bank;
+      company.account.bic = req.body.bic;
+      company.account.iban = req.body.iban;
+
+
+      company.save()
+        .then(result => res.json(result))
+        .catch(err => console.error(err));
+    })
+    .catch(err => console.error(err));
+});
+
+// @Route POST /myAlfred/api/companies/mambers
+// Creates a member in the company
+// @Access private
+router.post('/members', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+
+  const {errors, isValid} = validateCompanyMember(req.body);
+  if (!isValid) {
+    return res.status(400).json({error: errors});
+  }
+
+  User.findOne({email: req.body.email})
+    .then(user => {
+      if (user) {
+        return res.status(400).json({error: "L'email existe déjà"});
+      }
+      else {
+        const company_id = req.user.company
+        const newUser= new User({
+          firstname : req.body.firstname,
+          name : req.body.name,
+          email : req.body.email,
+          company : company_id,
+          password: crypto.randomBytes(10).toString('hex'),
+          roles: [EMPLOYEE],
+        })
+        newUser.save()
+          .then( newUser => {
+            res.json(newUser)
+          })
+          .catch( err => {
+            console.error(err)
+            res.status(500).json({error: err})
+          })
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    });
+});
+
+// @Route DELETE /myAlfred/api/companies/mamber/:member_id
+// removes member from the copany
+// @Access private
+router.delete('/members/:member_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+
+  const member_id = req.params.member_id;
+
+  const company_id = req.user.company;
+  User.find({company: company_id, roles: { "$in" : [ADMIN]}, _id : { $ne : member_id } })
+    .then( users => {
+      if (users.length==0) {
+        return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
+      }
+      else {
+        User.findByIdAndUpdate(member_id, { roles : [], company : null})
+          .then(user => {
+            if (!user) {
+              return res.status(404).json({error : 'Utilisateur inconnu'})
+            }
+            return res.json(user)
+          })
+          .catch(err => {
+            console.error(err)
+            res.status(500).json({error: err})
+          })
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    })
+});
+
+// @Route GET /myAlfred/api/companies/members
+// Returns all meembers from current company
+// @Access private
+router.get('/members', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+  const company_id = req.user.company
+
+  User.find({company : company_id}, 'firstname name email company roles')
+    .then (users => {
+      res.json(users)
+    })
+    .catch( err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    })
+})
+
+// @Route PUT /myAlfred/api/companies/representative
+// Sets the legal representative to this company
+// @Access private
+router.put('/representative', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+  const company_id = req.user.company
+  const representative_id = req.body.representative_id
+
+  Company.findByIdAndUpdate(company_id, {representative : representative_id}, { new : true} )
+    .then (company => {
+      res.json(company)
+    })
+    .catch( err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    })
+})
+
+// @Route PUT /myAlfred/api/companies/admins
+// Adds an admin to this company
+// @Access private
+router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+  const company_id = req.user.company
+  const admin_id = req.body.admin_id
+
+  User.findByIdAndUpdate(admin_id, {company : company_id, $addToSet : {roles : ADMIN}}, { new : true} )
+    .then (user => {
+      res.json(user)
+    })
+    .catch( err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    })
+})
+
+// @Route PUT /myAlfred/api/companies/admins
+// Adds an admin to this company
+// @Access private
+router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+  const company_id = req.user.company
+  const admin_id = req.params.admin_id
+
+  User.count({company: company_id, roles: { "$in" : [ADMIN]}, _id : { $ne : admin_id } })
+    .then( remainingAdmins => {
+      if (remainingAdmins==0) {
+        return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
+      }
+      else {
+        User.findByIdAndUpdate(admin_id, { $pull : { roles : ADMIN}}, { new : true })
+          .then(user => {
+            if (!user) {
+              return res.status(404).json({error : 'Utilisateur inconnu'})
+            }
+            return res.json(user)
+          })
+          .catch(err => {
+            console.error(err)
+            res.status(500).json({error: err})
+          })
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    })
 });
 
 module.exports = router;

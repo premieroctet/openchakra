@@ -6,10 +6,10 @@ import Grid from "@material-ui/core/Grid";
 class Box extends React.Component {
 
   render() {
-    const {classes, children}=this.props;
+    const {classes, children, overWritteCSS}=this.props;
 
     return (
-      <Grid className={classes.borderBox}>
+      <Grid className={classes.borderBox} style={{minHeight: overWritteCSS ? '95vh': ''}}>
         {children}
       </Grid>
     )

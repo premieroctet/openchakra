@@ -112,11 +112,9 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
             .catch(err => console.error(err));
           var su = data2ServiceUser(req.body, new ServiceUser());
           su.user = req.user.id;
-
           // FIX : créer les prestations custom avant
           req.body.prestations = JSON.parse(req.body.prestations);
           let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
-          console.log('newPrestations:' + JSON.stringify(newPrestations));
           let newPrestaModels = newPrestations.map(p => Prestation({
             ...p,
             service: req.body.service,
@@ -124,7 +122,6 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
             filter_presentation: null,
             private_alfred: req.user.id,
           }));
-          console.log('newPrestationsModel before save:' + JSON.stringify(newPrestaModels));
 
           const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({insertedIds: []});
           r
@@ -141,7 +138,6 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
               });
 
               Object.values(req.body.prestations).forEach(presta => {
-                console.log('Ajout presta : ' + JSON.stringify(presta));
                 if (!presta.price) {
                   console.error(`Presta ${presta._id} : non ajoutée, prix à 0`);
                 } else {

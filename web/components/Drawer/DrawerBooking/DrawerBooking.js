@@ -118,7 +118,6 @@ class DrawerBooking extends React.Component{
 
   render() {
 
-    console.time('Drawerbooking.render')
     const {expanded} = this.state;
     const {warningPerimeter, side, classes, service, alfred, date, time, errors,
       count, serviceUser, isChecked, location, pick_tax, total, commission,
@@ -417,7 +416,6 @@ class DrawerBooking extends React.Component{
         </Grid>
       </Grid>
     )
-    console.timeEnd('Drawerbooking.render')
     return res
   }
 

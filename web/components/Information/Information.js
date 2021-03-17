@@ -25,11 +25,10 @@ class Information extends React.Component {
       return null;
     }
     return (
-      <Dialog aria-labelledby="simple-dialog-title" open={this.props.open} onClose={this.props.onClose}
-              classes={{paper: classes.paperOverride}}>
-        <DialogTitle id="alert-dialog-title">{this.props.type ? 'Oups !' : 'Info'}</DialogTitle>
+      <Dialog aria-labelledby="simple-dialog-title" open={this.props.open} onClose={this.props.onClose}>
+        <DialogTitle id="alert-dialog-title">{this.props.type ? 'Oups !' : 'Information'}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description" className={classes.textContentDiAlog}
+          <DialogContentText id="alert-dialog-description" className={classes.textContentDialog}
                              dangerouslySetInnerHTML={{__html: this.props.text}}/>
         </DialogContent>
         <DialogActions>

@@ -46,6 +46,8 @@ const emptyPromise = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
 const {computeDistanceKm} = require('../utils/functions');
 const moment = require('moment');
+const {is_b2b_admin, is_b2b_manager}=require('../utils/context')
+
 moment.locale('fr');
 registerLocale('fr', fr);
 
@@ -95,21 +97,14 @@ class UserServicesPreview extends React.Component {
     this.isInPerimeter = this.isInPerimeter.bind(this)
   }
 
-  setState = (st, cb) => {
-    console.log(`setState:${Object.keys(st)}`)
-    return super.setState(st, cb)
-  }
-
   static getInitialProps({query: {id, address}}) {
     return {service_id: id, address: address};
   }
 
-  /**
-  setState = (st, cb) => {
-    console.log(`Setting state ${Object.keys(st)}`)
-    super.setState(st, cb)
+  // Converts 'all' to 'main'
+  get_prop_address = () => {
+    return this.props.address=='all' ? 'main' : this.props.address
   }
-  */
 
   componentDidMount() {
 
@@ -146,60 +141,71 @@ class UserServicesPreview extends React.Component {
           .then(res => {
             let user = res ? res.data : null
             st['user']=user
-            axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
+            const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+            promise
               .then(res => {
-                let availabilities = res.data;
-                st['availabilities']=availabilities
-                const excludedDays = this.getExcludedDays(availabilities)
-                st['excludedDays']=excludedDays
-                axios.get('/myAlfred/api/reviews/' + serviceUser.user._id)
-                  .then(response => {
-                    const skills = response.data;
-                    st['skills']=skills
-                    axios.get('/myAlfred/api/shop/alfred/' + serviceUser.user._id)
-                      .then(res => {
-                        let shop = res.data;
-                        st['shop']=shop
-                        st['flexible']=shop.flexible_cancel
-                        st['moderate']=shop.moderate_cancel
-                        st['strict']=shop.strict_cancel
-                        st['use_cesu']=shop.cesu !== 'Disabled'
-                        axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
+                var allAddresses = {'main': res.data.billing_address};
+                res.data.service_address.forEach(addr => {
+                  allAddresses[addr._id] = addr
+                });
+                st['allAddresses']=allAddresses
+
+                axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
+                  .then(res => {
+                    let availabilities = res.data;
+                    st['availabilities']=availabilities
+                    const excludedDays = this.getExcludedDays(availabilities)
+                    st['excludedDays']=excludedDays
+                    axios.get('/myAlfred/api/reviews/' + serviceUser.user._id)
+                      .then(response => {
+                        const skills = response.data;
+                        st['skills']=skills
+                        axios.get('/myAlfred/api/shop/alfred/' + serviceUser.user._id)
                           .then(res => {
-                            var reviews = res.data;
-                            if (id) {
-                              reviews = reviews.filter(r => r.serviceUser._id === id);
-                            }
-                            st['reviews']=reviews
-                            const equipmentsPromise=this.state.allEquipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
-                            Promise.all(equipmentsPromise)
-                              .then( res => {
-                                st['allDetailEquipments']=res.map( r => r.data)
-                                this.setState({
-                                  serviceUser: serviceUser,
-                                  service: serviceUser.service,
-                                  equipments: serviceUser.equipments,
-                                  prestations: serviceUser.prestations,
-                                  allEquipments: serviceUser.service.equipments,
-                                  alfred: serviceUser.user,
-                                  count: count,
-                                  pick_tax: null,
-                                  date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
-                                  time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
-                                  location: bookingObj ? bookingObj.location : null,
-                                  commission: bookingObj ? bookingObj.fees : null,
-                                  ...st
-                                }, () => {
-                                  if (!bookingObj) {
-                                    this.setDefaultLocation();
-                                  }
-                                  this.computeTotal()
-                                })
+                            let shop = res.data;
+                            st['shop']=shop
+                            st['flexible']=shop.flexible_cancel
+                            st['moderate']=shop.moderate_cancel
+                            st['strict']=shop.strict_cancel
+                            st['use_cesu']=shop.cesu !== 'Disabled'
+                            axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
+                              .then(res => {
+                                var reviews = res.data;
+                                if (id) {
+                                  reviews = reviews.filter(r => r.serviceUser._id === id);
+                                }
+                                st['reviews']=reviews
+                                const equipmentsPromise=serviceUser.service.equipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
+                                Promise.all(equipmentsPromise)
+                                  .then( res => {
+                                    st['allDetailEquipments']=res.map( r => r.data)
+                                    this.setState({
+                                      serviceUser: serviceUser,
+                                      service: serviceUser.service,
+                                      equipments: serviceUser.equipments,
+                                      prestations: serviceUser.prestations,
+                                      allEquipments: serviceUser.service.equipments,
+                                      alfred: serviceUser.user,
+                                      count: count,
+                                      pick_tax: null,
+                                      date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
+                                      time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
+                                      location: bookingObj ? bookingObj.location : null,
+                                      commission: bookingObj ? bookingObj.fees : null,
+                                      ...st
+                                    }, () => {
+                                      if (!bookingObj) {
+                                        this.setDefaultLocation();
+                                      }
+                                      this.computeTotal()
+                                    })
+                                  })
                               })
                           })
                       })
                   })
               })
+              .catch(err => console.error(err))
       })
     })
       .catch(err => console.error(err));
@@ -226,7 +232,7 @@ class UserServicesPreview extends React.Component {
     console.log('setDefaultLocation')
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
-    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.props.address || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
+    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.get_prop_address() || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
     this.setState({location: location});
   };
 
@@ -417,15 +423,15 @@ class UserServicesPreview extends React.Component {
   };
 
   getClientAddress = () => {
-    const {user}=this.state
+    const {user, allAddresses}=this.state
     if (!user) {
       return null
     }
     const{address}=this.props
-    if (!address || ['client', 'main'].includes(address)) {
-      return user.billing_address
+    if (!address || ['client', 'main', 'all'].includes(address)) {
+      return allAddresses['main']
     }
-    var res = user ? user.service_address.find(a => a._id.toString()==address) : null
+    var res = user ? allAddresses[address] : null
     if (res) {
       res.gps = { lat: res.lat, lng: res.lng}
     }
@@ -433,18 +439,18 @@ class UserServicesPreview extends React.Component {
   }
 
   getClientAddressLabel = () => {
-    const {location, user}=this.state
+    const {location, user, allAddresses}=this.state
     if (['client', 'main'].includes(location)) {
       return 'A mon adresse principale'
     }
-    return user ? (user.service_address.find(a => a._id.toString()==location) || {label:''}).label : ''
+    return user ? (allAddresses[location] || {label:''}).label : ''
   }
 
   getLocationLabel = () => {
     const titles = {
       'client': this.getClientAddressLabel(),
       'main': this.getClientAddressLabel(),
-      'alfred': 'Chez ' + this.state.alfred.firstname,
+      'alfred': `Chez ${this.state.alfred.firstname}`,
       'visio': 'En visio',
     };
     if (!this.state.location) {
@@ -758,7 +764,7 @@ class UserServicesPreview extends React.Component {
                           getLocationLabel={this.getLocationLabel}
                           warningPerimeter={this.hasWarningPerimeter()}
                           clientAddress={this.getClientAddressLabel()}
-                          clientAddressId={this.props.address}
+                          clientAddressId={this.get_prop_address()}
                           book={this.book}
                           {...this.state}
                         />
@@ -784,7 +790,7 @@ class UserServicesPreview extends React.Component {
                       getLocationLabel={this.getLocationLabel}
                       warningPerimeter={this.hasWarningPerimeter()}
                       clientAddress={this.getClientAddressLabel()}
-                      clientAddressId={this.props.address}
+                      clientAddressId={this.get_prop_address()}
                       book={this.book}
                       {...this.state}
                     />
@@ -841,7 +847,6 @@ class UserServicesPreview extends React.Component {
       return null
     }
 
-    console.count('Render')
     const res = (
       <React.Fragment>
         <Helmet>

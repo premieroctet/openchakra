@@ -1,5 +1,6 @@
-const {is_production, is_validation, is_development, is_development_nossl, displayConfig} = require('../config/config')
+require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]');
 
+const {is_production, is_validation, is_development, is_development_nossl, displayConfig} = require('../config/config')
 const express = require('express');
 const next = require('next');
 const mongoose = require('mongoose');
@@ -19,6 +20,7 @@ const fs = require('fs');
 const authRoutes = require('./routes/api/authentication');
 const users = require('./routes/api/users');
 const companies = require('./routes/api/companies');
+const groups = require('./routes/api/groups');
 const category = require('./routes/api/category');
 const billing = require('./routes/api/billing');
 const booking = require('./routes/api/booking');
@@ -50,7 +52,7 @@ const server = require('http').Server(app);
 const SocketIo = require('socket.io');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]');
+
 // Avoid deprecation warning
 mongoose.set('useUnifiedTopology', true)
 mongoose.set('useFindAndModify', false)
@@ -74,7 +76,9 @@ nextApp.prepare().then(() => {
 
 // Connect to MongoDB
   mongoose.connect(config.databaseUrl, {useNewUrlParser: true})
-    .then(() => console.log(`MongoDB connected to ${config.databaseUrl}`))
+    .then( () => {
+      console.log(`MongoDB connected to ${config.databaseUrl}`)
+    })
     .catch(err => console.error(err));
 
 // Passport middleware
@@ -90,6 +94,7 @@ nextApp.prepare().then(() => {
   app.use('/myAlfred/api/users', users);
   app.use('/myAlfred/api/companies', companies);
   app.use('/myAlfred/api/category', category);
+  app.use('/myAlfred/api/groups', groups);
   app.use('/myAlfred/api/billing', billing);
   app.use('/myAlfred/api/booking', booking);
   app.use('/myAlfred/api/calculating', calculating);

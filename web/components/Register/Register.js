@@ -67,7 +67,7 @@ function NumberFormatCustom(props) {
 }
 
 NumberFormatCustom.propTypes = {
-  inputRef: PropTypes.func.isRequired,
+  //inputRef: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
