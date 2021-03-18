@@ -31,7 +31,8 @@ const multer = require('multer')
 const path = require('path')
 const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
 const {counterArray, counterObjects} = require('../../../../utils/converters')
-const parse = require('url-parse')
+const url_parse = require('url-parse')
+const csv_parse = require('csv-parse/lib/sync')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 
 // @Route POST /myAlfred/api/admin/billing/all
@@ -2432,7 +2433,7 @@ router.get('/ages', (req, res) => {
     }
   }
 
-  const alfred = JSON.parse(parse(req.originalUrl, true).query.alfred)
+  const alfred = JSON.parse(url_parse(req.originalUrl, true).query.alfred)
 
   const fltr = alfred ? {is_alfred: true} : {}
   User.find(fltr, 'birthday')
@@ -2571,7 +2572,7 @@ router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (re
       Prospect.find({}, 'phone')
         .then (phones => {
           const contents = bufferToString(req.file.buffer)
-          var records = parse(contents, { columns: true, delimiter:';'})
+          var records = csv_parse(contents, { columns: true, delimiter:';'})
 
           const schema_fields = Object.keys(Prospect.schema.obj).sort()
           const schema_required = schema_fields.filter(k => Prospect.schema.obj[k].required && !Prospect.schema.obj[k].default)
