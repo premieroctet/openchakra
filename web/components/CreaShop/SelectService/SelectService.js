@@ -118,7 +118,15 @@ class SelectService extends React.Component {
             <h3 style={{color: '#696767'}}>{SHOP.service.subtitle}</h3>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-            <h4 className={classes.policySizeSubtitle}>{SHOP.service.content_particular_professional}</h4>
+            <h4 className={classes.policySizeSubtitle}>{
+              professional_access && particular_access ?
+                SHOP.service.content_particular_professional
+                :
+                professional_access ?
+                  SHOP.service.content_professional
+                  :
+                  SHOP.service.content_particular
+            }</h4>
           </Grid>
         </Grid>
           {this.isCreation() ?
