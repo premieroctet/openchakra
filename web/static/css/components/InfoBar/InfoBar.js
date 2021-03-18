@@ -9,7 +9,7 @@ export default theme => ({
     paddingBottom: theme.padding.infoBar.paddingBottom,
     alignItems: 'center',
     display: 'flex',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('md')]:{
       flexDirection: 'column',
       textAlign: 'center'
     }

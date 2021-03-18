@@ -2,7 +2,7 @@ export default theme => ({
   bannerPresentationMainStyle: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   bannerPresentationContainerDescription: {
     display: 'flex',
@@ -10,17 +10,30 @@ export default theme => ({
     width: '50%',
     [theme.breakpoints.down('lg')]:{
       width: '100%'
+    },
+    [theme.breakpoints.down('xs')]:{
+      textAlign: 'center'
     }
   },
   bannerPresentationTitle: {
     color: theme.palette.white.main,
     margin: theme.typography.title.margin,
+    [theme.breakpoints.down('xs')]:{
+      fontSize: '25px'
+    }
   },
   bannerPresentationContainerText: {
-    width: '75%'
+    width: '75%',
+    [theme.breakpoints.down('sm')]:{
+      width: '100%',
+
+    }
   },
   bannerPresentationText: {
     color: theme.palette.white.main,
+    [theme.breakpoints.down('xs')]:{
+      fontSize: '15px'
+    }
   },
   bannerPresentationButton: {
     color: theme.palette.primary.main,

@@ -1,3 +1,5 @@
+import {is_b2b_style} from "../../../utils/context";
+
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
@@ -33,7 +35,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import AlgoliaPlaces from 'algolia-places-react';
 import Button from "@material-ui/core/Button";
 import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n';
-
+import BusinessIcon from '@material-ui/icons/Business';
+import Link from "../../../components/Link/Link";
+import {is_development} from "../../../config/config";
+import WcIcon from '@material-ui/icons/Wc';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -376,6 +381,10 @@ class MobileNavbar extends React.Component{
         {
           !logged ?
             <BottomNavigationAction onClick={this.handleOpenRegister} label={'Inscription'} classes={{root: classes.navigationActionRoot, label: classes.label}} value={5} icon={ <GroupAddIcon/>}/> : null
+        }
+        {
+          !logged ?
+            <BottomNavigationAction onClick={() => Router.push(!is_b2b_style(this.state.user) ? '/professional' : is_development() ? '/particular' : null) } label={!is_b2b_style(this.state.user) ? 'Entreprise' : is_development() ? 'Particulier' : null} classes={{root: classes.navigationActionRoot, label: classes.label}} value={6} icon={ !is_b2b_style(this.state.user) ?  <BusinessIcon/> : is_development() ? <WcIcon/> : null }/> : null
         }
         {setOpenLogin ? this.modalLogin(classes) : null}
         {setOpenRegister ? this.modalRegister(classes) : null}

@@ -20,14 +20,14 @@ class BannerPresentation extends React.Component {
     const text = is_b2b_style() ? B2B_BANNER_PRESENTATION.text : BANNER_PRESENTATION.text
     return (
       <Grid className={classes.bannerPresentationMainStyle}>
-        <Grid className={classes.bannerPresentationContainerDescription}>
-          <Grid>
+        <Grid container spacing={2} style={{width: '100%', margin:0}} className={classes.bannerPresentationContainerDescription}>
+          <Grid item xs={12}>
             <h1 className={classes.bannerPresentationTitle}>{title}</h1>
           </Grid>
-          <Grid className={classes.bannerPresentationContainerText}>
+          <Grid item xs={12} className={classes.bannerPresentationContainerText}>
             <h2 className={classes.bannerPresentationText}>{text}</h2>
           </Grid>
-          <Grid>
+          <Grid item xs={12}>
             <Link href={'/search?search=1'}>
               <Button variant="contained"
                       classes={{root: classes.bannerPresentationButton}}>{BANNER_PRESENTATION.button}</Button>
