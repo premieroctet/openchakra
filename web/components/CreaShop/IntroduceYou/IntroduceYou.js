@@ -31,16 +31,16 @@ class IntroduceYou extends React.Component {
       cis: false,
       social_security: null,
       notice: false,
-      particular_access: this.props.particular_access && !part_pro,
-      professional_access: this.props.professional_access && !part_pro,
-      particular_professional_access: part_pro,
+      particular_access: Boolean(this.props.particular_access && !part_pro),
+      professional_access: Boolean(this.props.professional_access && !part_pro),
+      particular_professional_access: Boolean(part_pro),
     };
     this.fireChange = this.fireChange.bind(this)
   }
 
   fireChange = () => {
     const st=this.state
-    this.props.onChange(this.state.is_particular, this.state.company,
+    this.props.onChange(st.is_particular, st.company,
       st.is_certified, st.cesu, st.cis, st.social_security,
       st.particular_access || st.particular_professional_access,
       st.professional_access || st.particular_professional_access,
@@ -73,6 +73,12 @@ class IntroduceYou extends React.Component {
     if (is_particular) {
       st['particular_access']=true
       st['professional_access']=false
+      st['particular_professional_access']=false
+    }
+    else {
+      st['particular_access']=false
+      st['professional_access']=false
+      st['particular_professional_access']=true
     }
     this.setState(st, this.fireChange);
 

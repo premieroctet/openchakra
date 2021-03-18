@@ -107,6 +107,7 @@ class security extends React.Component {
       showNewPassword: false,
       showConfirmPassword: false,
     };
+    this.handleClose=this.handleClose.bind(this)
   }
 
   componentDidMount() {

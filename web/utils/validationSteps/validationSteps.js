@@ -61,7 +61,10 @@ const bookingPreferences = shop => {
   if (!shop) {
     return false
   }
-  if (isNaN(shop.minimum_basket)) {
+  if (isNaN(shop.minimum_basket) || shop.minimum_basket<0) {
+    return false
+  }
+  if (isNaN(shop.deadline_value) || shop.deadline_value<0) {
     return false
   }
   if (!shop.deadline_unit) {

@@ -29,10 +29,8 @@ const ServiceUserSchema = new Schema({
     },
   }],
   equipments: [{
-
     type: Schema.Types.ObjectId,
     ref: 'equipment',
-
   }],
   service_address: {
     type: {
@@ -78,6 +76,9 @@ const ServiceUserSchema = new Schema({
     file: {
       type: String,
     },
+    skills: [{
+      type: String,
+    }]
   },
   is_certified: {
     type: Boolean,
@@ -93,6 +94,9 @@ const ServiceUserSchema = new Schema({
     file: {
       type: String,
     },
+    skills: [{
+      type: String,
+    }]
   },
   option: {
     label: {
@@ -115,6 +119,16 @@ const ServiceUserSchema = new Schema({
   level: {
     type: Number,
   },
+  experience_title: {
+    type: String
+  },
+  experience_description: {
+    type: String
+  },
+  experience_skills: [{
+      type: String
+    }
+  ],
   number_of_views: {
     type: Number,
     default: 0,
@@ -145,7 +159,7 @@ const ServiceUserSchema = new Schema({
   professional_access: {
     type: Boolean,
     required: true,
-  }
+  },
 });
 
 module.exports = ServiceUser = mongoose.model('serviceUser', ServiceUserSchema);

@@ -163,7 +163,7 @@ class ButtonSwitch extends React.Component {
               <Grid style={{display: 'flex'}}>
                 <CssTextField
                   value={this.price}
-                  label={<Typography style={{color:'#696767'}}>'Tarif'</Typography>}
+                  label={<Typography style={{color:'#696767'}}>Tarif</Typography>}
                   type="number"
                   className={classes.textField}
                   disabled={!checked || priceDisabled}

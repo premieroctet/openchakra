@@ -140,6 +140,18 @@ const compute_vat_number = siren => {
   return result
 }
 
+const isSiretSirenLength = value => {
+  if (!value) {
+    return false
+  }
+  value=parseInt(compact(value))
+  if (isNaN(value)) {
+    return false
+  }
+  const lengthOk =[SIRET_LENGTH, SIREN_LENGTH].includes(value.toString().length)
+  return lengthOk
+}
+
 module.exports = {
   normalize,
   createQuery,
@@ -156,4 +168,5 @@ module.exports = {
   formatAddress,
   compact,
   compute_vat_number,
+  isSiretSirenLength,
 };

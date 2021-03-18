@@ -11,7 +11,7 @@ import {SHOP} from '../../utils/i18n';
 const moment = require('moment');
 const {SIRET} = require('../../config/config');
 const {ENTITES} = require('../../utils/consts');
-const {compact, compute_vat_number}=require('../../utils/text')
+const {compact, compute_vat_number, isSiretSirenLength}=require('../../utils/text')
 moment.locale('fr');
 
 const DATE_COUPURE_INSEE = moment('2020-06-09');
@@ -77,6 +77,11 @@ class siret extends React.Component {
 
   onSubmit = e => {
     const code = this.state.siret;
+
+    if (!isSiretSirenLength(code)) {
+      return
+    }
+
     const config = {
       headers: {Authorization: `Bearer ${SIRET.token}`},
     };
