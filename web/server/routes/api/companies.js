@@ -21,7 +21,7 @@ const multer = require('multer');
 const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise');
-const {ADMIN, EMPLOYEE} = require('../../../utils/consts')
+const {ADMIN, MANAGER, EMPLOYEE} = require('../../../utils/consts')
 var _ = require('lodash')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
 
@@ -519,5 +519,36 @@ router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: fa
       res.status(500).json({error: err})
     })
 });
+
+// @Route GET /myAlfred/api/companies/billings
+// Returns bookings having a billing number for current company
+// @Access private
+router.get('/billings', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+  req.user={company : '60531b451d8185ef606b5b3e'}
+  const company_id = req.user.company
+
+  User.find({company : company_id})
+    .then (users => {
+      const user_ids=users.map(u=>u._id)
+      Booking.find({
+        user:{$in: user_ids},
+        user_role:{$in: [ADMIN, MANAGER]},
+        $where : "this.billing_number && this.billing_number.length>0",
+      })
+        .populate('user')
+        .populate('alfred')
+        .then(bookings => {
+          res.json(bookings)
+        })
+        .catch( err => {
+          console.error(err)
+          res.status(500).json({error: err})
+        })
+    })
+    .catch( err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    })
+})
 
 module.exports = router;
