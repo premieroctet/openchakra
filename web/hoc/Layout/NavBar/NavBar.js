@@ -583,6 +583,7 @@ class NavBar extends Component {
                       onChange={(e) => {
                         this.onChange(e);
                       }}
+                      style={{marginTop: 20}}
                     >
                       {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                         <MenuItem value={_id} key={index}>
@@ -606,7 +607,7 @@ class NavBar extends Component {
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <InputLabel shrink>{this.state.ifHomePage ? SEARCHBAR.labelWhere : false}</InputLabel>
                   </Grid>
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  classes={{root: classes.navbarRootTextFieldWhere}}>
                     <AlgoliaPlaces
                       placeholder={SEARCHBAR.where}
                       options={{
