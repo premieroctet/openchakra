@@ -59,10 +59,6 @@ export default theme => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
   },
-  navbarAddressContainer: {
-    marginLeft: 20,
-    width: '50%'
-  },
   divider: {
     height: 28,
     margin: 4,

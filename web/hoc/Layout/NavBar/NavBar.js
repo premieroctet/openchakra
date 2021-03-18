@@ -539,13 +539,12 @@ class NavBar extends Component {
 
 
   searchBarInput = (classes) => {
-
     const logged = this.state.user != null
     return (
       <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
         <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid container style={{margin: 0, width: '100%'}}>
-            <Grid container item xl={4} lg={4} sm={4} md={4} xs={4} spacing={1} style={{margin: 0, width: '100%'}}>
+            <Grid container item xl={logged ? 5 : 4} lg={logged ? 5 : 4} sm={logged ? 5 :4} md={logged ? 5 :4} xs={logged ? 5 :4} spacing={1} style={{margin: 0, width: '100%'}}>
               <Grid item xl={11} lg={11} sm={11} md={11} xs={11}>
                 <TextField
                   placeholder={'Ménage, Jardinage, ...'}
@@ -569,7 +568,7 @@ class NavBar extends Component {
 
             {
               this.state.user ?
-                <Grid className={classes.navbarAddressContainer}>
+                <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                   <FormControl className={classes.navbarFormControlAddress}>
                     {this.state.ifHomePage ?
                       <InputLabel shrink id="demo-simple-select-placeholder-label-label">
@@ -661,7 +660,7 @@ class NavBar extends Component {
                   </Grid>
                 </Grid> : null
               }
-            <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'}}>
+            <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'end', alignItems: 'center'}}>
               <IconButton
                 classes={{root: classes.iconButton}}
                 style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
