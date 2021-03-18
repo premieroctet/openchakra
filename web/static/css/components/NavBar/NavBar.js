@@ -73,30 +73,28 @@ export default theme => ({
   navbarAlgoliaContent:{
     flex:1,
     marginLeft: 20,
-
   },
   navbarRootTextFieldWhere:{
     width: '100%',
-    '& div':{
-      width: '100%',
-      height: '100%'
-    },
     '& .algolia-places':{
-      height:'100%',
+      height: '100%',
+      color:'rgba(0, 0, 0, 0.87)',
       width: '100%',
-      margin: 0,
-      display: 'block',
-      boxSizing: 'content-box',
-      background: 'none',
-      animationName: 'mui-auto-fill-cancel',
-      color: 'currentColor',
-      border: 0,
-      letterSpacing: 'inherit',
-      animationDuration: '10ms'
+      alignItems: 'center',
+      display: 'inline-flex',
+      lineHeight: '1.1876em',
+      boxSizing: 'border-box',
+      position: 'relative',
+      fontWeight: 400,
+      fontSize: '1rem',
     },
     '& input':{
-      padding: '6px 0px 7px',
+      border: 0,
+      padding: '6px 0 7px',
       height: '1.1876em',
+      opacity: '0.65',
+      transition: 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+      boxSizing: 'content-box'
     },
     '& .ap-input-icon':{
       display: 'none',

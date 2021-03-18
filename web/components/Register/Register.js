@@ -768,7 +768,7 @@ class Register extends React.Component {
                   <Grid style={{marginTop: 20}}>
                     <hr/>
                     <Grid style={{marginTop: 20}}>
-                      <Link href={'/needHelp/needHelp'} target="_blank">
+                      <Link href={'/needHelp/needHelp'}>
                         <a target="_blank" style={{
                           color: '#2FBCD3',
                           textAlign: 'center',

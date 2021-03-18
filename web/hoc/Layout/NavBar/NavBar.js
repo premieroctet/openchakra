@@ -257,13 +257,17 @@ class NavBar extends Component {
 
   mobileSearchBarInput = (classes) => {
     return (
-      <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}
-            onClick={this.handleModalSearchBarInput}>
+      <Grid
+        className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}
+        onClick={this.handleModalSearchBarInput}
+      >
         <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}}
-                        style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
-                        aria-label="search">
+            <IconButton
+              classes={{root: classes.iconButton}}
+              style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+              aria-label="search"
+            >
               <SearchIcon/>
             </IconButton>
           </Grid>
@@ -364,10 +368,11 @@ class NavBar extends Component {
                       label={SEARCHBAR.where}
                       variant={'outlined'}
                       InputProps={{
-                        inputComponent: (inputref) => {
+                        inputComponent: (props) => {
+                          const { inputRef, onChange, ...other } = props;
                           return (
                             <AlgoliaPlaces
-                              {...inputref}
+                              {...other}
                               placeholder={''}
                               className={classes.navbarAlgoliaPlace}
                               options={{
@@ -407,10 +412,20 @@ class NavBar extends Component {
       <Grid className={classes.navbarSearchContainerSearchPage}>
         <Paper classes={{root: classes.navbarSearch}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}}
-                        style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
-                        aria-label="search"
-                        onClick={this.handleModalSearchBarInput}>
+            <IconButton
+              classes={{root: classes.iconButton}}
+              style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+              aria-label="search"
+              onClick={this.handleModalSearchBarInput}
+            >
+              <SearchIcon/>
+            </IconButton>
+            <IconButton
+              classes={{root: classes.iconButton}}
+              style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+              aria-label="search"
+              onClick={this.handleModalSearchBarInput}
+            >
               <SearchIcon/>
             </IconButton>
           </Grid>
@@ -516,6 +531,12 @@ class NavBar extends Component {
     )
   };
 
+  handleChange = (e) =>{
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  }
+
 
   searchBarInput = (classes) => {
 
@@ -582,35 +603,24 @@ class NavBar extends Component {
               </Grid>
               :
               <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={4} lg={4} sm={4} md={4} xs={4}>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <TextField
-                    label={this.state.ifHomePage ? SEARCHBAR.labelWhere : false}
-                    classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
-                    InputLabelProps={{shrink: true}}
-                    value={this.state.city}
-                    InputProps={{
-                      inputComponent: (props) => {
-                        const { inputRef, onChange, ...other } = props;
-
-                        return (
-                          <AlgoliaPlaces
-                            {...other}
-                            placeholder={SEARCHBAR.where}
-                            options={{
-                              appId: 'plKATRG826CP',
-                              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                              language: 'fr',
-                              countries: ['fr'],
-                              type: 'city',
-                            }}
-                            onChange={(suggestion) => this.onChangeCity(suggestion)}
-                            onClear={() => this.setState({city: '', gps: null})}
-
-                          />)
-                      },
-                      disableUnderline: true
-                    }}
-                  />
+                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}} >
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <InputLabel shrink>{this.state.ifHomePage ? SEARCHBAR.labelWhere : false}</InputLabel>
+                  </Grid>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}>
+                    <AlgoliaPlaces
+                      placeholder={SEARCHBAR.where}
+                      options={{
+                        appId: 'plKATRG826CP',
+                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                        language: 'fr',
+                        countries: ['fr'],
+                        type: 'city',
+                      }}
+                      onChange={(suggestion) => this.onChangeCity(suggestion)}
+                      onClear={() => this.setState({city: '', gps: null})}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             }
@@ -717,7 +727,7 @@ class NavBar extends Component {
                                    label={NAVBAR_MENU.registerServices}/>
                             </Link>
                           :
-                          <Link href={''}>
+                          <Link href={'/'}>
                             <Grid onClick={this.handleOpenRegister}>
                               <Tab classes={{root: classes.navbarTabRoot}}
                                    label={NAVBAR_MENU.registerServices}/>

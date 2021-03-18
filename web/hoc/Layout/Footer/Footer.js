@@ -84,8 +84,8 @@ class Footer extends React.Component {
                 </Grid>
               </Link>
               <Hidden only={['xs']}>
-                <Link onClick={() => Tawk_API.maximize()}>
-                  <Grid style={{marginBottom: '2vh'}}>
+                <Link href={''}>
+                  <Grid style={{marginBottom: '2vh'}} onClick={() => Tawk_API.maximize()}>
                     <Typography className={classes.footerLink}>Parler à un humain</Typography>
                   </Grid>
                 </Link>
