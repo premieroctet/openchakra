@@ -150,7 +150,13 @@ const BookingSchema = new Schema({
   user_role: {
     type: String,
     enum : [null, ...Object.keys(ROLES)],
-  }
+  },
+  billing_number: {
+    type: String,
+  },
+  receipt_number: {
+    type: String,
+  },
 }, {toJSON: {virtuals: true, getters: true}});
 
 BookingSchema.virtual('alfred_amount').get(function () {
