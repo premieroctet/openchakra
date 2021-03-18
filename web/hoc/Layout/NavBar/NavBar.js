@@ -28,7 +28,7 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Link from '../../../components/Link/Link';
+import Link from 'next/link';
 import axios from 'axios'
 import Hidden from "@material-ui/core/Hidden";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -523,140 +523,143 @@ class NavBar extends Component {
     return (
       <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
         <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
-          <Grid className={classes.navbarTextFieldService}>
-            <TextField
-              classes={{root: this.state.ifHomePage ? classes.navbarRootTextField : classes.navbarRootTextFieldP}}
-              placeholder={'Ménage, Jardinage, ...'}
-              value={this.state.keyword}
-              onChange={this.onChange}
-              name={'keyword'}
-              label={this.state.ifHomePage ? SEARCHBAR.labelWhat : null}
-              onKeyPress={(e) => {
-                e.key === 'Enter' && e.preventDefault();
-              }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              InputProps={{disableUnderline: true}}
-              style={{marginLeft: 20}}
-            />
-          </Grid>
-          <Grid>
-            <Divider className={classes.divider} orientation="vertical"/>
-          </Grid>
-          {this.state.user ?
-            <Grid className={classes.navbarAddressContainer}>
-              <FormControl className={classes.navbarFormControlAddress}>
-                {this.state.ifHomePage ?
-                  <InputLabel shrink id="demo-simple-select-placeholder-label-label">
-                    L'Adresse
-                  </InputLabel> : null
-                }
-                <Select
-                  disableUnderline
-                  id="outlined-select-currency"
-                  value={this.state.selectedAddress || 'main'}
-                  name={'selectedAddress'}
-                  onChange={(e) => {
-                    this.onChange(e);
+          <Grid container style={{margin: 0, width: '100%'}}>
+            <Grid container item xl={4} lg={4} sm={4} md={4} xs={4} spacing={1} style={{margin: 0, width: '100%'}}>
+              <Grid item xl={11} lg={11} sm={11} md={11} xs={11}>
+                <TextField
+                  placeholder={'Ménage, Jardinage, ...'}
+                  value={this.state.keyword}
+                  onChange={this.onChange}
+                  name={'keyword'}
+                  label={this.state.ifHomePage ? SEARCHBAR.labelWhat : null}
+                  onKeyPress={(e) => {
+                    e.key === 'Enter' && e.preventDefault();
                   }}
-                  classes={{root: classes.selectRoot}}
-                >
-                  {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
-                    <MenuItem value={_id} key={index}>
-                      { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
-                    </MenuItem>
-                  ))}
-                  <MenuItem value={'all'}>
-                    Partout, Rechercher des Alfred partout
-                  </MenuItem>
-                  <MenuItem value={'addAddress'}>
-                    <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                      Ajouter une adresse
-                    </Typography>
-                  </MenuItem>
-                </Select>
-              </FormControl>
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  InputProps={{disableUnderline: true}}
+                />
+              </Grid>
+              <Grid  item xl={1} lg={1} sm={1} md={1} xs={1}>
+                <Divider orientation="vertical"/>
+              </Grid>
             </Grid>
-            :
-            <Grid className={this.state.ifHomePage ? classes.navbarAlgoliaContent : classes.navbarAlgoliaContentP}>
-              <TextField
-                label={this.state.ifHomePage ? SEARCHBAR.labelWhere : false}
-                classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
-                InputLabelProps={{shrink: true}}
-                value={this.state.city}
-                InputProps={{
-                  inputComponent: (inputref) => {
-                    return (
-                      <AlgoliaPlaces
-                        {...inputref}
-                        placeholder={SEARCHBAR.where}
-                        className={classes.navbarAlgoliaPlace}
-                        options={{
-                          appId: 'plKATRG826CP',
-                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                          language: 'fr',
-                          countries: ['fr'],
-                          type: 'city',
-                        }}
-                        onChange={(suggestion) => this.onChangeCity(suggestion)}
-                        onClear={() => this.setState({city: '', gps: null})}
 
-                      />)
-                  },
-                  disableUnderline: true
-                }}
-              />
-            </Grid>
-          }
-          {
-            logged === false && this.state.ifHomePage ?
-              <Grid className={classes.navbarDatePickerMain}>
-                <Grid>
-                  <Divider className={classes.divider} orientation="vertical"/>
-                </Grid>
-                <Grid
-                  className={this.state.ifHomePage ? classes.navbarDatePickerContainer : classes.navbarDatePickerContainerP}>
+            {
+              this.state.user ?
+                <Grid className={classes.navbarAddressContainer}>
+                  <FormControl className={classes.navbarFormControlAddress}>
+                    {this.state.ifHomePage ?
+                      <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                        L'Adresse
+                      </InputLabel> : null
+                    }
+                    <Select
+                      disableUnderline
+                      id="outlined-select-currency"
+                      value={this.state.selectedAddress || 'main'}
+                      name={'selectedAddress'}
+                      onChange={(e) => {
+                        this.onChange(e);
+                      }}
+                    >
+                      {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
+                        <MenuItem value={_id} key={index}>
+                          { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
+                        </MenuItem>
+                      ))}
+                      <MenuItem value={'all'}>
+                        Partout, Rechercher des Alfred partout
+                      </MenuItem>
+                      <MenuItem value={'addAddress'}>
+                        <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                          Ajouter une adresse
+                        </Typography>
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+              </Grid>
+              :
+              <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={4} lg={4} sm={4} md={4} xs={4}>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                   <TextField
-                    label={this.state.ifHomePage ? SEARCHBAR.labelWhen : false}
-                    classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhen : classes.navbarRootTextFieldWhenP}}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
+                    label={this.state.ifHomePage ? SEARCHBAR.labelWhere : false}
+                    classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
+                    InputLabelProps={{shrink: true}}
+                    value={this.state.city}
                     InputProps={{
-                      inputComponent: (inputref) => {
+                      inputComponent: (props) => {
+                        const { inputRef, onChange, ...other } = props;
+
                         return (
-                          <DatePicker
-                            {...inputref}
-                            selected={this.state.dateSelected}
-                            onChange={(date) => {
-                              this.setState({dateSelected: date});
-                              if (date === null) {
-                                this.setState({dateSelected: ''});
-                              }
+                          <AlgoliaPlaces
+                            {...other}
+                            placeholder={SEARCHBAR.where}
+                            options={{
+                              appId: 'plKATRG826CP',
+                              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                              language: 'fr',
+                              countries: ['fr'],
+                              type: 'city',
                             }}
-                            locale='fr'
-                            showMonthDropdown
-                            dateFormat="dd/MM/yyyy"
-                            placeholderText={SEARCHBAR.when}
-                            minDate={new Date()}
-                            className={this.state.ifHomePage ? classes.inputDatePicker : classes.inputDatePickerP}
+                            onChange={(suggestion) => this.onChangeCity(suggestion)}
+                            onClear={() => this.setState({city: '', gps: null})}
+
                           />)
                       },
                       disableUnderline: true
                     }}
                   />
                 </Grid>
-              </Grid> : null
-          }
-          <Grid>
-            <IconButton
-              classes={{root: classes.iconButton}}
-              style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
-              aria-label="search"
-              onClick={() => this.findService()}>
-              <SearchIcon/>
-            </IconButton>
+              </Grid>
+            }
+            {
+              logged === false && this.state.ifHomePage ?
+                <Grid container item xl={3} lg={3} sm={3} md={3} xs={3} style={{margin: 0, width: '100%'}} spacing={1}>
+                  <Grid item xl={1} lg={1} sm={1} md={1} xs={1}>
+                    <Divider orientation="vertical"/>
+                  </Grid>
+                  <Grid  item xl={11} lg={11} sm={11} md={11} xs={11}>
+                    <TextField
+                      label={this.state.ifHomePage ? SEARCHBAR.labelWhen : false}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        inputComponent: (inputref) => {
+                          return (
+                            <DatePicker
+                              {...inputref}
+                              selected={this.state.dateSelected}
+                              onChange={(date) => {
+                                this.setState({dateSelected: date});
+                                if (date === null) {
+                                  this.setState({dateSelected: ''});
+                                }
+                              }}
+                              locale='fr'
+                              showMonthDropdown
+                              dateFormat="dd/MM/yyyy"
+                              placeholderText={SEARCHBAR.when}
+                              minDate={new Date()}
+                            />)
+                        },
+                        disableUnderline: true
+                      }}
+                    />
+                  </Grid>
+                </Grid> : null
+              }
+            <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'}}>
+              <IconButton
+                classes={{root: classes.iconButton}}
+                style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+                aria-label="search"
+                onClick={() => this.findService()}>
+                <SearchIcon/>
+              </IconButton>
+            </Grid>
           </Grid>
         </Paper>
       </Grid>
@@ -714,9 +717,12 @@ class NavBar extends Component {
                                    label={NAVBAR_MENU.registerServices}/>
                             </Link>
                           :
-                          <Link onClick={this.handleOpenRegister}>
-                            <Tab classes={{root: classes.navbarTabRoot}}
-                                 label={NAVBAR_MENU.registerServices}/>
+                          <Link href={''}>
+                            <Grid onClick={this.handleOpenRegister}>
+                              <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={NAVBAR_MENU.registerServices}/>
+                            </Grid>
+
                           </Link>
                         }
                         {

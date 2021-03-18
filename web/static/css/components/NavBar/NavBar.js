@@ -19,7 +19,7 @@ export default theme => ({
     whiteSpace: 'inherit'
   },
   navbarSearch: {
-    padding: 14,
+    padding: '14px 14px 14px 20px',
     display: 'flex',
     alignItems: 'center',
     width: '100%',
@@ -52,7 +52,6 @@ export default theme => ({
     }
   },
   iconButton: {
-    padding: 12,
     color: theme.palette.white.main,
   },
   navbarCloseButton:{
@@ -74,35 +73,33 @@ export default theme => ({
   navbarAlgoliaContent:{
     flex:1,
     marginLeft: 20,
-    '& .ap-input-icon':{
-      display: 'none',
-    }
+
   },
   navbarRootTextFieldWhere:{
     width: '100%',
-    fontFamily: theme.typography.text.fontFamily,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    display: 'flex',
-    justifyContent: 'center',
-    [theme.breakpoints.down('xs')]:{
-      width: '90%',
-      borderRadius: 4
-    },
-    "& .MuiFormLabel-root": {
-      '&:focus':{
-        color: theme.palette.primary.main
-      }
-    },
-    '& .MuiFormLabel-root.Mui-focused':{
-      color: theme.palette.primary.main
-    },
-    '& .MuiInputBase-input::placeholder':{
-      opacity: '0.5'
-    },
     '& div':{
-      width:'100%'
+      width: '100%',
+      height: '100%'
+    },
+    '& .algolia-places':{
+      height:'100%',
+      width: '100%',
+      margin: 0,
+      display: 'block',
+      boxSizing: 'content-box',
+      background: 'none',
+      animationName: 'mui-auto-fill-cancel',
+      color: 'currentColor',
+      border: 0,
+      letterSpacing: 'inherit',
+      animationDuration: '10ms'
+    },
+    '& input':{
+      padding: '6px 0px 7px',
+      height: '1.1876em',
+    },
+    '& .ap-input-icon':{
+      display: 'none',
     }
   },
   buttonIgnore:{
@@ -110,14 +107,8 @@ export default theme => ({
     color: 'rgba(39,37,37,35%)'
   },
   navbarAlgoliaPlace:{
-    border: 'inherit',
-    fontFamily: theme.typography.text.fontFamily,
-    color: theme.palette.placeHolder.main,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    padding: '6px 0 7px',
-    height: 'auto',
+    border: 0,
+
     [theme.breakpoints.down('xs')]:{
       padding: '18.5px 14px',
     }
