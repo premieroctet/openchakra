@@ -153,7 +153,7 @@ export default theme => ({
 
   navbarLogoContainer:{
     cursor: 'pointer',
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('xs')]:{
       display: 'none'
     }
   },

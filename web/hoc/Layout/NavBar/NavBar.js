@@ -722,9 +722,10 @@ class NavBar extends Component {
                     <Grid
                       className={classes.navbarLogoContainer}
                       item
-                      xl={!logged && ifHomePage ? 3 : 4}
-                      lg={4}
+                      xl={3}
+                      lg={3}
                       md={!logged && !ifHomePage ? 3 : 2}
+                      sm={1}
                       onClick={() => Router.push('/')}
                     >
                       <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
@@ -736,7 +737,7 @@ class NavBar extends Component {
                     <Grid
                       item
                       xl={6}
-                      lg={4}
+                      lg={6}
                       md={8}
                       sm={11}
                       className={classes.navabarHomepageMenu}
@@ -789,10 +790,10 @@ class NavBar extends Component {
                       <Grid
                         className={classes.navbarMenuBurgerContainer}
                         item
-                        xl={4}
-                        lg={4}
+                        xl={3}
+                        lg={3}
                         md={1}
-                        sm={ifHomePage ? 12 : 1}
+                        sm={ifHomePage ? 11 : 1}
                        >
                         <IconButton
                           aria-label="open drawer"
@@ -855,9 +856,9 @@ class NavBar extends Component {
                       <Grid
                         item
                         xl={!logged && ifHomePage ? 3 : 4}
-                        lg={4}
+                        lg={3}
                         md={!logged && !ifHomePage ? 3 : 2}
-                        sm={!logged && !ifHomePage ? 4 : 12}
+                        sm={!ifHomePage ? 12 : 11}
                         className={ifHomePage ? classes.navbarButtonContainer : classes.navbarButtonContainerP}
                       >
                         <Grid>
