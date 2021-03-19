@@ -142,16 +142,6 @@ export default theme => ({
       width: '95%'
     },
   },
-  navbarAppBar:{
-    backgroundColor:'transparent',
-    boxShadow: 'inherit'
-  },
-
-  navBartoolbar:{
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 0
-  },
   navbarTopContainer:{
     width: '90%',
     display: 'flex',
@@ -162,49 +152,24 @@ export default theme => ({
   },
 
   navbarLogoContainer:{
-    width: '20%',
     cursor: 'pointer',
-    [theme.breakpoints.down('md')]:{
-      width: '10%'
-    }
-  },
-  navbarLogoContainerP:{
-    width: '100%',
-    cursor: 'pointer',
-    [theme.breakpoints.down('md')]:{
-      width: '40%'
-    }
-  },
-  navabarHomepageMenu:{
-    width: '70%',
-    display: 'flex',
-    justifyContent: 'center',
     [theme.breakpoints.down('sm')]:{
       display: 'none'
     }
   },
-  navabarHomepageMenuP:{
-    width: '100%',
-
+  navabarHomepageMenu:{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]:{
+      display: 'none'
+    }
   },
   navbarMenuBurgerContainer:{
-    width: '20%',
     display: 'flex',
     flexDirection: 'row-reverse',
-    [theme.breakpoints.down('md')]:{
-      width: '10%'
-    }
+    alignItems: 'center',
   },
-
-  navbarMenuBurgerContainerP:{
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    [theme.breakpoints.down('md')]:{
-      width: '40%'
-    }
-  },
-
   navbarTabRoot:{
     textTransform: 'inherit',
     opacity: 'inherit',
@@ -322,13 +287,6 @@ export default theme => ({
   navbarSearchContainerSearchP:{
     width: '100%',
   },
-  navbarSearchP: {
-    padding: '1%',
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    borderRadius: theme.border.button.borderRadius,
-  },
   navbarRootTextFieldP: {
     marginLeft: 20,
     flex: 1,
@@ -397,14 +355,20 @@ export default theme => ({
     width: '100%',
     display: 'flex',
   },
-  navbarAppBarP:{
+  navbarAppBar:{
     boxShadow: 'inherit'
   },
   navBartoolbarP:{
-    display: 'flex',
-    justifyContent: 'center',
     marginTop: '1%',
-    marginBottom: '1%'
+    marginBottom: '1%',
+    [theme.breakpoints.down('sm')]:{
+      padding: 0
+    }
+  },
+  navBartoolbar:{
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 0
   },
   navbarTopContainerP:{
     display: 'flex',

@@ -51,7 +51,9 @@ class Layout extends React.Component {
 
     return (
       <Grid>
-        <InfoBar/>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <InfoBar/>
+        </Hidden>
         <NavBar selectedAddress={selectedAddress} keyword={keyword} key={this.logged}/>
         <Grid>
           <Grid className={classes.layoutScrollMenu}>
