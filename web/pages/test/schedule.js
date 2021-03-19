@@ -6,7 +6,6 @@ import {Calendar, momentLocalizer, Views} from 'react-big-calendar';
 import moment from 'moment';
 const localizer = momentLocalizer(moment);
 import Button from '@material-ui/core/Button';
-import styles from '../myShop/myAvailabilities/myAvailabilitiesStyle';
 import Schedule from '../../components/Schedule/Schedule';
 
 class calendarTest extends React.Component {
@@ -31,4 +30,4 @@ class calendarTest extends React.Component {
 
 }
 
-export default withStyles(styles)(calendarTest);
+export default calendarTest
