@@ -111,10 +111,11 @@ class PictureCellRenderer extends React.Component {
 
   render = () => {
     const rowHeight = this.props.node.rowHeight
+    console.log(this.props.value)
     if (this.props.value) {
       return (
           <div>
-          <img style={{ width:'auto', height:rowHeight}} src={`/${this.props.value}`}/>
+          <img style={{ width:'auto', height:rowHeight}} src={`${this.props.value}`}/>
           </div>
       )
     }
