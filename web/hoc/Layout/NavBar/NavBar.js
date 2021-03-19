@@ -258,7 +258,7 @@ class NavBar extends Component {
   mobileSearchBarInput = (classes) => {
     return (
       <Grid
-        className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}
+        style={{width: '100%'}}
         onClick={this.handleModalSearchBarInput}
       >
         <Paper classes={{root: classes.navbarSearch}}>
@@ -716,15 +716,15 @@ class NavBar extends Component {
         <AppBar position={'static'} className={classes.navbarAppBar} style={{backgroundColor: is_b2b_style(user) && companyPage || this.state.ifHomePage ? 'transparent' : is_b2b_style(user) && !companyPage ?'#353A51' : null}}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
-              <Grid container  style={{justifyContent: companyPage ? 'end' : 'space-between', width: '100%', margin:0}}>
+              <Grid container  style={{justifyContent: companyPage ? 'end' : '', width: '100%', margin:0}}>
                 {
                   companyPage ? null :
                     <Grid
                       className={classes.navbarLogoContainer}
                       item
-                      xl={4}
+                      xl={!logged && ifHomePage ? 3 : 4}
                       lg={4}
-                      md={2}
+                      md={!logged && !ifHomePage ? 3 : 2}
                       onClick={() => Router.push('/')}
                     >
                       <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
@@ -735,7 +735,7 @@ class NavBar extends Component {
                  companyPage ? null : ifHomePage ?
                     <Grid
                       item
-                      xl={4}
+                      xl={6}
                       lg={4}
                       md={8}
                       sm={11}
@@ -780,7 +780,7 @@ class NavBar extends Component {
                         }
                       </Tabs>
                     </Grid> :
-                   <Grid item xl={4} lg={4} md={8} sm={11}>
+                   <Grid item xl={4} lg={4} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage ? 8 : 11}>
                      {this.searchBarInput(classes)}
                    </Grid>
                   }
@@ -854,9 +854,10 @@ class NavBar extends Component {
                       :
                       <Grid
                         item
-                        xl={4}
+                        xl={!logged && ifHomePage ? 3 : 4}
                         lg={4}
-                        md={2}
+                        md={!logged && !ifHomePage ? 3 : 2}
+                        sm={!logged && !ifHomePage ? 4 : 12}
                         className={ifHomePage ? classes.navbarButtonContainer : classes.navbarButtonContainerP}
                       >
                         <Grid>

@@ -198,18 +198,12 @@ export default theme => ({
   navbarButtonContainer:{
     display: 'flex',
     flexDirection: 'row-reverse',
-    width: '20%',
     alignItems: 'center',
   },
   navbarButtonContainerP:{
     display: 'flex',
-    flexDirection: 'row-reverse',
-    width: '100%',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]:{
-      flexDirection: 'inherit',
-      width: '40%'
-    }
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   navBarlogIn:{
     textTransform: theme.typography.textTransform,
