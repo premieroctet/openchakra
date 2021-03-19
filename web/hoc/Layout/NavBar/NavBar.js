@@ -720,10 +720,10 @@ class NavBar extends Component {
                 {
                   companyPage ? null :
                     <Grid
-                      className={classes.navbarLogoContainer}
+                      className={this.state.ifHomePage ?  classes.navbarLogoContainer : classes.navbarLogoContainerP}
                       item
-                      xl={3}
-                      lg={3}
+                      xl={ifHomePage ? 3 : 4}
+                      lg={ifHomePage ? 3 : 4}
                       md={!logged && !ifHomePage ? 3 : 2}
                       sm={1}
                       onClick={() => Router.push('/')}
@@ -790,9 +790,9 @@ class NavBar extends Component {
                       <Grid
                         className={classes.navbarMenuBurgerContainer}
                         item
-                        xl={3}
-                        lg={3}
-                        md={1}
+                        xl={ifHomePage ? 3 : 4}
+                        lg={ifHomePage ? 3 : 4}
+                        md={ifHomePage ? 1 : 2}
                         sm={ifHomePage ? 11 : 1}
                        >
                         <IconButton
@@ -856,9 +856,9 @@ class NavBar extends Component {
                       <Grid
                         item
                         xl={!logged && ifHomePage ? 3 : 4}
-                        lg={3}
+                        lg={!logged && ifHomePage ? 3 : 4}
                         md={!logged && !ifHomePage ? 3 : 2}
-                        sm={!ifHomePage ? 12 : 11}
+                        sm={!ifHomePage ? 4 : 11}
                         className={ifHomePage ? classes.navbarButtonContainer : classes.navbarButtonContainerP}
                       >
                         <Grid>

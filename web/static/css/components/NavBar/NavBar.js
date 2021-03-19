@@ -157,6 +157,13 @@ export default theme => ({
       display: 'none'
     }
   },
+  navbarLogoContainerP:{
+    cursor: 'pointer',
+    [theme.breakpoints.down('sm')]:{
+      display: 'none'
+    }
+  },
+
   navabarHomepageMenu:{
     display: 'flex',
     justifyContent: 'center',
@@ -202,7 +209,7 @@ export default theme => ({
   },
   navbarButtonContainerP:{
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center'
   },
   navBarlogIn:{
