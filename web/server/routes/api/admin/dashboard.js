@@ -1830,7 +1830,7 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
       .sort({'label': 1})
       .populate('tags', ['label'])
       .populate('equipments', 'label')
-      .populate('category', 'label')
+      .populate('category', 'particular_label professional_label')
       .then(service => {
         res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
         res.setHeader('X-Total-Count', service.length);
@@ -1846,7 +1846,7 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
         .sort({'label': 1})
         .populate('tags', ['label'])
         .populate('equipments', 'label')
-        .populate('category', 'label')
+        .populate('category', 'particular_label professional_label')
         .then(service => {
           if (!service) {
             return res.status(400).json({msg: 'No service found'});

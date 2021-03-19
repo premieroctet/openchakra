@@ -65,7 +65,7 @@ class all extends React.Component {
     };
   this.columnDefs=[
       {headerName: "Label", field: "label"},
-      {headerName: "Catégorie", field: "category.label"},
+      {headerName: "Catégorie", field: "category_label"},
       {headerName: "Pros", field: "professional_access", cellRenderer:'booleanCellRenderer'},
       {headerName: "Particuliers", field: "particular_access", cellRenderer:'booleanCellRenderer'},
       {headerName: "Illustration", field: "picture", cellRenderer:'pictureCellRenderer'},
@@ -79,7 +79,14 @@ class all extends React.Component {
     axios.get('/myAlfred/api/admin/service/all')
       .then((response) => {
         let service = response.data;
-        this.setState({service: service.map( s => {s.picture='/'+s.picture; return s})});
+        this.setState({
+          service: service.map( s => {
+            s.picture='/'+s.picture;
+            console.log(JSON.stringify(s.category))
+            s.category_label = [s.category.particular_label, s.category.professional_label].join('/');
+            return s
+          })
+        });
       }).catch((error) => {
       console.log(error);
       if (error.response.status === 401 || error.response.status === 403) {

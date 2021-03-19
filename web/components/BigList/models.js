@@ -111,7 +111,6 @@ class PictureCellRenderer extends React.Component {
 
   render = () => {
     const rowHeight = this.props.node.rowHeight
-    console.log(this.props.value)
     if (this.props.value) {
       return (
           <div>
