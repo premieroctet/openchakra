@@ -34,7 +34,6 @@ const path = require('path')
 const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
 const {counterArray, counterObjects} = require('../../../../utils/converters')
 const {ADMIN, MANAGER, EMPLOYEE} = require('../../../../utils/consts')
-const url_parse = require('url-parse')
 const csv_parse = require('csv-parse/lib/sync')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 var _ = require('lodash')
@@ -1752,7 +1751,6 @@ const uploadService = multer({storage: storageService});
 // Add service for prestation
 // @Access private
 router.post('/service/all', uploadService.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
-  console.log('Req.body is ' + JSON.stringify(req.body));
   const {errors, isValid} = validateServiceInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1824,44 +1822,30 @@ router.post('/service/editPicture/:id', uploadService.single('picture'), passpor
 // View all service
 // @Access private
 router.get('/service/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  if (req.query.category != null) {
-    let label = req.query.category;
-    Service.find({category: mongoose.Types.ObjectId(label)})
+
+  const token = req.headers.authorization.split(' ')[1];
+  const decode = jwt.decode(token);
+  const admin = decode.is_admin;
+
+  if (admin) {
+    Service.find()
       .sort({'label': 1})
       .populate('tags', ['label'])
       .populate('equipments', 'label')
       .populate('category', 'particular_label professional_label')
       .then(service => {
+        if (!service) {
+          return res.status(400).json({msg: 'No service found'});
+        }
         res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
         res.setHeader('X-Total-Count', service.length);
         res.json(service);
-      });
+
+      })
+      .catch(err => res.status(404).json({service: 'No service found'}));
   } else {
-    const token = req.headers.authorization.split(' ')[1];
-    const decode = jwt.decode(token);
-    const admin = decode.is_admin;
-
-    if (admin) {
-      Service.find()
-        .sort({'label': 1})
-        .populate('tags', ['label'])
-        .populate('equipments', 'label')
-        .populate('category', 'particular_label professional_label')
-        .then(service => {
-          if (!service) {
-            return res.status(400).json({msg: 'No service found'});
-          }
-          res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-          res.setHeader('X-Total-Count', service.length);
-          res.json(service);
-
-        })
-        .catch(err => res.status(404).json({service: 'No service found'}));
-    } else {
-      res.status(403).json({msg: 'Access denied'});
-    }
+    res.status(403).json({msg: 'Access denied'});
   }
-
 });
 
 // @Route GET /myAlfred/api/admin/service/all/:id
@@ -2482,8 +2466,7 @@ router.get('/ages', (req, res) => {
     }
   }
 
-  const alfred = JSON.parse(url_parse(req.originalUrl, true).query.alfred)
-
+  const alfred = JSON.parse(req.query.alfred || "false")
   const fltr = alfred ? {is_alfred: true} : {}
   User.find(fltr, 'birthday')
   .sort({'birthday': -1})
