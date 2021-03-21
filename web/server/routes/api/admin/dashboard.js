@@ -1833,6 +1833,7 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
       .populate('tags', ['label'])
       .populate('equipments', 'label')
       .populate('category', 'particular_label professional_label')
+      .populate('prestations', 'particular_access professional_access')
       .then(service => {
         if (!service) {
           return res.status(400).json({msg: 'No service found'});
@@ -1842,8 +1843,12 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
         res.json(service);
 
       })
-      .catch(err => res.status(404).json({service: 'No service found'}));
-  } else {
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({service: 'No service found'})
+      })
+  }
+  else {
     res.status(403).json({msg: 'Access denied'});
   }
 });
@@ -2048,7 +2053,9 @@ router.get('/prestation/all', passport.authenticate('admin', {session: false}), 
   if (admin) {
     Prestation.find({}, 'label cesu_eligible particular_access professional_access')
       .sort({s_label: 1, category: 1})
-      .populate({path: 'service', select: 'label', populate: {path: 'category', select: 'label'}})
+      .populate({path: 'service', select: 'label', populate: {
+        path: 'category', select: 'particular_label professional_label'}
+      })
       .populate('filter_presentation', 'label')
       .populate('private_alfred', 'firstname name')
       .then(prestation => {

@@ -29,7 +29,7 @@ const styles = theme => ({
   card: {
     padding: '1.5rem 3rem',
     width: 400,
-    marginTop: '100px',
+    marginTop: '20px',
   },
   cardContant: {
     flexDirection: 'column',

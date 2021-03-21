@@ -152,6 +152,13 @@ const isSiretSirenLength = value => {
   return lengthOk
 }
 
+const insensitiveComparator = (a,b) => {
+  a = normalize(a ||'')
+  b = normalize(b ||'')
+  return a<b ? -1 : a>b ? 1 : 0
+}
+
+
 module.exports = {
   normalize,
   createQuery,
@@ -169,4 +176,5 @@ module.exports = {
   compact,
   compute_vat_number,
   isSiretSirenLength,
+  insensitiveComparator,
 };

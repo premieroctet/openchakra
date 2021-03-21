@@ -341,7 +341,7 @@ UserSchema.virtual('age').get(function () {
   if (!this.birthday) {
     return null
   }
-  const age = moment().diff(moment(this.birthday), 'years')
+  const age = moment().diff(this.birthday, 'years')
   return age
 });
 

@@ -3,6 +3,9 @@ const Schema = mongoose.Schema;
 const {normalize} = require('../../utils/text');
 
 const CategorySchema = new Schema({
+  picture: {
+    type: String,
+  },
   particular_label: {
     type: String,
   },

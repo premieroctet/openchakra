@@ -63,6 +63,15 @@ const ServiceSchema = new Schema({
     type: Boolean,
     required: true,
   }
+}, {
+  toJSON: {virtuals: true, getters: true},
+  toObject: { virtuals: true, getters: true }
+});
+
+ServiceSchema.virtual('prestations', {
+   ref: 'prestation', //The Model to use
+   localField: '_id', //Find in Model, where localField
+   foreignField: 'service', // is equal to foreignField
 });
 
 ServiceSchema.index({label: 'text'});

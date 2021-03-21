@@ -69,7 +69,9 @@ class all extends React.Component {
       {headerName: "Pros", field: "professional_access", cellRenderer:'booleanCellRenderer'},
       {headerName: "Particuliers", field: "particular_access", cellRenderer:'booleanCellRenderer'},
       {headerName: "Illustration", field: "picture", cellRenderer:'pictureCellRenderer'},
+      {headerName: "Warning", field: "warning"},
     ]
+    // TODO : ajouter colonne warning si service pro sans prestations pro ou service particulier sans presta particuliers
   }
 
   componentDidMount() {
@@ -79,11 +81,19 @@ class all extends React.Component {
     axios.get('/myAlfred/api/admin/service/all')
       .then((response) => {
         let service = response.data;
+
         this.setState({
           service: service.map( s => {
+            s.warning=[]
             s.picture='/'+s.picture;
-            console.log(JSON.stringify(s.category))
             s.category_label = [s.category.particular_label, s.category.professional_label].join('/');
+            if (s.professional_access && !s.prestations.find(p => p.professional_access)) {
+              s.warning.push('aucune prestation pro')
+            }
+            if (s.particular_access && !s.prestations.find(p => p.particular_access)) {
+              s.warning.push('aucune prestation particuliers')
+            }
+            s.warning=s.warning.join(',')
             return s
           })
         });
