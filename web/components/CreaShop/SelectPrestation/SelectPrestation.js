@@ -13,6 +13,7 @@ import {SHOP} from '../../../utils/i18n';
 import _ from 'lodash';
 const {getLoggedUserId}=require('../../../utils/functions');
 
+// TODO : filtrer suivant particuliers/professionels
 class SelectPrestation extends React.Component {
   constructor(props) {
     super(props);

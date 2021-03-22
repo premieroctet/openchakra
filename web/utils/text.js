@@ -41,12 +41,6 @@ const createRegExpOR = str => {
   return regexp;
 };
 
-const createQuery = str => {
-  const regexp = createRegExp(str);
-  const query = {'s_label': {$regex: regexp}};
-  return query;
-};
-
 const matches = (str, keywords) => {
   const regexps = createRegExp(keywords);
   const ok = regexps.test(str);
@@ -161,11 +155,9 @@ const insensitiveComparator = (a,b) => {
 
 module.exports = {
   normalize,
-  createQuery,
   matches,
   formatIban,
   maskIban,
-  createRegExp,
   createRegExpOR,
   createRegExpAND,
   frenchFormat,

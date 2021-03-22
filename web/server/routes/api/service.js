@@ -8,10 +8,10 @@ const Category = require('../../models/Category');
 const Prestation = require('../../models/Prestation');
 const Job = require('../../models/Job');
 const ServiceUser = require('../../models/ServiceUser');
-router.get('/test', (req, res) => res.json({msg: 'Service Works!'}));
 
 const mongoose = require('mongoose');
-const {createQuery} = require('../../../utils/text');
+
+const {PART, PRO}=require('../../../utils/consts');
 
 // @Route GET /myAlfred/api/service/all
 // View all service
@@ -213,91 +213,36 @@ router.get('/all/tags/:tags', (req, res) => {
 // Return { category_name : { services} }
 router.get('/keyword/:kw', (req, res) => {
 
-  const kw = req.params.kw;
-
-  console.log(`Search service keyword:${kw}`);
-  var result = {};
-  var keywords = {};
-  var query = createQuery(kw)
-  // Exclude private prestations
-  query['private_alfred']=null
-  Category.find(query)
-    .then(categories => {
-        Service.find({$or: [{category: {$in: categories.map(c => c._id)}}, query]})
-          .populate('category')
-          .then(services => {
-            services.forEach(s => {
-              const opt={
-                label: s.label,
-                id: s._id,
-                particular_access: s.particular_access,
-                professional_access: s.professional_access,
-              }
-              result[s.category.label] ? result[s.category.label].push(opt)
-                : result[s.category.label] = [opt];
-              let key = s.category.label + s.label;
-              keywords[key] ? keywords[key].push(s.category.label) : keywords[key] = [s.category.label];
-            });
-            Prestation.find(query)
-              .populate({path: 'service', populate: {path: 'category'}}).then(prestations => {
-              prestations.forEach(p => {
-                let s = p.service;
-                const opt={
-                  label: s.label,
-                  id: s._id,
-                  particular_access: s.particular_access,
-                  professional_access: s.professional_access,
-                }
-                result[s.category.label] ? result[s.category.label].push(opt)
-                  : result[s.category.label] = [opt];
-                let key = s.category.label + s.label;
-                keywords[key] ? keywords[key].push(p.label) : keywords[key] = [p.label];
-              });
-              Prestation.find()
-                .populate({path: 'service', populate: {path: 'category'}})
-                .populate({path: 'job', match: query})
-                .then(prestations => {
-                  prestations.forEach(p => {
-                    if ('job' in p && p['job'] != null) {
-                      let s = p.service;
-                      const opt={
-                        label: s.label,
-                        id: s._id,
-                        particular_access: s.particular_access,
-                        professional_access: s.professional_access,
-                      }
-                      result[s.category.label] ? result[s.category.label].push(opt)
-                        : result[s.category.label] = [opt];
-                      let key = s.category.label + s.label;
-                      keywords[key] ? keywords[key].push(p['job'].label) : keywords[key] = [p['job'].label];
-                    }
-                  });
-                  Object.keys(result).forEach(k => {
-                    result[k] = _.uniqWith(result[k], _.isEqual);
-                    result[k] = _.sortBy(result[k], ['label']);
-                  });
-                  var ordered = {};
-                  Object.keys(result).sort().forEach(key => {
-                    result[key].forEach(s => {
-                      s.keywords = _.uniqWith(keywords[key + s.label], _.isEqual);
-                      // TODO : handle "Aucun"
-                      s.keywords=s.keywords.filter( kw => kw != 'Aucun')
-                    });
-                    ordered[key] = result[key];
-                  });
-                  result = ordered;
-
-                  res.json(result);
-                });
-
-            });
-          });
-      },
-    )
-    .catch((err) => {
-      console.error(err);
-      res.json('Error:' + JSON.stringify(err));
-    });
+  Service.find({}, 'label s_label particular_access professional_access')
+    .populate('category', 's_particular_label s_professional_label')
+    .populate({path: 'prestations', select:'s_label particular_access professional_access private_alfred', populate:{path:'job', select:'s_label'}})
+    .sort({s_label:1})
+    .then( services => {
+      var result = {[PART]:[], [PRO]:[]}
+      Object.keys(result).forEach( access_type => {
+        const attribute=`${access_type}_access`
+        const label=`s_${access_type}_label`
+        services.filter(s => s[attribute]).forEach( service => {
+          var keywords= [service.s_label, service.category[label]]
+          service.prestations.filter(p => p[attribute] && !p.private_alfred).forEach( p => {
+            console.log(p.s_label)
+            keywords.push(p.s_label, p.job && p.job.s_label ? p.job.s_label : '')
+          })
+          // single string with unique words
+          keywords = _.uniq(keywords.filter( kw => Boolean(kw)).join(' ').split(' ')).join(' ')
+          result[access_type].push({
+            _id: service._id,
+            label: service.label,
+            keywords: keywords,
+          })
+        })
+      })
+      res.json(result)
+    })
+    .catch( err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
 });
 
 module.exports = router;

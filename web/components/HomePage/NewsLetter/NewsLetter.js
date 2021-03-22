@@ -138,7 +138,8 @@ class NewsLetter extends React.Component{
             </Grid>
           </Grid>
           <Grid className={classes.newsLetterRightContainer}>
-            {/****TODO when googleAuth avail <Grid className={style.newsLetterContainer}>
+            {/****TODO when googleAuth avail
+              <Grid className={style.newsLetterContainer}>
               <Button
                 variant="outlined"
                 classes={{root : style.newsLetterButtonGoogle}}
