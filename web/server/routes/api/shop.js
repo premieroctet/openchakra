@@ -10,6 +10,7 @@ const {sendShopDeleted, sendShopOnline} = require('../../../utils/mailing');
 const {createMangoProvider} = require('../../../utils/mangopay');
 const {GID_LEN} = require('../../../utils/consts');
 const {is_production, is_validation}=require('../../../config/config')
+const {normalize} = require('../../../utils/text');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -114,10 +115,13 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
           let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
           let newPrestaModels = newPrestations.map(p => Prestation({
             ...p,
+            s_label : normalize(p.label),
             service: req.body.service,
             billing: [p.billing],
             filter_presentation: null,
             private_alfred: req.user.id,
+            particular_access: req.body.particular_access,
+            professional_access: req.body.professional_access,
           }));
 
           const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({insertedIds: []});

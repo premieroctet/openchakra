@@ -79,6 +79,8 @@ class SelectPrestation extends React.Component {
       billing: this.state.all_billings,
       description: '',
       price: null,
+      particular_access: this.props.particular_access,
+      professional_access: this.props.professional_access,
     };
     grouped[CUSTOM_PRESTATIONS_FLTR].push(custom_presta);
     this.setState({grouped: grouped});
