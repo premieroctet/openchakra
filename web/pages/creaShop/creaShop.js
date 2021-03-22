@@ -219,6 +219,15 @@ class creaShop extends React.Component {
       setAxiosAuthentication()
       axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
+          // Update toekn
+          axios.get('/myAlfred/api/users/token')
+            .then ( res => {
+              setAuthToken();
+              this.loadData()
+            })
+            .catch (err => {
+              console.error(err)
+            })
           snackBarSuccess('Boutique créée')
           var su_id = res.data.services[0];
           if (cloned_shop.diplomaName) {
@@ -413,7 +422,9 @@ class creaShop extends React.Component {
         return <SelectPrestation
           service={shop.service}
           prestations={shop.prestations}
-          onChange={this.onPrestaChanged}/>;
+          onChange={this.onPrestaChanged}
+          particular_access={shop.particular_access}
+          professional_access={shop.professional_access}/>;
       case SETTINGSERVICE4:
         return <SettingService
           service={shop.service}

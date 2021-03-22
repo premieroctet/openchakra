@@ -13,7 +13,6 @@ import {SHOP} from '../../../utils/i18n';
 import _ from 'lodash';
 const {getLoggedUserId}=require('../../../utils/functions');
 
-// TODO : filtrer suivant particuliers/professionels
 class SelectPrestation extends React.Component {
   constructor(props) {
     super(props);
@@ -34,7 +33,9 @@ class SelectPrestation extends React.Component {
 
     // Get current alfred id
     const alfred_id = getLoggedUserId();
-
+    const part = this.props.particular_access
+    const pro = this.props.professional_access
+    console.log(`Part:${part}, pro:${pro}`)
     let billings = null;
     setAxiosAuthentication();
     axios.get(`/myAlfred/api/billing/all`)
@@ -51,6 +52,8 @@ class SelectPrestation extends React.Component {
     axios.get(`/myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         var prestations = res.data;
+        // Filter paarticular/professional
+        prestations=prestations.filter(p => (p.particular_access && part)||(p.professional_access && pro))
         // Remove private belonging to other Alfreds
         prestations = prestations.filter(p => p.private_alfred == null || p.private_alfred == alfred_id);
         let private_prestations = prestations.filter(p => p.private_alfred != null);
@@ -130,7 +133,7 @@ class SelectPrestation extends React.Component {
               return (
                 <Grid key={i} container spacing={3} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Typography style={{color: '#696767'}}>{fltr === 'Aucun' ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}</Typography>
+                    <Typography style={{color: '#696767'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}</Typography>
                   </Grid>
                   <Grid container spacing={3} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
                     {prestas.map((p, j) => {

@@ -149,10 +149,10 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
                   console.log('Shop update ' + shop._id);
                   shop.services.push(su._id);
                   shop.save();
-                  res.json(shop);
                   User.findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
                     .then(user => {
                       console.log('Updated alfred');
+                      res.json(shop);
                     })
                     .catch(err => console.log('Error:' + JSON.stringify(err)));
                 })
