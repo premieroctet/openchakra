@@ -29,6 +29,7 @@ const  {BigList}=require('../../../components/BigList/BigList')
 const moment = require('moment-timezone');
 const util=require('util')
 moment.locale('fr');
+const {insensitiveComparator}=require('../../../utils/text')
 
 const styles = theme => ({
   signupContainer: {
@@ -69,12 +70,12 @@ class all extends React.Component {
 
   this.columnDefs=[
       {headerName: "Privée", field: "private_alfred", cellRenderer: "privateRenderer"},
-      {headerName: "Label", field: "label"},
-      {headerName: "Catégorie", field: "service.category.label"},
-      {headerName: "Service", field: "service.label"},
+      {headerName: "Label", field: "label", comparator: insensitiveComparator},
+      {headerName: "Catégorie", field: "category_label", comparator: insensitiveComparator},
+      {headerName: "Service", field: "service.label", comparator: insensitiveComparator},
       {headerName: "Pros", field: "professional_access", cellRenderer:'booleanCellRenderer'},
       {headerName: "Particuliers", field: "particular_access", cellRenderer:'booleanCellRenderer'},
-      {headerName: "Filtre présentation", field: "filter_presentation.label"},
+      {headerName: "Filtre présentation", field: "filter_presentation.label", comparator: insensitiveComparator},
     ]
   }
 
@@ -84,6 +85,14 @@ class all extends React.Component {
     axios.get('/myAlfred/api/admin/prestation/all')
       .then((response) => {
         let prestation = response.data;
+        prestation=prestation.map( p => {
+          const cat = p.service ? p.service.category: null
+          p.category_label = cat ?
+              [cat.particular_label, cat.professional_label].join('/')
+              :
+              '';
+          return p
+        })
         this.setState({prestation: prestation});
       }).catch((error) => {
       console.log(error);

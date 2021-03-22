@@ -41,12 +41,6 @@ const createRegExpOR = str => {
   return regexp;
 };
 
-const createQuery = str => {
-  const regexp = createRegExp(str);
-  const query = {'s_label': {$regex: regexp}};
-  return query;
-};
-
 const matches = (str, keywords) => {
   const regexps = createRegExp(keywords);
   const ok = regexps.test(str);
@@ -140,13 +134,30 @@ const compute_vat_number = siren => {
   return result
 }
 
+const isSiretSirenLength = value => {
+  if (!value) {
+    return false
+  }
+  value=parseInt(compact(value))
+  if (isNaN(value)) {
+    return false
+  }
+  const lengthOk =[SIRET_LENGTH, SIREN_LENGTH].includes(value.toString().length)
+  return lengthOk
+}
+
+const insensitiveComparator = (a,b) => {
+  a = normalize(a ||'')
+  b = normalize(b ||'')
+  return a<b ? -1 : a>b ? 1 : 0
+}
+
+
 module.exports = {
   normalize,
-  createQuery,
   matches,
   formatIban,
   maskIban,
-  createRegExp,
   createRegExpOR,
   createRegExpAND,
   frenchFormat,
@@ -156,4 +167,6 @@ module.exports = {
   formatAddress,
   compact,
   compute_vat_number,
+  isSiretSirenLength,
+  insensitiveComparator,
 };

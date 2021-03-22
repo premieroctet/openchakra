@@ -348,9 +348,10 @@ router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authentic
     .then(serviceUser => {
       serviceUser.diploma.name = req.body.name;
       serviceUser.diploma.year = req.body.year;
+      serviceUser.diploma.skills = req.body.skills;
       const diploma = 'file_diploma';
       console.log('Diploma req.file:' + JSON.stringify(req.file));
-      if (req.file !== undefined && req.file !== null) {
+      if (req.file) {
         serviceUser.diploma.file = req.file.path;
       }
       serviceUser.graduated = true;
@@ -370,7 +371,8 @@ router.post('/addCertification/:id', upload.single('file_certification'), passpo
     .then(serviceUser => {
       serviceUser.certification.name = req.body.name;
       serviceUser.certification.year = req.body.year;
-      if (req.file !== undefined) {
+      serviceUser.certification.skills = req.body.skills;
+      if (req.file) {
         serviceUser.certification.file = req.file.path;
       }
       serviceUser.is_certified = true;

@@ -38,6 +38,8 @@ import Box from "../../components/Box/Box";
 const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
 const {getDefaultAvailability}=require('../../utils/dateutils')
+const {is_development}=require('../../config/config')
+const {snackBarSuccess}=require('../../utils/notifications')
 
 const PRESENTATION0=0
 const INTRODUCE1=1
@@ -57,13 +59,13 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 8,
+      activeStep: 0,
       user_id: null,
       saving: false,
       availabilities: [],
       currentUser:{},
       shop: {
-        particular_access: false,
+        particular_access: true,
         professional_access: false,
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
@@ -89,6 +91,9 @@ class creaShop extends React.Component {
         deadline_value: 1, // Valeur de prévenance
         deadline_unit: 'jours', // Unité de prévenance (h:heures, j:jours, s:semaines)
         level: '',
+        experience_description: '',
+        experience_title: '',
+        exerience_skills: [],
         service_address: null,
         perimeter: null,
         cesu: null,
@@ -96,7 +101,6 @@ class creaShop extends React.Component {
         social_security: null,
         vat_subject: false,
         vat_number: null,
-        sideBarLabels: []
       },
     };
     this.scheduleDrawer = React.createRef()
@@ -215,30 +219,48 @@ class creaShop extends React.Component {
       setAxiosAuthentication()
       axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
-
-          axios.post();
-          var su_id = res.data.services[0]._id;
-          if (cloned_shop.diplomaPicture !== null) {
+          // Update toekn
+          axios.get('/myAlfred/api/users/token')
+            .then ( res => {
+              setAuthToken();
+              this.loadData()
+            })
+            .catch (err => {
+              console.error(err)
+            })
+          snackBarSuccess('Boutique créée')
+          var su_id = res.data.services[0];
+          if (cloned_shop.diplomaName) {
             var dpChanged = typeof (cloned_shop.diplomaPicture) == 'object';
             const formData = new FormData();
             formData.append('name', cloned_shop.diplomaName);
             formData.append('year', cloned_shop.diplomaYear);
-            formData.append('file_diploma', dpChanged ? cloned_shop.diplomaPicture : null);
+            formData.append('skills', cloned_shop.diplomaSkills);
+            if (dpChanged) {
+              formData.append('file_diploma', cloned_shop.diplomaPicture);
+            }
 
             axios.post('/myAlfred/api/serviceUser/addDiploma/' + su_id, formData)
-              .then()
+              .then( () => {
+                snackBarSuccess('Diplôme enregistré')
+              })
               .catch(err => console.error(err));
           }
 
-          if (cloned_shop.certificationPicture !== null) {
+          if (cloned_shop.certificationName) {
             var cpChanged = typeof (cloned_shop.certificationPicture) == 'object';
             const formData = new FormData();
             formData.append('name', cloned_shop.certificationName);
             formData.append('year', cloned_shop.certificationYear);
-            formData.append('file_certification', cpChanged ? cloned_shop.certificationPicture : null);
+            formData.append('skills', cloned_shop.certificationSkills);
+            if (cpChanged) {
+              formData.append('file_certification', cloned_shop.certificationPicture);
+            }
 
             axios.post('/myAlfred/api/serviceUser/addCertification/' + su_id, formData)
-              .then()
+              .then( () => {
+                snackBarSuccess('Certification enregistrée')
+              })
               .catch(err => console.error(err));
           }
           Router.push(`/profile/services?user=${this.state.user_id}`)
@@ -282,7 +304,6 @@ class creaShop extends React.Component {
     shop.minimum_basket = state.minimum_basket;
     shop.deadline_unit = state.deadline_unit;
     shop.deadline_value = state.deadline_value;
-    shop.perimeter = state.perimeter;
     shop.equipments = state.equipments;
 
     this.setState({shop: shop});
@@ -300,6 +321,11 @@ class creaShop extends React.Component {
         certificationName: state.certificationName,
         certificationYear: state.certificationYear,
         certificationPicture: state.certificationPicture,
+        experience_skills: state.experience_skills,
+        experience_title: state.experience_title,
+        experience_description: state.experience_description,
+        diplomaSkills: state.diplomaSkills,
+        certificationSkills: state.certificationSkills,
       },
     });
   }
@@ -381,6 +407,8 @@ class creaShop extends React.Component {
           is_particular={shop.is_particular}
           company={shop.company}
           is_certified={shop.is_certified}
+          particular_access={shop.particular_access}
+          professional_access={shop.professional_access}
           onChange={this.introduceChanged}/>;
       case SELECTSERVICE2:
         return <SelectService
@@ -394,7 +422,9 @@ class creaShop extends React.Component {
         return <SelectPrestation
           service={shop.service}
           prestations={shop.prestations}
-          onChange={this.onPrestaChanged}/>;
+          onChange={this.onPrestaChanged}
+          particular_access={shop.particular_access}
+          professional_access={shop.professional_access}/>;
       case SETTINGSERVICE4:
         return <SettingService
           service={shop.service}

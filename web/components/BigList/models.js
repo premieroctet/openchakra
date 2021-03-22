@@ -22,9 +22,9 @@ class StatusCellRenderer extends React.Component {
       <>
       <div>
       {this.state.value.alfred ?
-        <img src="/static/assets/img/userServicePreview/alfred.svg" style={{width: '40px'}} title='Alfred' />
+        <img src="/static/assets/img/alfred.svg" style={{width: '40px'}} title='Alfred' />
        : null }
-      {this.state.value.admin ? <img src="/static/assets/img/userServicePreview/admin.svg" style={{width: '40px'}} title='Admin' /> : null }
+      {this.state.value.admin ? <img src="/static/assets/img/admin.svg" style={{width: '40px'}} title='Admin' /> : null }
       </div>
       </>
     )
@@ -114,7 +114,7 @@ class PictureCellRenderer extends React.Component {
     if (this.props.value) {
       return (
           <div>
-          <img style={{ width:'auto', height:rowHeight}} src={`/${this.props.value}`}/>
+          <img style={{ width:'auto', height:rowHeight}} src={`${this.props.value}`}/>
           </div>
       )
     }

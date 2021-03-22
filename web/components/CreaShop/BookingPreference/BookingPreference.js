@@ -23,10 +23,18 @@ class BookingPreference extends React.Component {
       equipments: props.equipments || [],
     };
     this.onEquipmentChecked = this.onEquipmentChecked.bind(this);
+    this.handleChange=this.handleChange.bind(this)
   }
 
-  handleChange(key, value) {
-    this.setState({[key]: value}, () => this.props.onChange(this.state));
+  handleChange = event => {
+    var {name, value}=event.target
+    if (['minimum_basket', 'deadline_value'].includes(name)) {
+      value = parseInt(value)
+      if (isNaN(value)) {
+        return
+      }
+    }
+    this.setState({[name]: value}, () => this.props.onChange(this.state));
   }
 
   componentDidMount() {
@@ -73,19 +81,21 @@ class BookingPreference extends React.Component {
               <TextField
                 id="standard-start-adornment"
                 variant={'outlined'}
+                name={'deadline_value'}
                 value={this.state.deadline_value}
                 label={'Délai'}
                 style={{width: '100%'}}
-
+                onChange={this.handleChange}
               />
             </Grid>
             <Grid  item xl={10} lg={10} md={10} sm={10} xs={10}>
               <TextField
                 value={this.state.deadline_unit}
+                name={'deadline_unit'}
                 select
                 variant="outlined"
                 label={SHOP.preference.units_dalay_prevenance}
-                onChange={v => this.handleChange('deadline_unit', v.target.value)}
+                onChange={this.handleChange}
                 style={{width: '100%'}}
               >
                 <MenuItem value="heures">{SHOP.preference.hours}</MenuItem>
@@ -105,11 +115,12 @@ class BookingPreference extends React.Component {
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <TextField
               type="number"
+              name={'minimum_basket'}
               style={{width: '100%'}}
               value={this.state.minimum_basket}
               label={SHOP.preference.textfield_minimum_basket}
               variant="outlined"
-              onChange={e => this.handleChange('minimum_basket', parseInt(e.target.value))}
+              onChange={this.handleChange}
               InputProps={{
                 inputProps: {
                   min: 0,

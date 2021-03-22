@@ -65,11 +65,13 @@ class all extends React.Component {
     };
   this.columnDefs=[
       {headerName: "Label", field: "label"},
-      {headerName: "Catégorie", field: "category.label"},
+      {headerName: "Catégorie", field: "category_label"},
       {headerName: "Pros", field: "professional_access", cellRenderer:'booleanCellRenderer'},
       {headerName: "Particuliers", field: "particular_access", cellRenderer:'booleanCellRenderer'},
       {headerName: "Illustration", field: "picture", cellRenderer:'pictureCellRenderer'},
+      {headerName: "Warning", field: "warning"},
     ]
+    // TODO : ajouter colonne warning si service pro sans prestations pro ou service particulier sans presta particuliers
   }
 
   componentDidMount() {
@@ -79,7 +81,22 @@ class all extends React.Component {
     axios.get('/myAlfred/api/admin/service/all')
       .then((response) => {
         let service = response.data;
-        this.setState({service: service.map( s => {s.picture='/'+s.picture; return s})});
+
+        this.setState({
+          service: service.map( s => {
+            s.warning=[]
+            s.picture='/'+s.picture;
+            s.category_label = [s.category.particular_label, s.category.professional_label].join('/');
+            if (s.professional_access && !s.prestations.find(p => p.professional_access)) {
+              s.warning.push('aucune prestation pro')
+            }
+            if (s.particular_access && !s.prestations.find(p => p.particular_access)) {
+              s.warning.push('aucune prestation particuliers')
+            }
+            s.warning=s.warning.join(',')
+            return s
+          })
+        });
       }).catch((error) => {
       console.log(error);
       if (error.response.status === 401 || error.response.status === 403) {

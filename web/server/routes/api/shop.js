@@ -64,12 +64,10 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
     return res.status(400).json(errors);
   }
 
-  console.log(`Shop creation received ${JSON.stringify(req.body)}`);
   Shop.findOne({
     alfred: req.user.id,
   })
     .then(shop => {
-      console.log('Found shop:' + JSON.stringify(shop));
       if (shop === null) {
         shop = new Shop();
         shop.alfred = req.user.id;
@@ -88,7 +86,6 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
       shop.verified_phone = req.body.verified_phone;
       shop.is_particular = req.body.is_particular;
       shop.is_professional = !shop.is_particular;
-      shop.level = req.body.level;
       shop.cesu = req.body.cesu;
       shop.cis = req.body.cis;
       shop.social_security = req.body.social_security;
@@ -150,15 +147,12 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
               su.save()
                 .then(su => {
                   console.log('Shop update ' + shop._id);
-                  Shop.findOne({alfred: req.user.id})
-                    .then(shop => {
-                      shop.services.push(su._id);
-                      shop.save();
-                      res.json(shop);
-                    });
+                  shop.services.push(su._id);
+                  shop.save();
                   User.findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
                     .then(user => {
                       console.log('Updated alfred');
+                      res.json(shop);
                     })
                     .catch(err => console.log('Error:' + JSON.stringify(err)));
                 })

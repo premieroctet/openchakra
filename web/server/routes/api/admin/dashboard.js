@@ -34,7 +34,7 @@ const path = require('path')
 const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
 const {counterArray, counterObjects} = require('../../../../utils/converters')
 const {ADMIN, MANAGER, EMPLOYEE} = require('../../../../utils/consts')
-const parse = require('url-parse')
+const csv_parse = require('csv-parse/lib/sync')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 var _ = require('lodash')
 const axios=require('axios')
@@ -1751,7 +1751,6 @@ const uploadService = multer({storage: storageService});
 // Add service for prestation
 // @Access private
 router.post('/service/all', uploadService.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
-  console.log('Req.body is ' + JSON.stringify(req.body));
   const {errors, isValid} = validateServiceInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1823,44 +1822,35 @@ router.post('/service/editPicture/:id', uploadService.single('picture'), passpor
 // View all service
 // @Access private
 router.get('/service/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  if (req.query.category != null) {
-    let label = req.query.category;
-    Service.find({category: mongoose.Types.ObjectId(label)})
+
+  const token = req.headers.authorization.split(' ')[1];
+  const decode = jwt.decode(token);
+  const admin = decode.is_admin;
+
+  if (admin) {
+    Service.find()
       .sort({'label': 1})
       .populate('tags', ['label'])
       .populate('equipments', 'label')
-      .populate('category', 'label')
+      .populate('category', 'particular_label professional_label')
+      .populate('prestations', 'particular_access professional_access')
       .then(service => {
+        if (!service) {
+          return res.status(400).json({msg: 'No service found'});
+        }
         res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
         res.setHeader('X-Total-Count', service.length);
         res.json(service);
-      });
-  } else {
-    const token = req.headers.authorization.split(' ')[1];
-    const decode = jwt.decode(token);
-    const admin = decode.is_admin;
 
-    if (admin) {
-      Service.find()
-        .sort({'label': 1})
-        .populate('tags', ['label'])
-        .populate('equipments', 'label')
-        .populate('category', 'label')
-        .then(service => {
-          if (!service) {
-            return res.status(400).json({msg: 'No service found'});
-          }
-          res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-          res.setHeader('X-Total-Count', service.length);
-          res.json(service);
-
-        })
-        .catch(err => res.status(404).json({service: 'No service found'}));
-    } else {
-      res.status(403).json({msg: 'Access denied'});
-    }
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({service: 'No service found'})
+      })
   }
-
+  else {
+    res.status(403).json({msg: 'Access denied'});
+  }
 });
 
 // @Route GET /myAlfred/api/admin/service/all/:id
@@ -2063,7 +2053,9 @@ router.get('/prestation/all', passport.authenticate('admin', {session: false}), 
   if (admin) {
     Prestation.find({}, 'label cesu_eligible particular_access professional_access')
       .sort({s_label: 1, category: 1})
-      .populate({path: 'service', select: 'label', populate: {path: 'category', select: 'label'}})
+      .populate({path: 'service', select: 'label', populate: {
+        path: 'category', select: 'particular_label professional_label'}
+      })
       .populate('filter_presentation', 'label')
       .populate('private_alfred', 'firstname name')
       .then(prestation => {
@@ -2481,8 +2473,7 @@ router.get('/ages', (req, res) => {
     }
   }
 
-  const alfred = JSON.parse(parse(req.originalUrl, true).query.alfred)
-
+  const alfred = JSON.parse(req.query.alfred || "false")
   const fltr = alfred ? {is_alfred: true} : {}
   User.find(fltr, 'birthday')
   .sort({'birthday': -1})
@@ -2804,7 +2795,7 @@ router.post('/prospect/add', passport.authenticate('admin', {session: false}), (
       Prospect.find({}, 'phone')
         .then (phones => {
           const contents = bufferToString(req.file.buffer)
-          var records = parse(contents, { columns: true, delimiter:';'})
+          var records = csv_parse(contents, { columns: true, delimiter:';'})
 
           const schema_fields = Object.keys(Prospect.schema.obj).sort()
           const schema_required = schema_fields.filter(k => Prospect.schema.obj[k].required && !Prospect.schema.obj[k].default)

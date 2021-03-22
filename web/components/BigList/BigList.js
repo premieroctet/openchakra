@@ -21,6 +21,7 @@ class BigList extends React.Component {
   constructor(props) {
     super(props)
     this.gridRef=React.createRef()
+    this.fitColumns=this.fitColumns.bind(this)
   }
 
   fitColumns = () => {
@@ -105,7 +106,25 @@ class BigList extends React.Component {
               enableFilter={true} pagination={true} defaultColDef={defaultColDef}
               frameworkComponents={frameworkComponents}
               {...this.props}
-              localeText= {{noRowsToShow: 'Aucun résultat'}}
+              localeText= {{
+                noRowsToShow: 'Aucun résultat',
+                applyFilter: 'Appliquer',
+                resetFilter: 'Annuler',
+                equals: 'Egal',
+                notEqual: 'Différent',
+                lessThan: '<',
+                greaterThan: '>',
+                lessThanOrEqual: '<=',
+                greaterThanOrEqual: '>=',
+                inRange: 'Dans',
+                inRangeStart: 'Entre',
+                inRangeEnd: 'et',
+                contains: 'Contient',
+                notContains: 'Ne contient pas',
+                startsWith: 'Comence par',
+                endsWith: 'Finit par',
+                filterOoo: 'Filtrer...'
+              }}
               onRowClicked={ this.props.onRowClicked}
               onCellClicked={ this.props.onCellClicked}
               onGridReady={this.fitColumns}

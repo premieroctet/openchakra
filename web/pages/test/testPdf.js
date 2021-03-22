@@ -1,9 +1,8 @@
-import LayoutPdf from "../../hoc/Layout/Pdf/LayoutPdf";
 import React from "react";
 import {PDFDownloadLink} from "@react-pdf/renderer";
 import NoSSR from 'react-no-ssr';
 import Grid from "@material-ui/core/Grid";
-import PdfGeneration from "../../components/BillingGeneration/PdfGeneration";
+import BillingGeneration from "../../components/BillingGeneration/BillingGeneration";
 
 class TestPdf extends React.Component {
   constructor(props) {
@@ -32,7 +31,7 @@ class TestPdf extends React.Component {
               <Grid onClick={this.setLoading}
               >
                 <PDFDownloadLink
-                  document={<PdfGeneration/>}
+                  // document={<BillingGeneration/>}
                   fileName="facture.pdf"
                   style={{
                     textDecoration: 'none',

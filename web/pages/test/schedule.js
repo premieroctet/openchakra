@@ -19,10 +19,10 @@ class calendarTest extends React.Component {
     return (
       <Grid>
         <Grid><h1>Calendrier semaine</h1>
-        <Schedule  nbSchedule={1} mode={'week'}/>
+        <Schedule style={classes} nbSchedule={1} mode={'week'}/>
         </Grid>
         <Grid><h1>Calendrier mois</h1>
-        <Schedule  nbSchedule={3}/>
+        <Schedule style={classes} nbSchedule={3}/>
         </Grid>
       </Grid>
     )
@@ -30,4 +30,4 @@ class calendarTest extends React.Component {
 
 }
 
-export default calendarTest;
+export default calendarTest

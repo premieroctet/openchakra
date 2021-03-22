@@ -27,6 +27,7 @@ const  {BigList}=require('../../../components/BigList/BigList')
 const moment = require('moment-timezone');
 moment.locale('fr');
 const {MANGOPAY_CONFIG}=require('../../../config/config')
+const {insensitiveComparator}=require('../../../utils/text')
 
 
 const styles = theme => ({
@@ -38,7 +39,7 @@ const styles = theme => ({
   },
   card: {
     padding: '1.5rem 3rem',
-    marginTop: '100px',
+    marginTop: '20px',
   },
   cardContant: {
     flexDirection: 'column',
@@ -68,10 +69,10 @@ class all extends React.Component {
 
   this.columnDefs=[
       {headerName: "Statut", field: "status", cellRenderer: 'statusCellRenderer', filter:'statusCellFilter'},
-      {headerName: "Prénom", field: "firstname"},
-      {headerName: "Nom", field: "name"},
-      {headerName: "Email", field: "email"},
-      {headerName: "Ville", field: "billing_address.city"},
+      {headerName: "Prénom", field: "firstname", comparator: insensitiveComparator},
+      {headerName: "Nom", field: "name", comparator: insensitiveComparator},
+      {headerName: "Email", field: "email", comparator: insensitiveComparator},
+      {headerName: "Ville", field: "billing_address.city", comparator: insensitiveComparator},
       {headerName: "Né(e) le", field: "birthday_moment", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter',},
       {headerName: "Inscrit le", field: "creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter', initialSort: 'desc'},
       {headerName: "Création boutique", field: "shop.creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter'},

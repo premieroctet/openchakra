@@ -8,7 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Divider from '@material-ui/core/Divider';
-import styles from '../../../static/css/components/dashboard/ServicesCompany/ServicesCompany';
+import styles from '../../../static/css/components/Dashboard/ServicesCompany/ServicesCompany';
 import withStyles from "@material-ui/core/styles/withStyles";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import Button from '@material-ui/core/Button';

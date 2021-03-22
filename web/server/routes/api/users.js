@@ -646,6 +646,7 @@ router.post('/login', (req, res) => {
   const {errors, isValid} = validateLoginInput(req.body);
 
   if (!isValid) {
+    console.warn(`Invalid login data:${JSON.stringify(errors)}`)
     return res.status(400).json(errors);
   }
 
@@ -658,6 +659,7 @@ router.post('/login', (req, res) => {
     .then(user => {
       // Check for user
       if (!user) {
+        console.warn(`Invalid login : no user for ${email}`)
         errors.username = 'Mot de passe ou email incorrect';
         return res.status(400).json(errors);
       }
@@ -695,7 +697,9 @@ router.post('/login', (req, res) => {
                 }).status(201).json();
               });
             });
-          } else {
+          }
+          else {
+            console.warn(`Invalid login : bad password ${password} for ${email}`)
             errors.password = 'Mot de passe ou email incorrect';
             return res.status(400).json(errors);
           }

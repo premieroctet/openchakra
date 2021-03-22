@@ -7,7 +7,7 @@ import axios from 'axios';
 import Select from 'react-select'
 const {matches, normalize} = require('../../../utils/text');
 import {SHOP} from '../../../utils/i18n';
-
+const {PART, PRO}=require('../../../utils/consts')
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -30,37 +30,16 @@ class SelectService extends React.Component {
     setAxiosAuthentication()
     axios.get(kw_url)
       .then((response) => {
-        let data = response.data;
-        let services = [];
-        Object.keys(data).forEach((k) => {
-          data[k].forEach((s) => {
-            // FIX: passer les keyowrds autrement dans le back
-            // Dont show services to exclude (i.e. already in the shop)
-            if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
-              s.keywords = s.keywords.map(k => normalize(k)).join(' ').toLowerCase(),
-              services.push(s);
-              if (this.state.service == null && s.id == this.props.service) {
-                this.setState({service: s});
-              }
-            }
-          });
-        });
+        let services = response.data;
         this.setState({services: services, loading: false});
       }).catch(error => {
       console.error(error);
     });
   };
 
-  service2Option = service => {
-    return {
-      label: `${service.label}`,
-      value: service.id,
-      keywords: service.keywords,
-    }
-  };
-
   onChange = (option) =>{
-    const opt_id = option ? option.value : null;
+
+    const opt_id = option ? option._id : null;
     this.setState({service: opt_id});
     this.props.onChange(opt_id);
   };
@@ -82,24 +61,21 @@ class SelectService extends React.Component {
     const {classes, professional_access, particular_access} = this.props;
     const {services, loading} = this.state;
 
-    const pro_options = services.filter( s => s.professional_access).map(s => this.service2Option(s));
-    const part_options = services.filter( s => s.particular_access).map(s => this.service2Option(s));
-
     var options;
     if (professional_access && particular_access) {
       options=[
         {
           label: SHOP.service.section_company,
-          options: pro_options
+          options: services[PRO]
         },
         {
           label: SHOP.service.section_particular,
-          options: part_options
+          options: services[PART]
         }
       ]
     }
     else {
-      options = professional_access ? pro_options : part_options
+      options = professional_access ? services[PRO] : services[PART]
     }
 
     const tabbedStyle = {
@@ -118,7 +94,15 @@ class SelectService extends React.Component {
             <h3 style={{color: '#696767'}}>{SHOP.service.subtitle}</h3>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-            <h4 className={classes.policySizeSubtitle}>{SHOP.service.content_particular_professional}</h4>
+            <h4 className={classes.policySizeSubtitle}>{
+              professional_access && particular_access ?
+                SHOP.service.content_particular_professional
+                :
+                professional_access ?
+                  SHOP.service.content_professional
+                  :
+                  SHOP.service.content_particular
+            }</h4>
           </Grid>
         </Grid>
           {this.isCreation() ?
