@@ -321,6 +321,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
 // @Route DELETE /myAlfred/api/shop/current/delete
 // Delete one shop
 // @Access private
+// TODO : supperimer serviceUsers et prestations personnalisées
 router.delete('/current/delete', passport.authenticate('jwt', {session: false}), (req, res) => {
   Shop.findOne({alfred: req.user.id})
     .populate('alfred')

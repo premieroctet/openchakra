@@ -60,19 +60,25 @@ class creaShop extends React.Component {
     this.state = {
       mobileOpen: false,
       activeStep: 0,
-      user_id: null,
       saving: false,
       availabilities: [],
       currentUser:{},
       shop: {
-        particular_access: true,
-        professional_access: false,
+        // Shop attributes
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: 'Merci pour votre réservation!',
         cancel_mode: CANCEL_MODE.FLEXIBLE,            // FLEXIBLE/MODERATE/STRICT
         is_particular: true,        // true/false : particulier.pro
-        company: {name: null, creation_date: null, siret: null, naf_ape: null, status: null}, //
+        company: {name: null, creation_date: null, siret: null, naf_ape: null, status: null}, 
+        cesu: null,
+        cis: false,
+        social_security: null,
+        vat_subject: false,
+        vat_number: null,
+        // ServiceUser attributes
+        particular_access: true,
+        professional_access: false,
         is_certified: false,
         service: null,
         description: '', // Description de l'expertise
@@ -96,11 +102,7 @@ class creaShop extends React.Component {
         exerience_skills: [],
         service_address: null,
         perimeter: null,
-        cesu: null,
-        cis: false,
-        social_security: null,
-        vat_subject: false,
-        vat_number: null,
+        // End
       },
     };
     this.scheduleDrawer = React.createRef()
@@ -120,7 +122,6 @@ class creaShop extends React.Component {
         let shop = this.state.shop;
         shop.service_address = user.billing_address;
         this.setState({
-          user_id: user._id,
           shop: shop,
           currentUser: user
         });
@@ -263,7 +264,7 @@ class creaShop extends React.Component {
               })
               .catch(err => console.error(err));
           }
-          Router.push(`/profile/services?user=${this.state.user_id}`)
+          Router.push(`/profile/services?user=${this.state.currentUser._id}`)
         })
         .catch(err => {
           this.setState({saving: false});
@@ -481,7 +482,7 @@ class creaShop extends React.Component {
               <img
                 alt={'logo_myAlfred'}
                 title={'logo_myAlfred'}
-                src={'../../../static/assets/icon/logo.svg'}
+                src={'/static/assets/icon/logo.svg'}
                 height={64}
                 style={{filter: 'invert(1)'}}/>
             </Grid>

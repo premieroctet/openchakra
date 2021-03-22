@@ -52,6 +52,7 @@ const ServiceSchema = new Schema({
   },
   s_label: {
     type: String,
+    required: true,
   },
   // Particulars can book
   particular_access: {

@@ -9,10 +9,12 @@ const PrestationSchema = new Schema({
   },
   price: {
     type: String,
+    required: true,
   },
   service: {
     type: Schema.Types.ObjectId,
     ref: 'service',
+    required: true,
   },
   billing: [{
     type: Schema.Types.ObjectId,
@@ -54,6 +56,7 @@ const PrestationSchema = new Schema({
   },
   s_label: {
     type: String,
+    required: true,
   },
   cesu_eligible: {
     type: Boolean,
