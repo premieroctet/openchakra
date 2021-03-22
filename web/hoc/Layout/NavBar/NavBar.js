@@ -282,6 +282,7 @@ class NavBar extends Component {
   };
 
   modalMobileSearchBarInput = (classes) => {
+
     return (
       <SwipeableDrawer
         anchor={'bottom'}
@@ -317,10 +318,10 @@ class NavBar extends Component {
                 style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? 'Quel service recherchez-vous ?' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
             </Grid>
           </Grid>
-          <Grid item container spacing={3} style={{margin: 0}}>
-            <Grid item xs={12} style={{display: 'flex', justifyContent: 'center', paddingBottom: 0, paddingTop: 0}}>
-              {
-                this.state.mobileStepSearch === 0 ?
+          <Grid item container spacing={3} style={{margin: 0, width: '100%'}}>
+            {
+              this.state.mobileStepSearch === 0 ?
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                   <TextField
                     value={this.state.keyword}
                     onChange={this.onChange}
@@ -330,70 +331,54 @@ class NavBar extends Component {
                       e.key === 'Enter' && e.preventDefault();
                     }}
                     variant="outlined"
-                    classes={{root: classes.modalMobileSearchBarInputTextField}}
+                    style={{width: '100%'}}
                   />
+                </Grid>
+                :
+                this.state.user ?
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <FormControl variant="outlined">
+                      <Select
+                        id="outlined-select-currency"
+                        value={this.state.selectedAddress || 'main'}
+                        name={'selectedAddress'}
+                        onChange={(e) => {
+                          this.onChange(e);
+                        }}
+                        classes={{selectMenu: classes.fitlerMenuLogged}}
+                      >
+                        {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
+                          <MenuItem value={_id} key={index}>
+                            { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
+                          </MenuItem>
+                        ))}
+                        <MenuItem value={'all'}>
+                          Partout, Rechercher des Alfred partout
+                        </MenuItem>
+                        <MenuItem value={'addAddress'}>
+                          <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                            Ajouter une adresse
+                          </Typography>
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
                   :
-                  this.state.user ?
-                    <Grid>
-                      <FormControl variant="outlined">
-                        <Select
-                          id="outlined-select-currency"
-                          value={this.state.selectedAddress || 'main'}
-                          name={'selectedAddress'}
-                          onChange={(e) => {
-                            this.onChange(e);
-                          }}
-                          classes={{selectMenu: classes.fitlerMenuLogged}}
-                        >
-                          {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
-                            <MenuItem value={_id} key={index}>
-                              { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
-                            </MenuItem>
-                          ))}
-                          <MenuItem value={'all'}>
-                            Partout, Rechercher des Alfred partout
-                          </MenuItem>
-                          <MenuItem value={'addAddress'}>
-                            <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                              Ajouter une adresse
-                            </Typography>
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    :
-                    <TextField
-                      item
-                      xs={12}
-                      classes={{root: classes.modalMobileSearchBartTextFieldWhereP}}
-                      value={this.state.city}
-                      label={SEARCHBAR.where}
-                      variant={'outlined'}
-                      InputProps={{
-                        inputComponent: (props) => {
-                          const { inputRef, onChange, ...other } = props;
-                          return (
-                            <AlgoliaPlaces
-                              {...other}
-                              placeholder={''}
-                              className={classes.navbarAlgoliaPlace}
-                              options={{
-                                appId: 'plKATRG826CP',
-                                apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                                language: 'fr',
-                                countries: ['fr'],
-                                type: 'city',
-                              }}
-                              onChange={(suggestion) => this.onChangeCity(suggestion)}
-                              onClear={() => this.setState({city: '', gps: ''})}
-
-                            />)
-                        },
-                        disableUnderline: true
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  classes={{root: classes.navbarRootTextFieldWhereP}}>
+                    <AlgoliaPlaces
+                      placeholder={SEARCHBAR.where}
+                      options={{
+                        appId: 'plKATRG826CP',
+                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                        language: 'fr',
+                        countries: ['fr'],
+                        type: 'city',
                       }}
+                      onChange={(suggestion) => this.onChangeCity(suggestion)}
+                      onClear={() => this.setState({city: '', gps: null})}
                     />
-              }
-            </Grid>
+                  </Grid>
+            }
           </Grid>
           <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '90%'}}>
@@ -508,7 +493,6 @@ class NavBar extends Component {
                 numberOfMonths={1}
               />
             </Grid>
-
           </Grid>
         </DialogContent>
         <DialogActions>

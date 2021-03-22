@@ -96,6 +96,29 @@ export default theme => ({
       display: 'none',
     }
   },
+  navbarRootTextFieldWhereP:{
+    width: '100%',
+    '& .algolia-places':{
+      height: '100%',
+      color:'rgba(0, 0, 0, 0.87)',
+      width: '100%',
+      alignItems: 'center',
+      display: 'inline-flex',
+      lineHeight: '1.1876em',
+      position: 'relative',
+      fontWeight: 400,
+      fontSize: '1rem',
+    },
+    '& input':{
+      padding: '18.5px 14px',
+      height: '100%',
+      opacity: '0.65',
+      transition: 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    },
+    '& .ap-input-icon':{
+      display: 'none',
+    }
+  },
   buttonIgnore:{
     textTransform: 'initial',
     color: 'rgba(39,37,37,35%)'
@@ -291,23 +314,6 @@ export default theme => ({
   navbarRootTextFieldP: {
     marginLeft: 20,
     flex: 1,
-    fontFamily: theme.typography.text.fontFamily,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    "& .MuiFormLabel-root": {
-      fontWeight: 'bold',
-    },
-    '& .MuiInputBase-input::placeholder':{
-      opacity: '0.5'
-    },
-    '& div':{
-      width:'100%'
-    }
-  },
-  navbarRootTextFieldWhereP:{
-    flex: 1,
-    marginLeft: 20,
     fontFamily: theme.typography.text.fontFamily,
     fontSize: theme.typography.placeHolder.fontSize,
     fontWeight:  theme.typography.placeHolder.fontWeight,
