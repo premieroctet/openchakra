@@ -701,7 +701,7 @@ class NavBar extends Component {
         <AppBar position={'static'} className={classes.navbarAppBar} style={{backgroundColor: is_b2b_style(user) && companyPage || this.state.ifHomePage ? 'transparent' : is_b2b_style(user) && !companyPage ?'#353A51' : null}}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
-              <Grid container  style={{justifyContent: companyPage ? 'end' : '', width: '100%', margin:0}}>
+              <Grid container  style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin:0}}>
                 {
                   companyPage ? null :
                     <Grid
