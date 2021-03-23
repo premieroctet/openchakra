@@ -20,7 +20,6 @@ export default theme => ({
     letterSpacing: '-0.0415625em',
     lineHeight: 1.25,
     color:'#FFFFFF',
-    displa: 'flex',
     flexDirection:'column',
     display: 'inline-block',
     [theme.breakpoints.down('xs')]:{
@@ -66,10 +65,10 @@ export default theme => ({
     color: theme.palette.white.main,
   },
   illuStyle:{
-    width: '80%'
+    width: '80%',
   },
   illuContainer:{
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'flex-end'
   }
 })

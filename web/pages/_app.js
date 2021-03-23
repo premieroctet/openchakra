@@ -5,7 +5,6 @@ import {MuiThemeProvider} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 import getPageContext from '../lib/getPageContext';
-import 'react-toastify/dist/ReactToastify.css';
 import 'react-tabs/style/react-tabs.css';
 import 'react-input-range/lib/css/index.css';
 import '../static/stylesfonts.css';
@@ -62,8 +61,6 @@ class MyApp extends App {
                 crossOrigin=""/>
           <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
           <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
-          <script src="https://www.googletagmanager.com/gtag/js?id=G-5ZTWZ756HY"/>
-          <script src="/static/assets/ga.js"/>
           <script src="https://sibforms.com/forms/end-form/build/main.js"/>
           <link rel="preconnect" href="https://fonts.gstatic.com"/>
           <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>

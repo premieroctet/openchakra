@@ -1,61 +1,46 @@
-
-
 .fonts {
-    font-family: 'Montserrat', sans-serif;
-
+  font-family: 'Montserrat', sans-serif;
 }
 
 p {
-    font-family: 'Montserrat', sans-serif;
-
-
+  font-family: 'Montserrat', sans-serif;
 }
 
 h2 {
-      font-family: 'Montserrat', sans-serif;
-
-
-    color: #696767;
+  font-family: 'Montserrat', sans-serif;
+  color: #696767;
 }
 
 h4 {
-    font-family: 'Montserrat', sans-serif;
-
-
-    color: #696767;
+  font-family: 'Montserrat', sans-serif;
+  color: #696767;
 }
 
 h1 {
-    font-family: 'Montserrat', sans-serif;
-
-
-    color: #696767;
+  font-family: 'Montserrat', sans-serif;
+  color: #696767;
 }
 
 h3 {
-    font-family: 'Montserrat', sans-serif;
-
-
-    color: #696767;
+  font-family: 'Montserrat', sans-serif;
+  color: #696767;
 }
 
 a {
-    font-family: 'Montserrat', sans-serif;
-
-
+  font-family: 'Montserrat', sans-serif;
 }
 
 body {
-    background-color: white !important;
+  background-color: white !important;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    /* display: none; <- Crashes Chrome on hover */
-    -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
 input[type=number] {
-    -moz-appearance: textfield; /* Firefox */
+  -moz-appearance: textfield; /* Firefox */
 }

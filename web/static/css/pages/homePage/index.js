@@ -13,23 +13,9 @@ export default theme => ({
   },
   bannerSize: {
     width: '60%',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '80%'
     }
-  },
-  navbarInput: {
-    borderBottom: 'inherit',
-    '&::placeholder': {
-      opacity: '0.55',
-      color: theme.palette.placeHolder.main,
-    }
-  },
-
-
-  bannerPresentationContainerIllustration: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '60%'
   },
   navbarAndBannerContainer: {
     height: '80vh',
@@ -50,7 +36,7 @@ export default theme => ({
   bannerPresentationContainer: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '7vh',
+    marginTop: '5vh',
   },
   mainContainerStyle: {
     justifyContent: 'center',
@@ -61,25 +47,6 @@ export default theme => ({
     justifyContent: 'center',
   },
 
-  becomeAlfredMainContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    padding: theme.padding.homePage.section.padding
-  },
-  becomeAlfredContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  becomeAlfredButton: {
-    color: theme.palette.primary.main,
-    fontWeight: theme.typography.blackButton.fontWeight,
-    fontFamily: theme.typography.blackButton.fontFamily,
-    backgroundColor: theme.palette.white.main,
-    borderRadius: theme.border.blackButton.borderRadius,
-    padding: theme.padding.blackButton.padding,
-  },
   resaServiceButton: {
     color: '#F8CF61',
     fontWeight: theme.typography.blackButton.fontWeight,
@@ -87,18 +54,6 @@ export default theme => ({
     backgroundColor: theme.palette.white.main,
     borderRadius: theme.border.blackButton.borderRadius,
     padding: theme.padding.blackButton.padding,
-  },
-  becomeAlfredTitle: {
-    color: theme.palette.white.main,
-    fontFamily: theme.typography.subTitle.fontFamily,
-    fontWeight: theme.typography.subTitle.fontWeight,
-    margin: theme.typography.subTitle.margin,
-  },
-  becomeAlfredText: {
-    fontFamily: theme.typography.text.fontFamily,
-    color: theme.palette.white.main,
-    fontWeight: theme.typography.text.fontWeight,
-    fontSize: theme.typography.text.fontSize
   },
   becomeAlfredComponent: {
     justifyContent: 'center',
@@ -142,22 +97,4 @@ export default theme => ({
     justifyContent: 'center',
     backgroundColor: 'rgba(228, 228, 228, 8)'
   },
-  categoryCardRoot: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-
-  cardPreviewMainStyle: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
-  },
-  menuHeaderActive: {
-    '&:active': {
-      color: '#84A5E0',
-      borderBottom: '#84A5E0'
-    }
-  }
 })

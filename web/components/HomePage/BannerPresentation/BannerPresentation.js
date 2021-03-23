@@ -49,7 +49,6 @@ class BannerPresentation extends React.Component {
             <img title={'illuB2b'} alt={'illuB2b'} src={`../../../static/assets/img/homePage/${is_b2b_style() ? 'b2bIllu' : 'illuHeader'}.svg`} className={classes.illuStyle}/>
           </Grid>
         </Hidden>
-
       </Grid>
     );
   }
