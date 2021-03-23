@@ -203,6 +203,8 @@ export default theme => ({
   navbarTabRoot:{
     opacity: 'inherit',
     color: theme.palette.white.main,
+    fontWeight:' bold',
+    textTransform: 'initial',
     transition: '0.3s',
     '&:hover':{
       color: 'rgba(255, 255, 142, 1)'
@@ -211,6 +213,8 @@ export default theme => ({
   navbarTabRootB2b:{
     opacity: 'inherit',
     color: theme.palette.white.main,
+    fontWeight:' bold',
+    textTransform: 'initial',
     transition: '0.3s',
     '&:hover':{
       color: 'rgb(176, 205, 200)'
