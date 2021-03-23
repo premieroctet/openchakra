@@ -70,8 +70,9 @@ const BANNER_PRESENTATION = {
   button: 'Découvrir'
 };
 const B2B_BANNER_PRESENTATION = {
-  title: 'Les micro-services qui permettent des maxi-économies',
-  text: 'Stressez moins. En quelques clics, trouvez la personne et le service dont vous avez besoin.',
+  title: 'Des milliers de talents',
+  subTitle: 'Au service de votre entreprise',
+  text: 'Trouvez le prestataire idéal pour répondre aux besoins ponctuels de votre entreprise & de vos collaborateurs. Des milliers de profils vérifiés et qualifiés au service de vos projets, votre stratégie, vos collaborateurs et vos locaux ! Un service simple et sécurisant !',
   button: 'Découvrir'
 };
 

@@ -1,33 +1,48 @@
+
+
 .fonts {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+
 }
 
 p {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+
+
 }
 
 h2 {
-    font-family: 'Josefin Sans', sans-serif;
+      font-family: 'Montserrat', sans-serif;
+
+
     color: #696767;
 }
 
 h4 {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+
+
     color: #696767;
 }
 
 h1 {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+
+
     color: #696767;
 }
 
 h3 {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+
+
     color: #696767;
 }
 
 a {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+
+
 }
 
 body {
@@ -43,12 +58,4 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
     -moz-appearance: textfield; /* Firefox */
-}
-
-.Toastify__toast--info {
-    background: #2FBCD3;
-}
-
-.Toastify__toast--error {
-    background: #F8727F;
 }

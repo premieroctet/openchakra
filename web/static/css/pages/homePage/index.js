@@ -17,24 +17,6 @@ export default theme => ({
       width: '80%'
     }
   },
-  infoBarMainStyle: {
-    backgroundColor: theme.palette.backgroundGrey.main,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  infoBarColorText: {
-    color: theme.palette.lightBlack.main,
-    fontSize: theme.typography.infoBar.fontSize,
-    lineHeight: theme.typography.infoBar.lineHeight,
-    fontFamily: theme.typography.infoBar.fontFamily,
-    margin: 0,
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center'
-    }
-  },
-  showmoreContainer: {
-    marginLeft: 5,
-  },
   navbarInput: {
     borderBottom: 'inherit',
     '&::placeholder': {
@@ -50,25 +32,13 @@ export default theme => ({
     width: '60%'
   },
   navbarAndBannerContainer: {
-    justifyContent: 'center',
-    height: '85vh',
-    backgroundImage: 'url(../../assets/img/homePage/illuHeader.png)',
-    backgroundColor: 'rgba(207,223,252,1)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
-  },
-  navbarAndBannerContainerB2b: {
-    justifyContent: 'center',
-    height: '85vh',
-    backgroundImage: 'url(../../assets/img/homePage/illuB2B-02.svg)',
-    backgroundColor: '#3c4047', //'rgba(207,223,252,1)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
+    height: '80vh',
   },
   navbarAndBannerBackground: {
-    width: '100%',
+    backgroundColor:  theme.palette.primary.main,
+  },
+  navbarAndBannerBackgroundb2b: {
+    backgroundColor: theme.palette.b2b.main,
   },
   navbarComponentPosition: {
     display: 'flex',
@@ -80,7 +50,7 @@ export default theme => ({
   bannerPresentationContainer: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '10vh',
+    marginTop: '7vh',
   },
   mainContainerStyle: {
     justifyContent: 'center',
@@ -184,29 +154,6 @@ export default theme => ({
     justifyContent: 'center',
     flexDirection: 'column'
   },
-  infoBarLinkContainer: {
-    paddingTop: theme.padding.infoBar.paddingTop,
-    paddingBottom: theme.padding.infoBar.paddingBottom,
-    alignItems: 'center',
-    display: 'flex',
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column'
-    }
-  },
-  infoBarPicsContainer: {
-    width: 15,
-    height: 15,
-    marginRight: 5
-  },
-
-  shomoreLink: {
-    color: theme.palette.link.main,
-    fontSize: theme.typography.infoBar.fontSize,
-    lineHeight: theme.typography.infoBar.lineHeight,
-    fontFamily: theme.typography.infoBar.fontFamily,
-    fontWeight: theme.typography.infoBar.fontWeight
-  },
-
   menuHeaderActive: {
     '&:active': {
       color: '#84A5E0',

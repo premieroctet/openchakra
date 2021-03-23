@@ -5,8 +5,8 @@ export default theme => ({
     alignItems: 'center',
   },
   infoBarLinkContainer:{
-    paddingTop: theme.padding.infoBar.paddingTop,
-    paddingBottom: theme.padding.infoBar.paddingBottom,
+    paddingTop: 10,
+    paddingBottom: 10,
     alignItems: 'center',
     display: 'flex',
     [theme.breakpoints.down('md')]:{

@@ -683,6 +683,7 @@ class NavBar extends Component {
     const {classes} = this.props;
 
     const logged = user != null
+
     const modalLogin = () => {
       return (
         <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={'connect'}/>
