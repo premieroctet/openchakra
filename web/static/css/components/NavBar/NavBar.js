@@ -201,11 +201,16 @@ export default theme => ({
     alignItems: 'center',
   },
   navbarTabRoot:{
-    textTransform: 'inherit',
     opacity: 'inherit',
     color: theme.palette.white.main,
-    fontWeight: theme.typography.buttonLink.fontWeight,
-    fontSize: theme.typography.buttonLink.fontSize,
+    transition: '0.3s',
+    '&:hover':{
+      color: 'rgba(255, 255, 142, 1)'
+    }
+  },
+  navbarTabRootB2b:{
+    opacity: 'inherit',
+    color: theme.palette.white.main,
     transition: '0.3s',
     '&:hover':{
       color: 'rgb(176, 205, 200)'

@@ -103,7 +103,8 @@ class Home extends React.Component {
                 <Grid className={classes.generalWidthContainer}>
                   <ResaService/>
                 </Grid>
-              </Grid>}
+              </Grid>
+          }
           <Hidden only={['xs', 'sm']}>
             {
               is_b2b_style() ? null :

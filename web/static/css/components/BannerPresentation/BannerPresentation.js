@@ -20,8 +20,8 @@ export default theme => ({
     letterSpacing: '-0.0415625em',
     lineHeight: 1.25,
     color:'#FFFFFF',
-    flexDirection:'column',
     display: 'inline-block',
+    margin:0,
     [theme.breakpoints.down('xs')]:{
       fontSize: '25px'
     }
@@ -30,7 +30,10 @@ export default theme => ({
     fontSize: '60px',
     fontWeight: 900,
     lineHeight: '1em',
-    display: 'block'
+    display: 'block',
+    [theme.breakpoints.down('xs')]:{
+      fontSize: '30px'
+    }
   },
   titleSpan:{
     fontSize: '20px',

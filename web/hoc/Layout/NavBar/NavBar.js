@@ -729,25 +729,33 @@ class NavBar extends Component {
                     >
                       <Tabs value={false} aria-label="simple tabs example">
                         <Link href={'/search?search=1'}>
-                          <Tab classes={{root: classes.navbarTabRoot}}
-                               label={NAVBAR_MENU.ourServices}/>
+                          <Tab
+                            classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                            label={NAVBAR_MENU.ourServices}
+                          />
                         </Link>
                         {user ?
                           user.is_alfred ?
                             <Link href={`/profile/services?user=${user._id}`}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.myServices}/>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={NAVBAR_MENU.myServices}
+                              />
                             </Link>
                             :
                             <Link href={'/creaShop/creaShop'}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.registerServices}/>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={NAVBAR_MENU.registerServices}
+                              />
                             </Link>
                           :
                           <Link href={'/'}>
                             <Grid onClick={this.handleOpenRegister}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.registerServices}/>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={NAVBAR_MENU.registerServices}
+                              />
                             </Grid>
 
                           </Link>
@@ -755,12 +763,16 @@ class NavBar extends Component {
                         {
                           !is_b2b_style(user) ?
                             <Link href={'/professional'}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.businessSide}/>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={NAVBAR_MENU.businessSide}
+                              />
                             </Link> : is_development() ?
                             <Link href={'/particular'}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={'Retour Alfred Particuliers'}/>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={'Retour Alfred Particuliers'}
+                              />
                             </Link> : null
 
                         }

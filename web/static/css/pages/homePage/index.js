@@ -19,9 +19,16 @@ export default theme => ({
   },
   navbarAndBannerContainer: {
     height: '80vh',
+    [theme.breakpoints.down('xs')]:{
+      height: 'inherit'
+    }
   },
   navbarAndBannerBackground: {
-    backgroundColor:  theme.palette.primary.main,
+    backgroundImage: 'url(../../assets/img/homePage/illuHeader.png)',
+    backgroundColor: 'rgba(207,223,252,1)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
   },
   navbarAndBannerBackgroundb2b: {
     backgroundColor: theme.palette.b2b.main,

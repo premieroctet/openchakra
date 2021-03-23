@@ -65,8 +65,9 @@ const NAVBAR_MENU = {
 };
 
 const BANNER_PRESENTATION = {
-  title: 'Et si vous pouviez réserver n\'importe quel service ?',
-  text: 'Stressez moins. En quelques clics, trouvez la personne et le service dont vous avez besoin.',
+  title: 'La réservation en ligne',
+  subTitle: 'De vos services du quotidien',
+  text: 'Artisans, indépendants, entrepreneurs, étudiants... en quelques clics trouvez la personne et le service dont vous avez besoin.',
   button: 'Découvrir'
 };
 const B2B_BANNER_PRESENTATION = {
