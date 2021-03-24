@@ -45,9 +45,6 @@ yarn.lock
 .LSOverride
 .DS_Store
 
-# Icon must end with two \r
-Icon
-
 # Thumbnails
 ._*
 # Files that might appear in the root of a volume
