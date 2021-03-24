@@ -44,7 +44,7 @@ class companyDashboard extends React.Component{
     super(props);
     this.state={
       mobileOpen: false,
-      activeStep: 0,
+      activeStep: 1,
       isMicroService: true,
       sideBarLabels:[
         {

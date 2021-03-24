@@ -1,30 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const jwt = require('jsonwebtoken');
-const keys = require('../../config/keys');
-const bcrypt = require('bcryptjs');
-const mongoose = require('mongoose');
-const path = require('path');
-const axiosCookieJarSupport = require('axios-cookiejar-support').default;
-const tough = require('tough-cookie');
-const {is_production, is_validation}=require('../../../config/config');
-const {validateCompanyProfile, validateCompanyMember, validateCompanyGroup} = require('../../validation/simpleRegister');
 const moment = require('moment');
 moment.locale('fr');
-const Company = require('../../models/Company');
 const User = require('../../models/User');
 const Group = require('../../models/Group');
 const Service = require('../../models/Service');
-const crypto = require('crypto');
-const multer = require('multer');
 const axios = require('axios');
-const {computeUrl} = require('../../../config/config');
-const emptyPromise = require('../../../utils/promise');
-const {ADMIN, EMPLOYEE, MANAGER} = require('../../../utils/consts')
-var _ = require('lodash')
-const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
-
+const {validateCompanyGroup} = require("../../validation/simpleRegister");
+const {MANAGER} = require('../../../utils/consts')
 
 axios.defaults.withCredentials = true;
 
@@ -115,7 +99,7 @@ router.post('/', passport.authenticate('b2badmin', {session: false}), (req, res)
         return
       }
       Group.create({name : req.body.name, company : company_id})
-        .then ( group => { res.json(group) })
+        .then ( group => {res.json(group)})
         .catch ( err => {
           console.error(err)
           res.status(500).json({error : JSON.stringify(err)})

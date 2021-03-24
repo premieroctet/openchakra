@@ -612,12 +612,12 @@ class Team extends React.Component{
                     name={'plafondGroupe'}
                     value={plafondGroupe}
                     type={'number'}
-                    InputProps={{ inputProps: { min: 0 } }}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
                     onChange={this.handleChange}
                     InputProps={{
                       endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                      inputProps: { min: 0 }
                     }}
                   />
                 </Grid>
