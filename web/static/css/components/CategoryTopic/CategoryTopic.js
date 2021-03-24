@@ -37,13 +37,11 @@ export default theme => ({
     width: '100%'
   },
   categoryTitle:{
-    fontFamily: theme.typography.sectionTitle.fontFamily,
     fontWeight: theme.typography.sectionTitle.fontWeight,
     fontSize: theme.typography.sectionTitle.fontSize,
     margin: theme.typography.sectionTitle.margin
   },
   categoryText:{
-    fontFamily: theme.typography.text.fontFamily,
     color: theme.typography.text.color,
     fontWeight: theme.typography.text.fontWeight,
     fontSize: theme.typography.text.fontSize,
@@ -63,7 +61,6 @@ export default theme => ({
     border: theme.border.whiteButton.border,
     textTransform: theme.typography.textTransform,
     padding: theme.padding.whiteButton.padding,
-    fontFamily: theme.typography.whiteButton.fontFamily,
     fontWeight: theme.typography.whiteButton.fontWeight
   },
 })

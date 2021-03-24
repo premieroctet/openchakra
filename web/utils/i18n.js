@@ -65,13 +65,15 @@ const NAVBAR_MENU = {
 };
 
 const BANNER_PRESENTATION = {
-  title: 'Et si vous pouviez réserver n\'importe quel service ?',
-  text: 'Stressez moins. En quelques clics, trouvez la personne et le service dont vous avez besoin.',
+  title: 'La réservation en ligne',
+  subTitle: 'De vos services du quotidien',
+  text: 'Artisans, indépendants, entrepreneurs, étudiants... en quelques clics trouvez la personne et le service dont vous avez besoin.',
   button: 'Découvrir'
 };
 const B2B_BANNER_PRESENTATION = {
-  title: 'Les micro-services qui permettent des maxi-économies',
-  text: 'Stressez moins. En quelques clics, trouvez la personne et le service dont vous avez besoin.',
+  title: 'Des milliers de talents',
+  subTitle: 'Au service de votre entreprise',
+  text: 'Trouvez le prestataire idéal pour répondre aux besoins ponctuels de votre entreprise & de vos collaborateurs. Des milliers de profils vérifiés et qualifiés au service de vos projets, votre stratégie, vos collaborateurs et vos locaux ! Un service simple et sécurisant !',
   button: 'Découvrir'
 };
 

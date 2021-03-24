@@ -5,7 +5,7 @@ import {createGenerateClassName, createMuiTheme} from '@material-ui/core/styles'
 // It's optional.
 const theme = createMuiTheme({
   h3:{
-    fontFamily: 'Josefin Sans, sans-serif',
+    fontFamily:  'Montserrat, sans-serif',
   },
   palette: {
     primary: {
@@ -13,6 +13,9 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: '#B26879',
+    },
+    b2b:{
+      main: '#353A51'
     },
     link: {
       main: '#4C89C4'
@@ -39,73 +42,112 @@ const theme = createMuiTheme({
   typography: {
     fontSize: 14,
     lineHeight: '20px',
-    fontFamily: 'Josefin Sans, sans-serif',
+     fontFamily:  'Montserrat, sans-serif',
+
+
+
     textTransform: 'none',
     fontWeight: 'bold',
     letterSpacing: '2px',
     color: '#696767',
     title:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontWeight: 'bold',
       fontSize: '32px',
       margin:0
     },
     subTitle:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontWeight: 'bold',
       fontSize: '20px',
       margin: 0
     },
     sectionTitle:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontWeight: 'bold',
       fontSize: '18px',
       margin: 0
     },
     text:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontWeight: '500',
       fontSize: '16px',
       margin: 0
     },
     textAlfredName:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontWeight: '800',
       fontSize: '12px',
       margin: 0
     },
     textLabel:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontWeight: '500',
       fontSize: '10px',
       margin: 0
     },
     buttonLink:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontWeight: '500',
       fontSize: '17px',
     },
     blackButton:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontWeight: 'bold',
     },
     whiteButton:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontWeight: 'bold',
     },
     whiteButtonContained:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontWeight: 'bold',
       fontSize: '18px'
     },
     infoBar:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       lineHeight: '23px',
       fontSize: 14,
       fontWeight: 'bold'
     },
     placeHolder:{
-      fontFamily: 'Josefin Sans, sans-serif',
+       fontFamily:  'Montserrat, sans-serif',
+
+
+
       fontSize: '1rem',
       fontWeight: '400',
       lineHeight: '1.1876em',

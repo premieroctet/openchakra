@@ -67,12 +67,11 @@ class Home extends React.Component {
         <Grid>
           <Hidden only={['md', 'sm', 'xs']}>
             <Grid>
-              <InfoBar style={classes}/>
+              <InfoBar/>
             </Grid>
           </Hidden>
-          <Grid container
-                className={is_b2b_style() ? classes.navbarAndBannerContainerB2b : classes.navbarAndBannerContainer}>
-            <Grid className={classes.navbarAndBannerBackground}>
+          <Grid container  className={classes.navbarAndBannerContainer}>
+            <Grid item xl={12} lg={12} sm={12} md={12} xs={12} className={is_b2b_style() ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}>
               <Grid className={classes.navbarComponentPosition}>
                 <NavBar/>
               </Grid>
@@ -104,7 +103,8 @@ class Home extends React.Component {
                 <Grid className={classes.generalWidthContainer}>
                   <ResaService/>
                 </Grid>
-              </Grid>}
+              </Grid>
+          }
           <Hidden only={['xs', 'sm']}>
             {
               is_b2b_style() ? null :

@@ -683,6 +683,7 @@ class NavBar extends Component {
     const {classes} = this.props;
 
     const logged = user != null
+
     const modalLogin = () => {
       return (
         <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={'connect'}/>
@@ -700,7 +701,7 @@ class NavBar extends Component {
         <AppBar position={'static'} className={classes.navbarAppBar} style={{backgroundColor: is_b2b_style(user) && companyPage || this.state.ifHomePage ? 'transparent' : is_b2b_style(user) && !companyPage ?'#353A51' : null}}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
-              <Grid container  style={{justifyContent: companyPage ? 'end' : '', width: '100%', margin:0}}>
+              <Grid container  style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin:0}}>
                 {
                   companyPage ? null :
                     <Grid
@@ -728,25 +729,33 @@ class NavBar extends Component {
                     >
                       <Tabs value={false} aria-label="simple tabs example">
                         <Link href={'/search?search=1'}>
-                          <Tab classes={{root: classes.navbarTabRoot}}
-                               label={NAVBAR_MENU.ourServices}/>
+                          <Tab
+                            classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                            label={NAVBAR_MENU.ourServices}
+                          />
                         </Link>
                         {user ?
                           user.is_alfred ?
                             <Link href={`/profile/services?user=${user._id}`}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.myServices}/>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={NAVBAR_MENU.myServices}
+                              />
                             </Link>
                             :
                             <Link href={'/creaShop/creaShop'}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.registerServices}/>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={NAVBAR_MENU.registerServices}
+                              />
                             </Link>
                           :
                           <Link href={'/'}>
                             <Grid onClick={this.handleOpenRegister}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.registerServices}/>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={NAVBAR_MENU.registerServices}
+                              />
                             </Grid>
 
                           </Link>
@@ -754,12 +763,16 @@ class NavBar extends Component {
                         {
                           !is_b2b_style(user) ?
                             <Link href={'/professional'}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.businessSide}/>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={NAVBAR_MENU.businessSide}
+                              />
                             </Link> : is_development() ?
                             <Link href={'/particular'}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={'Retour Alfred Particuliers'}/>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={'Retour Alfred Particuliers'}
+                              />
                             </Link> : null
 
                         }

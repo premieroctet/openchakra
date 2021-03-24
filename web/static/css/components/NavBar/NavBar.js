@@ -19,7 +19,7 @@ export default theme => ({
     whiteSpace: 'inherit'
   },
   navbarSearch: {
-    padding: '14px 14px 14px 20px',
+    padding: '10px 14px 10px 20px',
     display: 'flex',
     alignItems: 'center',
     width: '100%',
@@ -159,9 +159,9 @@ export default theme => ({
   },
   navbarMainSytle:{
     alignItems: 'center',
-    width: '80%',
+    width: '70%',
     display: 'flex',
-    [theme.breakpoints.down('md')]:{
+    [theme.breakpoints.down('lg')]:{
       width: '95%'
     },
   },
@@ -201,13 +201,23 @@ export default theme => ({
     alignItems: 'center',
   },
   navbarTabRoot:{
-    textTransform: 'inherit',
     opacity: 'inherit',
     color: theme.palette.white.main,
-    fontWeight: theme.typography.buttonLink.fontWeight,
-    fontSize: theme.typography.buttonLink.fontSize,
+    fontWeight:' bold',
+    textTransform: 'initial',
+    transition: '0.3s',
     '&:hover':{
-      borderBottom: '2px solid rgba(255,255,255,1)'
+      color: 'rgba(255, 255, 142, 1)'
+    }
+  },
+  navbarTabRootB2b:{
+    opacity: 'inherit',
+    color: theme.palette.white.main,
+    fontWeight:' bold',
+    textTransform: 'initial',
+    transition: '0.3s',
+    '&:hover':{
+      color: 'rgb(176, 205, 200)'
     }
   },
   inputDatePicker:{
