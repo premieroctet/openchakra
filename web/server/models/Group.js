@@ -26,7 +26,7 @@ const GroupSchema = new Schema({
   },
   budget_period:{
     type : String,
-    enum : Object.keys(BUDGET_PERIOD),
+    enum : [null, ...Object.keys(BUDGET_PERIOD)],
   }
 });
 

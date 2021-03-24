@@ -336,10 +336,12 @@ class Team extends React.Component{
   addGroupe = () => {
     const{plafondGroupe, nameGroupe, budget_period} = this.state;
 
+
+
     const data = {
       name: nameGroupe,
       budget: plafondGroupe,
-      budget_period: budget_period,
+      budget_period: budget_period === ''? null : budget_period,
     };
 
     axios.post('/myAlfred/api/groups', data)

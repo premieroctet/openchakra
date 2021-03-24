@@ -98,7 +98,7 @@ router.post('/', passport.authenticate('b2badmin', {session: false}), (req, res)
         res.status(400).json({error : 'Ce groupe existe déjà'})
         return
       }
-      Group.create({name : req.body.name, company : company_id})
+      Group.create({name : req.body.name, company : company_id, budget_period: req.body.budget_period, budget: req.body.budget})
         .then ( group => {res.json(group)})
         .catch ( err => {
           console.error(err)
