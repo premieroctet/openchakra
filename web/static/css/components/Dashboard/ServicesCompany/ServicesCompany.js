@@ -6,6 +6,10 @@ export default theme => ({
   chip: {
     margin: 2,
   },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
   formControl:{
     width: 250
   },
@@ -23,7 +27,6 @@ export default theme => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
   },
   accordionStyle:{
     boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2)'

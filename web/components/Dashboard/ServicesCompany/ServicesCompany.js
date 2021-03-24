@@ -7,7 +7,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import SettingsIcon from '@material-ui/icons/Settings';
-import Divider from '@material-ui/core/Divider';
 import styles from '../../../static/css/components/Dashboard/ServicesCompany/ServicesCompany';
 import withStyles from "@material-ui/core/styles/withStyles";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
@@ -44,10 +43,12 @@ const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
 const MenuProps = {
+  getContentAnchorEl: () => null,
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
       width: 250,
+      marginTop: 70 + ITEM_PADDING_TOP
     },
   },
 };
@@ -149,7 +150,7 @@ class ServicesCompany extends React.Component{
     if(servicesToAdd.length > 0){
       servicesToAdd.map(res => {
         axios.put(`/myAlfred/api/groups/${serviceSelected._id}/allowedServices`, { service_id : res._id}).then(res =>{
-           this.setState({dialogAddService : false}, () => this.componentDidMount())
+           this.setState({dialogAddService : false, servicesToAdd: []}, () => this.componentDidMount())
           }
         ).catch( err => {
           console.error(err)
@@ -316,8 +317,8 @@ class ServicesCompany extends React.Component{
     let servicesNotAllowed =  services.filter(service => !idAllowedServicesByGroup.includes(service._id ));
 
     return(
-      <Dialog open={dialogAddService} onClose={() => this.setState({dialogAddService: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.configService}}>
-        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false})}>Département {serviceSelected.name}</DialogTitle>
+      <Dialog open={dialogAddService} onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})} aria-labelledby="form-dialog-title" classes={{paper: classes.configService}}>
+        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})}>Département {serviceSelected.name}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -333,7 +334,7 @@ class ServicesCompany extends React.Component{
                   onChange={(e) => this.handleOnchange(e)}
                   name={'servicesToAdd'}
                   value={servicesToAdd}
-                  input={<OutlinedInput label={'Services'}  id="select-multiple-chip" />}
+                  input={<OutlinedInput label={'Services'}  id="select-multiple-chip"/>}
                   renderValue={(selected) => (
                     <div className={classes.chips}>
                       {selected.map((service) => (
@@ -355,7 +356,7 @@ class ServicesCompany extends React.Component{
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({dialogAddService: false})} color="secondary">
+          <Button onClick={() => this.setState({dialogAddService: false, servicesToAdd: []})} color="secondary">
             Annuler
           </Button>
           <Button onClick={this.addService} color="primary">
