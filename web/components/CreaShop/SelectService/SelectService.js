@@ -31,6 +31,14 @@ class SelectService extends React.Component {
     axios.get(kw_url)
       .then((response) => {
         let services = response.data;
+        // exclure services
+        if (this.props.excluded_services) {
+          Object.keys(services).forEach( key => {
+            const filtered=services[key].filter(s => !this.props.excluded_services.includes(s._id.toString()))
+            services[key]=filtered
+          });
+        }
+
         this.setState({services: services, loading: false});
       }).catch(error => {
       console.error(error);

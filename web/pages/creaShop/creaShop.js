@@ -65,6 +65,7 @@ class creaShop extends React.Component {
       availabilities: [],
       currentUser:{},
       mode: CREASHOP_MODE.CREATION,
+      excluded_services: [], // Dans le cas d'ajout
       shop: {
         // Shop attributes
         booking_request: true,     // true/false
@@ -152,6 +153,18 @@ class creaShop extends React.Component {
               shop: shop,
               currentUser: user
             });
+
+            // Si mode ajout de service, récupérer les services de la boutique pour les excludre des choix
+            if (!this.props.service_id) {
+              axios.get('/myAlfred/api/serviceUser/currentAlfred')
+                .then( res => {
+                  const sus = res.data
+                  console.log(`Excluding shop services ${sus.map(su => su.service._id)}`)
+                  const excluded_ids = sus.map(su => su.service._id.toString())
+                  this.setState({excluded_services: excluded_ids})
+                })
+                .catch (err => console.error(err))
+            }
           })
           .catch ( err => {
             this.setState({
@@ -441,7 +454,7 @@ class creaShop extends React.Component {
 
 
   renderSwitch = (stepIndex) =>{
-    const{shop , currentUser, mode}= this.state;
+    const{shop , currentUser, mode, excluded_services}= this.state;
     switch (stepIndex) {
       case PRESENTATION0:
         return <CreaShopPresentation
@@ -455,8 +468,10 @@ class creaShop extends React.Component {
           />;
       case SELECTSERVICE2:
         return <SelectService
+          key={moment()}
           creation={true}
           creationBoutique={true}
+          excluded_services={excluded_services}
           onChange={this.onServiceChanged}
           {...shop}
           />;
