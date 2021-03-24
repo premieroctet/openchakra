@@ -24,6 +24,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import styles from '../../static/css/pages/paymentMethod/paymentMethod';
 
+const {is_b2b_admin} = require('../../utils/context')
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -80,7 +81,8 @@ class paymentMethod extends React.Component {
       bic: '',
       iban: '',
       error: null,
-      errors: {}
+      errors: {},
+      is_pro: false
     };
   }
 
@@ -93,13 +95,15 @@ class paymentMethod extends React.Component {
         this.setState({
           user: res.data,
           userName: res.data.full_name,
+          is_pro: is_b2b_admin(res.data)
         });
       })
       .catch(err => {
-          if (err.response.status === 401 || err.response.status === 403) {
-            clearAuthenticationToken()
-            Router.push({pathname: '/'});
-          }
+          // if (err.response.status === 401 || err.response.status === 403) {
+          //   clearAuthenticationToken()
+          //   Router.push({pathname: '/'});
+          // }
+          console.error(err)
         },
       );
 
@@ -492,6 +496,7 @@ class paymentMethod extends React.Component {
   };
 
   content = (classes) => {
+    console.log(this.state.user)
     return (
       <Grid style={{display: 'flex', flexDirection: 'column'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -545,8 +550,8 @@ class paymentMethod extends React.Component {
             <h3>RIB enregistrés</h3>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Choisissez le versement directement sur votre compte
-              bancaire.</Typography>
+            <Typography
+              style={{color: 'rgba(39,37,37,35%)'}}>{this.state.is_pro ? 'Renseignez un rib pour permettre à vos collaborateurs le paiement par prélèvement bancaire.' : 'Choisissez le versement directement sur votre compte bancaire.'}</Typography>
           </Grid>
         </Grid>
         {this.state.haveAccount ?
@@ -576,7 +581,7 @@ class paymentMethod extends React.Component {
           :
           null
         }
-        <Grid >
+        <Grid>
           <Grid>
             <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
           </Grid>
