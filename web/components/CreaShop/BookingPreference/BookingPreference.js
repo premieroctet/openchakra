@@ -16,10 +16,9 @@ class BookingPreference extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      deadline_unit: props.deadline_unit,
-      deadline_value: props.deadline_value ? props.deadline_value : 1,
+      deadline_unit: props.deadline_unit || 'jours',
+      deadline_value: props.deadline_value || 1,
       minimum_basket: props.minimum_basket,
-      service: null,
       equipments: props.equipments || [],
     };
     this.onEquipmentChecked = this.onEquipmentChecked.bind(this);

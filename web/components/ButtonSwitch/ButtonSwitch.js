@@ -83,7 +83,7 @@ class ButtonSwitch extends React.Component {
   constructor(props) {
     super(props);
     this.checked = this.props.checked
-    this.billing = props.billing ? props.billing._id : props.isOption ? this.props.billings[0]._id : null
+    this.billing = props.billing ? (props.billing._id || this.props.billing): props.isOption ? this.props.billings[0]._id : null
     this.price = this.props.price
     this.label = this.props.label
 

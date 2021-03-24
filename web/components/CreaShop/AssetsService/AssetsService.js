@@ -19,27 +19,28 @@ import Button from "@material-ui/core/Button";
 import util from 'util'
 import _ from 'lodash'
 
+// TODO: gérer les images des diplômes et crtifications en cas de modification de service
 class AssetsService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       dates: [],
-      description: props.data.description,
-      diplomaYear: props.data.diplomaYear,
-      diplomaName: props.data.diplomaName,
-      diplomaPicture: props.data.diplomaPicture,
-      certificationYear: props.data.certificationYear,
-      certificationName: props.data.certificationName,
-      certificationPicture: props.data.certificationPicture,
-      level: props.data.level,
-      diplomaSkills: props.data.diplomaSkills || [],
-      certificationSkills: props.data.certificationSkills || [],
+      description: props.description || '',
+      diplomaYear: props.diplomaYear || '',
+      diplomaName: props.diplomaName || '',
+      diplomaPicture: props.diplomaPicture || '',
+      certificationYear: props.certificationYear || '',
+      certificationName: props.certificationName || '',
+      certificationPicture: props.certificationPicture || '',
+      level: props.level,
+      diplomaSkills: props.diplomaSkills || [],
+      certificationSkills: props.certificationSkills || [],
+      experience_skills: props.experience_skills || [],
+      experience_title: props.experience_title || [],
+      experience_description: props.experience_description || [],
       newExperienceSkill: '',
       newDiplomaSkill: '',
       newCertificationSkill: '',
-      experience_skills: props.data.experience_skills || [],
-      experience_title: props.data.experience_title,
-      experience_description: props.data.experience_description,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handlePicture=this.handlePicture.bind(this)
@@ -75,6 +76,7 @@ class AssetsService extends React.Component {
 
   addSkill = (skillsAttribute, newSkillAttribute) => {
     var newSkill = this.state[newSkillAttribute]
+    newSkill = newSkill.trim().replace(/^#*/, '')
     var skills = this.state[skillsAttribute]
     if (newSkill){
       skills.push(newSkill)

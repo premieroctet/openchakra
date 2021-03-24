@@ -12,7 +12,7 @@ import {Radio, RadioGroup} from '@material-ui/core';
 import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch';
 import Information from '../../Information/Information';
 import IconButton from "@material-ui/core/IconButton";
-const {CESU} = require('../../../utils/consts');
+const {CESU, CREASHOP_MODE} = require('../../../utils/consts');
 const I18N = require('../../../utils/i18n');
 import InfoIcon from '@material-ui/icons/Info';
 import {SHOP} from '../../../utils/i18n';
@@ -20,6 +20,7 @@ import TextField from '@material-ui/core/TextField';
 import Divider from "@material-ui/core/Divider";
 import moment from 'moment'
 
+// TODO : fix l'update ne se fait pas après appel à l'api Sirene
 class IntroduceYou extends React.Component {
   constructor(props) {
     super(props);
@@ -27,10 +28,11 @@ class IntroduceYou extends React.Component {
     this.state = {
       is_particular: this.props.is_particular,
       company: this.props.company,
-      cesu: null,
-      cis: false,
-      social_security: null,
+      cesu: this.props.cesu || null,
+      cis: this.props.cis || false,
+      social_security: this.props.social_security,
       notice: false,
+      is_certified: this.props.is_certified || false,
       particular_access: Boolean(this.props.particular_access && !part_pro),
       professional_access: Boolean(this.props.professional_access && !part_pro),
       particular_professional_access: Boolean(part_pro),
@@ -44,6 +46,7 @@ class IntroduceYou extends React.Component {
       st.is_certified, st.cesu, st.cis, st.social_security,
       st.particular_access || st.particular_professional_access,
       st.professional_access || st.particular_professional_access,
+      st.vat_subject, st.vat_number
     );
   };
 
@@ -131,6 +134,7 @@ class IntroduceYou extends React.Component {
     const {classes} = this.props;
 
     const {cesu, particular_access ,professional_access, particular_professional_access} = this.state;
+    const {mode}=this.props
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
@@ -261,52 +265,58 @@ class IntroduceYou extends React.Component {
             {this.state.is_particular ? null
               :
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_description}</Typography>
-                </Grid>
-                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <Siret onChange={this.onCompanyChanged} company={this.state.company}/>
-                </Grid>
-                <Grid  container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
-                  <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.cis}
-                          onChange={this.onCISChange}
-                          color="primary"
-                          name="is_certified"
-                          value={this.state.is_certified}
-                        />
-                      }
-                      label={
-                        <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_cis}</Typography>
-                      }
-                    />
+                { mode == CREASHOP_MODE.CREATION ?
+                  <>
+                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_description}</Typography>
                   </Grid>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.is_certified}
-                          onChange={this.onCertifiedChanged}
-                          color="primary"
-                          name="is_certified"
-                          value={this.state.is_certified}
-                        />
-                      }
-                      label={
-                        <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_certif}</Typography>
-                      }
-                    />
+                    <Siret onChange={this.onCompanyChanged} company={this.state.company}/>
                   </Grid>
-                </Grid>
-                <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <Divider/>
-                </Grid>
-                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.creation.is_profesionnal_propose_missions}</h4>
-                </Grid>
+                  <Grid  container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+                    <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={this.state.cis}
+                            onChange={this.onCISChange}
+                            color="primary"
+                            name="is_certified"
+                            value={this.state.is_certified}
+                          />
+                        }
+                        label={
+                          <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_cis}</Typography>
+                        }
+                      />
+                    </Grid>
+                    <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={this.state.is_certified}
+                            onChange={this.onCertifiedChanged}
+                            color="primary"
+                            name="is_certified"
+                            value={this.state.is_certified}
+                          />
+                        }
+                        label={
+                          <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_certif}</Typography>
+                        }
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <Divider/>
+                  </Grid>
+                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.creation.is_profesionnal_propose_missions}</h4>
+                  </Grid>
+                  </>
+                  :
+                  null
+                }
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12} spacing={1} style={{width: '100%', margin:0}}>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <ButtonSwitch

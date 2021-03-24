@@ -36,6 +36,8 @@ const I18N = require('../../utils/i18n');
 const {checkSocialSecurity} = require('../../utils/social_security');
 moment.locale('fr');
 
+// TODO : nettoyer les attributes doublons (ex siret et company.siret)
+// TODO : prendre en compte vat_subject et vat_number
 class trustAndVerification extends React.Component {
   constructor(props) {
     super(props);
@@ -68,6 +70,8 @@ class trustAndVerification extends React.Component {
       naf_ape: '',
       creation_date: '',
       status: '',
+      vat_subject: false,
+      vat_number: '',
       open: false,
       cesu: null,
       cis: false,
@@ -126,12 +130,16 @@ class trustAndVerification extends React.Component {
                 professional: result.is_professional,
                 company: result.company,
                 social_security: result.social_security,
+                vat_subject: result.vat_subject,
+                vat_number: result.vat_number,
               });
 
               if (result.is_professional === true) {
                 this.setState({
                   siret: result.company.siret, name: result.company.name, naf_ape: result.company.naf_ape,
                   creation_date: result.company.creation_date, status: result.company.status,
+                  vat_subject: result.company.vat_subject, vat_number: result.company.vat_number,
+
                 });
               }
             });

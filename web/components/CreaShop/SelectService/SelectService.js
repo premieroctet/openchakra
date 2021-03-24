@@ -13,7 +13,7 @@ class SelectService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      service: null,
+      service: this.props.service || null,
       services: [],
       creation: this.props.creation,
       loading: true,
@@ -59,9 +59,9 @@ class SelectService extends React.Component {
 
   render() {
     const {classes, professional_access, particular_access} = this.props;
-    const {services, loading} = this.state;
+    const {services, loading, service} = this.state;
 
-    var options;
+    var options=[]
     if (professional_access && particular_access) {
       options=[
         {
@@ -116,6 +116,7 @@ class SelectService extends React.Component {
                 isLoading={loading}
                 loadingMessage={() => 'Recherche des services'}
                 placeholder={SHOP.service.placeholder}
+                value={(options||[]).find(o => o._id==(service||"").toString())}
                 styles={professional_access && particular_access ? tabbedStyle : ''}
               />
             </Grid>
