@@ -427,7 +427,7 @@ const PART='particular'
 const CREASHOP_MODE={
   CREATION:'creation',
   SERVICE_ADD:'add',
-  SERVICE_EDIT:'edit',
+  SERVICE_UPDATE:'edit',
 }
 module.exports = {
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,

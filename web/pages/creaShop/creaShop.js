@@ -41,6 +41,7 @@ const {getDefaultAvailability}=require('../../utils/dateutils')
 const {is_development}=require('../../config/config')
 const {snackBarSuccess}=require('../../utils/notifications')
 const moment=require('moment')
+const {STEPS}=require('./creaShopSteps')
 
 const PRESENTATION0=0
 const INTRODUCE1=1
@@ -54,51 +55,13 @@ const BOOKCONDITIONS8=8
 
 const LASTSTEP=BOOKCONDITIONS8
 
-/** Libellés stepper
-getStepsCreaShop() {
-  return [
-    'Bienvenue',
-    'Création',
-    'Services',
-    'Prestations',
-    'Paramétrage',
-    'Préférences',
-    'Atouts',
-    'Disponibilités',
-    'Conditions',
-  ];
-}
-
-getStepsAddService() {
-  return [
-    'Ajouter',
-    'Prestations',
-    'Paramétrage',
-    'Préférences',
-    'Atouts',
-    //TODO a remettre quand les dispos seront affichés dans le schedule /'Indiquez vos disponibilités',
-  ];
-}
-
-getStepsUpdateService() {
-  return [
-    'Configurez ce service',
-    'Modifiez vos prestations',
-    'Paramétrez votre service',
-    'Vos préférences de réservation',
-    'Vos atouts pour ce service !',
-    //TODO a remettre quand les dispos seront affichés dans le schedule /'Indiquez vos disponibilités',
-  ];
-}
-*/
-
 class creaShop extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: is_development() ? 1 : 0,
+      activeStep: is_development() ? 0 : 0,
       saving: false,
       availabilities: [],
       currentUser:{},
@@ -145,19 +108,14 @@ class creaShop extends React.Component {
         perimeter: 10,
         // End
       },
+      loading: true
     };
+
     this.scheduleDrawer = React.createRef()
-    this.steps=[
-      'Bienvenue',
-      'Création',
-      'Services',
-      'Prestations',
-      'Paramétrage',
-      'Préférences',
-      'Atouts',
-      'Disponibilités',
-      'Conditions',
-    ]
+  }
+
+  static getInitialProps({query: {service_id}}) {
+    return {service_id: service_id};
   }
 
   componentDidMount() {
@@ -170,8 +128,12 @@ class creaShop extends React.Component {
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
+        this.setState({
+          currentUser: user,
+        });
         let shop = this.state.shop;
         shop.service_address=user.billing_address
+        // Has shop ?
         axios.get('/myAlfred/api/shop/currentAlfred')
           .then ( res => {
             const rcv_shop = res.data
@@ -197,20 +159,26 @@ class creaShop extends React.Component {
             shop.social_security=rcv_shop.social_security
             shop.is_certified=true
 
-            this.setState({
-              mode: CREASHOP_MODE.SERVICE_ADD,
-              shop: shop,
-              currentUser: user
-            });
-
             // Si mode ajout de service, récupérer les services de la boutique pour les excludre des choix
-            if (!this.props.service_id) {
+            if (this.props.service_id) {
+              console.log(`Service à modifier:${this.props.service_id}`)
+              shop.service = this.props.service_id
+              this.setState({
+                mode : CREASHOP_MODE.SERVICE_UPDATE,
+                shop : {service: this.props.service_id, ...shop},
+                loading: false,
+              })
+            }
+            else {
               axios.get('/myAlfred/api/serviceUser/currentAlfred')
                 .then( res => {
                   const sus = res.data
-                  console.log(`Excluding shop services ${sus.map(su => su.service._id)}`)
                   const excluded_ids = sus.map(su => su.service._id.toString())
-                  this.setState({excluded_services: excluded_ids})
+                  this.setState({
+                    mode : CREASHOP_MODE.SERVICE_ADD,
+                    excluded_services: excluded_ids,
+                    loading: false,
+                  })
                 })
                 .catch (err => console.error(err))
             }
@@ -220,6 +188,7 @@ class creaShop extends React.Component {
               mode: CREASHOP_MODE.CREATION,
               shop: shop,
               currentUser: user,
+              loading: false,
             });
           })
       })
@@ -227,10 +196,6 @@ class creaShop extends React.Component {
         console.error(error);
       });
     this.loadAvailabilities();
-  }
-
-  componentWillUnmount = () => {
-    clearInterval(this.intervalId)
   }
 
   availabilityDeleted = (avail) => {
@@ -475,7 +440,10 @@ class creaShop extends React.Component {
   nextDisabled = () => {
 
     let shop = this.state.shop;
+    const {mode, activeStep}=this.state
 
+    const valid_function = STEPS[mode][activeStep].is_valid
+    return !valid_function(this)
     let pageIndex = this.state.activeStep;
     if (pageIndex === PRESENTATION0) {
       return !creaShopPresentation();
@@ -507,6 +475,7 @@ class creaShop extends React.Component {
 
   renderSwitch = (stepIndex) =>{
     const{shop , currentUser, mode, excluded_services}= this.state;
+    return STEPS[mode][stepIndex].component(this)
     switch (stepIndex) {
       case PRESENTATION0:
         return <CreaShopPresentation
@@ -571,13 +540,15 @@ class creaShop extends React.Component {
   };
 
   drawer = (classes) => {
-    const {activeStep} = this.state;
+    const {activeStep,mode} = this.state;
+
+    const steps = STEPS[mode].map(s => s.menu)
     return (
       <Grid style={{height: '100%'}}>
         <Grid className={classes.appBarContainer}>
           <List classes={{root: classes.paddingList}}>
             <Stepper
-              steps={this.steps}
+              steps={steps}
               activeStep={activeStep}
               orientation={'vertical'}
             />
@@ -600,8 +571,12 @@ class creaShop extends React.Component {
   render() {
 
     const {classes, window} = this.props;
-    const {activeStep, mobileOpen} = this.state;
+    const {activeStep, mobileOpen, loading} = this.state;
     const container = window !== undefined ? () => window().document.body : undefined;
+
+    if (loading) {
+      return null
+    }
 
     return (
       <Grid className={classes.root}>
