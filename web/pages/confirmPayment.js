@@ -213,7 +213,10 @@ class ConfirmPayment extends React.Component {
           <Grid style={{position: 'relative'}}>
             <LayoutPayment>
               <Grid className={classes.contentStepper}>
-                <Stepper activeStep={activeStep} isType={'confirmPaiement'}/>
+                <Stepper
+                  activeStep={activeStep}
+                  steps={['ADRESSE & FACTURATION', 'PAIEMENT']}
+                  orientation={'horizontal'}/>
               </Grid>
               <Grid  className={classes.mainContainer}>
                 {this.renderSwitch(activeStep)}

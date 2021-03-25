@@ -54,6 +54,44 @@ const BOOKCONDITIONS8=8
 
 const LASTSTEP=BOOKCONDITIONS8
 
+/** Libellés stepper
+getStepsCreaShop() {
+  return [
+    'Bienvenue',
+    'Création',
+    'Services',
+    'Prestations',
+    'Paramétrage',
+    'Préférences',
+    'Atouts',
+    'Disponibilités',
+    'Conditions',
+  ];
+}
+
+getStepsAddService() {
+  return [
+    'Ajouter',
+    'Prestations',
+    'Paramétrage',
+    'Préférences',
+    'Atouts',
+    //TODO a remettre quand les dispos seront affichés dans le schedule /'Indiquez vos disponibilités',
+  ];
+}
+
+getStepsUpdateService() {
+  return [
+    'Configurez ce service',
+    'Modifiez vos prestations',
+    'Paramétrez votre service',
+    'Vos préférences de réservation',
+    'Vos atouts pour ce service !',
+    //TODO a remettre quand les dispos seront affichés dans le schedule /'Indiquez vos disponibilités',
+  ];
+}
+*/
+
 class creaShop extends React.Component {
 
   constructor(props) {
@@ -109,6 +147,17 @@ class creaShop extends React.Component {
       },
     };
     this.scheduleDrawer = React.createRef()
+    this.steps=[
+      'Bienvenue',
+      'Création',
+      'Services',
+      'Prestations',
+      'Paramétrage',
+      'Préférences',
+      'Atouts',
+      'Disponibilités',
+      'Conditions',
+    ]
   }
 
   componentDidMount() {
@@ -527,7 +576,11 @@ class creaShop extends React.Component {
       <Grid style={{height: '100%'}}>
         <Grid className={classes.appBarContainer}>
           <List classes={{root: classes.paddingList}}>
-            <Stepper activeStep={activeStep} isType={'creaShop'}/>
+            <Stepper
+              steps={this.steps}
+              activeStep={activeStep}
+              orientation={'vertical'}
+            />
           </List>
           <Grid container style={{display:'flex', justifyContent:'center'}}>
             <Grid style={{height: '100%', display : 'flex', flexDirection: 'column-reverse'}}>
