@@ -45,7 +45,7 @@ if __name__ == '__main__':
 	elements = [e for e in driver.find_elements_by_tag_name('input') if INPUT_ID.search(e.get_attribute('id'))]
 	elements = sorted(elements, key=lambda e :e.get_attribute('id'))
 	
-	filename = os.path.abspath('ouiboss_keywords.txt')
+	filename = os.path.expanduser('ouiboss_keywords.txt')
 	alphabet=[chr(i) for i in range(ord('a'), ord('z')+1)]
 
 	keywords=set()
