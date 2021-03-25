@@ -12,8 +12,8 @@ class ImageImportTest extends React.Component{
   render() {
     return(
       <>
-        <img src={LogoPng} width='200' />
-        <img src={LogoSvg} width='200'/>
+        <img src={LogoPng} width='4000' />
+        <img src={LogoSvg} width='4000'/>
       </>
     )
   }
