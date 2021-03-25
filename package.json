@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "invoice-number": "^1.0.6"
+    "mongoose-auto-increment": "^5.0.1"
   }
 }
