@@ -451,7 +451,7 @@ class BookingPreview extends React.Component {
                             <Button variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage}
                                     style={{textTransform: 'initial', color: 'white'}}>Envoyer un message</Button>
                           </Grid>
-                          {bookingObj.status === BOOK_STATUS.CONFIRMED ?
+                          {bookingObj.status === BOOK_STATUS.CONFIRMED  && phone?
                             <Grid item className={classes.containerPhone}>
                               <Hidden only={['xl', 'lg', 'md', 'sm']}>
                                 <Button>
@@ -468,7 +468,7 @@ class BookingPreview extends React.Component {
                         </Grid>
                       </Grid>
                       {
-                        bookingObj.status === BOOK_STATUS.CONFIRMED ?
+                        bookingObj.status === BOOK_STATUS.CONFIRMED && phone?
                           <Hidden only={['xs']}>
                             <Grid item xl={6}>
                               <Grid>
@@ -481,7 +481,6 @@ class BookingPreview extends React.Component {
                                   style={{textAlign: 'center'}}> {this.phoneDigit(phone.substring(1), 0, "0")}</Typography>
                               </Grid>
                             </Grid>
-
                           </Hidden> : null
                       }
                     </Grid>
