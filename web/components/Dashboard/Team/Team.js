@@ -339,7 +339,7 @@ class Team extends React.Component{
     const data = {
       name: nameGroupe,
       budget: plafondGroupe,
-      budget_period: budget_period,
+      budget_period: budget_period === ''? null : budget_period,
     };
 
     axios.post('/myAlfred/api/groups', data)
@@ -612,12 +612,12 @@ class Team extends React.Component{
                     name={'plafondGroupe'}
                     value={plafondGroupe}
                     type={'number'}
-                    InputProps={{ inputProps: { min: 0 } }}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
                     onChange={this.handleChange}
                     InputProps={{
                       endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                      inputProps: { min: 0 }
                     }}
                   />
                 </Grid>
@@ -647,32 +647,37 @@ class Team extends React.Component{
               </Grid>
               <Grid item container spacing={3} style={{width: '100%', margin: 0}}>
                 <Grid item xl={12} lg={12}>
-                  <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                    <InputLabel id="demo-mutiple-chip-label">RIB</InputLabel>
-                    <Select
-                      labelId="demo-mutiple-chip-label"
-                      id="demo-mutiple-chip"
-                      multiple
-                      onChange={(e) => this.handleChange(e)}
-                      name={'paymentMethod'}
-                      value={paymentMethod}
-                      input={<OutlinedInput label={'RIB'}  id="select-multiple-chip" />}
-                      renderValue={(selected) => (
-                        <div className={classes.chips}>
-                          {selected.map((value) => (
-                            <Chip key={value} label={value} className={classes.chip} />
+                  {
+                    accounts.length > 0 ?
+                      <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                        <InputLabel id="demo-mutiple-chip-label">RIB</InputLabel>
+                        <Select
+                          labelId="demo-mutiple-chip-label"
+                          id="demo-mutiple-chip"
+                          multiple
+                          onChange={(e) => this.handleChange(e)}
+                          name={'paymentMethod'}
+                          value={paymentMethod}
+                          input={<OutlinedInput label={'RIB'}  id="select-multiple-chip" />}
+                          renderValue={(selected) => (
+                            <div className={classes.chips}>
+                              {selected.map((value) => (
+                                <Chip key={value} label={value} className={classes.chip} />
+                              ))}
+                            </div>
+                          )}
+                          MenuProps={MenuProps}
+                        >
+                          {accounts.map((name) => (
+                            <MenuItem key={name} value={name} style={this.getStyles(name, paymentMethod)}>
+                              {name}
+                            </MenuItem>
                           ))}
-                        </div>
-                      )}
-                      MenuProps={MenuProps}
-                    >
-                      {accounts.map((name) => (
-                        <MenuItem key={name} value={name} style={this.getStyles(name, paymentMethod)}>
-                          {name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                        </Select>
+                      </FormControl> :
+                      <a href={'/account/paymentMethod'} target="_blank">Aucun RIB enregistrer rendez vous ici pour en ajouter.</a>
+                  }
+
                 </Grid>
               </Grid>
             </Grid>

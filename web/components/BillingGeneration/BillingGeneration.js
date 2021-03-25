@@ -33,7 +33,7 @@ class BillingGeneration extends React.Component {
             }}
           >
             <View>
-              <Image src={"https://www.my-alfred.io/static/assets/icon/logo.svg"}
+              <Image src={"../../static/assets/icon/logo.png"}
                      alt={'logo_myAlfred'}
                      style={{
                        height: 64
