@@ -24,7 +24,6 @@ import moment from 'moment'
 class IntroduceYou extends React.Component {
   constructor(props) {
     super(props);
-    const part_pro = this.props.particular_access && this.props.professional_access
     this.state = {
       is_particular: this.props.is_particular,
       company: this.props.company,
@@ -33,21 +32,13 @@ class IntroduceYou extends React.Component {
       social_security: this.props.social_security,
       notice: false,
       is_certified: this.props.is_certified || false,
-      particular_access: Boolean(this.props.particular_access && !part_pro),
-      professional_access: Boolean(this.props.professional_access && !part_pro),
-      particular_professional_access: Boolean(part_pro),
     };
     this.fireChange = this.fireChange.bind(this)
   }
 
   fireChange = () => {
     const st=this.state
-    this.props.onChange(st.is_particular, st.company,
-      st.is_certified, st.cesu, st.cis, st.social_security,
-      st.particular_access || st.particular_professional_access,
-      st.professional_access || st.particular_professional_access,
-      st.vat_subject, st.vat_number
-    );
+    this.props.onChange(st);
   };
 
   onChange = event => {
@@ -70,20 +61,7 @@ class IntroduceYou extends React.Component {
     if (this.state.is_particular == is_particular) {
       return
     }
-    var st={
-      is_particular: is_particular,
-    }
-    if (is_particular) {
-      st['particular_access']=true
-      st['professional_access']=false
-      st['particular_professional_access']=false
-    }
-    else {
-      st['particular_access']=false
-      st['professional_access']=false
-      st['particular_professional_access']=true
-    }
-    this.setState(st, this.fireChange);
+    this.setState({is_particular: is_particular}, this.fireChange);
 
   };
 
@@ -97,43 +75,10 @@ class IntroduceYou extends React.Component {
       () => this.fireChange());
   };
 
-  handleChangeCompany = (id, checked) =>{
-    if (!checked) {
-      return
-    }
-    this.checkHandleChange('professional_access')
-  };
-
-  handleChangeParticular = (id, checked) =>{
-    if (!checked) {
-      return
-    }
-    this.checkHandleChange('particular_access')
-  };
-
-  handleChangeBoth = (id, checked) =>{
-    if (!checked) {
-      return
-    }
-    this.checkHandleChange('particular_professional_access')
-  };
-
-  checkHandleChange = name =>{
-    var st={
-      particular_access: false,
-      professional_access: false,
-      particular_professional_access: false,
-    }
-    st[name]=true
-    this.setState(st, this.fireChange)
-  };
-
-
-
   render() {
     const {classes} = this.props;
 
-    const {cesu, particular_access ,professional_access, particular_professional_access} = this.state;
+    const {cesu, is_particular} = this.state;
     const {mode}=this.props
 
     return (
@@ -265,8 +210,6 @@ class IntroduceYou extends React.Component {
             {this.state.is_particular ? null
               :
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-                { mode == CREASHOP_MODE.CREATION ?
-                  <>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_description}</Typography>
                   </Grid>
@@ -307,49 +250,6 @@ class IntroduceYou extends React.Component {
                       />
                     </Grid>
                   </Grid>
-                  <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <Divider/>
-                  </Grid>
-                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.creation.is_profesionnal_propose_missions}</h4>
-                  </Grid>
-                  </>
-                  :
-                  null
-                }
-                <Grid item xl={12} lg={12} sm={12} md={12} xs={12} spacing={1} style={{width: '100%', margin:0}}>
-                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <ButtonSwitch
-                      key={moment()}
-                      label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_company}</Typography>}
-                      onChange={this.handleChangeCompany}
-                      value={professional_access}
-                      name={'professional_access'}
-                      checked={professional_access}
-                    />
-                  </Grid>
-                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <ButtonSwitch
-                      key={moment()}
-                      label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_particular}</Typography>}
-                      onChange={this.handleChangeParticular}
-                      value={particular_access}
-                      name={'particular_access'}
-                      checked={particular_access}
-                    />
-                  </Grid>
-
-                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <ButtonSwitch
-                      key={moment()}
-                      label={<Typography className={classes.policySizeContent}>{SHOP.creation.textfield_company_and_particular}</Typography>}
-                      onChange={this.handleChangeBoth}
-                      value={particular_professional_access}
-                      name={'particular_professional_access'}
-                      checked={particular_professional_access}
-                    />
-                  </Grid>
-                </Grid>
               </Grid>
             }
           </Grid>

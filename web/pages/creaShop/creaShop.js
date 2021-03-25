@@ -72,7 +72,7 @@ class creaShop extends React.Component {
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: 'Merci pour votre réservation!',
         cancel_mode: CANCEL_MODE.FLEXIBLE,            // FLEXIBLE/MODERATE/STRICT
-        is_particular: true,        // true/false : particulier.pro
+        is_particular: is_development() ? false : true,        // true/false : particulier.pro
         company: {name: null, creation_date: null, siret: null, naf_ape: null, status: null, vat_subject: false, vat_number: null},
         cesu: null,
         cis: false,
@@ -170,7 +170,7 @@ class creaShop extends React.Component {
             this.setState({
               mode: CREASHOP_MODE.CREATION,
               shop: shop,
-              currentUser: user
+              currentUser: user,
             });
           })
       })
@@ -323,9 +323,11 @@ class creaShop extends React.Component {
     this.setState({activeStep: this.state.activeStep - 1});
   };
 
-  onServiceChanged = (service_id) => {
+  onServiceChanged = state => {
     let shop = this.state.shop;
-    shop.service = service_id;
+    shop.service = state.service;
+    shop.particular_access = state.particular_access || state.particular_professional_access
+    shop.professional_access = state.professional_access || state.particular_professional_access
     this.setState({shop: shop});
   }
 
@@ -389,22 +391,23 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  introduceChanged = (is_particular, company, is_certified, cesu, cis, social_security,
-    particular_access, professional_access, vat_subject, vat_number) => {
+  introduceChanged = state => {
     let shop = this.state.shop;
-    shop.is_particular = is_particular;
-    shop.is_certified = is_certified;
-    shop.particular_access = particular_access;
-    shop.professional_access = professional_access;
-    if (is_particular) {
+    shop.is_particular = state.is_particular;
+    shop.is_certified = state.is_certified;
+    if (state.is_particular) {
       shop.company = null;
-      shop.cesu = cesu;
-      shop.cis = false;
-      shop.social_security = social_security;
+      shop.cesu = state.cesu;
+      shop.cis = null;
+      shop.social_security = state.social_security;
+      shop.particular_access=true
+      shop.professional_access=false
     } else {
-      shop.company = company;
+      shop.company = state.company;
       shop.cesu = null;
-      shop.cis = cis;
+      shop.cis = state.cis;
+      shop.particular_access=false
+      shop.professional_access=false
     }
     this.setState({shop: shop});
   }
@@ -468,12 +471,11 @@ class creaShop extends React.Component {
           />;
       case SELECTSERVICE2:
         return <SelectService
-          key={moment()}
+          {...shop}
           creation={true}
           creationBoutique={true}
           excluded_services={excluded_services}
           onChange={this.onServiceChanged}
-          {...shop}
           />;
       case SELECTPRESTATION3:
         return <SelectPrestation
