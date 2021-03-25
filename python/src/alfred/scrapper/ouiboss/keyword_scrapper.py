@@ -54,7 +54,7 @@ if __name__ == '__main__':
 			try:
 				word="".join(word)
 				keywords=keywords.union(get_keywords(driver, elements[0], word))
-				print('{}:{} keywords'.format(word, len(keywords)))
+				print('{}:{} keywords total'.format(word, len(keywords)))
 				with open(filename, 'w') as output:
 					output.write('\n'.join(sorted(keywords)))
 					print('Saved to {}'.format(filename))
