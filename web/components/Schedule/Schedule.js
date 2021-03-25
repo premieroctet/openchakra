@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 import styles from '../../static/css/components/Schedule/Schedule';
 import withStyles from "@material-ui/core/styles/withStyles";
 import Hidden from "@material-ui/core/Hidden";
+import {isMobile} from 'react-device-detect';
+
 
 const {isDateAvailable, isMomentAvailable} = require('../../utils/dateutils');
 moment.locale('fr');
@@ -306,7 +308,7 @@ class Schedule extends React.Component {
                     sm={nbSchedule === 1 ? 11 : 6} xs={12} className={classes.schedule_height} key={i}>
                 <Calendar
                   key={date}
-                  selectable={selectable}
+                  selectable={isMobile ? null : selectable}
                   popup={false}
                   culture={'fr-FR'}
                   localizer={localizer}
