@@ -24,12 +24,11 @@ MENU_CLASS='Autocomplete__Menu-sc-109v32z-2 fRIBbM'
 def get_keywords(driver, element, pattern):
 	element.send_keys(Keys.BACK_SPACE*len(pattern))
 	element.send_keys(pattern)
-	time.sleep(1)
+	time.sleep(0.5)
 	all_elements = driver.find_elements_by_xpath("//div")
 	menu = next((e for e in all_elements if e.get_attribute('class')==MENU_CLASS), None)
 	siblings=menu.find_elements_by_xpath(".//*")
 	kwds=set([s.text for s in siblings])
-	print('{}: {} trouvés'.format(pattern, len(kwds)))
 	return kwds
 
 if __name__ == '__main__':
@@ -50,14 +49,13 @@ if __name__ == '__main__':
 
 	keywords=set()
 	
-	for size in range(2, 26):
+	for size in range(1, 26):
 		for word in permutations(alphabet, size):
 			try:
+				word="".join(word)
 				keywords=keywords.union(get_keywords(driver, elements[0], word))
-				print(keywords)
-				print(len(keywords))
+				print('{}:{} keywords'.format(word, len(keywords)))
 				with open(filename, 'w') as output:
-					print(keywords)
 					output.write('\n'.join(sorted(keywords)))
 					print('Saved to {}'.format(filename))
 			except Exception as e:
