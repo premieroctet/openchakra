@@ -50,7 +50,7 @@ class Presentation extends React.Component {
     this.state = {
       user: null,
       company: null,
-      newDescription: '',
+      newDescription: null,
       showEdition: false,
     }
   }
@@ -96,7 +96,7 @@ class Presentation extends React.Component {
           website: this.state.website,
           name: this.state.companyName,
           billing_address: this.state.billing_address,
-          description: newDescription !== '' ? newDescription : this.state.description,
+          description: newDescription !== '' && newDescription !== null ? newDescription : this.state.description,
           siret: this.state.siret,
           vat_number: this.state.vat_number,
           vat_subject: this.state.vat_subject
@@ -128,7 +128,7 @@ class Presentation extends React.Component {
 
   modalEditDialog = (classes) => {
     const {user, showEdition, newDescription} = this.state;
-    const enabled = is_mode_company() ? false : newDescription;
+    const enabled = newDescription;
     const placeholder = newDescription || CMP_PRESENTATION.placeholder;
 
     return (
@@ -164,7 +164,7 @@ class Presentation extends React.Component {
                     this.save();
                   }}
                   variant="contained"
-                  disabled={enabled}
+                  disabled={!enabled}
                   classes={{root: classes.button}}
                   color={'primary'}
                 >
