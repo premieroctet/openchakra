@@ -98,7 +98,8 @@ class editProfileCompany extends React.Component{
         tva: company.vat_number,
         descriptionCompany: company.description,
         billing_address: company.billing_address,
-        vat_subject: company.vat_subject
+        vat_subject: company.vat_subject,
+        website: company.website
 
       })
     }).catch(err => {
@@ -148,7 +149,8 @@ class editProfileCompany extends React.Component{
       siret: this.state.siret,
       vat_number: this.state.vat_subject ? this.state.tva : '',
       billing_address: this.state.billing_address,
-      vat_subject: this.state.vat_subject
+      vat_subject: this.state.vat_subject,
+      website: this.state.website
       }
     ).then( res =>{
       snackBarSuccess("Profil modifié avec succès");

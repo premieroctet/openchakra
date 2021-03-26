@@ -89,6 +89,12 @@ class About extends React.Component {
           website: company.website,
           activityArea: company.activity,
           sizeCompany: company.size,
+          billing_address: company.billing_address,
+          companyName: company.name,
+          description: company.description,
+          siret: company.siret,
+          vat_number: company.vat_number,
+          vat_subject: company.vat_subject
         })
         }).catch(err => console.error(err))
 
@@ -128,19 +134,40 @@ class About extends React.Component {
   save = () => {
     const {newAddress, languages} = this.state;
     setAxiosAuthentication();
-    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(res => {
-      axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(res => {
-        snackBarSuccess('Profil modifié avec succès');
-        setTimeout(this.loadUser, 1000)
+
+    if(is_mode_company()){
+      axios.put('/myAlfred/api/companies/profile/editProfile', {
+        activity: this.state.activityArea,
+        size: this.state.sizeCompany,
+        website: this.state.website,
+        name: this.state.companyName,
+        billing_address: this.state.billing_address,
+        description: this.state.description,
+        siret: this.state.siret,
+        vat_number: this.state.vat_number,
+        vat_subject: this.state.vat_subject
+        }
+      ).then( res =>{
+        snackBarSuccess("Profil modifié avec succès");
+        this.componentDidMount()
+      }).catch( err => {
+        snackBarError(err.response.data);
+      })
+    }else{
+      axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(res => {
+          axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(res => {
+              snackBarSuccess('Profil modifié avec succès');
+              setTimeout(this.loadUser, 1000)
+            }
+          ).catch(err => {
+            console.error(err)
+          })
         }
       ).catch(err => {
-        console.error(err)
-      })
+          console.error(err)
+        }
+      );
     }
-    ).catch(err => {
-        console.error(err)
-      }
-    );
   };
 
   closeEditDialog = () => {
@@ -329,7 +356,7 @@ class About extends React.Component {
                   variant="contained"
                   classes={{root: classes.buttonSave}}
                   color={'primary'}
-                  disabled={enabledEdition}
+                  disabled={!is_mode_company() ? enabledEdition : false}
                 >
                   Modifier
                 </Button>
