@@ -68,6 +68,8 @@ class About extends React.Component {
       enabledEdition: true,
       activityArea: '',
       sizeCompany: '',
+      website: '',
+      company:{},
 
     };
   }
@@ -79,17 +81,27 @@ class About extends React.Component {
   loadUser = () => {
     this.setState({showEdition: false});
     setAxiosAuthentication();
-    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
-      .then(res => {
-        const user = res.data;
 
+      axios.get('/myAlfred/api/companies/current').then( res =>{
+        const company = res.data;
         this.setState({
-          user: user,
-          userLanguages: user.languages.map(l => ({value: l, label: l})),
-          billing_address: user.billing_address
+          company: company,
+          website: company.website,
+          activityArea: company.activity,
+          sizeCompany: company.size,
         })
-      })
-      .catch(err => console.error(err))
+        }).catch(err => console.error(err))
+
+      axios.get(`/myAlfred/api/users/users/${this.props.user}`)
+        .then(res => {
+          const user = res.data;
+          this.setState({
+            user: user,
+            userLanguages: user.languages.map(l => ({value: l, label: l})),
+            billing_address: user.billing_address
+          })
+        })
+        .catch(err => console.error(err))
   };
 
   onAddressChanged = result => {
@@ -117,14 +129,14 @@ class About extends React.Component {
     const {newAddress, languages} = this.state;
     setAxiosAuthentication();
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(res => {
-        axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(res => {
-            snackBarSuccess('Profil modifié avec succès');
-            setTimeout(this.loadUser, 1000)
-          }
-        ).catch(err => {
-          console.error(err)
-        })
-      }
+      axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(res => {
+        snackBarSuccess('Profil modifié avec succès');
+        setTimeout(this.loadUser, 1000)
+        }
+      ).catch(err => {
+        console.error(err)
+      })
+    }
     ).catch(err => {
         console.error(err)
       }
@@ -171,7 +183,7 @@ class About extends React.Component {
   };
 
   modalEditDialog = (classes) => {
-    const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany} = this.state;
+    const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, company, website} = this.state;
     const address = newAddress || (user ? user.billing_address : null)
     const placeholder = address ? `${address.city}, ${address.country}` : 'Entrez votre adresse';
 
@@ -204,10 +216,11 @@ class About extends React.Component {
                   is_mode_company() ?
                     <TextField
                       name={'website'}
-                      placeholder={'Site Web'}
                       variant={'outlined'}
                       label={'Site Web'}
+                      value={website || ''}
                       style={{width: '100%'}}
+                      onChange={this.handleChange}
                     />
                     :
                     <AlgoliaPlaces
@@ -281,7 +294,7 @@ class About extends React.Component {
                       style={{
                         fontWeight: 'bold',
                         textTransform: 'initial'
-                      }}>Taille de l'entreprise</h3>
+                      }}>Secteur d’activité</h3>
                   </Grid>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <FormControl variant="outlined" className={classes.formControl}>
@@ -331,7 +344,7 @@ class About extends React.Component {
 
   render() {
     const {displayTitlePicture, classes} = this.props;
-    const {user} = this.state;
+    const {user, company} = this.state;
     var place = user ? user.billing_address.city : "Pas d'adresse";
 
     const editable = isEditableUser(user);
@@ -359,17 +372,17 @@ class About extends React.Component {
       [
         {
           label: 'Site web',
-          summary: 'www.siteweb.fr',
+          summary: company.website ? company.website : 'Pas renseigner' ,
           IconName: <LanguageIcon fontSize="large"/>
         },
         {
           label: 'Taille de l’entreprise',
-          summary: '1000',
+          summary: company.size !== '' ? Object.keys(COMPANY_SIZE).map((res) => {if(res === company.size){return COMPANY_SIZE[res]}}): 'Pas sélectionner',
           IconName: <BusinessIcon fontSize="large"/>
         },
         {
           label: 'Secteur d’activité',
-          summary: 'informatique',
+          summary: company.activity !== '' ? Object.keys(COMPANY_ACTIVITY).map((res) => {if(res === company.activity){return COMPANY_ACTIVITY[res]}}) : 'Pas sélectionner',
           IconName: <WorkOutlineIcon fontSize="large"/>
         },
       ]
