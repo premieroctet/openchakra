@@ -810,12 +810,9 @@ class NavBar extends Component {
                           {user ?
                             <Grid>
                               <MenuItem>Bonjour {user.firstname} !</MenuItem>
-                              {
-                                !user.is_employee ?
-
-                                  <Link href={`/profile/about?user=${user._id}`}>
-                                    <MenuItem>Mon profil</MenuItem>
-                                  </Link> : null}
+                              <Link href={`/profile/about?user=${user._id}`}>
+                                <MenuItem>Mon profil</MenuItem>
+                              </Link>
                               <Link href={is_b2b_admin(user) ? '/account/editProfileCompany' : '/account/editProfile'}>
                                 <MenuItem>Mes paramètres</MenuItem>
                               </Link>
