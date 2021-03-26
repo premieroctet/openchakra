@@ -189,9 +189,9 @@ class Presentation extends React.Component {
     const title = is_mode_company() ? company ? `À propos de ${company.name}` : null : frenchFormat(`À propos de ${user ? user.firstname : ''}`);
 
     return (
-      <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
+      <>
         {editable ?
-          <Grid style={{position: 'absolute', right: 0}}>
+          <Grid style={{position: 'absolute', right: 10, top:10}}>
             <IconButton aria-label="edit" onClick={this.openEdition}>
               <CreateIcon/>
             </IconButton>
@@ -199,20 +199,23 @@ class Presentation extends React.Component {
           :
           null
         }
-        <Topic titleTopic={title}
-               titleSummary={user ? `membre depuis ${moment(user.creation_date).format("MMMM YYYY")}` : ''}>
-          {user && !is_mode_company()?
-            <Typography style={{wordWrap: 'break-word'}}>{user.description}</Typography>
-            :
-            is_mode_company() && company ?
-              <Typography style={{wordWrap: 'break-word'}}>{company.description}</Typography>
-              : null
-          }
-        </Topic>
-        <Grid>
-          {this.modalEditDialog(classes)}
+        <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
+          <Topic titleTopic={title}
+                 titleSummary={user ? `membre depuis ${moment(user.creation_date).format("MMMM YYYY")}` : ''}>
+            {user && !is_mode_company()?
+              <Typography style={{wordWrap: 'break-word'}}>{user.description}</Typography>
+              :
+              is_mode_company() && company ?
+                <Typography style={{wordWrap: 'break-word'}}>{company.description}</Typography>
+                : null
+            }
+          </Topic>
+          <Grid>
+            {this.modalEditDialog(classes)}
+          </Grid>
         </Grid>
-      </Grid>
+      </>
+
     )
   }
 }

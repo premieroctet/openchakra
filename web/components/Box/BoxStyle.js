@@ -8,6 +8,7 @@ export default theme => ({
     paddingRight: '10%',
     height: '100%',
     backgroundColor: 'white',
+    position: 'relative',
     [theme.breakpoints.down('xs')]:{
       border :'inherit',
       paddingLeft: 0,

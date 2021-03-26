@@ -251,7 +251,7 @@ class ProfileAbout extends React.Component {
     return(
       <Grid container spacing={3} style={{marginBottom: '12vh'}}>
         <Hidden only={['xs']}>
-          <Grid item xl={5} lg={5} md={6} sm={12} xs={12}>
+          <Grid item xl={5} lg={5} md={12} sm={12} xs={12}>
             <Box>
               <About user={user} />
             </Box>
@@ -304,7 +304,7 @@ class ProfileAbout extends React.Component {
             }
           </Grid>
         </Hidden>
-        <Grid item xl={7} lg={7} md={6} sm={12} xs={12}>
+        <Grid item xl={7} lg={7} md={12} sm={12} xs={12}>
           <Box>
             <Presentation user={user} classes={classes}/>
           </Box>

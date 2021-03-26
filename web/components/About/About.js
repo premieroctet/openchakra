@@ -415,13 +415,9 @@ class About extends React.Component {
       ]
 
     return (
-      <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
-        {displayTitlePicture ?
-          <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3>
-          : null
-        }
+      <>
         {editable ?
-          <Grid style={{position: 'absolute', right: 0}}>
+          <Grid style={{position: 'absolute', right: 10, top: 10}}>
             <IconButton aria-label="edit" onClick={this.openEdition}>
               <CreateIcon/>
             </IconButton>
@@ -429,18 +425,25 @@ class About extends React.Component {
           :
           null
         }
-        <Grid style={{display: 'flex', flexDirection: 'row'}}>
+        <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
           {displayTitlePicture ?
-            <Grid style={{marginLeft: '1%', marginRight: '1%'}}>
-              <UserAvatar user={user}/>
-            </Grid>
+            <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3>
             : null
           }
-          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsLG={12}
-                                columnsMD={6} columnsSm={6} columnsXS={6}/>
+
+          <Grid style={{display: 'flex', flexDirection: 'row'}}>
+            {displayTitlePicture ?
+              <Grid style={{marginLeft: '1%', marginRight: '1%'}}>
+                <UserAvatar user={user}/>
+              </Grid>
+              : null
+            }
+            <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsLG={12}
+                                  columnsMD={6} columnsSm={6} columnsXS={6}/>
+          </Grid>
+          {this.modalEditDialog(classes)}
         </Grid>
-        {this.modalEditDialog(classes)}
-      </Grid>
+      </>
     )
   }
 }
