@@ -48,9 +48,12 @@ const is_mode_company = user => {
   return is_b2b_admin(user)||is_b2b_manager(user)
 }
 
+
 const is_b2b_style = user => {
   return is_b2b_site() || is_b2b_admin(user) || is_b2b_manager(user)
 }
 module.exports={
-  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_b2b_site
-}
+  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_b2b_site,  is_mode_company
+ }
+
+

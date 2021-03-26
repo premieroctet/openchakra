@@ -122,8 +122,8 @@ class ProfileAbout extends React.Component {
     setAxiosAuthentication();
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then( res =>{
         axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then( res =>{
-          snackBarSuccess('Profil modifié avec succès');
-           setTimeout(this.loadUser, 1000)
+            snackBarSuccess('Profil modifié avec succès');
+            setTimeout(this.loadUser, 1000)
           }
         ).catch(err => {
           console.error(err)
@@ -286,18 +286,18 @@ class ProfileAbout extends React.Component {
             {
               alfred ?
                 alfred.id_confirmed ?
-                <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '4vh'}}>
-                  <Grid>
-                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>{alfred ? alfred.firstname : null}</Typography>
-                  </Grid>
-                  <Grid style={{margin: 3}}/>
-                  <Grid>
-                    <Typography style={{color:'black'}}>à un profil vérifié</Typography>
-                  </Grid>
-                  <Grid>
-                    <CheckCircleOutlineIcon/>
-                  </Grid>
-                </Grid> : null : null
+                  <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '4vh'}}>
+                    <Grid>
+                      <Typography style={{color: 'rgba(39,37,37,35%)'}}>{alfred ? alfred.firstname : null}</Typography>
+                    </Grid>
+                    <Grid style={{margin: 3}}/>
+                    <Grid>
+                      <Typography style={{color:'black'}}>à un profil vérifié</Typography>
+                    </Grid>
+                    <Grid>
+                      <CheckCircleOutlineIcon/>
+                    </Grid>
+                  </Grid> : null : null
             }
           </Grid>
         </Hidden>
