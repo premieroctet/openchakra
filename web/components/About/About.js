@@ -1,12 +1,14 @@
+import {TextField} from "@material-ui/core";
+import BusinessIcon from '@material-ui/icons/Business';
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
-
+import LanguageIcon from '@material-ui/icons/Language';
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/components/About/About';
-
+import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
 import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 import RoomIcon from '@material-ui/icons/Room';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
@@ -20,13 +22,17 @@ import Button from '@material-ui/core/Button';
 import Topic from '../../hoc/Topic/Topic'
 import AlgoliaPlaces from 'algolia-places-react'
 import MultipleSelect from 'react-select'
-import {LANGUAGES} from '../../utils/consts'
+import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
 import CreateIcon from '@material-ui/icons/Create'
 import {isEditableUser} from '../../utils/functions'
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Divider from "@material-ui/core/Divider";
-import {is_mode_company} from "../utils/context";
+import {is_mode_company} from "../../utils/context";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
 
 const {frenchFormat} = require('../../utils/text');
 const moment = require('moment');
@@ -59,7 +65,9 @@ class About extends React.Component {
       showEdition: false,
       languages: {},
       billing_address: {},
-      enabledEdition: true
+      enabledEdition: true,
+      activityArea: '',
+      sizeCompany: '',
 
     };
   }
@@ -157,8 +165,13 @@ class About extends React.Component {
     }
   };
 
+  handleChange = (event) => {
+    let {name, value} = event.target;
+    this.setState({[name] : value});
+  };
+
   modalEditDialog = (classes) => {
-    const {newAddress, showEdition, languages, enabledEdition, user} = this.state;
+    const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany} = this.state;
     const address = newAddress || (user ? user.billing_address : null)
     const placeholder = address ? `${address.city}, ${address.country}` : 'Entrez votre adresse';
 
@@ -176,23 +189,25 @@ class About extends React.Component {
             titleTopic={is_mode_company() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
             titleSummary={is_mode_company() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
             underline={true}/>
-          <Grid container>
-            <Grid container>
-              <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
+          <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+            <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
+              <Grid item xs={12} lg={12}>
                 <h3 style={{
                   fontWeight: 'bold',
                   textTransform: 'initial'
-                }}>{is_mode_company() ? : 'Site Web' : 'Lieu d\'habitation'}</h3>
+                }}>
+                  {is_mode_company() ? 'Site Web' : 'Lieu d\'habitation'}
+                </h3>
               </Grid>
-              <Grid item style={{width: '100%', marginTop: '3vh', marginBottom: '3vh'}}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 {
                   is_mode_company() ?
                     <TextField
-                      classes={{root: classes.textField}}
                       name={'website'}
                       placeholder={'Site Web'}
                       variant={'outlined'}
                       label={'Site Web'}
+                      style={{width: '100%'}}
                     />
                     :
                     <AlgoliaPlaces
@@ -208,35 +223,89 @@ class About extends React.Component {
                       }}
                       onChange={this.onAddressChanged}
                       onClear={() => this.onAddressChanged(null)}
-                    />}
+                    />
+                }
               </Grid>
             </Grid>
-            <Grid container>
-              <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
-                <Typography
+            <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
+              <Grid item xs={12} lg={12}>
+                <h3
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial'
-                  }}>{is_mode_company() ? 'Taille de l\'entreprise' : 'Langues parlées'}</Typography>
+                  }}>{is_mode_company() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
               </Grid>
-              <Grid item xs={12} style={{marginTop: '3vh', marginBottom: '3vh'}}>
-                <MultipleSelect
-                  key={moment()}
-                  value={languages}
-                  onChange={this.onLanguagesChanged}
-                  options={LANGUAGES}
-                  styles={{
-                    menu: provided => ({...provided, zIndex: 2}),
-                  }}
-                  isMulti
-                  isSearchable
-                  closeMenuOnSelect={false}
-                  placeholder={'Sélectionnez vos langues'}
-                  noOptionsMessage={() => 'Plus d\'options disponibles'}
-
-                />
+              <Grid item xs={12}>
+                {
+                  !is_mode_company() ?
+                    <MultipleSelect
+                      key={moment()}
+                      value={languages}
+                      onChange={this.onLanguagesChanged}
+                      options={LANGUAGES}
+                      styles={{
+                        menu: provided => ({...provided, zIndex: 2}),
+                      }}
+                      isMulti
+                      isSearchable
+                      closeMenuOnSelect={false}
+                      placeholder={'Sélectionnez vos langues'}
+                      noOptionsMessage={() => 'Plus d\'options disponibles'}
+                    /> :
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="demo-simple-select-outlined-label">Taille de l’entreprise</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={sizeCompany}
+                        onChange={this.handleChange}
+                        label={'Taille de l’entreprise'}
+                        name={'sizeCompany'}
+                        placeholder={'Taille de l’entreprise'}
+                      >
+                        {
+                          Object.keys(COMPANY_SIZE).map((res, index) =>(
+                            <MenuItem key={index} value={res}>{COMPANY_SIZE[res]}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                }
               </Grid>
             </Grid>
+              {
+              is_mode_company() ?
+                <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
+                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <h3
+                      style={{
+                        fontWeight: 'bold',
+                        textTransform: 'initial'
+                      }}>Taille de l'entreprise</h3>
+                  </Grid>
+                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="demo-simple-select-outlined-label">Secteur d’activité</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={activityArea}
+                        onChange={this.handleChange}
+                        label={'Secteur d’activité'}
+                        name={"activityArea"}
+                        placeholder={'Secteur d’activité'}
+                      >
+                        {
+                          Object.keys(COMPANY_ACTIVITY).map((res,index) =>(
+                            <MenuItem key={index} value={res}>{COMPANY_ACTIVITY[res]}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                : null
+              }
             <Grid style={{marginTop: '2vh', width: '100%'}}>
               <Divider/>
               <Grid style={{marginTop: '2vh', width: '100%'}}>
@@ -268,26 +337,42 @@ class About extends React.Component {
     const editable = isEditableUser(user);
 
 
-    const wrapperComponentProps = user ?
+    const wrapperComponentProps = !is_mode_company()?
       [
         {
           label: 'Lieu',
           summary: place,
-          IconName: user.firstname ? <RoomIcon fontSize="large"/> : ''
+          IconName: user ? <RoomIcon fontSize="large"/> : ''
         },
         {
           label: 'Langues',
-          summary: user.languages.join(', ') || null,
-          IconName: user.firstname ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : ''
+          summary: user ? user.languages.join(', ') || null : '',
+          IconName: user ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : ''
         },
         {
           label: 'Vérification',
-          summary: user.id_card_status_text,
-          IconName: user.firstname ? <CheckCircleOutlineIcon fontSize="large"/> : ''
+          summary: user ? user.id_card_status_text : '',
+          IconName: user ? <CheckCircleOutlineIcon fontSize="large"/> : ''
         },
       ]
       :
-      null;
+      [
+        {
+          label: 'Site web',
+          summary: 'www.siteweb.fr',
+          IconName: <LanguageIcon fontSize="large"/>
+        },
+        {
+          label: 'Taille de l’entreprise',
+          summary: '1000',
+          IconName: <BusinessIcon fontSize="large"/>
+        },
+        {
+          label: 'Secteur d’activité',
+          summary: 'informatique',
+          IconName: <WorkOutlineIcon fontSize="large"/>
+        },
+      ]
 
     return (
       <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>

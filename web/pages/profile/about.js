@@ -1,3 +1,5 @@
+import SummaryCommentary from "../../components/SummaryCommentary/SummaryCommentary";
+
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
@@ -30,6 +32,7 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
+import {is_mode_company} from "../../utils/context";
 const moment=require('moment');
 moment.locale('fr');
 
@@ -306,6 +309,15 @@ class ProfileAbout extends React.Component {
             <Presentation user={user} classes={classes}/>
           </Box>
         </Grid>
+        {
+          is_mode_company() ?
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Box>
+                <SummaryCommentary user={user} />
+              </Box>
+            </Grid>
+            : null
+        }
         <Grid item xl={8} lg={8} md={6} sm={12} xs={12}>
           <Box>
             <Skills alfred={user} />

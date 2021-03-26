@@ -43,6 +43,14 @@ export default theme => ({
     position: 'relative',
     backgroundRepeat: 'no-repeat'
   },
+  profilLayoutBannerImgB2b:{
+    display: 'flex',
+    justifyContent: 'center',
+    height: '50%',
+    width: '100%',
+    position: 'relative',
+    backgroundColor: theme.palette.b2b.main
+  },
   profilLayoutProfileHeader:{
     position: 'absolute',
     top: '43%',

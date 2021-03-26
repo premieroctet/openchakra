@@ -7,6 +7,9 @@ export default theme => ({
       justifyContent: 'center',
     },
   },
+  formControl:{
+    width: '100%'
+  },
   skillCard: {
     display: 'flex',
     flexDirection: 'column',

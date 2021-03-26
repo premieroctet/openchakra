@@ -13,6 +13,7 @@ import Rating from "@material-ui/lab/Rating";
 import Typography from "@material-ui/core/Typography";
 import Box from '../Box/Box'
 import Divider from '@material-ui/core/Divider';
+import Router from "next/router";
 
 
 class SummaryCommentary extends React.Component{
@@ -23,7 +24,7 @@ class SummaryCommentary extends React.Component{
       alfredReviews: [],
       filter:'',
       showCommentary: false,
-      userServicesPreview: true
+      userServicesPreview: false
     }
   }
 
@@ -32,6 +33,10 @@ class SummaryCommentary extends React.Component{
     const serviceUser=this.props.serviceUser
     if (!userId) {
       return
+    }
+
+    if(Router.pathname === '/userServicesPreview'){
+      this.setState({userServicesPreview: true})
     }
 
     axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${userId}`)
@@ -149,14 +154,20 @@ class SummaryCommentary extends React.Component{
           <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
         </Grid>
         {
-          showCommentary ?
-            allComments.map (r => (
-              <Grid style={{marginTop: '5%'}}>
-                <Commentary key={r._id} review={r._id} user={this.props.user}/>
-              </Grid>
-            ))
+          userServicesPreview ?
+            showCommentary  ?
+              allComments.map (r => (
+                <Grid style={{marginTop: '5%'}}>
+                  <Commentary key={r._id} review={r._id} user={this.props.user}/>
+                </Grid>
+              ))
+              : null
             :
-            null
+              allComments.map (r => (
+                <Grid style={{marginTop: '5%'}}>
+                  <Commentary key={r._id} review={r._id} user={this.props.user}/>
+                </Grid>
+              ))
         }
       </Grid>
     );
