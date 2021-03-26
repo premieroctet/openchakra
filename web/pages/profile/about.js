@@ -1,5 +1,4 @@
 import SummaryCommentary from "../../components/SummaryCommentary/SummaryCommentary";
-
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
@@ -27,12 +26,17 @@ import DialogContent from "@material-ui/core/DialogContent";
 import Topic from "../../hoc/Topic/Topic";
 import AlgoliaPlaces from "algolia-places-react";
 import MultipleSelect from "react-select";
-import {LANGUAGES} from "../../utils/consts";
+import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from "../../utils/consts";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 import {is_mode_company} from "../../utils/context";
+import {TextField} from "@material-ui/core";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 const moment=require('moment');
 moment.locale('fr');
 
@@ -65,6 +69,7 @@ class ProfileAbout extends React.Component {
       newAddress: null,
       userLanguages: [],
       newLanguages: null,
+      company: null
     }
 
   }
@@ -85,6 +90,23 @@ class ProfileAbout extends React.Component {
   loadUser = () => {
     this.setState({showEdition: false});
     setAxiosAuthentication();
+
+    axios.get('/myAlfred/api/companies/current').then( res =>{
+      const company = res.data;
+      this.setState({
+        company: company,
+        website: company.website,
+        activityArea: company.activity,
+        sizeCompany: company.size,
+        billing_address: company.billing_address,
+        companyName: company.name,
+        description: company.description,
+        siret: company.siret,
+        vat_number: company.vat_number,
+        vat_subject: company.vat_subject
+      })
+    }).catch(err => console.error(err))
+
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
         const user = res.data;
@@ -138,64 +160,143 @@ class ProfileAbout extends React.Component {
     );
   };
 
-  modalEditDialog = (classes) =>{
-    const {newAddress, showEdition, enabledEdition, languages}=this.state;
-    const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse';
+  modalEditDialog = (classes) => {
+    const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, company, website} = this.state;
+    const address = newAddress || (user ? user.billing_address : null)
+    const placeholder = address ? `${address.city}, ${address.country}` : 'Entrez votre adresse';
 
-    return(
+    return (
       <Dialog
         open={showEdition}
         onClose={this.closeEditDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        classes={{root: classes.mydialogContainer}}
       >
-        <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}/>
+        <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}
+                     style={{position: 'absolute', right: 0}}/>
         <DialogContent>
-          <Topic titleTopic={'Modifiez vos informations'} titleSummary={'Ici, vous pouvez modifier vos informations'} underline={true} />
-          <Grid container>
-            <Grid container>
-              <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
-                <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Lieu d'habitation</Typography>
+          <Topic
+            titleTopic={is_mode_company() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
+            titleSummary={is_mode_company() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
+            underline={true}/>
+          <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+            <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
+              <Grid item xs={12} lg={12}>
+                <h3 style={{
+                  fontWeight: 'bold',
+                  textTransform: 'initial'
+                }}>
+                  {is_mode_company() ? 'Site Web' : 'Lieu d\'habitation'}
+                </h3>
               </Grid>
-              <Grid item style={{width:'100%', marginTop: '3vh', marginBottom: '3vh'}}>
-                <AlgoliaPlaces
-                  key={moment()}
-                  placeholder={placeholder}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                {
+                  is_mode_company() ?
+                    <TextField
+                      name={'website'}
+                      variant={'outlined'}
+                      label={'Site Web'}
+                      value={website || ''}
+                      style={{width: '100%'}}
+                      onChange={this.handleChange}
+                    />
+                    :
+                    <AlgoliaPlaces
+                      key={moment()}
+                      placeholder={placeholder}
+                      options={{
+                        appId: 'plKATRG826CP',
+                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                        language: 'fr',
+                        countries: ['fr'],
+                        type: 'address',
 
-                  }}
-                  onChange={this.onAddressChanged}
-                  onClear = {() => this.onAddressChanged(null)}
-                />
+                      }}
+                      onChange={this.onAddressChanged}
+                      onClear={() => this.onAddressChanged(null)}
+                    />
+                }
               </Grid>
             </Grid>
-            <Grid container>
-              <Grid item xs={12} lg={12}  style={{marginTop: '2vh'}}>
-                <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Langues parlées</Typography>
+            <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
+              <Grid item xs={12} lg={12}>
+                <h3
+                  style={{
+                    fontWeight: 'bold',
+                    textTransform: 'initial'
+                  }}>{is_mode_company() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
               </Grid>
-              <Grid item xs={12} style={{marginTop: '3vh', marginBottom: '3vh'}}>
-                <MultipleSelect
-                  key={moment()}
-                  value={languages}
-                  onChange={this.onLanguagesChanged}
-                  options={LANGUAGES}
-                  styles={{
-                    menu: provided => ({...provided, zIndex: 2}),
-                  }}
-                  isMulti
-                  isSearchable
-                  closeMenuOnSelect={false}
-                  placeholder={'Sélectionnez vos langues'}
-                  noOptionsMessage={() => 'Plus d\'options disponibles'}
-                />
+              <Grid item xs={12}>
+                {
+                  !is_mode_company() ?
+                    <MultipleSelect
+                      key={moment()}
+                      value={languages}
+                      onChange={this.onLanguagesChanged}
+                      options={LANGUAGES}
+                      styles={{
+                        menu: provided => ({...provided, zIndex: 2}),
+                      }}
+                      isMulti
+                      isSearchable
+                      closeMenuOnSelect={false}
+                      placeholder={'Sélectionnez vos langues'}
+                      noOptionsMessage={() => 'Plus d\'options disponibles'}
+                    /> :
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="demo-simple-select-outlined-label">Taille de l’entreprise</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={sizeCompany}
+                        onChange={this.handleChange}
+                        label={'Taille de l’entreprise'}
+                        name={'sizeCompany'}
+                        placeholder={'Taille de l’entreprise'}
+                      >
+                        {
+                          Object.keys(COMPANY_SIZE).map((res, index) =>(
+                            <MenuItem key={index} value={res}>{COMPANY_SIZE[res]}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                }
               </Grid>
             </Grid>
+            {
+              is_mode_company() ?
+                <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
+                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <h3
+                      style={{
+                        fontWeight: 'bold',
+                        textTransform: 'initial'
+                      }}>Secteur d’activité</h3>
+                  </Grid>
+                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="demo-simple-select-outlined-label">Secteur d’activité</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={activityArea}
+                        onChange={this.handleChange}
+                        label={'Secteur d’activité'}
+                        name={"activityArea"}
+                        placeholder={'Secteur d’activité'}
+                      >
+                        {
+                          Object.keys(COMPANY_ACTIVITY).map((res,index) =>(
+                            <MenuItem key={index} value={res}>{COMPANY_ACTIVITY[res]}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                : null
+            }
             <Grid style={{marginTop: '2vh', width: '100%'}}>
               <Divider/>
               <Grid style={{marginTop: '2vh', width: '100%'}}>
@@ -204,9 +305,9 @@ class ProfileAbout extends React.Component {
                     this.save();
                   }}
                   variant="contained"
-                  color={'primary'}
                   classes={{root: classes.buttonSave}}
-                  disabled={enabledEdition}
+                  color={'primary'}
+                  disabled={!is_mode_company() ? enabledEdition : false}
                 >
                   Modifier
                 </Button>
@@ -244,12 +345,12 @@ class ProfileAbout extends React.Component {
     return {user: user};
   }
 
-  content = (classes, user, alfred) =>{
+  content = (classes, user, alfred, company) =>{
     const editable = isEditableUser(user);
 
 
     return(
-      <Grid container spacing={3} style={{marginBottom: '12vh'}}>
+      <Grid container spacing={3} style={{marginBottom: '12vh', width: '100%'}}>
         <Hidden only={['xs']}>
           <Grid item xl={5} lg={5} md={12} sm={12} xs={12}>
             <Box>
@@ -273,19 +374,29 @@ class ProfileAbout extends React.Component {
                 <Typography style={{color: 'rgba(39,37,37,35%)'}}>Habite à </Typography>
               </Grid>
               <Grid style={{margin: 3}}/>
-              <Grid>
-                <Typography style={{color:'black'}}>{alfred ? alfred.billing_address.city + ", " + alfred.billing_address.country : null}</Typography>
-              </Grid>
+              {
+                is_mode_company() ?
+                  <Grid>
+                    <Typography style={{color:'black'}}>{company ? company.billing_address.city + ", " + company.billing_address.country  : null}</Typography>
+                  </Grid> :
+                  <Grid>
+                    <Typography style={{color:'black'}}>{alfred ? alfred.billing_address.city + ", " + alfred.billing_address.country : null}</Typography>
+                  </Grid>
+              }
+
             </Grid>
-            <Grid style={{display: 'flex', flexDirection: 'row', marginTop: '4vh'}}>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Parle </Typography>
-              </Grid>
-              <Grid style={{margin: 3}}/>
-              <Grid>
-                <Typography style={{color:'black'}}>{alfred ? alfred.languages.join(', ') : null}</Typography>
-              </Grid>
-            </Grid>
+            {
+              is_mode_company() ? null :
+                <Grid style={{display: 'flex', flexDirection: 'row', marginTop: '4vh'}}>
+                  <Grid>
+                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>Parle </Typography>
+                  </Grid>
+                  <Grid style={{margin: 3}}/>
+                  <Grid>
+                    <Typography style={{color:'black'}}>{alfred ? alfred.languages.join(', ') : null}</Typography>
+                  </Grid>
+                </Grid>
+            }
             {
               alfred ?
                 alfred.id_confirmed ?
@@ -354,7 +465,7 @@ class ProfileAbout extends React.Component {
 
   render() {
     const {classes, user}=this.props;
-    const {alfred}=this.state;
+    const {alfred, company}=this.state;
 
     if(!user && alfred){
       return null
@@ -369,7 +480,7 @@ class ProfileAbout extends React.Component {
         </Hidden>
         <Hidden only={['lg', 'xl',  'sm', 'md']}>
           <LayoutMobileProfile user={user} currentIndex={4}>
-            {this.content(classes, user, alfred)}
+            {this.content(classes, user, alfred, company)}
           </LayoutMobileProfile>
         </Hidden>
         {this.modalEditDialog(classes) }

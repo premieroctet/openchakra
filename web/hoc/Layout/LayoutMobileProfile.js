@@ -17,6 +17,8 @@ import ScrollMenu from "../../components/ScrollMenu/ScrollMenu";
 import Divider from "@material-ui/core/Divider";
 import UserAvatar from "../../components/Avatar/UserAvatar";
 const {isEditableUser}=require('../../utils/functions');
+import {is_mode_company} from "../../utils/context";
+
 
 class LayoutMobileProfile extends React.Component{
 
@@ -97,9 +99,12 @@ class LayoutMobileProfile extends React.Component{
         <Grid style={{marginTop: '5vh'}}>
           <Divider/>
         </Grid>
-        <Grid className={classes.profilLayoutScrollMenu}>
-          <ScrollMenu categories={menuItems} mode={'profile'} extraParams={{user: this.props.user}}/>
-        </Grid>
+        {
+          is_mode_company() ? null :
+            <Grid className={classes.profilLayoutScrollMenu}>
+              <ScrollMenu categories={menuItems} mode={'profile'} extraParams={{user: this.props.user}}/>
+            </Grid>
+        }
         <Grid style={{padding: '10%'}}>
           {children}
         </Grid>

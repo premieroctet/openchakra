@@ -191,7 +191,7 @@ class Presentation extends React.Component {
     return (
       <>
         {editable ?
-          <Grid style={{position: 'absolute', right: 10, top:10}}>
+          <Grid style={{position: 'absolute', right: 10, top: 10, zIndex: 1}}>
             <IconButton aria-label="edit" onClick={this.openEdition}>
               <CreateIcon/>
             </IconButton>
