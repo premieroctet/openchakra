@@ -577,6 +577,14 @@ router.post('/login', (req, res) => {
       bcrypt.compare(password, user.password)
         .then(isMatch => {
           if (isMatch && user.active === true) {
+            // Keep last 10 connexion dates
+            user.last_login.unshift(Date.now())
+            while (user.last_login.length>10) {
+              user.last_login.pop()
+            }
+            user.save()
+              .then ( res => console.log(`${user.full_name} : updated last_login`))
+              .catch ( err => console.error(err))
             // User matched
             const payload = {
               id: user.id,
@@ -1046,25 +1054,6 @@ router.put('/account/rib', passport.authenticate('jwt', {session: false}), (req,
       user.account.bic = req.body.bic;
       user.account.iban = req.body.iban;
 
-
-      user.save().then(result => res.json(result)).catch(err => console.error(err));
-    })
-    .catch(err => console.error(err));
-});
-
-// @Route PUT /myAlfred/api/users/account/lastLogin
-// Push current datetime in array last_login for the user
-// @Access private
-router.put('/account/lastLogin', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
-    .then(user => {
-      const arrayLogin = user.last_login;
-      if (arrayLogin.length === 2) {
-        arrayLogin.unshift(Date.now());
-        arrayLogin.pop();
-      } else {
-        arrayLogin.unshift(Date.now());
-      }
 
       user.save().then(result => res.json(result)).catch(err => console.error(err));
     })

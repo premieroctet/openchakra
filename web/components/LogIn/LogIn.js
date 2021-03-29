@@ -74,12 +74,7 @@ class LogIn extends React.Component {
       .then(res => {
         setAuthToken()
         setAxiosAuthentication()
-        // TODO : inclure l'update de lastLogin dans /users/login
-        axios.put('/myAlfred/api/users/account/lastLogin')
-          .then(data => {
-            this.props.login();
-          })
-          .catch(err => console.error(err));
+        this.props.login();
       })
       .catch(err => {
         console.error(err);
