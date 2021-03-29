@@ -225,7 +225,6 @@ router.get('/keyword/:kw', (req, res) => {
         services.filter(s => s[attribute]).forEach( service => {
           var keywords= [service.s_label, service.category[label]]
           service.prestations.filter(p => p[attribute] && !p.private_alfred).forEach( p => {
-            console.log(p.s_label)
             keywords.push(p.s_label, p.job && p.job.s_label ? p.job.s_label : '')
           })
           // single string with unique words

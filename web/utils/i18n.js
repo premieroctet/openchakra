@@ -162,7 +162,8 @@ const SHOP = {
   },
   service:{
     title: 'Votre service',
-    subtitle: 'Configurez votre service. Si vous souhaitez en proposer plusieurs, vous pourrez en ajouter autant que vous le souhaitez par la suite.',
+    subtitle: 'Sélectionnez votre service. Si vous souhaitez en proposer plusieurs, vous pourrez en ajouter autant que vous le souhaitez par la suite.',
+    subtitle_update: 'Vous allez modifier le service indiqué ci-dessous',
     content_particular: 'Liste des services aux particuliers',
     content_professional: 'Liste des services aux entreprises',
     content_particular_professional: 'Liste des services aux particuliers & aux entreprises',
@@ -191,7 +192,7 @@ const SHOP = {
   },
   preference:{
     title: 'Préférences',
-    subtitle: 'Indiquez vos préférences de réservation. Ses préférences s’appliqueront lorsqu’un client souhaite vous réserver.',
+    subtitle: 'Indiquez vos préférences de réservation. Ces préférences s’appliqueront lorsqu’un client souhaite vous réserver.',
     title_delay_prevenance: 'De quel délai souhaitez-vous disposer entre la réservation et la réalisation du services ?',
     units_dalay_prevenance: 'Heures/jours/semaines',
     label_delay_prevenance: '',

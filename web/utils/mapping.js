@@ -27,7 +27,6 @@ const data2ServiceUser = (data, su) => {
   su.service_address = data.service_address;
   su.equipments = data.equipments;
 
-  console.log(`Mapped to ${JSON.stringify(su, null, 2)}`)
   return su;
 };
 

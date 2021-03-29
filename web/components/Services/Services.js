@@ -11,27 +11,48 @@ class Services extends React.Component {
     super(props);
   }
 
+
   render() {
-    const {classes, shop}=this.props;
+    const {classes, shop, onDelete}=this.props;
 
     if (!shop.services) {
       return null
     }
 
+    console.log(shop.is_particular)
+    const part_services = shop.services.filter( s => s.particular_access)
+    const pro_services = shop.services.filter( s => s.professional_access)
+
     return (
       <React.Fragment>
         <Grid>
-          <Typography>Services ({shop.services.length})</Typography>
+          <Typography>Services aux particuliers ({part_services.length})</Typography>
         </Grid>
-        <Grid container spacing={2} style={{marginTop: '5vh'}}>
+        <Grid container spacing={2} style={{marginTop: '1vh'}}>
         {
-          shop.services.map(s => (
+          part_services.map(s => (
             <Grid item xl={3} xs={12} sm={6} md={3} lg={3}>
-              <CardService item={s._id} page={0} profileMode={true}/>
+              <CardService item={s._id} page={0} profileMode={true} onDelete={onDelete}/>
             </Grid>
           ))
         }
         </Grid>
+        { shop.is_particular ? null :
+          <>
+          <Grid>
+            <Typography style={{marginTop: '20px'}}>Services aux professionnels ({pro_services.length})</Typography>
+          </Grid>
+          <Grid container spacing={2} style={{marginTop: '5vh'}}>
+          {
+            pro_services.map(s => (
+              <Grid item xl={3} xs={12} sm={6} md={3} lg={3}>
+                <CardService item={s._id} page={0} profileMode={true} onDelete={onDelete}/>
+              </Grid>
+            ))
+          }
+          </Grid>
+          </>
+        }
       </React.Fragment>
     )
   }

@@ -70,6 +70,13 @@ const ShopSchema = new Schema({
     status: {
       type: String,
     },
+    vat_subject : {
+      type: Boolean,
+      default: false,
+    },
+    vat_number : {
+      type: String,
+    },
   },
   services: [{
     type: Schema.Types.ObjectId,

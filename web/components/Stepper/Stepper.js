@@ -23,79 +23,26 @@ const PaddingConnector = () =>{
   )
 };
 class Stepper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      steps: props.isType === 'creaShop' ? this.getStepsCreaShop() : props.isType === 'updateService' ? this.getStepsUpdateService() : props.isType === 'confirmPaiement' ? this.getStepsPayment() :  this.getStepsAddService(),
-      urlName : ''
-    };
-  }
-
-  getStepsCreaShop() {
-    return [
-      'Bienvenue',
-      'Création',
-      'Services',
-      'Prestations',
-      'Paramétrage',
-      'Préférences',
-      'Atouts',
-      'Disponibilités',
-      'Conditions',
-    ];
-  }
-
-  getStepsAddService() {
-    return [
-      'Ajouter',
-      'Prestations',
-      'Paramétrage',
-      'Préférences',
-      'Atouts',
-      //TODO a remettre quand les dispos seront affichés dans le schedule /'Indiquez vos disponibilités',
-    ];
-  }
-
-  getStepsUpdateService() {
-    return [
-      'Configurez ce service',
-      'Modifiez vos prestations',
-      'Paramétrez votre service',
-      'Vos préférences de réservation',
-      'Vos atouts pour ce service !',
-      //TODO a remettre quand les dispos seront affichés dans le schedule /'Indiquez vos disponibilités',
-    ];
-  }
-
-  getStepsPayment() {
-    return [
-      'ADRESSE & FACTURATION',
-      'PAIEMENT'
-    ]
-  }
-
-  handleReset = () => {
-    this.setState({setActiveStep: 0, activeStep: 0});
-  };
 
   render() {
-    const {classes, activeStep, isType} = this.props;
+    const {classes, activeStep, orientation} = this.props;
 
+    const isVertical = orientation == 'vertical'
     return (
       <Grid className={classes.root}>
         <StepperMaterial
           activeStep={activeStep}
-          orientation={isType === 'creaShop' ? 'vertical' : 'horizontal'}
-          classes={{root :   isType === 'creaShop' ? classes.stepperShop : classes.stepperRoot}}
+          orientation={orientation}
+          classes={{root : isVertical ? classes.stepperShop : classes.stepperRoot}}
           style={{
-            justifyContent : isType === 'creaShop' ? 'space-around' : 'center'
+            justifyContent : isVertical ? 'space-around' : 'center'
           }}
-          connector={isType === 'creaShop' ? <Grid/> : <ColorlibConnector />}>
-          {this.state.steps.map(label => (
-            <Step key={label} classes={{root : isType === 'creaShop' ? classes.stepShop : classes.stepRoot}}>
+          connector={isVertical ? <Grid/> : <ColorlibConnector />}>
+          {this.props.steps.map(label => (
+            <Step key={label} classes={{root : isVertical ? classes.stepShop : classes.stepRoot}}>
               <StepLabel
-                classes={{root: isType === 'creaShop' ? classes.stepLabelShop :classes.stepLabelRoot}}
-                StepIconProps={{classes: {root: isType === 'creaShop' ? classes.stepIconShop : classes.stepIcon},
+                classes={{root: orientation === 'vertical' ? classes.stepLabelShop :classes.stepLabelRoot}}
+                StepIconProps={{classes: {root: isVertical ? classes.stepIconShop : classes.stepIcon},
               }}>
                 {label}
               </StepLabel>

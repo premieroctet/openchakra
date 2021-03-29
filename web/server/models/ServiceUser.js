@@ -145,10 +145,14 @@ const ServiceUserSchema = new Schema({
   // Frais livraison
   pick_tax: {
     type: Number,
+    default:0,
+    required:true
   },
   // Frais déplacement
   travel_tax: {
     type: Number,
+    default:0,
+    required:true
   },
   // Particulars can book
   particular_access: {

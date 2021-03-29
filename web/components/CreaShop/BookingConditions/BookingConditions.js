@@ -13,9 +13,8 @@ class BookingConditions extends React.Component {
     super(props);
     this.state = {
       booking_request: this.props.booking_request,
-      my_alfred_conditions: this.props.conditions, // BASIC/PICTURE/ID_CARD/RECOMMEND
+      my_alfred_conditions: this.props.my_alfred_conditions, // BASIC/PICTURE/ID_CARD/RECOMMEND
       cancel_mode: this.props.cancel_mode,
-
     };
 
     this.onAlfredConditionsChanged = this.onAlfredConditionsChanged.bind(this);

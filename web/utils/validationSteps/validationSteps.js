@@ -8,7 +8,13 @@ const creaShopPresentation = () => {
 };
 
 const selectService = (shop) => {
-  return Boolean(shop.service)
+  if (!Boolean(shop.service)) {
+    return false
+  }
+  if (!shop.particular_access && !shop.professional_access) {
+    return false
+  }
+  return true
 };
 
 const selectPrestation = (shop) => {
@@ -73,7 +79,7 @@ const bookingPreferences = shop => {
   return true
 }
 
-const introduceYou = (shop) => {
+const introduceYou = shop => {
   if (shop.is_particular) {
     if (!shop.cesu) {
       return false;
@@ -97,9 +103,6 @@ const introduceYou = (shop) => {
     return false;
   }
   if (shop.company.vat_subject && !shop.company.vat_number) {
-    return false
-  }
-  if (!shop.particular_access && !shop.professional_access) {
     return false
   }
   return true;

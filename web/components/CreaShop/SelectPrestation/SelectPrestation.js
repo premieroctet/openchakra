@@ -13,6 +13,7 @@ import {SHOP} from '../../../utils/i18n';
 import _ from 'lodash';
 const {getLoggedUserId}=require('../../../utils/functions');
 
+// TODO fix prestaitons personnalisées qui disparaissent lors du clic sur "Précédent"
 class SelectPrestation extends React.Component {
   constructor(props) {
     super(props);
@@ -35,7 +36,6 @@ class SelectPrestation extends React.Component {
     const alfred_id = getLoggedUserId();
     const part = this.props.particular_access
     const pro = this.props.professional_access
-    console.log(`Part:${part}, pro:${pro}`)
     let billings = null;
     setAxiosAuthentication();
     axios.get(`/myAlfred/api/billing/all`)
@@ -55,9 +55,9 @@ class SelectPrestation extends React.Component {
         // Filter paarticular/professional
         prestations=prestations.filter(p => (p.particular_access && part)||(p.professional_access && pro))
         // Remove private belonging to other Alfreds
-        prestations = prestations.filter(p => p.private_alfred == null || p.private_alfred == alfred_id);
-        let private_prestations = prestations.filter(p => p.private_alfred != null);
-        let public_prestations = prestations.filter(p => p.private_alfred == null);
+        prestations = prestations.filter(p => !Boolean(p.private_alfred) || p.private_alfred == alfred_id);
+        let private_prestations = prestations.filter(p => Boolean(p.private_alfred));
+        let public_prestations = prestations.filter(p => !Boolean(p.private_alfred));
         let grouped = _.mapValues(_.groupBy(public_prestations, 'filter_presentation.label'),
           clist => clist.map(public_prestations => _.omit(public_prestations, 'filter_presentation.label')));
         let presta_templates = private_prestations.map(p => {
@@ -66,7 +66,7 @@ class SelectPrestation extends React.Component {
         grouped = {[CUSTOM_PRESTATIONS_FLTR]: presta_templates, ...grouped};
         this.setState({grouped: grouped});
       }).catch(error => {
-      console.error(error);
+        console.error(error);
     });
   }
 
@@ -79,6 +79,9 @@ class SelectPrestation extends React.Component {
       billing: this.state.all_billings,
       description: '',
       price: null,
+      private_alfred: getLoggedUserId(),
+      particular_access: this.props.particular_access,
+      professional_access: this.props.professional_access,
     };
     grouped[CUSTOM_PRESTATIONS_FLTR].push(custom_presta);
     this.setState({grouped: grouped});
@@ -95,6 +98,9 @@ class SelectPrestation extends React.Component {
     let sel = this.state.prestations;
     if (checked) {
       sel[prestaId] = {_id: prestaId, label: label, price: price, billing: billing};
+      if (prestaId.toString().length==GID_LEN) {
+        sel[prestaId]['private_alfred']=getLoggedUserId()
+      }
     } else {
       delete sel[prestaId];
     }

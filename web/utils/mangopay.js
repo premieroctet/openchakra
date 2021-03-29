@@ -8,6 +8,7 @@ const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentSt
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType');
 const mangoApi = new mangopay(MANGOPAY_CONFIG)
 const {is_development, get_host_url} = require('../config/config');
+const process=require('process')
 
 const createMangoClient = user => {
   var userData = {
@@ -320,49 +321,51 @@ const payAlfred = booking => {
     });
 };
 
+// TODO : update hook s'il existe pour éviter les warning au démarrage
 const install_hooks= (hook_types, url) => {
+
+  if (is_development() && process.platform != 'darwin') {
+    return console.log(`Dev mode: skipped install_hooks(${hook_types})`)
+  }
+
   var host=get_host_url()
   if (is_development()) {
     host=host.replace('https', 'http')
   }
   const hook_url = new URL(url, host);
-  hook_types.forEach(hookType => {
-   console.log(`Setting hook ${hook_url} for ${hookType}`);
-   mangoApi.Hooks.create({
-     Tag: 'MyAlfred hook',
-     EventType: hookType,
-     Status: 'ENABLED',
-     Validity: 'VALID',
-     Url: hook_url,
-   })
-     .then(res => {
-       console.log(`Set hook ${hookType} to ${hook_url}`);
-     })
-     .catch(err => {
-       if (err.errors && err.errors.EventType && err.errors.EventType.includes('already been registered')) {
-         mangoApi.Hooks.getAll()
-           .then(res => {
-             const hookId = res.find(h => h.EventType == hookType).Id;
-             return hookId;
-           })
-           .then(hookId => {
-             mangoApi.Hooks.update({
-               Id: hookId,
-               Tag: 'MyAlfred hook',
-               EventType: hookType,
-               Status: 'ENABLED',
-               Validity: 'VALID',
-               Url: hook_url,
-             })
-               .then(() => {
-                 console.log(`Updated ${hookType} to ${hook_url}`);
-               });
-           });
-       } else {
-         console.error(`Error for hook ${hookType}:${JSON.stringify(err)}`);
-       }
-     });
- });
+
+  mangoApi.Hooks.getAll()
+    .then (declared_hooks => {
+
+      const hook_data={
+        Tag: 'MyAlfred hook',
+        Status: 'ENABLED',
+        Validity: 'VALID',
+        Url: hook_url,
+      }
+
+      hook_types.forEach(hook_type => {
+        const hook = declared_hooks.find(h => h.EventType == hook_type)
+        var request
+        if (hook) {
+          request = mangoApi.Hooks.update({ Id: hook.Id, EventType: hook_type, ...hook_data})
+        }
+        else {
+          request = mangoApi.Hooks.create({EventType: hook_type, ...hook_data})
+        }
+        request
+          .then( res => {
+            console.log(`${hook ? 'Updated' : 'Created'} ${hook_type} to ${hook_url}`);
+          })
+          .catch ( err => {
+            console.error(`Error for ${hook_type}:${err}`)
+            //console.error(err)
+          })
+      })
+    })
+    .catch (err => {
+      console.error(err)
+    })
 }
 
 module.exports = {

@@ -542,7 +542,10 @@ class NavBar extends Component {
                   name={'keyword'}
                   label={ifHomePage ? SEARCHBAR.labelWhat : ''}
                   onKeyPress={(e) => {
-                    e.key === 'Enter' && e.preventDefault();
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      this.findService()
+                    }
                   }}
                   InputLabelProps={{
                     shrink: true,
@@ -561,7 +564,7 @@ class NavBar extends Component {
                   <FormControl className={classes.navbarFormControlAddress}>
                     {this.state.ifHomePage ?
                       <InputLabel shrink id="demo-simple-select-placeholder-label-label">
-                        L'Adresse
+                        L'adresse
                       </InputLabel> : null
                     }
                     <Select
@@ -771,7 +774,7 @@ class NavBar extends Component {
                             <Link href={'/particular'}>
                               <Tab
                                 classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                label={'Retour Alfred Particuliers'}
+                                label={'Espace Particuliers'}
                               />
                             </Link> : null
 

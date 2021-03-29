@@ -83,9 +83,13 @@ class CardService extends React.Component{
   };
 
   deleteService(id) {
-    axios.delete('/myAlfred/api/serviceUser/' + id)
+    axios.delete(`/myAlfred/api/serviceUser/${id}`)
       .then(() => {
-        this.setState({open: false, id_service: ''}, () => window.location.reload());
+        this.setState({open: false, id_service: ''}, () => {
+          if (this.props.onDelete) {
+            this.props.onDelete(id)
+          }
+        });
       })
       .catch(err => console.error(err));
   }
@@ -157,7 +161,7 @@ class CardService extends React.Component{
                 profileMode && editable ?
                   <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
                     <Grid>
-                      <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/myShop/services?id=${cpData._id}`)}>
+                      <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
                         <EditIcon style={{color: 'white'}} />
                       </IconButton>
                     </Grid>

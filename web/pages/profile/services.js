@@ -37,6 +37,10 @@ class ProfileServices extends React.Component {
     return {user: user};
   }
 
+  onDelete = serviceuser_id => {
+    this.componentDidMount()
+  }
+
   content = (classes, user, shop) => {
 
     const editable = isEditableUser(user);
@@ -58,7 +62,7 @@ class ProfileServices extends React.Component {
           shop.services.length ?
             <Grid item xs={12} xl={12}>
               <Box>
-                <Services user={user} shop={shop}/>
+                <Services user={user} shop={shop} onDelete={this.onDelete}/>
               </Box>
             </Grid> : null : null
         }
@@ -84,7 +88,7 @@ class ProfileServices extends React.Component {
     if (!user) {
       return null
     }
-    
+
     return (
       <React.Fragment>
         <Hidden only={['xs']}>

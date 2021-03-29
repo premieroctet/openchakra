@@ -24,7 +24,8 @@ class AddService extends React.Component {
   };
 
   clickService = () => {
-    Router.push(isLoggedUserAlfred() ? `/myShop/services?user=${this.props.user}` : '/creaShop/creaShop')
+    //Router.push(isLoggedUserAlfred() ? `/myShop/services?user=${this.props.user}` : '/creaShop/creaShop')
+    Router.push('/creaShop/creaShop')
   };
 
   render() {

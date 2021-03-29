@@ -10,16 +10,17 @@ import isEmpty from '../../../server/validation/is-empty';
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import {SHOP} from '../../../utils/i18n';
+const moment=require('moment')
 
+// TODO : régler le pb du ButtonSwitch frais de déplacements
 class SettingService extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       location: props.location || {},
-      service: null,
-      travel_tax: props.travel_tax || null,
-      pick_tax: props.pick_tax || null,
+      travel_tax: props.travel_tax || 0,
+      pick_tax: props.pick_tax || 0,
       perimeter: props.perimeter,
     };
     this.stateButton = this.stateButton.bind(this);
@@ -143,7 +144,7 @@ class SettingService extends React.Component {
             }
         </Grid>
         <Grid container spacing={1} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
-          {service && (service.travel_tax || service.pick_tax) ?
+          {(travel_tax || pick_tax) ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <h4 className={classes.policySizeSubtitle} style={{margin:0}}>{SHOP.settingService.section_option_title}</h4>
             </Grid> : null
@@ -151,7 +152,7 @@ class SettingService extends React.Component {
           {service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se checke pas
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
-                ckecked={travel_tax != null}
+                ckecked={Boolean(travel_tax)}
                 price={travel_tax}
                 id='travel_tax'
                 label={SHOP.settingService.apply_moving_price}
@@ -163,7 +164,7 @@ class SettingService extends React.Component {
           {service && service.pick_tax ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
-                checked={pick_tax != null}
+                checked={!!pick_tax}
                 price={pick_tax}
                 id='pick_tax'
                 label={SHOP.settingService.propose_delivery}
