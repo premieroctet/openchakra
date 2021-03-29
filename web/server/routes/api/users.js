@@ -26,6 +26,7 @@ const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise.js');
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../../utils/mangopay');
+const {sendCookie}=require('../../utils/context')
 
 
 axios.defaults.withCredentials = true;
@@ -555,6 +556,7 @@ router.post('/login', (req, res) => {
 
   // Find user by email
   User.findOne({email})
+    .populate('shop', 'is_particular')
     .then(user => {
       // Check for user
       if (!user) {
@@ -585,25 +587,8 @@ router.post('/login', (req, res) => {
             user.save()
               .then ( res => console.log(`${user.full_name} : updated last_login`))
               .catch ( err => console.error(err))
-            // User matched
-            const payload = {
-              id: user.id,
-              name: user.name,
-              firstname: user.firstname,
-              is_admin: user.is_admin,
-              is_alfred: user.is_alfred,
-              role: role,
-            }; // Create JWT payload
             // Sign token
-            jwt.sign(payload, keys.secretOrKey, (err, token) => {
-              jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
-                res.cookie('token', 'Bearer ' + token, {
-                  httpOnly: false,
-                  secure: true,
-                  sameSite: true,
-                }).status(201).json();
-              });
-            });
+            sendCookie(user, res)
           }
           else {
             console.warn(`Invalid login : bad password ${password} for ${email}`)
@@ -616,23 +601,9 @@ router.post('/login', (req, res) => {
 
 router.get('/token',  passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findById(req.user.id)
+    .populate('shop', 'is_particular')
     .then( user => {
-      const payload = {
-        id: user.id,
-        name: user.name,
-        firstname: user.firstname,
-        is_admin: user.is_admin,
-        is_alfred: user.is_alfred,
-      }; // Create JWT payload
-
-      jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
-        res.cookie('token', 'Bearer ' + token, {
-          httpOnly: false,
-          secure: true,
-          sameSite: true,
-        })
-          .status('201').json()
-      })
+      sendCookie(user, res)
     })
     .catch( err => {
       console.error(err)

@@ -74,6 +74,7 @@ const sendCookie = (user, res) => {
     firstname: user.firstname,
     is_admin: user.is_admin,
     is_alfred: user.is_alfred,
+    is_alfred_pro: user.shop.is_particular,
   }; // Create JWT payload
 
   jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
@@ -83,7 +84,7 @@ const sendCookie = (user, res) => {
       sameSite: true,
     })
       .status('201')
-      .redirect('/');
+      .json()
   });
 };
 
