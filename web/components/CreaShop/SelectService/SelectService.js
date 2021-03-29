@@ -109,16 +109,14 @@ class SelectService extends React.Component {
 
     var options=[]
     if (particular_professional_access) {
-      options=[
-        {
-          label: SHOP.service.section_company,
-          options: services[PRO]
-        },
-        {
-          label: SHOP.service.section_particular,
-          options: services[PART]
-        }
-      ]
+      // Intersection services pro & part
+      options = services[PRO].filter( s => services[PART].map(s => s._id).includes(s._id))
+      // Union keywords part & pro versions
+      options=options.map( spro => {
+        const service_part = services[PART].find(spart => spart._id == spro._id)
+        spro.keywords  = _.uniq(spro.keywords.split(' ').concat(service_part.keywords.split(' '))).join(' ')
+        return spro
+      })
     }
     else {
       options = professional_access ? services[PRO] : services[PART]
@@ -204,7 +202,7 @@ class SelectService extends React.Component {
             isLoading={loading}
             loadingMessage={() => 'Recherche des services'}
             placeholder={SHOP.service.placeholder}
-            value={(options||[]).find(o => o._id==service)}
+            value={(options||[]).find(o => service && o._id==service)}
             styles={professional_access && particular_access ? tabbedStyle : ''}
           />
         </Grid>
