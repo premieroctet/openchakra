@@ -566,11 +566,6 @@ class creaShop extends React.Component {
           <Grid>
             <Box overWritteCSS={true}>
               <Grid>
-                { is_development()  ?
-                  <h1>{this.state.mode}</h1>
-                  :
-                  null
-                }
                 <Grid>
                   {this.renderSwitch(activeStep)}
                 </Grid>
