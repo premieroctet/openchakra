@@ -97,17 +97,17 @@ const createMangoProvider = (user, shop) => {
     });
 };
 
-const createMangoCompany = (user, company) => {
+const createOrUpdateMangoCompany = company => {
 
-  console.log(`Creating mango company for company ${company.name}, representative is ${user.name}`);
+  console.log(`Creating/updating mango company for company ${company.name}, representative is ${company.representative.full_name}`);
   var companyData = {
     PersonType: PersonType.Legal,
     Name: company.name,
-    Email: user.email,
+    Email: company.representative.email,
     LegalPersonType: 'BUSINESS',
-    LegalRepresentativeFirstName: user.firstname,
-    LegalRepresentativeLastName: user.name,
-    LegalRepresentativeEmail: user.email,
+    LegalRepresentativeFirstName: company.representative.firstname,
+    LegalRepresentativeLastName: company.representative.name,
+    LegalRepresentativeEmail: company.representative.email,
     HeadquartersAddress: new mangoApi.models.Address({
         AddressLine1: company.billing_address.address,
         AddressLine2: '',
@@ -116,20 +116,30 @@ const createMangoCompany = (user, company) => {
         PostalCode: company.billing_address.zip_code,
         Country: 'FR',
     }),
-    LegalRepresentativeBirthday: moment(user.birthday).unix(),
+    LegalRepresentativeBirthday: moment(company.representative.birthday).unix(),
     LegalRepresentativeNationality: 'FR',
     LegalRepresentativeCountryOfResidence: 'FR',
     CompanyNumber: company.siret,
-    Tag: `Company ${company.name}/Repr. ${user.firstname} ${user.name}`
+    Tag: `Company ${company.name}/Repr. ${company.representative.full_name}`
   };
 
-  mangoApi.Users.create(companyData)
-    .then(company => {
-      console.log(`Created Mango company ${JSON.stringify(company)}`);
-      company.mangopay_id = newUser.Id;
-      user.save().then().catch();
+  var method;
+  if (company.id_mangopay) {
+    companyData.Id = company.id_mangopay
+    method = mangoApi.Users.update(companyData)
+  }
+  else {
+    method = mangoApi.Users.create(companyData)
+  }
+  method
+    .then(mangopay_company => {
+      console.log(`Created Mango company ${JSON.stringify(mangopay_company)}`);
+      company.id_mangopay = mangopay_company.Id;
+      company.save()
+        .then( res => console.log(`Created/update company ${JSON.stringify(company)}`))
+        .catch( err => console.error(err))
       mangoApi.Wallets.create({
-        Owners: [company.Id],
+        Owners: [mangopay_company.Id],
         Description: `Wallet ${company._id} / ${company.name}company`,
         Currency: 'EUR',
       })
@@ -372,7 +382,7 @@ module.exports = {
   mangoApi,
   createMangoClient,
   createMangoProvider,
-  createMangoCompany,
+  createOrUpdateMangoCompany,
   addIdIfRequired,
   addRegistrationProof,
   payAlfred,

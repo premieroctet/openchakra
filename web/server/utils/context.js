@@ -19,7 +19,7 @@ const is_b2b_admin = req => {
 }
 
 //Create JWT cookie with user credentials
-const sendCookie = (user, res) => {
+const sendCookie = (user, role, res) => {
   const payload = {
     id: user.id,
     name: user.name,
@@ -27,6 +27,7 @@ const sendCookie = (user, res) => {
     is_admin: user.is_admin,
     is_alfred: user.is_alfred,
     is_alfred_pro: user.shop && user.shop.length==1 && !user.shop[0].is_particular,
+    role: role,
   }; // Create JWT payload
 
   jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {

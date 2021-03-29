@@ -23,7 +23,7 @@ const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise');
 const {ADMIN, MANAGER, EMPLOYEE} = require('../../../utils/consts')
 var _ = require('lodash')
-const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
+const {addRegistrationProof, createOrUpdateMangoCompany, install_hooks} = require('../../../utils/mangopay');
 
 
 axios.defaults.withCredentials = true;
@@ -462,7 +462,9 @@ router.put('/representative', passport.authenticate('b2badmin', {session: false}
   const representative_id = req.body.representative_id
 
   Company.findByIdAndUpdate(company_id, {representative : representative_id}, { new : true} )
+    .populate('representative')
     .then (company => {
+      createOrUpdateMangoCompany(company)
       res.json(company)
     })
     .catch( err => {

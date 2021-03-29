@@ -316,7 +316,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
       }
 
       if (user.active) {
-        sendCookie(user, res)
+        sendCookie(user, null, res)
       } else {
         errors = 'Utilisateur inactif';
         return res.status(400).json(errors);

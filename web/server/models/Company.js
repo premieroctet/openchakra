@@ -77,7 +77,12 @@ const CompanySchema = new Schema({
   representative : {
     type: Schema.Types.ObjectId,
     ref: 'users',
-  }
+  },
+  // Mangopay as client
+  id_mangopay: {
+    type: String,
+    default: null,
+  },
 }, {toJSON: {virtuals: true, getters: true}});
 
 

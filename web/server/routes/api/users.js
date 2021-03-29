@@ -594,7 +594,7 @@ router.post('/login', (req, res) => {
               .then ( res => console.log(`${user.full_name} : updated last_login`))
               .catch ( err => console.error(err))
             // Sign token
-            sendCookie(user, res)
+            sendCookie(user, role, res)
           }
           else {
             console.warn(`Invalid login : bad password ${password} for ${email}`)
@@ -609,7 +609,7 @@ router.get('/token',  passport.authenticate('jwt', {session: false}), (req, res)
   User.findById(req.user.id)
     .populate('shop', 'is_particular')
     .then( user => {
-      sendCookie(user, res)
+      sendCookie(user, null, res)
     })
     .catch( err => {
       console.error(err)
