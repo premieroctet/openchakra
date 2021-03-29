@@ -38,6 +38,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import ShowExperience from "../../components/ShowEperience/ShowExperience";
+import ShowDiploma from "../../components/ShowDiploma/ShowDiploma";
 const moment=require('moment');
 moment.locale('fr');
 
@@ -432,7 +433,7 @@ class ProfileAbout extends React.Component {
             </Grid>
             <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
               <Box>
-                <p>diplomes</p>
+                <ShowDiploma user={user}/>
               </Box>
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
