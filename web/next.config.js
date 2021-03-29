@@ -9,14 +9,9 @@ module.exports = withCSS({
       };
     }
     config.module.rules.push({
-      test : /\.(png|jp(e*)g|gif)$/,
+      test : /\.(png|jp(e*)g|gif|svg)$/,
       exclude: /(node_modules)/,
       loader : require.resolve('url-loader')
-    })
-    config.module.rules.push({
-      test: /\.svg$/,
-      exclude: /(node_modules)/,
-      loader: require.resolve('@svgr/webpack'),
     })
     return config;
   },

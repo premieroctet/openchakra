@@ -105,8 +105,6 @@ class BookingPreApprouve extends React.Component {
 
     const dateObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.PREAPPROVED};
 
-    console.log('dateObj:' + JSON.stringify(dateObj));
-
     axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
 
       .then(res => {
