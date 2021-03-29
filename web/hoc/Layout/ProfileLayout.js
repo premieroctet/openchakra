@@ -79,7 +79,7 @@ class ProfileLayout extends React.Component {
                 <Grid className={classes.profilLayoutBox}>
                   <Grid className={is_mode_company() ? classes.profilLayoutBannerImgB2b : classes.profilLayoutBannerImg}>
                     <Grid className={classes.profilLayoutAvatar}>
-                      <UserAvatar alt={user.firstname} user={user} className={classes.cardPreviewLarge}/>
+                      <UserAvatar alt={!is_mode_company() ? user.firstname : company ? company.name : ''} user={!is_mode_company() ? user : company ? company : ''} className={classes.cardPreviewLarge}/>
                     </Grid>
                   </Grid>
                   <Grid style={{

@@ -72,7 +72,7 @@ class LayoutMobileProfile extends React.Component{
     const{children, classes, currentIndex} = this.props;
     const{user, company} = this.state;
 
-    if (!user || !company) {
+    if (!user) {
       return null
     }
 
@@ -90,7 +90,7 @@ class LayoutMobileProfile extends React.Component{
           </Grid>
           <Grid className={classes.layoutMobileLayoutProfileHeader}>
             <Grid className={classes.profilLayoutAvatar}>
-              <UserAvatar alt={!is_mode_company() ? user.firstname : company.name} user={is_mode_company() ? company : user} className={classes.cardPreviewLarge} />
+              <UserAvatar alt={!is_mode_company() ? user.firstname : company ? company.name : ''} user={!is_mode_company() ? user : company ? company : ''} className={classes.cardPreviewLarge} />
             </Grid>
           </Grid>
           <Grid style={{display: 'flex',height: '40%', alignItems: 'center', marginTop: '10vh', marginLeft: '5vh'}}>
