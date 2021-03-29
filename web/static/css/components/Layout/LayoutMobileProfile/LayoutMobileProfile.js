@@ -1,6 +1,14 @@
 export default theme => ({
   layoutMobileProfilHeader:{
-    backgroundImage: 'url(../../../../assets/img/banner/banneProfil.svg)',
+    backgroundImage: 'url(/assets/img/banner/bannerProfile.svg)',
+    height: '30vh',
+    backgroundPosition: 'right',
+    backgroundSize: 'cover',
+    position: 'relative',
+    backgroundRepeat: 'no-repeat'
+  },
+  layoutMobileProfilHeaderPro:{
+    backgroundImage: 'url(/assets/img/banner/bannerProfilePro.svg)',
     height: '30vh',
     backgroundPosition: 'right',
     backgroundSize: 'cover',
