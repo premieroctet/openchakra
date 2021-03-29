@@ -33,7 +33,7 @@ const WELCOME = {
 }
 const INTRODUCE = {
   menu : 'Création',
-  is_valid : parent => introduceYou(parent.state.shop),
+  is_valid : parent => validationSteps.introduceYou(parent.state.shop),
   component: parent => <IntroduceYou
                       key={moment()}
                       {...parent.state.shop}
