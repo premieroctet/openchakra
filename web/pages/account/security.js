@@ -333,7 +333,7 @@ class security extends React.Component {
             <h2>Sécurité</h2>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Modifier votre mot de passe et gérer votre compte.</Typography>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Modifiez votre mot de passe et gérez votre compte.</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -344,7 +344,7 @@ class security extends React.Component {
             <h3>Mot de passe</h3>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Modifier votre mot de passe.</Typography>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Modifiez votre mot de passe.</Typography>
           </Grid>
         </Grid>
         <Grid style={{marginTop: '10vh'}}>

@@ -11,6 +11,9 @@ import BookingPreference from '../../components/CreaShop/BookingPreference/Booki
 import AssetsService from '../../components/CreaShop/AssetsService/AssetsService';
 import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
+import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
+const I18N = require('../../utils/i18n');
+/**
 import { assetsService,
     creaShopPresentation,
   introduceYou,
@@ -20,10 +23,12 @@ import { assetsService,
   settingShop,
   bookingPreferences,
 } from '../../utils/validationSteps/validationSteps';
+*/
+const validationSteps=require('../../utils/validationSteps/validationSteps')
 
 const WELCOME = {
   menu : 'Bienvenue',
-  is_valid : parent => creaShopPresentation(),
+  is_valid : parent => validationSteps.creaShopPresentation(),
   component: parent => <CreaShopPresentation user={parent.state.currentUser}/>,
 }
 const INTRODUCE = {
@@ -32,18 +37,38 @@ const INTRODUCE = {
   component: parent => <IntroduceYou
                       key={moment()}
                       {...parent.state.shop}
-                      mode={parent.state.mode}
                       onChange={parent.introduceChanged}
                      />
 }
 
-const SERVICE = {
-  menu : 'Services/Ajouter/Configurer',
-  is_valid : parent => selectService(parent.state.shop),
+const SERVICE_CREATE = {
+  menu : 'Services',
+  is_valid : parent => validationSteps.selectService(parent.state.shop),
   component: parent => <SelectService
                         {...parent.state.shop}
-                        creation={true}
-                        creationBoutique={true}
+                        mode={parent.state.mode}
+                        excluded_services={parent.state.excluded_services}
+                        onChange={parent.onServiceChanged}
+                      />,
+}
+
+const SERVICE_ADD = {
+  menu : 'Ajouter',
+  is_valid : parent => validationSteps.selectService(parent.state.shop),
+  component: parent => <SelectService
+                        {...parent.state.shop}
+                        mode={parent.state.mode}
+                        excluded_services={parent.state.excluded_services}
+                        onChange={parent.onServiceChanged}
+                      />,
+}
+
+const SERVICE_UPDATE = {
+  menu : 'Configurer',
+  is_valid : parent => validationSteps.selectService(parent.state.shop),
+  component: parent => <SelectService
+                        {...parent.state.shop}
+                        mode={parent.state.mode}
                         excluded_services={parent.state.excluded_services}
                         onChange={parent.onServiceChanged}
                       />,
@@ -51,19 +76,19 @@ const SERVICE = {
 
 const PRESTATIONS = {
   menu : 'Prestations',
-  is_valid : parent => selectPrestation(parent.state.shop),
+  is_valid : parent => validationSteps.selectPrestation(parent.state.shop),
   component : parent => <SelectPrestation {...parent.state.shop}  onChange={parent.onPrestaChanged} />
 }
 
 const PARAMETERS = {
   menu : 'Paramétrage',
-  is_valid : parent => settingService(parent.state.shop),
+  is_valid : parent => validationSteps.settingService(parent.state.shop),
   component : parent => <SettingService {...parent.state.shop} onChange={parent.settingsChanged}/>
 }
 
 const PREFERENCES = {
   menu : 'Préférences',
-  is_valid : parent => bookingPreferences(parent.state.shop),
+  is_valid : parent => validationSteps.bookingPreferences(parent.state.shop),
   component : parent => <BookingPreference  {...parent.state.shop} onChange={parent.preferencesChanged} />
 }
 
@@ -75,7 +100,7 @@ const ATOUTS = {
 
 const SCHEDULE = {
   menu : 'Disponibilités',
-  is_valid : parent => !(this.scheduleDrawer.current && this.scheduleDrawer.current.isDirty()),
+  is_valid : parent => !(parent.scheduleDrawer.current && parent.scheduleDrawer.current.isDirty()),
   component : parent => <DrawerAndSchedule
                           availabilities={parent.state.availabilities}
                           title={I18N.SCHEDULE_TITLE}
@@ -101,13 +126,9 @@ const CONDITIONS = {
 
 
 const STEPS={
-  [CREASHOP_MODE.CREATION] : [ WELCOME, INTRODUCE, SERVICE, PRESTATIONS, PARAMETERS, PREFERENCES, ATOUTS, SCHEDULE, CONDITIONS],
-  [CREASHOP_MODE.SERVICE_ADD] : {
-    menus : ['Ajouter', 'Prestations', 'Paramétrage', 'Préférences', 'Atouts'],
-  },
-  [CREASHOP_MODE.SERVICE_UPDATE] : {
-    menus: ['Configurer', 'Prestations', 'Paramétrage', 'Préférences', 'Atouts']
-  }
+  [CREASHOP_MODE.CREATION] : [ WELCOME, INTRODUCE, SERVICE_CREATE, PRESTATIONS, PARAMETERS, PREFERENCES, ATOUTS, SCHEDULE, CONDITIONS],
+  [CREASHOP_MODE.SERVICE_ADD] : [ SERVICE_ADD, PRESTATIONS, PARAMETERS, PREFERENCES, ATOUTS],
+  [CREASHOP_MODE.SERVICE_UPDATE] : [ SERVICE_UPDATE, PRESTATIONS, PARAMETERS, PREFERENCES, ATOUTS],
 }
 
 module.exports={STEPS}

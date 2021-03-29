@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const axios = require('axios');
 const CronJob = require('cron').CronJob;
 const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
@@ -52,22 +53,14 @@ const CANCEL_MODE = {
 // FIX : inclure les disponibilites
 router.post('/add', passport.authenticate('jwt', {session: false}), async (req, res) => {
 
-
-  console.log('equipments before:' + JSON.stringify(req.body.equipments, null, 2));
-  req.body.equipments = JSON.parse(req.body.equipments);
-  console.log('equipments after:' + JSON.stringify(req.body.equipments, null, 2));
-  // FIX: Ajouter date de création de boutique
   console.log('Creating shop');
   const {isValid, errors} = validateShopInput(req.body);
 
   if (!isValid) {
-    console.log('Errors:' + JSON.stringify(errors));
     return res.status(400).json(errors);
   }
 
-  Shop.findOne({
-    alfred: req.user.id,
-  })
+  Shop.findOne({alfred: req.user.id})
     .then(shop => {
       if (shop === null) {
         shop = new Shop();
@@ -102,70 +95,42 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
       console.log('Saving shop:' + JSON.stringify(shop));
       shop.save()
         .then(shop => {
-          User.findById(shop.alfred)
-            .then(alfred => {
-              createMangoProvider(alfred, shop);
-              sendShopOnline(alfred, req);
-            })
-            .catch(err => console.error(err));
-          var su = data2ServiceUser(req.body, new ServiceUser());
-          su.user = req.user.id;
-          // FIX : créer les prestations custom avant
-          req.body.prestations = JSON.parse(req.body.prestations);
-          let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
-          let newPrestaModels = newPrestations.map(p => Prestation({
-            ...p,
-            s_label : normalize(p.label),
-            service: req.body.service,
-            billing: [p.billing],
-            filter_presentation: null,
-            private_alfred: req.user.id,
-            particular_access: req.body.particular_access,
-            professional_access: req.body.professional_access,
-          }));
-
-          const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({insertedIds: []});
-          r
-            .catch(error => console.log('Error insert many' + JSON.stringify(error, null, 2)))
-            .then(result => {
-
-              console.log('newPrestationsModel after save:' + JSON.stringify(result));
-              var newIds = result.insertedIds;
-
-              // Update news prestations ids
-              newPrestations.forEach((p, idx) => {
-                p._id = newIds[idx];
-                console.log('Presta sauvegardée : ' + JSON.stringify(p));
-              });
-
-              Object.values(req.body.prestations).forEach(presta => {
-                if (!presta.price) {
-                  console.error(`Presta ${presta._id} : non ajoutée, prix à 0`);
-                } else {
-                  p = {prestation: presta._id, billing: presta.billing, price: presta.price};
-                  su.prestations.push(p);
-                  console.log('Presta ajoutée : ' + JSON.stringify(p));
-                }
-              });
-
-              su.save()
-                .then(su => {
-                  console.log('Shop update ' + shop._id);
-                  shop.services.push(su._id);
-                  shop.save();
-                  User.findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
-                    .then(user => {
-                      console.log('Updated alfred');
+          axios.defaults.headers.common['Authorization']=req.headers.authorization
+          axios.post('/myAlfred/api/serviceUser/addUpdate', req.body, { new: true})
+            .then( ressu => {
+              User.findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
+                .then(alfred => {
+                  createMangoProvider(alfred, shop);
+                  sendShopOnline(alfred, req);
+                  // Recharger le shop qui a été modié dans serviceUser/addUpdate
+                  Shop.findOne({alfred: alfred})
+                    .then ( result => {
                       res.json(shop);
                     })
-                    .catch(err => console.log('Error:' + JSON.stringify(err)));
+                    .catch(err => {
+                      console.log(err)
+                      res.status(404).json(err)
+                    });
                 })
-                .catch(err => console.log('Error:' + err));
+                .catch(err => {
+                  console.error(err)
+                  res.status(404).json(err)
+                });
+            })
+            .catch(err => {
+              console.error(err)
+              res.status(404).json(err)
             });
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(404).json(err)
         });
-    })
-    .catch(err => console.error(err));
-
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(404).json(err)
+      });
 });
 
 

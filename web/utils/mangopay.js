@@ -320,6 +320,7 @@ const payAlfred = booking => {
     });
 };
 
+// TODO : update hook s'il existe pour éviter les warning au démarrage
 const install_hooks= (hook_types, url) => {
   var host=get_host_url()
   if (is_development()) {

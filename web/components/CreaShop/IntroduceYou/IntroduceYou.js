@@ -79,7 +79,6 @@ class IntroduceYou extends React.Component {
     const {classes} = this.props;
 
     const {cesu, is_particular} = this.state;
-    const {mode}=this.props
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>

@@ -53,15 +53,13 @@ const ASSETSSERVICE6=6
 const SCHEDULE7=7
 const BOOKCONDITIONS8=8
 
-const LASTSTEP=BOOKCONDITIONS8
-
 class creaShop extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: is_development() ? 0 : 0,
+      activeStep: 0,
       saving: false,
       availabilities: [],
       currentUser:{},
@@ -73,7 +71,7 @@ class creaShop extends React.Component {
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: 'Merci pour votre réservation!',
         cancel_mode: CANCEL_MODE.FLEXIBLE,            // FLEXIBLE/MODERATE/STRICT
-        is_particular: is_development() ? false : true,        // true/false : particulier.pro
+        is_particular: true,        // true/false : particulier.pro
         company: {name: null, creation_date: null, siret: null, naf_ape: null, status: null, vat_subject: false, vat_number: null},
         cesu: null,
         cis: false,
@@ -114,8 +112,8 @@ class creaShop extends React.Component {
     this.scheduleDrawer = React.createRef()
   }
 
-  static getInitialProps({query: {service_id}}) {
-    return {service_id: service_id};
+  static getInitialProps({query: {serviceuser_id}}) {
+    return {serviceuser_id: serviceuser_id};
   }
 
   componentDidMount() {
@@ -160,14 +158,28 @@ class creaShop extends React.Component {
             shop.is_certified=true
 
             // Si mode ajout de service, récupérer les services de la boutique pour les excludre des choix
-            if (this.props.service_id) {
-              console.log(`Service à modifier:${this.props.service_id}`)
-              shop.service = this.props.service_id
-              this.setState({
-                mode : CREASHOP_MODE.SERVICE_UPDATE,
-                shop : {service: this.props.service_id, ...shop},
-                loading: false,
-              })
+            if (this.props.serviceuser_id) {
+              axios.get(`/myAlfred/api/serviceUser/${this.props.serviceuser_id}`)
+                .then ( res => {
+                  const serviceuser=res.data
+                  shop.service = serviceuser.service._id
+                  var prestations={}
+                  serviceuser.prestations.forEach( presta => {
+                    prestations[presta.prestation._id.toString()]={
+                      _id : presta.prestation._id,
+                      label : presta.prestation.label,
+                      billing : presta.billing,
+                      price: presta.price,
+                    }
+                  });
+                  shop.prestations = prestations
+                  this.setState({
+                    mode : CREASHOP_MODE.SERVICE_UPDATE,
+                    shop : shop,
+                    loading: false,
+                  })
+                })
+                .catch( err => console.error(err))
             }
             else {
               axios.get('/myAlfred/api/serviceUser/currentAlfred')
@@ -261,11 +273,12 @@ class creaShop extends React.Component {
   };
 
   handleNext = () => {
-    if (this.state.activeStep < LASTSTEP) {
+    if (!this.isLastStep() ) {
       this.setState({activeStep: this.state.activeStep + 1});
     }
     // last page => post
     else {
+      const mode=this.state.mode
       this.setState({saving: true});
       let cloned_shop = _.cloneDeep(this.state.shop);
       Object.keys(cloned_shop.prestations).forEach(key => {
@@ -273,23 +286,23 @@ class creaShop extends React.Component {
           cloned_shop.prestations[key]._id = null;
         }
       });
-      cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
-      cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
 
       setAxiosAuthentication()
-      axios.post('/myAlfred/api/shop/add', cloned_shop)
+      const url = mode == CREASHOP_MODE.CREATION ? '/myAlfred/api/shop/add' : `/myAlfred/api/serviceUser/addUpdate/${this.props.serviceuser_id || ''}`
+      axios.post(url, cloned_shop)
         .then(res => {
           // Update toekn
-          axios.get('/myAlfred/api/users/token')
-            .then ( res => {
-              setAuthToken();
-              this.loadData()
-            })
-            .catch (err => {
-              console.error(err)
-            })
-          snackBarSuccess('Boutique créée')
-          var su_id = res.data.services[0];
+          if (mode == CREASHOP_MODE.CREATION) {
+            axios.get('/myAlfred/api/users/token')
+              .then ( res => {
+                setAuthToken();
+              })
+              .catch (err => {
+                console.error(err)
+              })
+          }
+          snackBarSuccess(mode==CREASHOP_MODE.CREATION ? 'Boutique créée' : mode==CREASHOP_MODE.SERVICE_ADD ? 'Service ajouté' : 'Service modifié')
+          var su_id = mode==CREASHOP_MODE.CREATION ? res.data.services[0] : res.data
           if (cloned_shop.diplomaName) {
             var dpChanged = typeof (cloned_shop.diplomaPicture) == 'object';
             const formData = new FormData();
@@ -426,6 +439,12 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
+  isLastStep = () => {
+    const {mode, activeStep}=this.state
+    const steps_count = STEPS[mode].length
+    return activeStep == steps_count-1
+  }
+
   handlePrev = () => {
     const {activeStep}=this.state
     if (activeStep>0) {
@@ -439,100 +458,20 @@ class creaShop extends React.Component {
 
   nextDisabled = () => {
 
-    let shop = this.state.shop;
+    let {shop, saving} = this.state;
+    if (saving) {
+      return true
+    }
     const {mode, activeStep}=this.state
 
     const valid_function = STEPS[mode][activeStep].is_valid
     return !valid_function(this)
-    let pageIndex = this.state.activeStep;
-    if (pageIndex === PRESENTATION0) {
-      return !creaShopPresentation();
-    }
-    if (pageIndex === INTRODUCE1) {
-      return !introduceYou(shop);
-    }
-    if (pageIndex === SELECTSERVICE2) {
-      return !selectService(shop);
-    }
-    if (pageIndex === SELECTPRESTATION3) {
-      return !selectPrestation(shop);
-    }
-    if (pageIndex == SETTINGSERVICE4 ) {
-      return !settingService(shop)
-    }
-    if (pageIndex === BOOKINGPREFERENCE5) {
-      return !bookingPreferences(shop);
-    }
-    if (pageIndex === SCHEDULE7) {
-      return this.scheduleDrawer.current && this.scheduleDrawer.current.isDirty()
-    }
-    if (pageIndex === BOOKCONDITIONS8) {
-      return false
-    }
-    return false;
   };
 
 
   renderSwitch = (stepIndex) =>{
     const{shop , currentUser, mode, excluded_services}= this.state;
     return STEPS[mode][stepIndex].component(this)
-    switch (stepIndex) {
-      case PRESENTATION0:
-        return <CreaShopPresentation
-          user={currentUser}/>;
-      case INTRODUCE1 :
-        return <IntroduceYou
-          key={moment()}
-          {...shop}
-          mode={mode}
-          onChange={this.introduceChanged}
-          />;
-      case SELECTSERVICE2:
-        return <SelectService
-          {...shop}
-          creation={true}
-          creationBoutique={true}
-          excluded_services={excluded_services}
-          onChange={this.onServiceChanged}
-          />;
-      case SELECTPRESTATION3:
-        return <SelectPrestation
-          {...shop}
-          onChange={this.onPrestaChanged}
-          />;
-      case SETTINGSERVICE4:
-        return <SettingService
-          {...shop}
-          onChange={this.settingsChanged}/>;
-      case BOOKINGPREFERENCE5:
-        return <BookingPreference
-          {...shop}
-          onChange={this.preferencesChanged}
-          />;
-      case ASSETSSERVICE6:
-        return <AssetsService
-          {...shop}
-          onChange={this.assetsChanged}
-          />;
-      case SCHEDULE7:
-        return <DrawerAndSchedule
-          availabilities={this.state.availabilities}
-          title={I18N.SCHEDULE_TITLE}
-          subtitle={I18N.SCHEDULE_SUBTITLE}
-          nbSchedule={3}
-          availabilityUpdate={this.availabilityUpdate}
-          availabilityCreated={this.availabilityCreated}
-          onAvailabilityChanged={this.loadAvailabilities}
-          onDateSelectionCleared={this.onDateSelectionCleared}
-          selectable={true}
-          ref={this.scheduleDrawer}/>;
-      case BOOKCONDITIONS8:
-        return <BookingConditions
-          key={moment()}
-          {...shop}
-          onChangeLastPart={this.shopSettingsChanged}
-          onChange={this.conditionsChanged}/>;
-    }
   };
 
   handleDrawerToggle = () => {
@@ -636,16 +575,20 @@ class creaShop extends React.Component {
                   {this.renderSwitch(activeStep)}
                 </Grid>
                 <Grid style={{position: 'fixed', bottom: 75, right: 200}}>
-                <Grid>
-                  <Button
-                    variant="contained"
-                    classes={{root :classes.nextButton}}
-                    onClick={this.handlePrev}
-                    disabled={this.prevDisabled()}
-                  >
-                    Précédent
-                  </Button>
+                  { is_development() && activeStep > 0 ?
+                  <Grid>
+                    <Button
+                      variant="contained"
+                      classes={{root :classes.nextButton}}
+                      onClick={this.handlePrev}
+                      disabled={this.prevDisabled()}
+                    >
+                      Précédent
+                    </Button>
                   </Grid>
+                  :
+                  null
+                  }
                   </Grid>
                   <Grid style={{position: 'fixed', bottom: 75, right: 100}}>
                   <Grid>
@@ -655,7 +598,7 @@ class creaShop extends React.Component {
                       onClick={this.handleNext}
                       disabled={this.nextDisabled()}
                     >
-                      {activeStep === LASTSTEP ? 'Envoyer' : 'Suivant'}
+                      {this.isLastStep() ? 'Envoyer' : 'Suivant'}
                     </Button>
                   </Grid>
                 </Grid>

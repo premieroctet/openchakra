@@ -11,8 +11,9 @@ class Services extends React.Component {
     super(props);
   }
 
+
   render() {
-    const {classes, shop}=this.props;
+    const {classes, shop, onDelete}=this.props;
 
     if (!shop.services) {
       return null
@@ -27,7 +28,7 @@ class Services extends React.Component {
         {
           shop.services.map(s => (
             <Grid item xl={3} xs={12} sm={6} md={3} lg={3}>
-              <CardService item={s._id} page={0} profileMode={true}/>
+              <CardService item={s._id} page={0} profileMode={true} onDelete={onDelete}/>
             </Grid>
           ))
         }

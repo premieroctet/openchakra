@@ -22,6 +22,7 @@ const emptyPromise = require('../../../utils/promise');
 const {computeUrl} = require('../../../config/config');
 const {filterServicesGPS, filterServicesKeyword} = require('../../../utils/filters');
 const {GID_LEN, PRO, PART} = require('../../../utils/consts');
+const {normalize} = require('../../../utils/text');
 const parse = require('url-parse')
 const {distanceComparator}=require('../../../utils/filters')
 
@@ -137,38 +138,32 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
     });
 });
 
-// @Route POST /myAlfred/api/serviceUser/myShop/add
-// SAU : Add serviceUser in the shop
+// @Route POST /myAlfred/api/serviceUser/addUpdate
+// SAU : Add or update serviceUser in the shop
 // @Access private
-router.post('/myShop/add', upload.fields([{name: 'file_diploma', maxCount: 1}, {
-  name: 'file_certification',
-  maxCount: 1,
-}]), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  console.log('myShop/add received:' + JSON.stringify(req.body));
-
-  req.body.prestations = JSON.parse(req.body.prestations);
-  req.body.equipments = JSON.parse(req.body.equipments);
-  ServiceUser.findOne({user: req.user.id, service: req.body.service})
+  ServiceUser.findOne({ _id : req.params.serviceuser_id})
     .then(su => {
 
-      if (su) {
-        return res.status(400).json({
-          msg: 'Ce service existe déjà',
-        });
+      if (!su) {
+        su = new ServiceUser()
       }
       const data = req.body;
-      var su = data2ServiceUser(data, new ServiceUser());
+      var su = data2ServiceUser(data, su);
       su.user = req.user.id;
 
       // FIX : créer les prestations custom avant
       let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
       let newPrestaModels = newPrestations.map(p => Prestation({
         ...p,
+        s_label : normalize(p.label),
         service: req.body.service,
         billing: [p.billing],
         filter_presentation: null,
         private_alfred: req.user.id,
+        particular_access: req.body.particular_access,
+        professional_access: req.body.professional_access,
       }));
 
       const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({insertedIds: []});
@@ -180,6 +175,7 @@ router.post('/myShop/add', upload.fields([{name: 'file_diploma', maxCount: 1}, {
             p._id = newIds[idx];
             console.log('Presta sauvegardée : ' + JSON.stringify(p));
           });
+          su.prestations=[]
           Object.values(req.body.prestations).forEach(presta => {
             const newp = {prestation: presta._id, billing: presta.billing, price: presta.price};
             su.prestations.push(newp);
@@ -188,7 +184,9 @@ router.post('/myShop/add', upload.fields([{name: 'file_diploma', maxCount: 1}, {
           su.save().then((su) => {
             Shop.findOne({alfred: req.user.id})
               .then(shop => {
-                shop.services.unshift(su._id);
+                if (!req.params.serviceuser_id) {
+                  shop.services.unshift(su._id);
+                }
                 shop.save().then(newShop => res.json(su)).catch(err => console.error(err));
               })
               .catch(error => console.log(error));
@@ -210,55 +208,6 @@ router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, 
   ServiceUser.updateMany({user: req.user.id}, {status: req.body.status})
     .then(serviceUser => {
       res.json(serviceUser);
-    })
-    .catch(err => console.error(err));
-});
-
-// @Route PUT /myAlfred/api/serviceUser/edit/:id
-// Update a serviceUser
-// SAU : Update serviceUser in the shop
-// @Access private
-router.put('/edit/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-
-  console.log('Update ServiceUser, received:' + JSON.stringify(req.body, null, 2));
-  req.body.prestations = JSON.parse(req.body.prestations);
-  req.body.equipments = JSON.parse(req.body.equipments);
-
-  ServiceUser.findById(req.params.id)
-    .then(serviceUser => {
-      let data = req.body;
-
-      su = data2ServiceUser(data, serviceUser);
-      su.prestations = [];
-
-      // FIX : créer les prestations custom avant
-      let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
-      let newPrestaModels = newPrestations.map(p => Prestation({
-        ...p,
-        service: req.body.service,
-        billing: [p.billing],
-        filter_presentation: null,
-        private_alfred: req.user.id,
-      }));
-
-      const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({insertedIds: []});
-      r.catch(error => console.log('Error insert many' + JSON.stringify(error, null, 2)))
-        .then(result => {
-          var newIds = result.insertedIds;
-          // Update news prestations ids
-          newPrestations.forEach((p, idx) => {
-            p._id = newIds[idx];
-            console.log('Presta sauvegardée : ' + JSON.stringify(p));
-          });
-          Object.values(req.body.prestations).forEach(presta => {
-            const newp = {prestation: presta._id, billing: presta.billing, price: presta.price};
-            su.prestations.push(newp);
-          });
-          su.save().then((su) => {
-            res.json(su);
-          });
-        });
-
     })
     .catch(err => console.error(err));
 });
@@ -288,10 +237,19 @@ router.put('/editWithCity/:id', passport.authenticate('jwt', {
       serviceUser.level = req.body.level;
 
 
-      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
-
+      serviceUser.save()
+        .then(service => {
+          res.json(service)
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(404).json(err)
+        });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    });
 });
 
 // @Route PUT /myAlfred/api/serviceUser/addPrestation

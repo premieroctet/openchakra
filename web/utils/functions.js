@@ -23,7 +23,7 @@ const computeDistanceKm = (latlon1, latlon2) => {
       'km',
     );
   } catch (error) {
-    console.log('Error:' + error);
+    console.error(error);
     return null;
   }
 };
