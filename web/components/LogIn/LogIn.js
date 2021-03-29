@@ -26,7 +26,7 @@ import Select from '@material-ui/core/Select';
 const {is_b2b_admin, is_b2b_style, is_b2b_employee, is_b2b_site} = require('../../utils/context');
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
 import {COMPANY_ACTIVITY, EMPLOYEE} from "../../utils/consts";
-
+const {isLoggedUserAlfredPro}=require('../../utils/functions')
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -67,7 +67,8 @@ class LogIn extends React.Component {
     const user = {
       username: this.state.username,
       password: this.state.password,
-      role: this.state.selectedRole
+      role: this.state.selectedRole,
+      b2b_login: is_b2b_site(),
     };
 
     axios.post('/myAlfred/api/users/login', user)
@@ -98,7 +99,7 @@ class LogIn extends React.Component {
     const {errors, username, password, showPassword, roles, selectedRole} = this.state;
     const showRoles = is_b2b_site() && roles.length >= 1;
 
-    const loginDisabled = ((roles.length>0 || is_b2b_site()) && !selectedRole) || !password
+    const loginDisabled = (roles.length>0 && !selectedRole) || !password
 
     return (
       <Grid className={classes.fullContainer}>
