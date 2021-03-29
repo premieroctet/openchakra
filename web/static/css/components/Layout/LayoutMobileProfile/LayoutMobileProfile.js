@@ -7,6 +7,12 @@ export default theme => ({
     position: 'relative',
     backgroundRepeat: 'no-repeat'
   },
+  layoutMobileProfilHeaderB2b:{
+    backgroundColor: theme.palette.b2b.main,
+    height: '30vh',
+    position: 'relative',
+
+  },
   layoutMobileLayoutProfileHeader:{
     position: 'absolute',
     left: '10px',

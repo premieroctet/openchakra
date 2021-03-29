@@ -220,9 +220,13 @@ class About extends React.Component {
         onClose={this.closeEditDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        classes={{paper: classes.dialogPaper}}
       >
-        <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}
-                     style={{position: 'absolute', right: 0}}/>
+        <DialogTitle
+          id="customized-dialog-title"
+          onClose={this.closeEditDialog}
+          style={{position: 'absolute', right: 0}}
+        />
         <DialogContent>
           <Topic
             titleTopic={is_mode_company() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
@@ -417,7 +421,7 @@ class About extends React.Component {
     return (
       <>
         {editable ?
-          <Grid style={{position: 'absolute', right: 10, top: 10, zIndex: 1}}>
+          <Grid className={classes.containerIcon}>
             <IconButton aria-label="edit" onClick={this.openEdition}>
               <CreateIcon/>
             </IconButton>
@@ -438,8 +442,14 @@ class About extends React.Component {
               </Grid>
               : null
             }
-            <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsLG={12}
-                                  columnsMD={6} columnsSm={6} columnsXS={6}/>
+            <ListAlfredConditions
+              wrapperComponentProps={wrapperComponentProps}
+              columnsXl={12}
+              columnsLG={12}
+              columnsMD={6}
+              columnsSm={6}
+              columnsXS={6}
+            />
           </Grid>
           {this.modalEditDialog(classes)}
         </Grid>

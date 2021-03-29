@@ -171,6 +171,7 @@ class ProfileAbout extends React.Component {
         onClose={this.closeEditDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        classes={{paper: classes.dialogPaper}}
       >
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}
                      style={{position: 'absolute', right: 0}}/>
@@ -350,7 +351,7 @@ class ProfileAbout extends React.Component {
 
 
     return(
-      <Grid container spacing={3} style={{marginBottom: '12vh', width: '100%'}}>
+      <Grid container spacing={3} style={{marginBottom: '12vh', width: '100%', marginLeft: 0, marginRight: 0}}>
         <Hidden only={['xs']}>
           <Grid item xl={5} lg={5} md={12} sm={12} xs={12}>
             <Box>
@@ -359,7 +360,7 @@ class ProfileAbout extends React.Component {
           </Grid>
         </Hidden>
         <Hidden only={['sm','md','lg','xl']}>
-          <Grid item xs={12} style={{marginTop: '5vh', position: 'relative'}}>
+          <Grid item xs={12} style={{marginTop: '5vh', position: 'relative' , display: 'flex', alignItems: 'center'}}>
             { editable ?
               <Grid style={{position: 'absolute', right: 5}}>
                 <IconButton aria-label="edit" onClick={this.openEdition}>
@@ -417,7 +418,7 @@ class ProfileAbout extends React.Component {
         </Hidden>
         <Grid item xl={7} lg={7} md={12} sm={12} xs={12}>
           <Box>
-            <Presentation user={user} classes={classes}/>
+            <Presentation user={user}/>
           </Box>
         </Grid>
         {
@@ -429,16 +430,18 @@ class ProfileAbout extends React.Component {
             </Grid>
             : null
         }
-        <Grid item xl={8} lg={8} md={6} sm={12} xs={12}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
             <Skills alfred={user} />
           </Box>
         </Grid>
-        <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-          <Box>
-            <Badges user={user} />
-          </Box>
-        </Grid>
+        {false ?
+          <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
+            <Box>
+              <Badges user={user}/>
+            </Box>
+          </Grid> : null
+        }
         { false ?
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.aboutHastagsContainer}>
             <Box>

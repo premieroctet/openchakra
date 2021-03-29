@@ -28,6 +28,7 @@ class LayoutMobileProfile extends React.Component{
       currentUrlIndex: '',
       myProfilUrl: false,
       user: null,
+      company: null
     };
     this.nonlogged_items= [
       { label: 'À propos', url: '/about' },
@@ -58,13 +59,20 @@ class LayoutMobileProfile extends React.Component{
         this.setState( { user: res.data})
       })
       .catch (err => console.error(err));
+
+    axios.get('/myAlfred/api/companies/current').then( res =>{
+      const company = res.data;
+      this.setState({
+        company: company,
+      })
+    }).catch(err => console.error(err))
   };
 
   render() {
     const{children, classes, currentIndex} = this.props;
-    const{user, items} = this.state;
+    const{user, company} = this.state;
 
-    if (!user) {
+    if (!user || !company) {
       return null
     }
 
@@ -75,24 +83,30 @@ class LayoutMobileProfile extends React.Component{
     return(
       <Grid>
         <Grid>
-          <Grid className={classes.layoutMobileProfilHeader}>
+          <Grid className={is_mode_company() ? classes.layoutMobileProfilHeaderB2b : classes.layoutMobileProfilHeader}>
             <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
               <ArrowBackIosIcon />
             </IconButton>
           </Grid>
           <Grid className={classes.layoutMobileLayoutProfileHeader}>
             <Grid className={classes.profilLayoutAvatar}>
-              <UserAvatar alt={user.firstname} user={user} className={classes.cardPreviewLarge} />
+              <UserAvatar alt={!is_mode_company() ? user.firstname : company.name} user={is_mode_company() ? company : user} className={classes.cardPreviewLarge} />
             </Grid>
           </Grid>
           <Grid style={{display: 'flex',height: '40%', alignItems: 'center', marginTop: '10vh', marginLeft: '5vh'}}>
             <Grid style={{display: 'flex',flexDirection: 'column'}}>
               <Grid>
-                <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
+                {is_mode_company() ?
+                  <h3>{company ? company.name : ''}</h3>
+                  :
+                  <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
+                }
               </Grid>
-              <Grid>
-                <Typography style={{color:'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
-              </Grid>
+              {is_mode_company() ? null :
+                <Grid>
+                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
+                </Grid>
+              }
             </Grid>
           </Grid>
         </Grid>

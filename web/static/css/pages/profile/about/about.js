@@ -25,5 +25,10 @@ export default theme => ({
   },
   formControl:{
     width: '100%'
+  },
+  dialogPaper:{
+    [theme.breakpoints.down('xs')]:{
+      minWidth: '100%'
+    }
   }
 })

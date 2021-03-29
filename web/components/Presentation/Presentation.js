@@ -137,6 +137,7 @@ class Presentation extends React.Component {
         onClose={() => this.closeEditDialog()}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        classes={{paper: classes.dialogPaper}}
       >
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}
                      style={{position: 'absolute', right: 0}}/>
@@ -191,7 +192,7 @@ class Presentation extends React.Component {
     return (
       <>
         {editable ?
-          <Grid style={{position: 'absolute', right: 10, top: 10, zIndex: 1}}>
+          <Grid className={classes.containerIcon}>
             <IconButton aria-label="edit" onClick={this.openEdition}>
               <CreateIcon/>
             </IconButton>
