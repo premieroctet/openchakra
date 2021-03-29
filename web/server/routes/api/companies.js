@@ -23,7 +23,7 @@ const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise');
 const {ADMIN, MANAGER, EMPLOYEE} = require('../../../utils/consts')
 var _ = require('lodash')
-const {addRegistrationProof, createOrUpdateMangoCompany, install_hooks} = require('../../../utils/mangopay');
+const {addRegistrationProof, createOrUpdateMangoCompany, install_hooks} = require('../../utils/mangopay');
 
 
 axios.defaults.withCredentials = true;

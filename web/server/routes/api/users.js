@@ -25,7 +25,7 @@ const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise.js');
 const {ROLES}=require('../../../utils/consts')
-const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../../utils/mangopay');
+const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../utils/mangopay');
 const {sendCookie}=require('../../utils/context')
 
 
