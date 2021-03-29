@@ -123,14 +123,13 @@ const createOrUpdateMangoCompany = company => {
     Tag: `Company ${company.name}/Repr. ${company.representative.full_name}`
   };
 
-  var method;
-  if (company.id_mangopay) {
-    companyData.Id = company.id_mangopay
-    method = mangoApi.Users.update(companyData)
-  }
-  else {
-    method = mangoApi.Users.create(companyData)
-  }
+  const is_update = company.id_mangopay
+
+  const method = is_update ?
+      mangoApi.Users.update({Id : company.id_mangopay, ...companyData})
+      :
+      mangoApi.Users.create(companyData)
+
   method
     .then(mangopay_company => {
       console.log(`Created Mango company ${JSON.stringify(mangopay_company)}`);
@@ -138,17 +137,19 @@ const createOrUpdateMangoCompany = company => {
       company.save()
         .then( res => console.log(`Created/update company ${JSON.stringify(company)}`))
         .catch( err => console.error(err))
-      mangoApi.Wallets.create({
-        Owners: [mangopay_company.Id],
-        Description: `Wallet ${company._id} / ${company.name}company`,
-        Currency: 'EUR',
-      })
-        .then(wallet => {
-          console.log(`Created Wallet ${JSON.stringify(wallet)}`);
+      if (!is_update) {
+        mangoApi.Wallets.create({
+          Owners: [mangopay_company.Id],
+          Description: `Wallet ${company._id} / ${company.name}company`,
+          Currency: 'EUR',
         })
-        .catch(err => {
-          console.log(`Could not create Wallet:${err}`);
-        })
+          .then(wallet => {
+            console.log(`Created Wallet ${JSON.stringify(wallet)}`);
+          })
+          .catch(err => {
+            console.log(`Could not create Wallet:${err}`);
+          })
+      }
     });
 };
 
