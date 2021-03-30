@@ -43,7 +43,9 @@ router.post('/add/alfred', passport.authenticate('jwt', {session: false}), (req,
 
   const newReviews = new Reviews(reviewFields);
   newReviews.save().then(() => {
-    Booking.findByIdAndUpdate(req.body.booking, {alfred_evaluated: true}).then(() => res.json('ok')).catch(error => console.log(error));
+    Booking.findByIdAndUpdate(req.body.booking, {alfred_evaluated: true})
+      .then(() => res.json('ok'))
+      .catch(error => console.error(error));
   }).catch(err => console.error(err));
 
   User.findByIdAndUpdate(req.body.alfred, {
@@ -62,7 +64,7 @@ router.post('/add/alfred', passport.authenticate('jwt', {session: false}), (req,
             user.save().then(users => console.log('reviews update')).catch(err => console.error(err));
           })
           .catch(error => {
-            console.log(error);
+            console.error(error);
           });
       },
     )
@@ -96,7 +98,9 @@ router.post('/add/client', passport.authenticate('jwt', {session: false}), (req,
 
   const newReviews = new Reviews(reviewFields);
   newReviews.save().then(() => {
-    Booking.findByIdAndUpdate(req.body.booking, {user_evaluated: true}).then(() => res.json('ok')).catch(error => console.log(error));
+    Booking.findByIdAndUpdate(req.body.booking, {user_evaluated: true})
+      .then(() => res.json('ok'))
+      .catch(error => console.log(error));
   }).catch(err => console.error(err));
 
   User.findByIdAndUpdate(req.body.client, {
@@ -114,7 +118,7 @@ router.post('/add/client', passport.authenticate('jwt', {session: false}), (req,
             user.save().then(users => console.log('reviews update')).catch(err => console.error(err));
           })
           .catch(error => {
-            console.log(error);
+            console.error(error);
           });
       },
     )

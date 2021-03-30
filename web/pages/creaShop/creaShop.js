@@ -161,10 +161,34 @@ class creaShop extends React.Component {
             if (this.props.serviceuser_id) {
               axios.get(`/myAlfred/api/serviceUser/${this.props.serviceuser_id}`)
                 .then ( res => {
-                  const serviceuser=res.data
-                  shop.service = serviceuser.service._id
+                  const su=res.data
+                  shop.service = su.service._id
+                  shop.perimeter = su.perimeter
+                  shop.location = su.location
+                  shop.equipments = su.equipments.map( e => e._id)
+                  if (su.diploma) {
+                    shop.diplomaName = su.diploma.name
+                    shop.diplomaYear = su.diploma.year
+                    shop.diplomaSkills = su.diploma.skills
+                    shop.diplomaPicture = su.diploma.file
+                  }
+                  if (su.certification) {
+                    shop.certificationName = su.certification.name
+                    shop.certificationYear = su.certification.year
+                    shop.certificationSkills = su.certification.skills
+                    shop.certificationPicture = su.certification.file
+                  }
+                  if (su.deadline_before_booking.trim()) {
+                    shop.deadline_value = parseInt(su.deadline_before_booking.split(' ')[0])
+                    shop.deadline_unit = su.deadline_before_booking.split(' ')[1]
+                  }
+                  shop.minimum_basket = su.minimum_basket
+                  shop.experience_description = su.experience_description
+                  shop.experience_title = su.experience_title
+                  shop.experience_skills = su.experience_skills
+
                   var prestations={}
-                  serviceuser.prestations.forEach( presta => {
+                  su.prestations.forEach( presta => {
                     prestations[presta.prestation._id.toString()]={
                       _id : presta.prestation._id,
                       label : presta.prestation.label,
@@ -302,18 +326,18 @@ class creaShop extends React.Component {
               })
           }
           snackBarSuccess(mode==CREASHOP_MODE.CREATION ? 'Boutique créée' : mode==CREASHOP_MODE.SERVICE_ADD ? 'Service ajouté' : 'Service modifié')
-          var su_id = mode==CREASHOP_MODE.CREATION ? res.data.services[0] : res.data
+          var su_id = mode==CREASHOP_MODE.CREATION ? res.data.services[0] : res.data._id
           if (cloned_shop.diplomaName) {
             var dpChanged = typeof (cloned_shop.diplomaPicture) == 'object';
             const formData = new FormData();
             formData.append('name', cloned_shop.diplomaName);
             formData.append('year', cloned_shop.diplomaYear);
-            formData.append('skills', cloned_shop.diplomaSkills);
+            formData.append('skills', JSON.stringify(cloned_shop.diplomaSkills));
             if (dpChanged) {
               formData.append('file_diploma', cloned_shop.diplomaPicture);
             }
 
-            axios.post('/myAlfred/api/serviceUser/addDiploma/' + su_id, formData)
+            axios.post(`/myAlfred/api/serviceUser/addDiploma/${su_id}`, formData)
               .then( () => {
                 snackBarSuccess('Diplôme enregistré')
               })
@@ -325,12 +349,12 @@ class creaShop extends React.Component {
             const formData = new FormData();
             formData.append('name', cloned_shop.certificationName);
             formData.append('year', cloned_shop.certificationYear);
-            formData.append('skills', cloned_shop.certificationSkills);
+            formData.append('skills', JSON.stringify(cloned_shop.certificationSkills));
             if (cpChanged) {
               formData.append('file_certification', cloned_shop.certificationPicture);
             }
 
-            axios.post('/myAlfred/api/serviceUser/addCertification/' + su_id, formData)
+            axios.post(`/myAlfred/api/serviceUser/addCertification/${su_id}`, formData)
               .then( () => {
                 snackBarSuccess('Certification enregistrée')
               })
@@ -459,7 +483,7 @@ class creaShop extends React.Component {
   nextDisabled = () => {
 
     let {shop, saving} = this.state;
-    if (saving) {
+    if (!is_development() && saving) {
       return true
     }
     const {mode, activeStep}=this.state

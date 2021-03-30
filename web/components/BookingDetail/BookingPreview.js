@@ -119,11 +119,11 @@ class BookingPreview extends React.Component {
         });
       })
         .catch(error => {
-          console.log(error);
+          console.error(error);
         });
     })
       .catch(error => {
-        console.log(error);
+        console.error(error);
         if (error.response && error.response.status === 401 || error.response.status === 403) {
           clearAuthenticationToken()
           Router.push({pathname: '/'});

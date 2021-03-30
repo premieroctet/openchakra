@@ -41,8 +41,8 @@ const storageIdPicture = multer.diskStorage({
 const uploadIdPicture = multer({
   storage: storageIdPicture,
   fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname);
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
+    let ext = path.extname(file.originalname).toLowerCase();
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
       return callback(new Error('Only images are allowed'));
     }
     callback(null, true);
@@ -65,8 +65,8 @@ const storageRegProof = multer.diskStorage({
 const uploadRegProof = multer({
   storage: storageRegProof,
   fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname);
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
+    let ext = path.extname(file.originalname).toLowerCase();
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
       return callback(new Error('Error extension'));
     }
     callback(null, true);

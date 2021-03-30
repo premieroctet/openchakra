@@ -48,7 +48,7 @@ const storageIdPicture = multer.diskStorage({
 const uploadIdPicture = multer({
   storage: storageIdPicture,
   fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname);
+    let ext = path.extname(file.originalname).toLowerCase();
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
       return callback(new Error('Only images are allowed'));
     }
@@ -71,9 +71,9 @@ const storageIdCard = multer.diskStorage({
 const uploadIdCard = multer({
   storage: storageIdCard,
   fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname);
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
-      return callback(new Error('Error extension'));
+    let ext = path.extname(file.originalname).toLowerCase();
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
+      return callback(new Error(`Error extension:${ext}`));
     }
     callback(null, true);
   },
@@ -95,8 +95,8 @@ const storageRegProof = multer.diskStorage({
 const uploadRegProof = multer({
   storage: storageRegProof,
   fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname);
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
+    let ext = path.extname(file.originalname).toLowerCase();
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
       return callback(new Error('Error extension'));
     }
     callback(null, true);
@@ -119,8 +119,8 @@ const storageAlbumPicture = multer.diskStorage({
 const uploadAlbumPicture = multer({
   storage: storageAlbumPicture,
   fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname);
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
+    let ext = path.extname(file.originalname).toLowerCase();
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
       return callback(new Error('Error extension'));
     }
     callback(null, true);
@@ -696,7 +696,7 @@ router.delete('/:id/role/:role', passport.authenticate('jwt', {session: false}),
       user.save()
         .then(() => res.json(user))
         .catch( err => {
-          console.log(err);
+          console.error(err);
           res.status(404).json({user: 'Erreur à la suppression du rôle'})
         })
     })

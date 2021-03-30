@@ -105,10 +105,10 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
                   // Recharger le shop qui a été modié dans serviceUser/addUpdate
                   Shop.findOne({alfred: alfred})
                     .then ( result => {
-                      res.json(shop);
+                      res.json(result);
                     })
                     .catch(err => {
-                      console.log(err)
+                      console.error(err)
                       res.status(404).json(err)
                     });
                 })

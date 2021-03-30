@@ -36,8 +36,8 @@ class AssetsService extends React.Component {
       diplomaSkills: props.diplomaSkills || [],
       certificationSkills: props.certificationSkills || [],
       experience_skills: props.experience_skills || [],
-      experience_title: props.experience_title || [],
-      experience_description: props.experience_description || [],
+      experience_title: props.experience_title || '',
+      experience_description: props.experience_description || '',
       newExperienceSkill: '',
       newDiplomaSkill: '',
       newCertificationSkill: '',
@@ -378,7 +378,7 @@ class AssetsService extends React.Component {
           {this.state.certificationPicture ?
             <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
               <Grid item>
-                <Typography>Certification jointe}</Typography>
+                <Typography>Certification jointe</Typography>
                 <CheckCircleIcon color={'primary'}/>
               </Grid>
               <Grid item>

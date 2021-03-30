@@ -40,7 +40,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname);
+    let ext = path.extname(file.originalname).toLowerCase();
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
       return callback(new Error('Error extension'));
     }
@@ -134,7 +134,7 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
 
     })
     .catch(error => {
-      console.log(error);
+      console.error(error);
     });
 });
 
@@ -190,7 +190,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
                 }
                 shop.save().then(newShop => res.json(su)).catch(err => console.error(err));
               })
-              .catch(error => console.log(error));
+              .catch(error => console.error(error));
           })
             .catch(err => console.error(err));
         });
@@ -198,7 +198,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
 
     })
     .catch(error => {
-      console.log(error);
+      console.error(error);
     });
 });
 
@@ -307,9 +307,8 @@ router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authentic
     .then(serviceUser => {
       serviceUser.diploma.name = req.body.name;
       serviceUser.diploma.year = req.body.year;
-      serviceUser.diploma.skills = req.body.skills;
+      serviceUser.diploma.skills = JSON.parse(req.body.skills);
       const diploma = 'file_diploma';
-      console.log('Diploma req.file:' + JSON.stringify(req.file));
       if (req.file) {
         serviceUser.diploma.file = req.file.path;
       }
@@ -330,7 +329,7 @@ router.post('/addCertification/:id', upload.single('file_certification'), passpo
     .then(serviceUser => {
       serviceUser.certification.name = req.body.name;
       serviceUser.certification.year = req.body.year;
-      serviceUser.certification.skills = req.body.skills;
+      serviceUser.certification.skills = JSON.parse(req.body.skills);
       if (req.file) {
         serviceUser.certification.file = req.file.path;
       }
