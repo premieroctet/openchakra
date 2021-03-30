@@ -354,7 +354,7 @@ class ProfileAbout extends React.Component {
 
 
     return(
-      <Grid container spacing={3} style={{marginBottom: '12vh', width: '100%', marginLeft: 0, marginRight: 0}}>
+      <Grid container spacing={2} style={{marginBottom: '12vh', width: '100%', marginLeft: 0, marginRight: 0}}>
         <Hidden only={['xs']}>
           <Grid item xl={5} lg={5} md={12} sm={12} xs={12}>
             <Box>
@@ -363,7 +363,7 @@ class ProfileAbout extends React.Component {
           </Grid>
         </Hidden>
         <Hidden only={['sm','md','lg','xl']}>
-          <Grid item xs={12} style={{marginTop: '5vh', position: 'relative' , display: 'flex', alignItems: 'center'}}>
+          <Grid container item xs={12} style={{position: 'relative' , display: 'flex', alignItems: 'center', margin: 0}}>
             { editable ?
               <Grid style={{position: 'absolute', right: 5}}>
                 <IconButton aria-label="edit" onClick={this.openEdition}>
@@ -373,9 +373,9 @@ class ProfileAbout extends React.Component {
               :
               null
             }
-            <Grid style={{display: 'flex', flexDirection: 'row'}}>
+            <Grid item xs={12}>
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Habite à </Typography>
+                <h3 >Habite à </h3>
               </Grid>
               <Grid style={{margin: 3}}/>
               {
@@ -391,9 +391,9 @@ class ProfileAbout extends React.Component {
             </Grid>
             {
               is_mode_company() ? null :
-                <Grid style={{display: 'flex', flexDirection: 'row', marginTop: '4vh'}}>
+                <Grid item xs={12}>
                   <Grid>
-                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>Parle </Typography>
+                    <h3>Parle </h3>
                   </Grid>
                   <Grid style={{margin: 3}}/>
                   <Grid>

@@ -43,111 +43,72 @@ const theme = createMuiTheme({
     fontSize: 14,
     lineHeight: '20px',
      fontFamily:  'Montserrat, sans-serif',
-
-
-
     textTransform: 'none',
     fontWeight: 'bold',
     letterSpacing: '2px',
     color: '#696767',
     title:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontWeight: 'bold',
       fontSize: '32px',
       margin:0
     },
     subTitle:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontWeight: 'bold',
       fontSize: '20px',
       margin: 0
     },
     sectionTitle:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontWeight: 'bold',
       fontSize: '18px',
       margin: 0
     },
     text:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontWeight: '500',
       fontSize: '16px',
       margin: 0
     },
     textAlfredName:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontWeight: '800',
       fontSize: '12px',
       margin: 0
     },
     textLabel:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontWeight: '500',
       fontSize: '10px',
       margin: 0
     },
     buttonLink:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontWeight: '500',
       fontSize: '17px',
     },
     blackButton:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontWeight: 'bold',
     },
     whiteButton:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontWeight: 'bold',
     },
     whiteButtonContained:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontWeight: 'bold',
       fontSize: '18px'
     },
     infoBar:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       lineHeight: '23px',
       fontSize: 14,
       fontWeight: 'bold'
     },
     placeHolder:{
-       fontFamily:  'Montserrat, sans-serif',
-
-
-
+      fontFamily:  'Montserrat, sans-serif',
       fontSize: '1rem',
       fontWeight: '400',
       lineHeight: '1.1876em',

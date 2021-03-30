@@ -46,18 +46,17 @@ class ShowCertification extends React.Component{
               certifications.map(x => {
                 if(x.name){
                   return(
-                    <Grid container spacing={2} item xl={3} lg={3} md={3} sm={3} xs={3} style={{margin:0, width: '100%', border: '1px solid black', borderRadius: 30}}>
-                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Grid container spacing={2} item xl={3} lg={3} md={3} sm={3} xs={3} style={{margin:0, width: '100%', boxShadow:'0px 0px 6px -2px #696767', borderRadius: 30}}>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
                         <h4>{x.name}</h4>
                       </Grid>
-                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
                         <Typography>{x.year}</Typography>
                       </Grid>
                     </Grid>
                   )
-                }
-
-                }) : null
+                }})
+              : null
           }
         </Grid>
       </Grid>
