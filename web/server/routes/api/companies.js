@@ -464,6 +464,10 @@ router.put('/representative', passport.authenticate('b2badmin', {session: false}
   Company.findByIdAndUpdate(company_id, {representative : representative_id}, { new : true} )
     .populate('representative')
     .then (company => {
+      if (!company.representative.birthday) {
+        res.status(404).json('Indiquer la date de naissance du représentant légal')
+        return
+      }
       createOrUpdateMangoCompany(company)
       res.json(company)
     })
