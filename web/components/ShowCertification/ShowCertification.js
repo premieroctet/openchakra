@@ -1,18 +1,16 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Chip from "@material-ui/core/Chip";
 import axios from "axios";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/components/ShowCertification/ShowCertification';
 const {setAxiosAuthentication}=require('../../utils/authentication');
 
-
 class ShowCertification extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      services: []
+      services: [],
     }
   }
 
@@ -30,7 +28,6 @@ class ShowCertification extends React.Component{
   }
 
   render() {
-    const {classes} = this.props;
     const {shop, services} = this.state;
 
     let certifications = services ?  services.map(a => a.certification) : [];
