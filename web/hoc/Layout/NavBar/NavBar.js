@@ -842,6 +842,11 @@ class NavBar extends Component {
                               </Link>
                               {user.is_admin ?
                                 <Link href={`/dashboard/home`}>
+                                  <MenuItem>Dashboard My Alfred</MenuItem>
+                                </Link> : null
+                              }
+                              {is_b2b_admin(user) ?
+                                <Link href={`/company/dashboard/companyDashboard`}>
                                   <MenuItem>Dashboard</MenuItem>
                                 </Link> : null
                               }

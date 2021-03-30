@@ -11,7 +11,7 @@ const tough = require('tough-cookie');
 const {is_production, is_validation}=require('../../../config/config');
 const CronJob = require('cron').CronJob;
 const validateRegisterInput = require('../../validation/register');
-const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile} = require('../../validation/simpleRegister');
+const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
 const moment = require('moment');
@@ -901,6 +901,21 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
     .catch(err => console.error(err));
 });
 
+// @Route PUT /myAlfred/api/users/profile/birthday/:user_id
+// Update birthday for user {birthday,
+// @Access private
+router.put('/profile/birthday/:user_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+  console.log(`Setting birthday date ${req.body.birthday} to ${req.params.user_id}`)
+  const errors= validateBirthday(req.body.birthday)
+  if (errors) {
+    res.status(400).json(errors)
+    return
+  }
+  User.findByIdAndUpdate(req.params.user_id, {birthday: req.body.birthday})
+    .then (user => res.json())
+    .catch( err => res.status(400).json('Date de naissance incorrecte'))
+})
+
 // @Route PUT /myAlfred/api/users/profile/editProProfile
 // Edit email, job and phone
 // @Access private
@@ -927,13 +942,14 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
           .populate('company')
           .then(user => {
             if(req.user.email !== req.body.email){
-              User.findByIdAndUpdate(req.user.id,{
-                is_confirmed: false
-            }).then(()=>{
-                sendVerificationMail(user, req);
-                res.json({success: 'Profil mis à jour et e-mail envoyé !'});
-              }).catch( err => console.error(err))
-            }else{
+              User.findByIdAndUpdate(req.user.id,{ is_confirmed: false })
+                .then(()=>{
+                  sendVerificationMail(user, req);
+                  res.json({success: 'Profil mis à jour et e-mail envoyé !'});
+                })
+                .catch( err => console.error(err))
+            }
+            else{
               res.json({success: 'Profil mis à jour !'});
             }
             if (true) { //user.company && user.company.representative == user._id) {

@@ -444,7 +444,7 @@ router.delete('/members/:member_id', passport.authenticate('b2badmin', {session:
 router.get('/members', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   const company_id = req.user.company
 
-  User.find({company : company_id}, 'firstname name email company roles')
+  User.find({company : company_id}, 'firstname name email company roles birthday')
     .then (users => {
       res.json(users)
     })
@@ -464,6 +464,10 @@ router.put('/representative', passport.authenticate('b2badmin', {session: false}
   Company.findByIdAndUpdate(company_id, {representative : representative_id}, { new : true} )
     .populate('representative')
     .then (company => {
+      if (!company.representative.birthday) {
+        res.status(400).json('Indiquer la date de naissance du représentant légal')
+        return
+      }
       createOrUpdateMangoCompany(company)
       res.json(company)
     })
