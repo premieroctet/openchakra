@@ -43,7 +43,8 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_style, is_b2b_admin, is_b2b_manager} from "../../../utils/context";
+import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager} from "../../../utils/context";
+const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions')
 const emptyPromise = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
 
@@ -764,20 +765,22 @@ class NavBar extends Component {
                           </Link>
                         }
                         {
-                          !is_b2b_style(user) ?
-                            <Link href={'/professional'}>
-                              <Tab
-                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                label={NAVBAR_MENU.businessSide}
-                              />
-                            </Link> : is_development() ?
+                          // Accès part/pro uniquement si non loggué ou loggué en Alfred pro
+                          getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
+                            is_b2b_site() ?
                             <Link href={'/particular'}>
                               <Tab
                                 classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                                 label={'Espace Particuliers'}
                               />
-                            </Link> : null
-
+                            </Link>
+                            :
+                            <Link href={'/professional'}>
+                              <Tab
+                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                label={NAVBAR_MENU.businessSide}
+                              />
+                            </Link>
                         }
                       </Tabs>
                     </Grid> :

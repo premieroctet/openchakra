@@ -8,17 +8,13 @@ import MobileNavbar from "./NavBar/MobileNavbar";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/components/Layout/LayoutMobileProfile/LayoutMobileProfile'
 import axios from "axios";
-
-import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ScrollMenu from "../../components/ScrollMenu/ScrollMenu";
 import Divider from "@material-ui/core/Divider";
 import UserAvatar from "../../components/Avatar/UserAvatar";
 const {isEditableUser}=require('../../utils/functions');
 import {is_mode_company} from "../../utils/context";
-
+const {is_b2b_site}=require('../../utils/context');
 
 class LayoutMobileProfile extends React.Component{
 
@@ -83,7 +79,7 @@ class LayoutMobileProfile extends React.Component{
     return(
       <Grid>
         <Grid>
-          <Grid className={is_mode_company() ? classes.layoutMobileProfilHeaderB2b : classes.layoutMobileProfilHeader}>
+          <Grid className={is_b2b_site() ? classes.layoutMobileProfilHeaderPro : classes.layoutMobileProfilHeader}>
             <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
               <ArrowBackIosIcon />
             </IconButton>

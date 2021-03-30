@@ -184,6 +184,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
           su.save().then((su) => {
             Shop.findOne({alfred: req.user.id})
               .then(shop => {
+                // Add service if in add mode
                 if (!req.params.serviceuser_id) {
                   shop.services.unshift(su._id);
                 }

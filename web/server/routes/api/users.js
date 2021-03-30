@@ -25,7 +25,8 @@ const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise.js');
 const {ROLES}=require('../../../utils/consts')
-const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../../utils/mangopay');
+const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../utils/mangopay');
+const {sendCookie}=require('../../utils/context')
 
 
 axios.defaults.withCredentials = true;
@@ -552,9 +553,11 @@ router.post('/login', (req, res) => {
   const email = req.body.username;
   const password = req.body.password;
   var role = req.body.role;
+  var b2b_login = req.body.b2b_login;
 
   // Find user by email
   User.findOne({email})
+    .populate('shop', 'is_particular')
     .then(user => {
       // Check for user
       if (!user) {
@@ -569,10 +572,15 @@ router.post('/login', (req, res) => {
       }
 
       if (user.is_employee && !ROLES[role]) {
-        errors.role = `Rôle ${role} inconnu : ${Object.values(ROLES).join(',')} attendu`;
+        errors.role = `Rôle ${role} inconnu`;
         return res.status(400).json(errors);
       }
 
+      // Cas Alfred pro en b2b_login
+      if (b2b_login && !role && !(user.shop && user.shop.length>0 && !user.shop[0].is_particular)) {
+        errors.email = `Accès réservé aux professionnels`;
+        return res.status(400).json(errors);
+      }
       // Check password
       bcrypt.compare(password, user.password)
         .then(isMatch => {
@@ -585,25 +593,8 @@ router.post('/login', (req, res) => {
             user.save()
               .then ( res => console.log(`${user.full_name} : updated last_login`))
               .catch ( err => console.error(err))
-            // User matched
-            const payload = {
-              id: user.id,
-              name: user.name,
-              firstname: user.firstname,
-              is_admin: user.is_admin,
-              is_alfred: user.is_alfred,
-              role: role,
-            }; // Create JWT payload
             // Sign token
-            jwt.sign(payload, keys.secretOrKey, (err, token) => {
-              jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
-                res.cookie('token', 'Bearer ' + token, {
-                  httpOnly: false,
-                  secure: true,
-                  sameSite: true,
-                }).status(201).json();
-              });
-            });
+            sendCookie(user, role, res)
           }
           else {
             console.warn(`Invalid login : bad password ${password} for ${email}`)
@@ -616,23 +607,9 @@ router.post('/login', (req, res) => {
 
 router.get('/token',  passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findById(req.user.id)
+    .populate('shop', 'is_particular')
     .then( user => {
-      const payload = {
-        id: user.id,
-        name: user.name,
-        firstname: user.firstname,
-        is_admin: user.is_admin,
-        is_alfred: user.is_alfred,
-      }; // Create JWT payload
-
-      jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
-        res.cookie('token', 'Bearer ' + token, {
-          httpOnly: false,
-          secure: true,
-          sameSite: true,
-        })
-          .status('201').json()
-      })
+      sendCookie(user, null, res)
     })
     .catch( err => {
       console.error(err)
@@ -677,12 +654,13 @@ router.get('/users', (req, res) => {
 // Get roles for an email's user
 router.get('/roles/:email', (req, res) => {
 
-  console.log(`Request roles for email ${req.params.email}`)
   User.findOne({ email: req.params.email}, 'roles')
     .then(user => {
       if (!user) {
+        console.log(`Request roles for email ${req.params.email}:[]`)
         return res.json([]);
       }
+      console.log(`Request roles for email ${req.params.email}:${user.roles}`)
       res.json(user.roles);
     })
     .catch(err => res.status(404).json({user: 'No user found'}));

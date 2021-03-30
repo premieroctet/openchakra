@@ -19,7 +19,7 @@ const {
   sendLeaveCommentForClient, sendLeaveCommentForAlfred,
 } = require('../../../utils/mailing');
 const {get_role} = require('../../utils/context')
-const {payAlfred} = require('../../../utils/mangopay');
+const {payAlfred} = require('../../utils/mangopay');
 
 moment.locale('fr');
 

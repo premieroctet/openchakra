@@ -3,10 +3,9 @@ import React from 'react'
 import Layout from '../../hoc/Layout/Layout'
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
-
 import axios from 'axios'
-
-const {isEditableUser} = require('../../utils/functions');
+const {isEditableUser}=require('../../utils/functions');
+const {is_b2b_site}=require('../../utils/context')
 import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayout'
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
@@ -77,7 +76,7 @@ class ProfileLayout extends React.Component {
             <Grid className={classes.profilLayoutBackgroundContainer}>
               <Grid className={classes.profilLayoutMargin}>
                 <Grid className={classes.profilLayoutBox}>
-                  <Grid className={is_mode_company() ? classes.profilLayoutBannerImgB2b : classes.profilLayoutBannerImg}>
+                  <Grid className={is_b2b_site() ? classes.profilLayoutBannerImgPro : classes.profilLayoutBannerImg}>
                     <Grid className={classes.profilLayoutAvatar}>
                       <UserAvatar alt={!is_mode_company() ? user.firstname : company ? company.name : ''} user={!is_mode_company() ? user : company ? company : ''} className={classes.cardPreviewLarge}/>
                     </Grid>

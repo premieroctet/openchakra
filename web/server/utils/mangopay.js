@@ -1,13 +1,12 @@
 const moment = require('moment');
 const path = require('path');
-const emptyPromise = require('./promise');
-const {MANGOPAY_CONFIG} = require('../config/config')
+const emptyPromise = require('../../utils/promise');
+const {MANGOPAY_CONFIG, is_development, get_host_url} = require('../../config/config')
 const mangopay = require('mangopay2-nodejs-sdk');
 const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType');
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType');
 const mangoApi = new mangopay(MANGOPAY_CONFIG)
-const {is_development, get_host_url} = require('../config/config');
 const process=require('process')
 
 const createMangoClient = user => {
@@ -97,17 +96,17 @@ const createMangoProvider = (user, shop) => {
     });
 };
 
-const createMangoCompany = (user, company) => {
+const createOrUpdateMangoCompany = company => {
 
-  console.log(`Creating mango company for company ${company.name}, representative is ${user.name}`);
+  console.log(`Creating/updating mango company for company ${company.name}, representative is ${company.representative.full_name}`);
   var companyData = {
     PersonType: PersonType.Legal,
     Name: company.name,
-    Email: user.email,
+    Email: company.representative.email,
     LegalPersonType: 'BUSINESS',
-    LegalRepresentativeFirstName: user.firstname,
-    LegalRepresentativeLastName: user.name,
-    LegalRepresentativeEmail: user.email,
+    LegalRepresentativeFirstName: company.representative.firstname,
+    LegalRepresentativeLastName: company.representative.name,
+    LegalRepresentativeEmail: company.representative.email,
     HeadquartersAddress: new mangoApi.models.Address({
         AddressLine1: company.billing_address.address,
         AddressLine2: '',
@@ -116,29 +115,40 @@ const createMangoCompany = (user, company) => {
         PostalCode: company.billing_address.zip_code,
         Country: 'FR',
     }),
-    LegalRepresentativeBirthday: moment(user.birthday).unix(),
+    LegalRepresentativeBirthday: moment(company.representative.birthday).unix(),
     LegalRepresentativeNationality: 'FR',
     LegalRepresentativeCountryOfResidence: 'FR',
     CompanyNumber: company.siret,
-    Tag: `Company ${company.name}/Repr. ${user.firstname} ${user.name}`
+    Tag: `Company ${company.name}/Repr. ${company.representative.full_name}`
   };
 
-  mangoApi.Users.create(companyData)
-    .then(company => {
-      console.log(`Created Mango company ${JSON.stringify(company)}`);
-      company.mangopay_id = newUser.Id;
-      user.save().then().catch();
-      mangoApi.Wallets.create({
-        Owners: [company.Id],
-        Description: `Wallet ${company._id} / ${company.name}company`,
-        Currency: 'EUR',
-      })
-        .then(wallet => {
-          console.log(`Created Wallet ${JSON.stringify(wallet)}`);
+  const is_update = company.id_mangopay
+
+  const method = is_update ?
+      mangoApi.Users.update({Id : company.id_mangopay, ...companyData})
+      :
+      mangoApi.Users.create(companyData)
+
+  method
+    .then(mangopay_company => {
+      console.log(`Created Mango company ${JSON.stringify(mangopay_company)}`);
+      company.id_mangopay = mangopay_company.Id;
+      company.save()
+        .then( res => console.log(`Created/update company ${JSON.stringify(company)}`))
+        .catch( err => console.error(err))
+      if (!is_update) {
+        mangoApi.Wallets.create({
+          Owners: [mangopay_company.Id],
+          Description: `Wallet ${company._id} / ${company.name}company`,
+          Currency: 'EUR',
         })
-        .catch(err => {
-          console.log(`Could not create Wallet:${err}`);
-        })
+          .then(wallet => {
+            console.log(`Created Wallet ${JSON.stringify(wallet)}`);
+          })
+          .catch(err => {
+            console.log(`Could not create Wallet:${err}`);
+          })
+      }
     });
 };
 
@@ -372,7 +382,7 @@ module.exports = {
   mangoApi,
   createMangoClient,
   createMangoProvider,
-  createMangoCompany,
+  createOrUpdateMangoCompany,
   addIdIfRequired,
   addRegistrationProof,
   payAlfred,

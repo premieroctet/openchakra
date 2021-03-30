@@ -28,7 +28,7 @@ const validatePrestationInput = require('../../../validation/prestation');
 const validateRegisterAdminInput = require('../../../validation/registerAdmin');
 const validateCategoryInput = require('../../../validation/category');
 const validateServiceInput = require('../../../validation/service');
-const {addIdIfRequired} = require('../../../../utils/mangopay');
+const {addIdIfRequired} = require('../../../utils/mangopay');
 const multer = require('multer')
 const path = require('path')
 const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
@@ -38,6 +38,7 @@ const csv_parse = require('csv-parse/lib/sync')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 var _ = require('lodash')
 const axios=require('axios')
+const {sendCookie}=require('../../../utils/context')
 
 // @Route POST /myAlfred/api/admin/billing/all
 // Add billing for prestation
@@ -306,6 +307,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
 
   // Find user by email
   User.findOne({email})
+    .populate('shop', 'is_particular')
     .then(user => {
       // Check for user
       if (!user) {
@@ -313,25 +315,8 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
         return res.status(400).json(errors);
       }
 
-      if (user.active === true) {
-        // User matched
-        const payload = {
-          id: user.id,
-          name: user.name,
-          firstname: user.firstname,
-          is_admin: user.is_admin,
-          is_alfred: user.is_alfred,
-        }; // Create JWT payload
-        // Sign token
-        jwt.sign(payload, keys.secretOrKey, (err, token) => {
-          jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
-            res.cookie('token', 'Bearer ' + token, {
-              httpOnly: false,
-              secure: true,
-              sameSite: true,
-            }).status(201).json();
-          });
-        });
+      if (user.active) {
+        sendCookie(user, null, res)
       } else {
         errors = 'Utilisateur inactif';
         return res.status(400).json(errors);
