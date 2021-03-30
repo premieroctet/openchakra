@@ -35,7 +35,6 @@ export default theme => ({
   policySizeSubtitle: {
     fontSize: 19,
     lineHeight: '1.43em',
-    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
     color: '#484848',
   },
   policySizeContent: {

@@ -146,7 +146,6 @@ class AssetsService extends React.Component {
           </Grid>
           <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
             <TextField
-              value={''}
               variant={'outlined'}
               label={'Titre'}
               value={this.state.experience_title}

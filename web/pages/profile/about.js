@@ -161,6 +161,8 @@ class ProfileAbout extends React.Component {
         console.error(err)
       }
     );
+
+
   };
 
   modalEditDialog = (classes) => {
