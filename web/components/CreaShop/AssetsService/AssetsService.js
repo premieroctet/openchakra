@@ -267,13 +267,12 @@ class AssetsService extends React.Component {
                 key={'diploma'}
                 accept="image/*,.pdf"
                 className={classes.input}
-                id="contained-button-file"
-                multiple
+                id="diploma-file"
                 type="file"
                 name="diplomaPicture"
                 onChange={this.handlePicture}
               />
-              <label htmlFor="contained-button-file">
+              <label htmlFor="diploma-file">
                 <Button variant="contained" color="primary" component="span" classes={{root: classes.buttonUpload}}>
                   {SHOP.assets.button_joinDiploma}
                 </Button>
@@ -358,16 +357,15 @@ class AssetsService extends React.Component {
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <Grid className={classes.inputFileContainer}>
               <input
-                key={'diploma'}
+                key={'certification'}
                 accept="image/*,.pdf"
                 className={classes.input}
-                id="contained-button-file"
-                multiple
+                id="certification-file"
                 type="file"
                 name="certificationPicture"
-                onChange={e => this.handlePicture({target: { name : "certificationPicture", files: e.target.files}})}
+                onChange={this.handlePicture}
               />
-              <label htmlFor="contained-button-file">
+              <label htmlFor="certification-file">
                 <Button variant="contained" color="primary" component="span" classes={{root: classes.buttonUpload}}>
                   {SHOP.assets.button_joinCertification}
                 </Button>
