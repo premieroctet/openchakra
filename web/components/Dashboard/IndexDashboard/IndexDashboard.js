@@ -7,6 +7,12 @@ import axios from 'axios'
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 const {ADMIN}=require('../../../utils/consts')
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
+import TextField from "@material-ui/core/TextField";
+import withStyles from "@material-ui/core/styles/withStyles";
+import styles from '../../../static/css/pages/profile/editProfileCompany/editProfileCompany';
+const moment = require('moment')
+import Button from "@material-ui/core/Button";
+const emptyPromise = require('../../../utils/promise');
 
 class IndexDashboard extends React.Component{
   constructor(props) {
@@ -14,7 +20,9 @@ class IndexDashboard extends React.Component{
     this.state={
       admins: [],
       representative:null,
+      birthday: null,
     }
+    this.saveDisabled = this.saveDisabled.bind(this)
   }
 
   componentDidMount()  {
@@ -32,23 +40,56 @@ class IndexDashboard extends React.Component{
       .catch (err => console.error(err))
   }
 
+  getSelectedAdmin = () => {
+    const {admins, representative} = this.state
+    return admins.find(a => a._id == representative)
+  }
+
   onChange = event => {
-    const {value}=event.target
+    const {name, value}=event.target
+    this.setState({[name]: value})
+    if (name=='representative') {
+      this.setState({birthday: ''})
+    }
+  }
+
+  saveDisabled = () => {
+    const {representative, birthday} = this.state
+    const selectedAdmin = this.getSelectedAdmin()
+    const ok = representative && selectedAdmin && (selectedAdmin.birthday || birthday)
+    return !ok
+  }
+
+  onSave = () => {
+    const {representative, birthday} = this.state
+    const selectedAdmin = this.getSelectedAdmin()
+    const promise = selectedAdmin.birthday ? emptyPromise()
+        :  axios.put(`/myAlfred/api/users/profile/birthday/${representative}`, { birthday: birthday})
+
     setAxiosAuthentication();
-    axios.put('/myAlfred/api/companies/representative', { representative_id: value})
-      .then(res => {
-        snackBarSuccess('Représentant légal mis à jour')
-        this.componentDidMount()
+    promise
+      .then ( res => {
+        axios.put('/myAlfred/api/companies/representative', { representative_id: representative})
+          .then(res => {
+            snackBarSuccess('Représentant légal mis à jour')
+            this.componentDidMount()
+          })
+          .catch (err => {
+            console.error(err.response)
+            snackBarError(err.response.data)
+          })
       })
       .catch (err => {
-        console.error(err)
-        snackBarError(err)
+        console.error(err.response)
+        snackBarError(err.response.data)
       })
   }
 
   render() {
-    const {representative, admins}=this.state
+    const {classes} = this.props
+    const {representative, admins, birthday}=this.state
 
+    const selected_admin = this.getSelectedAdmin()
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%', margin: 0}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -68,6 +109,30 @@ class IndexDashboard extends React.Component{
                  <MenuItem key={admin._id} value={admin._id}>{admin.full_name} ({admin.email})</MenuItem>
                ))}
            </Select>
+           <Button onClick={this.onSave} disabled={this.saveDisabled()}>
+              Enregistrer
+           </Button>
+           { selected_admin && !selected_admin.birthday ?
+             <>
+               <h3>La date de naissance du représentant légal est requise</h3>
+               <Grid item xl={6} lg={6} xs={6} sm={6} md={6}>
+                 <TextField
+                   classes={{root: classes.textFieldDatePicker}}
+                   id="filled-with-placeholder"
+                   variant="outlined"
+                   type="date"
+                   label={'Date de naissance'}
+                   name={'birthday'}
+                   value={birthday}
+                   onChange={this.onChange}
+                   InputProps={{inputProps: {min: "1900-01-01", max: new moment()}}}
+                   InputLabelProps={{ shrink: true }}
+                 />
+               </Grid>
+             </>
+             :
+             null
+           }
           </Box>
         </Grid>
       </Grid>
@@ -76,4 +141,4 @@ class IndexDashboard extends React.Component{
 
 }
 
-export default IndexDashboard;
+export default withStyles(styles)(IndexDashboard)

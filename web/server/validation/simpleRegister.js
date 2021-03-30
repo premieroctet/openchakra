@@ -62,6 +62,21 @@ const validateSimpleRegisterInput = data => {
   };
 };
 
+const validateBirthday = data => {
+  var errors = {}
+  if (!moment(data).isValid()) {
+    errors.birthday = 'Date de naissance invalide';
+  }
+  if (moment(data).isValid() && moment(data).isAfter(moment().subtract(ACCOUNT_MIN_AGE, 'years'))) {
+    console.warn(`${data} ${moment(data)}<${moment().subtract(ACCOUNT_MIN_AGE, 'years')}`);
+    errors.birthday = `L'âge minimum est de ${ACCOUNT_MIN_AGE} ans`
+  }
+  if (moment(data).isValid() && moment(data).isBefore(moment().subtract(150, 'years'))) {
+    errors.birthday = 'Date de naissance invalide, merci de saisir l\'année sur 4 chiffres';
+  }
+  return Object.keys(errors).length>0 ? errors : null
+}
+
 const validateEditProfile = data =>{
   let errors = {};
 
@@ -85,16 +100,7 @@ const validateEditProfile = data =>{
     errors.email = 'Email invalide';
   }
 
-  if (!moment(data.birthday).isValid()) {
-    errors.birthday = 'Date de naissance invalide';
-  }
-  if (moment(data.birthday).isValid() && moment(data.birthday).isAfter(moment().subtract(ACCOUNT_MIN_AGE, 'years'))) {
-    console.warn(`${data.birthday} ${moment(data.birthday)}<${moment().subtract(ACCOUNT_MIN_AGE, 'years')}`);
-    errors.birthday = `Vous devez avoir ${ACCOUNT_MIN_AGE} ans au minimum`
-  }
-  if (moment(data.birthday).isValid() && moment(data.birthday).isBefore(moment().subtract(150, 'years'))) {
-    errors.birthday = 'Date de naissance invalide, merci de saisir l\'année sur 4 chiffres';
-  }
+  errors = {...validateBirthday(data.birthday), errors}
 
   return {
     errors,
@@ -252,4 +258,5 @@ const validateCompanyGroup = data =>{
 module.exports = {
   validateSimpleRegisterInput, validateEditProfile, validateCompanyProfile,
   validateEditProProfile, validateCompanyMember, validateCompanyGroup,
+  validateBirthday,
 };
