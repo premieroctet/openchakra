@@ -26,7 +26,7 @@ export default theme => ({
   },
   menuButton: {
     margin: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none',
     },
   },
@@ -38,7 +38,7 @@ export default theme => ({
     backgroundColor: theme.palette.primary.main,
     borderTopRightRadius: '30px 40px',
     border:0,
-    height: '100vh'
+    height: '100vh',
   },
   content: {
     flexGrow: 1,
