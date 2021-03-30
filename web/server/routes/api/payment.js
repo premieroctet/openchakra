@@ -5,18 +5,19 @@ const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const User = require('../../models/User');
+const Company = require('../../models/Company');
 const Booking = require('../../models/Booking');
 const axios = require('axios');
 const _ = require('lodash');
 const moment = require('moment');
 const request = require('request');
-const {mangoApi, install_hooks} = require('../../utils/mangopay');
+const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay');
 const {maskIban} = require('../../../utils/text');
 var parse = require('url-parse');
 const {inspect} = require('util');
 const {MANGOPAY_ERRORS}=require('../../../utils/mangopay_messages')
 moment.locale('fr');
-
+const {is_b2b_admin}=require('../../utils/context')
 const {computeUrl} = require('../../../config/config');
 
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}));
@@ -47,54 +48,27 @@ router.get('/hook', (req, res) => {
 // Create credit card
 // @access private
 router.post('/createCard', passport.authenticate('jwt', {session: false}), (req, res) => {
-  console.log(`Creating card for user ${req.user.id}`)
-  User.findById(req.user.id)
+  const b2b = is_b2b_admin(req)
+  if (b2b) {
+    console.log(`Creating card for company ${req.user.company}`)
+  }
+  else {
+    console.log(`Creating card for user ${req.user.id}`)
+  }
+
+  const promise = b2b ? Company.findById(req.user.company) : User.findById(req.user.id)
+  promise
     .then(user => {
       let id_mangopay = user.id_mangopay;
-      mangoApi.CardRegistrations.create({
-        UserId: id_mangopay,
-        Currency: 'EUR',
-      })
-        .then(function (cardRegistrationData) {
-          const number = req.body.card_number;
-          const expiration_date = req.body.expiration_date;
-          const csv = req.body.csv;
-
-          let cardData = {
-            'cardNumber': number,
-            'cardExpirationDate': expiration_date,
-            'cardCvx': csv,
-          };
-          let headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          };
-          let options = {
-            url: cardRegistrationData.CardRegistrationURL,
-            headers: headers,
-            form: {
-              data: cardRegistrationData.PreregistrationData,
-              accessKeyRef: cardRegistrationData.AccessKey,
-              cardNumber: cardData.cardNumber,
-              cardExpirationDate: cardData.cardExpirationDate,
-              cardCvx: cardData.cardCvx,
-            },
-          };
-          request.post(options, function (err, data, result) {
-            if (result.includes("errorCode")) {
-              const code=parseInt(result.split('=')[1])
-              console.log(`Card creation error:${code}`)
-              const errMsg = MANGOPAY_ERRORS[code] || `Erreur inconnue #${code}`
-              res.status(404).json({error: errMsg})
-              return
-            }
-            cardRegistrationData.RegistrationData = result;
-            mangoApi.CardRegistrations.update(cardRegistrationData)
-              .then(newCard => {
-                res.json(newCard);
-              });
-          }, options);
-
-        });
+      const {card_number, expiration_date, csv} = req.body
+      createCard(id_mangopay, card_number, expiration_date, csv)
+        .then( newCard => {
+          res.json(newCard)
+        })
+        .catch( err => {
+          console.error(err)
+          res.status(404).json({error: err})
+        })
     })
     .catch(error => {
       console.error(error);
@@ -282,9 +256,13 @@ router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req
 // View all credit cards for a user
 // @access private
 router.get('/cards', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
-    .then(user => {
-      mangoApi.Users.getCards(user.id_mangopay, {parameters: { per_page: 100}}).then(cards => res.json(cards));
+  if (is_b2b_admin(req)) {
+    console.log("C'est un admin B2B")
+  }
+  const promise=is_b2b_admin(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+  promise
+    .then(entity => {
+      mangoApi.Users.getCards(entity.id_mangopay, {parameters: { per_page: 100}}).then(cards => res.json(cards));
     })
     .catch(err => console.error(err));
 
@@ -294,17 +272,22 @@ router.get('/cards', passport.authenticate('jwt', {session: false}), (req, res) 
 // View all active credit cards for a user
 // @access private
 router.get('/cardsActive', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (is_b2b_admin(req)) {
+    console.log("C'est un admin B2B")
+  }
+  const promise=is_b2b_admin(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+
   const allCards = [];
-  User.findById(req.user.id)
-    .then(user => {
-      mangoApi.Users.getCards(user.id_mangopay)
+  promise
+    .then(entity => {
+      mangoApi.Users.getCards(entity.id_mangopay)
         .then(cards => {
           cards.forEach(c => {
             if (c.Active) {
               allCards.push(c);
             }
           });
-
           res.json(allCards);
         });
     })

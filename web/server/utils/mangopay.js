@@ -8,6 +8,7 @@ const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentSt
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType');
 const mangoApi = new mangopay(MANGOPAY_CONFIG)
 const process=require('process')
+const request = require('request');
 
 const createMangoClient = user => {
   var userData = {
@@ -382,6 +383,43 @@ const install_hooks= (hook_types, url) => {
     })
 }
 
+const createCard = (id_mangopay, card_number, expiration_date, csv) => {
+  return new Promise((resolve, reject) => {
+    mangoApi.CardRegistrations.create({UserId: id_mangopay,Currency: 'EUR', })
+      .then(function (cardRegistrationData) {
+        const options = {
+          url: cardRegistrationData.CardRegistrationURL,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          form: {
+            data: cardRegistrationData.PreregistrationData,
+            accessKeyRef: cardRegistrationData.AccessKey,
+            cardNumber: card_number,
+            cardExpirationDate: expiration_date,
+            cardCvx: csv,
+          },
+        };
+        request.post(options, function (err, data, result) {
+          if (result.includes("errorCode")) {
+            const code=parseInt(result.split('=')[1])
+            console.log(`Card creation error:${code}`)
+            const errMsg = MANGOPAY_ERRORS[code] || `Erreur inconnue #${code}`
+            reject(errMsg)
+            return
+          }
+          cardRegistrationData.RegistrationData = result;
+          mangoApi.CardRegistrations.update(cardRegistrationData)
+            .then(newCard => {
+              resolve(newCard)
+            });
+        }, options);
+      })
+      .catch (err => {
+        console.error(err)
+        reject(err)
+      })
+  })
+}
+
 module.exports = {
   mangoApi,
   createMangoClient,
@@ -391,4 +429,5 @@ module.exports = {
   addRegistrationProof,
   payAlfred,
   install_hooks,
+  createCard,
 };
