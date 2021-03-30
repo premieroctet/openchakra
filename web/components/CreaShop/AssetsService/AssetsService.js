@@ -377,10 +377,10 @@ class AssetsService extends React.Component {
           {this.state.certificationPicture ?
             <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
               <Grid item>
-                <Typography>Certification jointe}</Typography>
-                <CheckCircleIcon color={'primary'}/>
+                <Typography>Certification jointe</Typography>
               </Grid>
               <Grid item>
+                <CheckCircleIcon color={'primary'}/>
               </Grid>
             </Grid>
             : null
