@@ -129,7 +129,7 @@ class all extends React.Component {
         let admin = response.data;
         this.setState({admin: admin});
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
       if (error.response.status === 401 || error.response.status === 403) {
         clearAuthenticationToken()
         Router.push({pathname: '/login'});

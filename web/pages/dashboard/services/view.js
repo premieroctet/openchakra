@@ -131,7 +131,7 @@ class view extends React.Component {
         let category = response.data;
         this.setState({all_category: category});
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 
     axios.get('/myAlfred/api/admin/tags/all')
@@ -139,7 +139,7 @@ class view extends React.Component {
         let tags = response.data;
         this.setState({all_tags: tags});
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 
     axios.get('/myAlfred/api/admin/equipment/all')
