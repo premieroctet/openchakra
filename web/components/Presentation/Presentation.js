@@ -18,12 +18,12 @@ import TextField from '@material-ui/core/TextField';
 import {CMP_PRESENTATION} from '../../utils/i18n'
 import {MAX_DESCRIPTION_LENGTH} from '../../utils/consts'
 import {isEditableUser} from '../../utils/functions'
-import {is_mode_company} from "../../utils/context";
 
 const {frenchFormat} = require('../../utils/text');
 import CreateIcon from '@material-ui/icons/Create'
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 
 const moment = require('moment');
 moment.locale('fr');
@@ -43,7 +43,7 @@ const DialogTitle = withStyles(styles)((props) => {
 });
 
 
-class Presentation extends React.Component {
+class Presentation extends CompanyComponent {
 
   constructor(props) {
     super(props);
@@ -62,25 +62,29 @@ class Presentation extends React.Component {
   loadUser = () => {
     setAxiosAuthentication()
 
-    axios.get('/myAlfred/api/companies/current').then( res =>{
-      const company = res.data;
-      this.setState({
-        company: company,
-        website: company.website,
-        activityArea: company.activity,
-        sizeCompany: company.size,
-        billing_address: company.billing_address,
-        companyName: company.name,
-        description: company.description,
-        siret: company.siret,
-        vat_number: company.vat_number,
-        vat_subject: company.vat_subject
-      })
-    }).catch(err => console.error(err))
-
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then(res => {
-        this.setState({user: res.data})
+        const user = res.data
+        this.setState({user: user})
+        if (user.company) {
+          axios.get(`/myAlfred/api/companies/companies/${user.company}`)
+            .then( res =>{
+              const company = res.data;
+              this.setState({
+                company: company,
+                website: company.website,
+                activityArea: company.activity,
+                sizeCompany: company.size,
+                billing_address: company.billing_address,
+                companyName: company.name,
+                description: company.description,
+                siret: company.siret,
+                vat_number: company.vat_number,
+                vat_subject: company.vat_subject
+              })
+            })
+          .catch(err => console.error(err))
+        }
       })
       .catch(err => console.error(err))
   };
@@ -89,7 +93,7 @@ class Presentation extends React.Component {
     const {newDescription} = this.state
     setAxiosAuthentication()
 
-    if(is_mode_company(this.state.user)){
+    if(this.is_mode_company()){
       axios.put('/myAlfred/api/companies/profile/editProfile', {
           activity: this.state.activityArea,
           size: this.state.sizeCompany,
@@ -187,7 +191,7 @@ class Presentation extends React.Component {
     const {classes} = this.props;
     const {user, company} = this.state;
     const editable = isEditableUser(user);
-    const title = is_mode_company(user) ? company ? `À propos de ${company.name}` : null : frenchFormat(`À propos de ${user ? user.firstname : ''}`);
+    const title = this.is_mode_company() ? company ? `À propos de ${company.name}` : null : frenchFormat(`À propos de ${user ? user.firstname : ''}`);
 
     return (
       <>
@@ -203,10 +207,10 @@ class Presentation extends React.Component {
         <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
           <Topic titleTopic={title}
                  titleSummary={user ? `membre depuis ${moment(user.creation_date).format("MMMM YYYY")}` : ''}>
-            {user && !is_mode_company(user)?
+            {user && !this.is_mode_company()?
               <Typography style={{wordWrap: 'break-word'}}>{user.description}</Typography>
               :
-              is_mode_company(user) && company ?
+              this.is_mode_company() && company ?
                 <Typography style={{wordWrap: 'break-word'}}>{company.description}</Typography>
                 : null
             }

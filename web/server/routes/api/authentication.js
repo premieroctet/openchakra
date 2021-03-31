@@ -45,7 +45,7 @@ const authController = (req, res) => {
           throw err;
         });
       } else {
-        sendCookie(user, res);
+        send_cookie(user, res);
       }
     }).catch(err => console.error(err));
 };
@@ -67,7 +67,7 @@ const extractUser = (req) => {
 
 
 //Create JWT cookie with user credentials
-const sendCookie = (user, res) => {
+const send_cookie = (user, res) => {
   const payload = {
     id: user.id,
     name: user.name,

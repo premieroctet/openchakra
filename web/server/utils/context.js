@@ -26,7 +26,7 @@ const is_mode_company = req => {
 }
 
 //Create JWT cookie with user credentials
-const sendCookie = (user, role, res) => {
+const send_cookie = (user, role, res) => {
   const payload = {
     id: user.id,
     name: user.name,
@@ -48,4 +48,4 @@ const sendCookie = (user, role, res) => {
   });
 };
 
-module.exports = {get_role, is_b2b_admin, is_b2b_manager, is_mode_company, sendCookie}
+module.exports = {get_role, is_b2b_admin, is_b2b_manager, is_mode_company, send_cookie}

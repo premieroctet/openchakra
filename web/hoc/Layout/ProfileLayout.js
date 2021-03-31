@@ -1,5 +1,5 @@
-const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
+const {setAxiosAuthentication} = require('../../utils/authentication')
 import Layout from '../../hoc/Layout/Layout'
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
@@ -10,9 +10,9 @@ import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayo
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
 import UserAvatar from "../../components/Avatar/UserAvatar";
-import {is_mode_company} from "../../utils/context";
+const CompanyComponent = require('../b2b/CompanyComponent')
 
-class ProfileLayout extends React.Component {
+class ProfileLayout extends CompanyComponent {
 
   constructor(props) {
     super(props);
@@ -46,16 +46,20 @@ class ProfileLayout extends React.Component {
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then(res => {
-        this.setState({user: res.data})
+        const user = res.data
+        this.setState({user: user})
+        if (user.company) {
+          axios.get(`/myAlfred/api/companies/companies/${user.company}`)
+            .then( res =>{
+              const company = res.data;
+              this.setState({
+                company: company,
+              })
+            })
+          .catch(err => console.error(err))
+        }
       })
       .catch(err => console.error(err))
-
-    axios.get('/myAlfred/api/companies/current').then( res =>{
-      const company = res.data;
-      this.setState({
-        company: company,
-      })
-    }).catch(err => console.error(err))
   };
 
   render() {
@@ -78,7 +82,7 @@ class ProfileLayout extends React.Component {
                 <Grid className={classes.profilLayoutBox}>
                   <Grid className={is_b2b_site() ? classes.profilLayoutBannerImgPro : classes.profilLayoutBannerImg}>
                     <Grid className={classes.profilLayoutAvatar}>
-                      <UserAvatar alt={!is_mode_company(user) ? user.firstname : company ? company.name : ''} user={!is_mode_company(user) ? user : company ? company : ''} className={classes.cardPreviewLarge}/>
+                      <UserAvatar alt={!this.is_mode_company() ? user.firstname : company ? company.name : ''} user={!this.is_mode_company() ? user : company ? company : ''} className={classes.cardPreviewLarge}/>
                     </Grid>
                   </Grid>
                   <Grid style={{
@@ -89,13 +93,13 @@ class ProfileLayout extends React.Component {
                   }}>
                     <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Grid>
-                        {is_mode_company(user) ?
+                        {this.is_mode_company() ?
                           <h3>{company ? company.name : ''}</h3>
                           :
                           <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
                         }
                       </Grid>
-                      {is_mode_company(user) ? null :
+                      {this.is_mode_company() ? null :
                         <Grid>
                           <Typography style={{color: 'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
                         </Grid>
@@ -104,7 +108,7 @@ class ProfileLayout extends React.Component {
                     </Grid>
                   </Grid>
                   {
-                    !is_mode_company(user) ?
+                    !this.is_mode_company() ?
                       <Grid className={classes.profilLayoutScrollMenu}>
                         <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index}
                                     extraParams={{user: this.props.user}}/>

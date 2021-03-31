@@ -26,7 +26,7 @@ const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise.js');
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../utils/mangopay');
-const {sendCookie}=require('../../utils/context')
+const {send_cookie}=require('../../utils/context')
 
 axios.defaults.withCredentials = true;
 
@@ -593,7 +593,7 @@ router.post('/login', (req, res) => {
               .then ( res => console.log(`${user.full_name} : updated last_login`))
               .catch ( err => console.error(err))
             // Sign token
-            sendCookie(user, role, res)
+            send_cookie(user, role, res)
           }
           else {
             console.warn(`Invalid login : bad password ${password} for ${email}`)
@@ -608,7 +608,7 @@ router.get('/token',  passport.authenticate('jwt', {session: false}), (req, res)
   User.findById(req.user.id)
     .populate('shop', 'is_particular')
     .then( user => {
-      sendCookie(user, null, res)
+      send_cookie(user, null, res)
     })
     .catch( err => {
       console.error(err)

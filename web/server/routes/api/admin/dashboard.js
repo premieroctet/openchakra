@@ -38,7 +38,7 @@ const csv_parse = require('csv-parse/lib/sync')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 var _ = require('lodash')
 const axios=require('axios')
-const {sendCookie}=require('../../../utils/context')
+const {send_cookie}=require('../../../utils/context')
 
 // @Route POST /myAlfred/api/admin/billing/all
 // Add billing for prestation
@@ -316,7 +316,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
       }
 
       if (user.active) {
-        sendCookie(user, null, res)
+        send_cookie(user, null, res)
       } else {
         errors = 'Utilisateur inactif';
         return res.status(400).json(errors);

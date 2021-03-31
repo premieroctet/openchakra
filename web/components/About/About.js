@@ -28,11 +28,11 @@ import {isEditableUser} from '../../utils/functions'
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Divider from "@material-ui/core/Divider";
-import {is_mode_company} from "../../utils/context";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
+const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 
 const {frenchFormat} = require('../../utils/text');
 const moment = require('moment');
@@ -52,7 +52,7 @@ const DialogTitle = withStyles(styles)((props) => {
   );
 });
 
-class About extends React.Component {
+class About extends CompanyComponent {
 
   constructor(props) {
     super(props);
@@ -82,22 +82,6 @@ class About extends React.Component {
     this.setState({showEdition: false});
     setAxiosAuthentication();
 
-      axios.get('/myAlfred/api/companies/current').then( res =>{
-        const company = res.data;
-        this.setState({
-          company: company,
-          website: company.website,
-          activityArea: company.activity,
-          sizeCompany: company.size,
-          billing_address: company.billing_address,
-          companyName: company.name,
-          description: company.description,
-          siret: company.siret,
-          vat_number: company.vat_number,
-          vat_subject: company.vat_subject
-        })
-        }).catch(err => console.error(err))
-
       axios.get(`/myAlfred/api/users/users/${this.props.user}`)
         .then(res => {
           const user = res.data;
@@ -106,8 +90,27 @@ class About extends React.Component {
             userLanguages: user.languages.map(l => ({value: l, label: l})),
             billing_address: user.billing_address
           })
-        })
-        .catch(err => console.error(err))
+          if (user.company) {
+            axios.get(`/myAlfred/api/companies/companies/${user.company}`)
+              .then( res =>{
+                const company = res.data;
+                this.setState({
+                  company: company,
+                  website: company.website,
+                  activityArea: company.activity,
+                  sizeCompany: company.size,
+                  billing_address: company.billing_address,
+                  companyName: company.name,
+                  description: company.description,
+                  siret: company.siret,
+                  vat_number: company.vat_number,
+                  vat_subject: company.vat_subject
+                })
+              })
+            .catch(err => console.error(err))
+        }
+      })
+      .catch(err => console.error(err))
   };
 
   onAddressChanged = result => {
@@ -135,7 +138,7 @@ class About extends React.Component {
     const {newAddress, languages} = this.state;
     setAxiosAuthentication();
 
-    if(is_mode_company(this.state.user)){
+    if(this.is_mode_company()){
       axios.put('/myAlfred/api/companies/profile/editProfile', {
         activity: this.state.activityArea,
         size: this.state.sizeCompany,
@@ -229,8 +232,8 @@ class About extends React.Component {
         />
         <DialogContent>
           <Topic
-            titleTopic={is_mode_company(user) ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
-            titleSummary={is_mode_company(user) ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
+            titleTopic={this.is_mode_company() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
+            titleSummary={this.is_mode_company() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
             underline={true}/>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -239,12 +242,12 @@ class About extends React.Component {
                   fontWeight: 'bold',
                   textTransform: 'initial'
                 }}>
-                  {is_mode_company(user) ? 'Site Web' : 'Lieu d\'habitation'}
+                  {this.is_mode_company() ? 'Site Web' : 'Lieu d\'habitation'}
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 {
-                  is_mode_company(user) ?
+                  this.is_mode_company() ?
                     <TextField
                       name={'website'}
                       variant={'outlined'}
@@ -277,11 +280,11 @@ class About extends React.Component {
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial'
-                  }}>{is_mode_company(user) ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
+                  }}>{this.is_mode_company() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
               </Grid>
               <Grid item xs={12}>
                 {
-                  !is_mode_company(user) ?
+                  !this.is_mode_company() ?
                     <MultipleSelect
                       key={moment()}
                       value={languages}
@@ -318,7 +321,7 @@ class About extends React.Component {
               </Grid>
             </Grid>
               {
-              is_mode_company(user) ?
+              this.is_mode_company() ?
                 <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <h3
@@ -360,7 +363,7 @@ class About extends React.Component {
                   variant="contained"
                   classes={{root: classes.buttonSave}}
                   color={'primary'}
-                  disabled={!is_mode_company(user) ? enabledEdition : false}
+                  disabled={!this.is_mode_company() ? enabledEdition : false}
                 >
                   Modifier
                 </Button>
@@ -381,7 +384,7 @@ class About extends React.Component {
     const editable = isEditableUser(user);
 
 
-    const wrapperComponentProps = !is_mode_company(user)?
+    const wrapperComponentProps = !this.is_mode_company()?
       [
         {
           label: 'Lieu',
