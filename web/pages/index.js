@@ -47,8 +47,19 @@ class Home extends React.Component {
         let alfred = response.data;
         this.setState({alfred: alfred});
       }).catch(err => console.error(err));
+  }
 
+  resizeFrame = () =>{
 
+    let iframe = document.querySelector("#myIframe");
+
+    window.addEventListener('message', function(e) {
+      // message that was passed from iframe page
+      let message = e.data;
+
+      iframe.style.height = message.height + 'px';
+      iframe.style.width = '100%';
+    } , false);
   }
 
   render() {
@@ -56,9 +67,7 @@ class Home extends React.Component {
     const {category, alfred, logged, user} = this.state;
     return (
 
-
-      <React.Fragment>
-
+      <Grid>
         <Helmet>
           <title>Services rémunérés entre particuliers - My Alfred </title>
           <meta property="description"
@@ -82,6 +91,20 @@ class Home extends React.Component {
               </Grid>
             </Grid>
           </Grid>
+          {
+            is_b2b_style() ?
+              <Grid container>
+                <iframe
+                  onLoad={this.resizeFrame}
+                  frameborder="0"
+                  scrolling="no"
+                  id="myIframe"
+                  src="http://my-hooty.com/"
+                >
+                </iframe>
+              </Grid>
+               : null
+          }
           <Grid container className={classes.mainContainerStyle}>
             <Grid className={classes.generalWidthContainer}>
               <CategoryTopic category={category}/>
@@ -144,7 +167,7 @@ class Home extends React.Component {
             </Grid>
           </Hidden>
         </Grid>
-      </React.Fragment>
+      </Grid>
     );
   }
 }
