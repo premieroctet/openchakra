@@ -199,7 +199,7 @@ class editPicture extends React.Component {
                       user.picture ?
                         <img width={150} height={150} style={{borderRadius: '50%', objectFit: 'cover'}}
                              src={`../${user.picture}`} alt={'picture'}/> :
-                        <Avatar alt="photo de profil" className={classes.avatarLetter}>{generate_avatar(user)}</Avatar>
+                        <Avatar alt="photo de profil" className={classes.avatarLetter}>{user.avatar_letters}</Avatar>
                   }
                 </Grid>
                 <Grid item xs={12} md={6} style={{marginLeft: '5%'}}>

@@ -30,7 +30,7 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
   const userId = mongoose.Types.ObjectId(req.user.id);
   Booking.find({alfred: userId})
     .sort([['date', -1]])
-    .populate('user', ['name', 'firstname', 'picture'])
+    .populate('user', ['name', 'firstname', 'picture', 'company'])
     .populate('chatroom')
     .then(alfred => {
       if (!alfred) {

@@ -23,6 +23,8 @@ import BillingGeneration from "../BillingGeneration/BillingGeneration";
 import NoSSR from "react-no-ssr";
 
 const {BOOKING} = require('../../utils/i18n')
+const {getUserLabel} = require('../../utils/functions')
+
 registerLocale('fr', fr);
 moment.locale('fr');
 
@@ -44,7 +46,9 @@ class BookingPreview extends React.Component {
       currentUser: null,
       is_alfred: null,
       end_datetime: null,
-      loading: false
+      loading: false,
+      user_label: '',
+      alfred_label: '',
     };
     this.routingDetailsMessage = this.routingDetailsMessage.bind(this)
     this.getPrestationMinMoment = this.getPrestationMinMoment.bind(this)
@@ -71,7 +75,6 @@ class BookingPreview extends React.Component {
 
   componentDidMount() {
     const booking_id = this.props.booking_id;
-
 
     axios.get(`/myAlfred/api/shop/alfred/${booking_id}`)
       .then(res => {
@@ -100,6 +103,11 @@ class BookingPreview extends React.Component {
             end_datetime: end_datetime,
           },
         );
+
+        getUserLabel(booking.user)
+          .then( res => this.setState({user_label : res}))
+        getUserLabel(booking.alfred)
+          .then( res => this.setState({alfred_label : res}))
 
         if (res.data.serviceUserId) {
           axios.get(`/myAlfred/api/serviceUser/${this.state.bookingObj.serviceUserId}`).then(res => {
@@ -212,7 +220,7 @@ class BookingPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime, loading, is_pro} = this.state;
+    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime, loading, is_pro, user_label, alfred_label} = this.state;
 
     if (!bookingObj || !currentUser) {
       return null
@@ -227,6 +235,7 @@ class BookingPreview extends React.Component {
     // Am i the service provider ?
     const amIAlfred = currentUser._id === bookingObj.alfred._id;
     const displayUser = amIAlfred ? bookingObj.user : bookingObj.alfred;
+    const displayUserLabel = amIAlfred ? user_label : alfred_label;
 
     const status = bookingObj.status;
     const paymentTitle =
@@ -271,7 +280,7 @@ class BookingPreview extends React.Component {
                     <Grid item xs={9} sm={9} md={9} xl={9} lg={9}>
                       <Grid>
                         <Typography>
-                          {`${displayUser.firstname} ${displayUser.name}`}
+                          {displayUserLabel}
                         </Typography>
                       </Grid>
                       <Grid style={{marginTop: '2%'}}>
@@ -300,6 +309,7 @@ class BookingPreview extends React.Component {
                           loading ? "Chargement en cours..." :
                             <Grid onClick={this.setLoading}
                             >
+                              {/**
                               <PDFDownloadLink
                                 document={<BillingGeneration bookingObj={bookingObj} is_pro={is_pro}/>}
                                 fileName=
@@ -317,6 +327,7 @@ class BookingPreview extends React.Component {
                                   is_pro ? " ma facture" : " mon récépissé"
                                 }
                               </PDFDownloadLink>
+                              */}
                             </Grid>
                         }
                       </Grid>

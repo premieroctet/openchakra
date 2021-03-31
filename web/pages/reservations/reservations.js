@@ -24,6 +24,7 @@ import LayoutMobileReservations from "../../hoc/Layout/LayoutMobileReservations"
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 const {BOOK_STATUS}=require('../../utils/consts');
+const {getUserLabel}=require('../../utils/functions');
 import Router from 'next/router';
 
 
@@ -97,19 +98,32 @@ class AllReservations extends React.Component {
       })
   }
 
+  loadUserLabels = bookings => {
+    bookings.forEach( booking => {
+      getUserLabel(booking.alfred)
+        .then( res => {
+          this.setState({[booking.alfred._id]: res})
+        })
+      getUserLabel(booking.user)
+        .then( res => {
+          this.setState({[booking.user._id]: res})
+        })
+    })
+  }
   loadBookings = () => {
     axios.get('/myAlfred/api/booking/alfredBooking')
       .then(res => {
         // On n'affiche pas les résas en attente de paiement
-        const bookings=res.data.filter( r => r.status !== BOOK_STATUS.TO_PAY);
-        this.setState({alfredReservations: bookings});
+        const alfredBookings=res.data.filter( r => r.status !== BOOK_STATUS.TO_PAY);
+        this.setState({alfredReservations: alfredBookings});
+        axios.get('/myAlfred/api/booking/userBooking')
+          .then(res => {
+            const userBookings=res.data;
+            this.setState({userReservations: userBookings});
+            this.loadUserLabels(alfredBookings.concat(userBookings))
+          });
       });
 
-    axios.get('/myAlfred/api/booking/userBooking')
-      .then(res => {
-        const bookings=res.data;
-        this.setState({userReservations: bookings});
-      });
   };
 
   onReservationTypeChanged = (event, newValue) => {
@@ -268,7 +282,7 @@ class AllReservations extends React.Component {
                     </Grid>
                     <Grid item  xl={3} lg={3} md={3} sm={6} xs={8} className={classes.descriptionContainer}>
                       <Grid className={classes.bookingNameContainer}>
-                        <Typography><strong> {booking.status} - {alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
+                        <Typography><strong> {booking.status} - {alfredMode ? this.state[booking.user._id] : this.state[booking.alfred._id]}</strong></Typography>
                       </Grid>
                       <Grid>
                         <Typography>

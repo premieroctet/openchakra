@@ -3,6 +3,8 @@ import convertDistance from 'geolib/es/convertDistance';
 const jwt = require('jsonwebtoken')
 const isEmpty = require('../server/validation/is-empty');
 const moment = require('moment');
+const {setAxiosAuthentication}=require('./authentication')
+import axios from 'axios'
 
 const computeDistanceKm = (latlon1, latlon2) => {
   if (isEmpty(latlon1) || isEmpty(latlon2)) {
@@ -111,8 +113,31 @@ const isEditableUser = user => {
   return isEditable
 }
 
+const getUserLabel = user => {
+  return new Promise( (resolve, reject) => {
+    if (!user) {
+      resolve('')
+    }
+    if (user.company) {
+      setAxiosAuthentication()
+      axios.get(`/myAlfred/api/companies/name/${user.company}`)
+        .then ( res => {
+          resolve(`${user.firstname} pour ${res.data.name}`)
+        })
+        .catch( err => {
+          console.error(err)
+          resolve(user.firstname)
+        })
+    }
+    else {
+      resolve(user.firstname)
+    }
+  })
+}
+
 module.exports = {
   computeDistanceKm, computeBookingReference, computeAverageNotes,
   computeSumSkills, circular_get, getLoggedUserId,getLoggedUser,
-  isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro
+  isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
+  getUserLabel,
 };

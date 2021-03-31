@@ -45,6 +45,7 @@ class LogIn extends React.Component {
   onChange = e => {
     const {name, value} = e.target;
     if(name === 'username'){
+      // TODO aller chercher les rôles au bout d'une tepo, sinon GET /roles trop nombreux
       axios.get(`/myAlfred/api/users/roles/${e.target.value}`)
         .then( res =>{
           const roles = res.data;

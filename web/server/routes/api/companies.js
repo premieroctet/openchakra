@@ -558,4 +558,15 @@ router.get('/billings', passport.authenticate('b2badmin', {session: false}),
       })
 })
 
+router.get('/name/:company_id', (req, res) => {
+  Company.findById(req.params.company_id, 'name')
+    .then( company => {
+      res.json(company)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400).json()
+    })
+})
+
 module.exports = router;
