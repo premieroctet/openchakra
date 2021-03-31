@@ -89,7 +89,7 @@ class Presentation extends React.Component {
     const {newDescription} = this.state
     setAxiosAuthentication()
 
-    if(is_mode_company()){
+    if(is_mode_company(this.state.user)){
       axios.put('/myAlfred/api/companies/profile/editProfile', {
           activity: this.state.activityArea,
           size: this.state.sizeCompany,
@@ -187,7 +187,7 @@ class Presentation extends React.Component {
     const {classes} = this.props;
     const {user, company} = this.state;
     const editable = isEditableUser(user);
-    const title = is_mode_company() ? company ? `À propos de ${company.name}` : null : frenchFormat(`À propos de ${user ? user.firstname : ''}`);
+    const title = is_mode_company(user) ? company ? `À propos de ${company.name}` : null : frenchFormat(`À propos de ${user ? user.firstname : ''}`);
 
     return (
       <>
@@ -203,10 +203,10 @@ class Presentation extends React.Component {
         <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
           <Topic titleTopic={title}
                  titleSummary={user ? `membre depuis ${moment(user.creation_date).format("MMMM YYYY")}` : ''}>
-            {user && !is_mode_company()?
+            {user && !is_mode_company(user)?
               <Typography style={{wordWrap: 'break-word'}}>{user.description}</Typography>
               :
-              is_mode_company() && company ?
+              is_mode_company(user) && company ?
                 <Typography style={{wordWrap: 'break-word'}}>{company.description}</Typography>
                 : null
             }

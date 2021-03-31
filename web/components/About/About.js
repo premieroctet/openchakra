@@ -135,7 +135,7 @@ class About extends React.Component {
     const {newAddress, languages} = this.state;
     setAxiosAuthentication();
 
-    if(is_mode_company()){
+    if(is_mode_company(this.state.user)){
       axios.put('/myAlfred/api/companies/profile/editProfile', {
         activity: this.state.activityArea,
         size: this.state.sizeCompany,
@@ -229,8 +229,8 @@ class About extends React.Component {
         />
         <DialogContent>
           <Topic
-            titleTopic={is_mode_company() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
-            titleSummary={is_mode_company() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
+            titleTopic={is_mode_company(user) ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
+            titleSummary={is_mode_company(user) ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
             underline={true}/>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -239,12 +239,12 @@ class About extends React.Component {
                   fontWeight: 'bold',
                   textTransform: 'initial'
                 }}>
-                  {is_mode_company() ? 'Site Web' : 'Lieu d\'habitation'}
+                  {is_mode_company(user) ? 'Site Web' : 'Lieu d\'habitation'}
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 {
-                  is_mode_company() ?
+                  is_mode_company(user) ?
                     <TextField
                       name={'website'}
                       variant={'outlined'}
@@ -277,11 +277,11 @@ class About extends React.Component {
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial'
-                  }}>{is_mode_company() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
+                  }}>{is_mode_company(user) ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
               </Grid>
               <Grid item xs={12}>
                 {
-                  !is_mode_company() ?
+                  !is_mode_company(user) ?
                     <MultipleSelect
                       key={moment()}
                       value={languages}
@@ -318,7 +318,7 @@ class About extends React.Component {
               </Grid>
             </Grid>
               {
-              is_mode_company() ?
+              is_mode_company(user) ?
                 <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <h3
@@ -360,7 +360,7 @@ class About extends React.Component {
                   variant="contained"
                   classes={{root: classes.buttonSave}}
                   color={'primary'}
-                  disabled={!is_mode_company() ? enabledEdition : false}
+                  disabled={!is_mode_company(user) ? enabledEdition : false}
                 >
                   Modifier
                 </Button>
@@ -381,7 +381,7 @@ class About extends React.Component {
     const editable = isEditableUser(user);
 
 
-    const wrapperComponentProps = !is_mode_company()?
+    const wrapperComponentProps = !is_mode_company(user)?
       [
         {
           label: 'Lieu',

@@ -86,19 +86,19 @@ class LayoutMobileProfile extends React.Component{
           </Grid>
           <Grid className={classes.layoutMobileLayoutProfileHeader}>
             <Grid className={classes.profilLayoutAvatar}>
-              <UserAvatar alt={!is_mode_company() ? user.firstname : company ? company.name : ''} user={!is_mode_company() ? user : company ? company : ''} className={classes.cardPreviewLarge} />
+              <UserAvatar alt={!is_mode_company(user) ? user.firstname : company ? company.name : ''} user={!is_mode_company(user) ? user : company ? company : ''} className={classes.cardPreviewLarge} />
             </Grid>
           </Grid>
           <Grid style={{display: 'flex',height: '40%', alignItems: 'center', marginTop: '10vh', marginLeft: '5vh'}}>
             <Grid style={{display: 'flex',flexDirection: 'column'}}>
               <Grid>
-                {is_mode_company() ?
+                {is_mode_company(user) ?
                   <h3>{company ? company.name : ''}</h3>
                   :
                   <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
                 }
               </Grid>
-              {is_mode_company() ? null :
+              {is_mode_company(user) ? null :
                 <Grid>
                   <Typography style={{color: 'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
                 </Grid>
@@ -110,7 +110,7 @@ class LayoutMobileProfile extends React.Component{
           <Divider/>
         </Grid>
         {
-          is_mode_company() ? null :
+          is_mode_company(user) ? null :
             <Grid className={classes.profilLayoutScrollMenu}>
               <ScrollMenu categories={menuItems} mode={'profile'} extraParams={{user: this.props.user}}/>
             </Grid>
