@@ -40,6 +40,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ShowExperience from "../../components/ShowEperience/ShowExperience";
 import ShowDiploma from "../../components/ShowDiploma/ShowDiploma";
 import ShowCertification from "../../components/ShowCertification/ShowCertification";
+import Notes from "../../components/Notes/Notes";
 const moment=require('moment');
 moment.locale('fr');
 
@@ -456,11 +457,16 @@ class ProfileAbout extends React.Component {
             </Grid>
             : null
         }
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Box>
-            <Skills alfred={user} />
-          </Box>
-        </Grid>
+        {
+          alfred ?
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <Box>
+              <Skills alfred={user} />
+            </Box>
+          </Grid>
+            :
+            null
+        }
         {false ?
           <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
             <Box>
