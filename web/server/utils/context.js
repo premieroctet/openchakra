@@ -1,21 +1,28 @@
 const jwt = require('jsonwebtoken')
-const {ADMIN} = require('../../utils/consts')
+const {ADMIN, MANAGER} = require('../../utils/consts')
 const keys = require('../config/keys');
 
 const get_role = req => {
   const auth = req.headers.authorization
-  console.log(req.headers)
   if (!auth) {
     return null
   }
   const data=auth.split(' ')[1]
   const decoded = jwt.decode(data);
-  console.log(`Decode token:${decoded}`)
+  console.log(`Decode token:${JSON.stringify(decoded)}`)
   return decoded.role
 }
 
 const is_b2b_admin = req => {
   return ADMIN == get_role(req)
+}
+
+const is_b2b_manager = req => {
+  return MANAGER == get_role(req)
+}
+
+const is_mode_company = req => {
+  return is_b2b_admin(req) || is_b2b_manager(req)
 }
 
 //Create JWT cookie with user credentials
@@ -41,4 +48,4 @@ const sendCookie = (user, role, res) => {
   });
 };
 
-module.exports = {get_role, is_b2b_admin, sendCookie}
+module.exports = {get_role, is_b2b_admin, is_b2b_manager, is_mode_company, sendCookie}
