@@ -12,6 +12,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../../static/css/pages/profile/editProfileCompany/editProfileCompany';
 const moment = require('moment')
 import Button from "@material-ui/core/Button";
+import FormHelperText from "@material-ui/core/FormHelperText";
 const emptyPromise = require('../../../utils/promise');
 
 class IndexDashboard extends React.Component{
@@ -97,44 +98,59 @@ class IndexDashboard extends React.Component{
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
-           <h3>Représentant légal (doit être un administrateur)</h3>
-           <Select
-             labelId="demo-mutiple-chip-label"
-             id="demo-mutiple-chip"
-             onChange={this.onChange}
-             name={'representative'}
-             value={representative}
-           >
-             { admins.map( admin => (
-                 <MenuItem key={admin._id} value={admin._id}>{admin.full_name} ({admin.email})</MenuItem>
-               ))}
-           </Select>
-           <Button onClick={this.onSave} disabled={this.saveDisabled()}>
-              Enregistrer
-           </Button>
-           { selected_admin && !selected_admin.birthday ?
-             <>
-               <h3>La date de naissance du représentant légal est requise</h3>
-               <Grid item xl={6} lg={6} xs={6} sm={6} md={6}>
-                 <TextField
-                   classes={{root: classes.textFieldDatePicker}}
-                   id="filled-with-placeholder"
-                   variant="outlined"
-                   type="date"
-                   label={'Date de naissance'}
-                   name={'birthday'}
-                   value={birthday}
-                   onChange={this.onChange}
-                   InputProps={{inputProps: {min: "1900-01-01", max: new moment()}}}
-                   InputLabelProps={{ shrink: true }}
-                 />
-               </Grid>
-             </>
-             :
-             null
-           }
+            <Grid container item spacing={2} xl={12} lg={12} md={12} sm={12} xs={12} style={{width: '100%', margin:0}}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} >
+                <h3>Représentant légal (doit être un administrateur)</h3>
+              </Grid>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} >
+                <Select
+                  labelId="demo-mutiple-chip-label"
+                  id="demo-mutiple-chip"
+                  onChange={this.onChange}
+                  name={'representative'}
+                  value={representative}
+                  style={{width: '100%'}}
+                  variant={'outlined'}
+                >
+                  { admins.map( admin => (
+                    <MenuItem key={admin._id} value={admin._id}>{admin.full_name} ({admin.email})</MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              { selected_admin && !selected_admin.birthday ?
+                <>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} >
+                    <Grid item xl={6} lg={6} xs={6} sm={6} md={6}>
+                      <TextField
+                        classes={{root: classes.textFieldDatePicker}}
+                        id="filled-with-placeholder"
+                        variant="outlined"
+                        type="date"
+                        label={'Date de naissance'}
+                        name={'birthday'}
+                        value={birthday}
+                        onChange={this.onChange}
+                        InputProps={{inputProps: {min: "1900-01-01", max: new moment()}}}
+                        InputLabelProps={{ shrink: true }}
+                        error={selected_admin && !selected_admin.birthday && this.saveDisabled()}
+                        style={{width: '100%'}}
+                        helperText="La date de naissance du représentant légal est requise"
+                      />
+                    </Grid>
+                  </Grid>
+                </>
+                :
+                null
+              }
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Button onClick={this.onSave} disabled={this.saveDisabled()} variant={'contained'} color={'primary'} style={{textTransform: 'initial', color: 'white'}}>
+                  Enregistrer
+                </Button>
+              </Grid>
+            </Grid>
           </Box>
         </Grid>
+
       </Grid>
     );
   }

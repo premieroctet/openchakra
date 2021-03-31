@@ -5,53 +5,22 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from '../../static/css/pages/creaShop/creaShopStyle';
 import {withStyles} from '@material-ui/core/styles';
-import CreaShopPresentation from '../../components/CreaShop/CreaShopPresentation/CreaShopPresentation';
 import Stepper from '../../components/Stepper/Stepper';
-import SelectService from '../../components/CreaShop/SelectService/SelectService';
-import SelectPrestation from '../../components/CreaShop/SelectPrestation/SelectPrestation';
-import SettingService from '../../components/CreaShop/SettingService/SettingService';
-import BookingPreference from '../../components/CreaShop/BookingPreference/BookingPreference';
-import AssetsService from '../../components/CreaShop/AssetsService/AssetsService';
-import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions';
-import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import {ALF_CONDS, CANCEL_MODE, GID_LEN, CESU, CREASHOP_MODE} from '../../utils/consts.js';
 import Router from 'next/router';
-import {
-  assetsService,
-  creaShopPresentation,
-  introduceYou,
-  selectPrestation,
-  selectService,
-  settingService,
-  settingShop,
-  bookingPreferences,
-} from '../../utils/validationSteps/validationSteps';
-import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "@material-ui/core/Drawer";
 import PropTypes from "prop-types";
 import List from "@material-ui/core/List";
 import Box from "../../components/Box/Box";
-const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 const {is_development}=require('../../config/config')
 const {snackBarSuccess}=require('../../utils/notifications')
-const moment=require('moment')
 const {STEPS}=require('./creaShopSteps')
-
-const PRESENTATION0=0
-const INTRODUCE1=1
-const SELECTSERVICE2=2
-const SELECTPRESTATION3=3
-const SETTINGSERVICE4=4
-const BOOKINGPREFERENCE5=5
-const ASSETSSERVICE6=6
-const SCHEDULE7=7
-const BOOKCONDITIONS8=8
 
 class creaShop extends React.Component {
 
@@ -593,14 +562,15 @@ class creaShop extends React.Component {
                 <Grid>
                   {this.renderSwitch(activeStep)}
                 </Grid>
-                <Grid style={{position: 'fixed', bottom: 75, right: 200}}>
+                <Grid style={{position: 'fixed', bottom: 75, left: 300}}>
                   { is_development() && activeStep > 0 ?
                   <Grid>
                     <Button
-                      variant="contained"
-                      classes={{root :classes.nextButton}}
+                      variant="outlined"
+                      classes={{root :classes.backButton}}
                       onClick={this.handlePrev}
                       disabled={this.prevDisabled()}
+                      color={'primary'}
                     >
                       Précédent
                     </Button>

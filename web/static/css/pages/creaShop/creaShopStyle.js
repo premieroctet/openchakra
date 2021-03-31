@@ -7,6 +7,9 @@ export default theme => ({
     fontWeight: 'bold',
     backgroundColor: theme.palette.yellow.main
   },
+  backButton:{
+    textTransform: 'initial',
+  },
   root: {
     display: 'flex',
     backgroundColor: 'rgba(249,249,249, 1)',
