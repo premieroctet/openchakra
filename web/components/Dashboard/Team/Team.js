@@ -91,7 +91,6 @@ class Team extends React.Component{
       firstname: '',
       name: '',
       email: '',
-      haveAccount: false,
       paymentMethod: [],
       dialogAdd:false,
       dialogRemove: false,
@@ -111,7 +110,8 @@ class Team extends React.Component{
         emailManager: '',
         groupSelected: ''
       }],
-      accounts: []
+      accounts: [],
+      cards: [],
     }
   }
 
@@ -138,9 +138,16 @@ class Team extends React.Component{
       .then(response => {
         let accounts = response.data;
         if (accounts.length) {
-          this.setState({haveAccount: true, accounts: accounts});
+          this.setState({accounts: accounts});
         }
       });
+      axios.get('/myAlfred/api/payment/cards')
+        .then(response => {
+          let cards = response.data;
+          if (cards.length) {
+            this.setState({cards: cards});
+          }
+        });
   }
 
   handleChange = (event, index, user) =>{
@@ -165,7 +172,8 @@ class Team extends React.Component{
       }).catch( err => {
         snackBarError(err.response.error)
       })
-    }else{
+    }
+    else {
       this.setState({[name]: value})
     }
   };
@@ -211,7 +219,7 @@ class Team extends React.Component{
     this.setState({modeDialog: mode === 'manager' ? mode : 'admin'})
 
     if(name === 'dialogGroupe' && user){
-      this.setState({selected: user, nameGroupe: user.name, plafondGroupe: user.budget, budget_period: user.budget_period})
+      this.setState({selected: user, nameGroupe: user.name, plafondGroupe: user.budget, budget_period: user.budget_period, paymentMethod: user.cards})
     }else{
       this.setState({nameGroupe: '', plafondGroupe: '', budget_period: ''})
     }
@@ -334,12 +342,13 @@ class Team extends React.Component{
   };
 
   addGroupe = () => {
-    const{plafondGroupe, nameGroupe, budget_period} = this.state;
+    const{plafondGroupe, nameGroupe, budget_period, paymentMethod} = this.state;
 
     const data = {
       name: nameGroupe,
       budget: plafondGroupe,
       budget_period: budget_period === ''? null : budget_period,
+      cards: paymentMethod,
     };
 
     axios.post('/myAlfred/api/groups', data)
@@ -353,12 +362,13 @@ class Team extends React.Component{
   };
 
   updateGroupe = () =>{
-    const{selected, plafondGroupe, nameGroupe, budget_period} = this.state;
+    const{selected, plafondGroupe, nameGroupe, budget_period, paymentMethod} = this.state;
 
     const data = {
       name: nameGroupe,
       budget: plafondGroupe,
       budget_period: budget_period,
+      cards : paymentMethod,
     };
 
     axios.put(`/myAlfred/api/groups/${selected._id}`, data)
@@ -584,8 +594,12 @@ class Team extends React.Component{
     )
   };
 
+  getCardById = card_id => {
+    return this.state.cards.find(c => c.Id == card_id)
+  }
+
   dialogGroupe = (classes)=>{
-    const{dialogGroupe, selected, paymentMethod, accounts, nameGroupe, plafondGroupe, budget_period} = this.state;
+    const{dialogGroupe, selected, paymentMethod, cards, nameGroupe, plafondGroupe, budget_period} = this.state;
 
     return(
       <Dialog open={dialogGroupe} onClose={() => this.setState({dialogGroupe: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
@@ -648,9 +662,9 @@ class Team extends React.Component{
               <Grid item container spacing={3} style={{width: '100%', margin: 0}}>
                 <Grid item xl={12} lg={12}>
                   {
-                    accounts.length > 0 ?
+                    cards.length > 0 ?
                       <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                        <InputLabel id="demo-mutiple-chip-label">RIB</InputLabel>
+                        <InputLabel id="demo-mutiple-chip-label">CBs</InputLabel>
                         <Select
                           labelId="demo-mutiple-chip-label"
                           id="demo-mutiple-chip"
@@ -658,24 +672,25 @@ class Team extends React.Component{
                           onChange={(e) => this.handleChange(e)}
                           name={'paymentMethod'}
                           value={paymentMethod}
-                          input={<OutlinedInput label={'RIB'}  id="select-multiple-chip" />}
-                          renderValue={(selected) => (
-                            <div className={classes.chips}>
-                              {selected.map((value) => (
-                                <Chip key={value} label={value} className={classes.chip} />
-                              ))}
-                            </div>
-                          )}
+                          input={<OutlinedInput label={'CB'}  id="select-multiple-chip" />}
+                          renderValue={(card_ids) => {
+                            return(
+                              <div className={classes.chips}>
+                                {card_ids.map( card_id => (
+                                  <Chip key={card_id}label={this.getCardById(card_id).Alias} className={classes.chip} />
+                                ))}
+                              </div>
+                          )}}
                           MenuProps={MenuProps}
                         >
-                          {accounts.map((name) => (
-                            <MenuItem key={name} value={name} style={this.getStyles(name, paymentMethod)}>
-                              {name}
+                          {cards.map(card => (
+                            <MenuItem key={card.Id} value={card.Id} style={this.getStyles(name, paymentMethod)}>
+                              {card.Alias}
                             </MenuItem>
                           ))}
                         </Select>
                       </FormControl> :
-                      <a href={'/account/paymentMethod'} target="_blank">Aucun RIB enregistrer rendez vous ici pour en ajouter.</a>
+                      <a href={'/account/paymentMethod'} target="_blank">Aucun moyen de paiement enregistré, rendez-vous ici pour en ajouter.</a>
                   }
 
                 </Grid>

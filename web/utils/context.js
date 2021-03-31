@@ -3,7 +3,6 @@ const {ADMIN, MANAGER} = require('./consts')
 
 const is_b2b_site = () => {
   if (typeof localStorage == 'undefined') {
-    console.log('Pas de localStorage')
     return false
   }
   const is_b2b = localStorage.getItem('b2b') === "true"
@@ -54,5 +53,3 @@ const is_b2b_style = user => {
 module.exports={
   is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_b2b_site,  is_mode_company
  }
-
-

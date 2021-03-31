@@ -56,7 +56,6 @@ class ConfirmPayment extends React.Component {
     axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
       .then(res => {
         const bookingObj = res.data
-        console.log(JSON.stringify(bookingObj, null, 2))
         this.setState({
           prestations: bookingObj.prestations,
           bookingObj: bookingObj,
@@ -88,7 +87,7 @@ class ConfirmPayment extends React.Component {
         }
       })
 
-    axios.get('/myAlfred/api/payment/cardsActive')
+    axios.get('/myAlfred/api/payment/cards')
       .then(response => {
         let cards = response.data;
         this.setState({cards: cards});

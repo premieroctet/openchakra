@@ -27,7 +27,11 @@ const GroupSchema = new Schema({
   budget_period:{
     type : String,
     enum : [null, ...Object.keys(BUDGET_PERIOD)],
-  }
+  },
+  // Allower Mangopay card ids
+  cards: [{
+    type: String,
+  }]
 });
 
 const Group = mongoose.model('group', GroupSchema);
