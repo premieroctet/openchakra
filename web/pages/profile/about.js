@@ -183,8 +183,8 @@ class ProfileAbout extends React.Component {
                      style={{position: 'absolute', right: 0}}/>
         <DialogContent>
           <Topic
-            titleTopic={is_mode_company() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
-            titleSummary={is_mode_company() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
+            titleTopic={is_mode_company(user) ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
+            titleSummary={is_mode_company(user) ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
             underline={true}/>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -193,12 +193,12 @@ class ProfileAbout extends React.Component {
                   fontWeight: 'bold',
                   textTransform: 'initial'
                 }}>
-                  {is_mode_company() ? 'Site Web' : 'Lieu d\'habitation'}
+                  {is_mode_company(user) ? 'Site Web' : 'Lieu d\'habitation'}
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 {
-                  is_mode_company() ?
+                  is_mode_company(user) ?
                     <TextField
                       name={'website'}
                       variant={'outlined'}
@@ -231,11 +231,11 @@ class ProfileAbout extends React.Component {
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial'
-                  }}>{is_mode_company() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
+                  }}>{is_mode_company(user) ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
               </Grid>
               <Grid item xs={12}>
                 {
-                  !is_mode_company() ?
+                  !is_mode_company(user) ?
                     <MultipleSelect
                       key={moment()}
                       value={languages}
@@ -272,7 +272,7 @@ class ProfileAbout extends React.Component {
               </Grid>
             </Grid>
             {
-              is_mode_company() ?
+              is_mode_company(user) ?
                 <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <h3
@@ -314,7 +314,7 @@ class ProfileAbout extends React.Component {
                   variant="contained"
                   classes={{root: classes.buttonSave}}
                   color={'primary'}
-                  disabled={!is_mode_company() ? enabledEdition : false}
+                  disabled={!is_mode_company(user) ? enabledEdition : false}
                 >
                   Modifier
                 </Button>
@@ -382,7 +382,7 @@ class ProfileAbout extends React.Component {
               </Grid>
               <Grid style={{margin: 3}}/>
               {
-                is_mode_company() ?
+                is_mode_company(user) ?
                   <Grid>
                     <Typography style={{color:'black'}}>{company ? company.billing_address.city + ", " + company.billing_address.country  : null}</Typography>
                   </Grid> :
@@ -393,7 +393,7 @@ class ProfileAbout extends React.Component {
 
             </Grid>
             {
-              is_mode_company() ? null :
+              is_mode_company(user) ? null :
                 <Grid item xs={12}>
                   <Grid>
                     <h3>Parle </h3>
@@ -428,7 +428,7 @@ class ProfileAbout extends React.Component {
           </Box>
         </Grid>
         {
-          !is_mode_company() ?
+          !is_mode_company(user) ?
             <>
             <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
               <Box>
@@ -449,7 +449,7 @@ class ProfileAbout extends React.Component {
         }
 
         {
-          is_mode_company() ?
+          is_mode_company(user) ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Box>
                 <SummaryCommentary user={user} />
