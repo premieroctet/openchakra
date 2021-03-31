@@ -56,9 +56,7 @@ class Home extends React.Component {
     window.addEventListener('message', function(e) {
       // message that was passed from iframe page
       let message = e.data;
-
       iframe.style.height = message.height + 'px';
-      iframe.style.width = '100%';
     } , false);
   }
 
@@ -93,16 +91,15 @@ class Home extends React.Component {
           </Grid>
           {
             is_b2b_style() ?
-              <Grid container>
                 <iframe
                   onLoad={this.resizeFrame}
                   frameborder="0"
                   scrolling="no"
                   id="myIframe"
                   src="http://my-hooty.com/"
+                  style={{width: '100%'}}
                 >
                 </iframe>
-              </Grid>
                : null
           }
           <Grid container className={classes.mainContainerStyle}>
