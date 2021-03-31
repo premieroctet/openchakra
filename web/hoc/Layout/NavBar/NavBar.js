@@ -711,8 +711,8 @@ class NavBar extends Component {
                     <Grid
                       className={this.state.ifHomePage ?  classes.navbarLogoContainer : classes.navbarLogoContainerP}
                       item
-                      xl={ifHomePage ? 3 : 4}
-                      lg={ifHomePage ? 3 : 4}
+                      xl={ifHomePage ? is_b2b_style() ? 2 : 3 : 4}
+                      lg={ifHomePage ? is_b2b_style() ? 2 : 3 : 4}
                       md={!logged && !ifHomePage ? 3 : 2}
                       sm={1}
                       onClick={() => Router.push('/')}
@@ -725,62 +725,106 @@ class NavBar extends Component {
                  companyPage ? null : ifHomePage ?
                     <Grid
                       item
-                      xl={6}
-                      lg={6}
+                      xl={is_b2b_style() ? 7 : 6}
+                      lg={is_b2b_style() ? 7 : 6}
                       md={8}
                       sm={11}
                       className={classes.navabarHomepageMenu}
                     >
                       <Tabs value={false} aria-label="simple tabs example">
-                        <Link href={'/search?search=1'}>
-                          <Tab
-                            classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                            label={NAVBAR_MENU.ourServices}
-                          />
-                        </Link>
-                        {user ?
-                          user.is_alfred ?
-                            <Link href={`/profile/services?user=${user._id}`}>
-                              <Tab
-                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                label={NAVBAR_MENU.myServices}
-                              />
-                            </Link>
-                            :
-                            <Link href={'/creaShop/creaShop'}>
-                              <Tab
-                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                label={NAVBAR_MENU.registerServices}
-                              />
-                            </Link>
-                          :
-                          <Link href={'/'}>
-                            <Grid onClick={this.handleOpenRegister}>
-                              <Tab
-                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                label={NAVBAR_MENU.registerServices}
-                              />
-                            </Grid>
+                        {
+                          getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
+                            is_b2b_site() ?
+                              <>
+                                <Link href={"http://my-hooty.com/?page_id=279"}>
+                                  <a target="_blank">
+                                    <Tab
+                                      classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                      label={"Services aux entreprises"}
+                                    />
+                                  </a>
+                                </Link>
+                                <Link href={"http://my-hooty.com/?page_id=280"}>
+                                  <a target="_blank">
+                                    <Tab
+                                      classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                      label={"Services aux collaborateurs"}
+                                    />
+                                  </a>
+                                </Link>
+                                <Link href={'http://my-hooty.com/?page_id=699'}>
+                                  <a target="_blank">
+                                    <Tab
+                                      classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                      label={"Offres et tarifs"}
+                                    />
+                                  </a>
+                                </Link>
+                                {
+                                  isLoggedUserAlfredPro()  ?
+                                    <Link href={'/creaShop/creaShop'}>
+                                      <Tab
+                                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                        label={"Je propose mes services"}
+                                      />
+                                    </Link> :
+                                    <Link href={'/'}>
+                                      <Tab
+                                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                        label={"Je propose mes services"}
+                                        onClick={this.handleOpenRegister}
+                                      />
+                                    </Link>
+                                }
+                              </>
+                               :
+                              <>
+                                <Link href={'/search?search=1'}>
+                                  <Tab
+                                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                    label={NAVBAR_MENU.ourServices}
+                                  />
+                                </Link>
+                                {user ?
+                                  user.is_alfred ?
+                                    <Link href={`/profile/services?user=${user._id}`}>
+                                      <Tab
+                                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                        label={NAVBAR_MENU.myServices}
+                                      />
+                                    </Link>
+                                    :
+                                    <Link href={'/creaShop/creaShop'}>
+                                      <Tab
+                                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                        label={NAVBAR_MENU.registerServices}
+                                      />
+                                    </Link>
+                                  :
+                                  <Link href={'/'}>
+                                    <Grid onClick={this.handleOpenRegister}>
+                                      <Tab
+                                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                        label={NAVBAR_MENU.registerServices}
+                                      />
+                                    </Grid>
+                                  </Link>
+                                }
 
-                          </Link>
+                              </>
                         }
                         {
                           // Accès part/pro uniquement si non loggué ou loggué en Alfred pro
                           getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
                             is_b2b_site() ?
-                            <Link href={'/particular'}>
-                              <Tab
-                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                label={'Espace Particuliers'}
-                              />
-                            </Link>
-                            :
-                            <Link href={'/professional'}>
-                              <Tab
-                                classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                label={NAVBAR_MENU.businessSide}
-                              />
-                            </Link>
+                              null
+                              :
+                              <Link href={'/professional'}>
+                                <Tab
+                                  classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                  label={NAVBAR_MENU.businessSide}
+                                />
+                              </Link>
                         }
                       </Tabs>
                     </Grid> :
@@ -819,9 +863,6 @@ class NavBar extends Component {
                               <Link href={`/profile/about?user=${user._id}`}>
                                 <MenuItem>Mon profil</MenuItem>
                               </Link>
-                              <Link href={is_b2b_admin(user) ? '/account/editProfileCompany' : '/account/editProfile'}>
-                                <MenuItem>Mes paramètres</MenuItem>
-                              </Link>
                               {
                                 !user.is_employee ?
                                   user.is_alfred ?
@@ -850,6 +891,9 @@ class NavBar extends Component {
                                   <MenuItem>Dashboard</MenuItem>
                                 </Link> : null
                               }
+                              <Link href={is_b2b_admin(user) ? '/account/editProfileCompany' : '/account/editProfile'}>
+                                <MenuItem>Mes paramètres</MenuItem>
+                              </Link>
                               <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
                             </Grid>
                             :
@@ -864,11 +908,11 @@ class NavBar extends Component {
                         lg={!logged && ifHomePage ? 3 : 4}
                         md={!logged && !ifHomePage ? 3 : 2}
                         sm={!ifHomePage ? 4 : 11}
-                        className={ifHomePage ? classes.navbarButtonContainer : classes.navbarButtonContainerP}
+                        className={ifHomePage ? is_b2b_style() ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
                       >
                         <Grid>
                           <Button
-                            className={classes.navBarlogIn}
+                            classes={{root: is_b2b_style() ? classes.navBarlogInB2B : classes.navBarlogIn}}
                             onClick={this.handleOpenLogin}>
                             {NAVBAR_MENU.logIn}
                           </Button>
@@ -895,9 +939,9 @@ class NavBar extends Component {
                         <Grid className={classes.navbarRegisterContainer}>
                           <Button
                             variant="outlined"
-                            classes={{root: classes.navbarSignIn}}
+                            classes={{root: is_b2b_style() ? classes.navbarSignInB2B : classes.navbarSignIn}}
                             onClick={this.handleOpenRegister}>
-                            {NAVBAR_MENU.signIn}
+                            {is_b2b_style() ? "Créer mon entreprise" : NAVBAR_MENU.signIn}
                           </Button>
                           <Dialog
                             scroll={'paper'}

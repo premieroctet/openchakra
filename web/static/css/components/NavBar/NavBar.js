@@ -216,6 +216,9 @@ export default theme => ({
     fontWeight:' bold',
     textTransform: 'initial',
     transition: '0.3s',
+    '& span':{
+      whiteSpace: 'nowrap'
+    },
     '&:hover':{
       color: 'rgb(176, 205, 200)'
     }
@@ -245,11 +248,25 @@ export default theme => ({
     justifyContent: 'flex-end',
     alignItems: 'center'
   },
+  navbarButtonContainerB2B:{
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
   navBarlogIn:{
     textTransform: theme.typography.textTransform,
     borderRadius: theme.border.button.borderRadius,
     color: theme.palette.white.main,
     fontWeight: theme.typography.fontWeight
+  },
+  navBarlogInB2B:{
+    textTransform: theme.typography.textTransform,
+    borderRadius: theme.border.button.borderRadius,
+    color: theme.palette.white.main,
+    fontWeight: theme.typography.fontWeight,
+    '&:hover':{
+      color: 'rgb(176, 205, 200)',
+    }
   },
   navbarModal: {
     display: 'flex',
@@ -281,6 +298,17 @@ export default theme => ({
     fontWeight: theme.typography.fontWeight,
     border: '3px solid rgba(255, 255, 255, 1)',
     color: theme.palette.white.main,
+  },
+  navbarSignInB2B:{
+    borderRadius: theme.border.button.borderRadius,
+    textTransform: theme.typography.textTransform,
+    fontWeight: theme.typography.fontWeight,
+    border: '3px solid rgba(255, 255, 255, 1)',
+    color: theme.palette.white.main,
+    '&:hover':{
+      color: 'rgb(176, 205, 200)',
+      border: '3px solid rgb(176, 205, 200)',
+    }
   },
   textFieldMobilSearchInput:{
     width: '90%'
