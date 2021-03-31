@@ -5,18 +5,20 @@ const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const User = require('../../models/User');
+const Company = require('../../models/Company');
 const Booking = require('../../models/Booking');
+const Group = require('../../models/Group');
 const axios = require('axios');
 const _ = require('lodash');
 const moment = require('moment');
 const request = require('request');
-const {mangoApi, install_hooks} = require('../../utils/mangopay');
+const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay');
 const {maskIban} = require('../../../utils/text');
 var parse = require('url-parse');
 const {inspect} = require('util');
 const {MANGOPAY_ERRORS}=require('../../../utils/mangopay_messages')
 moment.locale('fr');
-
+const {is_b2b_admin, is_b2b_manager, is_mode_company}=require('../../utils/context')
 const {computeUrl} = require('../../../config/config');
 
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}));
@@ -31,6 +33,7 @@ TRANSFER_REFUND_CREATED TRANSFER_REFUND_SUCCEEDED TRANSFER_REFUND_FAILED".split(
 
 install_hooks(HOOK_TYPES, '/myAlfred/api/payment/hook')
 
+// TODO Gérer les get/post/put des comptes (account) pour le b2b
 /**
 MANGOPAY 3DS schema : https://support.mangopay.com/s/article/How-does-3DS-work-with-the-API?language=fr
 */
@@ -45,56 +48,29 @@ router.get('/hook', (req, res) => {
 
 // POST /myAlfred/api/payment/createCard
 // Create credit card
-// @access private
+// @access private b2b admin
 router.post('/createCard', passport.authenticate('jwt', {session: false}), (req, res) => {
-  console.log(`Creating card for user ${req.user.id}`)
-  User.findById(req.user.id)
-    .then(user => {
-      let id_mangopay = user.id_mangopay;
-      mangoApi.CardRegistrations.create({
-        UserId: id_mangopay,
-        Currency: 'EUR',
-      })
-        .then(function (cardRegistrationData) {
-          const number = req.body.card_number;
-          const expiration_date = req.body.expiration_date;
-          const csv = req.body.csv;
+  const b2b = is_b2b_admin(req)
+  if (b2b) {
+    console.log(`Creating card for company ${req.user.company}`)
+  }
+  else {
+    console.log(`Creating card for user ${req.user.id}`)
+  }
 
-          let cardData = {
-            'cardNumber': number,
-            'cardExpirationDate': expiration_date,
-            'cardCvx': csv,
-          };
-          let headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          };
-          let options = {
-            url: cardRegistrationData.CardRegistrationURL,
-            headers: headers,
-            form: {
-              data: cardRegistrationData.PreregistrationData,
-              accessKeyRef: cardRegistrationData.AccessKey,
-              cardNumber: cardData.cardNumber,
-              cardExpirationDate: cardData.cardExpirationDate,
-              cardCvx: cardData.cardCvx,
-            },
-          };
-          request.post(options, function (err, data, result) {
-            if (result.includes("errorCode")) {
-              const code=parseInt(result.split('=')[1])
-              console.log(`Card creation error:${code}`)
-              const errMsg = MANGOPAY_ERRORS[code] || `Erreur inconnue #${code}`
-              res.status(404).json({error: errMsg})
-              return
-            }
-            cardRegistrationData.RegistrationData = result;
-            mangoApi.CardRegistrations.update(cardRegistrationData)
-              .then(newCard => {
-                res.json(newCard);
-              });
-          }, options);
-
-        });
+  const promise = b2b ? Company.findById(req.user.company) : User.findById(req.user.id)
+  promise
+    .then(entity => {
+      let id_mangopay = entity.id_mangopay;
+      const {card_number, expiration_date, csv} = req.body
+      createCard(id_mangopay, card_number, expiration_date, csv)
+        .then( newCard => {
+          res.json(newCard)
+        })
+        .catch( err => {
+          console.error(err)
+          res.status(404).json({error: err})
+        })
     })
     .catch(error => {
       console.error(error);
@@ -108,9 +84,12 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
   const amount = req.body.amount * 100;
   const fees = req.body.fees * 100;
   const returnUrl= `/paymentSuccess?booking_id=${req.body.booking_id}`
-  User.findById(req.user.id)
-    .then(user => {
-      const id_mangopay = user.id_mangopay;
+
+  const promise=is_mode_company(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+
+  promise
+    .then(entity => {
+      const id_mangopay = entity.id_mangopay;
       mangoApi.Users.getWallets(id_mangopay)
         .then(wallets => {
           const wallet_id = wallets[0].Id;
@@ -153,9 +132,11 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
   const amount = req.body.amount * 100;
   const fees = req.body.fees * 100;
   const id_card = req.body.id_card;
-  User.findById(req.user.id)
-    .then(user => {
-      const id_mangopay = user.id_mangopay;
+  const promise=is_mode_company(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+
+  promise
+    .then(entity => {
+      const id_mangopay = entity.id_mangopay;
       mangoApi.Users.getWallets(id_mangopay)
         .then(wallets => {
           const wallet_id = wallets[0].Id;
@@ -189,39 +170,6 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
 
 });
 
-// POST /myAlfred/api/payment/transfer
-// @access private
-router.post('/transfer', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const amount = parseFloat(req.body.amount) * 100;
-  const fees = parseFloat(req.body.fees) * 100;
-  const wallet_credited = 72050324;
-  User.findById(req.user.id)
-    .then(user => {
-      const id_mangopay = user.id_mangopay;
-      mangoApi.Users.getWallets(id_mangopay)
-        .then(wallets => {
-          const wallet_id = wallets[0].Id;
-          mangoApi.Transfers.create({
-            AuthorId: id_mangopay,
-            DebitedFunds: {
-              Currency: 'EUR',
-              Amount: amount,
-            },
-            Fees: {
-              Currency: 'EUR',
-              Amount: fees,
-            },
-            DebitedWalletId: wallet_id,
-            CreditedWalletId: wallet_credited,
-
-          })
-            .then(data => {
-              res.json(data);
-            });
-        });
-    });
-});
-
 // POST /myAlfred/api/payment/bankAccount
 // @access private
 router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -231,7 +179,6 @@ router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req
   User.findById(req.user.id)
     .then(user => {
       const id_mangopay = user.id_mangopay;
-      const id_mangopay_provider = user.mangopay_provider_id;
       const billing_address = user.billing_address;
       const address = billing_address.address;
       const city = billing_address.city;
@@ -282,34 +229,36 @@ router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req
 // View all credit cards for a user
 // @access private
 router.get('/cards', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
-    .then(user => {
-      mangoApi.Users.getCards(user.id_mangopay, {parameters: { per_page: 100}}).then(cards => res.json(cards));
-    })
-    .catch(err => console.error(err));
-
-});
-
-// GET /myAlfred/api/payment/cardsActive
-// View all active credit cards for a user
-// @access private
-router.get('/cardsActive', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const allCards = [];
-  User.findById(req.user.id)
-    .then(user => {
-      mangoApi.Users.getCards(user.id_mangopay)
+  const promise=is_mode_company(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+  promise
+    .then(entity => {
+      mangoApi.Users.getCards(entity.id_mangopay, {parameters: { per_page: 100}})
         .then(cards => {
-          cards.forEach(c => {
-            if (c.Active) {
-              allCards.push(c);
-            }
-          });
-
-          res.json(allCards);
+          cards = cards.filter(c => c.Active)
+          if (is_b2b_manager(req)) {
+            Group.findOne({ members : req.user.id}, 'cards')
+              .then( group => {
+                cards = cards.filter( c => group.cards.includes(c.Id))
+                res.json(cards)
+              })
+              .catch(err => {
+                console.error(err)
+                res.status(400).json(err)
+              });
+          }
+          else {
+            res.json(cards)
+          }
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(400).json(err)
         });
     })
-    .catch(err => console.error(err));
-
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    });
 });
 
 // GET /myAlfred/api/payment/activeAccount
@@ -392,7 +341,6 @@ router.get('/siret/:siret_siren', (req, res) => {
     'form.departement': '',
     'form.departement_actif': '',
   };
-  console.log(JSON.stringify(data));
 
   const transport = axios.create({withCredentials: true});
   transport.get('https://avis-situation-sirene.insee.fr/')

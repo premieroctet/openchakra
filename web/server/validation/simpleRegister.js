@@ -239,8 +239,8 @@ const validateCompanyGroup = data =>{
     errors.name = 'Veuillez saisir un nom';
   }
 
-  if ('budget' in data && !Validator.isEmpty(data.budget)) {
-    if (parseInt(data.budget)<0) {
+  if ('budget' in data && !data.budget) {
+    if (isNaN(parseInt(data.budget)) || parseInt(data.budget)<0) {
       errors.budget = 'Le budget doit être un nombre positif';
     }
     if (Validator.isEmpty(data.budget_period)) {

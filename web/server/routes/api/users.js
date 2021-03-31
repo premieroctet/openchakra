@@ -28,7 +28,6 @@ const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../utils/mangopay');
 const {sendCookie}=require('../../utils/context')
 
-
 axios.defaults.withCredentials = true;
 
 const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ');

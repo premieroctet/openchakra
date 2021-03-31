@@ -16,63 +16,57 @@ class PaymentCard extends React.Component{
 
   render() {
     const{cards, userName, editable, classes} = this.props;
-    const isEqualToFlase = (currentValue) => currentValue === false;
-
-    let activeCard = [];
 
     return(
       <Grid container>
         {cards ?
           cards.map((e, index) => {
-            activeCard.push(e.Active);
-            if(e.Active){
-              let experiationDate = e.ExpirationDate.slice(0,2) + "/20" + e.ExpirationDate.slice(2);
-              let cb = e.CardProvider === 'MASTERCARD' ? e.Product === 'MCC'  ? e.CardProvider : 'MSI' : e.CardProvider === 'AMEX' ? 'AMEX' :  e.CardProvider === 'CB' ? e.CardProvider : 'visa' ;
+            let experiationDate = e.ExpirationDate.slice(0,2) + "/20" + e.ExpirationDate.slice(2);
+            let cb = e.CardProvider === 'MASTERCARD' ? e.Product === 'MCC'  ? e.CardProvider : 'MSI' : e.CardProvider === 'AMEX' ? 'AMEX' :  e.CardProvider === 'CB' ? e.CardProvider : 'visa' ;
 
-              return(
-                <Grid container key={index} style={{display: 'flex', alignItems: 'center', marginTop:20, marginBottom: 20}}>
-                  {!editable ?
-                    <Grid item xl={1} xs={2} sm={1}>
-                      <Radio value={e.Id}>
-                        <img src={`/static/assets/icon/paymentIcones/${cb}.png`} height={20} width={35} alt={e.CardProvider} title={e.CardProvider}/>
-                      </Radio>
-                    </Grid> : null
-                  }
-                  <Grid item xl={7} xs={7} sm={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                    <Hidden only={['xs']}>
-                      <Grid item xl={6} sm={4} style={{display: 'flex'}}>
-                        <img src={`/static/assets/icon/paymentIcones/${cb.toLowerCase()}.png`} height={20} width={35} alt={e.CardProvider} title={e.CardProvider}/>
-                      </Grid>
-                    </Hidden>
-                    <Grid item xl={6} sm={4} xs={10} style={{display: 'flex', flexDirection:'column'}}>
-                      <Grid className={classes.containerNameCard}>
-                        <Typography>{userName}</Typography>
-                      </Grid>
-                      <Grid className={classes.containerNumCard}>
-                        <Typography style={{color:'rgba(39,37,37,35%)'}}>{e.Alias.replace(/X/g, '*').slice(8)}</Typography>
-                      </Grid>
+            return(
+              <Grid container key={index} style={{display: 'flex', alignItems: 'center', marginTop:20, marginBottom: 20}}>
+                {!editable ?
+                  <Grid item xl={1} xs={2} sm={1}>
+                    <Radio value={e.Id}>
+                      <img src={`/static/assets/icon/paymentIcones/${cb}.png`} height={20} width={35} alt={e.CardProvider} title={e.CardProvider}/>
+                    </Radio>
+                  </Grid> : null
+                }
+                <Grid item xl={7} xs={7} sm={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <Hidden only={['xs']}>
+                    <Grid item xl={6} sm={4} style={{display: 'flex'}}>
+                      <img src={`/static/assets/icon/paymentIcones/${cb.toLowerCase()}.png`} height={20} width={35} alt={e.CardProvider} title={e.CardProvider}/>
+                    </Grid>
+                  </Hidden>
+                  <Grid item xl={6} sm={4} xs={10} style={{display: 'flex', flexDirection:'column'}}>
+                    <Grid className={classes.containerNameCard}>
+                      <Typography>{userName}</Typography>
+                    </Grid>
+                    <Grid className={classes.containerNumCard}>
+                      <Typography style={{color:'rgba(39,37,37,35%)'}}>{e.Alias.replace(/X/g, '*').slice(8)}</Typography>
                     </Grid>
                   </Grid>
-                  <Grid item xl={4} xs={3} sm={4} style={{display:'flex', justifyContent: 'center'}}>
-                    <Typography>{experiationDate}</Typography>
-                  </Grid>
-                  {
-                    editable ?
-                      <Grid item xl={1} xs={2} sm={1} style={{display: 'flex', justifyContent: 'center'}}>
-                        <IconButton aria-label="delete" onClick={()=>this.props.deleteCard(e.Id)}>
-                          <DeleteForeverIcon/>
-                        </IconButton>
-                      </Grid> : null
-                  }
                 </Grid>
-              )
-            }
+                <Grid item xl={4} xs={3} sm={4} style={{display:'flex', justifyContent: 'center'}}>
+                  <Typography>{experiationDate}</Typography>
+                </Grid>
+                {
+                  editable ?
+                    <Grid item xl={1} xs={2} sm={1} style={{display: 'flex', justifyContent: 'center'}}>
+                      <IconButton aria-label="delete" onClick={()=>this.props.deleteCard(e.Id)}>
+                        <DeleteForeverIcon/>
+                      </IconButton>
+                    </Grid> : null
+                }
+              </Grid>
+            )
             })
           :
             <Typography>Aucun mode de paiement enregistré</Typography>
         }
         {
-          cards && activeCard.every(isEqualToFlase) ?
+          cards && cards.length==0 ?
           <Typography>Aucun mode de paiement enregistré</Typography> : null
         }
       </Grid>
