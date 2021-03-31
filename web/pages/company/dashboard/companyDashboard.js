@@ -32,7 +32,6 @@ import Router from "next/router";
 const {setAxiosAuthentication} = require('../../../utils/authentication');
 const {is_b2b_admin} = require('../../../utils/context');
 
-
 class companyDashboard extends React.Component{
   constructor(props) {
     super(props);

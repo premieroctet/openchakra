@@ -88,7 +88,7 @@ const createMangoProvider = (user, shop) => {
       user.save().then().catch();
       mangoApi.Wallets.create({
         Owners: [newUser.Id],
-        Description: `Wallet ${user._id} / ${user.firstname} ${user.name} provider`,
+        Description: `${user._id} / ${user.full_name} provider`,
         Currency: 'EUR',
       })
         .then(wallet => {
@@ -144,7 +144,7 @@ const createOrUpdateMangoCompany = company => {
       if (!is_update) {
         mangoApi.Wallets.create({
           Owners: [mangopay_company.Id],
-          Description: `Wallet ${company._id} / ${company.name}company`,
+          Description: `${company._id} / ${company.name} company`,
           Currency: 'EUR',
         })
           .then(wallet => {

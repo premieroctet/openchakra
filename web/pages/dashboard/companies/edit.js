@@ -114,7 +114,6 @@ class view extends React.Component {
     };
     Promise.any([SIRET.siretUrl, SIRET.sirenUrl].map(u => axios.get(`${u}/${siret}`, config)))
       .then( res => {
-        console.log(JSON.stringify(res, null, 2))
         snackBarSuccess("Numéro SIRET/SIREN reconnu")
       })
       .catch(err => console.error(err))
