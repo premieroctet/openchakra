@@ -403,7 +403,7 @@ class About extends React.Component {
       [
         {
           label: 'Site web',
-          summary: company.website ? company.website : 'Pas renseigner' ,
+          summary: company.website ? company.website : 'Non renseigné' ,
           IconName: <LanguageIcon fontSize="large"/>
         },
         {

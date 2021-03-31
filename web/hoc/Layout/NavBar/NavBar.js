@@ -863,6 +863,9 @@ class NavBar extends Component {
                               <Link href={`/profile/about?user=${user._id}`}>
                                 <MenuItem>Mon profil</MenuItem>
                               </Link>
+                              <Link href={is_b2b_admin(user) ? '/account/editProfileCompany' : '/account/editProfile'}>
+                                <MenuItem>Mes paramètres</MenuItem>
+                              </Link>
                               {
                                 !user.is_employee ?
                                   user.is_alfred ?
@@ -891,9 +894,6 @@ class NavBar extends Component {
                                   <MenuItem>Dashboard</MenuItem>
                                 </Link> : null
                               }
-                              <Link href={is_b2b_admin(user) ? '/account/editProfileCompany' : '/account/editProfile'}>
-                                <MenuItem>Mes paramètres</MenuItem>
-                              </Link>
                               <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
                             </Grid>
                             :

@@ -74,6 +74,7 @@ class editProfileCompany extends React.Component{
           firstName: user.firstname,
           name: user.name,
           position: user.position,
+          birthday: user.birthday ? moment(user.birthday).format('YYYY-MM-DD') : null,
         });
         if(!is_b2b_admin(user)){
           Router.push({pathname: '/'});
@@ -109,6 +110,7 @@ class editProfileCompany extends React.Component{
 
   handleChange = (event) => {
     let {name, value} = event.target;
+    console.log(`onCHange:${name}=>${value}`)
     if (name === 'siret') {
       if(value.match(/^[0-9]*$/)){
         value = value.replace(/ /g, '');
@@ -167,6 +169,7 @@ class editProfileCompany extends React.Component{
       email: this.state.email,
       name: this.state.name,
       firstname: this.state.firstName,
+      birthday: this.state.birthday,
     }
 
     if (this.is_legal_representative()) {

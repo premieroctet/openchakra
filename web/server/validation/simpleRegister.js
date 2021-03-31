@@ -100,7 +100,7 @@ const validateEditProfile = data =>{
     errors.email = 'Email invalide';
   }
 
-  errors = {...validateBirthday(data.birthday), errors}
+  errors = {...validateBirthday(data.birthday), ...errors}
 
   return {
     errors,
@@ -136,10 +136,7 @@ const validateEditProProfile = data =>{
     errors.position = 'Veuillez saisir une fonction';
   }
 
-  if ('birthday' in data && !data.birthday) {
-    errors.birthday = 'Veuillez saisir une date de naissance';
-  }
-
+  errors = { ...validateBirthday(data.birthday), ...errors}
   return {
     errors,
     isValid: isEmpty(errors),

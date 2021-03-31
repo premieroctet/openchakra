@@ -951,9 +951,6 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
             else{
               res.json({success: 'Profil mis à jour !'});
             }
-            if (true) { //user.company && user.company.representative == user._id) {
-              createMangoCompany(user, user.company)
-            }
           })
           .catch(err => console.error(err));
       }
