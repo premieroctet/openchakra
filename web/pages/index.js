@@ -96,7 +96,7 @@ class Home extends React.Component {
                   frameborder="0"
                   scrolling="no"
                   id="myIframe"
-                  src="http://my-hooty.com/"
+                  src="https://my-hooty.com/"
                   style={{width: '100%'}}
                 >
                 </iframe>

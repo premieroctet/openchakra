@@ -538,6 +538,7 @@ class NavBar extends Component {
               <Grid item xl={11} lg={11} sm={11} md={11} xs={11} style={{display: 'flex', alignItems: 'center'}}>
                 <TextField
                   placeholder={'Ménage, Jardinage, ...'}
+                  style={{width: '100%'}}
                   value={this.state.keyword}
                   onChange={this.onChange}
                   name={'keyword'}
@@ -711,8 +712,8 @@ class NavBar extends Component {
                     <Grid
                       className={this.state.ifHomePage ?  classes.navbarLogoContainer : classes.navbarLogoContainerP}
                       item
-                      xl={ifHomePage ? is_b2b_style() ? 2 : 3 : 4}
-                      lg={ifHomePage ? is_b2b_style() ? 2 : 3 : 4}
+                      xl={ifHomePage ? 3 : 4}
+                      lg={ifHomePage ? 3 : 4}
                       md={!logged && !ifHomePage ? 3 : 2}
                       sm={1}
                       onClick={() => Router.push('/')}
@@ -725,8 +726,8 @@ class NavBar extends Component {
                  companyPage ? null : ifHomePage ?
                     <Grid
                       item
-                      xl={is_b2b_style() ? 7 : 6}
-                      lg={is_b2b_style() ? 7 : 6}
+                      xl={6}
+                      lg={6}
                       md={8}
                       sm={11}
                       className={classes.navabarHomepageMenu}
@@ -756,26 +757,11 @@ class NavBar extends Component {
                                   <a target="_blank">
                                     <Tab
                                       classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                      label={"Offres et tarifs"}
+                                      label={"Tarifs"}
                                     />
                                   </a>
                                 </Link>
-                                {
-                                  isLoggedUserAlfredPro()  ?
-                                    <Link href={'/creaShop/creaShop'}>
-                                      <Tab
-                                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                        label={"Je propose mes services"}
-                                      />
-                                    </Link> :
-                                    <Link href={'/'}>
-                                      <Tab
-                                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                        label={"Je propose mes services"}
-                                        onClick={this.handleOpenRegister}
-                                      />
-                                    </Link>
-                                }
+
                               </>
                                :
                               <>
@@ -941,7 +927,7 @@ class NavBar extends Component {
                             variant="outlined"
                             classes={{root: is_b2b_style() ? classes.navbarSignInB2B : classes.navbarSignIn}}
                             onClick={this.handleOpenRegister}>
-                            {is_b2b_style() ? "Créer mon entreprise" : NAVBAR_MENU.signIn}
+                            {NAVBAR_MENU.signIn}
                           </Button>
                           <Dialog
                             scroll={'paper'}
