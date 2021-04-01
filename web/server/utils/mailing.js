@@ -33,7 +33,7 @@ const BOOKING_INFOS_RECAP = 24;
 const BOOKING_DETAILS = 26;
 const BOOKING_EXPIRED_2_CLIENT = 30;
 const BOOKING_EXPIRED_2_ALFRED = 31;
-//const B2B_ACCOUNT_CREATED = 58;
+const B2B_ACCOUNT_CREATED = 58;
 
 const CONFIRM_PHONE = -1;
 
@@ -55,7 +55,7 @@ const SMS_CONTENTS = {
 const sendNotification = (notif_index, destinee, params) => {
   const msg = `Sending notif ${notif_index} to ${destinee._id} using ${JSON.stringify(params)}`
 
-  var enable_mails = true //ENABLE_MAILING
+  var enable_mails = ENABLE_MAILING
   // En validation, envoyer les notifications et SMS aux membres de @my-alfred.io
   if (!enable_mails && is_validation() && (destinee.email||'').toLowerCase().includes('@my-alfred.io')) {
     console.log(`Mailing disabled except for my-alfred.io mails on validation platform`)
@@ -202,6 +202,7 @@ const sendResetPassword = (user, token, req) => {
     },
   );
 };
+
 const sendBookingExpiredToAlfred = booking => {
   sendNotification(
     BOOKING_EXPIRED_2_ALFRED,
@@ -381,6 +382,20 @@ const sendNewBookingManual = (booking, req) => {
   );
 };
 
+const sendB2BAccount = (user, email, role, company, token, req) => {
+  sendNotification(
+    B2B_ACCOUNT_CREATED,
+    user,
+    {
+      user_firstname: user.firstname,
+      role: role,
+      company: company,
+      user_email: email,
+      link_initiatenewpassword: new URL(`/resetPassword?token=${token}`, computeUrl(req)),
+    },
+  );
+}
+
 module.exports = {
   sendVerificationMail,
   sendShopDeleted,
@@ -403,4 +418,5 @@ module.exports = {
   sendVerificationSMS,
   sendLeaveCommentForClient,
   sendLeaveCommentForAlfred,
+  sendB2BAccount
 };

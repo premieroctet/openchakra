@@ -13,7 +13,7 @@ const CronJob = require('cron').CronJob;
 const validateRegisterInput = require('../../validation/register');
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
-const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../utils/mailing');
+const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount} = require('../../utils/mailing');
 const moment = require('moment');
 moment.locale('fr');
 const User = require('../../models/User');
@@ -807,8 +807,10 @@ router.get('/email/check', (req, res) => {
 // Send email with link for reset password
 router.post('/forgotPassword', (req, res) => {
   const email = req.body.email;
+  const role = req.body.role
 
   User.findOne({email: email})
+    .populate('company')
     .then(user => {
       if (user === null) {
         console.error(`email ${email} not in database`);
@@ -821,7 +823,13 @@ router.post('/forgotPassword', (req, res) => {
             .catch(err => console.error(err));
         });
 
-        sendResetPassword(user, token, req);
+        // Role ? création d'un compte B2B
+        if (req.body.role) {
+          sendB2BAccount(user, user.email, role, user.company.name, token, req);
+        }
+        else {
+          sendResetPassword(user, token, req);
+        }
         res.json();
       }
     });

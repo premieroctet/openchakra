@@ -49,10 +49,8 @@ class forgotPassword extends React.Component {
     axios.post('/myAlfred/api/users/forgotPassword', user)
       .then(res => {
         snackBarSuccess(`Un email de récupération a été envoyé à l\'adresse ${email}`);
-        setTimeout(
-          () =>  Router.push({pathname: '/'}),
-          2000
-        )
+        // TODO : rediriger vers /aprticular ou professional
+        setTimeout( () =>  Router.push({pathname: '/'}), 2000)
       })
       .catch(res => {
         snackBarError(res.response.data.error)
