@@ -9,7 +9,9 @@ import {checkPass1, checkPass2} from '../utils/passwords';
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
-import {toast} from 'react-toastify';
+const {snackBarSuccess, snackBarError}=require('../utils/notifications')
+const {ADMIN, MANAGER}=require('../utils/consts')
+const _ = require('lodash')
 
 const styles = {
   loginContainer: {
@@ -68,15 +70,22 @@ class resetPassword extends React.Component {
       password: this.state.password,
       token: this.state.token,
     };
-    console.log('1');
     axios.post('/myAlfred/api/users/resetPassword', data)
       .then(res => {
-        console.log('2');
-        toast.info('Mot de passe modifié avec succès');
+        const user = res.data
+        snackBarSuccess('Mot de passe modifié avec succès');
+        // Rediriger vers /particular ou /professional suivant les rôles
+        if (_.intersection(user.roles, [ADMIN, MANAGER]).length>0) {
+          localStorage.setItem('b2b', 'true');
+        }
+        else {
+          localStorage.removeItem('b2b');
+        }
         Router.push({pathname: '/login'});
       })
       .catch(err => {
-        toast.error(err.response.data.msg);
+        console.error(err)
+        snackBarError(err.response.data.msg);
       });
 
 
