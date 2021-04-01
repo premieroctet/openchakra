@@ -1,6 +1,3 @@
-import {is_b2b_style} from "../../../utils/context";
-
-const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
@@ -24,7 +21,6 @@ import Grid from "@material-ui/core/Grid";
 import {Typography} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-const {getLoggedUserId}=require('../../../utils/functions');
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import TextField from "@material-ui/core/TextField";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
@@ -39,6 +35,9 @@ import BusinessIcon from '@material-ui/icons/Business';
 import Link from "../../../components/Link/Link";
 import {is_development} from "../../../config/config";
 import WcIcon from '@material-ui/icons/Wc';
+const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions')
+import {is_b2b_style, is_b2b_site} from "../../../utils/context";
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -102,7 +101,13 @@ class MobileNavbar extends React.Component{
 
   needRefresh = () => {
     this.setState({setOpenLogin: false});
-    Router.push('/search?search=1');
+    // Alfred pro && b2b_site => on redirige vers le profil
+    if (is_b2b_site() && isLoggedUserAlfredPro()) {
+      Router.push( `/profile/about?user=${getLoggedUserId()}`)
+    }
+    else {
+      Router.push('/search?search=1');
+    }
   };
 
   handleMenuClose = () => {
