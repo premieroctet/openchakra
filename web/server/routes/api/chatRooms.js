@@ -4,7 +4,7 @@ const uuidv4 = require('uuid/v4');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const nodemailer = require('nodemailer');
-const {sendNewMessageToAlfred, sendNewMessageToClient} = require('../../../utils/mailing');
+const {sendNewMessageToAlfred, sendNewMessageToClient} = require('../../utils/mailing');
 
 const ChatRooms = require('../../models/ChatRooms');
 

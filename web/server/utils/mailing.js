@@ -1,9 +1,8 @@
 const {SIB} = require('./sendInBlue');
 
-const {computeUrl, ENABLE_MAILING} = require('../config/config');
-const {booking_datetime_str} = require('./dateutils');
-const {fillSms} = require('./sms');
-const {get_host_url, is_validation} = require('../config/config');
+const {computeUrl, get_host_url, is_validation, ENABLE_MAILING} = require('../../config/config');
+const {booking_datetime_str} = require('../../utils/dateutils');
+const {fillSms} = require('../../utils/sms');
 
 // Templates
 

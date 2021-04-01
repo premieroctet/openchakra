@@ -13,7 +13,7 @@ const CronJob = require('cron').CronJob;
 const validateRegisterInput = require('../../validation/register');
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
-const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
+const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../utils/mailing');
 const moment = require('moment');
 moment.locale('fr');
 const User = require('../../models/User');
