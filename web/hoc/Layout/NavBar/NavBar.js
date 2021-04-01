@@ -175,7 +175,13 @@ class NavBar extends Component {
       localStorage.removeItem('path');
       Router.push(path)
     } else {
-      Router.push('/search?search=1');
+      // Alfred pro && b2b_site => on redirige vers le profil
+      if (is_b2b_site() && isLoggedUserAlfredPro()) {
+        Router.push( `/profile/about?user=${getLoggedUserId()}`)
+      }
+      else {
+        Router.push('/search?search=1');
+      }
     }
   };
 
