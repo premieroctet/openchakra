@@ -3,7 +3,7 @@ const {SIB} = require('./sendInBlue');
 const {computeUrl, ENABLE_MAILING} = require('../config/config');
 const {booking_datetime_str} = require('./dateutils');
 const {fillSms} = require('./sms');
-const {get_host_url} = require('../config/config');
+const {get_host_url, is_validation} = require('../config/config');
 
 // Templates
 
@@ -34,6 +34,7 @@ const BOOKING_INFOS_RECAP = 24;
 const BOOKING_DETAILS = 26;
 const BOOKING_EXPIRED_2_CLIENT = 30;
 const BOOKING_EXPIRED_2_ALFRED = 31;
+//const B2B_ACCOUNT_CREATED = 58;
 
 const CONFIRM_PHONE = -1;
 
@@ -55,21 +56,28 @@ const SMS_CONTENTS = {
 const sendNotification = (notif_index, destinee, params) => {
   const msg = `Sending notif ${notif_index} to ${destinee._id} using ${JSON.stringify(params)}`
 
-  if (!ENABLE_MAILING) {
-    console.log(`Disabled : ${msg}`)
+  var enable_mails = true //ENABLE_MAILING
+  // En validation, envoyer les notifications et SMS aux membres de @my-alfred.io
+  if (!enable_mails && is_validation() && (destinee.email||'').toLowerCase().includes('@my-alfred.io')) {
+    console.log(`Mailing disabled except for my-alfred.io mails on validation platform`)
+    enable_mails = true
+  }
+  var enable_sms = ENABLE_MAILING
+
+  if (!enable_sms && !enable_mails) {
+    console.log(`Mailing disabled:${msg}`)
     return true
   }
 
-  console.log(msg)
-
   var resultMail = true, resultSms = true;
+
   // Send mail
-  if (notif_index != CONFIRM_PHONE) {
+  if (enable_mails && notif_index != CONFIRM_PHONE) {
     resultMail = SIB.sendMail(notif_index, destinee.email, params);
   }
 
   // Send SMS
-  if (destinee.phone && SMS_CONTENTS[notif_index.toString()]) {
+  if (enable_sms && destinee.phone && SMS_CONTENTS[notif_index.toString()]) {
     console.log('Sending SMS');
     const smsContents = fillSms(SMS_CONTENTS[notif_index.toString()], params);
     console.log('SMS contents is ' + smsContents);
