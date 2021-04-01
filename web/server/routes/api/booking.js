@@ -17,7 +17,7 @@ const {
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
   sendLeaveCommentForClient, sendLeaveCommentForAlfred,
-} = require('../../../utils/mailing');
+} = require('../../utils/mailing');
 const {get_role} = require('../../utils/context')
 const {payAlfred} = require('../../utils/mangopay');
 

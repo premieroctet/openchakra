@@ -2684,7 +2684,7 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
                         newUser.password = hash;
                         newUser.save()
                           .then(() => {
-                            axios.post(`/myAlfred/api/users/forgotPassword`, { email:req.body.admin_email})
+                            axios.post(`/myAlfred/api/users/forgotPassword`, { email:req.body.admin_email, role: ADMIN})
                               .then(() => {
                                 return res.json(company)
                               })

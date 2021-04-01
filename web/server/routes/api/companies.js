@@ -21,7 +21,7 @@ const multer = require('multer');
 const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise');
-const {ADMIN, MANAGER, EMPLOYEE} = require('../../../utils/consts')
+const {ADMIN, MANAGER, EMPLOYEE, ROLES} = require('../../../utils/consts')
 var _ = require('lodash')
 const {addRegistrationProof, createOrUpdateMangoCompany} = require('../../utils/mangopay');
 
@@ -484,8 +484,15 @@ router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, 
   const company_id = req.user.company
   const admin_id = req.body.admin_id
 
+  const new_account = req.body.new_account
+
   User.findByIdAndUpdate(admin_id, {company : company_id, $addToSet : {roles : ADMIN}}, { new : true} )
     .then (user => {
+      if (new_account) {
+        axios.post(`/myAlfred/api/users/forgotPassword`, { email: user.email, role: ROLES[ADMIN]})
+          .then(() => {})
+          .catch (err => {})
+      }
       res.json(user)
     })
     .catch( err => {

@@ -13,7 +13,7 @@ const CronJob = require('cron').CronJob;
 const validateRegisterInput = require('../../validation/register');
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
-const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
+const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount} = require('../../utils/mailing');
 const moment = require('moment');
 moment.locale('fr');
 const User = require('../../models/User');
@@ -807,8 +807,10 @@ router.get('/email/check', (req, res) => {
 // Send email with link for reset password
 router.post('/forgotPassword', (req, res) => {
   const email = req.body.email;
+  const role = req.body.role
 
   User.findOne({email: email})
+    .populate('company')
     .then(user => {
       if (user === null) {
         console.error(`email ${email} not in database`);
@@ -821,8 +823,14 @@ router.post('/forgotPassword', (req, res) => {
             .catch(err => console.error(err));
         });
 
-        sendResetPassword(user, token, req);
-        res.json();
+        // Role ? création d'un compte B2B
+        if (req.body.role) {
+          sendB2BAccount(user, user.email, role, user.company.name, token, req);
+        }
+        else {
+          sendResetPassword(user, token, req);
+        }
+        res.json(user);
       }
     });
 });
@@ -834,10 +842,10 @@ router.post('/resetPassword', (req, res) => {
   const token = req.body.token;
   ResetToken.findOne({token: token})
     .then(resetToken => {
-      User.findOne({resetToken: new mongoose.Types.ObjectId(resetToken._id)})
+      User.findOne({resetToken: resetToken._id})
         .then(user => {
           if (!user) {
-            throw err;
+            throw 'No user';
           }
           bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(password, salt, (err, hash) => {
@@ -845,14 +853,20 @@ router.post('/resetPassword', (req, res) => {
                 throw err;
               }
               user.updateOne({password: hash, resetToken: undefined})
-                .then(user => res.json({success: 'password update'}))
+                .then(result => res.json(user))
                 .catch(err => console.error(err));
             });
           });
         })
-        .catch(err => res.status(400).json({msg: 'Token expiré'}));
+        .catch(err => {
+          console.error(err)
+          res.status(400).json({msg: 'Token expiré'})
+        })
     })
-    .catch(err => res.status(400).json({msg: 'Token invalide'}));
+    .catch(err => {
+      console.error(err)
+      res.status(400).json({msg: 'Token invalide'})
+    });
 });
 
 // @Route PUT /myAlfred/api/users/profile/editProfile

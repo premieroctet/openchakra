@@ -255,7 +255,8 @@ class Team extends React.Component{
           .then ( response => {
             let data = response.data;
             const data_id ={
-              admin_id: data._id
+              admin_id: data._id,
+              new_account: true,
             };
             axios.put('/myAlfred/api/companies/admin', data_id)
               .then(res=>{
@@ -299,7 +300,8 @@ class Team extends React.Component{
           .then ( response => {
             let data = response.data;
             const member_id ={
-              member_id: data._id
+              member_id: data._id,
+              new_account : true,
             };
             axios.put(`/myAlfred/api/groups/${res.groupSelected}/managers`, member_id).then(res=>{
               this.setState({dialogAdd: false}, () =>  this.componentDidMount());
@@ -403,7 +405,7 @@ class Team extends React.Component{
 
     return(
       <Dialog open={dialogAdd} onClose={() => this.setState({dialogAdd: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{modeDialog === 'manager' ? 'Ajouter un Manager' : 'Ajouter un Administrateurs'}</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{modeDialog === 'manager' ? 'Ajouter un Manager' : 'Ajouter un Administrateur'}</DialogTitle>
         <DialogContent dividers>
           {
             userEmploye.length === 0 ? null :

@@ -9,6 +9,8 @@ import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
 const {snackBarSuccess, snackBarError} = require('../utils/notifications');
+const {ADMIN, MANAGER} = require('../utils/consts')
+const _ = require('lodash')
 
 const styles = {
   loginContainer: {
@@ -43,22 +45,20 @@ class forgotPassword extends React.Component {
 
     const user = {
       email: email,
-
     };
 
     axios.post('/myAlfred/api/users/forgotPassword', user)
       .then(res => {
+        const user= res.data
         snackBarSuccess(`Un email de récupération a été envoyé à l\'adresse ${email}`);
-        setTimeout(
-          () =>  Router.push({pathname: '/'}),
-          2000
-        )
+        // Rediriger vers /particular ou /professional suivant les rôles
+        const redirect_url=_.intersection(user.roles, [ADMIN, MANAGER]).length>0 ? '/professional': '/particular'
+        setTimeout( () =>  Router.push({pathname: redirect_url}), 2000)
       })
-      .catch(res => {
+      .catch(err => {
+        console.error(err)
         snackBarError(res.response.data.error)
       });
-
-
   };
 
   render() {
