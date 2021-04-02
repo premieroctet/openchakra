@@ -50,7 +50,7 @@ class myProfile extends React.Component{
   logout2 = () => {
     localStorage.removeItem('path');
     clearAuthenticationToken()
-    Router.push('/?disconnect=1');
+    Router.push('/');
   };
 
 
