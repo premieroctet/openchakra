@@ -33,7 +33,8 @@ const {normalizePhone, bufferToString, normalize} = require('../../../../utils/t
 const {counterArray, counterObjects} = require('../../../../utils/converters')
 const url_parse = require('url-parse')
 const csv_parse = require('csv-parse/lib/sync')
-router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
+const axios = require('axios')
+const lbc = require('./lbc.json')
 
 // @Route POST /myAlfred/api/admin/billing/all
 // Add billing for prestation
@@ -94,40 +95,6 @@ router.get('/shops/extract', passport.authenticate('jwt', {session: false}), (re
         })
         .catch();
     });
-});
-
-// @Route GET /myAlfred/api/admin/prospect/tocontact
-// View all billings system
-// @Access public
-router.get('/prospect/tocontact/:category/:keywords?', (req, res) => {
-  const keywords = req.params.keywords || '';
-  var result = [];
-  Prospect.find(
-    {$and: [{category: req.params.category, keywords: keywords}, {$or: [{contacted: false}, {contacted: null}]}]},
-  )
-    .sort({category: 1})
-    .then(prospects => {
-      Prospect.updateMany(
-        {$and: [{category: req.params.category, keywords: keywords}, {$or: [{contacted: false}, {contacted: null}]}]},
-        {contacted: true},
-      )
-        .then(dummy => {
-          prospects.forEach(p => {
-            data = [];
-            data.push(`="${p.phone.replace(/^0/, '+33')}"`);
-            data.push(p.category + '/' + p.keywords);
-            data.push(p.name);
-            data.push(p.city);
-            data.push(p.zip_code);
-            result.push(data.join(';'));
-          });
-          const filename = `export_${req.params.category}_${keywords}_${moment().format('DDMMYYHHmm')}.csv`;
-          res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-          res.set('Content-Disposition', `attachment; filename="${filename}"`);
-          res.send(result.join('\n'));
-        });
-    })
-    .catch();
 });
 
 // @Route GET /myAlfred/api/admin/billing/all
@@ -2559,8 +2526,57 @@ router.get('/prospect/fields', passport.authenticate('jwt', {session: false}), (
   res.json({mandatory: schema_required, fields: schema_fields})
 })
 
-// @Route GET /myAlfred/api/admin/prospect/all
-// Get all prospect
+// @Route POST /myAlfred/api/admin/prospect/search
+// Launch prospects from le bon coin (api notifan)
+// Body : category, url
+// @Access private
+router.post('/prospect/search', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const category = (req.body.category||'').trim()
+  const url = (req.body.url||'').trim()
+
+  if (!category || !url) {
+    res.status(400).json('Catégorie et url requises')
+  }
+
+  if (url.includes('&page=')) {
+    res.status(400).json("L'url doit être une recherche sur la première page")
+  }
+
+  const urls=Array.from(Array(10).keys()).map(i => `${url}&page=${i+1}`)
+  console.log(urls)
+  /**
+  axios.get(`http://api.notifan.fr/search?url=${url}`)
+    .then( result => {
+      const ads=result.data.ads
+      const ads_phone = ads.filter(a => a.status="active" && a.has_phone)
+      ads_phone.forEach( ad => {
+        axios.get(`http://api.notifan.fr/phone?list_id=${ad.list_id}`)
+          .then (res => {
+            const phone_data = res.data
+            console.log(JSON.stringify(phone_data))
+          })
+          .catch (err => {
+            console.error(err)
+          })
+      })
+      res.json('ok')
+    })
+    .catch ( err => {
+      console.error(err.response)
+      const status=err.response.status
+      const msg={
+        403: 'Adresse ip non autorisée',
+        500 : 'Résolution Datadome, réessayer dans 5 secondes',
+        400 : 'Erreur de catégorie ou liste de recherche',
+      }
+      console.error(`Recherche le bon coin : ${err.response.data}`)
+      res.status(status).json(msg[status])
+    })
+  */
+})
+
+// @Route PROSPECT /myAlfred/api/admin/prospect/add
+// INsert prospects from csv
 // @Access private
 router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (req, res) => {
   uploadProspect.single('prospects')(req, res, err => {
@@ -2631,6 +2647,40 @@ router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (re
     }
   })
 })
+
+// @Route GET /myAlfred/api/admin/prospect/tocontact
+// View all billings system
+// @Access public
+router.get('/prospect/tocontact/:category/:keywords?', (req, res) => {
+  const keywords = req.params.keywords || '';
+  var result = [];
+  Prospect.find(
+    {$and: [{category: req.params.category, keywords: keywords}, {$or: [{contacted: false}, {contacted: null}]}]},
+  )
+    .sort({category: 1})
+    .then(prospects => {
+      Prospect.updateMany(
+        {$and: [{category: req.params.category, keywords: keywords}, {$or: [{contacted: false}, {contacted: null}]}]},
+        {contacted: true},
+      )
+        .then(dummy => {
+          prospects.forEach(p => {
+            data = [];
+            data.push(`="${p.phone.replace(/^0/, '+33')}"`);
+            data.push(p.category + '/' + p.keywords);
+            data.push(p.name);
+            data.push(p.city);
+            data.push(p.zip_code);
+            result.push(data.join(';'));
+          });
+          const filename = `export_${req.params.category}_${keywords}_${moment().format('DDMMYYHHmm')}.csv`;
+          res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          res.set('Content-Disposition', `attachment; filename="${filename}"`);
+          res.send(result.join('\n'));
+        });
+    })
+    .catch();
+});
 
 
 // @Route POST /myAlfred/api/admin/kyc_validate/:alfred_id
