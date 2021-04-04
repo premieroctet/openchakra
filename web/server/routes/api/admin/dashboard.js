@@ -35,6 +35,27 @@ const url_parse = require('url-parse')
 const csv_parse = require('csv-parse/lib/sync')
 const axios = require('axios')
 const lbc = require('./lbc.json')
+const _ = require('lodash')
+
+// For Node < 12.0
+if (!Promise.allSettled) {
+  Promise.allSettled = promises =>
+    Promise.all(
+      promises.map((promise, i) => {
+        console.log(promise)
+        return promise
+          .then(value => ({
+            status: "fulfilled",
+            value,
+          }))
+          .catch(reason => ({
+            status: "rejected",
+            reason,
+          }))
+        }
+      )
+    );
+}
 
 // @Route POST /myAlfred/api/admin/billing/all
 // Add billing for prestation
@@ -2542,8 +2563,53 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
     res.status(400).json("L'url doit être une recherche sur la première page")
   }
 
-  const urls=Array.from(Array(10).keys()).map(i => `${url}&page=${i+1}`)
-  console.log(urls)
+  const urls=Array.from(Array(10).keys()).map(i => `http://api.notifan.fr/search?url=${url}&page=${i+1}`)
+  const promises = urls.map(u => axios.get(u))
+  //const promises=[urls.map(u =>  new Promise((resolve, reject) => resolve({data:lbc})))]
+  console.log(promises)
+  Promise.allSettled(promises)
+    .then( results => {
+      var all_ads = []
+      results.forEach( result => {
+        console.log(result.status)
+        if (result.status=="fulfilled") {
+          all_ads = all_ads.concat(result.value.data.ads)
+        }
+      })
+      all_ads = _.uniqBy(all_ads.filter(a => a.status="active" && a.has_phone), ad => ad.list_id)
+
+      Prospect.find({ list_id : {$exists: true}}, 'ad_id')
+        .then ( prospects => {
+          prospects = prospects.map( p => p.list_id)
+          // Retirer les prospects connus en BD par leur ad_id
+          all_ads = all_ads.filter(ad => !prospects.includes(ad.list_id))
+          const phoneUrls = all_ads.map(ad => `http://api.notifan.fr/phone?list_id=${ad.list_id}`)
+          const phonePromises = phoneUrls.map( url => axios.get(url))
+          Promise.allSettled(phonePromises)
+            .then ( phone_results => {
+              // Keep
+              phone_results = phone_results.map(p => p.status=='fulfilled' && result.value.data.utils.status=='OK' ? value.data.utils.phonenumber : null)
+              const db_promises = []
+              phone_results.forEach( (phone, index) => {
+                if (result.status == 'fulfilled' && result.value.data.utils.status=='OK') {
+                  const phone=result.value.data.utils.phonenumber
+                  const ad = all_ads[index]
+                  const pData={
+                    category: category,
+                    name: ad.owner.name,
+                    title: ad.subject,
+                    phone: phone,
+                    city: ad.location.city,
+                    zip_code: ad.location.zipcode,
+                    provider: 'le bon coin',
+                    ad_id : ad.list_id,
+                  }
+                  db_promises.push(Prospect.create(pData))
+                }
+              })
+            })
+        })
+    })
   /**
   axios.get(`http://api.notifan.fr/search?url=${url}`)
     .then( result => {

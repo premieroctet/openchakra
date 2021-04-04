@@ -21,6 +21,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
+const {is_production, is_development}=require('../../config/config')
 
 
 const styles = theme => ({
@@ -116,8 +117,8 @@ class all extends React.Component {
       fields: [],
       mandatory: [],
       // Le bon coin
-      category: '',
-      url: '',
+      category: is_development() ? 'Catégorie' : '',
+      url: is_development() ? 'https://www.leboncoin.fr/recherche?text=services&locations=Rouen__49.435095013659414_1.0876298169104275_6200' : '',
     };
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
