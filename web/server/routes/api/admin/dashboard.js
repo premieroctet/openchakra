@@ -29,7 +29,7 @@ const validateServiceInput = require('../../../validation/service');
 const {addIdIfRequired} = require('../../../../utils/mangopay');
 const multer = require('multer')
 const path = require('path')
-const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
+const {normalizePhone, bufferToString, normalize, isMobilePhone} = require('../../../../utils/text')
 const {counterArray, counterObjects} = require('../../../../utils/converters')
 const url_parse = require('url-parse')
 const csv_parse = require('csv-parse/lib/sync')
@@ -2519,7 +2519,7 @@ router.get('/prospect/all', passport.authenticate('jwt', {session: false}), (req
         counts = {};
         contacted = {};
         prospects.forEach(p => {
-          const key = `${p.category}/${p.keywords}`;
+          const key = `${p.category}`;
           counts[key] = counts.hasOwnProperty(key) ? counts[key] + 1 : 1;
           const contact = p.contacted ? 1 : 0;
           contacted[key] = contacted.hasOwnProperty(key) ? contacted[key] + contact : contact;
@@ -2566,7 +2566,8 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
   const urls=Array.from(Array(10).keys()).map(i => `http://api.notifan.fr/search?url=${url}&page=${i+1}`)
   const promises = urls.map(u => axios.get(u))
   //const promises=[urls.map(u =>  new Promise((resolve, reject) => resolve({data:lbc})))]
-  console.log(promises)
+  console.log(urls)
+  const req_result={total_pages:10, total_ads:0, new_ads:0, saved_ads:0}
   Promise.allSettled(promises)
     .then( results => {
       var all_ads = []
@@ -2576,23 +2577,26 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
           all_ads = all_ads.concat(result.value.data.ads)
         }
       })
-      all_ads = _.uniqBy(all_ads.filter(a => a.status="active" && a.has_phone), ad => ad.list_id)
+      console.log(JSON.stringify(all_ads))
+      req_result.total_ads=all_ads.length
+      all_ads = _.uniqBy(all_ads.filter(a => a && a.status=="active" && a.has_phone), ad => ad.list_id)
 
       Prospect.find({ list_id : {$exists: true}}, 'ad_id')
         .then ( prospects => {
           prospects = prospects.map( p => p.list_id)
           // Retirer les prospects connus en BD par leur ad_id
           all_ads = all_ads.filter(ad => !prospects.includes(ad.list_id))
+          req_result.new_ads=all_ads.length
           const phoneUrls = all_ads.map(ad => `http://api.notifan.fr/phone?list_id=${ad.list_id}`)
           const phonePromises = phoneUrls.map( url => axios.get(url))
           Promise.allSettled(phonePromises)
             .then ( phone_results => {
               // Keep
-              phone_results = phone_results.map(p => p.status=='fulfilled' && result.value.data.utils.status=='OK' ? value.data.utils.phonenumber : null)
-              const db_promises = []
+              phone_results = phone_results.map(p => p.status=='fulfilled' && p.value.data.utils.status=='OK' ? p.value.data.utils.phonenumber : null)
+              var db_promises = []
               phone_results.forEach( (phone, index) => {
-                if (result.status == 'fulfilled' && result.value.data.utils.status=='OK') {
-                  const phone=result.value.data.utils.phonenumber
+                console.log(phone)
+                if (phone  && isMobilePhone(phone)) {
                   const ad = all_ads[index]
                   const pData={
                     category: category,
@@ -2607,28 +2611,16 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
                   db_promises.push(Prospect.create(pData))
                 }
               })
+              Promise.allSettled(db_promises)
+                .then( db_results => {
+                  req_result.saved_ads=db_results.filter(r=>r.status=='fulfilled').length
+                  res.json(req_result)
+                })
             })
         })
     })
-  /**
-  axios.get(`http://api.notifan.fr/search?url=${url}`)
-    .then( result => {
-      const ads=result.data.ads
-      const ads_phone = ads.filter(a => a.status="active" && a.has_phone)
-      ads_phone.forEach( ad => {
-        axios.get(`http://api.notifan.fr/phone?list_id=${ad.list_id}`)
-          .then (res => {
-            const phone_data = res.data
-            console.log(JSON.stringify(phone_data))
-          })
-          .catch (err => {
-            console.error(err)
-          })
-      })
-      res.json('ok')
-    })
     .catch ( err => {
-      console.error(err.response)
+      console.error(err)
       const status=err.response.status
       const msg={
         403: 'Adresse ip non autorisée',
@@ -2638,7 +2630,6 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
       console.error(`Recherche le bon coin : ${err.response.data}`)
       res.status(status).json(msg[status])
     })
-  */
 })
 
 // @Route PROSPECT /myAlfred/api/admin/prospect/add
@@ -2717,16 +2708,15 @@ router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (re
 // @Route GET /myAlfred/api/admin/prospect/tocontact
 // View all billings system
 // @Access public
-router.get('/prospect/tocontact/:category/:keywords?', (req, res) => {
-  const keywords = req.params.keywords || '';
+router.get('/prospect/tocontact/:category', (req, res) => {
   var result = [];
   Prospect.find(
-    {$and: [{category: req.params.category, keywords: keywords}, {$or: [{contacted: false}, {contacted: null}]}]},
+    {$and: [{category: req.params.category}, {$or: [{contacted: false}, {contacted: null}]}]},
   )
     .sort({category: 1})
     .then(prospects => {
       Prospect.updateMany(
-        {$and: [{category: req.params.category, keywords: keywords}, {$or: [{contacted: false}, {contacted: null}]}]},
+        {$and: [{category: req.params.category}, {$or: [{contacted: false}, {contacted: null}]}]},
         {contacted: true},
       )
         .then(dummy => {
@@ -2739,7 +2729,7 @@ router.get('/prospect/tocontact/:category/:keywords?', (req, res) => {
             data.push(p.zip_code);
             result.push(data.join(';'));
           });
-          const filename = `export_${req.params.category}_${keywords}_${moment().format('DDMMYYHHmm')}.csv`;
+          const filename = `export_${req.params.category}_${moment().format('DDMMYYHHmm')}.csv`;
           res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
           res.set('Content-Disposition', `attachment; filename="${filename}"`);
           res.send(result.join('\n'));

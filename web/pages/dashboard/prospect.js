@@ -118,7 +118,7 @@ class all extends React.Component {
       mandatory: [],
       // Le bon coin
       category: is_development() ? 'Catégorie' : '',
-      url: is_development() ? 'https://www.leboncoin.fr/recherche?text=services&locations=Rouen__49.435095013659414_1.0876298169104275_6200' : '',
+      url: is_development() ? 'https://www.leboncoin.fr/recherche?text=web' : '',
     };
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -192,7 +192,14 @@ class all extends React.Component {
     const {url, category} = this.state
     setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/prospect/search', {url, category})
-      .then(res => snackBarSuccess(res.data))
+      .then(res => {
+        const result=res.data
+        const msg=`Pages inspectées:${result.total_pages},
+                   Annonces totales:${result.total_ads},
+                   Annonce nouvelles:${result.new_ads},
+                   Prospects créés:${result.saved_ads}`
+        snackBarSuccess(msg)
+      })
       .catch(err => snackBarError(err.response.data))
   }
 

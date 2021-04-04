@@ -97,6 +97,18 @@ const hideIllegal = text => {
   return text
 }
 
+const isMobilePhone= number => {
+  console.log(`Test mobilephone:${number}`)
+  if (!number) {
+    return false
+  }
+  const MOBILE_RE=/^(0|\+?33)[67]\d{8}$/
+  number = number.toString().trim()
+  const res= MOBILE_RE.test(number) 
+  console.log(`Test mobilephone:${res}`)
+  return res
+}
+
 module.exports = {
   normalize,
   createQuery,
@@ -110,4 +122,5 @@ module.exports = {
   normalizePhone,
   bufferToString,
   hideIllegal,
+  isMobilePhone
 };
