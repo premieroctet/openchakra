@@ -4,6 +4,8 @@ const {invoiceFormat} = require("../../utils/invoice");
 const {BOOK_STATUS, ROLES} = require('../../utils/consts')
 const Schema = mongoose.Schema;
 const autoIncrement = require("mongoose-auto-increment");
+const CountSchema = require('./Count');
+
 const BookingSchema = new Schema({
   reference: {
     type: String,
@@ -160,6 +162,10 @@ const BookingSchema = new Schema({
     type: String,
   },
 }, {toJSON: {virtuals: true, getters: true}});
+
+BookingSchema.pre('invoiceNumber', function () {
+
+});
 
 BookingSchema.virtual('alfred_amount').get(function () {
   return this.amount - this.fees;

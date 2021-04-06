@@ -3,25 +3,34 @@ const Schema = mongoose.Schema;
 const autoIncrement = require("mongoose-auto-increment");
 
 const CountSchema = new Schema({
-  numero
+  key: {
+    type: String
+  },
+  value: {
+    type: String
+  },
+  type: {
+    type: String
+  }
 });
-CountSchema.pre('save', function (done) {
+
+CountSchema.post('save', function (done) {
   if (this.isNew) {
-    getNewId(function (autoincremented_id) {
-      this.id = autoincremented_id;
-      done()
-    })
-  } else {
-    done()
+    this.isNew.value += 1
+    next()
   }
 })
-let count = connection.model('count', CountSchema);
-count.nextCount(function (err, count) {
-  const _count = new Count();
-  count.save(function (err) {
-    _count.resetCount(function (err, count) {
-
-    })
-  })
-})
+// let count = connection.model('count', CountSchema);
+// count.nextCount(function (err, count) {
+//   const _count = new Count();
+//   count.save(function (err) {
+//     try {
+//       _count.resetCount(function (err, count) {
+//         count.value = 0;
+//       })
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   })
+// })
 module.exports = Booking = mongoose.model('count', CountSchema);

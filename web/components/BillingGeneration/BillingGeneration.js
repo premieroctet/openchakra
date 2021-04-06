@@ -20,6 +20,10 @@ class BillingGeneration extends React.Component {
     super(props)
   }
 
+  genFeesPage = () => {
+
+  }
+
   render() {
     const {bookingObj, is_pro} = this.props;
     return (

@@ -27,8 +27,8 @@ class NeedMoreFaq extends React.Component {
       }}>
         <Grid style={{margin: '0 auto'}}>
           <h3 style={{fontWeight: 'bold'}}>Et si vous souhaitez en savoir plus</h3>
-          <p>Vous pouvez consulter <Link href={'/faq'}>
-            <span className={classes.link}>notre FAQ</span>
+          <p>Vous pouvez <Link href={'/contact'}>
+            <span className={classes.link}>nous contacter</span>
           </Link>
           </p>
         </Grid>
