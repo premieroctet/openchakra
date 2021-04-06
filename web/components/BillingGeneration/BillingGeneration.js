@@ -21,6 +21,11 @@ class BillingGeneration extends React.Component {
   }
 
   genFeesPage = () => {
+    const feesPage = {
+      fees: this.props.bookingObj.fees,
+      is_pro: true
+    }
+    return JSON.stringify(feesPage);
 
   }
 
@@ -71,7 +76,7 @@ class BillingGeneration extends React.Component {
                 </View>
                 <View>
                   <Text>
-                    RCS :
+                    RCS : 850 148 867
                   </Text>
                 </View>
               </View>
@@ -138,7 +143,6 @@ class BillingGeneration extends React.Component {
               </View>
             </View>
           </View>
-
           <View style={styles.table}>
             <View style={styles.tableRow}>
               <View style={styles.tableColHeader}>
@@ -248,7 +252,12 @@ class BillingGeneration extends React.Component {
           </View>
         </Page>
         <Page>
-
+          {
+            this.genFeesPage()
+          }
+          <View fixed style={styles.footer}>
+            <Text>Page {"2"}</Text>
+          </View>
         </Page>
       </Document>
     )
