@@ -36,13 +36,13 @@ const csv_parse = require('csv-parse/lib/sync')
 const axios = require('axios')
 const lbc = require('./lbc.json')
 const _ = require('lodash')
+var util = require('util');
 
 // For Node < 12.0
 if (!Promise.allSettled) {
   Promise.allSettled = promises =>
     Promise.all(
       promises.map((promise, i) => {
-        console.log(promise)
         return promise
           .then(value => ({
             status: "fulfilled",
@@ -2563,25 +2563,46 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
     res.status(400).json("L'url doit être une recherche sur la première page")
   }
 
-  const urls=Array.from(Array(pages_count).keys()).map(i => `http://api.notifan.fr/search?url=${url}&page=${i+1}`)
+  const urls=Array.from(Array(pages_count).keys()).map(i => {
+    if (url.includes("&")) {
+      return `http://api.notifan.fr/search?url=${url}&page=${i+1}`
+    }
+    else {
+      return `http://api.notifan.fr/search?url=${url}/p-${i+1}`
+    }
+  })
+  console.log(`URL 1:${urls[0]}`)
   const promises = urls.map(u => axios.get(u))
   //const promises=[urls.map(u =>  new Promise((resolve, reject) => resolve({data:lbc})))]
-  console.log(urls)
   const req_result={total_pages:pages_count, scanned_pages:0, total_ads:0, new_ads:0, phone_ads:0, saved_ads:0}
   Promise.allSettled(promises)
     .then( results => {
       var all_ads = []
+      var error_reason = null
       results.forEach( result => {
-        console.log(result.status)
         if (result.status=="fulfilled") {
           all_ads = all_ads.concat(result.value.data.ads)
           req_result.scanned_pages=req_result.scanned_pages+1
         }
         else if (result.status=="rejected") {
           console.log(`Rejected:${result.reason}`)
+          error_reason = result.reason
+          util.inspect(error_reason)
         }
       })
-      console.log(JSON.stringify(all_ads))
+
+      if (error_reason) {
+        const status=error_reason.response.status
+        const msg={
+          403: 'Adresse ip non autorisée',
+          500 : 'Erreur inconnue du serveur de Paul',
+          503 : 'Résolution Datadome, réessayer dans 5 secondes',
+          400 : 'Erreur de catégorie ou liste de recherche',
+        }
+        res.status(status).json(msg[status] || `Erreur ${error_reason}`)
+        return
+      }
+
       req_result.total_ads=all_ads.length
       all_ads = _.uniqBy(all_ads.filter(a => a && a.status=="active" && a.has_phone), ad => ad.list_id)
 
@@ -2600,7 +2621,6 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
               var db_promises = []
               req_result.phone_ads=phone_results.filter(p => p && isMobilePhone(p)).length
               phone_results.forEach( (phone, index) => {
-                console.log(phone)
                 if (phone  && isMobilePhone(phone)) {
                   const ad = all_ads[index]
                   const pData={
@@ -2613,7 +2633,6 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
                     provider: 'le bon coin',
                     ad_id : ad.list_id,
                   }
-                  console.log(JSON.stringify(pData))
                   db_promises.push(Prospect.create(pData))
                 }
               })
@@ -2636,10 +2655,9 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
       const status=err.response.status
       const msg={
         403: 'Adresse ip non autorisée',
-        500 : 'Résolution Datadome, réessayer dans 5 secondes',
+        503 : 'Résolution Datadome, réessayer dans 5 secondes',
         400 : 'Erreur de catégorie ou liste de recherche',
       }
-      console.error(`Recherche le bon coin : ${err.response.data}`)
       res.status(status).json(msg[status])
     })
 })

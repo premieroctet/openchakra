@@ -120,6 +120,7 @@ class all extends React.Component {
       category: is_development() ? 'Catégorie' : '',
       url: is_development() ? 'https://www.leboncoin.fr/recherche?text=web' : '',
       lbc_message: '',
+      lbc_error: '',
     };
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -191,6 +192,7 @@ class all extends React.Component {
 
   startSearch = () => {
     const {url, category} = this.state
+    this.setState({lbc_message: '', lbc_error:''})
     setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/prospect/search', {url, category})
       .then(res => {
@@ -201,14 +203,17 @@ class all extends React.Component {
                    Annonce nouvelles:${result.new_ads},
                    Annonces avec mobile:${result.phone_ads},
                    Prospects créés:${result.saved_ads}`
-        this.setState({lbc_message: msg})
+        this.setState({lbc_message: msg, lbc_error:''})
       })
-      .catch(err => snackBarError(err.response.data))
+      .catch(err => {
+        console.error(err)
+        this.setState({lbc_message: '', lbc_error: err.response.data})
+      })
   }
 
   render() {
     const {classes} = this.props;
-    const {prospects, export_data, comments, errors, category, url, lbc_message} = this.state;
+    const {prospects, export_data, comments, errors, category, url, lbc_message, lbc_error} = this.state;
 
     return (
       <Layout>
@@ -238,6 +243,7 @@ class all extends React.Component {
                   onChange={this.onChange}
                 />
                 <div>{lbc_message}</div>
+                <em style={{color:'red'}}>{lbc_error}</em>
                 <Button disabled={!category || !url} onClick={this.startSearch}>
                   Lancer la recherche
                 </Button>
