@@ -22,6 +22,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 const {is_production, is_development}=require('../../config/config')
+const {delayedPromise}=require('../../utils/promise')
 
 
 const styles = theme => ({
@@ -192,7 +193,7 @@ class all extends React.Component {
 
   startSearch = () => {
     const {url, category} = this.state
-    this.setState({lbc_message: '', lbc_error:''})
+    this.setState({lbc_message: 'Scan en cours...', lbc_error:''})
     setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/prospect/search', {url, category})
       .then(res => {

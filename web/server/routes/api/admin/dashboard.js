@@ -37,6 +37,7 @@ const axios = require('axios')
 const lbc = require('./lbc.json')
 const _ = require('lodash')
 var util = require('util');
+const {delayedPromise}=require('../../../../utils/promise')
 
 // For Node < 12.0
 if (!Promise.allSettled) {
@@ -2509,7 +2510,7 @@ router.get('/prospect/all', passport.authenticate('jwt', {session: false}), (req
 
   if (admin) {
     // TODO: Use aggregate
-    Prospect.find()
+    Prospect.find({}, 'category contacted')
       .sort({category: 1, keywords: 1})
       .catch(err => {
         console.error(err);
@@ -2520,19 +2521,16 @@ router.get('/prospect/all', passport.authenticate('jwt', {session: false}), (req
         contacted = {};
         prospects.forEach(p => {
           const key = `${p.category}`;
-          counts[key] = counts.hasOwnProperty(key) ? counts[key] + 1 : 1;
+          counts[key] = (counts[key] || 0) + 1
           const contact = p.contacted ? 1 : 0;
-          contacted[key] = contacted.hasOwnProperty(key) ? contacted[key] + contact : contact;
+          contacted[key] = (contacted[key] || 0) + contact
         });
-        var result = [];
-        Object.keys(counts).forEach(key => {
-          result.push({
+        const result=Object.keys(counts).map(key => { return {
             category: key,
             count: counts[key],
             contacted: contacted[key],
             not_contacted: counts[key] - contacted[key],
-          });
-        });
+          }})
 
         res.json(result);
       });
@@ -2571,9 +2569,11 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
       return `http://api.notifan.fr/search?url=${url}/p-${i+1}`
     }
   })
-  console.log(`URL 1:${urls[0]}`)
-  const promises = urls.map(u => axios.get(u))
-  //const promises=[urls.map(u =>  new Promise((resolve, reject) => resolve({data:lbc})))]
+
+  const DELAY=2000
+
+  const promises = urls.map((u, index) => delayedPromise(DELAY*(index+1), ()=>axios.get(u)))
+
   const req_result={total_pages:pages_count, scanned_pages:0, total_ads:0, new_ads:0, phone_ads:0, saved_ads:0}
   Promise.allSettled(promises)
     .then( results => {
@@ -2585,21 +2585,21 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
           req_result.scanned_pages=req_result.scanned_pages+1
         }
         else if (result.status=="rejected") {
-          console.log(`Rejected:${result.reason}`)
+          console.log(`LBC request rejected:${result.reason}`)
           error_reason = result.reason
-          util.inspect(error_reason)
         }
       })
 
       if (error_reason) {
-        const status=error_reason.response.status
+        console.log(`Erreur lbc:${error_reason}`)
+        const status= error_reason.response ? error_reason.response.status : null
         const msg={
           403: 'Adresse ip non autorisée',
           500 : 'Erreur inconnue du serveur de Paul',
           503 : 'Résolution Datadome, réessayer dans 5 secondes',
           400 : 'Erreur de catégorie ou liste de recherche',
         }
-        res.status(status).json(msg[status] || `Erreur ${error_reason}`)
+        res.status(status || 500).json(msg[status] || error_reason.toString())
         return
       }
 
@@ -2613,7 +2613,7 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
           all_ads = all_ads.filter(ad => !prospects.includes(ad.list_id))
           req_result.new_ads=all_ads.length
           const phoneUrls = all_ads.map(ad => `http://api.notifan.fr/phone?list_id=${ad.list_id}`)
-          const phonePromises = phoneUrls.map( url => axios.get(url))
+          const phonePromises = phoneUrls.map( (url,index) => delayedPromise(DELAY*index, () => axios.get(url)))
           Promise.allSettled(phonePromises)
             .then ( phone_results => {
               // Keep
@@ -2652,13 +2652,13 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
     })
     .catch ( err => {
       console.error(err)
-      const status=err.response.status
+      const status= err.response ? err.response.status : null
       const msg={
         403: 'Adresse ip non autorisée',
         503 : 'Résolution Datadome, réessayer dans 5 secondes',
         400 : 'Erreur de catégorie ou liste de recherche',
       }
-      res.status(status).json(msg[status])
+      res.status(status || 500).json(msg[status] || err.toString())
     })
 })
 
