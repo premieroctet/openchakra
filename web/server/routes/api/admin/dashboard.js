@@ -2554,7 +2554,7 @@ router.get('/prospect/fields', passport.authenticate('jwt', {session: false}), (
 router.post('/prospect/search', passport.authenticate('jwt', {session: false}), (req, res) => {
   const category = (req.body.category||'').trim()
   const url = (req.body.url||'').trim()
-
+  const pages_count = 10
   if (!category || !url) {
     res.status(400).json('Catégorie et url requises')
   }
@@ -2563,11 +2563,11 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
     res.status(400).json("L'url doit être une recherche sur la première page")
   }
 
-  const urls=Array.from(Array(10).keys()).map(i => `http://api.notifan.fr/search?url=${url}&page=${i+1}`)
+  const urls=Array.from(Array(pages_count).keys()).map(i => `http://api.notifan.fr/search?url=${url}&page=${i+1}`)
   const promises = urls.map(u => axios.get(u))
   //const promises=[urls.map(u =>  new Promise((resolve, reject) => resolve({data:lbc})))]
   console.log(urls)
-  const req_result={total_pages:10, total_ads:0, new_ads:0, saved_ads:0}
+  const req_result={total_pages:pages_count, scanned_pages:0, total_ads:0, new_ads:0, phone_ads:0, saved_ads:0}
   Promise.allSettled(promises)
     .then( results => {
       var all_ads = []
@@ -2575,6 +2575,10 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
         console.log(result.status)
         if (result.status=="fulfilled") {
           all_ads = all_ads.concat(result.value.data.ads)
+          req_result.scanned_pages=req_result.scanned_pages+1
+        }
+        else if (result.status=="rejected") {
+          console.log(`Rejected:${result.reason}`)
         }
       })
       console.log(JSON.stringify(all_ads))
@@ -2594,6 +2598,7 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
               // Keep
               phone_results = phone_results.map(p => p.status=='fulfilled' && p.value.data.utils.status=='OK' ? p.value.data.utils.phonenumber : null)
               var db_promises = []
+              req_result.phone_ads=phone_results.filter(p => p && isMobilePhone(p)).length
               phone_results.forEach( (phone, index) => {
                 console.log(phone)
                 if (phone  && isMobilePhone(phone)) {
@@ -2608,12 +2613,19 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
                     provider: 'le bon coin',
                     ad_id : ad.list_id,
                   }
+                  console.log(JSON.stringify(pData))
                   db_promises.push(Prospect.create(pData))
                 }
               })
               Promise.allSettled(db_promises)
                 .then( db_results => {
                   req_result.saved_ads=db_results.filter(r=>r.status=='fulfilled').length
+                  db_results.forEach((r, index)  => {
+                    if (r.status=='rejected') {
+                      console.log(`Phone bd request rejectd, ad_id:${all_ads[index].list_id}, reason:${r.reason}`)
+                    }
+                  });
+
                   res.json(req_result)
                 })
             })

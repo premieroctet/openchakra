@@ -119,6 +119,7 @@ class all extends React.Component {
       // Le bon coin
       category: is_development() ? 'Catégorie' : '',
       url: is_development() ? 'https://www.leboncoin.fr/recherche?text=web' : '',
+      lbc_message: '',
     };
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -194,18 +195,20 @@ class all extends React.Component {
     axios.post('/myAlfred/api/admin/prospect/search', {url, category})
       .then(res => {
         const result=res.data
-        const msg=`Pages inspectées:${result.total_pages},
+        const msg=`Pages demandées:${result.total_pages},
+                   Pages scannées:${result.scanned_pages},
                    Annonces totales:${result.total_ads},
                    Annonce nouvelles:${result.new_ads},
+                   Annonces avec mobile:${result.phone_ads},
                    Prospects créés:${result.saved_ads}`
-        snackBarSuccess(msg)
+        this.setState({lbc_message: msg})
       })
       .catch(err => snackBarError(err.response.data))
   }
 
   render() {
     const {classes} = this.props;
-    const {prospects, export_data, comments, errors, category, url} = this.state;
+    const {prospects, export_data, comments, errors, category, url, lbc_message} = this.state;
 
     return (
       <Layout>
@@ -229,10 +232,12 @@ class all extends React.Component {
                 />
                 <Typography>URL le bon coin:</Typography>
                 <TextField
+                  style={{width:'100%'}}
                   name='url'
                   value={url}
                   onChange={this.onChange}
                 />
+                <div>{lbc_message}</div>
                 <Button disabled={!category || !url} onClick={this.startSearch}>
                   Lancer la recherche
                 </Button>
