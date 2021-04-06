@@ -23,7 +23,7 @@ const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
-const emptyPromise = require('../../../utils/promise.js');
+const {emptyPromise} = require('../../../utils/promise.js');
 
 
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');

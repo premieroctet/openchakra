@@ -4,4 +4,4 @@ function emptyPromise(val = null) {
   });
 }
 
-module.exports = emptyPromise;
+module.exports = {emptyPromise}

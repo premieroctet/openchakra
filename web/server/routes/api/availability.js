@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const {isIntervalAvailable} = require('../../../utils/dateutils');
 const validateAvailability = require('../../validation/availability');
 const parse = require('url-parse')
-const emptyPromise = require('../../../utils/promise')
+const {emptyPromise} = require('../../../utils/promise')
 const {getAvailabilityForDate, combineTimelapses} = require('../../../utils/dateutils')
 moment.locale('fr');
 router.get('/test', (req, res) => res.json({msg: 'Availability Works!'}));
