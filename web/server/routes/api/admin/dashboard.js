@@ -31,14 +31,33 @@ const validateServiceInput = require('../../../validation/service');
 const {addIdIfRequired} = require('../../../utils/mangopay');
 const multer = require('multer')
 const path = require('path')
-const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
+const {normalizePhone, bufferToString, normalize, isMobilePhone} = require('../../../../utils/text')
 const {counterArray, counterObjects} = require('../../../../utils/converters')
 const {ADMIN, MANAGER, EMPLOYEE} = require('../../../../utils/consts')
 const csv_parse = require('csv-parse/lib/sync')
-router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
-var _ = require('lodash')
-const axios=require('axios')
-const {send_cookie}=require('../../../utils/context')
+const axios = require('axios')
+const lbc = require('./lbc.json')
+const _ = require('lodash')
+var util = require('util');
+
+// For Node < 12.0
+if (!Promise.allSettled) {
+  Promise.allSettled = promises =>
+    Promise.all(
+      promises.map((promise, i) => {
+        return promise
+          .then(value => ({
+            status: "fulfilled",
+            value,
+          }))
+          .catch(reason => ({
+            status: "rejected",
+            reason,
+          }))
+        }
+      )
+    );
+}
 
 // @Route POST /myAlfred/api/admin/billing/all
 // Add billing for prestation
@@ -99,40 +118,6 @@ router.get('/shops/extract', passport.authenticate('admin', {session: false}), (
         })
         .catch();
     });
-});
-
-// @Route GET /myAlfred/api/admin/prospect/tocontact
-// View all billings system
-// @Access public
-router.get('/prospect/tocontact/:category/:keywords?', (req, res) => {
-  const keywords = req.params.keywords || '';
-  var result = [];
-  Prospect.find(
-    {$and: [{category: req.params.category, keywords: keywords}, {$or: [{contacted: false}, {contacted: null}]}]},
-  )
-    .sort({category: 1})
-    .then(prospects => {
-      Prospect.updateMany(
-        {$and: [{category: req.params.category, keywords: keywords}, {$or: [{contacted: false}, {contacted: null}]}]},
-        {contacted: true},
-      )
-        .then(dummy => {
-          prospects.forEach(p => {
-            data = [];
-            data.push(`="${p.phone.replace(/^0/, '+33')}"`);
-            data.push(p.category + '/' + p.keywords);
-            data.push(p.name);
-            data.push(p.city);
-            data.push(p.zip_code);
-            result.push(data.join(';'));
-          });
-          const filename = `export_${req.params.category}_${keywords}_${moment().format('DDMMYYHHmm')}.csv`;
-          res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-          res.set('Content-Disposition', `attachment; filename="${filename}"`);
-          res.send(result.join('\n'));
-        });
-    })
-    .catch();
 });
 
 // @Route GET /myAlfred/api/admin/billing/all
@@ -2555,7 +2540,7 @@ router.get('/prospect/all', passport.authenticate('admin', {session: false}), (r
         counts = {};
         contacted = {};
         prospects.forEach(p => {
-          const key = `${p.category}/${p.keywords}`;
+          const key = `${p.category}`;
           counts[key] = counts.hasOwnProperty(key) ? counts[key] + 1 : 1;
           const contact = p.contacted ? 1 : 0;
           contacted[key] = contacted.hasOwnProperty(key) ? contacted[key] + contact : contact;
@@ -2767,9 +2752,123 @@ router.put('/companies/all/:id', passport.authenticate('admin', {session: false}
 });
 
 
-// @Route GET /myAlfred/api/admin/prospect/all
-// Get all prospect
+// @Route POST /myAlfred/api/admin/prospect/search
+// Launch prospects from le bon coin (api notifan)
+// Body : category, url
 // @Access private
+router.post('/prospect/search', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const category = (req.body.category||'').trim()
+  const url = (req.body.url||'').trim()
+  const pages_count = 10
+  if (!category || !url) {
+    res.status(400).json('Catégorie et url requises')
+  }
+
+  if (url.includes('&page=')) {
+    res.status(400).json("L'url doit être une recherche sur la première page")
+  }
+
+  const urls=Array.from(Array(pages_count).keys()).map(i => {
+    if (url.includes("&")) {
+      return `http://api.notifan.fr/search?url=${url}&page=${i+1}`
+    }
+    else {
+      return `http://api.notifan.fr/search?url=${url}/p-${i+1}`
+    }
+  })
+  console.log(`URL 1:${urls[0]}`)
+  const promises = urls.map(u => axios.get(u))
+  //const promises=[urls.map(u =>  new Promise((resolve, reject) => resolve({data:lbc})))]
+  const req_result={total_pages:pages_count, scanned_pages:0, total_ads:0, new_ads:0, phone_ads:0, saved_ads:0}
+  Promise.allSettled(promises)
+    .then( results => {
+      var all_ads = []
+      var error_reason = null
+      results.forEach( result => {
+        if (result.status=="fulfilled") {
+          all_ads = all_ads.concat(result.value.data.ads)
+          req_result.scanned_pages=req_result.scanned_pages+1
+        }
+        else if (result.status=="rejected") {
+          console.log(`Rejected:${result.reason}`)
+          error_reason = result.reason
+          util.inspect(error_reason)
+        }
+      })
+
+      if (error_reason) {
+        const status=error_reason.response.status
+        const msg={
+          403: 'Adresse ip non autorisée',
+          500 : 'Erreur inconnue du serveur de Paul',
+          503 : 'Résolution Datadome, réessayer dans 5 secondes',
+          400 : 'Erreur de catégorie ou liste de recherche',
+        }
+        res.status(status).json(msg[status] || `Erreur ${error_reason}`)
+        return
+      }
+
+      req_result.total_ads=all_ads.length
+      all_ads = _.uniqBy(all_ads.filter(a => a && a.status=="active" && a.has_phone), ad => ad.list_id)
+
+      Prospect.find({ list_id : {$exists: true}}, 'ad_id')
+        .then ( prospects => {
+          prospects = prospects.map( p => p.list_id)
+          // Retirer les prospects connus en BD par leur ad_id
+          all_ads = all_ads.filter(ad => !prospects.includes(ad.list_id))
+          req_result.new_ads=all_ads.length
+          const phoneUrls = all_ads.map(ad => `http://api.notifan.fr/phone?list_id=${ad.list_id}`)
+          const phonePromises = phoneUrls.map( url => axios.get(url))
+          Promise.allSettled(phonePromises)
+            .then ( phone_results => {
+              // Keep
+              phone_results = phone_results.map(p => p.status=='fulfilled' && p.value.data.utils.status=='OK' ? p.value.data.utils.phonenumber : null)
+              var db_promises = []
+              req_result.phone_ads=phone_results.filter(p => p && isMobilePhone(p)).length
+              phone_results.forEach( (phone, index) => {
+                if (phone  && isMobilePhone(phone)) {
+                  const ad = all_ads[index]
+                  const pData={
+                    category: category,
+                    name: ad.owner.name,
+                    title: ad.subject,
+                    phone: phone,
+                    city: ad.location.city,
+                    zip_code: ad.location.zipcode,
+                    provider: 'le bon coin',
+                    ad_id : ad.list_id,
+                  }
+                  db_promises.push(Prospect.create(pData))
+                }
+              })
+              Promise.allSettled(db_promises)
+                .then( db_results => {
+                  req_result.saved_ads=db_results.filter(r=>r.status=='fulfilled').length
+                  db_results.forEach((r, index)  => {
+                    if (r.status=='rejected') {
+                      console.log(`Phone bd request rejectd, ad_id:${all_ads[index].list_id}, reason:${r.reason}`)
+                    }
+                  });
+
+                  res.json(req_result)
+                })
+            })
+        })
+    })
+    .catch ( err => {
+      console.error(err)
+      const status=err.response.status
+      const msg={
+        403: 'Adresse ip non autorisée',
+        503 : 'Résolution Datadome, réessayer dans 5 secondes',
+        400 : 'Erreur de catégorie ou liste de recherche',
+      }
+      res.status(status).json(msg[status])
+    })
+})
+
+// @Route PROSPECT /myAlfred/api/admin/prospect/add
+// INsert prospects from csv
 router.post('/prospect/add', passport.authenticate('admin', {session: false}), (req, res) => {
   uploadProspect.single('prospects')(req, res, err => {
     if (err) {
@@ -2839,6 +2938,39 @@ router.post('/prospect/add', passport.authenticate('admin', {session: false}), (
     }
   })
 })
+
+// @Route GET /myAlfred/api/admin/prospect/tocontact
+// View all billings system
+// @Access public
+router.get('/prospect/tocontact/:category', (req, res) => {
+  var result = [];
+  Prospect.find(
+    {$and: [{category: req.params.category}, {$or: [{contacted: false}, {contacted: null}]}]},
+  )
+    .sort({category: 1})
+    .then(prospects => {
+      Prospect.updateMany(
+        {$and: [{category: req.params.category}, {$or: [{contacted: false}, {contacted: null}]}]},
+        {contacted: true},
+      )
+        .then(dummy => {
+          prospects.forEach(p => {
+            data = [];
+            data.push(`="${p.phone.replace(/^0/, '+33')}"`);
+            data.push(p.category + '/' + p.keywords);
+            data.push(p.name);
+            data.push(p.city);
+            data.push(p.zip_code);
+            result.push(data.join(';'));
+          });
+          const filename = `export_${req.params.category}_${moment().format('DDMMYYHHmm')}.csv`;
+          res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          res.set('Content-Disposition', `attachment; filename="${filename}"`);
+          res.send(result.join('\n'));
+        });
+    })
+    .catch();
+});
 
 
 // @Route POST /myAlfred/api/admin/kyc_validate/:alfred_id

@@ -46,7 +46,10 @@ const ProspectSchema = new Schema({
   provider: {
     type: String,
     required: true,
-  }
+  },
+  ad_id : {
+    type: String,
+  } 
 });
 
 Prospect = mongoose.model('prospects', ProspectSchema);

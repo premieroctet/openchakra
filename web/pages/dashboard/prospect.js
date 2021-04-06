@@ -18,6 +18,10 @@ import {KeyboardArrowLeft, KeyboardArrowRight} from '@material-ui/icons';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
+const {is_production, is_development}=require('../../config/config')
 
 
 const styles = theme => ({
@@ -29,7 +33,7 @@ const styles = theme => ({
   },
   card: {
     padding: '1.5rem 3rem',
-    marginTop: '100px',
+    marginTop: '10px',
   },
   cardContant: {
     flexDirection: 'column',
@@ -112,6 +116,11 @@ class all extends React.Component {
       errors: null,
       fields: [],
       mandatory: [],
+      // Le bon coin
+      category: is_development() ? 'Catégorie' : '',
+      url: is_development() ? 'https://www.leboncoin.fr/recherche?text=web' : '',
+      lbc_message: '',
+      lbc_error: '',
     };
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -154,6 +163,11 @@ class all extends React.Component {
     this.setState({page: 0, rowsPerPage: event.target.value});
   }
 
+  onChange = event => {
+    const {name, value} = event.target
+    this.setState({[name]: value})
+  }
+
   onChangeHandler = event => {
     this.setState({selectedFile: event.target.files[0]})
   }
@@ -176,13 +190,34 @@ class all extends React.Component {
     this.setState({selectedFile:null})
   }
 
+  startSearch = () => {
+    const {url, category} = this.state
+    this.setState({lbc_message: '', lbc_error:''})
+    setAxiosAuthentication()
+    axios.post('/myAlfred/api/admin/prospect/search', {url, category})
+      .then(res => {
+        const result=res.data
+        const msg=`Pages demandées:${result.total_pages},
+                   Pages scannées:${result.scanned_pages},
+                   Annonces totales:${result.total_ads},
+                   Annonce nouvelles:${result.new_ads},
+                   Annonces avec mobile:${result.phone_ads},
+                   Prospects créés:${result.saved_ads}`
+        this.setState({lbc_message: msg, lbc_error:''})
+      })
+      .catch(err => {
+        console.error(err)
+        this.setState({lbc_message: '', lbc_error: err.response.data})
+      })
+  }
+
   render() {
     const {classes} = this.props;
-    const {prospects, export_data, comments, errors} = this.state;
+    const {prospects, export_data, comments, errors, category, url, lbc_message, lbc_error} = this.state;
 
     return (
       <Layout>
-        <Grid container style={{marginTop: 70}}>
+        <Grid container style={{marginTop: 20}}>
           <Link href={'/dashboard/home'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
           </Link>
@@ -190,6 +225,29 @@ class all extends React.Component {
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid>
+
+              <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+
+                <Typography style={{fontSize: 30}}>Import le bon coin</Typography>
+                <Typography>Catégorie:</Typography>
+                <TextField
+                  name='category'
+                  value={category}
+                  onChange={this.onChange}
+                />
+                <Typography>URL le bon coin:</Typography>
+                <TextField
+                  style={{width:'100%'}}
+                  name='url'
+                  value={url}
+                  onChange={this.onChange}
+                />
+                <div>{lbc_message}</div>
+                <em style={{color:'red'}}>{lbc_error}</em>
+                <Button disabled={!category || !url} onClick={this.startSearch}>
+                  Lancer la recherche
+                </Button>
+              </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                 <Typography style={{fontSize: 30}}>Import listing</Typography>
               </Grid>
@@ -210,7 +268,7 @@ class all extends React.Component {
                 <em style={{color: 'red'}}>{errors}</em>
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
-                <button disabled={!this.state.selectedFile} type="button" class="btn btn-success btn-block" onClick={this.onClickHandler}>Importer</button>
+                <Button disabled={!this.state.selectedFile} onClick={this.onClickHandler}>Importer</Button>
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                 <Typography style={{fontSize: 30}}>Prospection</Typography>

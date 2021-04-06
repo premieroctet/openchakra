@@ -152,6 +152,15 @@ const insensitiveComparator = (a,b) => {
   return a<b ? -1 : a>b ? 1 : 0
 }
 
+const isMobilePhone= number => {
+  if (!number) {
+    return false
+  }
+  const MOBILE_RE=/^(0|\+?33)[67]\d{8}$/
+  number = number.toString().trim()
+  const res= MOBILE_RE.test(number)
+  return res
+}
 
 module.exports = {
   normalize,
@@ -169,4 +178,5 @@ module.exports = {
   compute_vat_number,
   isSiretSirenLength,
   insensitiveComparator,
+  isMobilePhone,
 };
