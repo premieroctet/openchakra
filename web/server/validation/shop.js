@@ -8,7 +8,6 @@ module.exports = function validateShopInput(data) {
   data.welcome_message = !isEmpty(data.welcome_message) ? data.welcome_message : '';
   data.name = !isEmpty(data.name) ? data.name : '';
   data.siret = !isEmpty(data.siret) ? data.siret : '';
-  data.naf_ape = !isEmpty(data.naf_ape) ? data.naf_ape : '';
   const is_particular = data.is_particular;
   const is_professional = data.is_professional;
   const siret = parseInt(data.siret, 10);

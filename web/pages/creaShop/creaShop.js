@@ -41,7 +41,7 @@ class creaShop extends React.Component {
         welcome_message: 'Merci pour votre réservation!',
         cancel_mode: CANCEL_MODE.FLEXIBLE,            // FLEXIBLE/MODERATE/STRICT
         is_particular: true,        // true/false : particulier.pro
-        company: {name: null, creation_date: null, siret: null, naf_ape: null, status: null, vat_subject: false, vat_number: null},
+        company: {name: null, siret: null, vat_subject: false, vat_number: null},
         cesu: null,
         cis: false,
         social_security: null,
