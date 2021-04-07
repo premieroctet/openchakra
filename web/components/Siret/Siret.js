@@ -106,11 +106,6 @@ class siret extends React.Component {
 
   setCompanyData(data) {
     const uniteLegale = data.uniteLegale.periodesUniteLegale ? data.uniteLegale.periodesUniteLegale[0] : data.uniteLegale;
-    const date = data.uniteLegale.dateCreationUniteLegale;
-    const year = date.substring(0, 4);
-    const month = date.substring(5, 7);
-    const day = date.substring(8, 10);
-    const result = day + '/' + month + '/' + year;
     this.setState({
         name: uniteLegale.denominationUniteLegale || `${data.uniteLegale.prenomUsuelUniteLegale || uniteLegale.prenomUsuelUniteLegale} ${uniteLegale.nomUniteLegale}`,
         errors: null,
