@@ -76,7 +76,7 @@ class BookingPreference extends React.Component {
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+            <Grid item xl={2} lg={2} md={6} sm={6} xs={12}>
               <TextField
                 id="standard-start-adornment"
                 variant={'outlined'}
@@ -87,7 +87,7 @@ class BookingPreference extends React.Component {
                 onChange={this.handleChange}
               />
             </Grid>
-            <Grid  item xl={10} lg={10} md={10} sm={10} xs={10}>
+            <Grid  item xl={2} lg={2} md={6} sm={6} xs={12}>
               <TextField
                 value={this.state.deadline_unit}
                 name={'deadline_unit'}
@@ -111,7 +111,7 @@ class BookingPreference extends React.Component {
           <Typography className={classes.policySizeContent}>{SHOP.preference.subtitle_minimum_basket}</Typography>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid item xl={2} lg={2} md={6} sm={12} xs={12}>
             <TextField
               type="number"
               name={'minimum_basket'}
