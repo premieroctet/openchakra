@@ -65,13 +65,6 @@ class trustAndVerification extends React.Component {
       professional: false,
       alfred: false,
       company: {},
-      siret: '',
-      name: '',
-      naf_ape: '',
-      creation_date: '',
-      status: '',
-      vat_subject: false,
-      vat_number: '',
       open: false,
       cesu: null,
       cis: false,
@@ -130,18 +123,8 @@ class trustAndVerification extends React.Component {
                 professional: result.is_professional,
                 company: result.company,
                 social_security: result.social_security,
-                vat_subject: result.vat_subject,
-                vat_number: result.vat_number,
               });
 
-              if (result.is_professional === true) {
-                this.setState({
-                  siret: result.company.siret, name: result.company.name, naf_ape: result.company.naf_ape,
-                  creation_date: result.company.creation_date, status: result.company.status,
-                  vat_subject: result.company.vat_subject, vat_number: result.company.vat_number,
-
-                });
-              }
             });
         }
       })
@@ -187,7 +170,7 @@ class trustAndVerification extends React.Component {
   };
 
   onSiretChange = data => {
-    this.setState(data);
+    this.setState({company: data});
   };
 
   onRectoChange = e => {
@@ -221,8 +204,6 @@ class trustAndVerification extends React.Component {
         const data = res.data;
         this.setState({
           name: data.etablissement.l1_normalisee,
-          naf_ape: data.etablissement.activite_principale,
-          status: data.etablissement.libelle_nature_juridique_entreprise,
         });
         const date = data.etablissement.date_creation;
         const year = date.substring(0, 4);
@@ -279,11 +260,7 @@ class trustAndVerification extends React.Component {
     const newStatus = {
       is_particular: this.state.particular,
       is_professional: this.state.professional,
-      status: this.state.status,
-      name: this.state.name,
-      creation_date: this.state.creation_date,
-      siret: this.state.siret,
-      naf_ape: this.state.naf_ape,
+      company: this.state.company,
       cesu: this.state.cesu,
       cis: this.state.cis,
       social_security: this.state.social_security,
@@ -597,7 +574,7 @@ class trustAndVerification extends React.Component {
                   <Grid style={{marginTop: '5vh'}}>
                     <Siret
                       onChange={this.onSiretChange}
-                      company={this.state}
+                      company={this.state.company}
                     />
                   </Grid>
                   <Grid>

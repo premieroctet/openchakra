@@ -23,14 +23,12 @@ class siret extends React.Component {
 
     this.state = {
       siret: '',
-      naf_ape: '',
-      creation_date: '',
       name: '',
-      status: '',
       vat_subject: false,
       vat_number: null,
     };
     if (this.props.company) {
+      console.log(`Got company:${JSON.stringify(this.props.company)}`)
       this.state = this.props.company;
     }
     this.onChange = this.onChange.bind(this);
@@ -99,9 +97,7 @@ class siret extends React.Component {
           .catch(err => {
             this.setState({
               name: '',
-              status: '',
-              creation_date: '',
-              naf_ape: '',
+              siret: '',
             }, () => this.props.onChange(this.state));
             console.error(err);
           });
@@ -117,9 +113,6 @@ class siret extends React.Component {
     const result = day + '/' + month + '/' + year;
     this.setState({
         name: uniteLegale.denominationUniteLegale || `${data.uniteLegale.prenomUsuelUniteLegale || uniteLegale.prenomUsuelUniteLegale} ${uniteLegale.nomUniteLegale}`,
-        naf_ape: uniteLegale.activitePrincipaleUniteLegale,
-        status: ENTITES[uniteLegale.categorieJuridiqueUniteLegale],
-        creation_date: result,
         errors: null,
       }, () => this.props.onChange(this.state),
     );
@@ -164,18 +157,6 @@ class siret extends React.Component {
             <Grid item xl={6} xs={12}>
               <TextField
                 id="filled-with-placeholder"
-                variant="outlined"
-                type="date"
-                name={'creation_date'}
-                value={moment(this.state.creation_date, 'DD/mm/YYYY').format('YYYY-mm-DD')}
-                onChange={this.onChange}
-                classes={{root: classes.textField}}
-
-              />
-            </Grid>
-            <Grid item xl={6} xs={12}>
-              <TextField
-                id="filled-with-placeholder"
                 label="Nom"
                 variant="outlined"
                 type="text"
@@ -189,31 +170,6 @@ class siret extends React.Component {
           </Grid>
 
           <Grid container spacing={3}>
-            <Grid item xl={6} xs={12}>
-              <TextField
-                id="filled-with-placeholder"
-                label="Code NAF/APE"
-                variant="outlined"
-                type="text"
-                name={'naf_ape'}
-                value={this.state.naf_ape}
-                onChange={this.onChange}
-                classes={{root: classes.textField}}
-
-              />
-            </Grid>
-            <Grid item xl={6} xs={12}>
-              <TextField
-                id="filled-with-placeholder"
-                label="Statut juridique"
-                variant="outlined"
-                type="text"
-                name={'status'}
-                value={this.state.status}
-                onChange={this.onChange}
-                classes={{root: classes.textField}}
-              />
-            </Grid>
             <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
               <ButtonSwitch
                 label={<Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_vat_subject}</Typography>}
