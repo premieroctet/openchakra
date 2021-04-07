@@ -6,6 +6,7 @@ const Category=require('../server/models/Category')
 const Prestation=require('../server/models/Prestation')
 const Service=require('../server/models/Service')
 const ServiceUser=require('../server/models/ServiceUser')
+const Shop=require('../server/models/Shop')
 
 const mep_b2b = () => {
   Category.find()
@@ -62,6 +63,17 @@ const mep_b2b = () => {
         experience_title: '',
         experience_description: '',
         experience_skils: [],
+      },
+    }, { new: true})
+      .then( newModel => {
+        console.log(`ok:${JSON.stringify(newModel)}`)
+      })
+      .catch (err => console.error(err))
+    Shop.updateMany({}, {
+      $unset : {
+        'company.creation_date':true,
+        'company.naf_ape':true,
+        'company.status':true,
       },
     }, { new: true})
       .then( newModel => {
