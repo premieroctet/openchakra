@@ -9,7 +9,7 @@ const ServiceUser=require('../server/models/ServiceUser')
 const Shop=require('../server/models/Shop')
 
 const mep_b2b = () => {
-  Category.find()
+  Category.find({label : {$exists:true}})
     .then( models => {
       console.log(`Got ${models.length} categories`)
       models.forEach( model => {
