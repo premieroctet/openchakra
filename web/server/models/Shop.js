@@ -58,16 +58,7 @@ const ShopSchema = new Schema({
     name: {
       type: String,
     },
-    creation_date: {
-      type: String,
-    },
     siret: {
-      type: String,
-    },
-    naf_ape: {
-      type: String,
-    },
-    status: {
       type: String,
     },
     vat_subject : {
