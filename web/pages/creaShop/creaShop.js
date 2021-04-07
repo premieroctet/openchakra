@@ -556,44 +556,37 @@ class creaShop extends React.Component {
           </Hidden>
         </nav>
         <main className={classes.content}>
-          <Grid>
-            <Box overWritteCSS={true}>
-              <Grid>
-                <Grid>
-                  {this.renderSwitch(activeStep)}
-                </Grid>
-                <Grid style={{position: 'fixed', bottom: 75, left: 300}}>
-                  { is_development() && activeStep > 0 ?
-                  <Grid>
-                    <Button
-                      variant="outlined"
-                      classes={{root :classes.backButton}}
-                      onClick={this.handlePrev}
-                      disabled={this.prevDisabled()}
-                      color={'primary'}
-                    >
-                      Précédent
-                    </Button>
-                  </Grid>
-                  :
-                  null
-                  }
-                  </Grid>
-                  <Grid style={{position: 'fixed', bottom: 75, right: 100}}>
-                  <Grid>
-                    <Button
-                      variant="contained"
-                      classes={{root :classes.nextButton}}
-                      onClick={this.handleNext}
-                      disabled={this.nextDisabled()}
-                    >
-                      {this.isLastStep() ? 'Envoyer' : 'Suivant'}
-                    </Button>
-                  </Grid>
-                </Grid>
+          <Box overWritteCSS={true}>
+            <Grid>
+              {this.renderSwitch(activeStep)}
+            </Grid>
+          </Box>
+          <Grid container xl={12} lg={12} sm={12} md={12} xs={12} className={classes.containerNavigation}>
+            { is_development() && activeStep > 0 ?
+              <Grid item container xl={6} lg={6} md={6} sm={6} xs={6}>
+                <Button
+                  variant="outlined"
+                  classes={{root :classes.backButton}}
+                  onClick={this.handlePrev}
+                  disabled={this.prevDisabled()}
+                  color={'primary'}
+                >
+                  Précédent
+                </Button>
               </Grid>
-
-            </Box>
+              :
+              null
+            }
+            <Grid item container className={classes.containerNextButton} xl={6} lg={6} md={6} sm={6} xs={6}>
+              <Button
+                variant="contained"
+                classes={{root :classes.nextButton}}
+                onClick={this.handleNext}
+                disabled={this.nextDisabled()}
+              >
+                {this.isLastStep() ? 'Envoyer' : 'Suivant'}
+              </Button>
+            </Grid>
           </Grid>
         </main>
       </Grid>

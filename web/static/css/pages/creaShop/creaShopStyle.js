@@ -1,11 +1,26 @@
 const drawerWidth = 240;
 
 export default theme => ({
+
+  containerNavigation:{
+    margin: 0,
+    width: '100%',
+    marginTop: '1vh',
+    marginBottom: '1vh',
+    backgroundColor: 'rgba(249,249,249, 1)',
+
+  },
+  containerNextButton:{
+    display: 'flex',
+    justifyContent: 'end',
+  },
   nextButton: {
     color: 'white',
     textTransform: 'initial',
     fontWeight: 'bold',
-    backgroundColor: theme.palette.yellow.main
+    backgroundColor: theme.palette.yellow.main,
+    marginRight: '8vh'
+
   },
   backButton:{
     textTransform: 'initial',
