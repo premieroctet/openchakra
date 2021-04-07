@@ -28,7 +28,7 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 4,
+      activeStep: 0,
       saving: false,
       availabilities: [],
       currentUser:{},
