@@ -130,8 +130,8 @@ class ButtonSwitch extends React.Component {
     var {label, checked} = this;
 
     return (
-      <Grid className={classes.contentFiltre}>
-        <Grid className={classes.responsiveIOSswitch} style={{width: this.props.width}}>
+      <Grid container spacing={2} style={{width: '100%', margin:0}}>
+        <Grid item xl={6} lg={6} md={8} sm={8} xs={8} className={classes.responsiveIOSswitch} style={{width: this.props.width}}>
           <Grid>
             <IOSSwitch
               color="primary"
@@ -158,7 +158,7 @@ class ButtonSwitch extends React.Component {
           </Grid>
         </Grid>
         {isPrice ?
-          <Grid className={classes.responsiveIOSswitchContent}>
+          <Grid item xl={6} lg={6} md={4} sm={4} xs={4} className={classes.responsiveIOSswitchContent}>
             {checked === true ?
               <Grid style={{display: 'flex'}}>
                 <CssTextField

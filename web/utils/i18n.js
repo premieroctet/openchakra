@@ -184,7 +184,7 @@ const SHOP = {
     title_place_service : 'Où acceptez-vous de réaliser votre prestation ?',
     service_at_userHome: 'A l\' adresse de mon client',
     service_at_myHome: 'A mon adresse',
-    service_withVisio: 'En visioconférence',
+    service_withVisio: 'En visioconférence(la visioconférence ne tient pas compte de votre rayon d’intervention)',
     service_outside: 'En extérieur',
     apply_moving_price : 'Appliquer un forfait déplacement de',
     propose_delivery: 'Proposer un forfait retrait & livraison de',

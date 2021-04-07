@@ -95,7 +95,7 @@ class SettingService extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h4 className={classes.policySizeSubtitle} style={{margin:0}}>{SHOP.settingService.title_perimeter}</h4>
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid item xl={3} lg={3} md={3} sm={3} xs={12}>
           <TextField
             id="standard-start-adornment"
             variant={'outlined'}
@@ -105,6 +105,7 @@ class SettingService extends React.Component {
             value={perimeter}
             name={'perimeter'}
             type={'number'}
+            autoFocus={true}
             onChange={this.onChange}
           />
         </Grid>
