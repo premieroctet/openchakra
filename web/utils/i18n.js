@@ -220,7 +220,7 @@ const SHOP = {
     obtain_competence : 'Compétences acquises',
     diploma_title: 'Votre diplôme',
     diploma_subtitle: 'En téléchargeant votre diplôme, celui-ci aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ces derniers.',
-    year_obtain: "Année d'obtention",
+    year_obtain: "Année",
     button_joinDiploma: 'Joindre un diplôme',
     certification_title: 'Votre certification',
     certification_subtitle: 'En téléchargeant votre certification, celle-ci aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ces derniers.',

@@ -176,6 +176,12 @@ class AssetsService extends React.Component {
               value={this.state.newExperienceSkill}
               name='newExperienceSkill'
               onChange={this.handleChange}
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') {
+                  this.addSkill('experience_skills', 'newExperienceSkill')
+                  ev.preventDefault();
+                }
+              }}
             />
           </Grid>
           <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex'}}>
@@ -246,6 +252,12 @@ class AssetsService extends React.Component {
               value={this.state.newDiplomaSkill}
               name='newDiplomaSkill'
               onChange={this.handleChange}
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') {
+                  this.addSkill('diplomaSkills', 'newDiplomaSkill')
+                  ev.preventDefault();
+                }
+              }}
             />
           </Grid>
           <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex'}}>
@@ -339,6 +351,12 @@ class AssetsService extends React.Component {
               value={this.state.newCertificationSkill}
               name='newCertificationSkill'
               onChange={this.handleChange}
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') {
+                  this.addSkill('certificationSkills', 'newCertificationSkill')
+                  ev.preventDefault();
+                }
+              }}
             />
           </Grid>
           <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex'}}>
