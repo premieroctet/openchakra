@@ -281,56 +281,56 @@ class creaShop extends React.Component {
       });
 
       setAxiosAuthentication()
-      const url = mode == CREASHOP_MODE.CREATION ? '/myAlfred/api/shop/add' : `/myAlfred/api/serviceUser/addUpdate/${this.props.serviceuser_id || ''}`
-      axios.post(url, cloned_shop)
+      axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
-          // Update toekn
-          if (mode == CREASHOP_MODE.CREATION) {
-            axios.get('/myAlfred/api/users/token')
-              .then ( res => {
-                setAuthToken();
-              })
-              .catch (err => {
-                console.error(err)
-              })
-          }
-          snackBarSuccess(mode==CREASHOP_MODE.CREATION ? 'Boutique créée' : mode==CREASHOP_MODE.SERVICE_ADD ? 'Service ajouté' : 'Service modifié')
-          var su_id = mode==CREASHOP_MODE.CREATION ? res.data.services[0] : res.data._id
-          if (cloned_shop.diplomaName) {
-            var dpChanged = typeof (cloned_shop.diplomaPicture) == 'object';
-            const formData = new FormData();
-            formData.append('name', cloned_shop.diplomaName);
-            formData.append('year', cloned_shop.diplomaYear);
-            formData.append('skills', JSON.stringify(cloned_shop.diplomaSkills));
-            if (dpChanged) {
-              formData.append('file_diploma', cloned_shop.diplomaPicture);
-            }
+          const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.props.serviceuser_id || ''}`
+          axios.post(su_url, cloned_shop)
+            .then( su_res => {
+              const su = res.data
+              // Update token
+              if (mode == CREASHOP_MODE.CREATION) {
+                axios.get('/myAlfred/api/users/token')
+                  .then ( res => setAuthToken())
+                  .catch (err => console.error(err))
+              }
+              snackBarSuccess(mode==CREASHOP_MODE.CREATION ? 'Boutique créée' : mode==CREASHOP_MODE.SERVICE_ADD ? 'Service ajouté' : 'Service modifié')
+              var su_id = mode==CREASHOP_MODE.CREATION ? res.data.services[0] : res.data._id
+              if (cloned_shop.diplomaName) {
+                var dpChanged = typeof (cloned_shop.diplomaPicture) == 'object';
+                const formData = new FormData();
+                formData.append('name', cloned_shop.diplomaName);
+                formData.append('year', cloned_shop.diplomaYear);
+                formData.append('skills', JSON.stringify(cloned_shop.diplomaSkills));
+                if (dpChanged) {
+                  formData.append('file_diploma', cloned_shop.diplomaPicture);
+                }
 
-            axios.post(`/myAlfred/api/serviceUser/addDiploma/${su_id}`, formData)
-              .then( () => {
-                snackBarSuccess('Diplôme enregistré')
-              })
-              .catch(err => console.error(err));
-          }
+                axios.post(`/myAlfred/api/serviceUser/addDiploma/${su_id}`, formData)
+                  .then( () => {
+                    snackBarSuccess('Diplôme enregistré')
+                  })
+                  .catch(err => console.error(err));
+              }
 
-          if (cloned_shop.certificationName) {
-            var cpChanged = typeof (cloned_shop.certificationPicture) == 'object';
-            const formData = new FormData();
-            formData.append('name', cloned_shop.certificationName);
-            formData.append('year', cloned_shop.certificationYear);
-            formData.append('skills', JSON.stringify(cloned_shop.certificationSkills));
-            if (cpChanged) {
-              formData.append('file_certification', cloned_shop.certificationPicture);
-            }
+              if (cloned_shop.certificationName) {
+                var cpChanged = typeof (cloned_shop.certificationPicture) == 'object';
+                const formData = new FormData();
+                formData.append('name', cloned_shop.certificationName);
+                formData.append('year', cloned_shop.certificationYear);
+                formData.append('skills', JSON.stringify(cloned_shop.certificationSkills));
+                if (cpChanged) {
+                  formData.append('file_certification', cloned_shop.certificationPicture);
+                }
 
-            axios.post(`/myAlfred/api/serviceUser/addCertification/${su_id}`, formData)
-              .then( () => {
-                snackBarSuccess('Certification enregistrée')
-              })
-              .catch(err => console.error(err));
-          }
-          Router.push(`/profile/services?user=${this.state.currentUser._id}`)
-        })
+                axios.post(`/myAlfred/api/serviceUser/addCertification/${su_id}`, formData)
+                  .then( () => {
+                    snackBarSuccess('Certification enregistrée')
+                  })
+                  .catch(err => console.error(err));
+              }
+              Router.push(`/profile/services?user=${this.state.currentUser._id}`)
+            })
+        }) // End post shop/add
         .catch(err => {
           this.setState({saving: false});
          console.error(err);
