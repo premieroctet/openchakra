@@ -95,27 +95,11 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
       console.log('Saving shop:' + JSON.stringify(shop));
       shop.save()
         .then(shop => {
-          axios.defaults.headers.common['Authorization']=req.headers.authorization
-          axios.post('/myAlfred/api/serviceUser/addUpdate', req.body, { new: true})
-            .then( ressu => {
-              User.findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
-                .then(alfred => {
-                  createMangoProvider(alfred, shop);
-                  sendShopOnline(alfred, req);
-                  // Recharger le shop qui a été modié dans serviceUser/addUpdate
-                  Shop.findOne({alfred: alfred})
-                    .then ( result => {
-                      res.json(result);
-                    })
-                    .catch(err => {
-                      console.error(err)
-                      res.status(404).json(err)
-                    });
-                })
-                .catch(err => {
-                  console.error(err)
-                  res.status(404).json(err)
-                });
+          User.findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
+            .then(alfred => {
+              createMangoProvider(alfred, shop);
+              sendShopOnline(alfred, req);
+              res.json(shop);
             })
             .catch(err => {
               console.error(err)
