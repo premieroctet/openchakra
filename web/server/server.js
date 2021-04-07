@@ -46,6 +46,7 @@ const performances = require('./routes/api/performances');
 const payment = require('./routes/api/payment');
 const chatRooms = require('./routes/api/chatRooms');
 const admin = require('./routes/api/admin/dashboard');
+const blog = require('./routes/api/blog');
 const path = require('path');
 const app = express();
 const server = require('http').Server(app);
@@ -120,6 +121,7 @@ nextApp.prepare().then(() => {
   app.use('/myAlfred/api/performances', performances);
   app.use('/myAlfred/api/payment', payment);
   app.use('/myAlfred/api/authentication', authRoutes);
+  app.use('/blog', blog);
 
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
