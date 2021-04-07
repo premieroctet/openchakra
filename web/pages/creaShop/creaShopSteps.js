@@ -35,7 +35,6 @@ const INTRODUCE = {
   menu : 'Création',
   is_valid : parent => validationSteps.introduceYou(parent.state.shop),
   component: parent => <IntroduceYou
-                      key={moment()}
                       {...parent.state.shop}
                       onChange={parent.introduceChanged}
                      />

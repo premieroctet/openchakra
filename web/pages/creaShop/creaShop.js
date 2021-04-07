@@ -20,6 +20,7 @@ const {getLoggedUserId}=require('../../utils/functions')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 const {is_development}=require('../../config/config')
 const {snackBarSuccess}=require('../../utils/notifications')
+const {is_b2b_site}=require('../../utils/context')
 const {STEPS}=require('./creaShopSteps')
 
 class creaShop extends React.Component {
@@ -40,7 +41,7 @@ class creaShop extends React.Component {
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: 'Merci pour votre réservation!',
         cancel_mode: CANCEL_MODE.FLEXIBLE,            // FLEXIBLE/MODERATE/STRICT
-        is_particular: true,        // true/false : particulier.pro
+        is_particular: is_b2b_site() ? false : true,        // true/false : particulier.pro
         company: {name: null, siret: null, vat_subject: false, vat_number: null},
         cesu: null,
         cis: false,
