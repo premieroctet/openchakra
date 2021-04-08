@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
-const {is_production, is_validation}=require('../../../config/config');
+const {is_production, is_validation, computeUrl}=require('../../../config/config');
 const {validateCompanyProfile, validateCompanyMember, validateCompanyGroup} = require('../../validation/simpleRegister');
 const moment = require('moment');
 moment.locale('fr');
@@ -19,7 +19,6 @@ const Service = require('../../models/Service');
 const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
-const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise');
 const {ADMIN, MANAGER, EMPLOYEE, ROLES} = require('../../../utils/consts')
 var _ = require('lodash')
@@ -489,7 +488,7 @@ router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, 
   User.findByIdAndUpdate(admin_id, {company : company_id, $addToSet : {roles : ADMIN}}, { new : true} )
     .then (user => {
       if (new_account) {
-        axios.post(`/myAlfred/api/users/forgotPassword`, { email: user.email, role: ROLES[ADMIN]})
+        axios.post(new URL(`/myAlfred/api/users/forgotPassword`, computeUrl(req)).toString(), { email: user.email, role: ADMIN})
           .then(() => {})
           .catch (err => {})
       }

@@ -39,6 +39,7 @@ const axios = require('axios')
 const lbc = require('./lbc.json')
 const _ = require('lodash')
 var util = require('util');
+const {computeUrl}=require('../../../../config/config')
 
 // For Node < 12.0
 if (!Promise.allSettled) {
@@ -2669,7 +2670,7 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
                         newUser.password = hash;
                         newUser.save()
                           .then(() => {
-                            axios.post(`/myAlfred/api/users/forgotPassword`, { email:req.body.admin_email, role: ADMIN})
+                            axios.post(new URL(`/myAlfred/api/users/forgotPassword`, computeUrl(req)).toString(), { email:req.body.admin_email, role: ADMIN})
                               .then(() => {
                                 return res.json(company)
                               })

@@ -825,7 +825,7 @@ router.post('/forgotPassword', (req, res) => {
 
         // Role ? création d'un compte B2B
         if (req.body.role) {
-          sendB2BAccount(user, user.email, role, user.company.name, token, req);
+          sendB2BAccount(user, user.email, ROLES[role], user.company.name, token, req);
         }
         else {
           sendResetPassword(user, token, req);
