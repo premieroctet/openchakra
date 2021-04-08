@@ -20,7 +20,7 @@ CountSchema.post('save', function (done) {
     next()
   }
 })
-CountSchema.findOneAndUpdate({
+// CountSchema.findOneAndUpdate({
 
   // [{
   //   $addFields: {
@@ -34,19 +34,19 @@ CountSchema.findOneAndUpdate({
   //   }
   // }]
 
-}).then(counter => {
-  if (counter.date.getMonth ===
-    // Date now ou end_date(Booking) ou $month (variable mongo)
-    date.now().getMonth()) {
-    counter.counter += 1;
-  } else {
-    counter.counter = 0;
-  }
-  counter.save()
-    .then(updateCounter => {
-
-    })
-})
+// }).then(counter => {
+//   if (counter.date.getMonth ===
+//     // Date now ou end_date(Booking) ou $month (variable mongo)
+//     date.now().getMonth()) {
+//     counter.counter += 1;
+//   } else {
+//     counter.counter = 0;
+//   }
+//   counter.save()
+//     .then(updateCounter => {
+//
+//     })
+// })
 
 // let count = connection.model('count', CountSchema);
 // count.nextCount(function (err, count) {
