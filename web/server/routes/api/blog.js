@@ -3,7 +3,10 @@ const router = express.Router();
 const axios = require('axios')
 
 const WP_URL='http://my-alfred.io:2000'
+const WP_URL2 = 'http:\/\/my-alfred.io:2000'
+
 const WP_URL_RE = new RegExp('http://my-alfred.io:2000/blog', 'g')
+const WP_URL_RE2 = new RegExp('http:\/\/my-alfred.io:2000', 'g')
 // @Route GET /myAlfred/api/blog
 // add a recurrent availability for current user
 // access private
@@ -17,7 +20,11 @@ router.get('/:p1?/:p2?/:p3?/:p4?/:p5?/:p6?/:p7?/:p8?/:p9?/:p10?/:p11?/:p12?/:p13
       if (!(data instanceof Object)) {
         while (data.includes(WP_URL)) {
           console.log(`URL ${src_url}:replacing`)
-          data=data.replace(WP_URL_RE, '/blog/')
+          data=data.replace(WP_URL_RE, '/blog')
+        }
+        while (data.includes(WP_URL2)) {
+          console.log(`URL ${src_url}:replacing`)
+          data=data.replace(WP_URL_RE2, '')
         }
       }
       res.set(result.headers).status(result.status).send(data)

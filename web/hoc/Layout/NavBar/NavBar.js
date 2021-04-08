@@ -156,8 +156,13 @@ class NavBar extends Component {
   };
 
   handleOpenRegister = (e) => {
-    this.handleMenuClose();
-    this.setState({setOpenRegister: true, setOpenLogin: false});
+    if (is_b2b_site()) {
+      Router.push('/blog/inscription-entreprise/')
+    }
+    else {
+      this.handleMenuClose();
+      this.setState({setOpenRegister: true, setOpenLogin: false});
+    }
   };
 
   handleCloseRegister = () => {
@@ -743,7 +748,7 @@ class NavBar extends Component {
                           getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
                             is_b2b_site() ?
                               <>
-                                <Link href={"http://my-hooty.com/?page_id=279"}>
+                                <Link href={"/blog/elementor-211/"}>
                                   <a target="_blank">
                                     <Tab
                                       classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
@@ -751,7 +756,7 @@ class NavBar extends Component {
                                     />
                                   </a>
                                 </Link>
-                                <Link href={"http://my-hooty.com/?page_id=280"}>
+                                <Link href={"/blog/services-aux-collaborateurs/"}>
                                   <a target="_blank">
                                     <Tab
                                       classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
@@ -759,7 +764,7 @@ class NavBar extends Component {
                                     />
                                   </a>
                                 </Link>
-                                <Link href={'http://my-hooty.com/?page_id=699'}>
+                                <Link href={'/blog/tarifs'}>
                                   <a target="_blank">
                                     <Tab
                                       classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
