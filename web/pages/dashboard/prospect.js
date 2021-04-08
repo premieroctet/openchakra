@@ -120,8 +120,8 @@ class all extends React.Component {
       // Le bon coin
       category: is_development() ? 'Catégorie' : '',
       url: is_development() ? 'https://www.leboncoin.fr/recherche?text=web' : '',
-      lbc_message: '',
-      lbc_error: '',
+      lbc_message: [],
+      lbc_error: [],
     };
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -193,22 +193,16 @@ class all extends React.Component {
 
   startSearch = () => {
     const {url, category} = this.state
-    this.setState({lbc_message: 'Scan en cours...', lbc_error:''})
+    this.setState({lbc_message: ['Scan en cours...'], lbc_error:[]})
     setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/prospect/search', {url, category})
       .then(res => {
-        const result=res.data
-        const msg=`Pages demandées:${result.total_pages},
-                   Pages scannées:${result.scanned_pages},
-                   Annonces totales:${result.total_ads},
-                   Annonce nouvelles:${result.new_ads},
-                   Annonces avec mobile:${result.phone_ads},
-                   Prospects créés:${result.saved_ads}`
-        this.setState({lbc_message: msg, lbc_error:''})
+        const msg=res.data
+        this.setState({lbc_message: msg, lbc_error:[]})
       })
       .catch(err => {
         console.error(err)
-        this.setState({lbc_message: '', lbc_error: err.response.data})
+        this.setState({lbc_message: [], lbc_error: err.response.data})
       })
   }
 
@@ -243,8 +237,18 @@ class all extends React.Component {
                   value={url}
                   onChange={this.onChange}
                 />
-                <div>{lbc_message}</div>
-                <em style={{color:'red'}}>{lbc_error}</em>
+                { (lbc_message||[]).map( part => {
+                    return (
+                      <div>{part}</div>
+                    )
+                  })
+                }
+                { (lbc_error||[]).map( part => {
+                    return (
+                      <em style={{color:'red'}}>{part}</em>
+                    )
+                  })
+                }
                 <Button disabled={!category || !url} onClick={this.startSearch}>
                   Lancer la recherche
                 </Button>
