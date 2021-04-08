@@ -26,18 +26,19 @@ class SelectSlotTimer extends React.Component {
       const avatar=bookings[i] ? `/${bookings[i]}` : null
       var avatarProp = avatar ? <Avatar src={avatar} /> : anyAvatar ? <div /> : null
       items.push(
-        <Chip
-          clickable
-          label={('0' + i).slice(-2) + 'h00 - ' + ('0' + (i + 1)).slice(-2) + 'h00'}
-          style={{backgroundColor: color, backgroundImage: pattern}}
-          className={classes.textFieldChips}
-          avatar={ avatarProp }
-          onClick={() => {
-            this.toggleTimeSlot(i);
-          }}
-          selectable={false}
-        />
-
+        <Grid item xl={4} lg={4} md={4} sm={6} xs={6}>
+          <Chip
+            clickable
+            label={('0' + i).slice(-2) + 'h00 - ' + ('0' + (i + 1)).slice(-2) + 'h00'}
+            style={{backgroundColor: color, backgroundImage: pattern}}
+            className={classes.textFieldChips}
+            avatar={ avatarProp }
+            onClick={() => {
+              this.toggleTimeSlot(i);
+            }}
+            selectable={false}
+          />
+        </Grid>
       );
     }
     return items;
@@ -47,7 +48,7 @@ class SelectSlotTimer extends React.Component {
     const {classes, arrayLength, index, bookings} = this.props;
 
     return (
-      <Grid style={{textAlign: 'center'}}>
+      <Grid container item style={{width: '100%', margin: 0,  textAlign: 'center'}}>
         {this.createRender(arrayLength, index, classes, bookings)}
       </Grid>
     );

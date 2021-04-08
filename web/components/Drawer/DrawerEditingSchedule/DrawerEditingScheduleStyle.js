@@ -10,12 +10,6 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
-  containerSelectSlotTimer: {
-    width: '50%',
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-    },
-  },
   policySizeTitle: {
     margin: 0,
     overflowWrap: 'break-word !important',

@@ -464,7 +464,7 @@ class creaShop extends React.Component {
 
   renderSwitch = (stepIndex) =>{
     const{shop , currentUser, mode, excluded_services}= this.state;
-    return STEPS[mode][stepIndex].component(this)
+    return STEPS['creation'][7].component(this)
   };
 
   handleDrawerToggle = () => {
@@ -474,7 +474,7 @@ class creaShop extends React.Component {
   drawer = (classes) => {
     const {activeStep,mode} = this.state;
 
-    const steps = STEPS[mode].map(s => s.menu)
+    const steps = STEPS['creation'].map(s => s.menu)
     return (
       <Grid style={{height: '100%'}}>
         <Grid className={classes.appBarContainer}>
@@ -577,7 +577,7 @@ class creaShop extends React.Component {
               :
               null
             }
-            <Grid item container className={classes.containerNextButton} xl={6} lg={6} md={6} sm={6} xs={6}>
+            <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 12 : is_development() ? 6 : 12} lg={activeStep === 0 ? 12 : is_development() ? 6 : 12} md={activeStep === 0 ? 12 : is_development() ? 6 : 12} sm={activeStep === 0 ? 12 : is_development() ? 6 : 12} xs={activeStep === 0 ? 12 : is_development() ? 6 : 12}>
               <Button
                 variant="contained"
                 classes={{root :classes.nextButton}}

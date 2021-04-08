@@ -19,7 +19,10 @@ export default theme => ({
     textTransform: 'initial',
     fontWeight: 'bold',
     backgroundColor: theme.palette.yellow.main,
-    marginRight: '8vh'
+    marginRight: '8vh',
+    [theme.breakpoints.down('xs')]:{
+      marginRight: 0
+    }
 
   },
   backButton:{
