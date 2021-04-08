@@ -178,8 +178,7 @@ BookingSchema.virtual('date_prestation_moment').get(function () {
   if (!this.date_prestation) {
     return null;
   }
-  const res = moment(moment(this.date_prestation, 'DD/MM/YYYY').format('YYYY-MM-DD') + ' ' + moment(this.time_prestation).format('HH:mm'));
-  return res;
+  return moment(moment(this.date_prestation, 'DD/MM/YYYY').format('YYYY-MM-DD') + ' ' + moment(this.time_prestation).format('HH:mm'));
 });
 
 
