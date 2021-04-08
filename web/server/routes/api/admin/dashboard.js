@@ -2571,8 +2571,9 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
   })
 
   const DELAY=2000
+  const TIMEOUT=2000
 
-  const promises = urls.map((u, index) => delayedPromise(DELAY*(index+1), ()=>axios.get(u)))
+  const promises = urls.map((u, index) => delayedPromise(DELAY*(index+1), ()=>axios.get(u, { timeout: TIMEOUT})))
 
   const req_result={total_pages:pages_count, scanned_pages:0, total_ads:0, new_ads:0, phone_ads:0, saved_ads:0}
   Promise.allSettled(promises)
@@ -2613,7 +2614,7 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
           all_ads = all_ads.filter(ad => !prospects.includes(ad.list_id))
           req_result.new_ads=all_ads.length
           const phoneUrls = all_ads.map(ad => `http://api.notifan.fr/phone?list_id=${ad.list_id}`)
-          const phonePromises = phoneUrls.map( (url,index) => delayedPromise(DELAY*index, () => axios.get(url)))
+          const phonePromises = phoneUrls.map( (url,index) => delayedPromise(DELAY*index, () => axios.get(url, { timeout: TIMEOUT})))
           Promise.allSettled(phonePromises)
             .then ( phone_results => {
               // Keep
