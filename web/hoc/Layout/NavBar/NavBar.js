@@ -749,28 +749,22 @@ class NavBar extends Component {
                             is_b2b_site() ?
                               <>
                                 <Link href={"/blog/elementor-211/"}>
-                                  <a target="_blank">
-                                    <Tab
-                                      classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                      label={"Services aux entreprises"}
-                                    />
-                                  </a>
+                                  <Tab
+                                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                    label={"Services aux entreprises"}
+                                  />
                                 </Link>
                                 <Link href={"/blog/services-aux-collaborateurs/"}>
-                                  <a target="_blank">
-                                    <Tab
-                                      classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                      label={"Services aux collaborateurs"}
-                                    />
-                                  </a>
+                                  <Tab
+                                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                    label={"Services aux collaborateurs"}
+                                  />
                                 </Link>
                                 <Link href={'/blog/tarifs'}>
-                                  <a target="_blank">
-                                    <Tab
-                                      classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                      label={"Tarifs"}
-                                    />
-                                  </a>
+                                  <Tab
+                                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                                    label={"Tarifs"}
+                                  />
                                 </Link>
 
                               </>
