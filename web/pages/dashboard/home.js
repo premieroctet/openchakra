@@ -77,6 +77,7 @@ class home extends React.Component {
                     <Typography style={{fontSize: 30}}>Maintenance</Typography>
                   </Grid>
                   <Link href="/dashboard/logAsUser"><a>Connexion en tant qu'autre utilisateur</a></Link><br/>
+
                   <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                     <Typography style={{fontSize: 30}}>Moniteur</Typography>
                   </Grid>
@@ -84,6 +85,8 @@ class home extends React.Component {
                   <Link href="/dashboard/map"><a>Carte des services</a></Link><br/>
                   <Link href="/dashboard/bookings"><a>Réservations</a></Link><br/>
                   <Link href="/dashboard/prospect"><a>Prospection</a></Link><br/>
+                  <Link href="http://my-alfred.io:2000/blog/admin"><a>Administration WordPress</a></Link><br/>
+
                   <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                     <Typography style={{fontSize: 30}}>Base de données</Typography>
                   </Grid>

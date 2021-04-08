@@ -69,7 +69,7 @@ class About extends CompanyComponent {
       activityArea: '',
       sizeCompany: '',
       website: '',
-      company:{},
+      company:null,
 
     };
   }

@@ -140,6 +140,9 @@ class siret extends React.Component {
                 value={this.state.siret}
                 onChange={this.onChange}
                 classes={{root: classes.textField}}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid container>
@@ -159,7 +162,9 @@ class siret extends React.Component {
                 value={this.state.name}
                 onChange={this.onChange}
                 classes={{root: classes.textField}}
-
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
           </Grid>
