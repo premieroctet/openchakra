@@ -153,7 +153,7 @@ const SHOP = {
     is_professional_cis: 'Mon enterprise est éligible au Crédit Impôt Service',
     is_professional_certif: 'Je certifie sur l’honneur qu’il s’agit bien de mon entreprise.',
     is_professional_vat_subject: 'Mon entreprise est assujettie à la TVA',
-    is_profesionnal_propose_missions: 'Je souhaite proposer des missions : ',
+    is_profesionnal_propose_missions: 'Je souhaite proposer ce service : ',
     textfield_ss1: 'N° sécurité sociale',
     textfield_ntva: 'N° TVA',
     textfield_particular: 'Aux particuliers',

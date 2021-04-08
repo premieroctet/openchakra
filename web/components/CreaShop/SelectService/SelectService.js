@@ -96,11 +96,28 @@ class SelectService extends React.Component {
     }
     const {classes, is_particular, mode} = this.props;
     st[name]=true
-    st.service=null
+    // En mode modification de service, on le conserve si la destination change
+    if (mode!=CREASHOP_MODE.SERVICE_UPDATE) {
+      st.service=null
+    }
     this.setState(st, () => {
       this.props.onChange(this.state)
     })
   };
+
+  getSelectedServiceAccess = () => {
+    const {service, services}=this.state
+    const result=[]
+    if (services && Object.keys(services).length>0) {
+      if (services[PRO].find(s => s._id==service)) {
+        result.push(PRO)
+      }
+      if (services[PART].find(s => s._id==service)) {
+        result.push(PART)
+      }
+    }
+    return result
+  }
 
   render() {
 
@@ -128,6 +145,9 @@ class SelectService extends React.Component {
       },
     };
 
+    // Affichage choix part pro seulement si alfred pro et (creation/ajout ou (édition et service dispo pour part et pros))
+    const displayAccess = !is_particular && (mode!=CREASHOP_MODE.SERVICE_UPDATE || this.getSelectedServiceAccess().length==2)
+
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
@@ -139,7 +159,7 @@ class SelectService extends React.Component {
               mode==CREASHOP_MODE.SERVICE_UPDATE ? SHOP.service.subtitle_update : SHOP.service.subtitle
             }</h3>
           </Grid>
-          { is_particular ? null:
+          { is_particular || !displayAccess ? null:
             <>
             <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
               <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.creation.is_profesionnal_propose_missions}</h4>
