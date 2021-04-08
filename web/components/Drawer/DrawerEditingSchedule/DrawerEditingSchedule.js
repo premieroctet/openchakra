@@ -112,12 +112,11 @@ class DrawerEditingSchedule extends React.Component {
     const {classes} = this.props;
     const {availabilities, errors, timelapses, available, bookings} = this.state;
 
-    console.log(`Bookings:${JSON.stringify(bookings)}`)
     return (
       <Grid>
         <Grid style={{display: 'flex', alignItems: 'center',justifyContent: 'space-between'}}>
           <Grid>
-            <Typography className={classes.policySizeTitle}>Modifier vos disponibilités</Typography>
+            <h2>Modifier vos disponibilités</h2>
           </Grid>
           <Grid>
             <IconButton aria-label="CLOSE">
@@ -135,14 +134,26 @@ class DrawerEditingSchedule extends React.Component {
               </Grid>
               <Grid container>
                 <FormControl component="fieldset">
-                  <RadioGroup aria-label="availabilities" name="availabilities" value={availabilities}
-                              onChange={this.handleAvailabilities}>
-                    <FormControlLabel onChange={this.toggleAvailability} checked={!this.state.available}
-                                      value="notavailabilities" control={<Radio color="primary"/>}
-                                      label="Indisponible pour la journée"/>
-                    <FormControlLabel onChange={this.toggleAvailability} checked={this.state.available}
-                                      value="availabilities" control={<Radio color="primary"/>}
-                                      label="Disponible sur ces horaires : "/>
+                  <RadioGroup
+                    aria-label="availabilities"
+                    name="availabilities"
+                    value={availabilities}
+                    onChange={this.handleAvailabilities}
+                  >
+                    <FormControlLabel
+                      onChange={this.toggleAvailability}
+                      checked={!this.state.available}
+                      value="notavailabilities"
+                      control={<Radio color="primary"/>}
+                      label="Indisponible pour la journée"
+                    />
+                    <FormControlLabel
+                      onChange={this.toggleAvailability}
+                      checked={this.state.available}
+                      value="availabilities"
+                      control={<Radio color="primary"/>}
+                      label="Disponible sur ces horaires : "
+                    />
                   </RadioGroup>
                 </FormControl>
               </Grid>
@@ -155,14 +166,19 @@ class DrawerEditingSchedule extends React.Component {
                 </Grid>
                 <Grid container>
                   { 'Nuit Matin Après-midi Soirée'.split(' ').map( (title, index) => {
-                      return (
-                      <Grid item className={classes.containerSelectSlotTimer}>
+                    return (
+                      <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                         <Grid>
                           <h4>{title}</h4>
                         </Grid>
-                        <Grid>
-                          <SelectSlotTimer arrayLength={6} index={index*6} slots={timelapses}
-                                           bookings={bookings} onChange={this.slotTimerChanged}/>
+                        <Grid container item xl={6} lg={9} md={11} sm={7} xs={12}>
+                          <SelectSlotTimer
+                            arrayLength={6}
+                            index={index*6}
+                            slots={timelapses}
+                            bookings={bookings}
+                            onChange={this.slotTimerChanged}
+                          />
                         </Grid>
                       </Grid>
                       )
@@ -173,10 +189,16 @@ class DrawerEditingSchedule extends React.Component {
               :
               null
             }
-            <Grid style={{marginTop: 30, marginBottom: 110}}>
+            <Grid style={{marginTop: '5vh', marginBottom: '5vh'}}>
               <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                <Button disabled={!this.saveEnabled()} variant={'contained'} color={'primary'} style={{color: 'white'}}
-                        onClick={() => this.save()}>Enregistrer</Button>
+                <Button
+                  disabled={!this.saveEnabled()}
+                  variant={'contained'}
+                  color={'primary'}
+                  style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}}
+                  onClick={() => this.save()}>
+                  Enregistrer
+                </Button>
               </Grid>
             </Grid>
           </Grid>
