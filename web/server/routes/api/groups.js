@@ -9,6 +9,7 @@ const Service = require('../../models/Service');
 const axios = require('axios');
 const {validateCompanyGroup} = require("../../validation/simpleRegister");
 const {MANAGER, ROLES} = require('../../../utils/consts')
+const {computeUrl}=require('../../../config/config')
 
 axios.defaults.withCredentials = true;
 
@@ -251,7 +252,7 @@ router.put('/:group_id/managers', passport.authenticate('b2badmin', {session: fa
           Group.updateMany({ _id : { $ne : group_id}} , { $pull : {members : manager_id}})
             .then (() => {
               if (new_account) {
-                axios.post(`/myAlfred/api/users/forgotPassword`, { email: user.email, role: ROLES[MANAGER]})
+                axios.post(new URL(`/myAlfred/api/users/forgotPassword`, computeUrl(req)), { email: user.email, role: ROLES[MANAGER]})
                   .then(() => {})
                   .catch (err => {})
               }
