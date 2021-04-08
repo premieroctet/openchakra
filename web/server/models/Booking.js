@@ -159,8 +159,11 @@ const BookingSchema = new Schema({
   }
   ,
   receipt_number: {
-    type: String,
+    type: String
   },
+  myalfred_billing_number: {
+    type: String
+  }
 }, {toJSON: {virtuals: true, getters: true}});
 
 BookingSchema.pre('invoiceNumber', function () {

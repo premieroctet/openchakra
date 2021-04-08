@@ -20,17 +20,11 @@ class BillingGeneration extends React.Component {
     super(props)
   }
 
-  genFeesPage = () => {
-    const feesPage = {
-      fees: this.props.bookingObj.fees,
-      is_pro: true
-    }
-    return JSON.stringify(feesPage);
-
-  }
 
   render() {
     const {bookingObj, is_pro} = this.props;
+    const htFees = bookingObj.fees / 1.2;
+
     return (
       <Document>
         <Page pageNumber={"1"} size="A4" style={styles.body}>
@@ -251,14 +245,218 @@ class BillingGeneration extends React.Component {
             <Text>Page {"1"}</Text>
           </View>
         </Page>
-        <Page>
-          {
-            this.genFeesPage()
-          }
+        <Page pageNumber={"2"} size="A4" style={styles.body}>
+          <View
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              flexDirection: 'row'
+            }}
+          >
+            <View>
+              <Image src={"../../static/assets/icon/logo.png"}
+                     alt={'logo_myAlfred'}
+                     style={{
+                       height: 64
+                     }}/>
+            </View>
+            <View>
+              <View style={{
+                display: 'flex',
+                flexDirection: 'column',
+                textAlign: 'left'
+              }}>
+                <View>
+                  <Text>
+                    MY-ALFRED
+                  </Text>
+                </View>
+                <View>
+                  <Text>
+                    42 Rampe Bouvreuil
+                  </Text>
+                </View>
+                <View>
+                  <Text>
+                    76000 ROUEN
+                  </Text>
+                </View>
+                <View>
+                  <Text>
+                    France
+                  </Text>
+                </View>
+                <View>
+                  <Text>
+                    RCS : 850 148 867
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.title}>{is_pro ? 'Facture' :
+              'Récépissé'} vendeur n° {moment().format('Y M') + bookingObj.receipt_number}</Text>
+          </View>
+
+          <View style={{display: 'flex', flexDirection: 'row'}}>
+            <View>
+              <Text style={styles.objectHead}>Objet :</Text>
+            </View>
+            <View>
+              <Text>Réservation {bookingObj.reference}</Text>
+            </View>
+          </View>
+
+          <View style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: '3vh'
+
+          }}>
+            <View style={{
+              display: 'flex',
+              flexDirection: 'row'
+            }}>
+              <View>
+                <Text style={styles.objectHead}>Pour : </Text>
+              </View>
+              <View style={{
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <View>
+                  <Text>{bookingObj.user.full_name}</Text>
+                </View>
+                <View>
+                  <Text>{bookingObj.user.address}</Text>
+                </View>
+                <View>
+                  <Text>{bookingObj.user.zip_code}</Text>
+                </View>
+                <View>
+                  <Text>{bookingObj.user.city}</Text>
+                </View>
+                <View>
+                  <Text>{bookingObj.user.country}</Text>
+                </View>
+              </View>
+            </View>
+            {/*<View style={{*/}
+            {/*  display: 'flex',*/}
+            {/*  flexDirection: 'row'*/}
+            {/*}}>*/}
+            {/*  <View>*/}
+            {/*    <Text style={styles.object}>De : </Text>*/}
+            {/*  </View>*/}
+            {/*  <View>*/}
+            {/*    <Text>{bookingObj.alfred.full_name}</Text>*/}
+            {/*  </View>*/}
+            {/*</View>*/}
+          </View>
+          <View style={styles.table}>
+            <View style={styles.tableRow}>
+              <View style={styles.tableColHeader}>
+                <Text style={{
+                  margin: '5 2 5 0',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  textAlign: 'center'
+                }}>#</Text>
+              </View>
+              <View style={styles.tableColHeaderDescription}>
+                <Text style={styles.tableCellHeader}>Description</Text>
+              </View>
+              <View style={styles.tableColHeader}>
+                <Text style={styles.tableCellHeaderNum}>Quantité</Text>
+              </View>
+              <View style={styles.tableColHeader}>
+                <Text style={styles.tableCellHeaderNum}>Total</Text>
+              </View>
+            </View>
+
+            <View style={styles.tableRow}>
+              <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>1</Text>
+              </View>
+              <View style={styles.tableColDescription}>
+                <Text style={styles.tableCell}>Frais de service</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.tableCellNum}>1</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text
+                  style={styles.tableCellNum}>{(moneyFormat(htFees
+                ))} €
+                </Text>
+              </View>
+            </View>
+
+
+            <View style={styles.resultRow}>
+              <View>
+                <Text
+                  style={styles.tableCellTTC}>TVA</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text
+                  style={styles.TableCellResult}>{moneyFormat(bookingObj.fees - htFees
+                )} €</Text>
+              </View>
+            </View>
+
+
+            <View style={styles.resultRow}>
+              <View style={styles.tableCol}>
+                <Text style={styles.tableCellTTC}>TOTAL TTC</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.TableCellResult}>{moneyFormat(bookingObj.fees)} €</Text>
+              </View>
+            </View>
+          </View>
+          <View>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <View>
+                <Text style={styles.object}>Date {is_pro ? 'de la facture'
+                  : 'du récépissé'} : </Text>
+              </View>
+              <View>
+                <Text>{moment(bookingObj.end_date).format('DD/MM/YYYY')}</Text>
+              </View>
+            </View>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <View>
+                <Text style={styles.object}>Date de paiement : </Text>
+              </View>
+              <View>
+                <Text>{moment(bookingObj.date).format('DD/MM/YYYY')}</Text>
+              </View>
+            </View>
+          </View>
+          <View style={{display: 'flex', flexDirection: 'row'}}>
+            <View>
+              <Text style={styles.object}>Référence de transaction : </Text>
+            </View>
+            <View>
+              <Text>{bookingObj.id}</Text>
+            </View>
+          </View>
+          <View style={styles.infos}>
+            <Text>
+              {is_pro ? 'Pour toute question concernant cette facture' :
+                'Ceci n\'est pas une facture. Pour toute question concernant ce récépissé'
+              }, veuillez <Link
+              src={'https://www.my-alfred.io/contact'}>nous contacter.</Link></Text>
+          </View>
+          {/*Footer*/}
           <View fixed style={styles.footer}>
             <Text>Page {"2"}</Text>
           </View>
         </Page>
+
       </Document>
     )
   }
