@@ -135,6 +135,10 @@ class creaShop extends React.Component {
                   shop.service = su.service._id
                   shop.perimeter = su.perimeter
                   shop.location = su.location
+
+                  shop.particular_access = su.particular_access
+                  shop.professional_access = su.professional_access
+
                   shop.equipments = su.equipments.map( e => e._id)
                   if (su.diploma) {
                     shop.diplomaName = su.diploma.name

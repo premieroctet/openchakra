@@ -18,7 +18,7 @@ class SelectService extends React.Component {
     const part_pro = this.props.particular_access && this.props.professional_access
     this.state = {
       service: this.props.service || null,
-      services: [],
+      services: null,
       particular_access: Boolean(this.props.particular_access && !part_pro),
       professional_access: Boolean(this.props.professional_access && !part_pro),
       particular_professional_access: Boolean(part_pro),
@@ -124,6 +124,10 @@ class SelectService extends React.Component {
     const {classes, is_particular, mode} = this.props;
     const {services, loading, service, particular_access, professional_access, particular_professional_access} = this.state;
 
+    if (!services) {
+      return null
+    }
+    
     var options=[]
     if (particular_professional_access) {
       // Intersection services pro & part
