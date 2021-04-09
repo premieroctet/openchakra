@@ -5,11 +5,13 @@ const moment = require('moment');
 moment.locale('fr');
 const User = require('../../models/User');
 const Group = require('../../models/Group');
+const Booking = require('../../models/Booking');
 const Service = require('../../models/Service');
 const axios = require('axios');
 const {validateCompanyGroup} = require("../../validation/simpleRegister");
-const {MANAGER, ROLES} = require('../../../utils/consts')
+const {MANAGER, ROLES, MONTH_PERIOD, YEAR_PERIOD, BOOK_STATUS} = require('../../../utils/consts')
 const {computeUrl}=require('../../../config/config')
+const _ = require('lodash');
 
 axios.defaults.withCredentials = true;
 
@@ -303,5 +305,37 @@ router.delete('/:group_id/managers/:manager_id', passport.authenticate('b2badmin
 
 })
 
+// @Route GET /myAlfred/api/groups/:group_id/budget
+// Returns reamingin budget for this group in the period
+// @Access private b2badminmanager
+//router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {session: false}), (req, res) => {
+router.get('/:group_id/budget', (req, res) => {
+  console.log('request')
+  Group.findById(req.params.group_id, 'budget budget_period members')
+    .then( group =>{
+      if (!group.budget || !group.budget_period) {
+        return res.status(400).json("Ce département n'a pas de budget")
+      }
+      const start_date=moment().startOf(group.budget_period==MONTH_PERIOD ? 'month' : 'year')
+      // get not cancelled bookings for this group from start_date
+      Booking.find({
+        user : { $in : group.members},
+        date : {$gt: start_date},
+        status : { $nin : [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]}
+      })
+        .then( bookings => {
+          const consumed = _.sumBy(bookings, b => b.amount)
+          const remaining = group.budget-consumed
+          return res.json(remaining)
+        })
+        .catch (err => {
+          return res.staatus(400).json(err)
+        })
+    })
+    .catch( err =>{
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
 
 module.exports = router;

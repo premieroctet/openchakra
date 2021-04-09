@@ -74,5 +74,16 @@ passport.use('b2badmin', new JwtStrategy(jwt_opts, (jwt_payload, done) => {
     .catch(err => console.error(err));
 }));
 
+passport.use('b2badminmanager', new JwtStrategy(jwt_opts, (jwt_payload, done) => {
+  User.findById(jwt_payload.id)
+    .then(user => {
+      if (user && user.roles && (user.roles.includes(ADMIN)||user.roles.includes(MANAGER))) {
+        return done(null, user);
+      }
+      return done(null, false, "Vous devez être administrateur de l'entreprise");
+    })
+    .catch(err => console.error(err));
+}));
+
 
 module.exports = passport;
