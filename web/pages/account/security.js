@@ -523,12 +523,12 @@ class security extends React.Component {
           <meta property="description"
                 content="Modifiez votre mot de passe et gérez la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
         </Helmet>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs']}>
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>
-        <Hidden only={['lg', 'xl']}>
+        <Hidden only={['lg', 'xl', 'sm', 'md']}>
           <LayoutMobile>
             {this.content(classes)}
           </LayoutMobile>

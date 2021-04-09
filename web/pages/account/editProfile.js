@@ -318,7 +318,7 @@ class editProfile extends React.Component {
             <h2 style={{whiteSpace: 'nowrap'}}>Informations personnelles</h2>
           </Grid>
           <Grid container spacing={3} style={{marginTop: '10vh'}}>
-            <Grid item xl={6} lg={6} xs={12} sm={6} md={6}>
+            <Grid item xl={6} lg={6} xs={12} sm={12} md={12}>
               <TextField
                 classes={{root: classes.textField}}
                 value={user.gender || ''}
@@ -337,7 +337,7 @@ class editProfile extends React.Component {
                 </MenuItem>
               </TextField>
             </Grid>
-            <Grid item xl={6} lg={6} xs={12} sm={6} md={6}>
+            <Grid item xl={6} lg={6} xs={12} sm={12} md={12}>
               <TextField
                 classes={{root: classes.textFieldDatePicker}}
                 id="filled-with-placeholder"
@@ -352,7 +352,7 @@ class editProfile extends React.Component {
             </Grid>
           </Grid>
           <Grid container spacing={3}>
-            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
+            <Grid item xs={12} lg={6} md={12} sm={12} xl={6}>
               <TextField
                 classes={{root: classes.textField}}
                 value={user.email || ''}
@@ -367,7 +367,7 @@ class editProfile extends React.Component {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
+            <Grid item xs={12} lg={6} md={12} sm={12} xl={6} style={{display: 'flex'}}>
               <Button
                 variant="contained"
                 color={'primary'}
@@ -378,7 +378,7 @@ class editProfile extends React.Component {
                 {userEmail === user.email && user.is_confirmed === true ? 'Votre email est vérifié' : userEmail !== user.email ? 'Enregistrer votre nouvel email' : 'Vérifier votre email'}
               </Button>
             </Grid>
-            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
+            <Grid item xs={12} lg={6} md={12} sm={12} xl={6}>
               <TextField
                 classes={{root: classes.textField}}
                 value={this.state.phone || ''}
@@ -392,7 +392,7 @@ class editProfile extends React.Component {
                 }}
               />
             </Grid>
-            <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
+            <Grid item xs={12} lg={6} md={12} sm={12} xl={6} style={{display: 'flex'}}>
               <Button
                 variant="contained"
                 color={'primary'}
@@ -483,12 +483,12 @@ class editProfile extends React.Component {
           <meta property="description"
                 content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
         </Helmet>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs']}>
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>
-        <Hidden only={['lg', 'xl']}>
+        <Hidden only={['lg', 'xl', 'sm', 'md']}>
           <LayoutMobile currentIndex={4}>
             {this.content(classes)}
           </LayoutMobile>

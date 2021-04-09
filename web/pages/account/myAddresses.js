@@ -476,12 +476,12 @@ class myAddresses extends React.Component {
           <meta property="description"
                 content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…"/>
         </Helmet>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs']}>
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>
-        <Hidden only={['lg', 'xl']}>
+        <Hidden only={['lg', 'xl', 'sm', 'md']}>
           <LayoutMobile currentIndex={4}>
             {this.content(classes)}
           </LayoutMobile>

@@ -643,12 +643,12 @@ class paymentMethod extends React.Component {
           <meta property="description"
                 content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !"/>
         </Helmet>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs']}>
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>
-        <Hidden only={['lg', 'xl']}>
+        <Hidden only={['lg', 'xl', 'sm', 'md']}>
           <LayoutMobile>
             {this.content(classes)}
           </LayoutMobile>

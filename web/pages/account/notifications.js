@@ -500,12 +500,12 @@ class notifications extends React.Component {
           <meta property="description"
                 content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs']}>
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>
-        <Hidden only={['lg', 'xl']}>
+        <Hidden only={['lg', 'xl', 'sm', 'md']}>
           <LayoutMobile>
             {this.content(classes)}
           </LayoutMobile>
