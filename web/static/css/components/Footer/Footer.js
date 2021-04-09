@@ -36,12 +36,6 @@ export default theme => ({
     height: 1,
     width: '80%'
   },
-  footerTitileSection:{
-    fontFamily: theme.typography.sectionTitle.fontFamily
-  },
-  footerLink:{
-    fontFamily: theme.typography.text.fontFamily
-  },
   footerBrandContainer:{
     display: 'flex',
     flexDirection: 'row',

@@ -19,6 +19,8 @@ import Slide from "@material-ui/core/Slide";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions');
+import {isMobile} from 'react-device-detect';
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -94,226 +96,229 @@ class Footer extends React.Component {
     const {classes} = this.props;
 
     return (
-      <Grid className={classes.footerMainStyle}>
-        <Grid>
-          <Grid container className={classes.footerMainContainer}>
-            <Hidden only={['xs']}>
-              <Grid item xl={3} lg={3} className={classes.footerSection}>
-                <Grid>
-                  <h3 className={classes.footerTitileSection}>My Alfred</h3>
-                </Grid>
+      <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+        <Grid container spacing={1} style={{width:'100%', margin:0, display: 'flex', flexDirection: 'column'}} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={is_b2b_site() ? 4 : 3} xs={is_b2b_site() ? 4 : 3}>
+          <Grid item>
+            <h3>My Alfred</h3>
+          </Grid>
+          <Grid item>
+            <Link href={'/footer/apropos'}>
+              <Typography >À propos</Typography>
+            </Link>
+          </Grid>
+          {
+            is_b2b_site() ?
+              <>
+              <Grid item>
                 <Link href={'/footer/apropos'}>
-                  <Grid style={{marginBottom: '2vh'}}>
-                    <Typography className={classes.footerLink}>À propos</Typography>
-                  </Grid>
+                  <Typography >Presse</Typography>
                 </Link>
-                {
-                  is_b2b_site() ?
-                    <>
-                      <Link href={'/footer/apropos'}>
-                        <Grid style={{marginBottom: '2vh'}}>
-                          <Typography className={classes.footerLink}>Presse</Typography>
-                        </Grid>
-                      </Link>
-                      <Link href={'/footer/apropos'}>
-                        <Grid style={{marginBottom: '2vh'}}>
-                          <Typography className={classes.footerLink}>Blog</Typography>
-                        </Grid>
-                      </Link>
-                      <Link href={'/footer/apropos'}>
-                        <Grid style={{marginBottom: '2vh'}}>
-                          <Typography className={classes.footerLink}>CGU/CGV</Typography>
-                        </Grid>
-                      </Link>
-                      <Link href={'/footer/apropos'}>
-                        <Grid style={{marginBottom: '2vh'}}>
-                          <Typography className={classes.footerLink}>FAQ</Typography>
-                        </Grid>
-                      </Link>
-                      <Link href={'/footer/apropos'}>
-                        <Grid style={{marginBottom: '2vh'}}>
-                          <Typography className={classes.footerLink}>Informations légales</Typography>
-                        </Grid>
-                      </Link>
-                    </>
-                   : null
-                }
-                {
-                  !is_b2b_site() ?
-                    <>
-                      <Link href={'/footer/ourTeam'}>
-                        <Grid style={{marginBottom: '2vh'}}>
-                          <Typography className={classes.footerLink}>Notre équipe</Typography>
-                        </Grid>
-                      </Link>
-                      <Link href={'/contact'}>
-                        <Grid>
-                          <Typography className={classes.footerLink}>Nous contacter</Typography>
-                        </Grid>
-                      </Link>
-                    </> : null
-                }
-
               </Grid>
-            </Hidden>
-            <Hidden only={['xs']}>
-              <Grid item xl={3} lg={3} className={classes.footerSection}>
-                <Grid>
-                  <h3 className={classes.footerTitileSection}>{is_b2b_site() ? "Entreprises" : "Communauté"}</h3>
-                </Grid>
-                {
-                  !is_b2b_site() ?
-                    <Link href={'/footer/ourCommunity'}>
-                      <Grid style={{marginBottom: '2vh'}}>
-                        <Typography className={classes.footerLink}>Notre communauté</Typography>
-                      </Grid>
-                    </Link> :
-                    <>
-                      <Link href={'/footer/ourCommunity'}>
-                        <Grid style={{marginBottom: '2vh'}}>
-                          <Typography className={classes.footerLink}>Offre et tarifs</Typography>
-                        </Grid>
-                      </Link>
-                      <Link href={'/footer/ourCommunity'}>
-                        <Grid style={{marginBottom: '2vh'}}>
-                          <Typography className={classes.footerLink}>My Alfred entreprise</Typography>
-                        </Grid>
-                      </Link>
-                      <Link href={'/footer/ourCommunity'}>
-                        <Grid style={{marginBottom: '2vh'}}>
-                          <Typography className={classes.footerLink}>Services aux collaborateurs</Typography>
-                        </Grid>
-                      </Link>
-                    </>
-                }
-
+              <Grid item>
+                <Link href={'/footer/apropos'}>
+                  <Typography >Blog</Typography>
+                </Link>
               </Grid>
-            </Hidden>
-            <Hidden only={['xs']}>
-              <Grid item xl={3} lg={3} className={classes.footerSection}>
-                <Grid>
-                  <h3 className={classes.footerTitileSection}>Alfred</h3>
+              <Grid item>
+                <Link href={'/footer/apropos'}>
+                  <Typography >CGU/CGV</Typography>
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href={'/footer/apropos'}>
+                 <Typography >FAQ</Typography>
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href={'/footer/apropos'}>
+                 <Typography >Informations légales</Typography>
+                </Link>
+              </Grid>
+              </>
+              : null
+          }
+          {
+            !is_b2b_site() ?
+              <>
+                <Grid item>
+                  <Link href={'/footer/ourTeam'}>
+                    <Typography >Notre équipe</Typography>
+                  </Link>
                 </Grid>
-                {
-                  is_b2b_site() ? null :
-                    <Link href={'/footer/becomeAlfred'}>
-                      <Grid style={{marginBottom: '2vh'}}>
-                        <Typography className={classes.footerLink}>Devenir Alfred</Typography>
-                      </Grid>
+                <Grid item>
+                  <Link href={'/contact'}>
+                   <Typography >Nous contacter</Typography>
+                  </Link>
+                </Grid>
+              </>
+            : null
+          }
+        </Grid>
+        <Grid container spacing={1} style={{width: '100%', display:'flex', flexDirection: 'column', margin: 0}} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={is_b2b_site() ? 4 : 3} xs={is_b2b_site() ? 4 : 3}>
+          <Grid item>
+            <h3 >{is_b2b_site() ? "Entreprises" : "Communauté"}</h3>
+          </Grid>
+          {
+            !is_b2b_site() ?
+              <Grid item>
+                <Link href={'/footer/ourCommunity'}>
+                  <Typography >Notre communauté</Typography>
+                </Link>
+              </Grid>
+              :
+              <>
+                <Grid item>
+                  <Link href={'/footer/ourCommunity'}>
+                   <Typography >Offre et tarifs</Typography>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href={'/footer/ourCommunity'}>
+                    <Typography >My Alfred entreprise</Typography>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href={'/footer/ourCommunity'}>
+                    <Typography >Services aux collaborateurs</Typography>
+                  </Link>
+                </Grid>
+              </>
+          }
+        </Grid>
+        <Grid container spacing={1} style={{width: '100%', margin: 0, display: 'flex', flexDirection: 'column'}} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={is_b2b_site() ? 4 : 3} xs={is_b2b_site() ? 4 : 3}>
+          <Grid item>
+            <h3 >Alfred</h3>
+          </Grid>
+          {
+            is_b2b_site() ? null :
+              <Grid item>
+                <Link href={'/footer/becomeAlfred'}>
+                  <Typography >Devenir Alfred</Typography>
+                </Link>
+              </Grid>
+          }
+          {
+            getLoggedUserId() && !isLoggedUserAlfredPro()  ? null :
+              is_b2b_site() ?
+                isLoggedUserAlfredPro()  ?
+                  <Grid item>
+                    <Link href={'/creaShop/creaShop'}>
+                      <Typography>Je propose mes services</Typography>
                     </Link>
-                }
-                {
-                  getLoggedUserId() && !isLoggedUserAlfredPro()  ? null :
-                    is_b2b_site() ?
-                      isLoggedUserAlfredPro()  ?
-                        <Link href={'/creaShop/creaShop'}>
-                          <Grid style={{marginBottom: '2vh'}}>
-                            <Typography className={classes.footerLink}>Je propose mes services </Typography>
-                          </Grid>
-                        </Link>
-                        :
-                        <Grid onClick={this.handleOpenRegister} style={{cursor: 'pointer',marginBottom: '2vh'}}>
-                          <Typography className={classes.footerLink}>Je propose mes services</Typography>
-                        </Grid> : null
-                }
-                {
-                  is_b2b_site() ?
-                    <Link href={'/footer/becomeAlfred'}>
-                      <Grid style={{marginBottom: '2vh'}}>
-                        <Typography className={classes.footerLink}>Charte</Typography>
-                      </Grid>
-                    </Link> : null
-                }
-              </Grid>
-            </Hidden>
-            {
-              is_b2b_site() ? null :
-                <Grid item xl={3} lg={3} className={classes.footerSection}>
-                  <Grid>
-                    <h3 className={classes.footerTitileSection}>Assistance</h3>
                   </Grid>
-                  <Link href={'/footer/addService'}>
-                    <Grid style={{marginBottom: '2vh'}}>
-                      <Typography className={classes.footerLink}>Réserver un service</Typography>
-                    </Grid>
-                  </Link>
-                  <Hidden only={['xs']}>
-                    <Link href={''}>
-                      <Grid style={{marginBottom: '2vh'}} onClick={() => Tawk_API.maximize()}>
-                        <Typography className={classes.footerLink}>Parler à un humain</Typography>
-                      </Grid>
-                    </Link>
-                  </Hidden>
-                  <Link href={'/faq'}>
-                    <Grid>
-                      <Typography className={classes.footerLink}>FAQ</Typography>
-                    </Grid>
-                  </Link>
+
+                  :
+                  <Grid item onClick={this.handleOpenRegister} style={{cursor: 'pointer'}}>
+                    <Typography>Je propose mes services</Typography>
+                  </Grid>
+                : null
+          }
+          {
+            is_b2b_site() ?
+              <Grid item>
+                <Link href={'/footer/becomeAlfred'}>
+                  <Typography >Charte</Typography>
+                </Link>
+              </Grid>
+              : null
+          }
+        </Grid>
+        {
+          is_b2b_site() ? null :
+            <Grid container spacing={1} style={{width: '100%', margin:0, display: 'flex', flexDirection: 'column'}} item xl={3} lg={3} md={3} sm={3} xs={3}>
+              <Grid item>
+                <h3 >Assistance</h3>
+              </Grid>
+              <Grid item>
+                <Link href={'/footer/addService'}>
+                  <Typography >Réserver un service</Typography>
+                </Link>
+              </Grid>
+              <Hidden only={['xs']}>
+                <Grid item onClick={() => Tawk_API.maximize()}>
+                  <Typography >Parler à un humain</Typography>
                 </Grid>
-            }
-          </Grid>
-          <Hidden only={['xl', 'lg', 'md']}>
-            <Grid className={classes.footerDividerContainer}>
-              <Divider className={classes.footerDivider}/>
-            </Grid>
-          </Hidden>
-          <Grid className={classes.footerSocialSection}>
-            <Grid>
-              <h3 className={classes.footerTitileSection}>Réseaux sociaux</h3>
-            </Grid>
-            <Grid className={classes.footerSocialContainer}>
-              <Grid>
-                <a href={'https://www.facebook.com/myalfred1/'} target={'_blank'}>
-                  <IconButton aria-label="FacebookIcon" >
-                    <FacebookIcon/>
-                  </IconButton>
-                </a>
-              </Grid>
-              <Grid>
-                <a href={'https://www.instagram.com/my_alfred_/'} target={'_blank'}>
-                  <IconButton aria-label="InstagramIcon">
-                    <InstagramIcon/>
-                  </IconButton>
-                </a>
-              </Grid>
-              <Grid>
-                <a href={'https://www.linkedin.com/company/my-alfred/'} target={'_blank'}>
-                  <IconButton aria-label="LinkedInIcon">
-                    <LinkedInIcon/>
-                  </IconButton>
-                </a>
-              </Grid
-              ><Grid>
-                <a href={'https://twitter.com/MyAlfred2'} target={'_blank'}>
-                  <IconButton aria-label="TwitterIcon">
-                    <TwitterIcon/>
-                  </IconButton>
-                </a>
+              </Hidden>
+              <Grid item>
+                <Link href={'/faq'}>
+                  <Typography >FAQ</Typography>
+                </Link>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid className={classes.footerDividerContainer}>
-            <Divider className={classes.footerDivider}/>
-          </Grid>
-          <Grid className={classes.footerBrandContainer}>
-            <Grid className={classes.footerBrandStyle}>
-              <Grid className={classes.footerLawContainer}>
-                <Typography>© 2020 MY ALFRED Corporation. Tous droits  réservés</Typography>
+        }
+        {
+          isMobile ? null :
+            <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+              <Grid>
+                <h3>Mobiles</h3>
               </Grid>
-              <Grid className={classes.footerRgpdButtons}>
-                <Grid className={classes.footerLinkInfoContainer}>
-                  <Link href={'/footer/legalNotice'}>
-                    <Typography className={classes.footerLink}>Informations légales</Typography>
-                  </Link>
+              <Grid container style={{display: 'flex', alignItems: 'center'}}>
+                <Grid item>
+                  <a href={'/'}>
+                    <img alt={'appleStore'} title={'badge_applestore'} width={126.5} height={40} src={'../../static/assets/img/footer/ios/ios_black.svg'}/>
+                  </a>
                 </Grid>
-                <Grid  className={classes.footerLinkInfoContainer}>
-                  <Link href={'/cgu'}>
-                    <Grid>
-                      <Typography className={classes.footerLink}>Conditions générales d'utilisation</Typography>
-                    </Grid>
-                  </Link>
+                <Grid item>
+                  <a href={'/'}>
+                    <img alt={'googlePlay'} title={'badge_android'}  width={153} src={'../../static/assets/img/footer/android/android.png'}/>
+                  </a>
                 </Grid>
               </Grid>
+            </Grid>
+        }
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Divider/>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
+          <Grid container item xl={6} lg={6} md={6} sm={6} xs={6} spacing={2} style={{margin: 0, width: '100%'}}>
+            <Grid item>
+              <Typography>© 2021 My Alfred,Inc.</Typography>
+            </Grid>
+            <Grid item>
+              <span>·</span>
+            </Grid>
+            <Grid item>
+              <Link href={'/footer/legalNotice'}>
+                <Typography>Informations légales</Typography>
+              </Link>
+            </Grid>
+            <Grid item>
+              <span>·</span>
+            </Grid>
+            <Grid item>
+              <Link href={'/cgu'}>
+                <Typography>Conditions générales d'utilisation</Typography>
+              </Link>
+            </Grid>
+          </Grid>
+          <Grid container item xl={6} lg={6} md={6} sm={6} xs={6} spacing={2} style={{margin: 0, width: '100%', display: 'flex', justifyContent: 'end'}}>
+            <Grid item>
+              <a href={'https://www.facebook.com/myalfred1/'} target={'_blank'}>
+                <IconButton aria-label="FacebookIcon" >
+                  <FacebookIcon/>
+                </IconButton>
+              </a>
+            </Grid>
+            <Grid item>
+              <a href={'https://www.instagram.com/my_alfred_/'} target={'_blank'}>
+                <IconButton aria-label="InstagramIcon">
+                  <InstagramIcon/>
+                </IconButton>
+              </a>
+            </Grid>
+            <Grid item>
+              <a href={'https://www.linkedin.com/company/my-alfred/'} target={'_blank'}>
+                <IconButton aria-label="LinkedInIcon">
+                  <LinkedInIcon/>
+                </IconButton>
+              </a>
+            </Grid>
+            <Grid item>
+              <a href={'https://twitter.com/MyAlfred2'} target={'_blank'}>
+                <IconButton aria-label="TwitterIcon">
+                  <TwitterIcon/>
+                </IconButton>
+              </a>
             </Grid>
           </Grid>
         </Grid>
