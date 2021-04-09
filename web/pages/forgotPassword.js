@@ -57,7 +57,7 @@ class forgotPassword extends React.Component {
       })
       .catch(err => {
         console.error(err)
-        snackBarError(res.response.data.error)
+        snackBarError(err.response.data.error)
       });
   };
 

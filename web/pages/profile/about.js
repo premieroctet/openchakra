@@ -115,15 +115,12 @@ class ProfileAbout extends CompanyComponent {
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
         const user = res.data;
-        this.setState( {
-          alfred: user,
-          userLanguages:  user.languages.map(l => ({value: l, label: l})),
-          billing_address: user.billing_address
-        })
         if (user.company) {
           axios.get(`/myAlfred/api/companies/companies/${user.company}`).then( res =>{
             const company = res.data;
             this.setState({
+              alfred: user,
+              userLanguages:  user.languages.map(l => ({value: l, label: l})),
               company: company,
               website: company.website,
               activityArea: company.activity,
@@ -136,6 +133,13 @@ class ProfileAbout extends CompanyComponent {
               vat_subject: company.vat_subject
             })
           }).catch(err => console.error(err))
+        }
+        else {
+          this.setState( {
+            alfred: user,
+            userLanguages:  user.languages.map(l => ({value: l, label: l})),
+            billing_address: user.billing_address
+          })
         }
       })
       .catch (err => console.error(err))
