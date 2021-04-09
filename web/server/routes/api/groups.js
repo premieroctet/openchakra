@@ -316,11 +316,12 @@ router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {sessio
         return res.status(400).json("Ce département n'a pas de budget")
       }
       const start_date=moment().startOf(group.budget_period==MONTH_PERIOD ? 'month' : 'year')
-      // get not cancelled bookings for this group from start_date
+      // get not cancelled bookings for this group from start_date with user_role MANAGER
       Booking.find({
         user : { $in : group.members},
         date : {$gt: start_date},
-        status : { $nin : [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED, BOOK_STATUS.TO_CONFIRM]}
+        user_role : MANAGER,
+        status : { $nin : [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]}
       })
         .then( bookings => {
           const consumed = _.sumBy(bookings, b => b.amount)
