@@ -350,6 +350,10 @@ class UserServicesPreview extends React.Component {
   };
 
   onLocationChanged = (id, checked) => {
+    // Ne pas permettre la déselection
+    if (!checked) {
+      return
+    }
     this.onChange({target: {name: 'location', value: checked ? id : null}});
   };
 
