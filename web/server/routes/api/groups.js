@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const mongoose = require('mongoose');
 const moment = require('moment');
 moment.locale('fr');
 const User = require('../../models/User');
@@ -308,9 +309,7 @@ router.delete('/:group_id/managers/:manager_id', passport.authenticate('b2badmin
 // @Route GET /myAlfred/api/groups/:group_id/budget
 // Returns reamingin budget for this group in the period
 // @Access private b2badminmanager
-//router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {session: false}), (req, res) => {
-router.get('/:group_id/budget', (req, res) => {
-  console.log('request')
+router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {session: false}), (req, res) => {
   Group.findById(req.params.group_id, 'budget budget_period members')
     .then( group =>{
       if (!group.budget || !group.budget_period) {
@@ -321,7 +320,7 @@ router.get('/:group_id/budget', (req, res) => {
       Booking.find({
         user : { $in : group.members},
         date : {$gt: start_date},
-        status : { $nin : [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]}
+        status : { $nin : [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED, BOOK_STATUS.TO_CONFIRM]}
       })
         .then( bookings => {
           const consumed = _.sumBy(bookings, b => b.amount)
@@ -338,4 +337,18 @@ router.get('/:group_id/budget', (req, res) => {
     })
 })
 
+// @Route GET /myAlfred/api/groups/user/:user_id
+// Returns the group for this user if any
+// @Access private b2badminmanager
+//router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {session: false}), (req, res) => {
+router.get('/user/:user_id', passport.authenticate('b2badminmanager', {session: false}), (req, res) => {
+  Group.findOne({ members : mongoose.Types.ObjectId(req.params.user_id)})
+    .then( group =>{
+      res.json(group)
+    })
+    .catch( err =>{
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
 module.exports = router;
