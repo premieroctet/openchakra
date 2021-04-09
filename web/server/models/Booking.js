@@ -3,7 +3,6 @@ const moment = require('moment');
 const {invoiceFormat} = require("../../utils/invoice");
 const {BOOK_STATUS, ROLES} = require('../../utils/consts')
 const Schema = mongoose.Schema;
-const autoIncrement = require("mongoose-auto-increment");
 const CountSchema = require('./Count');
 
 const BookingSchema = new Schema({
