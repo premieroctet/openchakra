@@ -85,16 +85,13 @@ class About extends CompanyComponent {
       axios.get(`/myAlfred/api/users/users/${this.props.user}`)
         .then(res => {
           const user = res.data;
-          this.setState({
-            user: user,
-            userLanguages: user.languages.map(l => ({value: l, label: l})),
-            billing_address: user.billing_address
-          })
           if (user.company) {
             axios.get(`/myAlfred/api/companies/companies/${user.company}`)
               .then( res =>{
                 const company = res.data;
                 this.setState({
+                  user: user,
+                  userLanguages: user.languages.map(l => ({value: l, label: l})),
                   company: company,
                   website: company.website,
                   activityArea: company.activity,
@@ -108,6 +105,13 @@ class About extends CompanyComponent {
                 })
               })
             .catch(err => console.error(err))
+        }
+        else {
+          this.setState({
+            user: user,
+            userLanguages: user.languages.map(l => ({value: l, label: l})),
+            billing_address: user.billing_address
+          })
         }
       })
       .catch(err => console.error(err))
@@ -379,10 +383,10 @@ class About extends CompanyComponent {
   render() {
     const {displayTitlePicture, classes} = this.props;
     const {user, company} = this.state;
-    var place = user ? user.billing_address.city : "Pas d'adresse";
+
+    var place = this.is_mode_company() ? company ? company.billing_address.city : "Pas d'addresse" : user ? user.billing_address.city : "Pas d'adresse";
 
     const editable = isEditableUser(user);
-
 
     const wrapperComponentProps = !this.is_mode_company()?
       [
