@@ -6,12 +6,13 @@ const crypto = require('crypto');
 const moment = require('moment');
 const axios = require('axios');
 
-const {BOOK_STATUS, EXPIRATION_DELAY}=require('../../../utils/consts')
+const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts')
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
 const CronJob = require('cron').CronJob;
-const {is_production, is_development}=require('../../../config/config')
+const {is_production, is_development} = require('../../../config/config')
 const mangopay = require('mangopay2-nodejs-sdk');
+const {getNextNumber, getKeyDate} = require("../../utils/booking");
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
@@ -158,7 +159,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 
   newBooking.save()
     .then(booking => {
-    if (booking.status == BOOK_STATUS.INFO || booking.status == BOOK_STATUS.TO_CONFIRM) {
+      if (booking.status == BOOK_STATUS.INFO || booking.status == BOOK_STATUS.TO_CONFIRM) {
         // Reload to get user,alfred,service
         Booking.findById(booking._id)
           .populate('alfred')
@@ -234,7 +235,7 @@ router.get('/myBooking', passport.authenticate('jwt', {session: false}), (req, r
 // @Access private
 router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
   Booking.find({alfred: req.user.id})
-    .populate('alfred', { path : 'picture'})
+    .populate('alfred', {path: 'picture'})
     .populate('user')
     .populate('prestation')
     .then(booking => {
@@ -416,6 +417,15 @@ new CronJob('0 */15 * * * *', function () {
         const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
         if (moment(date).isSameOrAfter(end_date)) {
           console.log(`Booking finished:${b._id}`);
+          b.billing_number = getNextNumber(Booking.find({
+            billing_number: {
+              type: 'billing',
+              key: getKeyDate()
+            }
+          }));
+          b.receipt_number = '';
+          b.myalfred_billing_number = '';
+
           b.status = BOOK_STATUS.FINISHED
           b.save()
             .then(b => {
@@ -456,7 +466,7 @@ new CronJob('0 */15 * * * *', function () {
       booking.forEach(b => {
         const expirationDate = moment(b.date).add(EXPIRATION_DELAY, 'days').startOf('day');
         // Expired because Alfred did not answer
-        const answerExpired=moment(currentDate).isSameOrAfter(expirationDate)
+        const answerExpired = moment(currentDate).isSameOrAfter(expirationDate)
         // Expired because prestation date passed
         const prestaDateExpired = moment().isSameOrAfter(b.date_prestation_moment)
         if (answerExpired || prestaDateExpired) {

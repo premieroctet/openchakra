@@ -6,6 +6,7 @@ import {withStyles} from '@material-ui/core/styles';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
+import TwitterIcon from '@material-ui/icons/Twitter'
 import Divider from "@material-ui/core/Divider";
 import styles from '../../../static/css/components/Footer/Footer'
 import Hidden from "@material-ui/core/Hidden";
@@ -279,6 +280,13 @@ class Footer extends React.Component {
                 <a href={'https://www.linkedin.com/company/my-alfred/'} target={'_blank'}>
                   <IconButton aria-label="LinkedInIcon">
                     <LinkedInIcon/>
+                  </IconButton>
+                </a>
+              </Grid
+              ><Grid>
+                <a href={'https://twitter.com/MyAlfred2'} target={'_blank'}>
+                  <IconButton aria-label="TwitterIcon">
+                    <TwitterIcon/>
                   </IconButton>
                 </a>
               </Grid>

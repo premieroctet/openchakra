@@ -1,4 +1,4 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -7,7 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import io from 'socket.io-client';
 import Typography from '@material-ui/core/Typography';
-const {BOOK_STATUS}=require('../../utils/consts')
+
+const {BOOK_STATUS} = require('../../utils/consts')
 import styles from '../../static/css/components/BookingCancel/BookingCancel';
 import Divider from "@material-ui/core/Divider";
 
@@ -91,7 +92,8 @@ class Cancel extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid container style={{display:'flex', flexDirection: 'column', marginTop: '3vh', marginBottom: '3vh'}}>
+                  <Grid container
+                        style={{display: 'flex', flexDirection: 'column', marginTop: '3vh', marginBottom: '3vh'}}>
                     <Divider/>
                   </Grid>
                   <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -101,9 +103,9 @@ class Cancel extends React.Component {
                         variant={'contained'}
                         style={{
                           textTransform: 'initial',
-                          color:'white'
+                          color: 'white'
                         }}
-                        onClick={()=>this.props.onMaintain(this.props.booking_id)}
+                        onClick={() => this.props.onMaintain(this.props.booking_id)}
                       >
                         Maintenir
                       </Button>

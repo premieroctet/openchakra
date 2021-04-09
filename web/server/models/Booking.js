@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
-const {BOOK_STATUS, ROLES}=require('../../utils/consts')
+const {invoiceFormat} = require("../../utils/invoice");
+const {BOOK_STATUS, ROLES} = require('../../utils/consts')
 const Schema = mongoose.Schema;
+const autoIncrement = require("mongoose-auto-increment");
+const CountSchema = require('./Count');
 
 const BookingSchema = new Schema({
   reference: {
@@ -149,15 +152,23 @@ const BookingSchema = new Schema({
   // User role when booking
   user_role: {
     type: String,
-    enum : [null, ...Object.keys(ROLES)],
+    enum: [null, ...Object.keys(ROLES)],
   },
   billing_number: {
-    type: String,
-  },
+    type: String
+  }
+  ,
   receipt_number: {
-    type: String,
+    type: String
   },
+  myalfred_billing_number: {
+    type: String
+  }
 }, {toJSON: {virtuals: true, getters: true}});
+
+BookingSchema.pre('invoiceNumber', function () {
+
+});
 
 BookingSchema.virtual('alfred_amount').get(function () {
   return this.amount - this.fees;
@@ -167,9 +178,9 @@ BookingSchema.virtual('date_prestation_moment').get(function () {
   if (!this.date_prestation) {
     return null;
   }
-  const res = moment(moment(this.date_prestation, 'DD/MM/YYYY').format('YYYY-MM-DD') + ' ' + moment(this.time_prestation).format('HH:mm'));
-  return res;
+  return moment(moment(this.date_prestation, 'DD/MM/YYYY').format('YYYY-MM-DD') + ' ' + moment(this.time_prestation).format('HH:mm'));
 });
+
 
 BookingSchema.virtual('calendar_display').get(function () {
   if (!this.status) {

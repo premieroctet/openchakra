@@ -1,5 +1,3 @@
-
-
 const {RRule, RRuleSet, rrulestr} = require('rrule');
 const {ALL_SERVICES, generate_id} = require('./consts.js');
 const moment = require('moment-timezone');
@@ -188,13 +186,12 @@ const counterObjects = (data, attribute) => {
 
 const moneyFormat = (value) => {
   return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-  // return parseFloat(value).toFixed(2)
 }
-
 
 const todayDate = () => {
   return moment().format('L')
 }
+
 
 module.exports = {
   availabilities2events, eventUI2availability, availability2eventUI,
