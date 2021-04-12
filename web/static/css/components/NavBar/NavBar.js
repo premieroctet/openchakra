@@ -165,6 +165,9 @@ export default theme => ({
       width: '95%'
     },
   },
+  navbarMainSytleB2B:{
+    width: '95%',
+  },
   navbarTopContainer:{
     width: '90%',
     display: 'flex',
@@ -195,6 +198,14 @@ export default theme => ({
       display: 'none'
     }
   },
+  navbarHomepageMenuB2B:{
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]:{
+      display: 'none'
+    }
+  },
   navbarMenuBurgerContainer:{
     display: 'flex',
     flexDirection: 'row-reverse',
@@ -216,6 +227,7 @@ export default theme => ({
     fontWeight:' bold',
     textTransform: 'initial',
     transition: '0.3s',
+    minWidth: 'inherit',
     '& span':{
       whiteSpace: 'nowrap'
     },

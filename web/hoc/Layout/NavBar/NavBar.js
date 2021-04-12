@@ -679,7 +679,7 @@ class NavBar extends Component {
                   </Grid>
                 </Grid> : null
               }
-            <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'end', alignItems: 'center'}}>
+            <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'flex-end', alignItems: 'center'}}>
               <IconButton
                 classes={{root: classes.iconButton}}
                 style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
@@ -713,7 +713,7 @@ class NavBar extends Component {
     };
 
     return (
-      <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
+      <Grid className={this.state.ifHomePage ? is_b2b_style(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
         <AppBar position={'static'} className={classes.navbarAppBar} style={{backgroundColor: is_b2b_style(user) && companyPage || this.state.ifHomePage ? 'transparent' : is_b2b_style(user) && !companyPage ?'#353A51' : null}}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
@@ -741,7 +741,7 @@ class NavBar extends Component {
                       lg={6}
                       md={8}
                       sm={11}
-                      className={classes.navabarHomepageMenu}
+                      className={is_b2b_style(user) ? classes.navbarHomepageMenuB2B : classes.navabarHomepageMenu}
                     >
                       <Tabs value={false} aria-label="simple tabs example">
                         {
@@ -899,8 +899,17 @@ class NavBar extends Component {
                         lg={3}
                         md={!logged && !ifHomePage ? 3 : 2}
                         sm={!ifHomePage ? 4 : 11}
-                        className={ifHomePage ? is_b2b_style() ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
+                        className={ifHomePage ? is_b2b_style(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
                       >
+                        <Grid>
+                          <Button
+                            variant="outlined"
+                            classes={{root: classes.navbarSignInB2B}}
+                            style={{whiteSpace: 'nowrap'}}
+                            onClick={this.handleOpenLogin}>
+                            {'Je propose mes services'}
+                          </Button>
+                        </Grid>
                         <Grid>
                           <Button
                             classes={{root: is_b2b_style() ? classes.navBarlogInB2B : classes.navBarlogIn}}

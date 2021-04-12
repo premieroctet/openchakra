@@ -11,7 +11,7 @@ class TrustAndSecurityBar extends React.Component{
   render() {
     return(
       <Grid style={{display: 'flex', justifyContent: 'center', backgroundColor: 'white', height: '8vh'}}>
-        <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'end', width: '90%'}}>
+        <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', width: '90%'}}>
           <Grid>
             <VerifiedUserIcon/>
           </Grid>

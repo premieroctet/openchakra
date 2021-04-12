@@ -19,6 +19,9 @@ export default theme => ({
   },
   navbarAndBannerContainer: {
     height: '80vh',
+    [theme.breakpoints.down('lg')]:{
+      height: '90vh'
+    },
     [theme.breakpoints.down('xs')]:{
       height: 'inherit'
     }

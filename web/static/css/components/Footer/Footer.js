@@ -48,7 +48,7 @@ export default theme => ({
     margin: 0,
     width: '100%',
     display: 'flex',
-    justifyContent: 'end',
+    justifyContent: 'flex-end',
     [theme.breakpoints.down('sm')]:{
       justifyContent: 'center',
     }

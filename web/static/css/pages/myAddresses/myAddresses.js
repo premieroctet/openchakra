@@ -11,7 +11,7 @@ export default theme => ({
   editContainer:{
     display : 'flex',
     [theme.breakpoints.down('lg')]:{
-      justifyContent: 'end'
+      justifyContent: 'flex-end'
     }
   }
 })

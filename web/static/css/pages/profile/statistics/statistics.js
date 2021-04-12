@@ -1,7 +1,7 @@
 export default theme => ({
   statContainer:{
     display: 'flex',
-    justifyContent: 'end',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     width: '100%'
   },
@@ -42,7 +42,7 @@ export default theme => ({
     justifyContent: 'center',
     [theme.breakpoints.down('sm')]:{
       margin: 0,
-      justifyContent: 'end'
+      justifyContent: 'flex-end'
     }
   },
   statResultLabel:{

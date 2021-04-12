@@ -12,7 +12,7 @@ export default theme => ({
   },
   containerNextButton:{
     display: 'flex',
-    justifyContent: 'end',
+    justifyContent: 'flex-end',
   },
   nextButton: {
     color: 'white',
