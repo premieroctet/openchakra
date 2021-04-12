@@ -78,7 +78,13 @@ export default theme => ({
     backgroundColor: '#3C4047'
   },
   generalWidthFooter: {
-    width: '90%'
+    width: '90%',
+    [theme.breakpoints.down('sm')]: {
+      width: '95%'
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: '12vh'
+    }
   },
   trustAndSecurityContainer: {
     [theme.breakpoints.down('xs')]: {

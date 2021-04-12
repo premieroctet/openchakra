@@ -1,92 +1,4 @@
 export default theme => ({
-  footerMainStyle:{
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  footerMainContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    [theme.breakpoints.down('xs')]:{
-      justifyContent: 'start'
-    }
-  },
-  footerSection:{
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  footerSocialSection:{
-    display:'flex',
-    flexDirection: 'column',
-    width: '90%',
-    marginTop: '3%',
-    alignItems: 'end',
-    [theme.breakpoints.down('xs')]:{
-      alignItems: 'start'
-    }
-
-  },
-  footerDividerContainer:{
-    display: 'flex',
-    marginTop:'3vh',
-    marginBottom: '3vh',
-    justifyContent: 'center'
-  },
-  footerDivider:{
-    height: 1,
-    width: '80%'
-  },
-  footerBrandContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    [theme.breakpoints.down('xs')]:{
-      marginBottom: '12vh',
-      marginTop: '5vh',
-    }
-  },
-  footerBrandStyle:{
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '80%',
-    [theme.breakpoints.down('xs')]:{
-      width: 'inherit',
-      flexDirection: 'row',
-    },
-    [theme.breakpoints.down('lg')]:{
-      width: '100%'
-    }
-  },
-  footerRgpdButtons:{
-    display:'flex',
-    flexDirection: 'row',
-    justifyContent : 'space-between',
-    width: '30%',
-    [theme.breakpoints.down('xs')]:{
-      width: '100%',
-      flexDirection: 'column',
-      marginBottom: '15vh',
-      alignItems: 'end',
-      textAlign: 'end'
-    },
-    [theme.breakpoints.down('lg')]:{
-      width: '50%'
-    }
-  },
-  footerLawContainer:{
-    [theme.breakpoints.down('lg')]:{
-      width: '50%'
-    }
-  },
-  footerSocialContainer:{
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  footerLinkInfoContainer:{
-    [theme.breakpoints.down('xs')]:{
-      marginBottom: '2vh'
-    }
-  },
   navbarModal: {
     display: 'flex',
     alignItems: 'center',
@@ -115,4 +27,47 @@ export default theme => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
+  socialAndLegalContainer:{
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]:{
+      flexDirection: 'column-reverse',
+
+    }
+  },
+  legalContainer:{
+    margin: 0,
+    width: '100%',
+    [theme.breakpoints.down('sm')]:{
+      display: 'flex',
+      justifyContent: 'center'
+
+    }
+  },
+  socialContainer:{
+    margin: 0,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'end',
+    [theme.breakpoints.down('sm')]:{
+      justifyContent: 'center',
+    }
+  },
+  containerSectionFooter:{
+    width:'100%',
+    margin:0,
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.down('xs')]:{
+      textAlign: 'center'
+    }
+  },
+  storeContainer:{
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]:{
+      justifyContent: 'center'
+    }
+  }
+
 })
