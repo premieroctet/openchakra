@@ -20,14 +20,14 @@ const is_b2b_employee = user => {
  - is logged under ADMIN role
  */
 
- const is_b2b_admin = user => {
+const is_b2b_admin = user => {
   const is_admin = Boolean(user) && user.roles && user.roles.includes(ADMIN)
   if (!is_admin) {
     return false
   }
 
-  const token=getAuthToken()
-  const result = token && token.role==ADMIN
+  const token = getAuthToken()
+  const result = token && token.role == ADMIN
   return result
 }
 
@@ -37,19 +37,31 @@ const is_b2b_manager = user => {
     return false
   }
 
-  const token=getAuthToken()
-  const result = token && token.role==MANAGER
+  const token = getAuthToken()
+  const result = token && token.role == MANAGER
   return result
 }
 
 const is_mode_company = user => {
-  return is_b2b_admin(user)||is_b2b_manager(user)
+  return is_b2b_admin(user) || is_b2b_manager(user)
 }
 
 
 const is_b2b_style = user => {
   return is_b2b_site() || is_b2b_admin(user) || is_b2b_manager(user)
 }
-module.exports={
-  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_b2b_site,  is_mode_company
- }
+
+const isMobile = {
+  Android: function () {
+    return navigator.userAgent.match(/Android/i);
+  },
+  iOS: function () {
+    return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+  },
+  any: function () {
+    return (isMobile.Android() || isMobile.iOS());
+  }
+};
+module.exports = {
+  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_b2b_site, is_mode_company, isMobile
+}
