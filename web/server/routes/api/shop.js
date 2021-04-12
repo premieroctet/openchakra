@@ -106,7 +106,12 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
         .then(shop => {
           User.findById(shop.alfred)
             .then(alfred => {
-              createMangoProvider(alfred, shop);
+              if (alfred.age<18 || alfred.age>120) {
+                console.log(`Create Mango provider skipped, ${alfred.email} age ${alfred.age}`)
+              }
+              else {
+                createMangoProvider(alfred, shop);
+              }
               sendShopOnline(alfred, req);
             })
             .catch(err => console.error(err));
@@ -468,7 +473,12 @@ if (is_production() || is_validation()) {
           Shop.findOne({alfred: alfred})
             .then(shop => {
               console.log(`Found alfred ${alfred.name} and shop ${shop._id}`);
-              createMangoProvider(alfred, shop);
+              if (alfred.age<18 || alfred.age>120) {
+                console.log(`Create Mango provider skipped, ${alfred.email} age ${alfred.age}`)
+              }
+              else {
+                createMangoProvider(alfred, shop);
+              }
             })
             .catch(err => console.error(err));
         });
