@@ -215,6 +215,8 @@ class creaShop extends React.Component {
   }
 
   addDefaultAvailability = () => {
+    // 923772 : plus de disponibilité par défaut
+    return 
     const avail=getDefaultAvailability()
     const data={
       startDate: avail.period.begin,

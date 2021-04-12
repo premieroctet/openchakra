@@ -89,6 +89,7 @@ class UserServicesPreview extends React.Component {
       use_cesu: false,
       albums:[],
       excludedDays: [],
+      available_budget: Number.MAX_SAFE_INTEGER,
     };
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
@@ -140,6 +141,20 @@ class UserServicesPreview extends React.Component {
           .catch (err => {})
           .then(res => {
             let user = res ? res.data : null
+            // Mode compagnie : l'admin a un budget illimité comme un user standard, le manager a le budget de son département
+            if (user && is_b2b_manager(user)) {
+              axios.get(`/myAlfred/api/groups/user/${user._id}`)
+                .then ( res => {
+                  const group=res.data
+                  return axios.get(`/myAlfred/api/groups/${group._id}/budget`)
+                })
+                .then ( res => {
+                  this.setState({available_budget: res.data})
+                })
+                .catch (err => {
+                  console.error(err)
+                })
+            }
             st['user']=user
             const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
             promise
@@ -280,6 +295,10 @@ class UserServicesPreview extends React.Component {
     if (!this.state.location) {
       errors['location'] = 'Sélectionnez un lieu de prestation';
     }
+
+    if (this.hasWarningBudget()) {
+      errors['total'] = 'Le montant dépasse le budget disponible pour votre département';
+    }
     this.setState({errors: errors});
   };
 
@@ -331,6 +350,10 @@ class UserServicesPreview extends React.Component {
   };
 
   onLocationChanged = (id, checked) => {
+    // Ne pas permettre la déselection
+    if (!checked) {
+      return
+    }
     this.onChange({target: {name: 'location', value: checked ? id : null}});
   };
 
@@ -421,6 +444,11 @@ class UserServicesPreview extends React.Component {
     }
     return false
   };
+
+  hasWarningBudget = () => {
+    const warningBudget = this.state.total > this.state.available_budget
+    return warningBudget
+  }
 
   getClientAddress = () => {
     const {user, allAddresses}=this.state
@@ -763,6 +791,7 @@ class UserServicesPreview extends React.Component {
                           computeTravelTax={this.computeTravelTax}
                           getLocationLabel={this.getLocationLabel}
                           warningPerimeter={this.hasWarningPerimeter()}
+                          warningBudget={this.hasWarningBudget()}
                           clientAddress={this.getClientAddressLabel()}
                           clientAddressId={this.get_prop_address()}
                           book={this.book}
@@ -789,6 +818,7 @@ class UserServicesPreview extends React.Component {
                       computeTravelTax={this.computeTravelTax}
                       getLocationLabel={this.getLocationLabel}
                       warningPerimeter={this.hasWarningPerimeter()}
+                      warningBudget={this.hasWarningBudget()}
                       clientAddress={this.getClientAddressLabel()}
                       clientAddressId={this.get_prop_address()}
                       book={this.book}
@@ -841,7 +871,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes, address} = this.props;
-    const {service,alfred, user,} = this.state;
+    const {service,alfred, user, total, available_budget} = this.state;
 
     if (!this.state.serviceUser) {
       return null

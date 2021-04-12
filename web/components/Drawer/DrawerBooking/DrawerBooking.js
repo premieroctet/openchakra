@@ -119,7 +119,7 @@ class DrawerBooking extends React.Component{
   render() {
 
     const {expanded} = this.state;
-    const {warningPerimeter, side, classes, service, alfred, date, time, errors,
+    const {warningPerimeter, warningBudget, side, classes, service, alfred, date, time, errors,
       count, serviceUser, isChecked, location, pick_tax, total, commission,
       cesu_total, filters, pricedPrestations, availabilities, excludedDays} = this.props;
 
@@ -128,13 +128,14 @@ class DrawerBooking extends React.Component{
     const res = (
       <Grid>
         {
-          warningPerimeter ?
+          warningPerimeter || warningBudget ?
             <Grid className={classes.userServicePreviewWarningContainer}>
               <Grid>
                 <CancelIcon color={'secondary'}/>
               </Grid>
               <Grid>
-                <Typography>Cet Alfred se trouve trop loin de chez vous pour être réservé!</Typography>
+                { warningPerimeter ? <Typography>Cet Alfred se trouve trop loin de chez vous pour être réservé!</Typography> : null }
+                { warningBudget ? <Typography>Le montant dépasse le budget disponible pour votre département</Typography> : null }
               </Grid>
             </Grid> : null
         }

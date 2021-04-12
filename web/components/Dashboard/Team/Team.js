@@ -112,6 +112,7 @@ class Team extends React.Component{
       }],
       accounts: [],
       cards: [],
+      consumed_budgets: {}
     }
   }
 
@@ -127,12 +128,23 @@ class Team extends React.Component{
       console.error(err)
     });
 
-    axios.get('/myAlfred/api/groups').then(res => {
-      let data = res.data;
-      this.setState({groups: data})
-    }).catch(err => {
-      console.error(err)
-    });
+    axios.get('/myAlfred/api/groups')
+      .then(res => {
+        let groups = res.data;
+        this.setState({groups: groups})
+        groups.forEach( group => {
+          axios.get(`/myAlfred/api/groups/${group._id}/budget`)
+            .then ( res => {
+              var budgets = this.state.consumed_budgets
+              budgets[group._id]=res.data
+              this.setState({consumed_budgets: budgets})
+            })
+
+        });
+
+      }).catch(err => {
+        console.error(err)
+      });
 
     axios.get('/myAlfred/api/payment/activeAccount')
       .then(response => {
@@ -743,7 +755,7 @@ class Team extends React.Component{
 
   render() {
     const{classes} = this.props;
-    const{managers_sort, groups, admins, managers} = this.state;
+    const{managers_sort, groups, admins, managers, consumed_budgets} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -814,6 +826,11 @@ class Team extends React.Component{
                           primary={res.name}
                           secondary={res.budget ? `${res.budget}€ / ${BUDGET_PERIOD[res.budget_period]}` : 'Pas de budget défini'}
                         />
+                        { consumed_budgets[res._id] ?
+                          <ListItemText secondary={`${consumed_budgets[res._id]}€ disponibles`} />
+                          :
+                          null
+                        }
                         <ListItemSecondaryAction>
                           <IconButton edge="end" aria-label="update" onClick={() => this.handleClickOpen('dialogGroupe', res)}>
                             <SettingsIcon />

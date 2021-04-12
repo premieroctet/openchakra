@@ -74,7 +74,8 @@ const isMomentAvailable = (mom, avails) => {
   }
   const availability=getAvailabilityForDate(mom, avails)
   if (!availability || !availability.available) {
-    return false
+    // 923772 : pas de dispos => toujours disponible
+    return true
   }
   // Date is ok, check timelapses
   return availability.timelapses.includes(mom.hour())
@@ -193,7 +194,8 @@ const isDateAvailable = (mmt, availabilities) => {
     return false
   }
   if (!availabilities || availabilities.length == 0) {
-    return false;
+    // 923772 : pas de dispos => toujours disponible
+    return true;
   }
   const availability=getAvailabilityForDate(mmt, availabilities)
   return availability ? availability.available : false
