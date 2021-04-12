@@ -97,7 +97,7 @@ class Footer extends React.Component {
 
     return (
       <Grid container spacing={2} style={{width: '100%', margin: 0}}>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={is_b2b_site() ? 6 : 3} xs={is_b2b_site() ? 6 : 3}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
             <h3>À propos</h3>
           </Grid>
@@ -159,7 +159,7 @@ class Footer extends React.Component {
             : null
           }
         </Grid>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={is_b2b_site() ? 6 : 3} xs={is_b2b_site() ? 6 : 3}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
             <h3 >{is_b2b_site() ? "Entreprises" : "Communauté"}</h3>
           </Grid>
@@ -190,7 +190,7 @@ class Footer extends React.Component {
               </>
           }
         </Grid>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={is_b2b_site() ? 6 : 3} xs={is_b2b_site() ? 6 : 3}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
             <h3>Alfred</h3>
           </Grid>
@@ -230,7 +230,7 @@ class Footer extends React.Component {
         </Grid>
         {
           is_b2b_site() ? null :
-            <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3} lg={3} md={3} sm={3} xs={3}>
+            <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3} lg={3} md={3} sm={6} xs={6}>
               <Grid item>
                 <h3 >Assistance</h3>
               </Grid>
@@ -251,31 +251,28 @@ class Footer extends React.Component {
               </Grid>
             </Grid>
         }
-        {
-          isMobile ? null :
-            <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.containerSectionFooter}>
-              <Grid>
-                <h3>Mobiles</h3>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.containerSectionFooter}>
+            <Grid>
+              <h3>Mobiles</h3>
+            </Grid>
+            <Grid container className={classes.storeContainer}>
+              <Grid item>
+                <a href={'https://apps.apple.com/us/app/my-alfred/id1544073864'} target={'_blank'}>
+                  <img alt={'appleStore'} title={'badge_applestore'} width={126.5} height={40} src={'../../static/assets/img/footer/ios/ios_black.svg'}/>
+                </a>
               </Grid>
-              <Grid container className={classes.storeContainer}>
-                <Grid item>
-                  <a href={'https://apps.apple.com/us/app/my-alfred/id1544073864'} target={'_blank'}>
-                    <img alt={'appleStore'} title={'badge_applestore'} width={126.5} height={40} src={'../../static/assets/img/footer/ios/ios_black.svg'}/>
-                  </a>
-                </Grid>
-                <Grid item>
-                  <a href={'https://play.google.com/store/apps/details?id=com.myalfred'} target={'_blank'}>
-                    <img alt={'googlePlay'} title={'badge_android'}  width={153} src={'../../static/assets/img/footer/android/android.png'}/>
-                  </a>
-                </Grid>
+              <Grid item>
+                <a href={'https://play.google.com/store/apps/details?id=com.myalfred'} target={'_blank'}>
+                  <img alt={'googlePlay'} title={'badge_android'}  width={153} src={'../../static/assets/img/footer/android/android.png'}/>
+                </a>
               </Grid>
             </Grid>
-        }
+          </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Divider/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.socialAndLegalContainer}>
-          <Grid container item xl={6} lg={8} md={8} sm={12} xs={12} spacing={1} className={classes.legalContainer}>
+          <Grid container item xl={6} lg={8} md={9} sm={12} xs={12} spacing={1} className={classes.legalContainer}>
             <Grid item>
               <Typography>© 2021 My Alfred,Inc.</Typography>
             </Grid>
@@ -296,7 +293,7 @@ class Footer extends React.Component {
               </Link>
             </Grid>
           </Grid>
-          <Grid container item xl={6} lg={4} md={4} sm={12} xs={12} spacing={1} className={classes.socialContainer}>
+          <Grid container item xl={6} lg={4} md={3} sm={12} xs={12} spacing={1} className={classes.socialContainer}>
             <Grid item>
               <a href={'https://www.facebook.com/myalfred1/'} target={'_blank'}>
                 <IconButton aria-label="FacebookIcon" >

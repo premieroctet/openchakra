@@ -58,15 +58,16 @@ export default theme => ({
     margin:0,
     display: 'flex',
     flexDirection: 'column',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('sm')]:{
       textAlign: 'center'
     }
   },
   storeContainer:{
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.down('xs')]:{
-      justifyContent: 'center'
+    [theme.breakpoints.down('sm')]:{
+      justifyContent: 'center',
+      flexDirection: 'column'
     }
   }
 
