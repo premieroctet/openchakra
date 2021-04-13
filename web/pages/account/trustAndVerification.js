@@ -1,5 +1,5 @@
-const {clearAuthenticationToken}=require('../../utils/authentication')
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {clearAuthenticationToken} = require('../../utils/authentication')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 import React, {Fragment} from 'react';
 import axios from 'axios';
@@ -30,6 +30,8 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
+import FormHelperText from '@material-ui/core/FormHelperText';
+
 const {CESU} = require('../../utils/consts');
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 const I18N = require('../../utils/i18n');
@@ -90,26 +92,26 @@ class trustAndVerification extends React.Component {
       .get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
-        var st={'user': user}
+        var st = {'user': user}
         if (user.id_card) {
-          st['card']= user.id_card
+          st['card'] = user.id_card
           if (user.id_card.recto) {
-            st['ext']=user.id_card.recto.split('.').pop();
+            st['ext'] = user.id_card.recto.split('.').pop();
           }
           if (user.id_card.verso) {
-            st['extVerso']=user.id_card.verso.split('.').pop();
+            st['extVerso'] = user.id_card.verso.split('.').pop();
           }
           if (user.id_card.recto) {
             this.setState({type: user.id_card.verso ? 'identite' : 'passeport'});
           }
         }
         if (user.registration_proof) {
-          st['registration_proof']=user.registration_proof
-          st['extRegistrationProof']=user.registration_proof.split('.').pop();
+          st['registration_proof'] = user.registration_proof
+          st['extRegistrationProof'] = user.registration_proof.split('.').pop();
         }
-        st['id_card_status']=user.id_card_status_text
+        st['id_card_status'] = user.id_card_status_text
         if (user.id_card_error) {
-          st['id_card_error']=user.id_card_error_text
+          st['id_card_error'] = user.id_card_error_text
         }
         this.setState(st);
         if (user.is_alfred) {
@@ -165,8 +167,8 @@ class trustAndVerification extends React.Component {
   onChangePartPro = event => {
     const {name, checked} = event.target
 
-    const pro=(name=='professional' && checked) || (name=='particular' && !checked)
-    this.setState({ professional: pro})
+    const pro = (name == 'professional' && checked) || (name == 'particular' && !checked)
+    this.setState({professional: pro})
   };
 
   onSiretChange = data => {
@@ -281,12 +283,11 @@ class trustAndVerification extends React.Component {
               snackBarSuccess('Document d\'immatriculation ajouté');
               this.componentDidMount()
             })
-            .catch (err=> console.error(err))
+            .catch(err => console.error(err))
         }
       })
       .catch(err => console.error(err));
   }
-
   deleteRecto(force = false) {
     if (!force) {
       this.setState({
@@ -340,8 +341,8 @@ class trustAndVerification extends React.Component {
     return false;
   };
 
-  modalDeleteConfirmMessage = () =>{
-    return(
+  modalDeleteConfirmMessage = () => {
+    return (
       <Dialog
         open={this.state.open}
         onClose={this.handleClose}
@@ -368,18 +369,19 @@ class trustAndVerification extends React.Component {
 
 
   content = (classes) => {
-    return(
+    return (
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
             <h2>Vérification</h2>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Vérifiez votre email, votre numéro de téléphone et votre identité.</Typography>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Vérifiez votre email, votre numéro de téléphone et votre
+              identité.</Typography>
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid>
@@ -470,7 +472,7 @@ class trustAndVerification extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <Divider style={{height : 2, width: '100%', margin :'10vh 0px'}}/>
+            <Divider style={{height: 2, width: '100%', margin: '10vh 0px'}}/>
           </Grid>
           {this.state.alfred ?
             <Grid style={{marginBottom: '12vh'}}>
@@ -497,7 +499,7 @@ class trustAndVerification extends React.Component {
                 {!this.state.professional ?
                   <Grid>
                     <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
-                      <Grid style={{display: 'flex', alignItems:'center'}}>
+                      <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[0]}/>
                         <Typography>Je veux être déclaré(e) en CESU</Typography>
                       </Grid>
@@ -509,7 +511,7 @@ class trustAndVerification extends React.Component {
                             variant={'outlined'}
                             name='social_security'
                             label={'N° sécurité sociale'}
-                            helperText={'N° SS (13+2 chiffres)'}
+                            helperText={'(Facultatif) N° SS : 13+2 chiffres'}
                             value={this.state.social_security}
                             onChange={this.onChange}
                             errors={this.state.social_security}
@@ -517,7 +519,7 @@ class trustAndVerification extends React.Component {
                         </Grid>
                         :
                         null}
-                      <Grid style={{display: 'flex', alignItems:'center'}}>
+                      <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[1]}/>
                         <Typography> J'accepte d'être déclaré en CES </Typography>
                       </Grid>
@@ -537,7 +539,7 @@ class trustAndVerification extends React.Component {
                         </Grid>
                         :
                         null}
-                      <Grid style={{display: 'flex', alignItems:'center'}}>
+                      <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[2]}/>
                         <Typography>Je n'accepte pas d'être déclaré(e) en CESU</Typography>
                       </Grid>
@@ -603,7 +605,8 @@ class trustAndVerification extends React.Component {
                 null
               }
               <Grid style={{marginTop: '10vh'}}>
-                <Button disabled={this.statusSaveDisabled()} variant="contained" className={classes.buttonSave} onClick={this.editSiret}>
+                <Button  variant="contained" className={classes.buttonSave}
+                        onClick={this.editSiret}>
                   Enregistrer
                 </Button>
               </Grid>
