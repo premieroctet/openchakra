@@ -4,6 +4,7 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import {Helmet} from 'react-helmet';
 import Grid from '@material-ui/core/Grid';
 import InfoBar from '../components/InfoBar/InfoBar';
+import InfoBarMobile from '../components/InfoBarMobile/InfoBarMobile';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../static/css/pages/homePage/index';
 import NavBar from '../hoc/Layout/NavBar/NavBar';
@@ -18,8 +19,10 @@ import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Divider} from "@material-ui/core";
 import ResaService from "../components/HomePage/ResaService/ResaService";
 import {is_b2b_style} from "../utils/context";
-const {PRO, PART}=require('../utils/consts')
+
+const {PRO, PART} = require('../utils/consts')
 const {getLoggedUserId} = require('../utils/functions');
+import {isMobile} from 'react-device-detect'
 
 class Home extends React.Component {
   constructor(props) {
@@ -30,7 +33,6 @@ class Home extends React.Component {
       logged: false,
     };
   }
-
 
   componentDidMount() {
     if (getLoggedUserId()) {
@@ -49,15 +51,15 @@ class Home extends React.Component {
       }).catch(err => console.error(err));
   }
 
-  resizeFrame = () =>{
+  resizeFrame = () => {
 
     let iframe = document.querySelector("#myIframe");
 
-    window.addEventListener('message', function(e) {
+    window.addEventListener('message', function (e) {
       // message that was passed from iframe page
       let message = e.data;
       iframe.style.height = message.height + 'px';
-    } , false);
+    }, false);
   }
 
   render() {
@@ -77,8 +79,15 @@ class Home extends React.Component {
               <InfoBar/>
             </Grid>
           </Hidden>
-          <Grid container  className={classes.navbarAndBannerContainer}>
-            <Grid item xl={12} lg={12} sm={12} md={12} xs={12} className={is_b2b_style() ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}>
+          {
+            isMobile ?
+              <Grid>
+                <InfoBarMobile/>
+              </Grid> : null
+          }
+          <Grid container className={classes.navbarAndBannerContainer}>
+            <Grid item xl={12} lg={12} sm={12} md={12} xs={12}
+                  className={is_b2b_style() ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}>
               <Grid className={classes.navbarComponentPosition}>
                 <NavBar/>
               </Grid>
@@ -89,18 +98,19 @@ class Home extends React.Component {
               </Grid>
             </Grid>
           </Grid>
+
           {
             is_b2b_style() ?
-                <iframe
-                  onLoad={this.resizeFrame}
-                  frameborder="0"
-                  scrolling="no"
-                  id="myIframe"
-                  src="/blog/accueil"
-                  style={{width: '100%'}}
-                >
-                </iframe>
-               : null
+              <iframe
+                onLoad={this.resizeFrame}
+                frameborder="0"
+                scrolling="no"
+                id="myIframe"
+                src="/blog/accueil"
+                style={{width: '100%'}}
+              >
+              </iframe>
+              : null
           }
           <Grid container className={classes.mainContainerStyle}>
             <Grid className={classes.generalWidthContainer}>

@@ -51,17 +51,17 @@ const is_b2b_style = user => {
   return is_b2b_site() || is_b2b_admin(user) || is_b2b_manager(user)
 }
 
-const isMobile = {
-  Android: function () {
-    return navigator.userAgent.match(/Android/i);
-  },
-  iOS: function () {
-    return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-  },
-  any: function () {
-    return (isMobile.Android() || isMobile.iOS());
-  }
-};
+// const isMobile = {
+//   Android: function () {
+//     return navigator.userAgent.match(/Android/i);
+//   },
+//   iOS: function () {
+//     return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+//   },
+//   any: function () {
+//     return (isMobile.Android() || isMobile.iOS());
+//   }
+// };
 module.exports = {
-  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_b2b_site, is_mode_company, isMobile
+  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_b2b_site, is_mode_company
 }
