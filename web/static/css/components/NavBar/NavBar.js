@@ -3,6 +3,23 @@ export default theme => ({
     width: '50%',
     marginTop: '5vh',
     [theme.breakpoints.down('lg')]:{
+      width: '50%',
+    },
+    [theme.breakpoints.down('sm')]:{
+      width: '90%',
+    },
+    [theme.breakpoints.down('xs')]:{
+      cursor: 'pointer',
+      width: '100%',
+    },
+  },
+  navbarSearchContainerB2B:{
+    width: '40%',
+    marginTop: '5vh',
+    [theme.breakpoints.down('lg')]:{
+      width: '50%',
+    },
+    [theme.breakpoints.down('md')]:{
       width: '70%',
     },
     [theme.breakpoints.down('sm')]:{
@@ -26,49 +43,13 @@ export default theme => ({
     borderRadius: theme.border.button.borderRadius,
     boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px'
   },
-  navbarTextFieldService:{
-    flex: 1,
-  },
-  navbarRootTextField: {
-    width: '100%',
-    fontFamily: theme.typography.text.fontFamily,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    "& .MuiFormLabel-root": {
-      fontWeight: 'bold',
-      '&:focus':{
-        color: theme.palette.primary.main
-      }
-    },
-    '& .MuiFormLabel-root.Mui-focused':{
-      color: theme.palette.primary.main
-    },
-    '& .MuiInputBase-input::placeholder':{
-      opacity: '0.5'
-    },
-    '& div':{
-      width:'100%'
-    }
-  },
+
   iconButton: {
     color: theme.palette.white.main,
   },
-  navbarCloseButton:{
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-  },
-  divider: {
-    height: 28,
-    margin: 4,
-  },
+
   navbarFormControlAddress: {
     width: '100%'
-  },
-  navbarAlgoliaContent:{
-    flex:1,
-    marginLeft: 20,
   },
   navbarRootTextFieldWhere:{
     width: '100%',
@@ -119,44 +100,7 @@ export default theme => ({
       display: 'none',
     }
   },
-  buttonIgnore:{
-    textTransform: 'initial',
-    color: 'rgba(39,37,37,35%)'
-  },
-  navbarAlgoliaPlace:{
-    border: 0,
 
-    [theme.breakpoints.down('xs')]:{
-      padding: '18.5px 14px',
-    }
-  },
-  navbarDatePickerMain:{
-    display: 'flex',
-    alignItems: 'center'
-  },
-  navbarDatePickerContainer:{
-    flex: 1,
-    marginLeft: 20
-  },
-  navbarRootTextFieldWhen:{
-    width: '100%',
-    fontFamily: theme.typography.text.fontFamily,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    "& .MuiFormLabel-root": {
-      fontWeight: 'bold',
-      '&:focus':{
-        color: theme.palette.primary.main
-      }
-    },
-    '& .MuiFormLabel-root.Mui-focused':{
-      color: theme.palette.primary.main
-    },
-    '& .MuiInputBase-input::placeholder':{
-      opacity: '0.5'
-    }
-  },
   navbarMainSytle:{
     alignItems: 'center',
     width: '70%',
@@ -167,14 +111,6 @@ export default theme => ({
   },
   navbarMainSytleB2B:{
     width: '95%',
-  },
-  navbarTopContainer:{
-    width: '90%',
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]:{
-      width: '100%'
-    }
   },
 
   navbarLogoContainer:{
@@ -200,7 +136,7 @@ export default theme => ({
   },
   navbarHomepageMenuB2B:{
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
     [theme.breakpoints.down('md')]:{
       display: 'none'
@@ -235,15 +171,7 @@ export default theme => ({
       color: 'rgb(176, 205, 200)'
     }
   },
-  inputDatePicker:{
-    border: 'inherit',
-    fontFamily: theme.typography.text.fontFamily,
-    color: theme.palette.placeHolder.main,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    padding: '6px 0 7px',
-  },
+
   logoMyAlfred:{
     height: 64,
 
@@ -361,52 +289,7 @@ export default theme => ({
   navbarSearchContainerSearchP:{
     width: '100%',
   },
-  navbarRootTextFieldP: {
-    marginLeft: 20,
-    flex: 1,
-    fontFamily: theme.typography.text.fontFamily,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    "& .MuiFormLabel-root": {
-      fontWeight: 'bold',
-    },
-    '& .MuiInputBase-input::placeholder':{
-      opacity: '0.5'
-    },
-    '& div':{
-      width:'100%'
-    }
-  },
-  navbarRootTextFieldWhenP:{
-    width: '100%',
-    marginLeft: 20,
-    fontFamily: theme.typography.text.fontFamily,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    "& .MuiFormLabel-root": {
-      fontWeight: 'bold',
-      '&:focus':{
-        color: theme.palette.primary.main
-      }
-    },
-    '& .MuiFormLabel-root.Mui-focused':{
-      color: theme.palette.primary.main
-    },
-    '& .MuiInputBase-input::placeholder':{
-      opacity: '0.5'
-    }
-  },
-  navbarAlgoliaContentP:{
-    flex:1,
-    '& .ap-input-icon':{
-      display: 'none',
-    }
-  },
-  navbarDatePickerContainerP:{
-    flex: 1,
-  },
+
   navbarMainSytleP:{
     alignItems: 'center',
     width: '100%',
@@ -427,42 +310,6 @@ export default theme => ({
     flexDirection: 'column',
     padding: 0
   },
-  navbarTopContainerP:{
-    display: 'flex',
-    width: '90%',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]:{
-      width: '100%'
-    }
-
-  },
-  inputDatePickerP:{
-    border: 'inherit',
-    fontFamily: theme.typography.text.fontFamily,
-    color: theme.palette.placeHolder.main,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-  },
-  modalMobileSearchBarInputTextField:{
-    width: '100%'
-  },
-  modalMobileSearchBartTextFieldWhereP:{
-    flex: 1,
-    fontFamily: theme.typography.text.fontFamily,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    "& .MuiFormLabel-root": {
-      fontWeight: 'bold',
-    },
-    '& .MuiInputBase-input::placeholder':{
-      opacity: '0.5'
-    },
-    '& div':{
-      width:'100%'
-    }
-  },
   dialogNavbarMobileFilter:{
     minWidth: '100%'
   },
@@ -472,5 +319,33 @@ export default theme => ({
   },
   navbarPaperWidth:{
     width: 600
+  },
+  buttonService:{
+    width: '100%',
+    textTransform:'initial',
+    border: '3px solid #353A51',
+    borderRadius: theme.border.button.borderRadius,
+  },
+  buttonLoginB2b:{
+    width: '100%',
+    textTransform:'initial',
+    border: '3px solid #353A51',
+    borderRadius: theme.border.button.borderRadius,
+    backgroundColor: '#353A51',
+    color:'white',
+    '& :hover':{
+      color:'#353A51',
+    }
+  },
+  buttonRegisterB2b:{
+    width: '100%',
+    textTransform:'initial',
+    border: '3px solid rgb(176, 205, 200)',
+    borderRadius: theme.border.button.borderRadius,
+    backgroundColor: 'rgb(176, 205, 200)',
+    color:'white',
+    '& :hover':{
+      color:'rgb(176, 205, 200)',
+    }
   }
 })

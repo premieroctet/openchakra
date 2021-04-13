@@ -28,7 +28,6 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Link from 'next/link';
 import axios from 'axios'
 import Hidden from "@material-ui/core/Hidden";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -72,6 +71,7 @@ class NavBar extends Component {
     super(props);
     this.state = {
       anchorEl: null,
+      anchorElB2b: null,
       setOpenLogin: false,
       setOpenRegister: false,
       user: null,
@@ -143,7 +143,7 @@ class NavBar extends Component {
   };
 
   handleMenuClose = () => {
-    this.setState({anchorEl: null});
+    this.setState({anchorEl: null, anchorElB2b: null});
   };
 
   handleOpenLogin = (e) => {
@@ -219,8 +219,16 @@ class NavBar extends Component {
     this.setState({anchorEl: event.currentTarget})
   };
 
+  handleOpenMenuItemB2b = (event) => {
+    this.setState({anchorElB2b: event.currentTarget})
+  };
+
   handleClosenMenuItem = () => {
     this.setState({anchorEl: false})
+  };
+
+  handleClosenMenuItemB2b = () => {
+    this.setState({anchorElB2b: false})
   };
 
   findService = () => {
@@ -526,13 +534,241 @@ class NavBar extends Component {
     });
   }
 
+  burgerMenuLogged = (classes) =>{
+    const{ifHomePage, companyPage, anchorEl, user} = this.state;
+
+    return(
+      <Grid
+        className={classes.navbarMenuBurgerContainer}
+        item
+        xl={ifHomePage ? 3 : 4}
+        lg={3}
+        md={ifHomePage ? 1 : 2}
+        sm={ifHomePage ? 11 : 1}
+      >
+        <IconButton
+          aria-label="open drawer"
+          onClick={this.handleOpenMenuItem}
+        >
+          <MenuIcon style={{color: companyPage ? '#353A51' : 'white'}}/>
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={this.handleClosenMenuItem}
+          getContentAnchorEl={null}
+          anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+          transformOrigin={{vertical: 'top', horizontal: 'center'}}
+        >
+          {user ?
+            <Grid>
+              <MenuItem>Bonjour {user.firstname} !</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>Mon profil</MenuItem>
+              <MenuItem onClick={() => Router.push(is_b2b_admin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>Mes paramètres</MenuItem>
+              {
+                !user.is_employee ?
+                  user.is_alfred ?
+                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>Mes services</MenuItem>
+                    :
+                    <MenuItem onClick={() => Router.push(`/creaShop/creaShop`)}>Proposer mes services</MenuItem>
+                  : null
+              }
+              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>Mes messages</MenuItem>
+              <MenuItem onClick={()=>Router.push(`/reservations/reservations`)}>Mes réservations</MenuItem>
+              {user.is_admin ?
+                <MenuItem onClick={() =>Router.push(`/dashboard/home`)}>Dashboard My Alfred</MenuItem>
+                : null
+              }
+              {is_b2b_admin(user) ?
+                <MenuItem onClick={()=> Router.push(`/company/dashboard/companyDashboard`)}>Dashboard</MenuItem>
+               : null
+              }
+              <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
+            </Grid>
+            :
+            null
+          }
+        </Menu>
+      </Grid>
+    )
+  }
+
+  notLoggedButtonSection = (classes) =>{
+    const{setOpenRegister, ifHomePage, user, setOpenLogin} = this.state;
+
+    const logged = user != null
+
+    return(
+      <Grid
+        item
+        xl={!logged && ifHomePage ? 3 : 4}
+        lg={3}
+        md={!logged && !ifHomePage ? 3 : 2}
+        sm={!ifHomePage ? 4 : 11}
+        className={ifHomePage ? is_b2b_style(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
+      >
+        <Grid>
+          <Button
+            classes={{root: is_b2b_style() ? classes.navBarlogInB2B : classes.navBarlogIn}}
+            onClick={this.handleOpenLogin}>
+            {NAVBAR_MENU.logIn}
+          </Button>
+          <Dialog
+            scroll={'paper'}
+            aria-labelledby="scroll-dialog-title"
+            aria-describedby="scroll-dialog-description"
+            className={classes.navbarModal}
+            open={setOpenLogin}
+            onClose={this.handleCloseLogin}
+            TransitionComponent={Transition}
+            classes={{paperWidthSm: classes.navbarPaperWidth}}
+            disableBackdropClick={true}
+            disableEscapeKeyDown={true}
+          >
+            <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
+            <DialogContent classes={{root: classes.navbarWidthLoginContent}}>
+              <div className={classes.navbarPaper}>
+                {this.triggerLogin()}
+              </div>
+            </DialogContent>
+          </Dialog>
+        </Grid>
+        <Grid className={classes.navbarRegisterContainer}>
+          <Button
+            variant="outlined"
+            classes={{root: is_b2b_style() ? classes.navbarSignInB2B : classes.navbarSignIn}}
+            onClick={this.handleOpenRegister}>
+            {NAVBAR_MENU.signIn}
+          </Button>
+          <Dialog
+            scroll={'paper'}
+            aria-labelledby="scroll-dialog-title"
+            aria-describedby="scroll-dialog-description"
+            className={classes.navbarModal}
+            open={setOpenRegister}
+            onClose={this.handleCloseRegister}
+            TransitionComponent={Transition}
+            disableBackdropClick={true}
+            disableEscapeKeyDown={true}
+          >
+            <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
+            <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
+              <div className={classes.navbarPaper}>
+                {this.triggerRegister()}
+              </div>
+            </DialogContent>
+          </Dialog>
+        </Grid>
+      </Grid>
+    )
+  }
+
+
+
+
+  notLoggedButtonSectionB2b = (classes) =>{
+    const{setOpenRegister, ifHomePage, user, setOpenLogin, anchorElB2b} = this.state;
+
+    const logged = user != null
+
+    return(
+      <>
+        <Hidden only={['xl', 'lg']}>
+          <Grid
+            className={classes.navbarMenuBurgerContainer}
+            item
+            xl={ifHomePage ? 3 : 4}
+            lg={3}
+            md={ifHomePage ? 10 : 3}
+            sm={ifHomePage ? 10 : 1}
+          >
+            <IconButton
+              aria-label="open drawer"
+              onClick={this.handleOpenMenuItemB2b}
+            >
+              <MenuIcon style={{color: "white"}}/>
+            </IconButton>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorElB2b}
+              keepMounted
+              open={Boolean(anchorElB2b)}
+              onClose={this.handleClosenMenuItemB2b}
+              getContentAnchorEl={null}
+              anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+              transformOrigin={{vertical: 'top', horizontal: 'center'}}
+            >
+              <MenuItem onClick={() => Router.push('/search')}>
+                <Typography>Services aux entreprises</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => Router.push('/search')}>
+                <Typography>Services aux collaboratuers</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => Router.push('/search')}>
+                <Typography>Tarifs</Typography>
+              </MenuItem>
+              <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
+                <Divider/>
+              </Grid>
+              <MenuItem onClick={() => Router.push('/search')}>
+                <Button variant="outlined" classes={{root: classes.buttonService}}>Je propose mes services</Button>
+              </MenuItem>
+              <MenuItem onClick={this.handleOpenLogin}>
+                <Button variant="outlined" classes={{root: classes.buttonLoginB2b}} >Connexion</Button>
+              </MenuItem>
+              <MenuItem onClick={this.handleOpenRegister}>
+                <Button variant="outlined" classes={{root: classes.buttonRegisterB2b}}>Inscription</Button>
+              </MenuItem>
+            </Menu>
+          </Grid>
+        </Hidden>
+        <Hidden only={['md', 'sm', 'xs']}>
+          <Grid
+            item
+            xl={!logged && ifHomePage ? 3 : 4}
+            lg={ifHomePage ? 3 : 4}
+            md={!logged && !ifHomePage ? 3 : 2}
+            sm={!ifHomePage ? 4 : 11}
+            className={ifHomePage ? is_b2b_style(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
+          >
+            <Grid>
+              <Button
+                variant="outlined"
+                classes={{root: classes.navbarSignInB2B}}
+                style={{whiteSpace: 'nowrap'}}
+                onClick={this.handleOpenLogin}>
+                {'Je propose mes services'}
+              </Button>
+            </Grid>
+            <Grid>
+              <Button
+                classes={{root: is_b2b_style() ? classes.navBarlogInB2B : classes.navBarlogIn}}
+                onClick={this.handleOpenLogin}>
+                {NAVBAR_MENU.logIn}
+              </Button>
+            </Grid>
+            <Grid className={classes.navbarRegisterContainer}>
+              <Button
+                variant="outlined"
+                classes={{root: is_b2b_style() ? classes.navbarSignInB2B : classes.navbarSignIn}}
+                onClick={this.handleOpenRegister}>
+                {NAVBAR_MENU.signIn}
+              </Button>
+            </Grid>
+          </Grid>
+        </Hidden>
+      </>
+    )
+  }
 
   searchBarInput = (classes) => {
     const logged = this.state.user != null
-    const {ifHomePage} = this.state;
+    const {ifHomePage, user} = this.state;
+
 
     return (
-      <Grid className={ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
+      <Grid className={ifHomePage ? is_b2b_style(user) ? classes.navbarSearchContainerB2B : classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
         <Paper classes={{root: classes.navbarSearch}}>
           <Grid container style={{margin: 0, width: '100%'}}>
             <Grid
@@ -570,7 +806,6 @@ class NavBar extends Component {
                 <Divider orientation="vertical"/>
               </Grid>
             </Grid>
-
             {
               this.state.user ?
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
@@ -679,7 +914,7 @@ class NavBar extends Component {
                   </Grid>
                 </Grid> : null
               }
-            <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'flex-end', alignItems: 'center'}}>
+            <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', alignItems: 'center'}}>
               <IconButton
                 classes={{root: classes.iconButton}}
                 style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
@@ -694,23 +929,169 @@ class NavBar extends Component {
     )
   };
 
+  triggerLogin = () =>{
+    return (
+      <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={'connect'}/>
+    );
+  }
+
+  triggerRegister = () =>{
+    return(
+      <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'}/>
+    )
+  };
+
+  logoContainer = (classes) =>{
+    const{ifHomePage, user} = this.state;
+    const logged = user != null
+
+    return(
+      <Grid
+        className={ifHomePage ?  classes.navbarLogoContainer : classes.navbarLogoContainerP}
+        item
+        xl={ifHomePage ? 3 : 4}
+        lg={is_b2b_style(user) ? 2 : 3}
+        md={!logged && !ifHomePage ? 3 : 2}
+        sm={1}
+        onClick={() => Router.push('/')}
+      >
+        <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
+             className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
+      </Grid>
+    )
+  };
+
+  tabBar = (classes) =>{
+    const{user}= this.state;
+
+    return(
+      <Grid
+        item
+        xl={6}
+        lg={is_b2b_style(user) ? 7 : 6}
+        md={8}
+        sm={11}
+        className={is_b2b_style(user) ? classes.navbarHomepageMenuB2B : classes.navabarHomepageMenu}
+      >
+        <Tabs value={false} aria-label="simple tabs example">
+          {
+            getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
+              is_b2b_site() ?
+                <>
+                  <Tab
+                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    label={"Services aux entreprises"}
+                    onClick={() => Router.push("/blog/elementor-211/")}
+                  />
+                    <Tab
+                      classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                      label={"Services aux collaborateurs"}
+                      onClick={() => Router.push("/blog/services-aux-collaborateurs/")}
+                    />
+                    <Tab
+                      classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                      label={"Tarifs"}
+                      onClick={() => Router.push('/blog/tarifs')}
+                    />
+                </>
+                :
+                <>
+                  <Tab
+                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    label={NAVBAR_MENU.ourServices}
+                    onClick={() => Router.push('/search?search=1')}
+                  />
+                  {user ?
+                    user.is_alfred ?
+                      <Tab
+                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        label={NAVBAR_MENU.myServices}
+                        onClick={() => Router.push(`/profile/services?user=${user._id}`)}
+                      />
+                      :
+                        <Tab
+                          classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                          label={NAVBAR_MENU.registerServices}
+                          onClick={() => Router.push('/creaShop/creaShop')}
+                        />
+                    :
+                      <Tab
+                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        label={NAVBAR_MENU.registerServices}
+                        onClick={this.handleOpenRegister}
+                      />
+                  }
+                </>
+          }
+          {
+            // Accès part/pro uniquement si non loggué ou loggué en Alfred pro
+            getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
+              is_b2b_site() ?
+                null
+                :
+                  <Tab
+                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    label={NAVBAR_MENU.businessSide}
+                    onClick={() => Router.push('/professional')}
+                  />
+          }
+        </Tabs>
+      </Grid>
+    )
+  };
+
   render() {
-    const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage} = this.state;
+    const {user, ifHomePage,setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state;
     const {classes} = this.props;
 
     const logged = user != null
 
-    const modalLogin = () => {
-      return (
-        <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={'connect'}/>
-      );
-    };
+    const dialogLogin = () =>{
+      return(
+        <Dialog
+          scroll={'paper'}
+          aria-labelledby="scroll-dialog-title"
+          aria-describedby="scroll-dialog-description"
+          className={classes.navbarModal}
+          open={setOpenLogin}
+          onClose={this.handleCloseLogin}
+          TransitionComponent={Transition}
+          classes={{paperWidthSm: classes.navbarPaperWidth}}
+          disableBackdropClick={true}
+          disableEscapeKeyDown={true}
+        >
+          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
+          <DialogContent classes={{root: classes.navbarWidthLoginContent}}>
+            <div className={classes.navbarPaper}>
+              {this.triggerLogin()}
+            </div>
+          </DialogContent>
+        </Dialog>
+      )
+    }
 
-    const modalRegister = () => {
-      return (
-        <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'}/>
-      );
-    };
+    const dialogRegister = () =>{
+      return(
+        <Dialog
+          scroll={'paper'}
+          aria-labelledby="scroll-dialog-title"
+          aria-describedby="scroll-dialog-description"
+          className={classes.navbarModal}
+          open={setOpenRegister}
+          onClose={this.handleCloseRegister}
+          TransitionComponent={Transition}
+          disableBackdropClick={true}
+          disableEscapeKeyDown={true}
+        >
+          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
+          <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
+            <div className={classes.navbarPaper}>
+              {this.triggerRegister()}
+            </div>
+          </DialogContent>
+        </Dialog>
+      )
+    }
 
     return (
       <Grid className={this.state.ifHomePage ? is_b2b_style(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
@@ -718,252 +1099,15 @@ class NavBar extends Component {
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
               <Grid container  style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin:0}}>
+                {companyPage ? null : this.logoContainer(classes)}
                 {
-                  companyPage ? null :
-                    <Grid
-                      className={this.state.ifHomePage ?  classes.navbarLogoContainer : classes.navbarLogoContainerP}
-                      item
-                      xl={ifHomePage ? 3 : 4}
-                      lg={3}
-                      md={!logged && !ifHomePage ? 3 : 2}
-                      sm={1}
-                      onClick={() => Router.push('/')}
-                    >
-                      <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
-                           className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
-                    </Grid>
-                }
-                {
-                 companyPage ? null : ifHomePage ?
-                    <Grid
-                      item
-                      xl={6}
-                      lg={6}
-                      md={8}
-                      sm={11}
-                      className={is_b2b_style(user) ? classes.navbarHomepageMenuB2B : classes.navabarHomepageMenu}
-                    >
-                      <Tabs value={false} aria-label="simple tabs example">
-                        {
-                          getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
-                            is_b2b_site() ?
-                              <>
-                                <Link href={"/blog/elementor-211/"}>
-                                  <Tab
-                                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                    label={"Services aux entreprises"}
-                                  />
-                                </Link>
-                                <Link href={"/blog/services-aux-collaborateurs/"}>
-                                  <Tab
-                                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                    label={"Services aux collaborateurs"}
-                                  />
-                                </Link>
-                                <Link href={'/blog/tarifs'}>
-                                  <Tab
-                                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                    label={"Tarifs"}
-                                  />
-                                </Link>
-
-                              </>
-                               :
-                              <>
-                                <Link href={'/search?search=1'}>
-                                  <Tab
-                                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                    label={NAVBAR_MENU.ourServices}
-                                  />
-                                </Link>
-                                {user ?
-                                  user.is_alfred ?
-                                    <Link href={`/profile/services?user=${user._id}`}>
-                                      <Tab
-                                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                        label={NAVBAR_MENU.myServices}
-                                      />
-                                    </Link>
-                                    :
-                                    <Link href={'/creaShop/creaShop'}>
-                                      <Tab
-                                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                        label={NAVBAR_MENU.registerServices}
-                                      />
-                                    </Link>
-                                  :
-                                  <Link href={'/'}>
-                                    <Grid onClick={this.handleOpenRegister}>
-                                      <Tab
-                                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                        label={NAVBAR_MENU.registerServices}
-                                      />
-                                    </Grid>
-                                  </Link>
-                                }
-
-                              </>
-                        }
-                        {
-                          // Accès part/pro uniquement si non loggué ou loggué en Alfred pro
-                          getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
-                            is_b2b_site() ?
-                              null
-                              :
-                              <Link href={'/professional'}>
-                                <Tab
-                                  classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                                  label={NAVBAR_MENU.businessSide}
-                                />
-                              </Link>
-                        }
-                      </Tabs>
-                    </Grid> :
-                   <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage ? 8 : 11}>
+                 companyPage ? null : ifHomePage ? this.tabBar(classes)
+                   :
+                   <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !is_b2b_style(user) ? 8 :  11}>
                      {this.searchBarInput(classes)}
                    </Grid>
                   }
-                  {
-                    logged === true ?
-                      <Grid
-                        className={classes.navbarMenuBurgerContainer}
-                        item
-                        xl={ifHomePage ? 3 : 4}
-                        lg={3}
-                        md={ifHomePage ? 1 : 2}
-                        sm={ifHomePage ? 11 : 1}
-                       >
-                        <IconButton
-                          aria-label="open drawer"
-                          onClick={this.handleOpenMenuItem}
-                        >
-                          <MenuIcon style={{color: companyPage ? '#353A51' : 'white'}}/>
-                        </IconButton>
-                        <Menu
-                          anchorEl={anchorEl}
-                          keepMounted
-                          open={Boolean(anchorEl)}
-                          onClose={this.handleClosenMenuItem}
-                          getContentAnchorEl={null}
-                          anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-                          transformOrigin={{vertical: 'top', horizontal: 'center'}}
-                        >
-                          {user ?
-                            <Grid>
-                              <MenuItem>Bonjour {user.firstname} !</MenuItem>
-                              <Link href={`/profile/about?user=${user._id}`}>
-                                <MenuItem>Mon profil</MenuItem>
-                              </Link>
-                              <Link href={is_b2b_admin(user) ? '/account/editProfileCompany' : '/account/editProfile'}>
-                                <MenuItem>Mes paramètres</MenuItem>
-                              </Link>
-                              {
-                                !user.is_employee ?
-                                  user.is_alfred ?
-                                    <Link href={`/profile/services?user=${user._id}`}>
-                                      <MenuItem>Mes services</MenuItem>
-                                    </Link>
-                                    :
-                                    <Link href={`/creaShop/creaShop`}>
-                                      <MenuItem>Proposer mes services</MenuItem>
-                                    </Link> : null
-                              }
-
-                              <Link href={`/profile/messages?user=${user._id}`}>
-                                <MenuItem>Mes messages</MenuItem>
-                              </Link>
-                              <Link href={`/reservations/reservations`}>
-                                <MenuItem>Mes réservations</MenuItem>
-                              </Link>
-                              {user.is_admin ?
-                                <Link href={`/dashboard/home`}>
-                                  <MenuItem>Dashboard My Alfred</MenuItem>
-                                </Link> : null
-                              }
-                              {is_b2b_admin(user) ?
-                                <Link href={`/company/dashboard/companyDashboard`}>
-                                  <MenuItem>Dashboard</MenuItem>
-                                </Link> : null
-                              }
-                              <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
-                            </Grid>
-                            :
-                            null
-                          }
-                        </Menu>
-                      </Grid>
-                      :
-                      <Grid
-                        item
-                        xl={!logged && ifHomePage ? 3 : 4}
-                        lg={3}
-                        md={!logged && !ifHomePage ? 3 : 2}
-                        sm={!ifHomePage ? 4 : 11}
-                        className={ifHomePage ? is_b2b_style(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
-                      >
-                        <Grid>
-                          <Button
-                            variant="outlined"
-                            classes={{root: classes.navbarSignInB2B}}
-                            style={{whiteSpace: 'nowrap'}}
-                            onClick={this.handleOpenLogin}>
-                            {'Je propose mes services'}
-                          </Button>
-                        </Grid>
-                        <Grid>
-                          <Button
-                            classes={{root: is_b2b_style() ? classes.navBarlogInB2B : classes.navBarlogIn}}
-                            onClick={this.handleOpenLogin}>
-                            {NAVBAR_MENU.logIn}
-                          </Button>
-                          <Dialog
-                            scroll={'paper'}
-                            aria-labelledby="scroll-dialog-title"
-                            aria-describedby="scroll-dialog-description"
-                            className={classes.navbarModal}
-                            open={setOpenLogin}
-                            onClose={this.handleCloseLogin}
-                            TransitionComponent={Transition}
-                            classes={{paperWidthSm: classes.navbarPaperWidth}}
-                            disableBackdropClick={true}
-                            disableEscapeKeyDown={true}
-                          >
-                            <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
-                            <DialogContent classes={{root: classes.navbarWidthLoginContent}}>
-                              <div className={classes.navbarPaper}>
-                                {modalLogin()}
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        </Grid>
-                        <Grid className={classes.navbarRegisterContainer}>
-                          <Button
-                            variant="outlined"
-                            classes={{root: is_b2b_style() ? classes.navbarSignInB2B : classes.navbarSignIn}}
-                            onClick={this.handleOpenRegister}>
-                            {NAVBAR_MENU.signIn}
-                          </Button>
-                          <Dialog
-                            scroll={'paper'}
-                            aria-labelledby="scroll-dialog-title"
-                            aria-describedby="scroll-dialog-description"
-                            className={classes.navbarModal}
-                            open={setOpenRegister}
-                            onClose={this.handleCloseRegister}
-                            TransitionComponent={Transition}
-                            disableBackdropClick={true}
-                            disableEscapeKeyDown={true}
-                          >
-                            <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
-                            <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
-                              <div className={classes.navbarPaper}>
-                                {modalRegister()}
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        </Grid>
-                      </Grid>
-                  }
+                  {is_b2b_style(user) && !logged ? this.notLoggedButtonSectionB2b(classes) : logged === true ? this.burgerMenuLogged(classes) : this.notLoggedButtonSection(classes)}
               </Grid>
               {
                 ifHomePage ? this.searchBarInput(classes) : null
@@ -977,6 +1121,8 @@ class NavBar extends Component {
         </AppBar>
         {modalMobileSearchBarInput ? this.modalMobileSearchBarInput(classes) : null}
         {modalFilters ? this.modalMobileFilter(classes) : null}
+        {setOpenLogin ? dialogLogin() : null}
+        {setOpenRegister ? dialogRegister() : null}
       </Grid>
     )
   }
