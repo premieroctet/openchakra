@@ -156,13 +156,8 @@ class NavBar extends Component {
   };
 
   handleOpenRegister = (e) => {
-    if (is_b2b_site(this.state.user)) {
-      Router.push('/blog/inscription-entreprise/')
-    }
-    else {
-      this.handleMenuClose();
-      this.setState({setOpenRegister: true, setOpenLogin: false});
-    }
+    this.handleMenuClose();
+    this.setState({setOpenRegister: true, setOpenLogin: false});
   };
 
   handleCloseRegister = () => {
@@ -614,25 +609,6 @@ class NavBar extends Component {
             onClick={this.handleOpenLogin}>
             {NAVBAR_MENU.logIn}
           </Button>
-          <Dialog
-            scroll={'paper'}
-            aria-labelledby="scroll-dialog-title"
-            aria-describedby="scroll-dialog-description"
-            className={classes.navbarModal}
-            open={setOpenLogin}
-            onClose={this.handleCloseLogin}
-            TransitionComponent={Transition}
-            classes={{paperWidthSm: classes.navbarPaperWidth}}
-            disableBackdropClick={true}
-            disableEscapeKeyDown={true}
-          >
-            <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
-            <DialogContent classes={{root: classes.navbarWidthLoginContent}}>
-              <div className={classes.navbarPaper}>
-                {this.triggerLogin()}
-              </div>
-            </DialogContent>
-          </Dialog>
         </Grid>
         <Grid className={classes.navbarRegisterContainer}>
           <Button
@@ -641,24 +617,6 @@ class NavBar extends Component {
             onClick={this.handleOpenRegister}>
             {NAVBAR_MENU.signIn}
           </Button>
-          <Dialog
-            scroll={'paper'}
-            aria-labelledby="scroll-dialog-title"
-            aria-describedby="scroll-dialog-description"
-            className={classes.navbarModal}
-            open={setOpenRegister}
-            onClose={this.handleCloseRegister}
-            TransitionComponent={Transition}
-            disableBackdropClick={true}
-            disableEscapeKeyDown={true}
-          >
-            <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
-            <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
-              <div className={classes.navbarPaper}>
-                {this.triggerRegister()}
-              </div>
-            </DialogContent>
-          </Dialog>
         </Grid>
       </Grid>
     )
@@ -711,13 +669,13 @@ class NavBar extends Component {
               <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
                 <Divider/>
               </Grid>
-              <MenuItem onClick={() => Router.push('/search')}>
+              <MenuItem onClick={this.handleOpenRegister}>
                 <Button variant="outlined" classes={{root: classes.buttonService}}>Je propose mes services</Button>
               </MenuItem>
               <MenuItem onClick={this.handleOpenLogin}>
                 <Button variant="outlined" classes={{root: classes.buttonLoginB2b}} >Connexion</Button>
               </MenuItem>
-              <MenuItem onClick={this.handleOpenRegister}>
+              <MenuItem onClick={() => Router.push('/search')}>
                 <Button variant="outlined" classes={{root: classes.buttonRegisterB2b}}>Inscription</Button>
               </MenuItem>
             </Menu>
@@ -736,7 +694,8 @@ class NavBar extends Component {
               <Button
                 variant="outlined"
                 classes={{root: classes.navbarSignInB2B}}
-                onClick={this.handleOpenLogin}>
+                style={{whiteSpace: 'nowrap'}}
+                onClick={this.handleOpenRegister}>
                 {'Je propose mes services'}
               </Button>
             </Grid>
@@ -751,7 +710,7 @@ class NavBar extends Component {
               <Button
                 variant="outlined"
                 classes={{root: is_b2b_style(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
-                onClick={this.handleOpenRegister}>
+                onClick={() => Router.push('/blog/inscription-entreprise/')}>
                 {NAVBAR_MENU.signIn}
               </Button>
             </Grid>
