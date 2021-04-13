@@ -73,7 +73,7 @@ nextApp.prepare().then(() => {
 
 
 // DB config
-  // const db = require('./config/keys').MONGODB.mongoUri;
+// const db = require('./config/keys').MONGODB.mongoUri;
 
 // Connect to MongoDB
   mongoose.connect(config.databaseUrl, {useNewUrlParser: true})
@@ -146,12 +146,12 @@ nextApp.prepare().then(() => {
   app.get('*', routerHandler);
 
   if (SERVER_PROD || is_development()) {
-    // HTTP only handling redirect to HTTPS
+  // HTTP only handling redirect to HTTPS
     http.createServer(app).listen(80)
     console.log('Created server on port 80')
   }
   // HTTPS server using certificates
-  var httpsServer = https.createServer({
+  const httpsServer = https.createServer({
       cert: fs.readFileSync(process.env.HOME + '/.ssh/Main-Certificate-x509.txt'),
       key: fs.readFileSync(process.env.HOME + '/.ssh/www_my-alfred_io.key'),
       ca: fs.readFileSync(process.env.HOME + '/.ssh/Intermediate-Certificate.txt'),

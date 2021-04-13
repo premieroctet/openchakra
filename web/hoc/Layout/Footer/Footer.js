@@ -264,7 +264,7 @@ class Footer extends React.Component {
             <Grid className={classes.footerSocialContainer}>
               <Grid>
                 <a href={'https://www.facebook.com/myalfred1/'} target={'_blank'}>
-                  <IconButton aria-label="FacebookIcon" >
+                  <IconButton aria-label="FacebookIcon">
                     <FacebookIcon/>
                   </IconButton>
                 </a>
@@ -284,12 +284,12 @@ class Footer extends React.Component {
                 </a>
               </Grid
               ><Grid>
-                <a href={'https://twitter.com/MyAlfred2'} target={'_blank'}>
-                  <IconButton aria-label="TwitterIcon">
-                    <TwitterIcon/>
-                  </IconButton>
-                </a>
-              </Grid>
+              <a href={'https://twitter.com/MyAlfred2'} target={'_blank'}>
+                <IconButton aria-label="TwitterIcon">
+                  <TwitterIcon/>
+                </IconButton>
+              </a>
+            </Grid>
             </Grid>
           </Grid>
           <Grid className={classes.footerDividerContainer}>
@@ -298,7 +298,7 @@ class Footer extends React.Component {
           <Grid className={classes.footerBrandContainer}>
             <Grid className={classes.footerBrandStyle}>
               <Grid className={classes.footerLawContainer}>
-                <Typography>© 2020 MY ALFRED Corporation. Tous droits  réservés</Typography>
+                <Typography>© 2020 MY ALFRED Corporation. Tous droits réservés</Typography>
               </Grid>
               <Grid className={classes.footerRgpdButtons}>
                 <Grid className={classes.footerLinkInfoContainer}>
@@ -306,7 +306,7 @@ class Footer extends React.Component {
                     <Typography className={classes.footerLink}>Informations légales</Typography>
                   </Link>
                 </Grid>
-                <Grid  className={classes.footerLinkInfoContainer}>
+                <Grid className={classes.footerLinkInfoContainer}>
                   <Link href={'/cgu'}>
                     <Grid>
                       <Typography className={classes.footerLink}>Conditions générales d'utilisation</Typography>
