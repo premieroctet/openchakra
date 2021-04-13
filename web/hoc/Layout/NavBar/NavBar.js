@@ -156,7 +156,7 @@ class NavBar extends Component {
   };
 
   handleOpenRegister = (e) => {
-    if (is_b2b_site()) {
+    if (is_b2b_site(this.state.user)) {
       Router.push('/blog/inscription-entreprise/')
     }
     else {
@@ -610,7 +610,7 @@ class NavBar extends Component {
       >
         <Grid>
           <Button
-            classes={{root: is_b2b_style() ? classes.navBarlogInB2B : classes.navBarlogIn}}
+            classes={{root: is_b2b_style(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
             onClick={this.handleOpenLogin}>
             {NAVBAR_MENU.logIn}
           </Button>
@@ -637,7 +637,7 @@ class NavBar extends Component {
         <Grid className={classes.navbarRegisterContainer}>
           <Button
             variant="outlined"
-            classes={{root: is_b2b_style() ? classes.navbarSignInB2B : classes.navbarSignIn}}
+            classes={{root: is_b2b_style(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
             onClick={this.handleOpenRegister}>
             {NAVBAR_MENU.signIn}
           </Button>
@@ -736,14 +736,13 @@ class NavBar extends Component {
               <Button
                 variant="outlined"
                 classes={{root: classes.navbarSignInB2B}}
-                style={{whiteSpace: 'nowrap'}}
                 onClick={this.handleOpenLogin}>
                 {'Je propose mes services'}
               </Button>
             </Grid>
             <Grid>
               <Button
-                classes={{root: is_b2b_style() ? classes.navBarlogInB2B : classes.navBarlogIn}}
+                classes={{root: is_b2b_style(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
                 onClick={this.handleOpenLogin}>
                 {NAVBAR_MENU.logIn}
               </Button>
@@ -751,7 +750,7 @@ class NavBar extends Component {
             <Grid className={classes.navbarRegisterContainer}>
               <Button
                 variant="outlined"
-                classes={{root: is_b2b_style() ? classes.navbarSignInB2B : classes.navbarSignIn}}
+                classes={{root: is_b2b_style(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
                 onClick={this.handleOpenRegister}>
                 {NAVBAR_MENU.signIn}
               </Button>
@@ -979,17 +978,17 @@ class NavBar extends Component {
               is_b2b_site() ?
                 <>
                   <Tab
-                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                     label={"Services aux entreprises"}
                     onClick={() => Router.push("/blog/elementor-211/")}
                   />
                     <Tab
-                      classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                      classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                       label={"Services aux collaborateurs"}
                       onClick={() => Router.push("/blog/services-aux-collaborateurs/")}
                     />
                     <Tab
-                      classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                      classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                       label={"Tarifs"}
                       onClick={() => Router.push('/blog/tarifs')}
                     />
@@ -997,26 +996,26 @@ class NavBar extends Component {
                 :
                 <>
                   <Tab
-                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                     label={NAVBAR_MENU.ourServices}
                     onClick={() => Router.push('/search?search=1')}
                   />
                   {user ?
                     user.is_alfred ?
                       <Tab
-                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                         label={NAVBAR_MENU.myServices}
                         onClick={() => Router.push(`/profile/services?user=${user._id}`)}
                       />
                       :
                         <Tab
-                          classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                          classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                           label={NAVBAR_MENU.registerServices}
                           onClick={() => Router.push('/creaShop/creaShop')}
                         />
                     :
                       <Tab
-                        classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                         label={NAVBAR_MENU.registerServices}
                         onClick={this.handleOpenRegister}
                       />
@@ -1030,7 +1029,7 @@ class NavBar extends Component {
                 null
                 :
                   <Tab
-                    classes={{root: is_b2b_style() ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                     label={NAVBAR_MENU.businessSide}
                     onClick={() => Router.push('/professional')}
                   />
