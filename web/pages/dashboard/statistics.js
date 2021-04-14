@@ -21,7 +21,6 @@ const styles = theme => ({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'top',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     marginBottom: '2%',

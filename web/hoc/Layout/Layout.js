@@ -22,24 +22,39 @@ class Layout extends React.Component {
     super(props);
     this.state={
       logged: false,
-      categories: []
+      categories: [],
+      user:{}
     }
   }
 
   componentDidMount() {
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/category/${is_b2b_style() ? PRO : PART}`)
+
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        let data = res.data;
+        this.setState({
+          user: data,
+          gps: data.billing_address ? data.billing_address.gps : null
+        });
+      })
+      .catch(err => {
+        console.error((err))
+      })
+
+    axios.get(`/myAlfred/api/category/${is_b2b_style(this.state.user) ? PRO : PART}`)
       .then(res => {
         let cat = res.data;
         // Set label en fonction de PRO PART
         cat.forEach( c => {
-          c.label=is_b2b_style() ? c.professional_label : c.particular_label
+          c.label=is_b2b_style(this.state.user) ? c.professional_label : c.particular_label
         })
         this.setState({categories: cat})
       })
       .catch(err => {
         console.error(err)
       })
+
       if (getLoggedUserId()) {
         this.setState({logged: true});
       }

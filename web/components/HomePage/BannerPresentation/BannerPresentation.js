@@ -8,19 +8,30 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import {is_b2b_style} from "../../../utils/context.js";
 import Hidden from "@material-ui/core/Hidden";
 import Typography from "@material-ui/core/Typography";
+import axios from "axios";
+const {setAxiosAuthentication}=require('../../utils/authentication');
+
 
 class BannerPresentation extends React.Component {
   constructor(props) {
     super(props);
+  }
 
+  componentDidMount() {
+    setAxiosAuthentication()
+    axios.get('/myAlfred/api/users/current').then(res =>{
+      let result = res.data;
+      this.setState({user: result})
+    }).catch(err => console.error(err))
   }
 
   render() {
     const {classes} = this.props;
+    const {user} = this.state;
 
-    const title = is_b2b_style() ? B2B_BANNER_PRESENTATION.title : BANNER_PRESENTATION.title
-    const subTitle = is_b2b_style() ? B2B_BANNER_PRESENTATION.subTitle : BANNER_PRESENTATION.subTitle
-    const text = is_b2b_style() ? B2B_BANNER_PRESENTATION.text : BANNER_PRESENTATION.text
+    const title = is_b2b_style(user) ? B2B_BANNER_PRESENTATION.title : BANNER_PRESENTATION.title
+    const subTitle = is_b2b_style(user) ? B2B_BANNER_PRESENTATION.subTitle : BANNER_PRESENTATION.subTitle
+    const text = is_b2b_style(user) ? B2B_BANNER_PRESENTATION.text : BANNER_PRESENTATION.text
 
 
     return (
@@ -50,10 +61,10 @@ class BannerPresentation extends React.Component {
           </Grid>
         </Grid>
         {
-          is_b2b_style() ?
+          is_b2b_style(user) ?
             <Hidden only={['md', 'sm', 'xs']}>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.illuContainer}>
-                <img title={'illuB2b'} alt={'illuB2b'} src={`../../../static/assets/img/homePage/${is_b2b_style() ? 'b2bIllu.svg' : 'illuHeader.png'}`} className={classes.illuStyle}/>
+                <img title={'illuB2b'} alt={'illuB2b'} src={`../../../static/assets/img/homePage/${is_b2b_style(user) ? 'b2bIllu.svg' : 'illuHeader.png'}`} className={classes.illuStyle}/>
               </Grid>
             </Hidden> : null
         }

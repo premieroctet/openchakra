@@ -152,7 +152,7 @@ class SearchPage extends React.Component {
     }
     setAxiosAuthentication()
 
-    axios.get(`/myAlfred/api/category/${is_b2b_style() ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${is_b2b_style(this.state.user) ? PRO : PART}`)
       .catch(err => {
         console.error(err);
         this.setState({mounting: false});

@@ -28,6 +28,7 @@ class Home extends React.Component {
       category: {},
       alfred: {},
       logged: false,
+      user:{}
     };
   }
 
@@ -36,17 +37,33 @@ class Home extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
-    axios.get(`/myAlfred/api/category/${is_b2b_style() ? PRO : PART}`)
+
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        let data = res.data;
+        this.setState({
+          user: data,
+          gps: data.billing_address ? data.billing_address.gps : null
+        }
+        );
+      })
+      .catch(err => {
+        console.error((err))
+      })
+
+    axios.get(`/myAlfred/api/category/${is_b2b_style(this.state.user) ? PRO : PART}`)
       .then(res => {
         let category = res.data;
         this.setState({category: category});
       }).catch(err => console.error(err));
 
-    axios.get(`/myAlfred/api/serviceUser/home/${is_b2b_style() ? PRO : PART}`)
+    axios.get(`/myAlfred/api/serviceUser/home/${is_b2b_style(this.state.user) ? PRO : PART}`)
       .then(response => {
         let alfred = response.data;
         this.setState({alfred: alfred});
-      }).catch(err => console.error(err));
+      }).catch(err => console.error(err))
+
+
   }
 
   resizeFrame = () =>{
@@ -78,7 +95,7 @@ class Home extends React.Component {
             </Grid>
           </Hidden>
           <Grid container  className={classes.navbarAndBannerContainer}>
-            <Grid item xl={12} lg={12} sm={12} md={12} xs={12} className={is_b2b_style() ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}>
+            <Grid item xl={12} lg={12} sm={12} md={12} xs={12} className={is_b2b_style(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}>
               <Grid className={classes.navbarComponentPosition}>
                 <NavBar/>
               </Grid>
@@ -90,24 +107,24 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           {
-            is_b2b_style() ?
-                <iframe
-                  onLoad={this.resizeFrame}
-                  frameborder="0"
-                  scrolling="no"
-                  id="myIframe"
-                  src="/blog/accueil"
-                  style={{width: '100%'}}
-                >
-                </iframe>
-               : null
+            is_b2b_style(user) ?
+              <iframe
+                onLoad={this.resizeFrame}
+                frameborder="0"
+                scrolling="no"
+                id="myIframe"
+                src="/blog/accueil"
+                style={{width: '100%'}}
+              >
+              </iframe>
+             : null
           }
           <Grid container className={classes.mainContainerStyle}>
             <Grid className={classes.generalWidthContainer}>
               <CategoryTopic category={category}/>
             </Grid>
           </Grid>
-          <Grid container className={is_b2b_style() ? classes.howItWorksComponentB2b : classes.howItWorksComponent}>
+          <Grid container className={is_b2b_style(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}>
             <Grid className={classes.generalWidthContainer}>
               <HowItWorks/>
             </Grid>
@@ -118,7 +135,7 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           {
-            is_b2b_style() ? null :
+            is_b2b_style(user) ? null :
               <Grid container className={classes.becomeAlfredComponent}>
                 <Grid className={classes.generalWidthContainer}>
                   <ResaService/>
@@ -127,12 +144,13 @@ class Home extends React.Component {
           }
           <Hidden only={['xs', 'sm']}>
             {
-              is_b2b_style() ? null :
+              is_b2b_style(user) ? null :
                 <Grid container className={classes.mainNewsLetterStyle}>
                   <Grid className={classes.generalWidthContainerNewsLtter}>
                     <NewsLetter/>
                   </Grid>
-                </Grid>}
+                </Grid>
+            }
           </Hidden>
           <Grid>
             <Divider/>

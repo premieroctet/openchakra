@@ -20,8 +20,7 @@ class CategoryCard extends React.Component {
   componentDidMount() {
     setAxiosAuthentication()
 
-    axios
-      .get('/myAlfred/api/users/current')
+    axios.get('/myAlfred/api/users/current')
       .then(res => {
         let data = res.data;
         this.setState({
@@ -36,7 +35,7 @@ class CategoryCard extends React.Component {
 
   render() {
     const {classes, item} = this.props;
-    const {gps} = this.state;
+    const {gps,user} = this.state;
 
     if (!item) {
       return null
@@ -47,12 +46,12 @@ class CategoryCard extends React.Component {
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer'}}>
           <Grid className={classes.categoryCardMedia}>
             <Grid
-              style={{backgroundImage: `url('${is_b2b_style() ? item.professional_picture : item.particular_picture}')`}}
+              style={{backgroundImage: `url('${is_b2b_style(user) ? item.professional_picture : item.particular_picture}')`}}
               className={classes.categoryCardBackground}
             />
           </Grid>
           <Grid>
-            <h6>{is_b2b_style() ? item.professional_label : item.particular_label}</h6>
+            <h6>{is_b2b_style(user) ? item.professional_label : item.particular_label}</h6>
           </Grid>
         </Grid>
       </Link>
