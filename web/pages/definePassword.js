@@ -19,10 +19,13 @@ const styles = {
     height: '100vh',
     justifyContent: 'center',
     flexDirection: 'column',
+    background: '#353A51'
+
   },
   card: {
     padding: '1.5rem 3rem',
     width: 400,
+    borderRadius: '35px'
   },
 };
 
@@ -91,10 +94,7 @@ class definePassword extends React.Component {
   render() {
     const {classes} = this.props;
     return (
-      <Grid container className={classes.loginContainer}
-            style={{
-              background: '#353A51'
-            }}>
+      <Grid container className={classes.loginContainer}>
         <Grid style={{
           display: 'flex',
           flexDirection: 'row',
