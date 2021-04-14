@@ -97,72 +97,82 @@ class definePassword extends React.Component {
             }}>
         <Grid style={{
           display: 'flex',
-          flexDirection: 'row'
+          flexDirection: 'row',
+          marginTop: '-15px'
         }}>
-          <Grid>
-            <img style={{
-              height: 96, filter: 'invert(1)'
-            }} alt={'logo_myAlfred'} src={"../../static/assets/icon/logo.png"}/>
-          </Grid>
-          <img style={{
-            height: 248
-          }} alt={"illudefinepassword"} src={"../../static/assets/img/business/myalfredwelcome.svg"}/>
-        </Grid>
-        <Grid>
-          <Card
-            className={classes.card}
-            style={{}}
-          >
+          <Grid style={{
+            display: 'flex',
+            flexDirection: 'column',
+            marginRight: '9vw'
+          }}>
             <Grid>
-              <Grid item style={{display: 'flex', flexDirection: 'column'}}>
-                <Typography style={{fontSize: 35}}>Bienvenue !</Typography>
-                <Typography style={{fontSize: 16}}>L'administrateur My Alfred de votre entreprise vous invite à vous
-                  inscrire sur My Alfred.</Typography>
-                <Typography style={{fontSize: 16}}>Pour finaliser votre inscription, veuillez définir votre mot de passe
-                  :</Typography>
-              </Grid>
-              <form onSubmit={this.onSubmit}>
-                <Grid item>
-                  <TextField
-                    id="standard-with-placeholder"
-                    label="Nouveau mot de passe"
-                    placeholder="Mot de passe"
-                    margin="normal"
-                    style={{width: '100%'}}
-                    type="password"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.onChange}
-                    onKeyUp={this.onChange2}
-                    error={this.state.status1.error}
-                    helperText={this.state.status1.error}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    id="standard-with-placeholder"
-                    label="Répéter le mot de passe"
-                    placeholder="Mot de passe"
-                    margin="normal"
-                    style={{width: '100%'}}
-                    type="password"
-                    name="password2"
-                    value={this.state.password2}
-                    onChange={this.onChange}
-                    onKeyUp={this.onChange2}
-                    error={this.state.status2.error}
-                    helperText={this.state.status2.error}
-                  />
-                </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}
-                          disabled={!(this.state.status1.check && this.state.status2.check)}>
-                    Valider
-                  </Button>
-                </Grid>
-              </form>
+              <img style={{
+                height: 96, filter: 'invert(1)', marginTop: '-5vh'
+              }} alt={'logo_myAlfred'} src={"../../static/assets/icon/logo.png"}/>
             </Grid>
-          </Card>
+            <Grid>
+              <img style={{
+                height: '450px'
+              }} alt={"illudefinepassword"} src={"../../static/assets/img/business/myalfredwelcome.svg"}/></Grid>
+          </Grid>
+          <Grid>
+            <Card
+              className={classes.card}
+            >
+              <Grid>
+                <Grid item style={{display: 'flex', flexDirection: 'column'}}>
+                  <Typography style={{fontSize: 35, color: '#353A51', fontWeight: 'bolder'}}>Bienvenue !</Typography>
+                  <Typography style={{fontSize: 16, color: '#353A51', fontWeight: 'bold', marginBottom: '1vh'}}>L'administrateur
+                    My Alfred de votre entreprise vous invite à vous
+                    inscrire sur My Alfred.</Typography>
+                  <Typography style={{fontSize: 16, color: '#353A51', fontWeight: 'bold'}}>Pour finaliser votre
+                    inscription, veuillez définir votre mot de
+                    passe
+                    :</Typography>
+                </Grid>
+                <form onSubmit={this.onSubmit}>
+                  <Grid item>
+                    <TextField
+                      id="standard-with-placeholder"
+                      label="Nouveau mot de passe"
+                      placeholder="Mot de passe"
+                      margin="normal"
+                      style={{width: '100%'}}
+                      type="password"
+                      name="password"
+                      value={this.state.password}
+                      onChange={this.onChange}
+                      onKeyUp={this.onChange2}
+                      error={this.state.status1.error}
+                      helperText={this.state.status1.error}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      id="standard-with-placeholder"
+                      label="Répéter le mot de passe"
+                      placeholder="Mot de passe"
+                      margin="normal"
+                      style={{width: '100%'}}
+                      type="password"
+                      name="password2"
+                      value={this.state.password2}
+                      onChange={this.onChange}
+                      onKeyUp={this.onChange2}
+                      error={this.state.status2.error}
+                      helperText={this.state.status2.error}
+                    />
+                  </Grid>
+                  <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
+                    <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}
+                            disabled={!(this.state.status1.check && this.state.status2.check)}>
+                      Valider
+                    </Button>
+                  </Grid>
+                </form>
+              </Grid>
+            </Card>
+          </Grid>
         </Grid>
       </Grid>
     );
