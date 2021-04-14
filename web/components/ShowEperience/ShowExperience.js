@@ -45,7 +45,7 @@ class ShowExperience extends React.Component{
                 return(
                   <>
                     <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <h4>{res.experience_title}</h4>
+                      <h4 style={{margin:0}}>{res.experience_title}</h4>
                     </Grid>
                     <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                       <Typography>{res.experience_description}</Typography>

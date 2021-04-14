@@ -25,7 +25,7 @@ class ShowDiploma extends React.Component{
         let shop = response.data;
         this.setState({
           shop: shop,
-          services: shop.services
+          services: shop.services,
         })
       }).catch(err => console.error(err))
 
@@ -34,8 +34,9 @@ class ShowDiploma extends React.Component{
 
 
   render() {
-    const {classes, user} = this.props;
-    const {shop, services} = this.state;
+    const {classes} = this.props;
+    const {services} = this.state;
+    const diploma = services.map(res => res.diploma)
 
     return(
       <Grid container spacing={2} style={{margin: 0, width:'100%'}}>
@@ -44,21 +45,21 @@ class ShowDiploma extends React.Component{
         </Grid>
         <Grid container spacing={2} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
           {
-            shop ?
-              services.map( res => {
+            diploma ?
+              diploma.map( res => {
                 return(
                   <>
                     <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <h4>{res.experience_title}</h4>
+                      <h4 style={{margin:0}}>{res.name}</h4>
                     </Grid>
                     <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <Typography>{res.experience_description}</Typography>
+                      <Typography>Diplôme obtenu en {res.year}</Typography>
                     </Grid>
                     {
-                      res.experience_skills && res.experience_skills.length > 0 ?
+                      res.skills && res.skills.length > 0 ?
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.chipsContainer}>
                           {
-                            res.experience_skills.map( s => {
+                            res.skills.map( s => {
                               return(
                                 <Chip
                                   label={`#${s}`}
