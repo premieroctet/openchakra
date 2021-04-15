@@ -30,6 +30,21 @@ class StatusCellRenderer extends React.Component {
   }
 }
 
+class LocationRenderer extends React.Component {
+
+  constructor(props) {
+    super(props)
+  }
+
+  render = () => {
+    const location = this.props.value
+    const strValue = Object.keys(location).filter(k => location[k]).map( k => k.slice(0, 1).toUpperCase()).join('/')
+    return (
+      <div>{strValue}</div>
+    )
+  }
+}
+
 class StatusCellFilter extends React.Component {
 
   constructor(props) {
@@ -136,4 +151,4 @@ class PrivateRenderer extends React.Component {
 
 module.exports= {
   StatusCellRenderer, DateCellRenderer, DateTimeCellRenderer,
-  StatusCellFilter, PictureCellRenderer, PrivateRenderer}
+  StatusCellFilter, PictureCellRenderer, PrivateRenderer, LocationRenderer }

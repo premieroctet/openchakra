@@ -237,6 +237,32 @@ router.get('/users/all', passport.authenticate('jwt', {session: false}), (req, r
   }
 });
 
+// @Route GET /myAlfred/api/admin/serviceusers/all
+// List all serviuceusers
+router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decode = jwt.decode(token);
+  const admin = decode.is_admin;
+  if (admin) {
+    ServiceUser.find({}, '_id perimeter location service_address.zip_code service_address.city')
+      .populate({path : 'service', select: 'label category', populate : {path : 'category', select : 'label'}})
+      //.populate('service.category', 'label')
+      .populate({path : 'user', select : 'email shop', populate : { path : 'shop', select : 'is_particular'}})
+      .then(services => {
+        if (!services) {
+          res.status(400).json({msg: 'No services found'});
+        }
+        res.json(services)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({user: 'No services found'})
+      })
+  } else {
+    res.status(400).json({msg: 'Access denied'});
+  }
+});
+
 // @Route GET /myAlfred/api/admin/users/all_light
 // List all users (firstname, name, email)
 router.get('/users/all_light', passport.authenticate('jwt', {session: false}), (req, res) => {
