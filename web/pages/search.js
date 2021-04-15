@@ -36,7 +36,7 @@ class SearchDataModel extends SlideGridDataModel {
    => un item de moins par page
   */
   getPageCount() {
-    return Math.floor(this.data.length*1.0/(this.getGridSize()-1))
+    return Math.ceil(this.data.length*1.0/(this.getGridSize()-1))
   }
 
   /** un item blanc par page => descendre d'un index par page
