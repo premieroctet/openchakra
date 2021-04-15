@@ -39,6 +39,10 @@ const INFOBAR_MESSAGE = {
   showMore: 'ici.'
 };
 
+const INFOBARMOBILE_MESSAGE = {
+  message: 'L\'application MyAlfred est disponible au téléchargement sur :'
+}
+
 const SHOWMORE = 'En savoir plus';
 
 const SEARCHBAR = {
@@ -127,7 +131,7 @@ const getMangopayMessage = msg_id => {
 const SHOP = {
   addService: 'Ajoutez des services',
   createShop: 'Proposez votre premier service',
-  bienvenue:{
+  bienvenue: {
     titre: 'Bienvenue',
     subtitle: 'Nous allons vous aider à créer votre service et devenir Alfred en quelques minutes !',
     step1: 'Etape 1 : Votre talent, votre service',
@@ -140,11 +144,11 @@ const SHOP = {
     step3_subtitle: 'Présentez-vous !',
     step3_text: 'Renseignez votre profil Alfred, partagez vos réalisations, et décrivez-vous !',
   },
-  creation:{
+  creation: {
     title: 'A propos de vous',
     subtitle: 'Choisissez votre statut. Les particuliers peuvent proposer leurs services aux particuliers, mais seuls les professionnels peuvent proposer leurs services aux clients particuliers et entreprises.',
     is_particular: 'Je suis un particulier',
-    is_particular_description:'En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés.',
+    is_particular_description: 'En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés.',
     is_particular_want_cesu: 'Je veux être déclaré(e) en CESU',
     is_particular_accept_cesu: 'J\'accepte d\'être déclaré en CESU',
     is_particular_decline_cesu: 'Je n\'accepte pas d\'être déclaré(e) en CESU',
@@ -160,7 +164,7 @@ const SHOP = {
     textfield_company: 'Aux entreprises',
     textfield_company_and_particular: 'Aux particuliers et aux entreprises',
   },
-  service:{
+  service: {
     title: 'Votre service',
     subtitle: 'Sélectionnez votre service. Si vous souhaitez en proposer plusieurs, vous pourrez en ajouter autant que vous le souhaitez par la suite.',
     subtitle_update: 'Vous allez modifier le service indiqué ci-dessous',
@@ -171,26 +175,26 @@ const SHOP = {
     section_particular: 'Services au particuliers',
     section_company: 'Services au professionnels',
   },
-  parameter:{
+  parameter: {
     title: 'Paramétrez vos prestations',
     subtitle: 'Indiquez vos tarifs et votre méthode de facturation. Si vous êtes assujetti à la TVA, merci d’indiquer vos tarifs hors taxes. Vous ne trouvez pas une prestation ? Créez une prestation personnalisée qui vous sera propre ! ',
     presta_perso: 'Ajouter une prestation personnalisée',
   },
-  settingService:{
+  settingService: {
     title: 'Paramétrage',
     subtitle: 'Indiquez votre périmètre d’intervention ainsi que les options qui s’offrent à votre client quant à votre service.',
     title_perimeter: 'Quel est votre périmètre d’intervention ?',
     unity_perimeter: 'Km',
-    title_place_service : 'Où acceptez-vous de réaliser votre prestation ?',
+    title_place_service: 'Où acceptez-vous de réaliser votre prestation ?',
     service_at_userHome: 'A l\' adresse de mon client',
     service_at_myHome: 'A mon adresse',
     service_withVisio: 'En visioconférence(la visioconférence ne tient pas compte de votre rayon d’intervention)',
     service_outside: 'En extérieur',
-    apply_moving_price : 'Appliquer un forfait déplacement de',
+    apply_moving_price: 'Appliquer un forfait déplacement de',
     propose_delivery: 'Proposer un forfait retrait & livraison de',
     section_option_title: 'Options'
   },
-  preference:{
+  preference: {
     title: 'Préférences',
     subtitle: 'Indiquez vos préférences de réservation. Ces préférences s’appliqueront lorsqu’un client souhaite vous réserver.',
     title_delay_prevenance: 'De quel délai souhaitez-vous disposer entre la réservation et la réalisation du services ?',
@@ -205,19 +209,19 @@ const SHOP = {
     unit_minimum_basket: '€',
     title_equipments: 'Les équipements que vous fournissez pour ce service:',
   },
-  assets:{
+  assets: {
     title: 'Vos atouts',
     subtitle: 'Mettez en évidence vos compétences et votre expertise dans ce service. Vous pouvez également donner des précisions sur vos prestations. Précisez tout ce qui peut aider votre client à réserver correctement votre service !',
     expertise_title: 'Votre expertise',
     expertise_label: 'Votre expertise',
     experience_title: 'Votre expérience',
     experience_label: 'Experience',
-    experience_yearRange_0 : 'Entre 0 et 1 an',
-    experience_yearRange_1 : 'Entre 1 et 5 ans',
-    experience_yearRange_2 : 'Entre 5 et 10 ans',
-    experience_yearRange_3 : 'Plus de 10 ans',
+    experience_yearRange_0: 'Entre 0 et 1 an',
+    experience_yearRange_1: 'Entre 1 et 5 ans',
+    experience_yearRange_2: 'Entre 5 et 10 ans',
+    experience_yearRange_3: 'Plus de 10 ans',
     experience_label_description: 'Décrivrez votre expérience ici',
-    obtain_competence : 'Compétences acquises',
+    obtain_competence: 'Compétences acquises',
     diploma_title: 'Votre diplôme',
     diploma_subtitle: 'En téléchargeant votre diplôme, celui-ci aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ces derniers.',
     year_obtain: "Année",
@@ -227,7 +231,7 @@ const SHOP = {
     certification_name: 'Nom du certificat',
     button_joinCertification: 'Joindre une certification',
   },
-  bookingCondition:{
+  bookingCondition: {
     title: 'Vos conditions',
     subtitle: 'Fixez vos conditions et la façon dont vous acceptez qu’un client réserve vos services.',
     title_firstSection: 'Comment les clients peuvent vous réserver ?',
@@ -241,7 +245,7 @@ const SHOP = {
     title_thirdSection: 'Quelles sont vos conditions d’annulation ?',
     condition_flexible: 'Flexibles: Remboursement intégral jusqu\'à 1 jour avant la prestation',
     condition_moderate: 'Modérées: Remboursement intégral jusqu\'à 5 jours avant la prestation',
-    condition_strict : 'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation'
+    condition_strict: 'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation'
 
   }
 };
@@ -473,4 +477,5 @@ module.exports = {
   CMP_PRESENTATION,
   BOOKING,
   FAQ,
+  INFOBARMOBILE_MESSAGE
 };
