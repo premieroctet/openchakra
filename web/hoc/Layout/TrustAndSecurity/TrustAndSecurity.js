@@ -36,7 +36,7 @@ class TrustAndSecurity extends React.Component{
     const{items} = this.state;
     const{classes} = this.props;
     return(
-      <Grid contaienr spacing={2} style={{margin: 0, width: '100%'}} className={classes.trustAndSecurityMainContainer} >
+      <Grid container spacing={2} style={{margin: 0, width: '100%'}} className={classes.trustAndSecurityMainContainer} >
         {
           items.map((res, index) => (
             <Grid key={index} item xl={4} lg={4} md={4} sm={4} xs={4} className={classes.trustAndSecurityContent}>

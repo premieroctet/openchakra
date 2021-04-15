@@ -9,12 +9,15 @@ import {is_b2b_style} from "../../../utils/context.js";
 import Hidden from "@material-ui/core/Hidden";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-const {setAxiosAuthentication}=require('../../utils/authentication');
+const {setAxiosAuthentication}=require('../../../utils/authentication');
 
 
 class BannerPresentation extends React.Component {
   constructor(props) {
     super(props);
+    this.state={
+      user: {}
+    }
   }
 
   componentDidMount() {
