@@ -15,11 +15,31 @@ import NewsLetter from "../components/HomePage/NewsLetter/NewsLetter";
 import MobileNavbar from "../hoc/Layout/NavBar/MobileNavbar";
 import Hidden from "@material-ui/core/Hidden";
 import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
-import {Divider} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, Divider} from "@material-ui/core";
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import ResaService from "../components/HomePage/ResaService/ResaService";
 import {is_b2b_style} from "../utils/context";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import {deviceType, isMobile, osName, isAndroid, isIOS} from 'react-device-detect';
+import CloseIcon from "@material-ui/icons/Close";
+import IconButton from "@material-ui/core/IconButton";
 const {PRO, PART}=require('../utils/consts')
 const {getLoggedUserId} = require('../utils/functions');
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
 class Home extends React.Component {
   constructor(props) {
@@ -28,7 +48,8 @@ class Home extends React.Component {
       category: {},
       alfred: {},
       logged: false,
-      user:{}
+      user:{},
+      open: false
     };
   }
 
@@ -36,6 +57,9 @@ class Home extends React.Component {
   componentDidMount() {
     if (getLoggedUserId()) {
       this.setState({logged: true})
+    }
+    if(deviceType === 'browser' && isAndroid || isIOS){
+      this.setState({open: true})
     }
 
     axios.get('/myAlfred/api/users/current')
@@ -62,8 +86,28 @@ class Home extends React.Component {
         let alfred = response.data;
         this.setState({alfred: alfred});
       }).catch(err => console.error(err))
+  }
 
+  dialogStore = (classes) =>{
+    const{open} = this.state;
 
+    return(
+      <Dialog onClose={() => this.setState({open: false})} aria-labelledby="customized-dialog-title" open={open}>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({open: false})}>
+          Application My Alfred
+        </DialogTitle>
+        <DialogContent dividers>
+          <Typography gutterBottom>
+           Notre application est disponible sur {isAndroid ? 'Google play' : 'Apple store'}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={() => Router.push(isAndroid ? 'https://play.google.com/store/apps/details?id=com.myalfred' :'https://apps.apple.com/us/app/my-alfred/id1544073864')} color="primary">
+            Télécharger
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
   }
 
   resizeFrame = () =>{
@@ -79,7 +123,7 @@ class Home extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {category, alfred, logged, user} = this.state;
+    const {category, alfred, open, user} = this.state;
     return (
 
       <Grid>
@@ -182,6 +226,7 @@ class Home extends React.Component {
             </Grid>
           </Hidden>
         </Grid>
+        {open ? this.dialogStore(classes) : null}
       </Grid>
     );
   }

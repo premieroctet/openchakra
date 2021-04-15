@@ -56,15 +56,6 @@ export default theme => ({
   mainNewsLetterStyle: {
     justifyContent: 'center',
   },
-
-  resaServiceButton: {
-    color: '#F8CF61',
-    fontWeight: theme.typography.blackButton.fontWeight,
-    fontFamily: theme.typography.blackButton.fontFamily,
-    backgroundColor: theme.palette.white.main,
-    borderRadius: theme.border.blackButton.borderRadius,
-    padding: theme.padding.blackButton.padding,
-  },
   becomeAlfredComponent: {
     justifyContent: 'center',
     marginTop: '2%',
@@ -112,5 +103,15 @@ export default theme => ({
   mainContainerStyleFooter: {
     justifyContent: 'center',
     backgroundColor: 'rgba(228, 228, 228, 8)'
+  },
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
   },
 })
