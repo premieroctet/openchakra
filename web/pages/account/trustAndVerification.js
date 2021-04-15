@@ -35,7 +35,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 const {CESU} = require('../../utils/consts');
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 const I18N = require('../../utils/i18n');
-const {checkSocialSecurity} = require('../../utils/social_security');
 moment.locale('fr');
 
 // TODO : nettoyer les attributes doublons (ex siret et company.siret)
@@ -124,7 +123,6 @@ class trustAndVerification extends React.Component {
                 cesu: result.cesu,
                 professional: result.is_professional,
                 company: result.company,
-                social_security: result.social_security,
               });
 
             });
@@ -265,7 +263,6 @@ class trustAndVerification extends React.Component {
       company: this.state.company,
       cesu: this.state.cesu,
       cis: this.state.cis,
-      social_security: this.state.social_security,
     };
     axios.put('/myAlfred/api/shop/editStatus', newStatus)
       .then(res => {
@@ -331,13 +328,6 @@ class trustAndVerification extends React.Component {
   }
 
   statusSaveDisabled = () => {
-    const cesu = this.state.cesu;
-    const ss_id = this.state.social_security;
-    if (!this.state.professional) {
-      if (cesu === CESU[0] || cesu === CESU[1]) {
-        return checkSocialSecurity(ss_id) != null;
-      }
-    }
     return false;
   };
 
@@ -503,42 +493,10 @@ class trustAndVerification extends React.Component {
                         <Radio color="primary" value={CESU[0]}/>
                         <Typography>Je veux être déclaré(e) en CESU</Typography>
                       </Grid>
-                      {this.state.cesu === CESU[0] ?
-                        <Grid style={{marginTop: '3vh', marginBottom: '3vh', marginLeft: '3vh'}}>
-                          <TextField
-                            id="ss1"
-                            type="number"
-                            variant={'outlined'}
-                            name='social_security'
-                            label={'N° sécurité sociale'}
-                            helperText={'(Facultatif) N° SS : 13+2 chiffres'}
-                            value={this.state.social_security}
-                            onChange={this.onChange}
-                            errors={this.state.social_security}
-                          />
-                        </Grid>
-                        :
-                        null}
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[1]}/>
                         <Typography> J'accepte d'être déclaré en CES </Typography>
                       </Grid>
-                      {this.state.cesu === CESU[1] ?
-                        <Grid style={{marginTop: '3vh', marginBottom: '3vh', marginLeft: '3vh'}}>
-                          <TextField
-                            id="ss2"
-                            type="number"
-                            variant={'outlined'}
-                            name='social_security'
-                            label={'N° sécurité sociale'}
-                            helperText={'N° SS (13+2 chiffres)'}
-                            value={this.state.social_security}
-                            onChange={this.onChange}
-                            errors={this.state.social_security}
-                          />
-                        </Grid>
-                        :
-                        null}
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[2]}/>
                         <Typography>Je n'accepte pas d'être déclaré(e) en CESU</Typography>

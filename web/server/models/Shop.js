@@ -98,10 +98,6 @@ const ShopSchema = new Schema({
   id_mangopay: {
     type: String,
   },
-  // SS number
-  social_security: {
-    type: String,
-  },
 });
 
 module.exports = Shop = mongoose.model('shop', ShopSchema);

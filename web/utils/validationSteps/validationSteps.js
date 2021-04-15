@@ -1,7 +1,5 @@
 import isEmpty from '../../server/validation/is-empty';
-
 const {CESU} = require('../consts');
-const {checkSocialSecurity} = require('../social_security');
 
 const creaShopPresentation = () => {
   return true;
@@ -83,12 +81,6 @@ const introduceYou = shop => {
   if (shop.is_particular) {
     if (!shop.cesu) {
       return false;
-    }
-    if ([CESU[0], CESU[1]].includes(shop.cesu)) {
-      const res = checkSocialSecurity(shop.social_security);
-      if (res) {
-        return false;
-      }
     }
     return true;
   }

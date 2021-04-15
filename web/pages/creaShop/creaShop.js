@@ -45,7 +45,6 @@ class creaShop extends React.Component {
         company: {name: null, siret: null, vat_subject: false, vat_number: null},
         cesu: null,
         cis: false,
-        social_security: null,
         // ServiceUser attributes
         particular_access: true,
         professional_access: false,
@@ -124,7 +123,6 @@ class creaShop extends React.Component {
             shop.company=rcv_shop.company
             shop.cesu=rcv_shop.cesu
             shop.cis=rcv_shop.cis
-            shop.social_security=rcv_shop.social_security
             shop.is_certified=true
 
             // Si mode ajout de service, récupérer les services de la boutique pour les excludre des choix
@@ -426,7 +424,6 @@ class creaShop extends React.Component {
       shop.company = null;
       shop.cesu = state.cesu;
       shop.cis = null;
-      shop.social_security = state.social_security;
       shop.particular_access=true
       shop.professional_access=false
     } else {

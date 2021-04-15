@@ -29,7 +29,6 @@ class IntroduceYou extends React.Component {
       company: this.props.company,
       cesu: this.props.cesu || null,
       cis: this.props.cis || false,
-      social_security: this.props.social_security,
       notice: false,
       is_certified: this.props.is_certified || false,
     };
@@ -127,48 +126,12 @@ class IntroduceYou extends React.Component {
                           <Radio color="primary" value={CESU[0]}/>
                           <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_want_cesu}</Typography>
                         </Grid>
-                        {
-                          cesu == CESU[0] ?
-                            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{marginLeft: 45}}>
-                              <TextField
-                                id="ss1"
-                                type="number"
-                                label={SHOP.creation.textfield_ss1}
-                                name='social_security'
-                                placeholder="N° SS (13+2 chiffres)"
-                                value={this.state.social_security}
-                                onChange={this.onChange}
-                                errors={this.state.social_security}
-                                variant={'outlined'}
-                              />
-                            </Grid>
-                            :
-                            null
-                        }
                       </Grid>
                       <Grid container spacing={1} style={{width: '100%', margin:0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Radio color="primary" value={CESU[1]}/>
                           <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_accept_cesu}</Typography>
                         </Grid>
-                        {
-                          cesu == CESU[1] ?
-                            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{marginLeft: 45}}>
-                              <TextField
-                                id="ss1"
-                                type="number"
-                                label={SHOP.creation.textfield_ss1}
-                                name='social_security'
-                                placeholder="N° SS (13+2 chiffres)"
-                                value={this.state.social_security}
-                                onChange={this.onChange}
-                                errors={this.state.social_security}
-                                variant={'outlined'}
-                              />
-                            </Grid>
-                            :
-                            null
-                        }
                       </Grid>
                       <Grid container spacing={1} style={{width: '100%', margin:0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>

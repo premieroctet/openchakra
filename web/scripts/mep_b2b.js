@@ -74,6 +74,7 @@ const mep_b2b = () => {
         'company.creation_date':true,
         'company.naf_ape':true,
         'company.status':true,
+        'social_security': true,
       },
     }, { new: true})
       .then( newModel => {
