@@ -74,7 +74,7 @@ class add extends React.Component {
         alert('Equipment ajouté');
         Router.push({pathname: '/dashboard/equipments/all'});
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
       this.setState({errors: error.response.data});
       if (error.response.status === 401 || error.response.status === 403) {
         clearAuthenticationToken()

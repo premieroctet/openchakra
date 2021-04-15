@@ -116,7 +116,6 @@ class ConfirmPayment extends React.Component {
     axios.post('/myAlfred/api/payment/payInDirect', data)
       .then(res => {
         const payInResult=res.data
-        console.log(`Received result:${JSON.stringify(payInResult)}`)
         if (payInResult.SecureModeNeeded) {
           Router.push(payInResult.SecureModeRedirectURL)
         }
@@ -144,7 +143,6 @@ class ConfirmPayment extends React.Component {
     axios.post('/myAlfred/api/payment/payIn', data)
       .then(res => {
         const payInResult=res.data
-        console.log(`Received result:${JSON.stringify(payInResult)}`)
         if (payInResult.SecureModeNeeded) {
           Router.push(payInResult.SecureModeRedirectURL)
         }

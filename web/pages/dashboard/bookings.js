@@ -129,12 +129,11 @@ class all extends React.Component {
     axios.get('/myAlfred/api/admin/booking/all')
       .then((response) => {
         this.setState({bookings: response.data});
-        console.log(`${JSON.stringify(response.data[0])}`);
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
       if (error.response.status === 401 || error.response.status === 403) {
         clearAuthenticationToken()
-        Router.push({pathname: '/login'});
+        Router.push({pathname: '/'});
       }
 
     });
@@ -153,7 +152,6 @@ class all extends React.Component {
     const {classes} = this.props;
     const {bookings} = this.state;
 
-    console.log(`JSON.stringify(bookings)}`);
     return (
       <Layout>
         <Grid container style={{marginTop: 70}}>

@@ -135,10 +135,9 @@ class all extends React.Component {
 
       })
       .catch((error) => {
-        console.log(error);
         if (error.response.status === 401 || error.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'});
         }
       });
   }
@@ -153,7 +152,7 @@ class all extends React.Component {
 
   kyc_validation = alfred_id => {
     axios.post(`/myAlfred/api/admin/kyc_validate/${alfred_id}`)
-      .then(res => console.log(res));
+      .then(res => console.error(res));
   };
 
   render() {

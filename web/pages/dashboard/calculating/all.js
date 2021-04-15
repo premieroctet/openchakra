@@ -128,7 +128,7 @@ class all extends React.Component {
         let calculating = response.data;
         this.setState({calculating: calculating});
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
       if (error.response.status === 401 || error.response.status === 403) {
         clearAuthenticationToken()
         Router.push({pathname: '/login'});

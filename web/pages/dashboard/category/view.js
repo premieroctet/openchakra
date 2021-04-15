@@ -127,7 +127,7 @@ class view extends React.Component {
         let tags = response.data;
         this.setState({all_tags: tags});
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 
   }

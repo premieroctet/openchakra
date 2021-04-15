@@ -84,9 +84,9 @@ class all extends React.Component {
         })
         this.setState({equipments: equipments});
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
       if (error.response.status === 401 || error.response.status === 403) {
-        Router.push({pathname: '/login'});
+        Router.push({pathname: '/'});
       }
     });
   }

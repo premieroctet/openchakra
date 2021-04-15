@@ -88,7 +88,7 @@ class all extends React.Component {
         })
         this.setState({categories: categories})
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
       if (error.response.status === 401 || error.response.status === 403) {
         clearAuthenticationToken()
         Router.push({pathname: '/login'});

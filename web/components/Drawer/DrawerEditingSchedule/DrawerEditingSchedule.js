@@ -54,11 +54,9 @@ class DrawerEditingSchedule extends React.Component {
     // If one date, get bookings
     if (eventsSelected && eventsSelected.size==1) {
       const dt=moment([...eventsSelected][0]).format('DD/MM/YYYY')
-      console.log(`Date:${dt}`)
       axios.get('/myAlfred/api/booking/currentAlfred')
         .then( result => {
           var bookings = result.data.filter( b => moment(b.date_prestation, 'DD/MM/YYYY').format('DD/MM/YYYY')==dt)
-          console.log(`Found bookings #${bookings.length}`)
           var bkgs={}
           bookings.forEach( b => {
             const hour=moment(b.time_prestation).hour()

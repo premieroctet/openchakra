@@ -26,6 +26,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 const {PRO, PART}=require('../utils/consts')
 const {getLoggedUserId} = require('../utils/functions');
+import Router from 'next/router';
+
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;

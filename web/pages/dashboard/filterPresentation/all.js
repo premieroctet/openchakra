@@ -129,10 +129,10 @@ class all extends React.Component {
         let filterPresentation = response.data;
         this.setState({filterPresentation: filterPresentation});
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
       if (error.response.status === 401 || error.response.status === 403) {
         clearAuthenticationToken()
-        Router.push({pathname: '/login'});
+        Router.push({pathname: '/'});
       }
 
     });

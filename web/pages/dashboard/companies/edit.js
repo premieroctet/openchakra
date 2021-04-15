@@ -177,7 +177,7 @@ class view extends React.Component {
         }
       })
       .catch ( err => {
-        console.log(err)
+        console.error(err)
         snackBarError(err.response.data)
         this.setState({errors: err.response.data})
       })

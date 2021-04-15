@@ -82,9 +82,9 @@ class all extends React.Component {
         let job = response.data;
         this.setState({job: job});
       }).catch((error) => {
-      console.log(error);
+      console.error(error);
       if (error.response.status === 401 || error.response.status === 403) {
-        Router.push({pathname: '/login'});
+        Router.push({pathname: '/'});
       }
     });
   }

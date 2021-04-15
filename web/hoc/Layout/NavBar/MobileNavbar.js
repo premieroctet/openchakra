@@ -388,7 +388,7 @@ class MobileNavbar extends React.Component{
             <BottomNavigationAction onClick={this.handleOpenRegister} label={'Inscription'} classes={{root: classes.navigationActionRoot, label: classes.label}} value={5} icon={ <GroupAddIcon/>}/> : null
         }
         {
-          !logged ?
+          !logged && is_b2b_site(user) ?
             <BottomNavigationAction onClick={() => Router.push(!is_b2b_style(this.state.user) ? '/professional' : is_development() ? '/particular' : null) } label={!is_b2b_style(this.state.user) ? 'Entreprise' : is_development() ? 'Particulier' : null} classes={{root: classes.navigationActionRoot, label: classes.label}} value={6} icon={ !is_b2b_style(this.state.user) ?  <BusinessIcon/> : is_development() ? <WcIcon/> : null }/> : null
         }
         {setOpenLogin ? this.modalLogin(classes) : null}
