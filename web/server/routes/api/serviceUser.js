@@ -305,6 +305,7 @@ router.put('/editPrestation/:id', passport.authenticate('jwt', {
 router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
   ServiceUser.findById(req.params.id)
     .then(serviceUser => {
+      serviceUser.diploma = {}
       serviceUser.diploma.name = req.body.name;
       serviceUser.diploma.year = req.body.year;
       serviceUser.diploma.skills = JSON.parse(req.body.skills);

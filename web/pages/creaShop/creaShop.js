@@ -29,7 +29,7 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: 0,
+      activeStep: is_development() ? 4 : 0,
       saving: false,
       availabilities: [],
       currentUser:{},
@@ -133,6 +133,8 @@ class creaShop extends React.Component {
                   shop.service = su.service._id
                   shop.perimeter = su.perimeter
                   shop.location = su.location
+                  shop.description = su.description
+                  shop.level = su.level
 
                   shop.particular_access = su.particular_access
                   shop.professional_access = su.professional_access
@@ -214,7 +216,7 @@ class creaShop extends React.Component {
 
   addDefaultAvailability = () => {
     // 923772 : plus de disponibilité par défaut
-    return 
+    return
     const avail=getDefaultAvailability()
     const data={
       startDate: avail.period.begin,
@@ -288,6 +290,7 @@ class creaShop extends React.Component {
       setAxiosAuthentication()
       axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
+          snackBarSuccess(`serviceUser ${this.props.serviceuser_id}`)
           const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.props.serviceuser_id || ''}`
           axios.post(su_url, cloned_shop)
             .then( su_res => {
