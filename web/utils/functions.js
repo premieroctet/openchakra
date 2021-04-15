@@ -69,12 +69,10 @@ const circular_get = (array, start, length) => {
 
 const getLoggedUser = () => {
   if (typeof localStorage=='undefined') {
-    console.log(`Token inconnnu, localStorage non défini`)
     return null
   }
   const token = localStorage.getItem('token')
   if (!token) {
-    console.debug('Pas de token')
     return null
   }
   const data=token.split(' ')[1]

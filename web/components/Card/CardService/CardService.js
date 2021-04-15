@@ -67,11 +67,13 @@ class CardService extends React.Component{
   }
 
   componentDidMount() {
-    axios.get(`/myAlfred/api/serviceUser/cardPreview/${this.props.item}`)
-      .then(res => {
-        this.setState({cpData: res.data, alfred: res.data.alfred});
-      })
-      .catch(err => console.error(err));
+    if (this.props.item) {
+      axios.get(`/myAlfred/api/serviceUser/cardPreview/${this.props.item}`)
+        .then(res => {
+          this.setState({cpData: res.data, alfred: res.data.alfred});
+        })
+        .catch(err => console.error(err));
+    }
   }
 
   handleClickOpen =(id) => {
