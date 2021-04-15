@@ -134,11 +134,11 @@ class Footer extends React.Component {
                  <Typography >Informations légales</Typography>
                 </Link>
               </Grid>
-                <Grid item>
-                  <Link href={'/particular'}>
-                    <Typography>Espace particulier</Typography>
-                  </Link>
-                </Grid>
+              <Grid item>
+                <Link href={'/particular'}>
+                  <Typography>Espace particulier</Typography>
+                </Link>
+              </Grid>
               </>
               : null
           }
@@ -153,6 +153,11 @@ class Footer extends React.Component {
                 <Grid item>
                   <Link href={'/contact'}>
                    <Typography >Nous contacter</Typography>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href={'/particular'}>
+                    <Typography>Espace entreprise</Typography>
                   </Link>
                 </Grid>
               </>

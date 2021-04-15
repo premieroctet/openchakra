@@ -104,7 +104,7 @@ class Home extends React.Component {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => Router.push(isAndroid ? 'https://play.google.com/store/apps/details?id=com.myalfred' :'https://apps.apple.com/us/app/my-alfred/id1544073864')} color="primary">
+          <Button onClick={() => Router.push(isAndroid ? 'https://play.google.com/store/apps/details?id=com.myalfred' :'https://apps.apple.com/us/app/my-alfred/id1544073864')} color="primary">
             Télécharger
           </Button>
         </DialogActions>

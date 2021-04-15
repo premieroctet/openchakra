@@ -363,7 +363,7 @@ class MobileNavbar extends React.Component{
 
   render() {
     const{classes, currentIndex} = this.props;
-    const{setOpenLogin, setOpenRegister, modalMobileSearchBarInput, logged} = this.state;
+    const{setOpenLogin, setOpenRegister, modalMobileSearchBarInput, logged, user} = this.state;
 
     return(
       <BottomNavigation
@@ -389,7 +389,7 @@ class MobileNavbar extends React.Component{
         }
         {
           !logged && is_b2b_site(user) ?
-            <BottomNavigationAction onClick={() => Router.push(!is_b2b_style(this.state.user) ? '/professional' : is_development() ? '/particular' : null) } label={!is_b2b_style(this.state.user) ? 'Entreprise' : is_development() ? 'Particulier' : null} classes={{root: classes.navigationActionRoot, label: classes.label}} value={6} icon={ !is_b2b_style(this.state.user) ?  <BusinessIcon/> : is_development() ? <WcIcon/> : null }/> : null
+            <BottomNavigationAction onClick={this.handleOpenRegister} label={'Prestataire'} classes={{root: classes.navigationActionRoot, label: classes.label}} value={6} icon={<BusinessIcon/>}/> : null
         }
         {setOpenLogin ? this.modalLogin(classes) : null}
         {setOpenRegister ? this.modalRegister(classes) : null}
