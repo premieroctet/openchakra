@@ -61,6 +61,12 @@ class BigList extends React.Component {
       return value ? "OUI" : "NON"
     }
 
+    if (colId=="location") {
+      const location=value
+      const res = Object.keys(location).filter(k => location[k]).map( k => k.slice(0, 1).toUpperCase()).join('/')
+      return res
+    }
+
     return value
   }
 
@@ -78,6 +84,7 @@ class BigList extends React.Component {
       'dateTimeCellRenderer': models.DateTimeCellRenderer,
       'booleanCellRenderer': models.BooleanCellRenderer,
       'enumCellRenderer': models.EnumCellRenderer,
+      'locationRenderer': models.LocationRenderer,
     }
 
     const defaultColDef={

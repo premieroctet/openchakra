@@ -1,4 +1,3 @@
-const {clearAuthenticationToken}=require('../../../utils/authentication')
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 
@@ -27,6 +26,8 @@ import HomeIcon from '@material-ui/icons/Home';
 const  {BigList}=require('../../../components/BigList/BigList')
 const moment = require('moment-timezone');
 moment.locale('fr');
+const {MANGOPAY_CONFIG}=require('../../../config/config')
+
 
 const styles = theme => ({
   signupContainer: {
@@ -37,7 +38,6 @@ const styles = theme => ({
   },
   card: {
     padding: '1.5rem 3rem',
-
     marginTop: '100px',
   },
   cardContant: {
@@ -48,9 +48,6 @@ const styles = theme => ({
     color: 'black',
     fontSize: 12,
     lineHeight: 4.15,
-  },
-  table: {
-    minWidth: 650,
   },
 });
 
@@ -66,66 +63,77 @@ class all extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      billings: [],
+      services: [],
     };
 
   this.columnDefs=[
       {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Label", field: "label"},
+      {headerName: "Email", field: "user.email"},
+      {headerName: "Particulier", field: "user.shop.is_particular"},
+      {headerName: "Service", field: "service.label"},
+      {headerName: "Catégorie", field: "service.category.label"},
+      {headerName: "Localisation (Client/Alfred/Visio)", field: "location", cellRenderer: 'locationRenderer',},
+      {headerName: "Code postal", field: "service_address.zip_code"},
+      {headerName: "Ville", field: "service_address.city"},
     ]
+
   }
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     setAxiosAuthentication()
 
-    axios.get('/myAlfred/api/admin/billing/all')
-      .then((response) => {
-        let billings = response.data;
-        this.setState({billings: billings});
-      }).catch((error) => {
-      console.log(error);
-      if (error.response.status === 401 || error.response.status === 403) {
-        clearAuthenticationToken()
-        Router.push({pathname: '/login'});
-      }
-    });
-  }
-
-  onRowClick = data => {
-    if (data) {
-      window.open(`/dashboard/billing/view?id=${data._id}`, '_blank')
-    }
-  }
-
-  onAddClick = () => {
-    window.open(`/dashboard/billing/add`, '_blank')
+    axios.get('/myAlfred/api/admin/serviceusers/all')
+      .then( response => {
+        let services = response.data;
+        services.forEach( s => {
+          try {
+            s.user.shop.is_particular = Boolean(s.user.shop[0].is_particular)
+          }
+          catch (error) {
+            console.error(`Err on ${s._id}:${error}`)
+          }
+        });
+        this.setState({services: services});
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response.status === 401 || error.response.status === 403) {
+          Router.push({pathname: '/login'});
+        }
+      });
   }
 
   render() {
     const {classes} = this.props;
-    const {billings} = this.state;
+    const {services} = this.state;
+
+    if (services.length==0) {
+      return null
+    }
 
     return (
       <Layout>
         <Grid container style={{marginTop: 70}}>
         </Grid>
         <Grid container className={classes.signupContainer} style={{width:'100%'}}>
-	  <Link href={'/dashboard/home'}>
-
+	        <Link href={'/dashboard/home'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour dashboard</span></Typography>
-	  </Link>
-            <Grid style={{width: '90%'}}>
-              <Paper style={{width: '100%'}}>
-               <BigList data={billings} columnDefs={this.columnDefs} classes={classes}
-                        title={'Modes de facturation'} onRowClick={this.onRowClick} onAddClick={this.onAddClick}/>
-              </Paper>
-            </Grid>
+	        </Link>
+          <Grid style={{width: '90%'}}>
+            <Paper style={{width: '100%'}}>
+              <BigList
+                data={services}
+                columnDefs={this.columnDefs}
+                classes={classes}
+                title={"Services d'Alfred"}
+              />
+            </Paper>
+          </Grid>
         </Grid>
       </Layout>
     );
   };
 }
-
 
 export default withStyles(styles)(all);

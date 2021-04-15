@@ -64,6 +64,7 @@ class all extends React.Component {
       categories: [],
     };
   this.columnDefs=[
+      {headerName: "_id", field: "_id", width: 0},
       {headerName: "Label particuliers", field: "particular_label"},
       {headerName: "Label pro", field: "professional_label"},
       {headerName: "Illustration particuliers", field: "particular_picture", cellRenderer:'pictureCellRenderer'},

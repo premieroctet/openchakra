@@ -66,6 +66,7 @@ class all extends React.Component {
     };
 
     this.columnDefs=[
+      {headerName: "_id", field: "_id", width: 0},
       {headerName: "Label", field: "label"},
       {headerName: "Illustration", field: "picture", cellRenderer:'pictureCellRenderer'},
     ]

@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const axios = require('axios');
 const CronJob = require('cron').CronJob;
-const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
 const {sendShopDeleted, sendShopOnline} = require('../../utils/mailing');
 const {createMangoProvider} = require('../../utils/mangopay');
@@ -97,7 +96,12 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
         .then(shop => {
           User.findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
             .then(alfred => {
-              createMangoProvider(alfred, shop);
+              if (alfred.age<18 || alfred.age>120) {
+                console.log(`Create Mango provider skipped, ${alfred.email} age ${alfred.age}`)
+              }
+              else {
+                createMangoProvider(alfred, shop);
+              }
               sendShopOnline(alfred, req);
               res.json(shop);
             })
@@ -406,7 +410,12 @@ if (is_production() || is_validation()) {
           Shop.findOne({alfred: alfred})
             .then(shop => {
               console.log(`Found alfred ${alfred.name} and shop ${shop._id}`);
-              createMangoProvider(alfred, shop);
+              if (alfred.age<18 || alfred.age>120) {
+                console.log(`Create Mango provider skipped, ${alfred.email} age ${alfred.age}`)
+              }
+              else {
+                createMangoProvider(alfred, shop);
+              }
             })
             .catch(err => console.error(err));
         });

@@ -23,7 +23,7 @@ const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
-const emptyPromise = require('../../../utils/promise.js');
+const {emptyPromise} = require('../../../utils/promise.js');
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../utils/mangopay');
 const {send_cookie}=require('../../utils/context')
@@ -1266,8 +1266,16 @@ if (is_production() || is_validation()) {
       .limit(100)
       .then(usrs => {
         usrs.forEach(user => {
-          console.log(`Found customer ${user.name}`)
-          createMangoClient(user)
+          console.log(`Found customer ${user.name}, age ${user.age}`)
+          if (user.age<18) {
+	    console.warn(`User ${user._id} skipped, age ${user.age}<18`)
+	  }
+  	  else if (user.age>120) {
+	    console.warn(`User ${user._id} skipped, age ${user.age}>120`)
+	  }
+	  else {
+            createMangoClient(user)
+          }
         })
       })
       .catch(err => console.error(err))

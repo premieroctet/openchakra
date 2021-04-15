@@ -69,6 +69,7 @@ class all extends React.Component {
     };
 
   this.columnDefs=[
+      {headerName: "_id", field: "_id", width: 0},
       {headerName: "Privée", field: "private_alfred", cellRenderer: "privateRenderer"},
       {headerName: "Label", field: "label", comparator: insensitiveComparator},
       {headerName: "Catégorie", field: "category_label", comparator: insensitiveComparator},

@@ -7,7 +7,6 @@ import Typography from "@material-ui/core/Typography";
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import io from 'socket.io-client';
-const emptyPromise=require('../utils/promise')
 
 import LayoutPayment from "../hoc/Layout/LayoutPayment";
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'

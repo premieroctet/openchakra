@@ -27,7 +27,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchResults=withSlide(withGrid(CardService));
 const {is_b2b_style, is_b2b_admin, is_b2b_manager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
-
+const {emptyPromise}=require('../utils/promise')
 moment.locale('fr');
 
 class SearchDataModel extends SlideGridDataModel {
