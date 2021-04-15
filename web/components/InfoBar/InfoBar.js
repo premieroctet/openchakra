@@ -6,25 +6,24 @@ import styles from '../../static/css/components/InfoBar/InfoBar'
 import withStyles from "@material-ui/core/styles/withStyles";
 
 
-class InfoBar extends React.Component{
+class InfoBar extends React.Component {
   constructor(props) {
     super(props);
 
   }
-  render(){
+
+  render() {
     const {classes} = this.props;
 
-    return(
+    return (
       <Grid container className={classes.infoBarMainStyle}>
         <Grid item className={classes.infoBarLinkContainer}>
           <Grid className={classes.infoBarPicsContainer}>
-            <img src={'/static/assets/img/warning.svg'} alt={'warning'} title={'warning'} width={'100%'} height={'100%'}/>
+            <img src={'/static/assets/img/warning.svg'} alt={'warning'} title={'warning'} width={'100%'}
+                 height={'100%'}/>
           </Grid>
           <Grid>
             <Typography className={classes.infoBarColorText}>{INFOBAR_MESSAGE.message}</Typography>
-          </Grid>
-          <Grid item className={classes.showmoreContainer}>
-            <a href={"/contact"} className={classes.shomoreLink}>{INFOBAR_MESSAGE.showMore}</a>
           </Grid>
         </Grid>
       </Grid>

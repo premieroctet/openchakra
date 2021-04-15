@@ -2,6 +2,8 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import moment from "moment";
 
+import getNextNumber from '../../../server/utils/booking'
+
 moment.locale('fr');
 
 class Invoices extends React.Component {
@@ -13,7 +15,7 @@ class Invoices extends React.Component {
     return String(num).padStart(places, '0')
   }
   dateReceipt = (date) => {
-    return moment(date).format("Y.MM.")
+    return moment(date).format("YMM")
   }
 
   render() {

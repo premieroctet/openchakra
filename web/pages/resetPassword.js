@@ -81,7 +81,7 @@ class resetPassword extends React.Component {
         else {
           localStorage.removeItem('b2b');
         }
-        Router.push({pathname: '/login'});
+        Router.push({pathname: '/'});
       })
       .catch(err => {
         console.error(err)

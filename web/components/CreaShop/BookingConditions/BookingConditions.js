@@ -42,7 +42,7 @@ class BookingConditions extends React.Component {
 
   onAlfredConditionsChanged(id, checked) {
     if (!checked) {
-      id = (parseInt(id)-1).toString()
+      id = (parseInt(id) - 1).toString()
     }
     id = Math.max(parseInt(id), 0).toString()
     this.setState({my_alfred_conditions: id},
@@ -64,16 +64,18 @@ class BookingConditions extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
           <h2 className={classes.policySizeTitle}>{SHOP.bookingCondition.title}</h2>
         </Grid>
-        <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h3 className={classes.policySizeSubtitle}>{SHOP.bookingCondition.subtitle}</h3>
         </Grid>
         {
           false ?
             <>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.bookingCondition.title_firstSection}</h4>
+                <h4 className={classes.policySizeSubtitle}
+                    style={{margin: 0}}>{SHOP.bookingCondition.title_firstSection}</h4>
               </Grid>
-              <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12}
+                    xs={12}>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                   <ButtonSwitch
                     key={moment()}
@@ -100,7 +102,8 @@ class BookingConditions extends React.Component {
         }
 
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.bookingCondition.title_secondSection}</h4>
+          <h4 className={classes.policySizeSubtitle}
+              style={{margin: 0}}>{SHOP.bookingCondition.title_secondSection}</h4>
         </Grid>
         <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
