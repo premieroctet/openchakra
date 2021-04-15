@@ -44,7 +44,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
 import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager} from "../../../utils/context";
 const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions')
-const emptyPromise = require('../../../utils/promise.js');
+const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
 
 const Transition = React.forwardRef(function Transition(props, ref) {

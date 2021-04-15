@@ -1,6 +1,6 @@
 const moment = require('moment');
 const path = require('path');
-const emptyPromise = require('../../utils/promise');
+const {emptyPromise} = require('../../utils/promise');
 const {MANGOPAY_CONFIG, is_development, get_host_url} = require('../../config/config')
 const mangopay = require('mangopay2-nodejs-sdk');
 const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType');

@@ -13,7 +13,7 @@ import styles from '../../../static/css/pages/profile/editProfileCompany/editPro
 const moment = require('moment')
 import Button from "@material-ui/core/Button";
 import FormHelperText from "@material-ui/core/FormHelperText";
-const emptyPromise = require('../../../utils/promise');
+const {emptyPromise} = require('../../../utils/promise');
 
 class IndexDashboard extends React.Component{
   constructor(props) {

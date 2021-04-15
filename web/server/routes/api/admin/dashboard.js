@@ -40,6 +40,7 @@ const lbc = require('./lbc.json')
 const _ = require('lodash')
 var util = require('util');
 const {computeUrl}=require('../../../../config/config')
+const {delayedPromise}=require('../../../../utils/promise')
 
 // For Node < 12.0
 if (!Promise.allSettled) {
@@ -233,6 +234,32 @@ router.get('/users/all', passport.authenticate('admin', {session: false}), (req,
       .catch(err => {
         console.error(err)
         res.status(404).json({user: 'No users found'})
+      })
+  } else {
+    res.status(400).json({msg: 'Access denied'});
+  }
+});
+
+// @Route GET /myAlfred/api/admin/serviceusers/all
+// List all serviuceusers
+router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decode = jwt.decode(token);
+  const admin = decode.is_admin;
+  if (admin) {
+    ServiceUser.find({}, '_id perimeter location service_address.zip_code service_address.city')
+      .populate({path : 'service', select: 'label category', populate : {path : 'category', select : 'label'}})
+      //.populate('service.category', 'label')
+      .populate({path : 'user', select : 'email shop', populate : { path : 'shop', select : 'is_particular'}})
+      .then(services => {
+        if (!services) {
+          res.status(400).json({msg: 'No services found'});
+        }
+        res.json(services)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({user: 'No services found'})
       })
   } else {
     res.status(400).json({msg: 'Access denied'});
@@ -2531,7 +2558,7 @@ router.get('/prospect/all', passport.authenticate('admin', {session: false}), (r
 
   if (admin) {
     // TODO: Use aggregate
-    Prospect.find()
+    Prospect.find({}, 'category contacted')
       .sort({category: 1, keywords: 1})
       .catch(err => {
         console.error(err);
@@ -2542,19 +2569,16 @@ router.get('/prospect/all', passport.authenticate('admin', {session: false}), (r
         contacted = {};
         prospects.forEach(p => {
           const key = `${p.category}`;
-          counts[key] = counts.hasOwnProperty(key) ? counts[key] + 1 : 1;
+          counts[key] = (counts[key] || 0) + 1
           const contact = p.contacted ? 1 : 0;
-          contacted[key] = contacted.hasOwnProperty(key) ? contacted[key] + contact : contact;
+          contacted[key] = (contacted[key] || 0) + contact
         });
-        var result = [];
-        Object.keys(counts).forEach(key => {
-          result.push({
+        const result=Object.keys(counts).map(key => { return {
             category: key,
             count: counts[key],
             contacted: contacted[key],
             not_contacted: counts[key] - contacted[key],
-          });
-        });
+          }})
 
         res.json(result);
       });
@@ -2777,10 +2801,13 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
       return `http://api.notifan.fr/search?url=${url}/p-${i+1}`
     }
   })
-  console.log(`URL 1:${urls[0]}`)
-  const promises = urls.map(u => axios.get(u))
-  //const promises=[urls.map(u =>  new Promise((resolve, reject) => resolve({data:lbc})))]
-  const req_result={total_pages:pages_count, scanned_pages:0, total_ads:0, new_ads:0, phone_ads:0, saved_ads:0}
+
+  const DELAY=2000
+  const TIMEOUT=2000
+
+  const promises = urls.map((u, index) => delayedPromise(DELAY*(index+1), ()=>axios.get(u, { timeout: TIMEOUT})))
+
+  var req_result=[`Pages demandées:${pages_count}\n`]
   Promise.allSettled(promises)
     .then( results => {
       var all_ads = []
@@ -2788,46 +2815,45 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
       results.forEach( result => {
         if (result.status=="fulfilled") {
           all_ads = all_ads.concat(result.value.data.ads)
-          req_result.scanned_pages=req_result.scanned_pages+1
-        }
-        else if (result.status=="rejected") {
-          console.log(`Rejected:${result.reason}`)
-          error_reason = result.reason
-          util.inspect(error_reason)
         }
       })
 
-      if (error_reason) {
-        const status=error_reason.response.status
-        const msg={
-          403: 'Adresse ip non autorisée',
-          500 : 'Erreur inconnue du serveur de Paul',
-          503 : 'Résolution Datadome, réessayer dans 5 secondes',
-          400 : 'Erreur de catégorie ou liste de recherche',
-        }
-        res.status(status).json(msg[status] || `Erreur ${error_reason}`)
-        return
+      const requests_ok = results.filter(r => r.status=='fulfilled')
+      const requests_nok = results.filter(r => r.status=='rejected')
+
+      req_result.push(`Pages reçues:${requests_ok.length}`)
+      if (requests_nok.length>0) {
+        req_result.push(`Pages en erreur:${requests_nok.length}, cause:${_.uniq(requests_nok.map(r => r.reason.toString())).join(',')}`)
       }
 
-      req_result.total_ads=all_ads.length
-      all_ads = _.uniqBy(all_ads.filter(a => a && a.status=="active" && a.has_phone), ad => ad.list_id)
+      if (requests_ok.length==0) {
+        return res.status(400).json(req_result)
+      }
+
+      var all_ads = [].concat(requests_ok.map(r => r.value.data.ads))
+      req_result.push(`Annonces reçues:${all_ads.length}`)
+      all_ads = all_ads.filter(a => a && a.status=="active" && a.has_phone)
+      req_result.push(`Annonces actives avec téléphone:${all_ads.length}`)
 
       Prospect.find({ list_id : {$exists: true}}, 'ad_id')
         .then ( prospects => {
           prospects = prospects.map( p => p.list_id)
           // Retirer les prospects connus en BD par leur ad_id
           all_ads = all_ads.filter(ad => !prospects.includes(ad.list_id))
-          req_result.new_ads=all_ads.length
+          req_result.push(`Annonces nouvelles:${all_ads.length}`)
+
           const phoneUrls = all_ads.map(ad => `http://api.notifan.fr/phone?list_id=${ad.list_id}`)
-          const phonePromises = phoneUrls.map( url => axios.get(url))
+          const phonePromises = phoneUrls.map( (url,index) => delayedPromise(DELAY*index, () => axios.get(url, { timeout: TIMEOUT})))
+          req_result.push(`N°s tel demandés:${phonePromises.length}`)
           Promise.allSettled(phonePromises)
             .then ( phone_results => {
               // Keep
               phone_results = phone_results.map(p => p.status=='fulfilled' && p.value.data.utils.status=='OK' ? p.value.data.utils.phonenumber : null)
+              const mobile_count = phone_results.filter(p => isMobilePhone(p))
+              req_result.push(`N°s tel mobiles reçus:${mobile_count.length}`)
               var db_promises = []
-              req_result.phone_ads=phone_results.filter(p => p && isMobilePhone(p)).length
               phone_results.forEach( (phone, index) => {
-                if (phone  && isMobilePhone(phone)) {
+                if (isMobilePhone(phone)) {
                   const ad = all_ads[index]
                   const pData={
                     category: category,
@@ -2844,27 +2870,22 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
               })
               Promise.allSettled(db_promises)
                 .then( db_results => {
-                  req_result.saved_ads=db_results.filter(r=>r.status=='fulfilled').length
+                  const db_results_ok = db_result.filter( r => r.status='fulfilled')
                   db_results.forEach((r, index)  => {
                     if (r.status=='rejected') {
                       console.log(`Phone bd request rejectd, ad_id:${all_ads[index].list_id}, reason:${r.reason}`)
                     }
                   });
 
-                  res.json(req_result)
+                  req_result.push(`Prospects ajoutés:${db_results_ok.length}`)
+                  return res.json(req_result)
                 })
             })
         })
     })
     .catch ( err => {
       console.error(err)
-      const status=err.response.status
-      const msg={
-        403: 'Adresse ip non autorisée',
-        503 : 'Résolution Datadome, réessayer dans 5 secondes',
-        400 : 'Erreur de catégorie ou liste de recherche',
-      }
-      res.status(status).json(msg[status])
+      return res.status(500).json([err])
     })
 })
 
