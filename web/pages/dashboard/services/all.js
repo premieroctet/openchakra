@@ -64,6 +64,7 @@ class all extends React.Component {
       service: [],
     };
   this.columnDefs=[
+      {headerName: "_id", field: "_id", width: 0},
       {headerName: "Label", field: "label"},
       {headerName: "Catégorie", field: "category.label"},
       {headerName: "Illustration", field: "picture", cellRenderer:'pictureCellRenderer'},

@@ -67,6 +67,7 @@ class all extends React.Component {
     };
 
   this.columnDefs=[
+      {headerName: "_id", field: "_id", width: 0},
       {headerName: "Statut", field: "status", cellRenderer: 'statusCellRenderer', filter:'statusCellFilter'},
       {headerName: "Prénom", field: "firstname"},
       {headerName: "Nom", field: "name"},
