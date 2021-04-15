@@ -60,8 +60,10 @@ class Home extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
-    if(deviceType === 'browser' && isAndroid || isIOS){
-      this.setState({open: true})
+    if(deviceType === 'browser'){
+      if(isAndroid || isIOS){
+        this.setState({open: true})
+      }
     }
 
     axios.get('/myAlfred/api/users/current')

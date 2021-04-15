@@ -156,7 +156,7 @@ class Footer extends React.Component {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href={'/particular'}>
+                  <Link href={'/professional'}>
                     <Typography>Espace entreprise</Typography>
                   </Link>
                 </Grid>
