@@ -657,13 +657,13 @@ class NavBar extends Component {
               anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
               transformOrigin={{vertical: 'top', horizontal: 'center'}}
             >
-              <MenuItem onClick={() => Router.push('/search')}>
+              <MenuItem onClick={() => Router.push('/blog/elementor-211/')}>
                 <Typography>Services aux entreprises</Typography>
               </MenuItem>
-              <MenuItem onClick={() => Router.push('/search')}>
+              <MenuItem onClick={() => Router.push('/blog/services-aux-collaborateurs/')}>
                 <Typography>Services aux collaboratuers</Typography>
               </MenuItem>
-              <MenuItem onClick={() => Router.push('/search')}>
+              <MenuItem onClick={() => Router.push('/blog/tarifs')}>
                 <Typography>Tarifs</Typography>
               </MenuItem>
               <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>

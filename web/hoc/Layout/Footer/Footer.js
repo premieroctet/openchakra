@@ -173,17 +173,17 @@ class Footer extends React.Component {
               :
               <>
                 <Grid item>
-                  <Link href={'/footer/ourCommunity'}>
+                  <Link href={'/blog/tarifs'}>
                    <Typography >Offre et tarifs</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href={'/footer/ourCommunity'}>
-                    <Typography >My Alfred entreprise</Typography>
+                  <Link href={'/blog/elementor-211/'}>
+                    <Typography >Services aux entreprises</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href={'/footer/ourCommunity'}>
+                  <Link href={'/blog/services-aux-collaborateurs/'}>
                     <Typography >Services aux collaborateurs</Typography>
                   </Link>
                 </Grid>
