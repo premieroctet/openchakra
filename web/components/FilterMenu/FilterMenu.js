@@ -6,6 +6,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import moment from "moment";
 import {DateRangePicker} from 'react-dates';
+import styles from '../../static/css/components/FilterMenu/FilterMenu'
+import withStyles from "@material-ui/core/styles/withStyles";
 
 class FilterMenu extends React.Component{
   constructor(props) {
@@ -63,11 +65,11 @@ class FilterMenu extends React.Component{
   };
 
   render() {
-    const{style, mounting, search, searching, serviceUsers} = this.props;
+    const{classes, mounting, search, searching, serviceUsers} = this.props;
     const {statusFilterVisible, individualSelected, proSelected, dateFilterVisible, startDate, endDate, focusedInput} = this.state;
 
-    const statusFilterBg = this.isStatusFilterSet() ? '#2FBCD3' : 'white';
-    const dateFilterBg = this.isDateFilterSet() ? '#2FBCD3' : 'white';
+    const statusFilterBg = this.isStatusFilterSet() ? 'rgba(248, 207, 97, 1)' : 'white';
+    const dateFilterBg = this.isDateFilterSet() ? 'rgba(248, 207, 97, 1)' : 'white';
 
     let resultMessage;
 
@@ -82,26 +84,26 @@ class FilterMenu extends React.Component{
 
     return(
       <Grid>
-        <Grid className={style.filterMenuTitleContainer}>
+        <Grid className={classes.filterMenuTitleContainer}>
           <Grid>
-            <p className={style.filterMenuDescription}>{resultMessage}</p>
+            <p className={classes.filterMenuDescription}>{resultMessage}</p>
           </Grid>
         </Grid>
-        <Grid className={style.filterMenuChipContainer}>
-          <Grid className={style.filTerMenuStatusMainStyleFilter}>
+        <Grid className={classes.filterMenuChipContainer}>
+          <Grid className={classes.filTerMenuStatusMainStyleFilter}>
             {statusFilterVisible ?
-              <Grid className={style.filterMenuContainerStatut}>
-                <Grid className={style.filterMenuFocused} onClick={() => this.statusFilterToggled()}>
-                  <Typography className={style.filterMenuTextFocused}>Statut</Typography>
+              <Grid className={classes.filterMenuContainerStatut}>
+                <Grid className={classes.filterMenuFocused} onClick={() => this.statusFilterToggled()}>
+                  <Typography className={classes.filterMenuTextFocused}>Statut</Typography>
                 </Grid>
-                <Grid className={style.filterMenuContentMainStyle}>
-                  <Grid className={style.filTerMenuStatusMainStyleFilter}>
+                <Grid className={classes.filterMenuContentMainStyle}>
+                  <Grid className={classes.filTerMenuStatusMainStyleFilter}>
                     <Grid>
                       <Grid>
                         {individualSelected ? null :
                           <Grid>
                             <FormControlLabel
-                              classes={{root: style.filterMenuControlLabel}}
+                              classes={{root: classes.filterMenuControlLabel}}
                               control={
                                 <Switch
                                   checked={proSelected}
@@ -122,7 +124,7 @@ class FilterMenu extends React.Component{
                         {proSelected ? null :
                           <Grid>
                             <FormControlLabel
-                              classes={{root: style.filterMenuControlLabel}}
+                              classes={{root: classes.filterMenuControlLabel}}
                               control={
                                 <Switch
                                   checked={individualSelected}
@@ -147,19 +149,19 @@ class FilterMenu extends React.Component{
               <Grid
                 key={moment()}
                 onClick={() => this.statusFilterToggled()}
-                className={style.filterMenuStatusNotFocused}
+                className={classes.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${statusFilterBg}`}}>
-                  <Typography className={style.filterMenuTextNotFocused}>Statut</Typography>
+                  <Typography style={{color: this.isStatusFilterSet() ? 'white': 'black'}}>Statut</Typography>
               </Grid>
             }
           </Grid>
-          <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
+          <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
             {dateFilterVisible ?
-              <Grid className={style.filterMenuDateFocused}>
-                <Grid className={style.filterMenuFocused} onClick={() => this.dateFilterToggled()}>
+              <Grid className={classes.filterMenuDateFocused}>
+                <Grid className={classes.filterMenuFocused} onClick={() => this.dateFilterToggled()}>
                   <Typography >Quelle(s) date(s) ?</Typography>
                 </Grid>
-                <Grid className={style.filterMenuContentMainStyleDateFilter}>
+                <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                   <Grid>
                     <DateRangePicker
                       startDate={startDate} // momentPropTypes.momentObj or null,
@@ -175,7 +177,7 @@ class FilterMenu extends React.Component{
                       numberOfMonths={1}
                     />
                   </Grid>
-                  <Grid className={style.filterMenuDateFilterButtonContainer}>
+                  <Grid className={classes.filterMenuDateFilterButtonContainer}>
                     <Grid>
                       <Button onClick={() => this.cancelDateFilter()}>Annuler</Button>
                     </Grid>
@@ -188,9 +190,9 @@ class FilterMenu extends React.Component{
               :
               <Grid
                 onClick={() => this.dateFilterToggled()}
-                className={style.filterMenuStatusNotFocused}
+                className={classes.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${dateFilterBg}`}}>
-                <Typography>Quelle(s) date(s) ?</Typography>
+                <Typography style={{color:  this.isDateFilterSet() ?  'white' : 'black'}}>Quelle(s) date(s) ?</Typography>
               </Grid>
             }
           </Grid>
@@ -200,4 +202,4 @@ class FilterMenu extends React.Component{
   }
 }
 
-export default FilterMenu
+export default withStyles(styles)(FilterMenu);

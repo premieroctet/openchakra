@@ -36,16 +36,6 @@ export default theme => ({
     }
   },
 
-
-
-
-
-
-
-
-
-  /***** new css***/
-
   navbarRoot: {
     marginLeft: 20,
     flex: 1,
@@ -73,21 +63,6 @@ export default theme => ({
   searchFilterMenuContent:{
     width: '80%'
   },
-
-
-
-
-
-  filterMenuTitleContainer:{
-    marginTop: '5%',
-    textAlign: 'center'
-  },
-  filterMenuChipContainer:{
-    marginTop: '2%',
-    display: 'flex',
-
-  },
-
   searchMainConainer:{
     marginTop: '2%'
   },
@@ -129,7 +104,6 @@ export default theme => ({
       width: '100%'
     }
   },
-
   searchMainContainer:{
     marginLeft: 0,
     width: '100%',
@@ -138,7 +112,6 @@ export default theme => ({
 
     }
   },
-
   cardServiceButton:{
     color: theme.palette.white.main,
     fontWeight: theme.typography.blackButton.fontWeight,
@@ -150,9 +123,6 @@ export default theme => ({
   cardServiceButtonContainer:{
     width: '50%'
   },
-
-
-
   searchFilterRightContainer:{
     display: 'flex',
     alignItems: 'center',
@@ -163,19 +133,6 @@ export default theme => ({
   },
   searchSelectPadding:{
     paddingRight: '34px !important'
-  },
-  filterMenuTitle:{
-    fontFamily: theme.typography.subTitle.fontFamily
-  },
-  filterMenuDescription:{
-    fontFamily: theme.typography.fontFamily
-  },
-  filterMenuAccordionTitle:{
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  filterMenuAccordionContainer:{
-    borderRadius: '32px !important'
   },
   searchNeedHelpMainStyle:{
     width: '100%',
@@ -197,8 +154,6 @@ export default theme => ({
   searchSearchByHastagContainer:{
     width: '80%'
   },
-
-
   searchResultMessage:{
     display: 'flex',
     justifyContent: 'center',
@@ -208,87 +163,6 @@ export default theme => ({
     width: '80%'
   },
 
-
-
-
-  filterMenuContainerStatut:{
-    borderRadius: '15px',
-    backgroundColor: '#2FBCD3',
-    boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset',
-    cursor: 'pointer',
-    height: '45px',
-  },
-  filterMenuTextStatus:{
-    color: 'white',
-  },
-  filterMenuTextNotFocused:{
-  },
-  filterMenuContentMainStyle:{
-    borderRadius: '15px',
-    backgroundColor: 'white',
-    boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
-    height: 'auto',
-    zIndex: 1,
-    position: 'relative',
-  },
-  filterMenuContentMainStyleDateFilter:{
-    borderRadius: '15px',
-    backgroundColor: 'white',
-    boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
-    height: 'auto',
-    zIndex: 1,
-    position: 'relative',
-    padding: 10,
-    width: '140%'
-  },
-  filTerMenuStatusMainStyleFilterDate:{
-    width: '15%',
-    marginLeft: '2%',
-    [theme.breakpoints.down('md')]:{
-      width: '50%'
-    }
-  },
-  filterMenuFocused:{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    color: theme.palette.white.main
-  },
-  filterMenuStatusNotFocused:{
-    boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
-    cursor: 'pointer',
-    height: 45,
-    borderRadius: '15px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  filterMenuDateFocused:{
-    borderRadius: '15px',
-    backgroundColor: '#2FBCD3',
-    boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset',
-    cursor: 'pointer',
-    height: 45,
-
-  },
-  filTerMenuStatusMainStyleFilter:{
-    width: '15%',
-    [theme.breakpoints.down('md')]:{
-      width: '50%'
-    }
-  },
-  filterMenuTextFocused:{
-    color: theme.palette.white.main
-  },
-  filterMenuControlLabel:{
-    margin: 0,
-    verticalAlign: 'inherit'
-  },
-  filterMenuDateFilterButtonContainer:{
-    display: 'flex',
-    justifyContent: 'space-evenly'
-  },
   searchLoadingContainer:{
     display: 'flex',
     justifyContent : 'center',

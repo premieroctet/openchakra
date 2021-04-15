@@ -1,33 +1,21 @@
 import React from "react";
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import {checkPass1, checkPass2} from '../utils/passwords';
 import axios from 'axios';
 import Router from 'next/router';
-
+import styles from '../static/css/pages/definePassword/definePassword'
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import Hidden from "@material-ui/core/Hidden";
 const {snackBarSuccess, snackBarError} = require('../utils/notifications')
 const {ADMIN, MANAGER} = require('../utils/consts')
 const _ = require('lodash')
-
-const styles = {
-  loginContainer: {
-    alignItems: 'center',
-    height: '100vh',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    background: '#353A51'
-
-  },
-  card: {
-    padding: '1.5rem 3rem',
-    width: 400,
-    borderRadius: '35px'
-  },
-};
 
 class definePassword extends React.Component {
 
@@ -40,6 +28,7 @@ class definePassword extends React.Component {
       token: '',
       status1: {error: '', check: false},
       status2: {error: '', check: false},
+      showPassword: false
     };
   }
 
@@ -83,7 +72,7 @@ class definePassword extends React.Component {
         } else {
           localStorage.removeItem('b2b');
         }
-        Router.push({pathname: '/login'});
+        Router.push({pathname: '/'});
       })
       .catch(err => {
         console.error(err)
@@ -91,52 +80,47 @@ class definePassword extends React.Component {
       });
   };
 
+  handleClickShowPassword = () => {
+    this.setState({ showPassword: !this.state.showPassword });
+  };
+
+  handleMouseDownPassword = (event) =>{
+    event.preventDefault();
+  };
+
   render() {
     const {classes} = this.props;
+    const {showPassword} = this.state;
+
     return (
-      <Grid container className={classes.loginContainer}>
-        <Grid style={{
-          display: 'flex',
-          flexDirection: 'row',
-          marginTop: '-15px'
-        }}>
-          <Grid style={{
-            display: 'flex',
-            flexDirection: 'column',
-            marginRight: '9vw'
-          }}>
-            <Grid>
-              <img style={{
-                height: 96, filter: 'invert(1)', marginTop: '-5vh'
-              }} alt={'logo_myAlfred'} src={"../../static/assets/icon/logo.png"}/>
-            </Grid>
-            <Grid>
-              <img style={{
-                height: '450px'
-              }} alt={"illudefinepassword"} src={"../../static/assets/img/business/myalfredwelcome.svg"}/></Grid>
+      <Grid container spacing={2} style={{width:'100%', margin:0, backgroundColor: '#353A51', height: '100%', minHeight: '100vh'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <img style={{filter: 'invert(1)'}} height={96} alt={'logo_myAlfred'} title={'logo_myAlfred'} src={"../../static/assets/icon/logo.png"}/>
+        </Grid>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', justifyContent: 'center'}}>
+            <img height={450} alt={"illu_define_password"} title={'illu_define_password'} src={"../../static/assets/img/business/myalfredwelcome.svg"}/>
           </Grid>
-          <Grid>
-            <Card
-              className={classes.card}
-            >
-              <Grid>
-                <Grid item style={{display: 'flex', flexDirection: 'column'}}>
-                  <Typography style={{fontSize: 35, color: '#353A51', fontWeight: 'bolder'}}>Bienvenue !</Typography>
-                  <Typography style={{fontSize: 16, color: '#353A51', fontWeight: 'bold', marginBottom: '1vh'}}>L'administrateur
-                    My Alfred de votre entreprise vous invite à vous
-                    inscrire sur My Alfred.</Typography>
-                  <Typography style={{fontSize: 16, color: '#353A51', fontWeight: 'bold'}}>Pour finaliser votre
-                    inscription, veuillez définir votre mot de
-                    passe
-                    :</Typography>
+        </Hidden>
+        <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
+          <Grid className={classes.formContainer}>
+            <Card className={classes.card}>
+              <Grid container spacing={2} style={{margin:0, width: '100%'}}>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <h2 style={{color: '#353A51'}}>Bienvenue !</h2>
                 </Grid>
-                <form onSubmit={this.onSubmit}>
-                  <Grid item>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <h3 style={{color: '#353A51'}}>L'administrateur My Alfred de votre entreprise vous invite à vous inscrire sur My Alfred.</h3>
+                </Grid>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <h4 style={{color: '#353A51'}}>Pour finaliser votre inscription, veuillez définir votre mot de passe :</h4>
+                </Grid>
+                <Grid container spacing={4} style={{margin:0, width: '100%'}}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <TextField
                       id="standard-with-placeholder"
                       label="Nouveau mot de passe"
                       placeholder="Mot de passe"
-                      margin="normal"
                       style={{width: '100%'}}
                       type="password"
                       name="password"
@@ -147,29 +131,45 @@ class definePassword extends React.Component {
                       helperText={this.state.status1.error}
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <TextField
                       id="standard-with-placeholder"
                       label="Répéter le mot de passe"
                       placeholder="Mot de passe"
-                      margin="normal"
                       style={{width: '100%'}}
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       name="password2"
                       value={this.state.password2}
                       onChange={this.onChange}
                       onKeyUp={this.onChange2}
                       error={this.state.status2.error}
                       helperText={this.state.status2.error}
+                      InputProps={{
+                        endAdornment:(
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={this.handleClickShowPassword}
+                              onMouseDown={this.handleMouseDownPassword}
+                            >
+                              {showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                          )
+                      }}
                     />
                   </Grid>
-                  <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                    <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}
-                            disabled={!(this.state.status1.check && this.state.status2.check)}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                    <Button
+                      variant="contained"
+                      onClick={this.onSubmit}
+                      classes={{root: classes.saveButton}}
+                      disabled={!(this.state.status1.check && this.state.status2.check)}
+                    >
                       Valider
                     </Button>
                   </Grid>
-                </form>
+                </Grid>
               </Grid>
             </Card>
           </Grid>
