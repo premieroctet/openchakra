@@ -463,14 +463,14 @@ class creaShop extends React.Component {
     }
     const {mode, activeStep}=this.state
 
-    const valid_function = STEPS['creation'][7].is_valid
+    const valid_function = STEPS[mode][activeStep].is_valid
     return !valid_function(this)
   };
 
 
   renderSwitch = (stepIndex) =>{
     const{shop , currentUser, mode, excluded_services}= this.state;
-    return STEPS['creation'][7].component(this)
+    return STEPS[mode][stepIndex].component(this)
   };
 
   handleDrawerToggle = () => {
@@ -480,7 +480,7 @@ class creaShop extends React.Component {
   drawer = (classes) => {
     const {activeStep,mode} = this.state;
 
-    const steps = STEPS['creation'].map(s => s.menu)
+    const steps = STEPS[mode].map(s => s.menu)
     return (
       <Grid style={{height: '100%'}}>
         <Grid className={classes.appBarContainer}>
