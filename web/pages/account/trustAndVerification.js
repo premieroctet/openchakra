@@ -77,7 +77,7 @@ class trustAndVerification extends React.Component {
     this.editSiret = this.editSiret.bind(this);
     this.callDrawer = this.callDrawer.bind(this);
     this.onSiretChange = this.onSiretChange.bind(this);
-    this.statusSaveDisabled = this.statusSaveDisabled.bind(this);
+    this.statusSaveEnabled = this.statusSaveEnabled.bind(this);
     this.deleteRecto = this.deleteRecto.bind(this);
     this.deleteRegistrationProof = this.deleteRegistrationProof.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -117,12 +117,12 @@ class trustAndVerification extends React.Component {
           this.setState({alfred: true});
           axios.get('/myAlfred/api/shop/currentAlfred')
             .then(response => {
-              let result = response.data;
+              let user = response.data;
               this.setState({
-                cis: result.cis,
-                cesu: result.cesu,
-                professional: result.is_professional,
-                company: result.company,
+                cis: user.cis,
+                cesu: user.cesu,
+                professional: user.is_professional,
+                company: user.company,
               });
 
             });
@@ -327,8 +327,25 @@ class trustAndVerification extends React.Component {
     this.child.current.handleDrawerToggle();
   }
 
-  statusSaveDisabled = () => {
-    return false;
+  statusSaveEnabled = () => {
+    const {professional, cesu, company}=this.state
+    if (professional) {
+      if (!(company && company.siret && company.name)) {
+        console.log(`Invalid company:${company}`)
+        return false
+      }
+      if (company.vat_subject && !company.vat_number) {
+        console.log(`VAT subject without vat number:${company}`)
+        return false
+      }
+    }
+    else {
+      if (!cesu) {
+        console.log(`No CESU choice`)
+        return false
+      }
+    }
+    return true
   };
 
   modalDeleteConfirmMessage = () => {
@@ -564,7 +581,7 @@ class trustAndVerification extends React.Component {
               }
               <Grid style={{marginTop: '10vh'}}>
                 <Button  variant="contained" className={classes.buttonSave}
-                        onClick={this.editSiret}>
+                  onClick={this.editSiret} disabled={!this.statusSaveEnabled()}>
                   Enregistrer
                 </Button>
               </Grid>
