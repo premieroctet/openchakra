@@ -107,7 +107,7 @@ class CardService extends React.Component{
         <DialogTitle id="alert-dialog-title">{'Supprimer un service'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Voulez-vous vraiment supprimer ce service de votre service ?
+            Voulez-vous vraiment supprimer ce service ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -29,7 +29,7 @@ class creaShop extends React.Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      activeStep: is_development() ? 4 : 0,
+      activeStep: 0,
       saving: false,
       availabilities: [],
       currentUser:{},
@@ -290,20 +290,19 @@ class creaShop extends React.Component {
       setAxiosAuthentication()
       axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
-          snackBarSuccess(`serviceUser ${this.props.serviceuser_id}`)
           const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.props.serviceuser_id || ''}`
           axios.post(su_url, cloned_shop)
             .then( su_res => {
-              const su = res.data
+              const su = su_res.data
               // Update token
               if (mode == CREASHOP_MODE.CREATION) {
                 axios.get('/myAlfred/api/users/token')
                   .then ( res => setAuthToken())
                   .catch (err => console.error(err))
               }
-              snackBarSuccess(mode==CREASHOP_MODE.CREATION ? 'Boutique créée' : mode==CREASHOP_MODE.SERVICE_ADD ? 'Service ajouté' : 'Service modifié')
-              var su_id = mode==CREASHOP_MODE.CREATION ? res.data.services[0] : res.data._id
-              if (cloned_shop.diplomaName) {
+              snackBarSuccess(mode==CREASHOP_MODE.CREATION ? 'Boutique créée' : mode==CREASHOP_MODE.SERVICE_ADD ? 'Votre service a été créé' : 'Votre service a été modifié')
+              var su_id = su._id
+              if (cloned_shop.diplomaName || cloned_shop.diplomaPicture || cloned_shop.diplomaYear) {
                 var dpChanged = typeof (cloned_shop.diplomaPicture) == 'object';
                 const formData = new FormData();
                 formData.append('name', cloned_shop.diplomaName);
@@ -320,7 +319,7 @@ class creaShop extends React.Component {
                   .catch(err => console.error(err));
               }
 
-              if (cloned_shop.certificationName) {
+              if (cloned_shop.certificationName || cloned_shop.certificationPicture || cloned_shop.certificationYear) {
                 var cpChanged = typeof (cloned_shop.certificationPicture) == 'object';
                 const formData = new FormData();
                 formData.append('name', cloned_shop.certificationName);

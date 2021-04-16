@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const axios = require('axios');
 const CronJob = require('cron').CronJob;
-const {data2ServiceUser} = require('../../../utils/mapping');
 const {sendShopDeleted, sendShopOnline} = require('../../utils/mailing');
 const {createMangoProvider} = require('../../utils/mangopay');
 const {GID_LEN} = require('../../../utils/consts');
@@ -95,11 +94,13 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
         .then(shop => {
           User.findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
             .then(alfred => {
-              if (alfred.age<18 || alfred.age>120) {
-                console.log(`Create Mango provider skipped, ${alfred.email} age ${alfred.age}`)
-              }
-              else {
-                createMangoProvider(alfred, shop);
+              if (!alfred.mangopay_provider_id) {
+                if (alfred.age<18 || alfred.age>120) {
+                  console.log(`Create Mango provider skipped, ${alfred.email} age ${alfred.age}`)
+                }
+                else {
+                  createMangoProvider(alfred, shop);
+                }
               }
               sendShopOnline(alfred, req);
               res.json(shop);
