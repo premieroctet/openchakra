@@ -5,10 +5,24 @@ export default theme => ({
   containerNavigation:{
     margin: 0,
     width: '100%',
-    marginTop: '1vh',
-    marginBottom: '1vh',
-    backgroundColor: 'rgba(249,249,249, 1)',
-
+    position: 'fixed',
+    bottom: 0,
+    left: 255,
+    backgroundColor:'white',
+    zIndex:4,
+    [theme.breakpoints.down('sm')]:{
+      left:0
+    }
+  },
+  positionNavigationContainer:{
+    width:'75%',
+    padding: 15,
+    [theme.breakpoints.down('md')]:{
+      width: '68%'
+    },
+    [theme.breakpoints.down('sm')]:{
+      width: '90%'
+    }
   },
   containerNextButton:{
     display: 'flex',
@@ -19,11 +33,6 @@ export default theme => ({
     textTransform: 'initial',
     fontWeight: 'bold',
     backgroundColor: theme.palette.yellow.main,
-    marginRight: '8vh',
-    [theme.breakpoints.down('xs')]:{
-      marginRight: 0
-    }
-
   },
   backButton:{
     textTransform: 'initial',
@@ -87,5 +96,7 @@ export default theme => ({
     flexDirection: 'column',
     justifyContent:'space-around',
     height: '100%'
-  }
+  },
+
+
 })

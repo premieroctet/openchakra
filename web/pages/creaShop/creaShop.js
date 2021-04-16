@@ -86,10 +86,12 @@ class creaShop extends React.Component {
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    if (!getLoggedUserId()) {
+   /*
+       localStorage.setItem('path', Router.pathname);
+
+   if (!getLoggedUserId()) {
       Router.push('/');
-    }
+    }*/
 
     setAxiosAuthentication();
     axios.get('/myAlfred/api/users/current')
@@ -214,7 +216,7 @@ class creaShop extends React.Component {
 
   addDefaultAvailability = () => {
     // 923772 : plus de disponibilité par défaut
-    return 
+    return
     const avail=getDefaultAvailability()
     const data={
       startDate: avail.period.begin,
@@ -461,14 +463,14 @@ class creaShop extends React.Component {
     }
     const {mode, activeStep}=this.state
 
-    const valid_function = STEPS[mode][activeStep].is_valid
+    const valid_function = STEPS['creation'][7].is_valid
     return !valid_function(this)
   };
 
 
   renderSwitch = (stepIndex) =>{
     const{shop , currentUser, mode, excluded_services}= this.state;
-    return STEPS[mode][stepIndex].component(this)
+    return STEPS['creation'][7].component(this)
   };
 
   handleDrawerToggle = () => {
@@ -478,7 +480,7 @@ class creaShop extends React.Component {
   drawer = (classes) => {
     const {activeStep,mode} = this.state;
 
-    const steps = STEPS[mode].map(s => s.menu)
+    const steps = STEPS['creation'].map(s => s.menu)
     return (
       <Grid style={{height: '100%'}}>
         <Grid className={classes.appBarContainer}>
@@ -565,31 +567,33 @@ class creaShop extends React.Component {
               {this.renderSwitch(activeStep)}
             </Grid>
           </Box>
-          <Grid container xl={12} lg={12} sm={12} md={12} xs={12} className={classes.containerNavigation}>
-            { is_development() && activeStep > 0 ?
-              <Grid item container xl={6} lg={6} md={6} sm={6} xs={6}>
+          <Grid container className={classes.containerNavigation}>
+            <Grid className={classes.positionNavigationContainer}>
+              { is_development() && activeStep > 0 ?
+                <Grid item container xl={6} lg={6} md={6} sm={6} xs={6}>
+                  <Button
+                    variant="outlined"
+                    classes={{root :classes.backButton}}
+                    onClick={this.handlePrev}
+                    disabled={this.prevDisabled()}
+                    color={'primary'}
+                  >
+                    Précédent
+                  </Button>
+                </Grid>
+                :
+                null
+              }
+              <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 12 : is_development() ? 6 : 12} lg={activeStep === 0 ? 12 : is_development() ? 6 : 12} md={activeStep === 0 ? 12 : is_development() ? 6 : 12} sm={activeStep === 0 ? 12 : is_development() ? 6 : 12} xs={activeStep === 0 ? 12 : is_development() ? 6 : 12}>
                 <Button
-                  variant="outlined"
-                  classes={{root :classes.backButton}}
-                  onClick={this.handlePrev}
-                  disabled={this.prevDisabled()}
-                  color={'primary'}
+                  variant="contained"
+                  classes={{root :classes.nextButton}}
+                  onClick={this.handleNext}
+                  disabled={this.nextDisabled()}
                 >
-                  Précédent
+                  {this.isLastStep() ? 'Envoyer' : 'Suivant'}
                 </Button>
               </Grid>
-              :
-              null
-            }
-            <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 12 : is_development() ? 6 : 12} lg={activeStep === 0 ? 12 : is_development() ? 6 : 12} md={activeStep === 0 ? 12 : is_development() ? 6 : 12} sm={activeStep === 0 ? 12 : is_development() ? 6 : 12} xs={activeStep === 0 ? 12 : is_development() ? 6 : 12}>
-              <Button
-                variant="contained"
-                classes={{root :classes.nextButton}}
-                onClick={this.handleNext}
-                disabled={this.nextDisabled()}
-              >
-                {this.isLastStep() ? 'Envoyer' : 'Suivant'}
-              </Button>
             </Grid>
           </Grid>
         </main>

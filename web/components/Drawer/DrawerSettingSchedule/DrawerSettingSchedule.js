@@ -216,7 +216,7 @@ class DrawerSettingSchedule extends React.Component{
                 availabilities.map((availResult, availIdx) =>{
                   const error = errors[availIdx] || {};
                   return(
-                    <Accordion expanded={expanded[availIdx]} onChange={this.onAccordionChange(availIdx)}>
+                    <Accordion key={availIdx} expanded={expanded[availIdx]} onChange={this.onAccordionChange(availIdx)}>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
@@ -304,7 +304,7 @@ class DrawerSettingSchedule extends React.Component{
                             <Grid container>
                               { 'Nuit Matin Après-midi Soirée'.split(' ').map( (title, index) => {
                                 return (
-                                  <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+                                  <Grid key={index} item xl={6} lg={6} md={6} sm={12} xs={12}>
                                     <Grid>
                                       <h4>{title}</h4>
                                     </Grid>
@@ -336,7 +336,7 @@ class DrawerSettingSchedule extends React.Component{
               }
             </Grid>
             <Divider/>
-            <Grid style={{marginTop: '5vh', marginBottom: '5vh'}}>
+            <Grid className={classes.marginSaveButton}>
               <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
                 <Button
                   disabled={!this.addPeriodEnabled()}

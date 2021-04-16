@@ -187,7 +187,7 @@ class DrawerEditingSchedule extends React.Component {
               :
               null
             }
-            <Grid style={{marginTop: '5vh', marginBottom: '5vh'}}>
+            <Grid className={classes.marginSaveButton}>
               <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
                 <Button
                   disabled={!this.saveEnabled()}

@@ -26,7 +26,7 @@ class SelectSlotTimer extends React.Component {
       const avatar=bookings[i] ? `/${bookings[i]}` : null
       var avatarProp = avatar ? <Avatar src={avatar} /> : anyAvatar ? <div /> : null
       items.push(
-        <Grid item xl={4} lg={4} md={4} sm={6} xs={6}>
+        <Grid key={i} item xl={4} lg={4} md={4} sm={6} xs={6}>
           <Chip
             clickable
             label={('0' + i).slice(-2) + 'h00 - ' + ('0' + (i + 1)).slice(-2) + 'h00'}

@@ -17,5 +17,11 @@ export default theme => ({
     fontWeight: 'bold',
     margin: 3,
   },
-
+  marginSaveButton:{
+    marginTop: '5vh',
+    marginBottom: '5vh',
+    [theme.breakpoints.down('xs')]:{
+      marginBottom: 110
+    }
+  }
 })

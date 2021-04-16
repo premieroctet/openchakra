@@ -5,7 +5,10 @@ export default theme => ({
     flexDirection: 'column'
   },
   drawerAndSchedule_scheduleContainer:{
-    width: '100%'
+    width: '100%',
+    [theme.breakpoints.down('xs')]:{
+      marginBottom: 100
+    }
   },
 
   drawer: {
