@@ -82,7 +82,7 @@ const createMangoProvider = (user, shop) => {
 
   mangoApi.Users.create(userData)
     .then(newUser => {
-      console.log(`Created Mango User ${JSON.stringify(newUser)}`);
+      console.log(`Created Mango Provider ${JSON.stringify(newUser)}`);
       user.mangopay_provider_id = newUser.Id;
       user.mangopay_provider_status = newUser.PersonType;
       user.save().then().catch();

@@ -17,7 +17,7 @@ const geolib = require('geolib');
 const _ = require('lodash');
 const moment = require('moment');
 const isEmpty = require('../../validation/is-empty');
-const {data2ServiceUser} = require('../../../utils/mapping');
+const {data2ServiceUser} = require('../../utils/mapping');
 const {emptyPromise} = require('../../../utils/promise');
 const {computeUrl} = require('../../../config/config');
 const {filterServicesGPS, filterServicesKeyword} = require('../../../utils/filters');
@@ -145,12 +145,11 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
 
   ServiceUser.findOne({ _id : req.params.serviceuser_id})
     .then(su => {
-
       if (!su) {
-        su = new ServiceUser()
+        su = {}
       }
       const data = req.body;
-      var su = data2ServiceUser(data, su);
+      su = data2ServiceUser(data, su);
       su.user = req.user.id;
 
       // FIX : créer les prestations custom avant
@@ -181,18 +180,27 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
             su.prestations.push(newp);
           });
 
-          su.save().then(su => {
-            Shop.findOne({alfred: req.user.id})
-              .then(shop => {
-                // Add service if in add mode
-                if (!req.params.serviceuser_id) {
-                  shop.services.push(su._id);
+          const promise = req.params.serviceuser_id ? ServiceUser.findByIdAndUpdate(su._id, su, {new: true})  : ServiceUser.create(su)
+          promise
+            .then(su => {
+              if (req.params.serviceuser_id) {
+                return res.json(su)
+              }
+              else {
+                Shop.update({alfred: req.user.id}, { $push: { services: su}})
+                  .then(shop => {
+                    return res.json(su)
+                  })
+                  .catch(error => {
+                    console.error(error)
+                    res.status(400).json(error)
+                  })
                 }
-                shop.save().then(newShop => res.json(su)).catch(err => console.error(err));
-              })
-              .catch(error => console.error(error));
-          })
-            .catch(err => console.error(err));
+            })
+            .catch(err => {
+              console.error(err)
+              res.status(400).json(error)
+            })
         });
 
 
@@ -279,22 +287,14 @@ router.put('/addPrestation/:id', passport.authenticate('jwt', {
 // @Route PUT /myAlfred/api/serviceUser/editPrestation
 // Edit the price of a prestation for a service
 // @Access private
-router.put('/editPrestation/:id', passport.authenticate('jwt', {
-  session: false,
-}), (req, res) => {
+router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false,}), (req, res) => {
   ServiceUser.findById(req.params.id)
     .then(serviceUser => {
-
-
       const index = serviceUser.prestations
         .map(item => item.id)
         .indexOf(req.body.prestation);
-
       serviceUser.prestations[index].price = req.body.price;
-
-
       serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
-
     })
     .catch(err => console.error(err));
 });
@@ -305,6 +305,7 @@ router.put('/editPrestation/:id', passport.authenticate('jwt', {
 router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
   ServiceUser.findById(req.params.id)
     .then(serviceUser => {
+      serviceUser.diploma = {}
       serviceUser.diploma.name = req.body.name;
       serviceUser.diploma.year = req.body.year;
       serviceUser.diploma.skills = JSON.parse(req.body.skills);

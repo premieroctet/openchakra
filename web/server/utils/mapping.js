@@ -1,8 +1,7 @@
-const isEmpty = require('../server/validation/is-empty');
+const isEmpty = require('../validation/is-empty');
 
 const data2ServiceUser = (data, su) => {
 
-  console.log('data2ServiceUser:data is ' + JSON.stringify(data, null, 2));
   su.service = data.service;
   su.perimeter = data.perimeter || 0;
 
