@@ -22,4 +22,12 @@ export default theme => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
   },
+  containerLabel_mode:{
+    display: 'flex',
+    [theme.breakpoints.down('xs')]:{
+      flexDirection: 'column',
+      width: '100%',
+      alignItems: 'flex-end'
+    }
+  }
 })

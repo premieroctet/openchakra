@@ -569,36 +569,36 @@ class creaShop extends React.Component {
               {this.renderSwitch(activeStep)}
             </Grid>
           </Box>
-          <Grid container className={classes.containerNavigation}>
-            <Grid className={classes.positionNavigationContainer}>
-              { is_development() && activeStep > 0 ?
-                <Grid item container xl={6} lg={6} md={6} sm={6} xs={6}>
-                  <Button
-                    variant="outlined"
-                    classes={{root :classes.backButton}}
-                    onClick={this.handlePrev}
-                    disabled={this.prevDisabled()}
-                    color={'primary'}
-                  >
-                    Précédent
-                  </Button>
-                </Grid>
-                :
-                null
-              }
-              <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 12 : is_development() ? 6 : 12} lg={activeStep === 0 ? 12 : is_development() ? 6 : 12} md={activeStep === 0 ? 12 : is_development() ? 6 : 12} sm={activeStep === 0 ? 12 : is_development() ? 6 : 12} xs={activeStep === 0 ? 12 : is_development() ? 6 : 12}>
+        </main>
+        <Grid container className={classes.containerNavigation}>
+          <Grid container className={classes.positionNavigationContainer}>
+            { is_development() && activeStep > 0 ?
+              <Grid item container xl={6} lg={6} md={6} sm={6} xs={6}>
                 <Button
-                  variant="contained"
-                  classes={{root :classes.nextButton}}
-                  onClick={this.handleNext}
-                  disabled={this.nextDisabled()}
+                  variant="outlined"
+                  classes={{root :classes.backButton}}
+                  onClick={this.handlePrev}
+                  disabled={this.prevDisabled()}
+                  color={'primary'}
                 >
-                  {this.isLastStep() ? 'Envoyer' : 'Suivant'}
+                  Précédent
                 </Button>
               </Grid>
+              :
+              null
+            }
+            <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 11 : is_development() ? 5 : 12} lg={activeStep === 0 ? 11 : is_development() ? 5 : 12} md={activeStep === 0 ? 11 : is_development() ? 5 : 12} sm={activeStep === 0 ? 11 : is_development() ? 5 : 12} xs={activeStep === 0 ? 12 : is_development() ? 6 : 12}>
+              <Button
+                variant="contained"
+                classes={{root :classes.nextButton}}
+                onClick={this.handleNext}
+                disabled={this.nextDisabled()}
+              >
+                {this.isLastStep() ? 'Envoyer' : 'Suivant'}
+              </Button>
             </Grid>
           </Grid>
-        </main>
+        </Grid>
       </Grid>
     );
   }

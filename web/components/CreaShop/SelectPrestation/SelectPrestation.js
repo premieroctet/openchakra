@@ -146,7 +146,7 @@ class SelectPrestation extends React.Component {
                       let isEditable = p._id.length == GID_LEN;
                       let presta = this.state.prestations[p._id];
                       return (
-                        <Grid key={p._id} item xl={6} lg={12} md={12} sm={12} xs={12}>
+                        <Grid key={p._id} item xl={6} lg={6} md={12} sm={12} xs={12}>
                           <ButtonSwitch
                             isOption={true}
                             isPrice={true}

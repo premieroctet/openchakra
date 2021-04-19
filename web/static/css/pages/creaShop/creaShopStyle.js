@@ -7,22 +7,17 @@ export default theme => ({
     width: '100%',
     position: 'fixed',
     bottom: 0,
-    left: 255,
     backgroundColor:'white',
     zIndex:4,
+    borderTop: '1px solid rgba(210, 210, 210, 0.5)',
     [theme.breakpoints.down('sm')]:{
       left:0
     }
   },
   positionNavigationContainer:{
-    width:'75%',
+    width:'100%',
     padding: 15,
-    [theme.breakpoints.down('md')]:{
-      width: '68%'
-    },
-    [theme.breakpoints.down('sm')]:{
-      width: '90%'
-    }
+    marginLeft: drawerWidth
   },
   containerNextButton:{
     display: 'flex',
@@ -70,7 +65,7 @@ export default theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(2),
-
+    marginBottom: '12vh'
   },
   appBar: {
     [theme.breakpoints.up('sm')]: {
