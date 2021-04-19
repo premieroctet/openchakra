@@ -19,7 +19,7 @@ const {
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
   sendLeaveCommentForClient, sendLeaveCommentForAlfred,
 } = require('../../utils/mailing');
-const {get_role} = require('../../utils/context')
+const {get_role} = require('../../utils/serverContext')
 const {payAlfred} = require('../../utils/mangopay');
 
 moment.locale('fr');

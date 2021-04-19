@@ -18,7 +18,7 @@ var parse = require('url-parse');
 const {inspect} = require('util');
 const {MANGOPAY_ERRORS}=require('../../../utils/mangopay_messages')
 moment.locale('fr');
-const {is_b2b_admin, is_b2b_manager, is_mode_company}=require('../../utils/context')
+const {is_b2b_admin, is_b2b_manager, is_mode_company}=require('../../utils/serverContext')
 const {computeUrl} = require('../../../config/config');
 
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}));

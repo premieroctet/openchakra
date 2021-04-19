@@ -25,7 +25,7 @@ const serviceFilters = require('../../utils/filters');
 const {GID_LEN, PRO, PART, MANAGER} = require('../../../utils/consts');
 const {normalize} = require('../../../utils/text');
 const parse = require('url-parse')
-const {get_role, get_logged_id}=require('../../utils/context')
+const {get_role, get_logged_id}=require('../../utils/serverContext')
 
 moment.locale('fr');
 const storage = multer.diskStorage({
