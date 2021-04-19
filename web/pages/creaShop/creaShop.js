@@ -316,7 +316,7 @@ class creaShop extends React.Component {
 
                 axios.post(`/myAlfred/api/serviceUser/addDiploma/${su_id}`, formData)
                   .then( () => {
-                    snackBarSuccess('Diplôme enregistré')
+                    console.log('Diplôme enregistré')
                   })
                   .catch(err => console.error(err));
               }
@@ -333,7 +333,7 @@ class creaShop extends React.Component {
 
                 axios.post(`/myAlfred/api/serviceUser/addCertification/${su_id}`, formData)
                   .then( () => {
-                    snackBarSuccess('Certification enregistrée')
+                    console.log('Certification enregistrée')
                   })
                   .catch(err => console.error(err));
               }
