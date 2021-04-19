@@ -10,14 +10,15 @@ export default theme => ({
     backgroundColor:'white',
     zIndex:4,
     borderTop: '1px solid rgba(210, 210, 210, 0.5)',
-    [theme.breakpoints.down('sm')]:{
-      left:0
-    }
   },
   positionNavigationContainer:{
     width:'100%',
     padding: 15,
-    marginLeft: drawerWidth
+    marginLeft: drawerWidth,
+    [theme.breakpoints.down('sm')]:{
+      marginLeft: 0
+    }
+
   },
   containerNextButton:{
     display: 'flex',
@@ -48,9 +49,6 @@ export default theme => ({
   },
   menuButton: {
     margin: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
   },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,

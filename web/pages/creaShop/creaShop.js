@@ -521,17 +521,29 @@ class creaShop extends React.Component {
     return (
       <Grid className={classes.root}>
         <CssBaseline />
-        <Grid>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={this.handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Grid>
+        <Hidden only={['lg', 'xl', 'md']}>
+          <Grid container style={{display: 'flex', alignItems: 'center'}}>
+            <Grid>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={this.handleDrawerToggle}
+                className={classes.menuButton}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Grid>
+            <Grid style={{position: 'absolute', width: '100%' , textAlign: 'center'}}>
+              <img
+                alt={'logo_myAlfred'}
+                title={'logo_myAlfred'}
+                src={'/static/assets/icon/logoGreen.svg'}
+                height={64}
+                />
+            </Grid>
+          </Grid>
+        </Hidden>
         <nav className={classes.drawer} aria-label="mailbox folders">
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Hidden smUp implementation="css">
