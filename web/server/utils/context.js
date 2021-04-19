@@ -2,6 +2,25 @@ const jwt = require('jsonwebtoken')
 const {ADMIN, MANAGER} = require('../../utils/consts')
 const keys = require('../config/keys');
 
+const get_token = req => {
+  const auth = req.headers.authorization
+  if (!auth) {
+    console.log(`No authorization header, got ${Object.keys(req.headers)}`)
+    return null
+  }
+  const data=auth.split(' ')[1]
+  const decoded = jwt.decode(data)
+  return decoded
+}
+
+const get_logged_id = req => {
+  const token = get_token(req)
+  if (token) {
+    return token.id
+  }
+  return null
+}
+
 const get_role = req => {
   const auth = req.headers.authorization
   if (!auth) {
@@ -48,4 +67,4 @@ const send_cookie = (user, role, res) => {
   });
 };
 
-module.exports = {get_role, is_b2b_admin, is_b2b_manager, is_mode_company, send_cookie}
+module.exports = {get_logged_id, get_role, is_b2b_admin, is_b2b_manager, is_mode_company, send_cookie, get_token}

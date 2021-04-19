@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const ServiceUser = require('../../models/ServiceUser');
 const Shop = require('../../models/Shop');
+const Group = require('../../models/Group');
 const Service = require('../../models/Service');
 const User = require('../../models/User');
 const Availability = require('../../models/Availability');
@@ -20,11 +21,11 @@ const isEmpty = require('../../validation/is-empty');
 const {data2ServiceUser} = require('../../utils/mapping');
 const {emptyPromise} = require('../../../utils/promise');
 const {computeUrl} = require('../../../config/config');
-const {filterServicesGPS, filterServicesKeyword} = require('../../../utils/filters');
-const {GID_LEN, PRO, PART} = require('../../../utils/consts');
+const serviceFilters = require('../../utils/filters');
+const {GID_LEN, PRO, PART, MANAGER} = require('../../../utils/consts');
 const {normalize} = require('../../../utils/text');
 const parse = require('url-parse')
-const {distanceComparator}=require('../../../utils/filters')
+const {get_role, get_logged_id}=require('../../utils/context')
 
 moment.locale('fr');
 const storage = multer.diskStorage({
@@ -547,22 +548,37 @@ router.post('/search', (req, res) => {
         sus = sus.filter(su => su.prestations.some(p => p.prestation && p.prestation._id.toString() == prestation));
       }
       if (kw) {
-        sus = filterServicesKeyword(sus, kw, status);
+        sus = serviceFilters.filterServicesKeyword(sus, kw, status);
       }
       if (gps) {
         try {
-          sus = filterServicesGPS(sus, JSON.parse(req.body.gps), restrictPerimeter);
-        } catch (err) {
-          sus = filterServicesGPS(sus, req.body.gps, restrictPerimeter);
+          sus = serviceFilters.filterServicesGPS(sus, JSON.parse(req.body.gps), restrictPerimeter);
+        }
+        catch (err) {
+          sus = serviceFilters.filterServicesGPS(sus, req.body.gps, restrictPerimeter);
         }
       }
-      const elapsed = process.hrtime(start2);
-      console.log(`Fast Search found ${sus.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`);
-      res.json(sus);
+      // Manager : filtere les services autorisés
+      if (get_role(req)==MANAGER) {
+        Group.findOne({ members: get_logged_id(req)}, 'allowed_services')
+          .then ( group => {
+            sus = serviceFilters.filterServicesIds(sus, group.allowed_services)
+            return res.json(sus)
+          })
+          .catch (err => {
+            console.error(err)
+            return res.status(400).json(err)
+          })
+      }
+      else {
+        const elapsed = process.hrtime(start2);
+        console.log(`Fast Search found ${sus.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`);
+        return res.json(sus);
+      }
     })
     .catch(err => {
       console.error(err);
-      res.status(404).json(err);
+      return res.status(404).json(err);
     });
 });
 
@@ -729,7 +745,7 @@ router.get('/home/:partpro', (req, res) => {
     .then(services => {
       if (typeof services !== 'undefined' && services.length > 0) {
         if (gps) {
-          services.sort(distanceComparator(gps))
+          services.sort(serviceFilters.distanceComparator(gps))
           services = _.uniqBy(services, su => su.user)
         }
         else {
