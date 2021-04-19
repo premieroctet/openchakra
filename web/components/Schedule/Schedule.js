@@ -10,6 +10,7 @@ import styles from '../../static/css/components/Schedule/Schedule';
 import withStyles from "@material-ui/core/styles/withStyles";
 import Hidden from "@material-ui/core/Hidden";
 import {isMobile} from 'react-device-detect';
+import Router from "next/router";
 
 
 const {isDateAvailable, isMomentAvailable} = require('../../utils/dateutils');
@@ -28,7 +29,14 @@ class Schedule extends React.Component {
       eventsSelected: new Set(),
       view: Views.MONTH,
       currentDate: new Date(),
+      isUserServicePreview: false
     };
+  }
+
+  componentDidMount() {
+    if(Router.pathname === '/userServicePreview'){
+      this.setState({isUserServicePreview: true})
+    }
   }
 
   toggleSelection = ({start, end, action}) => {
@@ -72,7 +80,7 @@ class Schedule extends React.Component {
 
   render() {
     const {title, subtitle, selectable, nbSchedule, bookings, mode, classes} = this.props;
-    const {view, eventsSelected, currentDate} = this.state;
+    const {view, eventsSelected, currentDate, isUserServicePreview} = this.state;
 
     let events = [];
     if (bookings !== undefined) {
@@ -308,7 +316,7 @@ class Schedule extends React.Component {
                     sm={nbSchedule === 1 ? 11 : 6} xs={12} className={classes.schedule_height} key={i}>
                 <Calendar
                   key={date}
-                  selectable={isMobile ? null : selectable}
+                  selectable={isMobile && isUserServicePreview ? null : selectable}
                   popup={false}
                   culture={'fr-FR'}
                   localizer={localizer}
