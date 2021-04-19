@@ -34,7 +34,8 @@ class Schedule extends React.Component {
   }
 
   componentDidMount() {
-    if(Router.pathname === '/userServicePreview'){
+    //TODO FIX A REVOIR
+      if(Router.pathname === '/userServicePreview'){
       this.setState({isUserServicePreview: true})
     }
   }
