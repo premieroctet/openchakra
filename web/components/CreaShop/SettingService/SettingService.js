@@ -105,7 +105,6 @@ class SettingService extends React.Component {
             value={perimeter}
             name={'perimeter'}
             type={'number'}
-            autoFocus={true}
             onChange={this.onChange}
           />
         </Grid>
