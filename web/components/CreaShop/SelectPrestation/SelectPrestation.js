@@ -1,3 +1,5 @@
+import Button from "@material-ui/core/Button";
+
 const {setAxiosAuthentication}=require('../../../utils/authentication');
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
@@ -120,8 +122,8 @@ class SelectPrestation extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h3 style={{color: '#696767'}}>{SHOP.parameter.subtitle}</h3>
         </Grid>
-        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-          <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Fab
                 variant="extended"
@@ -134,44 +136,47 @@ class SelectPrestation extends React.Component {
                 <Typography style={{textTransform: 'initial', color: 'white'}}>{SHOP.parameter.presta_perso}</Typography>
               </Fab>
             </Grid>
-            {Object.keys(this.state.grouped).map((fltr, i) => {
-              let prestas = this.state.grouped[fltr];
-              return (
-                <Grid key={i} container spacing={3} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Typography style={{color: '#696767'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}</Typography>
+              {Object.keys(this.state.grouped).map((fltr, i) => {
+                let prestas = this.state.grouped[fltr];
+                return (
+                  <Grid key={i} className={classes.maxWidth}>
+                    <Grid className={classes.marginThirty}>
+                      <Grid>
+                        <Typography style={{color: '#696767'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}</Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                      {prestas.map((p, j) => {
+                        let isEditable = p._id.length == GID_LEN;
+                        let presta = this.state.prestations[p._id];
+                        return (
+                          <Grid key={p._id} item xl={6} lg={6} md={12} sm={12} xs={12}>
+                            <ButtonSwitch
+                              isOption={true}
+                              isPrice={true}
+                              width={'100%'}
+                              label={p.label}
+                              id={p._id}
+                              checked={presta != null}
+                              billings={p.billing}
+                              onChange={this.prestationSelected}
+                              isEditable={isEditable}
+                              price={presta ? presta.price : null}
+                              billing={presta ? presta.billing : null}
+                            />
+                            <hr style={{color: 'rgb(255, 249, 249, 0.6)', borderRadius: 10}}/>
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
                   </Grid>
-                  <Grid container spacing={3} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
-                    {prestas.map((p, j) => {
-                      let isEditable = p._id.length == GID_LEN;
-                      let presta = this.state.prestations[p._id];
-                      return (
-                        <Grid key={p._id} item xl={6} lg={6} md={12} sm={12} xs={12}>
-                          <ButtonSwitch
-                            isOption={true}
-                            isPrice={true}
-                            width={'100%'}
-                            label={p.label}
-                            id={p._id}
-                            checked={presta != null}
-                            billings={p.billing}
-                            onChange={this.prestationSelected}
-                            isEditable={isEditable}
-                            price={presta ? presta.price : null}
-                            billing={presta ? presta.billing : null}/>
-                          <hr style={{color: 'rgb(255, 249, 249, 0.6)', borderRadius: 10}}/>
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
-                </Grid>
-              );
-            })
-            }
+                );
+              })
+              }
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    );
+     );
   }
 }
 

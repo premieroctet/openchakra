@@ -20,8 +20,5 @@ export default theme => ({
   marginSaveButton:{
     marginTop: '5vh',
     marginBottom: '5vh',
-    [theme.breakpoints.down('xs')]:{
-      marginBottom: 110
-    }
   }
 })

@@ -16,7 +16,6 @@ export default theme => ({
     fontSize: 24,
     fontWeight: 800,
     lineHeight: '1.25em',
-    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
     color: 'rgb(72, 72, 72)',
     paddingTop: 2,
     paddingBottom: 2,
@@ -24,8 +23,5 @@ export default theme => ({
   marginSaveButton:{
     marginTop: '5vh',
     marginBottom: '5vh',
-    [theme.breakpoints.down('xs')]:{
-      marginBottom: 110
-    }
   }
 })

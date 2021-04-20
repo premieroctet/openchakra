@@ -245,7 +245,6 @@ const SHOP = {
     condition_flexible: 'Flexibles: Remboursement intégral jusqu\'à 1 jour avant la prestation',
     condition_moderate: 'Modérées: Remboursement intégral jusqu\'à 5 jours avant la prestation',
     condition_strict: 'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation'
-
   }
 };
 

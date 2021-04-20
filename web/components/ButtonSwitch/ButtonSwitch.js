@@ -15,34 +15,29 @@ const {inspect} = require('util');
 
 const IOSSwitch = withStyles((theme) => ({
   root: {
-    width: 52,
+    width: 42,
     height: 26,
     padding: 0,
     margin: theme.spacing(1),
   },
   switchBase: {
-    paddingLeft: 3,
-    paddingRight: 2,
-    paddingBottom: 2,
-    paddingTop: 3,
+    padding: 1,
     '&$checked': {
-      padding: 2,
-      transform: 'translateX(26px)',
+      transform: 'translateX(16px)',
       color: '#C7D4EE',
       '& + $track': {
         backgroundColor: 'white',
-        opacity: 1,
-        border: `1px solid ${theme.palette.grey[400]}`,
+
       },
     },
     '&$focusVisible $thumb': {
-      color: '#C7D4EE',
+      color: 'white',
       border: '6px solid #fff',
     },
   },
   thumb: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
   },
   track: {
     borderRadius: 26 / 2,
@@ -82,10 +77,12 @@ const CssTextField = withStyles({
 class ButtonSwitch extends React.Component {
   constructor(props) {
     super(props);
-    this.checked = this.props.checked
-    this.billing = props.billing ? (props.billing._id || this.props.billing): props.isOption ? this.props.billings[0]._id : null
-    this.price = this.props.price
+    this.checked= this.props.checked;
+    this.billing= props.billing ? (props.billing._id || this.props.billing): props.isOption ? this.props.billings[0]._id : null;
+    this.price = this.props.price;
     this.label = this.props.label
+
+
 
     this.onToggle = this.onToggle.bind(this);
     this.onChangeBilling = this.onChangeBilling.bind(this);
@@ -127,11 +124,11 @@ class ButtonSwitch extends React.Component {
 
   render() {
     const {classes, isEditable, isOption, isPrice, billings, priceDisabled} = this.props;
-    var {label, checked} = this;
+    var{checked, label} = this;
 
     return (
-      <Grid container spacing={2} style={{width: '100%', margin:0}}>
-        <Grid item xl={6} lg={6} md={8} sm={8} xs={6} className={classes.responsiveIOSswitch} style={{width: this.props.width}}>
+      <Grid className={classes.contentFiltre}>
+        <Grid className={classes.responsiveIOSswitch} style={{width: this.props.width}}>
           <Grid>
             <IOSSwitch
               color="primary"
@@ -142,25 +139,25 @@ class ButtonSwitch extends React.Component {
           </Grid>
           <Grid>
             <span>
-        {isEditable ?
-          <CssTextField
-            label={'Intitulé'}
-            placeholder={'Saisissez un intitulé'}
-            value={this.label}
-            onChange={this.onChangeLabel}
-            error={!this.label}
-            helperText={this.label ? null : 'Obligatoire'}
-          />
-          :
-          <Typography style={{color: '#696767'}}>{label === undefined ? 'label introuvable' : label}</Typography>
-        }
+              {isEditable ?
+                <CssTextField
+                  label={'Intitulé'}
+                  placeholder={'Saisissez un intitulé'}
+                  value={this.label}
+                  onChange={this.onChangeLabel}
+                  error={!this.label}
+                  helperText={this.label ? null : 'Obligatoire'}
+                />
+                :
+                <Typography style={{color: '#696767'}}>{label === undefined ? 'label introuvable' : label}</Typography>
+              }
             </span>
           </Grid>
         </Grid>
         {isPrice ?
-          <Grid item xl={6} lg={6} md={4} sm={4} xs={6} className={classes.responsiveIOSswitchContent}>
+          <Grid className={classes.responsiveIOSswitchContent}>
             {checked === true ?
-              <Grid className={classes.containerLabel_mode}>
+              <Grid style={{display: 'flex'}}>
                 <CssTextField
                   value={this.price}
                   label={<Typography style={{color:'#696767'}}>Tarif</Typography>}
