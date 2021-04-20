@@ -86,12 +86,11 @@ class creaShop extends React.Component {
   }
 
   componentDidMount() {
-   /*
-       localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname);
 
    if (!getLoggedUserId()) {
       Router.push('/');
-    }*/
+    }
 
     setAxiosAuthentication();
     axios.get('/myAlfred/api/users/current')
