@@ -127,7 +127,7 @@ class SelectService extends React.Component {
     if (!services) {
       return null
     }
-    
+
     var options=[]
     if (particular_professional_access) {
       // Intersection services pro & part
@@ -218,6 +218,7 @@ class SelectService extends React.Component {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Select
+            native={true}
             options={options}
             onChange={this.onChange}
             isDisabled={mode==CREASHOP_MODE.SERVICE_UPDATE}

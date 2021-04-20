@@ -458,7 +458,6 @@ class editProfile extends React.Component {
               variant="contained"
               color="primary"
               classes={{root: classes.button}}
-              disabled={user.state === "" || user.name === "" || user.email === "" || (!isPhoneOk(phone))}
             >
               Enregistrer
             </Button>
