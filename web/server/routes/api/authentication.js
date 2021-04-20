@@ -4,6 +4,7 @@ const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const {get_host_url} = require('../../../config/config');
+const {send_cookie}=require('../../utils/serverContext')
 
 const googleAuth = passport.authenticate('google', {session: false, scope: ['profile', 'email']});
 const facebookAuth = passport.authenticate('facebook', {session: false, scope: ['email']});
@@ -63,29 +64,6 @@ const extractUser = (req) => {
     provider: req.user.provider,
   };
   return user;
-};
-
-
-//Create JWT cookie with user credentials
-const send_cookie = (user, res) => {
-  const payload = {
-    id: user.id,
-    name: user.name,
-    firstname: user.firstname,
-    is_admin: user.is_admin,
-    is_alfred: user.is_alfred,
-    is_alfred_pro: user.shop.is_particular,
-  }; // Create JWT payload
-
-  jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
-    res.cookie('token', 'Bearer ' + token, {
-      httpOnly: false,
-      secure: true,
-      sameSite: true,
-    })
-      .status('201')
-      .json()
-  });
 };
 
 // Sendback user to / to finish registration
