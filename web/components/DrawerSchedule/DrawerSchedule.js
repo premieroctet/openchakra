@@ -8,7 +8,7 @@ import Fab from '@material-ui/core/Fab';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
 import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule';
-
+import Drawer from '@material-ui/core/Drawer';
 import axios from 'axios';
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Button from "@material-ui/core/Button";
@@ -70,7 +70,7 @@ class DrawerSchedule extends React.Component{
 
       return(
         <Grid style={{width: '100%', height: '100%'}}>
-          <SwipeableDrawer
+          <Drawer
             container={container}
             variant="temporary"
             anchor={'bottom'}
@@ -99,7 +99,7 @@ class DrawerSchedule extends React.Component{
                   onAvailabilityChanged={this.onAvailabilityChanged}
                 />
             }
-          </SwipeableDrawer>
+          </Drawer>
           <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
             <Hidden only={[ 'xs']}>
               <Grid style={{marginTop: '5vh'}}>
