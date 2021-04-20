@@ -126,7 +126,7 @@ class AssetsService extends React.Component {
           <h4 className={classes.policySizeSubtitle}>{SHOP.assets.experience_title}</h4>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
             <FormControl variant="outlined" style={{width: '100%'}}>
               <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.experience_label}</InputLabel>
               <Select
@@ -144,7 +144,7 @@ class AssetsService extends React.Component {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
             <TextField
               variant={'outlined'}
               label={'Titre'}
@@ -167,7 +167,7 @@ class AssetsService extends React.Component {
               onChange={this.handleChange}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={9}>
             <TextField
               id="outlined-basic"
               style={{width: '100%'}}
@@ -184,7 +184,7 @@ class AssetsService extends React.Component {
               }}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex'}}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={3} style={{display: 'flex'}}>
             <IconButton aria-label="AddCircleOutlineIcon" disabled={!this.state.newExperienceSkill}>
               <AddCircleOutlineIcon onClick={() => this.addSkill('experience_skills', 'newExperienceSkill')}/>
             </IconButton>
@@ -210,7 +210,7 @@ class AssetsService extends React.Component {
           </Grid>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-          <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+          <Grid item xl={6} lg={2} md={6} sm={6} xs={12}>
             <FormControl variant={'outlined'} style={{width: '100%'}}>
               <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.year_obtain}</InputLabel>
               <Select
@@ -233,7 +233,7 @@ class AssetsService extends React.Component {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
+          <Grid item xl={6} lg={10} md={6} sm={6} xs={12}>
             <TextField
               value={this.state.diplomaName}
               label="Titre"
@@ -243,7 +243,7 @@ class AssetsService extends React.Component {
               onChange={this.handleChange}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={9}>
             <TextField
               id="outlined-basic"
               style={{width: '100%'}}
@@ -260,7 +260,7 @@ class AssetsService extends React.Component {
               }}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex'}}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={3} style={{display: 'flex'}}>
             <IconButton aria-label="AddCircleOutlineIcon">
               <AddCircleOutlineIcon onClick={() => this.addSkill('diplomaSkills', 'newDiplomaSkill')}/>
             </IconButton>
@@ -315,7 +315,7 @@ class AssetsService extends React.Component {
           </Grid>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-          <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+          <Grid item xl={6} lg={2} md={6} sm={6} xs={12}>
             <FormControl variant={'outlined'} style={{width: '100%'}}>
               <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.year_obtain}</InputLabel>
               <Select
@@ -332,7 +332,7 @@ class AssetsService extends React.Component {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
+          <Grid item xl={6} lg={10} md={6} sm={6} xs={12}>
             <TextField
               value={this.state.certificationName}
               label={SHOP.assets.certification_name}
@@ -342,7 +342,7 @@ class AssetsService extends React.Component {
               onChange={this.handleChange}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={9}>
             <TextField
               id="outlined-basic"
               style={{width: '100%'}}
@@ -359,7 +359,7 @@ class AssetsService extends React.Component {
               }}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex'}}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={3} style={{display: 'flex'}}>
             <IconButton aria-label="AddCircleOutlineIcon">
             <AddCircleOutlineIcon onClick={() => this.addSkill('certificationSkills', 'newCertificationSkill')}/>
             </IconButton>
