@@ -41,6 +41,7 @@ const _ = require('lodash')
 var util = require('util');
 const {computeUrl}=require('../../../../config/config')
 const {delayedPromise}=require('../../../../utils/promise')
+const {get_token, send_cookie}=require('../../../utils/serverContext')
 
 // For Node < 12.0
 if (!Promise.allSettled) {
@@ -3018,6 +3019,10 @@ router.post('/kyc_validate/:alfred_id', passport.authenticate('admin', {session:
     res.status(403).json({prospects: 'Access denied'});
   }
 });
+
+router.get('/context', (req, res) => {
+  res.json(get_token(req))
+})
 
 passport.authenticate('admin', {session: false}),
   module.exports = router;

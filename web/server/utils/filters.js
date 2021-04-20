@@ -1,7 +1,7 @@
 const geolib = require('geolib');
-const isEmpty = require('../server/validation/is-empty');
-const {createRegExpOR, createRegExpAND} = require('./text');
-const {PRO, PART}=require('./consts')
+const isEmpty = require('../validation/is-empty');
+const {createRegExpOR, createRegExpAND} = require('../../utils/text');
+const {PRO, PART}=require('../../utils/consts')
 
 const isServiceAroundGPS = (serviceUser, coordinates) => {
 
@@ -92,4 +92,8 @@ const filterServicesKeyword = (serviceUsers, keyword, status) => {
   return [];
 };
 
-module.exports = {filterServicesGPS, filterServicesKeyword, distanceComparator};
+const filterServicesIds = (sus, serviceids) => {
+  return sus.filter( su => serviceids.includes(su.service._id))
+}
+
+module.exports = {filterServicesGPS, filterServicesKeyword, distanceComparator, filterServicesIds};
