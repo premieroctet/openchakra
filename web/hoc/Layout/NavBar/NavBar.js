@@ -43,8 +43,7 @@ import Switch from "@material-ui/core/Switch";
 import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
-
-
+import Slider from '@material-ui/core/Slider';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -87,9 +86,11 @@ class NavBar extends Component {
       proSelected: false,
       startDate: null,
       endDate: null,
+      radius: null,
+      locations: [],
       focusedInput: null,
-
     }
+    this.radius_marks=[1, 5,10,15,20,30,50,100,200,300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
   }
 
   componentDidMount() {
@@ -231,6 +232,18 @@ class NavBar extends Component {
         this.setState({[event.target.name]: event.target.checked, modalFilters: false}, () => this.props.filter());
   };
 
+  onLocationFilterChanged = event => {
+    const {name, checked} = event.target
+    var {locations} = this.state
+    if (checked) {
+      locations = _.uniq(locations.concat(name))
+    }
+    else {
+      locations = locations.filter( l => l!=name)
+    }
+    this.setState({locations: locations})
+  };
+
   onChangeInterval(startDate, endDate) {
     if (startDate) {
       startDate.hour(0).minute(0).second(0).millisecond(0);
@@ -243,7 +256,11 @@ class NavBar extends Component {
     this.setState({startDate: startDate, endDate: endDate});
   }
 
-    handleModalSearchBarInput = () => {
+  onRadiusFilterChanged = (event, value) => {
+    this.setState({radius: value});
+  };
+
+  handleModalSearchBarInput = () => {
     this.setState({modalMobileSearchBarInput: true})
   };
 
@@ -424,6 +441,7 @@ class NavBar extends Component {
   };
 
     modalMobileFilter = (classes) => {
+      const {locations} = this.state
       return (
         <Dialog
           onClose={() => this.setState({modalFilters: false})}
@@ -477,8 +495,8 @@ class NavBar extends Component {
               <DateRangePicker
                 startDate={this.state.startDate} // momentPropTypes.momentObj or null,
                 startDatePlaceholderText={'Début'}
-                endDatePlaceholderText={'Fin'}
                 startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                endDatePlaceholderText={'Fin'}
                 endDate={this.state.endDate} // momentPropTypes.momentObj or null,
                 endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
                 onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
@@ -488,7 +506,56 @@ class NavBar extends Component {
                 numberOfMonths={1}
               />
             </Grid>
-
+            <Grid>
+              <Slider
+                name="radius"
+                min={5}
+                max={300}
+                step={null}
+                value={this.state.radius}
+                valueLabelDisplay="auto"
+                marks={this.radius_marks}
+                onChange={this.onRadiusFilterChanged}
+              />
+            </Grid>
+            <Grid>
+            <FormControlLabel
+              classes={{root: classes.filterMenuControlLabel}}
+              control={
+                <Switch
+                  checked={locations.includes('client')}
+                  onChange={this.onLocationFilterChanged}
+                  color="primary"
+                  name={'client'}
+                />
+              }
+              label="Chez moi"
+            />
+            <FormControlLabel
+              classes={{root: classes.filterMenuControlLabel}}
+              control={
+                <Switch
+                  checked={locations.includes('alfred')}
+                  onChange={this.onLocationFilterChanged}
+                  color="primary"
+                  name={'alfred'}
+                />
+              }
+              label="Chez l'Alfred"
+            />
+            <FormControlLabel
+              classes={{root: classes.filterMenuControlLabel}}
+              control={
+                <Switch
+                  checked={locations.includes('visio')}
+                  onChange={this.onLocationFilterChanged}
+                  color="primary"
+                  name={'visio'}
+                />
+              }
+              label="En visio"
+            />
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
