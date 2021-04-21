@@ -201,8 +201,7 @@ class ProfileAbout extends CompanyComponent {
         aria-describedby="alert-dialog-description"
         classes={{paper: classes.dialogPaper}}
       >
-        <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}
-                     style={{position: 'absolute', right: 0}}/>
+        <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}/>
         <DialogContent>
           <Topic
             titleTopic={this.is_mode_company() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
@@ -522,7 +521,7 @@ class ProfileAbout extends CompanyComponent {
 
   render() {
     const {classes, user}=this.props;
-    const {alfred, company}=this.state;
+    const {showEdition, alfred, company}=this.state;
 
     if(!user && alfred){
       return null
@@ -540,7 +539,7 @@ class ProfileAbout extends CompanyComponent {
             {this.content(classes, user, alfred, company)}
           </LayoutMobileProfile>
         </Hidden>
-        {this.modalEditDialog(classes) }
+        {showEdition ? this.modalEditDialog(classes) : null }
       </React.Fragment>
     )
   }

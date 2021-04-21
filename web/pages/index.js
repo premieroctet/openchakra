@@ -158,7 +158,7 @@ class Home extends React.Component {
             is_b2b_style(user) ?
               <iframe
                 onLoad={this.resizeFrame}
-                frameborder="0"
+                frameBorder="0"
                 scrolling="no"
                 id="myIframe"
                 src="/blog/accueil"

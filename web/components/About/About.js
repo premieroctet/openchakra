@@ -232,7 +232,6 @@ class About extends CompanyComponent {
         <DialogTitle
           id="customized-dialog-title"
           onClose={this.closeEditDialog}
-          style={{position: 'absolute', right: 0}}
         />
         <DialogContent>
           <Topic
@@ -382,7 +381,7 @@ class About extends CompanyComponent {
 
   render() {
     const {displayTitlePicture, classes} = this.props;
-    const {user, company} = this.state;
+    const {user, company, showEdition} = this.state;
 
     var place = this.is_mode_company() ? company ? company.billing_address.city : "Pas d'addresse" : user ? user.billing_address.city : "Pas d'adresse";
 
@@ -458,7 +457,7 @@ class About extends CompanyComponent {
               columnsXS={6}
             />
           </Grid>
-          {this.modalEditDialog(classes)}
+          {showEdition ? this.modalEditDialog(classes) : null}
         </Grid>
       </>
     )
