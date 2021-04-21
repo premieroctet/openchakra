@@ -254,9 +254,11 @@ class FilterMenu extends React.Component{
 
     if (mounting) {
       resultMessage = '';
-    } else if (searching) {
+    }
+    else if (searching) {
       resultMessage = 'Recherche en cours';
-    } else if (serviceUsers.length === 0) {
+    }
+    else if (serviceUsers.length === 0) {
       resultMessage = "Nous n'avons pas trouvé de résultat pour votre recherche";
     }
 
@@ -379,44 +381,48 @@ class FilterMenu extends React.Component{
               </Grid>
             }
           </Grid>
-          <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
-            {radiusFilterVisible ?
-              <Grid className={style.filterMenuDateFocused}>
-                <Grid className={style.filterMenuFocused} onClick={() => this.radiusFilterToggled()}>
-                  <Typography >Quel périmètre ?</Typography>
-                </Grid>
-                <Grid className={style.filterMenuContentMainStyleDateFilter}>
-                  <Grid>
-                    <Slider
-                      name="radius"
-                      min={5}
-                      max={300}
-                      step={null}
-                      value={this.state.radius}
-                      valueLabelDisplay="auto"
-                      marks={this.radius_marks}
-                      onChange={this.onRadiusFilterChanged}
-                    />
-                  </Grid>
-                  <Grid className={style.filterMenuDateFilterButtonContainer}>
-                    <Grid>
-                      <Button onClick={() => this.cancelRadiusFilter()}>Annuler</Button>
+          { this.props.displayPerimeter ?
+              <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
+                {radiusFilterVisible ?
+                  <Grid className={style.filterMenuDateFocused}>
+                    <Grid className={style.filterMenuFocused} onClick={() => this.radiusFilterToggled()}>
+                      <Typography >Quel périmètre ?</Typography>
                     </Grid>
-                    <Grid>
-                      <Button onClick={() => this.validateRadiusFilter()}>Valider</Button>
+                    <Grid className={style.filterMenuContentMainStyleDateFilter}>
+                      <Grid>
+                        <Slider
+                          name="radius"
+                          min={5}
+                          max={300}
+                          step={null}
+                          value={this.state.radius}
+                          valueLabelDisplay="auto"
+                          marks={this.radius_marks}
+                          onChange={this.onRadiusFilterChanged}
+                        />
+                      </Grid>
+                      <Grid className={style.filterMenuDateFilterButtonContainer}>
+                        <Grid>
+                          <Button onClick={() => this.cancelRadiusFilter()}>Annuler</Button>
+                        </Grid>
+                        <Grid>
+                          <Button onClick={() => this.validateRadiusFilter()}>Valider</Button>
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
+                  :
+                  <Grid
+                    onClick={() => this.radiusFilterToggled()}
+                    className={style.filterMenuStatusNotFocused}
+                    style={{backgroundColor: `${radiusFilterBg}`}}>
+                    <Typography style={{color:  radiusFilterSet ?  'white' : 'black'}}>Quel périmètre ?</Typography>
+                  </Grid>
+                }
               </Grid>
               :
-              <Grid
-                onClick={() => this.radiusFilterToggled()}
-                className={style.filterMenuStatusNotFocused}
-                style={{backgroundColor: `${radiusFilterBg}`}}>
-                <Typography style={{color:  radiusFilterSet ?  'white' : 'black'}}>Quel périmètre ?</Typography>
-              </Grid>
-            }
-          </Grid>
+              null
+          }
           <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
             {locationFilterVisible?
               <Grid className={style.filterMenuDateFocused}>

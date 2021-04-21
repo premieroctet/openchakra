@@ -376,7 +376,7 @@ class SearchPage extends React.Component {
                 search={this.props.search}
                 searching={this.state.searching}
                 serviceUsers={serviceUsers}
-                resetFilter={this.resetFilter}
+                displayPerimeter={this.state.gps}
               />
             </Grid>
           </Grid>
