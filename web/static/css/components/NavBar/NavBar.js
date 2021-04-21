@@ -466,5 +466,12 @@ export default theme => ({
   rootIconButton:{
     paddingTop:0,
     paddingBottom: 0
-  }
+  },
+  filterMenuFocused:{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    color: theme.palette.white.main
+  },
 })

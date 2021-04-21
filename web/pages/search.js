@@ -201,11 +201,10 @@ class SearchPage extends React.Component {
   }
 
   filter = data => {
-    let filterComponentstate = data ? data : this.state;
-
+    let criterion = data ? data : this.state;
     const serviceUsers = this.state.serviceUsers;
     let serviceUsersDisplay = [];
-    if (filterComponentstate.proSelected || filterComponentstate.individualSelected) {
+    if (criterion.proSelected || criterion.individualSelected) {
       serviceUsers.forEach(su => {
         if (!su.user) {
           console.warn(`No user for serviceUser:${JSON.stringify(su, null, 2)}`)
@@ -213,7 +212,7 @@ class SearchPage extends React.Component {
         }
         let alfId = su.user._id;
         const isPro = this.state.proAlfred.includes(alfId);
-        if (isPro && filterComponentstate.proSelected || !isPro && filterComponentstate.individualSelected) {
+        if (isPro && criterion.proSelected || !isPro && criterion.individualSelected) {
           serviceUsersDisplay.push(su);
         }
       });
@@ -222,13 +221,13 @@ class SearchPage extends React.Component {
       serviceUsersDisplay = serviceUsers;
     }
 
-    if (filterComponentstate.radius && this.state.gps) {
-      const radius = filterComponentstate.radius
+    if (criterion.radius && this.state.gps) {
+      const radius = criterion.radius
       serviceUsersDisplay = serviceUsersDisplay.filter(su => computeDistanceKm(this.state.gps, su.service_address.gps) <= radius )
     }
 
-    if (filterComponentstate.locations) {
-      const locations_filter = filterComponentstate.locations
+    if (criterion.locations) {
+      const locations_filter = criterion.locations
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
         const su_locations = Object.keys(su.location).filter(k => Boolean(su.location[k]))
         const ok = _.intersection(su_locations, locations_filter).length>0
@@ -236,24 +235,24 @@ class SearchPage extends React.Component {
       })
     }
 
-    if (filterComponentstate.categories) {
-      const categories = filterComponentstate.categories
+    if (criterion.categories) {
+      const categories = criterion.categories
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
         const ok = categories.includes(su.service.category._id)
         return ok
       })
     }
 
-    if (filterComponentstate.services) {
-      const services = filterComponentstate.services
+    if (criterion.services) {
+      const services = criterion.services
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
         const ok = services.includes(su.service._id)
         return ok
       })
     }
 
-    const start = filterComponentstate.startDate;
-    const end = filterComponentstate.endDate;
+    const start = criterion.startDate;
+    const end = criterion.endDate;
 
     if (start && end) {
       axios.post('/myAlfred/api/availability/check', {

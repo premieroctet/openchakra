@@ -18,9 +18,8 @@ class LayoutMobileSearch extends React.Component{
     }
   }
 
-  callFilter = () =>{
-    let childState = this.child.current.state;
-    this.props.filter(childState)
+  callFilter = data =>{
+    this.props.filter(data)
   };
 
   callFilterNavBar = () => {

@@ -8,6 +8,7 @@ import moment from "moment";
 import {DateRangePicker} from 'react-dates';
 import Slider from '@material-ui/core/Slider';
 import MultipleSelect from "react-select";
+const {SEARCHBAR}=require('../../utils/i18n')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import axios from 'axios'
 import _ from 'lodash'
@@ -275,7 +276,7 @@ class FilterMenu extends React.Component{
             {statusFilterVisible ?
               <Grid className={style.filterMenuContainerStatut}>
                 <Grid className={style.filterMenuFocused} onClick={() => this.statusFilterToggled()}>
-                  <Typography className={style.filterMenuTextFocused}>Statut</Typography>
+                  <Typography className={style.filterMenuTextFocused}>{SEARCHBAR.labelStatus}</Typography>
                 </Grid>
                 <Grid className={style.filterMenuContentMainStyle}>
                   <Grid className={style.filTerMenuStatusMainStyleFilter}>
@@ -344,7 +345,7 @@ class FilterMenu extends React.Component{
             {dateFilterVisible ?
               <Grid className={style.filterMenuDateFocused}>
                 <Grid className={style.filterMenuFocused} onClick={() => this.dateFilterToggled()}>
-                  <Typography >Quelle(s) date(s) ?</Typography>
+                  <Typography>{SEARCHBAR.labelDate}</Typography>
                 </Grid>
                 <Grid className={style.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -377,7 +378,7 @@ class FilterMenu extends React.Component{
                 onClick={() => this.dateFilterToggled()}
                 className={style.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${dateFilterBg}`}}>
-                <Typography style={{color:  dateFilterSet ?  'white' : 'black'}}>Quelle(s) date(s) ?</Typography>
+                <Typography style={{color:  dateFilterSet ?  'white' : 'black'}}>Date(s)</Typography>
               </Grid>
             }
           </Grid>
@@ -386,7 +387,7 @@ class FilterMenu extends React.Component{
                 {radiusFilterVisible ?
                   <Grid className={style.filterMenuDateFocused}>
                     <Grid className={style.filterMenuFocused} onClick={() => this.radiusFilterToggled()}>
-                      <Typography >Quel périmètre ?</Typography>
+                      <Typography >{SEARCHBAR.labelPerimeter}</Typography>
                     </Grid>
                     <Grid className={style.filterMenuContentMainStyleDateFilter}>
                       <Grid>
@@ -416,7 +417,7 @@ class FilterMenu extends React.Component{
                     onClick={() => this.radiusFilterToggled()}
                     className={style.filterMenuStatusNotFocused}
                     style={{backgroundColor: `${radiusFilterBg}`}}>
-                    <Typography style={{color:  radiusFilterSet ?  'white' : 'black'}}>Quel périmètre ?</Typography>
+                    <Typography style={{color:  radiusFilterSet ?  'white' : 'black'}}>{SEARCHBAR.labelPerimeter}</Typography>
                   </Grid>
                 }
               </Grid>
@@ -427,7 +428,7 @@ class FilterMenu extends React.Component{
             {locationFilterVisible?
               <Grid className={style.filterMenuDateFocused}>
                 <Grid className={style.filterMenuFocused} onClick={() => this.locationFilterToggled()}>
-                  <Typography >Quel lieu ?</Typography>
+                  <Typography >{SEARCHBAR.labelLocation}</Typography>
                 </Grid>
                 <Grid className={style.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -483,7 +484,7 @@ class FilterMenu extends React.Component{
                 onClick={() => this.locationFilterToggled()}
                 className={style.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${locationFilterBg}`}}>
-                <Typography style={{color:  locationFilterSet ?  'white' : 'black'}}>Quel lieu ?</Typography>
+                <Typography style={{color:  locationFilterSet ?  'white' : 'black'}}>Lieu(x)</Typography>
               </Grid>
             }
           </Grid>
@@ -491,7 +492,7 @@ class FilterMenu extends React.Component{
             {categoriesFilterVisible?
               <Grid className={style.filterMenuDateFocused}>
                 <Grid className={style.filterMenuFocused} onClick={this.categoriesFilterToggled}>
-                  <Typography >Catégorie(s)</Typography>
+                  <Typography >{SEARCHBAR.labelCategory}</Typography>
                 </Grid>
                 <Grid className={style.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -520,7 +521,7 @@ class FilterMenu extends React.Component{
                 onClick={this.categoriesFilterToggled}
                 className={style.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${categoriesFilterBg}`}}>
-                <Typography style={{color:  categoriesFilterSet ?  'white' : 'black'}}>Catégorie(s)</Typography>
+                <Typography style={{color:  categoriesFilterSet ?  'white' : 'black'}}>{SEARCHBAR.labelCategory}</Typography>
               </Grid>
             }
           </Grid>
@@ -528,7 +529,7 @@ class FilterMenu extends React.Component{
             {servicesFilterVisible?
               <Grid className={style.filterMenuDateFocused}>
                 <Grid className={style.filterMenuFocused} onClick={this.servicesFilterToggled}>
-                  <Typography >Service(s)</Typography>
+                  <Typography>{SEARCHBAR.labelService}</Typography>
                 </Grid>
                 <Grid className={style.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -557,7 +558,7 @@ class FilterMenu extends React.Component{
                 onClick={this.servicesFilterToggled}
                 className={style.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${servicesFilterBg}`}}>
-                <Typography style={{color:  servicesFilterSet ?  'white' : 'black'}}>Service(s)</Typography>
+                <Typography style={{color:  servicesFilterSet ?  'white' : 'black'}}>{SEARCHBAR.labelService}</Typography>
               </Grid>
             }
           </Grid>

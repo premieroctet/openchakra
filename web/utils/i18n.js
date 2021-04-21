@@ -38,7 +38,7 @@ const MANGOPAY_MESSAGES = {
 };
 
 const INFOBAR_MESSAGE = {
-    message: 'Vous ne trouvez pas votre service ? L’équipe Alfred se mobilise pour vous trouver le meilleur Alfred près de chez vous',
+    message: 'Vous ne trouvez pas votre service ? L’équipe Alfred se mobilise pour trouver le meilleur Alfred près de chez vous',
     showMore: 'ici.'
 };
 
@@ -50,7 +50,13 @@ const SEARCHBAR = {
     when: 'Quand ?',
     labelWhere: 'L\'adresse',
     labelWhat: 'Le service',
-    labelWhen: 'Les dates'
+    labelWhen: 'Les dates',
+    labelStatus: 'Statut',
+    labelDate: 'Date(s)',
+    labelLocation: 'Lieu(x)',
+    labelPerimeter: 'Périmètre',
+    labelCategory: 'Catégorie(s)',
+    labelService: 'Service(s)',
 };
 
 const NAVBAR_MENU = {
