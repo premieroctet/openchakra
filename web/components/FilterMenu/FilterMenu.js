@@ -275,7 +275,7 @@ class FilterMenu extends React.Component{
           <Grid className={style.filTerMenuStatusMainStyleFilter}>
             {statusFilterVisible ?
               <Grid className={style.filterMenuContainerStatut}>
-                <Grid className={style.filterMenuFocused} onClick={() => this.statusFilterToggled()}>
+                <Grid className={style.filterMenuFocused} onClick={this.statusFilterToggled}>
                   <Typography className={style.filterMenuTextFocused}>{SEARCHBAR.labelStatus}</Typography>
                 </Grid>
                 <Grid className={style.filterMenuContentMainStyle}>
@@ -290,7 +290,6 @@ class FilterMenu extends React.Component{
                                 <Switch
                                   checked={proSelected}
                                   onChange={this.statusFilterChanged}
-                                  value={proSelected}
                                   color="primary"
                                   name={'proSelected'}
                                 />
@@ -334,7 +333,7 @@ class FilterMenu extends React.Component{
               :
               <Grid
                 key={moment()}
-                onClick={() => this.statusFilterToggled()}
+                onClick={this.statusFilterToggled}
                 className={style.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${statusFilterBg}`}}>
                 <Typography style={{color: statusFilterSet ? 'white': 'black'}}>Statut</Typography>
@@ -344,7 +343,7 @@ class FilterMenu extends React.Component{
           <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
             {dateFilterVisible ?
               <Grid className={style.filterMenuDateFocused}>
-                <Grid className={style.filterMenuFocused} onClick={() => this.dateFilterToggled()}>
+                <Grid className={style.filterMenuFocused} onClick={this.dateFilterToggled}>
                   <Typography>{SEARCHBAR.labelDate}</Typography>
                 </Grid>
                 <Grid className={style.filterMenuContentMainStyleDateFilter}>
@@ -365,17 +364,17 @@ class FilterMenu extends React.Component{
                   </Grid>
                   <Grid className={style.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={() => this.cancelDateFilter()}>Annuler</Button>
+                      <Button onClick={this.cancelDateFilter}>Annuler</Button>
                     </Grid>
                     <Grid>
-                      <Button onClick={() => this.validateDateFilter()}>Valider</Button>
+                      <Button onClick={this.validateDateFilter}>Valider</Button>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
               :
               <Grid
-                onClick={() => this.dateFilterToggled()}
+                onClick={this.dateFilterToggled}
                 className={style.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${dateFilterBg}`}}>
                 <Typography style={{color:  dateFilterSet ?  'white' : 'black'}}>Date(s)</Typography>
@@ -386,7 +385,7 @@ class FilterMenu extends React.Component{
               <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
                 {radiusFilterVisible ?
                   <Grid className={style.filterMenuDateFocused}>
-                    <Grid className={style.filterMenuFocused} onClick={() => this.radiusFilterToggled()}>
+                    <Grid className={style.filterMenuFocused} onClick={this.radiusFilterToggled}>
                       <Typography >{SEARCHBAR.labelPerimeter}</Typography>
                     </Grid>
                     <Grid className={style.filterMenuContentMainStyleDateFilter}>
@@ -404,17 +403,17 @@ class FilterMenu extends React.Component{
                       </Grid>
                       <Grid className={style.filterMenuDateFilterButtonContainer}>
                         <Grid>
-                          <Button onClick={() => this.cancelRadiusFilter()}>Annuler</Button>
+                          <Button onClick={this.cancelRadiusFilter}>Annuler</Button>
                         </Grid>
                         <Grid>
-                          <Button onClick={() => this.validateRadiusFilter()}>Valider</Button>
+                          <Button onClick={this.validateRadiusFilter}>Valider</Button>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                   :
                   <Grid
-                    onClick={() => this.radiusFilterToggled()}
+                    onClick={this.radiusFilterToggled}
                     className={style.filterMenuStatusNotFocused}
                     style={{backgroundColor: `${radiusFilterBg}`}}>
                     <Typography style={{color:  radiusFilterSet ?  'white' : 'black'}}>{SEARCHBAR.labelPerimeter}</Typography>
@@ -427,7 +426,7 @@ class FilterMenu extends React.Component{
           <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
             {locationFilterVisible?
               <Grid className={style.filterMenuDateFocused}>
-                <Grid className={style.filterMenuFocused} onClick={() => this.locationFilterToggled()}>
+                <Grid className={style.filterMenuFocused} onClick={this.locationFilterToggled}>
                   <Typography >{SEARCHBAR.labelLocation}</Typography>
                 </Grid>
                 <Grid className={style.filterMenuContentMainStyleDateFilter}>
@@ -471,20 +470,20 @@ class FilterMenu extends React.Component{
                   </Grid>
                   <Grid className={style.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={() => this.cancelLocationFilter()}>Annuler</Button>
+                      <Button onClick={this.cancelLocationFilter}>Annuler</Button>
                     </Grid>
                     <Grid>
-                      <Button onClick={() => this.validateLocationFilter()}>Valider</Button>
+                      <Button onClick={this.validateLocationFilter}>Valider</Button>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
               :
               <Grid
-                onClick={() => this.locationFilterToggled()}
+                onClick={this.locationFilterToggled}
                 className={style.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${locationFilterBg}`}}>
-                <Typography style={{color:  locationFilterSet ?  'white' : 'black'}}>Lieu(x)</Typography>
+                <Typography style={{color:  locationFilterSet ?  'white' : 'black'}}>{SEARCHBAR.labelLocation}</Typography>
               </Grid>
             }
           </Grid>
