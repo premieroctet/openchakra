@@ -9,6 +9,8 @@ import Menu from '@material-ui/core/Menu';
 const  {clearAuthenticationToken}=require('../../../utils/authentication')
 import Router from 'next/router';
 import Grid from '@material-ui/core/Grid';
+import MultipleSelect from "react-select";
+import moment from "moment";
 
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
@@ -88,6 +90,11 @@ class NavBar extends Component {
       endDate: null,
       radius: null,
       locations: [],
+      categories: [],
+      allCategories: [],
+      services: [],
+      filteredServices: [],
+      allServices: [],
       focusedInput: null,
     }
     this.radius_marks=[1, 5,10,15,20,30,50,100,200,300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
@@ -120,6 +127,24 @@ class NavBar extends Component {
       }).catch(err =>{console.error(err)});
 
     this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''});
+    setAxiosAuthentication()
+    axios.get('/myAlfred/api/category/all/sort')
+      .then(res => {
+        let categories = res.data;
+        this.setState({allCategories: categories.map(c => ({value:c._id, label: c.label}))})
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    axios.get('/myAlfred/api/service/all')
+      .then(res => {
+        const services=res.data.map(s => ({value:s._id, label: s.label, category: s.category._id}))
+        this.setState({allServices: services, filteredServices: services})
+      })
+      .catch(err => {
+        console.error(err)
+      })
+
   }
 
   logout = () => {
@@ -196,6 +221,22 @@ class NavBar extends Component {
     }
   };
 
+  onCategoriesFilterChanged = categories => {
+    categories = categories || []
+    const filteredServices=this.state.allServices.filter(s => {
+      return categories.map(c=>c.value).includes(s.category)
+    })
+    const services=this.state.services.filter(s => {
+      return filteredServices.map(fs=>fs.value).includes(s._id)
+    })
+    this.setState({categories: categories, filteredServices: filteredServices, services: services});
+  };
+
+  onServicesFilterChanged = services => {
+    services = services || []
+    this.setState({services: services || []});
+  };
+
   handleOpenMenuItem = (event) => {
     this.setState({anchorEl: event.currentTarget})
   };
@@ -203,6 +244,36 @@ class NavBar extends Component {
   handleClosenMenuItem = () => {
     this.setState({anchorEl: false})
   };
+
+  fireFilter = () => {
+    var fltr={}
+    if (this.state.proSelected) {
+      fltr.proSelected = true
+    }
+    if (this.state.individualSelected) {
+      fltr.individualSelected = true
+    }
+    if (this.state.startDate) {
+      fltr.startDate=this.state.startDate
+    }
+    if (this.state.endDate) {
+      fltr.endDate=this.state.endDate
+    }
+    if (this.state.radius) {
+      fltr.radius=this.state.radius
+    }
+    if (this.state.locations.length>0) {
+      fltr.locations=this.state.locations
+    }
+    if (this.state.services.length>0) {
+      fltr.services=this.state.services.map(c => c.value)
+    }
+    else if (this.state.categories.length>0) {
+      fltr.categories=this.state.categories.map(c => c.value)
+    }
+
+    this.props.filter(fltr)
+  }
 
   findService = () => {
     var queryParams = {search: 1};
@@ -229,7 +300,7 @@ class NavBar extends Component {
   };
 
   statusFilterChanged = event => {
-        this.setState({[event.target.name]: event.target.checked, modalFilters: false}, () => this.props.filter());
+    this.setState({[event.target.name]: event.target.checked});
   };
 
   onLocationFilterChanged = event => {
@@ -441,7 +512,7 @@ class NavBar extends Component {
   };
 
     modalMobileFilter = (classes) => {
-      const {locations} = this.state
+      const {locations, radius, categories, allCategories, services, filteredServices} = this.state
       return (
         <Dialog
           onClose={() => this.setState({modalFilters: false})}
@@ -476,9 +547,7 @@ class NavBar extends Component {
                   control={
                     <Switch
                       checked={this.state.individualSelected}
-                      onChange={e => {
-                        this.statusFilterChanged(e);
-                      }}
+                      onChange={this.statusFilterChanged}
                       value={this.state.individualSelected}
                       color="primary"
                       name={'individualSelected'}
@@ -512,7 +581,7 @@ class NavBar extends Component {
                 min={5}
                 max={300}
                 step={null}
-                value={this.state.radius}
+                value={radius}
                 valueLabelDisplay="auto"
                 marks={this.radius_marks}
                 onChange={this.onRadiusFilterChanged}
@@ -557,11 +626,35 @@ class NavBar extends Component {
             />
             </Grid>
           </Grid>
+          <Grid className={classes.filterMenuContentMainStyleDateFilter}>
+            <MultipleSelect
+              key={moment()}
+              value={categories}
+              onChange={this.onCategoriesFilterChanged}
+              options={allCategories}
+              isMulti
+              isSearchable
+              closeMenuOnSelect={true}
+              placeholder={SEARCHBAR.labelCategory}
+            />
+          </Grid>
+          <Grid className={classes.filterMenuContentMainStyleDateFilter}>
+            <MultipleSelect
+              key={moment()}
+              value={services}
+              onChange={this.onServicesFilterChanged}
+              options={filteredServices}
+              isMulti
+              isSearchable
+              closeMenuOnSelect={true}
+              placeholder={SEARCHBAR.labelService}
+            />
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button
             autoFocus
-            onClick={() => this.setState({modalFilters: false}, () => this.props.filter())}
+            onClick={() => this.setState({modalFilters: false}, this.fireFilter())}
             color="primary"
           >
             Afficher les résultats
