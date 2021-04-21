@@ -45,7 +45,7 @@ class FilterMenu extends React.Component{
     axios.get('/myAlfred/api/category/all/sort')
       .then(res => {
         let categories = res.data;
-        this.setState({allCategories: categories})
+        this.setState({allCategories: categories.map(c => ({value:c._id, label: c.label}))})
       })
       .catch(err => {
         console.error(err)
@@ -75,6 +75,9 @@ class FilterMenu extends React.Component{
     }
     if (this.state.locationFilterSet) {
       fltr.locations=this.state.locations
+    }
+    if (this.state.categoriesFilterSet) {
+      fltr.categories=this.state.categories.map(c => c.value)
     }
 
     this.props.filter(fltr)
@@ -180,12 +183,12 @@ class FilterMenu extends React.Component{
     this.setState({categoriesFilterSet:false, categoriesFilterVisible: false}, () => this.fireFilter());
   };
 
-  validatecategoriesFilter = () => {
+  validateCategoriesFilter = () => {
     this.setState({categoriesFilterSet:true, categoriesFilterVisible: false}, () => this.fireFilter());
   };
 
-  oncategoriesFilterChanged = (event, value) => {
-    this.setState({radius: value});
+  onCategoriesFilterChanged = categories => {
+    this.setState({categories: categories});
   };
 
   render() {
@@ -445,12 +448,20 @@ class FilterMenu extends React.Component{
                     <MultipleSelect
                       key={moment()}
                       value={categories}
-                      onChange={this.onCategoriesChanged}
+                      onChange={this.onCategoriesFilterChanged}
                       options={allCategories}
                       isMulti
                       isSearchable
                       closeMenuOnSelect={false}
                     />
+                    <Grid className={style.filterMenuDateFilterButtonContainer}>
+                      <Grid>
+                        <Button onClick={this.cancelCategoriesFilter}>Annuler</Button>
+                      </Grid>
+                      <Grid>
+                        <Button onClick={this.validateCategoriesFilter}>Valider</Button>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>

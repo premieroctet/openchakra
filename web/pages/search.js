@@ -235,6 +235,14 @@ class SearchPage extends React.Component {
       })
     }
 
+    if (filterComponentstate.categories) {
+      const categories = filterComponentstate.categories
+      serviceUsersDisplay = serviceUsersDisplay.filter(su => {
+        const ok = categories.includes(su.service.category._id)
+        return ok
+      })
+    }
+
     const start = filterComponentstate.startDate;
     const end = filterComponentstate.endDate;
 
