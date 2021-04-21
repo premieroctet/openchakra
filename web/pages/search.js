@@ -22,7 +22,7 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutMobileSearch from "../hoc/Layout/LayoutMobileSearch";
 import Typography from "@material-ui/core/Typography";
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
-const {getLoggedUserId}=require('../utils/functions')
+const {getLoggedUserId, computeDistanceKm}=require('../utils/functions')
 import withWidth from '@material-ui/core/withWidth';
 import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchResults=withSlide(withGrid(CardService));
@@ -64,7 +64,6 @@ class SearchPage extends React.Component {
   // FIX : page blanche quand redirigée depuis home page non connectée
   constructor(props) {
     super(props);
-    this.filterMenuComponent = React.createRef();
     this.filters=['Plus proche de moi']
     this.state = {
       user: null,
@@ -77,8 +76,6 @@ class SearchPage extends React.Component {
       shops: [],
       proAlfred: [], // Professional Alfred ids
       keyword: '',
-      proSelected: false, // Filtre professionnel
-      individualSelected: false, // Filtre particulier
       startDate: null,
       endDate: null,
       focusedInput: null,
@@ -203,28 +200,56 @@ class SearchPage extends React.Component {
       });
   }
 
-  searchCallback = q => {
-    if (!('gps' in q)) {
-      q['gps'] = null;
-    }
-    this.setState(q, () => this.search());
-  };
-
-  filter = (data) => {
-    let filterComponentstate = data ? data : this.filterMenuComponent.current ? this.filterMenuComponent.current.state : this.state;
+  filter = data => {
+    let filterComponentstate = data ? data : this.state;
 
     const serviceUsers = this.state.serviceUsers;
     let serviceUsersDisplay = [];
     if (filterComponentstate.proSelected || filterComponentstate.individualSelected) {
       serviceUsers.forEach(su => {
+        if (!su.user) {
+          console.warn(`No user for serviceUser:${JSON.stringify(su, null, 2)}`)
+          return
+        }
         let alfId = su.user._id;
         const isPro = this.state.proAlfred.includes(alfId);
         if (isPro && filterComponentstate.proSelected || !isPro && filterComponentstate.individualSelected) {
           serviceUsersDisplay.push(su);
         }
       });
-    } else {
+    }
+    else {
       serviceUsersDisplay = serviceUsers;
+    }
+
+    if (filterComponentstate.radius && this.state.gps) {
+      const radius = filterComponentstate.radius
+      serviceUsersDisplay = serviceUsersDisplay.filter(su => computeDistanceKm(this.state.gps, su.service_address.gps) <= radius )
+    }
+
+    if (filterComponentstate.locations) {
+      const locations_filter = filterComponentstate.locations
+      serviceUsersDisplay = serviceUsersDisplay.filter(su => {
+        const su_locations = Object.keys(su.location).filter(k => Boolean(su.location[k]))
+        const ok = _.intersection(su_locations, locations_filter).length>0
+        return ok
+      })
+    }
+
+    if (filterComponentstate.categories) {
+      const categories = filterComponentstate.categories
+      serviceUsersDisplay = serviceUsersDisplay.filter(su => {
+        const ok = categories.includes(su.service.category._id)
+        return ok
+      })
+    }
+
+    if (filterComponentstate.services) {
+      const services = filterComponentstate.services
+      serviceUsersDisplay = serviceUsersDisplay.filter(su => {
+        const ok = services.includes(su.service._id)
+        return ok
+      })
     }
 
     const start = filterComponentstate.startDate;
@@ -241,7 +266,8 @@ class SearchPage extends React.Component {
           serviceUsersDisplay = serviceUsersDisplay.filter(su => filteredServiceUsers.includes(su._id.toString()));
           this.setFilteredServiceUsers(serviceUsersDisplay);
         });
-    } else {
+    }
+    else {
       this.setFilteredServiceUsers(serviceUsersDisplay);
     }
   };
@@ -262,15 +288,6 @@ class SearchPage extends React.Component {
       });
     }
   };
-
-  resetFilter() {
-    this.setState({
-      proSelected: false,
-      individualSelected: false,
-      startDate: null,
-      endDate: null,
-    }, () => this.filter());
-  }
 
   search(forceFilter) {
 
@@ -328,16 +345,8 @@ class SearchPage extends React.Component {
       });
   }
 
-  isStatusFilterSet = () => {
-    return this.state.proSelected || this.state.individualSelected;
-  };
-
   isDateFilterSet = () => {
     return this.state.startDate != null || this.state.endDate != null;
-  };
-
-  isSubFilterSet = () => {
-    return this.isStatusFilterSet() || this.isDateFilterSet();
   };
 
   handleChange = (event) => {
@@ -359,7 +368,6 @@ class SearchPage extends React.Component {
           <Grid className={classes.searchFilterMenuPosition}>
             <Grid className={classes.searchFilterMenuContent}>
               <FilterMenu
-                ref={this.filterMenuComponent}
                 style={classes}
                 categories={this.state.categories}
                 gps={this.state.gps}
@@ -368,8 +376,7 @@ class SearchPage extends React.Component {
                 search={this.props.search}
                 searching={this.state.searching}
                 serviceUsers={serviceUsers}
-                resetFilter={this.resetFilter}
-                isSubFilterSet={this.isSubFilterSet}
+                displayPerimeter={this.state.gps}
               />
             </Grid>
           </Grid>
