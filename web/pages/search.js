@@ -217,7 +217,8 @@ class SearchPage extends React.Component {
           serviceUsersDisplay.push(su);
         }
       });
-    } else {
+    }
+    else {
       serviceUsersDisplay = serviceUsers;
     }
 
@@ -239,6 +240,14 @@ class SearchPage extends React.Component {
       const categories = filterComponentstate.categories
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
         const ok = categories.includes(su.service.category._id)
+        return ok
+      })
+    }
+
+    if (filterComponentstate.services) {
+      const services = filterComponentstate.services
+      serviceUsersDisplay = serviceUsersDisplay.filter(su => {
+        const ok = services.includes(su.service._id)
         return ok
       })
     }

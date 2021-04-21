@@ -29,12 +29,17 @@ class FilterMenu extends React.Component{
       radiusFilterVisible: false,
       radius: null,
       locationFilterSet: false,
-      locationFilterVisible: null,
+      locationFilterVisible: false,
       locations: [],
       categoriesFilterSet: false,
-      categoriesFilterVisible: null,
+      categoriesFilterVisible: false,
       categories: [],
       allCategories: [],
+      servicesFilterSet: false,
+      servicesFilterVisible: false,
+      services: [],
+      filteredServices: [],
+      allServices: [],
       focusedInput: null,
     }
     this.radius_marks=[1, 5,10,15,20,30,50,100,200,300].map(v => ({value: v, label: v>1 && v<50? '' : v}))
@@ -46,6 +51,14 @@ class FilterMenu extends React.Component{
       .then(res => {
         let categories = res.data;
         this.setState({allCategories: categories.map(c => ({value:c._id, label: c.label}))})
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    axios.get('/myAlfred/api/service/all')
+      .then(res => {
+        const services=res.data.map(s => ({value:s._id, label: s.label, category: s.category._id}))
+        this.setState({allServices: services, filteredServices: services})
       })
       .catch(err => {
         console.error(err)
@@ -76,7 +89,10 @@ class FilterMenu extends React.Component{
     if (this.state.locationFilterSet) {
       fltr.locations=this.state.locations
     }
-    if (this.state.categoriesFilterSet) {
+    if (this.state.servicesFilterSet) {
+      fltr.services=this.state.services.map(c => c.value)
+    }
+    else if (this.state.categoriesFilterSet) {
       fltr.categories=this.state.categories.map(c => c.value)
     }
 
@@ -188,7 +204,32 @@ class FilterMenu extends React.Component{
   };
 
   onCategoriesFilterChanged = categories => {
-    this.setState({categories: categories});
+    categories = categories || []
+    const filteredServices=this.state.allServices.filter(s => {
+      return categories.map(c=>c.value).includes(s.category)
+    })
+    const services=this.state.services.filter(s => {
+      return filteredServices.map(fs=>fs.value).includes(s._id)
+    })
+    this.setState({categories: categories, filteredServices: filteredServices, services: services});
+  };
+
+  // Services filter
+  servicesFilterToggled = () => {
+    this.setState({servicesFilterVisible: !this.state.servicesFilterVisible});
+  };
+
+  cancelServicesFilter = () => {
+    this.setState({servicesFilterSet:false, servicesFilterVisible: false}, () => this.fireFilter());
+  };
+
+  validateServicesFilter = () => {
+    this.setState({servicesFilterSet:true, servicesFilterVisible: false}, () => this.fireFilter());
+  };
+
+  onServicesFilterChanged = services => {
+    services = services || []
+    this.setState({services: services || []});
   };
 
   render() {
@@ -198,13 +239,16 @@ class FilterMenu extends React.Component{
       dateFilterSet, dateFilterVisible, startDate, endDate, focusedInput,
       radiusFilterSet, radiusFilterVisible,
       locationFilterSet, locationFilterVisible, locations,
-      categoriesFilterSet, categoriesFilterVisible, categories, allCategories
+      categoriesFilterSet, categoriesFilterVisible, categories, allCategories,
+      servicesFilterSet, servicesFilterVisible, services, filteredServices
     } = this.state;
 
     const statusFilterBg = statusFilterSet ? '#2FBCD3' : 'white';
     const dateFilterBg = dateFilterSet ? '#2FBCD3' : 'white';
     const radiusFilterBg = radiusFilterSet ? '#2FBCD3' : 'white';
     const locationFilterBg = locationFilterSet ? '#2FBCD3' : 'white';
+    const categoriesFilterBg = categoriesFilterSet ? '#2FBCD3' : 'white';
+    const servicesFilterBg = servicesFilterSet ? '#2FBCD3' : 'white';
 
     let resultMessage;
 
@@ -469,8 +513,45 @@ class FilterMenu extends React.Component{
               <Grid
                 onClick={this.categoriesFilterToggled}
                 className={style.filterMenuStatusNotFocused}
-                style={{backgroundColor: `${locationFilterBg}`}}>
-                <Typography style={{color:  locationFilterSet ?  'white' : 'black'}}>Catégorie(s)</Typography>
+                style={{backgroundColor: `${categoriesFilterBg}`}}>
+                <Typography style={{color:  categoriesFilterSet ?  'white' : 'black'}}>Catégorie(s)</Typography>
+              </Grid>
+            }
+          </Grid>
+          <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
+            {servicesFilterVisible?
+              <Grid className={style.filterMenuDateFocused}>
+                <Grid className={style.filterMenuFocused} onClick={this.servicesFilterToggled}>
+                  <Typography >Service(s)</Typography>
+                </Grid>
+                <Grid className={style.filterMenuContentMainStyleDateFilter}>
+                  <Grid>
+                    <MultipleSelect
+                      key={moment()}
+                      value={services}
+                      onChange={this.onServicesFilterChanged}
+                      options={filteredServices}
+                      isMulti
+                      isSearchable
+                      closeMenuOnSelect={false}
+                    />
+                    <Grid className={style.filterMenuDateFilterButtonContainer}>
+                      <Grid>
+                        <Button onClick={this.cancelServicesFilter}>Annuler</Button>
+                      </Grid>
+                      <Grid>
+                        <Button onClick={this.validateServicesFilter}>Valider</Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              :
+              <Grid
+                onClick={this.servicesFilterToggled}
+                className={style.filterMenuStatusNotFocused}
+                style={{backgroundColor: `${servicesFilterBg}`}}>
+                <Typography style={{color:  servicesFilterSet ?  'white' : 'black'}}>Service(s)</Typography>
               </Grid>
             }
           </Grid>
