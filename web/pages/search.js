@@ -235,7 +235,7 @@ class SearchPage extends React.Component {
       })
     }
 
-    if (criterion.categories) {
+    if (data && criterion.categories) {
       const categories = criterion.categories
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
         const ok = categories.includes(su.service.category._id)
@@ -243,7 +243,7 @@ class SearchPage extends React.Component {
       })
     }
 
-    if (criterion.services) {
+    if (data && criterion.services) {
       const services = criterion.services
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
         const ok = services.includes(su.service._id)
@@ -387,7 +387,7 @@ class SearchPage extends React.Component {
                 <Grid className={classes.searchSecondFilterContainer}>
                   <Grid className={classes.searchSecondFilterContainerLeft}>
                     {
-                      this.state.searching ? null : <Typography>{serviceUsers.length || 'Aucun'} Alfred disponible(s)</Typography>
+                      this.state.searching || this.state.mounting ? null : <Typography>{serviceUsers.length || 'Aucun'} Alfred disponible(s)</Typography>
                     }
                   </Grid>
                   { gps ?
@@ -428,7 +428,7 @@ class SearchPage extends React.Component {
               <Hidden only={['sm','md', 'lg', 'xl']}>
                 <Grid style={{display: 'flex', justifyContent: 'center' , marginTop: '5vh', marginBottom: '5vh'}}>
                   {
-                    this.state.searching ? null : <Typography>{serviceUsers.length || 'Aucun'} Alfred disponible(s)</Typography>
+                    this.state.searching || this.state.mounting ? null : <Typography>{serviceUsers.length || 'Aucun'} Alfred disponible(s)</Typography>
                   }
                 </Grid>
               </Hidden>
