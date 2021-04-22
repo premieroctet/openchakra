@@ -94,6 +94,13 @@ export const menuItems: MenuItems = {
   SimpleGrid: {},
   Spinner: {},
   Select: {},
+  Slider: {
+    children: {
+      SliderTrack: {},
+      SliderFilledTrack: {},
+      SliderThumb: {},
+    },
+  },
   Stack: {},
   Switch: {},
   Tag: {},
@@ -161,6 +168,7 @@ export const componentsList: ComponentType[] = [
   'RadioGroup',
   'Select',
   'SimpleGrid',
+  'Slider',
   'Spinner',
   'Stack',
   'Switch',

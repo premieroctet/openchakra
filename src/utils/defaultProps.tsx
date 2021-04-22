@@ -58,9 +58,10 @@ import {
   TabProps,
   BreadcrumbLinkProps,
   ListProps,
+  SliderProps,
+  SliderTrackProps,
+  SliderThumbProps,
 } from '@chakra-ui/react'
-
-import { ChevronDownIcon } from '@chakra-ui/icons'
 import iconsList from '~iconsList'
 
 type PropsWithForm<T> = T & { form?: T }
@@ -131,6 +132,10 @@ type PreviewDefaultProps = {
   ListItem?: PropsWithForm<any>
   Center?: PropsWithForm<CenterProps>
   Container?: PropsWithForm<ContainerProps>
+  Slider?: PropsWithForm<SliderProps>
+  SliderTrack?: PropsWithForm<SliderTrackProps>
+  SliderFilledTrack?: PropsWithForm<any>
+  SliderThumb?: PropsWithForm<SliderThumbProps>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -261,6 +266,15 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     spacingX: 1,
     spacingY: 1,
   },
+  Slider: {
+    step: 1,
+    size: 'md',
+    defaultValue: 50,
+    'aria-label': 'slider',
+  },
+  SliderFilledTrack: {},
+  SliderThumb: {},
+  SliderTrack: {},
   Stack: {
     spacing: 2,
     form: {

@@ -58,6 +58,10 @@ type ComponentType =
   | 'RadioGroup'
   | 'Select'
   | 'SimpleGrid'
+  | 'Slider'
+  | 'SliderTrack'
+  | 'SliderFilledTrack'
+  | 'SliderThumb'
   | 'Spinner'
   | 'Stack'
   | 'Switch'
@@ -77,6 +81,7 @@ type MetaComponentType =
   | 'AlertMeta'
   | 'InputGroupMeta'
   | 'BreadcrumbMeta'
+  | 'SliderMeta'
 
 interface IComponent {
   children: string[]

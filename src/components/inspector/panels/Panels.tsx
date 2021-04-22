@@ -48,6 +48,7 @@ import NumberInputPanel from '~components/inspector/panels/components/NumberInpu
 import AspectRatioPanel from '~components/inspector/panels/components/AspectRatioPanel'
 import BreadcrumbPanel from '~components/inspector/panels/components/BreadcrumbPanel'
 import BreadcrumbItemPanel from '~components/inspector/panels/components/BreadcrumbItemPanel'
+import SliderPanel from './components/SliderPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -96,6 +97,10 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'Radio' && <RadioPanel />}
       {type === 'RadioGroup' && <RadioGroupPanel />}
       {type === 'Select' && <SelectPanel />}
+      {type === 'Slider' && <SliderPanel />}
+      {type === 'SliderTrack' && <ChildrenControl />}
+      {type === 'SliderFilledTrack' && <ChildrenControl />}
+      {type === 'SliderThumb' && <ChildrenControl />}
       {type === 'List' && <ListPanel />}
       {type === 'ListItem' && <ListItemPanel />}
       {type === 'ListIcon' && <ListIconPanel />}
