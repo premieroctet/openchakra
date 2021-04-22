@@ -110,17 +110,24 @@ const ColorPickerControl = (props: ColorPickerPropType) => {
 
                     <TabPanel p={0}>
                       <Box position="relative" height="150px">
-                        <ColorPicker
-                          color={value}
-                          onChange={(color: any) => {
-                            props.gradient
-                              ? props.updateGradient!(
-                                  `#${color.hex}`,
-                                  props.index!,
-                                )
-                              : setValue(props.name, `#${color.hex}`)
-                          }}
-                        />
+                        {props.gradient ? (
+                          <ColorPicker
+                            color={props.gradientColor}
+                            onChange={(color: any) =>
+                              props.updateGradient!(
+                                `#${color.hex}`,
+                                props.index!,
+                              )
+                            }
+                          />
+                        ) : (
+                          <ColorPicker
+                            color={value}
+                            onChange={(color: any) =>
+                              setValue(props.name, `#${color.hex}`)
+                            }
+                          />
+                        )}
                         );
                       </Box>
                     </TabPanel>
