@@ -1,4 +1,5 @@
 const withCSS = require('@zeit/next-css');
+const BabelEnginePlugin = require('babel-engine-plugin');
 
 module.exports = withCSS({
   webpack: (config, {isServer}) => {
@@ -13,6 +14,12 @@ module.exports = withCSS({
       exclude: /(node_modules)/,
       loader : require.resolve('url-loader')
     })
+    config.plugins.push(
+        new BabelEnginePlugin({
+          presets: ['env']
+        })
+
+    )
     return config;
   },
 })
