@@ -154,7 +154,11 @@ const ColorPickerControl = (props: ColorPickerPropType) => {
           width="100px"
           size="sm"
           name={props.name}
-          onChange={setValueFromEvent}
+          onChange={e => {
+            if (props.updateGradient && props.index !== undefined) {
+              props.updateGradient(e.target.value, props.index)
+            }
+          }}
           value={props.gradientColor}
         />
       ) : (
