@@ -14,6 +14,7 @@ module.exports = withCSS({
       exclude: /(node_modules)/,
       loader : require.resolve('url-loader')
     })
+    //fix for Safari 10
     config.plugins.push(
         new BabelEnginePlugin({
           presets: ['env']
