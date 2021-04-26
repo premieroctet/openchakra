@@ -114,6 +114,7 @@ class Register extends React.Component {
       errorExistEmail: false,
       birthdayError: '',
       cityError: '',
+      pending: false,
     };
     this.handleChecked = this.handleChecked.bind(this);
     this.onChangeAddress = this.onChangeAddress.bind(this);
@@ -243,6 +244,8 @@ class Register extends React.Component {
 
   onSubmit = () => {
 
+    this.setState({pending: true})
+
     const newUser = {
       google_id: this.state.google_id,
       facebook_id: this.state.facebook_id,
@@ -272,6 +275,7 @@ class Register extends React.Component {
       .then(() => {
         axios.post('/myAlfred/api/users/login', {username, password, google_id, facebook_id})
           .then(() => {
+            this.setState({pending: false})
             setAuthToken()
             setAxiosAuthentication()
           })
@@ -281,6 +285,7 @@ class Register extends React.Component {
           .then(this.submitPhone).catch();
       })
       .catch(err => {
+        this.setState({pending: false})
         const errors=err.response.data
         const errKeys = Object.keys(errors)
         this.setState({errors: err.response.data});
@@ -841,7 +846,7 @@ class Register extends React.Component {
 
   render() {
     const {classes, callLogin, id} = this.props;
-    const {errors, activeStep, firstPageValidator, secondPageValidator} = this.state;
+    const {errors, activeStep, firstPageValidator, secondPageValidator, pending} = this.state;
 
     return (
       <Grid className={classes.fullContainer}>
@@ -872,7 +877,7 @@ class Register extends React.Component {
                       }}
                       nextButton={
                         <Button size="small" onClick={() => this.handleNext(activeStep)}
-                                disabled={activeStep === 0 ? firstPageValidator : secondPageValidator}>
+                                disabled={activeStep === 0 ? firstPageValidator : secondPageValidator || pending}>
                           {activeStep === 0 ? 'Suivant' : 'Terminer'}
                           <KeyboardArrowRight/>
                         </Button>
