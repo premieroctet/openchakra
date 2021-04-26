@@ -179,6 +179,9 @@ class NavBar extends Component {
       if (is_b2b_site() && isLoggedUserAlfredPro()) {
         Router.push( `/profile/about?user=${getLoggedUserId()}`)
       }
+      else if (is_b2b_site() && is_b2b_admin()) {
+        Router.push( `/company/dashboard/companyDashboard`)
+      }
       else {
         Router.push('/search?search=1');
       }

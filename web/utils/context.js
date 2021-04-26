@@ -20,35 +20,25 @@ const is_b2b_employee = user => {
  - is logged under ADMIN role
  */
 
-const is_b2b_admin = user => {
-  const is_admin = Boolean(user) && user.roles && user.roles.includes(ADMIN)
-  if (!is_admin) {
-    return false
-  }
-
+const is_b2b_admin = () => {
   const token = getAuthToken()
   const result = token && token.role == ADMIN
   return result
 }
 
-const is_b2b_manager = user => {
-  const is_manager = Boolean(user) && user.roles && user.roles.includes(MANAGER)
-  if (!is_manager) {
-    return false
-  }
-
+const is_b2b_manager = () => {
   const token = getAuthToken()
   const result = token && token.role == MANAGER
   return result
 }
 
-const is_mode_company = user => {
-  return is_b2b_admin(user) || is_b2b_manager(user)
+const is_mode_company = () => {
+  return is_b2b_admin() || is_b2b_manager()
 }
 
 
-const is_b2b_style = user => {
-  return is_b2b_site() || is_b2b_admin(user) || is_b2b_manager(user)
+const is_b2b_style = () => {
+  return is_b2b_site() || is_b2b_admin() || is_b2b_manager()
 }
 
 // const isMobile = {

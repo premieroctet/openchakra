@@ -37,7 +37,8 @@ class LogIn extends React.Component {
       password: '',
       errors: {},
       showPassword: false,
-      roles: [],
+      // Roles : null : pas de réposne du serveur, [] : réponse serveur pas de rôle pour l'email
+      roles: null,
       selectedRole: null,
     };
   }
@@ -46,6 +47,7 @@ class LogIn extends React.Component {
     const {name, value} = e.target;
     if(name === 'username'){
       // TODO aller chercher les rôles au bout d'une tepo, sinon GET /roles trop nombreux
+      this.setState({roles: null})
       axios.get(`/myAlfred/api/users/roles/${e.target.value}`)
         .then( res =>{
           const roles = res.data;
@@ -98,9 +100,9 @@ class LogIn extends React.Component {
   render() {
     const {classes, callRegister, id} = this.props;
     const {errors, username, password, showPassword, roles, selectedRole} = this.state;
-    const showRoles = is_b2b_site() && roles.length >= 1;
+    const showRoles = is_b2b_site() && roles && roles.length >= 1;
 
-    const loginDisabled = (roles.length>0 && !selectedRole) || !password
+    const loginDisabled = roles==null || (roles.length>0 && !selectedRole) || !password
 
     return (
       <Grid className={classes.fullContainer}>
