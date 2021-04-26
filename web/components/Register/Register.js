@@ -275,11 +275,13 @@ class Register extends React.Component {
       .then(() => {
         axios.post('/myAlfred/api/users/login', {username, password, google_id, facebook_id})
           .then(() => {
-            this.setState({pending: false})
             setAuthToken()
             setAxiosAuthentication()
           })
-          .catch()
+          .catch( err => {
+            this.setState({pending: false});
+            console.error(err)
+          })
           .then(this.addPhoto).catch()
           .then(this.setState({activeStep: this.state.activeStep + 1})).catch()
           .then(this.submitPhone).catch();

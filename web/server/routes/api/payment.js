@@ -297,7 +297,7 @@ router.get('/cardsActive', passport.authenticate('jwt', {session: false}), (req,
   const allCards = [];
   User.findById(req.user.id)
     .then(user => {
-      mangoApi.Users.getCards(user.id_mangopay)
+      mangoApi.Users.getCards(user.id_mangopay, {parameters: { per_page: 100}})
         .then(cards => {
           cards.forEach(c => {
             if (c.Active) {

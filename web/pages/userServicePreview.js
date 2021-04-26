@@ -471,8 +471,6 @@ class UserServicesPreview extends React.Component {
       return
     }
 
-    this.setState({pending: true})
-
     let prestations = [];
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
@@ -541,9 +539,9 @@ class UserServicesPreview extends React.Component {
         return
       }
 
+      this.setState({pending: true})
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
-          this.setState({ pending: false})
           const booking = response.data
           axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: booking._id})
             .then(() => {
