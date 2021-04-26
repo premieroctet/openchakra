@@ -322,7 +322,7 @@ class ServicesCompany extends React.Component{
         <DialogContent>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3>Sélectionnez les services autorisés pour ce départemment</h3>
+              <h3>Sélectionnez les services autorisés pour ce département</h3>
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
