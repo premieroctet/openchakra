@@ -45,6 +45,8 @@ const {COMM_CLIENT} = require('../utils/consts');
 const {emptyPromise} = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
 const {computeDistanceKm} = require('../utils/functions');
+const {snackBarError}=require('../utils/notifications')
+
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
@@ -87,6 +89,7 @@ class UserServicesPreview extends React.Component {
       use_cesu: false,
       albums:[],
       excludedDays: [],
+      pending: false,
     };
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
@@ -459,9 +462,16 @@ class UserServicesPreview extends React.Component {
     this.onChange({target: {name: 'pick_tax', value: checked ? this.state.serviceUser.pick_tax : null}});
   };
 
-  book = (actual) => { //actual : true=> book, false=>infos request
+  book = actual => { //actual : true=> book, false=>infos request
 
-    const {count, user, serviceUser} = this.state
+    const {count, user, serviceUser, pending} = this.state
+
+    if (pending) {
+      snackBarError(`Réservation en cours de traitement`)
+      return
+    }
+
+    this.setState({pending: true})
 
     let prestations = [];
     this.state.prestations.forEach(p => {
@@ -533,6 +543,7 @@ class UserServicesPreview extends React.Component {
 
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
+          this.setState({ pending: false})
           const booking = response.data
           axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: booking._id})
             .then(() => {
@@ -544,7 +555,10 @@ class UserServicesPreview extends React.Component {
               }
             });
         })
-        .catch(err => console.error(err))
+        .catch(err => {
+          this.setState({ pending: false})
+          console.error(err)
+        })
     })
   }
 
