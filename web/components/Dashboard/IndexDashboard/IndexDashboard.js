@@ -134,7 +134,7 @@ class IndexDashboard extends React.Component{
                         InputLabelProps={{ shrink: true }}
                         error={selected_admin && !selected_admin.birthday && this.saveDisabled()}
                         style={{width: '100%'}}
-                        helperText="La date de naissance du représentant légal est requise"
+                        helperText="La date de naissance de l'administrateur est requise"
                       />
                     </Grid>
                   </Grid>

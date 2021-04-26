@@ -100,7 +100,7 @@ const createMangoProvider = (user, shop) => {
 const createOrUpdateMangoCompany = company => {
 
   if (!company.representative.birthday) {
-    throw 'La date de naissance du représentant légal est requise'
+    throw "La date de naissance de l'administrateur est requise"
   }
 
   console.log(`Creating/updating mango company for company ${company.name}, representative is ${company.representative.full_name}`);
