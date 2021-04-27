@@ -61,7 +61,7 @@ class Home extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
-    if (deviceType === 'browser') {
+    if (deviceType === 'mobile') {
       if (isAndroid || isIOS) {
         this.setState({open: true})
       }
@@ -95,6 +95,11 @@ class Home extends React.Component {
 
   dialogStore = (classes) => {
     const {open} = this.state;
+    if (isAndroid){
+      this.setState({
+        open: true
+      })
+    }
 
     return (
       <Dialog onClose={() => this.setState({open: false})} aria-labelledby="customized-dialog-title" open={open}>

@@ -3,6 +3,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
 import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
+import LayoutFaq from "../hoc/Layout/LayoutFaq";
 
 const styles = theme => ({
   hideed: {
@@ -30,7 +31,7 @@ class CguPage extends React.Component {
     const {classes} = this.props;
 
     return (
-      <Layout>
+      <LayoutFaq>
         <Grid container className={classes.hideed}>
           <Grid item xs={12} style={{textAlign: 'center', marginBottom: 50}}>
             <h2>Conditions générales d'utilisation et de service de My-Alfred</h2>
@@ -1106,7 +1107,7 @@ class CguPage extends React.Component {
         </Grid>
         {/* <Footer/>*/}
 
-      </Layout>
+      </LayoutFaq>
     );
 
   };
