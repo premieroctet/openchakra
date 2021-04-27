@@ -18,7 +18,7 @@ import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Dialog, DialogActions, DialogContent, Divider} from "@material-ui/core";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import ResaService from "../components/HomePage/ResaService/ResaService";
-import {is_b2b_style, is_application} from "../utils/context";
+import {is_b2b_style, is_application, is_mobile} from "../utils/context";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import {deviceType, isMobile, osName, isAndroid, isIOS, getUA} from 'react-device-detect';
@@ -61,11 +61,10 @@ class Home extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
-    if (deviceType === 'mobile') {
-      if (isAndroid || isIOS) {
-        this.setState({open: true})
-      }
+    if (is_mobile()) {
+      this.setState({open: true})
     }
+
 
     axios.get('/myAlfred/api/users/current')
       .then(res => {
@@ -95,11 +94,7 @@ class Home extends React.Component {
 
   dialogStore = (classes) => {
     const {open} = this.state;
-    if (isAndroid){
-      this.setState({
-        open: true
-      })
-    }
+
 
     return (
       <Dialog onClose={() => this.setState({open: false})} aria-labelledby="customized-dialog-title" open={open}>

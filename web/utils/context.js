@@ -1,4 +1,5 @@
-import {getUA} from "react-device-detect";
+import {isWinPhone, isAndroid, isIOS, getUA} from 'react-device-detect';
+
 
 const isWebview = require('is-webview');
 const {getAuthToken} = require('./authentication')
@@ -47,6 +48,10 @@ const is_application = () => {
   return isWebview(getUA)
 }
 
+const is_mobile = () => {
+  return (isAndroid || isIOS || isWinPhone)
+}
+
 module.exports = {
-  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_b2b_site, is_mode_company, is_application
+  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_b2b_site, is_mode_company, is_application, is_mobile
 }
