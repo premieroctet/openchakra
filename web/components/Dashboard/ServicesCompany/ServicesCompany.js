@@ -93,7 +93,8 @@ class ServicesCompany extends React.Component{
         'Service D',
         'Service E',
       ],
-      groupeSelected: []
+      groupeSelected: [],
+      plafondConciergerie: 0
     }
   }
 
@@ -167,6 +168,11 @@ class ServicesCompany extends React.Component{
     }).catch( err =>{
       console.error(err)
     })
+  };
+
+  handleChange = (event) =>{
+    const{name, value} = event.target
+    this.setState({[name]: value})
   };
 
   dialogConfigService = (classes) => {
@@ -310,7 +316,8 @@ class ServicesCompany extends React.Component{
   };
 
   dialogAddService = (classes) =>{
-    const{dialogAddService, serviceSelected, services, servicesToAdd, groupeSelected} = this.state;
+    const {mode} = this.props;
+    const{dialogAddService, serviceSelected, services, servicesToAdd, groupeSelected, plafondConciergerie} = this.state;
 
     let allowedServicesByGroup = groupeSelected.allowed_services;
     let idAllowedServicesByGroup = allowedServicesByGroup ? allowedServicesByGroup.map(res => res._id) : '';
@@ -353,6 +360,29 @@ class ServicesCompany extends React.Component{
                 </Select>
               </FormControl>
             </Grid>
+            {
+              mode === 'conciergerie' ?
+                <Grid item container xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <h3>Niveau de prise en charge</h3>
+                  </Grid>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <TextField
+                      id="outlined-basic"
+                      variant="outlined"
+                      value={plafondConciergerie}
+                      name={'plafondConciergerie'}
+                      type={'number'}
+                      classes={{root: classes.textField}}
+                      onChange={this.handleChange}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                        inputProps: { min: 0, max: 100 }
+                      }}
+                    />
+                  </Grid>
+                </Grid> : null
+            }
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -396,7 +426,7 @@ class ServicesCompany extends React.Component{
   };
 
   render() {
-    const{listOfGroups, isMicroservice} = this.state;
+    const{listOfGroups, isMicroservice, dialogRemove, dialogAddService, dialogConfigService} = this.state;
     const{classes} = this.props;
 
     return(
@@ -461,9 +491,9 @@ class ServicesCompany extends React.Component{
             }
           </Box>
         </Grid>
-        {this.dialogConfigService(classes)}
-        {this.dialogAddService(classes)}
-        {this.dialogRemove(classes)}
+        {dialogConfigService ? this.dialogConfigService(classes) : null}
+        {dialogAddService ? this.dialogAddService(classes) : null}
+        {dialogRemove ? this.dialogRemove(classes) : null}
         </Grid>
     );
   }

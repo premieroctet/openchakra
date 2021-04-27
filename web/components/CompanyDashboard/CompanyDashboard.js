@@ -37,7 +37,7 @@ class CompanyDashboard extends React.Component{
     super(props);
     this.state={
       mobileOpen: false,
-      activeStep: 1,
+      activeStep: 2,
       isMicroService: true,
       sideBarLabels:[
         {
@@ -174,14 +174,13 @@ class CompanyDashboard extends React.Component{
       case 1:
         return <Team mode={mode}/>;
       case 2:
-        return <ServicesCompany/>;
+        return <ServicesCompany mode={mode}/>;
       case 3:
         return <Invoices/>;
       case 4:
         return <ScheduleCompany/>;
       case 5:
         return <AccountCompany/>;
-
     }
   }
 

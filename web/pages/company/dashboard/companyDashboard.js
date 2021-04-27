@@ -2,7 +2,7 @@ import React from 'react';
 import CompanyDashboard from "../../../components/CompanyDashboard/CompanyDashboard";
 import Grid from "@material-ui/core/Grid";
 
-class dashboardPage extends React.Component{
+export default class dashboardPage extends React.Component{
   constructor() {
     super();
   }
@@ -14,7 +14,4 @@ class dashboardPage extends React.Component{
       </Grid>
     )
   }
-
 }
-
-export default dashboardPage;
