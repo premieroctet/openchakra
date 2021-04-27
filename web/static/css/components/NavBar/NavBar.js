@@ -347,5 +347,12 @@ export default theme => ({
     '& :hover':{
       color:'rgb(176, 205, 200)',
     }
-  }
+  },
+  filterMenuFocused:{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    color: theme.palette.white.main
+  },
 })

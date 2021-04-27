@@ -108,6 +108,19 @@ class myProfile extends React.Component{
               </Button>
             </Grid>
           </Grid>
+          { user.is_admin ?
+            <Grid>
+              <Button
+                className={classes.button}
+                startIcon={<SettingsIcon />}
+                onClick={() => Router.push('/dashboard/home')}
+              >
+                Dashboard My Alfred
+              </Button>
+            </Grid>
+            :
+            null
+          }
           <Divider style={{marginTop: '5vh', marginBottom: '5vh'}}/>
           <Grid>
             <Grid>
