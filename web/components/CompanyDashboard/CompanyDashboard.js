@@ -37,7 +37,7 @@ class CompanyDashboard extends React.Component{
     super(props);
     this.state={
       mobileOpen: false,
-      activeStep: 0,
+      activeStep: 1,
       isMicroService: true,
       sideBarLabels:[
         {
@@ -56,17 +56,16 @@ class CompanyDashboard extends React.Component{
           label: 'Factures',
           icon: <DescriptionOutlinedIcon />
         },
-        props.mode === 'microservice' ?
         {
           label: 'Planning réservations',
           icon: <CalendarTodayOutlinedIcon />
-        } : null,
+        },
         {
           label: 'Mon compte',
           icon: <WorkOutlineOutlinedIcon />
         },
       ],
-      sideBarLabelsServices:[
+      sideBarLabelsConciergerie:[
         {
           label: 'Tableau de bord',
           icon: <HomeOutlinedIcon />
@@ -104,9 +103,10 @@ class CompanyDashboard extends React.Component{
           name: user.name,
           position: user.position,
         });
-        if(!is_b2b_admin(user)){
+        //TODO A REMETTRE
+        /*if(!is_b2b_admin(user)){
           Router.push({pathname: '/'});
-        }
+        }*/
       })
       .catch(err => {
           console.error(err);
@@ -127,22 +127,24 @@ class CompanyDashboard extends React.Component{
 
   drawer = (classes) => {
     const{mode} = this.props;
-    const {sideBarLabels, activeStep, sideBarLabelsServices} = this.state;
+    const {sideBarLabels, activeStep, sideBarLabelsConciergerie} = this.state;
 
-    const loadLabels = mode === 'microservice' ? sideBarLabelsServices : sideBarLabels;
+    const loadLabels = mode === 'microservice' ? sideBarLabels : sideBarLabelsConciergerie;
 
     return (
       <Grid style={{height: '100%'}}>
         <Grid className={classes.appBarContainer}>
           <List classes={{root: classes.paddingList}}>
-            {loadLabels.map((item, index) => (
-              <div className={classes.hoverButton}>
-                <ListItem button key={item.label} onClick={() => this.handleStep(index)} classes={{root: activeStep === index ? classes.activeButton : classes.standartButton}}>
-                  <ListItemIcon style={{color: 'white'}}>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.label} classes={{root: classes.listItemText}}/>
-                </ListItem>
-              </div>
-            ))}
+            {
+              loadLabels.map((item, index) => (
+                <div className={classes.hoverButton}>
+                  <ListItem button key={item.label} onClick={() => this.handleStep(index)} classes={{root: activeStep === index ? classes.activeButton : classes.standartButton}}>
+                    <ListItemIcon style={{color: 'white'}}>{item.icon}</ListItemIcon>
+                    <ListItemText primary={item.label} classes={{root: classes.listItemText}}/>
+                  </ListItem>
+                </div>
+              ))
+            }
           </List>
           <Grid container style={{display:'flex', justifyContent:'center'}}>
             <Grid>
@@ -164,11 +166,13 @@ class CompanyDashboard extends React.Component{
 
 
   renderSwitch(stepIndex) {
+    const {mode} = this.props;
+
     switch (stepIndex) {
       case 0:
         return <IndexDashboard/>;
       case 1:
-        return <Team/>;
+        return <Team mode={mode}/>;
       case 2:
         return <ServicesCompany/>;
       case 3:

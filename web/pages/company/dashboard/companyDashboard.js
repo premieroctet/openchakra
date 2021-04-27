@@ -10,7 +10,7 @@ class dashboardPage extends React.Component{
   render() {
     return(
       <Grid>
-        <CompanyDashboard mode={'microservice'}/>
+        <CompanyDashboard mode={'conciergerie'}/>
       </Grid>
     )
   }

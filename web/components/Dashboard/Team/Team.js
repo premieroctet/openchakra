@@ -138,10 +138,8 @@ class Team extends React.Component{
               var budgets = this.state.consumed_budgets
               budgets[group._id]=res.data
               this.setState({consumed_budgets: budgets})
-            })
-
+            }).catch(err =>{console.error(err)})
         });
-
       }).catch(err => {
         console.error(err)
       });
@@ -152,14 +150,14 @@ class Team extends React.Component{
         if (accounts.length) {
           this.setState({accounts: accounts});
         }
-      });
+      }).catch(err =>{console.error(err)});
       axios.get('/myAlfred/api/payment/cards')
         .then(response => {
           let cards = response.data;
           if (cards.length) {
             this.setState({cards: cards});
           }
-        });
+        }).catch(err =>{console.error(err)});
   }
 
   handleChange = (event, index, user) =>{
@@ -754,8 +752,8 @@ class Team extends React.Component{
   };
 
   render() {
-    const{classes} = this.props;
-    const{managers_sort, groups, admins, managers, consumed_budgets} = this.state;
+    const{classes, mode} = this.props;
+    const{managers_sort, groups, admins, managers, consumed_budgets, dialogRemoveGroupe, dialogGroupe, dialogRemove, dialogAdd} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -804,7 +802,7 @@ class Team extends React.Component{
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid  style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>Départements</h3>
+              <h3>{mode === 'microservice' ? 'Départements' : 'Classification'}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogGroupe')}>
@@ -815,7 +813,7 @@ class Team extends React.Component{
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
-            <Grid className={classes.listChipContainer}>
+            <Grid>
               {groups.length > 0 ?
                 <List>
                   {
@@ -858,7 +856,7 @@ class Team extends React.Component{
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
                   <Grid>
-                    <h3>Managers</h3>
+                    <h3>{mode === 'conciergerie' ? 'Collaborateurs' :  'Managers'}</h3>
                   </Grid>
                   <Grid container style={{marginLeft: '1vh'}}>
                     <Grid>
@@ -950,10 +948,10 @@ class Team extends React.Component{
               </Grid>
             </> : null
         }
-        {this.dialogGroupe(classes)}
-        {this.dialogAdd(classes)}
-        {this.dialogRemove(classes)}
-        {this.dialogRemoveGroupe(classes)}
+        {dialogGroupe ? this.dialogGroupe(classes) : null}
+        {dialogAdd ? this.dialogAdd(classes) : null}
+        {dialogRemove ? this.dialogRemove(classes) : null}
+        {dialogRemoveGroupe ? this.dialogRemoveGroupe(classes) : null}
       </Grid>
     );
   }
