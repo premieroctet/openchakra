@@ -21,13 +21,13 @@ import ResaService from "../components/HomePage/ResaService/ResaService";
 import {is_b2b_style} from "../utils/context";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import {deviceType, isMobile, osName, isAndroid, isIOS} from 'react-device-detect';
+import {deviceType, isMobile, osName, isAndroid, isIOS, getUA} from 'react-device-detect';
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 const {PRO, PART}=require('../utils/consts')
 const {getLoggedUserId} = require('../utils/functions');
 import Router from 'next/router';
-
+const isWebview = require('is-webview');
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
@@ -230,7 +230,7 @@ class Home extends React.Component {
             </Grid>
           </Hidden>
         </Grid>
-        {open ? this.dialogStore(classes) : null}
+        {!isWebview(getUA) ? open ? this.dialogStore(classes) : null : null}
       </Grid>
     );
   }
