@@ -2,7 +2,7 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import {Typography} from "@material-ui/core";
 import {INFOBARMOBILE_MESSAGE} from "../../utils/i18n";
-import styles from '../../static/css/components/InfoBar/InfoBar'
+import styles from '../../static/css/components/InfoBarMobile/InfoBarMobile'
 import withStyles from "@material-ui/core/styles/withStyles";
 
 class InfoBarMobile extends React.Component {
@@ -59,4 +59,3 @@ class InfoBarMobile extends React.Component {
 }
 
 export default withStyles(styles)(InfoBarMobile);
-
