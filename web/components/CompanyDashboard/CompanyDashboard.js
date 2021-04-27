@@ -10,27 +10,21 @@ import Drawer from "@material-ui/core/Drawer";
 import styles from '../../static/css/components/CompanyDashboard/CompanyDashboard';
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from 'prop-types';
-import Team from "../../components/Dashboard/Team/Team";
-import IndexDashboard from "../../components/Dashboard/IndexDashboard/IndexDashboard";
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import LocalFloristOutlinedIcon from '@material-ui/icons/LocalFloristOutlined';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import CalendarTodayOutlinedIcon from '@material-ui/icons/CalendarTodayOutlined';
 import WorkOutlineOutlinedIcon from '@material-ui/icons/WorkOutlineOutlined';
-import Invoices from "../../components/Dashboard/Invoices/Invoices";
-import ServicesCompany from "../../components/Dashboard/ServicesCompany/ServicesCompany";
-import ScheduleCompany from "../../components/Dashboard/ScheduleCompany/ScheduleCompany";
-import AccountCompany from "../../components/Dashboard/AccountCompany/AccountCompany";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from '@material-ui/icons/Menu';
 import Button from "@material-ui/core/Button";
 import NavBar from "../../hoc/Layout/NavBar/NavBar";
 import MobileNavbar from "../../hoc/Layout/NavBar/MobileNavbar";
 import axios from "axios";
-import Router from "next/router";
 const {setAxiosAuthentication} = require('../../utils/authentication');
-const {is_b2b_admin} = require('../../utils/context');
+const {STEPS}=require('../../utils/dashboardSteps');
+
 
 class CompanyDashboard extends React.Component{
   constructor(props) {
@@ -39,54 +33,6 @@ class CompanyDashboard extends React.Component{
       mobileOpen: false,
       activeStep: 2,
       isMicroService: true,
-      sideBarLabels:[
-        {
-          label: 'Tableau de bord',
-          icon: <HomeOutlinedIcon />
-        },
-        {
-          label:'Mon équipe',
-          icon: <PersonOutlineOutlinedIcon />
-        },
-        {
-          label: 'Mes services',
-          icon: <LocalFloristOutlinedIcon />
-        },
-        {
-          label: 'Factures',
-          icon: <DescriptionOutlinedIcon />
-        },
-        {
-          label: 'Planning réservations',
-          icon: <CalendarTodayOutlinedIcon />
-        },
-        {
-          label: 'Mon compte',
-          icon: <WorkOutlineOutlinedIcon />
-        },
-      ],
-      sideBarLabelsConciergerie:[
-        {
-          label: 'Tableau de bord',
-          icon: <HomeOutlinedIcon />
-        },
-        {
-          label: 'Collaborateurs',
-          icon: <PersonOutlineOutlinedIcon />
-        },
-        {
-          label: 'Services proposés',
-          icon: <LocalFloristOutlinedIcon />
-        },
-        {
-          label: 'Factures',
-          icon: <DescriptionOutlinedIcon />
-        },
-        {
-          label: 'Mon compte',
-          icon: <WorkOutlineOutlinedIcon />
-        },
-      ]
     }
   }
 
@@ -136,11 +82,11 @@ class CompanyDashboard extends React.Component{
         <Grid className={classes.appBarContainer}>
           <List classes={{root: classes.paddingList}}>
             {
-              loadLabels.map((item, index) => (
+              STEPS[mode].map((item, index) => (
                 <div className={classes.hoverButton}>
-                  <ListItem button key={item.label} onClick={() => this.handleStep(index)} classes={{root: activeStep === index ? classes.activeButton : classes.standartButton}}>
+                  <ListItem button key={item.menu} onClick={() => this.handleStep(index)} classes={{root: activeStep === index ? classes.activeButton : classes.standartButton}}>
                     <ListItemIcon style={{color: 'white'}}>{item.icon}</ListItemIcon>
-                    <ListItemText primary={item.label} classes={{root: classes.listItemText}}/>
+                    <ListItemText primary={item.menu} classes={{root: classes.listItemText}}/>
                   </ListItem>
                 </div>
               ))
@@ -168,20 +114,7 @@ class CompanyDashboard extends React.Component{
   renderSwitch(stepIndex) {
     const {mode} = this.props;
 
-    switch (stepIndex) {
-      case 0:
-        return <IndexDashboard/>;
-      case 1:
-        return <Team mode={mode}/>;
-      case 2:
-        return <ServicesCompany mode={mode}/>;
-      case 3:
-        return <Invoices/>;
-      case 4:
-        return <ScheduleCompany/>;
-      case 5:
-        return <AccountCompany/>;
-    }
+    return STEPS[mode][stepIndex].component(this)
   }
 
   render() {

@@ -1,0 +1,70 @@
+import React from "react";
+import IndexDashboard from "../components/Dashboard/IndexDashboard/IndexDashboard";
+import Team from "../components/Dashboard/Team/Team";
+import LocalFloristOutlinedIcon from "@material-ui/icons/LocalFloristOutlined";
+import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
+import PersonOutlineOutlinedIcon from "@material-ui/icons/PersonOutlineOutlined";
+import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
+import CalendarTodayOutlinedIcon from "@material-ui/icons/CalendarTodayOutlined";
+import WorkOutlineOutlinedIcon from "@material-ui/icons/WorkOutlineOutlined";
+import ServicesCompany from "../components/Dashboard/ServicesCompany/ServicesCompany";
+import ScheduleCompany from "../components/Dashboard/ScheduleCompany/ScheduleCompany";
+import AccountCompany from "../components/Dashboard/AccountCompany/AccountCompany";
+import Invoices from "../components/Dashboard/Invoices/Invoices";
+
+const {DASHBOARD_MODE} = require('./consts.js')
+
+const INDEX = {
+  menu : 'Tableau de bord',
+  icon: <HomeOutlinedIcon />,
+  component: parent => <IndexDashboard/>,
+}
+
+const TEAM = {
+  menu : 'Mon équipe',
+  icon: <PersonOutlineOutlinedIcon />,
+  component: parent => <Team mode={parent.props.mode}/>,
+}
+
+const SERVICES = {
+  menu : 'Mes services',
+  icon: <LocalFloristOutlinedIcon />,
+  component: parent => <ServicesCompany mode={parent.props.mode}/>,
+}
+
+const INVOICES = {
+  menu: 'Factures',
+  icon: <DescriptionOutlinedIcon/>,
+  component: parent => <Invoices/>,
+}
+
+const SCHEDULE = {
+  menu :  'Planning réservations',
+  icon: <CalendarTodayOutlinedIcon />,
+  component: parent => <ScheduleCompany />,
+}
+
+const ACCOUNT = {
+  menu :  'Mon compte',
+  icon: <WorkOutlineOutlinedIcon />,
+  component: parent => <AccountCompany />,
+}
+
+const TEAM_CONCIERGE = {
+  menu : 'Collaborateurs',
+  icon: <PersonOutlineOutlinedIcon />,
+  component: parent => <Team mode={parent.props.mode}/>,
+}
+
+const SERVICES_CONCIERGE = {
+  menu : 'Services proposés',
+  icon: <LocalFloristOutlinedIcon />,
+  component: parent => <ServicesCompany mode={parent.props.mode}/>,
+}
+
+const STEPS={
+  [DASHBOARD_MODE.MICROSERVICE] : [INDEX, TEAM, SERVICES, INVOICES, SCHEDULE, ACCOUNT],
+  [DASHBOARD_MODE.CONCIERGERIE] : [ INDEX, TEAM_CONCIERGE, SERVICES_CONCIERGE, INVOICES, ACCOUNT],
+}
+
+module.exports={STEPS}
