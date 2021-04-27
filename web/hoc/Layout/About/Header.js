@@ -104,7 +104,7 @@ class Header extends React.Component {
             <Button
               classes={{root: classes.button}}
               startIcon={<ArrowBackIcon style={{color: 'white'}}/>}
-              onClick={() => Router.push('/')}
+              onClick={() => Router.back()}
             >
               Retour sur My Alfred
             </Button>
