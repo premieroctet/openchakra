@@ -1,7 +1,7 @@
 import React from 'react';
-import {isMobile} from 'react-device-detect';
+import {is_mobile} from "../../utils/context";
 
-class MobileTest extends React.Component{
+class MobileTest extends React.Component {
 
   constructor(props) {
     super(props);
@@ -9,11 +9,11 @@ class MobileTest extends React.Component{
 
 
   render() {
-    const{classes} = this.props;
+    const {classes} = this.props;
 
-    const text=isMobile ? "Navigation à partir du téléphone" : "Navigation à partir d'un PC"
-    return(
-        <div>{text}</div>
+    const text = is_mobile() ? "Navigation à partir du téléphone" : "Navigation à partir d'un PC"
+    return (
+      <div>{text}</div>
     )
   }
 

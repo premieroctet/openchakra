@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import styles from '../../static/css/components/Schedule/Schedule';
 import withStyles from "@material-ui/core/styles/withStyles";
 import Hidden from "@material-ui/core/Hidden";
-import {isMobile} from 'react-device-detect';
+import {is_mobile} from "../../utils/context";
 import Router from "next/router";
 
 
@@ -35,7 +35,7 @@ class Schedule extends React.Component {
 
   componentDidMount() {
     //TODO FIX A REVOIR
-      if(Router.pathname === '/userServicePreview'){
+    if (Router.pathname === '/userServicePreview') {
       this.setState({isUserServicePreview: true})
     }
   }
@@ -46,17 +46,19 @@ class Schedule extends React.Component {
       return
     }
     let newDate = moment(start).format('YYYY-MM-DD');
-    var eventsSelected=this.state.eventsSelected;
+    var eventsSelected = this.state.eventsSelected;
     // Single selection : replace
     if (this.props.singleSelection) {
       eventsSelected = new Set([newDate])
     }
     // Multiple selection : toggle
     else {
-      if (!eventsSelected.delete(newDate)) { eventsSelected.add(newDate) }
+      if (!eventsSelected.delete(newDate)) {
+        eventsSelected.add(newDate)
+      }
     }
     this.setState(
-      { eventsSelected: eventsSelected},
+      {eventsSelected: eventsSelected},
       () => this.props.handleSelection(this.state.eventsSelected, start, this.props.mode)
     )
   };
@@ -66,17 +68,17 @@ class Schedule extends React.Component {
   };
 
   previousMonth = () => {
-      let date = new Date(this.state.currentDate);
-      date.setDate(1);
-      date.setMonth(date.getMonth() - 1);
-      this.setState({currentDate : date})
+    let date = new Date(this.state.currentDate);
+    date.setDate(1);
+    date.setMonth(date.getMonth() - 1);
+    this.setState({currentDate: date})
   };
 
   nextMonth = () => {
-      let date = new Date(this.state.currentDate);
-      date.setDate(1);
-      date.setMonth(date.getMonth() + 1);
-      this.setState({currentDate : date})
+    let date = new Date(this.state.currentDate);
+    date.setDate(1);
+    date.setMonth(date.getMonth() + 1);
+    this.setState({currentDate: date})
   };
 
   render() {
@@ -94,19 +96,19 @@ class Schedule extends React.Component {
 
     const customToolbar = (toolbar) => {
       const goToBack = () => {
-        if(this.props.mode === 'month'){
+        if (this.props.mode === 'month') {
           toolbar.date.setMonth(toolbar.date.getMonth() - 1);
           toolbar.onNavigate('prev');
-        }else{
+        } else {
           toolbar.onNavigate('PREV');
         }
       };
 
       const goToNext = () => {
-        if(this.props.mode === 'month'){
+        if (this.props.mode === 'month') {
           toolbar.date.setMonth(toolbar.date.getMonth() + 1);
           toolbar.onNavigate('prev');
-        }else{
+        } else {
           toolbar.onNavigate('NEXT');
         }
       };
@@ -151,15 +153,14 @@ class Schedule extends React.Component {
       let newDate = moment(event.date).format('YYYY-MM-DD');
       if (event.isOffRange) {
         return null
-      }
-      else if (moment(event.date).isBefore(moment().startOf('day'))) {
+      } else if (moment(event.date).isBefore(moment().startOf('day'))) {
         return <Typography className={classes.schedule_monthDateHeaderLabelOldDay}>{event.label}</Typography>
-      }
-      else {
+      } else {
         return (
           <Grid className={classes.schedule_containerLabelSelector}>
             <Hidden only={['xs']}>
-              <Grid className={eventsSelected.has(newDate) ? classes.schedule_labelSelectorActive : classes.schedule_labelSelector}>
+              <Grid
+                className={eventsSelected.has(newDate) ? classes.schedule_labelSelectorActive : classes.schedule_labelSelector}>
                 <Typography className={classes.schedule_monthDateHeaderLabel}>{event.label}</Typography>
               </Grid>
             </Hidden>
@@ -196,8 +197,7 @@ class Schedule extends React.Component {
             <Grid className={classes.schedule_today_style}/>
           </Grid>
         );
-      }
-      else {
+      } else {
         if (isAvailable) {
           return (
             <Grid className={classes.schedule_day_style}/>
@@ -218,9 +218,9 @@ class Schedule extends React.Component {
 
     const customWeekHeader = (header) => {
       let label = header.label.split(' ');
-      const headerContent = () =>{
+      const headerContent = () => {
         const m = moment(header.date);
-        return(
+        return (
           <Grid container>
             <Grid item style={{width: '100%'}}>
               <span style={{color: m.isBefore(moment().startOf('day')) ? '#999999' : 'black'}}>
@@ -230,7 +230,7 @@ class Schedule extends React.Component {
         )
       };
 
-      return(
+      return (
         <Grid>
           <Grid>
             {headerContent()}
@@ -248,28 +248,27 @@ class Schedule extends React.Component {
         let resource = event.resource;
         const isAvailable = isMomentAvailable(date, this.props.availabilities);
 
-        if(typeof resource === "undefined") {
-          if (date.minutes() === 0){
-            return(
+        if (typeof resource === "undefined") {
+          if (date.minutes() === 0) {
+            return (
               <Grid className={classes.schedule_timeSlotWrapper}>
                 <span>{date.hours() + ':' + date.format('mm')}</span>
               </Grid>
             )
-          }
-          else {
+          } else {
             return (
               <Grid/>
             )
           }
         }
         if (!isAvailable) {
-          return(
+          return (
             <Grid className={classes.schedule_non_available_style}/>
           )
         }
       };
 
-      return(
+      return (
         <Grid container className={classes.schedule_containerTimeSlotWrapper}>
           {label()}
         </Grid>
@@ -279,27 +278,28 @@ class Schedule extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}} className={classes.schedule_heightContainer}>
         {title || subtitle ?
-          <Grid container spacing={3} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12} >
+          <Grid container spacing={3} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
             {title ?
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  style={{display: 'flex', justifyContent: 'center'}}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
                 <h2 className={classes.schedule_policySizeTitle}>{title}</h2>
               </Grid> : null
             }
             {subtitle ?
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} >
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <h3 className={classes.schedule_policySizeContent}>{subtitle}</h3>
               </Grid> : null
             }
           </Grid>
           : null
         }
-        { this.props.mode === 'month' ?
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container style={{justifyContent: 'space-between', margin: 0, width: '100%'}} spacing={3}>
+        {this.props.mode === 'month' ?
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container
+                style={{justifyContent: 'space-between', margin: 0, width: '100%'}} spacing={3}>
             <Grid>
               <Button onClick={this.previousMonth} variant={'contained'}>&#8249;</Button>
             </Grid>
             <Grid>
-            <Button onClick={this.nextMonth} variant={'contained'}>&#8250;</Button>
+              <Button onClick={this.nextMonth} variant={'contained'}>&#8250;</Button>
             </Grid>
           </Grid>
           :
@@ -307,70 +307,70 @@ class Schedule extends React.Component {
         }
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container spacing={2} style={{padding: 5}}>
           {[...Array(nbSchedule)].map((x, i) => {
-            let date = new Date(currentDate);
-            date.setDate(1);
-            date.setMonth(date.getMonth() + (i-1));
-            const monthStr = moment(date).format('M');
-            const monthEvents = events.filter(e => moment(e.start).format('M') === monthStr);
-            return (
-              <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
-                    sm={nbSchedule === 1 ? 11 : 6} xs={12} className={classes.schedule_height} key={i}>
-                <Calendar
-                  key={date}
-                  selectable={isMobile && isUserServicePreview ? null : selectable}
-                  popup={false}
-                  culture={'fr-FR'}
-                  localizer={localizer}
-                  events={monthEvents}
-                  views={[Views.MONTH, Views.WEEK]}
-                  defaultView={mode}
-                  defaultDate={mode === 'month' ? date : new Date()}
-                  onSelectSlot={this.toggleSelection}
-                  dayLayoutAlgorithm={'no-overlap'}
-                  scrollToTime={date}
-                  className={classes.schedule_scheduleMainStyle}
-                  longPressThreshold={0}
-                  components={{
-                    /* event: MyEvent, // used by each view (Month, Day, Week)
-                     *   eventWrapper: MyEventWrapper,
-                     *   eventContainerWrapper: MyEventContainerWrapper,
-                     *   dateCellWrapper: MyDateCellWrapper,
-                     *   timeSlotWrapper: MyTimeSlotWrapper,
-                     *   timeGutterHeader: MyTimeGutterWrapper,
-                     *   toolbar: MyToolbar,
-                     *   agenda: {
-                     *   	 event: MyAgendaEvent // with the agenda view use a different component to render events
-                     *     time: MyAgendaTime,
-                     *     date: MyAgendaDate,
-                     *   },
-                     *   day: {
-                     *     header: MyDayHeader,
-                     *     event: MyDayEvent,
-                     *   },
-                     *   week: {
-                     *     header: MyWeekHeader,
-                     *     event: MyWeekEvent,
-                     *   },
-                     *   month: {
-                     *     header: MyMonthHeader,
-                     *     dateHeader: MyMonthDateHeader,
-                     *     event: MyMonthEvent,
-                     *   }*/
-                    month: {
-                      dateHeader: customMonthDateHeader,
-                      eventWrapper: customMonthEventWrapper,
-                      dateCellWrapper: customMonthDateCellWrapper,
-                      toolbar: customToolbar,
-                    },
-                    week:{
-                      toolbar: customToolbar,
-                      header: customWeekHeader,
-                      timeSlotWrapper: customMyTimeSlotWrapper,
-                    }
-                  }}
-                />
-              </Grid>
-            );
+              let date = new Date(currentDate);
+              date.setDate(1);
+              date.setMonth(date.getMonth() + (i - 1));
+              const monthStr = moment(date).format('M');
+              const monthEvents = events.filter(e => moment(e.start).format('M') === monthStr);
+              return (
+                <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
+                      sm={nbSchedule === 1 ? 11 : 6} xs={12} className={classes.schedule_height} key={i}>
+                  <Calendar
+                    key={date}
+                    selectable={is_mobile() && isUserServicePreview ? null : selectable}
+                    popup={false}
+                    culture={'fr-FR'}
+                    localizer={localizer}
+                    events={monthEvents}
+                    views={[Views.MONTH, Views.WEEK]}
+                    defaultView={mode}
+                    defaultDate={mode === 'month' ? date : new Date()}
+                    onSelectSlot={this.toggleSelection}
+                    dayLayoutAlgorithm={'no-overlap'}
+                    scrollToTime={date}
+                    className={classes.schedule_scheduleMainStyle}
+                    longPressThreshold={0}
+                    components={{
+                      /* event: MyEvent, // used by each view (Month, Day, Week)
+                       *   eventWrapper: MyEventWrapper,
+                       *   eventContainerWrapper: MyEventContainerWrapper,
+                       *   dateCellWrapper: MyDateCellWrapper,
+                       *   timeSlotWrapper: MyTimeSlotWrapper,
+                       *   timeGutterHeader: MyTimeGutterWrapper,
+                       *   toolbar: MyToolbar,
+                       *   agenda: {
+                       *   	 event: MyAgendaEvent // with the agenda view use a different component to render events
+                       *     time: MyAgendaTime,
+                       *     date: MyAgendaDate,
+                       *   },
+                       *   day: {
+                       *     header: MyDayHeader,
+                       *     event: MyDayEvent,
+                       *   },
+                       *   week: {
+                       *     header: MyWeekHeader,
+                       *     event: MyWeekEvent,
+                       *   },
+                       *   month: {
+                       *     header: MyMonthHeader,
+                       *     dateHeader: MyMonthDateHeader,
+                       *     event: MyMonthEvent,
+                       *   }*/
+                      month: {
+                        dateHeader: customMonthDateHeader,
+                        eventWrapper: customMonthEventWrapper,
+                        dateCellWrapper: customMonthDateCellWrapper,
+                        toolbar: customToolbar,
+                      },
+                      week: {
+                        toolbar: customToolbar,
+                        header: customWeekHeader,
+                        timeSlotWrapper: customMyTimeSlotWrapper,
+                      }
+                    }}
+                  />
+                </Grid>
+              );
             },
           )}
         </Grid>
