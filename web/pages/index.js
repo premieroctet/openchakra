@@ -18,25 +18,26 @@ import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Dialog, DialogActions, DialogContent, Divider} from "@material-ui/core";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import ResaService from "../components/HomePage/ResaService/ResaService";
-import {is_b2b_style} from "../utils/context";
+import {is_b2b_style, is_application} from "../utils/context";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import {deviceType, isMobile, osName, isAndroid, isIOS, getUA} from 'react-device-detect';
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
-const {PRO, PART}=require('../utils/consts')
+
+const {PRO, PART} = require('../utils/consts')
 const {getLoggedUserId} = require('../utils/functions');
 import Router from 'next/router';
-const isWebview = require('is-webview');
+
 
 const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
+  const {children, classes, onClose, ...other} = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
         <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-          <CloseIcon />
+          <CloseIcon/>
         </IconButton>
       ) : null}
     </MuiDialogTitle>
@@ -50,7 +51,7 @@ class Home extends React.Component {
       category: {},
       alfred: {},
       logged: false,
-      user:{},
+      user: {},
       open: false
     };
   }
@@ -60,8 +61,8 @@ class Home extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
-    if(deviceType === 'browser'){
-      if(isAndroid || isIOS){
+    if (deviceType === 'browser') {
+      if (isAndroid || isIOS) {
         this.setState({open: true})
       }
     }
@@ -70,9 +71,9 @@ class Home extends React.Component {
       .then(res => {
         let data = res.data;
         this.setState({
-          user: data,
-          gps: data.billing_address ? data.billing_address.gps : null
-        }
+            user: data,
+            gps: data.billing_address ? data.billing_address.gps : null
+          }
         );
       })
       .catch(err => {
@@ -92,21 +93,23 @@ class Home extends React.Component {
       }).catch(err => console.error(err))
   }
 
-  dialogStore = (classes) =>{
-    const{open} = this.state;
+  dialogStore = (classes) => {
+    const {open} = this.state;
 
-    return(
+    return (
       <Dialog onClose={() => this.setState({open: false})} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({open: false})}>
           Application My Alfred
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-           Notre application est disponible sur {isAndroid ? 'Google play' : 'Apple store'}
+            Notre application est disponible sur {isAndroid ? 'Google play' : 'Apple store'}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => Router.push(isAndroid ? 'https://play.google.com/store/apps/details?id=com.myalfred' :'https://apps.apple.com/us/app/my-alfred/id1544073864')} color="primary">
+          <Button
+            onClick={() => Router.push(isAndroid ? 'https://play.google.com/store/apps/details?id=com.myalfred' : 'https://apps.apple.com/us/app/my-alfred/id1544073864')}
+            color="primary">
             Télécharger
           </Button>
         </DialogActions>
@@ -114,15 +117,15 @@ class Home extends React.Component {
     )
   }
 
-  resizeFrame = () =>{
+  resizeFrame = () => {
 
     let iframe = document.querySelector("#myIframe");
 
-    window.addEventListener('message', function(e) {
+    window.addEventListener('message', function (e) {
       // message that was passed from iframe page
       let message = e.data;
       iframe.style.height = message.height + 'px';
-    } , false);
+    }, false);
   }
 
   render() {
@@ -142,8 +145,9 @@ class Home extends React.Component {
               <InfoBar/>
             </Grid>
           </Hidden>
-          <Grid container  className={classes.navbarAndBannerContainer}>
-            <Grid item xl={12} lg={12} sm={12} md={12} xs={12} className={is_b2b_style(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}>
+          <Grid container className={classes.navbarAndBannerContainer}>
+            <Grid item xl={12} lg={12} sm={12} md={12} xs={12}
+                  className={is_b2b_style(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}>
               <Grid className={classes.navbarComponentPosition}>
                 <NavBar/>
               </Grid>
@@ -165,7 +169,7 @@ class Home extends React.Component {
                 style={{width: '100%'}}
               >
               </iframe>
-             : null
+              : null
           }
           <Grid container className={classes.mainContainerStyle}>
             <Grid className={classes.generalWidthContainer}>
@@ -230,7 +234,7 @@ class Home extends React.Component {
             </Grid>
           </Hidden>
         </Grid>
-        {!isWebview(getUA) ? open ? this.dialogStore(classes) : null : null}
+        {!is_application() ? open ? this.dialogStore(classes) : null : null}
       </Grid>
     );
   }

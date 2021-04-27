@@ -29,7 +29,6 @@ class CguPage extends React.Component {
   render() {
     const {classes} = this.props;
 
-
     return (
       <Layout>
         <Grid container className={classes.hideed}>
