@@ -99,7 +99,12 @@ class Home extends React.Component {
     return (
       <Dialog onClose={() => this.setState({open: false})} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({open: false})}>
-          Application My Alfred
+          <Grid style={{display: 'flex'}}>
+            <img style={{marginRight: '1vh'}} src="../static/assets/icon/iconBlueDeep20@3x-2.png" alt="icone application myAlfred"/>
+            <Grid>
+              Application My&nbsp;Alfred
+            </Grid>
+          </Grid>
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
