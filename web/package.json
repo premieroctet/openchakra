@@ -40,6 +40,7 @@
     "file-system": "^2.2.2",
     "formik": "^1.5.7",
     "glob": "^7.1.4",
+    "is-webview": "^1.0.1",
     "jsonwebtoken": "^8.5.1",
     "jss": "^9.8.7",
     "leaflet": "^1.5.1",
