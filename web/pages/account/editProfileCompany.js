@@ -413,7 +413,6 @@ class editProfileCompany extends React.Component{
               <TextField
                 value={position}
                 name={'position'}
-                label={'Fonction'}
                 placeholder={'Fonction'}
                 variant={'outlined'}
                 label={'Fonction'}

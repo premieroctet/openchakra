@@ -10,28 +10,24 @@ import Drawer from "@material-ui/core/Drawer";
 import styles from '../../static/css/components/CompanyDashboard/CompanyDashboard';
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from 'prop-types';
-import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
-import LocalFloristOutlinedIcon from '@material-ui/icons/LocalFloristOutlined';
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
-import CalendarTodayOutlinedIcon from '@material-ui/icons/CalendarTodayOutlined';
-import WorkOutlineOutlinedIcon from '@material-ui/icons/WorkOutlineOutlined';
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from '@material-ui/icons/Menu';
 import Button from "@material-ui/core/Button";
 import NavBar from "../../hoc/Layout/NavBar/NavBar";
 import MobileNavbar from "../../hoc/Layout/NavBar/MobileNavbar";
 import axios from "axios";
+import Router from "next/router";
+
 const {setAxiosAuthentication} = require('../../utils/authentication');
 const {STEPS}=require('../../utils/dashboardSteps');
-
+const {is_b2b_admin} = require('../../utils/context');
 
 class CompanyDashboard extends React.Component{
   constructor(props) {
     super(props);
     this.state={
       mobileOpen: false,
-      activeStep: 2,
+      activeStep: 4,
       isMicroService: true,
     }
   }
@@ -49,7 +45,6 @@ class CompanyDashboard extends React.Component{
           name: user.name,
           position: user.position,
         });
-        //TODO A REMETTRE
         /*if(!is_b2b_admin(user)){
           Router.push({pathname: '/'});
         }*/
@@ -57,7 +52,7 @@ class CompanyDashboard extends React.Component{
       .catch(err => {
           console.error(err);
           if (err.response.status === 401 || err.response.status === 403) {
-            //Router.push({pathname: '/'});
+            Router.push({pathname: '/'});
           }
         },
       );
@@ -73,9 +68,7 @@ class CompanyDashboard extends React.Component{
 
   drawer = (classes) => {
     const{mode} = this.props;
-    const {sideBarLabels, activeStep, sideBarLabelsConciergerie} = this.state;
-
-    const loadLabels = mode === 'microservice' ? sideBarLabels : sideBarLabelsConciergerie;
+    const {activeStep} = this.state;
 
     return (
       <Grid style={{height: '100%'}}>
@@ -83,12 +76,12 @@ class CompanyDashboard extends React.Component{
           <List classes={{root: classes.paddingList}}>
             {
               STEPS[mode].map((item, index) => (
-                <div className={classes.hoverButton}>
+                <Grid key={index} className={classes.hoverButton}>
                   <ListItem button key={item.menu} onClick={() => this.handleStep(index)} classes={{root: activeStep === index ? classes.activeButton : classes.standartButton}}>
                     <ListItemIcon style={{color: 'white'}}>{item.icon}</ListItemIcon>
                     <ListItemText primary={item.menu} classes={{root: classes.listItemText}}/>
                   </ListItem>
-                </div>
+                </Grid>
               ))
             }
           </List>
