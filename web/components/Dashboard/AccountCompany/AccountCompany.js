@@ -91,13 +91,13 @@ class AccountCompany extends React.Component{
                 <TextField readonly InputLabelProps={{ shrink: true }} label={'adresse'} variant={'outlined'} classes={{root: classes.textField}} value={billing_address ? `${billing_address.address}, ${billing_address.zip_code}, ${billing_address.country}` : 'Adresse de facturation'}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                <TextField readonly classes={{root: classes.textField}} value={COMPANY_SIZE[sizeCompany]} label={'Taille de l’entreprise'} variant={'outlined'}/>
+                <TextField readonly InputLabelProps={{ shrink: true }} classes={{root: classes.textField}} value={COMPANY_SIZE[sizeCompany]} label={'Secteur d\'activité'} variant={'outlined'}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                 <TextField readonly InputLabelProps={{ shrink: true }} classes={{root: classes.textField}} value={COMPANY_ACTIVITY[activityArea]} label={'Taille de l’entreprise'} variant={'outlined'}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                <TextField variant={'outlined'} value={tva} classes={{root: classes.textField}}/>
+                <TextField readonly variant={'outlined'} value={tva} InputLabelProps={{ shrink: true }} label={'tva'} classes={{root: classes.textField}}/>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <h3>Mes sites</h3>
