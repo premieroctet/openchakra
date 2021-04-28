@@ -1,5 +1,5 @@
 import React from 'react'
-import Date from '../../components/Date/Date'
+import DateField from '../../components/DateField/DateField'
 import moment from 'moment'
 
 class DateTest extends React.Component {
@@ -19,7 +19,7 @@ class DateTest extends React.Component {
 
   render = () =>  {
     return (
-      <Date
+      <DateField
         defaultValue={this.state.dt}
         onChange={this.onChange}
       />

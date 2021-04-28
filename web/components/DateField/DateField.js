@@ -2,18 +2,18 @@ import React from 'react'
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment'
 
-class Date extends React.Component {
+class DateField extends React.Component {
 
   render = () => {
-    var {classes, defaultValue, onChange}=this.props
+    var {classes, value, onChange}=this.props
 
-    console.log(`Date value:${defaultValue}`)
-    defaultValue=moment(defaultValue)
-    if (defaultValue && moment(defaultValue).isValid()) {
-      defaultValue=moment(defaultValue).format('yyy-MM-DD')
+    console.log(`Date value:${value}`)
+    value=moment(value)
+    if (value && moment(value).isValid()) {
+      value=moment(value).format('yyyy-MM-DD')
     }
     else {
-      defaultValue=''
+      value=''
     }
     return (
       <TextField
@@ -23,10 +23,10 @@ class Date extends React.Component {
         InputLabelProps={{ shrink: true }}
         format={"DD/MM/YYYY"}
         {...this.props}
-        defaultValue={defaultValue}
+        value={value}
       />
     )
   }
 }
 
-export default Date
+export default DateField
