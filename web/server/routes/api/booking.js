@@ -437,7 +437,7 @@ new CronJob('0 */15 * * * *', function () {
               key: getKeyDate()
             }
           }));
-          ;
+
 
           b.status = BOOK_STATUS.FINISHED
           b.save()
