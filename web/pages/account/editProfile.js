@@ -9,8 +9,6 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import {registerLocale} from 'react-datepicker';
-import fr from 'date-fns/locale/fr';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/profile/editProfile/editProfile';
 import Hidden from "@material-ui/core/Hidden";
@@ -25,14 +23,12 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import DateField from '../../components/DateField/DateField'
 
 const {isPhoneOk} = require('../../utils/sms');
 const moment = require('moment');
 
-registerLocale('fr', fr);
 moment.locale('fr');
-
-const momentDateFormat = 'dd/MM/yyyy';
 
 class editProfile extends React.Component {
   constructor(props) {
@@ -42,8 +38,6 @@ class editProfile extends React.Component {
       phone: '',
       languages: [],
       birthday: null,
-      dpDate: moment().toDate(),
-      ipDate: moment().format(momentDateFormat),
       errors: {},
       openErrors: false,
       smsCodeOpen: false,
@@ -255,9 +249,8 @@ class editProfile extends React.Component {
   };
 
   content = (classes) => {
-    const {errors, user, phone, userEmail} = this.state;
-    const birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
-    const today = moment(new Date()).format('YYYY-MM-DD').toString();
+    const {errors, user, phone, userEmail, birthday} = this.state;
+
     return (
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -338,15 +331,10 @@ class editProfile extends React.Component {
               </TextField>
             </Grid>
             <Grid item xl={6} lg={6} xs={12} sm={12} md={12}>
-              <TextField
+              <DateField
                 classes={{root: classes.textFieldDatePicker}}
-                id="filled-with-placeholder"
-                variant="outlined"
-                type="date"
                 value={birthday}
                 onChange={this.onChangeBirthday}
-                InputLabelProps={{shrink: true}}
-                InputProps={{inputProps: {min: "1900-01-01", max: today}}}
                 error={!!(errors && errors.birthday)}
               />
             </Grid>
