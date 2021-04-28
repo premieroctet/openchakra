@@ -424,8 +424,20 @@ new CronJob('0 */15 * * * *', function () {
               key: getKeyDate()
             }
           }));
-          b.receipt_number = '';
-          b.myalfred_billing_number = '';
+          b.receipt_number = getNextNumber(Booking.find({
+            receipt_number: {
+              type: 'receipt',
+              key: getKeyDate()
+            }
+          }));
+
+          b.myalfred_billing_number = getNextNumber(Booking.find({
+            myalfred_billing_number: {
+              type: 'myalfred_billing',
+              key: getKeyDate()
+            }
+          }));
+          ;
 
           b.status = BOOK_STATUS.FINISHED
           b.save()
