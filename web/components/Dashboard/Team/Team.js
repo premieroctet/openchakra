@@ -270,7 +270,7 @@ class Team extends React.Component{
             };
             axios.put('/myAlfred/api/companies/admin', data_id)
               .then(res=>{
-                this.setState({dialogAdd: false}, () =>  this.componentDidMount());
+                this.setState({dialogAdd: false, newAdmins:[{nameAdmin: '', firstNameAdmin: '', emailAdmin: ''}]}, () =>  this.componentDidMount());
               })
               .catch ( err => {
                 snackBarError(err.response.data.error)
@@ -314,7 +314,7 @@ class Team extends React.Component{
               new_account : true,
             };
             axios.put(`/myAlfred/api/groups/${res.groupSelected}/managers`, member_id).then(res=>{
-              this.setState({dialogAdd: false}, () =>  this.componentDidMount());
+              this.setState({dialogAdd: false, newManagers: [{nameManager: '',firstNameManager: '',emailManager: '',groupSelected: ''}]}, () =>  this.componentDidMount());
             }).catch ( err => snackBarError(err.response.data.error))
           })
           .catch ( err => {
@@ -422,7 +422,7 @@ class Team extends React.Component{
               <Grid style={{paddingBottom: 20 }}>
                 <Grid container spacing={2} style={{width: '100%', margin: 0, paddingBottom: 40}}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <h3>Utilisateur existants</h3>
+                    <h3>Comptes existants</h3>
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
@@ -460,13 +460,13 @@ class Team extends React.Component{
                       </Grid>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                         <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                          <InputLabel id="demo-simple-select-outlined-label">Departements</InputLabel>
+                          <InputLabel id="demo-simple-select-outlined-label">Département</InputLabel>
                           <Select
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             name={'selectedGroup'}
                             onChange={this.handleChange}
-                            label="Departements"
+                            label="Département"
                             value={selectedGroup}
                           >
                             {
@@ -487,7 +487,7 @@ class Team extends React.Component{
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid style={{display: 'flex', alignItems: 'center'}}>
                 <Grid>
-                  <h3>Créer user</h3>
+                  <h3>Créer un nouveau compte</h3>
                 </Grid>
                 <Grid>
                   <IconButton onClick={() => this.addNewLine(modeDialog === 'admin' ? 'nbAdmin' : 'nbManager')}>
@@ -504,9 +504,9 @@ class Team extends React.Component{
                 <Grid item xl={11} lg={11} sm={11} md={11} xs={11} container spacing={2} style={{width: '100%', margin: 0}}>
                   <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
                     <TextField
-                      label="Nom"
-                      name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
-                      value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
+                      label="Prénom"
+                      value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
+                      name={modeDialog === 'admin' ?  'firstNameAdmin' : 'firstNameManager'}
                       onChange={(e) => this.handleChange(e, index)}
                       variant={'outlined'}
                       classes={{root: classes.textField}}
@@ -514,9 +514,9 @@ class Team extends React.Component{
                   </Grid>
                   <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
                     <TextField
-                      label="Prénom"
-                      value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
-                      name={modeDialog === 'admin' ?  'firstNameAdmin' : 'firstNameManager'}
+                      label="Nom"
+                      name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
+                      value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
                       onChange={(e) => this.handleChange(e, index)}
                       variant={'outlined'}
                       classes={{root: classes.textField}}
@@ -615,11 +615,11 @@ class Team extends React.Component{
 
     return(
       <Dialog open={dialogGroupe} onClose={() => this.setState({dialogGroupe: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogGroupe: false})} >Ajouter un groupe</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogGroupe: false})} >Ajouter un département</DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3>Configuration groupe</h3>
+              <h3>Configuration département</h3>
             </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container spacing={2} style={{width: '100%', margin: 0}}>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>

@@ -14,6 +14,7 @@ const moment = require('moment')
 import Button from "@material-ui/core/Button";
 import FormHelperText from "@material-ui/core/FormHelperText";
 const {emptyPromise} = require('../../../utils/promise');
+import DateField from '../../DateField/DateField'
 
 class IndexDashboard extends React.Component{
   constructor(props) {
@@ -121,19 +122,14 @@ class IndexDashboard extends React.Component{
                 <>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} >
                     <Grid item xl={6} lg={6} xs={6} sm={6} md={6}>
-                      <TextField
+                      <DateField
                         classes={{root: classes.textFieldDatePicker}}
-                        id="filled-with-placeholder"
                         variant="outlined"
-                        type="date"
                         label={'Date de naissance'}
                         name={'birthday'}
                         value={birthday}
                         onChange={this.onChange}
-                        InputProps={{inputProps: {min: "1900-01-01", max: new moment()}}}
-                        InputLabelProps={{ shrink: true }}
                         error={selected_admin && !selected_admin.birthday && this.saveDisabled()}
-                        style={{width: '100%'}}
                         helperText="La date de naissance de l'administrateur est requise"
                       />
                     </Grid>
