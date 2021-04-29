@@ -18,6 +18,8 @@ import MobileNavbar from "../../hoc/Layout/NavBar/MobileNavbar";
 import axios from "axios";
 import Router from "next/router";
 
+const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../utils/consts')
+
 const {setAxiosAuthentication} = require('../../utils/authentication');
 const {STEPS}=require('../../utils/dashboardSteps');
 const {is_b2b_admin} = require('../../utils/context');
@@ -85,11 +87,14 @@ class CompanyDashboard extends React.Component{
               ))
             }
           </List>
-          <Grid container style={{display:'flex', justifyContent:'center'}}>
-            <Grid>
-              <Button variant="outlined" classes={{root: classes.helpButton}}>Aide</Button>
+          <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} onClick={() => this.props.changeMode(mode)} className={ mode === MICROSERVICE_MODE ? classes.buttonMicroserviceActif : classes.buttonMicroservice}>
+              <Button variant="outlined" classes={{root: mode === MICROSERVICE_MODE ? classes.buttonActive :classes.helpButton}}>Microservice</Button>
             </Grid>
-            <Grid style={{height: '100%', display : 'flex', flexDirection: 'column-reverse'}}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} onClick={() => this.props.changeMode(mode)}  className={mode === CARETAKER_MODE ? classes.buttonCaretekerActif : classes.buttonCareteker}>
+              <Button variant="outlined" classes={{root: mode === CARETAKER_MODE ? classes.buttonActive : classes.helpButton}}>Conciergerie</Button>
+            </Grid>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
               <img
                 alt={'logo_myAlfred'}
                 title={'logo_myAlfred'}
