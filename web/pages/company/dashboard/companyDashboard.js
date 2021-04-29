@@ -11,7 +11,7 @@ export default class dashboardPage extends React.Component{
   render() {
     return(
       <Grid>
-        <CompanyDashboard mode={MICROSERVICE_MODE}/>
+        <CompanyDashboard mode={CARETAKER_MODE}/>
       </Grid>
     )
   }
