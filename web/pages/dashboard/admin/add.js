@@ -150,7 +150,6 @@ class add extends React.Component {
                   <DateField
                     id="date"
                     label="Date de naissance"
-                    type="date"
                     name="birthday"
                     className={classes.textField}
                     value={this.state.birthday}
