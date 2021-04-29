@@ -18,8 +18,17 @@ const GroupSchema = new Schema({
     ref: 'users',
   }],
   allowed_services: [{
-    type: Schema.Types.ObjectId,
-    ref: 'service',
+    service: {
+      type: Schema.Types.ObjectId,
+      ref: 'service',
+    },
+    // Amount percent paid by the company
+    supported_percent: {
+      type: Number,
+      min: 0,
+      max: 1,
+      required: true,
+    },
   }],
   budget : {
     type : Number,
@@ -27,12 +36,6 @@ const GroupSchema = new Schema({
   budget_period:{
     type : String,
     enum : [null, ...Object.keys(BUDGET_PERIOD)],
-  },
-  // Amount percent paid by the company
-  supported_percent: {
-    type: Number,
-    min: 0,
-    max: 1,
   },
   // Allower Mangopay card ids
   cards: [{

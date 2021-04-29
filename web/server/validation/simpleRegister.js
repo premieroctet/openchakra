@@ -1,7 +1,7 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 const moment = require('moment');
-const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE, MANAGER, DASHBOARD_MODE}=require('../../utils/consts');
+const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE, MANAGER, DASHBOARD_MODE, CARETAKER_MODE}=require('../../utils/consts');
 const _ = require('lodash')
 moment.locale('fr');
 
@@ -225,7 +225,7 @@ const validateCompanyMember = data =>{
   };
 };
 
-const validateCompanyGroup = data =>{
+const validateCompanyGroup = (data, update) =>{
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : '';
@@ -244,12 +244,8 @@ const validateCompanyGroup = data =>{
       errors.name = 'Veuillez sélectionner une période';
     }
   }
-  if (!Object.keys(DASHBOARD_MODE).includes(data.type)) {
+  if (!update && !Object.keys(DASHBOARD_MODE).includes(data.type)) {
     errors.type = `Type obligatoire pour le groupe (${Object.keys(DASHBOARD_MODE)})`;
-  }
-
-  if (data.type==CARETAKER_MODE && !data.supported_percent) {
-    errors.type = `Pourcentage de prise en charge obligatoire pour le groupe (${DASHBOARD_MODE[CARETAKER_MODE]})`;
   }
 
   return {
