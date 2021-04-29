@@ -497,7 +497,6 @@ class paymentMethod extends React.Component {
   };
 
   content = (classes) => {
-    console.log(this.state.user)
     return (
       <Grid style={{display: 'flex', flexDirection: 'column'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>

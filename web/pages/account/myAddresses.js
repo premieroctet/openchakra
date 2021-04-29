@@ -281,7 +281,7 @@ class myAddresses extends React.Component {
   };
 
   content = (classes) => {
-    const {billing_address, selected_address, pro_mode, company_name}=this.state
+    const {billing_address, selected_address, pro_mode, company_name, user}=this.state
     return(
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -332,7 +332,7 @@ class myAddresses extends React.Component {
             </Grid>
             <Grid>
               <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                {is_b2b_admin() ? 'Ajoutez vos sites et gagnez du temps' :
+                {is_b2b_admin(user) ? 'Ajoutez vos sites et gagnez du temps' :
                   'Ajoutez plusieurs adresses et gagnez du temps.'}
               </Typography>
             </Grid>

@@ -6,12 +6,11 @@ import styles from "../../../static/css/components/DashboardAccount/DashboardAcc
 import {TextField} from "@material-ui/core";
 import axios from "axios";
 import {setAxiosAuthentication} from "../../../utils/authentication";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
 import {COMPANY_ACTIVITY, COMPANY_SIZE} from "../../../utils/consts";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import AlgoliaPlaces from "algolia-places-react";
+import Typography from "@material-ui/core/Typography";
+import PaymentCard from "../../Payment/PaymentCard/PaymentCard";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import {formatIban} from "../../../utils/text";
 const moment=require('moment');
 moment.locale('fr');
 
@@ -26,6 +25,11 @@ class AccountCompany extends React.Component{
       siret: '',
       tva: '',
       billing_address: {},
+      service_address: [],
+      cards: [],
+      accounts: [],
+      haveAccount: false
+
     }
   }
 
@@ -47,8 +51,23 @@ class AccountCompany extends React.Component{
         description: company.description,
         siret: company.siret,
         tva: company.vat_number,
+        service_address: company.service_address
       })
     }).catch(err => console.error(err))
+
+    axios.get('/myAlfred/api/payment/cards')
+      .then(response => {
+        let cards = response.data;
+        this.setState({cards: cards});
+      }).catch(err => console.error(err));
+
+    axios.get('/myAlfred/api/payment/activeAccount')
+      .then(response => {
+        let accounts = response.data;
+        if (accounts.length) {
+          this.setState({haveAccount: true, accounts: accounts});
+        }
+      }).catch(err => {console.error(err)});
   }
 
   handleChange = (event) => {
@@ -64,9 +83,16 @@ class AccountCompany extends React.Component{
     }
   };
 
+  addressLabel = addr => {
+    if (!addr) {
+      return ''
+    }
+    return `${addr.address}, ${addr.zip_code} ${addr.city}, ${addr.country || 'France'}`
+  }
+
   render() {
     const {classes} = this.props;
-    const{companyName, sizeCompany, siret, activityArea, tva, billing_address} = this.state;
+    const{companyName, sizeCompany, siret, activityArea, tva, billing_address, service_address, haveAccount, accounts, cards} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -102,8 +128,71 @@ class AccountCompany extends React.Component{
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <h3>Mes sites</h3>
               </Grid>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <h3>Facturation & modes de paiement</h3>
+              <Grid container spacing={2} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
+                {
+                  service_address.length > 0 ?
+                    service_address.map((e, index) => (
+                      <Grid key={index} item xl={12} lg={12} md={12} sm={12} xs={12}>
+                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                          {this.addressLabel(e)}
+                        </Typography>
+                      </Grid>
+                    )) :
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                        <a href={'/account/myAddresses'}>Aucun site enregistré rendez vous ici pour en ajouter</a>
+                      </Grid>
+                }
+              </Grid>
+              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{margin:0, width: '100%'}}>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <h3>Facturation & modes de paiement</h3>
+                </Grid>
+                <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <h4>Cartes enregistrées</h4>
+                </Grid>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  {
+                    cards.length > 0 ?
+                      <PaymentCard
+                        cards={cards}
+                        userName={companyName}
+                        editable={false}
+                      />
+                      :
+                      <Grid>
+                        <a href={'/account/paymentMethod'}>Aucun mode de paiement enregistré rendez vous ici pour en ajouter</a>
+                      </Grid>
+                  }
+                </Grid>
+                <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <h4>RIB enregistrés</h4>
+                </Grid>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  {haveAccount ?
+                    <Grid container style={{marginTop: '10vh', display: 'flex', alignItems: 'center'}}>
+                      <Grid item xl={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        <Grid item xl={2} style={{display: 'flex'}}>
+                          <AccountBalanceIcon/>
+                        </Grid>
+                        <Grid item xl={6} style={{display: 'flex', flexDirection: 'column'}}>
+                          <Grid>
+                            <Grid>
+                              <Typography>{accounts[0].OwnerName}</Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid>
+                            <Typography
+                              style={{color: 'rgba(39,37,37,35%)'}}>{formatIban(accounts[0].IBAN)}</Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    :
+                    <Grid>
+                      <a href={'/account/paymentMethod'}>Aucun RIB enregistrer rendez vous ici pour en ajouter</a>
+                    </Grid>
+                  }
+                </Grid>
               </Grid>
             </Grid>
           </Box>
