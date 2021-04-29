@@ -7,7 +7,7 @@ import Select from "@material-ui/core/Select";
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 import MenuItem from '@material-ui/core/MenuItem'
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-const {ADMIN, ROLES, MANAGER} = require('../../utils/consts')
+const {ADMIN, ROLES, MANAGER, DASHBOARD_MODE} = require('../../utils/consts')
 class B2BApiTest extends React.Component {
 
   constructor(props) {
@@ -39,9 +39,14 @@ class B2BApiTest extends React.Component {
         this.setState({employees: response.data})
       })
       .catch (err => console.error(err))
-    axios.get('/myAlfred/api/groups')
-      .then (response => {
-        this.setState({groups: response.data})
+    Promise.all(Object.keys(DASHBOARD_MODE).map(mode => axios.get(`/myAlfred/api/groups/type/${mode}`)))
+      .then (responses => {
+        var groups=[]
+        responses.forEach(r => {
+          groups=groups.concat(r.data)
+        })
+        console.log(JSON.stringify(groups))
+        this.setState({groups: groups})
       })
       .catch (err => console.error(err))
     axios.get('/myAlfred/api/service/pro')
@@ -191,7 +196,7 @@ class B2BApiTest extends React.Component {
       Email
       <TextField name="email" onChange={this.onChange}/>
       <Select name="group_id" onChange={this.onChange} multi={false} >
-        { groups.map(group => <MenuItem value={group._id}>{group.name}</MenuItem>)}
+        { groups.map(group => <MenuItem value={group._id}>{`${group.name} (type ${DASHBOARD_MODE[group.type]})`}</MenuItem>)}
       </Select>
       <Button onClick={this.createMember}>Créer</Button>
      </div>
@@ -221,27 +226,27 @@ class B2BApiTest extends React.Component {
      <div>
       <h2>Groupes</h2>
       <ul>
-      { groups.map ( g => {
+      { groups.map ( group => {
           return (
             <li>
-              {g.name} <DeleteForeverIcon onClick={()=>this.deleteGroup(g._id)} />
+              {`${group.name} (type ${DASHBOARD_MODE[group.type]})`}<DeleteForeverIcon onClick={()=>this.deleteGroup(group._id)} />
               <div>Managers
               <ul>
-              {g.members.filter(m => m.roles.includes(MANAGER)).map( m => {
+              {group.members.filter(m => m.roles.includes(MANAGER)).map( m => {
                 return ( <li> {m.full_name} ({m.email}) </li> )
               })}
               </ul>
               </div>
               <div>Membres
               <ul>
-              {g.members.map( m => {
+              {group.members.map( m => {
                 return ( <li> {m.full_name} ({m.email}) </li> )
               })}
               </ul>
               </div>
               <div>Services autorisés
               <ul>
-              {g.allowed_services.map( s => {
+              {group.allowed_services.map( s => {
                 return ( <li> {s.label} </li> )
               })}
               </ul>
