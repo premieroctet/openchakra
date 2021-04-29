@@ -10,7 +10,6 @@ const getKeyDate = () => {
   return moment(date).format("YMM")
 }
 
-
 const getField = (t) => {
   return t + '_number'
 }
