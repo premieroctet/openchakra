@@ -27,7 +27,7 @@ class CompanyDashboard extends React.Component{
     super(props);
     this.state={
       mobileOpen: false,
-      activeStep: 4,
+      activeStep: 0,
       isMicroService: true,
     }
   }
@@ -45,9 +45,9 @@ class CompanyDashboard extends React.Component{
           name: user.name,
           position: user.position,
         });
-        /*if(!is_b2b_admin(user)){
+        if(!is_b2b_admin(user)){
           Router.push({pathname: '/'});
-        }*/
+        }
       })
       .catch(err => {
           console.error(err);

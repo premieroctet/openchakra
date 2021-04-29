@@ -3,8 +3,8 @@ import CompanyDashboard from "../../../components/CompanyDashboard/CompanyDashbo
 import Grid from "@material-ui/core/Grid";
 
 export default class dashboardPage extends React.Component{
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
 
   render() {
