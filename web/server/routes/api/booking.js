@@ -9,10 +9,11 @@ const axios = require('axios');
 const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts')
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
+const Count = require('../../models/Count');
 const CronJob = require('cron').CronJob;
 const {is_production, is_development} = require('../../../config/config')
 const mangopay = require('mangopay2-nodejs-sdk');
-const {getNextNumber, getKeyDate} = require("../../utils/booking");
+const {getNextNumber, getKeyDate, getField} = require("../../utils/booking");
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
@@ -417,26 +418,22 @@ new CronJob('0 */15 * * * *', function () {
         const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
         if (moment(date).isSameOrAfter(end_date)) {
           console.log(`Booking finished:${b._id}`);
-          b.billing_number = getNextNumber(Booking.find({
-            billing_number: {
-              type: 'billing',
+          const type = ['billing', 'receipt', 'myalfred_billing']
+          type.forEach(t => {
+            b.`${t}_number` = getNextNumber(Count.find({
+              type: t,
               key: getKeyDate()
-            }
-          }));
-          b.receipt_number = getNextNumber(Booking.find({
-            receipt_number: {
-              type: 'receipt',
+            }));
+            Count.find({
+              type: t,
               key: getKeyDate()
-            }
-          }));
-
-          b.myalfred_billing_number = getNextNumber(Booking.find({
-            myalfred_billing_number: {
-              type: 'myalfred_billing',
-              key: getKeyDate()
-            }
-          }));
-
+            })
+              .then(count => {
+                count.value = getNextNumber(count.value)
+                count.save()
+              })
+              .catch(err => console.error(err))
+          })
 
           b.status = BOOK_STATUS.FINISHED
           b.save()
