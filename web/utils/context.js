@@ -49,7 +49,7 @@ const is_application = () => {
 }
 
 const is_mobile = () => {
-  return (isAndroid || isIOS || isWinPhone)
+  return (isAndroid || isIOS)
 }
 
 module.exports = {

@@ -10,13 +10,12 @@ class Invoice extends React.Component {
 
   }
 
-
   render() {
     const type = ['billing', 'receipt', 'myalfred_billing']
     return (
       <div>
         {type.map(t => {
-          getField(t)
+          console.log(getField(t))
         })}
       </div>
     )
