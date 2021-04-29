@@ -103,7 +103,7 @@ class ServicesCompany extends React.Component{
   componentDidMount() {
     setAxiosAuthentication();
 
-    axios.get('/myAlfred/api/groups').then(res => {
+    axios.get(`/myAlfred/api/groups/type/${this.props.mode}`).then(res => {
       let data = res.data;
       this.setState({listOfGroups: data})
     }).catch(err => {
@@ -151,7 +151,7 @@ class ServicesCompany extends React.Component{
     const{serviceSelected, servicesToAdd, plafondConciergerie} = this.state;
 
     let convertPlafondConciergerie = parseFloat(plafondConciergerie) / 100;
-    
+
     if(servicesToAdd.length > 0){
       servicesToAdd.map(res => {
         const data = CARETAKER_MODE ? {service_id: res._id} : {service_id: res._id, supported_percent: convertPlafondConciergerie}
