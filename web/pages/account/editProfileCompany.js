@@ -426,6 +426,7 @@ class editProfileCompany extends React.Component{
               <Grid item xl={6} lg={6} xs={6} sm={6} md={6}>
                 <DateField
                   classes={{root: classes.textFieldDatePicker}}
+                  variant="outlined"
                   label={'Date de naissance'}
                   name={'birthday'}
                   value={birthday}

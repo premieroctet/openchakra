@@ -333,6 +333,7 @@ class editProfile extends React.Component {
             <Grid item xl={6} lg={6} xs={12} sm={12} md={12}>
               <DateField
                 classes={{root: classes.textFieldDatePicker}}
+                variant="outlined"
                 value={birthday}
                 onChange={this.onChangeBirthday}
                 error={!!(errors && errors.birthday)}

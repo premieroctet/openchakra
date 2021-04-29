@@ -18,7 +18,6 @@ class DateField extends React.Component {
     return (
       <TextField
         //className={classes.textFieldDatePicker}
-        variant="outlined"
         type="date"
         InputLabelProps={{ shrink: true }}
         format={"DD/MM/YYYY"}
