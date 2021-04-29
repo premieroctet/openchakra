@@ -1,5 +1,4 @@
-import {isWinPhone, isAndroid, isIOS, getUA} from 'react-device-detect';
-
+import {isAndroid, isIOS, getUA} from 'react-device-detect';
 
 const isWebview = require('is-webview');
 const {getAuthToken} = require('./authentication')
