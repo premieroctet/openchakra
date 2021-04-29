@@ -26,6 +26,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {is_b2b_admin} = require('../../utils/context');
+import DateField from '../../components/DateField/DateField'
 const moment=require('moment');
 moment.locale('fr');
 
@@ -423,16 +424,13 @@ class editProfileCompany extends React.Component{
             </Grid>
             { this.is_legal_representative() ?
               <Grid item xl={6} lg={6} xs={6} sm={6} md={6}>
-                <TextField
+                <DateField
                   classes={{root: classes.textFieldDatePicker}}
-                  id="filled-with-placeholder"
                   variant="outlined"
-                  type="date"
                   label={'Date de naissance'}
                   name={'birthday'}
                   value={birthday}
                   onChange={this.handleChange}
-                  InputProps={{inputProps: {min: "1900-01-01", max: new moment()}}}
                 />
               </Grid>
               :

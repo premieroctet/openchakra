@@ -12,7 +12,7 @@ import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import FormHelperText from '@material-ui/core/FormHelperText';
-
+import DateField from '../../../components/DateField/DateField'
 
 const styles = theme => ({
   signupContainer: {
@@ -147,17 +147,13 @@ class add extends React.Component {
                   <em>{errors.firstname}</em>
                 </Grid>
                 <Grid item className={classes.datenaissance}>
-                  <TextField
+                  <DateField
                     id="date"
                     label="Date de naissance"
-                    type="date"
                     name="birthday"
                     className={classes.textField}
                     value={this.state.birthday}
                     onChange={this.onChange}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
                   />
                   <FormHelperText>Date de naissance</FormHelperText>
                 </Grid>
