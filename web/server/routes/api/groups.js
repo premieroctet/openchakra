@@ -10,7 +10,7 @@ const Booking = require('../../models/Booking');
 const Service = require('../../models/Service');
 const axios = require('axios');
 const {validateCompanyGroup} = require("../../validation/simpleRegister");
-const {MANAGER, ROLES, MONTH_PERIOD, YEAR_PERIOD, BOOK_STATUS} = require('../../../utils/consts')
+const {MANAGER, ROLES, MONTH_PERIOD, YEAR_PERIOD, BOOK_STATUS, DASHBOARD_MODE, MICROSERVICE_MODE} = require('../../../utils/consts')
 const {computeUrl}=require('../../../config/config')
 const _ = require('lodash');
 
@@ -23,6 +23,7 @@ router.put('/:group_id/allowedServices', passport.authenticate('b2badmin', {sess
 
   const group_id = req.params.group_id
   const service_id = req.body.service_id
+  const supported_amount = req.body.supported_amount
 
   Service.findById(service_id, 'label professional_access')
     .then ( service => {
@@ -32,15 +33,26 @@ router.put('/:group_id/allowedServices', passport.authenticate('b2badmin', {sess
       if (!service.professional_access) {
         return res.status(400).json({error : `Le service ${service.label} n'est pas destiné aux professionnels`})
       }
-      Group.findByIdAndUpdate(group_id, {  $addToSet : { allowed_services : service_id}})
+      Group.findById(group_id)
         .then(group => {
           if (!group) {
             return res.status(400).json({msg: 'No group found'});
           }
-          res.json(group);
-
+          group.allowed_services.push({
+            service: service_id,
+            supported_amount: group.type==MICROSERVICE ?  1.0 : supported_amount
+          })
+          group.save()
+           .then (res => {
+             return res.json(group);
+           })
+           .catch(err => {
+             return res.status(404).json({company: 'No group found'})
+           })
         })
-        .catch(err => res.status(404).json({company: 'No group found'}));
+        .catch(err => {
+          return res.status(404).json({company: 'No group found'})
+        })
     })
     .catch(err => {
       console.error(err)
@@ -68,11 +80,16 @@ router.delete('/:group_id/allowedServices/:service_id', passport.authenticate('b
 // @Route GET /myAlfred/api/groups
 // Gets groups for a company
 // @Access private
-router.get('/', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+router.get('/type/:group_type', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
   const company_id = req.user.company
 
-  Group.find({company : company_id})
+  const group_type=req.params.group_type
+
+  if (!Object.keys(DASHBOARD_MODE).includes(group_type)) {
+    return res.status(400).json({error: `Type groupe ${group_type} inconnu`})
+  }
+  Group.find({company : company_id, type: group_type})
     .populate('members', 'firstname name email roles company cards')
     .populate('allowed_services', 'label')
     .then ( groups => {
@@ -107,7 +124,9 @@ router.post('/', passport.authenticate('b2badmin', {session: false}), (req, res)
         company : company_id,
         budget_period: req.body.budget_period,
         budget: req.body.budget,
-        cards : req.body.cards})
+        type: req.body.type,
+        cards : req.body.cards
+      })
         .then ( group => {res.json(group)})
         .catch ( err => {
           console.error(err)
@@ -128,7 +147,7 @@ router.put('/:group_id', passport.authenticate('b2badmin', {session: false}), (r
 
   const group_id = req.params.group_id
 
-  const {errors, isValid} = validateCompanyGroup(req.body);
+  const {errors, isValid} = validateCompanyGroup(req.body, true);
   if (!isValid) {
     return res.status(400).json({error: errors});
   }
