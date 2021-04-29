@@ -10,7 +10,7 @@ const Booking = require('../../models/Booking');
 const Service = require('../../models/Service');
 const axios = require('axios');
 const {validateCompanyGroup} = require("../../validation/simpleRegister");
-const {MANAGER, ROLES, MONTH_PERIOD, YEAR_PERIOD, BOOK_STATUS, DASHBOARD_MODE, MICROSERVICE_MODE} = require('../../../utils/consts')
+const {MANAGER, ROLES, MONTH_PERIOD, YEAR_PERIOD, BOOK_STATUS, DASHBOARD_MODE, MICROSERVICE_MODE, CARETAKER_MODE} = require('../../../utils/consts')
 const {computeUrl}=require('../../../config/config')
 const _ = require('lodash');
 
@@ -23,34 +23,42 @@ router.put('/:group_id/allowedServices', passport.authenticate('b2badmin', {sess
 
   const group_id = req.params.group_id
   const service_id = req.body.service_id
-  const supported_amount = req.body.supported_amount
+  const supported_percent = req.body.supported_percent
 
-  Service.findById(service_id, 'label professional_access')
+  Service.findById(service_id, 'label professional_access particular_access')
     .then ( service => {
       if (!service) {
         return res.status(404).json({error : `Service ${service._id} introuvable`})
       }
-      if (!service.professional_access) {
-        return res.status(400).json({error : `Le service ${service.label} n'est pas destiné aux professionnels`})
-      }
       Group.findById(group_id)
         .then(group => {
           if (!group) {
-            return res.status(400).json({msg: 'No group found'});
+            return res.status(400).json({msg: 'Groupe introuvable'});
+          }
+          if (group.type==MICROSERVICE_MODE && !service.professional_access) {
+            return res.status(400).json({msg: 'Un département ne peut autoriser que des service professionels'});
+          }
+          if (group.type==CARETAKER_MODE && !service.particular_access) {
+            return res.status(400).json({msg: 'La conciergerie ne peut autoriser que des services aux particuliers'});
+          }
+          if (group.allowed_services.map(s => s.service).includes(service_id)) {
+            return res.status(400).json({msg: 'Ce service est déjà autorisé'});
           }
           group.allowed_services.push({
             service: service_id,
-            supported_amount: group.type==MICROSERVICE ?  1.0 : supported_amount
+            supported_percent: group.type==MICROSERVICE_MODE ?  1.0 : supported_percent
           })
           group.save()
-           .then (res => {
+           .then (group => {
              return res.json(group);
            })
            .catch(err => {
+             console.error(err)
              return res.status(404).json({company: 'No group found'})
            })
         })
         .catch(err => {
+          console.error(err)
           return res.status(404).json({company: 'No group found'})
         })
     })
@@ -66,7 +74,7 @@ router.delete('/:group_id/allowedServices/:service_id', passport.authenticate('b
   const group_id = req.params.group_id
   const service_id = req.params.service_id
 
-  Group.findByIdAndUpdate(group_id, {  $pull : { allowed_services : service_id}})
+  Group.findByIdAndUpdate(group_id, {  $pull : { 'allowed_services' : {'_id' : service_id}}})
     .then(group => {
       if (!group) {
         return res.status(400).json({msg: 'No group found'});
@@ -74,7 +82,10 @@ router.delete('/:group_id/allowedServices/:service_id', passport.authenticate('b
       res.json(group);
 
     })
-    .catch(err => res.status(404).json({company: 'No group found'}));
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({company: 'No group found'})
+    })
 });
 
 // @Route GET /myAlfred/api/groups
@@ -91,7 +102,7 @@ router.get('/type/:group_type', passport.authenticate('b2badmin', {session: fals
   }
   Group.find({company : company_id, type: group_type})
     .populate('members', 'firstname name email roles company cards')
-    .populate('allowed_services', 'label')
+    .populate('allowed_services.service', 'label')
     .then ( groups => {
       res.json(groups)
     })
