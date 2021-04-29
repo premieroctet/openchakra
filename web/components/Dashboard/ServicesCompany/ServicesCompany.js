@@ -37,6 +37,8 @@ import axios from "axios";
 const {setAxiosAuthentication}=require('../../../utils/authentication');
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
 import CloseIcon from '@material-ui/icons/Close';
+const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
+
 
 
 const ITEM_HEIGHT = 48;
@@ -146,11 +148,14 @@ class ServicesCompany extends React.Component{
   };
 
   addService = () =>{
-    const{serviceSelected, servicesToAdd} = this.state;
+    const{serviceSelected, servicesToAdd, plafondConciergerie} = this.state;
 
+    let convertPlafondConciergerie = parseFloat(plafondConciergerie) / 100;
+    
     if(servicesToAdd.length > 0){
       servicesToAdd.map(res => {
-        axios.put(`/myAlfred/api/groups/${serviceSelected._id}/allowedServices`, { service_id : res._id}).then(res =>{
+        const data = CARETAKER_MODE ? {service_id: res._id} : {service_id: res._id, supported_percent: convertPlafondConciergerie}
+        axios.put(`/myAlfred/api/groups/${serviceSelected._id}/allowedServices`, data).then(res =>{
            this.setState({dialogAddService : false, servicesToAdd: []}, () => this.componentDidMount())
           }
         ).catch( err => {
@@ -173,7 +178,7 @@ class ServicesCompany extends React.Component{
   handleChange = (event) =>{
     const{name, value} = event.target
     if(name === 'plafondConciergerie'){
-      if(value.match(/^[0-9]*$/) && Number(value) <= 100){
+      if(value.match(/^[0-9^.,]*$/) && Number(value) <= 100){
         this.setState({[name]: value})
       }
     }else{
@@ -331,11 +336,11 @@ class ServicesCompany extends React.Component{
 
     return(
       <Dialog open={dialogAddService} onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})} aria-labelledby="form-dialog-title" classes={{paper: classes.configService}}>
-        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})}>Département {serviceSelected.name}</DialogTitle>
+        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})}>{mode === CARETAKER_MODE ? 'Classification' : 'Département'} {serviceSelected.name}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3>Sélectionnez les services autorisés pour ce département</h3>
+              <h3>Sélectionnez les services autorisés pour {mode === CARETAKER_MODE ? 'cette classification' :  'ce département'}</h3>
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
@@ -367,7 +372,7 @@ class ServicesCompany extends React.Component{
               </FormControl>
             </Grid>
             {
-              mode === 'conciergerie' ?
+              mode === CARETAKER_MODE ?
                 <Grid item container xl={12} lg={12} md={12} sm={12} xs={12}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <h3>Niveau de prise en charge</h3>
@@ -432,7 +437,7 @@ class ServicesCompany extends React.Component{
 
   render() {
     const{listOfGroups, isMicroservice, dialogRemove, dialogAddService, dialogConfigService} = this.state;
-    const{classes} = this.props;
+    const{classes, mode} = this.props;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -453,7 +458,7 @@ class ServicesCompany extends React.Component{
                         aria-controls="panel1a-content"
                         id={index}
                       >
-                        <Typography className={classes.heading}>Services disponibles pour le département <strong>{groupe.name}</strong></Typography>
+                        <Typography className={classes.heading}>Services disponibles pour {mode === CARETAKER_MODE ? 'la classification' : 'le département'} <strong>{groupe.name}</strong></Typography>
                       </AccordionSummary>
                       {
                         groupe.allowed_services.length > 0 ?
