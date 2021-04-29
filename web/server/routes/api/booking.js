@@ -421,7 +421,8 @@ new CronJob('0 */15 * * * *', function () {
           console.log(`Booking finished:${b._id}`);
           const type = ['billing', 'receipt', 'myalfred_billing']
           type.forEach(t => {
-            b.`${t}_number` = getNextNumber(Count.find({
+            const attribute = `${t}_number`;
+            b[attribute] = getNextNumber(Count.find({
               type: t,
               key: getKeyDate()
             }));
