@@ -172,7 +172,13 @@ class ServicesCompany extends React.Component{
 
   handleChange = (event) =>{
     const{name, value} = event.target
-    this.setState({[name]: value})
+    if(name === 'plafondConciergerie'){
+      if(value.match(/^[0-9]*$/) && Number(value) <= 100){
+        this.setState({[name]: value})
+      }
+    }else{
+      this.setState({[name]: value})
+    }
   };
 
   dialogConfigService = (classes) => {
@@ -372,7 +378,6 @@ class ServicesCompany extends React.Component{
                       variant="outlined"
                       value={plafondConciergerie}
                       name={'plafondConciergerie'}
-                      type={'number'}
                       classes={{root: classes.textField}}
                       onChange={this.handleChange}
                       InputProps={{
