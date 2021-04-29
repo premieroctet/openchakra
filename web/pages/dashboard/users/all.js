@@ -73,6 +73,8 @@ class all extends React.Component {
       {headerName: "Nom", field: "name"},
       {headerName: "Email", field: "email"},
       {headerName: "Ville", field: "billing_address.city"},
+      {headerName: "CP", field: "billing_address.zip_code"},
+      {headerName: "Tel", field: "phone"},
       {headerName: "Né(e) le", field: "birthday_moment", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter',},
       {headerName: "Inscrit le", field: "creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter', initialSort: 'desc'},
       {headerName: "Création boutique", field: "shop.creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter'},

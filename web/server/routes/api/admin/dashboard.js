@@ -219,7 +219,7 @@ router.get('/users/all', passport.authenticate('jwt', {session: false}), (req, r
   const admin = decode.is_admin;
 
   if (admin) {
-    User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address.city')
+    User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address.city billing_address.zip_code phone')
       .populate({path:'shop', select:'creation_date'})
       .sort({creation_date: -1})
       .then(users => {
