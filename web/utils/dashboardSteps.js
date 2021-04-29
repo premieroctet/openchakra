@@ -12,7 +12,7 @@ import ScheduleCompany from "../components/Dashboard/ScheduleCompany/ScheduleCom
 import AccountCompany from "../components/Dashboard/AccountCompany/AccountCompany";
 import Invoices from "../components/Dashboard/Invoices/Invoices";
 
-const {DASHBOARD_MODE} = require('./consts.js')
+const {MICROSERVICE_MODE, CARETAKER_MODE} = require('./consts.js')
 
 const INDEX = {
   menu : 'Tableau de bord',
@@ -63,8 +63,8 @@ const SERVICES_CONCIERGE = {
 }
 
 const STEPS={
-  [DASHBOARD_MODE.MICROSERVICE] : [INDEX, TEAM, SERVICES, INVOICES, SCHEDULE, ACCOUNT],
-  [DASHBOARD_MODE.CONCIERGERIE] : [ INDEX, TEAM_CONCIERGE, SERVICES_CONCIERGE, INVOICES, ACCOUNT],
+  [MICROSERVICE_MODE] : [INDEX, TEAM, SERVICES, INVOICES, SCHEDULE, ACCOUNT],
+  [CARETAKER_MODE] : [ INDEX, TEAM_CONCIERGE, SERVICES_CONCIERGE, INVOICES, ACCOUNT],
 }
 
 module.exports={STEPS}
