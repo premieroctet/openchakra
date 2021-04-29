@@ -115,7 +115,7 @@ class SelectPrestation extends React.Component {
             </Grid>
             <Grid className={classes.containerPrestas}>
               <Grid className={classes.bottomSpacer}>
-                <Typography className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos
+                <Typography className={classes.policySizeContent}>Quelles prestations souhaitez-vous proposer ? Indiquez vos
                   tarifs et votre unité de facturation. </Typography>
               </Grid>
               <Grid className={classes.buttonAddPrestas}>

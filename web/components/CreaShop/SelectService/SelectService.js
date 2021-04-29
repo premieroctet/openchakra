@@ -114,7 +114,7 @@ class SelectService extends React.Component {
                 <Grid>
                   <Grid>
                     <h3
-                      className={classes.policySizeSubtitle}>{this.isCreation() ? 'Quel service souhaitez-vous réaliser ?' : `Vous allez modifier votre service "${service ? service.label : ''}"`} </h3>
+                      className={classes.policySizeSubtitle}>{this.isCreation() ? 'Quel service souhaitez-vous proposer ?' : `Vous allez modifier votre service "${service ? service.label : ''}"`} </h3>
                   </Grid>
                   {creationBoutique ?
                     <Grid className={classes.bottomSpacer}>

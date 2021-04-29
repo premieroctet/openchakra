@@ -130,7 +130,7 @@ class SettingService extends React.Component {
               }
               <Grid>
                 <Grid>
-                  <h3 className={classes.policySizeSubtitle}>Où acceptez-vous de réaliser votre prestation ?</h3>
+                  <h3 className={classes.policySizeSubtitle}>Où acceptez-vous de proposer votre prestation ?</h3>
                 </Grid>
                 <Grid style={{marginLeft: 15}}>
                   {'client' in this.state.location ?
