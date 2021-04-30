@@ -502,69 +502,69 @@ class Team extends React.Component{
           </Grid>
           {
             objectToMap.map((res, index) => (
-              <>
-              <Grid container spacing={2} style={{width: '100%', margin: 0}} key={index} id={index}>
-                <Grid item xl={11} lg={11} sm={11} md={11} xs={11} container spacing={2} style={{width: '100%', margin: 0}}>
-                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
-                    <TextField
-                      label="Prénom"
-                      value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
-                      name={modeDialog === 'admin' ?  'firstNameAdmin' : 'firstNameManager'}
-                      onChange={(e) => this.handleChange(e, index)}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-                    />
+              <Grid key={index}>
+                <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+                  <Grid item xl={11} lg={11} sm={11} md={11} xs={11} container spacing={2} style={{width: '100%', margin: 0}}>
+                    <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                      <TextField
+                        label="Prénom"
+                        value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
+                        name={modeDialog === 'admin' ?  'firstNameAdmin' : 'firstNameManager'}
+                        onChange={(e) => this.handleChange(e, index)}
+                        variant={'outlined'}
+                        classes={{root: classes.textField}}
+                      />
+                    </Grid>
+                    <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                      <TextField
+                        label="Nom"
+                        name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
+                        value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
+                        onChange={(e) => this.handleChange(e, index)}
+                        variant={'outlined'}
+                        classes={{root: classes.textField}}
+                      />
+                    </Grid>
+                    <Grid item xl={modeDialog === 'manager' ? 6 : 12} lg={modeDialog === 'manager' ? 6 : 12} sm={modeDialog === 'manager' ? 6 : 12} md={modeDialog === 'manager' ? 6 : 12} xs={modeDialog === 'manager' ? 6 : 12}>
+                      <TextField
+                        label="Email"
+                        name={modeDialog === 'admin' ? 'emailAdmin' : 'emailManager'}
+                        value={modeDialog === 'admin' ? res.emailAdmin || '' : res.emailManager || ''}
+                        onChange={(e) => this.handleChange(e, index)}
+                        variant={'outlined'}
+                        classes={{root: classes.textField}}
+                      />
+                    </Grid>
+                    { modeDialog === 'manager' ?
+                      <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+                        <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                          <InputLabel id="demo-simple-select-outlined-label">Departements</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            name={'groupSelected'}
+                            onChange={(e) => this.handleChange(e, index)}
+                            label="Departements"
+                            value={res.groupSelected || ''}
+                          >
+                            {
+                              groups.map((res, index) => (
+                                <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
+                              ))
+                            }
+                          </Select>
+                        </FormControl>
+                      </Grid> : null
+                    }
                   </Grid>
-                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
-                    <TextField
-                      label="Nom"
-                      name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
-                      value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
-                      onChange={(e) => this.handleChange(e, index)}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-                    />
+                  <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                    <IconButton edge="end" aria-label="delete" onClick={(e) => this.removeLine(modeDialog === 'admin' ? 'nbAdmin' : 'nbManager',index, e)}>
+                      <DeleteIcon />
+                    </IconButton>
                   </Grid>
-                  <Grid item xl={modeDialog === 'manager' ? 6 : 12} lg={modeDialog === 'manager' ? 6 : 12} sm={modeDialog === 'manager' ? 6 : 12} md={modeDialog === 'manager' ? 6 : 12} xs={modeDialog === 'manager' ? 6 : 12}>
-                    <TextField
-                      label="Email"
-                      name={modeDialog === 'admin' ? 'emailAdmin' : 'emailManager'}
-                      value={modeDialog === 'admin' ? res.emailAdmin || '' : res.emailManager || ''}
-                      onChange={(e) => this.handleChange(e, index)}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-                    />
-                  </Grid>
-                  { modeDialog === 'manager' ?
-                    <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                      <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                        <InputLabel id="demo-simple-select-outlined-label">Departements</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-outlined-label"
-                          id="demo-simple-select-outlined"
-                          name={'groupSelected'}
-                          onChange={(e) => this.handleChange(e, index)}
-                          label="Departements"
-                          value={res.groupSelected || ''}
-                        >
-                          {
-                            groups.map((res, index) => (
-                              <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
-                            ))
-                          }
-                        </Select>
-                      </FormControl>
-                    </Grid> : null
-                  }
                 </Grid>
-                <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                  <IconButton edge="end" aria-label="delete" onClick={(e) => this.removeLine(modeDialog === 'admin' ? 'nbAdmin' : 'nbManager',index, e)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
                 <Divider/>
-              </>
+              </Grid>
             ))
           }
         </DialogContent>

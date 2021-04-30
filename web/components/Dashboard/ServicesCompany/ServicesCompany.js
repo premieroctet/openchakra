@@ -95,7 +95,7 @@ class ServicesCompany extends React.Component{
         'Service E',
       ],
       selectedGroup: [],
-      supportedPercent: 0
+      supportedPercent: 0,
     }
   }
 
@@ -214,9 +214,9 @@ class ServicesCompany extends React.Component{
                     input={<Input id="select-multiple-chip" />}
                     renderValue={(selected) => (
                       <Grid className={classes.chips}>
-                        {selected.map((value) => (
+                        {selected.map((value, index) => (
                           <Chip
-                            key={value}
+                            key={index}
                             label={value}
                             className={classes.chip}
                           />
@@ -224,8 +224,8 @@ class ServicesCompany extends React.Component{
                       </Grid>
                     )}
                   >
-                    {serviceNames.map((name) => (
-                      <MenuItem key={name} value={name}>
+                    {serviceNames.map((name, index) => (
+                      <MenuItem key={index} value={name}>
                         {name}
                       </MenuItem>
                     ))}
@@ -440,7 +440,7 @@ class ServicesCompany extends React.Component{
 
   render() {
     const{groups, dialogRemove, dialogAddService, dialogConfigService} = this.state;
-    const{classes, mode} = this.props;
+    const{classes, mode,coucou} = this.props;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -453,7 +453,7 @@ class ServicesCompany extends React.Component{
           <Box>
             {groups ?
               groups.map( (groupe, index) =>(
-                <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
+                <Grid key={index} container spacing={3} style={{margin: 0, width: '100%'}}>
                   <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
                     <Accordion key={index} classes={{root: classes.accordionStyle}}>
                       <AccordionSummary
@@ -469,8 +469,8 @@ class ServicesCompany extends React.Component{
                             <Grid style={{width: '100%'}}>
                               <List>
                                 {
-                                  groupe.allowed_services.map( service => (
-                                    <ListItem key={index}>
+                                  groupe.allowed_services.map( (service,j) => (
+                                    <ListItem key={j}>
                                       <ListItemText
                                         primary={service.service.label}
                                       />
