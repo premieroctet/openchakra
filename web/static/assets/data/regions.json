@@ -1,0 +1,402 @@
+[
+  {
+    "num_dep": "01",
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": "02",
+    "region_name": "Hauts-de-France"
+  },
+  {
+    "num_dep": "03",
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": "04",
+    "region_name": "Provence-Alpes-Côte d'Azur"
+  },
+  {
+    "num_dep": "05",
+    "region_name": "Provence-Alpes-Côte d'Azur"
+  },
+  {
+    "num_dep": "06",
+    "region_name": "Provence-Alpes-Côte d'Azur"
+  },
+  {
+    "num_dep": "07",
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": "08",
+    "region_name": "Grand Est"
+  },
+  {
+    "num_dep": "09",
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 10,
+    "region_name": "Grand Est"
+  },
+  {
+    "num_dep": 11,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 12,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 13,
+    "region_name": "Provence-Alpes-Côte d'Azur"
+  },
+  {
+    "num_dep": 14,
+    "region_name": "Normandie"
+  },
+  {
+    "num_dep": 15,
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": 16,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 17,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 18,
+    "region_name": "Centre-Val de Loire"
+  },
+  {
+    "num_dep": 19,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": "20",
+    "region_name": "Corse"
+  },
+  {
+    "num_dep": 21,
+    "region_name": "Bourgogne-Franche-Comté"
+  },
+  {
+    "num_dep": 22,
+    "region_name": "Bretagne"
+  },
+  {
+    "num_dep": 23,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 24,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 25,
+    "region_name": "Bourgogne-Franche-Comté"
+  },
+  {
+    "num_dep": 26,
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": 27,
+    "region_name": "Normandie"
+  },
+  {
+    "num_dep": 28,
+    "region_name": "Centre-Val de Loire"
+  },
+  {
+    "num_dep": 29,
+    "region_name": "Bretagne"
+  },
+  {
+    "num_dep": 30,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 31,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 32,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 33,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 34,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 35,
+    "region_name": "Bretagne"
+  },
+  {
+    "num_dep": 36,
+    "region_name": "Centre-Val de Loire"
+  },
+  {
+    "num_dep": 37,
+    "region_name": "Centre-Val de Loire"
+  },
+  {
+    "num_dep": 38,
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": 39,
+    "region_name": "Bourgogne-Franche-Comté"
+  },
+  {
+    "num_dep": 40,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 41,
+    "region_name": "Centre-Val de Loire"
+  },
+  {
+    "num_dep": 42,
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": 43,
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": 44,
+    "region_name": "Pays de la Loire"
+  },
+  {
+    "num_dep": 45,
+    "region_name": "Centre-Val de Loire"
+  },
+  {
+    "num_dep": 46,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 47,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 48,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 49,
+    "region_name": "Pays de la Loire"
+  },
+  {
+    "num_dep": 50,
+    "region_name": "Normandie"
+  },
+  {
+    "num_dep": 51,
+    "region_name": "Grand Est"
+  },
+  {
+    "num_dep": 52,
+    "region_name": "Grand Est"
+  },
+  {
+    "num_dep": 53,
+    "region_name": "Pays de la Loire"
+  },
+  {
+    "num_dep": 54,
+    "region_name": "Grand Est"
+  },
+  {
+    "num_dep": 55,
+    "region_name": "Grand Est"
+  },
+  {
+    "num_dep": 56,
+    "region_name": "Bretagne"
+  },
+  {
+    "num_dep": 57,
+    "region_name": "Grand Est"
+  },
+  {
+    "num_dep": 58,
+    "region_name": "Bourgogne-Franche-Comté"
+  },
+  {
+    "num_dep": 59,
+    "region_name": "Hauts-de-France"
+  },
+  {
+    "num_dep": 60,
+    "region_name": "Hauts-de-France"
+  },
+  {
+    "num_dep": 61,
+    "region_name": "Normandie"
+  },
+  {
+    "num_dep": 62,
+    "region_name": "Hauts-de-France"
+  },
+  {
+    "num_dep": 63,
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": 64,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 65,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 66,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 67,
+    "region_name": "Grand Est"
+  },
+  {
+    "num_dep": 68,
+    "region_name": "Grand Est"
+  },
+  {
+    "num_dep": 69,
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": 70,
+    "region_name": "Bourgogne-Franche-Comté"
+  },
+  {
+    "num_dep": 71,
+    "region_name": "Bourgogne-Franche-Comté"
+  },
+  {
+    "num_dep": 72,
+    "region_name": "Pays de la Loire"
+  },
+  {
+    "num_dep": 73,
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": 74,
+    "region_name": "Auvergne-Rhône-Alpes"
+  },
+  {
+    "num_dep": 75,
+    "region_name": "Île-de-France"
+  },
+  {
+    "num_dep": 76,
+    "region_name": "Normandie"
+  },
+  {
+    "num_dep": 77,
+    "region_name": "Île-de-France"
+  },
+  {
+    "num_dep": 78,
+    "region_name": "Île-de-France"
+  },
+  {
+    "num_dep": 79,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 80,
+    "region_name": "Hauts-de-France"
+  },
+  {
+    "num_dep": 81,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 82,
+    "region_name": "Occitanie"
+  },
+  {
+    "num_dep": 83,
+    "region_name": "Provence-Alpes-Côte d'Azur"
+  },
+  {
+    "num_dep": 84,
+    "region_name": "Provence-Alpes-Côte d'Azur"
+  },
+  {
+    "num_dep": 85,
+    "region_name": "Pays de la Loire"
+  },
+  {
+    "num_dep": 86,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 87,
+    "region_name": "Nouvelle-Aquitaine"
+  },
+  {
+    "num_dep": 88,
+    "region_name": "Grand Est"
+  },
+  {
+    "num_dep": 89,
+    "region_name": "Bourgogne-Franche-Comté"
+  },
+  {
+    "num_dep": 90,
+    "region_name": "Bourgogne-Franche-Comté"
+  },
+  {
+    "num_dep": 91,
+    "region_name": "Île-de-France"
+  },
+  {
+    "num_dep": 92,
+    "region_name": "Île-de-France"
+  },
+  {
+    "num_dep": 93,
+    "region_name": "Île-de-France"
+  },
+  {
+    "num_dep": 94,
+    "region_name": "Île-de-France"
+  },
+  {
+    "num_dep": 95,
+    "region_name": "Île-de-France"
+  },
+  {
+    "num_dep": 971,
+    "region_name": "Guadeloupe"
+  },
+  {
+    "num_dep": 972,
+    "region_name": "Martinique"
+  },
+  {
+    "num_dep": 973,
+    "region_name": "Guyane"
+  },
+  {
+    "num_dep": 974,
+    "region_name": "La Réunion"
+  },
+  {
+    "num_dep": 976,
+    "region_name": "Mayotte"
+  }
+]

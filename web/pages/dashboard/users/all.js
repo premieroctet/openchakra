@@ -27,6 +27,7 @@ const  {BigList}=require('../../../components/BigList/BigList')
 const moment = require('moment-timezone');
 moment.locale('fr');
 const {MANGOPAY_CONFIG}=require('../../../config/config')
+const regions=require('../../../static/assets/data/regions')
 
 
 const styles = theme => ({
@@ -74,6 +75,7 @@ class all extends React.Component {
       {headerName: "Email", field: "email"},
       {headerName: "Ville", field: "billing_address.city"},
       {headerName: "CP", field: "billing_address.zip_code"},
+      {headerName: "Région", field: "region"},
       {headerName: "Tel", field: "phone"},
       {headerName: "Né(e) le", field: "birthday_moment", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter',},
       {headerName: "Inscrit le", field: "creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter', initialSort: 'desc'},
@@ -98,6 +100,9 @@ class all extends React.Component {
           u.shop = u.shop.pop()
           if (!(u.billing_address && u.billing_address.gps && u.billing_address.gps.lat)) {
             u.warning='Adresse incorrecte'
+          }
+          if (u.billing_address && u.billing_address.zip_code) {
+            u.region = (regions.find(r => u.billing_address.zip_code.startsWith(r.num_dep)) || {}).region_name
           }
           return u
         })
