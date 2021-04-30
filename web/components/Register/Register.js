@@ -32,7 +32,6 @@ import Dialog from '@material-ui/core/Dialog';
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
-
 import OAuth from '../OAuth/OAuth';
 import Information from '../Information/Information';
 const {getLoggedUserId}=require('../../utils/functions')
@@ -41,7 +40,7 @@ var parse = require('url-parse');
 const {PROVIDERS, ACCOUNT_MIN_AGE} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
 const {isPhoneOk} = require('../../utils/sms');
-
+const {snackBarError}=require('../../utils/notifications')
 
 registerLocale('fr', fr);
 
@@ -118,6 +117,7 @@ class Register extends React.Component {
     };
     this.handleChecked = this.handleChecked.bind(this);
     this.onChangeAddress = this.onChangeAddress.bind(this);
+    this.onSuggestions = this.onSuggestions.bind(this)
   }
 
   componentDidMount() {
@@ -193,6 +193,10 @@ class Register extends React.Component {
       status2: checkPass2(this.state.password, this.state.password2),
     }, () => this.validatorFirstStep());
   };
+
+  onSuggestions(result) {
+    this.setState({address: result.query})
+  }
 
   onChangeAddress(result) {
     if (result) {
@@ -291,6 +295,7 @@ class Register extends React.Component {
         const errors=err.response.data
         const errKeys = Object.keys(errors)
         this.setState({errors: err.response.data});
+        snackBarError(err.response.data)
         if (errKeys.includes('email')) {
           this.setState({activeStep: 0});
         }
@@ -608,6 +613,7 @@ class Register extends React.Component {
             <Grid className={classes.margin}>
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                 <Grid item style={{width: '100%'}}>
+                  <form>
                   <AlgoliaPlaces
                     className={classes.textFieldAlgo}
                     placeholder='Recherchez votre adresse'
@@ -620,8 +626,10 @@ class Register extends React.Component {
 
                     }}
                     onChange={(suggestion) => this.onChangeAddress(suggestion)}
+                    onSuggestions={this.onSuggestions}
                     onClear={() => this.onChangeAddress(null)}
                   />
+                  </form>
                   <em style={{color: 'red'}}>{this.state.cityError}</em>
                 </Grid>
               </Grid>
