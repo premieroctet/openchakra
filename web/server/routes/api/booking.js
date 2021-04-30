@@ -6,12 +6,13 @@ const crypto = require('crypto');
 const moment = require('moment');
 const axios = require('axios');
 
-const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts')
+const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts');
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
 const Count = require('../../models/Count');
 const CronJob = require('cron').CronJob;
-const {is_production, is_development} = require('../../../config/config')
+const {is_production, is_development} = require('../../../config/config');
+const {invoiceFormat} = require('../../../utils/converters');
 const mangopay = require('mangopay2-nodejs-sdk');
 const {getNextNumber, getKeyDate, getField} = require("../../utils/booking");
 const {
@@ -421,10 +422,10 @@ new CronJob('0 */15 * * * *', function () {
           const type = ['billing', 'receipt', 'myalfred_billing']
           type.forEach(t => {
             const attribute = `${t}_number`;
-            b[attribute] = getNextNumber(Count.find({
+            b[attribute] = getKeyDate() + invoiceFormat(getNextNumber(Count.find({
               type: t,
               key: getKeyDate()
-            }));
+            })), 5);
             Count.find({
               type: t,
               key: getKeyDate()
