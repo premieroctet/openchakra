@@ -64,11 +64,16 @@ class logAsUser extends React.Component {
     super(props);
 
     this.state = {
-      user: null,
+      user: props.email,
       errors: null,
+      muUsers:[],
     };
 
     this.onUserChanged = this.onUserChanged.bind(this);
+  }
+
+  static getInitialProps({query: {email}}) {
+    return {email: email};
   }
 
   componentDidMount() {
@@ -139,6 +144,7 @@ class logAsUser extends React.Component {
                       name="user"
                       onChange={this.onUserChanged}
                       options={muUsers}
+                      values={muUsers.filter(m => m.value==user)}
                       multi={false}
                     >
                     </Select>

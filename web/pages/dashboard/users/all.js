@@ -80,6 +80,7 @@ class all extends React.Component {
       {headerName: "Création boutique", field: "shop.creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter'},
       {headerName: "Client Mangopay", field: "id_mangopay"},
       {headerName: "Alfred Mangopay", field: "mangopay_provider_id"},
+      {headerName: "Warning", field: "warning", cellRenderer: 'warningCellRenderer'},
     ]
 
   }
@@ -95,6 +96,9 @@ class all extends React.Component {
           u.status={'alfred':u.is_alfred, 'admin': u.is_admin}
           u.birthday_moment = moment(u.birthday)
           u.shop = u.shop.pop()
+          if (!(u.billing_address && u.billing_address.gps && u.billing_address.gps.lat)) {
+            u.warning='Adresse incorrecte'
+          }
           return u
         })
         this.setState({users:users});

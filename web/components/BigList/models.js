@@ -149,6 +149,14 @@ class PrivateRenderer extends React.Component {
 
 }
 
+class WarningRenderer extends React.Component {
+  render = () => {
+    return (
+      <em style={{color:'red'}}>{this.props.value}</em>
+    )
+  }
+}
+
 module.exports= {
   StatusCellRenderer, DateCellRenderer, DateTimeCellRenderer,
-  StatusCellFilter, PictureCellRenderer, PrivateRenderer, LocationRenderer }
+  StatusCellFilter, PictureCellRenderer, PrivateRenderer, LocationRenderer, WarningRenderer }

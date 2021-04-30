@@ -616,7 +616,7 @@ class Register extends React.Component {
                   <form>
                   <AlgoliaPlaces
                     className={classes.textFieldAlgo}
-                    placeholder='Recherchez votre adresse'
+                    placeholder='Saisissez puis sélectionnez votre adresse'
                     options={{
                       appId: 'plKATRG826CP',
                       apiKey: 'dc50194119e4c4736a7c57350e9f32ec',

@@ -82,6 +82,7 @@ class BigList extends React.Component {
       'privateRenderer' : models.PrivateRenderer,
       'dateTimeCellRenderer': models.DateTimeCellRenderer,
       'locationRenderer': models.LocationRenderer,
+      'warningCellRenderer': models.WarningRenderer,
     }
 
     const defaultColDef={

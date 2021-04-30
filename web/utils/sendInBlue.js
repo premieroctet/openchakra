@@ -31,7 +31,7 @@ class SIB_V3 {
 
     this.smtpInstance.sendTransacEmail(sendSmtpEmail)
       .then(data => {
-        console.log('SMTP called successfully. Returned data: ' + JSON.stringify(data, null, 2));
+        console.log('SMTP called successfully. Returned data: ' + JSON.stringify(data));
         return true;
       })
       .catch(err => {

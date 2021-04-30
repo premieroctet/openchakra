@@ -34,6 +34,7 @@ const BOOKING_INFOS_RECAP = 24;
 const BOOKING_DETAILS = 26;
 const BOOKING_EXPIRED_2_CLIENT = 30;
 const BOOKING_EXPIRED_2_ALFRED = 31;
+const ALERT = 59;
 
 const CONFIRM_PHONE = -1;
 
@@ -50,6 +51,7 @@ const SMS_CONTENTS = {
   [NEW_BOOKING]: '{{ params.client_firstname }} a réservé votre service {{ params.service_label }}',
   [BOOKING_EXPIRED_2_CLIENT]: 'Votre réservation du service {{ params.service_label }} par {{ params.alfred_firstname }} est expirée',
   [BOOKING_EXPIRED_2_ALFRED]: 'La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée',
+  [ALERT]: '{{ params.alert_message }}',
 };
 
 const sendNotification = (notif_index, destinee, params) => {
@@ -374,6 +376,19 @@ const sendNewBookingManual = (booking, req) => {
   );
 };
 
+const sendAlert = (user, subject, message) => {
+  sendNotification(
+    ALERT,
+    user,
+    {
+      alert_subject: subject,
+      alert_message: message,
+      user_firstname: user.firstname,
+    },
+  );
+};
+
+
 module.exports = {
   sendVerificationMail,
   sendShopDeleted,
@@ -396,4 +411,5 @@ module.exports = {
   sendVerificationSMS,
   sendLeaveCommentForClient,
   sendLeaveCommentForAlfred,
+  sendAlert,
 };
