@@ -37,7 +37,7 @@ import axios from "axios";
 const {setAxiosAuthentication}=require('../../../utils/authentication');
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
 import CloseIcon from '@material-ui/icons/Close';
-const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
+const {MICROSERVICE_MODE, CARETAKER_MODE, PRO, PART}=require('../../../utils/consts')
 
 
 
@@ -74,17 +74,16 @@ class ServicesCompany extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      isMicroService: true,
       dialogConfigService: false,
       dialogRemove: false,
-      serviceSelected: '',
+      selectedService: '',
       availableService: [],
       valueInvoice: '',
       rib: '',
       takeInCharge: false,
       priceInCharge: '',
       timeTakeInCharge: '',
-      listOfGroups: [],
+      groups: [],
       services:[],
       dialogAddService: false,
       servicesToAdd:[],
@@ -95,22 +94,23 @@ class ServicesCompany extends React.Component{
         'Service D',
         'Service E',
       ],
-      groupeSelected: [],
-      plafondConciergerie: 0
+      selectedGroup: [],
+      supportedPercent: 0
     }
   }
 
   componentDidMount() {
-    setAxiosAuthentication();
+    const {mode}=this.props
 
+    setAxiosAuthentication();
     axios.get(`/myAlfred/api/groups/type/${this.props.mode}`).then(res => {
       let data = res.data;
-      this.setState({listOfGroups: data})
+      this.setState({groups: data})
     }).catch(err => {
       console.error(err)
     });
 
-    axios.get('/myAlfred/api/service/pro')
+    axios.get(`/myAlfred/api/service/${mode==MICROSERVICE_MODE? PRO : PART}`)
       .then (response => {
         this.setState({services: response.data})
       })
@@ -118,7 +118,7 @@ class ServicesCompany extends React.Component{
   }
 
   handleClickOpen = (name, selected, groupe) =>{
-    this.setState({[name]: true, serviceSelected: selected ? selected: '', groupeSelected: groupe ? groupe : ''})
+    this.setState({[name]: true, selectedService: selected ? selected: '', selectedGroup: groupe ? groupe : ''})
   };
 
   handleOnchange = (event) =>{
@@ -148,26 +148,29 @@ class ServicesCompany extends React.Component{
   };
 
   addService = () =>{
-    const{serviceSelected, servicesToAdd, plafondConciergerie} = this.state;
+    const{selectedService, servicesToAdd, supportedPercent} = this.state;
 
-    let convertPlafondConciergerie = parseFloat(plafondConciergerie) / 100;
+    let convertSupportedPercent = parseFloat(supportedPercent) / 100;
+    console.log(`convertSupportedPercent:${convertSupportedPercent}`)
 
     if(servicesToAdd.length > 0){
       servicesToAdd.map(res => {
-        const data = CARETAKER_MODE ? {service_id: res._id} : {service_id: res._id, supported_percent: convertPlafondConciergerie}
-        axios.put(`/myAlfred/api/groups/${serviceSelected._id}/allowedServices`, data).then(res =>{
-           this.setState({dialogAddService : false, servicesToAdd: []}, () => this.componentDidMount())
-          }
-        ).catch( err => {
-          console.error(err)
-        })
+        const data = CARETAKER_MODE ? {service_id: res._id, supported_percent: convertSupportedPercent}: {service_id: res._id}
+        axios.put(`/myAlfred/api/groups/${selectedService._id}/allowedServices`, data)
+          .then(res =>{
+            this.setState({dialogAddService : false, servicesToAdd: []}, () => this.componentDidMount())
+          })
+          .catch( err => {
+            snackBarError(err.response.data)
+            console.error(err)
+          })
       })
     }
   };
 
   removeService = () => {
-    const{serviceSelected, groupeSelected} = this.state;
-    axios.delete(`/myAlfred/api/groups/${groupeSelected._id}/allowedServices/${serviceSelected._id}`).then( res =>{
+    const{selectedService, selectedGroup} = this.state;
+    axios.delete(`/myAlfred/api/groups/${selectedGroup._id}/allowedServices/${selectedService._id}`).then( res =>{
       snackBarSuccess('Service retiré');
       this.setState({dialogRemove: false}, () => this.componentDidMount())
     }).catch( err =>{
@@ -177,7 +180,7 @@ class ServicesCompany extends React.Component{
 
   handleChange = (event) =>{
     const{name, value} = event.target
-    if(name === 'plafondConciergerie'){
+    if(name === 'supportedPercent'){
       if(value.match(/^[0-9^.,]*$/) && Number(value) <= 100){
         this.setState({[name]: value})
       }
@@ -187,10 +190,10 @@ class ServicesCompany extends React.Component{
   };
 
   dialogConfigService = (classes) => {
-    const{dialogConfigService, serviceSelected, availableService, serviceNames, valueInvoice, rib, takeInCharge, priceInCharge, timeTakeInCharge} = this.state;
+    const{dialogConfigService, selectedService, availableService, serviceNames, valueInvoice, rib, takeInCharge, priceInCharge, timeTakeInCharge} = this.state;
     return(
       <Dialog open={dialogConfigService} onClose={() => this.setState({dialogConfigService: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.configService}}>
-        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogConfigService: false})}>{serviceSelected}</DialogTitle>
+        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogConfigService: false})}>{selectedService}</DialogTitle>
         <DialogContent>
           <Grid>
             <Grid>
@@ -328,15 +331,15 @@ class ServicesCompany extends React.Component{
 
   dialogAddService = (classes) =>{
     const {mode} = this.props;
-    const{dialogAddService, serviceSelected, services, servicesToAdd, groupeSelected, plafondConciergerie} = this.state;
+    const{dialogAddService, selectedService, services, servicesToAdd, selectedGroup, supportedPercent} = this.state;
 
-    let allowedServicesByGroup = groupeSelected.allowed_services;
+    let allowedServicesByGroup = selectedGroup.allowed_services;
     let idAllowedServicesByGroup = allowedServicesByGroup ? allowedServicesByGroup.map(res => res._id) : '';
     let servicesNotAllowed =  services.filter(service => !idAllowedServicesByGroup.includes(service._id ));
 
     return(
       <Dialog open={dialogAddService} onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})} aria-labelledby="form-dialog-title" classes={{paper: classes.configService}}>
-        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})}>{mode === CARETAKER_MODE ? 'Classification' : 'Département'} {serviceSelected.name}</DialogTitle>
+        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})}>{mode === CARETAKER_MODE ? 'Classification' : 'Département'} {selectedService.name}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -381,8 +384,8 @@ class ServicesCompany extends React.Component{
                     <TextField
                       id="outlined-basic"
                       variant="outlined"
-                      value={plafondConciergerie}
-                      name={'plafondConciergerie'}
+                      value={supportedPercent}
+                      name={'supportedPercent'}
                       classes={{root: classes.textField}}
                       onChange={this.handleChange}
                       InputProps={{
@@ -408,7 +411,7 @@ class ServicesCompany extends React.Component{
   };
 
   dialogRemove = (classes) =>{
-    const {dialogRemove, serviceSelected, groupeSelected} = this.state;
+    const {dialogRemove, selectedService, selectedGroup} = this.state;
     return(
       <Dialog
         open={dialogRemove}
@@ -420,7 +423,7 @@ class ServicesCompany extends React.Component{
         <DialogTitle id="alert-dialog-title" onClose={() => this.setState({dialogRemove: false})}>{"Supprimer"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Voulez vous supprimer {serviceSelected.label} de {groupeSelected.name} ?
+            Voulez vous supprimer {selectedService.label} de {selectedGroup.name} ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -436,7 +439,7 @@ class ServicesCompany extends React.Component{
   };
 
   render() {
-    const{listOfGroups, isMicroservice, dialogRemove, dialogAddService, dialogConfigService} = this.state;
+    const{groups, dialogRemove, dialogAddService, dialogConfigService} = this.state;
     const{classes, mode} = this.props;
 
     return(
@@ -448,8 +451,8 @@ class ServicesCompany extends React.Component{
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
-            {listOfGroups ?
-              listOfGroups.map( (groupe, index) =>(
+            {groups ?
+              groups.map( (groupe, index) =>(
                 <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
                   <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
                     <Accordion key={index} classes={{root: classes.accordionStyle}}>
@@ -466,18 +469,15 @@ class ServicesCompany extends React.Component{
                             <Grid style={{width: '100%'}}>
                               <List>
                                 {
-                                  groupe.allowed_services.map( (service) => (
+                                  groupe.allowed_services.map( service => (
                                     <ListItem key={index}>
                                       <ListItemText
-                                        primary={service.label}
+                                        primary={service.service.label}
                                       />
                                       <ListItemSecondaryAction>
-                                        {
-                                          isMicroservice ?
-                                            <IconButton edge="end" aria-label="SettingsIcon" onClick={() => this.handleClickOpen('dialogConfigService', service.label)}>
-                                              <SettingsIcon />
-                                            </IconButton> : null
-                                        }
+                                          <IconButton edge="end" aria-label="SettingsIcon" onClick={() => this.handleClickOpen('dialogConfigService', service.service.label)}>
+                                            <SettingsIcon />
+                                          </IconButton>
                                         <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemove', service, groupe)}>
                                           <DeleteIcon />
                                         </IconButton>
