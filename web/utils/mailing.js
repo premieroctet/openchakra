@@ -51,14 +51,13 @@ const SMS_CONTENTS = {
   [NEW_BOOKING]: '{{ params.client_firstname }} a réservé votre service {{ params.service_label }}',
   [BOOKING_EXPIRED_2_CLIENT]: 'Votre réservation du service {{ params.service_label }} par {{ params.alfred_firstname }} est expirée',
   [BOOKING_EXPIRED_2_ALFRED]: 'La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée',
-  [ALERT]: '{{ params.alert_message }}',
 };
 
 const sendNotification = (notif_index, destinee, params) => {
   const msg = `Sending notif ${notif_index} to ${destinee._id} using ${JSON.stringify(params)}`
 
-  if (!ENABLE_MAILING) {
-    console.log(`Disabled : ${msg}`)
+  if (!(ENABLE_MAILING || destinee.email.includes('@my-alfred.io'))) {
+      console.log(`Disabled : ${msg}`)
     return true
   }
 
