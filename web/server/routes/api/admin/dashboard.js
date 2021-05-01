@@ -2528,42 +2528,36 @@ router.get('/booking/all', passport.authenticate('jwt', {session: false}), (req,
 
 // @Route GET /myAlfred/api/admin/prospect/all
 // Get all prospect
-// @Access private
+// @Access admin
 router.get('/prospect/all', passport.authenticate('jwt', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
 
-  if (admin) {
-    // TODO: Use aggregate
-    Prospect.find({}, 'category contacted')
-      .sort({category: 1, keywords: 1})
-      .catch(err => {
-        console.error(err);
-        res.status(404).json({prospects: 'Error'});
-      })
-      .then(prospects => {
-        counts = {};
-        contacted = {};
-        prospects.forEach(p => {
-          const key = `${p.category}`;
-          counts[key] = (counts[key] || 0) + 1
-          const contact = p.contacted ? 1 : 0;
-          contacted[key] = (contacted[key] || 0) + contact
-        });
-        const result=Object.keys(counts).map(key => { return {
-            category: key,
-            count: counts[key],
-            contacted: contacted[key],
-            not_contacted: counts[key] - contacted[key],
-          }})
-
-        res.json(result);
-      });
-  } else {
-    res.status(403).json({prospects: 'Access denied'});
+  if (!admin) {
+    return res.status(403).json({msg: 'Access denied'})
   }
-});
+
+  Prospect.aggregate([
+    { $sort: { 'category':1, 'contacted':1} },
+    { $group: { _id: {"category": "$category", "contacted": "$contacted"}, total: {$sum: 1}} ,}
+  ])
+    .then( prospects => {
+      result={}
+      prospects.forEach(p  => {
+        var r=result[p._id.category]||{category:p._id.category, count: 0, contacted: 0, not_contacted:0}
+        r[p._id.contacted ? 'contacted' : 'not_contacted']=p.total
+        r.count += p.total
+        result[p._id.category]=r
+      });
+      result=_.sortBy(Object.values(result), v => normalize(v.category))
+      return res.json(result)
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(400).json(err);
+    })
+})
 
 router.get('/prospect/fields', passport.authenticate('jwt', {session: false}), (req, res) => {
   const schema_fields = Object.keys(Prospect.schema.obj).sort()

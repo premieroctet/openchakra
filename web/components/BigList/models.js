@@ -157,6 +157,17 @@ class WarningRenderer extends React.Component {
   }
 }
 
+class LinkRenderer extends React.Component {
+  render = () => {
+    const {text, link}=this.props.value
+    return (
+      <Link href={link}>{text}</Link>
+    )
+  }
+}
+
 module.exports= {
   StatusCellRenderer, DateCellRenderer, DateTimeCellRenderer,
-  StatusCellFilter, PictureCellRenderer, PrivateRenderer, LocationRenderer, WarningRenderer }
+  StatusCellFilter, PictureCellRenderer, PrivateRenderer, LocationRenderer, WarningRenderer,
+  LinkRenderer,
+}
