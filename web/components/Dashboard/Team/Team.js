@@ -324,8 +324,32 @@ class Team extends React.Component{
           })
       }
     });
-
   };
+
+  addEmploye = () =>{
+    const{newManagers} = this.state;
+
+    setAxiosAuthentication();
+
+    newManagers.map((res) =>{
+      if(res && res.firstNameManager !== '' && res.nameManager !== '' && res.emailManager !== '' && res.groupSelected !== ''){
+        const data = {
+          firstname: res.firstNameManager,
+          name: res.nameManager,
+          email: res.emailManager,
+        };
+
+        axios.post('/myAlfred/api/companies/members', data)
+          .then ( response => {
+            this.setState({dialogAdd: false, newManagers: [{nameManager: '',firstNameManager: '',emailManager: '',groupSelected: ''}]}, () =>  this.componentDidMount());
+          })
+          .catch ( err => {
+            console.error(err);
+            snackBarError(err.response.data.error)
+          })
+      }
+    });
+  }
 
   removeAdmin = () =>{
     const{selected} = this.state;
@@ -410,6 +434,7 @@ class Team extends React.Component{
 
   dialogAdd = (classes)=>{
     const{dialogAdd, newAdmins, user,canUpgrade, modeDialog, groups, selectedGroup, newManagers} = this.state;
+    const {mode} = this.props;
 
     let userEmploye = modeDialog === 'admin' ? user ? user.filter( e => !e.roles.includes(ADMIN)) : '' :  user ? user.filter( e => !e.roles.includes(MANAGER)) : '';
 
@@ -418,9 +443,9 @@ class Team extends React.Component{
 
     return(
       <Dialog open={dialogAdd} onClose={() => this.setState({dialogAdd: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{modeDialog === 'manager' ? 'Ajouter un Manager' : 'Ajouter un Administrateur'}</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{mode === MICROSERVICE_MODE ? 'Ajouter un Manager' : 'Ajouter un Employé'}</DialogTitle>
         <DialogContent dividers>
-          {
+          {mode === MICROSERVICE_MODE ?
             userEmploye.length === 0 ? null :
               <Grid style={{paddingBottom: 20 }}>
                 <Grid container spacing={2} style={{width: '100%', margin: 0, paddingBottom: 40}}>
@@ -484,7 +509,7 @@ class Team extends React.Component{
                   }
                 </Grid>
                 <Divider/>
-              </Grid>
+              </Grid>: null
           }
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -572,7 +597,7 @@ class Team extends React.Component{
           <Button onClick={() => this.setState({dialogAdd: false})} color="secondary">
             Annuler
           </Button>
-          <Button onClick={modeDialog === 'admin' ? this.addAdmin : this.addManager} color="primary">
+          <Button onClick={modeDialog === 'admin' ? this.addAdmin : mode === MICROSERVICE_MODE ? this.addManager : this.addEmploye} color="primary">
             Confirmer
           </Button>
         </DialogActions>
@@ -860,7 +885,7 @@ class Team extends React.Component{
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
                   <Grid>
-                    <h3>{mode === MICROSERVICE_MODE ? 'Collaborateurs' :  'Managers'}</h3>
+                    <h3>{mode === MICROSERVICE_MODE ? 'Managers' : 'Collaborateurs'}</h3>
                   </Grid>
                   <Grid container style={{marginLeft: '1vh'}}>
                     <Grid>
