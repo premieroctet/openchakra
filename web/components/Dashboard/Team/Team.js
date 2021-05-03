@@ -33,7 +33,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import {MICROSERVICE_MODE} from "../../../utils/consts";
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
-const {ADMIN, BUDGET_PERIOD, MANAGER} = require('../../../utils/consts');
+const {ADMIN, BUDGET_PERIOD, MANAGER, EMPLOYEE} = require('../../../utils/consts');
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, onClick, ...other } = props;
@@ -101,6 +101,7 @@ class Team extends React.Component{
       budget_period: null,
       canUpgrade:[],
       groups:[],
+      // managers : MANAGER in MICROSERVICE_MODE, employees in CARETAKER_MODE
       managers:[],
       groupName:'',
       modeDialog: '',
@@ -118,12 +119,12 @@ class Team extends React.Component{
   }
 
   componentDidMount() {
+    const {mode}=this.props
     setAxiosAuthentication();
-
     axios.get('/myAlfred/api/companies/members').then(res => {
       let data = res.data;
       const admins = data.filter(e => e.roles.includes(ADMIN));
-      const managers = data.filter(e => e.roles.includes(MANAGER));
+      const managers = data.filter(e => e.roles.includes(mode==MICROSERVICE_MODE ? MANAGER : EMPLOYEE));
       this.setState({user: data, admins: admins, managers: managers})
     }).catch(err => {
       console.error(err)
@@ -324,8 +325,40 @@ class Team extends React.Component{
           })
       }
     });
-
   };
+
+  addEmploye = () =>{
+    const{newManagers} = this.state;
+
+    setAxiosAuthentication();
+
+    newManagers.map((res) =>{
+      if(res && res.firstNameManager !== '' && res.nameManager !== '' && res.emailManager !== '' && res.groupSelected !== ''){
+        const data = {
+          firstname: res.firstNameManager,
+          name: res.nameManager,
+          email: res.emailManager,
+        };
+
+        axios.post('/myAlfred/api/companies/members', data)
+          .then ( response => {
+            const user=response.data
+            axios.put(`/myAlfred/api/groups/${res.groupSelected}/members`, { member_id: user._id})
+              .then(() => {
+                this.setState({dialogAdd: false, newManagers: [{nameManager: '',firstNameManager: '',emailManager: '',groupSelected: ''}]}, () =>  this.componentDidMount());
+              })
+              .catch ( err => {
+                console.error(err);
+                snackBarError(err.response.data.error)
+              })
+          })
+          .catch ( err => {
+            console.error(err);
+            snackBarError(err.response.data.error)
+          })
+      }
+    });
+  }
 
   removeAdmin = () =>{
     const{selected} = this.state;
@@ -410,6 +443,7 @@ class Team extends React.Component{
 
   dialogAdd = (classes)=>{
     const{dialogAdd, newAdmins, user,canUpgrade, modeDialog, groups, selectedGroup, newManagers} = this.state;
+    const {mode} = this.props;
 
     let userEmploye = modeDialog === 'admin' ? user ? user.filter( e => !e.roles.includes(ADMIN)) : '' :  user ? user.filter( e => !e.roles.includes(MANAGER)) : '';
 
@@ -418,9 +452,9 @@ class Team extends React.Component{
 
     return(
       <Dialog open={dialogAdd} onClose={() => this.setState({dialogAdd: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{modeDialog === 'manager' ? 'Ajouter un Manager' : 'Ajouter un Administrateur'}</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{mode === MICROSERVICE_MODE ? 'Ajouter un Manager' : 'Ajouter un Employé'}</DialogTitle>
         <DialogContent dividers>
-          {
+          {mode === MICROSERVICE_MODE ?
             userEmploye.length === 0 ? null :
               <Grid style={{paddingBottom: 20 }}>
                 <Grid container spacing={2} style={{width: '100%', margin: 0, paddingBottom: 40}}>
@@ -484,7 +518,7 @@ class Team extends React.Component{
                   }
                 </Grid>
                 <Divider/>
-              </Grid>
+              </Grid>: null
           }
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -502,69 +536,69 @@ class Team extends React.Component{
           </Grid>
           {
             objectToMap.map((res, index) => (
-              <>
-              <Grid container spacing={2} style={{width: '100%', margin: 0}} key={index} id={index}>
-                <Grid item xl={11} lg={11} sm={11} md={11} xs={11} container spacing={2} style={{width: '100%', margin: 0}}>
-                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
-                    <TextField
-                      label="Prénom"
-                      value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
-                      name={modeDialog === 'admin' ?  'firstNameAdmin' : 'firstNameManager'}
-                      onChange={(e) => this.handleChange(e, index)}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-                    />
+              <Grid key={index}>
+                <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+                  <Grid item xl={11} lg={11} sm={11} md={11} xs={11} container spacing={2} style={{width: '100%', margin: 0}}>
+                    <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                      <TextField
+                        label="Prénom"
+                        value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
+                        name={modeDialog === 'admin' ?  'firstNameAdmin' : 'firstNameManager'}
+                        onChange={(e) => this.handleChange(e, index)}
+                        variant={'outlined'}
+                        classes={{root: classes.textField}}
+                      />
+                    </Grid>
+                    <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                      <TextField
+                        label="Nom"
+                        name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
+                        value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
+                        onChange={(e) => this.handleChange(e, index)}
+                        variant={'outlined'}
+                        classes={{root: classes.textField}}
+                      />
+                    </Grid>
+                    <Grid item xl={modeDialog === 'manager' ? 6 : 12} lg={modeDialog === 'manager' ? 6 : 12} sm={modeDialog === 'manager' ? 6 : 12} md={modeDialog === 'manager' ? 6 : 12} xs={modeDialog === 'manager' ? 6 : 12}>
+                      <TextField
+                        label="Email"
+                        name={modeDialog === 'admin' ? 'emailAdmin' : 'emailManager'}
+                        value={modeDialog === 'admin' ? res.emailAdmin || '' : res.emailManager || ''}
+                        onChange={(e) => this.handleChange(e, index)}
+                        variant={'outlined'}
+                        classes={{root: classes.textField}}
+                      />
+                    </Grid>
+                    { modeDialog === 'manager' ?
+                      <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+                        <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                          <InputLabel id="demo-simple-select-outlined-label">Departements</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            name={'groupSelected'}
+                            onChange={(e) => this.handleChange(e, index)}
+                            label="Departements"
+                            value={res.groupSelected || ''}
+                          >
+                            {
+                              groups.map((res, index) => (
+                                <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
+                              ))
+                            }
+                          </Select>
+                        </FormControl>
+                      </Grid> : null
+                    }
                   </Grid>
-                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
-                    <TextField
-                      label="Nom"
-                      name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
-                      value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
-                      onChange={(e) => this.handleChange(e, index)}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-                    />
+                  <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                    <IconButton edge="end" aria-label="delete" onClick={(e) => this.removeLine(modeDialog === 'admin' ? 'nbAdmin' : 'nbManager',index, e)}>
+                      <DeleteIcon />
+                    </IconButton>
                   </Grid>
-                  <Grid item xl={modeDialog === 'manager' ? 6 : 12} lg={modeDialog === 'manager' ? 6 : 12} sm={modeDialog === 'manager' ? 6 : 12} md={modeDialog === 'manager' ? 6 : 12} xs={modeDialog === 'manager' ? 6 : 12}>
-                    <TextField
-                      label="Email"
-                      name={modeDialog === 'admin' ? 'emailAdmin' : 'emailManager'}
-                      value={modeDialog === 'admin' ? res.emailAdmin || '' : res.emailManager || ''}
-                      onChange={(e) => this.handleChange(e, index)}
-                      variant={'outlined'}
-                      classes={{root: classes.textField}}
-                    />
-                  </Grid>
-                  { modeDialog === 'manager' ?
-                    <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                      <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                        <InputLabel id="demo-simple-select-outlined-label">Departements</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-outlined-label"
-                          id="demo-simple-select-outlined"
-                          name={'groupSelected'}
-                          onChange={(e) => this.handleChange(e, index)}
-                          label="Departements"
-                          value={res.groupSelected || ''}
-                        >
-                          {
-                            groups.map((res, index) => (
-                              <MenuItem key={index} value={res._id}>{res.name}</MenuItem>
-                            ))
-                          }
-                        </Select>
-                      </FormControl>
-                    </Grid> : null
-                  }
                 </Grid>
-                <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                  <IconButton edge="end" aria-label="delete" onClick={(e) => this.removeLine(modeDialog === 'admin' ? 'nbAdmin' : 'nbManager',index, e)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
                 <Divider/>
-              </>
+              </Grid>
             ))
           }
         </DialogContent>
@@ -572,7 +606,7 @@ class Team extends React.Component{
           <Button onClick={() => this.setState({dialogAdd: false})} color="secondary">
             Annuler
           </Button>
-          <Button onClick={modeDialog === 'admin' ? this.addAdmin : this.addManager} color="primary">
+          <Button onClick={modeDialog === 'admin' ? this.addAdmin : mode === MICROSERVICE_MODE ? this.addManager : this.addEmploye} color="primary">
             Confirmer
           </Button>
         </DialogActions>
@@ -860,7 +894,7 @@ class Team extends React.Component{
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
                   <Grid>
-                    <h3>{mode === MICROSERVICE_MODE ? 'Collaborateurs' :  'Managers'}</h3>
+                    <h3>{mode === MICROSERVICE_MODE ? 'Managers' : 'Collaborateurs'}</h3>
                   </Grid>
                   <Grid container style={{marginLeft: '1vh'}}>
                     <Grid>

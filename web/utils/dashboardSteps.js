@@ -11,6 +11,10 @@ import ServicesCompany from "../components/Dashboard/ServicesCompany/ServicesCom
 import ScheduleCompany from "../components/Dashboard/ScheduleCompany/ScheduleCompany";
 import AccountCompany from "../components/Dashboard/AccountCompany/AccountCompany";
 import Invoices from "../components/Dashboard/Invoices/Invoices";
+import moment from 'moment';
+moment.locale('fr');
+
+
 
 const {MICROSERVICE_MODE, CARETAKER_MODE} = require('./consts.js')
 
@@ -23,13 +27,13 @@ const INDEX = {
 const TEAM = {
   menu : 'Mon équipe',
   icon: <PersonOutlineOutlinedIcon />,
-  component: parent => <Team mode={parent.props.mode}/>,
+  component: parent => <Team key={moment()} mode={parent.props.mode}/>,
 }
 
 const SERVICES = {
   menu : 'Mes services',
   icon: <LocalFloristOutlinedIcon />,
-  component: parent => <ServicesCompany mode={parent.props.mode}/>,
+  component: parent => <ServicesCompany key={moment()} mode={parent.props.mode}/>,
 }
 
 const INVOICES = {
@@ -53,13 +57,13 @@ const ACCOUNT = {
 const TEAM_CONCIERGE = {
   menu : 'Collaborateurs',
   icon: <PersonOutlineOutlinedIcon />,
-  component: parent => <Team mode={parent.props.mode}/>,
+  component: parent => <Team key={moment()} mode={parent.props.mode}/>,
 }
 
 const SERVICES_CONCIERGE = {
   menu : 'Services proposés',
   icon: <LocalFloristOutlinedIcon />,
-  component: parent => <ServicesCompany mode={parent.props.mode}/>,
+  component: parent => <ServicesCompany key={moment()} mode={parent.props.mode}/>,
 }
 
 const STEPS={

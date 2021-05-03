@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './BookingDetailStyle';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
+const {MANAGER, EMPLOYEE}=require('../../utils/consts')
 
 class BookingDetail extends React.Component {
   constructor(props) {
@@ -9,7 +10,9 @@ class BookingDetail extends React.Component {
   }
 
   render() {
-    const {classes, prestations, count, travel_tax, pick_tax, total, alfred_fee, client_fee, cesu_total, mode} = this.props;
+    const {
+      classes, prestations, count, travel_tax, pick_tax, total, alfred_fee,
+      client_fee, cesu_total, mode, role, company_amount} = this.props;
 
     return (
       <Grid>
@@ -98,6 +101,18 @@ class BookingDetail extends React.Component {
               </Grid>
               <Grid>
                 <p>{cesu_total.toFixed(2)}€</p>
+              </Grid>
+            </Grid>
+            :
+            null
+          }
+          {[MANAGER, EMPLOYEE].includes(role) ?
+            <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
+              <Grid>
+                <p>{'dont participation entreprise'}</p>
+              </Grid>
+              <Grid>
+                <p>{company_amount.toFixed(2)}€</p>
               </Grid>
             </Grid>
             :
