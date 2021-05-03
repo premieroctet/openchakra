@@ -33,7 +33,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import {MICROSERVICE_MODE} from "../../../utils/consts";
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
-const {ADMIN, BUDGET_PERIOD, MANAGER} = require('../../../utils/consts');
+const {ADMIN, BUDGET_PERIOD, MANAGER, EMPLOYEE} = require('../../../utils/consts');
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, onClick, ...other } = props;
@@ -101,6 +101,7 @@ class Team extends React.Component{
       budget_period: null,
       canUpgrade:[],
       groups:[],
+      // managers : MANAGER in MICROSERVICE_MODE, employees in CARETAKER_MODE
       managers:[],
       groupName:'',
       modeDialog: '',
@@ -118,12 +119,12 @@ class Team extends React.Component{
   }
 
   componentDidMount() {
+    const {mode}=this.props
     setAxiosAuthentication();
-
     axios.get('/myAlfred/api/companies/members').then(res => {
       let data = res.data;
       const admins = data.filter(e => e.roles.includes(ADMIN));
-      const managers = data.filter(e => e.roles.includes(MANAGER));
+      const managers = data.filter(e => e.roles.includes(mode==MICROSERVICE_MODE ? MANAGER : EMPLOYEE));
       this.setState({user: data, admins: admins, managers: managers})
     }).catch(err => {
       console.error(err)
@@ -341,7 +342,15 @@ class Team extends React.Component{
 
         axios.post('/myAlfred/api/companies/members', data)
           .then ( response => {
-            this.setState({dialogAdd: false, newManagers: [{nameManager: '',firstNameManager: '',emailManager: '',groupSelected: ''}]}, () =>  this.componentDidMount());
+            const user=response.data
+            axios.put(`/myAlfred/api/groups/${res.groupSelected}/members`, { member_id: user._id})
+              .then(() => {
+                this.setState({dialogAdd: false, newManagers: [{nameManager: '',firstNameManager: '',emailManager: '',groupSelected: ''}]}, () =>  this.componentDidMount());
+              })
+              .catch ( err => {
+                console.error(err);
+                snackBarError(err.response.data.error)
+              })
           })
           .catch ( err => {
             console.error(err);
