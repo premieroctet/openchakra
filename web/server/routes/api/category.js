@@ -50,7 +50,7 @@ router.get('/particular', (req, res) => {
     .catch(err => res.status(404).json({category: 'No category found'}));
 });
 
-// @Route GET /myAlfred/api/category/pro
+// @Route GET /myAlfred/api/category/professional
 // View all pro categories, i.e. having at least one service with professional_access
 router.get('/professional', (req, res) => {
 

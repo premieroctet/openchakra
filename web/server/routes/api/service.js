@@ -31,10 +31,25 @@ router.get('/all', (req, res) => {
     .catch(err => res.status(404).json({service: 'No service found'}));
 });
 
-// @Route GET /myAlfred/api/service/pro
-// View all pro service
-router.get('/pro', (req, res) => {
+// @Route GET /myAlfred/api/service/professional
+// View all professional services
+router.get('/professional', (req, res) => {
   Service.find({ professional_access: true}, 'label')
+  .sort({'label': 1})
+    .then(services => {
+      if (!services) {
+        return res.status(400).json({msg: 'No service found'});
+      } else {
+        res.json(services);
+      }
+    })
+    .catch(err => res.status(404).json({service: 'No service found'}));
+});
+
+// @Route GET /myAlfred/api/service/particular
+// View all pro services
+router.get('/particular', (req, res) => {
+  Service.find({ particular_access: true}, 'label')
   .sort({'label': 1})
     .then(services => {
       if (!services) {

@@ -50,6 +50,7 @@ const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functio
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
 import Slider from '@material-ui/core/Slider';
+const {PRO, PART}=require('../../../utils/consts')
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -143,7 +144,7 @@ class NavBar extends Component {
 
     this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''});
     setAxiosAuthentication()
-    axios.get('/myAlfred/api/category/all/sort')
+    axios.get(`/myAlfred/api/category/${is_b2b_site() ? PRO : PART}`)
       .then(res => {
         let categories = res.data;
         this.setState({allCategories: categories.map(c => ({value:c._id, label: c.label}))})

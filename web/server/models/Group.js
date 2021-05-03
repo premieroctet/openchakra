@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const {BUDGET_PERIOD}=require('../../utils/consts');
+const {BUDGET_PERIOD, DASHBOARD_MODE}=require('../../utils/consts');
 
 
 const GroupSchema = new Schema({
@@ -18,8 +18,17 @@ const GroupSchema = new Schema({
     ref: 'users',
   }],
   allowed_services: [{
-    type: Schema.Types.ObjectId,
-    ref: 'service',
+    service: {
+      type: Schema.Types.ObjectId,
+      ref: 'service',
+    },
+    // Amount percent paid by the company
+    supported_percent: {
+      type: Number,
+      min: 0,
+      max: 1,
+      required: true,
+    },
   }],
   budget : {
     type : Number,
@@ -31,7 +40,12 @@ const GroupSchema = new Schema({
   // Allower Mangopay card ids
   cards: [{
     type: String,
-  }]
+  }],
+  type: {
+    type: String,
+    enum: Object.keys(DASHBOARD_MODE),
+    required: true,
+  }
 });
 
 const Group = mongoose.model('group', GroupSchema);

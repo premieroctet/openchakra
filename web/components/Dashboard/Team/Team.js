@@ -31,6 +31,7 @@ import axios from 'axios';
 const {setAxiosAuthentication}=require('../../../utils/authentication');
 import InputAdornment from '@material-ui/core/InputAdornment';
 import OutlinedInput from "@material-ui/core/OutlinedInput";
+import {MICROSERVICE_MODE} from "../../../utils/consts";
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
 const {ADMIN, BUDGET_PERIOD, MANAGER} = require('../../../utils/consts');
 
@@ -128,7 +129,7 @@ class Team extends React.Component{
       console.error(err)
     });
 
-    axios.get('/myAlfred/api/groups')
+    axios.get(`/myAlfred/api/groups/type/${this.props.mode}`)
       .then(res => {
         let groups = res.data;
         this.setState({groups: groups})
@@ -355,12 +356,14 @@ class Team extends React.Component{
 
   addGroupe = () => {
     const{plafondGroupe, nameGroupe, budget_period, paymentMethod} = this.state;
+    const{mode} = this.props;
 
     const data = {
       name: nameGroupe,
       budget: plafondGroupe,
       budget_period: budget_period === ''? null : budget_period,
       cards: paymentMethod,
+      type: mode
     };
 
     axios.post('/myAlfred/api/groups', data)
@@ -426,7 +429,7 @@ class Team extends React.Component{
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                      <InputLabel id="demo-mutiple-chip-label">Users</InputLabel>
+                      <InputLabel id="demo-mutiple-chip-label">Utilisateurs</InputLabel>
                       <Select
                         labelId="demo-mutiple-chip-label"
                         id="demo-mutiple-chip"
@@ -612,14 +615,15 @@ class Team extends React.Component{
 
   dialogGroupe = (classes)=>{
     const{dialogGroupe, selected, paymentMethod, cards, nameGroupe, plafondGroupe, budget_period} = this.state;
+    const {mode} = this.props;
 
     return(
       <Dialog open={dialogGroupe} onClose={() => this.setState({dialogGroupe: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogGroupe: false})} >Ajouter un département</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogGroupe: false})} >{mode === MICROSERVICE_MODE ?  'Ajouter un département': 'Ajouter une classification'}</DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3>Configuration département</h3>
+              <h3>{mode === MICROSERVICE_MODE ? 'Configuration département' : 'Configuration classification'}</h3>
             </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container spacing={2} style={{width: '100%', margin: 0}}>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -802,7 +806,7 @@ class Team extends React.Component{
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid  style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>{mode === 'microservice' ? 'Départements' : 'Classification'}</h3>
+              <h3>{mode === MICROSERVICE_MODE ? 'Départements' : 'Classification'}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogGroupe')}>
@@ -856,7 +860,7 @@ class Team extends React.Component{
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
                   <Grid>
-                    <h3>{mode === 'conciergerie' ? 'Collaborateurs' :  'Managers'}</h3>
+                    <h3>{mode === MICROSERVICE_MODE ? 'Collaborateurs' :  'Managers'}</h3>
                   </Grid>
                   <Grid container style={{marginLeft: '1vh'}}>
                     <Grid>
