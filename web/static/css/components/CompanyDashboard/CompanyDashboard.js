@@ -1,4 +1,4 @@
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 export default theme =>({
   root: {
@@ -48,13 +48,59 @@ export default theme =>({
     paddingLeft: 15,
 
   },
+
+  buttonCareteker:{
+    display: 'flex',
+    justifyContent: 'center',
+    '& :hover':{
+      color: 'black',
+      backgroundColor: 'white'
+    }
+  },
+  buttonCaretekerActif:{
+    display: 'flex',
+    justifyContent: 'center',
+    '& :hover':{
+      backgroundColor: 'white',
+      color: 'black'
+    }
+  },
+
+  buttonMicroservice:{
+    display: 'flex',
+    justifyContent: 'center',
+    '& :hover':{
+      color: 'black',
+      backgroundColor: 'white'
+    }
+  },
+
+  buttonMicroserviceActif:{
+    display: 'flex',
+    justifyContent: 'center',
+    '& :hover':{
+      backgroundColor: 'white',
+      color: 'black'
+    }
+  },
+
+  buttonActive:{
+    borderRadius: theme.border.button.borderRadius,
+    textTransform: theme.typography.textTransform,
+    fontWeight: theme.typography.fontWeight,
+    border: '3px solid rgba(255, 255, 255, 1)',
+    color: 'black',
+    padding: '10px 50px',
+    backgroundColor: 'white',
+  },
+
   helpButton:{
     borderRadius: theme.border.button.borderRadius,
     textTransform: theme.typography.textTransform,
     fontWeight: theme.typography.fontWeight,
     border: '3px solid rgba(255, 255, 255, 1)',
     color: theme.palette.white.main,
-    padding: '10px 50px'
+    padding: '10px 50px',
   },
   listItemText:{
     '& span':{

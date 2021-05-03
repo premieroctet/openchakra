@@ -18,15 +18,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Chip from '@material-ui/core/Chip';
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -87,15 +84,8 @@ class ServicesCompany extends React.Component{
       services:[],
       dialogAddService: false,
       servicesToAdd:[],
-      serviceNames:[
-        'Service A',
-        'Service B',
-        'Service C',
-        'Service D',
-        'Service E',
-      ],
       selectedGroup: [],
-      supportedPercent: 0
+      supportedPercent: 0,
     }
   }
 
@@ -190,114 +180,33 @@ class ServicesCompany extends React.Component{
   };
 
   dialogConfigService = (classes) => {
-    const{dialogConfigService, selectedService, availableService, serviceNames, valueInvoice, rib, takeInCharge, priceInCharge, timeTakeInCharge} = this.state;
+    const{dialogConfigService, selectedService, priceInCharge, timeTakeInCharge} = this.state;
     return(
       <Dialog open={dialogConfigService} onClose={() => this.setState({dialogConfigService: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.configService}}>
         <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogConfigService: false})}>{selectedService}</DialogTitle>
         <DialogContent>
-          <Grid>
-            <Grid>
-              <Grid>
-                <h3>Services à disposition des administrateurs</h3>
-              </Grid>
-              <Grid>
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-mutiple-chip-label">Selectioner ou retirer</InputLabel>
-                  <Select
-                    labelId="demo-mutiple-chip-label"
-                    id="demo-mutiple-chip"
-                    multiple
-                    value={availableService}
-                    name={'availableService'}
-                    onChange={this.handleOnchange}
-                    classes={{root: classes.selectedMenu}}
-                    input={<Input id="select-multiple-chip" />}
-                    renderValue={(selected) => (
-                      <Grid className={classes.chips}>
-                        {selected.map((value) => (
-                          <Chip
-                            key={value}
-                            label={value}
-                            className={classes.chip}
-                          />
-                        ))}
-                      </Grid>
-                    )}
-                  >
-                    {serviceNames.map((name) => (
-                      <MenuItem key={name} value={name}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+          <Grid container spacing={2} style={{margin:0,width: '100%'}}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <h3>Prise en charge</h3>
             </Grid>
-            <Grid style={{marginTop: '5vh'}}>
-              <Grid>
-                <h3>Facturation</h3>
-              </Grid>
-              <Grid container spacing={3}>
-                <Grid item xl={3} lg={3}>
-                  <FormControl variant="outlined">
-                    <OutlinedInput
-                      id="outlined-adornment-%"
-                      value={valueInvoice}
-                      name={'valueInvoice'}
-                      onChange={this.handleOnchange}
-                      endAdornment={<InputAdornment position="end">%</InputAdornment>}
-                      inputProps={{
-                        'aria-label': '%',
-                      }}
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item xl={9} lg={9}>
-                  <FormControl variant="outlined" className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">RIB</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={rib}
-                      name={'rib'}
-                      onChange={this.handleOnchange}
-                      label="Selectionner un RIB"
-                    >
-                      <MenuItem value={10}>RIB 1</MenuItem>
-                      <MenuItem value={20}>RIB 2</MenuItem>
-                      <MenuItem value={30}>RIB 3</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid style={{marginTop: '5vh'}}>
-              <Grid>
-                <FormControlLabel
-                  control={<Checkbox checked={takeInCharge} onChange={this.handleOnchange} name="takeInCharge" color={'primary'} />}
-                  label="Prise en charge maximum par collaborateur"
-                />
-              </Grid>
-            </Grid>
-            <Grid style={{marginTop: '5vh'}}>
-              <Grid container spacing={3}>
-                <Grid item xl={3} lg={3}>
-                  <FormControl variant={takeInCharge ? "outlined" : 'filled'} className={classes.formControl}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid container>
+                <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
+                  <FormControl variant={"outlined"} className={classes.formControl}>
                     <TextField
                       id="outlined-adornment-€"
                       value={priceInCharge}
                       name={'priceInCharge'}
-                      variant={takeInCharge ? "outlined" : 'filled'}
+                      variant={"outlined"}
                       onChange={this.handleOnchange}
                       InputProps={{
                         endAdornment: <InputAdornment position="end">€</InputAdornment>,
                       }}
-                      disabled={!takeInCharge}
                     />
                   </FormControl>
                 </Grid>
-                <Grid item xl={9} lg={9}>
-                  <FormControl variant={takeInCharge ? "outlined" : 'filled'} className={classes.formControl}>
+                <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
+                  <FormControl variant={"outlined"} className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">Mois/An</InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
@@ -306,7 +215,6 @@ class ServicesCompany extends React.Component{
                       name={'timeTakeInCharge'}
                       onChange={this.handleOnchange}
                       label="Mois/An"
-                      disabled={!takeInCharge}
                     >
                       <MenuItem value={10}>Mois</MenuItem>
                       <MenuItem value={20}>An</MenuItem>
@@ -314,7 +222,7 @@ class ServicesCompany extends React.Component{
                   </FormControl>
                 </Grid>
               </Grid>
-            </Grid>
+          </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -322,7 +230,7 @@ class ServicesCompany extends React.Component{
             Annuler
           </Button>
           <Button onClick={this.addService} color="primary">
-            Confirmer
+            Modifier
           </Button>
         </DialogActions>
       </Dialog>
@@ -440,7 +348,7 @@ class ServicesCompany extends React.Component{
 
   render() {
     const{groups, dialogRemove, dialogAddService, dialogConfigService} = this.state;
-    const{classes, mode} = this.props;
+    const{classes, mode,coucou} = this.props;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -453,7 +361,7 @@ class ServicesCompany extends React.Component{
           <Box>
             {groups ?
               groups.map( (groupe, index) =>(
-                <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
+                <Grid key={index} container spacing={3} style={{margin: 0, width: '100%'}}>
                   <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
                     <Accordion key={index} classes={{root: classes.accordionStyle}}>
                       <AccordionSummary
@@ -469,8 +377,8 @@ class ServicesCompany extends React.Component{
                             <Grid style={{width: '100%'}}>
                               <List>
                                 {
-                                  groupe.allowed_services.map( service => (
-                                    <ListItem key={index}>
+                                  groupe.allowed_services.map( (service,j) => (
+                                    <ListItem key={j}>
                                       <ListItemText
                                         primary={service.service.label}
                                       />
