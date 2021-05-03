@@ -23,7 +23,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-const {is_b2b_admin, is_b2b_style, is_b2b_employee, is_b2b_site} = require('../../utils/context');
+const {is_b2b_site} = require('../../utils/context');
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
 import {COMPANY_ACTIVITY, EMPLOYEE} from "../../utils/consts";
 const {isLoggedUserAlfredPro}=require('../../utils/functions')

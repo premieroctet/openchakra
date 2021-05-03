@@ -35,17 +35,16 @@ import withGrid from "../hoc/Grid/GridCard";
 import CardAlbum from "../components/Card/CardAlbum/CardAlbum";
 const ImageSlide=withSlide(withGrid(CardAlbum));
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
-const {BOOK_STATUS}=require('../utils/consts')
+const {BOOK_STATUS, COMM_CLIENT, MANAGER}=require('../utils/consts')
 
 const isEmpty = require('../server/validation/is-empty');
 const {isDateAvailable} = require('../utils/dateutils')
 const {computeBookingReference} = require('../utils/functions');
-const {COMM_CLIENT} = require('../utils/consts');
 const {emptyPromise} = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
 const {computeDistanceKm} = require('../utils/functions');
 const moment = require('moment');
-const {is_b2b_admin, is_b2b_manager}=require('../utils/context')
+const {is_b2b_admin, is_b2b_manager, get_role}=require('../utils/context')
 
 moment.locale('fr');
 registerLocale('fr', fr);
@@ -75,6 +74,8 @@ class UserServicesPreview extends React.Component {
       commission: 0,
       cesu_total: 0,
       total: 0,
+      company_amount: 0,
+      company_percent: 0,
       location: null,
       date: null,
       time: null,
@@ -142,18 +143,24 @@ class UserServicesPreview extends React.Component {
           .then(res => {
             let user = res ? res.data : null
             // Mode compagnie : l'admin a un budget illimité comme un user standard, le manager a le budget de son département
-            if (user && is_b2b_manager(user)) {
-              axios.get(`/myAlfred/api/groups/user/${user._id}`)
+            if (user && user.company) {
+              axios.get(`/myAlfred/api/companies/budget/${user._id}/${get_role()}`)
                 .then ( res => {
-                  const group=res.data
-                  return axios.get(`/myAlfred/api/groups/${group._id}/budget`)
+                  this.setState({available_budget: res.data, role: get_role()})
                 })
-                .then ( res => {
-                  this.setState({available_budget: res.data})
+                .catch (err => {
+                  console.error(err)
+                  this.setState({available_budget: 0})
+                })
+              axios.get(`/myAlfred/api/companies/supported/${user._id}/${serviceUser.service._id}/${get_role()}`)
+                .then( res => {
+                  const percent=res.data
+                  this.setState({company_percent: percent})
                 })
                 .catch (err => {
                   console.error(err)
                 })
+
             }
             st['user']=user
             const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
@@ -387,6 +394,8 @@ class UserServicesPreview extends React.Component {
   };
 
   computeTotal = () => {
+    const {user, service, available_budget, company_percent}=this.state
+
     let totalPrestations = 0;
     let totalCesu = 0;
     let count = this.state.count;
@@ -413,10 +422,12 @@ class UserServicesPreview extends React.Component {
     let total = totalPrestations;
     total += commission;
 
+    const company_amount=Math.min( total*company_percent, available_budget)
     this.setState({
       totalPrestations: totalPrestations,
       commission: commission,
       total: total,
+      company_amount: company_amount,
       cesu_total: totalCesu,
     }, () => this.checkBook());
   };
@@ -446,8 +457,11 @@ class UserServicesPreview extends React.Component {
   };
 
   hasWarningBudget = () => {
-    const warningBudget = this.state.total > this.state.available_budget
-    return warningBudget
+    if (get_role()==MANAGER) {
+      const warningBudget = this.state.company_amount > this.state.available_budget
+      return warningBudget
+    }
+    return false
   }
 
   getClientAddress = () => {
@@ -493,7 +507,7 @@ class UserServicesPreview extends React.Component {
     this.onChange({target: {name: 'pick_tax', value: checked ? this.state.serviceUser.pick_tax : null}});
   };
 
-  book = (actual) => { //actual : true=> book, false=>infos request
+  book = actual => { //actual : true=> book, false=>infos request
 
     const {count, user, serviceUser} = this.state
 
@@ -526,6 +540,7 @@ class UserServicesPreview extends React.Component {
       location: this.state.location,
       equipments: this.state.serviceUser.equipments,
       amount: this.state.total,
+      company_amount: this.state.company_amount,
       date_prestation: this.state.date ? moment(this.state.date).format('DD/MM/YYYY') : null,
       time_prestation: this.state.time,
       alfred: this.state.serviceUser.user._id,

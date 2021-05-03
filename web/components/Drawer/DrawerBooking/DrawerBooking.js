@@ -121,7 +121,7 @@ class DrawerBooking extends React.Component{
     const {expanded} = this.state;
     const {warningPerimeter, warningBudget, side, classes, service, alfred, date, time, errors,
       count, serviceUser, isChecked, location, pick_tax, total, commission,
-      cesu_total, filters, pricedPrestations, availabilities, excludedDays} = this.props;
+      cesu_total, filters, pricedPrestations, availabilities, excludedDays, role, company_amount} = this.props;
 
     const excludedTimes = this.getExcludedTimes()
 
@@ -377,7 +377,9 @@ class DrawerBooking extends React.Component{
                       count={count}
                       travel_tax={this.props.computeTravelTax()}
                       pick_tax={pick_tax}
+                      company_amount={company_amount}
                       total={total}
+                      role={role}
                       client_fee={commission}
                       cesu_total={cesu_total}
                     />

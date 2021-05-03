@@ -36,8 +36,13 @@ const BookingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'equipment',
   }],
-  // Fix : string > float
+  // Total amount
   amount: {
+    type: Number,
+    required: true,
+  },
+  // Company supported amount
+  company_amount: {
     type: Number,
     required: true,
   },

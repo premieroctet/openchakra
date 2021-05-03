@@ -228,6 +228,7 @@ class view extends React.Component {
                 <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                   <Typography style={{fontSize: 20}}>Adresse siège social</Typography>
                 </Grid>
+                <form>
                 <AlgoliaPlaces
                   placeholder={placeholder}
                   options={{
@@ -240,6 +241,7 @@ class view extends React.Component {
                   onChange={this.onAddressChange}
                   onClear={this.onAddressChange}
                 />
+                </form>
 
 
                 <Grid item style={{width: '100%', marginTop: 20}}>

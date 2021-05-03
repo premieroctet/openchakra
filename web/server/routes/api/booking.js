@@ -140,6 +140,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.address = req.body.address;
   bookingFields.equipments = req.body.equipments;
   bookingFields.amount = req.body.amount;
+  bookingFields.company_amount = req.body.company_amount;
   bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred);
   bookingFields.user = mongoose.Types.ObjectId(req.body.user);
   bookingFields.chatroom = mongoose.Types.ObjectId(req.body.chatroom);

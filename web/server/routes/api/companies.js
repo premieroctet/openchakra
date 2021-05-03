@@ -20,7 +20,7 @@ const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
 const {emptyPromise} = require('../../../utils/promise');
-const {ADMIN, MANAGER, EMPLOYEE, ROLES} = require('../../../utils/consts')
+const {ADMIN, MANAGER, EMPLOYEE, ROLES, MICROSERVICE_MODE, CARETAKER_MODE, MONTH_PERIOD, BOOK_STATUS} = require('../../../utils/consts')
 var _ = require('lodash')
 const {addRegistrationProof, createOrUpdateMangoCompany} = require('../../utils/mangopay');
 
@@ -572,6 +572,91 @@ router.get('/name/:company_id', (req, res) => {
     .catch(err => {
       console.error(err)
       res.status(400).json()
+    })
+})
+
+// @Route GET /myAlfred/api/companies/budget/:role
+// Returns remaining budget for user_id & role in the period
+// @Access private user
+router.get('/budget/:user_id/:role', passport.authenticate('jwt', {session: false}), (req, res) => {
+  // Chercher Groupe suivant rôle
+  // Chercher budget
+  // Comptabiliser budget utilisé (company_amount)
+  // Soutraction budget/company_amount
+  const role = req.params.role
+  const user_id = req.params.user_id
+
+  if (role==ADMIN || !role) {
+    return Number.MAX_SAFE_INTEGER
+  }
+  Group.findOne( { members: user_id, type: role==MANAGER ? MICROSERVICE_MODE : CARETAKER_MODE})
+    .then( group =>{
+      if (!group) {
+        return res.status(400).json("Aucun groupe trouvé pour ce user")
+      }
+      console.log(`Found group ${group}`)
+      const start_date=moment().startOf(group.budget_period==MONTH_PERIOD ? 'month' : 'year')
+      if (!group.budget) {
+        console.log(`No budget for the group`)
+        return res.json(0)
+      }
+      const user_predicate = role==MANAGER ? { $in : group.members} : user_id
+      Booking.find({
+        user: user_predicate,
+        date : {$gt: start_date},
+        user_role : role,
+        status : { $nin : [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]}
+      })
+        .then( bookings => {
+          console.log(`Found ${bookings.length} bookings`)
+          const consumed = _.sumBy(bookings, b => b.amount)
+          const remaining = Math.max(group.budget-consumed, 0)
+          return res.json(remaining)
+        })
+        .catch (err => {
+          console.error(err)
+          return res.status(400).json(err)
+        })
+    })
+    .catch( err =>{
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
+
+// @Route GET /myAlfred/api/supported/:user_id/:role
+// Returns company amount percent for user_id, service_id & role
+// @Access private user
+router.get('/supported/:user_id/:service_id/:role', passport.authenticate('jwt', {session: false}), (req, res) => {
+  // Chercher Groupe suivant rôle
+  // Chercher budget
+  // Comptabiliser budget utilisé (company_amount)
+  // Soutraction budget/company_amount
+  const role = req.params.role
+  const user_id = req.params.user_id
+  const service_id = req.params.service_id
+
+  if (role==ADMIN) {
+    return res.json(1.0)
+  }
+  if (!role) {
+    return res.json(0.0)
+  }
+  Group.findOne( { members: user_id, type: role==MANAGER ? MICROSERVICE_MODE : CARETAKER_MODE})
+    .then( group =>{
+      if (!group) {
+        return res.status(400).json("Aucun groupe trouvé pour ce user")
+      }
+      console.log(`Found group ${group}`)
+      const allowedService=group.allowed_services.find(a => a.service._id.toString()==service_id)
+      if (!allowedService) {
+        return res.status(400).json("Service introuvable dans le groupe")
+      }
+      return res.json(allowedService.supported_percent)
+    })
+    .catch( err =>{
+      console.error(err)
+      res.status(400).json(err)
     })
 })
 
