@@ -1,4 +1,4 @@
-const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
+const {setAuthToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import {toast} from 'react-toastify';
 import {checkPass1, checkPass2} from '../../utils/passwords';
@@ -32,26 +32,29 @@ import Dialog from '@material-ui/core/Dialog';
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
+
 import OAuth from '../OAuth/OAuth';
 import Information from '../Information/Information';
-const {getLoggedUserId}=require('../../utils/functions')
+import CguContent from "../CguContent/CguContent";
+
+const {getLoggedUserId} = require('../../utils/functions')
 
 var parse = require('url-parse');
 const {PROVIDERS, ACCOUNT_MIN_AGE} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
 const {isPhoneOk} = require('../../utils/sms');
-const {snackBarError}=require('../../utils/notifications')
+
 
 registerLocale('fr', fr);
 
 
 function NumberFormatCustom(props) {
-  const {inputRef, onChange, ...other} = props;
+  const {inputref, onChange, ...other} = props;
 
   return (
     <NumberFormat
       {...other}
-      getInputRef={inputRef}
+      getInputRef={inputref}
       onValueChange={(values) => {
         onChange({
           target: {
@@ -66,7 +69,7 @@ function NumberFormatCustom(props) {
 }
 
 NumberFormatCustom.propTypes = {
-  inputRef: PropTypes.func.isRequired,
+  //inputRef: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
@@ -113,11 +116,10 @@ class Register extends React.Component {
       errorExistEmail: false,
       birthdayError: '',
       cityError: '',
-      pending: false,
+      open: false
     };
     this.handleChecked = this.handleChecked.bind(this);
     this.onChangeAddress = this.onChangeAddress.bind(this);
-    this.onSuggestions = this.onSuggestions.bind(this)
   }
 
   componentDidMount() {
@@ -160,6 +162,22 @@ class Register extends React.Component {
     }
   };
 
+  dialogCgu = (classes) => {
+    const {open} = this.state;
+    const handleClose = () => {
+      this.setState({open: false})
+    };
+    return (
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+        <DialogTitle onClose={() => this.setState({open: false})}>
+        </DialogTitle>
+        <DialogContent>
+          <CguContent/>
+          <Button style={{float: 'right'}} onClick={handleClose}>Fermer</Button>
+        </DialogContent>
+      </Dialog>
+    )
+  }
   onChange = e => {
     this.setState({[e.target.name]: e.target.value}, () => this.validatorFirstStep());
   };
@@ -194,19 +212,14 @@ class Register extends React.Component {
     }, () => this.validatorFirstStep());
   };
 
-  onSuggestions(result) {
-    this.setState({address: result.query})
-  }
-
   onChangeAddress(result) {
     if (result) {
-      const suggestion=result.suggestion
+      const suggestion = result.suggestion
       this.setState({
         city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode, country: suggestion.country,
         lat: suggestion.latlng.lat, lng: suggestion.latlng.lng,
       })
-    }
-    else {
+    } else {
       this.setState({
         city: null, address: null, zip_code: null, country: null,
         lat: null, lng: null,
@@ -248,8 +261,6 @@ class Register extends React.Component {
 
   onSubmit = () => {
 
-    this.setState({pending: true})
-
     const newUser = {
       google_id: this.state.google_id,
       facebook_id: this.state.facebook_id,
@@ -282,20 +293,15 @@ class Register extends React.Component {
             setAuthToken()
             setAxiosAuthentication()
           })
-          .catch( err => {
-            this.setState({pending: false});
-            console.error(err)
-          })
+          .catch()
           .then(this.addPhoto).catch()
           .then(this.setState({activeStep: this.state.activeStep + 1})).catch()
           .then(this.submitPhone).catch();
       })
       .catch(err => {
-        this.setState({pending: false})
-        const errors=err.response.data
+        const errors = err.response.data
         const errKeys = Object.keys(errors)
         this.setState({errors: err.response.data});
-        snackBarError(err.response.data)
         if (errKeys.includes('email')) {
           this.setState({activeStep: 0});
         }
@@ -572,31 +578,31 @@ class Register extends React.Component {
         return (
           <Grid container>
             <Grid className={classes.margin}>
-            { true ? null  :
-              <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-                <input accept="image/*"
-                       className="input"
-                       style={{display: 'none'}}
-                       id="icon-button-file"
-                       type="file"
-                       onChange={(event) => {
-                         this.handleChange(event);
-                         this.onChangePicture(event);
-                       }}
-                       name={'myImage'}
-                />
-                <label htmlFor="icon-button-file">
-                  <IconButton
-                    color="primary"
-                    className={classes.button}
-                    style={{backgroundImage: `url('${this.state.file}')`}}
-                    component="span"
-                  >
-                    <PhotoCamera style={{fontSize: '2rem'}}/>
-                  </IconButton>
-                </label>
-              </Grid>
-            }
+              {true ? null :
+                <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                  <input accept="image/*"
+                         className="input"
+                         style={{display: 'none'}}
+                         id="icon-button-file"
+                         type="file"
+                         onChange={(event) => {
+                           this.handleChange(event);
+                           this.onChangePicture(event);
+                         }}
+                         name={'myImage'}
+                  />
+                  <label htmlFor="icon-button-file">
+                    <IconButton
+                      color="primary"
+                      className={classes.button}
+                      style={{backgroundImage: `url('${this.state.file}')`}}
+                      component="span"
+                    >
+                      <PhotoCamera style={{fontSize: '2rem'}}/>
+                    </IconButton>
+                  </label>
+                </Grid>
+              }
             </Grid>
             <Grid className={classes.margin}>
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
@@ -604,7 +610,8 @@ class Register extends React.Component {
                   <Typography className={classes.subtitle}>Adresse postale</Typography>
                 </Grid>
                 <Grid>
-                  <Typography className={classes.textStyle}>Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous
+                  <Typography className={classes.textStyle}>Votre adresse ne sera pas visible, mais nous l’utiliserons
+                    pour vous
                     proposer
                     ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</Typography>
                 </Grid>
@@ -613,10 +620,9 @@ class Register extends React.Component {
             <Grid className={classes.margin}>
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                 <Grid item style={{width: '100%'}}>
-                  <form>
                   <AlgoliaPlaces
                     className={classes.textFieldAlgo}
-                    placeholder='Saisissez puis sélectionnez votre adresse'
+                    placeholder='Recherchez votre adresse'
                     options={{
                       appId: 'plKATRG826CP',
                       apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -626,10 +632,8 @@ class Register extends React.Component {
 
                     }}
                     onChange={(suggestion) => this.onChangeAddress(suggestion)}
-                    onSuggestions={this.onSuggestions}
                     onClear={() => this.onChangeAddress(null)}
                   />
-                  </form>
                   <em style={{color: 'red'}}>{this.state.cityError}</em>
                 </Grid>
               </Grid>
@@ -641,7 +645,7 @@ class Register extends React.Component {
                 </Grid>
                 <Grid>
                   <Typography className={classes.textStyle}>
-                  {`Pour vous inscrire, vous devez être âgé d’au moins ${ACCOUNT_MIN_AGE} ans.
+                    {`Pour vous inscrire, vous devez être âgé d’au moins ${ACCOUNT_MIN_AGE} ans.
                   Les autres utilisateurs ne verront pas votre date de naissance.`}
                   </Typography>
                 </Grid>
@@ -701,7 +705,8 @@ class Register extends React.Component {
                     <Typography className={classes.subtitle}>Téléphone</Typography>
                   </Grid>
                   <Grid>
-                    <Typography className={classes.textStyle}>L'ajout de votre numéro de téléphone permet aux membres My-Alfred
+                    <Typography className={classes.textStyle}>L'ajout de votre numéro de téléphone permet aux membres
+                      My-Alfred
                       de disposer d'un moyen pour vous contacter.
                     </Typography>
                   </Grid>
@@ -739,8 +744,10 @@ class Register extends React.Component {
                       />
                     </Grid>
                     <Grid>
-                      <a href={'/cgu'} target="_blank" style={{color: '#2FBCD3'}}>J’accepte les conditions
-                        générales d’utilisation de My-Alfred.</a>
+                      <Button onClick={this.handleOpenCgu} style={{color: '#2FBCD3'}}>J’accepte les
+                        conditions
+                        générales d’utilisation de My-Alfred.</Button>
+                      {this.dialogCgu()}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -765,7 +772,8 @@ class Register extends React.Component {
                     <Grid item style={{marginRight: '1%'}}>
                       <Link href={'/search?search=1'}>
                         <a style={{textDecoration: 'none'}}>
-                          <Button variant={'contained'} color={'primary'} style={{color: 'white', textTransform: 'initial'}}>Commencez à
+                          <Button variant={'contained'} color={'primary'}
+                                  style={{color: 'white', textTransform: 'initial'}}>Commencez à
                             explorer</Button>
                         </a>
                       </Link>
@@ -773,7 +781,8 @@ class Register extends React.Component {
                     <Grid item className={classes.responsiveSecondaryButton}>
                       <Link href={'/creaShop/creaShop'}>
                         <a style={{textDecoration: 'none'}}>
-                          <Button variant={'contained'} color={'secondary'} style={{color: 'white', textTransform: 'initial'}}>Proposer mes
+                          <Button variant={'contained'} color={'secondary'}
+                                  style={{color: 'white', textTransform: 'initial'}}>Proposer mes
                             services</Button>
                         </a>
                       </Link>
@@ -783,7 +792,7 @@ class Register extends React.Component {
                   <Grid style={{marginTop: 20}}>
                     <hr/>
                     <Grid style={{marginTop: 20}}>
-                      <Link href={'/needHelp/needHelp'} target="_blank">
+                      <Link href={'/needHelp/needHelp'}>
                         <a target="_blank" style={{
                           color: '#2FBCD3',
                           textAlign: 'center',
@@ -852,11 +861,14 @@ class Register extends React.Component {
   handleBack = () => {
     this.setState({activeStep: this.state.activeStep - 1});
   };
+  handleOpenCgu = () => {
+    this.setState({open: true})
+  }
 
 
   render() {
     const {classes, callLogin, id} = this.props;
-    const {errors, activeStep, firstPageValidator, secondPageValidator, pending} = this.state;
+    const {errors, activeStep, firstPageValidator, secondPageValidator} = this.state;
 
     return (
       <Grid className={classes.fullContainer}>
@@ -887,7 +899,7 @@ class Register extends React.Component {
                       }}
                       nextButton={
                         <Button size="small" onClick={() => this.handleNext(activeStep)}
-                                disabled={activeStep === 0 ? firstPageValidator : secondPageValidator || pending}>
+                                disabled={activeStep === 0 ? firstPageValidator : secondPageValidator}>
                           {activeStep === 0 ? 'Suivant' : 'Terminer'}
                           <KeyboardArrowRight/>
                         </Button>
