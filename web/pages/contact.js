@@ -37,22 +37,29 @@ class Contact extends React.Component {
             <Grid>
               <h3>Nous contacter</h3>
             </Grid>
-            <Grid>
-              <Typography>
-                <Grid style={{display: 'flex'}}>
-                  <MailOutlineIcon style={{paddingRight: '5px'}}/>
-                  <a style={{
-                    color: 'black',
-                    borderBottom: '1 px solid black',
-                  }} href={'mailto:hello@my-alfred.io'}>
-                    hello@my-alfred.io
-                  </a>
-                </Grid>
-              </Typography>
+            <Grid style={{display: 'flex'}}>
+              <MailOutlineIcon style={{paddingRight: '5px'}}/>
+              <a style={{
+                color: 'black',
+                borderBottom: '1 px solid black',
+              }} href={'mailto:hello@my-alfred.io'}>
+                <Typography>hello@my-alfred.io</Typography>
+              </a>
             </Grid>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <NeedMoreFaq/>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.contactContainer}>
+            <Grid>
+              <h3>Nous envoyer un message</h3>
+            </Grid>
+            <Grid style={{display: 'flex', width: '100%'}}>
+              <iframe
+                src={'https://share.hsforms.com/1XiISx1soSp-8Bm743F3RPA8njno'}
+                title="contact form"
+                frameBorder="0"
+                scrolling="no"
+                style={{width: '100%', height: 550}}
+              />
+            </Grid>
           </Grid>
         </Grid>
       </LayoutFaq>
