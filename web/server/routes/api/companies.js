@@ -23,6 +23,7 @@ const {emptyPromise} = require('../../../utils/promise');
 const {ADMIN, MANAGER, EMPLOYEE, ROLES, MICROSERVICE_MODE, CARETAKER_MODE, MONTH_PERIOD, BOOK_STATUS} = require('../../../utils/consts')
 var _ = require('lodash')
 const {addRegistrationProof, createOrUpdateMangoCompany} = require('../../utils/mangopay');
+const {getPeriodStart}=require('../../../utils/dateutils')
 
 
 axios.defaults.withCredentials = true;
@@ -594,12 +595,11 @@ router.get('/budget/:user_id/:role', passport.authenticate('jwt', {session: fals
       if (!group) {
         return res.status(400).json("Aucun groupe trouvé pour ce user")
       }
-      console.log(`Found group ${group}`)
-      const start_date=moment().startOf(group.budget_period==MONTH_PERIOD ? 'month' : 'year')
       if (!group.budget) {
         console.log(`No budget for the group`)
         return res.json(0)
       }
+      const start_date = getPeriodStart(group.budget_period)
       const user_predicate = role==MANAGER ? { $in : group.members} : user_id
       Booking.find({
         user: user_predicate,
@@ -647,7 +647,6 @@ router.get('/supported/:user_id/:service_id/:role', passport.authenticate('jwt',
       if (!group) {
         return res.status(400).json("Aucun groupe trouvé pour ce user")
       }
-      console.log(`Found group ${group}`)
       const allowedService=group.allowed_services.find(a => a.service._id.toString()==service_id)
       if (!allowedService) {
         return res.status(400).json("Service introuvable dans le groupe")

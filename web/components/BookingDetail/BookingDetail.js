@@ -106,7 +106,7 @@ class BookingDetail extends React.Component {
             :
             null
           }
-          {[MANAGER, EMPLOYEE].includes(role) ?
+          {role==EMPLOYEE ?
             <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
               <Grid>
                 <p>{'dont participation entreprise'}</p>
