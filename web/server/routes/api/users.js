@@ -27,6 +27,8 @@ const {emptyPromise} = require('../../../utils/promise.js');
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../utils/mangopay');
 const {send_cookie}=require('../../utils/serverContext')
+const ServiceUser = require('../../models/ServiceUser');
+
 
 axios.defaults.withCredentials = true;
 
@@ -278,6 +280,7 @@ router.post('/validateAccount', (req, res) => {
 // Set the main address in the profile
 // @Access private
 router.put('/profile/billingAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
+  console.log(req.body, 'body')
 
   User.findById(req.user.id)
     .then(user => {
@@ -288,8 +291,26 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
       user.billing_address.country = req.body.country;
       user.billing_address.gps.lat = req.body.gps.lat;
       user.billing_address.gps.lng = req.body.gps.lng;
-      user.save().then(user => res.json(user)).catch(err => console.error(err));
-
+      user.save()
+        .then(
+          ServiceUser.findOne({user: req.user.id})
+            .then(
+            serviceUser => {
+              console.log(typeof serviceUser.service_address.gps.lat, 'coucou')
+              serviceUser.service_address = {};
+              serviceUser.service_address.address = req.body.address;
+              serviceUser.service_address.zip_code = req.body.zip_code;
+              serviceUser.service_address.city = req.body.city;
+              serviceUser.service_address.country = req.body.country;
+              serviceUser.service_address.gps.lat = req.body.gps.lat;
+              serviceUser.service_address.gps.lng = req.body.gps.lng;
+              serviceUser.save()
+            }
+          ).catch( err => console.error(err))
+        )
+        .catch(
+          err => console.error(err)
+        );
     });
 });
 
