@@ -43,18 +43,19 @@ var parse = require('url-parse');
 const {PROVIDERS, ACCOUNT_MIN_AGE} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
 const {isPhoneOk} = require('../../utils/sms');
+const {snackBarError} = require('../../utils/notifications')
 
 
 registerLocale('fr', fr);
 
 
 function NumberFormatCustom(props) {
-  const {inputref, onChange, ...other} = props;
+  const {inputRef, onChange, ...other} = props;
 
   return (
     <NumberFormat
       {...other}
-      getInputRef={inputref}
+      getInputRef={inputRef}
       onValueChange={(values) => {
         onChange({
           target: {
@@ -69,7 +70,7 @@ function NumberFormatCustom(props) {
 }
 
 NumberFormatCustom.propTypes = {
-  //inputRef: PropTypes.func.isRequired,
+  inputRef: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
@@ -116,10 +117,13 @@ class Register extends React.Component {
       errorExistEmail: false,
       birthdayError: '',
       cityError: '',
+      pending: false,
       open: false
     };
     this.handleChecked = this.handleChecked.bind(this);
     this.onChangeAddress = this.onChangeAddress.bind(this);
+    this.onSuggestions = this.onSuggestions.bind(this)
+
   }
 
   componentDidMount() {
@@ -212,6 +216,10 @@ class Register extends React.Component {
     }, () => this.validatorFirstStep());
   };
 
+  onSuggestions(result) {
+    this.setState({address: result.query})
+  }
+
   onChangeAddress(result) {
     if (result) {
       const suggestion = result.suggestion
@@ -261,6 +269,8 @@ class Register extends React.Component {
 
   onSubmit = () => {
 
+    this.setState({pending: true})
+
     const newUser = {
       google_id: this.state.google_id,
       facebook_id: this.state.facebook_id,
@@ -293,15 +303,20 @@ class Register extends React.Component {
             setAuthToken()
             setAxiosAuthentication()
           })
-          .catch()
+          .catch(err => {
+            this.setState({pending: false});
+            console.error(err)
+          })
           .then(this.addPhoto).catch()
           .then(this.setState({activeStep: this.state.activeStep + 1})).catch()
           .then(this.submitPhone).catch();
       })
       .catch(err => {
+        this.setState({pending: false})
         const errors = err.response.data
         const errKeys = Object.keys(errors)
         this.setState({errors: err.response.data});
+        snackBarError(err.response.data)
         if (errKeys.includes('email')) {
           this.setState({activeStep: 0});
         }
@@ -620,20 +635,24 @@ class Register extends React.Component {
             <Grid className={classes.margin}>
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                 <Grid item style={{width: '100%'}}>
-                  <AlgoliaPlaces
-                    className={classes.textFieldAlgo}
-                    placeholder='Recherchez votre adresse'
-                    options={{
-                      appId: 'plKATRG826CP',
-                      apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                      language: 'fr',
-                      countries: ['fr'],
-                      type: 'address',
+                  <form>
+                    <AlgoliaPlaces
+                      className={classes.textFieldAlgo}
+                      placeholder='Saisissez puis sélectionnez votre adresse'
+                      options={{
+                        appId: 'plKATRG826CP',
+                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                        language: 'fr',
+                        countries: ['fr'],
+                        type: 'address',
 
-                    }}
-                    onChange={(suggestion) => this.onChangeAddress(suggestion)}
-                    onClear={() => this.onChangeAddress(null)}
-                  />
+                      }}
+
+                      onChange={(suggestion) => this.onChangeAddress(suggestion)}
+                      onSuggestions={this.onSuggestions}
+                      onClear={() => this.onChangeAddress(null)}
+                    />
+                  </form>
                   <em style={{color: 'red'}}>{this.state.cityError}</em>
                 </Grid>
               </Grid>
@@ -868,7 +887,7 @@ class Register extends React.Component {
 
   render() {
     const {classes, callLogin, id} = this.props;
-    const {errors, activeStep, firstPageValidator, secondPageValidator} = this.state;
+    const {errors, activeStep, firstPageValidator, secondPageValidator, pending} = this.state;
 
     return (
       <Grid className={classes.fullContainer}>
@@ -899,7 +918,7 @@ class Register extends React.Component {
                       }}
                       nextButton={
                         <Button size="small" onClick={() => this.handleNext(activeStep)}
-                                disabled={activeStep === 0 ? firstPageValidator : secondPageValidator}>
+                                disabled={activeStep === 0 ? firstPageValidator : secondPageValidator || pending}>
                           {activeStep === 0 ? 'Suivant' : 'Terminer'}
                           <KeyboardArrowRight/>
                         </Button>
