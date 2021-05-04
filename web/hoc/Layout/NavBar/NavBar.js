@@ -102,7 +102,8 @@ class NavBar extends Component {
       filteredServices: [],
       allServices: [],
       focusedInput: null,
-      companyPage: false
+      companyPage: false,
+      allAddresses: [],
     }
     this.radius_marks=[1, 5,10,15,20,30,50,100,200,300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
   }
@@ -126,6 +127,7 @@ class NavBar extends Component {
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         const user = res.data
+        this.setState({user: user})
         const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
         promise
           .then(res => {
@@ -133,10 +135,7 @@ class NavBar extends Component {
             res.data.service_address.forEach(addr => {
               allAddresses[addr._id] = addr
             });
-            this.setState({
-              user: user,
-              allAddresses: allAddresses
-            })
+            this.setState({allAddresses: allAddresses})
           })
       }).catch(err => {
       console.error(err)

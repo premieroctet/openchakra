@@ -237,7 +237,7 @@ router.delete('/profile/registrationProof', passport.authenticate('b2badmin', {s
 
 // @Route GET /myAlfred/api/companies/current
 // Get the company for the current logged user
-router.get('/current', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
   Company.findById(req.user.company)
     .then(company => {
       if (!company) {
