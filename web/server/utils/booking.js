@@ -3,7 +3,11 @@ const moment = require("moment")
 moment.locale('fr');
 
 const getNextNumber = (value) => {
-  return value += 1;
+  if (value == undefined || null) {
+    return value = 1;
+  } else {
+    return value += 1;
+  }
 }
 
 const getKeyDate = () => {
