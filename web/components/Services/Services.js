@@ -19,7 +19,6 @@ class Services extends React.Component {
       return null
     }
 
-    console.log(shop.is_particular)
     const part_services = shop.services.filter( s => s.particular_access)
     const pro_services = shop.services.filter( s => s.professional_access)
 
