@@ -7,7 +7,6 @@ export default theme =>({
   },
   card: {
     padding: '1.5rem 3rem',
-    minWidth: 400,
   },
   buttonSubmit:{
     textTransform: 'initial',
