@@ -280,7 +280,7 @@ router.post('/validateAccount', (req, res) => {
 // Set the main address in the profile
 // @Access private
 router.put('/profile/billingAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
-  console.log(req.body, 'body')
+  console.log(req.user, 'user')
 
   User.findById(req.user.id)
     .then(user => {
