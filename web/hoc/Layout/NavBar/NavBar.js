@@ -1076,7 +1076,7 @@ class NavBar extends Component {
         className={ifHomePage ?  classes.navbarLogoContainer : classes.navbarLogoContainerP}
         item
         xl={ifHomePage ? 3 : 4}
-        lg={is_b2b_style(user) && ifHomePage? 2 : 3}
+        lg={is_b2b_style(user) && ifHomePage ? 2 : is_b2b_style(user) && !ifHomePage && !logged? 2 :  3}
         md={!logged && !ifHomePage ? 3 : 2}
         sm={1}
         onClick={() => Router.push('/')}
