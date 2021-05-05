@@ -52,16 +52,20 @@ const GradientControl = (props: GradientControlPropsType) => {
     if (gradient === '' || gradient === null) {
       setGradientColor(['green.200'])
     } else {
-      let gradientValue = gradient.split('(')[1]
-      let actualDirection = gradientValue.split(',')[0]
-      let actualColor = gradientValue.split(',')
-      let colorArray = actualColor.splice(1, actualColor.length)
-      colorArray[colorArray.length - 1] = colorArray[
-        colorArray.length - 1
-      ].split(')')[0]
-      colorArray[0] = colorArray[0].split(' ')[1]
-      setDirectionValue(actualDirection)
-      setGradientColor(colorArray)
+      try {
+        let gradientValue = gradient.split('(')[1]
+        let actualDirection = gradientValue.split(',')[0]
+        let actualColor = gradientValue.split(',')
+        let colorArray = actualColor.splice(1, actualColor.length)
+        colorArray[colorArray.length - 1] = colorArray[
+          colorArray.length - 1
+        ].split(')')[0]
+        colorArray[0] = colorArray[0].split(' ')[1]
+        setDirectionValue(actualDirection)
+        setGradientColor(colorArray)
+      } catch (e) {
+        console.log(e)
+      }
     }
   }, [gradient])
 
