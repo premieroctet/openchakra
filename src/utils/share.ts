@@ -13,7 +13,9 @@ export const decodeShareUrl = (): IComponents | null => {
     const sharedData = searchParams.get('share')
 
     if (sharedData) {
-      return JSON.parse(LZString.decompressFromEncodedURIComponent(sharedData))
+      return JSON.parse(
+        LZString.decompressFromEncodedURIComponent(sharedData) as string,
+      )
     }
   } catch (e) {
     console.log(e)

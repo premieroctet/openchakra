@@ -96,6 +96,7 @@ test.each(componentsToTest)('Component Preview for %s', componentName => {
   // @ts-ignore
   const store = init(storeConfig)
   store.dispatch.components.addComponent({
+    //@ts-ignore
     parentName: 'root',
     type: componentName,
     rootParentType: componentName,

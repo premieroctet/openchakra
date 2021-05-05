@@ -1,15 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
-import { getSession } from 'next-auth/client'
+import prisma from '~utils/prisma'
 
-export default async function(req: NextApiRequest, res: NextApiResponse) {
-  const prisma = new PrismaClient()
-  const session = await getSession({ req })
+export default async function CreateProject(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   try {
     const { project: projectData } = req.body
     const actualUser = await prisma.session.findMany({
       where: {
-        accessToken: session!.accessToken,
+        accessToken: req.body.accessToken,
       },
     })
     const project = await prisma.project.create({

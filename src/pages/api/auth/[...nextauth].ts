@@ -1,14 +1,8 @@
 import { NextApiHandler } from 'next'
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
-import { PrismaClient } from '@prisma/client'
 import Adapters from 'next-auth/adapters'
-
-const prisma = new PrismaClient()
-
-const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options)
-
-export default authHandler
+import prisma from '~utils/prisma'
 
 const options = {
   providers: [
@@ -19,11 +13,15 @@ const options = {
   ],
   adapter: Adapters.Prisma.Adapter({
     prisma,
-    modelMapping: {
-      User: 'user',
-      Account: 'account',
-      Session: 'session',
-      VerificationRequest: 'verificationRequest',
-    },
   }),
 }
+
+const authHandler: NextApiHandler = async (req, res) => {
+  try {
+    await NextAuth(req, res, options)
+  } finally {
+    prisma.$disconnect()
+  }
+}
+
+export default authHandler

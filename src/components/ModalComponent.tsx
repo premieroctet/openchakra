@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, FormEvent } from 'react'
 import {
   Box,
   Modal,
@@ -15,19 +15,24 @@ import {
   Spinner,
   ModalFooter,
   Button,
-  ListIcon,
+  Switch,
+  useToast,
+  Text,
+  Accordion,
+  AccordionItem,
+  AccordionIcon,
+  AccordionPanel,
+  AccordionHeader,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  IconButton,
+  ButtonGroup,
+  Flex,
 } from '@chakra-ui/core'
 import { useRouter } from 'next/router'
 import { AiFillProject } from 'react-icons/ai'
-
-interface Project {
-  createdAt: string
-  updatedAt: string
-  userId: number
-  id: number
-  markup: string
-  projectName: string
-}
+import { Project } from '@prisma/client'
 
 interface Props {
   isOpen: boolean
@@ -36,10 +41,180 @@ interface Props {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   userProjectList: Project[]
   initProject: () => void
+  loading: boolean
+  setModalLoading: (value: boolean) => void
+  showUserProjectList: () => void
+  accessToken: string
+}
+
+interface UpdateProject {
+  id: number
+  public: boolean
+  projectName: string
 }
 
 const ModalComponent = (props: Props) => {
   const router = useRouter()
+  const toast = useToast()
+  const [loadingAdd, setLoadingAdd] = useState(false)
+
+  const updateProject = async (e: UpdateProject, token: string) => {
+    props.setModalLoading(true)
+    let bodyData = {
+      project: {
+        id: e.id,
+        public: e.public,
+        accessToken: token,
+      },
+    }
+    const response = await fetch('/api/project/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyData),
+    })
+
+    const data = await response.json()
+    props.setModalLoading(false)
+
+    return data
+  }
+
+  const saveScreenshot = async (e: UpdateProject) => {
+    props.setModalLoading(true)
+    const response = await fetch('/api/project/takeScreenShot', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify({
+        pageToScreenshot: `/project/preview/${e.id}-${e.projectName}`,
+        id: e.id,
+        accessToken: props.accessToken,
+      }),
+    })
+    props.setModalLoading(false)
+    if (response) {
+      toast({
+        title: 'The project screenshot has been updated',
+        description: 'The project screenshot has been updated successfully',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'Error when updated screenshot project',
+        description: 'An error occured, try again later',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const publishPublicProject = async (e: UpdateProject, token: string) => {
+    props.setModalLoading(true)
+
+    e.public = !e.public
+    const data = {
+      id: e.id,
+      public: e.public,
+      projectName: e.projectName,
+      accessToken: token,
+    }
+
+    const projectUpdated = await updateProject(data, token)
+
+    props.setModalLoading(false)
+
+    if (projectUpdated) {
+      toast({
+        title: 'The project visibility has been updated',
+        description:
+          'The project must now be validated by an admin to publish it in the gallery',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'Error when updated project',
+        description: 'An error occured, try again later',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const updateProjectName = async (
+    e: Project,
+    text: string | FormEvent<any>,
+  ) => {
+    props.setModalLoading(true)
+
+    const data = {
+      id: e.id,
+      projectName: text as string,
+      accessToken: props.accessToken,
+    }
+
+    const response = await fetch('/api/project/updateProjectName', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    const projectUpdated = await response.json()
+
+    if (projectUpdated) {
+      props.showUserProjectList()
+      toast({
+        title: 'The project name has been updated',
+        description: 'The project has been updated successfully',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'Error when updated project name',
+        description: 'An error occured, try again later',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
+    props.setModalLoading(true)
+  }
+
+  const EditableControls = ({ isEditing, onSubmit, onRequestEdit }: any) => {
+    return isEditing ? (
+      <ButtonGroup justifyContent="center" size="sm" ml={2}>
+        <IconButton
+          size="xs"
+          icon="check"
+          color="black"
+          onClick={onSubmit}
+          aria-label="submit"
+        />
+      </ButtonGroup>
+    ) : (
+      <Flex justifyContent="center" align="center" ml={5}>
+        <IconButton
+          size="xs"
+          icon="edit"
+          color="black"
+          onClick={onRequestEdit}
+          aria-label="edit"
+        />
+      </Flex>
+    )
+  }
 
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -53,7 +228,11 @@ const ModalComponent = (props: Props) => {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody overflowY="scroll">
-          {props.newProject ? (
+          {loadingAdd ? (
+            <Box textAlign="center">
+              <Spinner m="0 auto" color="#319795" size="xl" mt="3rem" />
+            </Box>
+          ) : props.newProject ? (
             <FormControl isRequired>
               <FormLabel htmlFor="fname">Project name</FormLabel>
               <Input
@@ -65,34 +244,123 @@ const ModalComponent = (props: Props) => {
                 }
               />
             </FormControl>
+          ) : props.loading ? (
+            <Box textAlign="center">
+              <Spinner m="0 auto" color="#319795" size="xl" mt="3rem" />
+            </Box>
           ) : props.userProjectList.length > 0 ? (
             <List spacing={3}>
               {props.userProjectList.map((e: Project, i: number) => {
                 return (
-                  <ListItem
-                    textAlign="center"
-                    onClick={() => {
-                      const href = `/project/${e.id}-${e.projectName}`
-                      router.push(href, href, { shallow: true })
-                    }}
-                    backgroundColor="#2E3748"
-                    color="white"
-                    borderRadius={5}
-                    p="0.5rem"
-                    cursor="pointer"
-                    _hover={{ backgroundColor: 'teal.400' }}
-                    fontWeight={600}
-                    fontSize="md"
-                  >
-                    <ListIcon icon={AiFillProject} color="white" />
-                    {e.id} - {e.projectName}
-                  </ListItem>
+                  <>
+                    <ListItem
+                      textAlign="center"
+                      backgroundColor="#2E3748"
+                      color="white"
+                      borderRadius={5}
+                      p="0.5rem"
+                      cursor="pointer"
+                      _hover={{ backgroundColor: 'teal.400' }}
+                      fontWeight={600}
+                      fontSize="md"
+                      mt={3}
+                      key={i}
+                    >
+                      <Accordion defaultIndex={[]} allowMultiple>
+                        <AccordionItem borderColor="transparent">
+                          <AccordionHeader
+                            _hover={{ backgroundColor: 'unset' }}
+                            textAlign="center"
+                            justifyItems="center"
+                            alignItems="center"
+                          >
+                            <Box
+                              as={AiFillProject}
+                              size="27px"
+                              color="white"
+                              display="inline-block"
+                              mr={5}
+                              width="20%"
+                            />
+                            <Editable
+                              display="inline-block"
+                              width="70%"
+                              textAlign="center"
+                              backgroundColor="transparent"
+                              defaultValue={e.projectName}
+                              fontSize="lg"
+                              isPreviewFocusable={false}
+                              submitOnBlur={true}
+                              onSubmit={(newValue: string | FormEvent<any>) => {
+                                updateProjectName(e, newValue)
+                              }}
+                            >
+                              {(props: any) => (
+                                <Flex align="center" justify="center">
+                                  <EditablePreview />
+                                  <EditableInput />
+                                  <EditableControls {...props} />
+                                </Flex>
+                              )}
+                            </Editable>
+
+                            <AccordionIcon />
+                          </AccordionHeader>
+                          <AccordionPanel pb={4}>
+                            <Flex align="center" justify="center">
+                              <Text mr={3}>
+                                {e.public ? 'Public' : 'Private'}
+                              </Text>
+                              <Switch
+                                color="teal"
+                                id="projectPublic"
+                                size="md"
+                                defaultIsChecked={e.public}
+                                onChange={() =>
+                                  publishPublicProject(e, props.accessToken)
+                                }
+                              />
+                              {e.public && (
+                                <Button
+                                  variantColor="teal"
+                                  size="sm"
+                                  ml={5}
+                                  onClick={() => saveScreenshot(e)}
+                                >
+                                  Take a screenshot
+                                </Button>
+                              )}
+                              <Button
+                                variantColor="teal"
+                                size="sm"
+                                ml={5}
+                                onClick={() => {
+                                  setLoadingAdd(true)
+                                  const href = `/project/${e.id}-${e.projectName}`
+                                  router.push(
+                                    {
+                                      pathname: '/project',
+                                    },
+                                    href,
+                                  )
+                                }}
+                              >
+                                Open
+                              </Button>
+                            </Flex>
+                          </AccordionPanel>
+                        </AccordionItem>
+                      </Accordion>
+                    </ListItem>
+                  </>
                 )
               })}
             </List>
           ) : (
             <Box textAlign="center">
-              <Spinner m="0 auto" color="#319795" size="xl" mt="3rem" />
+              <Text m="0 auto">
+                Project list is empty, save a project to display it here
+              </Text>
             </Box>
           )}
         </ModalBody>
@@ -107,7 +375,13 @@ const ModalComponent = (props: Props) => {
             >
               Close
             </Button>
-            <Button variantColor="blue" onClick={() => props.initProject()}>
+            <Button
+              variantColor="blue"
+              onClick={() => {
+                setLoadingAdd(true)
+                props.initProject()
+              }}
+            >
               Create
             </Button>
           </ModalFooter>

@@ -23,5 +23,12 @@ yarn-debug.log*
 yarn-error.log*
 
 .next
-
 pgdata
+/out_publish/
+/out_functions/
+zipped_functions/
+netlify-automatic-functions/
+out/
+
+# Local Netlify folder
+.netlify

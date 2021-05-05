@@ -1,80 +1,73 @@
 import React, { useEffect, useState } from 'react'
-import { PrismaClient } from '@prisma/client'
-import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { getSession, signIn } from 'next-auth/client'
 import useDispatch from '~hooks/useDispatch'
-import App from '~pages'
+import { useRouter } from 'next/router'
+import EditorPage from '~pages/editor'
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const prisma = new PrismaClient()
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  req,
+}) => {
   let projectId = (params!.slug as string).split('-')[0]
   let projectName = (params!.slug as string).split('-')[1]
 
-  const project = await prisma.project.findOne({
-    include: { user: true },
-    where: {
-      id: Number(projectId),
+  let bodyData = {
+    projectId,
+  }
+  //@ts-ignore
+  const baseUrl = req ? `https://${req.headers.host}` : ''
+
+  const response = await fetch(baseUrl + '/api/project/searchById', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    body: JSON.stringify(bodyData),
   })
-  let projects = JSON.parse(JSON.stringify(project))
+  const data = await response.json()
+  let project = JSON.parse(JSON.stringify(data.project))
+
   return {
     props: {
-      projects,
+      project,
       id: Number(projectId),
       projectName: projectName,
+      publicValue: project?.public,
+      validated: project?.validated,
     },
   }
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const prisma = new PrismaClient()
-  const projects = await prisma.project.findMany()
-  return {
-    paths: projects.map(project => ({
-      params: {
-        slug: `${project.id.toString()}-${project.projectName.toString()}`,
-      },
-    })),
-    fallback: true,
-  }
-}
-
-interface Project {
-  createdAt: string
-  updatedAt: string
-  userId: number
-  id: number
-  markup: string
-}
-
-interface Props {
-  projects: Project
-  id: number
 }
 
 const ProjectSlug = ({
-  projects,
+  project,
   id,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const [loading, setLoading] = useState(true)
+  projectName,
+  validated,
+  publicValue,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [projectExist, setProjectExist] = useState(true)
+  const [loading, setLoading] = useState(true)
 
+  const router = useRouter()
   const dispatch = useDispatch()
 
   const checkSession = async () => {
     const session = await getSession()
     if (session) {
-      if (projects) {
+      if (project) {
         setProjectExist(true)
-        if (projects.markup) {
-          dispatch.components.reset(JSON.parse(projects.markup))
+        if (project.markup) {
+          dispatch.components.reset(JSON.parse(project.markup))
           setLoading(false)
         }
       } else {
         setProjectExist(false)
       }
     } else {
-      signIn()
+      signIn('github', {
+        callbackUrl: process.env.NEXTAUTH_URL as string,
+      })
     }
   }
 
@@ -83,7 +76,18 @@ const ProjectSlug = ({
     // eslint-disable-next-line
   }, [])
 
-  return <App id={id} loading={loading} projectExist={projectExist} />
+  return router.isFallback ? (
+    <div>Loading...</div>
+  ) : (
+    <EditorPage
+      id={id}
+      projectExist={projectExist}
+      projectName={projectName}
+      validated={validated}
+      public={publicValue}
+      loading={loading}
+    />
+  )
 }
 
 export default ProjectSlug
