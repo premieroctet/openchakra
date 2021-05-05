@@ -83,6 +83,9 @@ const CompanySchema = new Schema({
     type: String,
     default: null,
   },
+  recurrent_cards: [{
+    type: String,
+  }]
 }, {toJSON: {virtuals: true, getters: true}});
 
 

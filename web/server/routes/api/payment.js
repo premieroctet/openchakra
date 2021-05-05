@@ -126,6 +126,48 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
     });
 });
 
+// POST /myAlfred/api/payment/recurrent
+// Set recurrency for card_id
+// @access private
+router.post('/recurrent', passport.authenticate('jwt', {session: false}), (req, res) => {
+  ICI CREER DES URLS DE RETOUR EN S3DS ET STANDARD
+  POSITIONNER recurrent_cards
+  const amount = 100
+  const fees = 0
+  const card_id = req.body.card_id
+  const promise=is_mode_company(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+
+  promise
+    .then(entity => {
+      const id_mangopay = entity.id_mangopay;
+      mangoApi.Users.getWallets(id_mangopay)
+        .then(wallets => {
+          const wallet_id = wallets[0].Id;
+          mangoApi.PayIns.create({
+            AuthorId: id_mangopay,
+            DebitedFunds: {Currency: 'EUR', Amount: amount},
+            Fees: {Currency: 'EUR', Amount: fees },
+            ReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            CardType: 'CB_VISA_MASTERCARD',
+            PaymentType: 'CARD',
+            ExecutionType: 'DIRECT',
+            CreditedWalletId: wallet_id,
+            CardId: card_id,
+            SecureMode: 'FORCE',
+            SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+          })
+            .then(payin => {
+              console.log(`Created reccurency for ${card_id}`)
+              return res.json(payin);
+            })
+            .catch(err => {
+              console.error(err)
+              return res.status(400).json(err)
+            })
+        });
+    })
+})
+
 // POST /myAlfred/api/payment/payInDirect
 // @access private
 router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -163,8 +205,12 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
               Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
                 .then( () => console.log('booking update ok'))
                 .catch( err => console.error(`booking update error:${err}`))
-              res.json(payin);
-            });
+              return res.json(payin);
+            })
+            .catch(err => {
+              console.error(err)
+              return res.status(400).json(err)
+            })
         });
     });
 

@@ -245,7 +245,7 @@ const addRegistrationProof = user => {
 };
 
 const payAlfred = booking => {
-  console.log(`Starting paying of booking ${JSON.stringify(booking)}`);
+  console.log(`Starting paying of booking ${booking._id}`);
   const amount = (booking.amount - booking.fees) * 100;
   const id_mangopay_user = booking.user.id_mangopay;
   const id_mangopay_alfred = booking.alfred.mangopay_provider_id;
