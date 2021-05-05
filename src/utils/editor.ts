@@ -89,5 +89,7 @@ export const rootComponents = COMPONENTS
         'AccordionButton',
         'AccordionPanel',
         'AccordionIcon',
+        'BreadcrumbItem',
+        'BreadcrumbLink',
       ].includes(name),
   )

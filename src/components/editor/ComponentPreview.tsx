@@ -23,6 +23,8 @@ import IconPreview from './previews/IconPreview'
 import IconButtonPreview from './previews/IconButtonPreview'
 import SelectPreview from '~components/editor/previews/SelectPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
+import BreadcrumbPreview from './previews/BreadcrumbPreview'
+import BreadcrumbItemPreview from './previews/BreadcrumbItemPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -105,9 +107,7 @@ const ComponentPreview: React.FC<{
       )
     case 'RadioGroup':
     case 'Stack':
-    case 'Breadcrumb':
     case 'InputGroup':
-    case 'BreadcrumbItem':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -142,6 +142,10 @@ const ComponentPreview: React.FC<{
       return <AspectRatioPreview component={component} />
     case 'Button':
       return <ButtonPreview component={component} />
+    case 'Breadcrumb':
+      return <BreadcrumbPreview component={component} />
+    case 'BreadcrumbItem':
+      return <BreadcrumbItemPreview component={component} />
     case 'Icon':
       return <IconPreview component={component} />
     case 'IconButton':
