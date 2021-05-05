@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import {
   Popover,
   PopoverTrigger,
@@ -154,7 +154,7 @@ const ColorPickerControl = (props: ColorPickerPropType) => {
           width="100px"
           size="sm"
           name={props.name}
-          onChange={(e: any) => {
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
             props.gradient
               ? props.updateGradient!(e.target.value, props.index!)
               : setValue(props.name, e.target.value)
