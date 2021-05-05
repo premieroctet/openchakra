@@ -281,16 +281,6 @@ const ModalComponent = (props: Props) => {
                               display="inline-block"
                               mr={5}
                               width="20%"
-                              onClick={() => {
-                                setLoadingAdd(true)
-                                const href = `/project/${e.id}-${e.projectName}`
-                                router.push(
-                                  {
-                                    pathname: '/project',
-                                  },
-                                  href,
-                                )
-                              }}
                             />
                             <Editable
                               display="inline-block"
@@ -340,6 +330,23 @@ const ModalComponent = (props: Props) => {
                                   Take a screenshot
                                 </Button>
                               )}
+                              <Button
+                                variantColor="teal"
+                                size="sm"
+                                ml={5}
+                                onClick={() => {
+                                  setLoadingAdd(true)
+                                  const href = `/project/${e.id}-${e.projectName}`
+                                  router.push(
+                                    {
+                                      pathname: '/project',
+                                    },
+                                    href,
+                                  )
+                                }}
+                              >
+                                Open
+                              </Button>
                             </Flex>
                           </AccordionPanel>
                         </AccordionItem>
