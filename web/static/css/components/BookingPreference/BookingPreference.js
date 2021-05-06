@@ -10,4 +10,10 @@ export default theme => ({
   policySizeContent: {
     color: '#696767',
   },
+  titleContainer:{
+    [theme.breakpoints.down('xs')]:{
+      display: 'flex',
+      justifyContent: 'center'
+    }
+  }
 })

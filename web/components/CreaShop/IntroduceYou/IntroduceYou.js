@@ -9,16 +9,12 @@ import Siret from '../../Siret/Siret';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../../static/css/components/IntroduceYou/IntroduceYou';
 import {Radio, RadioGroup} from '@material-ui/core';
-import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch';
 import Information from '../../Information/Information';
 import IconButton from "@material-ui/core/IconButton";
-const {CESU, CREASHOP_MODE} = require('../../../utils/consts');
+const {CESU} = require('../../../utils/consts');
 const I18N = require('../../../utils/i18n');
 import InfoIcon from '@material-ui/icons/Info';
 import {SHOP} from '../../../utils/i18n';
-import TextField from '@material-ui/core/TextField';
-import Divider from "@material-ui/core/Divider";
-import moment from 'moment'
 
 // TODO : fix l'update ne se fait pas après appel à l'api Sirene
 class IntroduceYou extends React.Component {
@@ -77,11 +73,9 @@ class IntroduceYou extends React.Component {
   render() {
     const {classes} = this.props;
 
-    const {cesu, is_particular} = this.state;
-
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
           <h2 className={classes.policySizeTitle}>{SHOP.creation.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex'}}>

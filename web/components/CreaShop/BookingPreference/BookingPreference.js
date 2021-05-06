@@ -65,7 +65,7 @@ class BookingPreference extends React.Component {
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
           <h2 className={classes.policySizeTitle}>{SHOP.preference.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -73,6 +73,9 @@ class BookingPreference extends React.Component {
         </Grid>
         <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_delay_prevenance} </h4>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <p className={classes.policySizeContent}>Par exemple, si vous indiquez un délai de 24 heures, un client devra réserver votre service au moins 24 heures avant votre intervention.</p>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
@@ -108,7 +111,7 @@ class BookingPreference extends React.Component {
           <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_minimum_basket}</h4>
         </Grid>
         <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Typography className={classes.policySizeContent}>{SHOP.preference.subtitle_minimum_basket}</Typography>
+          <p className={classes.policySizeContent}>{SHOP.preference.subtitle_minimum_basket}</p>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
           <Grid item xl={2} lg={2} md={6} sm={12} xs={12}>

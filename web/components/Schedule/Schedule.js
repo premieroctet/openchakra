@@ -280,7 +280,7 @@ class Schedule extends React.Component {
         {title || subtitle ?
           <Grid container spacing={3} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
             {title ?
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  className={classes.titleContainer}>
                 <h2 className={classes.schedule_policySizeTitle}>{title}</h2>
               </Grid> : null
             }

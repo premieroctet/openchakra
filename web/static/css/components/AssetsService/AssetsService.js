@@ -29,5 +29,11 @@ export default theme => ({
     color: 'white',
     textTransform: 'initial',
     fontWeight: 'bold'
+  },
+  titleContainer:{
+    [theme.breakpoints.down('xs')]:{
+      display: 'flex',
+      justifyContent: 'center'
+    }
   }
 })

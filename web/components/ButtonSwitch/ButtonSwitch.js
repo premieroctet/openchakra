@@ -149,7 +149,7 @@ class ButtonSwitch extends React.Component {
                   helperText={this.label ? null : 'Obligatoire'}
                 />
                 :
-                <Typography style={{color: '#696767'}}>{label === undefined ? 'label introuvable' : label}</Typography>
+                <p>{label === undefined ? 'label introuvable' : label}</p>
               }
             </span>
           </Grid>

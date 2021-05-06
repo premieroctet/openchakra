@@ -209,7 +209,7 @@ const SHOP = {
     days: 'jour(s)',
     weeks: 'semaine(s)',
     title_minimum_basket: 'Quel est le montant minimal pour réserver votre service ?',
-    subtitle_minimum_basket: ' Le client peut réserver mes services si le total des prestations sélectionnées est supérieur à :',
+    subtitle_minimum_basket: ' Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service. Si vous indiquez un montant de 10€, les clients ne pourront pas réserver vos services si la somme des prestations n’atteint pas ce montant',
     textfield_minimum_basket: 'Panier minimum',
     unit_minimum_basket: '€',
     title_equipments: 'Les équipements que vous fournissez pour ce service:',

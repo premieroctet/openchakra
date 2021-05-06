@@ -177,6 +177,12 @@ export default theme => ({
   },
   schedule_containerToolbar:{
     alignItems: 'center',
+  },
+  titleContainer:{
+    [theme.breakpoints.down('xs')]:{
+      display: 'flex',
+      justifyContent: 'center'
+    }
   }
 
 })

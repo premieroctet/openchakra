@@ -13,4 +13,10 @@ export default theme => ({
   margin: {
     margin: theme.spacing(1),
   },
+  titleContainer:{
+    [theme.breakpoints.down('xs')]:{
+      display: 'flex',
+      justifyContent: 'center'
+    }
+  }
 })

@@ -86,7 +86,7 @@ class SettingService extends React.Component {
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
           <h2 className={classes.policySizeTitle}>{SHOP.settingService.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -144,7 +144,7 @@ class SettingService extends React.Component {
             }
         </Grid>
         <Grid container spacing={1} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
-          {(travel_tax || pick_tax) ?
+          {(service && service.travel_tax || service && service.pick_tax) ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <h4 className={classes.policySizeSubtitle} style={{margin:0}}>{SHOP.settingService.section_option_title}</h4>
             </Grid> : null

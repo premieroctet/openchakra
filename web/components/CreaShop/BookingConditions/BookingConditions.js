@@ -61,7 +61,7 @@ class BookingConditions extends React.Component {
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
           <h2 className={classes.policySizeTitle}>{SHOP.bookingCondition.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>

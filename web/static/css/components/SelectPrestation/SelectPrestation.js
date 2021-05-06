@@ -57,4 +57,10 @@ export default theme => ({
     marginBottom: 30,
     marginTop: 30,
   },
+  titleContainer:{
+    [theme.breakpoints.down('xs')]:{
+      display: 'flex',
+      justifyContent: 'center'
+    }
+  }
 })
