@@ -7,7 +7,6 @@ import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/services/services';
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Hidden from "@material-ui/core/Hidden";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Box from "../../components/Box/Box";
 import axios from "axios";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";

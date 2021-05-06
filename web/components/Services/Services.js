@@ -31,8 +31,8 @@ class Services extends React.Component {
           </Grid>
           <Grid container spacing={2} style={{marginTop: '1vh'}}>
           {
-            part_services.map(s => (
-              <Grid item xl={3} xs={12} sm={6} md={3} lg={3}>
+            part_services.map((s, index) => (
+              <Grid item xl={3} xs={12} sm={6} md={3} lg={3} key={index}>
                 <CardService item={s._id} page={0} profileMode={true} onDelete={onDelete}/>
               </Grid>
             ))
@@ -47,8 +47,8 @@ class Services extends React.Component {
           </Grid>
           <Grid container spacing={2} style={{marginTop: '5vh'}}>
           {
-            pro_services.map(s => (
-              <Grid item xl={3} xs={12} sm={6} md={3} lg={3}>
+            pro_services.map((s,index) => (
+              <Grid item xl={3} xs={12} sm={6} md={3} lg={3} key={index}>
                 <CardService item={s._id} page={0} profileMode={true} onDelete={onDelete}/>
               </Grid>
             ))

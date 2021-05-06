@@ -280,38 +280,22 @@ router.post('/validateAccount', (req, res) => {
 // Set the main address in the profile
 // @Access private
 router.put('/profile/billingAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
-  console.log(req.user, 'user')
 
   User.findById(req.user.id)
     .then(user => {
-      user.billing_address = {};
-      user.billing_address.address = req.body.address;
-      user.billing_address.zip_code = req.body.zip_code;
-      user.billing_address.city = req.body.city;
-      user.billing_address.country = req.body.country;
-      user.billing_address.gps.lat = req.body.gps.lat;
-      user.billing_address.gps.lng = req.body.gps.lng;
+      user.billing_address = req.body;
       user.save()
         .then(
-          ServiceUser.findOne({user: req.user.id})
-            .then(
-            serviceUser => {
-              console.log(typeof serviceUser.service_address.gps.lat, 'coucou')
-              serviceUser.service_address = {};
-              serviceUser.service_address.address = req.body.address;
-              serviceUser.service_address.zip_code = req.body.zip_code;
-              serviceUser.service_address.city = req.body.city;
-              serviceUser.service_address.country = req.body.country;
-              serviceUser.service_address.gps.lat = req.body.gps.lat;
-              serviceUser.service_address.gps.lng = req.body.gps.lng;
-              serviceUser.save()
-            }
-          ).catch( err => console.error(err))
+          user => {
+            ServiceUser.updateMany({user:user.id}, {service_address: user.billing_address})
+          }
         )
         .catch(
           err => console.error(err)
         );
-    });
+    })
+    .catch(err => console.error(err))
+    .finally( user => {res.json(user)})
 });
 
 // @Route PUT /myAlfred/api/users/profile/languages
