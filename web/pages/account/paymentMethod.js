@@ -77,7 +77,7 @@ class paymentMethod extends React.Component {
       showAddCreditCard: false,
       showAddRib: false,
       showDeleteRib: false,
-      showRecurrentCard: 108097553,
+      showRecurrentCard: null,
       accounts: [],
       haveAccount: false,
       bic: '',

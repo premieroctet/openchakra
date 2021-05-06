@@ -83,6 +83,7 @@ const CompanySchema = new Schema({
     type: String,
     default: null,
   },
+  // Mangopay card ids validated for recurrent payments
   recurrent_cards: [{
     type: String,
   }]

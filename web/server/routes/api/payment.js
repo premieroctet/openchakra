@@ -130,8 +130,6 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
 // Set recurrency for card_id
 // @access private
 router.post('/recurrent', passport.authenticate('jwt', {session: false}), (req, res) => {
-  ICI CREER DES URLS DE RETOUR EN S3DS ET STANDARD
-  POSITIONNER recurrent_cards
   const amount = 100
   const fees = 0
   const card_id = req.body.card_id
@@ -153,11 +151,12 @@ router.post('/recurrent', passport.authenticate('jwt', {session: false}), (req, 
             ExecutionType: 'DIRECT',
             CreditedWalletId: wallet_id,
             CardId: card_id,
+            Culture: 'FR',
             SecureMode: 'FORCE',
             SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
           })
             .then(payin => {
-              console.log(`Created reccurency for ${card_id}`)
+              console.log(`Created reccurency for ${card_id}:${JSON.stringify(payin, null, 2)}`)
               return res.json(payin);
             })
             .catch(err => {
@@ -198,6 +197,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
             ExecutionType: 'DIRECT',
             CreditedWalletId: wallet_id,
             CardId: id_card,
+            Culture: 'FR',
             SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
           })
             .then(payin => {
