@@ -228,7 +228,7 @@ class add extends React.Component {
       .post('/myAlfred/api/admin/service/all', formData)
       .then(res => {
         alert('Service ajouté');
-        Router.push({pathname: '/dashboard/services/all'});
+        Router.push(`/dashboard/services/view?id=${res.data._id}`);
       })
       .catch(err => {
           toast.error(JSON.stringify(err.response.data, null, 2));

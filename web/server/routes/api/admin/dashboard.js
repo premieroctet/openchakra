@@ -1744,6 +1744,7 @@ const storageService = multer.diskStorage({
 });
 const uploadService = multer({storage: storageService});
 
+
 // @Route POST /myAlfred/api/admin/service/all
 // Add service for prestation
 // @Access private
@@ -1771,7 +1772,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
             category: mongoose.Types.ObjectId(req.body.category),
             equipments: JSON.parse(req.body.equipments),
             tags: JSON.parse(req.body.tags),
-            picture: req.body.picture.path,
+            picture: req.file.path,
             description: req.body.description,
             majoration: req.body.majoration,
             location: {
