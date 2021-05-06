@@ -7,23 +7,13 @@ import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
+import styles from '../static/css/pages/forgotPassword/forgotPassword'
 import Router from 'next/router';
 const {snackBarSuccess, snackBarError} = require('../utils/notifications');
 const {ADMIN, MANAGER} = require('../utils/consts')
 const _ = require('lodash')
+import {is_b2b_style} from "../utils/context";
 
-const styles = {
-  loginContainer: {
-    alignItems: 'center',
-    height: '100vh',
-    justifyContent: 'center',
-    flexDirection: 'column',
-  },
-  card: {
-    padding: '1.5rem 3rem',
-    width: 400,
-  },
-};
 
 class forgotPassword extends React.Component {
 
@@ -32,7 +22,14 @@ class forgotPassword extends React.Component {
 
     this.state = {
       email: '',
+      user:{}
     };
+  }
+
+  componentDidMount() {
+    axios.get('/myAlfred/api/users/current').then( res =>{
+      this.setState({user: res.data})
+    }).catch( err => (console.error(err)))
   }
 
   onChange = e => {
@@ -63,36 +60,32 @@ class forgotPassword extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {message, error}=this.state
+    const {user} = this.state;
 
     return (
       <Layout>
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
-            <Grid>
-              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>Mot de passe oublié</Typography>
-              </Grid>
-              <form onSubmit={this.onSubmit}>
-                <Grid item>
-                  <TextField
-                    id="standard-with-placeholder"
-                    label="Email"
-                    placeholder="Email"
-                    margin="normal"
-                    style={{width: '100%'}}
-                    type="email"
-                    name="email"
-                    value={this.state.email}
-                    onChange={this.onChange}
-                  />
-                </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
-                    Valider
-                  </Button>
-                </Grid>
-              </form>
+            <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+              <h2>Mot de passe oublié</h2>
+            </Grid>
+            <Grid item>
+              <TextField
+                id="standard-with-placeholder"
+                label="Email"
+                placeholder="Email"
+                style={{width: '100%'}}
+                type="email"
+                name="email"
+                value={this.state.email}
+                onChange={this.onChange}
+                variant={'outlined'}
+              />
+            </Grid>
+            <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
+              <Button variant="contained" classes={{root: classes.buttonSubmit}}  style={{backgroundColor: is_b2b_style(user) ? '#353A51' : 'rgba(178,204,251,1)'}} onClick={this.onSubmit}>
+                Valider
+              </Button>
             </Grid>
           </Card>
         </Grid>
