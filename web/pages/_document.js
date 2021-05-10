@@ -13,7 +13,7 @@ class MyDocument extends Document {
       <Head>
         <meta charSet="utf-8"/>
         {/* Use minimum-scale=1 to enable GPU rasterization */}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
         {/* PWA primary color */}
         <meta
           name="theme-color"
