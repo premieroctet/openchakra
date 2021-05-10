@@ -36,14 +36,12 @@ import Link from 'next/link';
 import OAuth from '../OAuth/OAuth';
 import Information from '../Information/Information';
 import CguContent from "../CguContent/CguContent";
-
+import CloseIcon from "@material-ui/icons/Close";
 const {getLoggedUserId} = require('../../utils/functions')
-
 var parse = require('url-parse');
 const {PROVIDERS, ACCOUNT_MIN_AGE} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
 const {isPhoneOk} = require('../../utils/sms');
-
 
 registerLocale('fr', fr);
 
@@ -169,12 +167,13 @@ class Register extends React.Component {
     };
     return (
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle onClose={() => this.setState({open: false})}>
-        </DialogTitle>
+        <DialogTitle onClose={() => this.setState({open: false})}/>
         <DialogContent>
           <CguContent/>
-          <Button style={{float: 'right'}} onClick={handleClose}>Fermer</Button>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color={'secondary'}>Fermer</Button>
+        </DialogActions>
       </Dialog>
     )
   }
@@ -735,7 +734,7 @@ class Register extends React.Component {
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                 <Grid>
                   <Grid container style={{marginTop: 15, alignItems: 'center'}}>
-                    <Grid>
+                    <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                       <Checkbox
                         checked={this.state.checked}
                         onChange={this.handleChecked}
@@ -743,7 +742,7 @@ class Register extends React.Component {
                         color="primary"
                       />
                     </Grid>
-                    <Grid>
+                    <Grid  item xl={10} lg={10} md={10} sm={10} xs={10}>
                       <Button onClick={this.handleOpenCgu} style={{color: '#2FBCD3'}}>J’accepte les
                         conditions
                         générales d’utilisation de My-Alfred.</Button>
