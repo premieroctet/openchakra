@@ -142,7 +142,7 @@ class SelectPrestation extends React.Component {
                   <Grid key={i} className={classes.maxWidth}>
                     <Grid className={classes.marginThirty}>
                       <Grid>
-                        <Typography style={{color: '#696767'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}</Typography>
+                        <Typography style={{color: '#696767'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? 'Prestations standard' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}</Typography>
                       </Grid>
                     </Grid>
                     <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
