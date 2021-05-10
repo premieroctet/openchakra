@@ -20,6 +20,8 @@ const {MANGOPAY_ERRORS}=require('../../../utils/mangopay_messages')
 moment.locale('fr');
 const {is_b2b_admin, is_b2b_manager, is_mode_company}=require('../../utils/serverContext')
 const {computeUrl} = require('../../../config/config');
+const Router=require('next/router')
+const cors = require('cors')
 
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}));
 
@@ -65,10 +67,11 @@ router.post('/createCard', passport.authenticate('jwt', {session: false}), (req,
       const {card_number, expiration_date, csv} = req.body
       createCard(id_mangopay, card_number, expiration_date, csv)
         .then( newCard => {
+          console.log(`Created card ${newCard.Id}`)
           res.json(newCard)
         })
         .catch( err => {
-          console.error(err)
+          console.error(`Error creating card:${err}`)
           res.status(404).json({error: err})
         })
     })
@@ -126,16 +129,60 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
     });
 });
 
+// POST /myAlfred/api/payment/refund
+// Set recurrency for card_id
+// @access private
+router.post('/refund', passport.authenticate('b2badmin', {session: false}),(req, res) => {
+  const payInId=req.body.payInId
+  const company_id = req.user.company
+  console.log(`Refunding transaction ${payInId}`)
+
+  Company.findById(req.user.company)
+    .then(entity => {
+      const id_mangopay = entity.id_mangopay;
+      mangoApi.PayIns.createRefund(
+        payInId,
+        { AuthorId: id_mangopay}
+      )
+        .then (refund => {
+          console.log(`refund ok : ${JSON.stringify(refund)}`)
+          res.json(refund)
+        })
+        .catch (err => {
+          console.error(err)
+          res.status(400).json(err)
+        })
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(400).json(err)
+      })
+})
+
 // POST /myAlfred/api/payment/recurrent
 // Set recurrency for card_id
 // @access private
-router.post('/recurrent', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/recurrentConfirm', passport.authenticate('b2badmin', {session: false}),(req, res) => {
+  console.log(`recurrentConfirm=${req.originalUrl}`)
+  const cardId=req.body.cardId
+  const company_id=req.body.company_id
+  Company.findByIdAndUpdate(company_id, { $addToSet: { recurrent_cards: cardId } })
+    .then( () => {
+      console.log(`Company ${company_id}:card ${cardId} added to recurrent`)
+    })
+  console.log(`Card ${cardId} added to company ${company_id} recurrency list`)
+  return res.status(200).json()
+})
+
+// POST /myAlfred/api/payment/recurrent
+// Set recurrency for card_id
+// @access private
+router.post('/recurrent', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   const amount = 100
   const fees = 0
   const card_id = req.body.card_id
-  const promise=is_mode_company(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
 
-  promise
+  Company.findById(req.user.company)
     .then(entity => {
       const id_mangopay = entity.id_mangopay;
       mangoApi.Users.getWallets(id_mangopay)
@@ -145,7 +192,8 @@ router.post('/recurrent', passport.authenticate('jwt', {session: false}), (req, 
             AuthorId: id_mangopay,
             DebitedFunds: {Currency: 'EUR', Amount: amount},
             Fees: {Currency: 'EUR', Amount: fees },
-            ReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            //ReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            ReturnURL: `${computeUrl(req)}/payment/recurrentPayment?cardId=${card_id}&company_id=${entity._id}`,
             CardType: 'CB_VISA_MASTERCARD',
             PaymentType: 'CARD',
             ExecutionType: 'DIRECT',
@@ -153,11 +201,13 @@ router.post('/recurrent', passport.authenticate('jwt', {session: false}), (req, 
             CardId: card_id,
             Culture: 'FR',
             SecureMode: 'FORCE',
-            SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            //SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            SecureModeReturnURL: `${computeUrl(req)}/payment/recurrentPayment?cardId=${card_id}&company_id=${entity._id}`,
+            StatementDescriptor: 'VALIDATION'
           })
             .then(payin => {
-              console.log(`Created reccurency for ${card_id}:${JSON.stringify(payin, null, 2)}`)
-              return res.json(payin);
+              console.log(`Created payin for recurrency:${JSON.stringify(payin)}`)
+              return res.json(payin)
             })
             .catch(err => {
               console.error(err)
@@ -280,7 +330,13 @@ router.get('/cards', passport.authenticate('jwt', {session: false}), (req, res) 
     .then(entity => {
       mangoApi.Users.getCards(entity.id_mangopay, {parameters: { per_page: 100}})
         .then(cards => {
+          console.log(`Cards:${JSON.stringify(cards, null, 2)}`)
           cards = cards.filter(c => c.Active)
+          if (entity instanceof Company) {
+            cards.forEach( c => {
+              c.recurrent = entity.recurrent_cards.includes(c.Id)
+            })
+          }
           if (is_b2b_manager(req)) {
             Group.findOne({ members : req.user.id}, 'cards')
               .then( group => {
@@ -369,7 +425,23 @@ router.put('/account', passport.authenticate('jwt', {session: false}), (req, res
 // @access private
 router.put('/cards', passport.authenticate('jwt', {session: false}), (req, res) => {
   const id_card = req.body.id_card;
-  mangoApi.Cards.update({Id: id_card, Active: false}).then().catch();
+  mangoApi.Cards.update({Id: id_card, Active: false})
+    .then( () => {
+      if (req.user.company) {
+        Company.findByIdAndUpdate(req.user.company, { $pull : { recurrent_cards: id_card}})
+          .then( () => {
+            console.log(`Card ${id_card} removed from recurrency list`)
+          })
+          .catch (err => {
+            console.error(`Card ${id_card} : error while removing from recurrency list`)
+          })
+      }
+      return res.json(id_card)
+    })
+    .catch( err => {
+      console.error(err)
+      return res.status(400).json(err)
+    })
 });
 
 // GET /myAlfred/api/payment/siret/{no_siret_or_siren}

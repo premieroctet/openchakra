@@ -9,6 +9,7 @@ const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType');
 const mangoApi = new mangopay(MANGOPAY_CONFIG)
 const process=require('process')
 const request = require('request');
+const {MANGOPAY_ERRORS}=require('../../utils/mangopay_messages')
 
 const createMangoClient = user => {
   var userData = {
@@ -339,7 +340,7 @@ const payAlfred = booking => {
 // TODO : update hook s'il existe pour éviter les warning au démarrage
 const install_hooks= (hook_types, url) => {
 
-  if (is_development() && process.platform != 'darwin') {
+  if (is_development() && !['darwin', 'linux'].includes(process.platform)) {
     return console.log(`Dev mode: skipped install_hooks(${hook_types})`)
   }
 

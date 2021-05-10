@@ -1,5 +1,6 @@
-MANGOPAY_ERRORS={
+const MANGOPAY_ERRORS={
   //1599:"Token processing error",
+  101301: "L'authentification 3DSecure a échoué",
   //105299:"Token input Error",
   105202:"N° de carte : format invalide",
   105203:"Date d'expiration : format incorrect",

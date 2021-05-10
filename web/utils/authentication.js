@@ -13,12 +13,10 @@ const setAuthToken = () => {
 
 const getAuthToken = () => {
   if (typeof localStorage=='undefined') {
-    console.debug('Can not get auth token, undefined localStorage')
     return null
   }
   const token = localStorage.getItem('token')
   if (!token) {
-    console.debug('No token in storage')
     return null
   }
 

@@ -22,14 +22,11 @@ const get_logged_id = req => {
 }
 
 const get_role = req => {
-  const auth = req.headers.authorization
-  if (!auth) {
-    return null
+  const token = get_token(req)
+  if (token) {
+    return token.role
   }
-  const data=auth.split(' ')[1]
-  const decoded = jwt.decode(data);
-  console.log(`Decode token:${JSON.stringify(decoded)}`)
-  return decoded.role
+  return null
 }
 
 const is_b2b_admin = req => {
