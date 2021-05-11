@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { SimpleGrid, Select, Box } from '@chakra-ui/react'
+import { Select, Box } from '@chakra-ui/react'
 import FormControl from '~components/inspector/controls/FormControl'
 import usePropsSelector from '~hooks/usePropsSelector'
 import { useForm } from '~hooks/useForm'
@@ -12,18 +12,14 @@ const DimensionPanel = () => {
   return (
     <>
       <Box>
-        {/* <SimpleGrid columns={1} spacing={1}> */}
         <TextControl label="Width" name="width" />
         <TextControl label="Height" name="height" />
-        {/* </SimpleGrid> */}
 
-        {/* <SimpleGrid columns={1} spacing={1}> */}
         <TextControl label="Min W" name="minWidth" />
         <TextControl label="Min H" name="minHeight" />
 
         <TextControl label="Max W" name="maxWidth" />
         <TextControl label="Max H" name="maxHeight" />
-        {/* </SimpleGrid> */}
       </Box>
 
       <FormControl label="Overflow">
