@@ -639,13 +639,29 @@ class paymentMethod extends React.Component {
   }
 
   onValidateRecurrent = () => {
+    const {user}=this.state
     setAxiosAuthentication()
     const data={
       card_id : this.state.showRecurrentCard,
     }
     this.setState({showRecurrentCard: null})
     axios.post('/myAlfred/api/payment/recurrent', data)
-      .then( () => console.log('Recurrent ok'))
+      .then( res => {
+        const payInResult=res.data
+        if (payInResult.SecureModeNeeded) {
+          Router.push(payInResult.SecureModeRedirectURL)
+        }
+        else {
+          if (payInResult.RedirectURL) {
+            Router.push(payInResult.RedirectURL)
+          }
+          else {
+            Router.push(`/payment/recurrentPayment?cardId=${this.state.showRecurrentCard}&company_id=${user.company}`)
+          }
+        }
+
+        console.log('Recurrent ok')
+      })
       .catch( err => {
         console.log(err)
         snackBarError(err.response.data)

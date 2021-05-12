@@ -248,93 +248,99 @@ const addRegistrationProof = user => {
 const payAlfred = booking => {
   console.log(`Starting paying of booking ${booking._id}`);
   const amount = (booking.amount - booking.fees) * 100;
-  const id_mangopay_user = booking.user.id_mangopay;
   const id_mangopay_alfred = booking.alfred.mangopay_provider_id;
+  const role = booking.user_role
 
-  mangoApi.Users.getWallets(id_mangopay_user)
-    .catch(err => {
-      console.error('Err:' + JSON.stringify(err));
-      return;
-    })
-    .then(wallets => {
-      const wallet_id = wallets[0].Id;
-      mangoApi.Users.getWallets(id_mangopay_alfred)
+  const promise= [ADMIN, MANAGER].includes(role) ? Company.findById(req.user.company) : User.findById(req.user.id)
+
+  promise
+    .then( entity => {
+      const id_mangopay_user=entity.id_mangopay
+      mangoApi.Users.getWallets(id_mangopay_user)
         .catch(err => {
-          console.error(`GetWallets Alfred ${id_mangopay_alfred}:${JSON.stringify(err)}`);
+          console.error('Err:' + JSON.stringify(err));
           return;
         })
-        .then(wallet_alfred => {
-          const id_wallet_alfred = wallet_alfred[0].Id;
+        .then(wallets => {
+          const wallet_id = wallets[0].Id;
+          mangoApi.Users.getWallets(id_mangopay_alfred)
+            .catch(err => {
+              console.error(`GetWallets Alfred ${id_mangopay_alfred}:${JSON.stringify(err)}`);
+              return;
+            })
+            .then(wallet_alfred => {
+              const id_wallet_alfred = wallet_alfred[0].Id;
 
-          const transferPromise = booking.mangopay_transfer_id ?
-            emptyPromise()
-            :
-            mangoApi.Transfers.create({
-              AuthorId: id_mangopay_user,
-              DebitedFunds: {Currency: 'EUR', Amount: amount},
-              Fees: {Currency: 'EUR', Amount: 0},
-              DebitedWalletId: wallet_id,
-              CreditedWalletId: id_wallet_alfred,
-            });
+              const transferPromise = booking.mangopay_transfer_id ?
+                emptyPromise()
+                :
+                mangoApi.Transfers.create({
+                  AuthorId: id_mangopay_user,
+                  DebitedFunds: {Currency: 'EUR', Amount: amount},
+                  Fees: {Currency: 'EUR', Amount: 0},
+                  DebitedWalletId: wallet_id,
+                  CreditedWalletId: id_wallet_alfred,
+                });
 
-          transferPromise.then(trsf => {
-              if (trsf) { // Transfer did not already exist
-                if (trsf.Status == 'FAILED') {
-                  console.error(`Transfer failed:${trsf.ResultMessage}`);
-                  return;
-                }
-                booking.mangopay_transfer_id = trsf.Id;
-                booking.save()
-                  .then(b => console.log(`Set transfer to ${trsf.Id} to booking ${b._id}]`))
-                  .catch(err => {
-                    console.log(`Error creating transfer for booking ${b._id}`);
-                    return;
-                  });
-              }
-              mangoApi.Users.getBankAccounts(id_mangopay_alfred)
-                .catch(err => {
-                  console.error(err);
-                  return;
-                })
-                .then(accounts => {
-                  accounts = accounts.filter(a => a.Active);
-                  if (accounts.length == 0) {
-                    console.log(`No active bank account for Alfred ${id_mangopay_alfred}`);
-                    return;
+              transferPromise.then(trsf => {
+                  if (trsf) { // Transfer did not already exist
+                    if (trsf.Status == 'FAILED') {
+                      console.error(`Transfer failed:${trsf.ResultMessage}`);
+                      return;
+                    }
+                    booking.mangopay_transfer_id = trsf.Id;
+                    booking.save()
+                      .then(b => console.log(`Set transfer to ${trsf.Id} to booking ${b._id}]`))
+                      .catch(err => {
+                        console.log(`Error creating transfer for booking ${b._id}`);
+                        return;
+                      });
                   }
-                  mangoApi.PayOuts.create({
-                    AuthorId: id_mangopay_alfred,
-                    DebitedFunds: {Currency: 'EUR', Amount: amount},
-                    Fees: {Currency: 'EUR', Amount: 0},
-                    BankAccountId: accounts[0].Id,
-                    DebitedWalletId: id_wallet_alfred,
-                    BankWireRef: `My Alfred`,
-                    PaymentType: 'BANK_WIRE',
-                  })
+                  mangoApi.Users.getBankAccounts(id_mangopay_alfred)
                     .catch(err => {
                       console.error(err);
                       return;
                     })
-                    .then(
-                      po => {
-                        console.log('Create payout OK:' + JSON.stringify(po));
-                        booking.mangopay_payout_id = po.Id;
-                        booking.paid = true;
-                        booking.date_payment = moment();
-                        booking.save().then().catch();
-                      },
-                      err => {
-                        console.error('Create Payout error:' + JSON.stringify(err));
-                      },
-                    );
-                });
-            },
-            err => {
-              err => console.error('Create transfer error:' + JSON.stringify(err));
-            },
-          );
+                    .then(accounts => {
+                      accounts = accounts.filter(a => a.Active);
+                      if (accounts.length == 0) {
+                        console.log(`No active bank account for Alfred ${id_mangopay_alfred}`);
+                        return;
+                      }
+                      mangoApi.PayOuts.create({
+                        AuthorId: id_mangopay_alfred,
+                        DebitedFunds: {Currency: 'EUR', Amount: amount},
+                        Fees: {Currency: 'EUR', Amount: 0},
+                        BankAccountId: accounts[0].Id,
+                        DebitedWalletId: id_wallet_alfred,
+                        BankWireRef: `My Alfred`,
+                        PaymentType: 'BANK_WIRE',
+                      })
+                        .catch(err => {
+                          console.error(err);
+                          return;
+                        })
+                        .then(
+                          po => {
+                            console.log('Create payout OK:' + JSON.stringify(po));
+                            booking.mangopay_payout_id = po.Id;
+                            booking.paid = true;
+                            booking.date_payment = moment();
+                            booking.save().then().catch();
+                          },
+                          err => {
+                            console.error('Create Payout error:' + JSON.stringify(err));
+                          },
+                        );
+                    });
+                },
+                err => {
+                  err => console.error('Create transfer error:' + JSON.stringify(err));
+                },
+              );
+            });
         });
-    });
+  })
 };
 
 // TODO : update hook s'il existe pour éviter les warning au démarrage

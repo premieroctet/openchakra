@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const {ADMIN, MANAGER} = require('../../utils/consts')
+const {ADMIN, MANAGER, EMPLOYEE} = require('../../utils/consts')
 const keys = require('../config/keys');
 
 const get_token = req => {
@@ -37,6 +37,10 @@ const is_b2b_manager = req => {
   return MANAGER == get_role(req)
 }
 
+const is_b2b_employee = req => {
+  return EMPLOYEE == get_role(req)
+}
+
 const is_mode_company = req => {
   return is_b2b_admin(req) || is_b2b_manager(req)
 }
@@ -64,4 +68,5 @@ const send_cookie = (user, role, res) => {
   });
 };
 
-module.exports = {get_logged_id, get_role, is_b2b_admin, is_b2b_manager, is_mode_company, send_cookie, get_token}
+module.exports = {get_logged_id, get_role, is_b2b_admin, is_b2b_manager,
+  is_b2b_employee, is_mode_company, send_cookie, get_token}

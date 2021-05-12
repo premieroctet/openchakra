@@ -12,8 +12,8 @@ class RecurrentPayment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      success: null,
-      error: null,
+      success: [],
+      errors: [],
     }
   }
 
@@ -27,10 +27,10 @@ class RecurrentPayment extends React.Component {
       .then(result => {
         let transaction = result.data;
         if (transaction.Status === 'FAILED') {
-          this.setState({error: `${getMangopayMessage(transaction.ResultCode)}`})
+          this.setState({errors: [getMangopayMessage(transaction.ResultCode)]})
         }
         else {
-          this.setState({success: 'Votre carte est validée pour les paiements, votre compte va être recrédité'})
+          this.setState({success: ['Votre carte est validée pour les paiements, votre compte va être recrédité']})
           const data={
             cardId: this.props.cardId,
             company_id: this.props.company_id,
@@ -42,12 +42,13 @@ class RecurrentPayment extends React.Component {
               }
               axios.post(`/myAlfred/api/payment/refund`, refundData)
                 .then( () => {
-                  this.setState({success: 'Votre carte est validée pour les paiements, votre compte a été recrédité'})
+                  var success=[...this.state.success, 'Votre compte a été recrédité']
+                  this.setState({success: success})
                 })
                 .catch(err => {
                   this.setState({
-                    success:null,
-                    error: 'Erreur durant le remboursement'})
+                    success:[],
+                    error: ['Erreur durant le remboursement']})
                 })
             })
             .catch( err => {
@@ -61,7 +62,7 @@ class RecurrentPayment extends React.Component {
   }
   render() {
     const {classes} = this.props;
-    const {error, success}=this.state
+    const {errors, success}=this.state
     return (
       <React.Fragment>
         <LayoutPayment>
@@ -73,8 +74,12 @@ class RecurrentPayment extends React.Component {
                     <h2>Enregistrement de la carte pour les paiements récurrents </h2>
                   </Grid>
                   <Grid>
-                    <Typography>{ success ? success : null}</Typography>
-                    <Typography>{ error ? error : null}</Typography>
+                    {success.map(s =>
+                      <Typography>{s}</Typography>
+                    )}
+                    {errors.map(e =>
+                      <Typography style={{color: 'red'}}>{e}</Typography>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>

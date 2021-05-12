@@ -18,10 +18,11 @@ var parse = require('url-parse');
 const {inspect} = require('util');
 const {MANGOPAY_ERRORS}=require('../../../utils/mangopay_messages')
 moment.locale('fr');
-const {is_b2b_admin, is_b2b_manager, is_mode_company}=require('../../utils/serverContext')
+const {is_b2b_admin, is_b2b_manager, is_b2b_employee, is_mode_company}=require('../../utils/serverContext')
 const {computeUrl} = require('../../../config/config');
 const Router=require('next/router')
 const cors = require('cors')
+const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}));
 
@@ -201,12 +202,10 @@ router.post('/recurrent', passport.authenticate('b2badmin', {session: false}), (
             CardId: card_id,
             Culture: 'FR',
             SecureMode: 'FORCE',
-            //SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
             SecureModeReturnURL: `${computeUrl(req)}/payment/recurrentPayment?cardId=${card_id}&company_id=${entity._id}`,
             StatementDescriptor: 'VALIDATION'
           })
             .then(payin => {
-              console.log(`Created payin for recurrency:${JSON.stringify(payin)}`)
               return res.json(payin)
             })
             .catch(err => {
@@ -320,48 +319,62 @@ router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req
     });
 });
 
-
+const get_cards = req => {
+  return new Promise( (resolve, reject) => {
+    const promise=is_mode_company(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+    promise
+      .then(entity => {
+        mangoApi.Users.getCards(entity.id_mangopay, {parameters: { per_page: 100}})
+          .then(cards => {
+            console.log(`Cards:${JSON.stringify(cards, null, 2)}`)
+            cards = cards.filter(c => c.Active)
+            if (entity.recurrent_cards) {
+              cards.forEach(c => c.recurrent=entity.recurrent_cards.includes(c.Id))
+            }
+            resolve(cards)
+          })
+      })
+      .catch (err => {
+        reject(err)
+      })
+    }
+  )
+}
 // GET /myAlfred/api/payment/cards
 // View all credit cards for a user
 // @access private
 router.get('/cards', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const promise=is_mode_company(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-  promise
-    .then(entity => {
-      mangoApi.Users.getCards(entity.id_mangopay, {parameters: { per_page: 100}})
-        .then(cards => {
-          console.log(`Cards:${JSON.stringify(cards, null, 2)}`)
-          cards = cards.filter(c => c.Active)
-          if (entity instanceof Company) {
-            cards.forEach( c => {
-              c.recurrent = entity.recurrent_cards.includes(c.Id)
-            })
-          }
-          if (is_b2b_manager(req)) {
-            Group.findOne({ members : req.user.id}, 'cards')
-              .then( group => {
-                cards = cards.filter( c => group.cards.includes(c.Id))
-                res.json(cards)
-              })
-              .catch(err => {
-                console.error(err)
-                res.status(400).json(err)
-              });
-          }
-          else {
-            res.json(cards)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-          res.status(400).json(err)
-        });
+  get_cards(req)
+    .then( cards =>{
+      res.json(cards)
     })
-    .catch(err => {
+    .catch (err => {
       console.error(err)
       res.status(400).json(err)
-    });
+    })
 });
+
+// GET /myAlfred/api/payment/cards
+// View all credit cards for a user
+// @access private
+router.get('/activeCards', passport.authenticate('jwt', {session: false}), (req, res) => {
+  get_cards(req)
+    .then( cards =>{
+      // B2B manager or employee : retain only cards allowed for group
+      const group_mode=is_b2b_manager(req) ? MICROSERVICE_MODE : is_b2b_employee(req) ? CARETAKER_MODE : null
+      if (group_mode) {
+        Group.findOne({ members : req.user.id, type: group_mode}, 'cards')
+          .then( group => {
+            cards = cards.filter( c => group.cards.includes(c.Id))
+          })
+      }
+      res.json(cards)
+    })
+    .catch (err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
 
 // GET /myAlfred/api/payment/activeAccount
 // View bank account for a user
