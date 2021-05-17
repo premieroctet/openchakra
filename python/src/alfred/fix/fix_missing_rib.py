@@ -44,36 +44,38 @@ class FixMissingRib(FixBase):
   def fix(self):
     alfreds = self.db.get_items("users", {'is_alfred' : True}, exclude_fields=['birthday'])
     print(len(alfreds))
-    pprint([a for a in alfreds if 'id_mangopay' not in a])
+    alfreds = [a for a in alfreds if 'id_mangopay' in a and 'mangopay_provider_id' in a]
     alfreds= [a for a in alfreds if a.id_mangopay and a.mangopay_provider_id]
     print(len(alfreds))
     for idx, alfred in enumerate(alfreds):
-      if alfred._id in self.index:
-        print('Already checked {}'.format(alfred._id))
-        continue
-      self.index[alfred._id]=True
       print("{}/{}".format(idx, len(alfreds)))
-      customer=User.get(alfred.id_mangopay)
-      customer_accounts=customer.bankaccounts.all()
-      provider=User.get(alfred.mangopay_provider_id)
-      provider_accounts=provider.bankaccounts.all()
-      if (customer_accounts or provider_accounts):
-        missing_accounts=[a for a in customer_accounts if not [p for p in provider_accounts if p.IBAN==a.IBAN]]
-        if missing_accounts:
-          print(alfred.id_mangopay, alfred.mangopay_provider_id)
-          print([a.IBAN for a in customer_accounts], [a.IBAN for a in provider_accounts])
-          print(missing_accounts)
-          for missing_account in missing_accounts:
-            print(missing_account)
-            new_account=BankAccount(
-              owner_name=missing_account.owner_name,
-              user_id=alfred.mangopay_provider_id,
-              type=missing_account.type,
-              owner_address=missing_account.owner_address,
-              iban=missing_account.iban,
-              bic=missing_account.bic
-            )
-            print(new_account.save())
+      if alfred._id in self.index:
+        continue
+      try:
+        customer=User.get(int(alfred.id_mangopay))
+        customer_accounts=customer.bankaccounts.all()
+        provider=User.get(int(alfred.mangopay_provider_id))
+        provider_accounts=provider.bankaccounts.all()
+        if (customer_accounts or provider_accounts):
+          missing_accounts=[a for a in customer_accounts if not [p for p in provider_accounts if p.IBAN==a.IBAN]]
+          if missing_accounts:
+            print(alfred.id_mangopay, alfred.mangopay_provider_id)
+            print([a.IBAN for a in customer_accounts], [a.IBAN for a in provider_accounts])
+            print(missing_accounts)
+            for missing_account in missing_accounts:
+              print(missing_account)
+              new_account=BankAccount(
+                owner_name=missing_account.owner_name,
+                user_id=int(alfred.mangopay_provider_id),
+                type=missing_account.type,
+                owner_address=missing_account.owner_address,
+                iban=missing_account.iban,
+                bic=missing_account.bic
+              )
+              print(new_account.save())
+        self.index[alfred._id]=True
+      except Exception as e:
+        print(e)
     print('Finished fix')
             
         

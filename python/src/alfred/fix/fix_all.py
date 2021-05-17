@@ -22,10 +22,6 @@ if __name__ == '__main__':
     db = sys.argv[1]
     print("Fixing db {}".format(db))
     try:
-      FixMissingRib(db).fix()
-    except Exception as e:
-      print(e)
-    try:
       FixUserCreationDate(db).fix()
     except Exception as e:
       print(e)
