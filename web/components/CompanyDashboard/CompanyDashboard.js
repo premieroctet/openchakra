@@ -17,12 +17,22 @@ import NavBar from "../../hoc/Layout/NavBar/NavBar";
 import MobileNavbar from "../../hoc/Layout/NavBar/MobileNavbar";
 import axios from "axios";
 import Router from "next/router";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../utils/consts')
 
 const {setAxiosAuthentication} = require('../../utils/authentication');
 const {STEPS}=require('../../utils/dashboardSteps');
 const {is_b2b_admin} = require('../../utils/context');
+
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
 class CompanyDashboard extends React.Component{
   constructor(props) {
@@ -68,16 +78,19 @@ class CompanyDashboard extends React.Component{
     this.setState({activeStep: index})
   };
 
-  modeDashboardChange = (mode) =>{
-   this.props.changeMode(mode)
+  modeDashboardChange = (index) =>{
+   this.props.changeMode(index)
   }
 
+
+
   drawer = (classes) => {
-    const{mode} = this.props;
+    const{mode, index} = this.props;
     const {activeStep} = this.state;
 
     return (
       <Grid style={{height: '100%'}}>
+
         <Grid className={classes.appBarContainer}>
           <List classes={{root: classes.paddingList}}>
             {
@@ -92,19 +105,19 @@ class CompanyDashboard extends React.Component{
             }
           </List>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} onClick={() => this.modeDashboardChange(mode)} className={ mode === MICROSERVICE_MODE ? classes.buttonMicroserviceActif : classes.buttonMicroservice}>
-              <Button variant="outlined" classes={{root: mode === MICROSERVICE_MODE ? classes.buttonActive :classes.helpButton}}>Microservice</Button>
-            </Grid>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} onClick={() => this.modeDashboardChange(mode)}  className={mode === CARETAKER_MODE ? classes.buttonCaretekerActif : classes.buttonCareteker}>
-              <Button variant="outlined" classes={{root: mode === CARETAKER_MODE ? classes.buttonActive : classes.helpButton}}>Conciergerie</Button>
-            </Grid>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+            <Grid item  xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
               <img
                 alt={'logo_myAlfred'}
                 title={'logo_myAlfred'}
                 src={'../../../static/assets/icon/logo.svg'}
                 height={64}
                 style={{filter: 'invert(1)'}}/>
+            </Grid>
+            <Grid  item  xl={12} lg={12} md={12} sm={12} xs={12} className={classes.rootTabs}>
+              <Tabs value={index} onChange={() => this.modeDashboardChange(index)} classes={{indicator: classes.scrollIndicator, selected: classes.colorSelected}} aria-label="simple tabs example">
+                <Tab label="Conciergerie" {...a11yProps(0)} style={{color:'white'}}/>
+                <Tab label="Microservice" {...a11yProps(1)}  style={{color:'white'}} />
+              </Tabs>
             </Grid>
           </Grid>
         </Grid>

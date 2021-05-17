@@ -34,7 +34,7 @@ import axios from "axios";
 const {setAxiosAuthentication}=require('../../../utils/authentication');
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
 import CloseIcon from '@material-ui/icons/Close';
-const {MICROSERVICE_MODE, CARETAKER_MODE, PRO, PART}=require('../../../utils/consts')
+const {MICROSERVICE_MODE, CARETAKER_MODE, PRO, PART, BUDGET_PERIOD}=require('../../../utils/consts')
 
 
 
@@ -381,6 +381,7 @@ class ServicesCompany extends React.Component{
                                     <ListItem key={j}>
                                       <ListItemText
                                         primary={service.service.label}
+                                        secondary={groupe.budget ? `${groupe.budget}€ / ${BUDGET_PERIOD[groupe.budget_period]}` : 'Pas de budget défini'}
                                       />
                                       <ListItemSecondaryAction>
                                           <IconButton edge="end" aria-label="SettingsIcon" onClick={() => this.handleClickOpen('dialogConfigService', service.service.label)}>
