@@ -408,7 +408,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
 });
 
 // Handle confirmated and after end date => to terminate
-new CronJob('0 */15 * * * *', function () {
+new CronJob('0 */1 * * * *', function () {
   console.log('Checking bookings to terminate');
   const date = moment().startOf('day');
   Booking.find({status: BOOK_STATUS.CONFIRMED, paid: false})
@@ -426,13 +426,23 @@ new CronJob('0 */15 * * * *', function () {
             b[attribute] = getKeyDate() + invoiceFormat(getNextNumber(Count.find({
               type: t,
               key: getKeyDate()
-            })), 5);
+            }).value), 5);
             Count.find({
               type: t,
               key: getKeyDate()
             })
               .then(count => {
-                count.value = getNextNumber(count.value)
+                if (count.value === undefined || null) {
+                  const c = new Count();
+                  c.key = getKeyDate();
+                  c.type = t;
+                  c.value = 1;
+                  count = c;
+                } else if (count.value > 0) {
+                  count.update({
+                    value: getNextNumber(count.value)
+                  })
+                }
                 count.save()
               })
               .catch(err => console.error(err))
@@ -451,50 +461,50 @@ new CronJob('0 */15 * * * *', function () {
 }, null, true, 'Europe/Paris');
 
 // Handle terminated but not paid bookings
-new CronJob('0 */15 * * * *', function () {
-  console.log(`Checking bookings to pay`)
-  const date = moment().startOf('day');
-  Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
-    .populate('user')
-    .populate('alfred')
-    .then(bookings => {
-      bookings.forEach(booking => {
-        console.log(`Booking to pay:${booking._id}`);
-        payAlfred(booking);
-      });
-    });
-}, null, true, 'Europe/Paris');
+// new CronJob('0 */15 * * * *', function () {
+//   console.log(`Checking bookings to pay`)
+//   const date = moment().startOf('day');
+//   Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
+//     .populate('user')
+//     .populate('alfred')
+//     .then(bookings => {
+//       bookings.forEach(booking => {
+//         console.log(`Booking to pay:${booking._id}`);
+//         payAlfred(booking);
+//       });
+//     });
+// }, null, true, 'Europe/Paris');
 
 // Expiration réervation en attente de confirmation :
 // - soit EXPIRATION_DELAY jours après la date de création de la réservation
 // - soit après la date de prestation
-new CronJob('0 */15 * * * *', function () {
-  console.log(`Checking expired bookings`)
-  const currentDate = moment().startOf('day');
-  Booking.find({status: BOOK_STATUS.TO_CONFIRM})
-    .populate('user')
-    .populate('alfred')
-    .then(booking => {
-      booking.forEach(b => {
-        const expirationDate = moment(b.date).add(EXPIRATION_DELAY, 'days').startOf('day');
-        // Expired because Alfred did not answer
-        const answerExpired = moment(currentDate).isSameOrAfter(expirationDate)
-        // Expired because prestation date passed
-        const prestaDateExpired = moment().isSameOrAfter(b.date_prestation_moment)
-        if (answerExpired || prestaDateExpired) {
-          const reason = answerExpired ? `Alfred did not confirm within ${EXPIRATION_DELAY} days` : 'prestation date passed'
-          console.log(`Booking ${b._id} expired : ${reason}`);
-          b.status = BOOK_STATUS.EXPIRED
-          b.save()
-            .then(b => {
-              sendBookingExpiredToAlfred(b);
-              sendBookingExpiredToClient(b);
-            })
-            .catch();
-        }
-      });
-    });
-}, null, true, 'Europe/Paris');
+// new CronJob('0 */15 * * * *', function () {
+//   console.log(`Checking expired bookings`)
+//   const currentDate = moment().startOf('day');
+//   Booking.find({status: BOOK_STATUS.TO_CONFIRM})
+//     .populate('user')
+//     .populate('alfred')
+//     .then(booking => {
+//       booking.forEach(b => {
+//         const expirationDate = moment(b.date).add(EXPIRATION_DELAY, 'days').startOf('day');
+//         // Expired because Alfred did not answer
+//         const answerExpired = moment(currentDate).isSameOrAfter(expirationDate)
+//         // Expired because prestation date passed
+//         const prestaDateExpired = moment().isSameOrAfter(b.date_prestation_moment)
+//         if (answerExpired || prestaDateExpired) {
+//           const reason = answerExpired ? `Alfred did not confirm within ${EXPIRATION_DELAY} days` : 'prestation date passed'
+//           console.log(`Booking ${b._id} expired : ${reason}`);
+//           b.status = BOOK_STATUS.EXPIRED
+//           b.save()
+//             .then(b => {
+//               sendBookingExpiredToAlfred(b);
+//               sendBookingExpiredToClient(b);
+//             })
+//             .catch();
+//         }
+//       });
+//     });
+// }, null, true, 'Europe/Paris');
 
 // pattern reference
 // premiere lettre nom user +  premiere lettre prenom user + premiere lettre nom alfred +  premiere lettre prenom alfred + date + 5 random
