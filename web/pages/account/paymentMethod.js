@@ -641,25 +641,29 @@ class paymentMethod extends React.Component {
   onValidateRecurrent = () => {
     const {user}=this.state
     setAxiosAuthentication()
+    const cardId=this.state.showRecurrentCard
     const data={
-      card_id : this.state.showRecurrentCard,
+      card_id : cardId,
     }
     this.setState({showRecurrentCard: null})
     axios.post('/myAlfred/api/payment/recurrent', data)
       .then( res => {
         const payInResult=res.data
+        console.log(`Got payin ${JSON.stringify(payInResult)}`)
         if (payInResult.SecureModeNeeded) {
-          Router.push(payInResult.SecureModeRedirectURL)
+          return Router.push(payInResult.SecureModeRedirectURL)
         }
         else {
           if (payInResult.RedirectURL) {
-            Router.push(payInResult.RedirectURL)
+            return Router.push(payInResult.RedirectURL)
+          }
+          else if (payInResult.ReturnURL || payInResult.SecureModeReturnURL) {
+            return Router.push(payInResult.ReturnURL || payInResult.SecureModeReturnURL)
           }
           else {
-            Router.push(`/payment/recurrentPayment?cardId=${this.state.showRecurrentCard}&company_id=${user.company}`)
+            return Router.push(`/payment/recurrentPayment?cardId=${cardId}&company_id=${user.company}`)
           }
         }
-
         console.log('Recurrent ok')
       })
       .catch( err => {

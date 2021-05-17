@@ -405,6 +405,7 @@ if (is_production() || is_validation()) {
     console.log('Alfred who need mango account');
     User.find({is_alfred: true, mangopay_provider_id: null, active: true})
       .then(alfreds => {
+        console.log(`Found ${alfreds.length}`);
         alfreds.forEach(alfred => {
           Shop.findOne({alfred: alfred})
             .then(shop => {
@@ -416,9 +417,10 @@ if (is_production() || is_validation()) {
                 createMangoProvider(alfred, shop);
               }
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+              console.error(`Mangopay provider creation error ${alfred._id}:${err}`)
+            });
         });
-        console.log(`Found ${alfreds.length}`);
 
       });
   }, null, true, 'Europe/Paris');

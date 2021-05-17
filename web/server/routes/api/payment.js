@@ -206,6 +206,7 @@ router.post('/recurrent', passport.authenticate('b2badmin', {session: false}), (
             StatementDescriptor: 'VALIDATION'
           })
             .then(payin => {
+              console.log(`Created recurrent ${JSON.stringify(payin)}`)
               return res.json(payin)
             })
             .catch(err => {
@@ -326,7 +327,6 @@ const get_cards = req => {
       .then(entity => {
         mangoApi.Users.getCards(entity.id_mangopay, {parameters: { per_page: 100}})
           .then(cards => {
-            console.log(`Cards:${JSON.stringify(cards, null, 2)}`)
             cards = cards.filter(c => c.Active)
             if (entity.recurrent_cards) {
               cards.forEach(c => c.recurrent=entity.recurrent_cards.includes(c.Id))

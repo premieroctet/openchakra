@@ -7,6 +7,9 @@ import Typography from "@material-ui/core/Typography";
 import styles from '../../static/css/pages/confirmPayment/confirmPayment';
 const {getMangopayMessage}=require('../../utils/i18n')
 const {setAxiosAuthentication} = require('../../utils/authentication')
+import Router from 'next/router';
+
+
 class RecurrentPayment extends React.Component {
 
   constructor(props) {
@@ -59,7 +62,11 @@ class RecurrentPayment extends React.Component {
       .catch (err => {
         console.error(err)
       })
-  }
+      .finally( () => {
+        setTimeout(() => Router.push('/account/paymentMethod'), 4000)
+      })
+}
+
   render() {
     const {classes} = this.props;
     const {errors, success}=this.state
@@ -82,6 +89,15 @@ class RecurrentPayment extends React.Component {
                     )}
                   </Grid>
                 </Grid>
+                <Grid>
+                  <Grid>
+                    <Typography>Vous allez être redirigé vers votre page Mes méthodes de paiemnt.</Typography>
+                  </Grid>
+                  <Grid>
+                    <Typography>Si la redirection ne fonctionne pas <a href={'/account/paymentMethod'}>cliquez ici</a></Typography>
+                  </Grid>
+                </Grid>
+
               </Grid>
 
             </Grid>

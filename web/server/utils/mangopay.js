@@ -6,10 +6,12 @@ const mangopay = require('mangopay2-nodejs-sdk');
 const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType');
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType');
+const Company=require('../models/Company')
 const mangoApi = new mangopay(MANGOPAY_CONFIG)
 const process=require('process')
 const request = require('request');
 const {MANGOPAY_ERRORS}=require('../../utils/mangopay_messages')
+const {ADMIN, MANAGER}=require('../../utils/consts')
 
 const createMangoClient = user => {
   var userData = {
@@ -95,7 +97,10 @@ const createMangoProvider = (user, shop) => {
         .then(wallet => {
           console.log(`Created Wallet ${JSON.stringify(wallet)}`);
         });
-    });
+    })
+    .catch(err => {
+      console.error(`Error @ creating mangopay provider for ${user._id}:${JSON.stringify(err)}`)
+    })
 };
 
 const createOrUpdateMangoCompany = company => {
@@ -251,11 +256,12 @@ const payAlfred = booking => {
   const id_mangopay_alfred = booking.alfred.mangopay_provider_id;
   const role = booking.user_role
 
-  const promise= [ADMIN, MANAGER].includes(role) ? Company.findById(req.user.company) : User.findById(req.user.id)
+  const promise= [ADMIN, MANAGER].includes(role) ? Company.findById(booking.user.company) : emptyPromise(booking.user)
 
   promise
     .then( entity => {
       const id_mangopay_user=entity.id_mangopay
+      console.log(`payAlfred : Got entity ${entity._id}, mangopay_id:${id_mangopay_user}`)
       mangoApi.Users.getWallets(id_mangopay_user)
         .catch(err => {
           console.error('Err:' + JSON.stringify(err));
