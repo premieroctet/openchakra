@@ -22,7 +22,7 @@ const {data2ServiceUser} = require('../../utils/mapping');
 const {emptyPromise} = require('../../../utils/promise');
 const {computeUrl} = require('../../../config/config');
 const serviceFilters = require('../../utils/filters');
-const {GID_LEN, PRO, PART, MANAGER} = require('../../../utils/consts');
+const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts');
 const {normalize} = require('../../../utils/text');
 const parse = require('url-parse')
 const {get_role, get_logged_id}=require('../../utils/serverContext')
@@ -558,11 +558,11 @@ router.post('/search', (req, res) => {
           sus = serviceFilters.filterServicesGPS(sus, req.body.gps, restrictPerimeter);
         }
       }
-      // Manager : filtere les services autorisés
+      // Manager : filterer les services autorisés
       if (get_role(req)==MANAGER) {
-        Group.findOne({ members: get_logged_id(req)}, 'allowed_services')
+        Group.findOne({ members:  get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
           .then ( group => {
-            sus = serviceFilters.filterServicesIds(sus, group.allowed_services)
+            sus = serviceFilters.filterServicesIds(sus, group.allowed_services.map(s=>s.service._id))
             return res.json(sus)
           })
           .catch (err => {

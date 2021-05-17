@@ -40,6 +40,8 @@ import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import {formatIban} from "../../utils/text";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import {toast} from 'react-toastify';
+import RecurrentCardDialog from '../../components/CreditCard/RecurrentCardDialog'
+const {snackBarError}=require('../../utils/notifications')
 
 moment.locale('fr');
 
@@ -70,12 +72,12 @@ class paymentMethod extends React.Component {
       issuer: '',
       focused: '',
       csv: '',
-      goodside: false,
-      deletedial: false,
+      showDeleteCard: false,
       Idtempo: '',
-      addCreditCard: false,
-      clickAdd: false,
-      clickDelete: false,
+      showAddCreditCard: false,
+      showAddRib: false,
+      showDeleteRib: false,
+      showRecurrentCard: null,
       accounts: [],
       haveAccount: false,
       bic: '',
@@ -84,6 +86,8 @@ class paymentMethod extends React.Component {
       errors: {},
       is_pro: false
     };
+    this.onDelayExpired = this.onDelayExpired.bind(this)
+    this.onValidateRecurrent = this.onValidateRecurrent.bind(this)
   }
 
   componentDidMount() {
@@ -95,7 +99,7 @@ class paymentMethod extends React.Component {
         this.setState({
           user: res.data,
           userName: res.data.full_name,
-          is_pro: is_b2b_admin(res.data)
+          is_pro: is_b2b_admin()
         });
       })
       .catch(err => {
@@ -124,23 +128,23 @@ class paymentMethod extends React.Component {
   }
 
   handleClick = () => {
-    this.setState({clickAdd: !this.state.clickAdd});
+    this.setState({showAddRib: !this.state.showAddRib});
   };
 
   handleClick2 = () => {
-    this.setState({clickDelete: !this.state.clickDelete});
+    this.setState({showDeleteRib: !this.state.showDeleteRib});
   };
 
   handleClose() {
-    this.setState({clickDelete: false});
+    this.setState({showDeleteRib: false});
   }
 
   refreshCards = () => {
-    this.setState({deletedial: false, addCreditCard: false}, () => this.componentDidMount());
+    this.setState({showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount());
   };
 
   handleCloseDial = () => {
-    this.setState({deletedial: false});
+    this.setState({showDeleteCard: false});
   };
 
   onChange = e => {
@@ -177,7 +181,7 @@ class paymentMethod extends React.Component {
       .then(res => {
         toast.info('RIB ajouté');
 
-        this.setState({clickAdd: false});
+        this.setState({showAddRib: false});
         axios.get('/myAlfred/api/payment/activeAccount')
           .then(response => {
             let accounts = response.data;
@@ -213,7 +217,7 @@ class paymentMethod extends React.Component {
   }
 
   refresh() {
-    this.setState({clickDelete: false, haveAccount: false});
+    this.setState({showDeleteRib: false, haveAccount: false});
     axios.get('/myAlfred/api/payment/activeAccount')
       .then(response => {
         let accounts = response.data;
@@ -224,13 +228,13 @@ class paymentMethod extends React.Component {
   }
 
   handleCloseModalAddRib = () => {
-    this.setState({clickAdd: false})
+    this.setState({showAddRib: false})
   };
 
   modalAddRib = (errors, classes) => {
     return (
       <Dialog
-        open={this.state.clickAdd}
+        open={this.state.showAddRib}
         onClose={() => this.handleCloseModalAddRib()}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -309,7 +313,7 @@ class paymentMethod extends React.Component {
   modalDeleteRib = (id) => {
     return (
       <Dialog
-        open={this.state.clickDelete}
+        open={this.state.showDeleteRib}
         onClose={() => this.handleClose()}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -348,6 +352,9 @@ class paymentMethod extends React.Component {
     axios.post('/myAlfred/api/payment/createCard', obj)
       .then(res => {
         this.setState({error: null})
+        if (is_b2b_admin()){
+          this.setState({ showRecurrentCard: res.data.CardId})
+        }
         this.refreshCards()
       })
       .catch(err => {
@@ -360,26 +367,25 @@ class paymentMethod extends React.Component {
     /*TODO pas de réponse de mongopay, api tourne en boucle, du coup j'ai supprimé then & catch*/
     const obj = {id_card: this.state.Idtempo};
     axios.put('/myAlfred/api/payment/cards', obj);
-    this.setState({deletedial: false, addCreditCard: false}, this.componentDidMount);
+    this.setState({showDeleteCard: false, showAddCreditCard: false}, this.componentDidMount);
   };
 
   handleCloseCreditCard = () => {
-    this.setState({addCreditCard: false});
+    this.setState({showAddCreditCard: false});
   };
 
   callAddCreditCard = () => {
-    this.setState({addCreditCard: true});
-
+    this.setState({showAddCreditCard: true});
   };
 
   callDialogDeletedCard = (e) => {
-    this.setState({deletedial: true, Idtempo: e})
+    this.setState({showDeleteCard: true, Idtempo: e})
   };
 
   modalAddCreditCard = (classes) => {
     return (
       <Dialog
-        open={this.state.addCreditCard}
+        open={this.state.showAddCreditCard}
         onClose={() => this.handleCloseCreditCard()}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -472,7 +478,7 @@ class paymentMethod extends React.Component {
   modalDeleteCreditCard = () => {
     return (
       <Dialog
-        open={this.state.deletedial}
+        open={this.state.showDeleteCard}
         onClose={this.handleCloseDial}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -627,9 +633,48 @@ class paymentMethod extends React.Component {
     )
   };
 
+  onDelayExpired = () => {
+    this.setState({showRecurrentCard: false})
+    snackBarError('Le délai de validation de la carte est expiré')
+  }
+
+  onValidateRecurrent = () => {
+    const {user}=this.state
+    setAxiosAuthentication()
+    const cardId=this.state.showRecurrentCard
+    const data={
+      card_id : cardId,
+    }
+    this.setState({showRecurrentCard: null})
+    axios.post('/myAlfred/api/payment/recurrent', data)
+      .then( res => {
+        const payInResult=res.data
+        console.log(`Got payin ${JSON.stringify(payInResult)}`)
+        if (payInResult.SecureModeNeeded) {
+          return Router.push(payInResult.SecureModeRedirectURL)
+        }
+        else {
+          if (payInResult.RedirectURL) {
+            return Router.push(payInResult.RedirectURL)
+          }
+          else if (payInResult.ReturnURL || payInResult.SecureModeReturnURL) {
+            return Router.push(payInResult.ReturnURL || payInResult.SecureModeReturnURL)
+          }
+          else {
+            return Router.push(`/payment/recurrentPayment?cardId=${cardId}&company_id=${user.company}`)
+          }
+        }
+        console.log('Recurrent ok')
+      })
+      .catch( err => {
+        console.log(err)
+        snackBarError(err.response.data)
+      })
+  }
+
   render() {
     const {classes} = this.props;
-    const {deletedial, addCreditCard, accounts, clickAdd, clickDelete, errors, user} = this.state;
+    const {showDeleteCard, showAddCreditCard, accounts, showAddRib, showDeleteRib, errors, user, showRecurrentCard} = this.state;
 
     if (!user) {
       return null
@@ -652,10 +697,17 @@ class paymentMethod extends React.Component {
             {this.content(classes)}
           </LayoutMobile>
         </Hidden>
-        {addCreditCard ? this.modalAddCreditCard(classes) : null}
-        {deletedial ? this.modalDeleteCreditCard(classes) : null}
-        {clickAdd ? this.modalAddRib(errors, classes) : null}
-        {clickDelete ? this.modalDeleteRib(accounts[0].Id) : null}
+        {showAddCreditCard ? this.modalAddCreditCard(classes) : null}
+        {showDeleteCard ? this.modalDeleteCreditCard(classes) : null}
+        {showAddRib ? this.modalAddRib(errors, classes) : null}
+        {showDeleteRib ? this.modalDeleteRib(accounts[0].Id) : null}
+        {showRecurrentCard ?
+          <RecurrentCardDialog
+            card_id={showRecurrentCard}
+            onDelayExpired={this.onDelayExpired}
+            onValidate={this.onValidateRecurrent}
+          />
+          : null}
       </React.Fragment>
     );
   };

@@ -1,5 +1,6 @@
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 const {ACCOUNT_MIN_AGE} = require('./consts')
+const {MANGOPAY_ERRORS}=require('./mangopay_messages')
 
 const CESU_NOTICE = 'Quel que soit votre statut, My Alfred est tenu de déclarer aux \
 finances publiques vos revenus générés <b>si les deux conditions suivantes sont \
@@ -131,7 +132,7 @@ const getMangopayMessage = msg_id => {
   if (!msg_id) {
     return null;
   }
-  return MANGOPAY_MESSAGES[msg_id] || `Erreur inconnue:${msg_id}`;
+  return MANGOPAY_MESSAGES[msg_id] || MANGOPAY_ERRORS[parseInt(msg_id)] || `Erreur inconnue:${msg_id}`;
 };
 
 const SHOP = {

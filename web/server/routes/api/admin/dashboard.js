@@ -36,7 +36,6 @@ const {counterArray, counterObjects} = require('../../../../utils/converters')
 const {ADMIN, MANAGER, EMPLOYEE} = require('../../../../utils/consts')
 const csv_parse = require('csv-parse/lib/sync')
 const axios = require('axios')
-const lbc = require('./lbc.json')
 const _ = require('lodash')
 var util = require('util');
 const {computeUrl}=require('../../../../config/config')

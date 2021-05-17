@@ -345,7 +345,7 @@ router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {sessio
       if (!group.budget || !group.budget_period) {
         return res.status(400).json("Ce département n'a pas de budget")
       }
-      const start_date=moment().startOf(group.budget_period==MONTH_PERIOD ? 'month' : 'year')
+      const start_date = getPeriodStart(group.budget_period)
       // get not cancelled bookings for this group from start_date with user_role MANAGER
       Booking.find({
         user : { $in : group.members},
@@ -368,18 +368,4 @@ router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {sessio
     })
 })
 
-// @Route GET /myAlfred/api/groups/user/:user_id
-// Returns the group for this user if any
-// @Access private b2badminmanager
-//router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {session: false}), (req, res) => {
-router.get('/user/:user_id', passport.authenticate('b2badminmanager', {session: false}), (req, res) => {
-  Group.findOne({ members : mongoose.Types.ObjectId(req.params.user_id)})
-    .then( group =>{
-      res.json(group)
-    })
-    .catch( err =>{
-      console.error(err)
-      res.status(400).json(err)
-    })
-})
 module.exports = router;
