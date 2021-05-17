@@ -11,7 +11,7 @@ const getNextNumber = (value) => {
 }
 
 const getKeyDate = () => {
-  return moment(date).format("YMM")
+  return moment().format("YMM")
 }
 
 const getField = (t) => {
