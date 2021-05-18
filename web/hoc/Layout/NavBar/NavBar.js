@@ -45,7 +45,7 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager} from "../../../utils/context";
+import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister} from "../../../utils/context";
 const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions')
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
@@ -188,6 +188,11 @@ class NavBar extends Component {
   handleOpenRegister = (e) => {
     this.handleMenuClose();
     this.setState({setOpenRegister: true, setOpenLogin: false});
+    if(e){
+      setStatusRegister()
+    }else{
+      removeStatusRegister()
+    }
   };
 
   handleCloseRegister = () => {
@@ -706,7 +711,7 @@ class NavBar extends Component {
         item
         xl={ifHomePage ? 3 : 4}
         lg={3}
-        md={ifHomePage ? 1 : 2}
+        md={ifHomePage && is_b2b_style(user) ? 10 : 2}
         sm={ifHomePage ? 11 : 1}
       >
         <IconButton
@@ -837,7 +842,7 @@ class NavBar extends Component {
               <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
                 <Divider/>
               </Grid>
-              <MenuItem onClick={this.handleOpenRegister}>
+              <MenuItem onClick={() => this.handleOpenRegister(true)}>
                 <Button variant="outlined" classes={{root: classes.buttonService}}>Je propose mes services</Button>
               </MenuItem>
               <MenuItem onClick={this.handleOpenLogin}>
