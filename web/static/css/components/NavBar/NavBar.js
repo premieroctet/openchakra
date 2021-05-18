@@ -245,6 +245,19 @@ export default theme => ({
     fontWeight: theme.typography.fontWeight,
     border: '3px solid rgba(255, 255, 255, 1)',
     color: theme.palette.white.main,
+
+    '&:hover':{
+      color: 'rgb(176, 205, 200)',
+      border: '3px solid rgb(176, 205, 200)',
+    }
+  },
+  navbarSignInB2BContained:{
+    borderRadius: theme.border.button.borderRadius,
+    textTransform: theme.typography.textTransform,
+    fontWeight: theme.typography.fontWeight,
+    border: '3px solid rgba(255, 255, 255, 1)',
+    color: theme.palette.b2b.main,
+    backgroundColor: theme.palette.white.main,
     '&:hover':{
       color: 'rgb(176, 205, 200)',
       border: '3px solid rgb(176, 205, 200)',

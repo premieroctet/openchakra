@@ -773,17 +773,17 @@ class NavBar extends Component {
       >
         <Grid>
           <Button
-            classes={{root: is_b2b_style(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
-            onClick={this.handleOpenLogin}>
-            {NAVBAR_MENU.logIn}
-          </Button>
-        </Grid>
-        <Grid className={classes.navbarRegisterContainer}>
-          <Button
             variant="outlined"
             classes={{root: is_b2b_style(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
             onClick={this.handleOpenRegister}>
             {NAVBAR_MENU.signIn}
+          </Button>
+        </Grid>
+        <Grid  className={classes.navbarRegisterContainer}>
+          <Button
+            classes={{root: is_b2b_style(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
+            onClick={this.handleOpenLogin}>
+            {NAVBAR_MENU.logIn}
           </Button>
         </Grid>
       </Grid>
@@ -858,7 +858,7 @@ class NavBar extends Component {
             sm={!ifHomePage ? 4 : 11}
             className={ifHomePage ? is_b2b_style(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
           >
-            <Grid>
+            <Grid className={classes.navbarRegisterContainer}>
               <Button
                 variant="outlined"
                 classes={{root: classes.navbarSignInB2B}}
@@ -867,19 +867,19 @@ class NavBar extends Component {
                 {'Je propose mes services'}
               </Button>
             </Grid>
+            <Grid >
+              <Button
+                variant="outlined"
+                classes={{root: is_b2b_style(user) ? classes.navbarSignInB2BContained : classes.navbarSignIn}}
+                onClick={() => Router.push('/blog/inscription-entreprise/')}>
+                {NAVBAR_MENU.signIn}
+              </Button>
+            </Grid>
             <Grid>
               <Button
                 classes={{root: is_b2b_style(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
                 onClick={this.handleOpenLogin}>
                 {NAVBAR_MENU.logIn}
-              </Button>
-            </Grid>
-            <Grid className={classes.navbarRegisterContainer}>
-              <Button
-                variant="outlined"
-                classes={{root: is_b2b_style(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
-                onClick={() => Router.push('/blog/inscription-entreprise/')}>
-                {NAVBAR_MENU.signIn}
               </Button>
             </Grid>
           </Grid>
