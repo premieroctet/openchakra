@@ -167,7 +167,7 @@ class SettingService extends React.Component {
                 }
                 {service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se checke pas
                   <Grid>
-                    <ButtonSwitch ckecked={travel_tax != null} price={travel_tax} id='travel_tax'
+                    <ButtonSwitch checked={travel_tax != null} price={travel_tax} id='travel_tax'
                                   label={'Appliquer un forfait déplacement de'} isPrice={true}
                                   onChange={this.onOptionChanged}/>
                   </Grid> : null
