@@ -44,7 +44,18 @@ const is_b2b_style = () => {
 }
 
 const is_application = () => {
-  return isWebview(getUA)
+  const _ua = getUA.toLocaleLowerCase();
+  const safari = /safari/.test(_ua);
+  const ios = /iphone|ipod|ipad/.test(_ua);
+  let is_ios_app = false;
+  if (ios && !safari) {
+    is_ios_app = true;
+  }
+
+  if (is_ios_app || isWebview(getUA)) {
+    return true;
+  }
+
 }
 
 const is_mobile = () => {
