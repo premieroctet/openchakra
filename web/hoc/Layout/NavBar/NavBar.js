@@ -165,6 +165,7 @@ class NavBar extends Component {
   logout = () => {
     clearAuthenticationToken()
     localStorage.removeItem('path')
+    removeStatusRegister()
     if (this.state.ifHomePage) {
       window.location.reload(false)
     } else {
