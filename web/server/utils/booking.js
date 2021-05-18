@@ -14,9 +14,6 @@ const getKeyDate = () => {
   return moment().format("YMM")
 }
 
-const getField = (t) => {
-  return t + '_number'
-}
 module.exports = {
-  getNextNumber, getKeyDate, getField
+  getNextNumber, getKeyDate
 }

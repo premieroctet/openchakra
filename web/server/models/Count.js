@@ -3,13 +3,16 @@ const Schema = mongoose.Schema;
 
 const CountSchema = new Schema({
   key: {
-    type: String
+    type: String,
+    required: true
   },
   value: {
-    type: String
+    type: Number,
+    required: true
   },
   type: {
-    type: String
+    type: String,
+    required: true
   }
 });
 
