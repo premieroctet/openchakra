@@ -73,7 +73,9 @@ class Register extends React.Component {
       birthdayError: '',
       cityError: '',
       open: false,
-      registerIncomplete: false
+      registerIncomplete: false,
+      showPassword: false,
+      showPassword2: false
     };
     this.handleChecked = this.handleChecked.bind(this);
     this.onChangeAddress = this.onChangeAddress.bind(this);
@@ -363,6 +365,18 @@ class Register extends React.Component {
     }
   };
 
+  handleClickShowPassword = () => {
+    this.setState({ showPassword: !this.state.showPassword });
+  };
+
+  handleClickShowPassword2 = () => {
+    this.setState({ showPassword2: !this.state.showPassword2 });
+  };
+
+  handleMouseDownPassword = (event) =>{
+    event.preventDefault();
+  };
+
   renderSwitch(stepIndex, classes, errors) {
 
     switch (stepIndex) {
@@ -373,6 +387,9 @@ class Register extends React.Component {
             onChangeEmail={this.onChangeEmail}
             onChange={this.onChange}
             onChangePassword={this.onChangePassword}
+            handleClickShowPassword={this.handleClickShowPassword}
+            handleClickShowPassword2={this.handleClickShowPassword2}
+            handleMouseDownPassword={this.handleMouseDownPassword}
           />
         )
       case 1:

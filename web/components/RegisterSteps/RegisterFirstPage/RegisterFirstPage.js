@@ -7,6 +7,10 @@ import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import LockOpenOutlinedIcon from "@material-ui/icons/LockOpenOutlined";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import styles from '../../../static/css/components/RegisterSteps/RegisterFirstPage/RegisterFirstPage';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 class RegisterFirstPage extends React.Component{
 
@@ -88,13 +92,26 @@ class RegisterFirstPage extends React.Component{
                     label="Créer un mot de passe"
                     placeholder="Créer un mot de passe"
                     style={{width: '100%'}}
-                    type="password"
+                    type={state.showPassword ? "text" : "password"}
                     name="password"
                     value={state.password}
                     onChange={(e) => this.props.onChange(e)}
                     onKeyUp={(e) => this.props.onChangePassword(e)}
                     error={state.status1.error}
                     helperText={state.status1.error}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => this.props.handleClickShowPassword()}
+                            onMouseDown={(e) => e.preventDefault()}
+                          >
+                            {state.showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
               </Grid>
@@ -109,13 +126,26 @@ class RegisterFirstPage extends React.Component{
                     label="Confirmer mot de passe"
                     placeholder="Confirmer mot de passe"
                     style={{width: '100%'}}
-                    type="password"
+                    type={state.showPassword2 ? "text" : "password"}
                     name="password2"
                     value={state.password2}
                     onChange={(e) => this.props.onChange(e)}
                     onKeyUp={(e) => this.props.onChangePassword(e)}
                     error={state.status2.error}
                     helperText={state.status2.error}
+                    InputProps={{
+                      endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => this.props.handleClickShowPassword2()}
+                        onMouseDown={(e) => e.preventDefault()}
+                        >
+                          {state.showPassword2 ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
               </Grid>
