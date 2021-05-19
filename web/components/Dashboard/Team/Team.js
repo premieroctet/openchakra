@@ -34,6 +34,8 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import {MICROSERVICE_MODE} from "../../../utils/consts";
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
 const {ADMIN, BUDGET_PERIOD, MANAGER, EMPLOYEE} = require('../../../utils/consts');
+import EmployeeImportDialog from '../../Employee/EmployeeImportDialog'
+const {is_development}=require('../../../config/config')
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, onClick, ...other } = props;
@@ -114,7 +116,8 @@ class Team extends React.Component{
       }],
       accounts: [],
       cards: [],
-      consumed_budgets: {}
+      consumed_budgets: {},
+      dialogEmployeeImport: is_development() ? true : false,
     }
   }
 
@@ -789,9 +792,18 @@ class Team extends React.Component{
     )
   };
 
+  openEmployeeImport = () => {
+    this.setState({dialogEmployeeImport: true})
+  }
+
+  dialogEmployeeImport = classes => {
+    return (
+      <EmployeeImportDialog classes={classes} />
+    )
+  }
   render() {
     const{classes, mode} = this.props;
-    const{managers_sort, groups, admins, managers, consumed_budgets, dialogRemoveGroupe, dialogGroupe, dialogRemove, dialogAdd} = this.state;
+    const{managers_sort, groups, admins, managers, consumed_budgets, dialogRemoveGroupe, dialogGroupe, dialogRemove, dialogAdd, dialogEmployeeImport} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -903,7 +915,7 @@ class Team extends React.Component{
                       </IconButton>
                     </Grid>
                     <Grid>
-                      <IconButton aria-label="GetAppOutlinedIcon">
+                      <IconButton aria-label="GetAppOutlinedIcon" onClick={this.openEmployeeImport}>
                         <GetAppOutlinedIcon />
                       </IconButton>
                     </Grid>
@@ -990,6 +1002,7 @@ class Team extends React.Component{
         {dialogAdd ? this.dialogAdd(classes) : null}
         {dialogRemove ? this.dialogRemove(classes) : null}
         {dialogRemoveGroupe ? this.dialogRemoveGroupe(classes) : null}
+        {dialogEmployeeImport ? this.dialogEmployeeImport(classes) : null}
       </Grid>
     );
   }

@@ -183,20 +183,18 @@ router.post('/register', (req, res) => {
         userFields.last_login = [];
 
         const newUser = new User(userFields);
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) {
-              throw err;
-            }
-            newUser.password = hash;
-            newUser.save()
-              .then(user => {
-                createMangoClient(user);
-                sendVerificationMail(user, req);
-                res.json(user);
-              })
-              .catch(err => console.error(err));
-          });
+        bcrypt.hash(newUser.password, 10, (err, hash) => {
+          if (err) {
+            throw err;
+          }
+          newUser.password = hash;
+          newUser.save()
+            .then(user => {
+              createMangoClient(user);
+              sendVerificationMail(user, req);
+              res.json(user);
+            })
+            .catch(err => console.error(err));
         });
       }
     });

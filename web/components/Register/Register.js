@@ -145,6 +145,33 @@ class Register extends React.Component {
         avatar: query.picture,
       });
     }
+    if (this.props.user_id) {
+      axios.get(`/myAlfred/api/users/users/${this.props.user_id}`)
+        .then (result => {
+          const user=result.data
+          this.setState({
+            firstname: user.firstname,
+            name:user.name,
+            birthday: user.birthday,
+            email: user.email,
+            phone: user.phone,
+          })
+          if (user.billing_address) {
+            const address=user.billing_address
+            this.setState({
+              address: address.address,
+              city: address.city,
+              zip_code: address.zip_code,
+              country: address.country,
+              lat: address.gps.lat,
+              lng: address.gps.lng,
+            })
+          }
+        })
+        .catch (err => {
+          console.error(err)
+        })
+    }
     if (query.error) {
       this.setState({errorExistEmail: true});
     }

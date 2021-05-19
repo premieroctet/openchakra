@@ -55,6 +55,7 @@ const send_cookie = (user, role, res) => {
     is_alfred: user.is_alfred,
     is_alfred_pro: user.shop && user.shop.length==1 && !user.shop[0].is_particular,
     role: role,
+    is_registered: user.is_registered,
   }; // Create JWT payload
 
   jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {

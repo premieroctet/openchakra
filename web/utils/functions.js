@@ -102,6 +102,13 @@ const isLoggedUserAlfredPro = () => {
   return logged && logged.is_alfred_pro
 }
 
+const isLoggedUserRegistered = () => {
+  const logged=getLoggedUser()
+  const result=logged && logged.is_registered
+  console.log(`Registered:${result}`)
+  return result
+}
+
 // Returns true if user is the currently logged user
 const isEditableUser = user => {
   if (!user || !getLoggedUserId()) {
@@ -137,5 +144,5 @@ module.exports = {
   computeDistanceKm, computeBookingReference, computeAverageNotes,
   computeSumSkills, circular_get, getLoggedUserId,getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
-  getUserLabel,
+  getUserLabel,isLoggedUserRegistered
 };

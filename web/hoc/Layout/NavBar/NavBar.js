@@ -46,7 +46,7 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
 import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager} from "../../../utils/context";
-const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions')
+const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered} = require('../../../utils/functions')
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
 import Slider from '@material-ui/core/Slider';
@@ -122,6 +122,9 @@ class NavBar extends Component {
     if (query.login === 'true') {
       this.handleOpenLogin()
     }
+    if (query.register) {
+      this.handleOpenRegister(query.register)
+    }
 
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
@@ -185,9 +188,9 @@ class NavBar extends Component {
     this.setState({setOpenLogin: false});
   };
 
-  handleOpenRegister = (e) => {
+  handleOpenRegister = (id=true) => {
     this.handleMenuClose();
-    this.setState({setOpenRegister: true, setOpenLogin: false});
+    this.setState({setOpenRegister: id, setOpenLogin: false});
   };
 
   handleCloseRegister = () => {
@@ -204,17 +207,21 @@ class NavBar extends Component {
     if (path) {
       localStorage.removeItem('path');
       Router.push(path)
-    } else {
-      // Alfred pro && b2b_site => on redirige vers le profil
-      if (is_b2b_site() && isLoggedUserAlfredPro()) {
-        Router.push( `/profile/about?user=${getLoggedUserId()}`)
-      }
-      else if (is_b2b_site() && is_b2b_admin()) {
-        Router.push( `/company/dashboard/companyDashboard`)
-      }
-      else {
-        Router.push('/search?search=1');
-      }
+    }
+    else if (!isLoggedUserRegistered()) {
+      const user_id=getLoggedUserId()
+      clearAuthenticationToken()
+      this.handleOpenRegister(user_id)
+    }
+    // Alfred pro && b2b_site => on redirige vers le profil
+    else if (is_b2b_site() && isLoggedUserAlfredPro()) {
+      Router.push( `/profile/about?user=${getLoggedUserId()}`)
+    }
+    else if (is_b2b_site() && is_b2b_admin()) {
+      Router.push( `/company/dashboard/companyDashboard`)
+    }
+    else {
+      Router.push('/search?search=1');
     }
   };
 
@@ -837,7 +844,7 @@ class NavBar extends Component {
               <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
                 <Divider/>
               </Grid>
-              <MenuItem onClick={this.handleOpenRegister}>
+              <MenuItem onClick={() => this.handleOpenRegister(true)}>
                 <Button variant="outlined" classes={{root: classes.buttonService}}>Je propose mes services</Button>
               </MenuItem>
               <MenuItem onClick={this.handleOpenLogin}>
@@ -1061,9 +1068,9 @@ class NavBar extends Component {
     );
   }
 
-  triggerRegister = () =>{
+  triggerRegister = user_id =>{
     return(
-      <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'}/>
+      <Register user_id={user_id} callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'}/>
     )
   };
 
@@ -1212,7 +1219,7 @@ class NavBar extends Component {
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
           <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
             <div className={classes.navbarPaper}>
-              {this.triggerRegister()}
+              {this.triggerRegister(setOpenRegister)}
             </div>
           </DialogContent>
         </Dialog>

@@ -21,10 +21,11 @@ const multer = require('multer');
 const axios = require('axios');
 const {emptyPromise} = require('../../../utils/promise');
 const {ADMIN, MANAGER, EMPLOYEE, ROLES, MICROSERVICE_MODE, CARETAKER_MODE, MONTH_PERIOD, BOOK_STATUS} = require('../../../utils/consts')
-var _ = require('lodash')
+const _ = require('lodash')
 const {addRegistrationProof, createOrUpdateMangoCompany} = require('../../utils/mangopay');
 const {getPeriodStart}=require('../../../utils/dateutils')
-
+const {normalizePhone, bufferToString, normalize, isMobilePhone} = require('../../../utils/text')
+const csv_parse = require('csv-parse/lib/sync')
 
 axios.defaults.withCredentials = true;
 
@@ -404,6 +405,89 @@ router.post('/members', passport.authenticate('b2badmin', {session: false}), (re
       res.status(500).json({error: err})
     });
 });
+
+const storageEmployees = multer.memoryStorage()
+
+const uploadEmployees = multer({
+  storage: storageEmployees,
+  fileFilter: function (req, file, callback) {
+    var ext = path.extname(file.originalname).toLowerCase()
+    if(ext !== '.csv' && ext !== '.txt') {
+      return callback('Fichier csv attendu (.csv ou .txt)')
+    }
+    callback(null, true)
+  },
+})
+
+// @Route POST /myAlfred/api/companies/mambers
+// Creates a member in the company
+// @Access private
+router.post('/employees', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+  uploadEmployees.single('employees')(req, res, err => {
+    if (err) {
+      console.error(err)
+      res.status(404).json(err)
+    }
+    else {
+      const EXPECTED=['nom', 'prénom', 'email']
+      User.find({}, 'email')
+        .then (users => {
+          const contents = bufferToString(req.file.buffer)
+          var records = csv_parse(contents, { columns: true, delimiter:';'})
+          if (!records.length) {
+            throw new Error('Aucun employé à importer')
+          }
+          const fields=Object.keys(records[0])
+          if (!_.isEqual(fields.sort(), EXPECTED.sort())) {
+            throw new Error(`Colonnes ${EXPECTED.join(',')} attendues`)
+          }
+          var messages=[]
+          var emails=new Set()
+          records.forEach((r, idx) => {
+            r.email=normalize(r.email)
+            const err=validateCompanyMember({
+              firstname: r['prénom'],
+              name: r.nom,
+              email: r.email
+            })
+            if (!err.isValid) {
+              messages.push(`Ligne ${idx+2}:${Object.values(err.errors).join(',')}`)
+            }
+            if (users.find(u=> u.email==r.email)) {
+              messages.push(`Ligne ${idx+2}:le compte ${r.email} existe déjà`)
+            }
+            if (emails.has(r.email)) {
+              messages.push(`Ligne ${idx+2}:le mail ${r.email} est déjà présent dans le fichier`)
+            }
+            emails.add(r.email)
+          })
+          if (messages.length>0) {
+            return res.status(400).json(messages.join('\n'))
+          }
+          User.insertMany(records.map(r => {
+            return {
+              firstname: r['prénom'],
+              name: r.nom,
+              email: r.email,
+              password : crypto.randomBytes(10).toString('hex'),
+            }
+          }))
+            .then ( result => {
+              return res.json(`${records.length} collaborateurs importés`)
+            })
+            .catch(err => {
+              console.error(err)
+              return res.status(400).json(err)
+            })
+        })
+        .catch (err => {
+          console.error(err)
+          return res.status(400).json(`Erreur lors de l'import:${err}`)
+        })
+
+    }
+  })
+})
 
 // @Route DELETE /myAlfred/api/companies/mamber/:member_id
 // removes member from the copany

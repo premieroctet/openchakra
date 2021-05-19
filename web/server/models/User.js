@@ -349,11 +349,17 @@ UserSchema.virtual('is_employee').get(function () {
   return Boolean(this.company)
 });
 
-/**
-UserSchema.virtual('roles').get(function () {
-  return Object.keys(ROLES)
+// Registered => has firstname, name, email, birthday, password, address
+UserSchema.virtual('is_registered').get(function () {
+  const REQUIRED=['firstname', 'name', 'email', 'birthday', 'password', 'billing_address']
+  console.log(REQUIRED.map(r => [r, this[r], Boolean(this[r])]))
+  if (REQUIRED.find(r => !this[r])) {
+    return false
+  }
+  else {
+    return true
+  }
 });
-*/
 
 UserSchema.virtual('shop', {
    ref: 'shop', //The Model to use
