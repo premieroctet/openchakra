@@ -5,8 +5,6 @@ import {toast} from 'react-toastify';
 import {checkPass1, checkPass2} from '../../utils/passwords';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import {Typography} from '@material-ui/core';
 import {registerLocale} from 'react-datepicker';
 import Button from '@material-ui/core/Button';
 import fr from 'date-fns/locale/fr';
@@ -15,18 +13,13 @@ import {withStyles} from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
 import Router from 'next/router';
-import Link from 'next/link';
-import RegisterSecondPage from "../RegisterSteps/RegisterSecondPage/RegisterSecondPage";
-import RegisterThirdPage from "../RegisterSteps/RegisterThirdPage/RegisterThirdPage";
-const {getLoggedUserId} = require('../../utils/functions')
 var parse = require('url-parse');
+
 const {isPhoneOk} = require('../../utils/sms');
+const {STEPS}=require('../../utils/registerStep')
+const {getLoggedUserId} = require('../../utils/functions')
+
 
 registerLocale('fr', fr);
 
@@ -377,42 +370,9 @@ class Register extends React.Component {
     event.preventDefault();
   };
 
-  renderSwitch(stepIndex, classes, errors) {
+  renderSwitch = (stepIndex, mode) => {
+    return STEPS[mode][stepIndex].component(this)
 
-    switch (stepIndex) {
-      case 0:
-        return(
-          <RegisterFirstPage
-            state={this.state}
-            onChangeEmail={this.onChangeEmail}
-            onChange={this.onChange}
-            onChangePassword={this.onChangePassword}
-            handleClickShowPassword={this.handleClickShowPassword}
-            handleClickShowPassword2={this.handleClickShowPassword2}
-            handleMouseDownPassword={this.handleMouseDownPassword}
-          />
-        )
-      case 1:
-        return (
-          <RegisterSecondPage
-            state={this.state}
-            onChangeAddress={this.onChangeAddress}
-            onChangeBirthdayDate={this.onChangeBirthdayDate}
-            onChangeBirthdayMonth={this.onChangeBirthdayMonth}
-            onChangeBirthdayYear={this.onChangeBirthdayYear}
-            onChangePhone={this.onChangePhone}
-            handleChecked={this.handleChecked}
-          />
-        );
-      case 2:
-        return (
-          <RegisterThirdPage
-            state={this.state}
-            onChange={this.onChange}
-            checkSmsCode={this.checkSmsCode}
-          />
-        );
-    }
   }
 
   handleNext = (activeStep) => {
@@ -431,7 +391,7 @@ class Register extends React.Component {
 
 
   render() {
-    const {classes, callLogin, id} = this.props;
+    const {classes, callLogin, mode} = this.props;
     const {errors, activeStep, firstPageValidator, secondPageValidator} = this.state;
 
     return (
@@ -445,7 +405,7 @@ class Register extends React.Component {
                 </Grid> : null
             }
             <Grid className={classes.containerSwitch}>
-              {this.renderSwitch(activeStep, classes, errors)}
+              {this.renderSwitch(activeStep, mode)}
             </Grid>
             {
               activeStep < 2 ?
