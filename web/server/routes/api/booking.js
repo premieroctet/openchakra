@@ -412,7 +412,7 @@ new CronJob('0 */1 * * * *', function () {
   const getNextNumber = (type, key) => {
     return new Promise((resolve, reject) => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}
-      Count.update({type: type, key: key}, updateObj, {upsert: true})
+      Count.updateMany({type: type, key: key}, updateObj, {upsert: true})
         .then(record => {
           resolve(record.value)
         })
@@ -436,9 +436,9 @@ new CronJob('0 */1 * * * *', function () {
             type.forEach(t => {
               const key = getKeyDate();
               const attribute = `${t}_number`;
-              getNextNumber(`${t}`, key)
-                .then(r => {
-                  b[attribute] = `R${key}${invoiceFormat(r, 5)}`;
+              getNextNumber(t, key)
+                .then(res => {
+                  b[attribute] = `R${key}${invoiceFormat(res, 5)}`;
                 })
                 .catch(err => console.error(err)
                 );
