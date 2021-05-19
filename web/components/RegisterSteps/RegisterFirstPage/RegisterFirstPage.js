@@ -25,15 +25,13 @@ class RegisterFirstPage extends React.Component{
                 id="input-with-icon-grid"
                 label="Email"
                 placeholder="Email"
-                margin="normal"
                 style={{width: '100%'}}
                 type="email"
                 value={state.email}
                 onChange={(e) => this.props.onChangeEmail(e)}
-                error={state.emailError}
-                helperText={state.emailError}
+                error={state.errors.email}
+                helperText={state.errors.email}
               />
-              <em style={{color: 'red'}}>{state.errors.email}</em>
             </Grid>
           </Grid>
         </Grid>
@@ -47,7 +45,6 @@ class RegisterFirstPage extends React.Component{
                 id="standard-with-placeholder"
                 label="Prénom"
                 placeholder="Prénom"
-                margin="normal"
                 style={{width: '100%'}}
                 type="text"
                 name="firstname"
@@ -68,7 +65,6 @@ class RegisterFirstPage extends React.Component{
               <TextField
                 label="Nom"
                 placeholder="Nom"
-                margin="normal"
                 style={{width: '100%'}}
                 type="text"
                 name="name"
@@ -91,7 +87,6 @@ class RegisterFirstPage extends React.Component{
                   <TextField
                     label="Créer un mot de passe"
                     placeholder="Créer un mot de passe"
-                    margin="normal"
                     style={{width: '100%'}}
                     type="password"
                     name="password"
@@ -113,7 +108,6 @@ class RegisterFirstPage extends React.Component{
                   <TextField
                     label="Confirmer mot de passe"
                     placeholder="Confirmer mot de passe"
-                    margin="normal"
                     style={{width: '100%'}}
                     type="password"
                     name="password2"

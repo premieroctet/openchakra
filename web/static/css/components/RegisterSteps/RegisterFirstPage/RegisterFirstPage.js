@@ -5,6 +5,7 @@ export default theme => ({
   },
   genericContainer: {
     width: '100%',
+    margin:0,
     justifyContent: 'center',
   },
   flexContainerPics: {

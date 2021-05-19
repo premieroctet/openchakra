@@ -76,24 +76,22 @@ class RegisterThirdPage extends React.Component{
         </Grid>
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-            <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
+            <Dialog open={state.smsCodeOpen} aria-labelledby="form-dialog-title">
               <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
               <DialogContent>
                 <DialogContentText>Saisissez le code reçu par SMS</DialogContentText>
                 <TextField
                   autoFocus
-                  margin="dense"
                   id="name"
                   label="Code"
                   type="number"
                   placeholder="0000"
                   maxLength="4"
-                  value={this.state.smsCode}
-                  onChange={e => {
-                    this.setState({smsCode: e.target.value});
-                  }}
+                  name={'smsCode'}
+                  value={state.smsCode}
+                  onChange={e => this.props.onChange(e)}
                   fullWidth
-                  errors={this.state.smsError}
+                  errors={state.smsError}
                 />
               </DialogContent>
               <DialogActions>
@@ -101,8 +99,8 @@ class RegisterThirdPage extends React.Component{
                   Confirmer plus tard
                 </Button>
                 <Button
-                  disabled={this.state.smsCode.length !== 4}
-                  onClick={() => this.checkSmsCode()}
+                  disabled={state.smsCode.length !== 4}
+                  onClick={() => this.props.checkSmsCode()}
                   color="primary">
                   Confirmer
                 </Button>

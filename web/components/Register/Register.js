@@ -129,7 +129,7 @@ class Register extends React.Component {
     this.setState({[e.target.name]: e.target.value}, () => this.validatorFirstStep());
   };
 
-  onChangePhone(e) {
+  onChangePhone = (e) => {
     var {name, value} = e.target;
     this.setState({[name]: value});
     if (name === 'phone') {
@@ -185,7 +185,7 @@ class Register extends React.Component {
     }
   }
 
-  handleChecked() {
+  handleChecked = () => {
     this.setState({checked: !this.state.checked}, () => this.validatorSecondStep());
   };
 
@@ -391,6 +391,8 @@ class Register extends React.Component {
         return (
           <RegisterThirdPage
             state={this.state}
+            onChange={this.onChange}
+            checkSmsCode={this.checkSmsCode}
           />
         );
     }

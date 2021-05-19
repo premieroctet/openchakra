@@ -84,14 +84,14 @@ class RegisterSecondPage extends React.Component{
       <Grid container>
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-            <Grid>
-              <Typography className={classes.subtitle}>Adresse postale</Typography>
+            <Grid item>
+              <h3 className={classes.subtitle}>Adresse postale</h3>
             </Grid>
-            <Grid>
-              <Typography className={classes.textStyle}>Votre adresse ne sera pas visible, mais nous l’utiliserons
+            <Grid item className={classes.textStyle}>
+              <Typography><em>Votre adresse ne sera pas visible, mais nous l’utiliserons
                 pour vous
                 proposer
-                ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</Typography>
+                ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</em></Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -118,13 +118,13 @@ class RegisterSecondPage extends React.Component{
         </Grid>
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-            <Grid>
-              <Typography className={classes.subtitle}>Date de naissance</Typography>
+            <Grid item>
+              <h3 className={classes.subtitle}>Date de naissance</h3>
             </Grid>
-            <Grid>
-              <Typography className={classes.textStyle}>
+            <Grid item>
+              <Typography className={classes.textStyle}><em>
                 {`Pour vous inscrire, vous devez être âgé d’au moins ${ACCOUNT_MIN_AGE} ans.
-                  Les autres utilisateurs ne verront pas votre date de naissance.`}
+                  Les autres utilisateurs ne verront pas votre date de naissance.`}</em>
               </Typography>
             </Grid>
             <Grid item className={classes.datenaissance} style={{display: 'flex', alignItems: 'center'}}>
@@ -133,7 +133,7 @@ class RegisterSecondPage extends React.Component{
                   <TextField
                     label="Jour"
                     placeholder="Jour"
-                    onChange={() => this.props.onChangeBirthdayDate()}
+                    onChange={(e) => this.props.onChangeBirthdayDate(e)}
                     inputProps={{
                       maxLength: 2,
                     }}
@@ -148,7 +148,7 @@ class RegisterSecondPage extends React.Component{
                   <TextField
                     label="Mois"
                     placeholder="Mois"
-                    onChange={() => this.props.onChangeBirthdayMonth()}
+                    onChange={(e) => this.props.onChangeBirthdayMonth(e)}
                     inputProps={{
                       maxLength: 2,
                     }}
@@ -162,7 +162,7 @@ class RegisterSecondPage extends React.Component{
                   <TextField
                     label="Année"
                     placeholder="Année"
-                    onChange={() => this.props.onChangeBirthdayYear()}
+                    onChange={(e) => this.props.onChangeBirthdayYear(e)}
                     inputProps={{
                       maxLength: 4,
                     }}
@@ -178,18 +178,16 @@ class RegisterSecondPage extends React.Component{
         </Grid>
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-            <Grid className={classes.newContainer}>
-              <Grid>
-                <Typography className={classes.subtitle}>Téléphone</Typography>
-              </Grid>
-              <Grid>
-                <Typography className={classes.textStyle}>L'ajout de votre numéro de téléphone permet aux membres
-                  My-Alfred
-                  de disposer d'un moyen pour vous contacter.
-                </Typography>
-              </Grid>
+            <Grid item>
+              <h3 className={classes.subtitle}>Téléphone</h3>
             </Grid>
-            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+            <Grid item>
+              <Typography className={classes.textStyle}><em>L'ajout de votre numéro de téléphone permet aux membres
+                My-Alfred
+                de disposer d'un moyen pour vous contacter.</em>
+              </Typography>
+            </Grid>
+            <Grid item container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
               <Grid item>
                 <PhoneIphoneOutlinedIcon className={classes.colorIcon}/>
               </Grid>
@@ -198,7 +196,6 @@ class RegisterSecondPage extends React.Component{
                   id="standard-with-placeholder"
                   label="Numéro de téléphone"
                   placeholder="Numéro de téléphone"
-                  margin="normal"
                   style={{width: '100%'}}
                   type={'number'}
                   name="phone"
@@ -211,18 +208,18 @@ class RegisterSecondPage extends React.Component{
         </Grid>
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-            <Grid>
+            <Grid item>
               <Grid container style={{marginTop: 15, alignItems: 'center'}}>
-                <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
                   <Checkbox
                     checked={state.checked}
-                    onChange={() => this.handleChecked()}
+                    onChange={(e) => this.props.handleChecked(e)}
                     value="checked"
                     color="primary"
                   />
                 </Grid>
-                <Grid  item xl={10} lg={10} md={10} sm={10} xs={10}>
-                  <Button onClick={this.handleOpenCgu} style={{color: '#2FBCD3'}}>J’accepte les
+                <Grid  item xl={11} lg={11} md={11} sm={11} xs={11}>
+                  <Button onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>J’accepte les
                     conditions
                     générales d’utilisation de My-Alfred.</Button>
                   {this.dialogCgu()}

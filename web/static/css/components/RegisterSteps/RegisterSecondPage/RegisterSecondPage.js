@@ -6,6 +6,7 @@ export default theme => ({
   genericContainer: {
     width: '100%',
     justifyContent: 'center',
+    margin: 0
   },
   subtitle: {
     fontSize: '1.2rem',
@@ -34,4 +35,7 @@ export default theme => ({
   colorIcon: {
     color: 'rgba(84,89,95,0.95)',
   },
+  buttonCGU:{
+    textTransform: 'initial'
+  }
 })
