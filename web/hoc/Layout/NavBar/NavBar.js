@@ -45,12 +45,12 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager} from "../../../utils/context";
+import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager, get_role} from "../../../utils/context";
 const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered} = require('../../../utils/functions')
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
 import Slider from '@material-ui/core/Slider';
-const {PRO, PART}=require('../../../utils/consts')
+const {PRO, PART, EMPLOYEE}=require('../../../utils/consts')
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -208,7 +208,7 @@ class NavBar extends Component {
       localStorage.removeItem('path');
       Router.push(path)
     }
-    else if (!isLoggedUserRegistered()) {
+    else if (!isLoggedUserRegistered() && get_role()==EMPLOYEE) {
       const user_id=getLoggedUserId()
       clearAuthenticationToken()
       this.handleOpenRegister(user_id)

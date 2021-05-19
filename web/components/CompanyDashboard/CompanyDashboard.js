@@ -23,15 +23,13 @@ const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../utils/consts')
 const {setAxiosAuthentication} = require('../../utils/authentication');
 const {STEPS}=require('../../utils/dashboardSteps');
 const {is_b2b_admin} = require('../../utils/context');
-const {is_development}=require('../../config/config')
 
 class CompanyDashboard extends React.Component{
   constructor(props) {
     super(props);
     this.state={
       mobileOpen: false,
-      activeStep: is_development()? 1: 0,
-      isMicroService: true,
+      activeStep: 0,
     }
   }
 

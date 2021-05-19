@@ -32,7 +32,7 @@ import Dialog from '@material-ui/core/Dialog';
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
-
+import moment from 'moment'
 import OAuth from '../OAuth/OAuth';
 import Information from '../Information/Information';
 import CguContent from "../CguContent/CguContent";
@@ -42,7 +42,7 @@ var parse = require('url-parse');
 const {PROVIDERS, ACCOUNT_MIN_AGE} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
 const {isPhoneOk} = require('../../utils/sms');
-
+const {formatAddress}= require('../../utils/text')
 registerLocale('fr', fr);
 
 
@@ -149,12 +149,14 @@ class Register extends React.Component {
       axios.get(`/myAlfred/api/users/users/${this.props.user_id}`)
         .then (result => {
           const user=result.data
+          console.log(`user ${typeof user.birthday}`)
           this.setState({
             firstname: user.firstname,
             name:user.name,
-            birthday: user.birthday,
+            birthday: user.birthday ? moment(user.birthday) : null,
             email: user.email,
             phone: user.phone,
+            emailValidator: true,
           })
           if (user.billing_address) {
             const address=user.billing_address
@@ -302,6 +304,7 @@ class Register extends React.Component {
       country: this.state.country,
       lat: this.state.lat,
       lng: this.state.lng,
+      user_id: this.props.user_id,
     };
 
     const username = this.state.email;
@@ -442,7 +445,9 @@ class Register extends React.Component {
   };
 
   renderSwitch(stepIndex, classes, errors) {
+    const {address, city, zip_code}=this.state
 
+    const address_placeholder= address || city || zip_code ? formatAddress({address, city, zip_code}) : 'Recherchez votre adresse'
     switch (stepIndex) {
       case 0:
         return (
@@ -642,13 +647,13 @@ class Register extends React.Component {
                     ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</Typography>
                 </Grid>
               </Grid>
-            </Grid>
+              </Grid>
             <Grid className={classes.margin}>
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                 <Grid item style={{width: '100%'}}>
                   <AlgoliaPlaces
                     className={classes.textFieldAlgo}
-                    placeholder='Recherchez votre adresse'
+                    placeholder={address_placeholder}
                     options={{
                       appId: 'plKATRG826CP',
                       apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -688,6 +693,8 @@ class Register extends React.Component {
                         InputProps={{
                           inputComponent: NumberFormatCustom,
                         }}
+                        InputLabelProps={{ shrink: true }}
+                        value={this.state.birthday ? this.state.birthday.format('DD') : ''}
                         error={this.state.birthdayError}
                         helperText={this.state.birthdayError}
                       />
@@ -703,6 +710,8 @@ class Register extends React.Component {
                         InputProps={{
                           inputComponent: NumberFormatCustom,
                         }}
+                        InputLabelProps={{ shrink: true }}
+                        value={this.state.birthday ? this.state.birthday.format('MM') : ''}
                         error={this.state.birthdayError}
                       />
                     </Grid>
@@ -717,6 +726,8 @@ class Register extends React.Component {
                         InputProps={{
                           inputComponent: NumberFormatCustom,
                         }}
+                        InputLabelProps={{ shrink: true }}
+                        value={this.state.birthday ? this.state.birthday.format('YYYY') : ''}
                         error={this.state.birthdayError}
                       />
                     </Grid>

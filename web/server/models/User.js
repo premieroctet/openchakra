@@ -351,14 +351,14 @@ UserSchema.virtual('is_employee').get(function () {
 
 // Registered => has firstname, name, email, birthday, password, address
 UserSchema.virtual('is_registered').get(function () {
-  const REQUIRED=['firstname', 'name', 'email', 'birthday', 'password', 'billing_address']
-  console.log(REQUIRED.map(r => [r, this[r], Boolean(this[r])]))
+  const REQUIRED=['firstname', 'name', 'email', 'birthday', 'password']
   if (REQUIRED.find(r => !this[r])) {
     return false
   }
-  else {
-    return true
+  if (!this.billing_address || !this.billing_address.address) {
+    return false
   }
+  return true
 });
 
 UserSchema.virtual('shop', {

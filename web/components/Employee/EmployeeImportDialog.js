@@ -65,7 +65,6 @@ class EmployeeImportDialog extends React.Component {
     return (
       <Dialog
         open={true}
-        onClose={() => this.handleCloseModalAddRib()}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >

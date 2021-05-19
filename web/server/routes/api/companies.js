@@ -473,6 +473,7 @@ router.post('/employees', passport.authenticate('b2badmin', {session: false}), (
             }
           }))
             .then ( result => {
+              console.log(JSON.stringify(result))
               return res.json(`${records.length} collaborateurs importés`)
             })
             .catch(err => {

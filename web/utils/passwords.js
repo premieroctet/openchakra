@@ -4,7 +4,7 @@ const arePasswordsEquals = (pass1, pass2) => (pass1 === pass2);
 
 const checkPass1 = pass => {
   if (pass === '') {
-    return {check: false};
+    return {check: false, error: 'Le mot de passe est vide'};
   } else if (checkPasswordFormat(pass)) {
     return {check: true};
   }
@@ -16,12 +16,9 @@ const checkPass1 = pass => {
 
 
 const checkPass2 = (pass1, pass2) => {
-  if (pass2 === '') {
-    return {check: false};
-  } else if (arePasswordsEquals(pass1, pass2)) {
+  if (pass1==pass2) {
     return {check: true};
   }
-
   return {
     error: 'Les mots de passe saisis sont différents',
     check: false,

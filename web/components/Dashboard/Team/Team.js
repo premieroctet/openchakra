@@ -35,7 +35,6 @@ import {MICROSERVICE_MODE} from "../../../utils/consts";
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
 const {ADMIN, BUDGET_PERIOD, MANAGER, EMPLOYEE} = require('../../../utils/consts');
 import EmployeeImportDialog from '../../Employee/EmployeeImportDialog'
-const {is_development}=require('../../../config/config')
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, onClick, ...other } = props;
@@ -117,7 +116,7 @@ class Team extends React.Component{
       accounts: [],
       cards: [],
       consumed_budgets: {},
-      dialogEmployeeImport: is_development() ? true : false,
+      dialogEmployeeImport: false,
     }
   }
 
