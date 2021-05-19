@@ -1069,7 +1069,7 @@ class NavBar extends Component {
 
   triggerRegister = () =>{
     return(
-      <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'} mode={'complete'}/>
+      <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'} mode={'incomplete'}/>
     )
   };
 
