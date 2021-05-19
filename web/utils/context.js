@@ -52,9 +52,7 @@ const is_application = () => {
     is_ios_app = true;
   }
 
-  if (is_ios_app || isWebview(getUA)) {
-    return true;
-  }
+  return is_ios_app || isWebview(getUA);
 
 }
 
