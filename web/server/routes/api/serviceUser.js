@@ -527,14 +527,14 @@ router.post('/search', (req, res) => {
   console.log(`Searching ${JSON.stringify(req.body)}`);
 
   const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
-  ServiceUser.find(filter, 'prestations.prestation service_address location perimeter')
+  ServiceUser.find(filter, 'prestations.prestation service_address location perimeter, description')
     .populate({path: 'user', select: 'firstname'})
     .populate({
-      path: 'service', select: 'label s_label',
+      path: 'service', select: 'label s_label description',
       populate: {path: 'category', select: status==PRO ? 's_professional_label':'s_particular_label'},
     })
     .populate({
-      path: 'prestations.prestation', select: 's_label',
+      path: 'prestations.prestation', select: 's_label description',
       populate: {path: 'job', select: 's_label'},
     })
     .then(sus => {
@@ -558,7 +558,7 @@ router.post('/search', (req, res) => {
           sus = serviceFilters.filterServicesGPS(sus, req.body.gps, restrictPerimeter);
         }
       }
-      // Manager : filterer les services autorisés
+      // Manager : filtrer les services autorisés
       if (get_role(req)==MANAGER) {
         Group.findOne({ members:  get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
           .then ( group => {

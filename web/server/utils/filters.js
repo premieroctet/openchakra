@@ -2,6 +2,7 @@ const geolib = require('geolib');
 const isEmpty = require('../validation/is-empty');
 const {createRegExpOR, createRegExpAND} = require('../../utils/text');
 const {PRO, PART}=require('../../utils/consts')
+const {normalize}=require('../../utils/text')
 
 const isServiceAroundGPS = (serviceUser, coordinates) => {
 
@@ -72,17 +73,21 @@ const filterServicesGPS = (serviceUsers, coordinates, restrict) => {
 // Check ANDed words first, then ORed if not result
 const filterServicesKeyword = (serviceUsers, keyword, status) => {
   const regExpFunctions = [createRegExpAND, createRegExpOR];
-
   const catLabel = status==PRO ? 's_professional_label' : 's_particular_label'
+  // On recherche d'abord avec un AND des mots-clés
+  // Si pas de résultats, on passe au OR
   for (i = 0; i < regExpFunctions.length; i++) {
     const regExpFn = regExpFunctions[i];
     const regexp = regExpFn(keyword);
     const filteredServices = serviceUsers.filter(su => {
-      return regexp.test(su.service ? su.service.s_label : '') ||
-        regexp.test(su.service ? su.service.category[catLabel] : '') ||
+      return regexp.test(su.service && su.service.s_label) ||
+        regexp.test(su.service && su.service.category[catLabel]) ||
+        regexp.test(normalize(su.service && su.service.description)) ||
+        regexp.test(normalize(su.description)) ||
         su.prestations.some(p => p.prestation &&
           (regexp.test(p.prestation.s_label) ||
-            (p.prestation.job && regexp.test(p.prestation.job.s_label))),
+           regexp.test(normalize(p.prestation.description)) ||
+           regexp.test(p.prestation.job && p.prestation.job.s_label)),
         );
     });
     if (filteredServices.length > 0) {
