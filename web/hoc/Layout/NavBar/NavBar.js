@@ -806,7 +806,8 @@ class NavBar extends Component {
   }
 
   checkAndOpenRegister = () =>{
-    this.handleOpenRegister;
+    setStatusRegister()
+    this.handleOpenRegister();
   };
 
   notLoggedButtonSectionB2b = (classes) =>{
@@ -879,7 +880,7 @@ class NavBar extends Component {
                 variant="outlined"
                 classes={{root: classes.navbarSignInB2B}}
                 style={{whiteSpace: 'nowrap'}}
-                onClick={this.handleOpenRegister}>
+                onClick={this.checkAndOpenRegister}>
                 {'Je propose mes services'}
               </Button>
             </Grid>
