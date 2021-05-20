@@ -204,15 +204,15 @@ const validateCompanyMember = data =>{
   data.email = !isEmpty(data.email) ? data.email : '';
 
   if (Validator.isEmpty(data.name)) {
-    errors.name = 'Veuillez saisir un nom';
+    errors.name = 'Nom manquant';
   }
 
   if (Validator.isEmpty(data.firstname)) {
-    errors.firstname = 'Veuillez saisir un prénom';
+    errors.firstname = 'Prénom manquant';
   }
 
   if (Validator.isEmpty(data.email)) {
-    errors.email = 'Veuillez saisir un email';
+    errors.email = 'Email manquant';
   }
 
   if (!Validator.isEmail(data.email)) {

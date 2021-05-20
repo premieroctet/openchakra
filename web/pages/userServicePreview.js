@@ -458,7 +458,7 @@ class UserServicesPreview extends React.Component {
 
   hasWarningBudget = () => {
     if (get_role()==MANAGER) {
-      const warningBudget = this.state.company_amount > this.state.available_budget
+      const warningBudget = this.state.company_amount < this.state.total
       return warningBudget
     }
     return false

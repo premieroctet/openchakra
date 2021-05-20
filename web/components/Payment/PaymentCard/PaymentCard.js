@@ -8,6 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import styles from '../../../static/css/components/PaymentCard/PaymentCard';
 import withStyles from "@material-ui/core/styles/withStyles";
 import Hidden from "@material-ui/core/Hidden";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 class PaymentCard extends React.Component{
   constructor(props) {
@@ -21,9 +22,10 @@ class PaymentCard extends React.Component{
       <Grid container>
         {cards ?
           cards.map((e, index) => {
-            let experiationDate = e.ExpirationDate.slice(0,2) + "/20" + e.ExpirationDate.slice(2);
+            let expirationDate = e.ExpirationDate.slice(0,2) + "/20" + e.ExpirationDate.slice(2);
             let cb = e.CardProvider === 'MASTERCARD' ? e.Product === 'MCC'  ? e.CardProvider : 'MSI' : e.CardProvider === 'AMEX' ? 'AMEX' :  e.CardProvider === 'CB' ? e.CardProvider : 'visa' ;
 
+            console.log(e)
             return(
               <Grid container key={index} style={{display: 'flex', alignItems: 'center', marginTop:20, marginBottom: 20}}>
                 {!editable ?
@@ -49,7 +51,8 @@ class PaymentCard extends React.Component{
                   </Grid>
                 </Grid>
                 <Grid item xl={4} xs={3} sm={4} style={{display:'flex', justifyContent: 'center'}}>
-                  <Typography>{experiationDate}</Typography>
+                  <Typography>{expirationDate}</Typography>
+                  { e.recurrent ? <CheckCircleIcon title={'Validée pour les paiements récurrents'}/> : null }
                 </Grid>
                 {
                   editable ?

@@ -45,12 +45,12 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister} from "../../../utils/context";
-const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions')
+import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister, get_role} from "../../../utils/context";
+const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered} = require('../../../utils/functions')
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
 import Slider from '@material-ui/core/Slider';
-const {PRO, PART}=require('../../../utils/consts')
+const {PRO, PART, EMPLOYEE}=require('../../../utils/consts')
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -78,7 +78,7 @@ class NavBar extends Component {
       anchorEl: null,
       anchorElB2b: null,
       setOpenLogin: false,
-      setOpenRegister: false,
+      setOpenRegister: null,
       user: null,
       activeStep: 0,
       keyword: '',
@@ -121,6 +121,9 @@ class NavBar extends Component {
     }
     if (query.login === 'true') {
       this.handleOpenLogin()
+    }
+    if (query.register) {
+      this.handleOpenRegister(query.register)
     }
 
     setAxiosAuthentication()
@@ -179,28 +182,23 @@ class NavBar extends Component {
 
   handleOpenLogin = (e) => {
     this.handleMenuClose();
-    this.setState({setOpenLogin: true, setOpenRegister: false});
+    this.setState({setOpenLogin: true, setOpenRegister: null});
   };
 
   handleCloseLogin = () => {
     this.setState({setOpenLogin: false});
   };
 
-  handleOpenRegister = (e) => {
+  handleOpenRegister = user_id => {
     this.handleMenuClose();
-    this.setState({setOpenRegister: true, setOpenLogin: false});
-    if(e){
-      setStatusRegister()
-    }else{
-      removeStatusRegister()
-    }
+    this.setState({setOpenRegister: user_id, setOpenLogin: false});
   };
 
   handleCloseRegister = () => {
     if (this.state.activeStep === 2) {
-      this.setState({setOpenRegister: false}, () => this.componentDidMount());
+      this.setState({setOpenRegister: null}, () => Router.push('/search?search=1'));
     } else {
-      this.setState({setOpenRegister: false});
+      this.setState({setOpenRegister: null});
     }
   };
 
@@ -210,17 +208,21 @@ class NavBar extends Component {
     if (path) {
       localStorage.removeItem('path');
       Router.push(path)
-    } else {
-      // Alfred pro && b2b_site => on redirige vers le profil
-      if (is_b2b_site() && isLoggedUserAlfredPro()) {
-        Router.push( `/profile/about?user=${getLoggedUserId()}`)
-      }
-      else if (is_b2b_site() && is_b2b_admin()) {
-        Router.push( `/company/dashboard/companyDashboard`)
-      }
-      else {
-        Router.push('/search?search=1');
-      }
+    }
+    else if (!isLoggedUserRegistered() && get_role()==EMPLOYEE) {
+      const user_id=getLoggedUserId()
+      clearAuthenticationToken()
+      this.handleOpenRegister(user_id)
+    }
+    // Alfred pro && b2b_site => on redirige vers le profil
+    else if (is_b2b_site() && isLoggedUserAlfredPro()) {
+      Router.push( `/profile/about?user=${getLoggedUserId()}`)
+    }
+    else if (is_b2b_site() && is_b2b_admin()) {
+      Router.push( `/company/dashboard/companyDashboard`)
+    }
+    else {
+      Router.push('/search?search=1');
     }
   };
 
@@ -1070,12 +1072,6 @@ class NavBar extends Component {
     );
   }
 
-  triggerRegister = () =>{
-    return(
-      <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'} mode={'incomplete'}/>
-    )
-  };
-
   logoContainer = (classes) =>{
     const{ifHomePage, user} = this.state;
     const logged = user != null
@@ -1221,7 +1217,8 @@ class NavBar extends Component {
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
           <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
             <div className={classes.navbarPaper}>
-              {this.triggerRegister()}
+              <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'} mode={'complete'}
+                  user_id={this.state.setOpenRegister}/>
             </div>
           </DialogContent>
         </Dialog>

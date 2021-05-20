@@ -6,13 +6,15 @@ const crypto = require('crypto');
 const moment = require('moment');
 const axios = require('axios');
 
-const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts')
+const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts');
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
+const Count = require('../../models/Count');
 const CronJob = require('cron').CronJob;
-const {is_production, is_development} = require('../../../config/config')
+const {is_production, is_development} = require('../../../config/config');
+const {invoiceFormat} = require('../../../utils/converters');
 const mangopay = require('mangopay2-nodejs-sdk');
-const {getNextNumber, getKeyDate} = require("../../utils/booking");
+const {getKeyDate} = require("../../utils/booking");
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
@@ -100,33 +102,6 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
     .catch(err => console.error(err));
 });
 
-router.get('/endConfirmedBookings', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const userId = mongoose.Types.ObjectId(req.user.id);
-  Booking.find({
-    $and: [
-      {$or: [{user: userId}, {alfred: userId}]},
-      {status: BOOK_STATUS.CONFIRMED},
-    ],
-  })
-    .then(booking => {
-      booking.forEach(b => {
-        const date = moment(b.end_date, 'YYYY-MM-DD').toDate();
-        const hourNow = new Date().getHours();
-
-        const hourBooking = parseInt(b.end_time.slice(0, 2));
-        if (moment().isAfter(date)) {
-          if (hourNow >= hourBooking) {
-            Booking.findByIdAndUpdate(b._id, {status: BOOK_STATUS.FINISHED}, {new: true})
-              .then(newB => {
-                res.json(newB);
-              });
-          }
-        }
-      });
-    });
-});
-
-
 router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   const random = crypto.randomBytes(Math.ceil(5 / 2)).toString('hex').slice(0, 5);
@@ -210,27 +185,6 @@ router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) =>
     .catch(err => res.status(404).json({booking: 'No booking found'}));
 });
 
-// @Route GET /myAlfred/booking/myBooking
-// View all the booking for the current user
-// @Access private
-router.get('/myBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({$or: [{alfred: req.user.id}, {user: req.user.id}]})
-    .populate('alfred')
-    .populate('user')
-    .populate('prestation')
-    .then(booking => {
-      if (booking) {
-        res.json(booking);
-      } else {
-        return res.status(400).json({msg: 'No booking found'});
-      }
-
-
-    })
-    .catch(err => console.error(err));
-
-});
-
 // @Route GET /myAlfred/api/booking/currentAlfred
 // View all the booking for the current alfred
 // @Access private
@@ -248,75 +202,6 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
     })
     .catch(err => console.error(err));
 
-});
-
-// @Route GET /myAlfred/api/booking/last/:id
-// View 3 last booking for shop page
-router.get('/last/:id', (req, res) => {
-  Booking.find({alfred: req.params.id, status: BOOK_STATUS.FINISHED}, {}, {sort: {'date': -1}}).limit(3)
-    .populate('alfred', '-id_card')
-    .populate('user', '-id_card')
-    .populate('prestation')
-    .populate({path: 'prestation', populate: {path: 'service'}})
-    .then(booking => {
-      if (booking) {
-        res.json(booking);
-      } else {
-        return res.status(400).json({msg: 'No booking found'});
-      }
-
-
-    })
-    .catch(err => console.error(err));
-
-});
-
-// GET /myAlfred/api/booking/getPaid
-// Get all booking paid for an alfred
-// @access private
-router.get('/getPaid', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({alfred: req.user.id, paid: true})
-    .populate('user', '-id_card')
-    .then(booking => {
-      res.json(booking);
-    })
-    .catch(err => console.error(err));
-});
-
-// GET /myAlfred/api/booking/getPaidSoon
-// Get all booking paid soon for an alfred
-// @access private
-router.get('/getPaidSoon', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({alfred: req.user.id, paid: false, status: BOOK_STATUS.CONFIRMED})
-    .populate('user', '-id_card')
-    .then(booking => {
-      res.json(booking);
-    })
-    .catch(err => console.error(err));
-});
-
-// GET /myAlfred/api/booking/account/paid
-// Get all booking paid  for a user
-// @access private
-router.get('/account/paid', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({user: req.user.id, paid: true})
-    .populate('alfred', '-id_card')
-    .then(booking => {
-      res.json(booking);
-    })
-    .catch(err => console.error(err));
-});
-
-// GET /myAlfred/api/booking/account/paidSoon
-// Get all booking paid soon for a user
-// @access private
-router.get('/account/paidSoon', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({user: req.user.id, paid: false, status: BOOK_STATUS.CONFIRMED})
-    .populate('alfred', '-id_card')
-    .then(booking => {
-      res.json(booking);
-    })
-    .catch(err => console.error(err));
 });
 
 // @Route GET /myAlfred/booking/:id
@@ -407,6 +292,18 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
 
 // Handle confirmated and after end date => to terminate
 new CronJob('0 */15 * * * *', function () {
+  const getNextNumber = (type, key) => {
+    return new Promise((resolve, reject) => {
+      const updateObj = {type: type, key: key, $inc: {value: 1}}
+      Count.updateMany({type: type, key: key}, updateObj, {upsert: true})
+        .then(record => {
+          resolve(record.value)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  }
   console.log('Checking bookings to terminate');
   const date = moment().startOf('day');
   Booking.find({status: BOOK_STATUS.CONFIRMED, paid: false})
@@ -415,27 +312,30 @@ new CronJob('0 */15 * * * *', function () {
     .catch(err => console.error(err))
     .then(booking => {
       booking.forEach(b => {
-        const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
-        if (moment(date).isSameOrAfter(end_date)) {
-          console.log(`Booking finished:${b._id}`);
-          b.billing_number = getNextNumber(Booking.find({
-            billing_number: {
-              type: 'billing',
-              key: getKeyDate()
-            }
-          }));
-          b.receipt_number = '';
-          b.myalfred_billing_number = '';
-
-          b.status = BOOK_STATUS.FINISHED
-          b.save()
-            .then(b => {
-              sendLeaveCommentForAlfred(b);
-              sendLeaveCommentForClient(b);
+          const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
+          if (moment(date).isSameOrAfter(end_date)) {
+            console.log(`Booking finished:${b._id}`);
+            const type = ['billing', 'receipt', 'myalfred_billing']
+            type.forEach(t => {
+              const key = getKeyDate();
+              const attribute = `${t}_number`;
+              getNextNumber(t, key)
+                .then(res => {
+                  b[attribute] = `R${key}${invoiceFormat(res, 5)}`;
+                })
+                .catch(err => console.error(err)
+                );
             })
-            .catch(err => console.error(err));
+            b.status = BOOK_STATUS.FINISHED
+            b.save()
+              .then(b => {
+                sendLeaveCommentForAlfred(b);
+                sendLeaveCommentForClient(b);
+              })
+              .catch(err => console.error(err));
+          }
         }
-      });
+      );
     });
 }, null, true, 'Europe/Paris');
 

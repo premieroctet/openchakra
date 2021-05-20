@@ -40,7 +40,6 @@ class CompanyDashboard extends React.Component{
     this.state={
       mobileOpen: false,
       activeStep: 0,
-      isMicroService: true,
     }
   }
 

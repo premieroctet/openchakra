@@ -21,8 +21,7 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 var parse = require('url-parse');
 import {removeStatusRegister} from "../../utils/context";
-
-
+const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms');
 const {STEPS}=require('../../utils/registerStep')
 const {getLoggedUserId} = require('../../utils/functions')
@@ -37,7 +36,7 @@ class Register extends React.Component {
     this.state = {
       firstname: '',
       name: '',
-      birthday: new Date(),
+      birthday: moment(),
       email: '',
       password: '',
       password2: '',
@@ -105,6 +104,34 @@ class Register extends React.Component {
         firstPageValidator: false,
         avatar: query.picture,
       });
+    }
+    if (this.props.user_id) {
+      axios.get(`/myAlfred/api/users/users/${this.props.user_id}`)
+        .then (result => {
+          const user=result.data
+          this.setState({
+            firstname: user.firstname,
+            name:user.name,
+            birthday: moment(user.birthday),
+            email: user.email,
+            phone: user.phone,
+            emailValidator: true,
+          })
+          if (user.billing_address) {
+            const address=user.billing_address
+            this.setState({
+              address: address.address,
+              city: address.city,
+              zip_code: address.zip_code,
+              country: address.country,
+              lat: address.gps.lat,
+              lng: address.gps.lng,
+            })
+          }
+        })
+        .catch (err => {
+          console.error(err)
+        })
     }
     if (query.error) {
       this.setState({errorExistEmail: true});
@@ -240,6 +267,7 @@ class Register extends React.Component {
       country: this.state.country,
       lat: this.state.lat,
       lng: this.state.lng,
+      user_id: this.props.user_id,
     };
 
     const username = this.state.email;
@@ -329,22 +357,19 @@ class Register extends React.Component {
       );
   };
 
-  onChangeBirthdayDate = (e) => {
-    let day = new Date(this.state.birthday);
-    day.setDate(e.target.value);
-    this.setState({birthday: day});
+  onChangeBirthdayDate = e => {
+    let birthday = this.state.birthday.set("date", e.target.value)
+    this.setState({birthday: birthday});
   };
 
-  onChangeBirthdayMonth = (e) => {
-    let month = new Date(this.state.birthday);
-    month.setMonth(e.target.value - 1);
-    this.setState({birthday: month});
+  onChangeBirthdayMonth = e => {
+    let birthday = this.state.birthday.set("month", parseInt(e.target.value)-1)
+    this.setState({birthday: birthday});
   };
 
-  onChangeBirthdayYear = (e) => {
-    let year = new Date(this.state.birthday);
-    year.setFullYear(e.target.value);
-    this.setState({birthday: year});
+  onChangeBirthdayYear = e => {
+    let birthday = this.state.birthday.set("year", e.target.value)
+    this.setState({birthday: birthday});
   };
 
   confirmLater = () => {

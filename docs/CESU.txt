@@ -1,0 +1,14 @@
+API CESU 07/07/2021
+
+Récupérer document KBIS auprès de l'URSSAF ?
+
+API permet inscrire PE : nom/prénom/date naissance/mail/RIB
+=> n° CESU pour ce PE ; il recevra un mail pour valider
+
+Enregistrement mandat tierce déclaration pour le PE
+
+A chaque déclaration, préciser toutes les coordonnées, si possible en précisant le numéro de CESU (sinon avec le n° de SS)
+
+Process :
+ échange pièces justificatives
+ 

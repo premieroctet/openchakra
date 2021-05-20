@@ -11,15 +11,17 @@ import Divider from "@material-ui/core/Divider";
 import styles from '../../../static/css/components/Footer/Footer'
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import {is_b2b_site, is_b2b_style} from "../../../utils/context";
+import {is_b2b_site, is_application, is_mobile} from "../../../utils/context";
+import {isAndroid, isIOS} from 'react-device-detect';
+
 import Register from "../../../components/Register/Register";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
+
 const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions');
-import {isMobile} from 'react-device-detect';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -44,7 +46,7 @@ const DialogTitle = withStyles(styles)((props) => {
 class Footer extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
+    this.state = {
       setOpenRegister: false,
       setOpenLogin: false
     }
@@ -60,9 +62,9 @@ class Footer extends React.Component {
   };
 
   dialogRegister = (classes) => {
-    const{setOpenRegister}= this.state;
+    const {setOpenRegister} = this.state;
 
-    return(
+    return (
       <Dialog
         scroll={'paper'}
         aria-labelledby="scroll-dialog-title"
@@ -97,7 +99,8 @@ class Footer extends React.Component {
 
     return (
       <Grid container spacing={2} style={{width: '100%', margin: 0}}>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3}
+              lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
             <h3>À propos</h3>
           </Grid>
@@ -109,36 +112,36 @@ class Footer extends React.Component {
           {
             is_b2b_site() ?
               <>
-              <Grid item>
-                <Link href={'/footer/apropos'}>
-                  <Typography >Presse</Typography>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href={'/footer/apropos'}>
-                  <Typography >Blog</Typography>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href={'/footer/apropos'}>
-                  <Typography >CGU/CGV</Typography>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href={'/footer/apropos'}>
-                 <Typography >FAQ</Typography>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href={'/footer/apropos'}>
-                 <Typography >Informations légales</Typography>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href={'/particular'}>
-                  <Typography>Espace particulier</Typography>
-                </Link>
-              </Grid>
+                <Grid item>
+                  <Link href={'/footer/apropos'}>
+                    <Typography>Presse</Typography>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href={'/footer/apropos'}>
+                    <Typography>Blog</Typography>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href={'/footer/apropos'}>
+                    <Typography>CGU/CGV</Typography>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href={'/footer/apropos'}>
+                    <Typography>FAQ</Typography>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href={'/footer/apropos'}>
+                    <Typography>Informations légales</Typography>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href={'/particular'}>
+                    <Typography>Espace particulier</Typography>
+                  </Link>
+                </Grid>
               </>
               : null
           }
@@ -147,12 +150,12 @@ class Footer extends React.Component {
               <>
                 <Grid item>
                   <Link href={'/footer/ourTeam'}>
-                    <Typography >Notre équipe</Typography>
+                    <Typography>Notre équipe</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/contact'}>
-                   <Typography >Nous contacter</Typography>
+                    <Typography>Nous contacter</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
@@ -161,41 +164,43 @@ class Footer extends React.Component {
                   </Link>
                 </Grid>
               </>
-            : null
+              : null
           }
         </Grid>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3}
+              lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
-            <h3 >{is_b2b_site() ? "Entreprises" : "Communauté"}</h3>
+            <h3>{is_b2b_site() ? "Entreprises" : "Communauté"}</h3>
           </Grid>
           {
             !is_b2b_site() ?
               <Grid item>
                 <Link href={'/footer/ourCommunity'}>
-                  <Typography >Notre communauté</Typography>
+                  <Typography>Notre communauté</Typography>
                 </Link>
               </Grid>
               :
               <>
                 <Grid item>
                   <Link href={'/blog/tarifs'}>
-                   <Typography >Offre et tarifs</Typography>
+                    <Typography>Offre et tarifs</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/blog/elementor-211/'}>
-                    <Typography >Services aux entreprises</Typography>
+                    <Typography>Services aux entreprises</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/blog/services-aux-collaborateurs/'}>
-                    <Typography >Services aux collaborateurs</Typography>
+                    <Typography>Services aux collaborateurs</Typography>
                   </Link>
                 </Grid>
               </>
           }
         </Grid>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3} lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3}
+              lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
             <h3>Alfred</h3>
           </Grid>
@@ -203,14 +208,14 @@ class Footer extends React.Component {
             is_b2b_site() ? null :
               <Grid item>
                 <Link href={'/footer/becomeAlfred'}>
-                  <Typography >Devenir Alfred</Typography>
+                  <Typography>Devenir Alfred</Typography>
                 </Link>
               </Grid>
           }
           {
-            getLoggedUserId() && !isLoggedUserAlfredPro()  ? null :
+            getLoggedUserId() && !isLoggedUserAlfredPro() ? null :
               is_b2b_site() ?
-                isLoggedUserAlfredPro()  ?
+                isLoggedUserAlfredPro() ?
                   <Grid item>
                     <Link href={'/creaShop/creaShop'}>
                       <Typography>Je propose mes services</Typography>
@@ -227,7 +232,7 @@ class Footer extends React.Component {
             is_b2b_site() ?
               <Grid item>
                 <Link href={'/footer/becomeAlfred'}>
-                  <Typography >Charte</Typography>
+                  <Typography>Charte</Typography>
                 </Link>
               </Grid>
               : null
@@ -235,44 +240,57 @@ class Footer extends React.Component {
         </Grid>
         {
           is_b2b_site() ? null :
-            <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3} lg={3} md={3} sm={6} xs={6}>
+            <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3} lg={3} md={3} sm={6}
+                  xs={6}>
               <Grid item>
-                <h3 >Assistance</h3>
+                <h3>Assistance</h3>
               </Grid>
               <Grid item>
                 <Link href={'/footer/addService'}>
-                  <Typography >Réserver un service</Typography>
+                  <Typography>Réserver un service</Typography>
                 </Link>
               </Grid>
               <Hidden only={['xs']}>
                 <Grid item onClick={() => Tawk_API.maximize()}>
-                  <Typography >Parler à un humain</Typography>
+                  <Typography>Parler à un humain</Typography>
                 </Grid>
               </Hidden>
               <Grid item>
                 <Link href={'/faq'}>
-                  <Typography >FAQ</Typography>
+                  <Typography>FAQ</Typography>
                 </Link>
               </Grid>
             </Grid>
         }
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.containerSectionFooter}>
-            <Grid>
-              <h3>Mobiles</h3>
-            </Grid>
-            <Grid container className={classes.storeContainer}>
-              <Grid item>
-                <a href={'https://apps.apple.com/us/app/my-alfred/id1544073864'} target={'_blank'}>
-                  <img alt={'appleStore'} title={'badge_applestore'} width={126.5} height={40} src={'../../static/assets/img/footer/ios/ios_black.svg'}/>
-                </a>
+        {
+          !is_application() ?
+
+            <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.containerSectionFooter}>
+              <Grid>
+                <h3>Mobiles</h3>
               </Grid>
-              <Grid item>
-                <a href={'https://play.google.com/store/apps/details?id=com.myalfred'} target={'_blank'}>
-                  <img alt={'googlePlay'} title={'badge_android'}  width={153} src={'../../static/assets/img/footer/android/android.png'}/>
-                </a>
+              <Grid container className={classes.storeContainer}>
+                {
+                  !isAndroid ?
+
+                    <Grid item>
+                      <a href={'https://apps.apple.com/us/app/my-alfred/id1544073864'} target={'_blank'}>
+                        <img alt={'appleStore'} title={'badge_applestore'} width={126.5} height={40}
+                             src={'../../static/assets/img/footer/ios/ios_black.svg'}/>
+                      </a>
+                    </Grid> : null
+                }
+                {
+                  !isIOS ? <Grid item>
+                    <a href={'https://play.google.com/store/apps/details?id=com.myalfred'} target={'_blank'}>
+                      <img alt={'googlePlay'} title={'badge_android'} width={153}
+                           src={'../../static/assets/img/footer/android/android.png'}/>
+                    </a>
+                  </Grid> : null
+                }
               </Grid>
-            </Grid>
-          </Grid>
+            </Grid> : null
+        }
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Divider/>
         </Grid>
@@ -301,7 +319,7 @@ class Footer extends React.Component {
           <Grid container item xl={6} lg={4} md={3} sm={12} xs={12} spacing={1} className={classes.socialContainer}>
             <Grid item>
               <a href={'https://www.facebook.com/myalfred1/'} target={'_blank'}>
-                <IconButton aria-label="FacebookIcon" >
+                <IconButton aria-label="FacebookIcon">
                   <FacebookIcon/>
                 </IconButton>
               </a>

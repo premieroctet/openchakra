@@ -155,48 +155,47 @@ router.post('/register', (req, res) => {
     return res.status(400).json(errors);
   }
 
+  // In case of pending registration
+  const user_id = req.body.user_id
   User.findOne({email: req.body.email})
     .then(user => {
-      if (user) {
+      if (user && (!user_id || user._id.toString()!=user_id)) {
         errors.email = 'L\'email existe déjà';
         return res.status(400).json(errors);
       } else {
-        const userFields = {};
-        userFields.name = req.body.name;
-        userFields.gender = req.body.gender;
-        userFields.firstname = req.body.firstname;
-        userFields.email = req.body.email;
-        userFields.password = req.body.password;
-        userFields.birthday = req.body.birthday;
+        user = user || new User();
+        user.name = req.body.name;
+        user.gender = req.body.gender;
+        user.firstname = req.body.firstname;
+        user.email = req.body.email;
+        user.password = req.body.password;
+        user.birthday = req.body.birthday;
 
-        userFields.billing_address = {};
-        userFields.billing_address.address = req.body.address;
-        userFields.billing_address.zip_code = req.body.zip_code;
-        userFields.billing_address.city = req.body.city;
-        userFields.billing_address.country = req.body.country;
+        user.billing_address = {};
+        user.billing_address.address = req.body.address;
+        user.billing_address.zip_code = req.body.zip_code;
+        user.billing_address.city = req.body.city;
+        user.billing_address.country = req.body.country;
 
 
-        userFields.billing_address.gps = {};
-        userFields.billing_address.gps.lat = req.body.lat;
-        userFields.billing_address.gps.lng = req.body.lng;
-        userFields.service_address = [];
-        userFields.last_login = [];
+        user.billing_address.gps = {};
+        user.billing_address.gps.lat = req.body.lat;
+        user.billing_address.gps.lng = req.body.lng;
+        user.service_address = [];
+        user.last_login = [];
 
-        const newUser = new User(userFields);
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) {
-              throw err;
-            }
-            newUser.password = hash;
-            newUser.save()
-              .then(user => {
-                createMangoClient(user);
-                sendVerificationMail(user, req);
-                res.json(user);
-              })
-              .catch(err => console.error(err));
-          });
+        bcrypt.hash(user.password, 10, (err, hash) => {
+          if (err) {
+            throw err;
+          }
+          user.password = hash;
+          user.save()
+            .then(user => {
+              createMangoClient(user);
+              sendVerificationMail(user, req);
+              res.json(user);
+            })
+            .catch(err => console.error(err));
         });
       }
     });
@@ -570,6 +569,11 @@ router.post('/login', (req, res) => {
         return res.status(400).json(errors);
       }
 
+      // Si roles et pas de rôle indiqué, prendre le seul possible
+      if (!role && user.roles.length==1) {
+        role=user.roles[0]
+      }
+
       if (user.is_employee && !role) {
         errors.role = 'Vous devez sélectioner un rôle';
         return res.status(400).json(errors);
@@ -595,7 +599,7 @@ router.post('/login', (req, res) => {
               user.last_login.pop()
             }
             user.save()
-              .then ( res => console.log(`${user.full_name} : updated last_login`))
+              .then ( () => {})
               .catch ( err => console.error(err))
             // Sign token
             send_cookie(user, role, res)

@@ -1,5 +1,5 @@
 const {RRule, RRuleSet, rrulestr} = require('rrule');
-const {ALL_SERVICES, generate_id} = require('./consts.js');
+const {ALL_SERVICES, BUDGET_PERIOD, MONTH_PERIOD, YEAR_PERIOD, generate_id} = require('./consts.js');
 const isEmpty = require('../server/validation/is-empty');
 var moment = require('moment-timezone');
 const {extendMoment} = require('moment-range');
@@ -234,8 +234,14 @@ const timelapsesSetToArray = timelapses => {
   return result
 }
 
+const getPeriodStart = period => {
+  const start_date=moment().startOf(period==MONTH_PERIOD ? 'month' : 'year')
+  return start_date
+}
+
 module.exports = {
   isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str,
   getDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS,
-  getAvailabilityForDate, combineTimelapses, timelapsesSetToArray
+  getAvailabilityForDate, combineTimelapses, timelapsesSetToArray,
+  getPeriodStart,
 };

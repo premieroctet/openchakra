@@ -57,7 +57,7 @@ const swaggerDocument = require('./swagger.json');
 // Avoid deprecation warning
 mongoose.set('useUnifiedTopology', true)
 mongoose.set('useFindAndModify', false)
-
+mongoose.set('useCreateIndex', true)
 
 nextApp.prepare().then(() => {
 
