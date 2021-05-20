@@ -408,7 +408,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
 });
 
 // Handle confirmated and after end date => to terminate
-new CronJob('0 */1 * * * *', function () {
+new CronJob('0 */15 * * * *', function () {
   const getNextNumber = (type, key) => {
     return new Promise((resolve, reject) => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}

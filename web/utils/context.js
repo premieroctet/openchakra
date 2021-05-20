@@ -21,17 +21,17 @@ const get_role = () => {
 }
 
 const is_b2b_employee = () => {
-  const is_employee = get_role()==EMPLOYEE
+  const is_employee = get_role() == EMPLOYEE
   return is_employee
 }
 
 const is_b2b_admin = () => {
-  const is_admin = get_role()==ADMIN
+  const is_admin = get_role() == ADMIN
   return is_admin
 }
 
 const is_b2b_manager = () => {
-  const is_manager = get_role()==MANAGER
+  const is_manager = get_role() == MANAGER
   return is_manager
 }
 
@@ -51,9 +51,7 @@ const is_application = () => {
   if (ios && !safari) {
     is_ios_app = true;
   }
-
-  return is_ios_app || isWebview(getUA);
-
+  return is_ios_app || isWebview(getUA);  
 }
 
 const is_mobile = () => {

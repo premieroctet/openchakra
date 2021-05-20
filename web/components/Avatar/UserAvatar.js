@@ -1,3 +1,5 @@
+import IconButton from '@material-ui/core/IconButton';
+
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
@@ -10,7 +12,7 @@ import styles from './UserAvatarStyle';
 import {isEditableUser} from '../../utils/functions'
 
 const {getLoggedUserId} = require('../../utils/functions')
-import Typography from "@material-ui/core/Typography";
+
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
 const jwt = require('jsonwebtoken');
@@ -200,7 +202,6 @@ class UserAvatar extends React.Component {
                     }
                   </ul>
                 </Popover>
-
               </Grid> :
               <Grid style={{
                 display: 'flex',
@@ -229,18 +230,10 @@ class UserAvatar extends React.Component {
           }
           {
             owner ?
-              <PhotoCameraIcon style={{
-                float: 'right',
-                bottom: '40%',
-                zIndex: '2',
-                position: 'relative',
-                color: '#312b2a',
-                backgroundColor: '#BDBDBD',
-                borderRadius: '50%',
-                padding: '0.3vh',
-                border: 'white 0.5px solid',
-                fontSize: 30
-              }} onClick={this.selectPicture}/> : null
+              <IconButton className={classes.buttonCamera}>
+                <PhotoCameraIcon onClick={this.selectPicture}/>
+              </IconButton>
+              : null
           }
 
 

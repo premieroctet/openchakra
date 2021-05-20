@@ -1,4 +1,20 @@
 export default theme => ({
+
+  buttonCamera: {
+    float: 'right',
+    zIndex: '2',
+    color: '#312b2a',
+    position: 'relative',
+    border: 'white 0.5px solid',
+    borderRadius: '50%',
+    backgroundColor: '#BDBDBD',
+    bottom: '40%',
+    padding: '0.3vh',
+    '&:hover': {
+      backgroundColor: 'white'
+    }
+
+  },
   popover: {
     pointerEvents: 'none',
     position: 'relative',
@@ -35,5 +51,5 @@ export default theme => ({
       transform: 'scale(2.4)',
       opacity: 0,
     },
-  },
+  }
 })
