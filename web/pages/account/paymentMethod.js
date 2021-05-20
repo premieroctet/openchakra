@@ -40,7 +40,6 @@ import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import {formatIban} from "../../utils/text";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import {toast} from 'react-toastify';
-import RecurrentCardDialog from '../../components/CreditCard/RecurrentCardDialog'
 const {snackBarError}=require('../../utils/notifications')
 
 moment.locale('fr');
@@ -77,7 +76,6 @@ class paymentMethod extends React.Component {
       showAddCreditCard: false,
       showAddRib: false,
       showDeleteRib: false,
-      showRecurrentCard: null,
       accounts: [],
       haveAccount: false,
       bic: '',
@@ -86,8 +84,6 @@ class paymentMethod extends React.Component {
       errors: {},
       is_pro: false
     };
-    this.onDelayExpired = this.onDelayExpired.bind(this)
-    this.onValidateRecurrent = this.onValidateRecurrent.bind(this)
   }
 
   componentDidMount() {
@@ -352,9 +348,6 @@ class paymentMethod extends React.Component {
     axios.post('/myAlfred/api/payment/createCard', obj)
       .then(res => {
         this.setState({error: null})
-        if (is_b2b_admin()){
-          this.setState({ showRecurrentCard: res.data.CardId})
-        }
         this.refreshCards()
       })
       .catch(err => {
@@ -633,48 +626,9 @@ class paymentMethod extends React.Component {
     )
   };
 
-  onDelayExpired = () => {
-    this.setState({showRecurrentCard: false})
-    snackBarError('Le délai de validation de la carte est expiré')
-  }
-
-  onValidateRecurrent = () => {
-    const {user}=this.state
-    setAxiosAuthentication()
-    const cardId=this.state.showRecurrentCard
-    const data={
-      card_id : cardId,
-    }
-    this.setState({showRecurrentCard: null})
-    axios.post('/myAlfred/api/payment/recurrent', data)
-      .then( res => {
-        const payInResult=res.data
-        console.log(`Got payin ${JSON.stringify(payInResult)}`)
-        if (payInResult.SecureModeNeeded) {
-          return Router.push(payInResult.SecureModeRedirectURL)
-        }
-        else {
-          if (payInResult.RedirectURL) {
-            return Router.push(payInResult.RedirectURL)
-          }
-          else if (payInResult.ReturnURL || payInResult.SecureModeReturnURL) {
-            return Router.push(payInResult.ReturnURL || payInResult.SecureModeReturnURL)
-          }
-          else {
-            return Router.push(`/payment/recurrentPayment?cardId=${cardId}&company_id=${user.company}`)
-          }
-        }
-        console.log('Recurrent ok')
-      })
-      .catch( err => {
-        console.log(err)
-        snackBarError(err.response.data)
-      })
-  }
-
   render() {
     const {classes} = this.props;
-    const {showDeleteCard, showAddCreditCard, accounts, showAddRib, showDeleteRib, errors, user, showRecurrentCard} = this.state;
+    const {showDeleteCard, showAddCreditCard, accounts, showAddRib, showDeleteRib, errors, user} = this.state;
 
     if (!user) {
       return null
@@ -701,13 +655,6 @@ class paymentMethod extends React.Component {
         {showDeleteCard ? this.modalDeleteCreditCard(classes) : null}
         {showAddRib ? this.modalAddRib(errors, classes) : null}
         {showDeleteRib ? this.modalDeleteRib(accounts[0].Id) : null}
-        {showRecurrentCard ?
-          <RecurrentCardDialog
-            card_id={showRecurrentCard}
-            onDelayExpired={this.onDelayExpired}
-            onValidate={this.onValidateRecurrent}
-          />
-          : null}
       </React.Fragment>
     );
   };

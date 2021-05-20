@@ -558,9 +558,9 @@ router.post('/search', (req, res) => {
           sus = serviceFilters.filterServicesGPS(sus, req.body.gps, restrictPerimeter);
         }
       }
-      // Manager : filterer les services autorisés
+      // Manager : filtrer les services autorisés
       if (get_role(req)==MANAGER) {
-        Group.findOne({ members:  get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
+        Group.findOne({ members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
           .then ( group => {
             sus = serviceFilters.filterServicesIds(sus, group.allowed_services.map(s=>s.service._id))
             return res.json(sus)
