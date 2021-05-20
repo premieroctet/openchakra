@@ -3,7 +3,6 @@ const {getLoggedUser, isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isL
 const isWebview = require('is-webview');
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
-const {getLoggedUser}=require('./functions')
 
 
 const is_b2b_site = () => {
