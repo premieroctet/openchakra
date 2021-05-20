@@ -20,6 +20,8 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 var parse = require('url-parse');
+import {removeStatusRegister} from "../../utils/context";
+
 
 const {isPhoneOk} = require('../../utils/sms');
 const {STEPS}=require('../../utils/registerStep')
@@ -71,7 +73,7 @@ class Register extends React.Component {
       birthdayError: '',
       cityError: '',
       open: false,
-      registerIncomplete: false,
+      setAlfredRegister: false,
       showPassword: false,
       showPassword2: false
     };
@@ -111,10 +113,10 @@ class Register extends React.Component {
       snackBarError('Vous êtes déjà inscrit');
       Router.push('/');
     }
-    if(localStorage.getItem('registerNotComplete') === 'true'){
-      this.setState({registerIncomplete: true})
+    if(localStorage.getItem('setAlfredRegister') === 'true'){
+      this.setState({setAlfredRegister: true})
     }else{
-      this.setState({registerIncomplete: false})
+      this.setState({setAlfredRegister: false})
     }
 
   }
@@ -210,7 +212,8 @@ class Register extends React.Component {
         if (res.data.sms_code_ok) {
           snackBarSuccess('Votre numéro de téléphone est validé');
           this.setState({smsCodeOpen: false, phoneConfirmed: true});
-          if(this.props.mode === 'incomplete'){
+          if(localStorage.getItem('setAlfredRegister') === 'true'){
+            removeStatusRegister()
             Router.push('/creaShop/creaShop')
           }
         } else {
@@ -346,7 +349,8 @@ class Register extends React.Component {
 
   confirmLater = () => {
     this.setState({smsCodeOpen: false});
-    if(this.props.mode === 'incomplete'){
+    if(localStorage.getItem('setAlfredRegister') === 'true'){
+      removeStatusRegister()
       Router.push('/creaShop/creaShop')
     }
   };

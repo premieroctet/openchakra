@@ -687,7 +687,10 @@ class NavBar extends Component {
         <DialogActions>
           <Button
             autoFocus
-            onClick={() => this.setState({modalFilters: false}, this.fireFilter())}
+            onClick={() => {
+              this.setState({modalFilters: false});
+              this.fireFilter()
+            }}
             color="primary"
           >
             Afficher les résultats
@@ -843,7 +846,7 @@ class NavBar extends Component {
               <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
                 <Divider/>
               </Grid>
-              <MenuItem onClick={() => this.handleOpenRegister(true)}>
+              <MenuItem onClick={() => {setStatusRegister(); this.handleOpenRegister()}}>
                 <Button variant="outlined" classes={{root: classes.buttonService}}>Je propose mes services</Button>
               </MenuItem>
               <MenuItem onClick={this.handleOpenLogin}>

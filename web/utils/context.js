@@ -4,6 +4,8 @@ import {isWinPhone, isAndroid, isIOS, getUA} from 'react-device-detect';
 const isWebview = require('is-webview');
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
+const {getLoggedUser}=require('./functions')
+
 
 const is_b2b_site = () => {
   if (typeof localStorage == 'undefined') {
@@ -53,11 +55,13 @@ const is_mobile = () => {
 }
 
 const setStatusRegister = () =>{
-  return localStorage.setItem('registerNotComplete', 'true')
+  if(!getLoggedUser()){
+    return localStorage.setItem('setAlfredRegister', 'true')
+  }
 }
 
 const removeStatusRegister = () =>{
-  return localStorage.removeItem('registerNotComplete')
+  return localStorage.removeItem('setAlfredRegister')
 }
 
 module.exports = {

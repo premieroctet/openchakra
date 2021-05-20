@@ -6,6 +6,7 @@ const moment = require('moment');
 const {setAxiosAuthentication}=require('./authentication')
 import axios from 'axios'
 
+
 const computeDistanceKm = (latlon1, latlon2) => {
   if (isEmpty(latlon1) || isEmpty(latlon2)) {
     return null;
