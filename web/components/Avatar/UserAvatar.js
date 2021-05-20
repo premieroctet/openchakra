@@ -1,4 +1,6 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
+import IconButton from '@material-ui/core/IconButton';
+
+const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import {withStyles} from '@material-ui/core/styles';
@@ -8,8 +10,10 @@ import Popover from '@material-ui/core/Popover';
 import axios from 'axios';
 import styles from './UserAvatarStyle';
 import {isEditableUser} from '../../utils/functions'
-const {getLoggedUserId}=require('../../utils/functions')
-import Typography from "@material-ui/core/Typography";
+
+const {getLoggedUserId} = require('../../utils/functions')
+
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
 const jwt = require('jsonwebtoken');
 
@@ -92,19 +96,23 @@ class UserAvatar extends React.Component {
   avatarWithPics(user, className) {
     const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
     return (
-      <Avatar alt="photo de profil" src={url} className={className} onClick={this.selectPicture}/>
+      <Avatar alt="photo de profil" src={url} className={className} onClick={this.selectPicture}>
+      </Avatar>
     );
   }
 
   avatarWithoutPics(user, className) {
     return (
-      <Avatar alt="photo de profil" className={className} onClick={this.selectPicture}><p>{user.avatar_letters}</p></Avatar>
-
+      <Avatar alt="photo de profil" className={className}
+              onClick={this.selectPicture}>
+        <p>{user.avatar_letters}</p>
+      </Avatar>
     );
   }
 
+
   onChange = event => {
-    const newPicture=event.target.files[0];
+    const newPicture = event.target.files[0];
     const formData = new FormData();
     formData.append('myImage', newPicture);
     const config = {
@@ -195,7 +203,13 @@ class UserAvatar extends React.Component {
                   </ul>
                 </Popover>
               </Grid> :
-              <Grid style={{display: 'flex', justifyContent: 'center', height: '100%', alignItems: 'center', width: '100%'}}>
+              <Grid style={{
+                display: 'flex',
+                justifyContent: 'center',
+                height: '100%',
+                alignItems: 'center',
+                width: '100%'
+              }}>
                 {
                   user.picture ?
                     this.avatarWithPics(user, className)
@@ -214,13 +228,23 @@ class UserAvatar extends React.Component {
                 />
               </Grid>
           }
+          {
+            owner ?
+              <IconButton className={classes.buttonCamera}>
+                <PhotoCameraIcon onClick={this.selectPicture}/>
+              </IconButton>
+              : null
+          }
+
 
         </Grid>
       );
 
     } else {
       return (
-        <Avatar alt="photo de profil" src='/static/basicavatar.png' className={className}/>
+        <Grid>
+          <Avatar alt="photo de profil" src='/static/basicavatar.png' className={className}/>
+        </Grid>
       );
     }
 

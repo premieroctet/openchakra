@@ -4,12 +4,6 @@ import Grid from "@material-ui/core/Grid";
 import {Typography} from "@material-ui/core";
 import Link from "next/link";
 import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import TextField from "@material-ui/core/TextField";
-import DialogActions from "@material-ui/core/DialogActions";
 import styles from '../../../static/css/components/RegisterSteps/RegisterThirdPage/RegisterThirdPage';
 
 class RegisterThirdPage extends React.Component{
@@ -18,7 +12,7 @@ class RegisterThirdPage extends React.Component{
 
     return(
       <Grid container>
-        <Grid className={classes.margin}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid>
               <h2 className={classes.titleRegister}>Inscription terminée</h2>
@@ -74,40 +68,7 @@ class RegisterThirdPage extends React.Component{
             </Grid>
           </Grid>
         </Grid>
-        <Grid className={classes.margin}>
-          <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-            <Dialog open={state.smsCodeOpen} aria-labelledby="form-dialog-title">
-              <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
-              <DialogContent>
-                <DialogContentText>Saisissez le code reçu par SMS</DialogContentText>
-                <TextField
-                  autoFocus
-                  id="name"
-                  label="Code"
-                  type="number"
-                  placeholder="0000"
-                  maxLength="4"
-                  name={'smsCode'}
-                  value={state.smsCode}
-                  onChange={e => this.props.onChange(e)}
-                  fullWidth
-                  errors={state.smsError}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => this.confirmLater()} color="primary">
-                  Confirmer plus tard
-                </Button>
-                <Button
-                  disabled={state.smsCode.length !== 4}
-                  onClick={() => this.props.checkSmsCode()}
-                  color="primary">
-                  Confirmer
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </Grid>
-        </Grid>
+
       </Grid>
     )
   }

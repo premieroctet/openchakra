@@ -192,10 +192,12 @@ const todayDate = () => {
   return moment().format('L')
 }
 
-
+ const invoiceFormat = (num, places) => {
+  return String(num).padStart(places, '0')
+}
 module.exports = {
   availabilities2events, eventUI2availability, availability2eventUI,
   DAYS, LONG_DAYS,
   bookings2events,
-  counterArray, counterObjects, moneyFormat, todayDate
+  counterArray, counterObjects, moneyFormat, todayDate, invoiceFormat
 };

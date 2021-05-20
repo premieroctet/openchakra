@@ -1,7 +1,6 @@
-import RegisterFirstPage from "../RegisterSteps/RegisterFirstPage/RegisterFirstPage";
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {setAuthToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
-import {toast} from 'react-toastify';
 import {checkPass1, checkPass2} from '../../utils/passwords';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
@@ -14,6 +13,12 @@ import MobileStepper from '@material-ui/core/MobileStepper';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Router from 'next/router';
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import TextField from "@material-ui/core/TextField";
+import DialogActions from "@material-ui/core/DialogActions";
 var parse = require('url-parse');
 const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms');
@@ -131,7 +136,7 @@ class Register extends React.Component {
       this.setState({errorExistEmail: true});
     }
     if (getLoggedUserId()) {
-      toast.warn('Vous êtes déjà inscrit');
+      snackBarError('Vous êtes déjà inscrit');
       Router.push('/');
     }
     if(localStorage.getItem('registerNotComplete') === 'true'){
@@ -217,11 +222,11 @@ class Register extends React.Component {
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
         var txt = 'Le SMS a été envoyé';
-        toast.info(txt);
+        snackBarSuccess(txt);
         this.setState({smsCodeOpen: true});
       })
       .catch(err => {
-        toast.error('Impossible d\'envoyer le SMS');
+        snackBarError('Impossible d\'envoyer le SMS')
         this.setState({serverError: true});
       });
   };
@@ -231,13 +236,16 @@ class Register extends React.Component {
     axios.post('/myAlfred/api/users/checkSMSVerification', {sms_code: this.state.smsCode})
       .then(res => {
         if (res.data.sms_code_ok) {
-          toast.info('Votre numéro de téléphone est validé');
+          snackBarSuccess('Votre numéro de téléphone est validé');
           this.setState({smsCodeOpen: false, phoneConfirmed: true});
+          if(this.props.mode === 'incomplete'){
+            Router.push('/creaShop/creaShop')
+          }
         } else {
-          toast.error('Le code est incorrect');
+          snackBarError('Le code est incorrect');
         }
       })
-      .catch(err => toast.error('Erreur à la vérification du code'));
+      .catch(err => snackBarError('Erreur à la vérification du code'));
   };
 
   onSubmit = () => {
@@ -275,10 +283,31 @@ class Register extends React.Component {
             setAuthToken()
             setAxiosAuthentication()
           })
-          .catch()
-          .then(this.addPhoto).catch()
-          .then(this.setState({activeStep: this.state.activeStep + 1})).catch()
-          .then(this.submitPhone).catch();
+          .catch( err =>{
+            console.error(err)
+          })
+          .then( () => {
+            if(this.props.mode === 'incomplete'){
+              this.submitPhone()
+            }else{
+              this.setState({activeStep: this.state.activeStep + 1})
+            }
+          }
+          )
+          .catch(
+            err => {
+              console.error(err)
+            }
+          )
+          .then( () => {
+            if(this.props.mode !== 'incomplete'){
+              this.submitPhone()
+            }
+          }
+          ).catch(
+            err => {
+              console.error(err)
+            });
       })
       .catch(err => {
         const errors = err.response.data
@@ -296,34 +325,11 @@ class Register extends React.Component {
       });
   };
 
-  addPhoto = () => {
-    setAxiosAuthentication()
-
-    if (this.state.picture !== '' || this.state.avatar !== '') {
-      const formData = new FormData();
-      formData.append('myImage', this.state.picture);
-      formData.append('avatar', this.state.avatar);
-      const config = {
-        headers: {
-          'content-type': 'multipart/form-data',
-        },
-      };
-
-      axios.post('/myAlfred/api/users/profile/picture', formData, config)
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-    /** else if (this.state.avatar !== '') {
-          axios.post("/myAlfred/api/users/profile/avatar", { avatar: this.state.avatar})
-            .catch((error) => {
-              console.error(error)
-            })
-        } */
-  };
-
-
   submitPhone = e => {
+
+    if(!this.state.phone && this.props.mode === 'incomplete'){
+      Router.push('/creaShop/creaShop')
+    }
 
     // Don't send empty phone number
     if (!this.state.phone) {
@@ -342,7 +348,7 @@ class Register extends React.Component {
     axios
       .put('/myAlfred/api/users/profile/phone', newPhone)
       .then(res => {
-        toast.info('Téléphone ajouté');
+        snackBarSuccess('Téléphone ajouté');
       })
       .catch(err =>
         console.error(err)
@@ -366,6 +372,9 @@ class Register extends React.Component {
 
   confirmLater = () => {
     this.setState({smsCodeOpen: false});
+    if(this.props.mode === 'incomplete'){
+      Router.push('/creaShop/creaShop')
+    }
   };
 
   validatorFirstStep = () => {
@@ -414,11 +423,46 @@ class Register extends React.Component {
     this.setState({activeStep: this.state.activeStep - 1});
   };
 
+  dialogPhone = (classes) =>{
+    return(
+      <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Saisissez le code reçu par SMS</DialogContentText>
+          <TextField
+            autoFocus
+            id="name"
+            label="Code"
+            type="number"
+            placeholder="0000"
+            maxLength="4"
+            name={'smsCode'}
+            value={this.state.smsCode}
+            onChange={(e) => this.onChange(e)}
+            fullWidth
+            errors={this.state.smsError}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.confirmLater()} color="primary">
+            Confirmer plus tard
+          </Button>
+          <Button
+            disabled={this.state.smsCode.length !== 4}
+            onClick={() => this.checkSmsCode()}
+            color="primary">
+            Confirmer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }
+
 
 
   render() {
     const {classes, callLogin, mode} = this.props;
-    const {errors, activeStep, firstPageValidator, secondPageValidator} = this.state;
+    const {smsCodeOpen, activeStep, firstPageValidator, secondPageValidator} = this.state;
 
     return (
       <Grid className={classes.fullContainer}>
@@ -474,6 +518,7 @@ class Register extends React.Component {
 
           </Grid>
         </Grid>
+        {smsCodeOpen ? this.dialogPhone(classes) : null}
       </Grid>
     );
   }

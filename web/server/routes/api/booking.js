@@ -6,13 +6,15 @@ const crypto = require('crypto');
 const moment = require('moment');
 const axios = require('axios');
 
-const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts')
+const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts');
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
+const Count = require('../../models/Count');
 const CronJob = require('cron').CronJob;
-const {is_production, is_development} = require('../../../config/config')
+const {is_production, is_development} = require('../../../config/config');
+const {invoiceFormat} = require('../../../utils/converters');
 const mangopay = require('mangopay2-nodejs-sdk');
-const {getNextNumber, getKeyDate} = require("../../utils/booking");
+const {getKeyDate} = require("../../utils/booking");
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
@@ -290,6 +292,18 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
 
 // Handle confirmated and after end date => to terminate
 new CronJob('0 */15 * * * *', function () {
+  const getNextNumber = (type, key) => {
+    return new Promise((resolve, reject) => {
+      const updateObj = {type: type, key: key, $inc: {value: 1}}
+      Count.updateMany({type: type, key: key}, updateObj, {upsert: true})
+        .then(record => {
+          resolve(record.value)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  }
   console.log('Checking bookings to terminate');
   const date = moment().startOf('day');
   Booking.find({status: BOOK_STATUS.CONFIRMED, paid: false})
@@ -298,28 +312,30 @@ new CronJob('0 */15 * * * *', function () {
     .catch(err => console.error(err))
     .then(booking => {
       booking.forEach(b => {
-        const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
-        if (moment(date).isSameOrAfter(end_date)) {
-          console.log(`Booking finished:${b._id}`);
-          /**
-          b.billing_number = getNextNumber(Booking.find({
-            billing_number: {
-              type: 'billing',
-              key: getKeyDate()
-            }
-          }));
-          b.receipt_number = '';
-          b.myalfred_billing_number = '';
-          */
-          b.status = BOOK_STATUS.FINISHED
-          b.save()
-            .then(b => {
-              sendLeaveCommentForAlfred(b);
-              sendLeaveCommentForClient(b);
+          const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
+          if (moment(date).isSameOrAfter(end_date)) {
+            console.log(`Booking finished:${b._id}`);
+            const type = ['billing', 'receipt', 'myalfred_billing']
+            type.forEach(t => {
+              const key = getKeyDate();
+              const attribute = `${t}_number`;
+              getNextNumber(t, key)
+                .then(res => {
+                  b[attribute] = `R${key}${invoiceFormat(res, 5)}`;
+                })
+                .catch(err => console.error(err)
+                );
             })
-            .catch(err => console.error(err));
+            b.status = BOOK_STATUS.FINISHED
+            b.save()
+              .then(b => {
+                sendLeaveCommentForAlfred(b);
+                sendLeaveCommentForClient(b);
+              })
+              .catch(err => console.error(err));
+          }
         }
-      });
+      );
     });
 }, null, true, 'Europe/Paris');
 
