@@ -45,8 +45,8 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister} from "../../../utils/context";
-const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions')
+import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister, get_role} from "../../../utils/context";
+const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered} = require('../../../utils/functions')
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
 import Slider from '@material-ui/core/Slider';
@@ -78,7 +78,7 @@ class NavBar extends Component {
       anchorEl: null,
       anchorElB2b: null,
       setOpenLogin: false,
-      setOpenRegister: false,
+      setOpenRegister: null,
       user: null,
       activeStep: 0,
       keyword: '',
@@ -182,28 +182,23 @@ class NavBar extends Component {
 
   handleOpenLogin = (e) => {
     this.handleMenuClose();
-    this.setState({setOpenLogin: true, setOpenRegister: false});
+    this.setState({setOpenLogin: true, setOpenRegister: null});
   };
 
   handleCloseLogin = () => {
     this.setState({setOpenLogin: false});
   };
 
-  handleOpenRegister = (id=true) => {
+  handleOpenRegister = user_id => {
     this.handleMenuClose();
-    this.setState({setOpenRegister: true, setOpenLogin: false});
-    if(e){
-      setStatusRegister()
-    }else{
-      removeStatusRegister()
-    }
+    this.setState({setOpenRegister: user_id, setOpenLogin: false});
   };
 
   handleCloseRegister = () => {
     if (this.state.activeStep === 2) {
-      this.setState({setOpenRegister: false}, () => this.componentDidMount());
+      this.setState({setOpenRegister: null}, () => Router.push('/search?search=1'));
     } else {
-      this.setState({setOpenRegister: false});
+      this.setState({setOpenRegister: null});
     }
   };
 
@@ -1074,12 +1069,6 @@ class NavBar extends Component {
     );
   }
 
-  triggerRegister = user_id =>{
-    return(
-      <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'} mode={'complete'}/>
-    )
-  };
-
   logoContainer = (classes) =>{
     const{ifHomePage, user} = this.state;
     const logged = user != null
@@ -1225,7 +1214,8 @@ class NavBar extends Component {
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
           <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
             <div className={classes.navbarPaper}>
-              {this.triggerRegister(setOpenRegister)}
+              <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'} mode={'complete'}
+                  user_id={this.state.setOpenRegister}/>
             </div>
           </DialogContent>
         </Dialog>

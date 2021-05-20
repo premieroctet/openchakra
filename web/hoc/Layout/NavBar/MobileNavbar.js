@@ -35,7 +35,7 @@ import BusinessIcon from '@material-ui/icons/Business';
 import Link from "../../../components/Link/Link";
 import {is_development} from "../../../config/config";
 import WcIcon from '@material-ui/icons/Wc';
-const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions')
+const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered} = require('../../../utils/functions')
 import {is_b2b_style, is_b2b_site} from "../../../utils/context";
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 
@@ -101,9 +101,22 @@ class MobileNavbar extends React.Component{
 
   needRefresh = () => {
     this.setState({setOpenLogin: false});
+    const path = localStorage.getItem('path')
+    if (path) {
+      localStorage.removeItem('path');
+      Router.push(path)
+    }
+    else if (!isLoggedUserRegistered() && get_role()==EMPLOYEE) {
+      const user_id=getLoggedUserId()
+      clearAuthenticationToken()
+      this.handleOpenRegister(user_id)
+    }
     // Alfred pro && b2b_site => on redirige vers le profil
-    if (is_b2b_site() && isLoggedUserAlfredPro()) {
+    else if (is_b2b_site() && isLoggedUserAlfredPro()) {
       Router.push( `/profile/about?user=${getLoggedUserId()}`)
+    }
+    else if (is_b2b_site() && is_b2b_admin()) {
+      Router.push( `/company/dashboard/companyDashboard`)
     }
     else {
       Router.push('/search?search=1');

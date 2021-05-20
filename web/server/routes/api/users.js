@@ -569,6 +569,11 @@ router.post('/login', (req, res) => {
         return res.status(400).json(errors);
       }
 
+      // Si roles et pas de rôle indiqué, prendre le seul possible
+      if (!role && user.roles.length==1) {
+        role=user.roles[0]
+      }
+
       if (user.is_employee && !role) {
         errors.role = 'Vous devez sélectioner un rôle';
         return res.status(400).json(errors);
@@ -594,7 +599,7 @@ router.post('/login', (req, res) => {
               user.last_login.pop()
             }
             user.save()
-              .then ( res => console.log(`${user.full_name} : updated last_login`))
+              .then ( () => {})
               .catch ( err => console.error(err))
             // Sign token
             send_cookie(user, role, res)

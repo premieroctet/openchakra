@@ -15,7 +15,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import Router from 'next/router';
 var parse = require('url-parse');
-
+const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms');
 const {STEPS}=require('../../utils/registerStep')
 const {getLoggedUserId} = require('../../utils/functions')
@@ -103,7 +103,6 @@ class Register extends React.Component {
       axios.get(`/myAlfred/api/users/users/${this.props.user_id}`)
         .then (result => {
           const user=result.data
-          console.log(`user ${typeof user.birthday}`)
           this.setState({
             firstname: user.firstname,
             name:user.name,
