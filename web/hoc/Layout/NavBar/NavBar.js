@@ -45,8 +45,8 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager, get_role} from "../../../utils/context";
-const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered} = require('../../../utils/functions')
+import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister} from "../../../utils/context";
+const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions')
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
 import Slider from '@material-ui/core/Slider';
@@ -168,6 +168,7 @@ class NavBar extends Component {
   logout = () => {
     clearAuthenticationToken()
     localStorage.removeItem('path')
+    removeStatusRegister()
     if (this.state.ifHomePage) {
       window.location.reload(false)
     } else {
@@ -190,7 +191,12 @@ class NavBar extends Component {
 
   handleOpenRegister = (id=true) => {
     this.handleMenuClose();
-    this.setState({setOpenRegister: id, setOpenLogin: false});
+    this.setState({setOpenRegister: true, setOpenLogin: false});
+    if(e){
+      setStatusRegister()
+    }else{
+      removeStatusRegister()
+    }
   };
 
   handleCloseRegister = () => {
@@ -713,7 +719,7 @@ class NavBar extends Component {
         item
         xl={ifHomePage ? 3 : 4}
         lg={3}
-        md={ifHomePage ? 1 : 2}
+        md={ifHomePage && is_b2b_style(user) ? 10 : 2}
         sm={ifHomePage ? 11 : 1}
       >
         <IconButton
@@ -780,17 +786,17 @@ class NavBar extends Component {
       >
         <Grid>
           <Button
-            classes={{root: is_b2b_style(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
-            onClick={this.handleOpenLogin}>
-            {NAVBAR_MENU.logIn}
-          </Button>
-        </Grid>
-        <Grid className={classes.navbarRegisterContainer}>
-          <Button
             variant="outlined"
             classes={{root: is_b2b_style(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
             onClick={this.handleOpenRegister}>
             {NAVBAR_MENU.signIn}
+          </Button>
+        </Grid>
+        <Grid  className={classes.navbarRegisterContainer}>
+          <Button
+            classes={{root: is_b2b_style(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
+            onClick={this.handleOpenLogin}>
+            {NAVBAR_MENU.logIn}
           </Button>
         </Grid>
       </Grid>
@@ -865,7 +871,7 @@ class NavBar extends Component {
             sm={!ifHomePage ? 4 : 11}
             className={ifHomePage ? is_b2b_style(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
           >
-            <Grid>
+            <Grid className={classes.navbarRegisterContainer}>
               <Button
                 variant="outlined"
                 classes={{root: classes.navbarSignInB2B}}
@@ -874,19 +880,19 @@ class NavBar extends Component {
                 {'Je propose mes services'}
               </Button>
             </Grid>
+            <Grid >
+              <Button
+                variant="outlined"
+                classes={{root: is_b2b_style(user) ? classes.navbarSignInB2BContained : classes.navbarSignIn}}
+                onClick={() => Router.push('/blog/inscription-entreprise/')}>
+                {NAVBAR_MENU.signIn}
+              </Button>
+            </Grid>
             <Grid>
               <Button
                 classes={{root: is_b2b_style(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
                 onClick={this.handleOpenLogin}>
                 {NAVBAR_MENU.logIn}
-              </Button>
-            </Grid>
-            <Grid className={classes.navbarRegisterContainer}>
-              <Button
-                variant="outlined"
-                classes={{root: is_b2b_style(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
-                onClick={() => Router.push('/blog/inscription-entreprise/')}>
-                {NAVBAR_MENU.signIn}
               </Button>
             </Grid>
           </Grid>
@@ -1064,13 +1070,13 @@ class NavBar extends Component {
 
   triggerLogin = () =>{
     return (
-      <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={'connect'}/>
+      <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={'connect'} />
     );
   }
 
   triggerRegister = user_id =>{
     return(
-      <Register user_id={user_id} callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'}/>
+      <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'} mode={'complete'}/>
     )
   };
 

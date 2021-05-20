@@ -7,24 +7,25 @@ export default class dashboardPage extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      mode: CARETAKER_MODE
+      mode: CARETAKER_MODE,
+      index:0
     }
   }
 
-  changemode = (mode) =>{
-    if(mode === CARETAKER_MODE){
-      this.setState({mode: MICROSERVICE_MODE})
+  changemode = (index) =>{
+    if(index === 0){
+      this.setState({mode: MICROSERVICE_MODE, index:1})
     }else{
-      this.setState({mode: CARETAKER_MODE})
+      this.setState({mode: CARETAKER_MODE, index:0})
     }
   }
 
   render() {
-    const{mode}= this.state;
+    const{mode, index}= this.state;
 
     return(
       <Grid>
-        <CompanyDashboard mode={mode} changeMode={this.changemode}/>
+        <CompanyDashboard mode={mode} index={index} changeMode={this.changemode}/>
       </Grid>
     )
   }

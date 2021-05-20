@@ -9,6 +9,18 @@ export default theme =>({
       flexDirection : 'column'
     }
   },
+  rootTabs: {
+    minWidth: '100%',
+    '& button':{
+      minWidth:0,
+    }
+  },
+  scrollIndicator:{
+    backgroundColor: 'white'
+  },
+  colorSelected:{
+    color: 'pink'
+  },
   drawer: {
     [theme.breakpoints.up('sm')]: {
       width: drawerWidth,
@@ -140,7 +152,9 @@ export default theme =>({
   appBarContainer:{
     display:'flex',
     flexDirection: 'column',
-    justifyContent:'space-around',
-    height: '100%'
+    justifyContent:'space-between',
+    height: '100%',
+    paddingTop: '50%',
+    paddingBottom: '5%'
   }
 })
