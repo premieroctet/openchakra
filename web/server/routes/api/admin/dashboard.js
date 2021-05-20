@@ -2683,7 +2683,7 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
                       email : req.body.admin_email,
                       company : company._id,
                       password: crypto.randomBytes(10).toString('hex'),
-                      roles: [ADMIN, EMPLOYEE]
+                      roles: [ADMIN]
                     })
                     console.log(`Generated user with password ${newUser.password}`)
                     bcrypt.genSalt(10, (err, salt) => {
