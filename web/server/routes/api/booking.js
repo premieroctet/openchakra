@@ -321,7 +321,7 @@ new CronJob('0 */15 * * * *', function () {
               const attribute = `${t}_number`;
               getNextNumber(t, key)
                 .then(res => {
-                  b[attribute] = `R${key}${invoiceFormat(res, 5)}`;
+                  b[attribute] = `${t.charAt(0).toUpperCase()}${key}${invoiceFormat(res, 5)}`;
                 })
                 .catch(err => console.error(err)
                 );
