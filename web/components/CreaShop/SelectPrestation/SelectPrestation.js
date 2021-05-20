@@ -26,6 +26,7 @@ class SelectPrestation extends React.Component {
       service: null,
       service_name: '',
       all_billlings: [],
+      isCustomPresta: false
     };
     this.prestationSelected = this.prestationSelected.bind(this);
     this.addCustomPrestation = this.addCustomPrestation.bind(this);
@@ -84,6 +85,7 @@ class SelectPrestation extends React.Component {
       private_alfred: getLoggedUserId(),
       particular_access: this.props.particular_access,
       professional_access: this.props.professional_access,
+      isCustomPresta: true
     };
     grouped[CUSTOM_PRESTATIONS_FLTR].push(custom_presta);
     this.setState({grouped: grouped});
@@ -157,7 +159,7 @@ class SelectPrestation extends React.Component {
                               width={'100%'}
                               label={p.label}
                               id={p._id}
-                              checked={presta != null}
+                              checked={p.isCustomPresta ? true : presta != null}
                               billings={p.billing}
                               onChange={this.prestationSelected}
                               isEditable={isEditable}
