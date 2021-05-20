@@ -36,7 +36,7 @@ import Link from "../../../components/Link/Link";
 import {is_development} from "../../../config/config";
 import WcIcon from '@material-ui/icons/Wc';
 const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered} = require('../../../utils/functions')
-import {is_b2b_style, is_b2b_site} from "../../../utils/context";
+import {is_b2b_style} from "../../../utils/context";
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 
 
@@ -112,10 +112,10 @@ class MobileNavbar extends React.Component{
       this.handleOpenRegister(user_id)
     }
     // Alfred pro && b2b_site => on redirige vers le profil
-    else if (is_b2b_site() && isLoggedUserAlfredPro()) {
+    else if (is_b2b_style() && isLoggedUserAlfredPro()) {
       Router.push( `/profile/about?user=${getLoggedUserId()}`)
     }
-    else if (is_b2b_site() && is_b2b_admin()) {
+    else if (is_b2b_admin()) {
       Router.push( `/company/dashboard/companyDashboard`)
     }
     else {
@@ -401,7 +401,7 @@ class MobileNavbar extends React.Component{
             <BottomNavigationAction onClick={this.handleOpenRegister} label={'Inscription'} classes={{root: classes.navigationActionRoot, label: classes.label}} value={5} icon={ <GroupAddIcon/>}/> : null
         }
         {
-          !logged && is_b2b_site(user) ?
+          !logged && is_b2b_style() ?
             <BottomNavigationAction onClick={this.handleOpenRegister} label={'Prestataire'} classes={{root: classes.navigationActionRoot, label: classes.label}} value={6} icon={<BusinessIcon/>}/> : null
         }
         {setOpenLogin ? this.modalLogin(classes) : null}

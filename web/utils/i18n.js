@@ -175,6 +175,7 @@ const SHOP = {
     subtitle: 'Sélectionnez votre service. Si vous souhaitez en proposer plusieurs, vous pourrez en ajouter autant que vous le souhaitez par la suite.',
     subtitle_update: 'Vous allez modifier le service indiqué ci-dessous',
     content_particular: 'Liste des services aux particuliers',
+    explanation: 'Vous pouvez saisir un mot clé pour filtrer votre service ou sélectionner votre service dans la liste',
     content_professional: 'Liste des services aux entreprises',
     content_particular_professional: 'Liste des services aux particuliers & aux entreprises',
     placeholder: 'Recherche par mot-clés',
