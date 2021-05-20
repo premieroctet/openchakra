@@ -61,7 +61,6 @@ const is_mobile = () => {
 }
 
 const setStatusRegister = () =>{
-  console.log('bonjour')
   if(getLoggedUser() === null){
     return localStorage.setItem('setAlfredRegister', 'true')
   }

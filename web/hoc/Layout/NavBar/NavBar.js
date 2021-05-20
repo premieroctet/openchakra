@@ -191,7 +191,6 @@ class NavBar extends Component {
   };
 
   handleOpenRegister = (user_id) => {
-    console.log('coucou')
     this.handleMenuClose();
     this.setState({setOpenRegister: user_id, setOpenLogin: false});
   };
@@ -807,7 +806,7 @@ class NavBar extends Component {
 
   checkAndOpenRegister = () =>{
     setStatusRegister()
-    this.handleOpenRegister();
+    this.handleOpenRegister(true);
   };
 
   notLoggedButtonSectionB2b = (classes) =>{
