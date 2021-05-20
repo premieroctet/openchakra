@@ -45,7 +45,7 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_site, is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister, get_role} from "../../../utils/context";
+import {is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister, get_role} from "../../../utils/context";
 const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered} = require('../../../utils/functions')
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
@@ -146,7 +146,7 @@ class NavBar extends Component {
 
     this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''});
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/category/${is_b2b_site() ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${is_b2b_style() ? PRO : PART}`)
       .then(res => {
         let categories = res.data;
         this.setState({allCategories: categories.map(c => ({value:c._id, label: c.label}))})
@@ -215,10 +215,10 @@ class NavBar extends Component {
       this.handleOpenRegister(user_id)
     }
     // Alfred pro && b2b_site => on redirige vers le profil
-    else if (is_b2b_site() && isLoggedUserAlfredPro()) {
+    else if (is_b2b_style() && isLoggedUserAlfredPro()) {
       Router.push( `/profile/about?user=${getLoggedUserId()}`)
     }
-    else if (is_b2b_site() && is_b2b_admin()) {
+    else if (is_b2b_admin()) {
       Router.push( `/company/dashboard/companyDashboard`)
     }
     else {
@@ -1104,7 +1104,7 @@ class NavBar extends Component {
         <Tabs value={false} aria-label="simple tabs example">
           {
             getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
-              is_b2b_site() ?
+              is_b2b_style() ?
                 <>
                   <Tab
                     classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
@@ -1154,7 +1154,7 @@ class NavBar extends Component {
           {
             // Accès part/pro uniquement si non loggué ou loggué en Alfred pro
             getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
-              is_b2b_site() ?
+              is_b2b_style() ?
                 null
                 :
                   <Tab

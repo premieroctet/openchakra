@@ -12,7 +12,7 @@ import Slider from '@material-ui/core/Slider';
 import MultipleSelect from "react-select";
 const {SEARCHBAR}=require('../../utils/i18n')
 const {setAxiosAuthentication}=require('../../utils/authentication')
-const {is_b2b_site}=require('../../utils/context')
+const {is_b2b_style}=require('../../utils/context')
 const {PRO, PART}=require('../../utils/consts')
 import axios from 'axios'
 import _ from 'lodash'
@@ -52,7 +52,7 @@ class FilterMenu extends React.Component{
 
   componentDidMount = () => {
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/category/${is_b2b_site() ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${is_b2b_style() ? PRO : PART}`)
       .then(res => {
         let categories = res.data;
         this.setState({allCategories: categories.map(c => ({value:c._id, label: c.label}))})

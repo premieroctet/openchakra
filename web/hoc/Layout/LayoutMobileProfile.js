@@ -14,7 +14,7 @@ import Divider from "@material-ui/core/Divider";
 import UserAvatar from "../../components/Avatar/UserAvatar";
 const {isEditableUser}=require('../../utils/functions');
 import {is_mode_company} from "../../utils/context";
-const {is_b2b_site}=require('../../utils/context');
+const {is_b2b_style}=require('../../utils/context');
 
 class LayoutMobileProfile extends React.Component{
 
@@ -79,7 +79,7 @@ class LayoutMobileProfile extends React.Component{
     return(
       <Grid>
         <Grid>
-          <Grid className={is_b2b_site() ? classes.layoutMobileProfilHeaderPro : classes.layoutMobileProfilHeader}>
+          <Grid className={is_b2b_style() ? classes.layoutMobileProfilHeaderPro : classes.layoutMobileProfilHeader}>
             <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
               <ArrowBackIosIcon />
             </IconButton>

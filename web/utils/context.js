@@ -1,5 +1,5 @@
 import {isAndroid, isIOS, getUA} from 'react-device-detect';
-
+const {getLoggedUser, isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro}=require('./functions')
 const isWebview = require('is-webview');
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
@@ -40,7 +40,25 @@ const is_mode_company = () => {
 }
 
 const is_b2b_style = () => {
-  return is_b2b_site() || is_b2b_admin() || is_b2b_manager()
+  // User non loggué : return is_b2b_site (localStorage)
+  // Loggué :
+  // - b2b admin ou b2b manager : true
+  // - b2b employé : false
+  // - alfred pro : return is_b2b_site (localStorage)
+  // - sans rôle : false
+  if (!getLoggedUser()) {
+    return is_b2b_site()
+  }
+  if (is_b2b_admin() || is_b2b_manager()) {
+      return true
+  }
+  if (is_b2b_employee()) {
+    return false
+  }
+  if (isLoggedUserAlfredPro()) {
+    return is_b2b_site()
+  }
+  return false
 }
 
 const is_application = () => {
@@ -51,7 +69,7 @@ const is_application = () => {
   if (ios && !safari) {
     is_ios_app = true;
   }
-  return is_ios_app || isWebview(getUA);  
+  return is_ios_app || isWebview(getUA);
 }
 
 const is_mobile = () => {
@@ -67,6 +85,6 @@ const removeStatusRegister = () =>{
 }
 
 module.exports = {
-  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_b2b_site, is_mode_company, is_application, is_mobile,
+  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_mode_company, is_application, is_mobile,
   get_role,setStatusRegister,removeStatusRegister
 }

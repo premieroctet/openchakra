@@ -11,7 +11,7 @@ import Divider from "@material-ui/core/Divider";
 import styles from '../../../static/css/components/Footer/Footer'
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import {is_b2b_site, is_application, is_mobile} from "../../../utils/context";
+import {is_b2b_style, is_application, is_mobile} from "../../../utils/context";
 import {isAndroid, isIOS} from 'react-device-detect';
 
 import Register from "../../../components/Register/Register";
@@ -99,8 +99,8 @@ class Footer extends React.Component {
 
     return (
       <Grid container spacing={2} style={{width: '100%', margin: 0}}>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3}
-              lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_style() ? 4 : 3}
+              lg={is_b2b_style() ? 4 : 3} md={is_b2b_style() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
             <h3>À propos</h3>
           </Grid>
@@ -110,7 +110,7 @@ class Footer extends React.Component {
             </Link>
           </Grid>
           {
-            is_b2b_site() ?
+            is_b2b_style() ?
               <>
                 <Grid item>
                   <Link href={'/footer/apropos'}>
@@ -146,7 +146,7 @@ class Footer extends React.Component {
               : null
           }
           {
-            !is_b2b_site() ?
+            !is_b2b_style() ?
               <>
                 <Grid item>
                   <Link href={'/footer/ourTeam'}>
@@ -167,13 +167,13 @@ class Footer extends React.Component {
               : null
           }
         </Grid>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3}
-              lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_style() ? 4 : 3}
+              lg={is_b2b_style() ? 4 : 3} md={is_b2b_style() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
-            <h3>{is_b2b_site() ? "Entreprises" : "Communauté"}</h3>
+            <h3>{is_b2b_style() ? "Entreprises" : "Communauté"}</h3>
           </Grid>
           {
-            !is_b2b_site() ?
+            !is_b2b_style() ?
               <Grid item>
                 <Link href={'/footer/ourCommunity'}>
                   <Typography>Notre communauté</Typography>
@@ -199,13 +199,13 @@ class Footer extends React.Component {
               </>
           }
         </Grid>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_site() ? 4 : 3}
-              lg={is_b2b_site() ? 4 : 3} md={is_b2b_site() ? 4 : 3} sm={6} xs={6}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={is_b2b_style() ? 4 : 3}
+              lg={is_b2b_style() ? 4 : 3} md={is_b2b_style() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
             <h3>Alfred</h3>
           </Grid>
           {
-            is_b2b_site() ? null :
+            is_b2b_style() ? null :
               <Grid item>
                 <Link href={'/footer/becomeAlfred'}>
                   <Typography>Devenir Alfred</Typography>
@@ -214,7 +214,7 @@ class Footer extends React.Component {
           }
           {
             getLoggedUserId() && !isLoggedUserAlfredPro() ? null :
-              is_b2b_site() ?
+              is_b2b_style() ?
                 isLoggedUserAlfredPro() ?
                   <Grid item>
                     <Link href={'/creaShop/creaShop'}>
@@ -229,7 +229,7 @@ class Footer extends React.Component {
                 : null
           }
           {
-            is_b2b_site() ?
+            is_b2b_style() ?
               <Grid item>
                 <Link href={'/footer/becomeAlfred'}>
                   <Typography>Charte</Typography>
@@ -239,7 +239,7 @@ class Footer extends React.Component {
           }
         </Grid>
         {
-          is_b2b_site() ? null :
+          is_b2b_style() ? null :
             <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3} lg={3} md={3} sm={6}
                   xs={6}>
               <Grid item>
