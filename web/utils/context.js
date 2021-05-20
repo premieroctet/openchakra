@@ -53,7 +53,7 @@ const is_application = () => {
   if (ios && !safari) {
     is_ios_app = true;
   }
-  return is_ios_app || isWebview(getUA);  
+  return is_ios_app || isWebview(getUA);
 }
 
 const is_mobile = () => {
@@ -61,7 +61,8 @@ const is_mobile = () => {
 }
 
 const setStatusRegister = () =>{
-  if(!getLoggedUser()){
+  console.log('bonjour')
+  if(getLoggedUser() === null){
     return localStorage.setItem('setAlfredRegister', 'true')
   }
 }

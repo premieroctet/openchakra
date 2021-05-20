@@ -182,6 +182,7 @@ class NavBar extends Component {
 
   handleOpenLogin = (e) => {
     this.handleMenuClose();
+    removeStatusRegister();
     this.setState({setOpenLogin: true, setOpenRegister: null});
   };
 
@@ -189,15 +190,18 @@ class NavBar extends Component {
     this.setState({setOpenLogin: false});
   };
 
-  handleOpenRegister = user_id => {
+  handleOpenRegister = (user_id) => {
+    console.log('coucou')
     this.handleMenuClose();
     this.setState({setOpenRegister: user_id, setOpenLogin: false});
   };
 
   handleCloseRegister = () => {
     if (this.state.activeStep === 2) {
+      removeStatusRegister()
       this.setState({setOpenRegister: null}, () => Router.push('/search?search=1'));
     } else {
+      removeStatusRegister()
       this.setState({setOpenRegister: null});
     }
   };
@@ -769,7 +773,7 @@ class NavBar extends Component {
   }
 
   notLoggedButtonSection = (classes) =>{
-    const{setOpenRegister, ifHomePage, user, setOpenLogin} = this.state;
+    const{ifHomePage, user} = this.state;
 
     const logged = user != null
 
@@ -801,11 +805,12 @@ class NavBar extends Component {
     )
   }
 
-
-
+  checkAndOpenRegister = () =>{
+    this.handleOpenRegister;
+  };
 
   notLoggedButtonSectionB2b = (classes) =>{
-    const{setOpenRegister, ifHomePage, user, setOpenLogin, anchorElB2b} = this.state;
+    const{ifHomePage, user, anchorElB2b} = this.state;
 
     const logged = user != null
 
@@ -848,7 +853,7 @@ class NavBar extends Component {
               <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
                 <Divider/>
               </Grid>
-              <MenuItem onClick={() => {setStatusRegister(); this.handleOpenRegister()}}>
+              <MenuItem onClick={this.checkAndOpenRegister}>
                 <Button variant="outlined" classes={{root: classes.buttonService}}>Je propose mes services</Button>
               </MenuItem>
               <MenuItem onClick={this.handleOpenLogin}>
@@ -1217,8 +1222,11 @@ class NavBar extends Component {
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
           <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
             <div className={classes.navbarPaper}>
-              <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'} mode={'complete'}
-                  user_id={this.state.setOpenRegister}/>
+              <Register
+                callLogin={this.handleOpenLogin}
+                sendParentData={this.getData} id={'register'}
+                user_id={this.state.setOpenRegister}
+              />
             </div>
           </DialogContent>
         </Dialog>

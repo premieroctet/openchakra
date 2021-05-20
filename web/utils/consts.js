@@ -434,8 +434,8 @@ const CREASHOP_MODE={
 }
 
 const REGISTER_MODE={
-  COMPLETE:'complete',
-  INCOMPLETE:'incomplete',
+  COMPLETE:'fullRegister',
+  INCOMPLETE:'setAlfredRegister',
 }
 
 const MICROSERVICE_MODE='MICROSERVICE'

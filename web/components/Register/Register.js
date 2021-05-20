@@ -289,7 +289,7 @@ class Register extends React.Component {
             console.error(err)
           })
           .then( () => {
-            if(this.props.mode === 'incomplete'){
+            if(localStorage.getItem('setAlfredRegister') === 'true'){
               this.submitPhone()
             }else{
               this.setState({activeStep: this.state.activeStep + 1})
@@ -302,7 +302,7 @@ class Register extends React.Component {
             }
           )
           .then( () => {
-            if(this.props.mode !== 'incomplete'){
+            if(localStorage.getItem('setAlfredRegister') !== 'true'){
               this.submitPhone()
             }
           }
@@ -329,7 +329,7 @@ class Register extends React.Component {
 
   submitPhone = e => {
 
-    if(!this.state.phone && this.props.mode === 'incomplete'){
+    if(!this.state.phone && localStorage.getItem('setAlfredRegister') === 'true'){
       Router.push('/creaShop/creaShop')
     }
 
@@ -408,7 +408,11 @@ class Register extends React.Component {
     event.preventDefault();
   };
 
-  renderSwitch = (stepIndex, mode) => {
+  renderSwitch = (stepIndex) => {
+    let mode = 'fullRegister'
+    if(localStorage.getItem('setAlfredRegister') === 'true'){
+      mode = 'setAlfredRegister';
+    }
     return STEPS[mode][stepIndex].component(this)
 
   }
@@ -464,7 +468,7 @@ class Register extends React.Component {
 
 
   render() {
-    const {classes, callLogin, mode} = this.props;
+    const {classes, callLogin} = this.props;
     const {smsCodeOpen, activeStep, firstPageValidator, secondPageValidator} = this.state;
 
     return (
@@ -478,7 +482,7 @@ class Register extends React.Component {
                 </Grid> : null
             }
             <Grid className={classes.containerSwitch}>
-              {this.renderSwitch(activeStep, mode)}
+              {this.renderSwitch(activeStep)}
             </Grid>
             {
               activeStep < 2 ?
