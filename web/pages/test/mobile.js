@@ -45,7 +45,6 @@ class MobileTest extends React.Component {
       </div>
     )
   }
-
 }
 
 export default MobileTest
