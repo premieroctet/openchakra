@@ -396,6 +396,20 @@ const sendB2BAccount = (user, email, role, company, token, req) => {
   );
 }
 
+const sendB2BRegistration = (user, email, role, company, req) => {
+  sendNotification(
+    B2B_ACCOUNT_CREATED,
+    user,
+    {
+      user_firstname: user.firstname,
+      role: role,
+      company: company,
+      user_email: email,
+      link_initiatenewpassword: new URL(`?register=${user._id}`, computeUrl(req)),
+    },
+  );
+}
+
 module.exports = {
   sendVerificationMail,
   sendShopDeleted,
@@ -418,5 +432,6 @@ module.exports = {
   sendVerificationSMS,
   sendLeaveCommentForClient,
   sendLeaveCommentForAlfred,
-  sendB2BAccount
+  sendB2BAccount,
+  sendB2BRegistration,
 };

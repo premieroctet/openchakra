@@ -26,6 +26,7 @@ const {addRegistrationProof, createOrUpdateMangoCompany} = require('../../utils/
 const {getPeriodStart}=require('../../../utils/dateutils')
 const {normalizePhone, bufferToString, normalize, isMobilePhone} = require('../../../utils/text')
 const csv_parse = require('csv-parse/lib/sync')
+const {sendB2BRegistration}=require('../../utils/mailing')
 
 axios.defaults.withCredentials = true;
 
@@ -470,11 +471,18 @@ router.post('/employees', passport.authenticate('b2badmin', {session: false}), (
               name: r.nom,
               email: r.email,
               password : crypto.randomBytes(10).toString('hex'),
+              company: req.user.company,
+              roles: [EMPLOYEE],
             }
           }))
-            .then ( result => {
-              console.log(JSON.stringify(result))
-              return res.json(`${records.length} collaborateurs importés`)
+            .then ( users => {
+              Company.findById(req.user.company)
+                .then( company => {
+                  users.forEach(u => {
+                    sendB2BRegistration(u, u.email, ROLES[EMPLOYEE], company.name, req)
+                  })
+                })
+              return res.json(`${users.length} collaborateurs importés`)
             })
             .catch(err => {
               console.error(err)

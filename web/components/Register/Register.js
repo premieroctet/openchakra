@@ -79,7 +79,7 @@ class Register extends React.Component {
     this.state = {
       firstname: '',
       name: '',
-      birthday: new Date(),
+      birthday: moment(),
       email: '',
       password: '',
       password2: '',
@@ -153,7 +153,7 @@ class Register extends React.Component {
           this.setState({
             firstname: user.firstname,
             name:user.name,
-            birthday: user.birthday ? moment(user.birthday) : null,
+            birthday: moment(user.birthday),
             email: user.email,
             phone: user.phone,
             emailValidator: true,
@@ -396,22 +396,19 @@ class Register extends React.Component {
       );
   };
 
-  onChangeBirthdayDate = (e) => {
-    let day = new Date(this.state.birthday);
-    day.setDate(e.target.value);
-    this.setState({birthday: day});
+  onChangeBirthdayDate = e => {
+    let birthday = this.state.birthday.set("date", e.target.value)
+    this.setState({birthday: birthday});
   };
 
-  onChangeBirthdayMonth = (e) => {
-    let month = new Date(this.state.birthday);
-    month.setMonth(e.target.value - 1);
-    this.setState({birthday: month});
+  onChangeBirthdayMonth = e => {
+    let birthday = this.state.birthday.set("month", parseInt(e.target.value)-1)
+    this.setState({birthday: birthday});
   };
 
-  onChangeBirthdayYear = (e) => {
-    let year = new Date(this.state.birthday);
-    year.setFullYear(e.target.value);
-    this.setState({birthday: year});
+  onChangeBirthdayYear = e => {
+    let birthday = this.state.birthday.set("year", e.target.value)
+    this.setState({birthday: birthday});
   };
 
   confirmLater = () => {
