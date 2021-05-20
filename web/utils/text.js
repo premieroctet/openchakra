@@ -6,8 +6,7 @@ const SIRET_LENGTH=14
 
 const normalize = str => {
   if (str) {
-    const normalized = str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    return normalized;
+    str = str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
   return str
 };
