@@ -52,7 +52,6 @@ class PaymentCard extends React.Component{
                 </Grid>
                 <Grid item xl={4} xs={3} sm={4} style={{display:'flex', justifyContent: 'center'}}>
                   <Typography>{expirationDate}</Typography>
-                  { e.recurrent ? <CheckCircleIcon title={'Validée pour les paiements récurrents'}/> : null }
                 </Grid>
                 {
                   editable ?

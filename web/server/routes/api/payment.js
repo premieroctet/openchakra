@@ -160,63 +160,6 @@ router.post('/refund', passport.authenticate('b2badmin', {session: false}),(req,
       })
 })
 
-// POST /myAlfred/api/payment/recurrent
-// Set recurrency for card_id
-// @access private
-router.post('/recurrentConfirm', passport.authenticate('b2badmin', {session: false}),(req, res) => {
-  console.log(`recurrentConfirm=${req.originalUrl}`)
-  const cardId=req.body.cardId
-  const company_id=req.body.company_id
-  Company.findByIdAndUpdate(company_id, { $addToSet: { recurrent_cards: cardId } })
-    .then( () => {
-      console.log(`Company ${company_id}:card ${cardId} added to recurrent`)
-    })
-  console.log(`Card ${cardId} added to company ${company_id} recurrency list`)
-  return res.status(200).json()
-})
-
-// POST /myAlfred/api/payment/recurrent
-// Set recurrency for card_id
-// @access private
-router.post('/recurrent', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  const amount = 100
-  const fees = 0
-  const card_id = req.body.card_id
-
-  Company.findById(req.user.company)
-    .then(entity => {
-      const id_mangopay = entity.id_mangopay;
-      mangoApi.Users.getWallets(id_mangopay)
-        .then(wallets => {
-          const wallet_id = wallets[0].Id;
-          mangoApi.PayIns.create({
-            AuthorId: id_mangopay,
-            DebitedFunds: {Currency: 'EUR', Amount: amount},
-            Fees: {Currency: 'EUR', Amount: fees },
-            //ReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
-            ReturnURL: `${computeUrl(req)}/payment/recurrentPayment?cardId=${card_id}&company_id=${entity._id}`,
-            CardType: 'CB_VISA_MASTERCARD',
-            PaymentType: 'CARD',
-            ExecutionType: 'DIRECT',
-            CreditedWalletId: wallet_id,
-            CardId: card_id,
-            Culture: 'FR',
-            SecureMode: 'FORCE',
-            SecureModeReturnURL: `${computeUrl(req)}/payment/recurrentPayment?cardId=${card_id}&company_id=${entity._id}`,
-            StatementDescriptor: 'VALIDATION'
-          })
-            .then(payin => {
-              console.log(`Created recurrent ${JSON.stringify(payin)}`)
-              return res.json(payin)
-            })
-            .catch(err => {
-              console.error(err)
-              return res.status(400).json(err)
-            })
-        });
-    })
-})
-
 // POST /myAlfred/api/payment/payInDirect
 // @access private
 router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -328,9 +271,6 @@ const get_cards = req => {
         mangoApi.Users.getCards(entity.id_mangopay, {parameters: { per_page: 100}})
           .then(cards => {
             cards = cards.filter(c => c.Active)
-            if (entity.recurrent_cards) {
-              cards.forEach(c => c.recurrent=entity.recurrent_cards.includes(c.Id))
-            }
             resolve(cards)
           })
       })
