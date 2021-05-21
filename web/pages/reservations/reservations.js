@@ -276,9 +276,7 @@ class AllReservations extends React.Component {
                 <Grid className={classes.reservationsMainContainer}>
                   <Grid container style={{display: 'flex', alignItems: 'center'}}>
                     <Grid item xl={3} lg={3} md={3} sm={6} xs={4} className={classes.avatarContainer}>
-                      <UserAvatar
-                        user={alfredMode ? booking.user : booking.alfred}
-                        className={classes.cardPreviewLarge}/>
+                      <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
                     </Grid>
                     <Grid item  xl={3} lg={3} md={3} sm={6} xs={8} className={classes.descriptionContainer}>
                       <Grid className={classes.bookingNameContainer}>

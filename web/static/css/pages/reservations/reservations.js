@@ -224,14 +224,6 @@ export default theme => ({
   scrollMenuTab:{
     textTransform: 'initial'
   },
-  cardPreviewLarge: {
-    width: 80,
-    height: 80,
-    [theme.breakpoints.down('sm')]:{
-      width: 60,
-      height: 60
-    }
-  },
   detailButtonContainer:{
     [theme.breakpoints.down('sm')]:{
       display: 'flex',

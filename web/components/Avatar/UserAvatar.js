@@ -38,14 +38,18 @@ class UserAvatar extends React.Component {
 
   avatarWithPics = (user, classes) => {
     const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
+    let profil = Router.pathname === '/profile/about';
+
     return (
-      <Avatar alt="photo de profil" src={url} className={classes.avatarLetter} onClick={this.selectPicture}/>
+      <Avatar alt="photo de profil" src={url} className={profil ? classes.avatarLetterProfil : classes.avatarLetter} onClick={this.selectPicture}/>
     );
   }
 
   avatarWithoutPics = (user, classes) =>{
+    let profil = Router.pathname === '/profile/about';
+
     return (
-      <Avatar alt="photo de profil" className={classes.avatarLetter}>
+      <Avatar alt="photo de profil" className={profil ? classes.avatarLetterProfil : classes.avatarLetter}>
         <p>{user.avatar_letters}</p>
       </Avatar>
     );
