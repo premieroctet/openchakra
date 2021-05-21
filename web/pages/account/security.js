@@ -366,6 +366,7 @@ class security extends React.Component {
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
+                                tabIndex="-1"
                                 aria-label="toggle password visibility"
                                 onClick={() => this.setState({showCurrentPassword: !showCurrentPassword}) }
                                 onMouseDown={ ev => ev.preventDefault()}
@@ -391,6 +392,7 @@ class security extends React.Component {
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
+                            tabIndex="-1"
                             aria-label="toggle password visibility"
                             onClick={() => this.setState({showNewPassword: !showNewPassword}) }
                           >
@@ -414,6 +416,7 @@ class security extends React.Component {
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
+                            tabIndex="-1"
                             aria-label="toggle password visibility"
                             onClick={() => this.setState({showConfirmPassword: !showConfirmPassword}) }
                           >

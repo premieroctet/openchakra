@@ -93,7 +93,7 @@ class AllReservations extends React.Component {
       .catch( err => {
         if (err.response && [401, 403].includes(err.response.status)) {
           localStorage.setItem('path', Router.asPath)
-          Router.push('/login');
+          Router.push('/');
         }
       })
   }

@@ -178,6 +178,7 @@ class LogIn extends React.Component {
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
+                            tabIndex="-1"
                             aria-label="toggle password visibility"
                             onClick={this.handleClickShowPassword}
                             onMouseDown={this.handleMouseDownPassword}
