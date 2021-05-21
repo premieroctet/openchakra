@@ -328,25 +328,25 @@ class AllReservations extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {reservationType, userInfo} = this.state;
+    const {reservationType, userInfo, bookingPreview, bookingCancel, bookingConfirm, bookingPreApprouved} = this.state;
 
     return (
-      <React.Fragment>
-        <Hidden only={['xs']}>
+      <div>
+        <Hidden only={['xs']} implementation={'css'}>
           <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
             {this.content(classes)}
           </LayoutReservations>
         </Hidden>
-        <Hidden only={['lg', 'xl',  'sm', 'md']}>
+        <Hidden only={['lg', 'xl',  'sm', 'md']} implementation={'css'}>
           <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
             {this.content(classes)}
           </LayoutMobileReservations>
         </Hidden>
-        { this.bookingPreviewModal(classes)}
-        { this.bookingCancelModal(classes)}
-        { this.bookingConfirmModal(classes)}
-        { this.bookingPreApprouved(classes)}
-      </React.Fragment>
+        { bookingPreview ? this.bookingPreviewModal(classes) : null}
+        { bookingCancel ? this.bookingCancelModal(classes) : null}
+        { bookingConfirm ? this.bookingConfirmModal(classes) : null}
+        { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
+      </div>
 
     );
   }
