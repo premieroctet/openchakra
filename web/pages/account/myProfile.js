@@ -62,7 +62,7 @@ class myProfile extends React.Component{
         <LayoutMobile currentIndex={4}>
           <Grid style={{display: 'flex', alignItems: 'center', marginTop: '5vh'}}>
             <Grid className={classes.cardPreviewContainerAvatar}>
-              <UserAvatar alt={user.firstName} user={user} className={classes.cardPreviewLarge} />
+              <UserAvatar alt={user.firstName} user={user}/>
             </Grid>
             <Grid style={{marginLeft: '5vh'}}>
               <h2>Hello {user.firstname}</h2>

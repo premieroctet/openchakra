@@ -206,7 +206,7 @@ class BookingConfirm extends React.Component {
                       </Grid>
                       <Grid item xs={5}>
                         <Grid item style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                          <UserAvatar classes={'avatarLetter'} user={bookingObj.user} className={classes.avatarLetter}/>
+                          <UserAvatar classes={'avatarLetter'} user={bookingObj.user}/>
                           <Typography style={{marginTop: 20}}
                                       className={classes.textAvatar}>{bookingObj.user.firstname}</Typography>
                         </Grid>

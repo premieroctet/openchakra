@@ -659,7 +659,7 @@ class UserServicesPreview extends React.Component {
                 <Grid container className={classes.avatarAnDescription}>
                   <Grid item xl={3} sm={3} className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
-                      <UserAvatar user={this.state.alfred} className={classes.avatarLetter}/>
+                      <UserAvatar user={this.state.alfred}/>
                     </Grid>
                   </Grid>
                   <Grid item xl={9} sm={9} className={classes.flexContentAvatarAndDescription}>

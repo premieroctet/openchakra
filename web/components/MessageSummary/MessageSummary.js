@@ -49,7 +49,7 @@ class MessageSummary extends React.Component {
           <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <Grid>
               <Grid>
-                <UserAvatar user={relative} className={classes.cardPreviewLarge}/>
+                <UserAvatar user={relative}/>
               </Grid>
             </Grid>
             <Grid style={{marginLeft: '3vh'}}>

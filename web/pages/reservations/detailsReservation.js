@@ -270,9 +270,9 @@ class DetailsReservation extends React.Component {
                         {bookingObj === null ||
                         currentUser === null ? null : currentUser._id ===
                         bookingObj.alfred._id ? (
-                          <UserAvatar user={bookingObj.user} className={classes.avatarLetter}/>
+                          <UserAvatar user={bookingObj.user}/>
                         ) : (
-                          <UserAvatar user={bookingObj.alfred} className={classes.avatarLetter}/>
+                          <UserAvatar user={bookingObj.alfred}/>
                         )}
                       </Grid>
                       <Grid item xs={5} md={7}>

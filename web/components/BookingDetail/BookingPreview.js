@@ -275,7 +275,7 @@ class BookingPreview extends React.Component {
                 <Grid className={classes.Rightcontent} item xs={12} sm={12} md={12} xl={12} lg={12}>
                   <Grid container className={classes.mobilerow}>
                     <Grid item xs={2} sm={3} md={3} xl={3} lg={3}>
-                      <UserAvatar user={displayUser} className={classes.avatarLetter}/>
+                      <UserAvatar user={displayUser}/>
                     </Grid>
                     <Grid item xs={9} sm={9} md={9} xl={9} lg={9}>
                       <Grid>

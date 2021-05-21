@@ -1,55 +1,15 @@
 export default theme => ({
-
-  buttonCamera: {
-    float: 'right',
-    zIndex: '2',
-    color: '#312b2a',
-    position: 'relative',
-    border: 'white 0.5px solid',
-    borderRadius: '50%',
-    backgroundColor: '#BDBDBD',
-    bottom: '40%',
-    padding: '0.3vh',
-    '&:hover': {
-      backgroundColor: 'white'
-    }
-
+  avatarLetter: {
+    height: '90%',
+    width: '90%',
+    margin: 'auto',
+    fontSize: 'xx-large',
   },
-  popover: {
-    pointerEvents: 'none',
-    position: 'relative',
-
+  input:{
+    display:'none'
   },
-  paper: {
-    backgroundColor: '#f87280',
-    color: 'white',
-    padding: theme.spacing(1),
-  },
-
-  badge: {
-    backgroundColor: '#f87280',
-    color: '#f87280',
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    '&::after': {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      animation: '$ripple 1.2s infinite ease-in-out',
-      border: '1px solid currentColor',
-      content: '""',
-    },
-  },
-  '@keyframes ripple': {
-    '0%': {
-      transform: 'scale(.8)',
-      opacity: 1,
-    },
-    '100%': {
-      transform: 'scale(2.4)',
-      opacity: 0,
-    },
+  badge:{
+    width: '100%',
+    height : '100%'
   }
 })

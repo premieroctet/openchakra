@@ -86,7 +86,7 @@ class LayoutMobileProfile extends React.Component{
           </Grid>
           <Grid className={classes.layoutMobileLayoutProfileHeader}>
             <Grid className={classes.profilLayoutAvatar}>
-              <UserAvatar alt={!is_mode_company(user) ? user.firstname : company ? company.name : ''} user={!is_mode_company(user) ? user : company ? company : ''} className={classes.cardPreviewLarge} />
+              <UserAvatar alt={!is_mode_company(user) ? user.firstname : company ? company.name : ''} user={!is_mode_company(user) ? user : company ? company : ''}/>
             </Grid>
           </Grid>
           <Grid style={{display: 'flex',height: '40%', alignItems: 'center', marginTop: '10vh', marginLeft: '5vh'}}>
