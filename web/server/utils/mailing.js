@@ -34,6 +34,7 @@ const BOOKING_DETAILS = 26;
 const BOOKING_EXPIRED_2_CLIENT = 30;
 const BOOKING_EXPIRED_2_ALFRED = 31;
 const B2B_ACCOUNT_CREATED = 58;
+const ALERT = 59;
 
 const CONFIRM_PHONE = -1;
 
@@ -382,6 +383,18 @@ const sendNewBookingManual = (booking, req) => {
   );
 };
 
+const sendAlert = (user, subject, message) => {
+  sendNotification(
+    ALERT,
+    user,
+    {
+      alert_subject: subject,
+      alert_message: message,
+      user_firstname: user.firstname,
+    },
+  );
+};
+
 const sendB2BAccount = (user, email, role, company, token, req) => {
   sendNotification(
     B2B_ACCOUNT_CREATED,
@@ -433,5 +446,6 @@ module.exports = {
   sendLeaveCommentForClient,
   sendLeaveCommentForAlfred,
   sendB2BAccount,
+  sendAlert,
   sendB2BRegistration,
 };

@@ -1,3 +1,5 @@
+ICI VERSION B2B A MERGER AVEC PROD_V3_1_9
+
 import Button from "@material-ui/core/Button";
 
 const {setAxiosAuthentication}=require('../../../utils/authentication');

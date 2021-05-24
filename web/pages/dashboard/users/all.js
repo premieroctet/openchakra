@@ -28,6 +28,7 @@ const moment = require('moment-timezone');
 moment.locale('fr');
 const {MANGOPAY_CONFIG}=require('../../../config/config')
 const {insensitiveComparator}=require('../../../utils/text')
+const regions=require('../../../static/assets/data/regions')
 
 
 const styles = theme => ({
@@ -74,11 +75,15 @@ class all extends React.Component {
       {headerName: "Nom", field: "name", comparator: insensitiveComparator},
       {headerName: "Email", field: "email", comparator: insensitiveComparator},
       {headerName: "Ville", field: "billing_address.city", comparator: insensitiveComparator},
+      {headerName: "CP", field: "billing_address.zip_code"},
+      {headerName: "Région", field: "region"},
+      {headerName: "Tel", field: "phone"},
       {headerName: "Né(e) le", field: "birthday_moment", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter',},
       {headerName: "Inscrit le", field: "creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter', initialSort: 'desc'},
       {headerName: "Création boutique", field: "shop.creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter'},
       {headerName: "Client Mangopay", field: "id_mangopay"},
       {headerName: "Alfred Mangopay", field: "mangopay_provider_id"},
+      {headerName: "Warning", field: "warning", cellRenderer: 'warningCellRenderer'},
     ]
 
   }
@@ -94,6 +99,12 @@ class all extends React.Component {
           u.status={'alfred':u.is_alfred, 'admin': u.is_admin}
           u.birthday_moment = moment(u.birthday)
           u.shop = u.shop.pop()
+          if (!(u.billing_address && u.billing_address.gps && u.billing_address.gps.lat)) {
+            u.warning='Adresse incorrecte'
+          }
+          if (u.billing_address && u.billing_address.zip_code) {
+            u.region = (regions.find(r => u.billing_address.zip_code.startsWith(r.num_dep)) || {}).region_name
+          }
           return u
         })
         this.setState({users:users});

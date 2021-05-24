@@ -1,3 +1,5 @@
+ICI VERSION B2B A MERGER AVEC PROD_V3_1_9
+
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {setAuthToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';

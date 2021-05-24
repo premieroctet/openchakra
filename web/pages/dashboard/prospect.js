@@ -1,29 +1,19 @@
-const {clearAuthenticationToken}=require('../../utils/authentication')
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react';
+import axios from 'axios';
+const {setAxiosAuthentication, clearAuthenticationToken}=require('../../utils/authentication')
 
+import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import Layout from '../../hoc/Layout/Layout';
-import axios from 'axios';
 import Link from 'next/link';
 import Router from 'next/router';
-import {Table, TableBody, TableCell, TableHead, TableRow, TablePagination} from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import {KeyboardArrowLeft, KeyboardArrowRight} from '@material-ui/icons';
-import LastPageIcon from '@material-ui/icons/LastPage';
-import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
-const {is_production, is_development}=require('../../config/config')
-const {delayedPromise}=require('../../utils/promise')
-
+const {BigList}=require('../../components/BigList/BigList')
 
 const styles = theme => ({
   signupContainer: {
@@ -55,56 +45,6 @@ const actionsStyles = theme => ({
   },
 });
 
-class TablePaginationActions extends React.Component {
-  handleFirstPageButtonClick = event => {
-    this.props.onChangePage(event, 0);
-  };
-
-  handleBackButtonClick = event => {
-    this.props.onChangePage(event, this.props.page - 1);
-  };
-
-  handleNextButtonClick = event => {
-    this.props.onChangePage(event, this.props.page + 1);
-  };
-
-  handleLastPageButtonClick = event => {
-    this.props.onChangePage(event, Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1));
-  };
-
-  render() {
-    const {classes, count, page, rowsPerPage, theme} = this.props;
-
-    return <div className={classes.root}>
-      <IconButton onClick={this.handleFirstPageButtonClick} disabled={page === 0} aria-label="First Page">
-        {theme.direction === 'rtl' ? <LastPageIcon/> : <FirstPageIcon/>}
-      </IconButton>
-      <IconButton onClick={this.handleBackButtonClick} disabled={page === 0} aria-label="Previous Page">
-        {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
-      </IconButton>
-      <IconButton onClick={this.handleNextButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                  aria-label="Next Page">
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
-      </IconButton>
-      <IconButton onClick={this.handleLastPageButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                  aria-label="Last Page">
-        {theme.direction === 'rtl' ? <FirstPageIcon/> : <LastPageIcon/>}
-      </IconButton>
-    </div>;
-  }
-}
-
-TablePaginationActions.propTypes = {
-  classes: PropTypes.object.isRequired,
-  count: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-  theme: PropTypes.object.isRequired,
-
-};
-const TablePaginationActionsWrapped = withStyles(actionsStyles, {withTheme: true})(TablePaginationActions);
-
 class all extends React.Component {
   constructor(props) {
     super(props);
@@ -118,8 +58,8 @@ class all extends React.Component {
       fields: [],
       mandatory: [],
       // Le bon coin
-      category: is_development() ? 'Catégorie' : '',
-      url: is_development() ? 'https://www.leboncoin.fr/recherche?text=web' : '',
+      category: '',
+      url: '',
       lbc_message: [],
       lbc_error: [],
     };
@@ -127,6 +67,15 @@ class all extends React.Component {
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     this.load = this.load.bind(this);
     this.fileRef = React.createRef()
+
+    this.columnDefs=[
+      {headerName: "_id", field: "_id", width: 0},
+      {headerName: "Catégorie", field: "category"},
+      {headerName: "#prospects", field: "count"},
+      {headerName: "#contactés", field: "contacted"},
+      {headerName: "#non contactés", field: "not_contacted"},
+      {headerName: "A contacter", field: "download", cellRenderer: 'linkRenderer'},
+    ]
   }
 
   componentDidMount() {
@@ -146,8 +95,16 @@ class all extends React.Component {
   load() {
     axios.get('/myAlfred/api/admin/prospect/all')
       .then((response) => {
-        this.setState({prospects: response.data});
-      }).catch((error) => {
+        const prospects=response.data
+        prospects.forEach(p => {
+          p.download={
+            link: `/myAlfred/api/admin/prospect/tocontact/${p.category}`,
+            text: `Liste ${p.category}`
+          }
+        })
+        this.setState({prospects: prospects});
+      })
+    .catch((error) => {
       console.log(error);
       if (error.response.status === 401 || error.response.status === 403) {
         clearAuthenticationToken()
@@ -212,18 +169,17 @@ class all extends React.Component {
 
     return (
       <Layout>
-        <Grid container style={{marginTop: 20}}>
+        <Grid container className={classes.signupContainer} style={{width:'100%'}}>
           <Link href={'/dashboard/home'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
           </Link>
         </Grid>
-        <Grid container className={classes.signupContainer}>
+          <Grid style={{width: '100%'}}>
           <Card className={classes.card}>
             <Grid>
-
+              <Card className={classes.card}>
               <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-
-                <Typography style={{fontSize: 30}}>Import le bon coin</Typography>
+                <Typography style={{fontSize: 30}}>Scan le bon coin</Typography>
                 <Typography>Catégorie:</Typography>
                 <TextField
                   name='category'
@@ -253,8 +209,10 @@ class all extends React.Component {
                   Lancer la recherche
                 </Button>
               </Grid>
+              </Card>
+              <Card className={classes.card}>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>Import listing</Typography>
+                <Typography style={{fontSize: 30}}>Import Excel</Typography>
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
               Sélectionnez un fichier .csv ou .txt, séparateur point-virgule
@@ -275,73 +233,18 @@ class all extends React.Component {
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
                 <Button disabled={!this.state.selectedFile} onClick={this.onClickHandler}>Importer</Button>
               </Grid>
-              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>Prospection</Typography>
-              </Grid>
+              </Card>
+              <Card className={classes.card}>
               <Paper style={{width: '100%'}}>
-                <div>
-                  <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Catégorie</TableCell>
-                        <TableCell># prospects</TableCell>
-                        <TableCell># contactés</TableCell>
-                        <TableCell># non contactés</TableCell>
-                        <TableCell>A contacter</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {prospects.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                        .map((p, index) =>
-                          <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                              {p.category.replace(/_/g, ' ')}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {p.count}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {p.contacted}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {p.not_contacted}
-                            </TableCell>
-                            <TableCell>
-                              {p.not_contacted ?
-                                <a href={`/myAlfred/api/admin/prospect/tocontact/${p.category}`}
-                                   onClick={
-                                     () => setTimeout(this.load, 2000)
-                                   }
-                                >
-                                  {`Liste ${p.category.replace(/_/g, ' ')}`}
-                                </a>
-                                :
-                                <div>Aucun nouveau contact</div>
-                              }
-                            </TableCell>
-                          </TableRow>,
-                        )}
-
-                    </TableBody>
-                  </Table>
-                </div>
-                <TablePagination
-                  rowsPerPageOptions={[10, 25]}
-                  component="div"
-                  count={prospects.length}
-                  rowsPerPage={this.state.rowsPerPage}
-                  page={this.state.page}
-                  backIconButtonProps={{
-                    'aria-label': 'Previous Page',
-                  }}
-                  nextIconButtonProps={{
-                    'aria-label': 'Next Page',
-                  }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActionsWrapped}
-                />
+            		<BigList
+            			data={prospects}
+            			columnDefs={this.columnDefs}
+            			classes={classes}
+            			title={'Prospection'}
+				          paginationPageSize='300'
+            		/>
               </Paper>
+              </Card>
             </Grid>
           </Card>
         </Grid>
