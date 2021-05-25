@@ -44,7 +44,7 @@ const {computeDistanceKm, computeBookingReference} = require('../utils/functions
 const {snackBarError}=require('../utils/notifications')
 
 const moment = require('moment');
-const {is_b2b_admin, is_b2b_manager, get_role}=require('../utils/context')
+const {isB2BAdmin, isB2BManager, getRole}=require('../utils/context')
 
 moment.locale('fr');
 registerLocale('fr', fr);
@@ -150,15 +150,15 @@ class UserServicesPreview extends React.Component {
             let user = res ? res.data : null
             // Mode compagnie : l'admin a un budget illimité comme un user standard, le manager a le budget de son département
             if (user && user.company) {
-              axios.get(`/myAlfred/api/companies/budget/${user._id}/${get_role()}`)
+              axios.get(`/myAlfred/api/companies/budget/${user._id}/${getRole()}`)
                 .then ( res => {
-                  this.setState({available_budget: res.data, role: get_role()})
+                  this.setState({available_budget: res.data, role: getRole()})
                 })
                 .catch (err => {
                   console.error(err)
                   this.setState({available_budget: 0})
                 })
-              axios.get(`/myAlfred/api/companies/supported/${user._id}/${serviceUser.service._id}/${get_role()}`)
+              axios.get(`/myAlfred/api/companies/supported/${user._id}/${serviceUser.service._id}/${getRole()}`)
                 .then( res => {
                   const percent=res.data
                   this.setState({company_percent: percent})
@@ -169,7 +169,7 @@ class UserServicesPreview extends React.Component {
 
             }
             st['user']=user
-            const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
             promise
               .then(res => {
                 var allAddresses = {'main': res.data.billing_address};
@@ -463,7 +463,7 @@ class UserServicesPreview extends React.Component {
   };
 
   hasWarningBudget = () => {
-    if (get_role()==MANAGER) {
+    if (getRole()==MANAGER) {
       const warningBudget = this.state.company_amount < this.state.total
       return warningBudget
     }

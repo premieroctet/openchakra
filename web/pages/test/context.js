@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios'
-const {is_b2b_admin, is_b2b_manager, getLoggedUser}=require('../../utils/context')
+const {isB2BAdmin, isB2BManager, getLoggedUser}=require('../../utils/context')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 
 class ContextTest extends React.Component{
@@ -32,15 +32,15 @@ class ContextTest extends React.Component{
     const{classes} = this.props
     const {user, server_context} = this.state
 
-    console.log(`User:${user}, is_b2b_admin:${is_b2b_admin(user)}`)
+    console.log(`User:${user}, isB2BAdmin:${isB2BAdmin(user)}`)
     return(
       <>
         <h1>Valeur token</h1>
         <div>{JSON.stringify(getLoggedUser())}</div>
-        <h1>is_b2b_admin</h1>
-        <div>{is_b2b_admin(user) ? 'Oui' : 'Non'}</div>
-        <h1>is_b2b_manager</h1>
-        <div>{is_b2b_manager(user) ? 'Oui' : 'Non'}</div>
+        <h1>isB2BAdmin</h1>
+        <div>{isB2BAdmin(user) ? 'Oui' : 'Non'}</div>
+        <h1>isB2BManager</h1>
+        <div>{isB2BManager(user) ? 'Oui' : 'Non'}</div>
         <h1>Contexte serveur</h1>
         <div>{JSON.stringify(server_context)}</div>
       </>

@@ -8,7 +8,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import querystring from 'querystring';
 import Router from 'next/router';
 import _ from 'lodash'
-const {is_b2b_style}=require('../../utils/context')
+const {isB2BStyle}=require('../../utils/context')
 
 function a11yProps(index, res) {
   return {

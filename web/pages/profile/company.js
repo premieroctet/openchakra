@@ -29,7 +29,7 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import {is_mode_company, isEditableUser} from '../../utils/context';
+import {isModeCompany, isEditableUser} from '../../utils/context';
 
 const moment = require('moment');
 moment.locale('fr');

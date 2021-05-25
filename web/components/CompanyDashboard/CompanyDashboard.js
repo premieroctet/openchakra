@@ -24,7 +24,7 @@ const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../utils/consts')
 
 const {setAxiosAuthentication} = require('../../utils/authentication');
 const {STEPS}=require('../../utils/dashboardSteps');
-const {is_b2b_admin} = require('../../utils/context');
+const {isB2BAdmin} = require('../../utils/context');
 
 
 function a11yProps(index) {
@@ -56,7 +56,7 @@ class CompanyDashboard extends React.Component{
           name: user.name,
           position: user.position,
         });
-        if(!is_b2b_admin(user)){
+        if(!isB2BAdmin(user)){
           Router.push({pathname: '/'});
         }
       })

@@ -142,7 +142,7 @@ class About extends CompanyComponent {
     const {newAddress, languages} = this.state;
     setAxiosAuthentication();
 
-    if(this.is_mode_company()){
+    if(this.isModeCompany()){
       axios.put('/myAlfred/api/companies/profile/editProfile', {
         activity: this.state.activityArea,
         size: this.state.sizeCompany,
@@ -235,8 +235,8 @@ class About extends CompanyComponent {
         />
         <DialogContent>
           <Topic
-            titleTopic={this.is_mode_company() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
-            titleSummary={this.is_mode_company() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
+            titleTopic={this.isModeCompany() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
+            titleSummary={this.isModeCompany() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
             underline={true}/>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -245,12 +245,12 @@ class About extends CompanyComponent {
                   fontWeight: 'bold',
                   textTransform: 'initial'
                 }}>
-                  {this.is_mode_company() ? 'Site Web' : 'Lieu d\'habitation'}
+                  {this.isModeCompany() ? 'Site Web' : 'Lieu d\'habitation'}
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 {
-                  this.is_mode_company() ?
+                  this.isModeCompany() ?
                     <TextField
                       name={'website'}
                       variant={'outlined'}
@@ -283,11 +283,11 @@ class About extends CompanyComponent {
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial'
-                  }}>{this.is_mode_company() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
+                  }}>{this.isModeCompany() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
               </Grid>
               <Grid item xs={12}>
                 {
-                  !this.is_mode_company() ?
+                  !this.isModeCompany() ?
                     <MultipleSelect
                       key={moment()}
                       value={languages}
@@ -324,7 +324,7 @@ class About extends CompanyComponent {
               </Grid>
             </Grid>
               {
-              this.is_mode_company() ?
+              this.isModeCompany() ?
                 <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <h3
@@ -366,7 +366,7 @@ class About extends CompanyComponent {
                   variant="contained"
                   classes={{root: classes.buttonSave}}
                   color={'primary'}
-                  disabled={!this.is_mode_company() ? enabledEdition : false}
+                  disabled={!this.isModeCompany() ? enabledEdition : false}
                 >
                   Modifier
                 </Button>
@@ -383,11 +383,11 @@ class About extends CompanyComponent {
     const {displayTitlePicture, classes} = this.props;
     const {user, company, showEdition} = this.state;
 
-    var place = this.is_mode_company() ? company ? company.billing_address.city : "Pas d'addresse" : user ? user.billing_address.city : "Pas d'adresse";
+    var place = this.isModeCompany() ? company ? company.billing_address.city : "Pas d'addresse" : user ? user.billing_address.city : "Pas d'adresse";
 
     const editable = isEditableUser(user);
 
-    const wrapperComponentProps = !this.is_mode_company()?
+    const wrapperComponentProps = !this.isModeCompany()?
       [
         {
           label: 'Lieu',

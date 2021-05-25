@@ -21,7 +21,7 @@ const get_logged_id = req => {
   return null
 }
 
-const get_role = req => {
+const getRole = req => {
   const token = get_token(req)
   if (token) {
     return token.role
@@ -29,20 +29,20 @@ const get_role = req => {
   return null
 }
 
-const is_b2b_admin = req => {
-  return ADMIN == get_role(req)
+const isB2BAdmin = req => {
+  return ADMIN == getRole(req)
 }
 
-const is_b2b_manager = req => {
-  return MANAGER == get_role(req)
+const isB2BManager = req => {
+  return MANAGER == getRole(req)
 }
 
-const is_b2b_employee = req => {
-  return EMPLOYEE == get_role(req)
+const isB2BEmployee = req => {
+  return EMPLOYEE == getRole(req)
 }
 
-const is_mode_company = req => {
-  return is_b2b_admin(req) || is_b2b_manager(req)
+const isModeCompany = req => {
+  return isB2BAdmin(req) || isB2BManager(req)
 }
 
 //Create JWT cookie with user credentials
@@ -69,5 +69,5 @@ const send_cookie = (user, role, res) => {
   });
 };
 
-module.exports = {get_logged_id, get_role, is_b2b_admin, is_b2b_manager,
-  is_b2b_employee, is_mode_company, send_cookie, get_token}
+module.exports = {get_logged_id, getRole, isB2BAdmin, isB2BManager,
+  isB2BEmployee, isModeCompany, send_cookie, get_token}

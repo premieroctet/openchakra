@@ -4,7 +4,7 @@ const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
 
 
-const is_b2b_site = () => {
+const isB2BSite = () => {
   if (typeof localStorage == 'undefined') {
     return false
   }
@@ -12,7 +12,7 @@ const is_b2b_site = () => {
   return is_b2b
 }
 
-const get_role = () => {
+const getRole = () => {
   const token = getAuthToken()
   if (!token) {
     return null
@@ -20,48 +20,48 @@ const get_role = () => {
   return token.role
 }
 
-const is_b2b_employee = () => {
-  const is_employee = get_role() == EMPLOYEE
+const isB2BEmployee = () => {
+  const is_employee = getRole() == EMPLOYEE
   return is_employee
 }
 
-const is_b2b_admin = () => {
-  const is_admin = get_role() == ADMIN
+const isB2BAdmin = () => {
+  const is_admin = getRole() == ADMIN
   return is_admin
 }
 
-const is_b2b_manager = () => {
-  const is_manager = get_role() == MANAGER
+const isB2BManager = () => {
+  const is_manager = getRole() == MANAGER
   return is_manager
 }
 
-const is_mode_company = () => {
-  return is_b2b_admin() || is_b2b_manager()
+const isModeCompany = () => {
+  return isB2BAdmin() || isB2BManager()
 }
 
-const is_b2b_style = () => {
-  // User non loggué : return is_b2b_site (localStorage)
+const isB2BStyle = () => {
+  // User non loggué : return isB2BSite (localStorage)
   // Loggué :
   // - b2b admin ou b2b manager : true
   // - b2b employé : false
-  // - alfred pro : return is_b2b_site (localStorage)
+  // - alfred pro : return isB2BSite (localStorage)
   // - sans rôle : false
   if (!getLoggedUser()) {
-    return is_b2b_site()
+    return isB2BSite()
   }
-  if (is_b2b_admin() || is_b2b_manager()) {
+  if (isB2BAdmin() || isB2BManager()) {
       return true
   }
-  if (is_b2b_employee()) {
+  if (isB2BEmployee()) {
     return false
   }
   if (isLoggedUserAlfredPro()) {
-    return is_b2b_site()
+    return isB2BSite()
   }
   return false
 }
 
-const is_application = () => {
+const isApplication = () => {
   const _ua = getUA.toLocaleLowerCase();
   const safari = /safari/.test(_ua);
   const ios = /iphone|ipod|ipad/.test(_ua);
@@ -72,7 +72,7 @@ const is_application = () => {
   return is_ios_app || isWebview(getUA);
 }
 
-const is_mobile = () => {
+const isMobile = () => {
   return (isAndroid || isIOS)
 }
 
@@ -162,8 +162,8 @@ const getUserLabel = user => {
 }
 
 module.exports = {
-  is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_mode_company, is_application, is_mobile,
-  get_role,setStatusRegister,removeStatusRegister, hasStatusRegister,
+  isB2BStyle, isB2BEmployee, isB2BAdmin, isB2BManager, isModeCompany, isApplication, isMobile,
+  getRole,setStatusRegister,removeStatusRegister, hasStatusRegister,
   getLoggedUserId,getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
   getUserLabel,isLoggedUserRegistered

@@ -25,7 +25,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormHelperText from '@material-ui/core/FormHelperText';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
-const {is_b2b_admin} = require('../../utils/context');
+const {isB2BAdmin} = require('../../utils/context');
 import DateField from '../../components/DateField/DateField'
 const moment=require('moment');
 moment.locale('fr');
@@ -77,7 +77,7 @@ class editProfileCompany extends React.Component{
           position: user.position,
           birthday: user.birthday ? moment(user.birthday).format('YYYY-MM-DD') : null,
         });
-        if(!is_b2b_admin(user)){
+        if(!isB2BAdmin(user)){
           Router.push({pathname: '/'});
         }
       })

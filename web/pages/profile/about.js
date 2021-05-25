@@ -204,8 +204,8 @@ class ProfileAbout extends CompanyComponent {
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}/>
         <DialogContent>
           <Topic
-            titleTopic={this.is_mode_company() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
-            titleSummary={this.is_mode_company() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
+            titleTopic={this.isModeCompany() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
+            titleSummary={this.isModeCompany() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
             underline={true}/>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -214,12 +214,12 @@ class ProfileAbout extends CompanyComponent {
                   fontWeight: 'bold',
                   textTransform: 'initial'
                 }}>
-                  {this.is_mode_company() ? 'Site Web' : 'Lieu d\'habitation'}
+                  {this.isModeCompany() ? 'Site Web' : 'Lieu d\'habitation'}
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 {
-                  this.is_mode_company() ?
+                  this.isModeCompany() ?
                     <TextField
                       name={'website'}
                       variant={'outlined'}
@@ -252,11 +252,11 @@ class ProfileAbout extends CompanyComponent {
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial'
-                  }}>{this.is_mode_company() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
+                  }}>{this.isModeCompany() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
               </Grid>
               <Grid item xs={12}>
                 {
-                  !this.is_mode_company() ?
+                  !this.isModeCompany() ?
                     <MultipleSelect
                       key={moment()}
                       value={languages}
@@ -293,7 +293,7 @@ class ProfileAbout extends CompanyComponent {
               </Grid>
             </Grid>
             {
-              this.is_mode_company() ?
+              this.isModeCompany() ?
                 <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <h3
@@ -335,7 +335,7 @@ class ProfileAbout extends CompanyComponent {
                   variant="contained"
                   classes={{root: classes.buttonSave}}
                   color={'primary'}
-                  disabled={!this.is_mode_company() ? enabledEdition : false}
+                  disabled={!this.isModeCompany() ? enabledEdition : false}
                 >
                   Modifier
                 </Button>

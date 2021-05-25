@@ -4,7 +4,7 @@ import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 import Layout from "./Layout";
 import axios from 'axios'
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import {is_b2b_admin} from '../../utils/context';
+import {isB2BAdmin} from '../../utils/context';
 
 class LayoutAccount extends React.Component {
   constructor(props) {
@@ -23,14 +23,14 @@ class LayoutAccount extends React.Component {
           items: [
             {
               label: 'Mes Informations',
-              url: is_b2b_admin(user) ? '/editProfileCompany' : '/editProfile'
+              url: isB2BAdmin(user) ? '/editProfileCompany' : '/editProfile'
             },
             {
               label: 'Modes de paiement',
               url: '/paymentMethod'
             },
             {
-              label: is_b2b_admin(user) ? 'Mes sites' : 'Mes adresses',
+              label: isB2BAdmin(user) ? 'Mes sites' : 'Mes adresses',
               url: '/myAddresses'
             },
             {

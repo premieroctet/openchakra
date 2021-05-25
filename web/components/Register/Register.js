@@ -20,7 +20,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 var parse = require('url-parse');
-import {hasStatusRegister, removeStatusRegister, get_role} from "../../utils/context";
+import {hasStatusRegister, removeStatusRegister, getRole} from "../../utils/context";
 const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms');
 const {STEPS}=require('../../utils/registerStep')
@@ -255,7 +255,7 @@ class Register extends React.Component {
             removeStatusRegister()
             Router.push('/creaShop/creaShop')
           }
-          else if (get_role() == EMPLOYEE) {
+          else if (getRole() == EMPLOYEE) {
             Router.push('/search?search=1')
           }
         } else {

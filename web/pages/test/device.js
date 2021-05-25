@@ -13,7 +13,7 @@ import {
   isWinPhone,
   deviceDetect
 } from 'react-device-detect';
-import {is_application, is_mobile} from '../../utils/context';
+import {isApplication, isMobile} from '../../utils/context';
 
 export default class device extends React.Component {
 
@@ -31,8 +31,8 @@ export default class device extends React.Component {
         <p>engineVersion: {engineVersion}</p>
         <p>getUA: {getUA}</p>
         <p>isDesktop: {isDesktop}</p>
-        <p>isMobile: {is_mobile().toString()}</p>
-        <p>isWebView: {is_application().toString()}
+        <p>isMobile: {isMobile().toString()}</p>
+        <p>isWebView: {isApplication().toString()}
         </p>
         <p>DeviceDetect: {JSON.stringify(deviceDetect())}</p>
       </>

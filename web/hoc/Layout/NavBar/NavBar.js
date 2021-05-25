@@ -43,7 +43,7 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister, get_role} from "../../../utils/context";
+import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeStatusRegister, setStatusRegister, getRole} from "../../../utils/context";
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
 import Slider from '@material-ui/core/Slider';
@@ -128,7 +128,7 @@ class NavBar extends Component {
       .then(res => {
         const user = res.data
         this.setState({user: user})
-        const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+        const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
         promise
           .then(res => {
             var allAddresses = {'main': res.data.billing_address};
@@ -143,7 +143,7 @@ class NavBar extends Component {
 
     this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''});
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/category/${is_b2b_style() ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${isB2BStyle() ? PRO : PART}`)
       .then(res => {
         let categories = res.data;
         this.setState({allCategories: categories.map(c => ({value:c._id, label: c.label}))})
@@ -209,16 +209,16 @@ class NavBar extends Component {
       localStorage.removeItem('path');
       Router.push(path)
     }
-    else if (!isLoggedUserRegistered() && get_role()==EMPLOYEE) {
+    else if (!isLoggedUserRegistered() && getRole()==EMPLOYEE) {
       const user_id=getLoggedUserId()
       clearAuthenticationToken()
       this.handleOpenRegister(user_id)
     }
     // Alfred pro && b2b_site => on redirige vers le profil
-    else if (is_b2b_style() && isLoggedUserAlfredPro()) {
+    else if (isB2BStyle() && isLoggedUserAlfredPro()) {
       Router.push( `/profile/about?user=${getLoggedUserId()}`)
     }
-    else if (is_b2b_admin()) {
+    else if (isB2BAdmin()) {
       Router.push( `/company/dashboard/companyDashboard`)
     }
     else {
@@ -384,7 +384,7 @@ class NavBar extends Component {
             <Grid item xs={2}>
               <IconButton
                 classes={{root: classes.iconButton}}
-                style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+                style={{backgroundColor: isB2BStyle(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
                 aria-label="search"
               >
                 <SearchIcon/>
@@ -520,7 +520,7 @@ class NavBar extends Component {
             <Grid item xs={2} onClick={this.handleModalSearchBarInput}>
               <IconButton
                 classes={{root: classes.iconButton}}
-                style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+                style={{backgroundColor: isB2BStyle(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
                 aria-label="search"
                 onClick={this.handleModalSearchBarInput}
               >
@@ -717,7 +717,7 @@ class NavBar extends Component {
         item
         xl={ifHomePage ? 3 : 4}
         lg={3}
-        md={ifHomePage && is_b2b_style(user) ? 10 : 2}
+        md={ifHomePage && isB2BStyle(user) ? 10 : 2}
         sm={ifHomePage ? 11 : 1}
       >
         <IconButton
@@ -739,7 +739,7 @@ class NavBar extends Component {
             <Grid>
               <MenuItem>Bonjour {user.firstname} !</MenuItem>
               <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>Mon profil</MenuItem>
-              <MenuItem onClick={() => Router.push(is_b2b_admin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>Mes paramètres</MenuItem>
+              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>Mes paramètres</MenuItem>
               {
                 !user.is_employee ?
                   user.is_alfred ?
@@ -754,7 +754,7 @@ class NavBar extends Component {
                 <MenuItem onClick={() =>Router.push(`/dashboard/home`)}>Dashboard My Alfred</MenuItem>
                 : null
               }
-              {is_b2b_admin(user) ?
+              {isB2BAdmin(user) ?
                 <MenuItem onClick={()=> Router.push(`/company/dashboard/companyDashboard`)}>Dashboard</MenuItem>
                : null
               }
@@ -780,19 +780,19 @@ class NavBar extends Component {
         lg={3}
         md={!logged && !ifHomePage ? 3 : 2}
         sm={!ifHomePage ? 4 : 11}
-        className={ifHomePage ? is_b2b_style(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
+        className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
       >
         <Grid>
           <Button
             variant="outlined"
-            classes={{root: is_b2b_style(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
+            classes={{root: isB2BStyle(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
             onClick={this.handleOpenRegister}>
             {NAVBAR_MENU.signIn}
           </Button>
         </Grid>
         <Grid  className={classes.navbarRegisterContainer}>
           <Button
-            classes={{root: is_b2b_style(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
+            classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
             onClick={this.handleOpenLogin}>
             {NAVBAR_MENU.logIn}
           </Button>
@@ -869,7 +869,7 @@ class NavBar extends Component {
             lg={ifHomePage ? 3 : 4}
             md={!logged && !ifHomePage ? 3 : 2}
             sm={!ifHomePage ? 4 : 11}
-            className={ifHomePage ? is_b2b_style(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
+            className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
           >
             <Grid className={classes.navbarRegisterContainer}>
               <Button
@@ -883,14 +883,14 @@ class NavBar extends Component {
             <Grid >
               <Button
                 variant="outlined"
-                classes={{root: is_b2b_style(user) ? classes.navbarSignInB2BContained : classes.navbarSignIn}}
+                classes={{root: isB2BStyle(user) ? classes.navbarSignInB2BContained : classes.navbarSignIn}}
                 onClick={() => Router.push('/blog/inscription-entreprise/')}>
                 {NAVBAR_MENU.signIn}
               </Button>
             </Grid>
             <Grid>
               <Button
-                classes={{root: is_b2b_style(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
+                classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
                 onClick={this.handleOpenLogin}>
                 {NAVBAR_MENU.logIn}
               </Button>
@@ -907,7 +907,7 @@ class NavBar extends Component {
 
 
     return (
-      <Grid className={ifHomePage ? is_b2b_style(user) ? classes.navbarSearchContainerB2B : classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
+      <Grid className={ifHomePage ? isB2BStyle(user) ? classes.navbarSearchContainerB2B : classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
         <Paper classes={{root: classes.navbarSearch}}>
           <Grid container style={{margin: 0, width: '100%'}}>
             <Grid
@@ -1056,7 +1056,7 @@ class NavBar extends Component {
             <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', alignItems: 'center'}}>
               <IconButton
                 classes={{root: classes.iconButton}}
-                style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+                style={{backgroundColor: isB2BStyle(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
                 aria-label="search"
                 onClick={() => this.findService()}>
                 <SearchIcon/>
@@ -1083,7 +1083,7 @@ class NavBar extends Component {
         className={ifHomePage ?  classes.navbarLogoContainer : classes.navbarLogoContainerP}
         item
         xl={ifHomePage ? 3 : 4}
-        lg={is_b2b_style(user) && ifHomePage ? 2 : is_b2b_style(user) && !ifHomePage && !logged? 2 :  3}
+        lg={isB2BStyle(user) && ifHomePage ? 2 : isB2BStyle(user) && !ifHomePage && !logged? 2 :  3}
         md={!logged && !ifHomePage ? 3 : 2}
         sm={1}
         onClick={() => Router.push('/')}
@@ -1101,28 +1101,28 @@ class NavBar extends Component {
       <Grid
         item
         xl={6}
-        lg={is_b2b_style(user) ? 7 : 6}
+        lg={isB2BStyle(user) ? 7 : 6}
         md={8}
         sm={11}
-        className={is_b2b_style(user) ? classes.navbarHomepageMenuB2B : classes.navabarHomepageMenu}
+        className={isB2BStyle(user) ? classes.navbarHomepageMenuB2B : classes.navabarHomepageMenu}
       >
         <Tabs value={false} aria-label="simple tabs example">
           {
             getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
-              is_b2b_style() ?
+              isB2BStyle() ?
                 <>
                   <Tab
-                    classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                     label={"Services aux entreprises"}
                     onClick={() => Router.push("/blog/elementor-211/")}
                   />
                     <Tab
-                      classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                      classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                       label={"Services aux collaborateurs"}
                       onClick={() => Router.push("/blog/services-aux-collaborateurs/")}
                     />
                     <Tab
-                      classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                      classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                       label={"Tarifs"}
                       onClick={() => Router.push('/blog/tarifs')}
                     />
@@ -1130,26 +1130,26 @@ class NavBar extends Component {
                 :
                 <>
                   <Tab
-                    classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                     label={NAVBAR_MENU.ourServices}
                     onClick={() => Router.push('/search?search=1')}
                   />
                   {user ?
                     user.is_alfred ?
                       <Tab
-                        classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                         label={NAVBAR_MENU.myServices}
                         onClick={() => Router.push(`/profile/services?user=${user._id}`)}
                       />
                       :
                         <Tab
-                          classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                          classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                           label={NAVBAR_MENU.registerServices}
                           onClick={() => Router.push('/creaShop/creaShop')}
                         />
                     :
                       <Tab
-                        classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                         label={NAVBAR_MENU.registerServices}
                         onClick={this.handleOpenRegister}
                       />
@@ -1159,11 +1159,11 @@ class NavBar extends Component {
           {
             // Accès part/pro uniquement si non loggué ou loggué en Alfred pro
             getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
-              is_b2b_style() ?
+              isB2BStyle() ?
                 null
                 :
                   <Tab
-                    classes={{root: is_b2b_style(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                     label={NAVBAR_MENU.businessSide}
                     onClick={() => Router.push('/professional')}
                   />
@@ -1231,8 +1231,8 @@ class NavBar extends Component {
     }
 
     return (
-      <Grid className={this.state.ifHomePage ? is_b2b_style(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={'static'} className={classes.navbarAppBar} style={{backgroundColor: is_b2b_style(user) && companyPage || this.state.ifHomePage ? 'transparent' : is_b2b_style(user) && !companyPage ?'#353A51' : null}}>
+      <Grid className={this.state.ifHomePage ? isB2BStyle(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
+        <AppBar position={'static'} className={classes.navbarAppBar} style={{backgroundColor: isB2BStyle(user) && companyPage || this.state.ifHomePage ? 'transparent' : isB2BStyle(user) && !companyPage ?'#353A51' : null}}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
               <Grid container  style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin:0}}>
@@ -1240,11 +1240,11 @@ class NavBar extends Component {
                 {
                  companyPage ? null : ifHomePage ? this.tabBar(classes)
                    :
-                   <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !is_b2b_style(user) ? 8 :  11}>
+                   <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !isB2BStyle(user) ? 8 :  11}>
                      {this.searchBarInput(classes)}
                    </Grid>
                   }
-                  {is_b2b_style(user) && !logged ? this.notLoggedButtonSectionB2b(classes) : logged === true ? this.burgerMenuLogged(classes) : this.notLoggedButtonSection(classes)}
+                  {isB2BStyle(user) && !logged ? this.notLoggedButtonSectionB2b(classes) : logged === true ? this.burgerMenuLogged(classes) : this.notLoggedButtonSection(classes)}
               </Grid>
               {
                 ifHomePage ? this.searchBarInput(classes) : null
