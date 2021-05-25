@@ -11,7 +11,7 @@ import Divider from "@material-ui/core/Divider";
 import styles from '../../../static/css/components/Footer/Footer'
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import {isAndroid, isIOS} from 'react-device-detect';
+import {isAndroid, isIOS} from '../../../utils/context';
 import Register from "../../../components/Register/Register";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";

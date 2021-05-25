@@ -1,6 +1,5 @@
 import getDistance from 'geolib/es/getDistance';
 import convertDistance from 'geolib/es/convertDistance';
-const jwt = require('jsonwebtoken')
 const isEmpty = require('../server/validation/is-empty');
 const moment = require('moment');
 const {setAxiosAuthentication}=require('./authentication')
