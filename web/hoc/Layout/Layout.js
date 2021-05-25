@@ -13,8 +13,7 @@ import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import axios from "axios";
 import TrustAndSecurity from "./TrustAndSecurity/TrustAndSecurity";
 import Divider from "@material-ui/core/Divider";
-const {getLoggedUserId}=require('../../utils/functions')
-const {is_b2b_style}=require('../../utils/context')
+const {getLoggedUserId, is_b2b_style}=require('../../utils/context')
 const {PRO, PART}=require('../../utils/consts')
 
 class Layout extends React.Component {

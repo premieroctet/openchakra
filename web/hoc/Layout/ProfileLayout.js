@@ -4,8 +4,7 @@ import Layout from '../../hoc/Layout/Layout'
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 import axios from 'axios'
-const {isEditableUser}=require('../../utils/functions');
-const {is_b2b_style}=require('../../utils/context')
+const {isEditableUser, is_b2b_style}=require('../../utils/context')
 import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayout'
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";

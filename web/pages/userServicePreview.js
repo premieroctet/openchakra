@@ -1,5 +1,4 @@
-const {clearAuthenticationToken}=require('../utils/authentication')
-const {setAxiosAuthentication}=require('../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
@@ -39,10 +38,9 @@ const {BOOK_STATUS, COMM_CLIENT, MANAGER}=require('../utils/consts')
 
 const isEmpty = require('../server/validation/is-empty');
 const {isDateAvailable} = require('../utils/dateutils')
-const {computeBookingReference} = require('../utils/functions');
 const {emptyPromise} = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
-const {computeDistanceKm} = require('../utils/functions');
+const {computeDistanceKm, computeBookingReference} = require('../utils/functions');
 const {snackBarError}=require('../utils/notifications')
 
 const moment = require('moment');

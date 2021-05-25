@@ -21,7 +21,7 @@ import AddIcon from "@material-ui/icons/Add";
 import styles from '../../../static/css/components/DrawerBooking/DrawerBooking';
 import withStyles from "@material-ui/core/styles/withStyles";
 const isEmpty = require('../../../server/validation/is-empty');
-const {getLoggedUserId} = require('../../../utils/functions')
+const {getLoggedUserId} = require('../../../utils/context')
 const {isMomentAvailable} = require('../../../utils/dateutils')
 const moment = require('moment');
 moment.locale('fr');

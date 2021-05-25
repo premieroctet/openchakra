@@ -1,5 +1,4 @@
 import {isAndroid, isIOS, getUA} from 'react-device-detect';
-const {getLoggedUser, isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro}=require('./functions')
 const isWebview = require('is-webview');
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
@@ -91,7 +90,81 @@ const hasStatusRegister = () => {
   return localStorage.getItem('setAlfredRegister') == 'true'
 }
 
+const getLoggedUser = () => {
+  if (typeof localStorage=='undefined') {
+    return null
+  }
+  const token = localStorage.getItem('token')
+  if (!token) {
+    return null
+  }
+  const data=token.split(' ')[1]
+  const decoded = jwt.decode(data);
+  return decoded
+}
+
+const getLoggedUserId = () => {
+  const logged=getLoggedUser()
+  return logged && logged.id
+}
+
+const isLoggedUserAdmin = () => {
+  const logged=getLoggedUser()
+  return logged && logged.is_admin
+}
+
+const isLoggedUserAlfred = () => {
+  const logged=getLoggedUser()
+  return logged && logged.is_alfred
+}
+
+const isLoggedUserAlfredPro = () => {
+  const logged=getLoggedUser()
+  return logged && logged.is_alfred_pro
+}
+
+const isLoggedUserRegistered = () => {
+  const logged=getLoggedUser()
+  const result=logged && logged.is_registered
+  console.log(`Registered:${result}`)
+  return result
+}
+
+// Returns true if user is the currently logged user
+const isEditableUser = user => {
+  if (!user || !getLoggedUserId()) {
+    return false
+  }
+  const isEditable=getLoggedUserId()==user || getLoggedUserId()==user._id
+  return isEditable
+}
+
+const getUserLabel = user => {
+  return new Promise( (resolve, reject) => {
+    if (!user) {
+      resolve('')
+    }
+    if (user.company) {
+      setAxiosAuthentication()
+      axios.get(`/myAlfred/api/companies/name/${user.company}`)
+        .then ( res => {
+          resolve(`${user.firstname} pour ${res.data.name}`)
+        })
+        .catch( err => {
+          console.error(err)
+          resolve(user.firstname)
+        })
+    }
+    else {
+      resolve(user.firstname)
+    }
+  })
+}
+
 module.exports = {
   is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_mode_company, is_application, is_mobile,
-  get_role,setStatusRegister,removeStatusRegister, hasStatusRegister
+  get_role,setStatusRegister,removeStatusRegister, hasStatusRegister,
+  getLoggedUserId,getLoggedUser,
+  isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
+  getUserLabel,isLoggedUserRegistered
 }

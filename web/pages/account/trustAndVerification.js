@@ -1,5 +1,4 @@
-const {clearAuthenticationToken} = require('../../utils/authentication')
-const {setAxiosAuthentication} = require('../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 import React, {Fragment} from 'react';
 import axios from 'axios';

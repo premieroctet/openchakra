@@ -10,7 +10,6 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../../static/css/components/MobileNavbar/MobileNavbar';
 import Router from 'next/router';
 import axios from "axios";
-
 import LogIn from "../../../components/LogIn/LogIn";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
@@ -35,8 +34,7 @@ import BusinessIcon from '@material-ui/icons/Business';
 import Link from "../../../components/Link/Link";
 import {is_development} from "../../../config/config";
 import WcIcon from '@material-ui/icons/Wc';
-const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered} = require('../../../utils/functions')
-import {is_b2b_style} from "../../../utils/context";
+const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, is_b2b_style} = require('../../../utils/context')
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 
 

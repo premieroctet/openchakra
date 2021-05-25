@@ -12,9 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import ScrollMenu from "../../components/ScrollMenu/ScrollMenu";
 import Divider from "@material-ui/core/Divider";
 import UserAvatar from "../../components/Avatar/UserAvatar";
-const {isEditableUser}=require('../../utils/functions');
-import {is_mode_company} from "../../utils/context";
-const {is_b2b_style}=require('../../utils/context');
+import {isEditableUser, is_mode_company, is_b2b_style} from "../../utils/context";
 
 class LayoutMobileProfile extends React.Component{
 

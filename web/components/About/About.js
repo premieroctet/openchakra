@@ -24,7 +24,7 @@ import AlgoliaPlaces from 'algolia-places-react'
 import MultipleSelect from 'react-select'
 import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
 import CreateIcon from '@material-ui/icons/Create'
-import {isEditableUser} from '../../utils/functions'
+import {isEditableUser} from '../../utils/context'
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Divider from "@material-ui/core/Divider";

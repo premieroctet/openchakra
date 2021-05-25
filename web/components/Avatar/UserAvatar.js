@@ -6,8 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import axios from 'axios';
 import styles from './UserAvatarStyle';
-import {isEditableUser} from '../../utils/functions'
-const {getLoggedUserId} = require('../../utils/functions')
+const {isEditableUser, getLoggedUserId} = require('../../utils/context')
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import Badge from "@material-ui/core/Badge";
 

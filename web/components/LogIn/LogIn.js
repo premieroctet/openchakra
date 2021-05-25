@@ -23,10 +23,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-const {is_b2b_style} = require('../../utils/context');
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
 import {COMPANY_ACTIVITY, EMPLOYEE} from "../../utils/consts";
-const {isLoggedUserAlfredPro}=require('../../utils/functions')
+const {is_b2b_style, isLoggedUserAlfredPro}=require('../../utils/context')
 
 class LogIn extends React.Component {
   constructor(props) {

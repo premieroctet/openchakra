@@ -20,7 +20,7 @@ import Typography from "@material-ui/core/Typography";
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import IconButton from "@material-ui/core/IconButton";
 import CreateIcon from "@material-ui/icons/Create";
-import {isEditableUser} from "../../utils/functions";
+import {isEditableUser} from "../../utils/context";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import Topic from "../../hoc/Topic/Topic";

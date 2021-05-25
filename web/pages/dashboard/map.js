@@ -10,7 +10,7 @@ import axios from 'axios';
 import MapComponent from '../../components/map';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-const {getLoggedUserId}=require('../../utils/functions')
+const {getLoggedUserId}=require('../../utils/context')
 import AlgoliaPlaces from 'algolia-places-react';
 
 const styles = theme => ({

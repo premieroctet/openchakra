@@ -16,11 +16,10 @@ import Drawer from "@material-ui/core/Drawer";
 import PropTypes from "prop-types";
 import List from "@material-ui/core/List";
 import Box from "../../components/Box/Box";
-const {getLoggedUserId}=require('../../utils/functions')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 const {is_development}=require('../../config/config')
 const {snackBarSuccess}=require('../../utils/notifications')
-const {is_b2b_style}=require('../../utils/context')
+const {getLoggedUserId, is_b2b_style}=require('../../utils/context')
 const {STEPS}=require('./creaShopSteps')
 
 class creaShop extends React.Component {

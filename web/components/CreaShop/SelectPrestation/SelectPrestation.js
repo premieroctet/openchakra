@@ -1,5 +1,4 @@
 import Button from "@material-ui/core/Button";
-
 const {setAxiosAuthentication}=require('../../../utils/authentication');
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
@@ -13,7 +12,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import {SHOP} from '../../../utils/i18n';
 import _ from 'lodash';
-const {getLoggedUserId}=require('../../../utils/functions');
+const {getLoggedUserId}=require('../../../utils/context');
 
 // TODO fix prestaitons personnalisées qui disparaissent lors du clic sur "Précédent"
 class SelectPrestation extends React.Component {

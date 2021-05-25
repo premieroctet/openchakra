@@ -21,11 +21,11 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutMobileSearch from "../hoc/Layout/LayoutMobileSearch";
 import Typography from "@material-ui/core/Typography";
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
-const {getLoggedUserId, computeDistanceKm}=require('../utils/functions')
+const {computeDistanceKm}=require('../utils/functions')
 import withWidth from '@material-ui/core/withWidth';
 import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchResults=withSlide(withGrid(CardService));
-const {is_b2b_style, is_b2b_admin, is_b2b_manager} =require('../utils/context')
+const {getLoggedUserId, is_b2b_style, is_b2b_admin, is_b2b_manager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
 const {emptyPromise}=require('../utils/promise')
 moment.locale('fr');

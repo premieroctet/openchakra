@@ -1,6 +1,4 @@
-const {clearAuthenticationToken}=require('../../utils/authentication');
-const {setAxiosAuthentication}=require('../../utils/authentication');
-const {setAuthToken}=require('../../utils/authentication');
+const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication');
 import React, {Fragment} from 'react';
 import axios from 'axios';
 import moment from 'moment';

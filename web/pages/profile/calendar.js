@@ -5,7 +5,7 @@ import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/calendar/calendar';
-import {getLoggedUserId} from '../../utils/functions'
+import {getLoggedUserId} from '../../utils/context'
 import Hidden from "@material-ui/core/Hidden";
 import Topic from "../../hoc/Topic/Topic";
 import Box from "../../components/Box/Box";

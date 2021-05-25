@@ -10,7 +10,7 @@ import Hidden from "@material-ui/core/Hidden";
 import Box from "../../components/Box/Box";
 import axios from "axios";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
-const {isEditableUser}=require('../../utils/functions');
+const {isEditableUser}=require('../../utils/context');
 
 class ProfileServices extends React.Component {
 

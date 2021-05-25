@@ -1,7 +1,5 @@
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-
-const {clearAuthenticationToken} = require('../../utils/authentication')
-const {setAxiosAuthentication} = require('../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';

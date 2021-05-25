@@ -24,7 +24,7 @@ import {hasStatusRegister, removeStatusRegister, get_role} from "../../utils/con
 const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms');
 const {STEPS}=require('../../utils/registerStep')
-const {getLoggedUserId, isLoggedUserRegistered} = require('../../utils/functions')
+const {getLoggedUserId, isLoggedUserRegistered} = require('../../utils/context')
 const {EMPLOYEE} = require('../../utils/consts');
 
 

@@ -1,4 +1,4 @@
-const {setAxiosAuthentication} = require('../../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -6,12 +6,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-const {clearAuthenticationToken} = require('../../../utils/authentication')
 import Router from 'next/router';
 import Grid from '@material-ui/core/Grid';
 import MultipleSelect from "react-select";
 import moment from "moment";
-
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
 import Dialog from '@material-ui/core/Dialog';
@@ -45,8 +43,7 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister, get_role} from "../../../utils/context";
-const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered} = require('../../../utils/functions')
+import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, is_b2b_style, is_b2b_admin, is_b2b_manager, removeStatusRegister, setStatusRegister, get_role} from "../../../utils/context";
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
 import Slider from '@material-ui/core/Slider';

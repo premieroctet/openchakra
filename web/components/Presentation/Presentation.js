@@ -1,12 +1,10 @@
 import {snackBarError, snackBarSuccess} from "../../utils/notifications";
-
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/components/Presentation/Presentation';
-
 import Topic from "../../hoc/Topic/Topic"
 import Box from '../Box/Box'
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -17,8 +15,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import {CMP_PRESENTATION} from '../../utils/i18n'
 import {MAX_DESCRIPTION_LENGTH} from '../../utils/consts'
-import {isEditableUser} from '../../utils/functions'
-
+import {isEditableUser} from '../../utils/context'
 const {frenchFormat} = require('../../utils/text');
 import CreateIcon from '@material-ui/icons/Create'
 import IconButton from "@material-ui/core/IconButton";

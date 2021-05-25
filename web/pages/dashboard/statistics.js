@@ -1,7 +1,5 @@
-const {clearAuthenticationToken}=require('../../utils/authentication')
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAxiosAuthentication, clearAuthenticationToken}=require('../../utils/authentication')
 import React from 'react';
-
 import {withStyles} from '@material-ui/core/styles';
 import Router from 'next/router';
 import axios from 'axios';
@@ -13,7 +11,7 @@ import {Card, Grid, Typography, Checkbox, Avatar} from '@material-ui/core'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 const {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineSeries, RadialChart}=require('react-vis')
 import Layout from '../../hoc/Layout/Layout';
-const {isLoggedUserAdmin}=require('../../utils/functions')
+const {isLoggedUserAdmin}=require('../../utils/context')
 
 const styles = theme => ({
 

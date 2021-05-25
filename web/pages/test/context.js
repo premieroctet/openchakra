@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from 'axios'
-
-const {getLoggedUser}=require('../../utils/functions')
-const {is_b2b_admin, is_b2b_manager}=require('../../utils/context')
+const {is_b2b_admin, is_b2b_manager, getLoggedUser}=require('../../utils/context')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 
 class ContextTest extends React.Component{

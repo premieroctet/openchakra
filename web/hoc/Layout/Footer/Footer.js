@@ -11,17 +11,14 @@ import Divider from "@material-ui/core/Divider";
 import styles from '../../../static/css/components/Footer/Footer'
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import {is_b2b_style, is_application, is_mobile} from "../../../utils/context";
 import {isAndroid, isIOS} from 'react-device-detect';
-
 import Register from "../../../components/Register/Register";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-
-const {getLoggedUserId, isLoggedUserAlfredPro} = require('../../../utils/functions');
+const {getLoggedUserId, isLoggedUserAlfredPro, is_b2b_style, is_application, is_mobile} = require('../../../utils/context');
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {

@@ -24,7 +24,7 @@ import LayoutMobileReservations from "../../hoc/Layout/LayoutMobileReservations"
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 const {BOOK_STATUS}=require('../../utils/consts');
-const {getUserLabel}=require('../../utils/functions');
+const {getUserLabel}=require('../../utils/context');
 import Router from 'next/router';
 
 
