@@ -1,5 +1,3 @@
-ICI VERSION B2B A MERGER AVEC PROD_V3_1_9
-
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {setAuthToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
@@ -22,7 +20,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 var parse = require('url-parse');
-import {removeStatusRegister} from "../../utils/context";
+import {hasStatusRegister, removeStatusRegister} from "../../utils/context";
 const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms');
 const {STEPS}=require('../../utils/registerStep')
@@ -74,7 +72,6 @@ class Register extends React.Component {
       birthdayError: '',
       cityError: '',
       open: false,
-      setAlfredRegister: false,
       showPassword: false,
       showPassword2: false
     };
@@ -142,12 +139,6 @@ class Register extends React.Component {
       snackBarError('Vous êtes déjà inscrit');
       Router.push('/');
     }
-    if(localStorage.getItem('setAlfredRegister') === 'true'){
-      this.setState({setAlfredRegister: true})
-    }else{
-      this.setState({setAlfredRegister: false})
-    }
-
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -241,7 +232,7 @@ class Register extends React.Component {
         if (res.data.sms_code_ok) {
           snackBarSuccess('Votre numéro de téléphone est validé');
           this.setState({smsCodeOpen: false, phoneConfirmed: true});
-          if(localStorage.getItem('setAlfredRegister') === 'true'){
+          if(hasStatusRegister()){
             removeStatusRegister()
             Router.push('/creaShop/creaShop')
           }
@@ -291,7 +282,7 @@ class Register extends React.Component {
             console.error(err)
           })
           .then( () => {
-            if(localStorage.getItem('setAlfredRegister') === 'true'){
+            if(hasStatusRegister()){
               this.submitPhone()
             }else{
               this.setState({activeStep: this.state.activeStep + 1})
@@ -304,7 +295,7 @@ class Register extends React.Component {
             }
           )
           .then( () => {
-            if(localStorage.getItem('setAlfredRegister') !== 'true'){
+            if(!hasStatusRegister()){
               this.submitPhone()
             }
           }
@@ -331,7 +322,7 @@ class Register extends React.Component {
 
   submitPhone = e => {
 
-    if(!this.state.phone && localStorage.getItem('setAlfredRegister') === 'true'){
+    if(!this.state.phone && hasStatusRegister()){
       Router.push('/creaShop/creaShop')
     }
 
@@ -376,7 +367,7 @@ class Register extends React.Component {
 
   confirmLater = () => {
     this.setState({smsCodeOpen: false});
-    if(localStorage.getItem('setAlfredRegister') === 'true'){
+    if(hasStatusRegister()){
       removeStatusRegister()
       Router.push('/creaShop/creaShop')
     }
@@ -412,7 +403,7 @@ class Register extends React.Component {
 
   renderSwitch = (stepIndex) => {
     let mode = 'fullRegister'
-    if(localStorage.getItem('setAlfredRegister') === 'true'){
+    if(hasStatusRegister()){
       mode = 'setAlfredRegister';
     }
     return STEPS[mode][stepIndex].component(this)
