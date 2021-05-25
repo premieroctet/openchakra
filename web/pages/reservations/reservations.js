@@ -242,8 +242,11 @@ class AllReservations extends React.Component {
   };
 
   newAppointment = (booking) =>{
-    localStorage.setItem('bookingObj', JSON.stringify(booking))
-    Router.push('/userServicePreview?id=' + booking.serviceUserId);
+    let newBooking = booking;
+    newBooking.date_prestation = null;
+    newBooking.time_prestation = null;
+    localStorage.setItem('bookingObj', JSON.stringify(newBooking))
+    Router.push('/userServicePreview?id=' + newBooking.serviceUserId);
 
   };
 
@@ -304,6 +307,7 @@ class AllReservations extends React.Component {
                         <Button
                           color={'primary'}
                           variant={'outlined'}
+                          classes={{root: classes.buttonDetail}}
                           onClick={() => this.openBookingPreview(booking._id)}>
                           Détail
                         </Button>
@@ -314,7 +318,7 @@ class AllReservations extends React.Component {
                           color={'primary'}
                           classes={{root: classes.buttonResa}}
                           onClick={() => this.newAppointment(booking)}>
-                          Réserver
+                          Réserver de nouveau
                         </Button>
                       </Grid>
                     </Grid>

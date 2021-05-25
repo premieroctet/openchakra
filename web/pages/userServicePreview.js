@@ -622,7 +622,7 @@ class UserServicesPreview extends React.Component {
   getAlbum = (id) => {
     return this.state.albums.find( a => a._id===id)
   };
-  
+
   content = (classes) => {
     const serviceAddress = this.state.serviceUser.service_address;
 

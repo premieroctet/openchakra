@@ -36,7 +36,7 @@ export default theme => ({
     [theme.breakpoints.down('sm')]:{
       justifyContent: 'flex-end',
     },
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('xs')]:{
       justifyContent: 'center',
     },
   },
@@ -84,6 +84,9 @@ export default theme => ({
     [theme.breakpoints.down('xs')]:{
       textAlign: 'center'
     }
+  },
+  buttonDetail:{
+    textTransform: 'initial'
   }
 
 })
