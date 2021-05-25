@@ -20,6 +20,7 @@ class UserAvatar extends React.Component {
       kyc: null,
       owner: false,
       userId: '',
+      isAbout: false
     };
   }
 
@@ -27,6 +28,9 @@ class UserAvatar extends React.Component {
     const user_id = getLoggedUserId()
     if (user_id) {
       this.setState({currentUser: user_id});
+    }
+    if(Router.pathname === '/profile/about'){
+      this.setState({isAbout: true})
     }
   }
 
@@ -37,19 +41,19 @@ class UserAvatar extends React.Component {
   };
 
   avatarWithPics = (user, classes) => {
+    const{isAbout} = this.state;
     const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
-    let profil = Router.pathname === '/profile/about';
 
     return (
-      <Avatar alt="photo de profil" src={url} className={profil ? classes.avatarLetterProfil : classes.avatarLetter} onClick={this.selectPicture}/>
+      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter} onClick={this.selectPicture}/>
     );
   }
 
   avatarWithoutPics = (user, classes) =>{
-    let profil = Router.pathname === '/profile/about';
+    const{isAbout} = this.state;
 
     return (
-      <Avatar alt="photo de profil" className={profil ? classes.avatarLetterProfil : classes.avatarLetter}>
+      <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}>
         <p>{user.avatar_letters}</p>
       </Avatar>
     );

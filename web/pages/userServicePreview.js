@@ -1,4 +1,3 @@
-const {clearAuthenticationToken}=require('../utils/authentication')
 const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
@@ -16,27 +15,17 @@ import Hidden from '@material-ui/core/Hidden';
 import MapComponent from '../components/map';
 import {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
-import Switch from '@material-ui/core/Switch';
 import {Helmet} from 'react-helmet';
 import Link from 'next/link';
-
 import Topic from "../hoc/Topic/Topic";
 import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import GallerySlidePics from "../components/GallerySlidePics/GallerySlidePics";
 import SummaryCommentary from "../components/SummaryCommentary/SummaryCommentary"
 import DrawerBooking from "../components/Drawer/DrawerBooking/DrawerBooking";
-import LayoutAccount from "../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../hoc/Layout/LayoutMobile";
-import withSlide from "../hoc/Slide/SlideShow";
-import withGrid from "../hoc/Grid/GridCard";
-import CardAlbum from "../components/Card/CardAlbum/CardAlbum";
-const ImageSlide=withSlide(withGrid(CardAlbum));
-const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
 const {BOOK_STATUS, COMM_CLIENT, MANAGER}=require('../utils/consts')
-
 const isEmpty = require('../server/validation/is-empty');
 const {isDateAvailable} = require('../utils/dateutils')
 const {computeBookingReference} = require('../utils/functions');
@@ -394,7 +383,7 @@ class UserServicesPreview extends React.Component {
   };
 
   computeTotal = () => {
-    const {user, service, available_budget, company_percent}=this.state
+    const {available_budget, company_percent}=this.state
 
     let totalPrestations = 0;
     let totalCesu = 0;
@@ -633,22 +622,13 @@ class UserServicesPreview extends React.Component {
   getAlbum = (id) => {
     return this.state.albums.find( a => a._id===id)
   };
-
-  getAlbumPictures = () => {
-    const album=this.getAlbum(this.state.selectedAlbum);
-    const res = album ? album.pictures : []
-    return res
-  };
-
+  
   content = (classes) => {
     const serviceAddress = this.state.serviceUser.service_address;
 
     const filters = this.extractFilters();
 
     const pricedPrestations = this.computePricedPrestations();
-
-    const pictures = this.getAlbumPictures();
-
 
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
@@ -778,7 +758,7 @@ class UserServicesPreview extends React.Component {
                       </Grid> : ''
                   }
                 </Grid>
-                <Hidden only={['xl', 'lg']}>
+                <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
                   <Grid className={classes.showReservation}>
                     <Button
                       variant="contained"
@@ -790,7 +770,7 @@ class UserServicesPreview extends React.Component {
                       Voir les services
                     </Button>
                   </Grid>
-                  <Hidden only={['xl', 'lg']}>
+                  <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
                     <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)}>
                       <Grid className={classes.drawerContent}>
                         <DrawerBooking
@@ -818,9 +798,8 @@ class UserServicesPreview extends React.Component {
                 </Hidden>
               </Grid>
               {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
-              <Hidden only={['xs', 'sm', 'md']}>
                 <Grid item xl={6} lg={6} md={12} sm={12} xs={12} style={{paddingLeft: '5%', paddingRight: '5%'}}>
-                  <Grid className={classes.contentRight}>
+                  <Hidden only={['xs', 'sm', 'md']} implementation={'css'} className={classes.contentRight}>
                     <DrawerBooking
                       filters={filters}
                       pricedPrestations={pricedPrestations}
@@ -839,31 +818,12 @@ class UserServicesPreview extends React.Component {
                       book={this.book}
                       {...this.state}
                     />
-                  </Grid>
+                  </Hidden>
                 </Grid>
-              </Hidden>
             </Grid>
           </Grid>
           <Grid style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
-              { false ? <Grid style={{marginTop: '5%'}}>
-                <Topic
-                  underline={true}
-                  titleTopic={this.state.alfred.firstname ? `Les photos de ${this.state.alfred.firstname}` : ''}
-                  titleSummary={this.state.alfred.firstname ? `Un aperçu du travail de ${this.state.alfred.firstname}` : ''}
-                  needBackground={true}
-                >
-                  <Grid>
-                    {pictures.length === 0 ? null :
-                      <ImageSlide
-                        model={new SlideGridDataModel(pictures, 4, 1, true)}
-                        style={classes}
-                      />
-                    }
-                  </Grid>
-                </Topic>
-              </Grid>: null}
-
               {
                 this.state.reviews.length === 0 ? null :
                   <Grid style={{marginTop: '5%'}}>
@@ -874,7 +834,6 @@ class UserServicesPreview extends React.Component {
                     >
                       <SummaryCommentary user={this.state.alfred._id}  serviceUser={this.props.service_id}/>
                     </Topic>
-
                   </Grid>
               }
             </Grid>
@@ -886,7 +845,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes, address} = this.props;
-    const {service,alfred, user, total, available_budget} = this.state;
+    const {service,alfred, user} = this.state;
 
     if (!this.state.serviceUser) {
       return null
@@ -902,12 +861,12 @@ class UserServicesPreview extends React.Component {
           <meta property="og:type" content="website"/>
           <meta property="og:url" content="https://my-alfred.io"/>
         </Helmet>
-        <Hidden only={['xs', ]}>
+        <Hidden only={['xs']} implementation={'css'} className={classes.hidden}>
           <Layout user={user} selectedAddress={address}>
             {this.content(classes)}
           </Layout>
         </Hidden>
-        <Hidden only={['lg', 'xl', 'sm', 'md']}>
+        <Hidden only={['lg', 'xl', 'sm', 'md']} implementation={'css'} className={classes.hidden}>
           <LayoutMobile>
             {this.content(classes)}
           </LayoutMobile>

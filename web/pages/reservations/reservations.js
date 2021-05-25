@@ -241,6 +241,12 @@ class AllReservations extends React.Component {
     )
   };
 
+  newAppointment = (booking) =>{
+    localStorage.setItem('bookingObj', JSON.stringify(booking))
+    Router.push('/userServicePreview?id=' + booking.serviceUserId);
+
+  };
+
   content = (classes) =>{
     const reservations = this.filterReservations();
     const alfredMode = this.state.reservationType===0;
@@ -267,9 +273,9 @@ class AllReservations extends React.Component {
         </Grid>
         <Grid container style={{marginTop: '10vh', display: 'flex', flexDirection: 'column'}}>
           {reservations.length ? (
-            reservations.map(booking => {
+            reservations.map((booking, index) => {
               return (
-                <Grid className={classes.reservationsMainContainer}>
+                <Grid key={index} className={classes.reservationsMainContainer}>
                   <Grid container spacing={2} style={{display: 'flex', alignItems: 'center', margin: 0, width: '100%'}}>
                     <Grid item xl={2} lg={2} md={6} sm={6} xs={4}>
                       <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
@@ -307,7 +313,7 @@ class AllReservations extends React.Component {
                           variant={'contained'}
                           color={'primary'}
                           classes={{root: classes.buttonResa}}
-                          onClick={() => this.openBookingPreview(booking._id)}>
+                          onClick={() => this.newAppointment(booking)}>
                           Réserver
                         </Button>
                       </Grid>
