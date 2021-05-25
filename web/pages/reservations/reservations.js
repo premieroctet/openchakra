@@ -27,7 +27,6 @@ const {BOOK_STATUS}=require('../../utils/consts');
 const {getUserLabel}=require('../../utils/functions');
 import Router from 'next/router';
 
-
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
@@ -42,7 +41,6 @@ const DialogTitle = withStyles(styles)((props) => {
   );
 });
 
-
 moment.locale('fr');
 
 //TODO RASSEMBLER ALLRESERVATIONS + COMINGRESERVATIONS + FINISHEDRESERVATIONS
@@ -56,9 +54,7 @@ class AllReservations extends React.Component {
       userReservations: [],
       isAlfred: false,
       userInfo: {},
-      // reservationType : 0 => Alfred, 1 => client
       reservationType: 1,
-      // Tab reservationStatus : 0 => toutes, 1 => à venir, 2 => terminées
       reservationStatus: 0,
       bookingPreview: null,
       bookingCancel: null,
@@ -84,7 +80,6 @@ class AllReservations extends React.Component {
           isAlfred: result.is_alfred,
           reservationType: result.is_alfred ? 0 : 1,
         });
-
         this.loadBookings()
         if (this.props.id) {
           setTimeout(() => this.setState({bookingPreview: this.props.id}), 1000)
@@ -110,6 +105,7 @@ class AllReservations extends React.Component {
         })
     })
   }
+
   loadBookings = () => {
     axios.get('/myAlfred/api/booking/alfredBooking')
       .then(res => {
@@ -123,7 +119,6 @@ class AllReservations extends React.Component {
             this.loadUserLabels(alfredBookings.concat(userBookings))
           });
       });
-
   };
 
   onReservationTypeChanged = (event, newValue) => {
@@ -173,6 +168,7 @@ class AllReservations extends React.Component {
   onClosePreview = () => {
     this.setState({bookingPreview: null}, () => this.loadBookings())
   };
+
   bookingPreviewModal = (classes) => {
     const {bookingPreview}=this.state;
 
@@ -218,7 +214,6 @@ class AllReservations extends React.Component {
         open={Boolean(bookingConfirm)}
         onClose={() => this.setState({bookingConfirm: null})}
         classes={{paper: classes.dialogPreviewPaper}}
-
       >
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingConfirm: null})}/>
         <DialogContent>
@@ -232,10 +227,11 @@ class AllReservations extends React.Component {
     const {bookingPreApprouved}=this.state;
 
     return (
-      <Dialog style={{width: '100%'}}
-              open={Boolean(bookingPreApprouved)}
-              onClose={() => this.setState({bookingPreApprouved: null})}
-              classes={{paper: classes.dialogPreviewPaper}}
+      <Dialog
+        style={{width: '100%'}}
+        open={Boolean(bookingPreApprouved)}
+        onClose={() => this.setState({bookingPreApprouved: null})}
+        classes={{paper: classes.dialogPreviewPaper}}
       >
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingPreApprouved: null})}/>
         <DialogContent>
@@ -274,11 +270,11 @@ class AllReservations extends React.Component {
             reservations.map(booking => {
               return (
                 <Grid className={classes.reservationsMainContainer}>
-                  <Grid container style={{display: 'flex', alignItems: 'center'}}>
-                    <Grid item xl={3} lg={3} md={3} sm={6} xs={4} className={classes.avatarContainer}>
+                  <Grid container spacing={2} style={{display: 'flex', alignItems: 'center', margin: 0, width: '100%'}}>
+                    <Grid item xl={2} lg={2} md={6} sm={6} xs={4}>
                       <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
                     </Grid>
-                    <Grid item  xl={3} lg={3} md={3} sm={6} xs={8} className={classes.descriptionContainer}>
+                    <Grid item xl={5} lg={5} md={6} sm={6} xs={8} className={classes.descriptionContainer}>
                       <Grid className={classes.bookingNameContainer}>
                         <Typography><strong> {booking.status} - {alfredMode ? this.state[booking.user._id] : this.state[booking.alfred._id]}</strong></Typography>
                       </Grid>
@@ -294,15 +290,11 @@ class AllReservations extends React.Component {
                         <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}>{booking.service}</Typography>
                       </Grid>
                     </Grid>
-                    <Grid item   xl={3} lg={3} md={3} sm={6} xs={4} className={classes.priceContainer}>
-                      <Grid>
-                        <Typography>
-                          {(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€
-                        </Typography>
-                      </Grid>
+                    <Grid item  xl={1} lg={1} md={6} sm={3} xs={4} className={classes.priceContainer}>
+                        <Typography className={classes.alfredAmount}><strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong></Typography>
                     </Grid>
-                    <Grid item  xl={3} lg={3} md={3} sm={6} xs={8} className={classes.detailButtonContainer}>
-                      <Grid>
+                    <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer}>
+                      <Grid item>
                         <Button
                           color={'primary'}
                           variant={'outlined'}
@@ -310,9 +302,18 @@ class AllReservations extends React.Component {
                           Détail
                         </Button>
                       </Grid>
+                      <Grid item>
+                        <Button
+                          variant={'contained'}
+                          color={'primary'}
+                          classes={{root: classes.buttonResa}}
+                          onClick={() => this.openBookingPreview(booking._id)}>
+                          Réserver
+                        </Button>
+                      </Grid>
                     </Grid>
                   </Grid>
-                  <Grid style={{marginTop: '5vh', marginBottom: '5vh'}}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{marginTop: '5vh', marginBottom: '5vh'}}>
                     <Divider/>
                   </Grid>
                 </Grid>
@@ -331,13 +332,13 @@ class AllReservations extends React.Component {
     const {reservationType, userInfo, bookingPreview, bookingCancel, bookingConfirm, bookingPreApprouved} = this.state;
 
     return (
-      <div>
-        <Hidden only={['xs']} implementation={'css'}>
+      <Grid>
+        <Hidden only={['xs']} implementation={'css'} className={classes.hidden}>
           <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
             {this.content(classes)}
           </LayoutReservations>
         </Hidden>
-        <Hidden only={['lg', 'xl',  'sm', 'md']} implementation={'css'}>
+        <Hidden only={['lg', 'xl',  'sm', 'md']} implementation={'css'} className={classes.hidden}>
           <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
             {this.content(classes)}
           </LayoutMobileReservations>
@@ -346,7 +347,7 @@ class AllReservations extends React.Component {
         { bookingCancel ? this.bookingCancelModal(classes) : null}
         { bookingConfirm ? this.bookingConfirmModal(classes) : null}
         { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
-      </div>
+      </Grid>
 
     );
   }

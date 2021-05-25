@@ -26,7 +26,8 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
-    marginTop: '2vh'
-
   },
+  hidden:{
+    width: '100%'
+  }
 })

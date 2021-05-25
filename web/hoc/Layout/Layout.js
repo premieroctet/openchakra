@@ -66,7 +66,7 @@ class Layout extends React.Component {
 
     return (
       <Grid>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs', 'sm', 'md']} implementation={"css"} className={classes.hidden}>
           <InfoBar/>
         </Hidden>
         <NavBar selectedAddress={selectedAddress} keyword={keyword} key={this.logged}/>
@@ -80,13 +80,13 @@ class Layout extends React.Component {
         </Grid>
         {children}
         <Grid className={classes.mainContainerStyleFooter}>
-          <Hidden only={['xs', 'sm', 'md']}>
+          <Hidden only={['xs', 'sm', 'md']} implementation={"css"} className={classes.hidden}>
             <Divider style={{width: '100%'}}/>
-            <Grid style={{width: '90%', marginTop: '2vh'}}>
+            <Grid style={{width: '90%', marginTop: '2vh', marginBottom: '2vh'}}>
               <TrustAndSecurity/>
             </Grid>
           </Hidden>
-          <Grid className={classes.generalWidthFooter} >
+          <Grid className={classes.generalWidthFooter}>
             <Grid style={{width: '85%'}}>
               <Footer/>
             </Grid>
