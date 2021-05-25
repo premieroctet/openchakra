@@ -210,6 +210,5 @@ class LinkRenderer extends React.Component {
 module.exports= {
   StatusCellRenderer, DateCellRenderer, DateTimeCellRenderer,
   StatusCellFilter, PictureCellRenderer, PrivateRenderer, BooleanCellRenderer,LocationRenderer, WarningRenderer,
-  EnumCellRenderer, LocationRenderer
-  LinkRenderer,
+  EnumCellRenderer, LocationRenderer, LinkRenderer,
 }
