@@ -91,7 +91,6 @@ class UserServicesPreview extends React.Component {
   }
 
   setState = (st, cb) => {
-    console.log(`setState:${Object.keys(st)}`)
     return super.setState(st, cb)
   }
 
