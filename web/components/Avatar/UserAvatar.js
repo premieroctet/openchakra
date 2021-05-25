@@ -102,7 +102,7 @@ class UserAvatar extends React.Component {
                   onChange={this.onChange}
                 />
                 <label htmlFor="icon-button-file">
-                  <IconButton aria-label="upload picture" component="span">
+                  <IconButton className={classes.buttonCamera} aria-label="upload picture" component="span">
                     <PhotoCameraIcon onClick={this.selectPicture}/>
                   </IconButton>
                 </label>

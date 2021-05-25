@@ -149,7 +149,7 @@ class SettingService extends React.Component {
               <h4 className={classes.policySizeSubtitle} style={{margin:0}}>{SHOP.settingService.section_option_title}</h4>
             </Grid> : null
           }
-          {service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se checke pas
+          {service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se check pas
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
                 ckecked={Boolean(travel_tax)}
