@@ -1,5 +1,4 @@
-const {clearAuthenticationToken}=require('../utils/authentication')
-const {setAxiosAuthentication}=require('../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -13,6 +12,7 @@ import AddressAndFacturation from "../components/Payment/AddressAndFacturation/A
 import PaymentChoice from "../components/Payment/PaymentChoice/PaymentChoice";
 import LayoutPayment from "../hoc/Layout/LayoutPayment";
 
+const {snackBarError}=require('../utils/notifications')
 moment.locale('fr');
 
 class ConfirmPayment extends React.Component {
@@ -42,7 +42,7 @@ class ConfirmPayment extends React.Component {
       cards: [],
       id_card: '',
       cardSelected: false,
-      valueother: 'other',
+      pending: false,
     };
   }
 
@@ -105,6 +105,10 @@ class ConfirmPayment extends React.Component {
   };
 
   payDirect = () => {
+    const {pending}=this.state
+    if (pending) {
+      return snackBarError(`Paiement en cours de traitement`)
+    }
     const total = parseFloat(this.state.grandTotal);
     const fees = parseFloat(this.state.fees);
     const data = {
@@ -113,6 +117,7 @@ class ConfirmPayment extends React.Component {
       amount: total,
       fees: fees,
     };
+    this.setState({pending: true})
     axios.post('/myAlfred/api/payment/payInDirect', data)
       .then(res => {
         const payInResult=res.data
@@ -128,7 +133,10 @@ class ConfirmPayment extends React.Component {
           }
         }
       })
-      .catch( err => { console.error(err)});
+      .catch( err => {
+        this.setState({pending: false})
+        console.error(err)
+      });
   };
 
   pay = () => {
@@ -146,13 +154,11 @@ class ConfirmPayment extends React.Component {
         if (payInResult.SecureModeNeeded) {
           Router.push(payInResult.SecureModeRedirectURL)
         }
+        else if (payInResult.RedirectURL) {
+          Router.push(payInResult.RedirectURL)
+        }
         else {
-          if (payInResult.RedirectURL) {
-            Router.push(payInResult.RedirectURL)
-          }
-          else {
-            Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`)
-          }
+          Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`)
         }
       })
       .catch(err => {

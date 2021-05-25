@@ -25,7 +25,7 @@ const serviceFilters = require('../../utils/filters');
 const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts');
 const {normalize} = require('../../../utils/text');
 const parse = require('url-parse')
-const {get_role, get_logged_id}=require('../../utils/serverContext')
+const {getRole, get_logged_id}=require('../../utils/serverContext')
 
 moment.locale('fr');
 const storage = multer.diskStorage({
@@ -559,7 +559,7 @@ router.post('/search', (req, res) => {
         }
       }
       // Manager : filtrer les services autorisés
-      if (get_role(req)==MANAGER) {
+      if (getRole(req)==MANAGER) {
         Group.findOne({ members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
           .then ( group => {
             sus = serviceFilters.filterServicesIds(sus, group.allowed_services.map(s=>s.service._id))

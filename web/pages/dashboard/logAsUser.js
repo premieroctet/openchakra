@@ -1,6 +1,4 @@
-const {clearAuthenticationToken}=require('../../utils/authentication')
-const {setAxiosAuthentication}=require('../../utils/authentication')
-const {setAuthToken}=require('../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -64,11 +62,16 @@ class logAsUser extends React.Component {
     super(props);
 
     this.state = {
-      user: null,
+      user: props.email,
       errors: null,
+      muUsers:[],
     };
 
     this.onUserChanged = this.onUserChanged.bind(this);
+  }
+
+  static getInitialProps({query: {email}}) {
+    return {email: email};
   }
 
   componentDidMount() {
@@ -139,6 +142,7 @@ class logAsUser extends React.Component {
                       name="user"
                       onChange={this.onUserChanged}
                       options={muUsers}
+                      values={muUsers.filter(m => m.value==user)}
                       multi={false}
                     >
                     </Select>

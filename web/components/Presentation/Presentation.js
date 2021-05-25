@@ -1,12 +1,10 @@
 import {snackBarError, snackBarSuccess} from "../../utils/notifications";
-
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/components/Presentation/Presentation';
-
 import Topic from "../../hoc/Topic/Topic"
 import Box from '../Box/Box'
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -17,8 +15,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import {CMP_PRESENTATION} from '../../utils/i18n'
 import {MAX_DESCRIPTION_LENGTH} from '../../utils/consts'
-import {isEditableUser} from '../../utils/functions'
-
+import {isEditableUser} from '../../utils/context'
 const {frenchFormat} = require('../../utils/text');
 import CreateIcon from '@material-ui/icons/Create'
 import IconButton from "@material-ui/core/IconButton";
@@ -93,7 +90,7 @@ class Presentation extends CompanyComponent {
     const {newDescription} = this.state
     setAxiosAuthentication()
 
-    if(this.is_mode_company()){
+    if(this.isModeCompany()){
       axios.put('/myAlfred/api/companies/profile/editProfile', {
           activity: this.state.activityArea,
           size: this.state.sizeCompany,
@@ -191,7 +188,7 @@ class Presentation extends CompanyComponent {
     const {classes} = this.props;
     const {user, company} = this.state;
     const editable = isEditableUser(user);
-    const title = this.is_mode_company() ? company ? `À propos de ${company.name}` : null : frenchFormat(`À propos de ${user ? user.firstname : ''}`);
+    const title = this.isModeCompany() ? company ? `À propos de ${company.name}` : null : frenchFormat(`À propos de ${user ? user.firstname : ''}`);
 
     return (
       <>
@@ -207,10 +204,10 @@ class Presentation extends CompanyComponent {
         <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
           <Topic titleTopic={title}
                  titleSummary={user ? `membre depuis ${moment(user.creation_date).format("MMMM YYYY")}` : ''}>
-            {user && !this.is_mode_company()?
+            {user && !this.isModeCompany()?
               <Typography style={{wordWrap: 'break-word'}}>{user.description}</Typography>
               :
-              this.is_mode_company() && company ?
+              this.isModeCompany() && company ?
                 <Typography style={{wordWrap: 'break-word'}}>{company.description}</Typography>
                 : null
             }

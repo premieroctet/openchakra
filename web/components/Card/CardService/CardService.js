@@ -3,10 +3,9 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import {Button} from "@material-ui/core";
 import axios from "axios";
-import {computeAverageNotes} from '../../../utils/functions';
+import {computeAverageNotes, computeDistanceKm} from '../../../utils/functions';
 import Box from "@material-ui/core/Box";
 import Rating from "@material-ui/lab/Rating";
-const {computeDistanceKm} = require('../../../utils/functions');
 import RoomIcon from '@material-ui/icons/Room';
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
@@ -23,7 +22,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import Router from 'next/router';
-const {isEditableUser}=require('../../../utils/functions');
+const {isEditableUser}=require('../../../utils/context');
 
 class CardServiceInfo extends React.Component{
   constructor(props) {

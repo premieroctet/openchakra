@@ -8,6 +8,7 @@ const Service=require('../server/models/Service')
 const ServiceUser=require('../server/models/ServiceUser')
 const Shop=require('../server/models/Shop')
 const Booking=require('../server/models/Booking')
+const User=require('../server/models/User')
 
 const mep_b2b = () => {
   Category.find({label : {$exists:true}})
@@ -83,6 +84,12 @@ const mep_b2b = () => {
       })
       .catch (err => console.error(err))
     Booking.updateMany({}, { company_amount:0})
+    .then( newModel => {
+      console.log(`ok:${JSON.stringify(newModel)}`)
+    })
+    .catch (err => console.error(err))
+
+    User.updateMany({}, { company: null, roles:[]})
     .then( newModel => {
       console.log(`ok:${JSON.stringify(newModel)}`)
     })

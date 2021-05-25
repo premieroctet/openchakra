@@ -1,5 +1,4 @@
-const {clearAuthenticationToken} = require('../../utils/authentication')
-const {setAxiosAuthentication} = require('../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -25,7 +24,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-const {is_b2b_admin}=require('../../utils/context')
+const {isB2BAdmin}=require('../../utils/context')
 
 moment.locale('fr');
 
@@ -73,7 +72,7 @@ class myAddresses extends React.Component {
         this.service_address_put_url = '/myAlfred/api/users/profile/serviceAddress'
         this.service_address_edit_url = '/myAlfred/api/users/profile/address/'
         this.service_address_delete_url = '/myAlfred/api/users/profile/address/'
-        if (is_b2b_admin(user)) {
+        if (isB2BAdmin(user)) {
           axios.get('/myAlfred/api/companies/current')
             .then(res => {
               let company = res.data;
@@ -332,7 +331,7 @@ class myAddresses extends React.Component {
             </Grid>
             <Grid>
               <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                {is_b2b_admin(user) ? 'Ajoutez vos sites et gagnez du temps' :
+                {isB2BAdmin(user) ? 'Ajoutez vos sites et gagnez du temps' :
                   'Ajoutez plusieurs adresses et gagnez du temps.'}
               </Typography>
             </Grid>

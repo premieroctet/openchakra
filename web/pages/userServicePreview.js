@@ -1,4 +1,4 @@
-const {setAxiosAuthentication}=require('../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
@@ -28,12 +28,13 @@ import LayoutMobile from "../hoc/Layout/LayoutMobile";
 const {BOOK_STATUS, COMM_CLIENT, MANAGER}=require('../utils/consts')
 const isEmpty = require('../server/validation/is-empty');
 const {isDateAvailable} = require('../utils/dateutils')
-const {computeBookingReference} = require('../utils/functions');
 const {emptyPromise} = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
-const {computeDistanceKm} = require('../utils/functions');
+const {computeDistanceKm, computeBookingReference} = require('../utils/functions');
+const {snackBarError}=require('../utils/notifications')
+
 const moment = require('moment');
-const {is_b2b_admin, is_b2b_manager, get_role}=require('../utils/context')
+const {isB2BAdmin, isB2BManager, getRole}=require('../utils/context')
 
 moment.locale('fr');
 registerLocale('fr', fr);
@@ -80,12 +81,18 @@ class UserServicesPreview extends React.Component {
       albums:[],
       excludedDays: [],
       available_budget: Number.MAX_SAFE_INTEGER,
+      pending: false,
     };
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
     this.book = this.book.bind(this)
     this.getClientAddress = this.getClientAddress.bind(this)
     this.isInPerimeter = this.isInPerimeter.bind(this)
+  }
+
+  setState = (st, cb) => {
+    console.log(`setState:${Object.keys(st)}`)
+    return super.setState(st, cb)
   }
 
   static getInitialProps({query: {id, address}}) {
@@ -133,15 +140,15 @@ class UserServicesPreview extends React.Component {
             let user = res ? res.data : null
             // Mode compagnie : l'admin a un budget illimité comme un user standard, le manager a le budget de son département
             if (user && user.company) {
-              axios.get(`/myAlfred/api/companies/budget/${user._id}/${get_role()}`)
+              axios.get(`/myAlfred/api/companies/budget/${user._id}/${getRole()}`)
                 .then ( res => {
-                  this.setState({available_budget: res.data, role: get_role()})
+                  this.setState({available_budget: res.data, role: getRole()})
                 })
                 .catch (err => {
                   console.error(err)
                   this.setState({available_budget: 0})
                 })
-              axios.get(`/myAlfred/api/companies/supported/${user._id}/${serviceUser.service._id}/${get_role()}`)
+              axios.get(`/myAlfred/api/companies/supported/${user._id}/${serviceUser.service._id}/${getRole()}`)
                 .then( res => {
                   const percent=res.data
                   this.setState({company_percent: percent})
@@ -152,7 +159,7 @@ class UserServicesPreview extends React.Component {
 
             }
             st['user']=user
-            const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
             promise
               .then(res => {
                 var allAddresses = {'main': res.data.billing_address};
@@ -446,7 +453,7 @@ class UserServicesPreview extends React.Component {
   };
 
   hasWarningBudget = () => {
-    if (get_role()==MANAGER) {
+    if (getRole()==MANAGER) {
       const warningBudget = this.state.company_amount < this.state.total
       return warningBudget
     }
@@ -498,7 +505,12 @@ class UserServicesPreview extends React.Component {
 
   book = actual => { //actual : true=> book, false=>infos request
 
-    const {count, user, serviceUser} = this.state
+    const {count, user, serviceUser, pending} = this.state
+
+    if (pending) {
+      snackBarError(`Réservation en cours de traitement`)
+      return
+    }
 
     let prestations = [];
     this.state.prestations.forEach(p => {
@@ -569,6 +581,7 @@ class UserServicesPreview extends React.Component {
         return
       }
 
+      this.setState({pending: true})
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
           const booking = response.data
@@ -582,7 +595,10 @@ class UserServicesPreview extends React.Component {
               }
             });
         })
-        .catch(err => console.error(err))
+        .catch(err => {
+          this.setState({ pending: false})
+          console.error(err)
+        })
     })
   }
 

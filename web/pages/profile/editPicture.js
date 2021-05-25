@@ -1,5 +1,4 @@
-const {clearAuthenticationToken}=require('../../utils/authentication')
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Layout from '../../hoc/Layout/Layout';

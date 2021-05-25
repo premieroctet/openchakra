@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import styles from '../../static/css/components/Schedule/Schedule';
 import withStyles from "@material-ui/core/styles/withStyles";
 import Hidden from "@material-ui/core/Hidden";
-import {is_mobile} from "../../utils/context";
+import {isMobile} from "../../utils/context";
 import Router from "next/router";
 
 
@@ -317,7 +317,7 @@ class Schedule extends React.Component {
                       sm={nbSchedule === 1 ? 11 : 6} xs={12} className={classes.schedule_height} key={i}>
                   <Calendar
                     key={date}
-                    selectable={is_mobile() && isUserServicePreview ? null : selectable}
+                    selectable={isMobile() && isUserServicePreview ? null : selectable}
                     popup={false}
                     culture={'fr-FR'}
                     localizer={localizer}

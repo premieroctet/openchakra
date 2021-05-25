@@ -191,8 +191,24 @@ class EnumCellRenderer extends React.Component {
   }
 }
 
+class WarningRenderer extends React.Component {
+  render = () => {
+    return (
+      <em style={{color:'red'}}>{this.props.value}</em>
+    )
+  }
+}
+
+class LinkRenderer extends React.Component {
+  render = () => {
+    const {text, link}=this.props.value
+    return (
+      <Link href={link}>{text}</Link>
+    )
+  }
+}
 module.exports= {
   StatusCellRenderer, DateCellRenderer, DateTimeCellRenderer,
-  StatusCellFilter, PictureCellRenderer, PrivateRenderer, BooleanCellRenderer,
-  EnumCellRenderer, LocationRenderer
+  StatusCellFilter, PictureCellRenderer, PrivateRenderer, BooleanCellRenderer,LocationRenderer, WarningRenderer,
+  EnumCellRenderer, LocationRenderer, LinkRenderer,
 }

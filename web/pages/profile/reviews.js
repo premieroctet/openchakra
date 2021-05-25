@@ -9,7 +9,7 @@ import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
-import {isEditableUser} from "../../utils/functions";
+import {isEditableUser} from "../../utils/context";
 
 class ProfileReviews extends React.Component {
 

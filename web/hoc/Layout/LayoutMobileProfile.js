@@ -12,9 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import ScrollMenu from "../../components/ScrollMenu/ScrollMenu";
 import Divider from "@material-ui/core/Divider";
 import UserAvatar from "../../components/Avatar/UserAvatar";
-const {isEditableUser}=require('../../utils/functions');
-import {is_mode_company} from "../../utils/context";
-const {is_b2b_style}=require('../../utils/context');
+import {isEditableUser, isModeCompany, isB2BStyle} from "../../utils/context";
 
 class LayoutMobileProfile extends React.Component{
 
@@ -79,26 +77,26 @@ class LayoutMobileProfile extends React.Component{
     return(
       <Grid>
         <Grid>
-          <Grid className={is_b2b_style() ? classes.layoutMobileProfilHeaderPro : classes.layoutMobileProfilHeader}>
+          <Grid className={isB2BStyle() ? classes.layoutMobileProfilHeaderPro : classes.layoutMobileProfilHeader}>
             <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
               <ArrowBackIosIcon />
             </IconButton>
           </Grid>
           <Grid className={classes.layoutMobileLayoutProfileHeader}>
             <Grid className={classes.profilLayoutAvatar}>
-              <UserAvatar alt={!is_mode_company(user) ? user.firstname : company ? company.name : ''} user={!is_mode_company(user) ? user : company ? company : ''}/>
+              <UserAvatar alt={!isModeCompany(user) ? user.firstname : company ? company.name : ''} user={!isModeCompany(user) ? user : company ? company : ''}/>
             </Grid>
           </Grid>
           <Grid style={{display: 'flex',height: '40%', alignItems: 'center', marginTop: '10vh', marginLeft: '5vh'}}>
             <Grid style={{display: 'flex',flexDirection: 'column'}}>
               <Grid>
-                {is_mode_company(user) ?
+                {isModeCompany(user) ?
                   <h3>{company ? company.name : ''}</h3>
                   :
                   <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
                 }
               </Grid>
-              {is_mode_company(user) ? null :
+              {isModeCompany(user) ? null :
                 <Grid>
                   <Typography style={{color: 'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
                 </Grid>
@@ -110,7 +108,7 @@ class LayoutMobileProfile extends React.Component{
           <Divider/>
         </Grid>
         {
-          is_mode_company(user) ? null :
+          isModeCompany(user) ? null :
             <Grid className={classes.profilLayoutScrollMenu}>
               <ScrollMenu categories={menuItems} mode={'profile'} extraParams={{user: this.props.user}}/>
             </Grid>

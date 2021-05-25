@@ -10,7 +10,6 @@ import loadable from 'loadable-components';
 const Chart = loadable(() => import('react-apexcharts'));
 import Router from 'next/router'
 import axios from 'axios'
-
 const _ = require('lodash');
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
@@ -21,7 +20,7 @@ import Divider from '@material-ui/core/Divider';
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
-import {isEditableUser} from "../../utils/functions";
+import {isEditableUser} from "../../utils/context";
 
 
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
@@ -413,7 +412,7 @@ class ProfileStatistics extends React.Component {
     if (!user) {
       return null
     }
-    
+
     return (
       <React.Fragment>
         <React.Fragment>

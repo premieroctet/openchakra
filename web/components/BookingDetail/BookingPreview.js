@@ -1,5 +1,4 @@
-const {clearAuthenticationToken} = require('../../utils/authentication')
-const {setAxiosAuthentication} = require('../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import Link from 'next/link';
 import Grid from '@material-ui/core/Grid';
@@ -23,7 +22,7 @@ import BillingGeneration from "../BillingGeneration/BillingGeneration";
 import NoSSR from "react-no-ssr";
 
 const {BOOKING} = require('../../utils/i18n')
-const {getUserLabel} = require('../../utils/functions')
+const {getUserLabel} = require('../../utils/context')
 
 registerLocale('fr', fr);
 moment.locale('fr');

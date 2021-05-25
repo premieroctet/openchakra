@@ -21,11 +21,11 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutMobileSearch from "../hoc/Layout/LayoutMobileSearch";
 import Typography from "@material-ui/core/Typography";
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
-const {getLoggedUserId, computeDistanceKm}=require('../utils/functions')
+const {computeDistanceKm}=require('../utils/functions')
 import withWidth from '@material-ui/core/withWidth';
 import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchResults=withSlide(withGrid(CardService));
-const {is_b2b_style, is_b2b_admin, is_b2b_manager} =require('../utils/context')
+const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
 const {emptyPromise}=require('../utils/promise')
 moment.locale('fr');
@@ -148,7 +148,7 @@ class SearchPage extends React.Component {
     }
     setAxiosAuthentication()
 
-    axios.get(`/myAlfred/api/category/${is_b2b_style(this.state.user) ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
       .catch(err => {
         console.error(err);
         this.setState({mounting: false});
@@ -168,7 +168,7 @@ class SearchPage extends React.Component {
                 this.setState({isAdmin: user.is_admin});
                 st['user'] = user;
 
-                const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+                const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
                 promise
                   .then(res => {
                     var allAddresses = {'main': res.data.billing_address.gps};
@@ -326,7 +326,7 @@ class SearchPage extends React.Component {
       }
     }
 
-    filters.status = is_b2b_style() ? PRO : PART
+    filters.status = isB2BStyle() ? PRO : PART
 
     axios.post('/myAlfred/api/serviceUser/search', filters)
       .then(res => {
