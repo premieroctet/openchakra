@@ -122,7 +122,7 @@ class NavBar extends Component {
     if (query.login === 'true') {
       this.handleOpenLogin()
     }
-    if (query.register) {
+    if (query.register && !getLoggedUserId()) {
       this.handleOpenRegister(query.register)
     }
 

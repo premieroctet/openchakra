@@ -20,11 +20,12 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 var parse = require('url-parse');
-import {hasStatusRegister, removeStatusRegister} from "../../utils/context";
+import {hasStatusRegister, removeStatusRegister, get_role} from "../../utils/context";
 const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms');
 const {STEPS}=require('../../utils/registerStep')
-const {getLoggedUserId} = require('../../utils/functions')
+const {getLoggedUserId, isLoggedUserRegistered} = require('../../utils/functions')
+const {EMPLOYEE} = require('../../utils/consts');
 
 
 registerLocale('fr', fr);
@@ -81,6 +82,11 @@ class Register extends React.Component {
   }
 
   componentDidMount() {
+    if (getLoggedUserId() && isLoggedUserRegistered()) {
+      snackBarError('Vous êtes déjà inscrit');
+      window.location = '/'
+    }
+
     let query = parse(window.location.href, true).query;
     if (query.google_id) {
       this.setState({
@@ -135,10 +141,6 @@ class Register extends React.Component {
     }
     if (query.error) {
       this.setState({errorExistEmail: true});
-    }
-    if (getLoggedUserId()) {
-      snackBarError('Vous êtes déjà inscrit');
-      Router.push('/');
     }
   }
 
@@ -252,6 +254,9 @@ class Register extends React.Component {
           if(hasStatusRegister()){
             removeStatusRegister()
             Router.push('/creaShop/creaShop')
+          }
+          else if (get_role() == EMPLOYEE) {
+            Router.push('/search?search=1')
           }
         } else {
           snackBarError('Le code est incorrect');
@@ -484,7 +489,7 @@ class Register extends React.Component {
 
   render() {
     const {classes, callLogin} = this.props;
-    const {smsCodeOpen, activeStep, firstPageValidator, secondPageValidator} = this.state;
+    const {smsCodeOpen, activeStep, firstPageValidator, secondPageValidator, pending} = this.state;
 
     return (
       <Grid className={classes.fullContainer}>
