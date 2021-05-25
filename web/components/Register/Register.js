@@ -20,7 +20,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 var parse = require('url-parse');
-import {removeStatusRegister} from "../../utils/context";
+import {hasStatusRegister, removeStatusRegister} from "../../utils/context";
 const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms');
 const {STEPS}=require('../../utils/registerStep')
@@ -71,8 +71,8 @@ class Register extends React.Component {
       errorExistEmail: false,
       birthdayError: '',
       cityError: '',
+      pending: false,
       open: false,
-      setAlfredRegister: false,
       showPassword: false,
       showPassword2: false
     };
@@ -140,12 +140,6 @@ class Register extends React.Component {
       snackBarError('Vous êtes déjà inscrit');
       Router.push('/');
     }
-    if(localStorage.getItem('setAlfredRegister') === 'true'){
-      this.setState({setAlfredRegister: true})
-    }else{
-      this.setState({setAlfredRegister: false})
-    }
-
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -154,6 +148,22 @@ class Register extends React.Component {
     }
   };
 
+  dialogCgu = (classes) => {
+    const {open} = this.state;
+    const handleClose = () => {
+      this.setState({open: false})
+    };
+    return (
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+        <DialogTitle onClose={() => this.setState({open: false})}>
+        </DialogTitle>
+        <DialogContent>
+          <CguContent/>
+          <Button style={{float: 'right'}} onClick={handleClose}>Fermer</Button>
+        </DialogContent>
+      </Dialog>
+    )
+  }
   onChange = e => {
     this.setState({[e.target.name]: e.target.value}, () => this.validatorFirstStep());
   };
@@ -239,7 +249,7 @@ class Register extends React.Component {
         if (res.data.sms_code_ok) {
           snackBarSuccess('Votre numéro de téléphone est validé');
           this.setState({smsCodeOpen: false, phoneConfirmed: true});
-          if(localStorage.getItem('setAlfredRegister') === 'true'){
+          if(hasStatusRegister()){
             removeStatusRegister()
             Router.push('/creaShop/creaShop')
           }
@@ -247,11 +257,14 @@ class Register extends React.Component {
           snackBarError('Le code est incorrect');
         }
       })
-      .catch(err => snackBarError('Erreur à la vérification du code'));
+      .catch(err => {
+        snackBarError('Erreur à la vérification du code')
+      })
   };
 
   onSubmit = () => {
 
+    this.setState({pending: true})
     const newUser = {
       google_id: this.state.google_id,
       facebook_id: this.state.facebook_id,
@@ -285,11 +298,12 @@ class Register extends React.Component {
             setAuthToken()
             setAxiosAuthentication()
           })
-          .catch( err =>{
+          .catch(err => {
+            this.setState({pending: false});
             console.error(err)
           })
           .then( () => {
-            if(localStorage.getItem('setAlfredRegister') === 'true'){
+            if(hasStatusRegister()){
               this.submitPhone()
             }else{
               this.setState({activeStep: this.state.activeStep + 1})
@@ -302,7 +316,7 @@ class Register extends React.Component {
             }
           )
           .then( () => {
-            if(localStorage.getItem('setAlfredRegister') !== 'true'){
+            if(!hasStatusRegister()){
               this.submitPhone()
             }
           }
@@ -312,6 +326,7 @@ class Register extends React.Component {
             });
       })
       .catch(err => {
+        this.setState({pending: false})
         const errors = err.response.data
         const errKeys = Object.keys(errors)
         this.setState({errors: err.response.data});
@@ -329,7 +344,7 @@ class Register extends React.Component {
 
   submitPhone = e => {
 
-    if(!this.state.phone && localStorage.getItem('setAlfredRegister') === 'true'){
+    if(!this.state.phone && hasStatusRegister()){
       Router.push('/creaShop/creaShop')
     }
 
@@ -374,7 +389,7 @@ class Register extends React.Component {
 
   confirmLater = () => {
     this.setState({smsCodeOpen: false});
-    if(localStorage.getItem('setAlfredRegister') === 'true'){
+    if(hasStatusRegister()){
       removeStatusRegister()
       Router.push('/creaShop/creaShop')
     }
@@ -410,7 +425,7 @@ class Register extends React.Component {
 
   renderSwitch = (stepIndex) => {
     let mode = 'fullRegister'
-    if(localStorage.getItem('setAlfredRegister') === 'true'){
+    if(hasStatusRegister()){
       mode = 'setAlfredRegister';
     }
     return STEPS[mode][stepIndex].component(this)
@@ -500,7 +515,7 @@ class Register extends React.Component {
                       }}
                       nextButton={
                         <Button size="small" onClick={() => this.handleNext(activeStep)}
-                                disabled={activeStep === 0 ? firstPageValidator : secondPageValidator}>
+                                disabled={activeStep === 0 ? firstPageValidator : secondPageValidator || pending}>
                           {activeStep === 0 ? 'Suivant' : 'Terminer'}
                           <KeyboardArrowRight/>
                         </Button>

@@ -25,7 +25,7 @@ class DrawerBookingRecap extends React.Component{
 
   render() {
 
-    const{pricedPrestations, countPrestations, grandTotal, fees, travel_tax, classes, pick_tax, cesu_total, mode, prestations, bookingObj, user, id_card, activeStep} = this.props;
+    const{pricedPrestations, countPrestations, grandTotal, fees, travel_tax, classes, pick_tax, cesu_total, mode, prestations, bookingObj, user, id_card, activeStep, pending} = this.props;
 
     return(
       <Grid>
@@ -152,7 +152,7 @@ class DrawerBookingRecap extends React.Component{
               color="primary"
               aria-label="add"
               onClick={() => activeStep === 0 ? this.props.handleStep() : this.props.handlePayDirect()}
-              disabled={activeStep === 1 ? id_card === '' : false}
+              disabled={activeStep === 1 ? id_card === '' || pending : false}
             >
               <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? 'Payer' : 'Valider'}</Typography>
             </Button>

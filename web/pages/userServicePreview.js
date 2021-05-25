@@ -43,6 +43,8 @@ const {computeBookingReference} = require('../utils/functions');
 const {emptyPromise} = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
 const {computeDistanceKm} = require('../utils/functions');
+const {snackBarError}=require('../utils/notifications')
+
 const moment = require('moment');
 const {is_b2b_admin, is_b2b_manager, get_role}=require('../utils/context')
 
@@ -91,12 +93,18 @@ class UserServicesPreview extends React.Component {
       albums:[],
       excludedDays: [],
       available_budget: Number.MAX_SAFE_INTEGER,
+      pending: false,
     };
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
     this.book = this.book.bind(this)
     this.getClientAddress = this.getClientAddress.bind(this)
     this.isInPerimeter = this.isInPerimeter.bind(this)
+  }
+
+  setState = (st, cb) => {
+    console.log(`setState:${Object.keys(st)}`)
+    return super.setState(st, cb)
   }
 
   static getInitialProps({query: {id, address}}) {
@@ -509,7 +517,12 @@ class UserServicesPreview extends React.Component {
 
   book = actual => { //actual : true=> book, false=>infos request
 
-    const {count, user, serviceUser} = this.state
+    const {count, user, serviceUser, pending} = this.state
+
+    if (pending) {
+      snackBarError(`Réservation en cours de traitement`)
+      return
+    }
 
     let prestations = [];
     this.state.prestations.forEach(p => {
@@ -580,6 +593,7 @@ class UserServicesPreview extends React.Component {
         return
       }
 
+      this.setState({pending: true})
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
           const booking = response.data
@@ -593,7 +607,10 @@ class UserServicesPreview extends React.Component {
               }
             });
         })
-        .catch(err => console.error(err))
+        .catch(err => {
+          this.setState({ pending: false})
+          console.error(err)
+        })
     })
   }
 

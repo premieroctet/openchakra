@@ -13,9 +13,12 @@ const validateSimpleRegisterInput = data => {
   data.password = !isEmpty(data.password) ? data.password : '';
   data.password2 = !isEmpty(data.password2) ? data.password2 : '';
   data.address = !isEmpty(data.address) ? data.address : '';
+  // On ne valide plus que l'adresse
+  /**
   data.zip_code = !isEmpty(data.zip_code) ? data.zip_code : '';
   data.city = !isEmpty(data.city) ? data.city : '';
   data.country = !isEmpty(data.country) ? data.country : '';
+  */
   data.google_id = !isEmpty(data.google_id) ? data.google_id : '';
   data.facebook_id = !isEmpty(data.facebook_id) ? data.facebook_id : '';
 
@@ -44,6 +47,8 @@ const validateSimpleRegisterInput = data => {
     errors.address = 'Veuillez saisir une adresse';
   }
 
+  // On ne valide plus que l'adresse
+  /**
   if (Validator.isEmpty(data.zip_code)) {
     errors.zip_code = 'Veuillez saisir un code postal';
   }
@@ -55,7 +60,7 @@ const validateSimpleRegisterInput = data => {
   if (Validator.isEmpty(data.country)) {
     errors.country = 'Veuillez choisir un pays';
   }
-
+  */
   return {
     errors,
     isValid: isEmpty(errors),

@@ -166,6 +166,12 @@ class SelectPrestation extends React.Component {
                               price={presta ? presta.price : null}
                               billing={presta ? presta.billing : null}
                             />
+                            {
+                              p.description ?
+                                <Grid style={{marginTop: 40}}>
+                                  <Typography><em><pre>{p.description}</pre></em></Typography>
+                                </Grid> : null
+                            }
                             <hr style={{color: 'rgb(255, 249, 249, 0.6)', borderRadius: 10}}/>
                           </Grid>
                         );

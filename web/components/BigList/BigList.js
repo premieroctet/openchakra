@@ -85,6 +85,8 @@ class BigList extends React.Component {
       'booleanCellRenderer': models.BooleanCellRenderer,
       'enumCellRenderer': models.EnumCellRenderer,
       'locationRenderer': models.LocationRenderer,
+      'warningCellRenderer': models.WarningRenderer,
+      'linkRenderer': models.LinkRenderer,
     }
 
     const defaultColDef={
@@ -134,7 +136,7 @@ class BigList extends React.Component {
               }}
               onRowClicked={ this.props.onRowClicked}
               onCellClicked={ this.props.onCellClicked}
-              onGridReady={this.fitColumns}
+              onFirstDataRendered={this.fitColumns}
               ref={this.gridRef}
               />
             </Paper>

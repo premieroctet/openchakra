@@ -87,7 +87,11 @@ const removeStatusRegister = () =>{
   return localStorage.removeItem('setAlfredRegister')
 }
 
+const hasStatusRegister = () => {
+  return localStorage.getItem('setAlfredRegister') == 'true'
+}
+
 module.exports = {
   is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_manager, is_mode_company, is_application, is_mobile,
-  get_role,setStatusRegister,removeStatusRegister
+  get_role,setStatusRegister,removeStatusRegister, hasStatusRegister
 }
