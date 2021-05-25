@@ -2,7 +2,7 @@ import {isAndroid, isIOS, getUA} from 'react-device-detect';
 const isWebview = require('is-webview');
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
-
+const jwt = require('jsonwebtoken')
 
 const isB2BSite = () => {
   if (typeof localStorage == 'undefined') {
@@ -166,5 +166,5 @@ module.exports = {
   getRole,setStatusRegister,removeStatusRegister, hasStatusRegister,
   getLoggedUserId,getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
-  getUserLabel,isLoggedUserRegistered
+  getUserLabel,isLoggedUserRegistered, isIOS, isAndroid
 }

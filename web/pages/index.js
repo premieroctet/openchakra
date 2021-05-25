@@ -21,7 +21,6 @@ import ResaService from "../components/HomePage/ResaService/ResaService";
 import {isB2BStyle, isApplication, isMobile} from "../utils/context";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import {deviceType, isMobile, osName, isAndroid, isIOS, getUA} from 'react-device-detect';
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 
