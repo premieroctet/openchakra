@@ -28,6 +28,7 @@ const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../utils/mangopay');
 const {send_cookie}=require('../../utils/serverContext')
 const ServiceUser = require('../../models/ServiceUser');
+const {ensureDirectoryExists} = require('../../utils/filesystem')
 
 
 axios.defaults.withCredentials = true;
@@ -35,7 +36,7 @@ axios.defaults.withCredentials = true;
 const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ');
 install_hooks(HOOK_TYPES, '/myAlfred/api/users/hook')
 
-
+ensureDirectoryExists('static/profile/')
 const storageIdPicture = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/');
@@ -57,6 +58,7 @@ const uploadIdPicture = multer({
   },
 });
 
+ensureDirectoryExists('static/profile/idCard/')
 const storageIdCard = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/idCard/');
@@ -81,6 +83,7 @@ const uploadIdCard = multer({
 });
 
 // Registration proof storage
+ensureDirectoryExists('static/profile/registrationProof/')
 const storageRegProof = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/registrationProof/');
@@ -105,6 +108,7 @@ const uploadRegProof = multer({
 });
 
 // Album picture storage
+ensureDirectoryExists('static/profile/album/')
 const storageAlbumPicture = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/album/');

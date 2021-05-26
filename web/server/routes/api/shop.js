@@ -10,7 +10,9 @@ const {createMangoProvider} = require('../../utils/mangopay');
 const {GID_LEN} = require('../../../utils/consts');
 const {is_production, is_validation}=require('../../../config/config')
 const {normalize} = require('../../../utils/text');
+const {ensureDirectoryExists} = require('../../utils/filesystem')
 
+ensureDirectoryExists('static/profile/idCard/')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/idCard/');
