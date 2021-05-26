@@ -33,7 +33,8 @@ class UserAvatar extends React.Component {
     }
   }
 
-  selectPicture = () => {
+  selectPicture = (e) => {
+    e.preventDefault()
     if (isEditableUser(this.props.user)) {
       this.fileInput.click()
     }
@@ -44,7 +45,7 @@ class UserAvatar extends React.Component {
     const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
 
     return (
-      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter} onClick={this.selectPicture}/>
+      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}/>
     );
   }
 
@@ -105,8 +106,8 @@ class UserAvatar extends React.Component {
                   onChange={this.onChange}
                 />
                 <label htmlFor="icon-button-file">
-                  <IconButton className={classes.buttonCamera} aria-label="upload picture" component="span">
-                    <PhotoCameraIcon onClick={this.selectPicture}/>
+                  <IconButton onClick={this.selectPicture} className={classes.buttonCamera} aria-label="upload picture" component="span">
+                    <PhotoCameraIcon/>
                   </IconButton>
                 </label>
               </Grid> : null}
