@@ -11,7 +11,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import {CSVLink} from 'react-csv';
 
-const {isLoggedUserAdmin}=require('../../utils/functions')
+const {isLoggedUserAdmin}=require('../../utils/context')
 
 const jwt = require('jsonwebtoken');
 const styles = theme => ({

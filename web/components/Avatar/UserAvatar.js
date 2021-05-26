@@ -1,21 +1,14 @@
 import IconButton from '@material-ui/core/IconButton';
-
-const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import {withStyles} from '@material-ui/core/styles';
-import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
-import Popover from '@material-ui/core/Popover';
+import Router from 'next/router';
 import axios from 'axios';
 import styles from './UserAvatarStyle';
-import {isEditableUser} from '../../utils/functions'
-
-const {getLoggedUserId} = require('../../utils/functions')
-
+const {isEditableUser, getLoggedUserId} = require('../../utils/context')
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
-
-const jwt = require('jsonwebtoken');
+import Badge from "@material-ui/core/Badge";
 
 class UserAvatar extends React.Component {
   constructor(props) {
@@ -26,90 +19,45 @@ class UserAvatar extends React.Component {
       kyc: null,
       owner: false,
       userId: '',
+      isAbout: false
     };
-    this.interval_id = null;
   }
 
   componentDidMount() {
     const user_id = getLoggedUserId()
     if (user_id) {
-      this.setState({currentUser: user_id},
-        () => {
-          // Check once then every 20s
-          if (this.props.warnings === true) {
-            this.checkWarnings(token);
-            this.interval_id = setInterval(() => this.checkWarnings(token), 20000);
-          }
-        },
-      );
+      this.setState({currentUser: user_id});
+    }
+    if(Router.pathname === '/profile/about'){
+      this.setState({isAbout: true})
     }
   }
 
-  componentWillUnmount() {
-    clearInterval(this.interval_id);
-  }
-
-  checkWarnings = token => {
-    setAxiosAuthentication()
-    var kyc = [];
-    axios.get('/myAlfred/api/chatRooms/nonViewedMessagesCount')
-      .then(res => {
-        const nbMessages = res.data;
-        if (nbMessages > 0) {
-          const plural = nbMessages === 1 ? '' : 's';
-          kyc.push(`Vous avez ${res.data} message${plural} non lu${plural}`);
-        }
-        return axios.get('/myAlfred/api/users/current');
-      })
-      .then(res => {
-        const user = res.data;
-        if (user.id_card_error_text) {
-          kyc.push(user.id_card_error_text);
-        }
-      })
-      .then(() => {
-        this.setState({kyc: kyc.length > 0 ? kyc : null});
-      })
-      .catch(err => console.error(err));
-  };
-
-  ifOwner() {
-    if (this.state.currentUser === this.state.userId) {
-      this.setState({owner: true});
-    }
-  };
-
-  handlePopoverOpen = (event) => {
-    this.setState({anchorEl: event.currentTarget});
-  };
-
-  handlePopoverClose = () => {
-    this.setState({anchorEl: null});
-  };
-
-  selectPicture = () => {
+  selectPicture = (e) => {
+    e.preventDefault()
     if (isEditableUser(this.props.user)) {
       this.fileInput.click()
     }
   };
 
-  avatarWithPics(user, className) {
+  avatarWithPics = (user, classes) => {
+    const{isAbout} = this.state;
     const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
+
     return (
-      <Avatar alt="photo de profil" src={url} className={className} onClick={this.selectPicture}>
-      </Avatar>
+      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}/>
     );
   }
 
-  avatarWithoutPics(user, className) {
+  avatarWithoutPics = (user, classes) =>{
+    const{isAbout} = this.state;
+
     return (
-      <Avatar alt="photo de profil" className={className}
-              onClick={this.selectPicture}>
+      <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}>
         <p>{user.avatar_letters}</p>
       </Avatar>
     );
   }
-
 
   onChange = event => {
     const newPicture = event.target.files[0];
@@ -122,132 +70,58 @@ class UserAvatar extends React.Component {
     };
     axios.post('/myAlfred/api/users/profile/picture', formData, config)
       .then(response => {
-        // TODO: reload only avatar using setState
-        window.location.reload(false)
-      }).catch();
+        this.props.fireRefresh()
+      }).catch( err => {console.error(err)});
 
   }
 
   render() {
-    const {user, className, classes} = this.props;
-    const {anchorEl, currentUser} = this.state;
-    const open = Boolean(anchorEl);
+    const {user, classes} = this.props;
+    const {currentUser} = this.state;
 
     if (user) {
-      var owner = currentUser === user._id;
-      var kyc = this.state.kyc;
+      var owner = currentUser === user._id && Router.pathname === '/profile/about';
     }
 
-    if (user) {
-      return (
-        <Grid style={{width: '100%', height: '100%'}}>
-          {
-            owner && kyc ?
+    return (
+      <Grid style={{width: '100%', height: '100%'}}>
+        <Grid style={{
+          height: '100%',
+          width: '100%'
+        }}>
+          <Badge
+            overlap="circle"
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            classes={{root: classes.badge}}
+            badgeContent={ owner ?
               <Grid>
-                <Badge
-                  classes={{badge: classes.badge}}
-                  overlap="circle"
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                  variant="dot"
-                  onMouseEnter={this.handlePopoverOpen}
-                  onMouseLeave={this.handlePopoverClose}
-                  aria-owns={anchorEl ? 'mouse-over-popover' : undefined}
-                  aria-haspopup="true"
-                >
-                  {
-                    user.picture ?
-                      this.avatarWithPics(user, className)
-                      :
-                      this.avatarWithoutPics(user, className)
-                  }
-                </Badge>
                 <input
-                  id="file"
                   ref={fileInput => this.fileInput = fileInput}
-                  style={{display: 'none'}}
-                  name="myImage"
-                  type="file"
+                  accept="image/*"
+                  className={classes.input}
+                  id="icon-button-file" type="file"
                   onChange={this.onChange}
-                  className="form-control"
-                  accept={'image/*'}
                 />
-
-                <Popover
-                  id="mouse-over-popover"
-                  className={classes.popover}
-                  classes={{
-                    paper: classes.paper,
-                  }}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={this.handlePopoverClose}
-                  disableRestoreFocus
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                  }}
-                >
-                  <ul>
-                    {
-                      kyc.map(res => (
-                        <li>{res}</li>
-                      ))
-                    }
-                  </ul>
-                </Popover>
-              </Grid> :
-              <Grid style={{
-                display: 'flex',
-                justifyContent: 'center',
-                height: '100%',
-                alignItems: 'center',
-                width: '100%'
-              }}>
-                {
-                  user.picture ?
-                    this.avatarWithPics(user, className)
-                    :
-                    this.avatarWithoutPics(user, className)
-                }
-                <input
-                  id="file"
-                  ref={fileInput => this.fileInput = fileInput}
-                  style={{display: 'none'}}
-                  name="myImage"
-                  type="file"
-                  onChange={this.onChange}
-                  className="form-control"
-                  accept={'image/*'}
-                />
-              </Grid>
-          }
-          {
-            owner ?
-              <IconButton className={classes.buttonCamera}>
-                <PhotoCameraIcon onClick={this.selectPicture}/>
-              </IconButton>
-              : null
-          }
-
-
+                <label htmlFor="icon-button-file">
+                  <IconButton onClick={this.selectPicture} className={classes.buttonCamera} aria-label="upload picture" component="span">
+                    <PhotoCameraIcon/>
+                  </IconButton>
+                </label>
+              </Grid> : null}
+          >
+            {
+              user.picture ?
+                this.avatarWithPics(user, classes)
+                :
+                this.avatarWithoutPics(user, classes)
+            }
+          </Badge>
         </Grid>
-      );
-
-    } else {
-      return (
-        <Grid>
-          <Avatar alt="photo de profil" src='/static/basicavatar.png' className={className}/>
-        </Grid>
-      );
-    }
-
+      </Grid>
+    );
   }
 }
 

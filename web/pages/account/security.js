@@ -1,6 +1,4 @@
-const {clearAuthenticationToken}=require('../../utils/authentication');
-const {setAxiosAuthentication}=require('../../utils/authentication');
-const {setAuthToken}=require('../../utils/authentication');
+const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication');
 import React, {Fragment} from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -366,6 +364,7 @@ class security extends React.Component {
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
+                                tabIndex="-1"
                                 aria-label="toggle password visibility"
                                 onClick={() => this.setState({showCurrentPassword: !showCurrentPassword}) }
                                 onMouseDown={ ev => ev.preventDefault()}
@@ -391,6 +390,7 @@ class security extends React.Component {
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
+                            tabIndex="-1"
                             aria-label="toggle password visibility"
                             onClick={() => this.setState({showNewPassword: !showNewPassword}) }
                           >
@@ -414,6 +414,7 @@ class security extends React.Component {
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
+                            tabIndex="-1"
                             aria-label="toggle password visibility"
                             onClick={() => this.setState({showConfirmPassword: !showConfirmPassword}) }
                           >

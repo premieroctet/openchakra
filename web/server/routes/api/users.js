@@ -8,12 +8,12 @@ const mongoose = require('mongoose');
 const path = require('path');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
-const {is_production, is_validation}=require('../../../config/config');
+const {is_production, is_validation, computeUrl}=require('../../../config/config');
 const CronJob = require('cron').CronJob;
 const validateRegisterInput = require('../../validation/register');
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
-const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount} = require('../../utils/mailing');
+const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing');
 const moment = require('moment');
 moment.locale('fr');
 const User = require('../../models/User');
@@ -22,7 +22,6 @@ const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
-const {computeUrl} = require('../../../config/config');
 const {emptyPromise} = require('../../../utils/promise.js');
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../utils/mangopay');
@@ -197,6 +196,21 @@ router.post('/register', (req, res) => {
             .then(user => {
               createMangoClient(user);
               sendVerificationMail(user, req);
+                // Warning si adresse incomplète
+                if (!user.billing_address.gps.lat) {
+                  User.find({is_admin: true}, 'firstname email phone')
+                    .then (admins => {
+                      let log_link = new URL(`/dashboard/logAsUser?email=${user.email}`, computeUrl(req));
+                      const msg=`Compléter l'adresse pour le compte ${user.email}, connexion via ${log_link}`
+                      const subject=`Alerte adresse incorrecte pour ${user.email}`
+                      admins.forEach( admin => {
+                        sendAlert(admin, subject, msg)
+                      })
+                    })
+                    .catch ( err => {
+                      console.error(err)
+                    })
+                }
               res.json(user);
             })
             .catch(err => console.error(err));
@@ -557,13 +571,13 @@ router.post('/login', (req, res) => {
     return res.status(400).json(errors);
   }
 
-  const email = req.body.username;
+  const email = req.body.username.toLowerCase().trim();
   const password = req.body.password;
   var role = req.body.role;
   var b2b_login = req.body.b2b_login;
 
   // Find user by email
-  User.findOne({email})
+  User.findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('shop', 'is_particular')
     .then(user => {
       // Check for user
@@ -819,10 +833,10 @@ router.get('/email/check', (req, res) => {
 // @Route POST /myAlfred/api/users/forgotPassword
 // Send email with link for reset password
 router.post('/forgotPassword', (req, res) => {
-  const email = req.body.email;
+  const email = (req.body.email || "").toLowerCase().trim();
   const role = req.body.role
 
-  User.findOne({email: email})
+  User.findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('company')
     .then(user => {
       if (user === null) {

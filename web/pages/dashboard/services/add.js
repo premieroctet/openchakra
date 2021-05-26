@@ -1,5 +1,4 @@
-const {clearAuthenticationToken}=require('../../../utils/authentication')
-const {setAxiosAuthentication}=require('../../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -227,7 +226,7 @@ class add extends React.Component {
       .post('/myAlfred/api/admin/service/all', formData)
       .then(res => {
         alert('Service ajouté');
-        Router.push({pathname: '/dashboard/services/all'});
+        Router.push(`/dashboard/services/view?id=${res.data._id}`);
       })
       .catch(err => {
           toast.error(JSON.stringify(err.response.data, null, 2));

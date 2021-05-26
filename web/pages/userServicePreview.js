@@ -1,5 +1,4 @@
-const {clearAuthenticationToken}=require('../utils/authentication')
-const {setAxiosAuthentication}=require('../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
@@ -16,35 +15,26 @@ import Hidden from '@material-ui/core/Hidden';
 import MapComponent from '../components/map';
 import {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
-import Switch from '@material-ui/core/Switch';
 import {Helmet} from 'react-helmet';
 import Link from 'next/link';
-
 import Topic from "../hoc/Topic/Topic";
 import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import GallerySlidePics from "../components/GallerySlidePics/GallerySlidePics";
 import SummaryCommentary from "../components/SummaryCommentary/SummaryCommentary"
 import DrawerBooking from "../components/Drawer/DrawerBooking/DrawerBooking";
-import LayoutAccount from "../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../hoc/Layout/LayoutMobile";
-import withSlide from "../hoc/Slide/SlideShow";
-import withGrid from "../hoc/Grid/GridCard";
-import CardAlbum from "../components/Card/CardAlbum/CardAlbum";
-const ImageSlide=withSlide(withGrid(CardAlbum));
-const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
 const {BOOK_STATUS, COMM_CLIENT, MANAGER}=require('../utils/consts')
-
 const isEmpty = require('../server/validation/is-empty');
 const {isDateAvailable} = require('../utils/dateutils')
-const {computeBookingReference} = require('../utils/functions');
 const {emptyPromise} = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
-const {computeDistanceKm} = require('../utils/functions');
+const {computeDistanceKm, computeBookingReference} = require('../utils/functions');
+const {snackBarError}=require('../utils/notifications')
+
 const moment = require('moment');
-const {is_b2b_admin, is_b2b_manager, get_role}=require('../utils/context')
+const {isB2BAdmin, isB2BManager, getRole}=require('../utils/context')
 
 moment.locale('fr');
 registerLocale('fr', fr);
@@ -91,12 +81,17 @@ class UserServicesPreview extends React.Component {
       albums:[],
       excludedDays: [],
       available_budget: Number.MAX_SAFE_INTEGER,
+      pending: false,
     };
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
     this.book = this.book.bind(this)
     this.getClientAddress = this.getClientAddress.bind(this)
     this.isInPerimeter = this.isInPerimeter.bind(this)
+  }
+
+  setState = (st, cb) => {
+    return super.setState(st, cb)
   }
 
   static getInitialProps({query: {id, address}}) {
@@ -144,15 +139,15 @@ class UserServicesPreview extends React.Component {
             let user = res ? res.data : null
             // Mode compagnie : l'admin a un budget illimité comme un user standard, le manager a le budget de son département
             if (user && user.company) {
-              axios.get(`/myAlfred/api/companies/budget/${user._id}/${get_role()}`)
+              axios.get(`/myAlfred/api/companies/budget/${user._id}/${getRole()}`)
                 .then ( res => {
-                  this.setState({available_budget: res.data, role: get_role()})
+                  this.setState({available_budget: res.data, role: getRole()})
                 })
                 .catch (err => {
                   console.error(err)
                   this.setState({available_budget: 0})
                 })
-              axios.get(`/myAlfred/api/companies/supported/${user._id}/${serviceUser.service._id}/${get_role()}`)
+              axios.get(`/myAlfred/api/companies/supported/${user._id}/${serviceUser.service._id}/${getRole()}`)
                 .then( res => {
                   const percent=res.data
                   this.setState({company_percent: percent})
@@ -163,7 +158,7 @@ class UserServicesPreview extends React.Component {
 
             }
             st['user']=user
-            const promise = is_b2b_admin(user)||is_b2b_manager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
             promise
               .then(res => {
                 var allAddresses = {'main': res.data.billing_address};
@@ -394,7 +389,7 @@ class UserServicesPreview extends React.Component {
   };
 
   computeTotal = () => {
-    const {user, service, available_budget, company_percent}=this.state
+    const {available_budget, company_percent}=this.state
 
     let totalPrestations = 0;
     let totalCesu = 0;
@@ -457,7 +452,7 @@ class UserServicesPreview extends React.Component {
   };
 
   hasWarningBudget = () => {
-    if (get_role()==MANAGER) {
+    if (getRole()==MANAGER) {
       const warningBudget = this.state.company_amount < this.state.total
       return warningBudget
     }
@@ -509,7 +504,12 @@ class UserServicesPreview extends React.Component {
 
   book = actual => { //actual : true=> book, false=>infos request
 
-    const {count, user, serviceUser} = this.state
+    const {count, user, serviceUser, pending} = this.state
+
+    if (pending) {
+      snackBarError(`Réservation en cours de traitement`)
+      return
+    }
 
     let prestations = [];
     this.state.prestations.forEach(p => {
@@ -580,6 +580,7 @@ class UserServicesPreview extends React.Component {
         return
       }
 
+      this.setState({pending: true})
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
           const booking = response.data
@@ -593,7 +594,10 @@ class UserServicesPreview extends React.Component {
               }
             });
         })
-        .catch(err => console.error(err))
+        .catch(err => {
+          this.setState({ pending: false})
+          console.error(err)
+        })
     })
   }
 
@@ -634,21 +638,12 @@ class UserServicesPreview extends React.Component {
     return this.state.albums.find( a => a._id===id)
   };
 
-  getAlbumPictures = () => {
-    const album=this.getAlbum(this.state.selectedAlbum);
-    const res = album ? album.pictures : []
-    return res
-  };
-
   content = (classes) => {
     const serviceAddress = this.state.serviceUser.service_address;
 
     const filters = this.extractFilters();
 
     const pricedPrestations = this.computePricedPrestations();
-
-    const pictures = this.getAlbumPictures();
-
 
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
@@ -659,7 +654,7 @@ class UserServicesPreview extends React.Component {
                 <Grid container className={classes.avatarAnDescription}>
                   <Grid item xl={3} sm={3} className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
-                      <UserAvatar user={this.state.alfred} className={classes.avatarLetter}/>
+                      <UserAvatar user={this.state.alfred}/>
                     </Grid>
                   </Grid>
                   <Grid item xl={9} sm={9} className={classes.flexContentAvatarAndDescription}>
@@ -722,7 +717,6 @@ class UserServicesPreview extends React.Component {
                 <Grid className={classes.scheduleContainer}>
                   <Topic
                     underline={true}
-                    style={classes}
                     titleTopic={'Sélectionnez vos dates'}
                     titleSummary={this.state.alfred.firstname ? `Choisissez vos dates selon les disponibilités de ${this.state.alfred.firstname}` : ''}
                   >
@@ -778,7 +772,7 @@ class UserServicesPreview extends React.Component {
                       </Grid> : ''
                   }
                 </Grid>
-                <Hidden only={['xl', 'lg']}>
+                <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
                   <Grid className={classes.showReservation}>
                     <Button
                       variant="contained"
@@ -790,7 +784,7 @@ class UserServicesPreview extends React.Component {
                       Voir les services
                     </Button>
                   </Grid>
-                  <Hidden only={['xl', 'lg']}>
+                  <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
                     <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)}>
                       <Grid className={classes.drawerContent}>
                         <DrawerBooking
@@ -846,24 +840,6 @@ class UserServicesPreview extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
-              { false ? <Grid style={{marginTop: '5%'}}>
-                <Topic
-                  underline={true}
-                  titleTopic={this.state.alfred.firstname ? `Les photos de ${this.state.alfred.firstname}` : ''}
-                  titleSummary={this.state.alfred.firstname ? `Un aperçu du travail de ${this.state.alfred.firstname}` : ''}
-                  needBackground={true}
-                >
-                  <Grid>
-                    {pictures.length === 0 ? null :
-                      <ImageSlide
-                        model={new SlideGridDataModel(pictures, 4, 1, true)}
-                        style={classes}
-                      />
-                    }
-                  </Grid>
-                </Topic>
-              </Grid>: null}
-
               {
                 this.state.reviews.length === 0 ? null :
                   <Grid style={{marginTop: '5%'}}>
@@ -874,7 +850,6 @@ class UserServicesPreview extends React.Component {
                     >
                       <SummaryCommentary user={this.state.alfred._id}  serviceUser={this.props.service_id}/>
                     </Topic>
-
                   </Grid>
               }
             </Grid>
@@ -886,7 +861,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes, address} = this.props;
-    const {service,alfred, user, total, available_budget} = this.state;
+    const {service,alfred, user} = this.state;
 
     if (!this.state.serviceUser) {
       return null
@@ -902,12 +877,12 @@ class UserServicesPreview extends React.Component {
           <meta property="og:type" content="website"/>
           <meta property="og:url" content="https://my-alfred.io"/>
         </Helmet>
-        <Hidden only={['xs', ]}>
+        <Hidden only={['xs']} implementation={'css'} className={classes.hidden}>
           <Layout user={user} selectedAddress={address}>
             {this.content(classes)}
           </Layout>
         </Hidden>
-        <Hidden only={['lg', 'xl', 'sm', 'md']}>
+        <Hidden only={['lg', 'xl', 'sm', 'md']} implementation={'css'} className={classes.hidden}>
           <LayoutMobile>
             {this.content(classes)}
           </LayoutMobile>

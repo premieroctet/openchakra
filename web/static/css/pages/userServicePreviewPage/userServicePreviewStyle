@@ -9,62 +9,8 @@ export default theme => ({
       marginTop: '5vh'
     }
   },
-  badge: {
-    color: 'white',
-  },
-  boxRating: {
-    margin: 0,
-  },
-  rating: {
-    marginLeft: -15,
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 'large',
-    },
-  },
-  responsiveListContainer: {
-    width: '80%',
-    [theme.breakpoints.down('xs')]: {
-      margin: 0,
-      height: 'auto',
-      display: 'flex',
-      flexDirection: 'column',
-      width: '100%',
-    },
-  },
-  noPadding: {
-    padding: 0,
-
-  },
-  minWidth: {
-    minWidth: 30,
-  },
-  sizeText: {
-    fontSize: 'small',
-  },
-  flexPosition: {
-    display: 'flex',
-  },
   itemAvatar: {
     flexDirection: 'column',
-  },
-  avatarLetter: {
-    height: 100,
-    width: 100,
-    margin: 'auto',
-    fontSize: 'xx-large',
-  },
-  textAvatar: {
-    textAlign: 'center',
-    color: 'black',
-    margin: 'auto',
-    fontSize: 20,
-  },
-  skillsContentContainer: {
-    display: 'flex',
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
   },
   contentRight: {
     width: '100%',
@@ -82,21 +28,6 @@ export default theme => ({
     [theme.breakpoints.down('md')]: {
       width: '100%',
       display: 'flex',
-    },
-  },
-
-  hrStyle: {
-    width: 500,
-    [theme.breakpoints.down('xs')]: {
-      width: '90%',
-    },
-  },
-  imageStyle: {
-    width: 25,
-    height: 25,
-    [theme.breakpoints.down('xs')]: {
-      height: 20,
-      width: 20,
     },
   },
   buttonReservation: {
@@ -127,6 +58,7 @@ export default theme => ({
   },
   showReservation: {
     display: 'flex',
+    width: '100%',
     justifyContent: 'center',
   },
 
@@ -152,77 +84,8 @@ export default theme => ({
       marginTop: 10,
     },
   },
-  itemListContainer: {
-    width: '100%',
-    display: 'flex',
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-  },
-  middleHr: {
-    width: 400,
-    [theme.breakpoints.down('xs')]: {
-      width: '90%',
-    },
-  },
   scheduleContainer: {
     marginTop: '15%',
-  },
-  scheduleContainerTitle: {
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-  },
-  basketMinimumContainer: {
-    marginTop: 30,
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-  },
-  textContentBasket: {
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-      marginLeft: 15,
-      marginRight: 15,
-    },
-  },
-  priceBasketContent: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 20,
-    },
-  },
-  delayPrevenance: {
-    marginTop: 30,
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-  },
-  textContentDelay: {
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-      marginLeft: 15,
-      marginRight: 15,
-    },
-  },
-  delayPrevenanceContent: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 20,
-    },
   },
   perimeterContent: {
     marginTop: '15%',
@@ -231,49 +94,6 @@ export default theme => ({
       justifyContent: 'center',
       flexDirection: 'column',
       alignItems: 'center',
-    },
-  },
-  textContentPerimeter: {
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-      marginLeft: 15,
-      marginRight: 15,
-    },
-  },
-  bookingConditionContent: {
-    marginTop: 30,
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-  },
-  bookingConditionContentTitle: {
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-    },
-  },
-  listContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: 15,
-    },
-  },
-  listStyle: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  commentaryContent: {
-    marginTop: 30,
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginBottom: 100,
     },
   },
   equipmentsContainer: {
@@ -288,19 +108,6 @@ export default theme => ({
     '& .ListAlfredConditions-mainContainerListAlfred-144':{
       padding: '5%'
     }
-  },
-  textEquipments: {
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-      marginLeft: 15,
-      marginRight: 15,
-    },
-  },
-  marginRight: {
-    marginRight: 20,
-  },
-  textField: {
-    width: 70,
   },
 
   userServicePreviewButtonProfil:{
@@ -501,52 +308,12 @@ export default theme => ({
     alignItems: 'center',
   },
 
-
-  /**BannerReservation**/
-  bannerContainer: {
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-  },
-  darkOverlay: {
-    height: 350,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-  },
-  statusMedia: {
-    position: 'absolute',
-    top: '10%',
-    right: '5%',
-  },
-  chipStyle: {
-    backgroundColor: '#f87280',
-    color: 'white',
-    fontWeight: 'bold',
-    border: '2px solid white',
-  },
-  margin: {
-    height: 'auto',
-  },
-
-
-
-  divider: {
-    height: 28,
-    margin: 4,
-  },
-
-
-
   overrideCssChild:{
     '& .ListAlfredConditions-mainContainerListAlfred-144':{
       padding: '5%'
     }
+  },
+  hidden:{
+    width: '100%'
   }
-
 })

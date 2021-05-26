@@ -17,7 +17,7 @@ class Profile extends React.Component {
     return(
       <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
         <Grid>
-          <UserAvatar user={user} className={classes.avatarLetter}/>
+          <UserAvatar user={user}/>
         </Grid>
         <Grid style={{display: 'flex', flexDirection: 'column', marginLeft: '3vh'}}>
           <Grid>

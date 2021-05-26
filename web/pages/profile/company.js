@@ -1,5 +1,4 @@
 import SnackBar from "../../components/SnackBar/SnackBar";
-
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
@@ -20,7 +19,6 @@ import Typography from "@material-ui/core/Typography";
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import IconButton from "@material-ui/core/IconButton";
 import CreateIcon from "@material-ui/icons/Create";
-import {isEditableUser} from "../../utils/functions";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import Topic from "../../hoc/Topic/Topic";
@@ -31,7 +29,7 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import {is_mode_company} from '../../utils/context';
+import {isModeCompany, isEditableUser} from '../../utils/context';
 
 const moment = require('moment');
 moment.locale('fr');

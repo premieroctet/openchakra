@@ -1,6 +1,5 @@
 import React from 'react'
 import axios from 'axios'
-
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import Album from '../../components/Album/Album'
@@ -11,8 +10,7 @@ import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
-import {isEditableUser} from "../../utils/functions";
-const {getLoggedUserId}=require('../../utils/functions');
+const {getLoggedUserId, isEditableUser}=require('../../utils/context');
 
 class ProfilePictures extends React.Component {
 

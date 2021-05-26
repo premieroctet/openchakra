@@ -1,7 +1,5 @@
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-
-const {clearAuthenticationToken} = require('../../utils/authentication')
-const {setAxiosAuthentication} = require('../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
@@ -24,7 +22,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import styles from '../../static/css/pages/paymentMethod/paymentMethod';
 
-const {is_b2b_admin} = require('../../utils/context')
+const {isB2BAdmin} = require('../../utils/context')
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -95,7 +93,7 @@ class paymentMethod extends React.Component {
         this.setState({
           user: res.data,
           userName: res.data.full_name,
-          is_pro: is_b2b_admin()
+          is_pro: isB2BAdmin()
         });
       })
       .catch(err => {

@@ -18,7 +18,7 @@ var parse = require('url-parse');
 const {inspect} = require('util');
 const {MANGOPAY_ERRORS}=require('../../../utils/mangopay_messages')
 moment.locale('fr');
-const {is_b2b_admin, is_b2b_manager, is_b2b_employee, is_mode_company}=require('../../utils/serverContext')
+const {isB2BAdmin, isB2BManager, isB2BEmployee, isModeCompany}=require('../../utils/serverContext')
 const {computeUrl} = require('../../../config/config');
 const Router=require('next/router')
 const cors = require('cors')
@@ -53,7 +53,7 @@ router.get('/hook', (req, res) => {
 // Create credit card
 // @access private b2b admin
 router.post('/createCard', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const b2b = is_b2b_admin(req)
+  const b2b = isB2BAdmin(req)
   if (b2b) {
     console.log(`Creating card for company ${req.user.company}`)
   }
@@ -89,7 +89,7 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
   const fees = req.body.fees * 100;
   const returnUrl= `/paymentSuccess?booking_id=${req.body.booking_id}`
 
-  const promise=is_mode_company(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
 
   promise
     .then(entity => {
@@ -166,7 +166,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
   const amount = req.body.amount * 100;
   const fees = req.body.fees * 100;
   const id_card = req.body.id_card;
-  const promise=is_mode_company(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
 
   promise
     .then(entity => {
@@ -265,7 +265,7 @@ router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req
 
 const get_cards = req => {
   return new Promise( (resolve, reject) => {
-    const promise=is_mode_company(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+    const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
     promise
       .then(entity => {
         mangoApi.Users.getCards(entity.id_mangopay, {parameters: { per_page: 100}})
@@ -301,7 +301,7 @@ router.get('/activeCards', passport.authenticate('jwt', {session: false}), (req,
   get_cards(req)
     .then( cards =>{
       // B2B manager or employee : retain only cards allowed for group
-      const group_mode=is_b2b_manager(req) ? MICROSERVICE_MODE : is_b2b_employee(req) ? CARETAKER_MODE : null
+      const group_mode=isB2BManager(req) ? MICROSERVICE_MODE : isB2BEmployee(req) ? CARETAKER_MODE : null
       if (group_mode) {
         Group.findOne({ members : req.user.id, type: group_mode}, 'cards')
           .then( group => {

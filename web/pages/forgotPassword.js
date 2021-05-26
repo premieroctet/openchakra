@@ -12,7 +12,7 @@ import Router from 'next/router';
 const {snackBarSuccess, snackBarError} = require('../utils/notifications');
 const {ADMIN, MANAGER} = require('../utils/consts')
 const _ = require('lodash')
-import {is_b2b_style} from "../utils/context";
+import {isB2BStyle} from "../utils/context";
 
 
 class forgotPassword extends React.Component {
@@ -83,7 +83,7 @@ class forgotPassword extends React.Component {
               />
             </Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-              <Button variant="contained" classes={{root: classes.buttonSubmit}}  style={{backgroundColor: is_b2b_style(user) ? '#353A51' : 'rgba(178,204,251,1)'}} onClick={this.onSubmit}>
+              <Button variant="contained" classes={{root: classes.buttonSubmit}}  style={{backgroundColor: isB2BStyle(user) ? '#353A51' : 'rgba(178,204,251,1)'}} onClick={this.onSubmit}>
                 Valider
               </Button>
             </Grid>

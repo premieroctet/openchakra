@@ -4,8 +4,7 @@ import Layout from '../../hoc/Layout/Layout'
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 import axios from 'axios'
-const {isEditableUser}=require('../../utils/functions');
-const {is_b2b_style}=require('../../utils/context')
+const {isEditableUser, isB2BStyle}=require('../../utils/context')
 import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayout'
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
@@ -80,9 +79,9 @@ class ProfileLayout extends CompanyComponent {
             <Grid className={classes.profilLayoutBackgroundContainer}>
               <Grid className={classes.profilLayoutMargin}>
                 <Grid className={classes.profilLayoutBox}>
-                  <Grid className={is_b2b_style() ? classes.profilLayoutBannerImgPro : classes.profilLayoutBannerImg}>
+                  <Grid className={isB2BStyle() ? classes.profilLayoutBannerImgPro : classes.profilLayoutBannerImg}>
                     <Grid className={classes.profilLayoutAvatar}>
-                      <UserAvatar alt={!this.is_mode_company() ? user.firstname : company ? company.name : ''} user={!this.is_mode_company() ? user : company ? company : ''} className={classes.cardPreviewLarge}/>
+                      <UserAvatar alt={!this.isModeCompany() ? user.firstname : company ? company.name : ''} user={!this.isModeCompany() ? user : company ? company : ''} fireRefresh={this.componentDidMount}/>
                     </Grid>
                   </Grid>
                   <Grid style={{
@@ -93,13 +92,13 @@ class ProfileLayout extends CompanyComponent {
                   }}>
                     <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Grid>
-                        {this.is_mode_company() ?
+                        {this.isModeCompany() ?
                           <h3>{company ? company.name : ''}</h3>
                           :
                           <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
                         }
                       </Grid>
-                      {this.is_mode_company() ? null :
+                      {this.isModeCompany() ? null :
                         <Grid>
                           <Typography style={{color: 'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
                         </Grid>
@@ -108,7 +107,7 @@ class ProfileLayout extends CompanyComponent {
                     </Grid>
                   </Grid>
                   {
-                    !this.is_mode_company() ?
+                    !this.isModeCompany() ?
                       <Grid className={classes.profilLayoutScrollMenu}>
                         <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index}
                                     extraParams={{user: this.props.user}}/>

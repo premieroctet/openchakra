@@ -1,4 +1,4 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
@@ -15,7 +15,6 @@ import ContactMailIcon from '@material-ui/icons/ContactMail';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Divider from "@material-ui/core/Divider";
 import InfoIcon from '@material-ui/icons/Info';
-const  {clearAuthenticationToken}=require('../../utils/authentication')
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import UserAvatar from "../../components/Avatar/UserAvatar";
 
@@ -62,7 +61,7 @@ class myProfile extends React.Component{
         <LayoutMobile currentIndex={4}>
           <Grid style={{display: 'flex', alignItems: 'center', marginTop: '5vh'}}>
             <Grid className={classes.cardPreviewContainerAvatar}>
-              <UserAvatar alt={user.firstName} user={user} className={classes.cardPreviewLarge} />
+              <UserAvatar alt={user.firstName} user={user}/>
             </Grid>
             <Grid style={{marginLeft: '5vh'}}>
               <h2>Hello {user.firstname}</h2>

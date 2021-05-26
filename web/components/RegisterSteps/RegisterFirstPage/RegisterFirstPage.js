@@ -103,6 +103,7 @@ class RegisterFirstPage extends React.Component{
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
+                            tabIndex="-1"
                             aria-label="toggle password visibility"
                             onClick={() => this.props.handleClickShowPassword()}
                             onMouseDown={(e) => e.preventDefault()}
@@ -137,9 +138,10 @@ class RegisterFirstPage extends React.Component{
                       endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => this.props.handleClickShowPassword2()}
-                        onMouseDown={(e) => e.preventDefault()}
+                          tabIndex="-1"
+                          aria-label="toggle password visibility"
+                          onClick={() => this.props.handleClickShowPassword2()}
+                          onMouseDown={(e) => e.preventDefault()}
                         >
                           {state.showPassword2 ? <Visibility /> : <VisibilityOff />}
                         </IconButton>

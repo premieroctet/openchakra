@@ -13,8 +13,7 @@ import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import axios from "axios";
 import TrustAndSecurity from "./TrustAndSecurity/TrustAndSecurity";
 import Divider from "@material-ui/core/Divider";
-const {getLoggedUserId}=require('../../utils/functions')
-const {is_b2b_style}=require('../../utils/context')
+const {getLoggedUserId, isB2BStyle}=require('../../utils/context')
 const {PRO, PART}=require('../../utils/consts')
 
 class Layout extends React.Component {
@@ -42,12 +41,12 @@ class Layout extends React.Component {
         console.error((err))
       })
 
-    axios.get(`/myAlfred/api/category/${is_b2b_style(this.state.user) ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
       .then(res => {
         let cat = res.data;
         // Set label en fonction de PRO PART
         cat.forEach( c => {
-          c.label=is_b2b_style(this.state.user) ? c.professional_label : c.particular_label
+          c.label=isB2BStyle(this.state.user) ? c.professional_label : c.particular_label
         })
         this.setState({categories: cat})
       })
@@ -66,7 +65,7 @@ class Layout extends React.Component {
 
     return (
       <Grid>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs', 'sm', 'md']} implementation={"css"} className={classes.hidden}>
           <InfoBar/>
         </Hidden>
         <NavBar selectedAddress={selectedAddress} keyword={keyword} key={this.logged}/>
@@ -80,13 +79,13 @@ class Layout extends React.Component {
         </Grid>
         {children}
         <Grid className={classes.mainContainerStyleFooter}>
-          <Hidden only={['xs', 'sm', 'md']}>
+          <Hidden only={['xs', 'sm', 'md']} implementation={"css"} className={classes.hidden}>
             <Divider style={{width: '100%'}}/>
-            <Grid style={{width: '90%', marginTop: '2vh'}}>
+            <Grid style={{width: '90%', marginTop: '2vh', marginBottom: '2vh'}}>
               <TrustAndSecurity/>
             </Grid>
           </Hidden>
-          <Grid className={classes.generalWidthFooter} >
+          <Grid className={classes.generalWidthFooter}>
             <Grid style={{width: '85%'}}>
               <Footer/>
             </Grid>

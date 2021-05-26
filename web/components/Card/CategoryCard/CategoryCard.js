@@ -5,7 +5,7 @@ import styles from '../../../static/css/components/Card/CategoryCard/CategoryCar
 import withStyles from "@material-ui/core/styles/withStyles";
 import Link from 'next/link';
 import axios from "axios";
-const {is_b2b_style}=require('../../../utils/context')
+const {isB2BStyle}=require('../../../utils/context')
 
 class CategoryCard extends React.Component {
 
@@ -46,12 +46,12 @@ class CategoryCard extends React.Component {
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer'}}>
           <Grid className={classes.categoryCardMedia}>
             <Grid
-              style={{backgroundImage: `url('${is_b2b_style(user) ? item.professional_picture : item.particular_picture}')`}}
+              style={{backgroundImage: `url('${isB2BStyle(user) ? item.professional_picture : item.particular_picture}')`}}
               className={classes.categoryCardBackground}
             />
           </Grid>
           <Grid>
-            <h6>{is_b2b_style(user) ? item.professional_label : item.particular_label}</h6>
+            <h6>{isB2BStyle(user) ? item.professional_label : item.particular_label}</h6>
           </Grid>
         </Grid>
       </Link>

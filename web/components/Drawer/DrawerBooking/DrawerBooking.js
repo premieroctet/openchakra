@@ -21,7 +21,7 @@ import AddIcon from "@material-ui/icons/Add";
 import styles from '../../../static/css/components/DrawerBooking/DrawerBooking';
 import withStyles from "@material-ui/core/styles/withStyles";
 const isEmpty = require('../../../server/validation/is-empty');
-const {getLoggedUserId} = require('../../../utils/functions')
+const {getLoggedUserId} = require('../../../utils/context')
 const {isMomentAvailable} = require('../../../utils/dateutils')
 const moment = require('moment');
 moment.locale('fr');
@@ -331,9 +331,6 @@ class DrawerBooking extends React.Component{
                       <Grid>
                         <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                           <Grid style={{display: 'flex', alignItems: 'center'}}>
-                            <Grid>
-
-                            </Grid>
                             <Grid>
                               <label>Retrait & livraison</label>
                             </Grid>

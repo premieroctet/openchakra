@@ -12,7 +12,7 @@ import Box from '../Box/Box'
 import Typography from "@material-ui/core/Typography";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Hidden from "@material-ui/core/Hidden";
-const {isLoggedUserAlfred}=require('../../utils/functions')
+const {isLoggedUserAlfred}=require('../../utils/context')
 
 class AddService extends React.Component {
   constructor(props) {

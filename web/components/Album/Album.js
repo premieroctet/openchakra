@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-const {isEditableUser}=require('../../utils/functions');
+const {isEditableUser}=require('../../utils/context');
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Dialog from '@material-ui/core/Dialog';

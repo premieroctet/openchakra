@@ -18,15 +18,14 @@ import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Dialog, DialogActions, DialogContent, Divider} from "@material-ui/core";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import ResaService from "../components/HomePage/ResaService/ResaService";
-import {is_b2b_style, is_application, is_mobile} from "../utils/context";
+import {isB2BStyle, isApplication, isMobile} from "../utils/context";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import {deviceType, isMobile, osName, isAndroid, isIOS, getUA} from 'react-device-detect';
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 
 const {PRO, PART} = require('../utils/consts')
-const {getLoggedUserId} = require('../utils/functions');
+const {getLoggedUserId} = require('../utils/context');
 import Router from 'next/router';
 
 
@@ -61,7 +60,7 @@ class Home extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
-    if (is_mobile()) {
+    if (isMobile()) {
       this.setState({open: true})
     }
 
@@ -79,13 +78,13 @@ class Home extends React.Component {
         console.error((err))
       })
 
-    axios.get(`/myAlfred/api/category/${is_b2b_style(this.state.user) ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
       .then(res => {
         let category = res.data;
         this.setState({category: category});
       }).catch(err => console.error(err));
 
-    axios.get(`/myAlfred/api/serviceUser/home/${is_b2b_style(this.state.user) ? PRO : PART}`)
+    axios.get(`/myAlfred/api/serviceUser/home/${isB2BStyle(this.state.user) ? PRO : PART}`)
       .then(response => {
         let alfred = response.data;
         this.setState({alfred: alfred});
@@ -152,7 +151,7 @@ class Home extends React.Component {
           </Hidden>
           <Grid container className={classes.navbarAndBannerContainer}>
             <Grid item xl={12} lg={12} sm={12} md={12} xs={12}
-                  className={is_b2b_style(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}>
+                  className={isB2BStyle(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}>
               <Grid className={classes.navbarComponentPosition}>
                 <NavBar/>
               </Grid>
@@ -164,7 +163,7 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           {
-            is_b2b_style(user) ?
+            isB2BStyle(user) ?
               <iframe
                 onLoad={this.resizeFrame}
                 frameBorder="0"
@@ -181,7 +180,7 @@ class Home extends React.Component {
               <CategoryTopic category={category}/>
             </Grid>
           </Grid>
-          <Grid container className={is_b2b_style(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}>
+          <Grid container className={isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}>
             <Grid className={classes.generalWidthContainer}>
               <HowItWorks/>
             </Grid>
@@ -192,7 +191,7 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           {
-            is_b2b_style(user) ? null :
+            isB2BStyle(user) ? null :
               <Grid container className={classes.becomeAlfredComponent}>
                 <Grid className={classes.generalWidthContainer}>
                   <ResaService/>
@@ -201,7 +200,7 @@ class Home extends React.Component {
           }
           <Hidden only={['xs', 'sm']}>
             {
-              is_b2b_style(user) ? null :
+              isB2BStyle(user) ? null :
                 <Grid container className={classes.mainNewsLetterStyle}>
                   <Grid className={classes.generalWidthContainerNewsLtter}>
                     <NewsLetter/>
@@ -239,7 +238,7 @@ class Home extends React.Component {
             </Grid>
           </Hidden>
         </Grid>
-        {!is_application() ? open ? this.dialogStore(classes) : null : null}
+        {!isApplication() ? open ? this.dialogStore(classes) : null : null}
       </Grid>
     );
   }

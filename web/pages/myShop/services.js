@@ -23,7 +23,7 @@ import {
   settingService,
 } from '../../utils/validationSteps/validationSteps';
 
-const {getLoggedUserId}=require('../../utils/functions')
+const {getLoggedUserId}=require('../../utils/context')
 
 
 class services extends React.Component {

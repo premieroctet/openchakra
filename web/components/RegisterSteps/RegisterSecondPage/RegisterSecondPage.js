@@ -98,6 +98,7 @@ class RegisterSecondPage extends React.Component{
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item style={{width: '100%'}}>
+              <form>
               <AlgoliaPlaces
                 className={classes.textFieldAlgo}
                 placeholder='Recherchez votre adresse'
@@ -112,6 +113,7 @@ class RegisterSecondPage extends React.Component{
                 onChange={(suggestion) => this.props.onChangeAddress(suggestion)}
                 onClear={() => this.props.onChangeAddress(null)}
               />
+              </form>
               <em style={{color: 'red'}}>{state.cityError}</em>
             </Grid>
           </Grid>

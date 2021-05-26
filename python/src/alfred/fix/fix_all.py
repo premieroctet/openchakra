@@ -16,24 +16,58 @@ from alfred.fix.fix_service_tax import FixServiceTax
 from alfred.fix.fix_multiple_services import FixMultipleServices
 from alfred.fix.fix_user_name import FixUserName
 from alfred.fix.fix_serviceuser_diploma_certification import FixServiceUserDiplomaCertification
+from alfred.fix.fix_missing_rib import FixMissingRib
 
 if __name__ == '__main__':
     db = sys.argv[1]
     print("Fixing db {}".format(db))
-    FixUserCreationDate(db).fix()
+    try:
+      FixUserCreationDate(db).fix()
+    except Exception as e:
+      print(e)
     #FixUserAddress(db).fix()
-    FixShopsCreationDate(db).fix()
-    FixServiceUserAddress(db).fix()
-    FixOrphanShops(db).fix()
-    FixServiceUserBilling(db).fix()
-    FixPhoneNumbers(db).fix()
+    try:
+      FixShopsCreationDate(db).fix()
+    except Exception as e:
+      print(e)
+    try:
+      FixServiceUserAddress(db).fix()
+    except Exception as e:
+      print(e)
+    try:
+      FixOrphanShops(db).fix()
+    except Exception as e:
+      print(e)
+    try:
+      FixServiceUserBilling(db).fix()
+    except Exception as e:
+      print(e)
+    try:
+      FixPhoneNumbers(db).fix()
+    except Exception as e:
+      print(e)
     #FixBookingAmount(db).fix()
     #FixMangoPayAccountTag(db).fix()
     #FixMangoPayWallet(db).fix()
-    FixServiceUserLevel(db).fix()
-    FixServiceUserDiplomaCertification(db).fix()
+    try:
+      FixServiceUserLevel(db).fix()
+    except Exception as e:
+      print(e)
+    try:
+      FixServiceUserDiplomaCertification(db).fix()
+    except Exception as e:
+      print(e)
     #FixSiret(db).fix()
     #FixAddAvailabilities(db).fix()
-    FixServiceTax(db).fix()
-    FixMultipleServices(db).fix()
-    FixUserName(db).fix()
+    try:
+      FixServiceTax(db).fix()
+    except Exception as e:
+      print(e)
+    try:
+      FixMultipleServices(db).fix()
+    except Exception as e:
+      print(e)
+    try:
+      FixUserName(db).fix()
+    except Exception as e:
+      print(e)

@@ -10,7 +10,7 @@ import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
 import styles from '../static/css/pages/resetPassword/resetPassword'
-import {is_b2b_style} from "../utils/context";
+import {isB2BStyle} from "../utils/context";
 const {snackBarSuccess, snackBarError}=require('../utils/notifications')
 const {ADMIN, MANAGER}=require('../utils/consts')
 const _ = require('lodash')
@@ -136,7 +136,7 @@ class resetPassword extends React.Component {
                 <Button
                   variant="contained"
                   onClick={this.onSubmit}
-                  style={{backgroundColor: is_b2b_style(user) ? '#353A51' : 'rgba(178,204,251,1)'}}
+                  style={{backgroundColor: isB2BStyle(user) ? '#353A51' : 'rgba(178,204,251,1)'}}
                   disabled={!(this.state.status1.check && this.state.status2.check)}
                   classes={{root: classes.buttonSubmit}}
                 >

@@ -395,7 +395,9 @@ router.post('/members', passport.authenticate('b2badmin', {session: false}), (re
           roles: [EMPLOYEE],
         })
         newUser.save()
+          .then(newUser => newUser.populate('company'))
           .then( newUser => {
+            sendB2BRegistration(newUser, newUser.email, ROLES[EMPLOYEE], newUser.company.name, req)
             res.json(newUser)
           })
           .catch( err => {

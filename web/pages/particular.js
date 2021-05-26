@@ -10,7 +10,7 @@ class Particular extends React.Component {
 
   componentDidMount() {
     localStorage.removeItem('b2b');
-    Router.push('/')
+    window.location = '/'
   }
 
   render = () => {
