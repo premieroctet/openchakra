@@ -305,7 +305,7 @@ class Schedule extends React.Component {
           :
           null
         }
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container spacing={2} style={{padding: 5}}>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{padding: 5, margin:0, width:'100%'}}>
           {[...Array(nbSchedule)].map((x, i) => {
               let date = new Date(currentDate);
               date.setDate(1);
@@ -313,8 +313,8 @@ class Schedule extends React.Component {
               const monthStr = moment(date).format('M');
               const monthEvents = events.filter(e => moment(e.start).format('M') === monthStr);
               return (
-                <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
-                      sm={nbSchedule === 1 ? 11 : 6} xs={12} className={classes.schedule_height} key={i}>
+                <Grid item xl={nbSchedule === 1 ? 12 : 4} lg={nbSchedule === 1 ? 12 : 4} md={nbSchedule === 1 ? 12 : 6}
+                      sm={nbSchedule === 1 ? 12 : 6} xs={12} className={classes.schedule_height} key={i}>
                   <Calendar
                     key={date}
                     selectable={isMobile() && isUserServicePreview ? null : selectable}

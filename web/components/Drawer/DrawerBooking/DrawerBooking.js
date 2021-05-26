@@ -332,9 +332,6 @@ class DrawerBooking extends React.Component{
                         <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                           <Grid style={{display: 'flex', alignItems: 'center'}}>
                             <Grid>
-
-                            </Grid>
-                            <Grid>
                               <label>Retrait & livraison</label>
                             </Grid>
                           </Grid>

@@ -717,7 +717,6 @@ class UserServicesPreview extends React.Component {
                 <Grid className={classes.scheduleContainer}>
                   <Topic
                     underline={true}
-                    style={classes}
                     titleTopic={'Sélectionnez vos dates'}
                     titleSummary={this.state.alfred.firstname ? `Choisissez vos dates selon les disponibilités de ${this.state.alfred.firstname}` : ''}
                   >
@@ -813,8 +812,9 @@ class UserServicesPreview extends React.Component {
                 </Hidden>
               </Grid>
               {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
+              <Hidden only={['xs', 'sm', 'md']}>
                 <Grid item xl={6} lg={6} md={12} sm={12} xs={12} style={{paddingLeft: '5%', paddingRight: '5%'}}>
-                  <Hidden only={['xs', 'sm', 'md']} implementation={'css'} className={classes.contentRight}>
+                  <Grid className={classes.contentRight}>
                     <DrawerBooking
                       filters={filters}
                       pricedPrestations={pricedPrestations}
@@ -833,8 +833,9 @@ class UserServicesPreview extends React.Component {
                       book={this.book}
                       {...this.state}
                     />
-                  </Hidden>
+                  </Grid>
                 </Grid>
+              </Hidden>
             </Grid>
           </Grid>
           <Grid style={{display: 'flex', justifyContent: 'center'}}>
