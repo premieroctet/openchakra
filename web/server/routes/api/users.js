@@ -567,13 +567,13 @@ router.post('/login', (req, res) => {
     return res.status(400).json(errors);
   }
 
-  const email = req.body.username;
+  const email = req.body.username.toLowerCase().trim();
   const password = req.body.password;
   var role = req.body.role;
   var b2b_login = req.body.b2b_login;
 
   // Find user by email
-  User.findOne({email})
+  User.findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('shop', 'is_particular')
     .then(user => {
       // Check for user
@@ -829,10 +829,10 @@ router.get('/email/check', (req, res) => {
 // @Route POST /myAlfred/api/users/forgotPassword
 // Send email with link for reset password
 router.post('/forgotPassword', (req, res) => {
-  const email = req.body.email;
+  const email = (req.body.email || "").toLowerCase().trim();
   const role = req.body.role
 
-  User.findOne({email: email})
+  User.findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('company')
     .then(user => {
       if (user === null) {
