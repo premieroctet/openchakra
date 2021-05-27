@@ -25,9 +25,12 @@ const serviceFilters = require('../../utils/filters');
 const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts');
 const {normalize} = require('../../../utils/text');
 const parse = require('url-parse')
-const {getRole, get_logged_id}=require('../../utils/serverContext')
+const {getRole, get_logged_id} = require('../../utils/serverContext')
+const {ensureDirectoryExists} = require('../../utils/filesystem')
 
 moment.locale('fr');
+
+ensureDirectoryExists('static/profile/diploma/')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/diploma/');

@@ -291,7 +291,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
 });
 
 // Handle confirmated and after end date => to terminate
-new CronJob('0 */15 * * * *', function () {
+new CronJob('0 */1 * * * *', function () {
   const getNextNumber = (type, key) => {
     return new Promise((resolve, reject) => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}
@@ -316,16 +316,44 @@ new CronJob('0 */15 * * * *', function () {
           if (moment(date).isSameOrAfter(end_date)) {
             console.log(`Booking finished:${b._id}`);
             const type = ['billing', 'receipt', 'myalfred_billing']
-            type.forEach(t => {
-              const key = getKeyDate();
-              const attribute = `${t}_number`;
-              getNextNumber(t, key)
+            const key = getKeyDate();
+            type.map(i => {
+              const attribute = `${type[i]}_number`;
+
+              const result = Promise.all([getNextNumber(type[i], key)])
                 .then(res => {
-                  b[attribute] = `${t.charAt(0).toUpperCase()}${key}${invoiceFormat(res, 5)}`;
+                  return `${type[i].charAt(0).toUpperCase()}${key}${res}`
+
                 })
-                .catch(err => console.error(err)
-                );
+                .catch(err => {
+                  console.error(err)
+                });
+
+              Promise.all([result])
+                .then(data => {
+                  b[attribute] = data;
+
+                })
+                .catch(err => {
+                  console.error(err)
+                })
             })
+
+
+            // type.forEach(t => {
+            //   const key = getKeyDate();
+            //   const attribute = `${t}_number`;
+            //   getNextNumber(t, key)
+            //     .then(res => {
+            //       b[attribute] = `${t.charAt(0).toUpperCase()}${key}${invoiceFormat(res, 5)}`;
+            //     })
+            //     .catch(err => console.error(err)
+            //     ).all([b[attribute]]).then(r => {
+            //     console.log(r)
+            //   }).catch(error => {
+            //     console.log(error)
+            //   });
+            // })
             b.status = BOOK_STATUS.FINISHED
             b.save()
               .then(b => {

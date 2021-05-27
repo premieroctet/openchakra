@@ -14,7 +14,7 @@ module.exports = function validateLoginInput(data) {
 
   if (!(data.google_id || data.facebook_id)) {
     if (!Validator.isEmail(data.username)) {
-      errors.username = 'Email invalide';
+      errors.username = `Email ${data.username} invalide`;
     }
     if (Validator.isEmpty(data.username)) {
       errors.username = 'Veuillez saisir une adresse email';

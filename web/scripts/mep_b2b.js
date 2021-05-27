@@ -89,9 +89,15 @@ const mep_b2b = () => {
     })
     .catch (err => console.error(err))
 
-    User.updateMany({}, { company: null, roles:[]})
-    .then( newModel => {
-      console.log(`ok:${JSON.stringify(newModel)}`)
+    User.find({})
+    .then( users => {
+      users.forEach(u => {
+        u.company = null
+        u.roles = []
+        u.email = u.email.toLowerCase().trim()
+        u.save()
+      })
+      console.log(`ok for users`)
     })
     .catch (err => console.error(err))
 }

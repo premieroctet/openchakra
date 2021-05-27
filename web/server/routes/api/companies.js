@@ -27,9 +27,11 @@ const {getPeriodStart}=require('../../../utils/dateutils')
 const {normalizePhone, bufferToString, normalize, isMobilePhone} = require('../../../utils/text')
 const csv_parse = require('csv-parse/lib/sync')
 const {sendB2BRegistration}=require('../../utils/mailing')
+const {ensureDirectoryExists} = require('../../utils/filesystem')
 
 axios.defaults.withCredentials = true;
 
+ensureDirectoryExists('static/profile/')
 const storageIdPicture = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/');
@@ -52,6 +54,7 @@ const uploadIdPicture = multer({
 });
 
 // Registration proof storage
+ensureDirectoryExists('static/profile/registrationProof/')
 const storageRegProof = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/registrationProof/');

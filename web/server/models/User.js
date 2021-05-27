@@ -22,6 +22,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
+    set: v => v.toLowerCase().trim(),
   },
   password: {
     type: String,

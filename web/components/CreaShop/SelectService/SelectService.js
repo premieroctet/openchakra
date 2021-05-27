@@ -163,7 +163,9 @@ class SelectService extends React.Component {
             <h3 style={{color: '#696767'}}>{
               mode == CREASHOP_MODE.SERVICE_UPDATE ? SHOP.service.subtitle_update : SHOP.service.subtitle
             }</h3>
-            <h3>{SHOP.service.explanation}</h3>
+            { CREASHOP_MODE.SERVICE_UPDATE ? null :
+              <h3>{SHOP.service.explanation}</h3>
+            }
           </Grid>
           {is_particular || !displayAccess ? null :
             <>

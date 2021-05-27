@@ -41,6 +41,7 @@ var util = require('util');
 const {computeUrl}=require('../../../../config/config')
 const {delayedPromise}=require('../../../../utils/promise')
 const {get_token, send_cookie}=require('../../../utils/serverContext')
+const {ensureDirectoryExists} = require('../../../utils/filesystem')
 
 // For Node < 12.0
 if (!Promise.allSettled) {
@@ -1368,6 +1369,7 @@ router.put('/tags/all/:id', passport.authenticate('admin', {session: false}), (r
 
 // CATEGORY
 
+ensureDirectoryExists('static/category/')
 const storageCat = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/category/');
@@ -1563,8 +1565,7 @@ router.put('/category/all/:id?', passport.authenticate('admin', {session: false}
 });
 
 // EQUIPMENTS
-
-
+ensureDirectoryExists('static/equipments/')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/equipments/');
@@ -1734,7 +1735,7 @@ router.put('/equipment/all/:id', passport.authenticate('admin', {session: false}
 });
 
 // SERVICE
-
+ensureDirectoryExists('static/service/')
 const storageService = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/service/');
@@ -1953,7 +1954,7 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
 
 
 // PRESTATION
-
+ensureDirectoryExists('static/prestation/')
 const storagePrestation = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/prestation/');
@@ -2171,7 +2172,7 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
 });
 
 // SHOP BANNER
-
+ensureDirectoryExists('static/shopBanner/')
 const storageBanner = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/shopBanner/');
