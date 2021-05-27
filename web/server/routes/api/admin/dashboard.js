@@ -251,7 +251,7 @@ router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), 
     ServiceUser.find({}, '_id perimeter location service_address.zip_code service_address.city')
       .populate({path : 'service', select: 'label category', populate : {path : 'category', select : 'label'}})
       //.populate('service.category', 'label')
-      .populate({path : 'user', select : 'email shop', populate : { path : 'shop', select : 'is_particular'}})
+      .populate({path : 'user', select : 'email shop', populate : { path : 'shop', select : 'is_professional'}})
       .then(services => {
         if (!services) {
           res.status(400).json({msg: 'No services found'});
@@ -275,7 +275,7 @@ router.get('/users/all_light', passport.authenticate('admin', {session: false}),
   const admin = decode.is_admin;
 
   if (admin) {
-    User.find({active: true}, 'firstname name email')
+    User.find({active: true}, 'firstname name email roles')
       .sort({name: 1})
       .then(user => {
         if (!user) {
@@ -318,6 +318,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
     return;
   }
   const email = req.body.username;
+  const role = req.body.role
 
   // Find user by email
   User.findOne({email})
@@ -330,7 +331,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
       }
 
       if (user.active) {
-        send_cookie(user, null, res)
+        send_cookie(user, role, res)
       } else {
         errors = 'Utilisateur inactif';
         return res.status(400).json(errors);
