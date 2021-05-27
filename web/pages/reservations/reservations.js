@@ -251,6 +251,7 @@ class AllReservations extends React.Component {
   };
 
   content = (classes) =>{
+    const {reservationType} = this.state;
     const reservations = this.filterReservations();
     const alfredMode = this.state.reservationType===0;
 
@@ -312,15 +313,19 @@ class AllReservations extends React.Component {
                           Détail
                         </Button>
                       </Grid>
-                      <Grid item>
-                        <Button
-                          variant={'contained'}
-                          color={'primary'}
-                          classes={{root: classes.buttonResa}}
-                          onClick={() => this.newAppointment(booking)}>
-                          Réserver de nouveau
-                        </Button>
-                      </Grid>
+                      {
+                        reservationType === 1 ?
+                          <Grid item>
+                            <Button
+                              variant={'contained'}
+                              color={'primary'}
+                              classes={{root: classes.buttonResa}}
+                              onClick={() => this.newAppointment(booking)}>
+                              Réserver de nouveau
+                            </Button>
+                          </Grid> : null
+                      }
+
                     </Grid>
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{marginTop: '5vh', marginBottom: '5vh'}}>
