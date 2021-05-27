@@ -20,7 +20,7 @@ class UserAvatar extends React.Component {
       owner: false,
       userId: '',
       isAbout: false,
-      myProfile: false
+      isPageEditable: false
     };
   }
 
@@ -32,8 +32,8 @@ class UserAvatar extends React.Component {
     if(Router.pathname === '/profile/about'){
       this.setState({isAbout: true})
     }
-    if(Router.pathname === '/account/myProfile'){
-      this.setState({myProfile: true})
+    if(Router.pathname === '/account/myProfile' || Router.pathname === '/profile/about'){
+      this.setState({isPageEditable: true})
     }
   }
 
@@ -81,11 +81,10 @@ class UserAvatar extends React.Component {
 
   render() {
     const {user, classes} = this.props;
-    const {currentUser} = this.state;
+    const {currentUser, isPageEditable} = this.state;
 
     if (user) {
       var owner = currentUser === user._id ;
-      var idetablePage = Router.pathname === '/profile/about' || Router.pathname === '/account/myProfile'
     }
 
     return (
@@ -101,7 +100,7 @@ class UserAvatar extends React.Component {
               horizontal: 'right',
             }}
             classes={{root: classes.badge}}
-            badgeContent={ owner && idetablePage ?
+            badgeContent={ owner && isPageEditable ?
               <Grid>
                 <input
                   ref={fileInput => this.fileInput = fileInput}
