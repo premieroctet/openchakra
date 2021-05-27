@@ -14,6 +14,7 @@ import Select from 'react-dropdown-select';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 
+const {ROLES} = require('../../utils/consts')
 
 const styles = {
   loginContainer: {
@@ -63,6 +64,8 @@ class logAsUser extends React.Component {
 
     this.state = {
       user: props.email,
+      roles: [],
+      role: null,
       errors: null,
       muUsers:[],
     };
@@ -85,6 +88,7 @@ class logAsUser extends React.Component {
             label: `${u.name} ${u.firstname} ${u.email} (${u._id})`,
             value: u.email,
             key: u.id,
+            roles: u.roles,
           };
         });
         this.setState({muUsers: muUsers});
@@ -100,14 +104,24 @@ class logAsUser extends React.Component {
   }
 
   onUserChanged = e => {
-    this.setState({user: e[0].value});
+    this.setState({
+      user: e[0].value,
+      roles: e[0].roles.map(r => { return { label: ROLES[r], value: r}}),
+      role: e[0].roles.length==1 ? e[0].roles[0] : null});
   };
+
+  onRoleChanged = e => {
+    console.log(JSON.stringify(e))
+    this.setState({role: e[0].value})
+  }
 
   onSubmit = e => {
     e.preventDefault();
 
     setAxiosAuthentication()
-    axios.post('/myAlfred/api/admin/loginAs', {username: this.state.user})
+    axios.post('/myAlfred/api/admin/loginAs', {
+      username: this.state.user, role: this.state.role
+    })
       .then(res => {
         setAuthToken()
         Router.push('/');
@@ -122,7 +136,10 @@ class logAsUser extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {muUsers, user} = this.state;
+    const {muUsers, user, roles, role} = this.state;
+
+    console.log(`User ${user}, roles:${roles}, role:${role}`)
+    const logEnabled = user && (roles.length==0 || role)
 
     return (
       <Layout>
@@ -135,7 +152,6 @@ class logAsUser extends React.Component {
               <form onSubmit={this.onSubmit}>
                 <Grid item style={{width: '100%'}}>
                   <Typography style={{fontSize: 20}}>Se connecter en tant que</Typography>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
                     <Select
                       input={<Input name="user" id="genre-label-placeholder"/>}
                       displayEmpty
@@ -145,14 +161,29 @@ class logAsUser extends React.Component {
                       values={muUsers.filter(m => m.value==user)}
                       multi={false}
                     >
-                    </Select>
-                  </FormControl>
-
+                  </Select>
+                  { roles && roles.length>0 ?
+                    <>
+                      <Typography style={{fontSize: 15, marginTop: '10px'}}>avec le rôle</Typography>
+                      <Select
+                        input={<Input name="user" id="genre-label-placeholder"/>}
+                        displayEmpty
+                        name="user"
+                        onChange={this.onRoleChanged}
+                        options={roles}
+                        values={roles.filter(r => r.value==role)}
+                        multi={false}
+                      >
+                      </Select>
+                    </>
+                    :
+                    null
+                  }
                 </Grid>
                 <em style={{color: 'red'}}>{this.state.errors}</em>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                   <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}
-                          disabled={!user}>
+                          disabled={!logEnabled}>
                     Connexion
                   </Button>
                 </Grid>
