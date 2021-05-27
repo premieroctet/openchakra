@@ -118,10 +118,9 @@ class SelectService extends React.Component {
                   </Grid>
                   {creationBoutique ?
                     <Grid className={classes.bottomSpacer}>
-                      <Typography className={classes.policySizeContent}>Identifiez maintenant le premier service que vous
-                        souhaitez configurer dans
-                        votre boutique de services. Vous pourrez en ajouter autant que vous voulez dans
-                        votre boutique. Un service n’apparait pas ? Cliquez ici pour l’ajouter.
+                      <Typography className={classes.policySizeContent}>
+			  Sélectionnez votre service, vous pouvez saisir des mots-clés pour faciliter la recherche.<br/>
+			  Si vous souhaitez en proposer plusieurs, vous pourrez en ajouter autant que vous le souhaitez par la suite.
                       </Typography>
                     </Grid> : null
                   }
