@@ -102,7 +102,6 @@ class home extends React.Component {
                   <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
                   <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                   <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
-                  <Link href="/dashboard/options/all"><a>Options</a></Link><br/>
                   { false ? // Générer boutiques si nécessaire seulement
                     <CSVLink asyncOnClick={true} data={this.state.shopsData} filename="shops.csv" separator={';'}
                              target="_blank">Export boutiques</CSVLink>

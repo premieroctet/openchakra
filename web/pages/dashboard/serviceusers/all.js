@@ -1,4 +1,4 @@
-const {setAxiosAuthentication}=require('../../../utils/authentication')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -9,24 +9,12 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Link from 'next/link';
 import Router from 'next/router';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import TablePagination from '@material-ui/core/TablePagination';
-import IconButton from '@material-ui/core/IconButton';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
-import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
 const  {BigList}=require('../../../components/BigList/BigList')
 const moment = require('moment-timezone');
 moment.locale('fr');
-const {MANGOPAY_CONFIG}=require('../../../config/config')
+const {insensitiveComparator}=require('../../../utils/text')
 
 
 const styles = theme => ({
@@ -34,28 +22,6 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'top',
     flexDirection: 'column',
-
-  },
-  card: {
-    padding: '1.5rem 3rem',
-    marginTop: '100px',
-  },
-  cardContant: {
-    flexDirection: 'column',
-  },
-  linkText: {
-    textDecoration: 'none',
-    color: 'black',
-    fontSize: 12,
-    lineHeight: 4.15,
-  },
-});
-
-const actionsStyles = theme => ({
-  root: {
-    flexShrink: 0,
-    color: theme.palette.text.secondary,
-    marginLeft: theme.spacing(2.5),
   },
 });
 
@@ -68,13 +34,13 @@ class all extends React.Component {
 
   this.columnDefs=[
       {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Email", field: "user.email"},
-      {headerName: "Particulier", field: "user.shop.is_particular"},
-      {headerName: "Service", field: "service.label"},
-      {headerName: "Catégorie", field: "service.category.label"},
-      {headerName: "Localisation (Client/Alfred/Visio)", field: "location", cellRenderer: 'locationRenderer',},
+      {headerName: "Email", field: "user.email", comparator: insensitiveComparator},
+      {headerName: "Pro", field: "user.shop.is_professional", cellRenderer: 'booleanCellRenderer'},
+      {headerName: "Service", field: "service.label", comparator: insensitiveComparator},
+      {headerName: "Catégorie", field: "service.category.label", comparator: insensitiveComparator},
+      {headerName: "Localisation (Client/Alfred/Visio)", field: "location", cellRenderer: 'locationRenderer'},
       {headerName: "Code postal", field: "service_address.zip_code"},
-      {headerName: "Ville", field: "service_address.city"},
+      {headerName: "Ville", field: "service_address.city", comparator: insensitiveComparator},
     ]
 
   }
@@ -88,7 +54,7 @@ class all extends React.Component {
         let services = response.data;
         services.forEach( s => {
           try {
-            s.user.shop.is_particular = Boolean(s.user.shop[0].is_particular)
+            s.user.shop.is_professional = Boolean(s.user.shop[0].is_professional)
           }
           catch (error) {
             console.error(`Err on ${s._id}:${error}`)
@@ -97,29 +63,33 @@ class all extends React.Component {
         this.setState({services: services});
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         if (error.response.status === 401 || error.response.status === 403) {
-          Router.push({pathname: '/login'});
+	  clearAuthenticationToken()
+          Router.push({pathname: '/'});
         }
       });
+  }
+
+  onCellClicked = event => {
+    // window.open(`/dashboard/users/view?id=${data._id}`, '_blank')
+    const {colDef, rowIndex, data, value}=event
+
+    if (colDef.field=='service.label') {
+      window.open(`/userServicePreview?id=${data._id}`, '_blank')
+    }
+    else {
+      window.open(`/profile/about?user=${data.user._id}`, '_blank')
+    }
   }
 
   render() {
     const {classes} = this.props;
     const {services} = this.state;
 
-    if (services.length==0) {
-      return null
-    }
-
     return (
       <Layout>
-        <Grid container style={{marginTop: 70}}>
-        </Grid>
         <Grid container className={classes.signupContainer} style={{width:'100%'}}>
-	        <Link href={'/dashboard/home'}>
-            <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour dashboard</span></Typography>
-	        </Link>
           <Grid style={{width: '90%'}}>
             <Paper style={{width: '100%'}}>
               <BigList
@@ -127,6 +97,7 @@ class all extends React.Component {
                 columnDefs={this.columnDefs}
                 classes={classes}
                 title={"Services d'Alfred"}
+                onCellClicked={this.onCellClicked}
               />
             </Paper>
           </Grid>

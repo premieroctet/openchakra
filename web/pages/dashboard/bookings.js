@@ -23,6 +23,8 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
+const {BigList}=require('../../components/BigList/BigList')
+const {insensitiveComparator}=require('../../utils/text')
 
 
 const moment = require('moment');
@@ -36,7 +38,7 @@ const styles = theme => ({
   },
   card: {
     padding: '1.5rem 3rem',
-    marginTop: '100px',
+    marginTop: '20px',
   },
   cardContant: {
     flexDirection: 'column',
@@ -57,66 +59,24 @@ const actionsStyles = theme => ({
   },
 });
 
-class TablePaginationActions extends React.Component {
-  handleFirstPageButtonClick = event => {
-    this.props.onChangePage(event, 0);
-  };
-
-  handleBackButtonClick = event => {
-    this.props.onChangePage(event, this.props.page - 1);
-  };
-
-  handleNextButtonClick = event => {
-    this.props.onChangePage(event, this.props.page + 1);
-  };
-
-  handleLastPageButtonClick = event => {
-    this.props.onChangePage(event, Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1));
-  };
-
-  render() {
-    const {classes, count, page, rowsPerPage, theme} = this.props;
-
-    return <div className={classes.root}>
-      <IconButton onClick={this.handleFirstPageButtonClick} disabled={page === 0} aria-label="First Page">
-        {theme.direction === 'rtl' ? <LastPageIcon/> : <FirstPageIcon/>}
-      </IconButton>
-      <IconButton onClick={this.handleBackButtonClick} disabled={page === 0} aria-label="Previous Page">
-        {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
-      </IconButton>
-      <IconButton onClick={this.handleNextButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                  aria-label="Next Page">
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
-      </IconButton>
-      <IconButton onClick={this.handleLastPageButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                  aria-label="Last Page">
-        {theme.direction === 'rtl' ? <FirstPageIcon/> : <LastPageIcon/>}
-      </IconButton>
-    </div>;
-  }
-}
-
-TablePaginationActions.propTypes = {
-  classes: PropTypes.object.isRequired,
-  count: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-  theme: PropTypes.object.isRequired,
-
-};
-const TablePaginationActionsWrapped = withStyles(actionsStyles, {withTheme: true})(TablePaginationActions);
-
 class all extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       bookings: [],
-      page: 0,
-      rowsPerPage: 10,
     };
-    this.handleChangePage = this.handleChangePage.bind(this);
-    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
+
+    this.columnDefs=[
+      {headerName: "_id", field: "_id", width: 0},
+      {headerName: "Date réservation", field: "date", cellRenderer: 'dateTimeCellRenderer'},
+      {headerName: "Date prestation", field: "prestation_date", comparator: insensitiveComparator},
+      {headerName: "Service", field: "service", comparator: insensitiveComparator},
+      {headerName: "Client", field: "user.full_name", comparator: insensitiveComparator},
+      {headerName: "Alfred", field: "alfred.full_name", comparator: insensitiveComparator},
+      {headerName: "Montant client", field: "amount"},
+      {headerName: "Statut", field: "status"},
+      {headerName: "Virement", field: "paid", cellRenderer: 'booleanCellRenderer'},
+    ]
 
   }
 
@@ -126,24 +86,35 @@ class all extends React.Component {
     setAxiosAuthentication()
 
     axios.get('/myAlfred/api/admin/booking/all')
-      .then((response) => {
+      .then(response => {
+        const bookings = response.data
+        bookings.forEach( b => {
+          b.prestation_date = `${b.date_prestation} ${moment(b.time_prestation).format('HH:mm')}`
+        })
         this.setState({bookings: response.data});
-      }).catch((error) => {
-      console.error(error);
-      if (error.response.status === 401 || error.response.status === 403) {
-        clearAuthenticationToken()
-        Router.push({pathname: '/'});
-      }
-
-    });
+      })
+      .catch((error) => {
+	       console.error(error);
+	       if (error.response.status === 401 || error.response.status === 403) {
+	         clearAuthenticationToken()
+           Router.push({pathname: '/'});
+         }
+       });
   }
 
-  handleChangePage(event, page) {
-    this.setState({page});
-  }
+  onCellClicked = event => {
+    // window.open(`/dashboard/users/view?id=${data._id}`, '_blank')
+    const {colDef, rowIndex, data, value}=event
 
-  handleChangeRowsPerPage(event) {
-    this.setState({page: 0, rowsPerPage: event.target.value});
+    if (colDef.field=='user.full_name') {
+      window.open(`/profile/about?user=${data.user._id}`, '_blank')
+    }
+    if (colDef.field=='alfred.full_name') {
+      window.open(`/profile/about?user=${data.alfred._id}`, '_blank')
+    }
+    if (colDef.field=='service') {
+      window.open(`/userServicePreview?id=${data.serviceUserId}`, '_blank')
+    }
   }
 
 
@@ -153,88 +124,18 @@ class all extends React.Component {
 
     return (
       <Layout>
-        <Grid container style={{marginTop: 70}}>
-          <Link href={'/dashboard/home'}>
-            <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
-          </Link>
-        </Grid>
-        <Grid container className={classes.signupContainer}>
-          <Card className={classes.card}>
-            <Grid>
-              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>Réservations</Typography>
-              </Grid>
-
-              <Paper style={{width: '100%'}}>
-                <div>
-                  <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Date réservation</TableCell>
-                        <TableCell>Date prestation</TableCell>
-                        <TableCell>Service</TableCell>
-                        <TableCell>Client</TableCell>
-                        <TableCell>Alfred</TableCell>
-                        <TableCell>Montant client</TableCell>
-                        <TableCell>Statut</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {bookings.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                        .map((b, index) =>
-                          <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                              {moment(b.date).format('DD/MM/YYYY hh:mm')}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {`${b.date_prestation} ${moment(b.time_prestation).format('hh:mm')}`}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              <Link href={`/userServicePreview?id=${b.serviceUserId}`}>
-                                {`${b.service}`}
-                              </Link>
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              <Link href={`/viewProfile?id=${b.user._id}`}>
-                                {`${b.user.firstname} ${b.user.name}`}
-                              </Link>
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              <Link href={`/viewProfile?id=${b.alfred._id}`}>
-                                {`${b.alfred.firstname} ${b.alfred.name}`}
-                              </Link>
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {`${b.amount}€`}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {`${b.status}`}
-                            </TableCell>
-                          </TableRow>,
-                        )}
-
-                    </TableBody>
-                  </Table>
-                </div>
-                <TablePagination
-                  rowsPerPageOptions={[10, 25]}
-                  component="div"
-                  count={bookings.length}
-                  rowsPerPage={this.state.rowsPerPage}
-                  page={this.state.page}
-                  backIconButtonProps={{
-                    'aria-label': 'Previous Page',
-                  }}
-                  nextIconButtonProps={{
-                    'aria-label': 'Next Page',
-                  }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActionsWrapped}
-                />
+        <Grid container className={classes.signupContainer} style={{width:'100%'}}>
+          <Grid style={{width: '90%'}}>
+            <Paper style={{width: '100%'}}>
+                <BigList
+                  data={bookings}
+                  columnDefs={this.columnDefs}
+                  classes={classes}
+                  title={'Réservations'}
+                  onCellClicked={this.onCellClicked}
+		/>
               </Paper>
             </Grid>
-          </Card>
         </Grid>
       </Layout>
     );

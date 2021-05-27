@@ -2,16 +2,16 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
-import Layout from '../../../hoc/Layout/Layout';
+import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
 import Paper from '@material-ui/core/Paper';
 import HomeIcon from '@material-ui/icons/Home';
-const  {BigList}=require('../../../components/BigList/BigList')
+const  {BigList}=require('../../components/BigList/BigList')
 const moment = require('moment-timezone');
 moment.locale('fr');
-const {insensitiveComparator}=require('../../../utils/text')
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
+const {insensitiveComparator}=require('../../utils/text')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 
 const styles = theme => ({
   signupContainer: {
@@ -22,11 +22,11 @@ const styles = theme => ({
   },
 });
 
-class all extends React.Component {
+class DataPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      billings: [],
+      data: [],
     };
 
   this.columnDefs=[
@@ -38,18 +38,7 @@ class all extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     setAxiosAuthentication()
-
-    axios.get('/myAlfred/api/admin/billing/all')
-      .then((response) => {
-        let billings = response.data;
-        this.setState({billings: billings});
-      }).catch((error) => {
-      console.log(error);
-      if (error.response.status === 401 || error.response.status === 403) {
-        clearAuthenticationToken()
-        Router.push({pathname: '/login'});
-      }
-    });
+    this.loadData()
   }
 
   onCellClicked = data => {
@@ -77,7 +66,7 @@ class all extends React.Component {
                 classes={classes}
                 title={"Services d'Alfred"}
                 onCellClicked={this.onCellClicked}
-		onAddClick={this.onAddClick}
+		            onAddClick={this.onAddClick}
               />
             </Paper>
           </Grid>
@@ -87,5 +76,5 @@ class all extends React.Component {
   };
 }
 
-
-export default withStyles(styles)(all);
+//export default withStyles(styles)(DataPage);
+export default DataPage

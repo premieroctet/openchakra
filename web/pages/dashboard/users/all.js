@@ -26,8 +26,8 @@ import HomeIcon from '@material-ui/icons/Home';
 const  {BigList}=require('../../../components/BigList/BigList')
 const moment = require('moment-timezone');
 moment.locale('fr');
-const {MANGOPAY_CONFIG}=require('../../../config/config')
 const {insensitiveComparator}=require('../../../utils/text')
+const {MANGOPAY_CONFIG}=require('../../../config/config')
 const regions=require('../../../static/assets/data/regions')
 
 
@@ -37,27 +37,6 @@ const styles = theme => ({
     justifyContent: 'top',
     flexDirection: 'column',
 
-  },
-  card: {
-    padding: '1.5rem 3rem',
-    marginTop: '20px',
-  },
-  cardContant: {
-    flexDirection: 'column',
-  },
-  linkText: {
-    textDecoration: 'none',
-    color: 'black',
-    fontSize: 12,
-    lineHeight: 4.15,
-  },
-});
-
-const actionsStyles = theme => ({
-  root: {
-    flexShrink: 0,
-    color: theme.palette.text.secondary,
-    marginLeft: theme.spacing(2.5),
   },
 });
 
@@ -112,6 +91,7 @@ class all extends React.Component {
       .catch((error) => {
         console.error(error);
         if (error.response.status === 401 || error.response.status === 403) {
+	  clearAuthenticationToken()
           Router.push({pathname: '/'});
         }
       });
@@ -143,17 +123,9 @@ class all extends React.Component {
     const {classes} = this.props;
     const {users} = this.state;
 
-    if (users.length==0) {
-      return null
-    }
     return (
       <Layout>
-        <Grid container style={{marginTop: 70}}>
-        </Grid>
         <Grid container className={classes.signupContainer} style={{width:'100%'}}>
-	        <Link href={'/dashboard/home'}>
-            <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour dashboard</span></Typography>
-	        </Link>
           <Grid style={{width: '90%'}}>
             <Paper style={{width: '100%'}}>
               <BigList

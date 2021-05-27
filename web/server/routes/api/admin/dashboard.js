@@ -251,7 +251,7 @@ router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), 
     ServiceUser.find({}, '_id perimeter location service_address.zip_code service_address.city')
       .populate({path : 'service', select: 'label category', populate : {path : 'category', select : 'label'}})
       //.populate('service.category', 'label')
-      .populate({path : 'user', select : 'email shop', populate : { path : 'shop', select : 'is_particular'}})
+      .populate({path : 'user', select : 'email shop', populate : { path : 'shop', select : 'is_professional'}})
       .then(services => {
         if (!services) {
           res.status(400).json({msg: 'No services found'});

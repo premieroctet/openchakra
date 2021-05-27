@@ -90,6 +90,11 @@ class all extends React.Component {
     });
   }
 
+  onCellClicked = event => {
+    const {colDef, rowIndex, data, value}=event
+    window.open(`/dashboard/equipments/view?id=${data._id}`, '_blank')
+  }
+
   render() {
     const {classes} = this.props;
     const {equipments} = this.state;
@@ -106,7 +111,7 @@ class all extends React.Component {
             <Grid style={{width: '90%'}}>
               <Paper style={{width: '100%'}}>
                <BigList data={equipments} columnDefs={this.columnDefs} classes={classes}
-                        title={'Equipements'} onRowClick={this.onRowClick} />
+                        title={'Equipements'} onCellClicked={this.onCellClicked} />
               </Paper>
             </Grid>
         </Grid>

@@ -88,12 +88,10 @@ class all extends React.Component {
     });
   }
 
-  onRowClick = data => {
-    if (data) {
-      window.open(`/dashboard/job/view?id=${data._id}`, '_blank')
-    }
+  onCellClicked = event => {
+    const {colDef, rowIndex, data, value}=event
+    window.open(`/dashboard/job/view?id=${data._id}`, '_blank')
   }
-
 
   render() {
     const {classes} = this.props;
@@ -111,7 +109,7 @@ class all extends React.Component {
             <Grid style={{width: '90%'}}>
               <Paper style={{width: '100%'}}>
                <BigList data={job} columnDefs={this.columnDefs} classes={classes}
-                        title={'Métiers'} onRowClick={this.onRowClick} />
+                        title={'Métiers'} onCellClicked={this.onCellClicked} />
               </Paper>
             </Grid>
         </Grid>
