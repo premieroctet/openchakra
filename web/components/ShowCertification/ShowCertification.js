@@ -30,7 +30,7 @@ class ShowCertification extends React.Component{
   render() {
     const {shop, services} = this.state;
 
-    let certifications = services ?  services.map(a => a.certification) : [];
+    let certifications = services.map(a => a.certification).filter(c => Boolean(c))
 
     return(
       <Grid container spacing={2} style={{margin: 0, width:'100%'}}>

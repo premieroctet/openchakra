@@ -36,8 +36,9 @@ class ShowDiploma extends React.Component{
   render() {
     const {classes} = this.props;
     const {services} = this.state;
-    const diploma = services.map(res => res.diploma)
+    const diploma = services.map(res => res.diploma).filter(r => Boolean(r))
 
+    console.log(`Diplômes:${JSON.stringify(diploma)}`)
     return(
       <Grid container spacing={2} style={{margin: 0, width:'100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
