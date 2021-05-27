@@ -97,7 +97,7 @@ class myProfile extends React.Component{
                 Mes informations
               </Button>
             </Grid>
-            <Grid>
+            <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
               <Button
                 className={classes.button}
                 startIcon={<SettingsIcon />}

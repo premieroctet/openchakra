@@ -13,6 +13,10 @@ export default theme => ({
       height: 60
     }
   },
+  myProfile:{
+    width: '100%',
+    height: '100%'
+  },
   input: {
     display: 'none'
   },

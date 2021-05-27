@@ -28,14 +28,7 @@ class PaymentResponsive extends React.Component{
           <Grid style={{marginTop: '5vh'}}>
             <List component="nav" aria-label="main mailbox folders">
               <ListItem button onClick={() => Router.push('/account/paymentMethod')}>
-                <ListItemText primary="Mes cartes de crédit" secondary={'Ajoutez vos cartes de crédit'}/>
-                <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                  <ArrowForwardIosIcon />
-                </ListItemIcon>
-              </ListItem>
-              <Divider />
-              <ListItem button onClick={() => Router.push('/account/paymentPreference')}>
-                <ListItemText primary="Mon RIB" secondary={'Choisissez un mode de versement'}/>
+                <ListItemText primary="Mes cartes de crédit et mes RIB" secondary={'Ajoutez vos cartes de crédit et RIB'}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
@@ -46,7 +39,6 @@ class PaymentResponsive extends React.Component{
       </Grid>
     );
   }
-
 }
 
 

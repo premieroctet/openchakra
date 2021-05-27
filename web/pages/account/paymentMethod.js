@@ -1,7 +1,6 @@
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React, {Fragment} from 'react';
-import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -14,20 +13,15 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
-import Cards from 'react-credit-cards';
 import {formatCreditCardNumber, formatCVC, formatExpirationDate} from '../../components/utils';
 import {Helmet} from 'react-helmet';
-import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import styles from '../../static/css/pages/paymentMethod/paymentMethod';
 
 const {isB2BAdmin} = require('../../utils/context')
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
 import PaymentCard from "../../components/Payment/PaymentCard/PaymentCard";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -38,7 +32,6 @@ import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import {formatIban} from "../../utils/text";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import {toast} from 'react-toastify';
-const {snackBarError}=require('../../utils/notifications')
 
 moment.locale('fr');
 

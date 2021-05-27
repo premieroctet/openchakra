@@ -19,7 +19,8 @@ class UserAvatar extends React.Component {
       kyc: null,
       owner: false,
       userId: '',
-      isAbout: false
+      isAbout: false,
+      myProfile: false
     };
   }
 
@@ -31,28 +32,32 @@ class UserAvatar extends React.Component {
     if(Router.pathname === '/profile/about'){
       this.setState({isAbout: true})
     }
+    if(Router.pathname === '/account/myProfile'){
+      this.setState({myProfile: true})
+    }
   }
 
-  selectPicture = () => {
+  selectPicture = (e) => {
+    e.preventDefault()
     if (isEditableUser(this.props.user)) {
       this.fileInput.click()
     }
   };
 
   avatarWithPics = (user, classes) => {
-    const{isAbout} = this.state;
+    const{isAbout, myProfile} = this.state;
     const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
 
     return (
-      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter} onClick={this.selectPicture}/>
+      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : myProfile ? classes.myProfile : classes.avatarLetter}/>
     );
   }
 
   avatarWithoutPics = (user, classes) =>{
-    const{isAbout} = this.state;
+    const{isAbout, myProfile} = this.state;
 
     return (
-      <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}>
+      <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : myProfile ? classes.myProfile : classes.avatarLetter}>
         <p>{user.avatar_letters}</p>
       </Avatar>
     );
@@ -79,7 +84,8 @@ class UserAvatar extends React.Component {
     const {currentUser} = this.state;
 
     if (user) {
-      var owner = currentUser === user._id && Router.pathname === '/profile/about';
+      var owner = currentUser === user._id ;
+      var idetablePage = Router.pathname === '/profile/about' || Router.pathname === '/account/myProfile'
     }
 
     return (
@@ -95,7 +101,7 @@ class UserAvatar extends React.Component {
               horizontal: 'right',
             }}
             classes={{root: classes.badge}}
-            badgeContent={ owner ?
+            badgeContent={ owner && idetablePage ?
               <Grid>
                 <input
                   ref={fileInput => this.fileInput = fileInput}
@@ -105,8 +111,8 @@ class UserAvatar extends React.Component {
                   onChange={this.onChange}
                 />
                 <label htmlFor="icon-button-file">
-                  <IconButton className={classes.buttonCamera} aria-label="upload picture" component="span">
-                    <PhotoCameraIcon onClick={this.selectPicture}/>
+                  <IconButton onClick={this.selectPicture} className={classes.buttonCamera} aria-label="upload picture" component="span">
+                    <PhotoCameraIcon/>
                   </IconButton>
                 </label>
               </Grid> : null}
