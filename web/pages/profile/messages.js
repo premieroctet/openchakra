@@ -72,7 +72,7 @@ class Messages extends React.Component {
       .catch (err => {
         if (err.response && [401, 403].includes(err.response.status)) {
           localStorage.setItem('path', Router.asPath)
-          Router.push('/login');
+          Router.push('/');
         }
       })
   }
@@ -275,7 +275,7 @@ class Messages extends React.Component {
     if (!user) {
       return null
     }
-    
+
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
