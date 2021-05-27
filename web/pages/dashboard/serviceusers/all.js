@@ -1,38 +1,13 @@
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
-
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
+const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Link from 'next/link';
-import Router from 'next/router';
-import Paper from '@material-ui/core/Paper';
-import HomeIcon from '@material-ui/icons/Home';
-const  {BigList}=require('../../../components/BigList/BigList')
-const moment = require('moment-timezone');
-moment.locale('fr');
+import axios from 'axios'
 const {insensitiveComparator}=require('../../../utils/text')
 
 
-const styles = theme => ({
-  signupContainer: {
-    alignItems: 'center',
-    justifyContent: 'top',
-    flexDirection: 'column',
-  },
-});
+class all extends DataPage {
 
-class all extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      services: [],
-    };
-
-  this.columnDefs=[
+  getColumnDefs = () => {
+    return [
       {headerName: "_id", field: "_id", width: 0},
       {headerName: "Email", field: "user.email", comparator: insensitiveComparator},
       {headerName: "Pro", field: "user.shop.is_professional", cellRenderer: 'booleanCellRenderer'},
@@ -42,13 +17,13 @@ class all extends React.Component {
       {headerName: "Code postal", field: "service_address.zip_code"},
       {headerName: "Ville", field: "service_address.city", comparator: insensitiveComparator},
     ]
-
   }
 
-  componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    setAxiosAuthentication()
+  getTitle = () => {
+    return "Services d'Alfred"
+  }
 
+  loadData = () => {
     axios.get('/myAlfred/api/admin/serviceusers/all')
       .then( response => {
         let services = response.data;
@@ -60,22 +35,12 @@ class all extends React.Component {
             console.error(`Err on ${s._id}:${error}`)
           }
         });
-        this.setState({services: services});
+        this.setState({data: services});
       })
-      .catch((error) => {
-        console.error(error);
-        if (error.response.status === 401 || error.response.status === 403) {
-	  clearAuthenticationToken()
-          Router.push({pathname: '/'});
-        }
-      });
   }
 
-  onCellClicked = event => {
-    // window.open(`/dashboard/users/view?id=${data._id}`, '_blank')
-    const {colDef, rowIndex, data, value}=event
-
-    if (colDef.field=='service.label') {
+  onCellClicked = (data, field) => {
+    if (field=='service.label') {
       window.open(`/userServicePreview?id=${data._id}`, '_blank')
     }
     else {
@@ -83,28 +48,6 @@ class all extends React.Component {
     }
   }
 
-  render() {
-    const {classes} = this.props;
-    const {services} = this.state;
-
-    return (
-      <Layout>
-        <Grid container className={classes.signupContainer} style={{width:'100%'}}>
-          <Grid style={{width: '90%'}}>
-            <Paper style={{width: '100%'}}>
-              <BigList
-                data={services}
-                columnDefs={this.columnDefs}
-                classes={classes}
-                title={"Services d'Alfred"}
-                onCellClicked={this.onCellClicked}
-              />
-            </Paper>
-          </Grid>
-        </Grid>
-      </Layout>
-    );
-  };
 }
 
 export default withStyles(styles)(all);

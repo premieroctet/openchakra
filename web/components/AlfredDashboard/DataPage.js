@@ -27,12 +27,7 @@ class DataPage extends React.Component {
     super(props);
     this.state = {
       data: [],
-    };
-
-  this.columnDefs=[
-      {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Label", field: "label"},
-    ]
+    }
   }
 
   componentDidMount() {
@@ -41,19 +36,16 @@ class DataPage extends React.Component {
     this.loadData()
   }
 
-  onCellClicked = data => {
-    if (data) {
-      window.open(`/dashboard/billing/view?id=${data._id}`, '_blank')
+  _onCellClicked = event => {
+    const {colDef, data, value}=event
+    if (data && this.onCellClicked) {
+      this.onCellClicked(data, colDef.field, value)
     }
-  }
-
-  onAddClick = () => {
-    window.open(`/dashboard/billing/add`, '_blank')
   }
 
   render() {
     const {classes} = this.props;
-    const {billings} = this.state;
+    const {data} = this.state;
 
     return (
       <Layout>
@@ -61,12 +53,12 @@ class DataPage extends React.Component {
           <Grid style={{width: '90%'}}>
             <Paper style={{width: '100%'}}>
               <BigList
-                data={billings}
-                columnDefs={this.columnDefs}
+                data={data}
+                columnDefs={this.getColumnDefs()}
                 classes={classes}
-                title={"Services d'Alfred"}
-                onCellClicked={this.onCellClicked}
-		            onAddClick={this.onAddClick}
+                title={this.getTitle()}
+                onCellClicked={this._onCellClicked}
+		            onAddClick={this.onAddClicked}
               />
             </Paper>
           </Grid>
@@ -77,4 +69,4 @@ class DataPage extends React.Component {
 }
 
 //export default withStyles(styles)(DataPage);
-export default DataPage
+module.exports={DataPage, styles}

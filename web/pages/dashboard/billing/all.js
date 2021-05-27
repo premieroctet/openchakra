@@ -1,91 +1,37 @@
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
+const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
-import Paper from '@material-ui/core/Paper';
-import HomeIcon from '@material-ui/icons/Home';
-const  {BigList}=require('../../../components/BigList/BigList')
-const moment = require('moment-timezone');
-moment.locale('fr');
+import axios from 'axios'
 const {insensitiveComparator}=require('../../../utils/text')
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
-const styles = theme => ({
-  signupContainer: {
-    alignItems: 'center',
-    justifyContent: 'top',
-    flexDirection: 'column',
+class all extends DataPage {
 
-  },
-});
-
-class all extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      billings: [],
-    };
-
-  this.columnDefs=[
+  getColumnDefs = () => {
+    return [
       {headerName: "_id", field: "_id", width: 0},
       {headerName: "Label", field: "label"},
     ]
   }
 
-  componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    setAxiosAuthentication()
+  getTitle = () => {
+    return "Méthodes de facturation"
+  }
 
+  loadData = () => {
     axios.get('/myAlfred/api/admin/billing/all')
-      .then((response) => {
+      .then( response => {
         let billings = response.data;
-        this.setState({billings: billings});
-      }).catch((error) => {
-      console.log(error);
-      if (error.response.status === 401 || error.response.status === 403) {
-        clearAuthenticationToken()
-        Router.push({pathname: '/login'});
-      }
-    });
+        this.setState({data: billings});
+      })
   }
 
-  onCellClicked = data => {
-    if (data) {
-      window.open(`/dashboard/billing/view?id=${data._id}`, '_blank')
-    }
+  onCellClicked = (data, field) => {
+    window.open(`/dashboard/billing/view?id=${data._id}`, '_blank')
   }
 
-  onAddClick = () => {
+  onAddClicked = () => {
     window.open(`/dashboard/billing/add`, '_blank')
   }
 
-  render() {
-    const {classes} = this.props;
-    const {billings} = this.state;
-
-    return (
-      <Layout>
-        <Grid container className={classes.signupContainer} style={{width:'100%'}}>
-          <Grid style={{width: '90%'}}>
-            <Paper style={{width: '100%'}}>
-              <BigList
-                data={billings}
-                columnDefs={this.columnDefs}
-                classes={classes}
-                title={"Services d'Alfred"}
-                onCellClicked={this.onCellClicked}
-		onAddClick={this.onAddClick}
-              />
-            </Paper>
-          </Grid>
-        </Grid>
-      </Layout>
-    );
-  };
 }
-
 
 export default withStyles(styles)(all);
