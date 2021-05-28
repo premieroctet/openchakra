@@ -1,14 +1,14 @@
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
+const {textColumn}=require('../../../components/BigList/models')
 import axios from 'axios'
-const {insensitiveComparator}=require('../../../utils/text')
 
 class all extends DataPage {
 
   getColumnDefs = () => {
     return [
       {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Label", field: "label"},
+      textColumn({headerName: "Label", field: "label"}),
     ]
   }
 

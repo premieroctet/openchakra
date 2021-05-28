@@ -1,20 +1,20 @@
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
+const models=require('../../../components/BigList/models')
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios'
-const {insensitiveComparator}=require('../../../utils/text')
 
 class all extends DataPage {
 
   getColumnDefs = () => {
     return [
       {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Privée", field: "private_alfred", cellRenderer: "privateRenderer"},
-      {headerName: "Label", field: "label", comparator: insensitiveComparator},
-      {headerName: "Catégorie", field: "category_label", comparator: insensitiveComparator},
-      {headerName: "Service", field: "service.label", comparator: insensitiveComparator},
-      {headerName: "Pros", field: "professional_access", cellRenderer:'booleanCellRenderer'},
-      {headerName: "Particuliers", field: "particular_access", cellRenderer:'booleanCellRenderer'},
-      {headerName: "Filtre présentation", field: "filter_presentation.label", comparator: insensitiveComparator},
+      models.textColumn({headerName: "Privée", field: "alfred", cellRenderer: "privateRenderer", }),
+      models.textColumn({headerName: "Label", field: "label"}),
+      models.textColumn({headerName: "Catégorie", field: "category_label"}),
+      models.textColumn({headerName: "Service", field: "service.label"}),
+      models.booleanColumn({headerName: "Pros", field: "professional_access"}),
+      models.booleanColumn({headerName: "Particuliers", field: "particular_access"}),
+      models.textColumn({headerName: "Filtre présentation", field: "filter_presentation.label"}),
     ]
   }
 
@@ -32,14 +32,15 @@ class all extends DataPage {
               [cat.particular_label, cat.professional_label].join('/')
               :
               '';
+          p.alfred = p.private_alfred ? p.private_alfred.full_name : ''
           return p
         })
         this.setState({data: prestation});
-      })  
+      })
   }
 
   onCellClicked = (data, field) => {
-    if (field=='private_alfred') {
+    if (field=='alfred') {
       if (data.private_alfred) {
         window.open(`/profile/services?user=${data.private_alfred._id}`)
       }

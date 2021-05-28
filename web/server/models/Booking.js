@@ -170,10 +170,6 @@ const BookingSchema = new Schema({
   }
 }, {toJSON: {virtuals: true, getters: true}});
 
-BookingSchema.pre('invoiceNumber', function () {
-
-});
-
 BookingSchema.virtual('alfred_amount').get(function () {
   return this.amount - this.fees;
 });

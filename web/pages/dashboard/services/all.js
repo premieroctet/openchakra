@@ -1,18 +1,18 @@
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios'
-const {insensitiveComparator}=require('../../../utils/text')
+const models=require('../../../components/BigList/models')
 
 class all extends DataPage {
   getColumnDefs = () => {
     return [
       {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Label", field: "label"},
-      {headerName: "Catégorie", field: "category_label"},
-      {headerName: "Pros", field: "professional_access", cellRenderer:'booleanCellRenderer'},
-      {headerName: "Particuliers", field: "particular_access", cellRenderer:'booleanCellRenderer'},
-      {headerName: "Illustration", field: "picture", cellRenderer:'pictureCellRenderer'},
-      {headerName: "Warning", field: "warning"},
+      models.textColumn({headerName: "Label", field: "label"}),
+      models.textColumn({headerName: "Catégorie", field: "category_label"}),
+      models.booleanColumn({headerName: "Pros", field: "professional_access"}),
+      models.booleanColumn({headerName: "Particuliers", field: "particular_access"}),
+      models.pictureColumn({headerName: "Illustration", field: "picture"}),
+      models.textColumn({headerName: "Warning", field: "warning"}),
     ]
     // TODO : ajouter colonne warning si service pro sans prestations pro ou service particulier sans presta particuliers
   }

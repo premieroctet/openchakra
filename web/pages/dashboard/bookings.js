@@ -1,22 +1,23 @@
 const  {DataPage, styles}=require('../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
+const models=require('../../components/BigList/models')
 import axios from 'axios'
-const {insensitiveComparator}=require('../../utils/text')
 const moment = require('moment')
+moment.locale('fr')
 
 class all extends DataPage {
 
   getColumnDefs = () => {
     return [
       {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Date réservation", field: "date", cellRenderer: 'dateTimeCellRenderer'},
-      {headerName: "Date prestation", field: "prestation_date", comparator: insensitiveComparator},
-      {headerName: "Service", field: "service", comparator: insensitiveComparator},
-      {headerName: "Client", field: "user.full_name", comparator: insensitiveComparator},
-      {headerName: "Alfred", field: "alfred.full_name", comparator: insensitiveComparator},
-      {headerName: "Montant client", field: "amount"},
-      {headerName: "Statut", field: "status"},
-      {headerName: "Virement", field: "paid", cellRenderer: 'booleanCellRenderer'},
+      models.dateTimeColumn({headerName: "Réservation", field: "date"}),
+      models.dateTimeColumn({headerName: "Prestation", field: "date_prestation_moment"}),
+      models.textColumn({headerName: "Service", field: "service"}),
+      models.textColumn({headerName: "Client", field: "user.full_name"}),
+      models.textColumn({headerName: "Alfred", field: "alfred.full_name"}),
+      models.currencyColumn({headerName: "Montant client", field: "amount"}),
+      models.textColumn({headerName: "Statut", field: "status"}),
+      models.booleanColumn({headerName: "Virement", field: "paid"}),
     ]
   }
 
@@ -29,10 +30,11 @@ class all extends DataPage {
     axios.get('/myAlfred/api/admin/booking/all')
       .then( response => {
         const bookings = response.data
+        console.log(typeof bookings[0].date)
         bookings.forEach( b => {
-          b.prestation_date = `${b.date_prestation} ${moment(b.time_prestation).format('HH:mm')}`
+          b.date = b.date ? moment(b.date) : null
         })
-        this.setState({data: response.data});
+        this.setState({data: bookings});
       })
   }
 

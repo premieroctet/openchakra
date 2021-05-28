@@ -1,7 +1,7 @@
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios'
-const {insensitiveComparator}=require('../../../utils/text')
+const models=require('../../../components/BigList/models')
 const {MANGOPAY_CONFIG}=require('../../../config/config')
 const regions=require('../../../static/assets/data/regions')
 const moment = require('moment')
@@ -11,20 +11,20 @@ class all extends DataPage {
   getColumnDefs = () => {
     return [
       {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Statut", field: "status", cellRenderer: 'statusCellRenderer', filter:'statusCellFilter'},
-      {headerName: "Prénom", field: "firstname", comparator: insensitiveComparator},
-      {headerName: "Nom", field: "name", comparator: insensitiveComparator},
-      {headerName: "Email", field: "email", comparator: insensitiveComparator},
-      {headerName: "Ville", field: "billing_address.city", comparator: insensitiveComparator},
+      {headerName: "Statut", field: "status", cellRenderer: 'statusRenderer', filter:'statusFilter'},
+      models.textColumn({headerName: "Prénom", field: "firstname"}),
+      models.textColumn({headerName: "Nom", field: "name"}),
+      models.textColumn({headerName: "Email", field: "email"}),
+      models.textColumn({headerName: "Ville", field: "billing_address.city"}),
       {headerName: "CP", field: "billing_address.zip_code"},
-      {headerName: "Région", field: "region"},
+      models.textColumn({headerName: "Région", field: "region"}),
       {headerName: "Tel", field: "phone"},
-      {headerName: "Né(e) le", field: "birthday_moment", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter',},
-      {headerName: "Inscrit le", field: "creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter', initialSort: 'desc'},
-      {headerName: "Création boutique", field: "shop.creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter'},
-      {headerName: "Client Mangopay", field: "id_mangopay"},
-      {headerName: "Alfred Mangopay", field: "mangopay_provider_id"},
-      {headerName: "Warning", field: "warning", cellRenderer: 'warningCellRenderer'},
+      models.dateColumn({headerName: "Né(e) le", field: "birthday_moment"}),
+      models.dateTimeColumn({headerName: "Inscrit le", field: "creation_date", initialSort: 'desc'}),
+      models.dateTimeColumn({headerName: "Création boutique", field: "shop.creation_date"}),
+      models.textColumn({headerName: "Client Mangopay", field: "id_mangopay"}),
+      models.textColumn({headerName: "Alfred Mangopay", field: "mangopay_provider_id"}),
+      models.textColumn({headerName: "Warning", field: "warning", cellRenderer: 'warningRenderer'}),
     ]
   }
 

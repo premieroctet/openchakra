@@ -1,16 +1,16 @@
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios'
-const {insensitiveComparator}=require('../../../utils/text')
+const models=require('../../../components/BigList/models')
 const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../../utils/consts')
 
 class all extends DataPage {
 
   getColumnDefs = () => {
     return [
-      {headerName: "Nom", field: "name"},
-      {headerName: "Taille", field: "size", cellRenderer: 'enumCellRenderer', cellRendererParams: { enum: COMPANY_SIZE}},
-      {headerName: "Secteur", field: "activity", cellRenderer: 'enumCellRenderer', cellRendererParams: { enum: COMPANY_ACTIVITY}},
+      models.textColumn({headerName: "Nom", field: "name"}),
+      {headerName: "Taille", field: "size", cellRenderer: 'enumRenderer', cellRendererParams: { enum: COMPANY_SIZE}},
+      models.textColumn({headerName: "Secteur", field: "activity", cellRenderer: 'enumRenderer', cellRendererParams: { enum: COMPANY_ACTIVITY}}),
       {headerName: "Comptes", field: "employees", },
     ]
   }

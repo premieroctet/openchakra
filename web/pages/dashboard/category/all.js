@@ -1,18 +1,19 @@
+
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
+const models=require('../../../components/BigList/models')
 import axios from 'axios'
-const {insensitiveComparator}=require('../../../utils/text')
 
 class all extends DataPage {
 
   getColumnDefs = () => {
     return [
       {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Label particuliers", field: "particular_label"},
-      {headerName: "Label pro", field: "professional_label"},
-      {headerName: "Illustration particuliers", field: "particular_picture", cellRenderer:'pictureCellRenderer'},
-      {headerName: "Illustration pro", field: "professional_picture", cellRenderer:'pictureCellRenderer'},
-      {headerName: "Tags", field: "tags"},
+      models.textColumn({headerName: "Label particuliers", field: "particular_label"}),
+      models.textColumn({headerName: "Label pro", field: "professional_label"}),
+      models.pictureColumn({headerName: "Illustration particuliers", field: "particular_picture"}),
+      models.pictureColumn({headerName: "Illustration pro", field: "professional_picture"}),
+      models.textColumn({headerName: "Tags", field: "tags"}),
     ]
   }
 

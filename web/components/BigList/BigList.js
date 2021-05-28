@@ -75,18 +75,19 @@ class BigList extends React.Component {
     const {data, columnDefs, classes, title} = this.props
 
     const frameworkComponents={
-      'statusCellRenderer': models.StatusCellRenderer,
-      'dateCellRenderer': models.DateCellRenderer,
-      'mangopayCellRenderer' : models.MangopayCellRenderer,
-      'statusCellFilter' : models.StatusCellFilter,
-      'pictureCellRenderer' : models.PictureCellRenderer,
+      'statusRenderer': models.StatusRenderer,
+      'dateRenderer': models.DateRenderer,
+      'mangopayRenderer' : models.MangopayRenderer,
+      'statusFilter' : models.StatusFilter,
+      'pictureRenderer' : models.PictureRenderer,
       'privateRenderer' : models.PrivateRenderer,
-      'dateTimeCellRenderer': models.DateTimeCellRenderer,
-      'booleanCellRenderer': models.BooleanCellRenderer,
-      'enumCellRenderer': models.EnumCellRenderer,
+      'dateTimeRenderer': models.DateTimeRenderer,
+      'booleanRenderer': models.BooleanRenderer,
+      'enumRenderer': models.EnumRenderer,
       'locationRenderer': models.LocationRenderer,
-      'warningCellRenderer': models.WarningRenderer,
+      'warningRenderer': models.WarningRenderer,
       'linkRenderer': models.LinkRenderer,
+      'currencyRenderer': models.CurrencyRenderer,
     }
 
     const defaultColDef={

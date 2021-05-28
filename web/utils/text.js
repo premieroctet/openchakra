@@ -5,9 +5,7 @@ const SIREN_LENGTH=9
 const SIRET_LENGTH=14
 
 const normalize = str => {
-  if (str) {
-    str = str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  }
+  str = str ? str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : ''
   return str
 };
 
@@ -146,9 +144,7 @@ const isSiretSirenLength = value => {
 }
 
 const insensitiveComparator = (a,b) => {
-  a = normalize(a ||'')
-  b = normalize(b ||'')
-  return a<b ? -1 : a>b ? 1 : 0
+  return (a||'').localeCompare(b, 'fr')
 }
 
 const isMobilePhone= number => {

@@ -10,7 +10,6 @@ import HomeIcon from '@material-ui/icons/Home';
 const  {BigList}=require('../../components/BigList/BigList')
 const moment = require('moment-timezone');
 moment.locale('fr');
-const {insensitiveComparator}=require('../../utils/text')
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 
 const styles = theme => ({
@@ -33,6 +32,7 @@ class DataPage extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     setAxiosAuthentication()
+    // TODO Gérer un retour 401 => login
     this.loadData()
   }
 

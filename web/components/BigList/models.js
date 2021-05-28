@@ -6,8 +6,9 @@ moment.locale('fr');
 const util = require('util');
 import LockIcon from '@material-ui/icons/Lock';
 import CheckIcon from '@material-ui/icons/Check';
+const {insensitiveComparator, normalize} = require('../../utils/text')
 
-class StatusCellRenderer extends React.Component {
+class StatusRenderer extends React.Component {
 
   constructor(props) {
     super(props)
@@ -46,7 +47,7 @@ class LocationRenderer extends React.Component {
   }
 }
 
-class StatusCellFilter extends React.Component {
+class StatusFilter extends React.Component {
 
   constructor(props) {
     super(props)
@@ -96,7 +97,7 @@ class StatusCellFilter extends React.Component {
   }
 }
 
-class DateCellRenderer extends React.Component {
+class DateRenderer extends React.Component {
 
   render = () => {
     if (!this.props.value) {
@@ -109,7 +110,7 @@ class DateCellRenderer extends React.Component {
   }
 }
 
-class DateTimeCellRenderer extends React.Component {
+class DateTimeRenderer extends React.Component {
 
   render = () => {
     if (!this.props.value) {
@@ -117,12 +118,12 @@ class DateTimeCellRenderer extends React.Component {
     }
     const m=moment(this.props.value)
     return (
-      <>{m.isValid() ? m.format('L LT') : 'date invalide'}</>
+      <>{m.isValid() ? m.format('L LT') : `date invalide:${this.props.value}`}</>
     )
   }
 }
 
-class PictureCellRenderer extends React.Component {
+class PictureRenderer extends React.Component {
 
   render = () => {
     const rowHeight = this.props.node.rowHeight
@@ -145,7 +146,7 @@ class PrivateRenderer extends React.Component {
     return (
       <>
       { this.props.value ?
-        <div><LockIcon/>{this.props.value.full_name}</div>
+        <div><LockIcon/>{this.props.value}</div>
         :
         null
       }
@@ -155,7 +156,7 @@ class PrivateRenderer extends React.Component {
 
 }
 
-class BooleanCellRenderer extends React.Component {
+class BooleanRenderer extends React.Component {
 
   render = () => {
     if (!this.props.value) {
@@ -179,7 +180,7 @@ class BooleanCellEditor extends React.Component {
   }
 }
 
-class EnumCellRenderer extends React.Component {
+class EnumRenderer extends React.Component {
 
   render = () => {
     if (!this.props.value) {
@@ -207,8 +208,66 @@ class LinkRenderer extends React.Component {
     )
   }
 }
+
+class CurrencyRenderer extends React.Component {
+  render = () => {
+    return (
+      <div style={{textAlign: 'right'}}>{Number(this.props.value).toFixed(2)}€</div>
+    )
+  }
+}
+
+const textColumn = obj => {
+  var base={
+    comparator: insensitiveComparator,
+    filterParams: {
+      textFormatter: normalize
+    }
+  }
+  return Object.assign(base, obj)
+}
+
+const booleanColumn = obj => {
+  var base={
+    cellRenderer: 'booleanRenderer',
+  }
+  return Object.assign(base, obj)
+}
+
+const dateColumn = obj => {
+  var base={
+    cellRenderer: 'dateRenderer',
+    filter:'agDateColumnFilter',
+  }
+  return Object.assign(base, obj)
+}
+
+const dateTimeColumn = obj => {
+  var base={
+    cellRenderer: 'dateTimeRenderer',
+    filter:'agDateColumnFilter',
+  }
+  return Object.assign(base, obj)
+}
+
+const currencyColumn = obj => {
+  var base={
+    cellRenderer: 'currencyRenderer',
+    filter:'agNumberColumnFilter',
+  }
+  return Object.assign(base, obj)
+}
+
+const pictureColumn = obj => {
+  var base={
+    cellRenderer:'pictureRenderer',
+  }
+  return Object.assign(base, obj)
+}
+
 module.exports= {
-  StatusCellRenderer, DateCellRenderer, DateTimeCellRenderer,
-  StatusCellFilter, PictureCellRenderer, PrivateRenderer, BooleanCellRenderer,LocationRenderer, WarningRenderer,
-  EnumCellRenderer, LocationRenderer, LinkRenderer,
+  StatusRenderer, DateRenderer, DateTimeRenderer, CurrencyRenderer,
+  StatusFilter, PictureRenderer, PrivateRenderer, BooleanRenderer,LocationRenderer, WarningRenderer,
+  EnumRenderer, LocationRenderer, LinkRenderer,
+  textColumn, booleanColumn, dateColumn, dateTimeColumn, currencyColumn, pictureColumn
 }

@@ -14,6 +14,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 const {BigList}=require('../../components/BigList/BigList')
+const models = require('../../components/BigList/models')
 
 const styles = theme => ({
   signupContainer: {
@@ -70,7 +71,7 @@ class all extends React.Component {
 
     this.columnDefs=[
       {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Catégorie", field: "category"},
+      models.textColumn({headerName: "Catégorie", field: "category"}),
       {headerName: "#prospects", field: "count"},
       {headerName: "#contactés", field: "contacted"},
       {headerName: "#non contactés", field: "not_contacted"},

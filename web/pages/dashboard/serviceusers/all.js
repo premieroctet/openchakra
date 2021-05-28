@@ -1,7 +1,7 @@
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios'
-const {insensitiveComparator}=require('../../../utils/text')
+const models=require('../../../components/BigList/models')
 
 
 class all extends DataPage {
@@ -9,13 +9,13 @@ class all extends DataPage {
   getColumnDefs = () => {
     return [
       {headerName: "_id", field: "_id", width: 0},
-      {headerName: "Email", field: "user.email", comparator: insensitiveComparator},
-      {headerName: "Pro", field: "user.shop.is_professional", cellRenderer: 'booleanCellRenderer'},
-      {headerName: "Service", field: "service.label", comparator: insensitiveComparator},
-      {headerName: "Catégorie", field: "service.category.label", comparator: insensitiveComparator},
+      models.textColumn({headerName: "Email", field: "user.email"}),
+      models.booleanColumn({headerName: "Pro", field: "user.shop.is_professional"}),
+      models.textColumn({headerName: "Service", field: "service.label"}),
+      models.textColumn({headerName: "Catégorie", field: "service.category.label"}),
       {headerName: "Localisation (Client/Alfred/Visio)", field: "location", cellRenderer: 'locationRenderer'},
       {headerName: "Code postal", field: "service_address.zip_code"},
-      {headerName: "Ville", field: "service_address.city", comparator: insensitiveComparator},
+      models.textColumn({headerName: "Ville", field: "service_address.city"}),
     ]
   }
 
