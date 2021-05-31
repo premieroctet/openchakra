@@ -57,6 +57,7 @@ const PrestationSchema = new Schema({
   s_label: {
     type: String,
     required: true,
+    sparse: true,
   },
   cesu_eligible: {
     type: Boolean,
@@ -66,11 +67,13 @@ const PrestationSchema = new Schema({
   particular_access: {
     type: Boolean,
     required: true,
+    sparse: true,
   },
   // Professionals can book
   professional_access: {
     type: Boolean,
     required: true,
+    sparse: true,
   }
 });
 

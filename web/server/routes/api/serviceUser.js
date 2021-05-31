@@ -537,7 +537,7 @@ router.post('/search', (req, res) => {
       populate: {path: 'category', select: status==PRO ? 's_professional_label':'s_particular_label'},
     })
     .populate({
-      path: 'prestations.prestation', select: 's_label description',
+      path: 'prestations.prestation', select: 's_label description', match: filter,
       populate: {path: 'job', select: 's_label'},
     })
     .then(sus => {

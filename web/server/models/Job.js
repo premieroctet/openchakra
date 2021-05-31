@@ -12,6 +12,7 @@ const JobSchema = new Schema({
     default: function () {
       return normalize(this.label);
     },
+    sparse: true,
   },
 
 });

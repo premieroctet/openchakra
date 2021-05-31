@@ -158,11 +158,13 @@ const ServiceUserSchema = new Schema({
   particular_access: {
     type: Boolean,
     required: true,
+    sparse: true,
   },
   // Professionals can book
   professional_access: {
     type: Boolean,
     required: true,
+    sparse: true,
   },
 });
 

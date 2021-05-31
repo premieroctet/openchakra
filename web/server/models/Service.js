@@ -53,16 +53,19 @@ const ServiceSchema = new Schema({
   s_label: {
     type: String,
     required: true,
+    sparse: true,
   },
   // Particulars can book
   particular_access: {
     type: Boolean,
     required: true,
+    sparse: true,
   },
   // Professionals can book
   professional_access: {
     type: Boolean,
     required: true,
+    sparse: true,
   }
 }, {
   toJSON: {virtuals: true, getters: true},
