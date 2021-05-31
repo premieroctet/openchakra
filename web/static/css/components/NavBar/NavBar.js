@@ -13,6 +13,14 @@ export default theme => ({
       width: '100%',
     },
   },
+  hiddenXLandLG:{
+    [theme.breakpoints.up('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.up('lg')]:{
+      display: 'none'
+    }
+  },
   navbarSearchContainerB2B:{
     width: '40%',
     marginTop: '5vh',
@@ -147,6 +155,17 @@ export default theme => ({
     flexDirection: 'row-reverse',
     alignItems: 'center',
   },
+  navbarMenuBurgerContainerB2B:{
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    }
+  },
   navbarTabRoot:{
     opacity: 'inherit',
     color: theme.palette.white.main,
@@ -176,6 +195,34 @@ export default theme => ({
     height: 64,
 
   },
+  hiddenOnlyXs:{
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 0,
+    width: '100%',
+    alignItems: 'center',
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  },
+  hiddenOnMobile:{
+    width: '100%',
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+
+
+
+  },
 
 
   navbarButtonContainer:{
@@ -186,12 +233,35 @@ export default theme => ({
   navbarButtonContainerP:{
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  navbarButtonContainerPB2B:{
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
   },
   navbarButtonContainerB2B:{
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
   },
   navBarlogIn:{
     textTransform: theme.typography.textTransform,
