@@ -2,7 +2,6 @@ const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
@@ -499,16 +498,16 @@ class notifications extends React.Component {
           <meta property="description"
                 content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
-        <Hidden only={['xs']}>
+        <Grid className={classes.containerLayoutAccount}>
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
-        </Hidden>
-        <Hidden only={['lg', 'xl', 'sm', 'md']}>
+        </Grid>
+        <Grid className={classes.layoutMobileContainer}>
           <LayoutMobile>
             {this.content(classes)}
           </LayoutMobile>
-        </Hidden>
+        </Grid>
 
     </React.Fragment>
     );
