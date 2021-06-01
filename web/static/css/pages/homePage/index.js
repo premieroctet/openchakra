@@ -114,4 +114,55 @@ export default theme => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
+  infoBarContainer:{
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+  },
+  newsLetterContainer:{
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+  },
+  hideAndShowTrustAndSecurity:{
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+
+  },
+  mobileNavBarContainer:{
+    position: 'fixed',
+    bottom: '3%',
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+    zIndex: 1,
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+  }
 })

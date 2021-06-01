@@ -13,7 +13,6 @@ import OurAlfred from "../components/HomePage/OurAlfred/OurAlfred";
 import HowItWorks from "../components/HomePage/HowItWorks/HowItWorks";
 import NewsLetter from "../components/HomePage/NewsLetter/NewsLetter";
 import MobileNavbar from "../hoc/Layout/NavBar/MobileNavbar";
-import Hidden from "@material-ui/core/Hidden";
 import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Dialog, DialogActions, DialogContent, Divider} from "@material-ui/core";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -140,18 +139,25 @@ class Home extends React.Component {
       <Grid>
         <Helmet>
           <title>Services rémunérés entre particuliers - My Alfred </title>
-          <meta property="description"
-                content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"/>
+          <meta
+            property="description"
+            content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"
+          />
         </Helmet>
         <Grid>
-          <Hidden only={['md', 'sm', 'xs']} implementation={'css'}>
-            <Grid>
-              <InfoBar/>
-            </Grid>
-          </Hidden>
+          <Grid className={classes.infoBarContainer}>
+            <InfoBar/>
+          </Grid>
           <Grid container className={classes.navbarAndBannerContainer}>
-            <Grid item xl={12} lg={12} sm={12} md={12} xs={12}
-                  className={isB2BStyle(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}>
+            <Grid
+              item
+              xl={12}
+              lg={12}
+              sm={12}
+              md={12}
+              xs={12}
+              className={isB2BStyle(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}
+            >
               <Grid className={classes.navbarComponentPosition}>
                 <NavBar/>
               </Grid>
@@ -198,7 +204,7 @@ class Home extends React.Component {
                 </Grid>
               </Grid>
           }
-          <Hidden only={['xs', 'sm']}>
+          <Grid className={classes.newsLetterContainer}>
             {
               isB2BStyle(user) ? null :
                 <Grid container className={classes.mainNewsLetterStyle}>
@@ -207,36 +213,27 @@ class Home extends React.Component {
                   </Grid>
                 </Grid>
             }
-          </Hidden>
+          </Grid>
           <Grid>
             <Divider/>
           </Grid>
-          <Hidden only={['xs', 'sm', 'md']}>
+          <Grid className={classes.hideAndShowTrustAndSecurity}>
             <Grid className={classes.trustAndSecurityContainer}>
               <Grid className={classes.trustAndSecurityComponent}>
                 <TrustAndSecurity/>
               </Grid>
             </Grid>
-          </Hidden>
+          </Grid>
           <Grid container className={classes.mainContainerStyleFooter}>
             <Grid className={classes.generalWidthFooter}>
               <Footer/>
             </Grid>
           </Grid>
-          <Hidden only={['xl', 'lg', 'md', 'sm']}>
-            <Grid style={{
-              position: 'fixed',
-              bottom: '3%',
-              display: 'flex',
-              justifyContent: 'center',
-              width: '100%',
-              zIndex: 1
-            }}>
-              <Grid style={{width: '100%'}}>
-                <MobileNavbar currentIndex={0}/>
-              </Grid>
+          <Grid className={classes.mobileNavBarContainer}>
+            <Grid style={{width: '100%'}}>
+              <MobileNavbar currentIndex={0}/>
             </Grid>
-          </Hidden>
+          </Grid>
         </Grid>
         {!isApplication() ? open ? this.dialogStore(classes) : null : null}
       </Grid>
