@@ -6,7 +6,6 @@ import Services from '../../components/Services/Services'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/services/services';
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
-import Hidden from "@material-ui/core/Hidden";
 import Box from "../../components/Box/Box";
 import axios from "axios";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
@@ -68,13 +67,12 @@ class ProfileServices extends React.Component {
 
         {
           !editable ?
-            <Hidden only={['sm', 'xs']}>
-              <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                <Grid style={{width: '70%'}}>
-                  <AskQuestion user={user}/>
-                </Grid>
+            <Grid item className={classes.containerAskQuestion}>
+              <Grid style={{width: '70%'}}>
+                <AskQuestion user={user}/>
               </Grid>
-            </Hidden> : null
+            </Grid>
+           : null
         }
       </Grid>
     )
@@ -90,16 +88,16 @@ class ProfileServices extends React.Component {
 
     return (
       <React.Fragment>
-        <Hidden only={['xs']}>
+        <Grid className={classes.profileLayoutContainer}>
           <ProfileLayout user={user}>
             {this.content(classes, user, shop)}
           </ProfileLayout>
-        </Hidden>
-        <Hidden only={['lg', 'xl','sm', 'md']}>
+        </Grid>
+        <Grid className={classes.containerLayoutMobileProfile}>
           <LayoutMobileProfile user={user} currentIndex={4}>
             {this.content(classes, user, shop)}
           </LayoutMobileProfile>
-        </Hidden>
+        </Grid>
       </React.Fragment>
     )
   }
