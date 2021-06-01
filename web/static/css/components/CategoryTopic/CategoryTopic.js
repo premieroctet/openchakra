@@ -63,4 +63,45 @@ export default theme => ({
     padding: theme.padding.whiteButton.padding,
     fontWeight: theme.typography.whiteButton.fontWeight
   },
+  hiddenOnXs:{
+    [theme.breakpoints.only("xs")]:{
+      display: 'none'
+    }
+  },
+  categorySlideContainer:{
+    [theme.breakpoints.only("xs")]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only("sm")]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only("md")]:{
+      display: 'none'
+    }
+  },
+  hideOnBigScreen:{
+    [theme.breakpoints.only("lg")]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only("xl")]:{
+      display: 'none'
+    }
+  },
+  buttonDiscoverMobile:{
+    marginTop: '10vh',
+    display: 'flex',
+    justifyContent: 'center',
+    [theme.breakpoints.only("xl")]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only("lg")]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only("md")]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only("sm")]:{
+      display: 'none'
+    }
+  }
 })
