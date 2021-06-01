@@ -1,12 +1,9 @@
 import React from 'react'
-import axios from 'axios'
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import Album from '../../components/Album/Album'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/picture/picture';
-import Hidden from "@material-ui/core/Hidden";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
@@ -39,13 +36,12 @@ class ProfilePictures extends React.Component {
         </Grid>
         {
           !editable ?
-            <Hidden only={['sm', 'xs']}>
-              <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                <Grid style={{width: '70%'}}>
-                  <AskQuestion user={user}/>
-                </Grid>
+            <Grid className={classes.containerAskQuestion} item >
+              <Grid style={{width: '70%'}}>
+                <AskQuestion user={user}/>
               </Grid>
-            </Hidden> : null
+            </Grid>
+         : null
         }
       </Grid>
     )
@@ -62,16 +58,16 @@ class ProfilePictures extends React.Component {
 
     return (
       <React.Fragment>
-        <Hidden only={['xs']}>
+        <Grid className={classes.profileLayoutContainer}>
           <ProfileLayout user={user}>
             {this.content(classes, user)}
           </ProfileLayout>
-        </Hidden>
-        <Hidden only={['lg', 'xl','sm', 'md']}>
+        </Grid>
+        <Grid className={classes.LayoutMobileProfile}>
           <LayoutMobileProfile user={user} currentIndex={4}>
             {this.content(classes, user)}
           </LayoutMobileProfile>
-        </Hidden>
+        </Grid>
       </React.Fragment>
     )
   }
