@@ -1,5 +1,5 @@
 import SummaryCommentary from "../../components/SummaryCommentary/SummaryCommentary";
-const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
+const {snackBarSuccess} = require('../../utils/notifications');
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
@@ -11,7 +11,6 @@ import Badges from '../../components/Badges/Badges'
 import Hashtags from '../../components/Hashtags/Hashtags'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/about/about';
-import Hidden from "@material-ui/core/Hidden";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
@@ -39,7 +38,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ShowExperience from "../../components/ShowEperience/ShowExperience";
 import ShowDiploma from "../../components/ShowDiploma/ShowDiploma";
 import ShowCertification from "../../components/ShowCertification/ShowCertification";
-import Notes from "../../components/Notes/Notes";
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 
 const moment=require('moment');
@@ -379,70 +377,66 @@ class ProfileAbout extends CompanyComponent {
     const company_mode = Boolean(this.state.company)
     return(
       <Grid container spacing={2} style={{marginBottom: '12vh', width: '100%', marginLeft: 0, marginRight: 0}}>
-        <Hidden only={['xs']}>
-          <Grid item xl={5} lg={5} md={12} sm={12} xs={12}>
-            <Box>
-              <About user={user} />
-            </Box>
-          </Grid>
-        </Hidden>
-        <Hidden only={['sm','md','lg','xl']}>
-          <Grid container item xs={12} style={{position: 'relative' , display: 'flex', alignItems: 'center', margin: 0}}>
-            { editable ?
-              <Grid style={{position: 'absolute', right: 5}}>
-                <IconButton aria-label="edit" onClick={this.openEdition}>
-                  <CreateIcon />
-                </IconButton>
-              </Grid>
-              :
-              null
-            }
-            <Grid item xs={12}>
-              <Grid>
-                <h3 >Habite à </h3>
-              </Grid>
-              <Grid style={{margin: 3}}/>
-              {
-                company_mode ?
-                  <Grid>
-                    <Typography style={{color:'black'}}>{company ? company.billing_address.city + ", " + company.billing_address.country  : null}</Typography>
-                  </Grid> :
-                  <Grid>
-                    <Typography style={{color:'black'}}>{alfred ? alfred.billing_address.city + ", " + alfred.billing_address.country : null}</Typography>
-                  </Grid>
-              }
-
+        <Grid className={classes.aboutContainer} item xl={5} lg={5} md={12} sm={12} xs={12}>
+          <Box>
+            <About user={user} />
+          </Box>
+        </Grid>
+        <Grid className={classes.bigContainer} container item xs={12}>
+          { editable ?
+            <Grid style={{position: 'absolute', right: 5}}>
+              <IconButton aria-label="edit" onClick={this.openEdition}>
+                <CreateIcon />
+              </IconButton>
             </Grid>
+            :
+            null
+          }
+          <Grid item xs={12}>
+            <Grid>
+              <h3 >Habite à </h3>
+            </Grid>
+            <Grid style={{margin: 3}}/>
             {
-              company_mode ? null :
-                <Grid item xs={12}>
+              company_mode ?
+                <Grid>
+                  <Typography style={{color:'black'}}>{company ? company.billing_address.city + ", " + company.billing_address.country  : null}</Typography>
+                </Grid> :
+                <Grid>
+                  <Typography style={{color:'black'}}>{alfred ? alfred.billing_address.city + ", " + alfred.billing_address.country : null}</Typography>
+                </Grid>
+            }
+
+          </Grid>
+          {
+            company_mode ? null :
+              <Grid item xs={12}>
+                <Grid>
+                  <h3>Parle </h3>
+                </Grid>
+                <Grid style={{margin: 3}}/>
+                <Grid>
+                  <Typography style={{color:'black'}}>{alfred ? alfred.languages.join(', ') : null}</Typography>
+                </Grid>
+              </Grid>
+          }
+          {
+            alfred ?
+              alfred.id_confirmed ?
+                <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '4vh'}}>
                   <Grid>
-                    <h3>Parle </h3>
+                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>{alfred ? alfred.firstname : null}</Typography>
                   </Grid>
                   <Grid style={{margin: 3}}/>
                   <Grid>
-                    <Typography style={{color:'black'}}>{alfred ? alfred.languages.join(', ') : null}</Typography>
+                    <Typography style={{color:'black'}}>à un profil vérifié</Typography>
                   </Grid>
-                </Grid>
-            }
-            {
-              alfred ?
-                alfred.id_confirmed ?
-                  <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '4vh'}}>
-                    <Grid>
-                      <Typography style={{color: 'rgba(39,37,37,35%)'}}>{alfred ? alfred.firstname : null}</Typography>
-                    </Grid>
-                    <Grid style={{margin: 3}}/>
-                    <Grid>
-                      <Typography style={{color:'black'}}>à un profil vérifié</Typography>
-                    </Grid>
-                    <Grid>
-                      <CheckCircleOutlineIcon/>
-                    </Grid>
-                  </Grid> : null : null
-            }
-          </Grid>
-        </Hidden>
+                  <Grid>
+                    <CheckCircleOutlineIcon/>
+                  </Grid>
+                </Grid> : null : null
+          }
+        </Grid>
         <Grid item xl={7} lg={7} md={12} sm={12} xs={12}>
           <Box>
             <Presentation user={user}/>
@@ -506,13 +500,12 @@ class ProfileAbout extends CompanyComponent {
         }
         {
           !editable ?
-            <Hidden only={['sm', 'xs']}>
-              <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                <Grid style={{width: '70%'}}>
-                  <AskQuestion user={user}/>
-                </Grid>
+            <Grid className={classes.askquestionContainer} item>
+              <Grid style={{width: '70%'}}>
+                <AskQuestion user={user}/>
               </Grid>
-            </Hidden> : null
+            </Grid>
+            : null
         }
 
       </Grid>
@@ -529,16 +522,16 @@ class ProfileAbout extends CompanyComponent {
 
     return (
       <React.Fragment>
-        <Hidden only={['xs']}>
+        <Grid className={classes.profileLayoutContainer}>
           <ProfileLayout user={user}>
             {this.content(classes, user, alfred)}
           </ProfileLayout>
-        </Hidden>
-        <Hidden only={['lg', 'xl',  'sm', 'md']}>
+        </Grid>
+        <Grid className={classes.layoutMobileProfileContainer}>
           <LayoutMobileProfile user={user} currentIndex={4}>
             {this.content(classes, user, alfred, company)}
           </LayoutMobileProfile>
-        </Hidden>
+        </Grid>
         {showEdition ? this.modalEditDialog(classes) : null }
       </React.Fragment>
     )

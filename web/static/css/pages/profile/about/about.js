@@ -30,5 +30,58 @@ export default theme => ({
     [theme.breakpoints.down('xs')]:{
       minWidth: '100%'
     }
+  },
+  aboutContainer:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  },
+  bigContainer:{
+    position: 'relative' ,
+    display: 'flex',
+    alignItems: 'center',
+    margin: 0,
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    }
+  },
+  askquestionContainer:{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  },
+  profileLayoutContainer:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  },
+  layoutMobileProfileContainer:{
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    }
   }
 })
