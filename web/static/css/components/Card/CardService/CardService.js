@@ -227,6 +227,19 @@ export default theme => ({
       lineClamp:1,
 
     }
+  },
+  carServiceInfoContainer:{
+    [theme.breakpoints.only('xs')]:{
+      display:'none',
+    },
+    [theme.breakpoints.only('sm')]:{
+      display:'none',
+    },
+  },
+  containerDistance:{
+    [theme.breakpoints.only('xs')]:{
+      display:'none',
+    },
   }
 
 })

@@ -12,7 +12,6 @@ import Avatar from "@material-ui/core/Avatar";
 import styles from '../../../static/css/components/Card/CardService/CardService'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography";
-import Hidden from "@material-ui/core/Hidden";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import IconButton from '@material-ui/core/IconButton';
@@ -136,9 +135,9 @@ class CardService extends React.Component{
     }
     if (this.props.item===null) {
       return (
-        <Hidden only={['xs', 'sm']}>
+        <Grid className={classes.carServiceInfoContainer}>
           <CardServiceInfo classes={classes} />
-        </Hidden>
+        </Grid>
       )
     }
 
@@ -189,14 +188,14 @@ class CardService extends React.Component{
                   </Grid>
                   <Grid className={classes.cardKmContainer}>
                     { distance ?
-                      <Hidden only={['xs']}>
+                      <Grid className={classes.containerDistance}>
                         <Grid style={{whiteSpace: 'nowrap'}}>
                           <Typography>{`À ${" "} ${distance} ${" "}km `}</Typography>
                         </Grid>
                         <Grid>
                           <Typography>-</Typography>
                         </Grid>
-                      </Hidden>
+                      </Grid>
                       :
                       null
                     }
