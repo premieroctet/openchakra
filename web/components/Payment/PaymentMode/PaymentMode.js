@@ -1,14 +1,13 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import PaymentPics from "../../PaymentPics/PaymentPics";
 import HttpsIcon from '@material-ui/icons/Https';
 import PaymentCard from "../PaymentCard/PaymentCard";
-import Hidden from "@material-ui/core/Hidden";
+import withStyles from "@material-ui/core/styles/withStyles";
+import styles from '../../../static/css/components/PaymentMode/PaymentMode'
 
 class PaymentMode extends React.Component{
   constructor(props) {
@@ -20,7 +19,7 @@ class PaymentMode extends React.Component{
   };
 
   render() {
-    const {cards, currentUser, id_card} = this.props;
+    const {cards, currentUser, id_card, classes} = this.props;
     let name = currentUser.firstname + " " + currentUser.name;
 
     return(
@@ -34,11 +33,9 @@ class PaymentMode extends React.Component{
               <Typography>Paiement sécurisé</Typography>
             </Grid>
           </Grid>
-          <Hidden only={['xs']}>
-            <Grid>
-              <PaymentPics/>
-            </Grid>
-          </Hidden>
+          <Grid className={classes.paymentPicsContainer}>
+            <PaymentPics/>
+          </Grid>
         </Grid>
         <Grid style={{marginTop: '3vh', marginBottom: '3vh'}}>
           <FormControl component="fieldset" style={{width: '100%'}}>
@@ -52,4 +49,4 @@ class PaymentMode extends React.Component{
   }
 }
 
-export default PaymentMode
+export default withStyles(styles)(PaymentMode)
