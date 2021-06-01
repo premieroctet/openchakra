@@ -72,6 +72,15 @@ export default theme => ({
   },
   illuContainer:{
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
   }
 })

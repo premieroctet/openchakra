@@ -6,7 +6,6 @@ import Link from 'next/link';
 import styles from '../../../static/css/components/BannerPresentation/BannerPresentation'
 import withStyles from "@material-ui/core/styles/withStyles";
 import {isB2BStyle} from "../../../utils/context.js";
-import Hidden from "@material-ui/core/Hidden";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 const {setAxiosAuthentication}=require('../../../utils/authentication');
@@ -65,13 +64,11 @@ class BannerPresentation extends React.Component {
         </Grid>
         {
           isB2BStyle(user) ?
-            <Hidden only={['md', 'sm', 'xs']}>
-              <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.illuContainer}>
-                <img title={'illuB2b'} alt={'illuB2b'} src={`../../../static/assets/img/homePage/${isB2BStyle(user) ? 'b2bIllu.svg' : 'illuHeader.png'}`} className={classes.illuStyle}/>
-              </Grid>
-            </Hidden> : null
+            <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.illuContainer}>
+              <img title={'illuB2b'} alt={'illuB2b'} src={`../../../static/assets/img/homePage/${isB2BStyle(user) ? 'b2bIllu.svg' : 'illuHeader.png'}`} className={classes.illuStyle}/>
+            </Grid>
+            : null
         }
-
       </Grid>
     );
   }
