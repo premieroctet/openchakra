@@ -7,10 +7,8 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import StarRatings from 'react-star-ratings';
 import TextField from '@material-ui/core/TextField';
-
 import styles from '../static/css/pages/evaluateClient/evaluateClient';
 import Typography from "@material-ui/core/Typography";
-import Hidden from "@material-ui/core/Hidden";
 import LayoutEvaluate from "../hoc/Layout/LayoutEvaluate";
 import LayoutMobile from "../hoc/Layout/LayoutMobile";
 
@@ -225,16 +223,16 @@ class EvaluateClient extends React.Component {
     return (
 
       <React.Fragment>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Grid className={classes.hideOnMobile}>
           <LayoutEvaluate user={user}>
             {this.content(classes)}
           </LayoutEvaluate>
-        </Hidden>
-        <Hidden only={['lg', 'xl']}>
+        </Grid>
+        <Grid className={classes.hideOnWeb}>
           <LayoutMobile currentIndex={null}>
             {this.content(classes)}
           </LayoutMobile>
-        </Hidden>
+        </Grid>
       </React.Fragment>
     );
   };

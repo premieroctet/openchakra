@@ -14,5 +14,24 @@ export default theme => ({
     fontWeight: 'bold',
     textTransform : 'initial',
     color: 'white'
+  },
+  hideOnMobile:{
+    [theme.breakpoints.down('xs')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.down('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.down('md')]:{
+      display: 'none'
+    }
+  },
+  hideOnWeb:{
+    [theme.breakpoints.down('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.down('lg')]:{
+      display: 'none'
+    },
   }
 })
