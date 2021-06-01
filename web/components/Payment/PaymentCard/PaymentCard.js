@@ -1,14 +1,11 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Typography from "@material-ui/core/Typography";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import IconButton from "@material-ui/core/IconButton";
 import styles from '../../../static/css/components/PaymentCard/PaymentCard';
 import withStyles from "@material-ui/core/styles/withStyles";
-import Hidden from "@material-ui/core/Hidden";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 class PaymentCard extends React.Component{
   constructor(props) {
@@ -24,8 +21,6 @@ class PaymentCard extends React.Component{
           cards.map((e, index) => {
             let expirationDate = e.ExpirationDate.slice(0,2) + "/20" + e.ExpirationDate.slice(2);
             let cb = e.CardProvider === 'MASTERCARD' ? e.Product === 'MCC'  ? e.CardProvider : 'MSI' : e.CardProvider === 'AMEX' ? 'AMEX' :  e.CardProvider === 'CB' ? e.CardProvider : 'visa' ;
-
-            console.log(e)
             return(
               <Grid container key={index} style={{display: 'flex', alignItems: 'center', marginTop:20, marginBottom: 20}}>
                 {!editable ?
@@ -36,11 +31,9 @@ class PaymentCard extends React.Component{
                   </Grid> : null
                 }
                 <Grid item xl={7} xs={7} sm={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                  <Hidden only={['xs']}>
-                    <Grid item xl={6} sm={4} style={{display: 'flex'}}>
-                      <img src={`/static/assets/icon/paymentIcones/${cb.toLowerCase()}.png`} height={20} width={35} alt={e.CardProvider} title={e.CardProvider}/>
-                    </Grid>
-                  </Hidden>
+                  <Grid className={classes.containerImg} item xl={6} sm={4}>
+                    <img src={`/static/assets/icon/paymentIcones/${cb.toLowerCase()}.png`} height={20} width={35} alt={e.CardProvider} title={e.CardProvider}/>
+                  </Grid>
                   <Grid item xl={6} sm={4} xs={10} style={{display: 'flex', flexDirection:'column'}}>
                     <Grid className={classes.containerNameCard}>
                       <Typography>{userName}</Typography>

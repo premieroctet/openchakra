@@ -9,5 +9,11 @@ export default theme => ({
       textAlign: 'center'
     }
   },
+  containerImg:{
+    display: 'flex',
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  }
 
 })
