@@ -1,6 +1,5 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -12,16 +11,12 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from 'prop-types';
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from '@material-ui/icons/Menu';
-import Button from "@material-ui/core/Button";
 import NavBar from "../../hoc/Layout/NavBar/NavBar";
 import MobileNavbar from "../../hoc/Layout/NavBar/MobileNavbar";
 import axios from "axios";
 import Router from "next/router";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-
-const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../utils/consts')
-
 const {setAxiosAuthentication} = require('../../utils/authentication');
 const {STEPS}=require('../../utils/dashboardSteps');
 const {isB2BAdmin} = require('../../utils/context');
@@ -132,7 +127,7 @@ class CompanyDashboard extends React.Component{
   }
 
   render() {
-    const{classes, window, mode} = this.props;
+    const{classes, window} = this.props;
     const {mobileOpen, activeStep} = this.state;
 
     const container = window !== undefined ? () => window().document.body : undefined;
@@ -153,7 +148,7 @@ class CompanyDashboard extends React.Component{
         </Grid>
         <nav className={classes.drawer} aria-label="mailbox folders">
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-          <Hidden smUp implementation="css">
+          <Grid className={classes.drawerContainer}>
             <Drawer
               container={container}
               variant="temporary"
@@ -169,8 +164,8 @@ class CompanyDashboard extends React.Component{
             >
               {this.drawer(classes)}
             </Drawer>
-          </Hidden>
-          <Hidden xsDown implementation="css">
+          </Grid>
+          <Grid className={classes.drawerMobile}>
             <Drawer
               classes={{
                 paper: classes.drawerPaper,
@@ -180,22 +175,20 @@ class CompanyDashboard extends React.Component{
             >
               {this.drawer(classes)}
             </Drawer>
-          </Hidden>
+          </Grid>
         </nav>
         <main className={classes.content}>
-          <Hidden only={['xs']}>
+          <Grid className={classes.navbarContainer}>
             <NavBar/>
-          </Hidden>
+          </Grid>
           <Grid>
             {this.renderSwitch(activeStep)}
           </Grid>
-          <Hidden only={['lg', 'xl', 'md', 'sm']}>
-            <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 4}}>
-              <Grid style={{width: '100%'}}>
-                <MobileNavbar currentIndex={0}/>
-              </Grid>
+          <Grid className={classes.mobileNavbar}>
+            <Grid style={{width: '100%'}}>
+              <MobileNavbar currentIndex={0}/>
             </Grid>
-          </Hidden>
+          </Grid>
         </main>
       </Grid>
     );

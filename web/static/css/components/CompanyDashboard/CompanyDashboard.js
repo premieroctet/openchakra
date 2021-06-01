@@ -29,7 +29,7 @@ export default theme =>({
   },
   menuButton: {
     margin: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none',
     },
   },
@@ -51,7 +51,7 @@ export default theme =>({
     }
   },
   appBar: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('xs')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
@@ -156,5 +156,41 @@ export default theme =>({
     height: '100%',
     paddingTop: '50%',
     paddingBottom: '5%'
+  },
+  drawerContainer:{
+    [theme.breakpoints.up('sm')]:{
+      display: 'none'
+    }
+  },
+  drawerMobile:{
+    [theme.breakpoints.down('sm')]:{
+      display: 'none'
+    }
+  },
+  navbarContainer:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    }
+  },
+  mobileNavbar:{
+    position: 'fixed',
+    bottom: '3%',
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+    zIndex: 4,
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+
   }
 })
