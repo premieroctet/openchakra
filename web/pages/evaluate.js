@@ -6,12 +6,9 @@ import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import StarRatings from 'react-star-ratings';
-import {toast} from 'react-toastify';
 import TextField from '@material-ui/core/TextField';
 import Skills from '../components/Skills/Skills';
-
 import Typography from "@material-ui/core/Typography";
-import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../hoc/Layout/LayoutMobile";
 import LayoutEvaluate from "../hoc/Layout/LayoutEvaluate";
 import styles from '../static/css/pages/evaluate/evaluate';
@@ -247,16 +244,16 @@ class Evaluate extends React.Component {
 
     return (
       <React.Fragment>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Grid className={classes.hideOnMobile}>
           <LayoutEvaluate user={user}>
             {this.content(classes)}
           </LayoutEvaluate>
-        </Hidden>
-        <Hidden only={['lg', 'xl']}>
+        </Grid>
+        <Grid className={classes.hideOnLaptop}>
           <LayoutMobile currentIndex={null}>
             {this.content(classes)}
           </LayoutMobile>
-        </Hidden>
+        </Grid>
       </React.Fragment>
     );
   };
