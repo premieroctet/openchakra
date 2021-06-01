@@ -9,5 +9,10 @@ export default theme => ({
     [theme.breakpoints.down('xs')]:{
       width: '100%'
     }
+  },
+  hideOnMobile:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
   }
 })

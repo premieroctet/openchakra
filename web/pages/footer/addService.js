@@ -5,7 +5,6 @@ import LayoutFaq from "../../hoc/Layout/LayoutFaq";
 import NeedMoreFaq from "../../hoc/Layout/Faq/NeedMoreFaq";
 import styles from '../../static/css/pages/footer/addService/addService';
 import Typography from "@material-ui/core/Typography";
-import Hidden from "@material-ui/core/Hidden";
 
 class AddService extends React.Component {
   constructor(props) {
@@ -18,11 +17,9 @@ class AddService extends React.Component {
       <LayoutFaq>
         <Grid className={classes.mainContainerAddService}>
           <Grid style={{display: 'flex'}}>
-            <Hidden only={['xs']}>
-              <Grid>
-                <h1 style={{marginRight: '25px', color: '#F8CF61'}}>1</h1>
-              </Grid>
-            </Hidden>
+            <Grid className={classes.hideOnMobile}>
+              <h1 style={{marginRight: '25px', color: '#F8CF61'}}>1</h1>
+            </Grid>
             <Grid style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
                 <h3 className={classes.titleRub}>Inscrivez-vous & détaillez vos informations</h3>
@@ -34,12 +31,10 @@ class AddService extends React.Component {
             </Grid>
           </Grid>
           <Grid style={{display: 'flex'}}>
-            <Hidden only={['xs']}>
-              <Grid>
-                <h1 style={{marginRight: '25px', color: '#84A5E0'}}>2
-                </h1>
-              </Grid>
-            </Hidden>
+            <Grid className={classes.hideOnMobile}>
+              <h1 style={{marginRight: '25px', color: '#84A5E0'}}>2
+              </h1>
+            </Grid>
             <Grid style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
                 <h3 className={classes.titleRub}>Commencez votre recherche</h3>
@@ -52,12 +47,10 @@ class AddService extends React.Component {
             </Grid>
           </Grid>
           <Grid style={{display: 'flex'}}>
-            <Hidden only={['xs']}>
-              <Grid>
-                <h1 style={{marginRight: '25px', color: '#F36B7F'}}>3
-                </h1>
-              </Grid>
-            </Hidden>
+            <Grid className={classes.hideOnMobile}>
+              <h1 style={{marginRight: '25px', color: '#F36B7F'}}>3
+              </h1>
+            </Grid>
             <Grid style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
                 <h3 className={classes.titleRub}>Choisissez votre Alfred et réservez !</h3>
