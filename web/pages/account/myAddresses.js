@@ -22,7 +22,6 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
-import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 const {isB2BAdmin}=require('../../utils/context')
 
@@ -475,16 +474,16 @@ class myAddresses extends React.Component {
           <meta property="description"
                 content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…"/>
         </Helmet>
-        <Hidden only={['xs']}>
+        <Grid className={classes.hideOnlyMobile} >
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
-        </Hidden>
-        <Hidden only={['lg', 'xl', 'sm', 'md']}>
+        </Grid>
+        <Grid className={classes.hideOnLaptop}>
           <LayoutMobile currentIndex={4}>
             {this.content(classes)}
           </LayoutMobile>
-        </Hidden>
+        </Grid>
         {this.state.open ? this.modalDeleteAddress() : null}
       </React.Fragment>
     );
