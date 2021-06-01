@@ -50,5 +50,35 @@ export default theme => ({
       display : 'flex',
       justifyContent: 'left'
     }
+  },
+  containerAskQuestion:{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    [theme.breakpoints.only('xs')]:{
+      display : 'none',
+    },
+    [theme.breakpoints.only('sm')]:{
+      display : 'none',
+    }
+  },
+  profileLayoutContainer:{
+    [theme.breakpoints.only('xs')]:{
+      display : 'none',
+    },
+  },
+  layoutMobileProfileContainer:{
+    [theme.breakpoints.only('xl')]:{
+      display : 'none',
+    },
+    [theme.breakpoints.only('lg')]:{
+      display : 'none',
+    },
+    [theme.breakpoints.only('md')]:{
+      display : 'none',
+    },
+    [theme.breakpoints.only('sm')]:{
+      display : 'none',
+    },
   }
 })

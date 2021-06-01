@@ -12,7 +12,6 @@ import Router from 'next/router'
 import axios from 'axios'
 const _ = require('lodash');
 import Hidden from "@material-ui/core/Hidden";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Box from "../../components/Box/Box";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -393,13 +392,12 @@ class ProfileStatistics extends React.Component {
         </Grid>
         {
           !editable ?
-            <Hidden only={['sm', 'xs']}>
-              <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                <Grid style={{width: '70%'}}>
-                  <AskQuestion user={user}/>
-                </Grid>
+            <Grid className={classes.containerAskQuestion} item>
+              <Grid style={{width: '70%'}}>
+                <AskQuestion user={user}/>
               </Grid>
-            </Hidden> : null
+            </Grid>
+           : null
         }
       </Grid>
     )
@@ -407,7 +405,6 @@ class ProfileStatistics extends React.Component {
 
   render() {
     const {classes, user}=this.props;
-    const {serviceUser} = this.state;
 
     if (!user) {
       return null
@@ -415,18 +412,16 @@ class ProfileStatistics extends React.Component {
 
     return (
       <React.Fragment>
-        <React.Fragment>
-          <Hidden only={['xs']}>
-            <ProfileLayout user={user}>
-              {this.content(classes, user)}
-            </ProfileLayout>
-          </Hidden>
-          <Hidden  only={['lg', 'xl','sm', 'md']}>
-            <LayoutMobileProfile user={user} currentIndex={4}>
-              {this.content(classes, user)}
-            </LayoutMobileProfile>
-          </Hidden>
-        </React.Fragment>
+        <Grid className={classes.profileLayoutContainer}>
+          <ProfileLayout user={user}>
+            {this.content(classes, user)}
+          </ProfileLayout>
+        </Grid>
+        <Grid className={classes.layoutMobileProfileContainer}>
+          <LayoutMobileProfile user={user} currentIndex={4}>
+            {this.content(classes, user)}
+          </LayoutMobileProfile>
+        </Grid>
       </React.Fragment>
     )
   }
