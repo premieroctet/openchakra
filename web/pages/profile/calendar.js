@@ -6,7 +6,6 @@ import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerA
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/calendar/calendar';
 import {getLoggedUserId} from '../../utils/context'
-import Hidden from "@material-ui/core/Hidden";
 import Topic from "../../hoc/Topic/Topic";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
@@ -85,16 +84,16 @@ class ProfileCalendar extends React.Component {
 
     return (
       <React.Fragment>
-        <Hidden only={['xs']}>
+        <Grid className={classes.profileLayoutContainer}>
           <ProfileLayout user={user} index={index}>
             {this.content(classes, bookings, user, readOnly)}
           </ProfileLayout>
-        </Hidden>
-        <Hidden  only={['lg', 'xl','sm', 'md']}>
+        </Grid>
+        <Grid className={classes.layoutMobileProfileContainer}>
           <LayoutMobileProfile user={user} index={index} currentIndex={2}>
             {this.content(classes, bookings)}
           </LayoutMobileProfile>
-        </Hidden>
+        </Grid>
       </React.Fragment>
     )
   }
