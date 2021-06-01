@@ -10,7 +10,6 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/profile/editProfile/editProfile';
-import Hidden from "@material-ui/core/Hidden";
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Divider from "@material-ui/core/Divider";
@@ -457,7 +456,7 @@ class editProfile extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {user} = this.state;
+    const {user, smsCodeOpen} = this.state;
 
     if (!user) {
       return null
@@ -470,17 +469,17 @@ class editProfile extends React.Component {
           <meta property="description"
                 content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
         </Helmet>
-        <Hidden only={['xs']}>
+        <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
-        </Hidden>
-        <Hidden only={['lg', 'xl', 'sm', 'md']}>
+        </Grid>
+        <Grid className={classes.layoutMobileContainer}>
           <LayoutMobile currentIndex={4}>
             {this.content(classes)}
           </LayoutMobile>
-        </Hidden>
-        {this.dialogConfirmPhone(classes)}
+        </Grid>
+        {smsCodeOpen ? this.dialogConfirmPhone(classes) : null}
       </React.Fragment>
     );
   };

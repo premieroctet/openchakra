@@ -30,6 +30,24 @@ export default theme => ({
     textTransform: 'initial',
     width: '100%',
     color:'white',
-
+  },
+  layoutAccountContainer:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  },
+  layoutMobileContainer:{
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    }
   }
 })
