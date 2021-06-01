@@ -2,16 +2,12 @@ const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Router from 'next/router'
 import Grid from '@material-ui/core/Grid'
-import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/components/AddService/AddService';
-
 import {Button} from '@material-ui/core'
 import {SHOP} from '../../utils/i18n'
-import Box from '../Box/Box'
 import Typography from "@material-ui/core/Typography";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import Hidden from "@material-ui/core/Hidden";
 const {isLoggedUserAlfred}=require('../../utils/context')
 
 class AddService extends React.Component {
@@ -33,9 +29,9 @@ class AddService extends React.Component {
 
     return (
       <Grid className={classes.containerAddService}>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Grid className={classes.containerTitle}>
           <h3>Mes services</h3>
-        </Hidden>
+        </Grid>
         <Button classes={{root : classes.buttonAddService}} onClick={this.clickService} startIcon={<AddCircleOutlineIcon />}>
           { isLoggedUserAlfred() ?
             SHOP.addService

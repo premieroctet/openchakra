@@ -15,5 +15,16 @@ export default theme => ({
   descriptionAddService:{
     color:'rgba(39,37,37,35%)',
     textAlign: 'center'
+  },
+  containerTitle:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    }
   }
 })
