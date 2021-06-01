@@ -10,4 +10,9 @@ export default theme => ({
       width: '80%'
     }
   },
+  hiddenXs:{
+    [theme.breakpoints.only('xs')]: {
+      display: 'none'
+    }
+  }
 })
