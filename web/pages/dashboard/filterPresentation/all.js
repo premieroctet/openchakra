@@ -8,7 +8,7 @@ class all extends DataPage {
   getColumnDefs = () => {
     return [
       {headerName: "_id", field: "_id", width: 0},
-      textColumn({headerName: "Label", field: "label"),
+      textColumn({headerName: "Label", field: "label"}),
     ]
   }
 

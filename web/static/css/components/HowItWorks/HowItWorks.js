@@ -22,7 +22,13 @@ export default theme => ({
   howItWorksRightContainer:{
     display: 'flex',
     flexDirection: 'column',
-    width: '30%'
+    width: '30%',
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
   },
   howItWorksRightText:{
     color: theme.palette.white.main,
