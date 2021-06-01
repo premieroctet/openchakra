@@ -19,13 +19,12 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
-import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Input from '@material-ui/core/Input';
-const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
+const {snackBarSuccess} = require('../../utils/notifications');
 
 
 moment.locale('fr');
@@ -524,16 +523,16 @@ class security extends React.Component {
           <meta property="description"
                 content="Modifiez votre mot de passe et gérez la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
         </Helmet>
-        <Hidden only={['xs']}>
+        <Grid className={classes.layoutAccounContainer}>
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
-        </Hidden>
-        <Hidden only={['lg', 'xl', 'sm', 'md']}>
+        </Grid>
+        <Grid className={classes.layoutMobileContainer}>
           <LayoutMobile>
             {this.content(classes)}
           </LayoutMobile>
-        </Hidden>
+        </Grid>
           {open ? this.modalDeleteShop() : null}
           {open2 ? this.modalDeleteAccount() : null}
       </Fragment>
