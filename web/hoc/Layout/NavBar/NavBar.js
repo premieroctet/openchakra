@@ -127,7 +127,7 @@ class NavBar extends Component {
       .then(res => {
         const user = res.data
         this.setState({user: user})
-        const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current').catch(err =>{console.error(err)}) : emptyPromise({ data : user})
+        const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
         promise
           .then(res => {
             var allAddresses = {'main': res.data.billing_address};
