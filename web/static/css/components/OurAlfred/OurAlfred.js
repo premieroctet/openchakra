@@ -66,4 +66,48 @@ export default theme => ({
     fontFamily: theme.typography.whiteButton.fontFamily,
     fontWeight: theme.typography.whiteButton.fontWeight
   },
+  hiddenOnMobile:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  },
+  alfredSlideContainer:{
+    width: '100%',
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    }
+  },
+  containerCardPreviewMobile:{
+    width: '100%',
+    margin: 0,
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    }
+  },
+  containerMobileButton:{
+    marginTop: '10vh',
+    display: 'flex',
+    justifyContent: 'center',
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    }
+  }
 })

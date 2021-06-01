@@ -2,7 +2,6 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Router from 'next/router'
 import Button from "@material-ui/core/Button";
-import Hidden from "@material-ui/core/Hidden";
 import {CATEGORY} from "../../../utils/i18n";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../../static/css/components/OurAlfred/OurAlfred';
@@ -37,17 +36,15 @@ class OurAlfred extends React.Component{
               </Grid>
             </Grid>
           </Grid>
-          <Hidden only={['xs']}>
-            <Grid>
-              <Button classes={{root: classes.ourAlfredButton}} onClick={() => Router.push('/search?search=1')}>Tout découvrir</Button>
-            </Grid>
-          </Hidden>
+          <Grid className={classes.hiddenOnMobile}>
+            <Button classes={{root: classes.ourAlfredButton}} onClick={() => Router.push('/search?search=1')}>Tout découvrir</Button>
+          </Grid>
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
-          <Hidden only={['xs', 'sm', 'md']}>
+          <Grid item className={classes.alfredSlideContainer}>
             <AlfredSlide model={new SlideGridDataModel(alfred, 3, 1, true)} style={classes} />
-          </Hidden>
-          <Hidden only={['lg', 'xl',]}>
+          </Grid>
+          <Grid item container spacing={3} className={classes.containerCardPreviewMobile}>
             {
               Object.keys(alfred).map((res, index) =>(
                 <Grid item key={index}>
@@ -55,15 +52,13 @@ class OurAlfred extends React.Component{
                 </Grid>
               ))
             }
-          </Hidden>
-        </Grid>
-        <Hidden only={['xl', 'lg', 'md', 'sm']}>
-          <Grid style={{marginTop: '10vh', display: 'flex', justifyContent: 'center'}}>
-            <Button variant={'outlined'} classes={{root : classes.categoryButton}} onClick={() => Router.push('/search?search=1')}>
-              {CATEGORY.button}
-            </Button>
           </Grid>
-        </Hidden>
+        </Grid>
+        <Grid className={classes.containerMobileButton}>
+          <Button variant={'outlined'} classes={{root : classes.categoryButton}} onClick={() => Router.push('/search?search=1')}>
+            {CATEGORY.button}
+          </Button>
+        </Grid>
       </Grid>
 
     );
