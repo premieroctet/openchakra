@@ -27,7 +27,15 @@ export default theme => ({
     justifyContent: 'center',
     width: '100%',
   },
-  hidden:{
-    width: '100%'
+  hiddenOnMobile:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
   }
 })

@@ -3,13 +3,11 @@ import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
 import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/pages/homePage/index';
-import Hidden from "@material-ui/core/Hidden";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
 import {isEditableUser} from "../../utils/context";
+import styles from '../../static/css/pages/profile/reviews/reviews'
 
 class ProfileReviews extends React.Component {
 
@@ -34,13 +32,12 @@ class ProfileReviews extends React.Component {
         </Grid>
         {
           !editable ?
-            <Hidden only={['sm', 'xs']}>
-              <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                <Grid style={{width: '70%'}}>
-                  <AskQuestion user={user}/>
-                </Grid>
+            <Grid item className={classes.containerAskQuestion}>
+              <Grid style={{width: '70%'}}>
+                <AskQuestion user={user}/>
               </Grid>
-            </Hidden> : null
+            </Grid>
+             : null
         }
       </Grid>
     )
@@ -54,16 +51,16 @@ class ProfileReviews extends React.Component {
     }
     return (
       <React.Fragment>
-        <Hidden only={['xs']}>
+        <Grid className={classes.containerProfileLayout}>
           <ProfileLayout user={user}>
             {this.content(classes, user)}
           </ProfileLayout>
-        </Hidden>
-        <Hidden only={['lg', 'xl','sm', 'md']}>
+        </Grid>
+        <Grid className={classes.containerLayoutMobileProfile}>
           <LayoutMobileProfile user={user} currentIndex={4}>
             {this.content(classes, user)}
           </LayoutMobileProfile>
-        </Hidden>
+        </Grid>
       </React.Fragment>
     )
   }

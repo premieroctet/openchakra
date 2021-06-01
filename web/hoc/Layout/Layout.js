@@ -1,10 +1,7 @@
-import Hidden from "@material-ui/core/Hidden";
-
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import React, {Fragment} from 'react';
+import React from 'react';
 import NavBar from './NavBar/NavBar';
 import Footer from './Footer/Footer';
-
 import styles from '../../static/css/pages/layout/layoutStyle'
 import {withStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -61,13 +58,13 @@ class Layout extends React.Component {
 
   render() {
     const {children, selectedAddress, classes, gps, keyword} = this.props;
-    const {logged, categories} = this.state;
+    const {categories} = this.state;
 
     return (
       <Grid>
-        <Hidden only={['xs', 'sm', 'md']} implementation={"css"} className={classes.hidden}>
+        <Grid className={classes.hiddenOnMobile}>
           <InfoBar/>
-        </Hidden>
+        </Grid>
         <NavBar selectedAddress={selectedAddress} keyword={keyword} key={this.logged}/>
         <Grid>
           <Grid className={classes.layoutScrollMenu}>
@@ -79,12 +76,12 @@ class Layout extends React.Component {
         </Grid>
         {children}
         <Grid className={classes.mainContainerStyleFooter}>
-          <Hidden only={['xs', 'sm', 'md']} implementation={"css"} className={classes.hidden}>
+          <Grid className={classes.hiddenOnMobile}>
             <Divider style={{width: '100%'}}/>
             <Grid style={{width: '90%', marginTop: '2vh', marginBottom: '2vh'}}>
               <TrustAndSecurity/>
             </Grid>
-          </Hidden>
+          </Grid>
           <Grid className={classes.generalWidthFooter}>
             <Grid style={{width: '85%'}}>
               <Footer/>
