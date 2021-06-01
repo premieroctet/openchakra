@@ -138,19 +138,6 @@ class NewsLetter extends React.Component{
             </Grid>
           </Grid>
           <Grid className={classes.newsLetterRightContainer}>
-            {/****TODO when googleAuth avail
-              <Grid className={style.newsLetterContainer}>
-              <Button
-                variant="outlined"
-                classes={{root : style.newsLetterButtonGoogle}}
-                startIcon={<FacebookIcon />}
-              >
-                {NEWS_LETTER.google}
-              </Button>
-            </Grid>
-            <Grid >
-              <p className={style.newsLetterText}>{NEWS_LETTER.where}</p>
-            </Grid>***/}
             <Grid className={classes.newsLetterContainer}>
               <Grid>
                 <TextField

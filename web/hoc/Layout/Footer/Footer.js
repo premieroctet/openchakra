@@ -9,7 +9,6 @@ import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import TwitterIcon from '@material-ui/icons/Twitter'
 import Divider from "@material-ui/core/Divider";
 import styles from '../../../static/css/components/Footer/Footer'
-import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 import {isAndroid, isIOS} from '../../../utils/context';
 import Register from "../../../components/Register/Register";
@@ -247,11 +246,9 @@ class Footer extends React.Component {
                   <Typography>Réserver un service</Typography>
                 </Link>
               </Grid>
-              <Hidden only={['xs']}>
-                <Grid item onClick={() => Tawk_API.maximize()}>
-                  <Typography>Parler à un humain</Typography>
-                </Grid>
-              </Hidden>
+              <Grid item onClick={() => Tawk_API.maximize()} className={classes.hiddenOnMobile}>
+                <Typography>Parler à un humain</Typography>
+              </Grid>
               <Grid item>
                 <Link href={'/faq'}>
                   <Typography>FAQ</Typography>

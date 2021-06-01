@@ -69,6 +69,11 @@ export default theme => ({
       justifyContent: 'center',
       flexDirection: 'column'
     }
+  },
+  hiddenOnMobile:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
   }
 
 })

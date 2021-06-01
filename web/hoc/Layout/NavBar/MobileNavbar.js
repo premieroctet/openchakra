@@ -29,11 +29,10 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import AlgoliaPlaces from 'algolia-places-react';
 import Button from "@material-ui/core/Button";
-import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n';
+import {SEARCHBAR} from '../../../utils/i18n';
 import BusinessIcon from '@material-ui/icons/Business';
-import Link from "../../../components/Link/Link";
-import {is_development} from "../../../config/config";
-import WcIcon from '@material-ui/icons/Wc';
+import {clearAuthenticationToken} from "../../../utils/authentication";
+import {isB2BAdmin} from "../../../server/utils/serverContext";
 const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle} = require('../../../utils/context')
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 
