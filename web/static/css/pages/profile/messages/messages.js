@@ -43,5 +43,24 @@ export default theme => ({
     width: 80,
     height: 80,
     margin: 'auto'
+  },
+  layoutMessagesContainer:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  },
+  layoutMobileMessageContainer:{
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    }
   }
 })

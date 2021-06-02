@@ -3,10 +3,8 @@ import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/messages/messages';
-import Hidden from "@material-ui/core/Hidden";
 import axios from "axios";
 import Typography from '@material-ui/core/Typography';
-
 const moment=require('moment');
 import MessageSummary from '../../components/MessageSummary/MessageSummary'
 import _ from 'lodash'
@@ -278,16 +276,16 @@ class Messages extends React.Component {
 
     return (
       <React.Fragment>
-        <Hidden only={['xs']}>
+        <Grid className={classes.layoutMessagesContainer}>
           <LayoutMessages ref={this.child} handleChange={this.handleChange} {...this.state} userInfo={user}>
             {this.content(classes)}
           </LayoutMessages>
-        </Hidden>
-        <Hidden only={['lg', 'xl',  'sm', 'md']}>
+        </Grid>
+        <Grid className={classes.layoutMobileMessageContainer}>
           <LayoutMobileMessages ref={this.child} handleChange={this.handleChange} {...this.state} currentIndex={3} userInfo={user}>
             {this.content(classes)}
           </LayoutMobileMessages>
-        </Hidden>
+        </Grid>
         {relativeDetails ? this.messageDetails(classes) : null}
       </React.Fragment>
     )
