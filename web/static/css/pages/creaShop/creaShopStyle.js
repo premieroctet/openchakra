@@ -90,6 +90,19 @@ export default theme => ({
     justifyContent:'space-around',
     height: '100%'
   },
+  containerLogo:{
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+  }
 
 
 })

@@ -8,7 +8,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Stepper from '../../components/Stepper/Stepper';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import {ALF_CONDS, CANCEL_MODE, GID_LEN, CESU, CREASHOP_MODE} from '../../utils/consts.js';
+import {ALF_CONDS, CANCEL_MODE, GID_LEN, CREASHOP_MODE} from '../../utils/consts.js';
 import Router from 'next/router';
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
@@ -469,7 +469,7 @@ class creaShop extends React.Component {
 
 
   renderSwitch = (stepIndex) =>{
-    const{shop , currentUser, mode, excluded_services}= this.state;
+    const{mode}= this.state;
     return STEPS[mode][stepIndex].component(this)
   };
 
@@ -519,29 +519,27 @@ class creaShop extends React.Component {
     return (
       <Grid className={classes.root}>
         <CssBaseline />
-        <Hidden only={['lg', 'xl', 'md']}>
-          <Grid container style={{display: 'flex', alignItems: 'center'}}>
-            <Grid>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={this.handleDrawerToggle}
-                className={classes.menuButton}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Grid>
-            <Grid style={{position: 'absolute', width: '100%' , textAlign: 'center'}}>
-              <img
-                alt={'logo_myAlfred'}
-                title={'logo_myAlfred'}
-                src={'/static/assets/icon/logoGreen.svg'}
-                height={64}
-                />
-            </Grid>
+        <Grid container className={classes.containerLogo}>
+          <Grid>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={this.handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
           </Grid>
-        </Hidden>
+          <Grid style={{position: 'absolute', width: '100%' , textAlign: 'center'}}>
+            <img
+              alt={'logo_myAlfred'}
+              title={'logo_myAlfred'}
+              src={'/static/assets/icon/logoGreen.svg'}
+              height={64}
+              />
+          </Grid>
+        </Grid>
         <nav className={classes.drawer} aria-label="mailbox folders">
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Hidden smUp implementation="css">
