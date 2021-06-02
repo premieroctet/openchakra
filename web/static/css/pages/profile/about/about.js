@@ -83,5 +83,16 @@ export default theme => ({
     [theme.breakpoints.only('sm')]:{
       display: 'none'
     }
+  },
+  containerAskQuestion:{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    }
   }
 })
