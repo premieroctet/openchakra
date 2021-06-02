@@ -22,5 +22,24 @@ export default theme => ({
     [theme.breakpoints.down('lg')]:{
       width: '100%'
     }
+  },
+  layoutAccountContainer:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  },
+  layoutMobileContainer:{
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    }
   }
 })

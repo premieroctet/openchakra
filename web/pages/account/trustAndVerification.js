@@ -1,13 +1,12 @@
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
-import React, {Fragment} from 'react';
+import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import {pdfjs} from 'react-pdf';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -27,10 +26,7 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import FormHelperText from '@material-ui/core/FormHelperText';
-
 const {CESU} = require('../../utils/consts');
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 const I18N = require('../../utils/i18n');
@@ -594,7 +590,7 @@ class trustAndVerification extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {message, user} = this.state
+    const {user} = this.state
 
     if (!user) {
       return null
@@ -607,16 +603,16 @@ class trustAndVerification extends React.Component {
           <meta property="description"
                 content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
-        <Hidden only={['xs']}>
+        <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
-        </Hidden>
-        <Hidden only={['lg', 'xl', 'sm', 'md']}>
+        </Grid>
+        <Grid className={classes.layoutMobileContainer}>
           <LayoutMobile currentIndex={4}>
             {this.content(classes)}
           </LayoutMobile>
-        </Hidden>
+        </Grid>
         {this.state.open ? this.modalDeleteConfirmMessage() : null}
       </React.Fragment>
     );
