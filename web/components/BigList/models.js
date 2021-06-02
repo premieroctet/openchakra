@@ -268,6 +268,6 @@ const pictureColumn = obj => {
 module.exports= {
   StatusRenderer, DateRenderer, DateTimeRenderer, CurrencyRenderer,
   StatusFilter, PictureRenderer, PrivateRenderer, BooleanRenderer,LocationRenderer, WarningRenderer,
-  EnumRenderer, LocationRenderer, LinkRenderer,
+  EnumRenderer,LinkRenderer,
   textColumn, booleanColumn, dateColumn, dateTimeColumn, currencyColumn, pictureColumn
 }
