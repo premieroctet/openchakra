@@ -3,7 +3,6 @@ import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/pages/profile/editProfileCompany/editProfileCompany';
 import {Helmet} from "react-helmet";
-import Hidden from "@material-ui/core/Hidden";
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Router from "next/router";
@@ -477,16 +476,16 @@ class editProfileCompany extends React.Component{
           <meta property="description"
                 content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
         </Helmet>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount index={index} contextUser={user}>
             {this.content(classes)}
           </LayoutAccount>
-        </Hidden>
-        <Hidden only={['lg', 'xl']}>
+        </Grid>
+        <Grid className={classes.layoutMobileContainer}>
           <LayoutMobile currentIndex={4}>
             {this.content(classes)}
           </LayoutMobile>
-        </Hidden>
+        </Grid>
       </React.Fragment>
     );
   }
