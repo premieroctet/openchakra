@@ -315,5 +315,18 @@ export default theme => ({
   },
   hidden:{
     width: '100%'
+  },
+  contentRightContainer:{
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
   }
 })

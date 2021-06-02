@@ -812,30 +812,28 @@ class UserServicesPreview extends React.Component {
                 </Hidden>
               </Grid>
               {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
-              <Hidden only={['xs', 'sm', 'md']}>
-                <Grid item xl={6} lg={6} md={12} sm={12} xs={12} style={{paddingLeft: '5%', paddingRight: '5%'}}>
-                  <Grid className={classes.contentRight}>
-                    <DrawerBooking
-                      filters={filters}
-                      pricedPrestations={pricedPrestations}
-                      toggleDrawer={this.toggleDrawer}
-                      onChangeDate={this.onChangeDate}
-                      onChangeTime={this.onChangeTime}
-                      onQtyChanged={this.onQtyChanged}
-                      isInPerimeter={this.isInPerimeter}
-                      onLocationChanged={this.onLocationChanged}
-                      computeTravelTax={this.computeTravelTax}
-                      getLocationLabel={this.getLocationLabel}
-                      warningPerimeter={this.hasWarningPerimeter()}
-                      warningBudget={this.hasWarningBudget()}
-                      clientAddress={this.getClientAddressLabel()}
-                      clientAddressId={this.get_prop_address()}
-                      book={this.book}
-                      {...this.state}
-                    />
-                  </Grid>
+              <Grid className={classes.contentRightContainer} item xl={6} lg={6} md={12} sm={12} xs={12}>
+                <Grid className={classes.contentRight}>
+                  <DrawerBooking
+                    filters={filters}
+                    pricedPrestations={pricedPrestations}
+                    toggleDrawer={this.toggleDrawer}
+                    onChangeDate={this.onChangeDate}
+                    onChangeTime={this.onChangeTime}
+                    onQtyChanged={this.onQtyChanged}
+                    isInPerimeter={this.isInPerimeter}
+                    onLocationChanged={this.onLocationChanged}
+                    computeTravelTax={this.computeTravelTax}
+                    getLocationLabel={this.getLocationLabel}
+                    warningPerimeter={this.hasWarningPerimeter()}
+                    warningBudget={this.hasWarningBudget()}
+                    clientAddress={this.getClientAddressLabel()}
+                    clientAddressId={this.get_prop_address()}
+                    book={this.book}
+                    {...this.state}
+                  />
                 </Grid>
-              </Hidden>
+              </Grid>
             </Grid>
           </Grid>
           <Grid style={{display: 'flex', justifyContent: 'center'}}>
