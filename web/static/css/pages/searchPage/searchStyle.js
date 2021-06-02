@@ -58,7 +58,10 @@ export default theme => ({
   searchFilterMenuPosition:{
     width: '100%',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
   },
   searchFilterMenuContent:{
     width: '80%'
@@ -73,6 +76,9 @@ export default theme => ({
   searchMainContainerHeader:{
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
   },
   searchSecondFilterContainer:{
     display:'flex',
@@ -170,5 +176,61 @@ export default theme => ({
     marginTop: '10vh',
     marginBottom: '10vh'
   },
+  displayNbAvailable:{
+    display: 'flex',
+    justifyContent: 'center' ,
+    marginTop: '5vh',
+    marginBottom: '5vh',
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+  },
+  hideOnMobile:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+  },
+  hideOnBigScreen:{
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+  },
+  layoutContainer:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    },
+  },
+  layoutMobileSearchContainer:{
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+  }
 
 })
