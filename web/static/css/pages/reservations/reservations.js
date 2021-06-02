@@ -22,8 +22,24 @@ export default theme => ({
   scrollMenuTab:{
     textTransform: 'initial'
   },
+  hiddenMobile:{
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  },
   hidden:{
-    width: '100%'
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    }
   },
   detailButtonContainer:{
     width: '100%',

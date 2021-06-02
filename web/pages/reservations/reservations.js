@@ -17,7 +17,6 @@ import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import BookingCancel from '../../components/BookingDetail/BookingCancel'
 import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
 import BookingPreApprouve from "../../components/BookingDetail/BookingPreApprouve";
-import Hidden from "@material-ui/core/Hidden";
 import LayoutReservations from "../../hoc/Layout/LayoutReservations";
 import Divider from "@material-ui/core/Divider";
 import LayoutMobileReservations from "../../hoc/Layout/LayoutMobileReservations";
@@ -348,16 +347,16 @@ class AllReservations extends React.Component {
 
     return (
       <Grid>
-        <Hidden only={['xs']} implementation={'css'} className={classes.hidden}>
+        <Grid className={classes.hiddenMobile}>
           <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
             {this.content(classes)}
           </LayoutReservations>
-        </Hidden>
-        <Hidden only={['lg', 'xl',  'sm', 'md']} implementation={'css'} className={classes.hidden}>
+        </Grid>
+        <Grid className={classes.hidden}>
           <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
             {this.content(classes)}
           </LayoutMobileReservations>
-        </Hidden>
+        </Grid>
         { bookingPreview ? this.bookingPreviewModal(classes) : null}
         { bookingCancel ? this.bookingCancelModal(classes) : null}
         { bookingConfirm ? this.bookingConfirmModal(classes) : null}
