@@ -48,6 +48,11 @@ export default theme => ({
   userServicePreviewAccordionNoShadow:{
     boxShadow: 'none'
   },
+  hideOnBigSreen:{
+    [theme.breakpoints.up('lg')]:{
+      display: 'none'
+    }
+  },
 
 
   userServicePButtonResa:{

@@ -2,7 +2,6 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Typography from "@material-ui/core/Typography";
-import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import TextField from "@material-ui/core/TextField";
@@ -146,13 +145,11 @@ class DrawerBooking extends React.Component{
                 <Grid>
                   <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>{service.label} - {alfred.firstname}</Typography>
                 </Grid>
-                <Hidden lgUp>
-                  <Grid>
-                    <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
-                      <CloseIcon color={'secondary'} onClick={this.props.toggleDrawer(side, false)}/>
-                    </IconButton>
-                  </Grid>
-                </Hidden>
+                <Grid className={classes.hideOnBigSreen}>
+                  <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
+                    <CloseIcon color={'secondary'} onClick={this.props.toggleDrawer(side, false)}/>
+                  </IconButton>
+                </Grid>
               </Grid>
               <Grid style={{marginTop: '5%'}}>
                 <Grid style={{padding: '10px 16px', display: 'flex', alignItems: 'center', border: '1px solid rgba(112,112,112,0.5)', borderRadius: 14, width: '100%'}}>

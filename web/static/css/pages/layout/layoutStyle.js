@@ -28,6 +28,7 @@ export default theme => ({
     width: '100%',
   },
   hiddenOnMobile:{
+    width: '100%',
     [theme.breakpoints.only('xs')]:{
       display: 'none'
     },
