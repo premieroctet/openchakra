@@ -1,6 +1,6 @@
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
-import React, {Fragment} from 'react';
+const {setAxiosAuthentication} = require('../../utils/authentication')
+import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -17,7 +17,6 @@ import {formatCreditCardNumber, formatCVC, formatExpirationDate} from '../../com
 import {Helmet} from 'react-helmet';
 import IconButton from '@material-ui/core/IconButton';
 import styles from '../../static/css/pages/paymentMethod/paymentMethod';
-
 const {isB2BAdmin} = require('../../utils/context')
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
@@ -27,7 +26,6 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import SecurityIcon from '@material-ui/icons/Security';
-import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import {formatIban} from "../../utils/text";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
@@ -101,7 +99,6 @@ class paymentMethod extends React.Component {
     axios.get('/myAlfred/api/payment/cards')
       .then(response => {
         let cards = response.data;
-        console.log(`Got cards:${JSON.stringify(cards)}`)
         this.setState({cards: cards});
       }).catch(err => console.error(err));
 
@@ -136,12 +133,6 @@ class paymentMethod extends React.Component {
 
   onChange = e => {
     this.setState({[e.target.name]: e.target.value});
-  };
-
-  handleCallback = ({issuer}, isValid) => {
-    if (isValid) {
-      this.setState({issuer});
-    }
   };
 
   handleInputChange = ({target}) => {
@@ -632,16 +623,16 @@ class paymentMethod extends React.Component {
           <meta property="description"
                 content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !"/>
         </Helmet>
-        <Hidden only={['xs']}>
+        <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
-        </Hidden>
-        <Hidden only={['lg', 'xl', 'sm', 'md']}>
+        </Grid>
+        <Grid className={classes.layoutMobileContainer}>
           <LayoutMobile>
             {this.content(classes)}
           </LayoutMobile>
-        </Hidden>
+        </Grid>
         {showAddCreditCard ? this.modalAddCreditCard(classes) : null}
         {showDeleteCard ? this.modalDeleteCreditCard(classes) : null}
         {showAddRib ? this.modalAddRib(errors, classes) : null}
