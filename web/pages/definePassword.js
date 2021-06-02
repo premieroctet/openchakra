@@ -12,7 +12,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Hidden from "@material-ui/core/Hidden";
 const {snackBarSuccess, snackBarError} = require('../utils/notifications')
 const {ADMIN, MANAGER} = require('../utils/consts')
 const _ = require('lodash')
@@ -97,11 +96,9 @@ class definePassword extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <img style={{filter: 'invert(1)'}} height={96} alt={'logo_myAlfred'} title={'logo_myAlfred'} src={"../../static/assets/icon/logo.png"}/>
         </Grid>
-        <Hidden only={['xs', 'sm', 'md']}>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', justifyContent: 'center'}}>
-            <img height={450} alt={"illu_define_password"} title={'illu_define_password'} src={"../../static/assets/img/business/myalfredwelcome.svg"}/>
-          </Grid>
-        </Hidden>
+        <Grid className={classes.containerImg} item xl={6} lg={6} md={6} sm={6} xs={6}>
+          <img height={450} alt={"illu_define_password"} title={'illu_define_password'} src={"../../static/assets/img/business/myalfredwelcome.svg"}/>
+        </Grid>
         <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
           <Grid className={classes.formContainer}>
             <Card className={classes.card}>
