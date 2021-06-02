@@ -14,4 +14,28 @@ export default theme => ({
   drawerScheduleButton:{
     marginRight: theme.spacing(2),
   },
+  buttonShowContainer:{
+    marginTop: '5vh',
+    [theme.breakpoints.only('xs')]:{
+      display: 'none'
+    }
+  },
+  containerFab:{
+    position: 'fixed',
+    bottom: '15vh',
+    zIndex: 6,
+    right: 0,
+    [theme.breakpoints.only('xl')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('lg')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('md')]:{
+      display: 'none'
+    },
+    [theme.breakpoints.only('sm')]:{
+      display: 'none'
+    },
+  }
 })

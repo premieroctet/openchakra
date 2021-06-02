@@ -1,6 +1,5 @@
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
-import Hidden from '@material-ui/core/Hidden';
 import Grid from '@material-ui/core/Grid';
 import withStyles from '@material-ui/core/styles/withStyles';
 import styles from '../../static/css/components/DrawerSchedule/DrawerSchedule';
@@ -10,7 +9,6 @@ import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditing
 import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule';
 import Drawer from '@material-ui/core/Drawer';
 import axios from 'axios';
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Button from "@material-ui/core/Button";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
@@ -101,28 +99,24 @@ class DrawerSchedule extends React.Component{
             }
           </Drawer>
           <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-            <Hidden only={[ 'xs']}>
-              <Grid style={{marginTop: '5vh'}}>
-                <Button
-                  startIcon={this.state.eventsSelected.size > 0 ? <SettingsIcon /> : <AddCircleOutlineIcon />}
-                  onClick={this.handleDrawerToggle}
-                  color={'primary'}
-                >
-                  { this.state.eventsSelected.size > 0 ? 'Modifier vos disponibilités' : 'Paramétrez vos disponibilités'}
-                </Button>
-              </Grid>
-            </Hidden>
-            <Hidden only={['lg', 'xl', 'md', 'sm',]}>
-              <Grid style={{position: 'fixed', bottom: '15vh', zIndex: 6, right: 0}}>
-                <Fab
-                  color="primary"
-                  aria-label="add"
-                  onClick={this.handleDrawerToggle}
-                  className={classes.drawerScheduleButton}>
-                  <SettingsIcon style={{color: 'white'}}/>
-                </Fab>
-              </Grid>
-            </Hidden>
+            <Grid className={classes.buttonShowContainer}>
+              <Button
+                startIcon={this.state.eventsSelected.size > 0 ? <SettingsIcon /> : <AddCircleOutlineIcon />}
+                onClick={this.handleDrawerToggle}
+                color={'primary'}
+              >
+                { this.state.eventsSelected.size > 0 ? 'Modifier vos disponibilités' : 'Paramétrez vos disponibilités'}
+              </Button>
+            </Grid>
+            <Grid className={classes.containerFab}>
+              <Fab
+                color="primary"
+                aria-label="add"
+                onClick={this.handleDrawerToggle}
+                className={classes.drawerScheduleButton}>
+                <SettingsIcon style={{color: 'white'}}/>
+              </Fab>
+            </Grid>
           </Grid>
         </Grid>
 
