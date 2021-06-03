@@ -9,6 +9,8 @@ const Group = require('../../models/Group');
 const Service = require('../../models/Service');
 const User = require('../../models/User');
 const Availability = require('../../models/Availability');
+const Category = require('../../models/Category');
+const Job = require('../../models/Job');
 const Prestation = require('../../models/Prestation');
 const axios = require('axios');
 const https = require('https');
@@ -802,6 +804,46 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
       service: 'No service found',
     }));
 });
+
+// @Route GET /myAlfred/api/serviceUser/keywords/:mode
+// Returns all keywords for services
+// mode : PRO ou PART
+// @Access public
+router.get('/keywords/:mode', (req, res) => {
+  const mode=req.params.mode
+  if (![PRO, PART].includes(mode)) {
+    return res.status(400).json(`Mode ${mode} inconnu, ${PRO} ou ${PART} attendu`)
+  }
+  const filter_att=mode==PART ? "particular_access" : "professional_access"
+  const filter={[filter_att]: true}
+  const label_att=mode==PART ? "s_particular_label" : "s_professional_label"
+
+  const promises=[
+    Category.find({}, `${label_att} description`),
+    Service.find(filter, 's_label description'),
+    Prestation.find(filter, 's_label description'),
+    ServiceUser.find(filter, 'description'),
+    Job.find({}, 's_label'),
+  ]
+  Promise.all(promises.map(p => p.lean()))
+    .then(result => {
+      // One array only
+      result = [].concat(...result)
+      // Attribute valkues to one string only
+      result = result.map(r => {delete r._id; return Object.values(r).join(' ')}).join(' ')
+      // normalize
+      result = normalize(result)
+      // Keep only [a-z]
+      result = result.toLowerCase().replace(/[^a-zA-Z]+/g, " ")
+      result = result.split(' ')
+      result = _.uniq(result).filter(e => e && e.length>2).sort()
+      res.json(result)
+    })
+    .catch (err => {
+      console.error(err)
+      res.json([])
+    })
+})
 
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser
