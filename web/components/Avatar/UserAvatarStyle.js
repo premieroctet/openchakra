@@ -8,21 +8,21 @@ export default theme => ({
   avatarLetter: {
     width: 80,
     height: 80,
-    [theme.breakpoints.down('sm')]: {
+    [ theme.breakpoints.down('sm') ]: {
       width: 60,
-      height: 60
-    }
+      height: 60,
+    },
   },
-  myProfile:{
+  myProfile: {
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
   input: {
-    display: 'none'
+    display: 'none',
   },
   badge: {
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
   buttonCamera: {
     float: 'right',
@@ -35,7 +35,7 @@ export default theme => ({
     bottom: '40%',
     padding: '0.3vh',
     '&:hover': {
-      backgroundColor: 'white'
-    }
-  }
+      backgroundColor: 'white',
+    },
+  },
 })

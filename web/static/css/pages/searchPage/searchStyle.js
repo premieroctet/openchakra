@@ -14,7 +14,7 @@ export default theme => ({
   },
   containerTitle: {
     marginTop: 70,
-    [theme.breakpoints.down('xs')]: {
+    [ theme.breakpoints.down('xs') ]: {
       marginTop: 200,
     },
   },
@@ -23,17 +23,17 @@ export default theme => ({
     padding: 5,
   },
   paddingResponsive: {
-    [theme.breakpoints.down('xs')]: {
+    [ theme.breakpoints.down('xs') ]: {
       padding: '0 !important',
       marginBottom: 20,
     },
   },
 
-  paginationRoot:{
-    '& .MuiPaginationItem-page.Mui-selected':{
+  paginationRoot: {
+    '& .MuiPaginationItem-page.Mui-selected': {
       backgroundColor: 'rgba(248, 207, 97, 1)',
-      color: 'white'
-    }
+      color: 'white',
+    },
   },
 
   navbarRoot: {
@@ -41,196 +41,197 @@ export default theme => ({
     flex: 1,
     fontFamily: theme.typography.text.fontFamily,
     fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
+    fontWeight: theme.typography.placeHolder.fontWeight,
+    lineHeight: theme.typography.placeHolder.lineHeight,
   },
-  navbarInput:{
-    '&::placeholder':{
+  navbarInput: {
+    '&::placeholder': {
       opacity: '0.55',
       color: theme.palette.placeHolder.main,
-    }
+    },
   },
-  searchNavbarComponentPosition:{
+  searchNavbarComponentPosition: {
     display: 'flex',
     width: '100%',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  searchFilterMenuPosition:{
+  searchFilterMenuPosition: {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
-    }
+    [ theme.breakpoints.only('xs') ]: {
+      display: 'none',
+    },
   },
-  searchFilterMenuContent:{
-    width: '80%'
+  searchFilterMenuContent: {
+    width: '80%',
   },
-  searchMainConainer:{
-    marginTop: '2%'
+  searchMainConainer: {
+    marginTop: '2%',
   },
-  searchContainerHeader:{
+  searchContainerHeader: {
     display: 'flex',
-    width: '80%'
+    width: '80%',
   },
-  searchMainContainerHeader:{
+  searchMainContainerHeader: {
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
-    }
+    [ theme.breakpoints.only('xs') ]: {
+      display: 'none',
+    },
   },
-  searchSecondFilterContainer:{
-    display:'flex',
+  searchSecondFilterContainer: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%'
+    width: '100%',
   },
-  searchSecondFilterContainerLeft:{
-    marginRight: 20
+  searchSecondFilterContainerLeft: {
+    marginRight: 20,
   },
-  searchMainContainerResult:{
+  searchMainContainerResult: {
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
     marginTop: '4%',
-    [theme.breakpoints.down('xs')]:{
-      justifyContent: 'initial'
-    }
+    [ theme.breakpoints.down('xs') ]: {
+      justifyContent: 'initial',
+    },
 
   },
 
-  searchContainerDisplayResult:{
+  searchContainerDisplayResult: {
     width: '70%',
-    [theme.breakpoints.down('sm')]:{
+    [ theme.breakpoints.down('sm') ]: {
       width: '90%',
     },
-    [theme.breakpoints.down('xs')]:{
-      width: '100%'
-    }
+    [ theme.breakpoints.down('xs') ]: {
+      width: '100%',
+    },
   },
-  searchMainContainer:{
+  searchMainContainer: {
     marginLeft: 0,
     width: '100%',
-    [theme.breakpoints.down('xs')]:{
-      marginBottom: '20vh'
+    [ theme.breakpoints.down('xs') ]: {
+      marginBottom: '20vh',
 
-    }
+    },
   },
-  cardServiceButton:{
+  cardServiceButton: {
     color: theme.palette.white.main,
     fontWeight: theme.typography.blackButton.fontWeight,
     fontFamily: theme.typography.blackButton.fontFamily,
     backgroundColor: theme.palette.black.main,
     borderRadius: theme.border.blackButton.borderRadius,
-    width: '100%'
+    width: '100%',
   },
-  cardServiceButtonContainer:{
-    width: '50%'
+  cardServiceButtonContainer: {
+    width: '50%',
   },
-  searchFilterRightContainer:{
+  searchFilterRightContainer: {
     display: 'flex',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
-  searchFilterRightLabel:{
-    marginRight: 10
+  searchFilterRightLabel: {
+    marginRight: 10,
   },
-  searchSelectPadding:{
-    paddingRight: '34px !important'
+  searchSelectPadding: {
+    paddingRight: '34px !important',
   },
-  searchNeedHelpMainStyle:{
+  searchNeedHelpMainStyle: {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
     marginTop: '3%',
     marginBottom: '3%',
   },
-  searchNeedHelpMainContainer:{
-    width: '80%'
+  searchNeedHelpMainContainer: {
+    width: '80%',
   },
-  searchSearchByHastagMainStyle:{
+  searchSearchByHastagMainStyle: {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
     marginTop: '3%',
     marginBottom: '3%',
   },
-  searchSearchByHastagContainer:{
-    width: '80%'
+  searchSearchByHastagContainer: {
+    width: '80%',
   },
-  searchResultMessage:{
+  searchResultMessage: {
     display: 'flex',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
   },
-  searchResultMessageContent:{
-    width: '80%'
+  searchResultMessageContent: {
+    width: '80%',
   },
 
-  searchLoadingContainer:{
+  searchLoadingContainer: {
     display: 'flex',
-    justifyContent : 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: '10vh',
-    marginBottom: '10vh'
+    marginBottom: '10vh',
   },
-  displayNbAvailable:{
+  displayNbAvailable: {
     display: 'flex',
-    justifyContent: 'center' ,
+    justifyContent: 'center',
     marginTop: '5vh',
     marginBottom: '5vh',
-    [theme.breakpoints.only('xl')]:{
-      display: 'none'
+    [ theme.breakpoints.only('xl') ]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('lg')]:{
-      display: 'none'
+    [ theme.breakpoints.only('lg') ]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('md')]:{
-      display: 'none'
+    [ theme.breakpoints.only('md') ]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
-    },
-  },
-  hideOnMobile:{
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
+    [ theme.breakpoints.only('sm') ]: {
+      display: 'none',
     },
   },
-  hideOnBigScreen:{
-    [theme.breakpoints.only('xl')]:{
-      display: 'none'
-    },
-    [theme.breakpoints.only('lg')]:{
-      display: 'none'
-    },
-    [theme.breakpoints.only('md')]:{
-      display: 'none'
-    },
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
+  hideOnMobile: {
+    width: '100%',
+    [ theme.breakpoints.only('xs') ]: {
+      display: 'none',
     },
   },
-  layoutContainer:{
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
+  hideOnBigScreen: {
+    [ theme.breakpoints.only('xl') ]: {
+      display: 'none',
+    },
+    [ theme.breakpoints.only('lg') ]: {
+      display: 'none',
+    },
+    [ theme.breakpoints.only('md') ]: {
+      display: 'none',
+    },
+    [ theme.breakpoints.only('sm') ]: {
+      display: 'none',
     },
   },
-  layoutMobileSearchContainer:{
-    [theme.breakpoints.only('xl')]:{
-      display: 'none'
+  layoutContainer: {
+    [ theme.breakpoints.only('xs') ]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('lg')]:{
-      display: 'none'
+  },
+  layoutMobileSearchContainer: {
+    [ theme.breakpoints.only('xl') ]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('md')]:{
-      display: 'none'
+    [ theme.breakpoints.only('lg') ]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
+    [ theme.breakpoints.only('md') ]: {
+      display: 'none',
     },
-  }
+    [ theme.breakpoints.only('sm') ]: {
+      display: 'none',
+    },
+  },
 
 })
