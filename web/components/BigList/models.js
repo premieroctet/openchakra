@@ -1,12 +1,11 @@
-import React, { useState} from 'react';
+import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
-import Link from 'next/link';
-const moment = require('moment-timezone');
-moment.locale('fr');
-const util = require('util');
-import LockIcon from '@material-ui/icons/Lock';
-import CheckIcon from '@material-ui/icons/Check';
-const {insensitiveComparator, normalize} = require('../../utils/text')
+import Link from 'next/link'
+const moment = require('moment')
+moment.locale('fr')
+import LockIcon from '@material-ui/icons/Lock'
+import CheckIcon from '@material-ui/icons/Check'
+const { insensitiveComparator, normalize } = require('../../utils/text')
 
 class StatusRenderer extends React.Component {
 
@@ -22,10 +21,8 @@ class StatusRenderer extends React.Component {
     return (
       <>
       <div>
-      {this.state.value.alfred ?
-        <img src="/static/assets/img/alfred.svg" style={{width: '40px'}} title='Alfred' />
-       : null }
-      {this.state.value.admin ? <img src="/static/assets/img/admin.svg" style={{width: '40px'}} title='Admin' /> : null }
+        {this.state.value.alfred ? <img src="/static/assets/img/alfred.svg" style={{ width: '40px' }} alt={' Alfred '} title='Alfred' /> : null }
+        {this.state.value.admin ? <img src="/static/assets/img/admin.svg" style={{ width: '40px' }} alt='Admin' title='Admin' /> : null }
       </div>
       </>
     )
@@ -40,7 +37,7 @@ class LocationRenderer extends React.Component {
 
   render = () => {
     const location = this.props.value
-    const strValue = Object.keys(location).filter(k => location[k]).map( k => k.slice(0, 1).toUpperCase()).join('/')
+    const strValue = Object.keys(location).filter(k => location[ k ]).map(k => k.slice(0, 1).toUpperCase()).join('/')
     return (
       <div>{strValue}</div>
     )
@@ -59,21 +56,9 @@ class StatusFilter extends React.Component {
   }
 
   onChange = event => {
-    this.setState({[event.target.name]: event.target.checked}, () => {
+    this.setState({ [ event.target.name ]: event.target.checked }, () => {
       this.params.filterChangedCallback()
     })
-  }
-
-  doesFilterPass = params => {
-    const data = params.data
-    if (this.state.alfred && !data.is_alfred || this.state.admin && !data.is_admin) {
-      return false
-    }
-    return true
-  }
-
-  setModel = model => {
-    this.setState(model)
   }
 
   getModel = () => {
@@ -88,10 +73,10 @@ class StatusFilter extends React.Component {
     return (
       <div>
         <Checkbox name={'alfred'} checked={this.state.alfred} onChange={this.onChange} />
-          <img src="/static/assets/img/userServicePreview/alfred.svg" style={{width: '40px'}} title='Alfred' />
+        <img src="/static/assets/img/userServicePreview/alfred.svg" style={{ width: '40px' }} alt='Alfred' title='Alfred' />
         <br/>
         <Checkbox name={'admin'} checked={this.state.admin} onChange={this.onChange} />
-          <img src="/static/assets/img/userServicePreview/admin.svg" style={{width: '40px'}} title='Admin' />
+        <img src="/static/assets/img/userServicePreview/admin.svg" style={{ width: '40px' }} alt='Admin' title='Admin' />
       </div>
     )
   }
@@ -101,7 +86,7 @@ class DateRenderer extends React.Component {
 
   render = () => {
     if (!this.props.value) {
-      return ""
+      return ''
     }
     const m=moment(this.props.value)
     return (
@@ -114,7 +99,7 @@ class DateTimeRenderer extends React.Component {
 
   render = () => {
     if (!this.props.value) {
-      return ""
+      return ''
     }
     const m=moment(this.props.value)
     return (
@@ -129,14 +114,14 @@ class PictureRenderer extends React.Component {
     const rowHeight = this.props.node.rowHeight
     if (this.props.value) {
       return (
-          <div>
-          <img style={{ width:'auto', height:rowHeight}} src={`${this.props.value}`}/>
-          </div>
+        <div>
+          <img style={{ width: 'auto', height: rowHeight }} src={`${this.props.value}`}/>
+        </div>
       )
     }
-    else {
-      return null
-    }
+
+    return null
+
   }
 }
 
@@ -145,10 +130,7 @@ class PrivateRenderer extends React.Component {
   render = () => {
     return (
       <>
-      { this.props.value ?
-        <div><LockIcon/>{this.props.value}</div>
-        :
-        null
+      { this.props.value ? <div><LockIcon/>{this.props.value}</div> : null
       }
       </>
     )
@@ -168,26 +150,14 @@ class BooleanRenderer extends React.Component {
   }
 }
 
-class BooleanCellEditor extends React.Component {
-
-  render = () => {
-    if (!this.props.value) {
-      return null
-    }
-    return (
-      <CheckIcon/>
-    )
-  }
-}
-
 class EnumRenderer extends React.Component {
 
   render = () => {
     if (!this.props.value) {
-      return ""
+      return ''
     }
     return (
-      <>{this.props.enum[this.props.value]}</>
+      <>{this.props.enum[ this.props.value ]}</>
     )
   }
 }
@@ -195,14 +165,14 @@ class EnumRenderer extends React.Component {
 class WarningRenderer extends React.Component {
   render = () => {
     return (
-      <em style={{color:'red'}}>{this.props.value}</em>
+      <em style={{ color: 'red' }}>{this.props.value}</em>
     )
   }
 }
 
 class LinkRenderer extends React.Component {
   render = () => {
-    const {text, link}=this.props.value
+    const { text, link }=this.props.value
     return (
       <Link href={link}>{text}</Link>
     )
@@ -212,62 +182,62 @@ class LinkRenderer extends React.Component {
 class CurrencyRenderer extends React.Component {
   render = () => {
     return (
-      <div style={{textAlign: 'right'}}>{Number(this.props.value).toFixed(2)}€</div>
+      <div style={{ textAlign: 'right' }}>{Number(this.props.value).toFixed(2)}€</div>
     )
   }
 }
 
 const textColumn = obj => {
-  var base={
+  let base={
     comparator: insensitiveComparator,
     filterParams: {
-      textFormatter: normalize
-    }
+      textFormatter: normalize,
+    },
   }
   return Object.assign(base, obj)
 }
 
 const booleanColumn = obj => {
-  var base={
+  let base={
     cellRenderer: 'booleanRenderer',
   }
   return Object.assign(base, obj)
 }
 
 const dateColumn = obj => {
-  var base={
+  let base={
     cellRenderer: 'dateRenderer',
-    filter:'agDateColumnFilter',
+    filter: 'agDateColumnFilter',
   }
   return Object.assign(base, obj)
 }
 
 const dateTimeColumn = obj => {
-  var base={
+  let base={
     cellRenderer: 'dateTimeRenderer',
-    filter:'agDateColumnFilter',
+    filter: 'agDateColumnFilter',
   }
   return Object.assign(base, obj)
 }
 
 const currencyColumn = obj => {
-  var base={
+  let base={
     cellRenderer: 'currencyRenderer',
-    filter:'agNumberColumnFilter',
+    filter: 'agNumberColumnFilter',
   }
   return Object.assign(base, obj)
 }
 
 const pictureColumn = obj => {
-  var base={
-    cellRenderer:'pictureRenderer',
+  let base={
+    cellRenderer: 'pictureRenderer',
   }
   return Object.assign(base, obj)
 }
 
 module.exports= {
   StatusRenderer, DateRenderer, DateTimeRenderer, CurrencyRenderer,
-  StatusFilter, PictureRenderer, PrivateRenderer, BooleanRenderer,LocationRenderer, WarningRenderer,
-  EnumRenderer,LinkRenderer,
-  textColumn, booleanColumn, dateColumn, dateTimeColumn, currencyColumn, pictureColumn
+  StatusFilter, PictureRenderer, PrivateRenderer, BooleanRenderer, LocationRenderer, WarningRenderer,
+  EnumRenderer, LinkRenderer,
+  textColumn, booleanColumn, dateColumn, dateTimeColumn, currencyColumn, pictureColumn,
 }
