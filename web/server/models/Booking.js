@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const moment = require('moment');
-const {invoiceFormat} = require("../../utils/invoice");
+const mongoose = require('mongoose')
+const moment = require('moment')
+const {invoiceFormat} = require('../../utils/invoice')
 const {BOOK_STATUS, ROLES} = require('../../utils/consts')
-const Schema = mongoose.Schema;
-const CountSchema = require('./Count');
+const Schema = mongoose.Schema
+const CountSchema = require('./Count')
 
 const BookingSchema = new Schema({
   reference: {
@@ -159,38 +159,37 @@ const BookingSchema = new Schema({
     enum: [null, ...Object.keys(ROLES)],
   },
   billing_number: {
-    type: String
-  }
-  ,
+    type: String,
+  },
   receipt_number: {
-    type: String
+    type: String,
   },
   myalfred_billing_number: {
-    type: String
-  }
-}, {toJSON: {virtuals: true, getters: true}});
+    type: String,
+  },
+}, {toJSON: {virtuals: true, getters: true}})
 
-BookingSchema.virtual('alfred_amount').get(function () {
-  return this.amount - this.fees;
-});
+BookingSchema.virtual('alfred_amount').get(function() {
+  return this.amount - this.fees
+})
 
-BookingSchema.virtual('date_prestation_moment').get(function () {
+BookingSchema.virtual('date_prestation_moment').get(function() {
   if (!this.date_prestation) {
-    return null;
+    return null
   }
-  return moment(moment(this.date_prestation, 'DD/MM/YYYY').format('YYYY-MM-DD') + ' ' + moment(this.time_prestation).format('HH:mm'));
-});
+  return moment(`${moment(this.date_prestation, 'DD/MM/YYYY').format('YYYY-MM-DD') } ${ moment(this.time_prestation).format('HH:mm')}`)
+})
 
 
-BookingSchema.virtual('calendar_display').get(function () {
+BookingSchema.virtual('calendar_display').get(function() {
   if (!this.status) {
-    return false;
+    return false
   }
   if ([BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.REFUSED].includes(this.status)) {
-    return false;
+    return false
   }
-  return true;
-});
+  return true
+})
 
 
-module.exports = Booking = mongoose.model('booking', BookingSchema);
+module.exports = Booking = mongoose.model('booking', BookingSchema)
