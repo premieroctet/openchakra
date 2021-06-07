@@ -1,5 +1,6 @@
 import InputAdornment from "@material-ui/core/InputAdornment";
-const {setAxiosAuthentication}=require('../../../utils/authentication');
+
+const {setAxiosAuthentication} = require('../../../utils/authentication');
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from '../../../static/css/components/SettingService/SettingService';
@@ -10,7 +11,8 @@ import isEmpty from '../../../server/validation/is-empty';
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import {SHOP} from '../../../utils/i18n';
-const moment=require('moment')
+
+const moment = require('moment')
 
 // TODO : régler le pb du ButtonSwitch frais de déplacements
 class SettingService extends React.Component {
@@ -61,7 +63,7 @@ class SettingService extends React.Component {
   }
 
   onChange = event => {
-    const {name, value}=event.target
+    const {name, value} = event.target
     this.setState({[name]: value}, this.fireOnChange
     )
   }
@@ -83,7 +85,7 @@ class SettingService extends React.Component {
   render() {
     const {classes} = this.props;
     const {service, location, pick_tax, travel_tax, perimeter} = this.state;
-
+    console.log(location)
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
@@ -93,7 +95,7 @@ class SettingService extends React.Component {
           <h3 style={{color: '#696767'}}>{SHOP.settingService.subtitle}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle} style={{margin:0}}>{SHOP.settingService.title_perimeter}</h4>
+          <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.settingService.title_perimeter}</h4>
         </Grid>
         <Grid item xl={3} lg={3} md={3} sm={3} xs={12}>
           <TextField
@@ -110,46 +112,49 @@ class SettingService extends React.Component {
         </Grid>
         <Grid container spacing={1} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <h4 className={classes.policySizeSubtitle} style={{margin:0}}>{SHOP.settingService.title_place_service}</h4>
+            <h4 className={classes.policySizeSubtitle}
+                style={{margin: 0}}>{SHOP.settingService.title_place_service}</h4>
           </Grid>
-            {'client' in this.state.location ?
-              <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <ButtonSwitch
-                  checked={location.client === true}
-                  label={SHOP.settingService.service_at_userHome}
-                  id='client'
-                  onChange={this.onLocationChange}
-                />
-              </Grid> : null
-            }
-            {'alfred' in location ?
-              <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <ButtonSwitch
-                  checked={location.alfred === true}
-                  label={SHOP.settingService.service_at_myHome}
-                  id='alfred'
-                  onChange={this.onLocationChange}
-                />
-              </Grid> : null
-            }
-            {'visio' in location ?
-              <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <ButtonSwitch
-                  checked={location.visio === true}
-                  label={SHOP.settingService.service_withVisio}
-                  id='visio'
-                  onChange={this.onLocationChange}
-                />
-              </Grid> : null
-            }
+          {'client' in this.state.location ?
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                checked={location.client === true}
+                label={SHOP.settingService.service_at_userHome}
+                id='client'
+                onChange={this.onLocationChange}
+              />
+            </Grid> : null
+          }
+          {'alfred' in location ?
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                checked={location.alfred === true}
+                label={SHOP.settingService.service_at_myHome}
+                id='alfred'
+                onChange={this.onLocationChange}
+              />
+            </Grid> : null
+          }
+          {'visio' in location ?
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                checked={location.visio === true}
+                label={SHOP.settingService.service_withVisio}
+                id='visio'
+                onChange={this.onLocationChange}
+              />
+            </Grid> : null
+          }
         </Grid>
         <Grid container spacing={1} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           {(service && service.travel_tax || service && service.pick_tax) ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h4 className={classes.policySizeSubtitle} style={{margin:0}}>{SHOP.settingService.section_option_title}</h4>
+              <h4 className={classes.policySizeSubtitle}
+                  style={{margin: 0}}>{SHOP.settingService.section_option_title}</h4>
             </Grid> : null
           }
-          {service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se check pas
+          {service && service.travel_tax && location.client ? // FIX : voir pourquoi le ButtonSwitch ne se check pas
+
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
                 ckecked={Boolean(travel_tax)}
