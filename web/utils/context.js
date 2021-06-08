@@ -1,5 +1,5 @@
-import {isAndroid, isIOS, getUA} from 'react-device-detect';
-const isWebview = require('is-webview');
+import {isAndroid, isIOS, getUA} from 'react-device-detect'
+const isWebview = require('is-webview')
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
 const jwt = require('jsonwebtoken')
@@ -8,7 +8,7 @@ const isB2BSite = () => {
   if (typeof localStorage == 'undefined') {
     return false
   }
-  const is_b2b = localStorage.getItem('b2b') === "true"
+  const is_b2b = localStorage.getItem('b2b') === 'true'
   return is_b2b
 }
 
@@ -50,7 +50,7 @@ const isB2BStyle = () => {
     return isB2BSite()
   }
   if (isB2BAdmin() || isB2BManager()) {
-      return true
+    return true
   }
   if (isB2BEmployee()) {
     return false
@@ -62,27 +62,27 @@ const isB2BStyle = () => {
 }
 
 const isApplication = () => {
-  const _ua = getUA.toLocaleLowerCase();
-  const safari = /safari/.test(_ua);
-  const ios = /iphone|ipod|ipad/.test(_ua);
-  let is_ios_app = false;
+  const _ua = getUA.toLocaleLowerCase()
+  const safari = /safari/.test(_ua)
+  const ios = /iphone|ipod|ipad/.test(_ua)
+  let is_ios_app = false
   if (ios && !safari) {
-    is_ios_app = true;
+    is_ios_app = true
   }
-  return is_ios_app || isWebview(getUA);
+  return is_ios_app || isWebview(getUA)
 }
 
 const isMobile = () => {
   return (isAndroid || isIOS)
 }
 
-const setStatusRegister = () =>{
-  if(getLoggedUser() === null){
+const setStatusRegister = () => {
+  if(getLoggedUser() === null) {
     return localStorage.setItem('setAlfredRegister', 'true')
   }
 }
 
-const removeStatusRegister = () =>{
+const removeStatusRegister = () => {
   return localStorage.removeItem('setAlfredRegister')
 }
 
@@ -98,8 +98,8 @@ const getLoggedUser = () => {
   if (!token) {
     return null
   }
-  const data=token.split(' ')[1]
-  const decoded = jwt.decode(data);
+  const data=token.split(' ')[ 1 ]
+  const decoded = jwt.decode(data)
   return decoded
 }
 
@@ -140,22 +140,21 @@ const isEditableUser = user => {
 }
 
 const getUserLabel = user => {
-  return new Promise( (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (!user) {
       resolve('')
     }
     if (user.company) {
       setAxiosAuthentication()
       axios.get(`/myAlfred/api/companies/name/${user.company}`)
-        .then ( res => {
+        .then(res => {
           resolve(`${user.firstname} pour ${res.data.name}`)
         })
-        .catch( err => {
+        .catch(err => {
           console.error(err)
           resolve(user.firstname)
         })
-    }
-    else {
+    } else {
       resolve(user.firstname)
     }
   })
@@ -163,8 +162,8 @@ const getUserLabel = user => {
 
 module.exports = {
   isB2BStyle, isB2BEmployee, isB2BAdmin, isB2BManager, isModeCompany, isApplication, isMobile,
-  getRole,setStatusRegister,removeStatusRegister, hasStatusRegister,
-  getLoggedUserId,getLoggedUser,
+  getRole, setStatusRegister, removeStatusRegister, hasStatusRegister,
+  getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
-  getUserLabel,isLoggedUserRegistered, isIOS, isAndroid
+  getUserLabel, isLoggedUserRegistered, isIOS, isAndroid,
 }
