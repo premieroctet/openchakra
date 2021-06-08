@@ -11,6 +11,13 @@ const columns = [
   {field: 'billing_number', headerName: 'billing_number'},
 ]
 
+const rows = [
+  {firstname: 'edwin'},
+  {lastname: 'lienard'},
+  {billing_number: 'mybilling'},
+  {amount: 500},
+]
+
 class Invoices extends React.Component {
   constructor(props) {
     super(props)
@@ -31,8 +38,6 @@ class Invoices extends React.Component {
   }
 
   render() {
-    const {data} = this.state
-
     return (
       <Grid>
         <h2>Factures</h2>
@@ -40,7 +45,7 @@ class Invoices extends React.Component {
           height: 400,
           width: '100%',
         }}>
-          {/* <DataGrid rows={data} columns={columns} checkboxSelection/>*/}
+          {/* <DataGrid rows={rows} columns={columns} checkboxSelection/>*/}
         </Grid>
       </Grid>
     )

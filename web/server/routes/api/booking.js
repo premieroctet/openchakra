@@ -7,6 +7,7 @@ const moment = require('moment')
 const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts')
 const Booking = require('../../models/Booking')
 const Count = require('../../models/Count')
+const {invoiceFormat} = require('../../../utils/converters')
 const CronJob = require('cron').CronJob
 const {getKeyDate} = require('../../utils/booking')
 const {
@@ -285,13 +286,15 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
 })
 
 // Handle confirmated and after end date => to terminate
-new CronJob('0 */1 * * * *', (() => {
+new CronJob('* * * * *', (() => {
   const getNextNumber = (type, key) => {
     return new Promise((resolve, reject) => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}
-      Count.updateMany({type: type, key: key}, updateObj, {upsert: true})
-        .then(record => {
-          resolve(record.value)
+      Count.updateOne({type: type, key: key}, updateObj, {upsert: true})
+        .then(() => {
+          Count.findOne({type: type, key: key}).then(res => {
+            resolve(res)
+          })
         })
         .catch(err => {
           reject(err)
@@ -313,14 +316,7 @@ new CronJob('0 */1 * * * *', (() => {
             values => {
               values.map((res, i) => {
                 const attribute = `${type[ i ]}_number`
-                const result = `${type[ i ].charAt(0).toUpperCase()}${key}${res}`
-                Promise.all([result])
-                  .then(data => {
-                    b[ attribute ] = data
-                  })
-                  .catch(err => {
-                    console.error(err)
-                  })
+                b[ attribute ] = `${type[ i ].charAt(0).toUpperCase()}${key}${invoiceFormat(res.value, 5)}`
               })
             },
           )

@@ -1,11 +1,11 @@
-const crypto = require('crypto');
-const ALL_SERVICES = ['Tous les services', null];
+const crypto = require('crypto')
+const ALL_SERVICES = ['Tous les services', null]
 
 const MODES={
-  PRODUCTION:'production',
-  VALIDATION:'validation',
-  DEVELOPMENT:'development',
-  DEVELOPMENT_NOSSL:'development_nossl',
+  PRODUCTION: 'production',
+  VALIDATION: 'validation',
+  DEVELOPMENT: 'development',
+  DEVELOPMENT_NOSSL: 'development_nossl',
 }
 
 const ALF_CONDS = { // my alfred condiitons
@@ -13,30 +13,30 @@ const ALF_CONDS = { // my alfred condiitons
   PICTURE: '1',
   ID_CARD: '2',
   RECOMMEND: '3',
-};
+}
 
 const CANCEL_MODE = {
   FLEXIBLE: '0',
   MODERATE: '1',
   STRICT: '2',
-};
+}
 
-const CUSTOM_PRESTATIONS_FLTR = 'Prestations personnalisées';
+const CUSTOM_PRESTATIONS_FLTR = 'Prestations personnalisées'
 
 const generate_id = () => {
-  return crypto.randomBytes(20).toString('hex');
-};
+  return crypto.randomBytes(20).toString('hex')
+}
 
-const GID_LEN = 40;
+const GID_LEN = 40
 
-const COMM_ALFRED = 0.0;
-const COMM_CLIENT = 0.18;
+const COMM_ALFRED = 0.0
+const COMM_CLIENT = 0.18
 
 const SIRET = {
   token: 'ca27811b-126c-35db-aaf0-49aea431706e',
   siretUrl: 'https://api.insee.fr/entreprises/sirene/V3/siret',
   sirenUrl: 'https://api.insee.fr/entreprises/sirene/V3/siren',
-};
+}
 
 const ENTITES = {
   '1000': 'Entrepreneur individuel',
@@ -299,12 +299,12 @@ const ENTITES = {
   '9300': 'Fondation',
   '9900': 'Autre personne morale de droit privé',
   '9970': 'Groupement de coopération sanitaire à gestion privée',
-};
+}
 
-const CESU = ['Mandatory', 'Optional', 'Disabled'];
+const CESU = ['Mandatory', 'Optional', 'Disabled']
 
-const GOOGLE_PROVIDER = 'google';
-const FACEBOOK_PROVIDER = 'facebook';
+const GOOGLE_PROVIDER = 'google'
+const FACEBOOK_PROVIDER = 'facebook'
 
 const AMAZON_HOST='my-alfred.io'
 const LOCAL_HOST='sebhd.freeboxos.fr'
@@ -313,24 +313,24 @@ const SKILLS={
   careful: {
     label: 'Travail soigneux',
     picture: 'careful_work',
-    entrieName: 'careful'
+    entrieName: 'careful',
   },
   punctual: {
     label: 'Ponctualité',
     picture: 'punctuality',
-    entrieName: 'punctual'
+    entrieName: 'punctual',
   },
   flexible: {
     label: 'Flexibilité',
     picture: 'flexibility',
-    entrieName: 'flexible'
+    entrieName: 'flexible',
   },
   reactive: {
     label: 'Réactivité',
     picture: 'reactivity',
-    entrieName: 'reactive'
+    entrieName: 'reactive',
   },
-};
+}
 
 const LANGUAGES= [
   {value: 'Français', label: 'Français'},
@@ -343,7 +343,7 @@ const LANGUAGES= [
   {value: 'Portugais', label: 'Portugais'},
   {value: 'Russe', label: 'Russe'},
   {value: 'Japonais', label: 'Japonais'},
-];
+]
 
 const MAX_DESCRIPTION_LENGTH=300
 
@@ -356,7 +356,7 @@ const BOOK_STATUS= {
   TO_CONFIRM: 'En attente de confirmation',
   TO_PAY: 'En attente de paiement',
   INFO: "Demande d'infos",
-  PREAPPROVED: 'Pré-approuvée'
+  PREAPPROVED: 'Pré-approuvée',
 }
 
 // Délai d'expiration des réservatins (jours après création de la résa)
@@ -376,34 +376,34 @@ const COMPANY_SIZE= {
 }
 
 const COMPANY_ACTIVITY = {
-  'ADM': "Administration, fonction publique",
-   'AGRO': "Agroalimentaire",
-   'ART': "Artisanat d'art",
-   'ASSO': "Associations",
-   'BAN': "Banques, assurances, services financiers",
-   'CHIM': "Chimie, plastique, conditionnement",
-   'DET': "Commerce de détail, grande distribution",
-   'COMM': "Communication, marketing, information",
-   'CONSTR': "Construction, bâtiment, travaux publics",
-   'CULT': "Culture, sports, loisirs",
-   'ENER': "Energie",
-   'ENS': "Enseignement, formation",
-   'ENV': "Environnement, récupération, tri, recyclage, traitement des déchets, matériaux, de l'eau",
-   'EQUIP': "Equipement, matériel pour activités professionnelles",
-   'FAB': "Fabrication, commerce de gros d'articles destinés à la vente",
-   'GESTION': "Gestion, administration des entreprises",
-   'HOTEL': "Hôtellerie, restauration, tourisme",
-   'IMMO': "Immobilier",
-   'TEXT': "Industrie textile",
-   'INFO': "Informatique",
-   'ING': "Ingénieurs d'études et de recherche, chercheurs",
-   'LOGIS': "Logistique, transports",
-   'ELECTRO': "Matériel électrique, électronique, optique",
-   'MECA': "Mécanique, métallurgie",
-   'SIDER': "Minerais, minéraux, sidérurgie",
-   'JURI': "Professions juridiques",
-   'SANTE': "Santé, action sociale",
-   'SERVICE': "Services aux particuliers, collectivités, entreprises",
+  'ADM': 'Administration, fonction publique',
+  'AGRO': 'Agroalimentaire',
+  'ART': "Artisanat d'art",
+  'ASSO': 'Associations',
+  'BAN': 'Banques, assurances, services financiers',
+  'CHIM': 'Chimie, plastique, conditionnement',
+  'DET': 'Commerce de détail, grande distribution',
+  'COMM': 'Communication, marketing, information',
+  'CONSTR': 'Construction, bâtiment, travaux publics',
+  'CULT': 'Culture, sports, loisirs',
+  'ENER': 'Energie',
+  'ENS': 'Enseignement, formation',
+  'ENV': "Environnement, récupération, tri, recyclage, traitement des déchets, matériaux, de l'eau",
+  'EQUIP': 'Equipement, matériel pour activités professionnelles',
+  'FAB': "Fabrication, commerce de gros d'articles destinés à la vente",
+  'GESTION': 'Gestion, administration des entreprises',
+  'HOTEL': 'Hôtellerie, restauration, tourisme',
+  'IMMO': 'Immobilier',
+  'TEXT': 'Industrie textile',
+  'INFO': 'Informatique',
+  'ING': "Ingénieurs d'études et de recherche, chercheurs",
+  'LOGIS': 'Logistique, transports',
+  'ELECTRO': 'Matériel électrique, électronique, optique',
+  'MECA': 'Mécanique, métallurgie',
+  'SIDER': 'Minerais, minéraux, sidérurgie',
+  'JURI': 'Professions juridiques',
+  'SANTE': 'Santé, action sociale',
+  'SERVICE': 'Services aux particuliers, collectivités, entreprises',
 }
 
 const ADMIN='ADMIN'
@@ -414,44 +414,44 @@ const ROLES = {
   ADMIN: 'Administrateur',
   MANAGER: 'Manager',
   EMPLOYEE: 'Collaborateur',
-};
+}
 
-const MONTH_PERIOD="MONTHLY"
-const YEAR_PERIOD="ANNUALY"
+const MONTH_PERIOD='MONTHLY'
+const YEAR_PERIOD='ANNUALY'
 
 const BUDGET_PERIOD = {
-  [MONTH_PERIOD]: 'Mois',
-  [YEAR_PERIOD]: 'An',
-};
+  [ MONTH_PERIOD ]: 'Mois',
+  [ YEAR_PERIOD ]: 'An',
+}
 
 const PRO='professional'
 const PART='particular'
 
 const CREASHOP_MODE={
-  CREATION:'creation',
-  SERVICE_ADD:'add',
-  SERVICE_UPDATE:'edit',
+  CREATION: 'creation',
+  SERVICE_ADD: 'add',
+  SERVICE_UPDATE: 'edit',
 }
 
 const REGISTER_MODE={
-  COMPLETE:'fullRegister',
-  INCOMPLETE:'setAlfredRegister',
+  COMPLETE: 'fullRegister',
+  INCOMPLETE: 'setAlfredRegister',
 }
 
 const MICROSERVICE_MODE='MICROSERVICE'
 const CARETAKER_MODE='CARETAKER'
 
 const DASHBOARD_MODE ={
-  [MICROSERVICE_MODE]: 'microservice',
-  [CARETAKER_MODE]: 'conciergerie'
+  [ MICROSERVICE_MODE ]: 'microservice',
+  [ CARETAKER_MODE ]: 'conciergerie',
 }
 
 const PEND_EMPLOYEE_REGISTER='PEND_EMPLOYEE_REGISTER'
 const PEND_ALFRED_PRO_REGISTER='PEND_ALFRED_PRO_REGISTER'
 
 const PENDING_REASONS= {
-  [PEND_EMPLOYEE_REGISTER]:'Inscription employé',
-  [PEND_ALFRED_PRO_REGISTER]:'Inscription Alfred',
+  [ PEND_EMPLOYEE_REGISTER ]: 'Inscription employé',
+  [ PEND_ALFRED_PRO_REGISTER ]: 'Inscription Alfred',
 }
 
 module.exports = {
@@ -461,5 +461,5 @@ module.exports = {
   SKILLS, LANGUAGES, MAX_DESCRIPTION_LENGTH, BOOK_STATUS, EXPIRATION_DELAY,
   CLOSE_NOTIFICATION_DELAY, ACCOUNT_MIN_AGE, COMPANY_SIZE, COMPANY_ACTIVITY,
   ADMIN, MANAGER, EMPLOYEE, ROLES, BUDGET_PERIOD, PRO, PART, CREASHOP_MODE,
-  MONTH_PERIOD, YEAR_PERIOD, DASHBOARD_MODE, MICROSERVICE_MODE, CARETAKER_MODE,REGISTER_MODE
-};
+  MONTH_PERIOD, YEAR_PERIOD, DASHBOARD_MODE, MICROSERVICE_MODE, CARETAKER_MODE, REGISTER_MODE,
+}
