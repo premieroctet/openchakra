@@ -28,22 +28,11 @@ class Invoices extends React.Component {
       }).catch(err => {
         console.log(err)
       })
-    forEach(t => {
-      const rows = [
-        {firstname: res.data[ t ].firstname},
-        {lastname: res.data[ t ].lastname},
-        {billing_number: res.data[ t ].billing_number},
-        {amount: res.data[ t ].amount},
-      ]
-    })
   }
 
   render() {
     const {data} = this.state
-    const rows = [
-      {firstname: data[ 0 ].firstname},
-    ]
-    console.log(data)
+
     return (
       <Grid>
         <h2>Factures</h2>
@@ -51,7 +40,7 @@ class Invoices extends React.Component {
           height: 400,
           width: '100%',
         }}>
-          <DataGrid rows={rows} columns={columns} checkboxSelection/>
+          {/* <DataGrid rows={data} columns={columns} checkboxSelection/>*/}
         </Grid>
       </Grid>
     )

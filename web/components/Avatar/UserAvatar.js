@@ -1,12 +1,12 @@
 import IconButton from '@material-ui/core/IconButton'
 import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
-import { withStyles } from '@material-ui/core/styles'
+import {withStyles} from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import axios from 'axios'
 import styles from './UserAvatarStyle'
-const { isEditableUser, getLoggedUserId } = require('../../utils/context')
+const {isEditableUser, getLoggedUserId} = require('../../utils/context')
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import Badge from '@material-ui/core/Badge'
 
@@ -30,13 +30,13 @@ class UserAvatar extends React.Component {
     const currentUrl = Router.pathname
 
     if (userId) {
-      this.setState({ currentUser: userId })
+      this.setState({currentUser: userId})
     }
     if(profileUrl.includes(currentUrl.substring(currentUrl.lastIndexOf('/') + 1))) {
-      this.setState({ isAbout: true })
+      this.setState({isAbout: true})
     }
     if(Router.pathname === '/account/myProfile' || Router.pathname === '/profile/about') {
-      this.setState({ isPageEditable: true })
+      this.setState({isPageEditable: true})
     }
   }
 
@@ -48,7 +48,7 @@ class UserAvatar extends React.Component {
   };
 
   avatarWithPics = (user, classes) => {
-    const{ isAbout, myProfile } = this.state
+    const{isAbout, myProfile} = this.state
     const url = user.picture.match(/^https?:\/\//) ? user.picture : `/${ user.picture}`
 
     return (
@@ -57,7 +57,7 @@ class UserAvatar extends React.Component {
   }
 
   avatarWithoutPics = (user, classes) => {
-    const{ isAbout, myProfile } = this.state
+    const{isAbout, myProfile} = this.state
 
     return (
       <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : myProfile ? classes.myProfile : classes.avatarLetter}>
@@ -85,13 +85,13 @@ class UserAvatar extends React.Component {
   }
 
   render() {
-    const { user, classes } = this.props
-    const { currentUser, isPageEditable } = this.state
+    const {user, classes} = this.props
+    const {currentUser, isPageEditable} = this.state
 
     let owner = user ? currentUser === user._id : null
 
     return (
-      <Grid style={{ width: '100%', height: '100%' }}>
+      <Grid style={{width: '100%', height: '100%'}}>
         <Grid style={{
           height: '100%',
           width: '100%',
@@ -102,7 +102,7 @@ class UserAvatar extends React.Component {
               vertical: 'bottom',
               horizontal: 'right',
             }}
-            classes={{ root: classes.badge }}
+            classes={{root: classes.badge}}
             badgeContent={ owner && isPageEditable ? <Grid>
               <input
                 ref={fileInput => this.fileInput = fileInput}

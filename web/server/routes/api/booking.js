@@ -309,33 +309,21 @@ new CronJob('0 */1 * * * *', (() => {
         if (moment(date).isSameOrAfter(end_date)) {
           const type = ['billing', 'receipt', 'myalfred_billing']
           const key = getKeyDate()
-          Promise.all([getNextNumber('billing', key), getNextNumber('receipt', key), getNextNumber('myalfred_billing', key)]).then(
+          Promise.all([getNextNumber(type[ 0 ], key), getNextNumber(type[ 1 ], key), getNextNumber(type[ 2 ], key)]).then(
             values => {
-              return `${type[ i ].charAt(0).toUpperCase()}${key}${values}`
-            }
+              values.map((res, i) => {
+                const attribute = `${type[ i ]}_number`
+                const result = `${type[ i ].charAt(0).toUpperCase()}${key}${res}`
+                Promise.all([result])
+                  .then(data => {
+                    b[ attribute ] = data
+                  })
+                  .catch(err => {
+                    console.error(err)
+                  })
+              })
+            },
           )
-
-          type.map(i => {
-            const attribute = `${type[ i ]}_number`
-
-            const result = Promise.all([getNextNumber(type[ i ], key)])
-              .then(res => {
-                return `${type[ i ].charAt(0).toUpperCase()}${key}${res}`
-
-              })
-              .catch(err => {
-                console.error(err)
-              })
-
-            Promise.all([result])
-              .then(data => {
-                b[ attribute ] = data
-
-              })
-              .catch(err => {
-                console.error(err)
-              })
-          })
           b.status = BOOK_STATUS.FINISHED
           b.save()
             .then(b => {
