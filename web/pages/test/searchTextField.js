@@ -16,7 +16,7 @@ class TestSearchTextField extends React.Component {
   componentDidMount = () => {
     axios.get('/myAlfred/api/serviceUser/keywords/particular')
       .then( res => {
-        const keywords=res.data
+        const keywords=res.data.slice(1,100)
         const options=keywords.map(k => { return {label: k}})
         this.setState({options:options, loading:false})
       })
