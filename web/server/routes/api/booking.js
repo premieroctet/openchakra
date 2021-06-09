@@ -4,20 +4,16 @@ const passport = require('passport')
 const mongoose = require('mongoose')
 const crypto = require('crypto')
 const moment = require('moment')
-const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts')
+const {BOOK_STATUS} = require('../../../utils/consts')
 const Booking = require('../../models/Booking')
 const Count = require('../../models/Count')
-const {invoiceFormat} = require('../../../utils/converters')
 const CronJob = require('cron').CronJob
-const {getKeyDate} = require('../../utils/booking')
 const {
-  sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
+  sendBookingConfirmed, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
-  sendLeaveCommentForClient, sendLeaveCommentForAlfred,
 } = require('../../utils/mailing')
 const {getRole} = require('../../utils/serverContext')
-const {payAlfred} = require('../../utils/mangopay')
 
 moment.locale('fr')
 
@@ -102,7 +98,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   const random = crypto.randomBytes(Math.ceil(5 / 2)).toString('hex').slice(0, 5)
 
   const bookingFields = {}
-  bookingFields.reference = `${req.body.reference }_${ random}`
+  bookingFields.reference = `${req.body.reference}_${random}`
   bookingFields.service = req.body.service
   if (req.body.option) {
     bookingFields.option = req.body.option
@@ -285,8 +281,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     .catch(err => console.error(err))
 })
 
-// Handle confirmated and after end date => to terminate
-new CronJob('0 */1 * * * *', (() => {
+new CronJob('0 */15 * * * *', (() => {
   const getNextNumber = (type, key) => {
     return new Promise((resolve, reject) => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}
@@ -303,6 +298,7 @@ new CronJob('0 */1 * * * *', (() => {
         })
     })
   }
+
   const date = moment().startOf('day')
   Booking.find({status: BOOK_STATUS.CONFIRMED, paid: false})
     .populate('user')
@@ -337,6 +333,7 @@ new CronJob('0 */1 * * * *', (() => {
 
 // Handle terminated but not paid bookings
 new CronJob('0 */15 * * * *', (() => {
+  const date = moment().startOf('day')
   Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
     .populate('user')
     .populate('alfred')
@@ -353,8 +350,9 @@ new CronJob('0 */15 * * * *', (() => {
 // - soit EXPIRATION_DELAY jours après la date de création de la réservation
 // - soit après la date de prestation
 new CronJob('0 */15 * * * *', (() => {
+  console.log('Checking expired bookings')
   const currentDate = moment().startOf('day')
-  Booking.find({status: BOOK_STATUS.TO_CONFIRM})
+  Booking.find({$or: [{status: BOOK_STATUS.TO_CONFIRM}, {status: BOOK_STATUS.TO_PAY}]})
     .populate('user')
     .populate('alfred')
     .then(booking => {
