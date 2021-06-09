@@ -1,47 +1,68 @@
-import { Autocomplete } from '@material-ui/lab';
-import { TextField } from '@material-ui/core';
 import React from 'react';
 import util from 'util'
-const {normalize} = require('../../utils/text')
+import TextField from '@material-ui/core/TextField'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+const {normalize, getWordAt} = require('../../utils/text')
+
+const Item = ({ entity: name }) => <div>{`${name}`}</div>
 
 class SearchTextField extends React.Component {
 
-  filterOptions = (options, state) => {
-    console.log(state)
-    const last_item=normalize(state.inputValue.split(/[\s,]+/).slice(-1).pop())
-    options = options.filter(o => normalize(o.label).includes(last_item))
-    return options
+  constructor(props) {
+    super(props)
+    this.state={
+      value: '',
+      options:['abattage', 'coiffure'],
+      selectOpen: false,
+    }
+    this.normalized_options=this.props.options.map(o => normalize(o.label))
   }
 
-  onChange = (event, value, reason) => {
-    console.log(`Event:${util.inspect(event._targetInst.return.tag)}`)
-    console.log(`value:${value}`)
-    console.log(`reason:${reason}`)
+  onChange = ev => {
+    const {target}=ev
+    this.setState({value: target.value})
   }
 
-  onInputChange = (event, value, reason) => {
-    console.log(`Event:${util.inspect(event._targetInst.return.tag)}`)
-    console.log(`value:${value}`)
-    console.log(`reason:${reason}`)
+  onKeyUp = event => {
+    const {target}=event
+    console.log(target.selectionStart)
+    console.log(target.selectionEnd)
+    const word=getWordAt(this.state.value, target.selectionStart).word
+    console.log(word)
+    const re=new RegExp(word)
+    const filtered=this.normalized_options.filter(o => o.match(re)).slice(0,50)
+    this.setState({options: filtered})
+    console.log(filtered)
+    this.setState({selectOpen: true})
   }
-  
+
+  onSelection = ev => {
+    const {target}=event
+    console.log('onSelection')
+    this.setState({selected: target.value, selectOpen: false})
+  }
+
   render() {
+    const {value, selected, options, selectOpen}=this.state
     return (
-      <Autocomplete
-        native={true}
-        options={this.props.options}
-        onChange={this.props.onChange}
-        onKeyDown={this.onChange}
-        isDisabled={this.props.isDisabled}
-        renderInput={params => <TextField {...params} label="Combo box" variant="outlined" />}
-        getOptionLabel={option => option.label || option}
-        freeSolo={true}
-        loadingText='Chargement'
-        loading={this.props.loading}
-        autoComplete={true}
-        filterOptions={this.filterOptions}
-        multiple={true}
-      />
+      <>
+        <TextField
+          value={value}
+          onKeyUp={this.onKeyUp}
+          onChange={this.onChange}
+        />
+        <Select
+          value={selected}
+          onChange={this.onSelection}
+          open={selectOpen}
+        >
+          {options.map(o => (
+            <MenuItem value={o} key={o}>{o}</MenuItem>
+          ))}
+        </Select>
+         <div>Test</div>
+      </>
     )
   }
 }

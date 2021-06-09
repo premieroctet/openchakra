@@ -157,6 +157,19 @@ const isMobilePhone= number => {
   return res
 }
 
+const getWordAt = (text, position) => {
+  const patBefore=/\w*$/
+  const patAfter=/^\w*/
+  const before=text.substring(0, position)
+  const after=text.substring(position)
+  const matchBefore=before.match(patBefore)[0]
+  const matchAfter=after.match(patAfter)[0]
+  const start=position-matchBefore.length
+  const end=position+matchAfter.length
+  const length=end-start
+  return {start: start, end: end, word: matchBefore+matchAfter}
+}
+
 module.exports = {
   normalize,
   matches,
@@ -174,4 +187,5 @@ module.exports = {
   isSiretSirenLength,
   insensitiveComparator,
   isMobilePhone,
-};
+  getWordAt,
+}
