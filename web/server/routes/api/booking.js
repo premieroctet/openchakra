@@ -4,14 +4,18 @@ const passport = require('passport')
 const mongoose = require('mongoose')
 const crypto = require('crypto')
 const moment = require('moment')
-const {BOOK_STATUS} = require('../../../utils/consts')
+const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts')
 const Booking = require('../../models/Booking')
 const Count = require('../../models/Count')
+const {getKeyDate} = require('../../utils/booking')
+const {invoiceFormat} = require('../../../utils/converters')
+const {payAlfred} = require('../../utils/mangopay')
 const CronJob = require('cron').CronJob
 const {
-  sendBookingConfirmed, sendBookingInfosRecap,
+  sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
+  sendLeaveCommentForClient, sendLeaveCommentForAlfred,
 } = require('../../utils/mailing')
 const {getRole} = require('../../utils/serverContext')
 
@@ -126,21 +130,21 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 
   newBooking.save()
     .then(booking => {
-      if (booking.status == BOOK_STATUS.INFO || booking.status == BOOK_STATUS.TO_CONFIRM) {
+      if (booking.status === BOOK_STATUS.INFO || booking.status === BOOK_STATUS.TO_CONFIRM) {
         // Reload to get user,alfred,service
         Booking.findById(booking._id)
           .populate('alfred')
           .populate('user')
           .then(book => {
-            if (booking.status == BOOK_STATUS.INFO) {
+            if (booking.status === BOOK_STATUS.INFO) {
               sendBookingInfosRecap(book)
               sendAskingInfo(book, req)
             }
-            if (booking.status == BOOK_STATUS.TO_CONFIRM) {
+            if (booking.status === BOOK_STATUS.TO_CONFIRM) {
               sendBookingDetails(book)
               sendNewBookingManual(book, req)
             }
-            if (booking.status == BOOK_STATUS.CONFIRMED) {
+            if (booking.status === BOOK_STATUS.CONFIRMED) {
               sendNewBooking(book, req)
             }
           })
@@ -251,25 +255,25 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
         return res.status(404).json({msg: 'no booking found'})
       }
       if (booking) {
-        if (booking.status == BOOK_STATUS.TO_CONFIRM) {
+        if (booking.status === BOOK_STATUS.TO_CONFIRM) {
           sendBookingDetails(booking)
           sendNewBookingManual(booking, req)
         }
-        if (booking.status == BOOK_STATUS.CONFIRMED) {
+        if (booking.status === BOOK_STATUS.CONFIRMED) {
           sendBookingConfirmed(booking)
         }
-        if (booking.status == BOOK_STATUS.REFUSED) {
-          if (canceller_id == booking.user._id) {
+        if (booking.status === BOOK_STATUS.REFUSED) {
+          if (canceller_id === booking.user._id) {
             sendBookingRefusedToAlfred(booking, req)
           } else {
             sendBookingRefusedToClient(booking, req)
           }
         }
-        if (booking.status == BOOK_STATUS.PREAPPROVED) {
+        if (booking.status === BOOK_STATUS.PREAPPROVED) {
           sendAskInfoPreapproved(booking, req)
         }
-        if (booking.status == BOOK_STATUS.CANCELED) {
-          if (canceller_id == booking.user._id) {
+        if (booking.status === BOOK_STATUS.CANCELED) {
+          if (canceller_id === booking.user._id) {
             sendBookingCancelledByClient(booking)
           } else {
             sendBookingCancelledByAlfred(booking, req)
@@ -320,9 +324,9 @@ new CronJob('0 */15 * * * *', (() => {
           )
           b.status = BOOK_STATUS.FINISHED
           b.save()
-            .then(b => {
-              sendLeaveCommentForAlfred(b)
-              sendLeaveCommentForClient(b)
+            .then(bo => {
+              sendLeaveCommentForAlfred(bo)
+              sendLeaveCommentForClient(bo)
             })
             .catch(err => console.error(err))
         }
@@ -333,7 +337,6 @@ new CronJob('0 */15 * * * *', (() => {
 
 // Handle terminated but not paid bookings
 new CronJob('0 */15 * * * *', (() => {
-  const date = moment().startOf('day')
   Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
     .populate('user')
     .populate('alfred')
@@ -367,9 +370,9 @@ new CronJob('0 */15 * * * *', (() => {
           console.log(`Booking ${b._id} expired : ${reason}`)
           b.status = BOOK_STATUS.EXPIRED
           b.save()
-            .then(b => {
-              sendBookingExpiredToAlfred(b)
-              sendBookingExpiredToClient(b)
+            .then(bo => {
+              sendBookingExpiredToAlfred(bo)
+              sendBookingExpiredToClient(bo)
             })
             .catch(err => {
               console.error(err)
