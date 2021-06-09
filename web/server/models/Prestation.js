@@ -9,7 +9,7 @@ const PrestationSchema = new Schema({
   },
   price: {
     type: String,
-    required: true,
+    required: false,
   },
   service: {
     type: Schema.Types.ObjectId,
@@ -74,8 +74,12 @@ const PrestationSchema = new Schema({
     type: Boolean,
     required: true,
     sparse: true,
-  }
-});
+  },
+  private_company: {
+    type: Schema.Types.ObjectId,
+    ref: 'companies',
+  },
+})
 
 PrestationSchema.index({label: 'text'});
 
