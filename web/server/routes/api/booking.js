@@ -286,7 +286,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
 })
 
 // Handle confirmated and after end date => to terminate
-new CronJob('* * * * *', (() => {
+new CronJob('0 */1 * * * *', (() => {
   const getNextNumber = (type, key) => {
     return new Promise((resolve, reject) => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}
@@ -294,6 +294,8 @@ new CronJob('* * * * *', (() => {
         .then(() => {
           Count.findOne({type: type, key: key}).then(res => {
             resolve(res)
+          }).catch(err => {
+            console.error(err)
           })
         })
         .catch(err => {
@@ -342,6 +344,8 @@ new CronJob('0 */15 * * * *', (() => {
       bookings.forEach(booking => {
         payAlfred(booking)
       })
+    }).catch(err => {
+      console.error(err)
     })
 }), null, true, 'Europe/Paris')
 
@@ -369,7 +373,9 @@ new CronJob('0 */15 * * * *', (() => {
               sendBookingExpiredToAlfred(b)
               sendBookingExpiredToClient(b)
             })
-            .catch()
+            .catch(err => {
+              console.error(err)
+            })
         }
       })
     })
