@@ -3,7 +3,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
-import { Divider, Typography } from '@material-ui/core'
+import {Divider, Typography} from '@material-ui/core'
 import axios from 'axios'
 import styles from '../../../static/css/components/SelectPrestation/SelectPrestation'
 import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN} from '../../../utils/consts'
@@ -181,39 +181,38 @@ class SelectPrestation extends React.Component {
           </Grid>
         </Grid>
         {
-          true ?
+          true ? <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Divider/>
+            </Grid>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <h3 style={{color: '#696767'}}>{SHOP.parameter.titleIsPro}</h3>
+            </Grid>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Typography>{SHOP.parameter.descriptionIsPro}</Typography>
+            </Grid>
             <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Divider/>
+                <ButtonSwitch
+                  isOption={true}
+                  isPrice={true}
+                  width={'100%'}
+                  label={'coucou'}
+                  id={1987984654}
+                  checked={true}
+                  billings={[]}
+                  onChange={this.prestationSelected}
+                  isEditable={true}
+                  price={50}
+                  billing={100}
+                />
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <h3 style={{color: '#696767'}}>{SHOP.parameter.titleIsPro}</h3>
+                <Typography>Infos : ce pack s’installe en maximum 30 minutes. Cliquez ici pour consulter la notice d’installation afin de fixer votre tarif. </Typography>
               </Grid>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography>{SHOP.parameter.descriptionIsPro}</Typography>
-              </Grid>
-              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <ButtonSwitch
-                    isOption={true}
-                    isPrice={true}
-                    width={'100%'}
-                    label={'coucou'}
-                    id={1987984654}
-                    checked={true}
-                    billings={[]}
-                    onChange={this.prestationSelected}
-                    isEditable={true}
-                    price={50}
-                    billing={100}
-                  />
-                </Grid>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <Typography>Infos : ce pack s’installe en maximum 30 minutes. Cliquez ici pour consulter la notice d’installation afin de fixer votre tarif. </Typography>
-                </Grid>
 
-              </Grid>
-            </Grid> : null
+            </Grid>
+          </Grid> : null
         }
 
       </Grid>

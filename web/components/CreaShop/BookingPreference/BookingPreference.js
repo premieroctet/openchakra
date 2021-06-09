@@ -1,67 +1,65 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import {withStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import axios from 'axios';
-import styles from '../../../static/css/components/BookingPreference/BookingPreference';
-import Checkbox from "@material-ui/core/Checkbox";
-import {SHOP} from "../../../utils/i18n";
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import {withStyles} from '@material-ui/core/styles'
+import TextField from '@material-ui/core/TextField'
+import MenuItem from '@material-ui/core/MenuItem'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import axios from 'axios'
+import styles from '../../../static/css/components/BookingPreference/BookingPreference'
+import Checkbox from '@material-ui/core/Checkbox'
+import {SHOP} from '../../../utils/i18n'
 
 // FIX : réafficher la ville de référence
 
 class BookingPreference extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       deadline_unit: props.deadline_unit || 'jours',
       deadline_value: props.deadline_value || 1,
       minimum_basket: props.minimum_basket || 0,
       equipments: props.equipments || [],
-    };
-    this.onEquipmentChecked = this.onEquipmentChecked.bind(this);
+    }
+    this.onEquipmentChecked = this.onEquipmentChecked.bind(this)
     this.handleChange=this.handleChange.bind(this)
   }
 
   handleChange = event => {
-    var {name, value}=event.target
+    let {name, value}=event.target
     if (['minimum_basket', 'deadline_value'].includes(name)) {
       value = parseInt(value)
       if (isNaN(value)) {
         return
       }
     }
-    this.setState({[name]: value}, () => this.props.onChange(this.state));
+    this.setState({[ name ]: value}, () => this.props.onChange(this.state))
   }
 
   componentDidMount() {
     axios.get(`/myAlfred/api/service/${this.props.service}`)
       .then(response => {
-        let service = response.data;
-        this.setState({service: service});
+        let service = response.data
+        this.setState({service: service})
       })
       .catch(error => {
-        console.error(error);
-      });
+        console.error(error)
+      })
   }
 
   onEquipmentChecked(event) {
     const equipment_id = event.target.name
-    var equipments = this.state.equipments
+    let equipments = this.state.equipments
     if (equipments.includes(equipment_id)) {
-      equipments = equipments.filter( id => id != equipment_id)
-    }
-    else {
+      equipments = equipments.filter(id => id != equipment_id)
+    } else {
       equipments.push(equipment_id)
     }
-    this.setState({equipments: equipments}, () => this.props.onChange(this.state));
+    this.setState({equipments: equipments}, () => this.props.onChange(this.state))
   }
 
   render() {
-    const {classes} = this.props;
-    const {service} = this.state;
+    const {classes} = this.props
+    const {service} = this.state
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
@@ -71,7 +69,7 @@ class BookingPreference extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h3 style={{color: '#696767'}}>{SHOP.preference.subtitle}</h3>
         </Grid>
-        <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_delay_prevenance} </h4>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -90,7 +88,7 @@ class BookingPreference extends React.Component {
                 onChange={this.handleChange}
               />
             </Grid>
-            <Grid  item xl={2} lg={2} md={6} sm={6} xs={12}>
+            <Grid item xl={2} lg={2} md={6} sm={6} xs={12}>
               <TextField
                 value={this.state.deadline_unit}
                 name={'deadline_unit'}
@@ -107,10 +105,10 @@ class BookingPreference extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_minimum_basket}</h4>
         </Grid>
-        <Grid  item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <p className={classes.policySizeContent}>{SHOP.preference.subtitle_minimum_basket}</p>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
@@ -132,44 +130,43 @@ class BookingPreference extends React.Component {
             />
           </Grid>
         </Grid>
-        {service && service.equipments.length > 0 ?
-          <>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_equipments}</h4>
+        {service && service.equipments.length > 0 ? <>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_equipments}</h4>
+          </Grid>
+          <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+            <Grid container xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+              {service.equipments.map((result, index) => {
+                const selected=this.state.equipments.includes(result._id)
+                return (
+                  <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
+                    <label style={{cursor: 'pointer'}}>
+                      <img
+                        src={`/static/equipments/${result.logo}`}
+                        height={100}
+                        width={100}
+                        alt={result.label}
+                        title={result.label}
+                        style={{backgroundColor: selected ? '#CEDEFC' : null}}
+                      />
+                      <Checkbox
+                        style={{display: 'none'}}
+                        color="primary"
+                        type="checkbox"
+                        name={result._id}
+                        checked={this.state.equipments.includes(result._id)}
+                        onChange={this.onEquipmentChecked}/>
+                    </label>
+                  </Grid>
+                )
+              })}
             </Grid>
-            <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
-              <Grid container xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
-                {service.equipments.map((result, index) => {
-                  const selected=this.state.equipments.includes(result._id);
-                  return (
-                    <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
-                      <label style={{cursor: 'pointer'}}>
-                        <img
-                          src={`/static/equipments/${result.logo}`}
-                          height={100}
-                          width={100}
-                          alt={result.label}
-                          title={result.label}
-                          style={{backgroundColor: selected ? '#CEDEFC' : null}}
-                        />
-                        <Checkbox
-                          style={{display: 'none'}}
-                          color="primary"
-                          type="checkbox"
-                          name={result._id}
-                          checked={this.state.equipments.includes(result._id)}
-                          onChange={this.onEquipmentChecked}/>
-                      </label>
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </Grid>
-          </> : null
+          </Grid>
+        </> : null
         }
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(BookingPreference);
+export default withStyles(styles)(BookingPreference)
