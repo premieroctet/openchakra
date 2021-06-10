@@ -57,7 +57,8 @@ class SelectPrestation extends React.Component {
         prestations=prestations.filter(p => (p.particular_access && part)||(p.professional_access && pro))
         // Remove private belonging to other Alfreds
         prestations = prestations.filter(p => !p.private_alfred || p.private_alfred == alfred_id)
-        let private_prestations = prestations.filter(p => Boolean(p.private_company))
+        let private_prestations = prestations.filter(p => Boolean(p.private_alfred))
+        let companyPrestations = prestations.filter(p => Boolean(p.private_company))
         let public_prestations = prestations.filter(p => !p.private_alfred && !p.private_company)
         let grouped = _.mapValues(_.groupBy(public_prestations, 'filter_presentation.label'),
           clist => clist.map(el => _.omit(el, 'filter_presentation.label')))
@@ -65,7 +66,7 @@ class SelectPrestation extends React.Component {
           return {...p, billing: billings}
         })
         grouped = {[ CUSTOM_PRESTATIONS_FLTR ]: presta_templates, ...grouped}
-        grouped = {[ CUSTOM_PRIVATE_FLTR ]: private_prestations, ...grouped}
+        grouped = {[ CUSTOM_PRIVATE_FLTR ]: companyPrestations, ...grouped}
         this.setState({grouped: grouped})
       }).catch(error => {
         console.error(error)
