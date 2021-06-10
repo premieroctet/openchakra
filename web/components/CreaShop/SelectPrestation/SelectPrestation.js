@@ -6,7 +6,7 @@ import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
 import {Divider, Typography} from '@material-ui/core'
 import axios from 'axios'
 import styles from '../../../static/css/components/SelectPrestation/SelectPrestation'
-import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN} from '../../../utils/consts'
+import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN, CUSTOM_PRIVATE_FLTR} from '../../../utils/consts'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import {SHOP} from '../../../utils/i18n'
@@ -65,6 +65,7 @@ class SelectPrestation extends React.Component {
           return {...p, billing: billings}
         })
         grouped = {[ CUSTOM_PRESTATIONS_FLTR ]: presta_templates, ...grouped}
+        grouped = {[ CUSTOM_PRIVATE_FLTR ]: private_prestations, ...grouped}
         this.setState({grouped: grouped})
       }).catch(error => {
         console.error(error)
@@ -137,17 +138,17 @@ class SelectPrestation extends React.Component {
               </Fab>
             </Grid>
             {Object.keys(this.state.grouped).map((fltr, i) => {
-              let prestas = this.state.grouped[ fltr ]
+              let prestas = fltr === CUSTOM_PRIVATE_FLTR ? null : this.state.grouped[ fltr ]
               return (
                 <Grid key={i} className={classes.maxWidth}>
-                  <Grid className={classes.marginThirty}>
-                    <Grid>
+                  {
+                    fltr === CUSTOM_PRIVATE_FLTR ? null : <Grid className={classes.marginThirty}>
                       <Typography style={{color: '#696767'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? 'Prestations standard' : fltr === 'Prestations personnalisées' && this.state.grouped[ 'Prestations personnalisées' ].length === 0 ? '' : fltr}</Typography>
                     </Grid>
-                  </Grid>
+                  }
                   <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                    {prestas.map(p => {
-                      let isEditable = p._id.length == GID_LEN
+                    {prestas ? prestas.map(p => {
+                      let isEditable = p._id.length === GID_LEN
                       let presta = this.state.prestations[ p._id ]
                       return (
                         <Grid key={p._id} item xl={6} lg={6} md={12} sm={12} xs={12}>
@@ -172,7 +173,7 @@ class SelectPrestation extends React.Component {
                           <hr style={{color: 'rgb(255, 249, 249, 0.6)', borderRadius: 10}}/>
                         </Grid>
                       )
-                    })}
+                    }) : null}
                   </Grid>
                 </Grid>
               )
@@ -181,7 +182,7 @@ class SelectPrestation extends React.Component {
           </Grid>
         </Grid>
         {
-          true ? <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
+          this.state.grouped[ CUSTOM_PRIVATE_FLTR ] ? <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Divider/>
             </Grid>
@@ -192,29 +193,33 @@ class SelectPrestation extends React.Component {
               <Typography>{SHOP.parameter.descriptionIsPro}</Typography>
             </Grid>
             <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <ButtonSwitch
-                  isOption={true}
-                  isPrice={true}
-                  width={'100%'}
-                  label={'coucou'}
-                  id={1987984654}
-                  checked={true}
-                  billings={[]}
-                  onChange={this.prestationSelected}
-                  isEditable={true}
-                  price={50}
-                  billing={100}
-                />
-              </Grid>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography>Infos : ce pack s’installe en maximum 30 minutes. Cliquez ici pour consulter la notice d’installation afin de fixer votre tarif. </Typography>
-              </Grid>
-
+              {this.state.grouped[ CUSTOM_PRIVATE_FLTR ].map(res => {
+                let isEditable = res._id.length === GID_LEN
+                let presta = this.state.prestations[ res._id ]
+                return(
+                  <Grid key={res._id} item xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <ButtonSwitch
+                      isOption={true}
+                      isPrice={true}
+                      width={'100%'}
+                      label={res.label}
+                      id={res._id}
+                      checked={res.isCustomPresta}
+                      billings={res.billing}
+                      onChange={this.prestationSelected}
+                      isEditable={isEditable}
+                      price={presta ? presta.price : null}
+                      billing={presta ? presta.billing : null}
+                    />
+                    {
+                      res.description ? <Typography>Infos : {res.description}</Typography> : null
+                    }
+                  </Grid>
+                )
+              })}
             </Grid>
           </Grid> : null
         }
-
       </Grid>
     )
   }

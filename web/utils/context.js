@@ -140,7 +140,7 @@ const isEditableUser = user => {
 }
 
 const getUserLabel = user => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if (!user) {
       resolve('')
     }
