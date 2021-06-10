@@ -139,7 +139,7 @@ class SelectPrestation extends React.Component {
               </Fab>
             </Grid>
             {Object.keys(this.state.grouped).map((fltr, i) => {
-              let prestas = this.state.grouped[ CUSTOM_PRESTATIONS_FLTR ]
+              let prestas = fltr === COMPANY_PRIVATE_FLTR ? [] : this.state.grouped[ fltr ]
               return (
                 <Grid key={i} className={classes.maxWidth}>
                   {
@@ -205,7 +205,7 @@ class SelectPrestation extends React.Component {
                       width={'100%'}
                       label={res.label}
                       id={res._id}
-                      checked={res.isCustomPresta}
+                      checked={res.isCustomPresta ? true : presta != null}
                       billings={res.billing}
                       onChange={this.prestationSelected}
                       isEditable={isEditable}
