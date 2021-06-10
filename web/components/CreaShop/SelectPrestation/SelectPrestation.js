@@ -138,7 +138,7 @@ class SelectPrestation extends React.Component {
               </Fab>
             </Grid>
             {Object.keys(this.state.grouped).map((fltr, i) => {
-              let prestas = fltr === CUSTOM_PRIVATE_FLTR ? null : this.state.grouped[ fltr ]
+              let prestas = this.state.grouped[ fltr ]
               return (
                 <Grid key={i} className={classes.maxWidth}>
                   {
