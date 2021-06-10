@@ -13,6 +13,7 @@ import {SHOP} from '../../../utils/i18n'
 const {PART, PRO, CREASHOP_MODE} = require('../../../utils/consts')
 import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch'
 import moment from 'moment'
+import _ from 'lodash'
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -120,6 +121,13 @@ class SelectService extends React.Component {
     return result
   }
 
+  getSelectedOption = (options, service) => {
+    const {particular_professional_access}=this.state
+    let opts=particular_professional_access ? [].concat(...options.map(o => o.options)) : options
+    console.log(JSON.stringify(opts.slice(0, 5), null, 2))
+    return opts.find(o => o._id==service)
+  }
+
   render() {
 
     const {classes, is_particular, mode} = this.props
@@ -132,13 +140,12 @@ class SelectService extends React.Component {
     let options = []
     if (particular_professional_access) {
       // Intersection services pro & part
-      options = services[PRO].filter(s => services[PART].map(serv => serv._id).includes(s._id))
-      // Union keywords part & pro versions
-      options = options.map(spro => {
-        const service_part = services[PART].find(spart => spart._id == spro._id)
-        spro.keywords = _.uniq(spro.keywords.split(' ').concat(service_part.keywords.split(' '))).join(' ')
-        return spro
-      })
+      const both_options = _.intersectionBy(services[PRO], services[PART], s => s._id)
+      const part_options = _.differenceBy(services[PART], both_options, s => s._id).slice(0, 3)
+      const pro_options = _.differenceBy(services[PRO], both_options, s => s._id)
+      options.push({label: 'Services aux particuliers uniquement', options: part_options})
+      options.push({label: 'Services aux professionels uniquement', options: pro_options})
+      options.push({label: 'Services aux particuliers et aux professionels', options: both_options})
     }
     else {
       options = professional_access ? services[PRO] : services[PART]
@@ -154,16 +161,14 @@ class SelectService extends React.Component {
     const displayAccess = !is_particular && (mode != CREASHOP_MODE.SERVICE_UPDATE || this.getSelectedServiceAccess().length == 2)
 
     let services_title = null
-    if (mode!=CREASHOP_MODE.SERVICE_UPDATE) {
-      if (particular_professional_access) {
-        services_title=SHOP.service.content_particular_professional
-      }
-      else if (professional_access) {
-        services_title=SHOP.service.content_professional
-      }
-      else {
-        services_title=SHOP.service.content_particular
-      }
+    if (particular_professional_access) {
+      services_title=SHOP.service.content_particular_professional
+    }
+    else if (professional_access) {
+      services_title=SHOP.service.content_professional
+    }
+    else {
+      services_title=SHOP.service.content_particular
     }
 
     return (
@@ -241,7 +246,7 @@ class SelectService extends React.Component {
             isLoading={loading}
             loadingMessage={() => 'Recherche des services'}
             placeholder={SHOP.service.placeholder}
-            value={(options || []).find(o => service && o._id == service)}
+            value={this.getSelectedOption(options, service)}
             styles={professional_access && particular_access ? tabbedStyle : ''}
           />
         </Grid>
