@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
-
+const {snackBarSuccess} = require('../../../utils/notifications')
 
 const styles = {
   loginContainer: {
@@ -35,58 +35,58 @@ const styles = {
 class view extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       job: {},
       label: '',
 
-    };
+    }
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClick = this.handleClick.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
-    return {job_id: id};
+    return {job_id: id}
 
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    const id = this.props.job_id;
+    localStorage.setItem('path', Router.pathname)
+    const id = this.props.job_id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/job/all/${id}`)
       .then(response => {
-        let job = response.data;
-        this.setState({job: job});
+        let job = response.data
+        this.setState({job: job})
 
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
-      });
+      })
 
   }
 
   onChange = e => {
-    const state = this.state.job;
-    state[e.target.name] = e.target.value;
-    this.setState({job: state});
+    const state = this.state.job
+    state[e.target.name] = e.target.value
+    this.setState({job: state})
   };
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const {label} = this.state.job;
-    const id = this.props.job_id;
+    const {label} = this.state.job
+    const id = this.props.job_id
     axios.put(`/myAlfred/api/admin/job/all/${id}`, {label})
-      .then(res => {
+      .then(() => {
 
-        alert('Métier modifié avec succès');
-        Router.push({pathname: '/dashboard/job/all'});
+        snackBarSuccess('Métier modifié avec succès')
+        Router.push({pathname: '/dashboard/job/all'})
       })
       .catch(err => {
         console.error(err);

@@ -22,6 +22,8 @@ import Link from 'next/link';
 
 import Checkbox from '@material-ui/core/Checkbox';
 
+const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
+
 const styles = {
   loginContainer: {
     alignItems: 'center',
@@ -79,6 +81,7 @@ class view extends React.Component {
       tags: [],
       selectedTags: null,
       selectedBilling: null,
+      companies: [],
       errors: {},
     };
 
@@ -125,7 +128,6 @@ class view extends React.Component {
             value: q._id,
           })),
         });
-
 
       })
       .catch(err => {
@@ -177,12 +179,22 @@ class view extends React.Component {
     });
 
     axios.get('/myAlfred/api/admin/tags/all')
-      .then((response) => {
-        let tags = response.data;
-        this.setState({all_tags: tags});
-      }).catch((error) => {
-      console.log(error);
-    });
+      .then(response => {
+        let tags = response.data
+        this.setState({all_tags: tags})
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+    axios.get('/myAlfred/api/admin/companies/all')
+      .then(response => {
+        let companies = response.data
+        this.setState({companies: companies})
+      })
+      .catch(error => {
+        console.log(error)
+      })
 
   }
 
@@ -214,6 +226,17 @@ class view extends React.Component {
       this.setState({current_filter_presentation: this.state.all_filter_presentation.find(f => f._id.toString() == value.toString())});
     }
   };
+
+  onChangeCompany = e => {
+    const {value} = e.target
+    const {prestation}=this.state
+    prestation.private_company=value
+    if (value) {
+      prestation.professional_access=true
+      prestation.particular_access=false
+    }
+    this.setState({prestation: prestation})
+  }
 
   handleChangeTags = selectedTags => {
     this.setState({selectedTags});
@@ -249,13 +272,15 @@ class view extends React.Component {
     const {label, price, description, professional_access, particular_access} = this.state.prestation;
     const id = this.props.prestation_id;
     const cesu_eligible = this.state.cesu_eligible;
+    const private_company = this.state.prestation.private_company;
 
     axios.put(`/myAlfred/api/admin/prestation/all/${id}`, {
       label, price, billing, service, filter_presentation,
-      job, description, tags, cesu_eligible, particular_access,professional_access
+      job, description, tags, cesu_eligible, particular_access,professional_access,
+      private_company
     })
       .then(res => {
-        alert('Prestation modifiée avec succès');
+        snackBarSuccess('Prestation modifiée avec succès');
       })
       .catch(err => {
         console.error(err);
@@ -273,8 +298,7 @@ class view extends React.Component {
     const id = this.props.prestation_id;
     axios.delete(`/myAlfred/api/admin/prestation/all/${id}`)
       .then(res => {
-
-        alert('Prestation supprimée avec succès');
+        snackBarSuccess('Prestation supprimée avec succès');
         Router.push({pathname: '/dashboard/prestations/all'});
       })
       .catch(err => {
@@ -300,6 +324,8 @@ class view extends React.Component {
     const {all_filter_presentation} = this.state;
     const {all_job} = this.state;
     const {all_tags} = this.state;
+    const {companies} = this.state;
+    console.log(prestation.private_company)
 
     const categories = all_category.map(e => (
       <MenuItem value={e._id}>{e.label}</MenuItem>
@@ -465,8 +491,7 @@ class view extends React.Component {
                               name="particular_access" onChange={this.onChangeBool}
                               />
                   }
-                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux particuliers</p>
-                  </React.Fragment>}
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux particuliers</p></React.Fragment>}
                 />
                 <FormControlLabel
                   control={
@@ -478,6 +503,29 @@ class view extends React.Component {
                   label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux professionels</p>
                   </React.Fragment>}
                 />
+                <Grid item style={{width: '100%', marginTop: 20}}>
+                  <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Typography style={{fontSize: 20}}>Restreindre à la compagnie</Typography>
+                    <Select
+                      input={<Input name="job" id="genre-label-placeholder"/>}
+                      displayEmpty
+                      name="private_company"
+                      value={prestation.private_company ? prestation.private_company.toString():null}
+                      onChange={this.onChangeCompany}
+                      className={classes.selectEmpty}
+                      error={this.state.errors.company}
+                    >
+                      <MenuItem key={''} value={null}>
+                        <em>...</em>
+                      </MenuItem>
+                      {companies.map(e => (
+                        <MenuItem key={e._id} value={e._id.toString()}>
+                          {e.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
 
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <Typography style={{fontSize: 20}}>Tags</Typography>

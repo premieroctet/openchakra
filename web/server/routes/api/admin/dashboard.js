@@ -1996,18 +1996,20 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
             s_label: normalize(req.body.label),
             price: req.body.price,
             service: mongoose.Types.ObjectId(req.body.service),
-            billing: JSON.parse(req.body.billing),
+            billing: req.body.billing,
             filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
             search_filter: null,
             category: null,
             calculating: null,
-            job: mongoose.Types.ObjectId(req.body.job),
+            job: req.body.job,
             description: req.body.description,
             //picture: req.body.picture.path,
-            picture: req.file.path,
-            tags: JSON.parse(req.body.tags),
+            picture: req.file ? req.file.path : null,
+            tags: req.body.tags,
             cesu_eligible: req.body.cesu_eligible,
-            professional_access: req.body.professional_access, particular_access: req.body.particular_access
+            professional_access: req.body.professional_access,
+            particular_access: req.body.particular_access,
+            private_company: req.body.private_company,
           });
           newPrestation.save()
             .then(prestation => res.json(prestation))
@@ -2156,6 +2158,7 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
           cesu_eligible: req.body.cesu_eligible,
           professional_access: req.body.professional_access,
           particular_access: req.body.particular_access,
+          private_company: req.body.private_company,
         },
       },
       {new: true})
