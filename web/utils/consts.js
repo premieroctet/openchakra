@@ -22,7 +22,7 @@ const CANCEL_MODE = {
 }
 
 const CUSTOM_PRESTATIONS_FLTR = 'Prestations personnalisées'
-const CUSTOM_PRIVATE_FLTR = 'Prestations entreprise'
+const COMPANY_PRIVATE_FLTR = 'Prestations entreprise'
 
 const generate_id = () => {
   return crypto.randomBytes(20).toString('hex')
@@ -463,5 +463,5 @@ module.exports = {
   CLOSE_NOTIFICATION_DELAY, ACCOUNT_MIN_AGE, COMPANY_SIZE, COMPANY_ACTIVITY,
   ADMIN, MANAGER, EMPLOYEE, ROLES, BUDGET_PERIOD, PRO, PART, CREASHOP_MODE,
   MONTH_PERIOD, YEAR_PERIOD, DASHBOARD_MODE, MICROSERVICE_MODE, CARETAKER_MODE, REGISTER_MODE,
-  CUSTOM_PRIVATE_FLTR
+  COMPANY_PRIVATE_FLTR
 }

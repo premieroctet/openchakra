@@ -6,7 +6,7 @@ import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
 import {Divider, Typography} from '@material-ui/core'
 import axios from 'axios'
 import styles from '../../../static/css/components/SelectPrestation/SelectPrestation'
-import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN, CUSTOM_PRIVATE_FLTR} from '../../../utils/consts'
+import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN, COMPANY_PRIVATE_FLTR} from '../../../utils/consts'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import {SHOP} from '../../../utils/i18n'
@@ -59,14 +59,14 @@ class SelectPrestation extends React.Component {
         prestations = prestations.filter(p => !p.private_alfred || p.private_alfred == alfred_id)
         let private_prestations = prestations.filter(p => Boolean(p.private_alfred))
         let companyPrestations = prestations.filter(p => Boolean(p.private_company))
-        let public_prestations = prestations.filter(p => !p.private_alfred || !p.private_company)
+        let public_prestations = prestations.filter(p => !p.private_alfred && !p.private_company)
         let grouped = _.mapValues(_.groupBy(public_prestations, 'filter_presentation.label'),
           clist => clist.map(el => _.omit(el, 'filter_presentation.label')))
         let presta_templates = private_prestations.map(p => {
           return {...p, billing: billings}
         })
         grouped = {[ CUSTOM_PRESTATIONS_FLTR ]: presta_templates, ...grouped}
-        grouped = {[ CUSTOM_PRIVATE_FLTR ]: companyPrestations, ...grouped}
+        grouped = {[ COMPANY_PRIVATE_FLTR ]: companyPrestations, ...grouped}
         this.setState({grouped: grouped})
       }).catch(error => {
         console.error(error)
@@ -139,11 +139,11 @@ class SelectPrestation extends React.Component {
               </Fab>
             </Grid>
             {Object.keys(this.state.grouped).map((fltr, i) => {
-              let prestas = this.state.grouped[ fltr ]
+              let prestas = this.state.grouped[ CUSTOM_PRESTATIONS_FLTR ]
               return (
                 <Grid key={i} className={classes.maxWidth}>
                   {
-                    fltr === CUSTOM_PRIVATE_FLTR ? null : <Grid className={classes.marginThirty}>
+                    fltr === COMPANY_PRIVATE_FLTR ? null : <Grid className={classes.marginThirty}>
                       <Typography style={{color: '#696767'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? 'Prestations standard' : fltr === 'Prestations personnalisées' && this.state.grouped[ 'Prestations personnalisées' ].length === 0 ? '' : fltr}</Typography>
                     </Grid>
                   }
@@ -183,7 +183,7 @@ class SelectPrestation extends React.Component {
           </Grid>
         </Grid>
         {
-          this.state.grouped[ CUSTOM_PRIVATE_FLTR ] ? <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
+          this.state.grouped[ COMPANY_PRIVATE_FLTR ] ? <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Divider/>
             </Grid>
@@ -194,7 +194,7 @@ class SelectPrestation extends React.Component {
               <Typography>{SHOP.parameter.descriptionIsPro}</Typography>
             </Grid>
             <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
-              {this.state.grouped[ CUSTOM_PRIVATE_FLTR ].map(res => {
+              {this.state.grouped[ COMPANY_PRIVATE_FLTR ].map(res => {
                 let isEditable = res._id.length === GID_LEN
                 let presta = this.state.prestations[ res._id ]
                 return(
