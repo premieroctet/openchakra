@@ -34,7 +34,7 @@ const {computeDistanceKm, computeBookingReference} = require('../utils/functions
 const {snackBarError}=require('../utils/notifications')
 
 const moment = require('moment');
-const {isB2BAdmin, isB2BManager, getRole}=require('../utils/context')
+const {isB2BAdmin, isB2BManager, getRole, isModeCompany}=require('../utils/context')
 
 moment.locale('fr');
 registerLocale('fr', fr);
@@ -137,6 +137,16 @@ class UserServicesPreview extends React.Component {
           .catch (err => {})
           .then(res => {
             let user = res ? res.data : null
+            // Filter private_company prestations
+            serviceUser.prestations=serviceUser.prestations.filter(p => {
+              const company=p.prestation.private_company
+              if (company) {
+                return isModeCompany() && user && user.company==company
+              }
+              else {
+                return true
+              }
+            })
             // Mode compagnie : l'admin a un budget illimité comme un user standard, le manager a le budget de son département
             if (user && user.company) {
               axios.get(`/myAlfred/api/companies/budget/${user._id}/${getRole()}`)
