@@ -36,6 +36,8 @@ import {isB2BAdmin} from "../../../utils/context";
 const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, getRole} = require('../../../utils/context')
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 const {EMPLOYEE}=require('../../../utils/consts')
+const {formatAddress} = require('../../../utils/text.js');
+
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -72,7 +74,8 @@ class MobileNavbar extends React.Component{
       keyword: '',
       city: undefined,
       gps: '',
-      logged: false
+      logged: false,
+      allAddresses: [],
     }
   }
 
@@ -89,11 +92,16 @@ class MobileNavbar extends React.Component{
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        var allAddresses={'main':res.data.billing_address};
-        res.data.service_address.forEach( addr => {
-          allAddresses[addr._id]=addr
-        });
-        this.setState({ user : res.data, allAddresses: allAddresses})
+        const user=res.data
+        const promise = isB2BAdmin()||isB2BManager() ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+        promise
+          .then(res => {
+            var allAddresses = {'main': res.data.billing_address};
+            res.data.service_address.forEach(addr => {
+              allAddresses[addr._id] = addr
+            });
+            this.setState({ user : user, allAddresses: allAddresses})
+          })
       }).catch(err => console.error(err));
   }
 
@@ -305,15 +313,11 @@ class MobileNavbar extends React.Component{
                           }}
                           classes={{selectMenu: classes.fitlerMenuLogged}}
                         >
-                          <MenuItem value={'main'} style={{whiteSpace: 'nowrap'}}>
-                            Adresse
-                            principale, {' ' + this.state.user.billing_address.address} {this.state.user.billing_address.zip_code},{this.state.user.billing_address.city}
+                        {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
+                          <MenuItem value={_id} key={index}>
+                            { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
                           </MenuItem>
-                          {this.state.user.service_address.map((e, index) => (
-                            <MenuItem value={e._id} key={index}>
-                              {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
-                            </MenuItem>
-                          ))}
+                        ))}                          ))}
                           <MenuItem value={'all'}>
                             Partout, Rechercher des Alfred partout
                           </MenuItem>
