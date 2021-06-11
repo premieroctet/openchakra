@@ -18,6 +18,8 @@ import InfoIcon from '@material-ui/icons/Info';
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import UserAvatar from "../../components/Avatar/UserAvatar";
 
+const {isB2BAdmin, getRole}=require('../../utils/context')
+
 class myProfile extends React.Component{
 
   constructor(props) {
@@ -61,7 +63,7 @@ class myProfile extends React.Component{
         <LayoutMobile currentIndex={4}>
           <Grid style={{display: 'flex', alignItems: 'center', marginTop: '5vh'}}>
             <Grid className={classes.cardPreviewContainerAvatar}>
-              <UserAvatar alt={user.firstName} user={user}/>
+              <UserAvatar alt={user.firstName} user={user} fireRefresh={() => this.componentDidMount()}/>
             </Grid>
             <Grid style={{marginLeft: '5vh'}}>
               <h2>Hello {user.firstname}</h2>
@@ -77,35 +79,52 @@ class myProfile extends React.Component{
                 Voir mon profil
               </Button>
             </Grid>
-            <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
-              <Button
-                className={classes.button}
-                startIcon={<ViewComfyIcon />}
-                onClick={() => user.is_alfred ? Router.push(`/profile/services?user=${user._id}`) : Router.push('/creaShop/creaShop')}
+            { user && !getRole() ?
+              <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
+                <Button
+                  className={classes.button}
+                  startIcon={<ViewComfyIcon />}
+                  onClick={() => user.is_alfred ? Router.push(`/profile/services?user=${user._id}`) : Router.push('/creaShop/creaShop')}
 
-              >
-                {user.is_alfred ? 'Mes Services' : 'Proposer mes services'}
-              </Button>
-            </Grid>
-            <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
-              <Button
-                className={classes.button}
-                startIcon={<ContactMailIcon />}
-                onClick={() => Router.push('/account/personalInformation')}
-
-              >
-                Mes informations
-              </Button>
-            </Grid>
-            <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
-              <Button
-                className={classes.button}
-                startIcon={<SettingsIcon />}
-                onClick={() => Router.push('/account/parameters')}
-              >
-                Mes paramètres
-              </Button>
-            </Grid>
+                >
+                  {user.is_alfred ? 'Mes Services' : 'Proposer mes services'}
+                </Button>
+              </Grid>
+              :
+              null
+            }
+            { isB2BAdmin() ?
+              <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
+                <Button
+                  className={classes.button}
+                  startIcon={<SettingsIcon />}
+                  onClick={() => Router.push('/company/dashboard/companyDashboard')}
+                >
+                  Dashboard
+                </Button>
+              </Grid>
+              :
+              <>
+              <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
+                <Button
+                  className={classes.button}
+                  startIcon={<ContactMailIcon />}
+                  onClick={() => Router.push('/account/personalInformation')}
+                >
+                  Mes informations
+                </Button>
+              </Grid>
+              <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
+                <Button
+                  className={classes.button}
+                  startIcon={<SettingsIcon />}
+                  onClick={() => Router.push('/account/parameters')}
+                >
+                  Mes paramètres
+                </Button>
+              </Grid>
+              </>
+            }
           </Grid>
           { user.is_admin ?
             <Grid>
