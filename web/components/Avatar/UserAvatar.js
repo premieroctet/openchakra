@@ -26,7 +26,7 @@ class UserAvatar extends React.Component {
 
   componentDidMount() {
     const userId = getLoggedUserId()
-    const profileUrl = ['services', 'about', 'reviews', 'calendar', 'statistics']
+    const profileUrl = ['services', 'about', 'reviews', 'calendar', 'statistics', 'myProfile']
     const currentUrl = Router.pathname
 
     if (userId) {
@@ -48,19 +48,19 @@ class UserAvatar extends React.Component {
   };
 
   avatarWithPics = (user, classes) => {
-    const{isAbout, myProfile} = this.state
+    const{isAbout, isPageEditable} = this.state
     const url = user.picture.match(/^https?:\/\//) ? user.picture : `/${ user.picture}`
 
     return (
-      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : myProfile ? classes.myProfile : classes.avatarLetter}/>
+      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : isPageEditable ? classes.myProfile : classes.avatarLetter}/>
     )
   }
 
   avatarWithoutPics = (user, classes) => {
-    const{isAbout, myProfile} = this.state
+    const{isAbout, isPageEditable} = this.state
 
     return (
-      <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : myProfile ? classes.myProfile : classes.avatarLetter}>
+      <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : isPageEditable ? classes.myProfile : classes.avatarLetter}>
         <p>{user.avatar_letters}</p>
       </Avatar>
     )

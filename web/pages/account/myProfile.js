@@ -1,61 +1,59 @@
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import Avatar from "@material-ui/core/Avatar";
-import withStyles from "@material-ui/core/styles/withStyles";
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../static/css/pages/account/myProfile/myProfile'
-import Router from "next/router";
-import axios from "axios";
+import Router from 'next/router'
+import axios from 'axios'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline'
+import ContactMailIcon from '@material-ui/icons/ContactMail'
+import SettingsIcon from '@material-ui/icons/Settings'
+import Divider from '@material-ui/core/Divider'
+import InfoIcon from '@material-ui/icons/Info'
+import ViewComfyIcon from '@material-ui/icons/ViewComfy'
+import UserAvatar from '../../components/Avatar/UserAvatar'
 
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
-import ContactMailIcon from '@material-ui/icons/ContactMail';
-import SettingsIcon from '@material-ui/icons/Settings';
-import Divider from "@material-ui/core/Divider";
-import InfoIcon from '@material-ui/icons/Info';
-import ViewComfyIcon from '@material-ui/icons/ViewComfy';
-import UserAvatar from "../../components/Avatar/UserAvatar";
-
-class myProfile extends React.Component{
+class myProfile extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
-      user:{}
+      user: {},
     }
 
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
-        this.setState({user: res.data});
+        this.setState({user: res.data})
 
       })
       .catch(err => {
-          if (err.response.status === 401 || err.response.status === 403) {
-            clearAuthenticationToken()
-            Router.push({pathname: '/'});
-          }
-        },
-      );
+        if (err.response.status === 401 || err.response.status === 403) {
+          clearAuthenticationToken()
+          Router.push({pathname: '/'})
+        }
+      },
+      )
   }
 
   logout2 = () => {
-    localStorage.removeItem('path');
+    localStorage.removeItem('path')
     clearAuthenticationToken()
-    Router.push('/');
+    Router.push('/')
   };
 
 
   render() {
-    const {classes} = this.props;
-    const {user} = this.state;
+    const {classes} = this.props
+    const {user} = this.state
     return(
       <React.Fragment>
         <LayoutMobile currentIndex={4}>
@@ -77,17 +75,17 @@ class myProfile extends React.Component{
                 Voir mon profil
               </Button>
             </Grid>
-            <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
+            <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
               <Button
                 className={classes.button}
                 startIcon={<ViewComfyIcon />}
-                onClick={() => user.is_alfred ? Router.push(`/profile/services?user=${user._id}`) : Router.push('/creaShop/creaShop')}
+                onClick={() => (user.is_alfred ? Router.push(`/profile/services?user=${user._id}`) : Router.push('/creaShop/creaShop'))}
 
               >
                 {user.is_alfred ? 'Mes Services' : 'Proposer mes services'}
               </Button>
             </Grid>
-            <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
+            <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
               <Button
                 className={classes.button}
                 startIcon={<ContactMailIcon />}
@@ -97,7 +95,7 @@ class myProfile extends React.Component{
                 Mes informations
               </Button>
             </Grid>
-            <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
+            <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
               <Button
                 className={classes.button}
                 startIcon={<SettingsIcon />}
@@ -131,7 +129,7 @@ class myProfile extends React.Component{
                 Comment ça marche ?
               </Button>
             </Grid>
-            <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
+            <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
               <Button
                 className={classes.button}
                 startIcon={<InfoIcon />}
@@ -170,9 +168,9 @@ class myProfile extends React.Component{
           </Grid>
         </LayoutMobile>
       </React.Fragment>
-    );
+    )
   }
 
 }
 
-export default withStyles (styles) (myProfile);
+export default withStyles(styles)(myProfile)
