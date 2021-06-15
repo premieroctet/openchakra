@@ -1,12 +1,15 @@
 export default theme => ({
   policySizeTitle: {
-    color: '#696767',
+    fontSize: 24,
+    lineHeight: '1.25em',
+    color: '#403f3f',
+    margin: 0,
   },
   policySizeSubtitle: {
-    color: '#696767',
+    color: '#403f3f',
   },
   policySizeContent: {
-    color: '#696767',
+    color: '#403f3f',
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
@@ -40,7 +43,7 @@ export default theme => ({
   },
   contentTitle: {
     width: '100%',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   bottomSpacer: {
     marginTop: 30,
@@ -57,10 +60,10 @@ export default theme => ({
     marginBottom: 30,
     marginTop: 30,
   },
-  titleContainer:{
-    [theme.breakpoints.down('xs')]:{
+  titleContainer: {
+    [theme.breakpoints.down('xs')]: {
       display: 'flex',
-      justifyContent: 'center'
-    }
-  }
+      justifyContent: 'center',
+    },
+  },
 })

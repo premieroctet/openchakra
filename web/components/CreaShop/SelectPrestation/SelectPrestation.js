@@ -105,7 +105,8 @@ class SelectPrestation extends React.Component {
       if (prestaId.toString().length==GID_LEN) {
         sel[ prestaId ].private_alfred=getLoggedUserId()
       }
-    } else {
+    }
+    else {
       delete sel[ prestaId ]
     }
     this.setState({prestations: sel})
@@ -122,7 +123,7 @@ class SelectPrestation extends React.Component {
           <h2 className={classes.policySizeTitle}>{SHOP.parameter.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 style={{color: '#696767'}}>{SHOP.parameter.subtitle}</h3>
+          <h3 style={{color: '#403f3f'}}>{SHOP.parameter.subtitle}</h3>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -144,7 +145,7 @@ class SelectPrestation extends React.Component {
                 <Grid key={i} className={classes.maxWidth}>
                   {
                     fltr === COMPANY_PRIVATE_FLTR ? null : <Grid className={classes.marginThirty}>
-                      <Typography style={{color: '#696767'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? 'Prestations standard' : fltr === 'Prestations personnalisées' && this.state.grouped[ 'Prestations personnalisées' ].length === 0 ? '' : fltr}</Typography>
+                      <Typography style={{color: '#403f3f'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? 'Prestations standard' : fltr === 'Prestations personnalisées' && this.state.grouped[ 'Prestations personnalisées' ].length === 0 ? '' : fltr}</Typography>
                     </Grid>
                   }
                   <Grid container spacing={2} style={{margin: 0, width: '100%'}}>

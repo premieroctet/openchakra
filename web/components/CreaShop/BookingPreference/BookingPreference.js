@@ -51,7 +51,8 @@ class BookingPreference extends React.Component {
     let equipments = this.state.equipments
     if (equipments.includes(equipment_id)) {
       equipments = equipments.filter(id => id != equipment_id)
-    } else {
+    }
+    else {
       equipments.push(equipment_id)
     }
     this.setState({equipments: equipments}, () => this.props.onChange(this.state))
@@ -67,7 +68,7 @@ class BookingPreference extends React.Component {
           <h2 className={classes.policySizeTitle}>{SHOP.preference.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 style={{color: '#696767'}}>{SHOP.preference.subtitle}</h3>
+          <h3 style={{color: '#403f3f'}}>{SHOP.preference.subtitle}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_delay_prevenance} </h4>

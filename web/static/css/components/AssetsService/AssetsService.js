@@ -2,22 +2,23 @@ export default theme => ({
   policySizeTitle: {
     fontSize: 24,
     lineHeight: '1.25em',
-    color: '#696767',
+    color: '#403f3f',
+    margin: 0,
   },
   policySizeSubtitle: {
-    color: '#696767',
+    color: '#403f3f',
   },
   policySizeContent: {
-    color: '#696767',
+    color: '#403f3f',
   },
-  chipsContainer:{
+  chipsContainer: {
     display: 'flex',
     flexWrap: 'wrap',
     '& > *': {
       margin: theme.spacing(0.5),
     },
   },
-  inputFileContainer:{
+  inputFileContainer: {
     '& > *': {
       margin: theme.spacing(1),
     },
@@ -25,15 +26,15 @@ export default theme => ({
   input: {
     display: 'none',
   },
-  buttonUpload:{
+  buttonUpload: {
     color: 'white',
     textTransform: 'initial',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
-  titleContainer:{
-    [theme.breakpoints.down('xs')]:{
+  titleContainer: {
+    [theme.breakpoints.down('xs')]: {
       display: 'flex',
-      justifyContent: 'center'
-    }
-  }
+      justifyContent: 'center',
+    },
+  },
 })

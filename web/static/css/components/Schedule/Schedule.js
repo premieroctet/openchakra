@@ -4,10 +4,10 @@ export default theme => ({
     width: '100%',
     marginBottom: 5,
   },
-  schedule_monthDateHeaderLabelOldDay:{
-    color: '#999999'
+  schedule_monthDateHeaderLabelOldDay: {
+    color: '#999999',
   },
-  schedule_containerLabelSelector:{
+  schedule_containerLabelSelector: {
     width: '100%',
     height: '100%',
     display: 'flex',
@@ -39,17 +39,17 @@ export default theme => ({
       color: 'white',
     },
   },
-  schedule_monthDateHeaderLabel:{
+  schedule_monthDateHeaderLabel: {
     cursor: 'pointer',
-    fontWeight: 'initial'
+    fontWeight: 'initial',
   },
-  schedule_off_range_style:{
+  schedule_off_range_style: {
     width: '100%',
     height: '100%',
     borderLeft: '1px solid #DDD',
     backgroundColor: 'white',
   },
-  schedule_today_style_avail:{
+  schedule_today_style_avail: {
     width: '100%',
     height: '100%',
     borderLeft: '1px solid #DDD',
@@ -59,13 +59,13 @@ export default theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  schedule_today_style:{
+  schedule_today_style: {
     borderRadius: 50,
     width: 25,
     height: 25,
     border: '1px solid black',
   },
-  style_today_style_off:{
+  style_today_style_off: {
     width: '100%',
     height: '100%',
     borderLeft: '1px solid #DDD',
@@ -75,7 +75,7 @@ export default theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  schedule_day_style:{
+  schedule_day_style: {
     width: '100%',
     height: '100%',
     borderLeft: '1px solid #DDD',
@@ -87,9 +87,9 @@ export default theme => ({
     borderLeft: '1px solid #DDD',
     cursor: 'pointer',
     backgroundColor: 'lightgrey',
-    background: 'repeating-linear-gradient(45deg, lightgrey 48%, #FFFFFF  50%,lightgrey 51%)'
+    background: 'repeating-linear-gradient(45deg, lightgrey 48%, #FFFFFF  50%,lightgrey 51%)',
   },
-  schedule_myEventWrapperStyle:{
+  schedule_myEventWrapperStyle: {
     borderTop: '25px solid pink',
     borderRight: '25px solid transparent',
     height: 0,
@@ -99,12 +99,12 @@ export default theme => ({
     margin: 0,
     marginLeft: 1,
   },
-  schedule_timeSlotWrapper:{
+  schedule_timeSlotWrapper: {
     textAlign: 'center',
-    width : '100%'
+    width: '100%',
   },
-  schedule_containerTimeSlotWrapper:{
-    flex: '1 0 0'
+  schedule_containerTimeSlotWrapper: {
+    flex: '1 0 0',
   },
   schedule_heightContainer: {
     overflow: 'hidden',
@@ -115,13 +115,14 @@ export default theme => ({
   schedule_policySizeTitle: {
     fontSize: 24,
     lineHeight: '1.25em',
-    color: '#696767',
+    color: '#403f3f',
+    margin: 0,
   },
   schedule_policySizeContent: {
-    color: '#696767'
+    color: '#403f3f',
   },
-  schedule_height:{
-    height: 325
+  schedule_height: {
+    height: 325,
   },
   schedule_scheduleMainStyle: {
     '& .rbc-month-view': {
@@ -154,7 +155,7 @@ export default theme => ({
       display: 'none',
     },
     '& .rbc-header': {
-      padding:0,
+      padding: 0,
       [theme.breakpoints.down('xs')]: {
         whiteSpace: 'inherit !important',
       },
@@ -166,23 +167,23 @@ export default theme => ({
       padding: 0,
     },
     '& .rbc-allday-cell': {
-      display : 'none'
+      display: 'none',
     },
     '& .rbc-time-view': {
-      borderRadius: 5
+      borderRadius: 5,
     },
-    '& .rbc-row':{
-      flex: 1
-    }
+    '& .rbc-row': {
+      flex: 1,
+    },
   },
-  schedule_containerToolbar:{
+  schedule_containerToolbar: {
     alignItems: 'center',
   },
-  titleContainer:{
-    [theme.breakpoints.down('xs')]:{
+  titleContainer: {
+    [theme.breakpoints.down('xs')]: {
       display: 'flex',
-      justifyContent: 'center'
-    }
-  }
+      justifyContent: 'center',
+    },
+  },
 
 })

@@ -1,25 +1,25 @@
-import Grid from '@material-ui/core/Grid';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
-import Typography from '@material-ui/core/Typography';
-import React from 'react';
-import Siret from '../../Siret/Siret';
-import {withStyles} from '@material-ui/core/styles';
-import styles from '../../../static/css/components/IntroduceYou/IntroduceYou';
-import {Radio, RadioGroup} from '@material-ui/core';
-import Information from '../../Information/Information';
-import IconButton from "@material-ui/core/IconButton";
-const {CESU} = require('../../../utils/consts');
-const I18N = require('../../../utils/i18n');
-import InfoIcon from '@material-ui/icons/Info';
-import {SHOP} from '../../../utils/i18n';
+import Grid from '@material-ui/core/Grid'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked'
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked'
+import Typography from '@material-ui/core/Typography'
+import React from 'react'
+import Siret from '../../Siret/Siret'
+import {withStyles} from '@material-ui/core/styles'
+import styles from '../../../static/css/components/IntroduceYou/IntroduceYou'
+import {Radio, RadioGroup} from '@material-ui/core'
+import Information from '../../Information/Information'
+import IconButton from '@material-ui/core/IconButton'
+const {CESU} = require('../../../utils/consts')
+const I18N = require('../../../utils/i18n')
+import InfoIcon from '@material-ui/icons/Info'
+import {SHOP} from '../../../utils/i18n'
 
 // TODO : fix l'update ne se fait pas après appel à l'api Sirene
 class IntroduceYou extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       is_particular: this.props.is_particular,
       company: this.props.company,
@@ -27,51 +27,51 @@ class IntroduceYou extends React.Component {
       cis: this.props.cis || false,
       notice: false,
       is_certified: this.props.is_certified || false,
-    };
+    }
     this.fireChange = this.fireChange.bind(this)
   }
 
   fireChange = () => {
     const st=this.state
-    this.props.onChange(st);
+    this.props.onChange(st)
   };
 
   onChange = event => {
-    const {name, value} = event.target;
+    const {name, value} = event.target
     this.setState({[name]: value},
-      () => this.fireChange());
+      () => this.fireChange())
   };
 
   onCISChange = (id, checked) => {
     this.setState({cis: checked},
-      () => this.fireChange());
+      () => this.fireChange())
   };
 
   onStatusChanged = (event, checked) => {
     if (!checked) {
       return false
     }
-    let id = event.target.id;
-    let is_particular = (id === 'particular' && checked) || (id === 'professional' && !checked);
+    let id = event.target.id
+    let is_particular = (id === 'particular' && checked) || (id === 'professional' && !checked)
     if (this.state.is_particular == is_particular) {
       return
     }
-    this.setState({is_particular: is_particular}, this.fireChange);
+    this.setState({is_particular: is_particular}, this.fireChange)
 
   };
 
-  onCertifiedChanged = (event) => {
+  onCertifiedChanged = event => {
     this.setState({is_certified: event.target.checked},
-      () => this.fireChange());
+      () => this.fireChange())
   };
 
-  onCompanyChanged = (company) => {
+  onCompanyChanged = company => {
     this.setState({company: company},
-      () => this.fireChange());
+      () => this.fireChange())
   };
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
@@ -80,7 +80,7 @@ class IntroduceYou extends React.Component {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex'}}>
           <Grid>
-            <h3 style={{color: '#696767'}}>{SHOP.creation.subtitle}</h3>
+            <h3 style={{color: '#403f3f'}}>{SHOP.creation.subtitle}</h3>
           </Grid>
           <Grid>
             <IconButton aria-label="info" className={classes.margin} onClick={() => this.setState({notice: true})}>
@@ -109,25 +109,25 @@ class IntroduceYou extends React.Component {
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
             {
               this.state.is_particular ?
-                <Grid container spacing={1} item  xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
+                <Grid container spacing={1} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_description}</Typography>
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
-                      <Grid container spacing={1} style={{width: '100%', margin:0}}>
+                      <Grid container spacing={1} style={{width: '100%', margin: 0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Radio color="primary" value={CESU[0]}/>
                           <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_want_cesu}</Typography>
                         </Grid>
                       </Grid>
-                      <Grid container spacing={1} style={{width: '100%', margin:0}}>
+                      <Grid container spacing={1} style={{width: '100%', margin: 0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Radio color="primary" value={CESU[1]}/>
                           <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_accept_cesu}</Typography>
                         </Grid>
                       </Grid>
-                      <Grid container spacing={1} style={{width: '100%', margin:0}}>
+                      <Grid container spacing={1} style={{width: '100%', margin: 0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Radio color="primary" value={CESU[2]}/>
                           <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_decline_cesu}</Typography>
@@ -166,46 +166,46 @@ class IntroduceYou extends React.Component {
             {this.state.is_particular ? null
               :
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                  <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_description}</Typography>
+                </Grid>
+                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                  <Siret onChange={this.onCompanyChanged} company={this.state.company}/>
+                </Grid>
+                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_description}</Typography>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={this.state.cis}
+                          onChange={this.onCISChange}
+                          color="primary"
+                          name="is_certified"
+                          value={this.state.is_certified}
+                        />
+                      }
+                      label={
+                        <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_cis}</Typography>
+                      }
+                    />
                   </Grid>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <Siret onChange={this.onCompanyChanged} company={this.state.company}/>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={this.state.is_certified}
+                          onChange={this.onCertifiedChanged}
+                          color="primary"
+                          name="is_certified"
+                          value={this.state.is_certified}
+                        />
+                      }
+                      label={
+                        <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_certif}</Typography>
+                      }
+                    />
                   </Grid>
-                  <Grid  container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
-                    <Grid  item xl={12} lg={12} sm={12} md={12} xs={12}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={this.state.cis}
-                            onChange={this.onCISChange}
-                            color="primary"
-                            name="is_certified"
-                            value={this.state.is_certified}
-                          />
-                        }
-                        label={
-                          <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_cis}</Typography>
-                        }
-                      />
-                    </Grid>
-                    <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={this.state.is_certified}
-                            onChange={this.onCertifiedChanged}
-                            color="primary"
-                            name="is_certified"
-                            value={this.state.is_certified}
-                          />
-                        }
-                        label={
-                          <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_certif}</Typography>
-                        }
-                      />
-                    </Grid>
-                  </Grid>
+                </Grid>
               </Grid>
             }
           </Grid>
@@ -216,8 +216,8 @@ class IntroduceYou extends React.Component {
           text={I18N.CESU_NOTICE}
         />
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(IntroduceYou);
+export default withStyles(styles)(IntroduceYou)

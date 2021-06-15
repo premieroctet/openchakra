@@ -1,34 +1,34 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import styles from '../../../static/css/components/BookingConditions/BookingConditions';
-import {withStyles} from '@material-ui/core/styles';
-import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
-import {ALF_CONDS} from '../../../utils/consts.js';
-import {CANCEL_MODE} from "../../../utils/consts";
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import styles from '../../../static/css/components/BookingConditions/BookingConditions'
+import {withStyles} from '@material-ui/core/styles'
+import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
+import {ALF_CONDS} from '../../../utils/consts.js'
+import {CANCEL_MODE} from '../../../utils/consts'
 import moment from 'moment'
-import {SHOP} from '../../../utils/i18n';
+import {SHOP} from '../../../utils/i18n'
 
 class BookingConditions extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       booking_request: this.props.booking_request,
       my_alfred_conditions: this.props.my_alfred_conditions, // BASIC/PICTURE/ID_CARD/RECOMMEND
       cancel_mode: this.props.cancel_mode,
-    };
+    }
 
-    this.onAlfredConditionsChanged = this.onAlfredConditionsChanged.bind(this);
-    this.onBookingChanged = this.onBookingChanged.bind(this);
+    this.onAlfredConditionsChanged = this.onAlfredConditionsChanged.bind(this)
+    this.onBookingChanged = this.onBookingChanged.bind(this)
 
-    this.cancel_buttons = {};
-    Object.values(CANCEL_MODE).forEach(v => this.cancel_buttons[v] = React.createRef());
-    this.cancelModeChanged = this.cancelModeChanged.bind(this);
+    this.cancel_buttons = {}
+    Object.values(CANCEL_MODE).forEach(v => this.cancel_buttons[v] = React.createRef())
+    this.cancelModeChanged = this.cancelModeChanged.bind(this)
 
-    this.booking_request = React.createRef();
-    this.booking_auto = React.createRef();
+    this.booking_request = React.createRef()
+    this.booking_auto = React.createRef()
 
-    this.conditions = {};
-    Object.values(ALF_CONDS).forEach(k => this.conditions[k] = React.createRef());
+    this.conditions = {}
+    Object.values(ALF_CONDS).forEach(k => this.conditions[k] = React.createRef())
   }
 
   onBookingChanged(id, checked) {
@@ -36,7 +36,7 @@ class BookingConditions extends React.Component {
       return false
     }
     this.setState({booking_request: id == 'request'},
-      () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
+      () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions))
 
   }
 
@@ -46,18 +46,18 @@ class BookingConditions extends React.Component {
     }
     id = Math.max(parseInt(id), 0).toString()
     this.setState({my_alfred_conditions: id},
-      () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
+      () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions))
   }
 
-  cancelModeChanged(mode_id, checked) {
-    this.setState({cancel_mode: mode_id}, () => this.props.onChangeLastPart(mode_id));
+  cancelModeChanged(mode_id) {
+    this.setState({cancel_mode: mode_id}, () => this.props.onChangeLastPart(mode_id))
     Object.values(CANCEL_MODE).forEach(v => {
-      this.cancel_buttons[v].current.setState({checked: mode_id === v});
-    });
+      this.cancel_buttons[v].current.setState({checked: mode_id === v})
+    })
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
@@ -67,43 +67,9 @@ class BookingConditions extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h3 className={classes.policySizeSubtitle}>{SHOP.bookingCondition.subtitle}</h3>
         </Grid>
-        {
-          false ?
-            <>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <h4 className={classes.policySizeSubtitle}
-                    style={{margin: 0}}>{SHOP.bookingCondition.title_firstSection}</h4>
-              </Grid>
-              <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12}
-                    xs={12}>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <ButtonSwitch
-                    key={moment()}
-                    checked={this.state.booking_request}
-                    id='request'
-                    style={{width: '100%'}}
-                    label={SHOP.bookingCondition.booking_request}
-                    ref={this.booking_request}
-                    onChange={this.onBookingChanged}
-                  />
-                </Grid>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <ButtonSwitch
-                    key={moment()}
-                    checked={!this.state.booking_request}
-                    id='auto'
-                    label={SHOP.bookingCondition.booking_auto}
-                    ref={this.booking_auto}
-                    onChange={this.onBookingChanged}
-                  />
-                </Grid>
-              </Grid>
-            </> : null
-        }
-
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h4 className={classes.policySizeSubtitle}
-              style={{margin: 0}}>{SHOP.bookingCondition.title_secondSection}</h4>
+            style={{margin: 0}}>{SHOP.bookingCondition.title_secondSection}</h4>
         </Grid>
         <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -183,8 +149,8 @@ class BookingConditions extends React.Component {
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(BookingConditions);
+export default withStyles(styles)(BookingConditions)
