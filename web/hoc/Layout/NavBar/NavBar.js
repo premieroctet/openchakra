@@ -41,7 +41,7 @@ import Switch from "@material-ui/core/Switch";
 import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
-import {is_development} from "../../../config/config";
+import {isB2BDisabled} from "../../../config/config";
 import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeStatusRegister, setStatusRegister, getRole} from "../../../utils/context";
 const {emptyPromise} = require('../../../utils/promise.js');
 const {formatAddress} = require('../../../utils/text.js');
@@ -69,7 +69,7 @@ const DialogTitle = withStyles(styles)((props) => {
 
 class NavBar extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       anchorEl: null,
       anchorElB2b: null,
@@ -101,11 +101,11 @@ class NavBar extends Component {
       companyPage: false,
       allAddresses: [],
     }
-    this.radius_marks=[1, 5,10,15,20,30,50,100,200,300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
+    this.radius_marks=[1, 5, 10, 15, 20, 30, 50, 100, 200, 300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
   }
 
   componentDidMount() {
-    let query = Router.query;
+    let query = Router.query
     if (Router.pathname === '/') {
       this.setState({ifHomePage: true})
     }
@@ -127,7 +127,7 @@ class NavBar extends Component {
       .then(res => {
         const user = res.data
         this.setState({user: user})
-        const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+        const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
         promise
           .then(res => {
             var allAddresses = {'main': res.data.billing_address};
@@ -136,23 +136,24 @@ class NavBar extends Component {
             });
             this.setState({allAddresses: allAddresses})
           })
-      }).catch(err => {
-      console.error(err)
-    });
+      })
+      .catch(err => {
+        console.error(err)
+      })
 
-    this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''});
+    this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''})
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/category/${isB2BStyle() ? PRO : PART}`)
       .then(res => {
-        let categories = res.data;
-        this.setState({allCategories: categories.map(c => ({value:c._id, label: c.label}))})
+        let categories = res.data
+        this.setState({allCategories: categories.map(c => ({value: c._id, label: c.label}))})
       })
       .catch(err => {
         console.error(err)
       })
     axios.get('/myAlfred/api/service/all')
       .then(res => {
-        const services=res.data.map(s => ({value:s._id, label: s.label, category: s.category._id}))
+        const services=res.data.map(s => ({value: s._id, label: s.label, category: s.category._id}))
         this.setState({allServices: services, filteredServices: services})
       })
       .catch(err => {
@@ -1137,31 +1138,31 @@ class NavBar extends Component {
                         onClick={() => Router.push(`/profile/services?user=${user._id}`)}
                       />
                       :
-                        <Tab
-                          classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                          label={NAVBAR_MENU.registerServices}
-                          onClick={() => Router.push('/creaShop/creaShop')}
-                        />
-                    :
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                         label={NAVBAR_MENU.registerServices}
-                        onClick={this.handleOpenRegister}
+                        onClick={() => Router.push('/creaShop/creaShop')}
                       />
+                    :
+                    <Tab
+                      classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                      label={NAVBAR_MENU.registerServices}
+                      onClick={this.handleOpenRegister}
+                    />
                   }
                 </>
           }
           {
             // Accès part/pro uniquement si non loggué ou loggué en Alfred pro
-            getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
-              isB2BStyle() ?
+            getLoggedUserId() && !isLoggedUserAlfredPro()? null:
+              isB2BStyle() || isB2BDisabled() ?
                 null
                 :
-                  <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    label={NAVBAR_MENU.businessSide}
-                    onClick={() => Router.push('/professional')}
-                  />
+                <Tab
+                  classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                  label={NAVBAR_MENU.businessSide}
+                  onClick={() => Router.push('/professional')}
+                />
           }
         </Tabs>
       </Grid>

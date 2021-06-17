@@ -18,7 +18,7 @@ import Slide from "@material-ui/core/Slide";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 const {getLoggedUserId, isLoggedUserAlfredPro, isB2BStyle, isApplication, isMobile} = require('../../../utils/context');
-
+const {isB2BDisabled} = require('../../../config/config')
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -155,9 +155,11 @@ class Footer extends React.Component {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href={'/professional'}>
-                    <Typography>Espace entreprise</Typography>
-                  </Link>
+                  { isB2BDisabled() ? null:
+                    <Link href={'/professional'}>
+                      <Typography>Espace entreprise</Typography>
+                    </Link>
+                  }
                 </Grid>
               </>
               : null

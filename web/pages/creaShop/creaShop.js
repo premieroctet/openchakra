@@ -432,8 +432,8 @@ class creaShop extends React.Component {
       shop.company = state.company
       shop.cesu = null
       shop.cis = state.cis
-      shop.particular_access=false
-      shop.professional_access=false
+      shop.particular_access=true
+      shop.professional_access=true
     }
     this.setState({shop: shop})
   }
@@ -470,7 +470,7 @@ class creaShop extends React.Component {
 
   renderSwitch = stepIndex => {
     const{mode}= this.state
-    return STEPS['creation'][8].component(this)
+    return STEPS[mode][stepIndex].component(this)
   };
 
   handleDrawerToggle = () => {

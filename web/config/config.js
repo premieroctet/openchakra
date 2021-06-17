@@ -1,5 +1,6 @@
 const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE}=require('../mode')
+const source = require('./client_id.json')
 
 const get_mode = () => {
   if (!Object.values(MODES).includes(MODE)) {
@@ -37,7 +38,9 @@ const SERVER_PROD = is_production() || is_development()
 
 const ENABLE_MAILING = is_production()
 
-const source = require('./client_id.json');
+const isB2BDisabled = () => {
+  return true
+}
 
 const get_host_url = () => {
   const protocol='https'
@@ -95,9 +98,9 @@ const mailConfig = {
   accessToken: 'ya29.Il-7B9vPQ9meRKDhLu1cARHVXyGEiGiIidmgeLCB7LLszjByPxRVWJ8mw_u2AQh5ZXeUiXgPyAX9H-KjgXX7pwArP6Bp_TC1OrMR-fOFAMITK0OuOPWKjk11Z0AUhP4dxw',
 };
 
-const computeUrl = (req) => {
-  return 'https://' + req.headers.host;
-};
+const computeUrl = req => {
+  return `https://${req.headers.host}`
+}
 
 const SIRET = {
   token: 'ca27811b-126c-35db-aaf0-49aea431706e',
@@ -134,5 +137,5 @@ module.exports = {
   GOOGLE_PROVIDER, FACEBOOK_PROVIDER, PROVIDERS,
   is_production, is_validation, is_development, is_development_nossl, SERVER_PROD,
   get_host_url, MANGOPAY_CONFIG, displayConfig,
-  ENABLE_MAILING
-};
+  ENABLE_MAILING, isB2BDisabled,
+}

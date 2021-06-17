@@ -2,9 +2,31 @@ import {isAndroid, isIOS, getUA} from 'react-device-detect'
 const isWebview = require('is-webview')
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
+const {isB2BDisabled} = require('../config/config')
 const jwt = require('jsonwebtoken')
 
+const getLoggedUser = () => {
+  if (typeof localStorage=='undefined') {
+    return null
+  }
+  const token = localStorage.getItem('token')
+  if (!token) {
+    return null
+  }
+  const data=token.split(' ')[ 1 ]
+  const decoded = jwt.decode(data)
+  return decoded
+}
+
+const isLoggedUserAlfredPro = () => {
+  const logged=getLoggedUser()
+  return logged && logged.is_alfred_pro
+}
+
 const isB2BSite = () => {
+  if (isB2BDisabled()) {
+    return false
+  }
   if (typeof localStorage == 'undefined') {
     return false
   }
@@ -13,6 +35,9 @@ const isB2BSite = () => {
 }
 
 const getRole = () => {
+  if (isB2BDisabled()) {
+    return null
+  }
   const token = getAuthToken()
   if (!token) {
     return null
@@ -40,6 +65,9 @@ const isModeCompany = () => {
 }
 
 const isB2BStyle = () => {
+  if (isB2BDisabled()) {
+    return false
+  }
   // User non loggué : return isB2BSite (localStorage)
   // Loggué :
   // - b2b admin ou b2b manager : true
@@ -90,19 +118,6 @@ const hasStatusRegister = () => {
   return localStorage.getItem('setAlfredRegister') == 'true'
 }
 
-const getLoggedUser = () => {
-  if (typeof localStorage=='undefined') {
-    return null
-  }
-  const token = localStorage.getItem('token')
-  if (!token) {
-    return null
-  }
-  const data=token.split(' ')[ 1 ]
-  const decoded = jwt.decode(data)
-  return decoded
-}
-
 const getLoggedUserId = () => {
   const logged=getLoggedUser()
   return logged && logged.id
@@ -116,11 +131,6 @@ const isLoggedUserAdmin = () => {
 const isLoggedUserAlfred = () => {
   const logged=getLoggedUser()
   return logged && logged.is_alfred
-}
-
-const isLoggedUserAlfredPro = () => {
-  const logged=getLoggedUser()
-  return logged && logged.is_alfred_pro
 }
 
 const isLoggedUserRegistered = () => {
