@@ -25,18 +25,32 @@ class UserAvatar extends React.Component {
   }
 
   componentDidMount() {
-    const userId = getLoggedUserId()
+    const {user} = this.props
     const profileUrl = ['services', 'about', 'reviews', 'calendar', 'statistics', 'myProfile']
     const currentUrl = Router.pathname
 
-    if (userId) {
-      this.setState({currentUser: userId})
-    }
+    axios.get('/myAlfred/api/users/current').then(res => {
+      let userInfo = res.data
+      this.setState({currentUser: userInfo}, () => {
+        if (getLoggedUserId() === this.state.currentUser._id) {
+          this.setState({owner: true})
+        }
+        else{
+          this.setState({owner: false})
+        }
+        if(user._id === this.state.currentUser._id) {
+          this.setState({isPageEditable: true})
+        }
+      })
+    },
+    ).catch(err => { console.error(err) })
+
+
     if(profileUrl.includes(currentUrl.substring(currentUrl.lastIndexOf('/') + 1))) {
       this.setState({isAbout: true})
     }
-    if(Router.pathname === '/account/myProfile' || Router.pathname === '/profile/about') {
-      this.setState({isPageEditable: true})
+    else{
+      this.setState({isAbout: false})
     }
   }
 
@@ -48,19 +62,19 @@ class UserAvatar extends React.Component {
   };
 
   avatarWithPics = (user, classes) => {
-    const{isAbout, isPageEditable} = this.state
+    const{isAbout} = this.state
     const url = user.picture.match(/^https?:\/\//) ? user.picture : `/${ user.picture}`
 
     return (
-      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : isPageEditable ? classes.myProfile : classes.avatarLetter}/>
+      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}/>
     )
   }
 
   avatarWithoutPics = (user, classes) => {
-    const{isAbout, isPageEditable} = this.state
+    const{isAbout} = this.state
 
     return (
-      <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : isPageEditable ? classes.myProfile : classes.avatarLetter}>
+      <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}>
         <p>{user.avatar_letters}</p>
       </Avatar>
     )
@@ -86,9 +100,8 @@ class UserAvatar extends React.Component {
 
   render() {
     const {user, classes} = this.props
-    const {currentUser, isPageEditable} = this.state
+    const {isPageEditable, owner} = this.state
 
-    let owner = user ? currentUser === user._id : null
 
     return (
       <Grid style={{width: '100%', height: '100%'}}>

@@ -470,7 +470,7 @@ class creaShop extends React.Component {
 
   renderSwitch = stepIndex => {
     const{mode}= this.state
-    return STEPS['creation'][8].component(this)
+    return STEPS[mode][stepIndex].component(this)
   };
 
   handleDrawerToggle = () => {
