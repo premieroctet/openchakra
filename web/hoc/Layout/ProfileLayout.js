@@ -1,10 +1,10 @@
 import React from 'react'
-const { setAxiosAuthentication } = require('../../utils/authentication')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 import Layout from '../../hoc/Layout/Layout'
 import Grid from '@material-ui/core/Grid'
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import axios from 'axios'
-const { isEditableUser, isB2BStyle }=require('../../utils/context')
+const {isEditableUser, isB2BStyle}=require('../../utils/context')
 import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayout'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Typography from '@material-ui/core/Typography'
@@ -20,24 +20,24 @@ class ProfileLayout extends CompanyComponent {
       company: null,
     }
     this.nonlogged_items = [
-      { label: 'À propos', url: '/about' },
-      { label: 'Services', url: '/services' },
+      {label: 'À propos', url: '/about'},
+      {label: 'Services', url: '/services'},
       // { label: 'Photos', url: '/pictures' }, TODO : Albums 899538 899547
-      { label: 'Avis', url: '/reviews' },
+      {label: 'Avis', url: '/reviews'},
     ]
     this.logged_items = [
-      { label: 'À propos', url: '/about' },
-      { label: 'Mes services', url: '/services' },
+      {label: 'À propos', url: '/about'},
+      {label: 'Mes services', url: '/services'},
       // { label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
-      { label: 'Mes avis', url: '/reviews' },
+      {label: 'Mes avis', url: '/reviews'},
     ]
     this.logged_alfred_items = [
-      { label: 'À propos', url: '/about' },
-      { label: 'Mes services', url: '/services' },
+      {label: 'À propos', url: '/about'},
+      {label: 'Mes services', url: '/services'},
       // { label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
-      { label: 'Mes avis', url: '/reviews' },
-      { label: 'Mon calendrier', url: '/calendar' },
-      { label: 'Mes statistiques', url: '/statistics' },
+      {label: 'Mes avis', url: '/reviews'},
+      {label: 'Mon calendrier', url: '/calendar'},
+      {label: 'Mes statistiques', url: '/statistics'},
     ]
   }
 
@@ -46,10 +46,10 @@ class ProfileLayout extends CompanyComponent {
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then(res => {
         const user = res.data
-        this.setState({ user: user })
+        this.setState({user: user})
         if (user.company) {
           axios.get(`/myAlfred/api/companies/companies/${user.company}`)
-            .then(res => {
+            .then(() => {
               const company = res.data
               this.setState({
                 company: company,
@@ -62,8 +62,8 @@ class ProfileLayout extends CompanyComponent {
   };
 
   render() {
-    const { user, company } = this.state
-    const { children, index, classes } = this.props
+    const {user, company} = this.state
+    const {children, index, classes} = this.props
 
     if (!user) {
       return null
@@ -89,13 +89,13 @@ class ProfileLayout extends CompanyComponent {
                     height: '40%',
                     alignItems: 'center',
                   }}>
-                    <Grid style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Grid>
                         {this.isModeCompany() ? <h3>{company ? company.name : ''}</h3> : <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
                         }
                       </Grid>
                       {this.isModeCompany() ? null : <Grid>
-                        <Typography style={{ color: 'rgba(39,37,37,35%)' }}>et j’ai hâte de vous rencontrer !</Typography>
+                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
                       </Grid>
                       }
 
@@ -104,7 +104,7 @@ class ProfileLayout extends CompanyComponent {
                   {
                     !this.isModeCompany() ? <Grid className={classes.profilLayoutScrollMenu}>
                       <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index}
-                        extraParams={{ user: this.props.user }}/>
+                        extraParams={{user: this.props.user}}/>
                     </Grid> : null}
                 </Grid>
               </Grid>

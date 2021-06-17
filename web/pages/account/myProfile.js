@@ -17,13 +17,16 @@ import ViewComfyIcon from '@material-ui/icons/ViewComfy'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 
 const {isB2BAdmin, getRole}=require('../../utils/context')
+const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 
-class myProfile extends React.Component {
+
+class myProfile extends CompanyComponent {
 
   constructor(props) {
     super(props)
     this.state={
-      user: {},
+      user: null,
+      company: null
     }
 
   }
@@ -34,7 +37,18 @@ class myProfile extends React.Component {
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
-        this.setState({user: res.data})
+        const user = res.data
+        this.setState({user: user})
+        if (user.company) {
+          axios.get(`/myAlfred/api/companies/companies/${user.company}`)
+            .then(() => {
+              const company = res.data
+              this.setState({
+                company: company,
+              })
+            })
+            .catch(err => console.error(err))
+        }
 
       })
       .catch(err => {
@@ -55,13 +69,18 @@ class myProfile extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {user} = this.state
+    const {user, company} = this.state
+
+    if (!user) {
+      return null
+    }
+    
     return(
       <React.Fragment>
         <LayoutMobile currentIndex={4}>
           <Grid style={{display: 'flex', alignItems: 'center', marginTop: '5vh'}}>
             <Grid className={classes.cardPreviewContainerAvatar}>
-              <UserAvatar alt={user.firstName} user={user} fireRefresh={() => this.componentDidMount()}/>
+              <UserAvatar alt={!this.isModeCompany() ? user.firstname : company ? company.name : ''} user={!this.isModeCompany() ? user : company ? company : ''} fireRefresh={() => this.componentDidMount()}/>
             </Grid>
             <Grid style={{marginLeft: '5vh'}}>
               <h2>Hello {user.firstname}</h2>

@@ -1,31 +1,31 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 import Link from '../../../components/Link/Link'
-import {withStyles} from '@material-ui/core/styles';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import InstagramIcon from '@material-ui/icons/Instagram';
-import LinkedInIcon from '@material-ui/icons/LinkedIn';
+import {withStyles} from '@material-ui/core/styles'
+import FacebookIcon from '@material-ui/icons/Facebook'
+import InstagramIcon from '@material-ui/icons/Instagram'
+import LinkedInIcon from '@material-ui/icons/LinkedIn'
 import TwitterIcon from '@material-ui/icons/Twitter'
-import Divider from "@material-ui/core/Divider";
+import Divider from '@material-ui/core/Divider'
 import styles from '../../../static/css/components/Footer/Footer'
-import IconButton from "@material-ui/core/IconButton";
-import {isAndroid, isIOS} from '../../../utils/context';
-import Register from "../../../components/Register/Register";
-import DialogContent from "@material-ui/core/DialogContent";
-import Dialog from "@material-ui/core/Dialog";
-import Slide from "@material-ui/core/Slide";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import CloseIcon from "@material-ui/icons/Close";
-const {getLoggedUserId, isLoggedUserAlfredPro, isB2BStyle, isApplication, isMobile} = require('../../../utils/context');
+import IconButton from '@material-ui/core/IconButton'
+import {isAndroid, isIOS} from '../../../utils/context'
+import Register from '../../../components/Register/Register'
+import DialogContent from '@material-ui/core/DialogContent'
+import Dialog from '@material-ui/core/Dialog'
+import Slide from '@material-ui/core/Slide'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import CloseIcon from '@material-ui/icons/Close'
+const {getLoggedUserId, isLoggedUserAlfredPro, isB2BStyle, isApplication} = require('../../../utils/context')
 const {isB2BDisabled} = require('../../../config/config')
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => {
+  return <Slide direction="up" ref={ref} {...props} />
+})
 
-const DialogTitle = withStyles(styles)((props) => {
-  const {children, classes, onClose, ...other} = props;
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
@@ -35,30 +35,30 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
 
 class Footer extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       setOpenRegister: false,
-      setOpenLogin: false
+      setOpenLogin: false,
     }
   }
 
-  handleOpenRegister = (e) => {
-    this.handleMenuClose();
-    this.setState({setOpenRegister: true, setOpenLogin: false});
+  handleOpenRegister = () => {
+    this.handleMenuClose()
+    this.setState({setOpenRegister: true, setOpenLogin: false})
   };
 
   handleMenuClose = () => {
-    this.setState({anchorEl: null});
+    this.setState({anchorEl: null})
   };
 
-  dialogRegister = (classes) => {
-    const {setOpenRegister} = this.state;
+  dialogRegister = classes => {
+    const {setOpenRegister} = this.state
 
     return (
       <Dialog
@@ -84,19 +84,20 @@ class Footer extends React.Component {
 
   handleCloseRegister = () => {
     if (this.state.activeStep === 2) {
-      this.setState({setOpenRegister: false}, () => this.componentDidMount());
-    } else {
-      this.setState({setOpenRegister: false});
+      this.setState({setOpenRegister: false}, () => this.componentDidMount())
+    }
+    else {
+      this.setState({setOpenRegister: false})
     }
   };
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
 
     return (
       <Grid container spacing={2} style={{width: '100%', margin: 0}}>
         <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
-              lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
+          lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
             <h3>À propos</h3>
           </Grid>
@@ -166,9 +167,9 @@ class Footer extends React.Component {
           }
         </Grid>
         <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
-              lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
+          lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
-            <h3>{isB2BStyle() ? "Entreprises" : "Communauté"}</h3>
+            <h3>{isB2BStyle() ? 'Entreprises' : 'Communauté'}</h3>
           </Grid>
           {
             !isB2BStyle() ?
@@ -198,7 +199,7 @@ class Footer extends React.Component {
           }
         </Grid>
         <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
-              lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
+          lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
             <h3>Alfred</h3>
           </Grid>
@@ -239,7 +240,7 @@ class Footer extends React.Component {
         {
           isB2BStyle() ? null :
             <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3} lg={3} md={3} sm={6}
-                  xs={6}>
+              xs={6}>
               <Grid item>
                 <h3>Assistance</h3>
               </Grid>
@@ -272,7 +273,7 @@ class Footer extends React.Component {
                     <Grid item>
                       <a href={'https://apps.apple.com/us/app/my-alfred/id1544073864'} target={'_blank'}>
                         <img alt={'appleStore'} title={'badge_applestore'} width={126.5} height={40}
-                             src={'../../static/assets/img/footer/ios/ios_black.svg'}/>
+                          src={'../../static/assets/img/footer/ios/ios_black.svg'}/>
                       </a>
                     </Grid> : null
                 }
@@ -280,7 +281,7 @@ class Footer extends React.Component {
                   !isIOS ? <Grid item>
                     <a href={'https://play.google.com/store/apps/details?id=com.myalfred'} target={'_blank'}>
                       <img alt={'googlePlay'} title={'badge_android'} width={153}
-                           src={'../../static/assets/img/footer/android/android.png'}/>
+                        src={'../../static/assets/img/footer/android/android.png'}/>
                     </a>
                   </Grid> : null
                 }
@@ -345,8 +346,8 @@ class Footer extends React.Component {
         </Grid>
         {this.dialogRegister(classes)}
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(Footer);
+export default withStyles(styles)(Footer)

@@ -1,36 +1,36 @@
-const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication');
-import React from 'react';
-import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Router from 'next/router';
-import {withStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import {Helmet} from 'react-helmet';
-import styles from '../../static/css/pages/profile/editProfile/editProfile';
-import LayoutAccount from "../../hoc/Layout/LayoutAccount";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import Divider from "@material-ui/core/Divider";
-import Typography from '@material-ui/core/Typography';
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
-const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
+import React from 'react'
+import axios from 'axios'
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import Router from 'next/router'
+import {withStyles} from '@material-ui/core/styles'
+import TextField from '@material-ui/core/TextField'
+import MenuItem from '@material-ui/core/MenuItem'
+import {Helmet} from 'react-helmet'
+import styles from '../../static/css/pages/profile/editProfile/editProfile'
+import LayoutAccount from '../../hoc/Layout/LayoutAccount'
+import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+import Divider from '@material-ui/core/Divider'
+import Typography from '@material-ui/core/Typography'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogActions from '@material-ui/core/DialogActions'
+const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts')
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import DateField from '../../components/DateField/DateField'
 
-const {isPhoneOk} = require('../../utils/sms');
-const moment = require('moment');
+const {isPhoneOk} = require('../../utils/sms')
+const moment = require('moment')
 
-moment.locale('fr');
+moment.locale('fr')
 
 class editProfile extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: {},
       phone: '',
@@ -46,76 +46,78 @@ class editProfile extends React.Component {
       userEmail: '',
       checkEmailSeverity: '',
       checkEmailState: false,
-      checkEmailMessage: ''
-    };
+      checkEmailMessage: '',
+    }
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     this.loadUser()
   }
 
   loadUser = () => {
-    setAxiosAuthentication();
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
-        let user = res.data;
+        let user = res.data
         this.setState({
           birthday: user.birthday,
           user: user,
           phone: user.phone,
-          userEmail: user.email
-        });
+          userEmail: user.email,
+        })
       })
       .catch(err => {
-          console.error(err);
-          if (err.response.status === 401 || err.response.status === 403) {
-            clearAuthenticationToken();
-            Router.push({pathname: '/'});
-          }
-        },
-      );
+        console.error(err)
+        if (err.response.status === 401 || err.response.status === 403) {
+          clearAuthenticationToken()
+          Router.push({pathname: '/'})
+        }
+      },
+      )
   };
 
   onChange = e => {
-    const state = this.state.user;
-    let {name, value} = e.target;
+    const state = this.state.user
+    let {name, value} = e.target
 
     if (name === 'phone') {
-      const phoneOk = isPhoneOk(value);
+      const phoneOk = isPhoneOk(value)
       if (phoneOk && e.target.value.startsWith('0')) {
-        value = '33' + value.substring(1);
+        value = `33${ value.substring(1)}`
       }
     }
     if (name === 'description') {
       value = value.slice(0, MAX_DESCRIPTION_LENGTH)
     }
-    state[e.target.name] = value;
-    this.setState({user: state});
+    state[e.target.name] = value
+    this.setState({user: state})
   };
 
 
   onChangeName = event => {
-    const state = this.state.user;
-    let value = event.target.value;
+    const state = this.state.user
+    let value = event.target.value
 
     if (value.match(/[0-9^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/)) {
-    } else {
-      value = value.charAt(0).toUpperCase() + value.slice(1);
-      state[event.target.name] = value;
-      this.setState({user: state});
+    }
+    else {
+      value = value.charAt(0).toUpperCase() + value.slice(1)
+      state[event.target.name] = value
+      this.setState({user: state})
     }
   };
   onChangePhone = event => {
-    let value = event.target.value;
+    let value = event.target.value
     if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤é¨'èùçà]/) || value.length > 11) {
-    } else {
-      const phoneOk = isPhoneOk(value);
+    }
+    else {
+      const phoneOk = isPhoneOk(value)
       if (phoneOk && value.startsWith('0')) {
-        value = '33' + value.substring(1);
+        value = `33${ value.substring(1)}`
       }
-      this.setState({phone: value});
+      this.setState({phone: value})
     }
   };
 
@@ -124,69 +126,70 @@ class editProfile extends React.Component {
       return
     }
     if (!this.state.phoneConfirmed && !this.state.serverError) {
-      this.sendSms();
+      this.sendSms()
     }
 
     const newPhone = {
       phone: this.state.phone,
       phone_confirmed: this.state.phoneConfirmed,
-    };
+    }
 
-    setAxiosAuthentication();
+    setAxiosAuthentication()
     axios
       .put('/myAlfred/api/users/profile/phone', newPhone)
       .then()
       .catch(err =>
-        console.error(err)
-      );
+        console.error(err),
+      )
   };
 
   sendEmail = () => {
     axios.get('/myAlfred/api/users/sendMailVerification')
       .then(() => {
-        snackBarSuccess("Mail envoyé")
+        snackBarSuccess('Mail envoyé')
       })
-      .catch( err => {
+      .catch(err => {
         snackBarError('email non envoyé')
-       });
+      })
   };
 
   sendSms = () => {
-    setAxiosAuthentication();
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
         this.setState({smsCodeOpen: true}, () => this.onSubmit())
-        snackBarSuccess("Le SMS a été envoyé")
+        snackBarSuccess('Le SMS a été envoyé')
       })
       .catch(err => {
         this.setState({
           smsCodeOpen: true,
-          serverError: true
-        });
+          serverError: true,
+        })
         snackBarError('Impossible d\'envoyer le SMS')
-      });
+      })
   };
 
   checkSmsCode = () => {
-    setAxiosAuthentication();
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/users/checkSMSVerification', {sms_code: this.state.smsCode})
       .then(res => {
         if (res.data.sms_code_ok) {
           this.setState({
             smsCodeOpen: false,
-            phoneConfirmed: true
-          }, () => this.onSubmit());
-          snackBarSuccess("Votre numéro de téléphone est validé")
-        } else {
-          snackBarError('Le code est incorrect');
+            phoneConfirmed: true,
+          }, () => this.onSubmit())
+          snackBarSuccess('Votre numéro de téléphone est validé')
+        }
+        else {
+          snackBarError('Le code est incorrect')
         }
       })
       .catch(err =>
-        snackBarError('Erreur à la vérification du code')
-       );
+        snackBarError('Erreur à la vérification du code'),
+      )
   };
 
-  dialogConfirmPhone = (classes) => {
+  dialogConfirmPhone = classes => {
     return (
       <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
@@ -202,7 +205,7 @@ class editProfile extends React.Component {
             maxLength="4"
             value={this.state.smsCode}
             onChange={e => {
-              this.setState({smsCode: e.target.value});
+              this.setState({smsCode: e.target.value})
             }}
             fullWidth
             errors={this.state.smsError}
@@ -225,29 +228,29 @@ class editProfile extends React.Component {
 
 
   onChangeBirthday = e => {
-    this.setState({birthday: e.target.value});
+    this.setState({birthday: e.target.value})
   };
 
   onSubmit = e => {
-    const birthday = this.state.birthday;
-    const {email, name, firstname, description, gender, job, diplomes, school} = this.state.user;
-    const {phone} = this.state;
+    const birthday = this.state.birthday
+    const {email, name, firstname, description, gender, job, diplomes, school} = this.state.user
+    const {phone} = this.state
 
     axios.put('/myAlfred/api/users/profile/editProfile', {
       email, name, firstname, birthday, description, gender, phone, job, diplomes, school,
     })
       .then(res => {
-        snackBarSuccess("Profil modifié avec succès");
-        this.setState({errors: {}}, () => this.loadUser());
+        snackBarSuccess('Profil modifié avec succès')
+        this.setState({errors: {}}, () => this.loadUser())
       })
       .catch(err => {
         err.response ?
-        snackBarError(err.response.data) : null
-      });
+          snackBarError(err.response.data) : null
+      })
   };
 
-  content = (classes) => {
-    const {errors, user, phone, userEmail, birthday} = this.state;
+  content = classes => {
+    const {errors, user, phone, userEmail, birthday} = this.state
 
     return (
       <Grid>
@@ -297,7 +300,7 @@ class editProfile extends React.Component {
             />
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}
-                style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
+            style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
             <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
           </Grid>
         </Grid>
@@ -350,7 +353,7 @@ class editProfile extends React.Component {
                 label={'Adresse email'}
                 error={!!(errors && errors.email)}
                 InputProps={{
-                  endAdornment: userEmail === user.email && user.is_confirmed === true ? <CheckCircleOutlineIcon /> : null
+                  endAdornment: userEmail === user.email && user.is_confirmed === true ? <CheckCircleOutlineIcon /> : null,
                 }}
               />
             </Grid>
@@ -358,7 +361,7 @@ class editProfile extends React.Component {
               <Button
                 variant="contained"
                 color={'primary'}
-                onClick={() => user.is_confirmed ? this.onSubmit() : this.sendEmail()}
+                onClick={() => (user.is_confirmed ? this.onSubmit() : this.sendEmail())}
                 disabled={user.email ? !!(userEmail === user.email && user.is_confirmed) : true}
                 classes={{root: classes.buttonCheckPhone}}
               >
@@ -375,7 +378,7 @@ class editProfile extends React.Component {
                 variant={'outlined'}
                 label={'Téléphone'}
                 InputProps={{
-                  endAdornment: phone === user.phone && user.phone_confirmed === true ? <CheckCircleOutlineIcon /> : null
+                  endAdornment: phone === user.phone && user.phone_confirmed === true ? <CheckCircleOutlineIcon /> : null,
                 }}
               />
             </Grid>
@@ -455,8 +458,8 @@ class editProfile extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
-    const {user, smsCodeOpen} = this.state;
+    const {classes} = this.props
+    const {user, smsCodeOpen} = this.state
 
     if (!user) {
       return null
@@ -467,7 +470,7 @@ class editProfile extends React.Component {
         <Helmet>
           <title>Profil - Modifier mon profil - My Alfred </title>
           <meta property="description"
-                content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
+            content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
         </Helmet>
         <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount>
@@ -481,8 +484,8 @@ class editProfile extends React.Component {
         </Grid>
         {smsCodeOpen ? this.dialogConfirmPhone(classes) : null}
       </React.Fragment>
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(editProfile);
+export default withStyles(styles)(editProfile)
