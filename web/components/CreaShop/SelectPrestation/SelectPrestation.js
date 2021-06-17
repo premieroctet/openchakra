@@ -184,7 +184,7 @@ class SelectPrestation extends React.Component {
           </Grid>
         </Grid>
         {
-          this.state.grouped[ COMPANY_PRIVATE_FLTR ] ? <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
+          this.state.grouped[ COMPANY_PRIVATE_FLTR ] && this.state.grouped[ COMPANY_PRIVATE_FLTR ].length>0 ? <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Divider/>
             </Grid>

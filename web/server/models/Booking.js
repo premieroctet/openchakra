@@ -44,7 +44,7 @@ const BookingSchema = new Schema({
   // Company supported amount
   company_amount: {
     type: Number,
-    required: true,
+    required: false,
   },
   date: {
     type: Date,
