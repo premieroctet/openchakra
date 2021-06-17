@@ -595,7 +595,7 @@ class creaShop extends React.Component {
               :
               null
             }
-            <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 11 : is_development() ? 5 : 12} lg={activeStep === 0 ? 11 : is_development() ? 5 : 12} md={activeStep === 0 ? 11 : is_development() ? 5 : 12} sm={activeStep === 0 ? 11 : is_development() ? 5 : 12} xs={activeStep === 0 ? 12 : is_development() ? 6 : 12}>
+            <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 11 : is_development() ? 5 : 11} lg={activeStep === 0 ? 11 : is_development() ? 5 : 11} md={activeStep === 0 ? 11 : is_development() ? 5 : 11} sm={activeStep === 0 ? 11 : is_development() ? 5 : 11} xs={activeStep === 0 ? 12 : is_development() ? 6 : 11}>
               <Button
                 variant="contained"
                 classes={{root: classes.nextButton}}
