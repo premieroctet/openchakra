@@ -95,11 +95,7 @@ class siret extends React.Component {
             this.setCompanyData(res.data);
           })
           .catch(err => {
-            this.setState({
-              name: '',
-              siret: '',
-            }, () => this.props.onChange(this.state));
-            console.error(err);
+            console.error(err)
           });
       });
   };
