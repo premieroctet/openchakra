@@ -530,7 +530,7 @@ router.post('/search', (req, res) => {
   console.log(`Searching ${JSON.stringify(req.body)}`);
 
   const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
-  ServiceUser.find(filter, 'prestations.prestation service_address location perimeter, description')
+  ServiceUser.find(filter, 'prestations.prestation service_address location perimeter description')
     .populate({path: 'user', select: 'firstname'})
     .populate({
       path: 'service', select: 'label s_label description',
