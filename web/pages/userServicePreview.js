@@ -311,6 +311,9 @@ class UserServicesPreview extends React.Component {
     if (this.hasWarningBudget()) {
       errors['total'] = 'Le montant dépasse le budget disponible pour votre département';
     }
+    if (this.hasWarningSelf()) {
+      errors['user'] = 'Vous ne pouvez pas vous réserver vous-même';
+    }
     this.setState({errors: errors});
   };
 
@@ -467,6 +470,11 @@ class UserServicesPreview extends React.Component {
       return warningBudget
     }
     return false
+  }
+
+  hasWarningSelf = () => {
+    const {user, alfred}=this.state
+    return user && alfred && user._id.toString()==alfred._id.toString()
   }
 
   getClientAddress = () => {
@@ -811,6 +819,7 @@ class UserServicesPreview extends React.Component {
                           getLocationLabel={this.getLocationLabel}
                           warningPerimeter={this.hasWarningPerimeter()}
                           warningBudget={this.hasWarningBudget()}
+                          warningSelf={this.hasWarningSelf()}
                           clientAddress={this.getClientAddressLabel()}
                           clientAddressId={this.get_prop_address()}
                           book={this.book}
@@ -837,6 +846,7 @@ class UserServicesPreview extends React.Component {
                     getLocationLabel={this.getLocationLabel}
                     warningPerimeter={this.hasWarningPerimeter()}
                     warningBudget={this.hasWarningBudget()}
+                    warningSelf={this.hasWarningSelf()}
                     clientAddress={this.getClientAddressLabel()}
                     clientAddressId={this.get_prop_address()}
                     book={this.book}
