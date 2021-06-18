@@ -26,7 +26,7 @@ const {isPhoneOk} = require('../../utils/sms');
 const {STEPS}=require('../../utils/registerStep')
 const {getLoggedUserId, isLoggedUserRegistered} = require('../../utils/context')
 const {EMPLOYEE} = require('../../utils/consts');
-
+const {is_production}=require('../../config/config')
 
 registerLocale('fr', fr);
 
@@ -234,7 +234,7 @@ class Register extends React.Component {
     setAxiosAuthentication()
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
-        var txt = 'Le SMS a été envoyé';
+        var txt = is_production() ? 'Le SMS a été envoyé' : `Dev : le code est ${res.data.sms_code}`;
         snackBarSuccess(txt);
         this.setState({smsCodeOpen: true});
       })

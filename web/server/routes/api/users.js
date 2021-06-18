@@ -271,7 +271,7 @@ router.post('/sendSMSVerification', passport.authenticate('jwt', {session: false
         res.status(400).json({error: 'Impossible d\'envoyer le SMS'});
         return;
       }
-      res.json({sms_code: code});
+      res.json({sms_code: is_production() ? 'ok' : code});
     })
     .catch(err => {
       console.error(err);
