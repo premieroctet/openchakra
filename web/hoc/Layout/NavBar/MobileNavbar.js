@@ -32,7 +32,8 @@ import Button from "@material-ui/core/Button";
 import {SEARCHBAR} from '../../../utils/i18n';
 import BusinessIcon from '@material-ui/icons/Business';
 import {clearAuthenticationToken} from "../../../utils/authentication";
-import {isB2BAdmin} from "../../../utils/context";
+import {isB2BAdmin, isB2BManager} from "../../../utils/context";
+const {emptyPromise} = require('../../../utils/promise');
 const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, getRole} = require('../../../utils/context')
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 const {EMPLOYEE}=require('../../../utils/consts')
