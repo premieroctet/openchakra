@@ -141,7 +141,7 @@ class SelectService extends React.Component {
     if (particular_professional_access) {
       // Intersection services pro & part
       const both_options = _.intersectionBy(services[PRO], services[PART], s => s._id)
-      const part_options = _.differenceBy(services[PART], both_options, s => s._id).slice(0, 3)
+      const part_options = _.differenceBy(services[PART], both_options, s => s._id)
       const pro_options = _.differenceBy(services[PRO], both_options, s => s._id)
       options.push({label: 'Services aux particuliers uniquement', options: part_options})
       options.push({label: 'Services aux professionels uniquement', options: pro_options})
