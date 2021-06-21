@@ -21,7 +21,6 @@ const {isB2BAdmin} = require('../../utils/context')
 import LayoutAccount from '../../hoc/Layout/LayoutAccount'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
-import PaymentCard from '../../components/Payment/PaymentCard/PaymentCard'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
@@ -150,39 +149,6 @@ class paymentMethod extends React.Component {
     this.setState({[target.name]: target.value})
   };
 
-  onSubmit = e => {
-    e.preventDefault()
-    const data = {
-      bic: this.state.bic,
-      iban: this.state.iban,
-    }
-
-    this.setState({errors: {}})
-    axios.post('/myAlfred/api/payment/bankAccount', data)
-      .then(res => {
-        toast.info('RIB ajouté')
-
-        this.setState({showAddRib: false})
-        axios.get('/myAlfred/api/payment/activeAccount')
-          .then(response => {
-            let accounts = response.data
-            if (accounts.length) {
-              this.setState({haveAccount: true, accounts: accounts})
-            }
-          })
-
-      })
-      .catch(err => {
-        toast.error('Erreur à l\'ajout du RIB')
-        try {
-          this.setState({errors: err.response.data.errors})
-        }
-        catch (err) {
-          console.error(err)
-        }
-      })
-  };
-
   deleteAccount(id) {
     const data = {
       id_account: id,
@@ -208,146 +174,6 @@ class paymentMethod extends React.Component {
         }
       })
   }
-
-  handleCloseModalAddRib = () => {
-    this.setState({showAddRib: false})
-  };
-
-  modalAddRib = (errors, classes) => {
-    return (
-      <Dialog
-        open={this.state.showAddRib}
-        onClose={() => this.handleCloseModalAddRib()}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseModalAddRib}>
-          <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            <Grid>
-              <h4>Ajouter un RIB</h4>
-            </Grid>
-            <Grid>
-              <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajouter un RIB en toute sécurité</Typography>
-            </Grid>
-          </Grid>
-        </DialogTitle>
-        <DialogContent>
-          <Grid style={{margin: '15px'}}>
-            <TextField
-              id="outlined-name"
-              style={{width: '100%'}}
-              value={this.state.iban}
-              name={'iban'}
-              onChange={this.onChange}
-              margin="normal"
-              variant="outlined"
-              placeholder={'IBAN'}
-              label={'IBAN'}
-              error={errors.iban}
-              helperText={errors.iban}
-            />
-          </Grid>
-          <Grid style={{margin: '15px'}}>
-            <TextField
-              style={{width: '100%'}}
-              value={this.state.bic}
-              name={'bic'}
-              onChange={this.onChange}
-              margin="normal"
-              variant="outlined"
-              placeholder={'Code SWIFT / BIC'}
-              label={'Code SWIFT / BIC'}
-              error={errors.bic}
-              helperText={errors.bic}
-            />
-          </Grid>
-          <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
-            <Button
-              onClick={this.onSubmit}
-              variant="contained"
-              classes={{root: classes.buttonSave}}
-            >
-              Enregistrer le RIB
-            </Button>
-          </Grid>
-          <Grid style={{display: 'flex', alignItems: 'center'}}>
-            <Grid>
-              <Grid>
-                <SecurityIcon style={{color: 'rgba(39,37,37,35%)'}}/>
-              </Grid>
-            </Grid>
-            <Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Toutes les données de paiement sur My Alfred sont
-                  chiffrées.</Typography>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de
-                  confiance.</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </DialogContent>
-      </Dialog>
-    )
-  };
-
-  modalDeleteRib = id => {
-    return (
-      <Dialog
-        open={this.state.showDeleteRib}
-        onClose={() => this.handleClose()}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{'Voulez-vous vraiment supprimer votre RIB ?'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Si vous supprimez votre RIB vous ne pourrez plus l'utiliser par la suite avec ce compte.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.handleClose()} color="primary">
-            Annuler
-          </Button>
-          <Button onClick={() => this.deleteAccount(id)} color="secondary" autoFocus>
-            Supprimer
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  };
-
-
-  addCard = () => {
-    const card_number = this.state.card_number.replace(/\s/g, '')
-    const expiration_date = this.state.expiration_date.split('/')
-    const finaldate = expiration_date[0] + expiration_date[1]
-    const csv = this.state.csv
-
-    const obj = {
-      card_number: card_number,
-      expiration_date: finaldate,
-      csv: csv,
-    }
-
-    axios.post('/myAlfred/api/payment/createCard', obj)
-      .then(() => {
-        this.setState({error: null})
-        this.refreshCards()
-      })
-      .catch(err => {
-        console.error(err)
-        this.setState({error: err.response.data.error})
-      })
-  };
-
-  deleteCard = () => {
-    /* TODO pas de réponse de mongopay, api tourne en boucle, du coup j'ai supprimé then & catch*/
-    const obj = {id_card: this.state.Idtempo}
-    axios.put('/myAlfred/api/payment/cards', obj)
-    this.setState({showDeleteCard: false, showAddCreditCard: false}, this.componentDidMount)
-  };
 
   handleCloseCreditCard = () => {
     this.setState({showAddCreditCard: false})
@@ -588,7 +414,7 @@ class paymentMethod extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {showDeleteCard, showAddCreditCard, accounts, showAddRib, showDeleteRib, errors, user} = this.state
+    const {user} = this.state
 
     if (!user) {
       return null
@@ -611,10 +437,7 @@ class paymentMethod extends React.Component {
             {this.content(classes)}
           </LayoutMobile>
         </Grid>
-        {showAddCreditCard ? this.modalAddCreditCard(classes) : null}
-        {showDeleteCard ? this.modalDeleteCreditCard(classes) : null}
-        {showAddRib ? this.modalAddRib(errors, classes) : null}
-        {showDeleteRib ? this.modalDeleteRib(accounts[0].Id) : null}
+
       </React.Fragment>
     )
   }

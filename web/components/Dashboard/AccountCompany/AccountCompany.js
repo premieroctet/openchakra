@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import {formatIban} from '../../../utils/text'
 import HandleCB from '../../HandleCB/HandleCB'
+import HandleRIB from '../../HandleRIB/HandleRIB'
 const moment=require('moment')
 moment.locale('fr')
 
@@ -145,30 +146,7 @@ class AccountCompany extends React.Component {
                   <h4>RIB enregistrés</h4>
                 </Grid>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  {haveAccount ?
-                    <Grid container style={{marginTop: '10vh', display: 'flex', alignItems: 'center'}}>
-                      <Grid item xl={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <Grid item xl={2} style={{display: 'flex'}}>
-                          <AccountBalanceIcon/>
-                        </Grid>
-                        <Grid item xl={6} style={{display: 'flex', flexDirection: 'column'}}>
-                          <Grid>
-                            <Grid>
-                              <Typography>{accounts[0].OwnerName}</Typography>
-                            </Grid>
-                          </Grid>
-                          <Grid>
-                            <Typography
-                              style={{color: 'rgba(39,37,37,35%)'}}>{formatIban(accounts[0].IBAN)}</Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    :
-                    <Grid>
-                      <a href={'/account/paymentMethod'}>Aucun RIB enregistrer rendez vous ici pour en ajouter</a>
-                    </Grid>
-                  }
+                  <HandleRIB/>
                 </Grid>
               </Grid>
             </Grid>
