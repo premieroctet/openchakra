@@ -15,7 +15,8 @@ export default class dashboardPage extends React.Component {
   changemode = index => {
     if(index === 0) {
       this.setState({mode: MICROSERVICE_MODE, index: 1})
-    }else{
+    }
+    else{
       this.setState({mode: CARETAKER_MODE, index: 0})
     }
   }

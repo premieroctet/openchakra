@@ -1,40 +1,41 @@
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 const {setAxiosAuthentication} = require('../../utils/authentication')
-import React from 'react';
-import axios from 'axios';
-import moment from 'moment';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Router from 'next/router';
-import {withStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import NumberFormat from 'react-number-format';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
-import {formatCreditCardNumber, formatCVC, formatExpirationDate} from '../../components/utils';
-import {Helmet} from 'react-helmet';
-import IconButton from '@material-ui/core/IconButton';
-import styles from '../../static/css/pages/paymentMethod/paymentMethod';
+import React from 'react'
+import axios from 'axios'
+import moment from 'moment'
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import Router from 'next/router'
+import {withStyles} from '@material-ui/core/styles'
+import TextField from '@material-ui/core/TextField'
+import NumberFormat from 'react-number-format'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogActions from '@material-ui/core/DialogActions'
+import {formatCreditCardNumber, formatCVC, formatExpirationDate} from '../../components/utils'
+import {Helmet} from 'react-helmet'
+import IconButton from '@material-ui/core/IconButton'
+import styles from '../../static/css/pages/paymentMethod/paymentMethod'
 const {isB2BAdmin} = require('../../utils/context')
-import LayoutAccount from "../../hoc/Layout/LayoutAccount";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import PaymentCard from "../../components/Payment/PaymentCard/PaymentCard";
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import CloseIcon from '@material-ui/icons/Close';
-import SecurityIcon from '@material-ui/icons/Security';
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import {formatIban} from "../../utils/text";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import {toast} from 'react-toastify';
+import LayoutAccount from '../../hoc/Layout/LayoutAccount'
+import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
+import PaymentCard from '../../components/Payment/PaymentCard/PaymentCard'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import CloseIcon from '@material-ui/icons/Close'
+import SecurityIcon from '@material-ui/icons/Security'
+import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+import {formatIban} from '../../utils/text'
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
+import {toast} from 'react-toastify'
+import HandleCB from '../../components/HandleCB/HandleCB'
 
-moment.locale('fr');
+moment.locale('fr')
 
-const DialogTitle = withStyles(styles)((props) => {
-  const {children, classes, onClose, ...other} = props;
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography {...other} className={classes.root}>
       <Typography variant="h6">{children}</Typography>
@@ -44,14 +45,14 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
 
 class paymentMethod extends React.Component {
   constructor(props) {
-    super(props);
-    this.child = React.createRef();
+    super(props)
+    this.child = React.createRef()
     this.state = {
       user: {},
       cards: [],
@@ -71,12 +72,12 @@ class paymentMethod extends React.Component {
       iban: '',
       error: null,
       errors: {},
-      is_pro: false
-    };
+      is_pro: false,
+    }
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
@@ -84,125 +85,128 @@ class paymentMethod extends React.Component {
         this.setState({
           user: res.data,
           userName: res.data.full_name,
-          is_pro: isB2BAdmin()
-        });
+          is_pro: isB2BAdmin(),
+        })
       })
       .catch(err => {
-          // if (err.response.status === 401 || err.response.status === 403) {
-          //   clearAuthenticationToken()
-          //   Router.push({pathname: '/'});
-          // }
-          console.error(err)
-        },
-      );
+        // if (err.response.status === 401 || err.response.status === 403) {
+        //   clearAuthenticationToken()
+        //   Router.push({pathname: '/'});
+        // }
+        console.error(err)
+      },
+      )
 
     axios.get('/myAlfred/api/payment/cards')
       .then(response => {
-        let cards = response.data;
-        this.setState({cards: cards});
-      }).catch(err => console.error(err));
+        let cards = response.data
+        this.setState({cards: cards})
+      }).catch(err => console.error(err))
 
     axios.get('/myAlfred/api/payment/activeAccount')
       .then(response => {
-        let accounts = response.data;
+        let accounts = response.data
         if (accounts.length) {
-          this.setState({haveAccount: true, accounts: accounts});
+          this.setState({haveAccount: true, accounts: accounts})
         }
-      });
+      })
   }
 
   handleClick = () => {
-    this.setState({showAddRib: !this.state.showAddRib});
+    this.setState({showAddRib: !this.state.showAddRib})
   };
 
   handleClick2 = () => {
-    this.setState({showDeleteRib: !this.state.showDeleteRib});
+    this.setState({showDeleteRib: !this.state.showDeleteRib})
   };
 
   handleClose() {
-    this.setState({showDeleteRib: false});
+    this.setState({showDeleteRib: false})
   }
 
   refreshCards = () => {
-    this.setState({showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount());
+    this.setState({showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount())
   };
 
   handleCloseDial = () => {
-    this.setState({showDeleteCard: false});
+    this.setState({showDeleteCard: false})
   };
 
   onChange = e => {
-    this.setState({[e.target.name]: e.target.value});
+    this.setState({[e.target.name]: e.target.value})
   };
 
   handleInputChange = ({target}) => {
     if (target.name === 'card_number') {
-      target.value = formatCreditCardNumber(target.value);
-    } else if (target.name === 'expiration_date') {
-      target.value = formatExpirationDate(target.value);
-    } else if (target.name === 'csv') {
-      target.value = formatCVC(target.value);
+      target.value = formatCreditCardNumber(target.value)
+    }
+    else if (target.name === 'expiration_date') {
+      target.value = formatExpirationDate(target.value)
+    }
+    else if (target.name === 'csv') {
+      target.value = formatCVC(target.value)
     }
 
-    this.setState({[target.name]: target.value});
+    this.setState({[target.name]: target.value})
   };
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
     const data = {
       bic: this.state.bic,
       iban: this.state.iban,
-    };
+    }
 
-    this.setState({errors: {}});
+    this.setState({errors: {}})
     axios.post('/myAlfred/api/payment/bankAccount', data)
       .then(res => {
-        toast.info('RIB ajouté');
+        toast.info('RIB ajouté')
 
-        this.setState({showAddRib: false});
+        this.setState({showAddRib: false})
         axios.get('/myAlfred/api/payment/activeAccount')
           .then(response => {
-            let accounts = response.data;
+            let accounts = response.data
             if (accounts.length) {
-              this.setState({haveAccount: true, accounts: accounts});
+              this.setState({haveAccount: true, accounts: accounts})
             }
-          });
+          })
 
       })
       .catch(err => {
-        toast.error('Erreur à l\'ajout du RIB');
+        toast.error('Erreur à l\'ajout du RIB')
         try {
-          this.setState({errors: err.response.data.errors});
-        } catch (err) {
-          console.error(err);
+          this.setState({errors: err.response.data.errors})
         }
-      });
+        catch (err) {
+          console.error(err)
+        }
+      })
   };
 
   deleteAccount(id) {
     const data = {
       id_account: id,
-    };
+    }
     axios.put('/myAlfred/api/payment/account', data)
       .then(() => {
-        toast.error('Compte bancaire supprimé');
-        this.refresh();
+        toast.error('Compte bancaire supprimé')
+        this.refresh()
       })
       .catch(() => {
-        toast.error('Un erreur est survenue');
-      });
+        toast.error('Un erreur est survenue')
+      })
 
   }
 
   refresh() {
-    this.setState({showDeleteRib: false, haveAccount: false});
+    this.setState({showDeleteRib: false, haveAccount: false})
     axios.get('/myAlfred/api/payment/activeAccount')
       .then(response => {
-        let accounts = response.data;
+        let accounts = response.data
         if (accounts.length) {
-          this.setState({haveAccount: true, accounts: accounts});
+          this.setState({haveAccount: true, accounts: accounts})
         }
-      });
+      })
   }
 
   handleCloseModalAddRib = () => {
@@ -288,7 +292,7 @@ class paymentMethod extends React.Component {
     )
   };
 
-  modalDeleteRib = (id) => {
+  modalDeleteRib = id => {
     return (
       <Dialog
         open={this.state.showDeleteRib}
@@ -316,19 +320,19 @@ class paymentMethod extends React.Component {
 
 
   addCard = () => {
-    const card_number = this.state.card_number.replace(/\s/g, '');
-    const expiration_date = this.state.expiration_date.split('/');
-    const finaldate = expiration_date[0] + expiration_date[1];
-    const csv = this.state.csv;
+    const card_number = this.state.card_number.replace(/\s/g, '')
+    const expiration_date = this.state.expiration_date.split('/')
+    const finaldate = expiration_date[0] + expiration_date[1]
+    const csv = this.state.csv
 
     const obj = {
       card_number: card_number,
       expiration_date: finaldate,
       csv: csv,
-    };
+    }
 
     axios.post('/myAlfred/api/payment/createCard', obj)
-      .then(res => {
+      .then(() => {
         this.setState({error: null})
         this.refreshCards()
       })
@@ -339,25 +343,25 @@ class paymentMethod extends React.Component {
   };
 
   deleteCard = () => {
-    /*TODO pas de réponse de mongopay, api tourne en boucle, du coup j'ai supprimé then & catch*/
-    const obj = {id_card: this.state.Idtempo};
-    axios.put('/myAlfred/api/payment/cards', obj);
-    this.setState({showDeleteCard: false, showAddCreditCard: false}, this.componentDidMount);
+    /* TODO pas de réponse de mongopay, api tourne en boucle, du coup j'ai supprimé then & catch*/
+    const obj = {id_card: this.state.Idtempo}
+    axios.put('/myAlfred/api/payment/cards', obj)
+    this.setState({showDeleteCard: false, showAddCreditCard: false}, this.componentDidMount)
   };
 
   handleCloseCreditCard = () => {
-    this.setState({showAddCreditCard: false});
+    this.setState({showAddCreditCard: false})
   };
 
   callAddCreditCard = () => {
-    this.setState({showAddCreditCard: true});
+    this.setState({showAddCreditCard: true})
   };
 
-  callDialogDeletedCard = (e) => {
+  callDialogDeletedCard = e => {
     this.setState({showDeleteCard: true, Idtempo: e})
   };
 
-  modalAddCreditCard = (classes) => {
+  modalAddCreditCard = classes => {
     return (
       <Dialog
         open={this.state.showAddCreditCard}
@@ -477,7 +481,7 @@ class paymentMethod extends React.Component {
     )
   };
 
-  content = (classes) => {
+  content = () => {
     return (
       <Grid style={{display: 'flex', flexDirection: 'column'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -493,34 +497,8 @@ class paymentMethod extends React.Component {
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
-          <Grid>
-            <h3>Cartes enregistrées</h3>
-          </Grid>
-          <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Payez encore plus rapidement sans communiquer vos
-              informations financières.</Typography>
-          </Grid>
+          <HandleCB/>
         </Grid>
-        <Grid style={{marginTop: '5vh'}}>
-          <PaymentCard cards={this.state.cards} userName={this.state.userName} editable={true}
-                       deleteCard={this.callDialogDeletedCard}/>
-        </Grid>
-        <Grid>
-          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
-        </Grid>
-        <Grid>
-          <Grid style={{display: 'flex', alignItems: 'center'}}>
-            <Grid>
-              <IconButton aria-label="add" onClick={this.callAddCreditCard}>
-                <AddCircleIcon/>
-              </IconButton>
-            </Grid>
-            <Grid>
-              <Typography>Enregistrer une carte bancaire</Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
         </Grid>
         <Grid>
@@ -585,7 +563,7 @@ class paymentMethod extends React.Component {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          marginBottom: '12vh'
+          marginBottom: '12vh',
         }}>
           <Grid style={{marginRight: '2vh'}}>
             <Grid>
@@ -609,8 +587,8 @@ class paymentMethod extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
-    const {showDeleteCard, showAddCreditCard, accounts, showAddRib, showDeleteRib, errors, user} = this.state;
+    const {classes} = this.props
+    const {showDeleteCard, showAddCreditCard, accounts, showAddRib, showDeleteRib, errors, user} = this.state
 
     if (!user) {
       return null
@@ -621,7 +599,7 @@ class paymentMethod extends React.Component {
         <Helmet>
           <title>Compte - Modes de paiement - My Alfred </title>
           <meta property="description"
-                content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !"/>
+            content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !"/>
         </Helmet>
         <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount>
@@ -638,9 +616,9 @@ class paymentMethod extends React.Component {
         {showAddRib ? this.modalAddRib(errors, classes) : null}
         {showDeleteRib ? this.modalDeleteRib(accounts[0].Id) : null}
       </React.Fragment>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(paymentMethod);
+export default withStyles(styles)(paymentMethod)
