@@ -24,7 +24,6 @@ const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 
-
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
   return (
@@ -67,6 +66,10 @@ class HandleRIB extends React.Component {
       })
   }
 
+  onChange = e => {
+    this.setState({[e.target.name]: e.target.value})
+  };
+
   handleClick = () => {
     this.setState({showAddRib: !this.state.showAddRib})
   };
@@ -78,6 +81,25 @@ class HandleRIB extends React.Component {
   handleCloseModalAddRib = () => {
     this.setState({showAddRib: false})
   };
+
+  handleClose() {
+    this.setState({showDeleteRib: false})
+  }
+
+  deleteAccount(id) {
+    const data = {
+      id_account: id,
+    }
+    axios.put('/myAlfred/api/payment/account', data)
+      .then(() => {
+        snackBarSuccess('Compte bancaire supprimé')
+        this.refresh()
+      })
+      .catch(() => {
+        snackBarError('Un erreur est survenue')
+      })
+
+  }
 
   modalAddRib = (errors, classes) => {
     return (

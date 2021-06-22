@@ -8,8 +8,6 @@ import axios from 'axios'
 import {setAxiosAuthentication} from '../../../utils/authentication'
 import {COMPANY_ACTIVITY, COMPANY_SIZE} from '../../../utils/consts'
 import Typography from '@material-ui/core/Typography'
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
-import {formatIban} from '../../../utils/text'
 import HandleCB from '../../HandleCB/HandleCB'
 import HandleRIB from '../../HandleRIB/HandleRIB'
 const moment=require('moment')
@@ -87,7 +85,7 @@ class AccountCompany extends React.Component {
 
   render() {
     const {classes} = this.props
-    const{companyName, sizeCompany, siret, activityArea, tva, billing_address, service_address, haveAccount, accounts} = this.state
+    const{companyName, sizeCompany, siret, activityArea, tva, billing_address, service_address} = this.state
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%', margin: 0}}>
@@ -142,9 +140,7 @@ class AccountCompany extends React.Component {
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                   <HandleCB/>
                 </Grid>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <h4>RIB enregistrés</h4>
-                </Grid>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: '5vh 0px'}}/>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                   <HandleRIB/>
                 </Grid>

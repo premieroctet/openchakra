@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const {ADMIN, MANAGER, EMPLOYEE} = require('../../utils/consts')
-const keys = require('../config/keys');
+const keys = require('../config/keys')
 
 const get_token = req => {
   const auth = req.headers.authorization

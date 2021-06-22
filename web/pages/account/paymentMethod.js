@@ -325,8 +325,6 @@ class paymentMethod extends React.Component {
         <Grid>
           <HandleCB/>
         </Grid>
-        <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-        </Grid>
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>

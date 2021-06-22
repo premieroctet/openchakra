@@ -19,6 +19,8 @@ import axios from 'axios'
 import {setAxiosAuthentication} from '../../utils/authentication'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
+
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -95,27 +97,27 @@ class HandleCB extends React.Component {
 
     axios.post('/myAlfred/api/payment/createCard', obj)
       .then(() => {
-        this.setState({error: null}, () => this.refreshCards())
+        snackBarSuccess('Carte ajouté !')
+        this.setState({error: null, showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount())
       })
       .catch(err => {
         console.error(err)
-        this.setState({error: err.response.data.error})
+        snackBarError(err.response.data.error)
       })
   };
 
-  refreshCards = () => {
-    this.setState({showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount())
-  };
-
   deleteCard = () => {
-    /* TODO pas de réponse de mongopay, api tourne en boucle, du coup j'ai supprimé then & catch*/
     const obj = {id_card: this.state.Idtempo}
-    axios.put('/myAlfred/api/payment/cards', obj)
-    this.setState({showDeleteCard: false, showAddCreditCard: false}, this.componentDidMount)
+    axios.put('/myAlfred/api/payment/cards', obj).then(() => {
+      snackBarSuccess('Carte supprimé !')
+      this.setState({showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount())
+    }).catch(err => {
+      snackBarError(err.response.data.error)
+    })
   };
 
   modalAddCreditCard = classes => {
-    const {error, showAddCreditCard, card_number, expiration_date, csv} = this.state
+    const {showAddCreditCard, card_number, expiration_date, csv} = this.state
     return (
       <Dialog
         open={showAddCreditCard}
