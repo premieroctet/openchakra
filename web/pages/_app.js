@@ -13,7 +13,6 @@ import '../static/forminputs.css'
 import '../static/inputRange.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import '../static/cssdashboard.css'
-import 'react-credit-cards/es/styles-compiled.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import '../static/style1.css'
 
@@ -60,7 +59,6 @@ class MyApp extends App {
             crossOrigin=""/>
           <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
           <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
-          <script src="https://sibforms.com/forms/end-form/build/main.js"/>
           <link rel="preconnect" href="https://fonts.gstatic.com"/>
           <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
         </Head>
