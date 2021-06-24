@@ -259,21 +259,6 @@ class HandleCB extends React.Component {
           <PaymentCard cards={cards} userName={userName} editable={true}
             deleteCard={this.callDialogDeletedCard}/>
         </Grid>
-        <Grid>
-          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
-        </Grid>
-        <Grid>
-          <Grid style={{display: 'flex', alignItems: 'center'}}>
-            <Grid>
-              <IconButton aria-label="add" onClick={this.callAddCreditCard}>
-                <AddCircleIcon/>
-              </IconButton>
-            </Grid>
-            <Grid>
-              <Typography>Ajouter une carte bancaire</Typography>
-            </Grid>
-          </Grid>
-        </Grid>
         {showAddCreditCard ? this.modalAddCreditCard(classes) : null}
         {showDeleteCard ? this.modalDeleteCreditCard(classes) : null}
       </Grid>
