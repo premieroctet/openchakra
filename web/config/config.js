@@ -39,7 +39,7 @@ const SERVER_PROD = is_production() || is_development()
 const ENABLE_MAILING = is_production()
 
 const isB2BDisabled = () => {
-  return false
+  return true
 }
 
 const get_host_url = () => {
