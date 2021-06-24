@@ -13,7 +13,6 @@ import SecurityIcon from '@material-ui/icons/Security'
 import axios from 'axios'
 import Router from 'next/router'
 import {setAxiosAuthentication} from '../../utils/authentication'
-import {isB2BAdmin} from '../../server/utils/serverContext'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import TextField from '@material-ui/core/TextField'
@@ -23,6 +22,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
+import { isB2BAdmin } from '../../utils/context'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
