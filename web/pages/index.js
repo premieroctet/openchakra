@@ -45,6 +45,7 @@ const DialogTitle = withStyles(styles)(props => {
 class Home extends React.Component {
   constructor(props) {
     super(props)
+    this.child = React.createRef()
     this.state = {
       category: {},
       alfred: {},
@@ -70,7 +71,7 @@ class Home extends React.Component {
         this.setState({
           user: data,
           gps: data.billing_address ? data.billing_address.gps : null,
-        }
+        },
         )
       })
       .catch(err => {
@@ -131,6 +132,10 @@ class Home extends React.Component {
     }, false)
   }
 
+  callLogin = () => {
+    this.child.current.handleOpenLogin()
+  }
+
   render() {
     const {classes} = this.props
     const {category, alfred, open, user} = this.state
@@ -159,7 +164,7 @@ class Home extends React.Component {
               className={isB2BStyle(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}
             >
               <Grid className={classes.navbarComponentPosition}>
-                <NavBar/>
+                <NavBar ref={this.child}/>
               </Grid>
               <Grid className={classes.bannerPresentationContainer}>
                 <Grid className={classes.bannerSize}>
@@ -197,7 +202,7 @@ class Home extends React.Component {
           {
             isB2BStyle(user) ? null : <Grid container className={classes.becomeAlfredComponent}>
               <Grid className={classes.generalWidthContainer}>
-                <ResaService/>
+                <ResaService triggerLogin={this.callLogin}/>
               </Grid>
             </Grid>
           }
