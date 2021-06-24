@@ -10,6 +10,7 @@ import {COMPANY_ACTIVITY, COMPANY_SIZE} from '../../../utils/consts'
 import Typography from '@material-ui/core/Typography'
 import HandleCB from '../../HandleCB/HandleCB'
 import HandleRIB from '../../HandleRIB/HandleRIB'
+import HandleAddresses from '../../HandleAddresses/HandleAddresses'
 const moment=require('moment')
 moment.locale('fr')
 
@@ -119,31 +120,13 @@ class AccountCompany extends React.Component {
                 <TextField readonly variant={'outlined'} value={tva} InputLabelProps={{shrink: true}} label={'tva'} classes={{root: classes.textField}}/>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <h3>Mes sites</h3>
+                <HandleAddresses/>
               </Grid>
-              <Grid container spacing={2} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12}>
-                {
-                  service_address.length > 0 ?
-                    service_address.map((e, index) => (
-                      <Grid key={index} item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                          {this.addressLabel(e)}
-                        </Typography>
-                      </Grid>
-                    )) :
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <a href={'/account/myAddresses'}>Aucun site enregistré rendez vous ici pour en ajouter</a>
-                    </Grid>
-                }
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <HandleCB/>
               </Grid>
-              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{margin: 0, width: '100%'}}>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <HandleCB/>
-                </Grid>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: '5vh 0px'}}/>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <HandleRIB/>
-                </Grid>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <HandleRIB/>
               </Grid>
             </Grid>
           </Box>

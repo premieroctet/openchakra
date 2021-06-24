@@ -19,6 +19,7 @@ import axios from 'axios'
 import {setAxiosAuthentication} from '../../utils/authentication'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 
 
@@ -240,8 +241,15 @@ class HandleCB extends React.Component {
 
     return(
       <Grid>
-        <Grid>
-          <h3>Cartes enregistrées</h3>
+        <Grid style={{display: 'flex', alignItems: 'center'}}>
+          <Grid>
+            <h3>Cartes enregistrées</h3>
+          </Grid>
+          <Grid>
+            <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={this.callAddCreditCard}>
+              <AddCircleOutlineOutlinedIcon/>
+            </IconButton>
+          </Grid>
         </Grid>
         <Grid>
           <Typography style={{color: 'rgba(39,37,37,35%)'}}>Payez encore plus rapidement sans communiquer vos
@@ -253,18 +261,6 @@ class HandleCB extends React.Component {
         </Grid>
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
-        </Grid>
-        <Grid>
-          <Grid style={{display: 'flex', alignItems: 'center'}}>
-            <Grid>
-              <IconButton aria-label="add" onClick={this.callAddCreditCard}>
-                <AddCircleIcon/>
-              </IconButton>
-            </Grid>
-            <Grid>
-              <Typography>Enregistrer une carte bancaire</Typography>
-            </Grid>
-          </Grid>
         </Grid>
         {showAddCreditCard ? this.modalAddCreditCard(classes) : null}
         {showDeleteCard ? this.modalDeleteCreditCard(classes) : null}

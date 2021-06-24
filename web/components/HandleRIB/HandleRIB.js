@@ -8,7 +8,6 @@ import {formatIban} from '../../utils/text'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 import Divider from '@material-ui/core/Divider'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
 import SecurityIcon from '@material-ui/icons/Security'
 import axios from 'axios'
 import Router from 'next/router'
@@ -22,7 +21,8 @@ import DialogActions from '@material-ui/core/DialogActions'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
-import { isB2BAdmin } from '../../utils/context'
+import {isB2BAdmin} from '../../utils/context'
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -245,9 +245,17 @@ class HandleRIB extends React.Component {
 
     return(
       <Grid>
-        <Grid>
-          <h3>RIB enregistrés</h3>
+        <Grid style={{display: 'flex', alignItems: 'center'}}>
+          <Grid>
+            <h3>RIB enregistrés</h3>
+          </Grid>
+          <Grid>
+            <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={this.handleClick}>
+              <AddCircleOutlineOutlinedIcon/>
+            </IconButton>
+          </Grid>
         </Grid>
+
         <Grid>
           <Typography
             style={{color: 'rgba(39,37,37,35%)'}}>{is_pro ? 'Renseignez un rib pour permettre à vos collaborateurs le paiement par prélèvement bancaire.' : 'Choisissez le versement directement sur votre compte bancaire.'}</Typography>
@@ -277,22 +285,11 @@ class HandleRIB extends React.Component {
             </Grid>
           </Grid>
           :
-          null
+          <Grid style={{marginTop: '5vh'}}>
+            <Typography>Aucun RIB enregistré</Typography>
+          </Grid>
         }
         <Grid>
-          <Grid>
-            <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
-          </Grid>
-          <Grid style={{display: 'flex', alignItems: 'center'}}>
-            <Grid>
-              <IconButton aria-label="add" onClick={this.handleClick}>
-                <AddCircleIcon/>
-              </IconButton>
-            </Grid>
-            <Grid>
-              <Typography>Ajouter un rib</Typography>
-            </Grid>
-          </Grid>
           <Grid>
             <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
           </Grid>
