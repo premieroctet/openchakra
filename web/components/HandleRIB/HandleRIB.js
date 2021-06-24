@@ -43,7 +43,6 @@ class HandleRIB extends React.Component {
     super(props)
     this.state={
       accounts: [],
-      haveAccount: false,
       is_pro: isB2BAdmin(),
       showDeleteRib: false,
       showAddRib: false,
@@ -60,9 +59,7 @@ class HandleRIB extends React.Component {
     axios.get('/myAlfred/api/payment/activeAccount')
       .then(response => {
         let accounts = response.data
-        if (accounts.length) {
-          this.setState({haveAccount: true, accounts: accounts})
-        }
+        this.setState({accounts: accounts})
       })
   }
 
@@ -79,24 +76,23 @@ class HandleRIB extends React.Component {
   };
 
   handleCloseModalAddRib = () => {
-    this.setState({showAddRib: false})
+    this.setState({showAddRib: false, bic: null, iban: null, errors: {}})
   };
 
   handleClose() {
     this.setState({showDeleteRib: false})
   }
 
-  deleteAccount(id) {
-    const data = {
-      id_account: id,
-    }
-    axios.put('/myAlfred/api/payment/account', data)
+  deleteAccount(account_id) {
+    axios.delete(`/myAlfred/api/payment/account/${account_id}`)
       .then(() => {
         snackBarSuccess('Compte bancaire supprimé')
-        this.refresh()
+        this.handleClose()
+        this.componentDidMount()
       })
       .catch(() => {
         snackBarError('Un erreur est survenue')
+        this.handleClose()
       })
 
   }
@@ -217,13 +213,13 @@ class HandleRIB extends React.Component {
     axios.post('/myAlfred/api/payment/bankAccount', data)
       .then(() => {
         snackBarSuccess('RIB ajouté')
+        this.handleCloseModalAddRib()
         this.setState({showAddRib: false})
         axios.get('/myAlfred/api/payment/activeAccount')
           .then(response => {
             let accounts = response.data
-            if (accounts.length) {
-              this.setState({haveAccount: true, accounts: accounts})
-            }
+            this.setState({accounts: accounts})
+            this.componentDidMount()
           })
 
       })
@@ -232,8 +228,8 @@ class HandleRIB extends React.Component {
         try {
           this.setState({errors: err.response.data.errors})
         }
-        catch (err) {
-          console.error(err)
+        catch (err2) {
+          console.error(err2)
         }
       })
   };
@@ -241,7 +237,7 @@ class HandleRIB extends React.Component {
 
   render() {
     const {classes} = this.props
-    const{haveAccount, accounts, is_pro, showAddRib, showDeleteRib, errors} = this.state
+    const{accounts, is_pro, showAddRib, showDeleteRib, errors} = this.state
 
     return(
       <Grid>
@@ -260,7 +256,7 @@ class HandleRIB extends React.Component {
           <Typography
             style={{color: 'rgba(39,37,37,35%)'}}>{is_pro ? 'Renseignez un rib pour permettre à vos collaborateurs le paiement par prélèvement bancaire.' : 'Choisissez le versement directement sur votre compte bancaire.'}</Typography>
         </Grid>
-        {haveAccount ?
+        {accounts.length>0 ?
           <Grid container style={{marginTop: '10vh', display: 'flex', alignItems: 'center'}}>
             <Grid item xl={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <Grid item xl={2} style={{display: 'flex'}}>

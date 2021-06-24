@@ -1,38 +1,31 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const router = express.Router();
-const passport = require('passport');
-const mongoose = require('mongoose');
-const User = require('../../models/User');
-const Company = require('../../models/Company');
-const Booking = require('../../models/Booking');
-const Group = require('../../models/Group');
-const axios = require('axios');
-const _ = require('lodash');
-const moment = require('moment');
-const request = require('request');
-const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay');
-const {maskIban} = require('../../../utils/text');
-var parse = require('url-parse');
-const {inspect} = require('util');
-const {MANGOPAY_ERRORS}=require('../../../utils/mangopay_messages')
-moment.locale('fr');
+const express = require('express')
+const router = express.Router()
+const passport = require('passport')
+const User = require('../../models/User')
+const Company = require('../../models/Company')
+const Booking = require('../../models/Booking')
+const Group = require('../../models/Group')
+const axios = require('axios')
+const moment = require('moment')
+const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay')
+const {maskIban} = require('../../../utils/text')
+const parse = require('url-parse')
+const {inspect} = require('util')
+moment.locale('fr')
 const {isB2BAdmin, isB2BManager, isB2BEmployee, isModeCompany}=require('../../utils/serverContext')
-const {computeUrl} = require('../../../config/config');
-const Router=require('next/router')
-const cors = require('cors')
+const {computeUrl} = require('../../../config/config')
 const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
-router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}));
+router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}))
 
-HOOK_TYPES=
-"PAYIN_NORMAL_CREATED PAYIN_NORMAL_SUCCEEDED PAYIN_NORMAL_FAILED \
+/* eslint-disable no-multi-str */
+HOOK_TYPES = 'PAYIN_NORMAL_CREATED PAYIN_NORMAL_SUCCEEDED PAYIN_NORMAL_FAILED \
 PAYOUT_NORMAL_CREATED PAYOUT_NORMAL_SUCCEEDED PAYOUT_NORMAL_FAILED \
 TRANSFER_NORMAL_CREATED TRANSFER_NORMAL_SUCCEEDED TRANSFER_NORMAL_FAILED \
 PAYIN_REFUND_CREATED PAYIN_REFUND_SUCCEEDED PAYIN_REFUND_FAILED \
 PAYOUT_REFUND_CREATED PAYOUT_REFUND_SUCCEEDED PAYOUT_REFUND_FAILED \
-TRANSFER_REFUND_CREATED TRANSFER_REFUND_SUCCEEDED TRANSFER_REFUND_FAILED".split(' ')
+TRANSFER_REFUND_CREATED TRANSFER_REFUND_SUCCEEDED TRANSFER_REFUND_FAILED'.split(' ')
+/* eslint-enable no-multi-str */
 
 install_hooks(HOOK_TYPES, '/myAlfred/api/payment/hook')
 
@@ -44,10 +37,10 @@ MANGOPAY 3DS schema : https://support.mangopay.com/s/article/How-does-3DS-work-w
 // Create credit card
 // @access public
 router.get('/hook', (req, res) => {
-  var query = parse(req.originalUrl, true).query;
-  console.log(`Got params:${JSON.stringify(query)}`);
-  res.json();
-});
+  let query = parse(req.originalUrl, true).query
+  console.log(`Got params:${JSON.stringify(query)}`)
+  res.json()
+})
 
 // POST /myAlfred/api/payment/createCard
 // Create credit card
@@ -64,39 +57,39 @@ router.post('/createCard', passport.authenticate('jwt', {session: false}), (req,
   const promise = b2b ? Company.findById(req.user.company) : User.findById(req.user.id)
   promise
     .then(entity => {
-      let id_mangopay = entity.id_mangopay;
+      let id_mangopay = entity.id_mangopay
       const {card_number, expiration_date, csv} = req.body
       createCard(id_mangopay, card_number, expiration_date, csv)
-        .then( newCard => {
+        .then(newCard => {
           console.log(`Created card ${newCard.Id}`)
           res.json(newCard)
         })
-        .catch( err => {
+        .catch(err => {
           console.error(`Error creating card:${err}`)
           res.status(404).json({error: err})
         })
     })
     .catch(error => {
-      console.error(error);
-      res.status(404).json({error: error});
-  });
-});
+      console.error(error)
+      res.status(404).json({error: error})
+    })
+})
 
 // POST /myAlfred/api/payment/payIn
 // @access private
 router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const amount = req.body.amount * 100;
-  const fees = req.body.fees * 100;
+  const amount = req.body.amount * 100
+  const fees = req.body.fees * 100
   const returnUrl= `/paymentSuccess?booking_id=${req.body.booking_id}`
 
   const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
 
   promise
     .then(entity => {
-      const id_mangopay = entity.id_mangopay;
+      const id_mangopay = entity.id_mangopay
       mangoApi.Users.getWallets(id_mangopay)
         .then(wallets => {
-          const wallet_id = wallets[0].Id;
+          const wallet_id = wallets[0].Id
           mangoApi.PayIns.create({
             AuthorId: id_mangopay,
             DebitedFunds: {
@@ -117,63 +110,59 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
           })
             .then(payin => {
               Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
-                .then( () => console.log('booking update ok'))
-                .catch( err => console.error(`booking update error:${err}`))
+                .then(() => console.log('booking update ok'))
+                .catch(err => console.error(`booking update error:${err}`))
               console.log(`Created Payin ${JSON.stringify(payin)}`)
-              res.json(payin);
-            });
-        });
+              res.json(payin)
+            })
+        })
     })
     .catch(error => {
-      console.error(error);
-      res.status(404).json({error: err});
-    });
-});
+      console.error(error)
+      return res.status(404).json({error: err})
+    })
+})
 
 // POST /myAlfred/api/payment/refund
 // Set recurrency for card_id
 // @access private
-router.post('/refund', passport.authenticate('b2badmin', {session: false}),(req, res) => {
+router.post('/refund', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   const payInId=req.body.payInId
-  const company_id = req.user.company
   console.log(`Refunding transaction ${payInId}`)
 
   Company.findById(req.user.company)
     .then(entity => {
-      const id_mangopay = entity.id_mangopay;
-      mangoApi.PayIns.createRefund(
-        payInId,
-        { AuthorId: id_mangopay}
-      )
-        .then (refund => {
+      const id_mangopay = entity.id_mangopay
+      mangoApi.PayIns.createRefund(payInId, {AuthorId: id_mangopay})
+        .then(refund => {
           console.log(`refund ok : ${JSON.stringify(refund)}`)
           res.json(refund)
         })
-        .catch (err => {
+        .catch(err => {
           console.error(err)
           res.status(400).json(err)
         })
-      })
-      .catch(err => {
-        console.error(err)
-        res.status(400).json(err)
-      })
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
 })
 
 // POST /myAlfred/api/payment/payInDirect
 // @access private
 router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const amount = req.body.amount * 100;
-  const fees = req.body.fees * 100;
-  const id_card = req.body.id_card;
+  const amount = req.body.amount * 100
+  const fees = req.body.fees * 100
+  const id_card = req.body.id_card
   const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
 
   promise
     .then(entity => {
-      const id_mangopay = entity.id_mangopay;
+      const id_mangopay = entity.id_mangopay
       mangoApi.Users.getWallets(id_mangopay)
         .then(wallets => {
-          const wallet_id = wallets[0].Id;
+          const wallet_id = wallets[0].Id
           mangoApi.PayIns.create({
             AuthorId: id_mangopay,
             DebitedFunds: {
@@ -196,32 +185,31 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
             .then(payin => {
               console.log(`Created Payin ${JSON.stringify(payin)}`)
               Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
-                .then( () => console.log('booking update ok'))
-                .catch( err => console.error(`booking update error:${err}`))
-              return res.json(payin);
+                .then(() => console.log('booking update ok'))
+                .catch(err => console.error(`booking update error:${err}`))
+              return res.json(payin)
             })
             .catch(err => {
               console.error(err)
               return res.status(400).json(err)
             })
-        });
-    });
-
-});
+        })
+    })
+})
 
 // POST /myAlfred/api/payment/bankAccount
 // @access private
 router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const iban = req.body.iban;
-  const bic = req.body.bic;
+  const {iban, bic} = req.body
 
-  User.findById(req.user.id)
-    .then(user => {
-      const id_mangopay = user.id_mangopay;
-      const billing_address = user.billing_address;
-      const address = billing_address.address;
-      const city = billing_address.city;
-      const zip_code = billing_address.zip_code;
+  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+  promise
+    .then(entity => {
+      const id_mangopay = entity.id_mangopay
+      const billing_address = entity.billing_address
+      const address = billing_address.address
+      const city = billing_address.city
+      const zip_code = billing_address.zip_code
 
       const account = {
         OwnerAddress: {
@@ -230,87 +218,86 @@ router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req
           PostalCode: zip_code,
           Country: 'FR',
         },
-        OwnerName: user.firstname + ' ' + user.name,
+        OwnerName: entity.full_name,
 
         IBAN: iban,
         BIC: bic,
         Type: 'IBAN',
-      };
+      }
 
       mangoApi.Users.createBankAccount(id_mangopay, account)
         .then(newAccount => {
-          console.log(`Mango bank account:${JSON.stringify(newAccount)}`);
-          res.json({msg: 'Compte créé'});
+          console.log(`Mango bank account:${JSON.stringify(newAccount)}`)
+          res.json({msg: 'Compte créé'})
         })
         .catch(err => {
-          console.error(`${JSON.stringify(err)}`);
-          errors = {};
+          console.error(`${JSON.stringify(err)}`)
+          errors = {}
           if (err.errors.BIC) {
-            errors['bic'] = 'Le code BIC est incorrect';
+            errors.bic='Le code BIC est incorrect'
           }
           if (err.errors.IBAN) {
-            errors['iban'] = 'Le code IBAN est incorrect';
+            errors.iban='Le code IBAN est incorrect'
           }
-          console.error(`Error:${errors}`);
-          res.status(404).json({errors: errors});
-        });
-
-
+          console.error(`Error:${errors}`)
+          res.status(404).json({errors: errors})
+        })
     })
     .catch(err => {
-      console.error(`Error:${err}`);
-      res.status(404).json({errors: 'Utilisateur non reconnu'});
-    });
-});
+      console.error(`Error:${err}`)
+      res.status(404).json({errors: 'Utilisateur non reconnu'})
+    })
+})
 
 const get_cards = req => {
-  return new Promise( (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
     promise
       .then(entity => {
-        mangoApi.Users.getCards(entity.id_mangopay, {parameters: { per_page: 100}})
+        mangoApi.Users.getCards(entity.id_mangopay, {parameters: {per_page: 100}})
           .then(cards => {
-            cards = cards.filter(c => c.Active)
-            resolve(cards)
+            const active_cards = cards.filter(c => c.Active)
+            resolve(active_cards)
           })
       })
-      .catch (err => {
+      .catch(err => {
         reject(err)
       })
-    }
-  )
+  })
 }
+
 // GET /myAlfred/api/payment/cards
 // View all credit cards for a user
 // @access private
 router.get('/cards', passport.authenticate('jwt', {session: false}), (req, res) => {
   get_cards(req)
-    .then( cards =>{
+    .then(cards => {
       res.json(cards)
     })
-    .catch (err => {
+    .catch(err => {
       console.error(err)
       res.status(400).json(err)
     })
-});
+})
 
 // GET /myAlfred/api/payment/cards
 // View all credit cards for a user
 // @access private
 router.get('/activeCards', passport.authenticate('jwt', {session: false}), (req, res) => {
   get_cards(req)
-    .then( cards =>{
+    .then(result => {
+      let cards=result
       // B2B manager or employee : retain only cards allowed for group
       const group_mode=isB2BManager(req) ? MICROSERVICE_MODE : isB2BEmployee(req) ? CARETAKER_MODE : null
       if (group_mode) {
-        Group.findOne({ members : req.user.id, type: group_mode}, 'cards')
-          .then( group => {
-            cards = cards.filter( c => group.cards.includes(c.Id))
+        Group.findOne({members: req.user.id, type: group_mode}, 'cards')
+          .then(group => {
+            cards = cards.filter(c => group.cards.includes(c.Id))
           })
       }
       res.json(cards)
     })
-    .catch (err => {
+    .catch(err => {
       console.error(err)
       res.status(400).json(err)
     })
@@ -320,109 +307,111 @@ router.get('/activeCards', passport.authenticate('jwt', {session: false}), (req,
 // View bank account for a user
 // @access private
 router.get('/activeAccount', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const allAccount = [];
-  User.findById(req.user.id)
-    .then(user => {
-      const id_mangopay = user.id_mangopay;
-      mangoApi.Users.getBankAccounts(id_mangopay)
+  const allAccount = []
+  const promise = isB2BAdmin(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+  promise
+    .then(entity => {
+      const id_mangopay = entity.id_mangopay
+      consolei.Users.getBankAccounts(id_mangopay)
         .then(accounts => {
           accounts.forEach(a => {
             if (a.Active) {
-              a.IBAN = maskIban(a.IBAN);
-              allAccount.push(a);
+              a.IBAN = maskIban(a.IBAN)
+              allAccount.push(a)
             }
-          });
-          res.json(allAccount);
-        });
+          })
+          res.json(allAccount)
+        })
     })
     .catch(err => {
-      console.error(JSON.stringify(err));
-      res.json([]);
-    });
-});
+      console.error(JSON.stringify(err))
+      res.json([])
+    })
+})
 
 // GET /myAlfred/api/payment/transactions
 // View transaction for a user
 // @access private
 router.get('/payin/:payin_id', passport.authenticate('jwt', {session: false}), (req, res) => {
-    mangoApi.PayIns.get(req.params.payin_id)
-      .then(payin => {
-        console.log(`Got payin:${JSON.stringify(payin)}`)
-        res.json(payin);
-      })
-      .catch(err => {
-        console.error(err)
-        res.json({})
-      })
-});
+  mangoApi.PayIns.get(req.params.payin_id)
+    .then(payin => {
+      console.log(`Got payin:${JSON.stringify(payin)}`)
+      res.json(payin)
+    })
+    .catch(err => {
+      console.error(err)
+      res.json({})
+    })
+})
 
 // PUT /myAlfred/api/payment/account
 // Deactivate an account
 // @access private
-router.put('/account', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const id_account = req.body.id_account;
-  User.findById(req.user.id)
-    .then(user => {
-      const id_mangopay = user.id_mangopay;
-      mangoApi.Users.deactivateBankAccount(id_mangopay, id_account).then(
-        account => {
-          res.status(200).json(account);
-        },
-      ).catch(err => console.error(err));
-    });
-
-});
+router.delete('/account/:account_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const account_id = req.params.account_id
+  const promise = isB2BAdmin(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
+  promise
+    .then(entity => {
+      const id_mangopay = entity.id_mangopay
+      mangoApi.Users.deactivateBankAccount(id_mangopay, account_id)
+        .then(account => {
+          res.json(account)
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(400).json(err)
+        })
+    })
+})
 
 // PUT /myAlfred/api/payment/cards
 // Deactivate a card
 // @access private
 router.put('/cards', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const id_card = req.body.id_card;
+  const id_card = req.body.id_card
   mangoApi.Cards.update({Id: id_card, Active: false})
-    .then( () => {
+    .then(() => {
       return res.json(id_card)
     })
-    .catch( err => {
+    .catch(err => {
       console.error(err)
       return res.status(400).json(err)
     })
-});
+})
 
 // GET /myAlfred/api/payment/siret/{no_siret_or_siren}
 // Get document for siret orsiren
 // @access public
 router.get('/siret/:siret_siren', (req, res) => {
 
-  var siren = req.params.siret_siren.substring(0, 9);
-  console.log(`siren:${siren}`);
-  siren = `${siren.substring(0, 3)} ${siren.substring(3, 6)} ${siren.substring(6, 9)}`;
+  let siren = req.params.siret_siren.substring(0, 9)
+  console.log(`siren:${siren}`)
+  siren = `${siren.substring(0, 3)} ${siren.substring(3, 6)} ${siren.substring(6, 9)}`
   data = {
     'form.siren': siren,
     'form.critere': 'S',
     'form.nic': '',
     'form.departement': '',
     'form.departement_actif': '',
-  };
+  }
 
-  const transport = axios.create({withCredentials: true});
+  const transport = axios.create({withCredentials: true})
   transport.get('https://avis-situation-sirene.insee.fr/')
     .catch(err => {
-      console.error(err);
-      res.status(404).json(err);
-      return;
+      console.error(err)
+      return res.status(404).json(err)
     })
-    .then(resp => {
+    .then(() => {
       transport.post('https://avis-situation-sirene.insee.fr/IdentificationListeSiret.action', data)
         .catch(err => {
-          res.status(404).json(err);
-          return;
+          return res.status(404).json(err)
         })
         .then(resp => {
-          console.log(inspect(resp));
-          res.write(resp.data);
+          console.log(inspect(resp))
+          res.write(resp.data)
         })
     })
-});
+})
 
 
-module.exports = router;
+module.exports = router

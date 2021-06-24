@@ -110,6 +110,16 @@ const createOrUpdateMangoCompany = company => {
   }
 
   console.log(`Creating/updating mango company for company ${company.name}, representative is ${company.representative.full_name}`);
+
+  var address=new mangoApi.models.Address({
+      AddressLine1: company.billing_address.address,
+      AddressLine2: '',
+      City: company.billing_address.city,
+      Region: '',
+      PostalCode: company.billing_address.zip_code,
+      Country: 'FR',
+  })
+
   var companyData = {
     PersonType: PersonType.Legal,
     Name: company.name,
@@ -118,15 +128,9 @@ const createOrUpdateMangoCompany = company => {
     LegalRepresentativeFirstName: company.representative.firstname,
     LegalRepresentativeLastName: company.representative.name,
     LegalRepresentativeEmail: company.representative.email,
-    HeadquartersAddress: new mangoApi.models.Address({
-        AddressLine1: company.billing_address.address,
-        AddressLine2: '',
-        City: company.billing_address.city,
-        Region: '',
-        PostalCode: company.billing_address.zip_code,
-        Country: 'FR',
-    }),
+    HeadquartersAddress: address,
     LegalRepresentativeBirthday: moment(company.representative.birthday).unix(),
+    LegalRepresentativeAddress: address,
     LegalRepresentativeNationality: 'FR',
     LegalRepresentativeCountryOfResidence: 'FR',
     CompanyNumber: company.siret,
