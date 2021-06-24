@@ -1,59 +1,59 @@
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React, {Component} from 'react';
-import Button from '@material-ui/core/Button';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import Router from 'next/router';
-import Grid from '@material-ui/core/Grid';
-import MultipleSelect from "react-select";
-import moment from "moment";
-import LogIn from '../../../components/LogIn/LogIn';
-import Register from '../../../components/Register/Register';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import Slide from '@material-ui/core/Slide';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import CloseIcon from '@material-ui/icons/Close';
-import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AlgoliaPlaces from 'algolia-places-react';
-import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n';
-import DatePicker from "react-datepicker";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import React, {Component} from 'react'
+import Button from '@material-ui/core/Button'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import MenuItem from '@material-ui/core/MenuItem'
+import Menu from '@material-ui/core/Menu'
+import Router from 'next/router'
+import Grid from '@material-ui/core/Grid'
+import MultipleSelect from 'react-select'
+import moment from 'moment'
+import LogIn from '../../../components/LogIn/LogIn'
+import Register from '../../../components/Register/Register'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import Slide from '@material-ui/core/Slide'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import CloseIcon from '@material-ui/icons/Close'
+import Paper from '@material-ui/core/Paper'
+import Divider from '@material-ui/core/Divider'
+import MenuIcon from '@material-ui/icons/Menu'
+import SearchIcon from '@material-ui/icons/Search'
+import AlgoliaPlaces from 'algolia-places-react'
+import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n'
+import DatePicker from 'react-datepicker'
+import TextField from '@material-ui/core/TextField'
+import Select from '@material-ui/core/Select'
+import FormControl from '@material-ui/core/FormControl'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 import axios from 'axios'
-import withStyles from "@material-ui/core/styles/withStyles";
-import styles from '../../../static/css/components/NavBar/NavBar';
-import {Typography} from '@material-ui/core';
-import TuneIcon from '@material-ui/icons/Tune';
-import InputLabel from '@material-ui/core/InputLabel';
-import DialogActions from "@material-ui/core/DialogActions";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import {DateRangePicker} from "react-dates";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import ClearIcon from "@material-ui/icons/Clear";
-import {isB2BDisabled} from "../../../config/config";
-import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeStatusRegister, setStatusRegister, getRole} from "../../../utils/context";
-const {emptyPromise} = require('../../../utils/promise.js');
-const {formatAddress} = require('../../../utils/text.js');
-import Slider from '@material-ui/core/Slider';
+import withStyles from '@material-ui/core/styles/withStyles'
+import styles from '../../../static/css/components/NavBar/NavBar'
+import {Typography} from '@material-ui/core'
+import TuneIcon from '@material-ui/icons/Tune'
+import InputLabel from '@material-ui/core/InputLabel'
+import DialogActions from '@material-ui/core/DialogActions'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
+import {DateRangePicker} from 'react-dates'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import ClearIcon from '@material-ui/icons/Clear'
+import {isB2BDisabled} from '../../../config/config'
+import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeStatusRegister, setStatusRegister, getRole} from '../../../utils/context'
+const {emptyPromise} = require('../../../utils/promise.js')
+const {formatAddress} = require('../../../utils/text.js')
+import Slider from '@material-ui/core/Slider'
 const {PRO, PART, EMPLOYEE}=require('../../../utils/consts')
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => {
+  return <Slide direction="up" ref={ref} {...props} />
+})
 
-const DialogTitle = withStyles(styles)((props) => {
-  const {children, classes, onClose, ...other} = props;
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
@@ -63,8 +63,8 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
 
 class NavBar extends Component {
@@ -130,10 +130,10 @@ class NavBar extends Component {
         const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
         promise
           .then(res => {
-            var allAddresses = {'main': res.data.billing_address};
+            let allAddresses = {'main': res.data.billing_address}
             res.data.service_address.forEach(addr => {
               allAddresses[addr._id] = addr
-            });
+            })
             this.setState({allAddresses: allAddresses})
           })
       })
@@ -168,45 +168,47 @@ class NavBar extends Component {
     removeStatusRegister()
     if (this.state.ifHomePage) {
       window.location.reload(false)
-    } else {
+    }
+    else {
       Router.push('/')
     }
   };
 
   handleMenuClose = () => {
-    this.setState({anchorEl: null, anchorElB2b: null});
+    this.setState({anchorEl: null, anchorElB2b: null})
   };
 
-  handleOpenLogin = (e) => {
-    this.handleMenuClose();
-    removeStatusRegister();
-    this.setState({setOpenLogin: true, setOpenRegister: null});
+  handleOpenLogin = () => {
+    this.handleMenuClose()
+    removeStatusRegister()
+    this.setState({setOpenLogin: true, setOpenRegister: null})
   };
 
   handleCloseLogin = () => {
-    this.setState({setOpenLogin: false});
+    this.setState({setOpenLogin: false})
   };
 
-  handleOpenRegister = (user_id) => {
-    this.handleMenuClose();
-    this.setState({setOpenRegister: user_id, setOpenLogin: false});
+  handleOpenRegister = user_id => {
+    this.handleMenuClose()
+    this.setState({setOpenRegister: user_id, setOpenLogin: false})
   };
 
   handleCloseRegister = () => {
     if (this.state.activeStep === 2) {
       removeStatusRegister()
-      this.setState({setOpenRegister: null}, () => Router.push('/search?search=1'));
-    } else {
+      this.setState({setOpenRegister: null}, () => Router.push('/search?search=1'))
+    }
+    else {
       removeStatusRegister()
-      this.setState({setOpenRegister: null});
+      this.setState({setOpenRegister: null})
     }
   };
 
   needRefresh = () => {
-    this.setState({setOpenLogin: false});
+    this.setState({setOpenLogin: false})
     const path = localStorage.getItem('path')
     if (path) {
-      localStorage.removeItem('path');
+      localStorage.removeItem('path')
       Router.push(path)
     }
     else if (!isLoggedUserRegistered() && getRole()==EMPLOYEE) {
@@ -216,37 +218,38 @@ class NavBar extends Component {
     }
     // Alfred pro && b2b_site => on redirige vers le profil
     else if (isB2BStyle() && isLoggedUserAlfredPro()) {
-      Router.push( `/profile/about?user=${getLoggedUserId()}`)
+      Router.push(`/profile/about?user=${getLoggedUserId()}`)
     }
     else if (isB2BAdmin()) {
-      Router.push( `/company/dashboard/companyDashboard`)
+      Router.push('/company/dashboard/companyDashboard')
     }
     else {
-      Router.push('/search?search=1');
+      Router.push('/search?search=1')
     }
   };
 
-  getData = (e) => {
-    this.setState({activeStep: e});
+  getData = e => {
+    this.setState({activeStep: e})
   };
 
   onSuggestions = ({query}) => {
-    this.setState({city: query});
+    this.setState({city: query})
   };
 
   onChange = e => {
-    let {name, value} = e.target;
-    this.setState({[name]: value});
+    let {name, value} = e.target
+    this.setState({[name]: value})
     if (name === 'selectedAddress') {
       if (value === 'addAddress') {
-        Router.push('/account/myAddresses');
-      } else {
+        Router.push('/account/myAddresses')
+      }
+      else {
         this.setState({
-          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses['main'].gps : {
+          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses.main.gps : {
             lat: this.state.allAddresses[value].lat,
             lng: this.state.allAddresses[value].lng,
           },
-        });
+        })
       }
     }
   };
@@ -254,24 +257,24 @@ class NavBar extends Component {
   onCategoriesFilterChanged = categories => {
     categories = categories || []
     const filteredServices=this.state.allServices.filter(s => {
-      return categories.map(c=>c.value).includes(s.category)
+      return categories.map(c => c.value).includes(s.category)
     })
     const services=this.state.services.filter(s => {
-      return filteredServices.map(fs=>fs.value).includes(s._id)
+      return filteredServices.map(fs => fs.value).includes(s._id)
     })
-    this.setState({categories: categories, filteredServices: filteredServices, services: services});
+    this.setState({categories: categories, filteredServices: filteredServices, services: services})
   };
 
   onServicesFilterChanged = services => {
     services = services || []
-    this.setState({services: services || []});
+    this.setState({services: services || []})
   };
 
-  handleOpenMenuItem = (event) => {
+  handleOpenMenuItem = event => {
     this.setState({anchorEl: event.currentTarget})
   };
 
-  handleOpenMenuItemB2b = (event) => {
+  handleOpenMenuItemB2b = event => {
     this.setState({anchorElB2b: event.currentTarget})
   };
 
@@ -284,7 +287,7 @@ class NavBar extends Component {
   };
 
   fireFilter = () => {
-    var fltr={}
+    let fltr={}
     if (this.state.proSelected) {
       fltr.proSelected = true
     }
@@ -314,66 +317,66 @@ class NavBar extends Component {
   }
 
   findService = () => {
-    var queryParams = {search: 1};
+    let queryParams = {search: 1}
     if (this.state.keyword) {
-      queryParams['keyword'] = this.state.keyword;
+      queryParams.keyword = this.state.keyword
     }
 
     if (this.state.city) {
-      queryParams['city'] = this.state.city;
+      queryParams.city = this.state.city
     }
 
     if (this.state.gps) {
-      queryParams['gps'] = JSON.stringify(this.state.gps);
+      queryParams.gps = JSON.stringify(this.state.gps)
     }
 
     if (this.state.selectedAddress) {
-      queryParams['selectedAddress'] = this.state.selectedAddress
+      queryParams.selectedAddress = this.state.selectedAddress
     }
-    Router.push({pathname: '/search', query: queryParams});
+    Router.push({pathname: '/search', query: queryParams})
   };
 
   onChangeCity({suggestion}) {
-    this.setState({gps: suggestion.latlng, city: suggestion.name});
-  };
+    this.setState({gps: suggestion.latlng, city: suggestion.name})
+  }
 
   statusFilterChanged = event => {
-    this.setState({[event.target.name]: event.target.checked});
+    this.setState({[event.target.name]: event.target.checked})
   };
 
   onLocationFilterChanged = event => {
     const {name, checked} = event.target
-    var {locations} = this.state
+    let {locations} = this.state
     if (checked) {
       locations = _.uniq(locations.concat(name))
     }
     else {
-      locations = locations.filter( l => l!=name)
+      locations = locations.filter(l => l!=name)
     }
     this.setState({locations: locations})
   };
 
   onChangeInterval(startDate, endDate) {
     if (startDate) {
-      startDate.hour(0).minute(0).second(0).millisecond(0);
+      startDate.hour(0).minute(0).second(0).millisecond(0)
     }
 
     if (endDate) {
-      endDate.hour(23).minute(59).second(59).millisecond(999);
+      endDate.hour(23).minute(59).second(59).millisecond(999)
     }
 
-    this.setState({startDate: startDate, endDate: endDate});
+    this.setState({startDate: startDate, endDate: endDate})
   }
 
   onRadiusFilterChanged = (event, value) => {
-    this.setState({radius: value});
+    this.setState({radius: value})
   };
 
   handleModalSearchBarInput = () => {
     this.setState({modalMobileSearchBarInput: true})
   };
 
-  mobileSearchBarInput = (classes) => {
+  mobileSearchBarInput = classes => {
     return (
       <Grid
         style={{width: '100%'}}
@@ -390,7 +393,7 @@ class NavBar extends Component {
                 <SearchIcon/>
               </IconButton>
             </Grid>
-            <Grid item xs={10} style={{display:'flex', alignItems: 'center'}}>
+            <Grid item xs={10} style={{display: 'flex', alignItems: 'center'}}>
               <Typography style={{marginLeft: '2vh'}}>Commencez votre recherche</Typography>
             </Grid>
           </Grid>
@@ -399,7 +402,7 @@ class NavBar extends Component {
     )
   };
 
-  modalMobileSearchBarInput = (classes) => {
+  modalMobileSearchBarInput = classes => {
 
     return (
       <SwipeableDrawer
@@ -411,7 +414,7 @@ class NavBar extends Component {
           mobileStepSearch: 0,
           keyword: null,
           city: undefined,
-          gps: ''
+          gps: '',
         })}
         className={classes.drawerStyle}
       >
@@ -426,7 +429,7 @@ class NavBar extends Component {
                   mobileStepSearch: 0,
                   keyword: null,
                   city: undefined,
-                  gps: ''
+                  gps: '',
                 })}>
                 <ClearIcon/>
               </IconButton>
@@ -445,8 +448,8 @@ class NavBar extends Component {
                     onChange={this.onChange}
                     name={'keyword'}
                     label={'Ménage, jardinage, ...'}
-                    onKeyPress={(e) => {
-                      e.key === 'Enter' && e.preventDefault();
+                    onKeyPress={e => {
+                      e.key === 'Enter' && e.preventDefault()
                     }}
                     variant="outlined"
                     style={{width: '100%'}}
@@ -460,14 +463,14 @@ class NavBar extends Component {
                         id="outlined-select-currency"
                         value={this.state.selectedAddress || 'main'}
                         name={'selectedAddress'}
-                        onChange={(e) => {
-                          this.onChange(e);
+                        onChange={e => {
+                          this.onChange(e)
                         }}
                         classes={{selectMenu: classes.fitlerMenuLogged}}
                       >
                         {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                           <MenuItem value={_id} key={index}>
-                            { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
+                            { _id=='main' ? 'Adresse principale' : `${value.label }, `} {formatAddress(value)}
                           </MenuItem>
                         ))}
                         <MenuItem value={'all'}>
@@ -482,7 +485,7 @@ class NavBar extends Component {
                     </FormControl>
                   </Grid>
                   :
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  classes={{root: classes.navbarRootTextFieldWhereP}}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhereP}}>
                     <AlgoliaPlaces
                       placeholder={SEARCHBAR.where}
                       options={{
@@ -492,7 +495,7 @@ class NavBar extends Component {
                         countries: ['fr'],
                         type: 'city',
                       }}
-                      onChange={(suggestion) => this.onChangeCity(suggestion)}
+                      onChange={suggestion => this.onChangeCity(suggestion)}
                       onClear={() => this.setState({city: '', gps: null})}
                     />
                   </Grid>
@@ -501,7 +504,7 @@ class NavBar extends Component {
           <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '90%'}}>
               <Button
-                onClick={() => this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService()}
+                onClick={() => (this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService())}
                 color={'primary'} classes={{root: classes.buttonNextRoot}}
                 variant={'contained'}>{this.state.mobileStepSearch === 0 ? 'Suivant' : 'Rechercher'}
               </Button>
@@ -512,7 +515,7 @@ class NavBar extends Component {
     )
   };
 
-  mobileSearchBarInputSearchPage = (classes) => {
+  mobileSearchBarInputSearchPage = classes => {
     return (
       <Grid className={classes.navbarSearchContainerSearchPage}>
         <Paper classes={{root: classes.navbarSearch}}>
@@ -527,14 +530,14 @@ class NavBar extends Component {
                 <SearchIcon/>
               </IconButton>
             </Grid>
-            <Grid item xs={8} onClick={this.handleModalSearchBarInput} style={{cursor: 'pointer', display: 'flex', alignItems:'center' }}>
+            <Grid item xs={8} onClick={this.handleModalSearchBarInput} style={{cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
               <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '2vh'}}>Commencez votre recherche</Typography>
             </Grid>
             <Grid container item xs={2} style={{margin: 0, width: '100%'}}>
               <Grid item xs={1}>
                 <Divider orientation="vertical"/>
               </Grid>
-              <Grid item xs={11} style={{display:'flex', justifyContent: 'center'}}>
+              <Grid item xs={11} style={{display: 'flex', justifyContent: 'center'}}>
                 <IconButton color="primary" aria-label="directions" onClick={() => this.setState({modalFilters: true})}>
                   <TuneIcon/>
                 </IconButton>
@@ -546,7 +549,7 @@ class NavBar extends Component {
     )
   };
 
-    modalMobileFilter = (classes) => {
+    modalMobileFilter = classes => {
       const {locations, radius, categories, allCategories, services, filteredServices} = this.state
       return (
         <Dialog
@@ -555,161 +558,161 @@ class NavBar extends Component {
           open={this.state.modalFilters}
           classes={{paper: classes.dialogNavbarMobileFilter}}
         >
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
+          <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
           Filtres
-        </DialogTitle>
-        <DialogContent dividers>
-          <Grid>
+          </DialogTitle>
+          <DialogContent dividers>
             <Grid>
               <Grid>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={this.state.proSelected}
-                      onChange={e => {
-                        this.statusFilterChanged(e);
-                      }}
-                      value={this.state.proSelected}
-                      color="primary"
-                      name={'proSelected'}
-                    />
-                  }
-                  label="Pro"
+                <Grid>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={this.state.proSelected}
+                        onChange={e => {
+                          this.statusFilterChanged(e)
+                        }}
+                        value={this.state.proSelected}
+                        color="primary"
+                        name={'proSelected'}
+                      />
+                    }
+                    label="Pro"
+                  />
+                </Grid>
+                <Grid>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={this.state.individualSelected}
+                        onChange={this.statusFilterChanged}
+                        value={this.state.individualSelected}
+                        color="primary"
+                        name={'individualSelected'}
+                      />
+                    }
+                    label="Particulier"
+                  />
+                </Grid>
+              </Grid>
+              <Grid>
+                <Divider style={{width: '100%', marginTop: '2vh', marginBottom: '2vh'}}/>
+              </Grid>
+              <Grid>
+                <DateRangePicker
+                  startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+                  startDatePlaceholderText={'Début'}
+                  startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                  endDatePlaceholderText={'Fin'}
+                  endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+                  endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                  onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
+                  focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                  onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
+                  minimumNights={0}
+                  numberOfMonths={1}
+                />
+              </Grid>
+              <Grid>
+                <Slider
+                  name="radius"
+                  min={5}
+                  max={300}
+                  step={null}
+                  value={radius}
+                  valueLabelDisplay="auto"
+                  marks={this.radius_marks}
+                  onChange={this.onRadiusFilterChanged}
                 />
               </Grid>
               <Grid>
                 <FormControlLabel
+                  classes={{root: classes.filterMenuControlLabel}}
                   control={
                     <Switch
-                      checked={this.state.individualSelected}
-                      onChange={this.statusFilterChanged}
-                      value={this.state.individualSelected}
+                      checked={locations.includes('client')}
+                      onChange={this.onLocationFilterChanged}
                       color="primary"
-                      name={'individualSelected'}
+                      name={'client'}
                     />
                   }
-                  label="Particulier"
+                  label="Chez moi"
+                />
+                <FormControlLabel
+                  classes={{root: classes.filterMenuControlLabel}}
+                  control={
+                    <Switch
+                      checked={locations.includes('alfred')}
+                      onChange={this.onLocationFilterChanged}
+                      color="primary"
+                      name={'alfred'}
+                    />
+                  }
+                  label="Chez l'Alfred"
+                />
+                <FormControlLabel
+                  classes={{root: classes.filterMenuControlLabel}}
+                  control={
+                    <Switch
+                      checked={locations.includes('visio')}
+                      onChange={this.onLocationFilterChanged}
+                      color="primary"
+                      name={'visio'}
+                    />
+                  }
+                  label="En visio"
                 />
               </Grid>
             </Grid>
-            <Grid>
-              <Divider style={{width: '100%', marginTop: '2vh', marginBottom: '2vh'}}/>
-            </Grid>
-            <Grid>
-              <DateRangePicker
-                startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                startDatePlaceholderText={'Début'}
-                startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                endDatePlaceholderText={'Fin'}
-                endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-                endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
-                focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
-                minimumNights={0}
-                numberOfMonths={1}
+            <Grid className={classes.filterMenuContentMainStyleDateFilter}>
+              <MultipleSelect
+                key={moment()}
+                value={categories}
+                onChange={this.onCategoriesFilterChanged}
+                options={allCategories}
+                isMulti
+                isSearchable
+                closeMenuOnSelect={true}
+                placeholder={SEARCHBAR.labelCategory}
               />
             </Grid>
-            <Grid>
-              <Slider
-                name="radius"
-                min={5}
-                max={300}
-                step={null}
-                value={radius}
-                valueLabelDisplay="auto"
-                marks={this.radius_marks}
-                onChange={this.onRadiusFilterChanged}
+            <Grid className={classes.filterMenuContentMainStyleDateFilter}>
+              <MultipleSelect
+                key={moment()}
+                value={services}
+                onChange={this.onServicesFilterChanged}
+                options={filteredServices}
+                isMulti
+                isSearchable
+                closeMenuOnSelect={true}
+                placeholder={SEARCHBAR.labelService}
               />
             </Grid>
-            <Grid>
-            <FormControlLabel
-              classes={{root: classes.filterMenuControlLabel}}
-              control={
-                <Switch
-                  checked={locations.includes('client')}
-                  onChange={this.onLocationFilterChanged}
-                  color="primary"
-                  name={'client'}
-                />
-              }
-              label="Chez moi"
-            />
-            <FormControlLabel
-              classes={{root: classes.filterMenuControlLabel}}
-              control={
-                <Switch
-                  checked={locations.includes('alfred')}
-                  onChange={this.onLocationFilterChanged}
-                  color="primary"
-                  name={'alfred'}
-                />
-              }
-              label="Chez l'Alfred"
-            />
-            <FormControlLabel
-              classes={{root: classes.filterMenuControlLabel}}
-              control={
-                <Switch
-                  checked={locations.includes('visio')}
-                  onChange={this.onLocationFilterChanged}
-                  color="primary"
-                  name={'visio'}
-                />
-              }
-              label="En visio"
-            />
-            </Grid>
-          </Grid>
-          <Grid className={classes.filterMenuContentMainStyleDateFilter}>
-            <MultipleSelect
-              key={moment()}
-              value={categories}
-              onChange={this.onCategoriesFilterChanged}
-              options={allCategories}
-              isMulti
-              isSearchable
-              closeMenuOnSelect={true}
-              placeholder={SEARCHBAR.labelCategory}
-            />
-          </Grid>
-          <Grid className={classes.filterMenuContentMainStyleDateFilter}>
-            <MultipleSelect
-              key={moment()}
-              value={services}
-              onChange={this.onServicesFilterChanged}
-              options={filteredServices}
-              isMulti
-              isSearchable
-              closeMenuOnSelect={true}
-              placeholder={SEARCHBAR.labelService}
-            />
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            autoFocus
-            onClick={() => {
-              this.setState({modalFilters: false});
-              this.fireFilter()
-            }}
-            color="primary"
-          >
+          </DialogContent>
+          <DialogActions>
+            <Button
+              autoFocus
+              onClick={() => {
+                this.setState({modalFilters: false})
+                this.fireFilter()
+              }}
+              color="primary"
+            >
             Afficher les résultats
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  };
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )
+    };
 
-  handleChange = (e) =>{
+  handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
-    });
+    })
   }
 
-  burgerMenuLogged = (classes) =>{
-    const{ifHomePage, companyPage, anchorEl, user} = this.state;
+  burgerMenuLogged = classes => {
+    const{ifHomePage, companyPage, anchorEl, user} = this.state
 
     return(
       <Grid
@@ -745,18 +748,18 @@ class NavBar extends Component {
                   user.is_alfred ?
                     <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>Mes services</MenuItem>
                     :
-                    <MenuItem onClick={() => Router.push(`/creaShop/creaShop`)}>Proposer mes services</MenuItem>
+                    <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>Proposer mes services</MenuItem>
                   : null
               }
               <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>Mes messages</MenuItem>
-              <MenuItem onClick={()=>Router.push(`/reservations/reservations`)}>Mes réservations</MenuItem>
+              <MenuItem onClick={() => Router.push('/reservations/reservations')}>Mes réservations</MenuItem>
               {user.is_admin ?
-                <MenuItem onClick={() =>Router.push(`/dashboard/home`)}>Dashboard My Alfred</MenuItem>
+                <MenuItem onClick={() => Router.push('/dashboard/home')}>Dashboard My Alfred</MenuItem>
                 : null
               }
               {isB2BAdmin(user) ?
-                <MenuItem onClick={()=> Router.push(`/company/dashboard/companyDashboard`)}>Dashboard</MenuItem>
-               : null
+                <MenuItem onClick={() => Router.push('/company/dashboard/companyDashboard')}>Dashboard</MenuItem>
+                : null
               }
               <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
             </Grid>
@@ -768,8 +771,8 @@ class NavBar extends Component {
     )
   }
 
-  notLoggedButtonSection = (classes) =>{
-    const{ifHomePage, user} = this.state;
+  notLoggedButtonSection = classes => {
+    const{ifHomePage, user} = this.state
 
     const logged = user != null
 
@@ -790,7 +793,7 @@ class NavBar extends Component {
             {NAVBAR_MENU.signIn}
           </Button>
         </Grid>
-        <Grid  className={classes.navbarRegisterContainer}>
+        <Grid className={classes.navbarRegisterContainer}>
           <Button
             classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
             onClick={this.handleOpenLogin}>
@@ -801,13 +804,13 @@ class NavBar extends Component {
     )
   }
 
-  checkAndOpenRegister = () =>{
+  checkAndOpenRegister = () => {
     setStatusRegister()
-    this.handleOpenRegister(true);
+    this.handleOpenRegister(true)
   };
 
-  notLoggedButtonSectionB2b = (classes) =>{
-    const{ifHomePage, user, anchorElB2b} = this.state;
+  notLoggedButtonSectionB2b = classes => {
+    const{ifHomePage, user, anchorElB2b} = this.state
 
     const logged = user != null
 
@@ -825,7 +828,7 @@ class NavBar extends Component {
             aria-label="open drawer"
             onClick={this.handleOpenMenuItemB2b}
           >
-            <MenuIcon style={{color: "white"}}/>
+            <MenuIcon style={{color: 'white'}}/>
           </IconButton>
           <Menu
             id="simple-menu"
@@ -897,9 +900,9 @@ class NavBar extends Component {
     )
   }
 
-  searchBarInput = (classes) => {
+  searchBarInput = classes => {
     const logged = this.state.user != null
-    const {ifHomePage, user} = this.state;
+    const {ifHomePage, user} = this.state
 
 
     return (
@@ -925,9 +928,9 @@ class NavBar extends Component {
                   onChange={this.onChange}
                   name={'keyword'}
                   label={ifHomePage ? SEARCHBAR.labelWhat : ''}
-                  onKeyPress={(e) => {
+                  onKeyPress={e => {
                     if (e.key === 'Enter') {
-                      e.preventDefault();
+                      e.preventDefault()
                       this.findService()
                     }
                   }}
@@ -937,7 +940,7 @@ class NavBar extends Component {
                   InputProps={{disableUnderline: true}}
                 />
               </Grid>
-              <Grid  item xl={1} lg={1} sm={1} md={1} xs={1}>
+              <Grid item xl={1} lg={1} sm={1} md={1} xs={1}>
                 <Divider orientation="vertical"/>
               </Grid>
             </Grid>
@@ -955,14 +958,14 @@ class NavBar extends Component {
                       id="outlined-select-currency"
                       value={this.state.selectedAddress || 'main'}
                       name={'selectedAddress'}
-                      onChange={(e) => {
-                        this.onChange(e);
+                      onChange={e => {
+                        this.onChange(e)
                       }}
-                     style={{marginTop: this.state.ifHomePage ? 20 : 10}}
+                      style={{marginTop: this.state.ifHomePage ? 20 : 10}}
                     >
                       {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                         <MenuItem value={_id} key={index}>
-                          { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
+                          { _id=='main' ? 'Adresse principale' : `${value.label }, `} {formatAddress(value)}
                         </MenuItem>
                       ))}
                       <MenuItem value={'all'}>
@@ -975,42 +978,42 @@ class NavBar extends Component {
                       </MenuItem>
                     </Select>
                   </FormControl>
-              </Grid>
-              :
-              <Grid
-                container
-                spacing={1}
-                style={{margin: 0, width: '100%'}}
-                item
-                xl={!logged ? !ifHomePage ? 6 : 4 : 5}
-                lg={!logged ? !ifHomePage ? 6 : 4 : 5}
-                sm={!logged ? !ifHomePage ? 6 : 4 : 5}
-                md={!logged ? !ifHomePage ? 6 : 4 : 5}
-                xs={!logged ? !ifHomePage ? 6 : 4 : 5}
-              >
-                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%', display: 'flex', alignItems:'center'}} >
-                  {
-                    this.state.ifHomePage ?
-                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <InputLabel shrink>{SEARCHBAR.labelWhere}</InputLabel>
-                      </Grid> : null
-                  }
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  classes={{root: classes.navbarRootTextFieldWhere}}>
-                    <AlgoliaPlaces
-                      placeholder={SEARCHBAR.where}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'city',
-                      }}
-                      onChange={(suggestion) => this.onChangeCity(suggestion)}
-                      onClear={() => this.setState({city: '', gps: null})}
-                    />
+                </Grid>
+                :
+                <Grid
+                  container
+                  spacing={1}
+                  style={{margin: 0, width: '100%'}}
+                  item
+                  xl={!logged ? !ifHomePage ? 6 : 4 : 5}
+                  lg={!logged ? !ifHomePage ? 6 : 4 : 5}
+                  sm={!logged ? !ifHomePage ? 6 : 4 : 5}
+                  md={!logged ? !ifHomePage ? 6 : 4 : 5}
+                  xs={!logged ? !ifHomePage ? 6 : 4 : 5}
+                >
+                  <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%', display: 'flex', alignItems: 'center'}} >
+                    {
+                      this.state.ifHomePage ?
+                        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                          <InputLabel shrink>{SEARCHBAR.labelWhere}</InputLabel>
+                        </Grid> : null
+                    }
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhere}}>
+                      <AlgoliaPlaces
+                        placeholder={SEARCHBAR.where}
+                        options={{
+                          appId: 'plKATRG826CP',
+                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                          language: 'fr',
+                          countries: ['fr'],
+                          type: 'city',
+                        }}
+                        onChange={suggestion => this.onChangeCity(suggestion)}
+                        onClear={() => this.setState({city: '', gps: null})}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
             }
             {
               logged === false && this.state.ifHomePage ?
@@ -1018,22 +1021,22 @@ class NavBar extends Component {
                   <Grid item xl={1} lg={1} sm={1} md={1} xs={1}>
                     <Divider orientation="vertical"/>
                   </Grid>
-                  <Grid  item xl={11} lg={11} sm={11} md={11} xs={11}>
+                  <Grid item xl={11} lg={11} sm={11} md={11} xs={11}>
                     <TextField
                       label={this.state.ifHomePage ? SEARCHBAR.labelWhen : false}
                       InputLabelProps={{
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent: (inputref) => {
+                        inputComponent: inputref => {
                           return (
                             <DatePicker
                               {...inputref}
                               selected={this.state.dateSelected}
-                              onChange={(date) => {
-                                this.setState({dateSelected: date});
+                              onChange={date => {
+                                this.setState({dateSelected: date})
                                 if (date === null) {
-                                  this.setState({dateSelected: ''});
+                                  this.setState({dateSelected: ''})
                                 }
                               }}
                               locale='fr'
@@ -1043,12 +1046,12 @@ class NavBar extends Component {
                               minDate={new Date()}
                             />)
                         },
-                        disableUnderline: true
+                        disableUnderline: true,
                       }}
                     />
                   </Grid>
                 </Grid> : null
-              }
+            }
             <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', alignItems: 'center'}}>
               <IconButton
                 classes={{root: classes.iconButton}}
@@ -1064,34 +1067,34 @@ class NavBar extends Component {
     )
   };
 
-  triggerLogin = () =>{
+  triggerLogin = () => {
     return (
       <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={'connect'} />
-    );
+    )
   }
 
-  logoContainer = (classes) =>{
-    const{ifHomePage, user} = this.state;
+  logoContainer = classes => {
+    const{ifHomePage, user} = this.state
     const logged = user != null
 
     return(
       <Grid
-        className={ifHomePage ?  classes.navbarLogoContainer : classes.navbarLogoContainerP}
+        className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP}
         item
         xl={ifHomePage ? 3 : 4}
-        lg={isB2BStyle(user) && ifHomePage ? 2 : isB2BStyle(user) && !ifHomePage && !logged? 2 :  3}
+        lg={isB2BStyle(user) && ifHomePage ? 2 : isB2BStyle(user) && !ifHomePage && !logged? 2 : 3}
         md={!logged && !ifHomePage ? 3 : 2}
         sm={1}
         onClick={() => Router.push('/')}
       >
         <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
-             className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
+          className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
       </Grid>
     )
   };
 
-  tabBar = (classes) =>{
-    const{user}= this.state;
+  tabBar = classes => {
+    const{user}= this.state
 
     return(
       <Grid
@@ -1104,24 +1107,24 @@ class NavBar extends Component {
       >
         <Tabs value={false} aria-label="simple tabs example">
           {
-            getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
+            getLoggedUserId() && !isLoggedUserAlfredPro() ? null:
               isB2BStyle() ?
                 <>
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    label={"Services aux entreprises"}
-                    onClick={() => Router.push("/blog/elementor-211/")}
+                    label={'Services aux entreprises'}
+                    onClick={() => Router.push('/blog/elementor-211/')}
                   />
-                    <Tab
-                      classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                      label={"Services aux collaborateurs"}
-                      onClick={() => Router.push("/blog/services-aux-collaborateurs/")}
-                    />
-                    <Tab
-                      classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                      label={"Tarifs"}
-                      onClick={() => Router.push('/blog/tarifs')}
-                    />
+                  <Tab
+                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    label={'Services aux collaborateurs'}
+                    onClick={() => Router.push('/blog/services-aux-collaborateurs/')}
+                  />
+                  <Tab
+                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    label={'Tarifs'}
+                    onClick={() => Router.push('/blog/tarifs')}
+                  />
                 </>
                 :
                 <>
@@ -1170,12 +1173,12 @@ class NavBar extends Component {
   };
 
   render() {
-    const {user, ifHomePage,setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state;
-    const {classes} = this.props;
+    const {user, ifHomePage, setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state
+    const {classes} = this.props
 
     const logged = user != null
 
-    const dialogLogin = () =>{
+    const dialogLogin = () => {
       return(
         <Dialog
           scroll={'paper'}
@@ -1199,7 +1202,7 @@ class NavBar extends Component {
       )
     }
 
-    const dialogRegister = () =>{
+    const dialogRegister = () => {
       return(
         <Dialog
           scroll={'paper'}
@@ -1231,20 +1234,20 @@ class NavBar extends Component {
         <AppBar position={'static'} className={classes.navbarAppBar} style={{backgroundColor: isB2BStyle(user) && companyPage || this.state.ifHomePage ? 'transparent' : isB2BStyle(user) && !companyPage ?'#353A51' : null}}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Grid className={classes.hiddenOnlyXs}>
-              <Grid container  style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%',margin:0}}>
+              <Grid container style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin: 0}}>
                 {companyPage ? null : this.logoContainer(classes)}
                 {
-                 companyPage ? null : ifHomePage ? this.tabBar(classes)
-                   :
-                   <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !isB2BStyle(user) ? 8 :  11}>
-                     {this.searchBarInput(classes)}
-                   </Grid>
-                  }
-                  {isB2BStyle(user) && !logged ? this.notLoggedButtonSectionB2b(classes) : logged === true ? this.burgerMenuLogged(classes) : this.notLoggedButtonSection(classes)}
-              </Grid>
-                {
-                  ifHomePage ? this.searchBarInput(classes) : null
+                  companyPage ? null : ifHomePage ? this.tabBar(classes)
+                    :
+                    <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !isB2BStyle(user) ? 8 : 11}>
+                      {this.searchBarInput(classes)}
+                    </Grid>
                 }
+                {isB2BStyle(user) && !logged ? this.notLoggedButtonSectionB2b(classes) : logged === true ? this.burgerMenuLogged(classes) : this.notLoggedButtonSection(classes)}
+              </Grid>
+              {
+                ifHomePage ? this.searchBarInput(classes) : null
+              }
             </Grid>
             <Grid className={classes.hiddenOnMobile}>
               {ifHomePage ? this.mobileSearchBarInput(classes) : null}
@@ -1261,4 +1264,4 @@ class NavBar extends Component {
   }
 }
 
-export default withStyles(styles)(NavBar);
+export default withStyles(styles)(NavBar)
