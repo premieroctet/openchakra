@@ -1,24 +1,24 @@
-import React from 'react';
-import Grid from "@material-ui/core/Grid";
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
-import Button from "@material-ui/core/Button";
-import {CATEGORY} from "../../../utils/i18n";
-import withStyles from "@material-ui/core/styles/withStyles";
-import styles from '../../../static/css/components/OurAlfred/OurAlfred';
-import withSlide from '../../../hoc/Slide/SlideShow';
+import Button from '@material-ui/core/Button'
+import {CATEGORY} from '../../../utils/i18n'
+import withStyles from '@material-ui/core/styles/withStyles'
+import styles from '../../../static/css/components/OurAlfred/OurAlfred'
+import withSlide from '../../../hoc/Slide/SlideShow'
 import withGrid from '../../../hoc/Grid/GridCard'
-import CardPreview from "../../Card/CardPreview/CardPreview";
-import Typography from "@material-ui/core/Typography";
-const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel');
+import CardPreview from '../../Card/CardPreview/CardPreview'
+import Typography from '@material-ui/core/Typography'
+const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel')
 
 const AlfredSlide=withSlide(withGrid(CardPreview))
 
-class OurAlfred extends React.Component{
+class OurAlfred extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   render() {
-    const{classes, alfred} = this.props;
+    const{classes, alfred} = this.props
 
     return(
       <Grid className={classes.ourAlfredMainStyle}>
@@ -46,7 +46,7 @@ class OurAlfred extends React.Component{
           </Grid>
           <Grid item container spacing={3} className={classes.containerCardPreviewMobile}>
             {
-              Object.keys(alfred).map((res, index) =>(
+              Object.keys(alfred).map((res, index) => (
                 <Grid item key={index}>
                   <CardPreview item={alfred[res]}/>
                 </Grid>
@@ -55,14 +55,14 @@ class OurAlfred extends React.Component{
           </Grid>
         </Grid>
         <Grid className={classes.containerMobileButton}>
-          <Button variant={'outlined'} classes={{root : classes.categoryButton}} onClick={() => Router.push('/search?search=1')}>
+          <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search?search=1')}>
             {CATEGORY.button}
           </Button>
         </Grid>
       </Grid>
 
-    );
+    )
   }
 }
 
-export default withStyles(styles)(OurAlfred);
+export default withStyles(styles)(OurAlfred)

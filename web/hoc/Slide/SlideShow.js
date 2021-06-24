@@ -1,32 +1,27 @@
-import React from 'react';
+import React from 'react'
 import Carousel from 'react-material-ui-carousel'
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid'
 import Pagination from '@material-ui/lab/Pagination'
-import './SlideShow.css';
-import styles from '../../static/css/components/Slide/SlideShow/SlideShow'
+import './SlideShow.css'
 
 function withSlide(WrappedComponent) {
 
-  return class extends React.Component{
+  return class extends React.Component {
     constructor(props) {
-      super(props);
+      super(props)
       this.state={
         pageIndex: 0,
       }
     }
 
-    onCarouselIndexChange = (index, active) => {
-      this.setState({pageIndex: index})
-    };
-
     onPageChange = (event, pageIndex) => {
       this.setState({pageIndex: pageIndex-1})
     };
 
-    render(){
-      const {pageIndex} = this.state;
-      const {style,model} = this.props;
-      var pageCount = this.props;
+    render() {
+      const {pageIndex} = this.state
+      const {style, model} = this.props
+      let pageCount = this.props
 
       if (model) {
         pageCount=model.getPageCount()
@@ -35,10 +30,10 @@ function withSlide(WrappedComponent) {
       return(
         <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
           <Carousel
-            easing="ease"
             autoPlay={false}
-            onChange={this.onCarouselIndexChange}
-            animation={"slide"}
+            next={ () => { this.setState({pageIndex: this.state.pageIndex + 1}) }}
+            prev={ () => { this.setState({pageIndex: this.state.pageIndex - 1}) }}
+            animation={'slide'}
             navButtonsAlwaysVisible={this.props.infinite}
             navButtonsAlwaysInvisible={!model.isInfinite()}
           >
@@ -52,7 +47,7 @@ function withSlide(WrappedComponent) {
             </Grid>
           </Carousel>
           { !model.isInfinite() ?
-            <Grid style={{ display:'flex', justifyContent:'center', marginTop : '5vh', marginBottom: '5vh'}}>
+            <Grid style={{display: 'flex', justifyContent: 'center', marginTop: '5vh', marginBottom: '5vh'}}>
               <Pagination count={pageCount} page={pageIndex+1} onChange={this.onPageChange} classes={{root: style.paginationRoot}}/>
             </Grid>
             :

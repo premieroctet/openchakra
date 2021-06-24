@@ -1,107 +1,110 @@
 export default theme => ({
-  categoryMainContainer:{
+  categoryMainContainer: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
 
-  categoryContainer:{
+  categoryContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%'
+    width: '100%',
   },
-  categoryLeftContainer:{
+  categoryLeftContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems:'center'
+    alignItems: 'center',
   },
-  categoryImgContainer:{
+  categoryImgContainer: {
     height: '100%',
     marginTop: '-25px',
     transform: 'rotate(-25deg)',
-    [theme.breakpoints.down('xs')]:{
-      margin:0
-    }
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+    },
   },
 
-  categoryTextContainer:{
+  categoryTextContainer: {
     marginLeft: 10,
   },
-  slideShowContainer:{
+  slideShowContainer: {
     display: 'flex',
     alignItems: 'center',
-    padding: '2%'
+    padding: '2%',
   },
 
-  slideShowSectionContainer:{
-    width: '100%'
+  slideShowSectionContainer: {
+    width: '100%',
   },
-  categoryTitle:{
+  categoryTitle: {
     fontWeight: theme.typography.sectionTitle.fontWeight,
     fontSize: theme.typography.sectionTitle.fontSize,
-    margin: theme.typography.sectionTitle.margin
+    margin: theme.typography.sectionTitle.margin,
   },
-  categoryText:{
+  categoryText: {
     color: theme.typography.text.color,
     fontWeight: theme.typography.text.fontWeight,
     fontSize: theme.typography.text.fontSize,
-    margin: theme.typography.text.margin
+    margin: theme.typography.text.margin,
   },
-  categorySlideShowContainer:{
+  categorySlideShowContainer: {
     marginTop: '5vh',
-    [theme.breakpoints.down('md')]:{
-      overflowX: 'scroll',
-      display: 'flex',
-      flexWrap: 'nowrap',
-      zIndex:0
-    }
+
   },
-  categoryButton:{
+  categoryButton: {
     borderRadius: theme.border.whiteButton.borderRadius,
     border: theme.border.whiteButton.border,
     textTransform: theme.typography.textTransform,
     padding: theme.padding.whiteButton.padding,
-    fontWeight: theme.typography.whiteButton.fontWeight
+    fontWeight: theme.typography.whiteButton.fontWeight,
   },
-  hiddenOnXs:{
-    [theme.breakpoints.only("xs")]:{
-      display: 'none'
-    }
-  },
-  categorySlideContainer:{
-    [theme.breakpoints.only("xs")]:{
-      display: 'none'
+  hiddenOnXs: {
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only("sm")]:{
-      display: 'none'
-    },
-    [theme.breakpoints.only("md")]:{
-      display: 'none'
-    }
   },
-  hideOnBigScreen:{
-    [theme.breakpoints.only("lg")]:{
-      display: 'none'
+  categorySlideContainer: {
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only("xl")]:{
-      display: 'none'
-    }
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
+    },
+    [theme.breakpoints.only('md')]: {
+      display: 'none',
+    },
   },
-  buttonDiscoverMobile:{
+  hideOnBigScreen: {
+    width: '100%',
+    margin: 0,
+    [theme.breakpoints.only('lg')]: {
+      display: 'none',
+    },
+    [theme.breakpoints.only('xl')]: {
+      display: 'none',
+    },
+    [theme.breakpoints.down('md')]: {
+      overflowX: 'scroll',
+      display: 'flex',
+      flexWrap: 'nowrap',
+      zIndex: 0,
+    },
+  },
+  buttonDiscoverMobile: {
     marginTop: '10vh',
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.only("xl")]:{
-      display: 'none'
+    [theme.breakpoints.only('xl')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only("lg")]:{
-      display: 'none'
+    [theme.breakpoints.only('lg')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only("md")]:{
-      display: 'none'
+    [theme.breakpoints.only('md')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only("sm")]:{
-      display: 'none'
-    }
-  }
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
+    },
+  },
 })

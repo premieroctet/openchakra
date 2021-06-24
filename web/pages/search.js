@@ -1,7 +1,7 @@
-const { setAxiosAuthentication }=require('../utils/authentication')
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import { withStyles } from '@material-ui/core/styles'
+import {withStyles} from '@material-ui/core/styles'
 import axios from 'axios'
 import 'react-dates/initialize'
 import moment from 'moment'
@@ -18,14 +18,14 @@ import withSlide from '../hoc/Slide/SlideShow'
 import withGrid from '../hoc/Grid/GridCard'
 import LayoutMobileSearch from '../hoc/Layout/LayoutMobileSearch'
 import Typography from '@material-ui/core/Typography'
-const { SlideGridDataModel }=require('../utils/models/SlideGridDataModel')
-const { computeDistanceKm }=require('../utils/functions')
+const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
+const {computeDistanceKm}=require('../utils/functions')
 import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchResults=withSlide(withGrid(CardService))
-const { getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager } =require('../utils/context')
-const { PRO, PART }=require('../utils/consts')
-const { emptyPromise }=require('../utils/promise')
+const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
+const {PRO, PART}=require('../utils/consts')
+const {emptyPromise}=require('../utils/promise')
 moment.locale('fr')
 
 class SearchDataModel extends SlideGridDataModel {
@@ -89,7 +89,7 @@ class SearchPage extends React.Component {
     this.SCROLL_DELTA=30
   }
 
-  static getInitialProps({ query: { keyword, city, gps, selectedAddress, category, service, prestation, search, date } }) {
+  static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date}}) {
     // FIX : set city nin AlgoPlaces if provided
     let init = {
       keyword: keyword,
@@ -102,7 +102,7 @@ class SearchPage extends React.Component {
       date: date,
     }
     if (gps) {
-      init[ 'gps' ] = gps
+      init.gps = gps
     }
     return init
   }
@@ -115,7 +115,7 @@ class SearchPage extends React.Component {
 
   componentDidMount() {
     if (getLoggedUserId()) {
-      this.setState({ logged: true })
+      this.setState({logged: true})
     }
     // Mount components gets criterion from URL
     // If date in URL then force filter after search
@@ -129,63 +129,63 @@ class SearchPage extends React.Component {
       startDate.hour(0).minute(0).second(0)
       let endDate = moment(parseInt(this.props.date))
       endDate.hour(23).minute(59).second(59)
-      st[ 'startDate' ] = startDate
-      st[ 'endDate' ] = endDate
+      st.startDate = startDate
+      st.endDate = endDate
     }
     if ('category' in this.props) {
-      st[ 'category' ] = this.props.category
+      st.category = this.props.category
     }
     if ('service' in this.props) {
-      st[ 'service' ] = this.props.service
+      st.service = this.props.service
     }
     if ('prestation' in this.props) {
-      st[ 'prestation' ] = this.props.prestation
+      st.prestation = this.props.prestation
     }
     if ('selectedAddress' in this.props) {
-      st[ 'selectedAddress' ] = this.props.selectedAddress
+      st.selectedAddress = this.props.selectedAddress
     }
     setAxiosAuthentication()
 
     axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
       .catch(err => {
         console.error(err)
-        this.setState({ mounting: false })
+        this.setState({mounting: false})
       })
       .then(res => {
-        st[ 'categories' ] = res.data
+        st.categories = res.data
         axios.get('/myAlfred/api/shop/allStatus')
           .catch(err => {
             console.error(err)
-            this.setState({ mounting: false })
+            this.setState({mounting: false})
           })
           .then(res => {
-            st[ 'shops' ] = res.data
+            st.shops = res.data
             axios.get('/myAlfred/api/users/current')
               .then(res => {
                 let user = res.data
-                this.setState({ isAdmin: user.is_admin })
-                st[ 'user' ] = user
+                this.setState({isAdmin: user.is_admin})
+                st.user = user
 
-                const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data: user })
+                const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
                 promise
                   .then(res => {
-                    let allAddresses = { 'main': res.data.billing_address.gps }
+                    let allAddresses = {'main': res.data.billing_address.gps}
                     res.data.service_address.forEach(addr => {
-                      allAddresses[ addr._id ] = { lat: addr.lat, lng: addr.lng }
+                      allAddresses[ addr._id ] = {lat: addr.lat, lng: addr.lng}
                     })
-                    st[ 'allAddresses' ]=allAddresses
-                    if ('selectedAddress' in this.props && this.props[ 'selectedAddress' ] !== 'all') {
-                      st[ 'gps' ] = allAddresses[ this.props.selectedAddress ]
+                    st.allAddresses=allAddresses
+                    if ('selectedAddress' in this.props && this.props.selectedAddress !== 'all') {
+                      st.gps = allAddresses[ this.props.selectedAddress ]
                     }
-                    if (!this.props[ 'selectedAddress' ] && !this.props[ 'gps' ]) {
-                      st[ 'gps' ] = allAddresses[ 'main' ]
-                      st[ 'selectedAddress' ] = 'main'
+                    if (!this.props.selectedAddress && !this.props.gps) {
+                      st.gps = allAddresses.main
+                      st.selectedAddress = 'main'
                     }
                     this.setState(st, () => {
                       if (this.props.search) {
                         this.search('date' in this.props)
                       }
-                      this.setState({ mounting: false })
+                      this.setState({mounting: false})
                     })
                   })
               })
@@ -194,7 +194,7 @@ class SearchPage extends React.Component {
                   if (this.props.search) {
                     this.search('date' in this.props)
                   }
-                  this.setState({ mounting: false })
+                  this.setState({mounting: false})
                 })
               })
           })
@@ -217,7 +217,8 @@ class SearchPage extends React.Component {
           serviceUsersDisplay.push(su)
         }
       })
-    } else {
+    }
+    else {
       serviceUsersDisplay = serviceUsers
     }
 
@@ -265,59 +266,61 @@ class SearchPage extends React.Component {
           serviceUsersDisplay = serviceUsersDisplay.filter(su => filteredServiceUsers.includes(su._id.toString()))
           this.setFilteredServiceUsers(serviceUsersDisplay)
         })
-    } else {
+    }
+    else {
       this.setFilteredServiceUsers(serviceUsersDisplay)
     }
   };
 
   setFilteredServiceUsers = serviceUsers => {
-    this.setState({ serviceUsersDisplay: serviceUsers, scroll_count: Math.min(this.SCROLL_DELTA, serviceUsers.length) })
+    this.setState({serviceUsersDisplay: serviceUsers, scroll_count: Math.min(this.SCROLL_DELTA, serviceUsers.length)})
   };
 
   onChange = e => {
-    let { name, value } = e.target
-    this.setState({ [ e.target.name ]: e.target.value })
+    let {name, value} = e.target
+    this.setState({[ e.target.name ]: e.target.value})
     if (name === 'selectedAddress') {
       this.setState({
         gps: value === 'all' ? null : 'gps' in value ? value.gps : {
-          'lat': value[ 'lat' ],
-          'lng': value[ 'lng' ],
+          'lat': value.lat,
+          'lng': value.lng,
         },
       })
     }
   };
 
   search(forceFilter) {
-    this.setState({ searching: true })
+    this.setState({searching: true})
 
     let filters = {}
 
     // GPS
     if (this.state.gps) {
-      filters[ 'gps' ] = this.state.gps
-      filters[ 'perimeter' ] = true
+      filters.gps = this.state.gps
+      filters.perimeter = true
     }
     // "Search everywhere" : provide GPS of first users' addresses if any, no limit
     else if (this.state.user && this.state.user.billing_address) {
-      filters[ 'gps' ] = this.state.user.billing_address.gps
-      filters[ 'perimeter' ] = false
+      filters.gps = this.state.user.billing_address.gps
+      filters.perimeter = false
     }
 
     // Keyword search disables cat/ser/presta filter
     if (this.state.keyword) {
-      filters[ 'keyword' ] = this.state.keyword
-    } else {
+      filters.keyword = this.state.keyword
+    }
+    else {
       // Category
       if (this.props.category) {
-        filters[ 'category' ] = this.props.category
+        filters.category = this.props.category
       }
       // Service
       if (this.props.service) {
-        filters[ 'service' ] = this.props.service
+        filters.service = this.props.service
       }
       // Prestation
       if (this.props.prestation) {
-        filters[ 'prestation' ] = this.props.prestation
+        filters.prestation = this.props.prestation
       }
     }
 
@@ -326,21 +329,21 @@ class SearchPage extends React.Component {
     axios.post('/myAlfred/api/serviceUser/search', filters)
       .then(res => {
         let serviceUsers = res.data
-        this.setState({ serviceUsers: serviceUsers })
+        this.setState({serviceUsers: serviceUsers})
         this.setFilteredServiceUsers(serviceUsers)
         const categories = this.state.categories
         let proAlfred = this.state.shops.filter(s => s.is_professional).map(s => s.alfred._id)
-        this.setState({ categories: categories, proAlfred: proAlfred },
+        this.setState({categories: categories, proAlfred: proAlfred},
           () => {
             if (forceFilter) {
               this.filter()
             }
           })
-        this.setState({ searching: false })
+        this.setState({searching: false})
       })
       .catch(err => {
         console.error(err)
-        this.setState({ searching: false })
+        this.setState({searching: false})
       })
   }
 
@@ -349,17 +352,17 @@ class SearchPage extends React.Component {
   };
 
   handleChange = event => {
-    this.setState({ filters: event.target.value })
+    this.setState({filters: event.target.value})
   };
 
 
   content = classes => {
     let serviceUsers = this.state.serviceUsersDisplay
-    const { gps, selectedAddress, scroll_count } = this.state
+    const {gps, selectedAddress, scroll_count} = this.state
 
-    const { width } = this.props
+    const {width} = this.props
 
-    const [cols, rows]={ 'xs': [100, 1], 'sm': [2, 3], 'md': [3, 3], 'lg': [4, 4], 'xl': [4, 3] }[ width ]
+    const [cols, rows]={'xs': [100, 1], 'sm': [2, 3], 'md': [3, 3], 'lg': [4, 4], 'xl': [4, 3]}[ width ]
 
     return(
       <Grid>
@@ -400,7 +403,7 @@ class SearchPage extends React.Component {
                         onChange={this.handleChange}
                         displayEmpty
                         disableUnderline
-                        classes={{ select: classes.searchSelectPadding }}
+                        classes={{select: classes.searchSelectPadding}}
                       >
                         {this.filters.map((res, index) => {
                           return(
@@ -441,19 +444,19 @@ class SearchPage extends React.Component {
                     <Grid className={classes.hideOnBigScreen} item xs={12}>
                       <InfiniteScroll
                         dataLength={scroll_count}
-                        next={() => this.setState({ scroll_count: this.state.scroll_count+this.SCROLL_DELTA }) }
+                        next={() => this.setState({scroll_count: this.state.scroll_count+this.SCROLL_DELTA}) }
                         hasMore={scroll_count<serviceUsers.length}
                         loader={<CircularProgress/>}
                       >
                         {
-                          serviceUsers.slice(0, scroll_count).map((su) => (
+                          serviceUsers.slice(0, scroll_count).map(su => (
                             <CardService
                               key={su._id}
                               item={su._id}
                               gps={gps}
                               user={this.state.user}
                               address={selectedAddress} />
-                          )
+                          ),
                           )
                         }
                       </InfiniteScroll>
@@ -470,8 +473,8 @@ class SearchPage extends React.Component {
 
 
   render() {
-    const { classes } = this.props
-    const { user, gps, selectedAddress, keyword } = this.state
+    const {classes} = this.props
+    const {user, gps, selectedAddress, keyword} = this.state
 
     return (
       <React.Fragment>
