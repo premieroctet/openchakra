@@ -22,7 +22,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts')
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import DateField from '../../components/DateField/DateField'
-
+const {is_production}=require('../../config/config')
 const {isPhoneOk} = require('../../utils/sms')
 const moment = require('moment')
 
@@ -158,9 +158,11 @@ class editProfile extends React.Component {
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
         this.setState({smsCodeOpen: true}, () => this.onSubmit())
-        snackBarSuccess('Le SMS a été envoyé')
+        var txt = is_production() ? 'Le SMS a été envoyé' : `Dev : le code est ${res.data.sms_code}`;
+        snackBarSuccess(txt)
       })
       .catch(err => {
+        console.error(err)
         this.setState({
           smsCodeOpen: true,
           serverError: true,
