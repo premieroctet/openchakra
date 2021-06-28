@@ -101,7 +101,7 @@
     //"computed-property-spacing": [ 2, "always" ],
     "consistent-this": [ 2, "self" ],
     "eol-last": 2,
-    "func-style": [ 2, "expression" ],
+    //"func-style": [ 2, "expression" ],
     "indent": [ "error", 2],
     "key-spacing": [ 2, { "beforeColon": false, "afterColon": true } ],
     //"new-cap": 2,
