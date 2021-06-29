@@ -1,73 +1,74 @@
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
-import React from 'react';
-import axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import Typography from "@material-ui/core/Typography";
-import Router from 'next/router';
-import {withStyles} from '@material-ui/core/styles';
-import io from 'socket.io-client';
+import React from 'react'
+import axios from 'axios'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import Router from 'next/router'
+import {withStyles} from '@material-ui/core/styles'
+import io from 'socket.io-client'
 
-import LayoutPayment from "../hoc/Layout/LayoutPayment";
+import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
 const {BOOK_STATUS}=require('../utils/consts')
 
 class paymentSuccess extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: {},
       booking: null,
       success: false,
-    };
+    }
   }
 
   static getInitialProps({query: {booking_id, transactionId}}) {
-    return {booking_id: booking_id, transaction_id: transactionId};
+    return {booking_id: booking_id, transaction_id: transactionId}
   }
 
   componentDidMount() {
 
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        let user = res.data;
-        this.setState({user: user});
+        let user = res.data
+        this.setState({user: user})
       })
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
     axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
-      .then (res => {
+      .then(res => {
         const booking = res.data
         axios.get(`/myAlfred/api/payment/payin/${booking.mangopay_payin_id}`)
           .then(result => {
-            let transaction = result.data;
+            let transaction = result.data
             if (transaction.Status === 'FAILED') {
-              Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`);
-            } else {
+              Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`)
+            }
+            else {
               this.setState({success: true})
               const booking_id = this.props.booking_id
-              this.socket = io();
-              this.socket.on('connect', socket => {
-                this.socket.emit('booking', booking_id);
+              this.socket = io()
+              this.socket.on('connect', () => {
+                this.socket.emit('booking', booking_id)
                 const newStatus = booking.status==BOOK_STATUS.PREAPPROVED ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
                 axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {status: newStatus})
                   .then(res => {
-                    setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
-                    localStorage.removeItem('booking_id');
+                    setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
+                    localStorage.removeItem('booking_id')
                     setTimeout(() => Router.push('/reservations/reservations'), 4000)
                   })
-                  .catch();
-              });
+                  .catch()
+              })
             }
-          });
+          })
       })
-      .catch (err => {
+      .catch(err => {
         console.error(err)
       })
 
@@ -75,7 +76,7 @@ class paymentSuccess extends React.Component {
 
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
     const {success} = this.state
 
     if (!success) {
@@ -109,9 +110,9 @@ class paymentSuccess extends React.Component {
           </Grid>
         </LayoutPayment>
       </React.Fragment>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(paymentSuccess);
+export default withStyles(styles)(paymentSuccess)
