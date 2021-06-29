@@ -150,7 +150,7 @@ const isEditableUser = user => {
 }
 
 const getUserLabel = user => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     if (!user) {
       resolve('')
     }
@@ -164,10 +164,15 @@ const getUserLabel = user => {
           console.error(err)
           resolve(user.firstname)
         })
-    } else {
+    }
+    else {
       resolve(user.firstname)
     }
   })
+}
+
+const getPartner = () => {
+  return true
 }
 
 module.exports = {
@@ -175,5 +180,5 @@ module.exports = {
   getRole, setStatusRegister, removeStatusRegister, hasStatusRegister,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
-  getUserLabel, isLoggedUserRegistered, isIOS, isAndroid,
+  getUserLabel, isLoggedUserRegistered, isIOS, isAndroid, getPartner,
 }
