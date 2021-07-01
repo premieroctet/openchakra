@@ -103,7 +103,7 @@ export default theme => ({
 
   searchContainerDisplayResult: {
     width: '70%',
-    [ theme.breakpoints.down('sm') ]: {
+    [ theme.breakpoints.down('lg') ]: {
       width: '90%',
     },
     [ theme.breakpoints.down('xs') ]: {
