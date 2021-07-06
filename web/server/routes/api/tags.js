@@ -1,8 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
-const Tags = require('../../models/Tags');
-
 router.get('/test', (req, res) => res.json({msg: 'Tags Works!'}));
 
 

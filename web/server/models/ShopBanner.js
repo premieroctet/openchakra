@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const ShopBannerSchema = new Schema({
   label: {
@@ -8,6 +8,6 @@ const ShopBannerSchema = new Schema({
   picture: {
     type: String,
   },
-});
+})
 
-module.exports = ShopBanner = mongoose.model('shopBanner', ShopBannerSchema);
+module.exports = ShopBannerSchema

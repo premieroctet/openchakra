@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const ProspectSchema = new Schema({
   id: {
@@ -47,11 +47,9 @@ const ProspectSchema = new Schema({
     type: String,
     required: true,
   },
-  ad_id : {
+  ad_id: {
     type: String,
-  } 
-});
+  },
+})
 
-Prospect = mongoose.model('prospects', ProspectSchema);
-
-module.exports = Prospect;
+module.exports = ProspectSchema

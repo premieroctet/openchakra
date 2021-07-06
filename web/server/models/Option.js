@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 // TODO : supprimer ce modèle
 const OptionsSchema = new Schema({
@@ -15,6 +15,6 @@ const OptionsSchema = new Schema({
     type: String,
     required: true,
   },
-});
+})
 
-module.exports = Options = mongoose.model('options', OptionsSchema);
+module.exports = OptionsSchema

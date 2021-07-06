@@ -1,248 +1,224 @@
-const express = require('express');
-const router = express.Router();
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
-const keys = require('../../config/keys');
-const bcrypt = require('bcryptjs');
-const mongoose = require('mongoose');
-const path = require('path');
-const axiosCookieJarSupport = require('axios-cookiejar-support').default;
-const tough = require('tough-cookie');
-const {is_production, is_validation, computeUrl}=require('../../../config/config');
-const CronJob = require('cron').CronJob;
-const validateRegisterInput = require('../../validation/register');
-const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister');
-const validateLoginInput = require('../../validation/login');
-const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing');
-const moment = require('moment');
-moment.locale('fr');
-const User = require('../../models/User');
-const Album = require('../../models/Albums');
-const ResetToken = require('../../models/ResetToken');
-const crypto = require('crypto');
-const multer = require('multer');
-const axios = require('axios');
-const {emptyPromise} = require('../../../utils/promise.js');
+const express = require('express')
+const router = express.Router()
+const passport = require('passport')
+const bcrypt = require('bcryptjs')
+const mongoose = require('mongoose')
+const path = require('path')
+const axiosCookieJarSupport = require('axios-cookiejar-support').default
+const tough = require('tough-cookie')
+const {is_production, is_validation, computeUrl}=require('../../../config/config')
+const CronJob = require('cron').CronJob
+const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
+const validateLoginInput = require('../../validation/login')
+const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
+const moment = require('moment')
+moment.locale('fr')
+const crypto = require('crypto')
+const multer = require('multer')
+const axios = require('axios')
+const {emptyPromise} = require('../../../utils/promise.js')
 const {ROLES}=require('../../../utils/consts')
-const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoCompany, install_hooks} = require('../../utils/mangopay');
+const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
-const ServiceUser = require('../../models/ServiceUser');
-const {ensureDirectoryExists} = require('../../utils/filesystem')
+const {ensureDirectoryExists, isImageFile} = require('../../utils/filesystem')
 
 
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true
 
-const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ');
+const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ')
 install_hooks(HOOK_TYPES, '/myAlfred/api/users/hook')
 
 ensureDirectoryExists('static/profile/')
 const storageIdPicture = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'static/profile/');
+  destination: (req, file, cb) => {
+    cb(null, 'static/profile/')
   },
-  filename: function (req, file, cb) {
-    let datetimestamp = Date.now();
-    let key = crypto.randomBytes(5).toString('hex');
-    cb(null, datetimestamp + '_' + key + '_' + file.originalname);
+  filename: (req, file, cb) => {
+    let datetimestamp = Date.now()
+    let key = crypto.randomBytes(5).toString('hex')
+    cb(null, `${datetimestamp}_${key}'_'${file.originalname}`)
   },
-});
+})
 const uploadIdPicture = multer({
   storage: storageIdPicture,
-  fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname).toLowerCase();
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
-      return callback(new Error('Only images are allowed'));
+  fileFilter: (req, file, callback) => {
+    if (!isImageFile(file.originalname)) {
+      return callback(new Error('Only images are allowed'))
     }
-    callback(null, true);
+    callback(null, true)
   },
-});
+})
 
 ensureDirectoryExists('static/profile/idCard/')
 const storageIdCard = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'static/profile/idCard/');
+  destination: (req, file, cb) => {
+    cb(null, 'static/profile/idCard/')
   },
-  filename: function (req, file, cb) {
-    let datetimestamp = Date.now();
-    let key = crypto.randomBytes(5).toString('hex');
-    let key2 = crypto.randomBytes(10).toString('hex');
-    cb(null, datetimestamp + '_' + key + '_' + key2 + path.extname(file.originalname));
+  filename: (req, file, cb) => {
+    let datetimestamp = Date.now()
+    let key = crypto.randomBytes(5).toString('hex')
+    let key2 = crypto.randomBytes(10).toString('hex')
+    cb(null, `${datetimestamp}}_${key}_${key2}${path.extname(file.originalname)}`)
+  },
+})
 
-  },
-});
 const uploadIdCard = multer({
   storage: storageIdCard,
-  fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname).toLowerCase();
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
-      return callback(new Error(`Error extension:${ext}`));
+  fileFilter: (req, file, callback) => {
+    if (!isImageFile(file.originalname)) {
+      return callback(new Error(`Error extension:${ext}`))
     }
-    callback(null, true);
+    callback(null, true)
   },
-});
+})
 
 // Registration proof storage
 ensureDirectoryExists('static/profile/registrationProof/')
 const storageRegProof = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'static/profile/registrationProof/');
+  destination: (req, file, cb) => {
+    cb(null, 'static/profile/registrationProof/')
   },
-  filename: function (req, file, cb) {
-    let datetimestamp = Date.now();
-    let key = crypto.randomBytes(5).toString('hex');
-    let key2 = crypto.randomBytes(10).toString('hex');
-    cb(null, datetimestamp + '_' + key + '_' + key2 + path.extname(file.originalname));
+  filename: (req, file, cb) => {
+    let datetimestamp = Date.now()
+    let key = crypto.randomBytes(5).toString('hex')
+    let key2 = crypto.randomBytes(10).toString('hex')
+    cb(null, `${datetimestamp}}_${key}_${key2}${path.extname(file.originalname)}`)
+  },
+})
 
-  },
-});
 const uploadRegProof = multer({
   storage: storageRegProof,
-  fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname).toLowerCase();
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
-      return callback(new Error('Error extension'));
+  fileFilter: (req, file, callback) => {
+    if (!isImageFile(file.originalname)) {
+      return callback(new Error('Error extension'))
     }
-    callback(null, true);
+    callback(null, true)
   },
-});
+})
 
 // Album picture storage
 ensureDirectoryExists('static/profile/album/')
 const storageAlbumPicture = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'static/profile/album/');
+  destination: (req, file, cb) => {
+    cb(null, 'static/profile/album/')
   },
-  filename: function (req, file, cb) {
-    let datetimestamp = Date.now();
-    let key = crypto.randomBytes(5).toString('hex');
-    let key2 = crypto.randomBytes(10).toString('hex');
-    cb(null, datetimestamp + '_' + key + '_' + key2 + path.extname(file.originalname));
+  filename: (req, file, cb) => {
+    let datetimestamp = Date.now()
+    let key = crypto.randomBytes(5).toString('hex')
+    let key2 = crypto.randomBytes(10).toString('hex')
+    cb(null, `${datetimestamp}}_${key}_${key2}${path.extname(file.originalname)}`)
+  },
+})
 
-  },
-});
 const uploadAlbumPicture = multer({
   storage: storageAlbumPicture,
-  fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname).toLowerCase();
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
-      return callback(new Error('Error extension'));
+  fileFilter: (req, file, callback) => {
+    if (!isImageFile(file.originalname)) {
+      return callback(new Error('Error extension'))
     }
-    callback(null, true);
+    callback(null, true)
   },
-});
+})
 
-const sendAccountValidation = (request, user) => {
-
-  let link = new URL('/validateAccount?user=' + user._id, computeUrl(request));
-
-  sendMail(
-    'no-reply@my-alfred.io',
-    user.email,
-    'validation',
-    {
-      name: user.name,
-      firstname: user.firstname,
-      validation_url: link,
-    },
-  );
-};
-
-router.get('/test', (req, res) => res.json({msg: 'Users Works!'}));
+router.get('/test', (req, res) => res.json({msg: 'Users Works!'}))
 
 // @Route POST /myAlfred/api/users/register
 // Register
 router.post('/register', (req, res) => {
-  const {errors, isValid} = validateSimpleRegisterInput(req.body);
+  const {errors, isValid} = validateSimpleRegisterInput(req.body)
 
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json(errors)
   }
 
   // In case of pending registration
   const user_id = req.body.user_id
-  User.findOne({email: req.body.email})
-    .then(user => {
-      if (user && (!user_id || user._id.toString()!=user_id)) {
-        errors.email = 'L\'email existe déjà';
-        return res.status(400).json(errors);
-      } else {
-        user = user || new User();
-        user.name = req.body.name;
-        user.gender = req.body.gender;
-        user.firstname = req.body.firstname;
-        user.email = req.body.email;
-        user.password = req.body.password;
-        user.birthday = req.body.birthday;
-
-        user.billing_address = {};
-        user.billing_address.address = req.body.address;
-        user.billing_address.zip_code = req.body.zip_code;
-        user.billing_address.city = req.body.city;
-        user.billing_address.country = req.body.country;
-
-
-        user.billing_address.gps = {};
-        user.billing_address.gps.lat = req.body.lat;
-        user.billing_address.gps.lng = req.body.lng;
-        user.service_address = [];
-        user.last_login = [];
-
-        bcrypt.hash(user.password, 10, (err, hash) => {
-          if (err) {
-            throw err;
-          }
-          user.password = hash;
-          user.save()
-            .then(user => {
-              createMangoClient(user);
-              sendVerificationMail(user, req);
-                // Warning si adresse incomplète
-                if (!user.billing_address.gps.lat) {
-                  User.find({is_admin: true}, 'firstname email phone')
-                    .then (admins => {
-                      let log_link = new URL(`/dashboard/logAsUser?email=${user.email}`, computeUrl(req));
-                      const msg=`Compléter l'adresse pour le compte ${user.email}, connexion via ${log_link}`
-                      const subject=`Alerte adresse incorrecte pour ${user.email}`
-                      admins.forEach( admin => {
-                        sendAlert(admin, subject, msg)
-                      })
-                    })
-                    .catch ( err => {
-                      console.error(err)
-                    })
-                }
-              res.json(user);
-            })
-            .catch(err => console.error(err));
-        });
+  req.context.getModel('User').findOne({email: req.body.email})
+    .then(db_user => {
+      if (db_user && (!user_id || db_user._id.toString()!=user_id)) {
+        errors.email = 'L\'email existe déjà'
+        return res.status(400).json(errors)
       }
-    });
-});
+
+      let user = db_user || {}
+      user.name = req.body.name
+      user.gender = req.body.gender
+      user.firstname = req.body.firstname
+      user.email = req.body.email
+      user.password = req.body.password
+      user.birthday = req.body.birthday
+
+      user.billing_address = {
+        address: req.body.address,
+        zip_code: req.body.zip_code,
+        city: req.body.city,
+        country: req.body.country,
+        gps: {
+          lat: req.body.lat,
+          lng: req.body.lng,
+        },
+      }
+      user.service_address = []
+      user.last_login = []
+
+      bcrypt.hash(user.password, 10, (err, hash) => {
+        if (err) {
+          throw err
+        }
+        user.password = hash
+        user.save()
+          .then(user => {
+            createMangoClient(user)
+            sendVerificationMail(user, req)
+            // Warning si adresse incomplète
+            if (!user.billing_address.gps.lat) {
+              req.context.getModel('User').find({is_admin: true}, 'firstname email phone')
+                .then(admins => {
+                  let log_link = new URL(`/dashboard/logAsUser?email=${user.email}`, computeUrl(req))
+                  const msg=`Compléter l'adresse pour le compte ${user.email}, connexion via ${log_link}`
+                  const subject=`Alerte adresse incorrecte pour ${user.email}`
+                  admins.forEach(admin => {
+                    sendAlert(admin, subject, msg)
+                  })
+                })
+                .catch(err => {
+                  console.error(err)
+                })
+            }
+            res.json(user)
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      })
+    })
+})
 
 // @Route GET /myAlfred/api/users/sendMailVerification
 // Send email
 // @access private
 router.get('/sendMailVerification', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      sendVerificationMail(user, req);
-      res.json({});
+      sendVerificationMail(user, req)
+      res.json({})
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
 
 // @Route POST /myAlfred/api/users/sendSMSVerification
 // Send email
 // @access private
 router.post('/checkSMSVerification', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const sms_code = req.body.sms_code;
-  User.findById(req.user.id)
+  const sms_code = req.body.sms_code
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       if (user.sms_code == sms_code) {
         console.log('Code SSMS OK pour moi');
-        User.findByIdAndUpdate(req.user.id, {sms_code: null, phone_confirmed: true})
+        req.context.getModel('User').findByIdAndUpdate(req.user, {sms_code: null, phone_confirmed: true})
           .then(u => console.log('OK'))
           .catch(err => console.error(err));
         res.json({sms_code_ok: true});
@@ -261,8 +237,8 @@ router.post('/checkSMSVerification', passport.authenticate('jwt', {session: fals
 // @access private
 router.post('/sendSMSVerification', passport.authenticate('jwt', {session: false}), (req, res) => {
   const code = Math.floor(Math.random() * Math.floor(10000)).toString().padStart(4, '0');
-  console.log(`Création code sms ${code} pour ${req.user.id}`);
-  User.findByIdAndUpdate(req.user.id, {sms_code: code}, {new: true})
+  console.log(`Création code sms ${code} pour ${req.user}`);
+  req.context.getModel('User').findByIdAndUpdate(req.user, {sms_code: code}, {new: true})
     .then(user => {
       if (req.body.phone) {
         user.phone = req.body.phone;
@@ -282,7 +258,7 @@ router.post('/sendSMSVerification', passport.authenticate('jwt', {session: false
 // @Route PUT /myAlfred/api/users/validateAccount
 // Validate account after register
 router.post('/validateAccount', (req, res) => {
-  User.findByIdAndUpdate(mongoose.Types.ObjectId(req.body.id), {
+  req.context.getModel('User').findByIdAndUpdate(mongoose.Types.ObjectId(req.body.id), {
     is_confirmed: true,
   }, {new: true})
     .then(user => {
@@ -298,13 +274,13 @@ router.post('/validateAccount', (req, res) => {
 // @Access private
 router.put('/profile/billingAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       user.billing_address = req.body;
       user.save()
         .then(
           user => {
-            ServiceUser.updateMany({user:user.id}, {service_address: user.billing_address})
+            req.context.getModel('ServiceUser').updateMany({user:user.id}, {service_address: user.billing_address})
           }
         )
         .catch(
@@ -320,7 +296,7 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
 // @Access private
 router.put('/profile/languages', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       user.languages = req.body.languages
       user.save().then(user => res.json(user)).catch(err => console.error(err));
@@ -332,7 +308,7 @@ router.put('/profile/languages', passport.authenticate('jwt', {session: false}),
 // @Access private
 router.put('/profile/description', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       user.description = req.body.description
       user.save().then(user => res.json(user)).catch(err => console.error(err));
@@ -344,7 +320,7 @@ router.put('/profile/description', passport.authenticate('jwt', {session: false}
 // @Access private
 router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       const address = {
         address: req.body.address,
@@ -370,7 +346,7 @@ router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: fal
 // Get service address by id
 // @Access private
 router.get('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       const index = req.params.id;
       const address = user.service_address;
@@ -386,7 +362,7 @@ router.get('/profile/address/:id', passport.authenticate('jwt', {session: false}
 // Edit service address by id
 // @Access private
 router.put('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       const index = user.service_address
         .map(item => item.id)
@@ -410,7 +386,7 @@ router.put('/profile/address/:id', passport.authenticate('jwt', {session: false}
 // Delete service address by id
 // @Access private
 router.delete('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       const index = user.service_address
         .map(item => item.id)
@@ -426,7 +402,7 @@ router.delete('/profile/address/:id', passport.authenticate('jwt', {session: fal
 // Add phone number in profile
 // @Access private
 router.put('/profile/phone', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findByIdAndUpdate(req.user.id, {
+  req.context.getModel('User').findByIdAndUpdate(req.user, {
     phone: req.body.phone,
     phone_confirmed: req.body.phone_confirmed,
   }, {new: true})
@@ -442,7 +418,7 @@ router.put('/profile/phone', passport.authenticate('jwt', {session: false}), (re
 // Add job in profile
 // @Access private
 router.put('/profile/job', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findByIdAndUpdate(req.user.id, {
+  req.context.getModel('User').findByIdAndUpdate(req.user, {
     job: req.body.job,
   }, {new: true})
     .then(user => {
@@ -457,7 +433,7 @@ router.put('/profile/job', passport.authenticate('jwt', {session: false}), (req,
 // Add a picture profile
 // @Access private
 router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findByIdAndUpdate(req.user.id, {
+  req.context.getModel('User').findByIdAndUpdate(req.user, {
     picture: req.file ? req.file.path : '',
   }, {new: true})
     .then(user => {
@@ -472,7 +448,7 @@ router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.auth
 // Add a picture profile
 // @Access private
 router.put('/profile/pictureLater', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findByIdAndUpdate(req.user.id, {picture: req.body.picture}, {new: true})
+  req.context.getModel('User').findByIdAndUpdate(req.user, {picture: req.body.picture}, {new: true})
     .then(user => {
       res.json(user);
     })
@@ -486,7 +462,7 @@ router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 
   name: 'myCardV',
   maxCount: 1,
 }]), passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       user.id_card = {};
       user.id_card.recto = req.files['myCardR'][0].path;
@@ -513,7 +489,7 @@ router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 
 // Add an identity card
 // @Access private
 router.post('/profile/idCard/addVerso', uploadIdCard.single('myCardV'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       user.id_card.verso = req.file.path;
 
@@ -529,7 +505,7 @@ router.post('/profile/idCard/addVerso', uploadIdCard.single('myCardV'), passport
 // Add a registration proof
 // @Access private
 router.post('/profile/registrationProof/add', uploadRegProof.single('registrationProof'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       user.registration_proof = req.file.path;
       return user.save();
@@ -547,7 +523,7 @@ router.post('/profile/registrationProof/add', uploadRegProof.single('registratio
 // Deletes a registration proof
 // @Access private
 router.delete('/profile/registrationProof', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       user.registration_proof = null;
       return user.save();
@@ -577,7 +553,7 @@ router.post('/login', (req, res) => {
   var b2b_login = req.body.b2b_login;
 
   // Find user by email
-  User.findOne({email: new RegExp(`^${email}$`, 'i')})
+  req.context.getModel('User').findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('shop', 'is_particular')
     .then(user => {
       // Check for user
@@ -632,7 +608,7 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/token',  passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .populate('shop', 'is_particular')
     .then( user => {
       send_cookie(user, null, res)
@@ -653,7 +629,7 @@ router.get('/logout', function (req, res) {
 // List all users
 router.get('/all', (req, res) => {
 
-  User.find({is_admin: false})
+  req.context.getModel('User').find({is_admin: false})
     .then(user => {
       if (!user) {
         res.status(400).json({msg: 'No users found'});
@@ -666,7 +642,7 @@ router.get('/all', (req, res) => {
 // @Route GET /myAlfred/api/users/users
 // List all simple users
 router.get('/users', (req, res) => {
-  User.find({is_admin: false, is_alfred: false})
+  req.context.getModel('User').find({is_admin: false, is_alfred: false})
     .then(user => {
       if (!user) {
         res.status(400).json({msg: 'No users found'});
@@ -680,7 +656,7 @@ router.get('/users', (req, res) => {
 // Get roles for an email's user
 router.get('/roles/:email', (req, res) => {
 
-  User.findOne({ email: req.params.email}, 'roles')
+  req.context.getModel('User').findOne({ email: req.params.email}, 'roles')
     .then(user => {
       if (!user) {
         console.log(`Request roles for email ${req.params.email}:[]`)
@@ -695,7 +671,7 @@ router.get('/roles/:email', (req, res) => {
 // @Route GET /myAlfred/api/users/users/:id
 // Get one user
 router.get('/users/:id', (req, res) => {
-  User.findById(req.params.id)
+  req.context.getModel('User').findById(req.params.id)
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'});
@@ -709,7 +685,7 @@ router.get('/users/:id', (req, res) => {
 // @Route DELETE /myAlfred/api/users/:id/role/:role
 // Get one user
 router.delete('/:id/role/:role', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.params.id)
+  req.context.getModel('User').findById(req.params.id)
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'});
@@ -732,7 +708,7 @@ router.delete('/:id/role/:role', passport.authenticate('jwt', {session: false}),
 // @Route PUT /myAlfred/api/users/users/becomeAlfred
 // Update one user is_alfred's status
 router.put('/users/becomeAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findByIdAndUpdate(req.user.id, {is_alfred: true}, {new: true})
+  req.context.getModel('User').findByIdAndUpdate(req.user, {is_alfred: true}, {new: true})
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'});
@@ -746,7 +722,7 @@ router.put('/users/becomeAlfred', passport.authenticate('jwt', {session: false})
 // @Route PUT /myAlfred/api/users/users/deleteAlfred
 // Update one user is_alfred's status
 router.put('/users/deleteAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findByIdAndUpdate(req.user.id, {is_alfred: false}, {new: true})
+  req.context.getModel('User').findByIdAndUpdate(req.user, {is_alfred: false}, {new: true})
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'});
@@ -760,7 +736,7 @@ router.put('/users/deleteAlfred', passport.authenticate('jwt', {session: false})
 // @Route PUT /myAlfred/api/users/alfredViews/:id
 // Update number of views for an alfred
 router.put('/alfredViews/:id', (req, res) => {
-  User.findByIdAndUpdate(req.params.id, {$inc: {number_of_views: 1}}, {new: true})
+  req.context.getModel('User').findByIdAndUpdate(req.params.id, {$inc: {number_of_views: 1}}, {new: true})
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'});
@@ -774,7 +750,7 @@ router.put('/alfredViews/:id', (req, res) => {
 // @Route GET /myAlfred/api/users/home/alfred
 // List alfred homepage
 router.get('/home/alfred', (req, res) => {
-  User.find({is_alfred: true})
+  req.context.getModel('User').find({is_alfred: true})
     .sort({creation_date: -1})
     .limit(10)
     .then(user => {
@@ -789,87 +765,71 @@ router.get('/home/alfred', (req, res) => {
 // @Route GET /myAlfred/api/users/alfred
 // List all alfred
 router.get('/alfred', (req, res) => {
-  User.find({is_alfred: true})
+  req.context.getModel('User').find({is_alfred: true})
     .then(user => {
       if (!user) {
-        res.status(400).json({msg: 'No alfred found'});
+        return res.status(400).json({msg: 'No alfred found'})
       }
-      res.json(user);
+      return res.json(user)
     })
-    .catch(err => res.status(404).json({alfred: 'No alfred found'}));
-});
+    .catch(err => {
+      return res.status(404).json({alfred: `No alfred found:${err}`})
+    })
+})
 
 // @Route GET /myAlfred/api/users/current
 // Get the current user
 // @Access private
 router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .populate('resetToken')
     .then(user => {
-      res.json(user);
+      res.json(user)
     })
     .catch(err => {
-      console.error(err)
+      console.error(`During User.findById:${err}`)
       res.status(404).json({alfred: 'No alfred found'})
-    });
-});
-
-// @Route POST /myAlfred/api/users/email/check
-//  email
-router.get('/email/check', (req, res) => {
-
-  User.findOne({email: req.query.email})
-    .then(user => {
-      sendAccountValidation(req, user);
-      res.json(user);
     })
-    .catch(err => {
-      console.error(err);
-      res.json(null);
-    });
-
-});
+})
 
 // @Route POST /myAlfred/api/users/forgotPassword
 // Send email with link for reset password
 router.post('/forgotPassword', (req, res) => {
-  const email = (req.body.email || "").toLowerCase().trim();
+  const email = (req.body.email || '').toLowerCase().trim()
   const role = req.body.role
 
-  User.findOne({email: new RegExp(`^${email}$`, 'i')})
+  req.context.getModel('User').findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('company')
     .then(user => {
       if (user === null) {
-        console.error(`email ${email} not in database`);
-        res.status(404).json({error: 'Aucun compte avec cet email'});
-      } else {
-        const token = crypto.randomBytes(20).toString('hex');
-        const newToken = new ResetToken({token: token});
-        newToken.save().then(token => {
-          user.update({resetToken: token._id})
-            .catch(err => console.error(err));
-        });
-
-        // Role ? création d'un compte B2B
-        if (req.body.role) {
-          sendB2BAccount(user, user.email, ROLES[role], user.company.name, token, req);
-        }
-        else {
-          sendResetPassword(user, token, req);
-        }
-        res.json(user);
+        console.error(`email ${email} not in database`)
+        return res.status(404).json({error: 'Aucun compte avec cet email'})
       }
-    });
-});
+      const token = crypto.randomBytes(20).toString('hex')
+      req.context.getModel('ResetToken').create({token: token})
+        .then(token => {
+          user.update({resetToken: token._id})
+            .catch(err => console.error(err))
+        })
+      // Role ? création d'un compte B2B
+      if (req.body.role) {
+        sendB2BAccount(user, user.email, ROLES[role], user.company.name, token, req)
+      }
+      else {
+        sendResetPassword(user, token, req)
+      }
+      res.json(user)
+    })
+})
 
 // @Route POST /myAlfred/api/users/resetPassword
 // Reset the password
 router.post('/resetPassword', (req, res) => {
   const password = req.body.password;
   const token = req.body.token;
-  ResetToken.findOne({token: token})
+  req.context.getModel('ResetToken').findOne({token: token})
     .then(resetToken => {
-      User.findOne({resetToken: resetToken._id})
+      req.context.getModel('User').findOne({resetToken: resetToken._id})
         .then(user => {
           if (!user) {
             throw 'No user';
@@ -903,15 +863,16 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
 
   const {errors, isValid} = validateEditProfile(req.body);
 
-  User.findOne({email: req.body.email})
+  req.context.getModel('User').findOne({email: req.body.email})
     .then(user => {
-      if (user && req.body.email != req.user.email) {
+      if (user && req.body.email != req.context.getUser().email) {
         return res.status(400).json({errors: {email: 'Adresse mail déjà utilisée'}});
-      }else if(!isValid){
+      }
+      else if(!isValid){
         return res.status(400).json(errors);
       }
       else {
-        User.findByIdAndUpdate(req.user.id, {
+        req.context.getModel('User').findByIdAndUpdate(req.user, {
           email: req.body.email,
           name: req.body.name,
           firstname: req.body.firstname,
@@ -925,7 +886,7 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
         }, {new: true})
           .then(user => {
             if(req.user.email !== req.body.email){
-              User.findByIdAndUpdate(req.user.id,{
+              req.context.getModel('User').findByIdAndUpdate(req.user,{
                 is_confirmed: false
             }).then(()=>{
                 sendVerificationMail(user, req);
@@ -951,7 +912,7 @@ router.put('/profile/birthday/:user_id', passport.authenticate('b2badmin', {sess
     res.status(400).json(errors)
     return
   }
-  User.findByIdAndUpdate(req.params.user_id, {birthday: req.body.birthday})
+  req.context.getModel('User').findByIdAndUpdate(req.params.user_id, {birthday: req.body.birthday})
     .then (user => res.json())
     .catch( err => res.status(400).json('Date de naissance incorrecte'))
 })
@@ -964,7 +925,7 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
   console.log(`Received:${JSON.stringify(req.body)}`)
   const {errors, isValid} = validateEditProProfile(req.body);
 
-  User.findOne({email: req.body.email})
+  req.context.getModel('User').findOne({email: req.body.email})
     .then(user => {
       if (user && req.body.email != req.user.email) {
         return res.status(400).json({email: 'Adresse mail déjà utilisée'});
@@ -972,7 +933,7 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
         return res.status(400).json(errors);
       }
       else {
-        User.findByIdAndUpdate(req.user.id, {
+        req.context.getModel('User').findByIdAndUpdate(req.user, {
           email: req.body.email,
           name: req.body.name,
           firstname: req.body.firstname,
@@ -982,7 +943,7 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
           .populate('company')
           .then(user => {
             if(req.user.email !== req.body.email){
-              User.findByIdAndUpdate(req.user.id,{ is_confirmed: false })
+              req.context.getModel('User').findByIdAndUpdate(req.user,{ is_confirmed: false })
                 .then(()=>{
                   sendVerificationMail(user, req);
                   res.json({success: 'Profil mis à jour et e-mail envoyé !'});
@@ -1010,7 +971,7 @@ router.put('/profile/editPassword', passport.authenticate('jwt', {session: false
   if (!newPassword.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')) {
     return res.status(400).json({error: 'Le nouveau mot de passe doit contenir au moins :\n\t- 8 caractères\n\t- 1 minuscule\n\t- 1 majuscule\n\t- 1 chiffre'});
   }else {
-    User.findById(req.user.id)
+    req.context.getModel('User').findById(req.user.id)
       .then(user => {
         const promise = admin ? emptyPromise(true) : emptyPromise(bcrypt.compare(password, user.password));
         promise
@@ -1040,44 +1001,62 @@ router.put('/profile/editPassword', passport.authenticate('jwt', {session: false
 // @Access private
 router.put('/account/notifications', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      //user.notifications_message = {};
-      user.notifications_message.email = req.body.messages_email;
-      user.notifications_message.push = req.body.messages_push;
-      user.notifications_message.sms = req.body.messages_sms;
+      if (!user) {
+        return res.status(404).json(`Unknown user ${req.user}`)
+      }
+      user.notifications_message = {
+        email: req.body.messages_email,
+        push: req.body.messages_push,
+        sms: req.body.messages_sms,
+      }
 
-      //user.notifications_rappel = {};
-      user.notifications_rappel.email = req.body.rappel_email;
-      user.notifications_rappel.push = req.body.rappel_push;
-      user.notifications_rappel.sms = req.body.rappel_sms;
+      user.notifications_rappel = {
+        email: req.body.rappel_email,
+        push: req.body.rappel_push,
+        sms: req.body.rappel_sms,
+      }
 
-      //user.notifications_promotions = {};
-      user.notifications_promotions.email = req.body.promotions_email;
-      user.notifications_promotions.push = req.body.promotions_push;
-      user.notifications_promotions.sms = req.body.promotions_sms;
-      user.notifications_promotions.phone = req.body.promotions_phone;
+      user.notifications_promotions={
+        email: req.body.promotions_email,
+        push: req.body.promotions_push,
+        sms: req.body.promotions_sms,
+        phone: req.body.promotions_phone,
+      }
 
-      //user.notifications_community = {};
-      user.notifications_community.email = req.body.community_email;
-      user.notifications_community.push = req.body.community_push;
-      user.notifications_community.sms = req.body.community_sms;
+      user.notifications_community = {
+        email: req.body.community_email,
+        push: req.body.community_push,
+        sms: req.body.community_sms,
+      }
 
-      //user.notifications_assistance = {};
-      user.notifications_assistance.push = req.body.assistance_push;
-      user.notifications_assistance.sms = req.body.assistance_sms;
+      user.notifications_assistance={
+        push: req.body.assistance_push,
+        sms: req.body.assistance_sms,
+      }
 
-      user.save().then(result => res.json(result)).catch(err => console.error(err));
+      user.save()
+        .then(result => {
+          res.json(result)
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(400).json(err)
+        })
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
 
 // @Route PUT /myAlfred/api/users/account/rib
 // Edit rib
 // @Access private
 router.put('/account/rib', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
       user.account = {};
       user.account.name = req.body.name;
@@ -1095,7 +1074,7 @@ router.put('/account/rib', passport.authenticate('jwt', {session: false}), (req,
 // Define preference for indexing account
 // @Access private
 router.put('/account/indexGoogle', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findByIdAndUpdate(req.user.id, {index_google: req.body.index_google})
+  req.context.getModel('User').findByIdAndUpdate(req.user, {index_google: req.body.index_google})
     .then(user => {
       res.json(user);
     })
@@ -1106,21 +1085,24 @@ router.put('/account/indexGoogle', passport.authenticate('jwt', {session: false}
 // Delete the picture profile
 // @Access private
 router.delete('/profile/picture/delete', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findByIdAndUpdate(req.user.id, {
+  req.context.getModel('User').findByIdAndUpdate(req.user, {
     picture: null,
   }, {new: true})
     .then(user => {
-      res.json(user);
+      return res.json(user)
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => {
+      console.error(err)
+      return res.status(400).json(err)
+    })
+})
 
 // @Route PUT /myAlfred/api/users/current/delete
 // Delete the current user
 // @Access private
 router.put('/current/delete', passport.authenticate('jwt', {session: false}), (req, res) => {
   const hash = crypto.randomBytes(10).toString('hex');
-  User.findByIdAndUpdate(req.user.id, {active: false, is_alfred: false, email: hash})
+  req.context.getModel('User').findByIdAndUpdate(req.user, {active: false, is_alfred: false, email: hash})
     .then(() => {
       res.json({msg: 'Compte désactivé'});
     })
@@ -1131,72 +1113,23 @@ router.put('/current/delete', passport.authenticate('jwt', {session: false}), (r
 // Delete recto identity card
 // @Access private
 router.delete('/profile/idCard/recto', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      user.id_card = null;
-      user.id_card_status = null;
-      user.id_card_error = null;
-      user.save().then(user => res.json(user)).catch(err => console.error(err));
-    })
-    .catch(err => {
-      console.error(err);
-    });
-});
-
-// @Route GET /myAlfred/api/users/siren_proof
-// Send email
-// @access private
-router.get('/siren_proof/:siren', (req, res) => {
-  const siren = '514067685';
-  console.log(`Getting SIREN proof:${req.params.siren}`);
-
-  axiosCookieJarSupport(axios);
-  const cookieJar = new tough.CookieJar();
-
-  const transport = axios.create({
-    jar: cookieJar,
-    withCredentials: true,
-  });
-
-  transport.post('https://avis-situation-sirene.insee.fr/jsp/avis-formulaire.jsp')
-    .then(response => {
-      console.log(JSON.stringify(response.headers));
-      transport.post('https://avis-situation-sirene.insee.fr/IdentificationListeSiret.action',
-        data = {
-          'form.siren': siren,
-          'form.critere': 'S',
-          'form.nic': '',
-          'form.departement': '',
-          'form.departement_actif': '',
-        },
-        headers = {
-          'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-          'Accept-Encoding': 'gzip, deflate, br',
-          'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8',
-          'Cache-Control': 'no-cache',
-          'Connection': 'keep-alive',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Host': 'avis-situation-sirene.insee.fr',
-          'Origin': 'https://avis-situation-sirene.insee.fr',
-          'Pragma': 'no-cache',
-          'Referer': 'https://avis-situation-sirene.insee.fr/',
-          'Sec-Fetch-Dest': 'document',
-          'Sec-Fetch-Mode': 'navigate',
-          'Sec-Fetch-Site': 'same-origin',
-          'Sec-Fetch-User': '?1',
-          'Upgrade-Insecure-Requests': '1',
-        })
-        .then(response => {
-          //fs.writeFile('/home/seb/test.html', response.data, function (err) {})
-          res.send(response.data);
+      user.id_card = null
+      user.id_card_status = null
+      user.id_card_error = null
+      user.save()
+        .then(user => {
+          res.json(user)
         })
         .catch(err => {
-          console.error(err);
-          res.json(err.response.data);
-        });
-    });
-});
+          console.error(err)
+        })
+    })
+    .catch(err => {
+      console.error(err)
+    })
+})
 
 /******** ALBUMS *********/
 // @Route POST /myAlfred/api/users/profile/album/add
@@ -1206,7 +1139,7 @@ router.post('/profile/album/add', uploadAlbumPicture.single('myImage'), passport
   const album=new Album({
     label : req.body.label,
     picture: req.file.path,
-    user  : req.user.id,
+    user  : req.user,
   })
   album.save()
     .then( album => {
@@ -1222,22 +1155,22 @@ router.post('/profile/album/add', uploadAlbumPicture.single('myImage'), passport
 // Gets albums
 // @Access private
 router.get('/profile/albums/:user_id', (req, res) => {
-  Album.find({user : req.params.user_id})
-    .then( albums => {
+  req.context.getModel('Album').find({user: req.params.user_id})
+    .then(albums => {
       res.json(albums)
     })
     .catch(err => {
-      console.error(err);
+      console.error(err)
       res.status(500).json({error: err})
-    });
-});
+    })
+})
 
 // @Route POST /myAlfred/api/users/profile/album/picture/add
 // Add a picture to an album
 // @Access private
 router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
   console.log('Adding picture')
-  Album.findById(req.body.album)
+  req.context.getModel('Album').findById(req.body.album)
     .then(album => {
       console.log('Album found')
       album.pictures.push({path: req.file.path})
@@ -1246,10 +1179,10 @@ router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), 
       res.status(200).json({})
     })
     .catch(err => {
-      console.error(err);
+      console.error(err)
       res.status(500).json({error: err})
-    });
-});
+    })
+})
 
 // @Route GET /myAlfred/api/users/mangopay_kyc
 // Send email
@@ -1258,7 +1191,7 @@ router.get('/hook', (req, res) => {
   const doc_id = req.query.RessourceId;
   const kyc_status = req.query.EventType;
   console.log(`Mangopay called ${req.url}`);
-  User.findOne({$or: [{identity_proof_id: doc_id}, {registration_proof_id: doc_id}]})
+  req.context.getModel('User').findOne({$or: [{identity_proof_id: doc_id}, {registration_proof_id: doc_id}]})
     .then(user => {
       if (user) {
         // Got callback for id proof or registration proof ?
@@ -1289,7 +1222,7 @@ router.get('/hook', (req, res) => {
 if (is_production() || is_validation()) {
   new CronJob('0 */15 * * * *', function () {
     console.log("Customers who need mango account");
-    User.find({id_mangopay: null, active: true})
+    req.context.getModel('User').find({id_mangopay: null, active: true})
       .limit(100)
       .then(usrs => {
         usrs.forEach(user => {

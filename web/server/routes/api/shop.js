@@ -11,6 +11,7 @@ const {GID_LEN} = require('../../../utils/consts');
 const {is_production, is_validation}=require('../../../config/config')
 const {normalize} = require('../../../utils/text');
 const {ensureDirectoryExists} = require('../../utils/filesystem')
+const validateShopInput = require('../../validation/shop');
 
 ensureDirectoryExists('static/profile/idCard/')
 const storage = multer.diskStorage({
@@ -25,10 +26,6 @@ const upload = multer({
   storage: storage,
 });
 
-const Shop = require('../../models/Shop');
-const Prestation = require('../../models/Prestation');
-const ServiceUser = require('../../models/ServiceUser');
-const validateShopInput = require('../../validation/shop');
 router.get('/test', (req, res) => res.json({
   msg: 'Shop Works!',
 }));
@@ -60,7 +57,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
     return res.status(400).json(errors);
   }
 
-  Shop.findOne({alfred: req.user.id})
+  req.context.getModel('Shop').findOne({alfred: req.user.id})
     .then(shop => {
       if (shop === null) {
         shop = new Shop();
@@ -94,7 +91,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
       console.log('Saving shop:' + JSON.stringify(shop));
       shop.save()
         .then(shop => {
-          User.findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
+          req.context.getModel('User').findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
             .then(alfred => {
               if (!alfred.mangopay_provider_id) {
                 if (alfred.age<18 || alfred.age>120) {
@@ -127,7 +124,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
 // @Route GET /myAlfred/api/shop/all
 // View all shop
 router.get('/all', (req, res) => {
-  Shop.find()
+  req.context.getModel('Shop').find()
     .sort({creation_date: -1})
     .populate('alfred', '-id_card')
     .populate('services')
@@ -155,22 +152,22 @@ router.get('/all', (req, res) => {
 // @Route GET /myAlfred/api/shop/allStatus
 // View all shop status (pro/particular)
 router.get('/allStatus', (req, res) => {
-  Shop.find({}, 'is_particular is_professional')
+  req.context.getModel('Shop').find({}, 'is_particular is_professional')
     .populate({path: 'alfred', select: '_id'})
     .then(shops => {
-      res.json(shops);
+      res.json(shops)
     })
     .catch(err => {
-      console.error(err);
-      res.status(404).json({shop: 'No shop found'});
-    });
-});
+      console.error(err)
+      res.status(404).json({shop: 'No shop found'})
+    })
+})
 
 // @Route GET /myAlfred/api/shop/:id
 // View one shop
 router.get('/all/:id', (req, res) => {
 
-  Shop.findById(req.params.id)
+  req.context.getModel('Shop').findById(req.params.id)
     .populate('alfred', '-id_card')
     .populate({path: 'services.label', populate: {path: 'service', select: 'label'}})
     .populate('alfred')
@@ -201,7 +198,7 @@ router.get('/all/:id', (req, res) => {
 // Get a shop with alfred id
 router.get('/alfred/:id_alfred', (req, res) => {
 
-  Shop.findOne({
+  req.context.getModel('Shop').findOne({
     alfred: req.params.id_alfred,
   })
     .populate('services')
@@ -248,7 +245,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
 
-  Shop.findOne({alfred: req.user.id})
+  req.context.getModel('Shop').findOne({alfred: req.user.id})
     .populate('alfred')
     .populate({
       path: 'services.label',
@@ -278,7 +275,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
 // @Access private
 // TODO : supperimer serviceUsers et prestations personnalisées
 router.delete('/current/delete', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Shop.findOne({alfred: req.user.id})
+  req.context.getModel('Shop').findOne({alfred: req.user.id})
     .populate('alfred')
     .then(shop => {
       shop.remove().then(() => {
@@ -297,7 +294,7 @@ router.delete('/current/delete', passport.authenticate('jwt', {session: false}),
 router.delete('/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  Shop.findById(req.params.id)
+  req.context.getModel('Shop').findById(req.params.id)
     .then(shop => {
       shop.remove().then(() => res.json({
         success: true,
@@ -315,7 +312,7 @@ router.delete('/:id', passport.authenticate('jwt', {
 router.put('/editBanner', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  Shop.findOneAndUpdate({
+  req.context.getModel('Shop').findOneAndUpdate({
     alfred: req.user.id,
   }, {
     picture: req.body.picture,
@@ -336,7 +333,7 @@ router.put('/editBanner', passport.authenticate('jwt', {
 router.put('/editWelcomeMessage', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  Shop.findOneAndUpdate({
+  req.context.getModel('Shop').findOneAndUpdate({
     alfred: req.user.id,
   }, {
     welcome_message: req.body.welcome_message,
@@ -357,7 +354,7 @@ router.put('/editWelcomeMessage', passport.authenticate('jwt', {
 router.put('/editParameters', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  Shop.findOneAndUpdate({
+  req.context.getModel('Shop').findOneAndUpdate({
     alfred: req.user.id,
   }, {
     booking_request: req.body.booking_request,
@@ -385,7 +382,7 @@ router.put('/editParameters', passport.authenticate('jwt', {
 // Edit personal status for a shop
 // @Access private
 router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Shop.findOneAndUpdate({alfred: req.user.id}, {
+  req.context.getModel('Shop').findOneAndUpdate({alfred: req.user.id}, {
     is_particular: req.body.is_particular,
     is_professional: req.body.is_professional,
     company: req.body.is_particular ? null : req.body.company,
@@ -408,7 +405,7 @@ if (is_production() || is_validation()) {
     User.find({is_alfred: true, mangopay_provider_id: null, active: true})
       .then(alfreds => {
         alfreds.forEach(alfred => {
-          Shop.findOne({alfred: alfred})
+          req.context.getModel('Shop').findOne({alfred: alfred})
             .then(shop => {
               console.log(`Found alfred ${alfred.name} and shop ${shop._id}`);
               if (alfred.age<18 || alfred.age>120) {

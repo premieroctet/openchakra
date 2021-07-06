@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const {normalize} = require('../../utils/text');
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const CategorySchema = new Schema({
   particular_label: {
@@ -26,12 +25,10 @@ const CategorySchema = new Schema({
   },
   tags: [{
     type: Schema.Types.ObjectId,
-    ref: 'tag',
+    ref: 'Tag',
   }],
-});
+})
 
-CategorySchema.index({label: 'text'});
+CategorySchema.index({label: 'text'})
 
-const Category = mongoose.model('category', CategorySchema);
-
-module.exports = Category;
+module.exports = CategorySchema

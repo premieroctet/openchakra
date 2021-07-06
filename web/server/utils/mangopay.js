@@ -6,7 +6,6 @@ const mangopay = require('mangopay2-nodejs-sdk');
 const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType');
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType');
-const Company=require('../models/Company')
 const mangoApi = new mangopay(MANGOPAY_CONFIG)
 const process=require('process')
 const request = require('request');
@@ -263,14 +262,10 @@ const payAlfred = booking => {
   const promise= [ADMIN, MANAGER].includes(role) ? Company.findById(booking.user.company) : emptyPromise(booking.user)
 
   promise
-    .then( entity => {
+    .then(entity => {
       const id_mangopay_user=entity.id_mangopay
       console.log(`payAlfred : Got entity ${entity._id}, mangopay_id:${id_mangopay_user}`)
       mangoApi.Users.getWallets(id_mangopay_user)
-        .catch(err => {
-          console.error('Err:' + JSON.stringify(err));
-          return;
-        })
         .then(wallets => {
           const wallet_id = wallets[0].Id;
           mangoApi.Users.getWallets(id_mangopay_alfred)
@@ -349,13 +344,16 @@ const payAlfred = booking => {
                 },
               );
             });
-        });
+        })
+        .catch(err => {
+          return console.error(`payAlfred:${err}`)
+        })
   })
 };
 
 // TODO : update hook s'il existe pour éviter les warning au démarrage
 const install_hooks= (hook_types, url) => {
-
+  return
   if (is_development() && !['darwin', 'linux'].includes(process.platform)) {
     return console.log(`Dev mode: skipped install_hooks(${hook_types})`)
   }

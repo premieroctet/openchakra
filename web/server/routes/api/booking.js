@@ -18,6 +18,7 @@ const {
   sendLeaveCommentForClient, sendLeaveCommentForAlfred,
 } = require('../../utils/mailing')
 const {getRole} = require('../../utils/serverContext')
+const {connectionPool}=require('../../utils/database')
 
 moment.locale('fr')
 
@@ -26,7 +27,7 @@ router.get('/test', (req, res) => res.json({msg: 'Booking Works!'}))
 // @Route GET /myAlfred/api/booking/alfredBooking
 router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id)
-  Booking.find({alfred: userId})
+  req.context.getModel('Booking').find({alfred: userId})
     .sort([['date', -1]])
     .populate('user', ['name', 'firstname', 'picture', 'company'])
     .populate('chatroom')
@@ -43,7 +44,7 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
 
 router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id)
-  Booking.find({user: userId})
+  req.context.getModel('Booking').find({user: userId})
     .sort([['date', -1]])
     .populate('alfred', '-id_card')
     .populate({
@@ -67,7 +68,7 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
 
 router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id)
-  Booking.find({
+  req.context.getModel('Booking').find({
     $and: [
       {
         $or: [
@@ -87,7 +88,7 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
     .then(booking => {
       booking.forEach(b => {
         if (!moment(b.date).isBetween(moment(b.date), moment(b.date).add(1, 'd'))) {
-          Booking.findByIdAndUpdate(b._id, {status: BOOK_STATUS.EXPIRED}, {new: true})
+          req.context.getModel('Booking').findByIdAndUpdate(b._id, {status: BOOK_STATUS.EXPIRED}, {new: true})
             .then(newB => {
               res.json(newB)
             })
@@ -123,16 +124,13 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.status = req.body.status
   bookingFields.serviceUserId = req.body.serviceUserId
   bookingFields.cesu_amount = req.body.cesu_amount
-  bookingFields.user_role = getRole(req)
+  bookingFields.user_role = getRole(req) || null
 
-  const newBooking = new Booking(bookingFields)
-
-
-  newBooking.save()
+  req.context.getModel('Booking').create(bookingFields)
     .then(booking => {
       if (booking.status === BOOK_STATUS.INFO || booking.status === BOOK_STATUS.TO_CONFIRM) {
         // Reload to get user,alfred,service
-        Booking.findById(booking._id)
+        req.context.getModel('Booking').findById(booking._id)
           .populate('alfred')
           .populate('user')
           .then(book => {
@@ -152,7 +150,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
             console.error(err)
           })
       }
-      console.log(booking)
+      console.log(`New booking:${booking}`)
       res.json(booking)
     })
     .catch(err => {
@@ -166,32 +164,36 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 // @Access private
 router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  Booking.find()
+  req.context.getModel('Booking').find()
     .populate('alfred')
     .populate('user')
     .populate('prestation')
     .then(booking => {
       if (typeof booking !== 'undefined' && booking.length > 0) {
         res.json(booking)
-      } else {
+      }
+      else {
         return res.status(400).json({msg: 'No booking found'})
       }
     })
-    .catch(() => res.status(404).json({booking: 'No booking found'}))
+    .catch(() => {
+      res.status(404).json({booking: 'No booking found'})
+    })
 })
 
 // @Route GET /myAlfred/api/booking/currentAlfred
 // View all the booking for the current alfred
 // @Access private
 router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({alfred: req.user.id})
+  req.context.getModel('Booking').find({alfred: req.user.id})
     .populate('alfred', {path: 'picture'})
     .populate('user')
     .populate('prestation')
     .then(booking => {
       if (booking) {
         res.json(booking)
-      } else {
+      }
+      else {
         return res.status(400).json({msg: 'No booking found'})
       }
     })
@@ -204,7 +206,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 // @Access private
 router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  Booking.findById(req.params.id)
+  req.context.getModel('Booking').findById(req.params.id)
     .populate('alfred', '-id_card')
     .populate('user', '-id_card')
     .populate('prestation')
@@ -212,7 +214,8 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     .then(booking => {
       if (booking) {
         res.json(booking)
-      } else {
+      }
+      else {
         return res.status(400).json({msg: 'No booking found'})
       }
     })
@@ -227,11 +230,13 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 // Delete one booking
 // @Access private
 router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.findById(req.params.id)
+  req.context.getModel('Booking').findById(req.params.id)
     .then(message => {
       message.remove().then(() => res.json({success: true}))
     })
-    .catch(() => res.status(404).json({bookingnotfound: 'No booking found'}))
+    .catch(() => {
+      res.status(404).json({bookingnotfound: 'No booking found'})
+    })
 })
 
 router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -245,7 +250,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
   }
 
   console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}`)
-  Booking.findByIdAndUpdate(req.params.id, obj, {new: true})
+  req.context.getModel('Booking').findByIdAndUpdate(req.params.id, obj, {new: true})
     .populate('alfred')
     .populate('user')
     .populate('prestation')
@@ -275,7 +280,8 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
         if (booking.status === BOOK_STATUS.CANCELED) {
           if (canceller_id === booking.user._id) {
             sendBookingCancelledByClient(booking)
-          } else {
+          }
+          else {
             sendBookingCancelledByAlfred(booking, req)
           }
         }
