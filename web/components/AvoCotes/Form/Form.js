@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
 import Divider from '@material-ui/core/Divider'
+import Button from '@material-ui/core/Button'
 
 function Form({classes}) {
   return(
@@ -42,7 +43,7 @@ function Form({classes}) {
                 <Typography>Le nom</Typography>
               </Grid>
             </Grid>
-            <Grid container spacing={3} style={{width: '100%', margin: 0, display: 'flex', alignItems: 'center'}}>
+            <Grid container spacing={3} style={{width: '100%', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
               <Grid item>
                 <IconButton aria-label="RemoveIcon">
                   <RemoveIcon />
@@ -61,6 +62,22 @@ function Form({classes}) {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Divider/>
+        </Grid>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} className={classes.containerPrice}>
+          <Grid item>
+            <Typography>Coût total de mon installation : </Typography>
+          </Grid>
+          <Grid item>
+            <Typography>109€</Typography>
+          </Grid>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Button variant="contained" classes={{root: classes.buttonPaid}}>
+            Payer
+          </Button>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Typography>* les télecommandes ne nécessitent pas d'installation</Typography>
         </Grid>
       </Grid>
     </>

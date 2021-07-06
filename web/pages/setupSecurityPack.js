@@ -10,7 +10,7 @@ function setupSecurityPack() {
       <Grid>
         <Banner/>
       </Grid>
-      <Grid>
+      <Grid style={{marginTop: '5vh'}}>
         <MainSection/>
       </Grid>
 
