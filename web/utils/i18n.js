@@ -272,6 +272,14 @@ const AVOCOTES = {
   phone: '02 35 00 00 00',
   phoneTextFirst: 'Appel gratuit depuis la',
   phoneTextSecond: 'France metropolitaine',
+  ourCompanyTitleFirst: 'Pourquoi faire confiance a alfred pour',
+  ourCompanyTitleSecond: 'L\'installation de mon pack avocotes protection ?',
+  ourCompanyDescriptionFirst: 'Grâce à notre communauté d\'entrepreneurs indépendants, quel que soit votre besoin en matière de services, Alfred on-demand y répond et vous accompagne dans votre démarche.',
+  ourCompanyDescriptionSecond: 'Nous sélectionnons pour vous les meilleurs talents en parfaite adéquation avec vos besoins, en essayant de nous adpater aux mieux à vos contraintes d\'agenda. Nos installateurs sont vérifiés et fromés aux solutions Avocotés pour vous prêter main forte dans le cadre de votre installation.',
+  address: '5 rue jacques Monod',
+  postal: '76130 mont saint aignan',
+  phoneContact: 'tel.: 02 35 00 00 00',
+  mail: 'Mail: avocotes@alfred-ondemand.fr',
 }
 
 const BOOKING = {

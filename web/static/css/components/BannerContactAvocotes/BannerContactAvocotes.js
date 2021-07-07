@@ -5,6 +5,7 @@ export default theme => ({
     height: 500,
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
+    color: 'white',
   },
   container: {
     display: 'flex',
@@ -16,8 +17,10 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: 'black',
+    alignItems: 'center',
     borderRadius: 40,
     width: 500,
-    padding: 16,
+    padding: 10,
+    margin: 0,
   },
 })

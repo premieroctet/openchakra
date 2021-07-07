@@ -18,11 +18,11 @@ function BannerContact({classes}) {
             <h2 style={{textAlign: 'center'}}>{AVOCOTES.contactUs}</h2>
           </Grid>
           <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-            <Grid className={classes.containerFakeButton}>
-              <Grid>
-                <Typography>{AVOCOTES.phone}</Typography>
+            <Grid container spacing={2} className={classes.containerFakeButton}>
+              <Grid item>
+                <Typography style={{fontWeight: 'bold', fontSize: 30}}>{AVOCOTES.phone}</Typography>
               </Grid>
-              <Grid>
+              <Grid item>
                 <Grid>
                   <Typography>{AVOCOTES.phoneTextFirst}</Typography>
                 </Grid>
