@@ -264,6 +264,14 @@ const AVOCOTES = {
   titleEquipment: 'Materiel apporte et fourni par votre installateur :',
   titleCordonnates: 'Vos Cordonées :',
   titleDetails: 'Détaillez votre commande :',
+  totalText: 'Coût total de mon installation :',
+  paidButton: 'Payer',
+  helperText: '* les télecommandes ne nécessitent pas d\'installation',
+  askQuestion: 'Une question sur votre installation ?',
+  contactUs: 'Contactez nous',
+  phone: '02 35 00 00 00',
+  phoneTextFirst: 'Appel gratuit depuis la',
+  phoneTextSecond: 'France metropolitaine',
 }
 
 const BOOKING = {

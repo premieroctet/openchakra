@@ -65,7 +65,7 @@ function Form({classes}) {
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} className={classes.containerPrice}>
           <Grid item>
-            <Typography>Coût total de mon installation : </Typography>
+            <Typography>{AVOCOTES.totalText}</Typography>
           </Grid>
           <Grid item>
             <Typography>109€</Typography>
@@ -73,11 +73,11 @@ function Form({classes}) {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Button variant="contained" classes={{root: classes.buttonPaid}}>
-            Payer
+            {AVOCOTES.paidButton}
           </Button>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Typography>* les télecommandes ne nécessitent pas d'installation</Typography>
+          <Typography>{AVOCOTES.helperText}</Typography>
         </Grid>
       </Grid>
     </>
