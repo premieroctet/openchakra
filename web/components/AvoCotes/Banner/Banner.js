@@ -8,14 +8,13 @@ function Banner({classes}) {
 
   return(
     <>
-      <Grid container spacing={3} className={classes.container}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+      <Grid container className={classes.container}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{padding: 20}}>
           <img
             alt={'logo_myAlfred'}
             title={'logo_myAlfred'}
-            src={'../../../static/assets/icon/logo.svg'}
+            src={'../../../static/assets/icon/logoOnDemand.svg'}
             height={64}
-            style={{filter: 'invert(1)'}}
           />
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerImgAndTitle}>
@@ -24,14 +23,14 @@ function Banner({classes}) {
               <h1 className={classes.title}>{AVOCOTES.title}</h1>
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h2 className={classes.subtitle}>{AVOCOTES.subtitle}</h2>
+              <h3 className={classes.subtitle}>{AVOCOTES.subtitle}</h3>
             </Grid>
           </Grid>
           <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
             <img
               alt={'equipement'}
               title={'equipment'}
-              src={'../../../static/assets/icon/creaShopBg.svg'}
+              src={'../../../static/assets/img/avocotes/avocote.svg'}
               className={classes.imgEquipment}
             />
           </Grid>

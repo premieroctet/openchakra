@@ -14,9 +14,8 @@ function Footer({classes}) {
             <img
               alt={'logo_myAlfred'}
               title={'logo_myAlfred'}
-              src={'../../../static/assets/icon/logo.svg'}
-              height={128}
-              style={{filter: 'invert(1)'}}
+              src={'../../../static/assets/icon/logoOnDemand.svg'}
+              height={98}
             />
           </Grid>
           <Grid>

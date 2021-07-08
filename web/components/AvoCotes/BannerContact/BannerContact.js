@@ -12,10 +12,10 @@ function BannerContact({classes}) {
       <Grid className={classes.mainContainer}>
         <Grid container className={classes.container}>
           <Grid item>
-            <h2 style={{textAlign: 'center'}}>{AVOCOTES.askQuestion}</h2>
+            <h2 style={{textAlign: 'center', color: 'white'}}>{AVOCOTES.askQuestion}</h2>
           </Grid>
           <Grid item>
-            <h2 style={{textAlign: 'center'}}>{AVOCOTES.contactUs}</h2>
+            <h2 style={{textAlign: 'center', color: 'white'}}>{AVOCOTES.contactUs}</h2>
           </Grid>
           <Grid item style={{display: 'flex', justifyContent: 'center'}}>
             <Grid container spacing={2} className={classes.containerFakeButton}>

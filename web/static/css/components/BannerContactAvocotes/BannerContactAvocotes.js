@@ -1,10 +1,11 @@
 export default theme => ({
   mainContainer: {
-    backgroundImage: 'url(../../../static/assets/icon/banneProfil.svg)',
+    backgroundImage: 'url(../../../static/assets/img/avocotes/banner.jpeg)',
     width: '100%',
     height: 500,
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
+    backgroundPosition: 'center',
     color: 'white',
   },
   container: {
