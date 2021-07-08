@@ -359,7 +359,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     obj.end_time = req.body.end_time;
   }
 
-  console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}`)
+  console.trace(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}`)
   Booking.findByIdAndUpdate(req.params.id, obj, {new: true})
     .populate('alfred')
     .populate('user')

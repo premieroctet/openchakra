@@ -93,7 +93,10 @@ const createMangoProvider = (user, shop) => {
         .then(wallet => {
           console.log(`Created Wallet ${JSON.stringify(wallet)}`);
         });
-    });
+    })
+    .catch (err => {
+      console.error(`Creating mango provider for ${user.name} failed:${JSON.stringify(err)}`)
+    })
 };
 
 const addIdIfRequired = user => {
