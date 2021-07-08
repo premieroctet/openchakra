@@ -174,7 +174,7 @@ class UserServicesPreview extends React.Component {
                               reviews = reviews.filter(r => r.serviceUser._id === id);
                             }
                             st['reviews']=reviews
-                            const equipmentsPromise=this.state.allEquipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
+                            const equipmentsPromise=serviceUser.service.equipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
                             Promise.all(equipmentsPromise)
                               .then( res => {
                                 st['allDetailEquipments']=res.map( r => r.data)
