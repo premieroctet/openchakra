@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const {CESU} = require('../../utils/consts');
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const {CESU} = require('../../utils/consts')
 const {hideIllegal} = require('../../utils/text')
 
 const ShopSchema = new Schema({
@@ -30,7 +30,7 @@ const ShopSchema = new Schema({
   },
   welcome_message: {
     type: String,
-    set : text => hideIllegal(text),
+    set: text => hideIllegal(text),
   },
   flexible_cancel: {
     type: Boolean,
@@ -61,22 +61,22 @@ const ShopSchema = new Schema({
     siret: {
       type: String,
     },
-    vat_subject : {
+    vat_subject: {
       type: Boolean,
       default: false,
     },
-    vat_number : {
+    vat_number: {
       type: String,
     },
   },
   services: [{
     type: Schema.Types.ObjectId,
-    ref: 'serviceUser',
+    ref: 'ServiceUser',
 
   }],
   alfred: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
   },
   picture: String,
   // particulier CESU : oblige, accepte, refuse
@@ -98,6 +98,6 @@ const ShopSchema = new Schema({
   id_mangopay: {
     type: String,
   },
-});
+})
 
-module.exports = Shop = mongoose.model('shop', ShopSchema);
+module.exports = ShopSchema

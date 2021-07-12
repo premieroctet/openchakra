@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-
 const validateNewsletterInput = require('../../validation/newsletter');
-const Newsletter = require('../../models/Newsletter');
 
 router.get('/test', (req, res) => res.json({msg: 'Newsletter Works!'}));
 
@@ -17,7 +15,7 @@ router.post('/add', (req, res) => {
     return res.status(400).json(errors);
   }
 
-  Newsletter.findOne({email: req.body.email})
+  req.context.getModel('Newsletter').findOne({email: req.body.email})
     .then(newsletter => {
       if (newsletter) {
         errors.email = 'This email already exists';
@@ -43,7 +41,7 @@ router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) =>
   const admin = decode.is_admin;
 
   if (admin) {
-    Newsletter.find()
+    req.context.getModel('Newsletter').find()
       .then(newsletter => {
         if (typeof newsletter !== 'undefined' && newsletter.length > 0) {
           res.json(newsletter);
@@ -67,7 +65,7 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
   const admin = decode.is_admin;
 
   if (admin) {
-    Newsletter.findById(req.params.id)
+    req.context.getModel('Newsletter').findById(req.params.id)
       .then(newsletter => {
         if (Object.keys(newsletter).length === 0 && newsletter.constructor === Object) {
           return res.status(400).json({msg: 'No email found'});
@@ -89,7 +87,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
-  Newsletter.findById(req.params.id)
+  req.context.getModel('Newsletter').findById(req.params.id)
     .then(newsletter => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'});

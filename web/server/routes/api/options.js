@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const Options = require('../../models/Options');
-
 router.get('/test', (req, res) => res.json({msg: 'Options Works!'}));
 
 

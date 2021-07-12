@@ -4,9 +4,6 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
-
-const Favoris = require('../../models/Favoris');
-
 router.get('/test', (req, res) => res.json({msg: 'Favoris Works!'}));
 
 // @Route POST /myAlfred/api/favoris/add

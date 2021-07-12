@@ -2,13 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const _ = require('lodash');
-
-const Service = require('../../models/Service');
-const Category = require('../../models/Category');
-const Prestation = require('../../models/Prestation');
-const Job = require('../../models/Job');
-const ServiceUser = require('../../models/ServiceUser');
-
 const mongoose = require('mongoose');
 
 const {PART, PRO}=require('../../../utils/consts');
@@ -16,7 +9,7 @@ const {PART, PRO}=require('../../../utils/consts');
 // @Route GET /myAlfred/api/service/all
 // View all service
 router.get('/all', (req, res) => {
-  Service.find()
+  req.context.getModel('Service').find()
     .sort({'label': 1})
     .populate('tags')
     .populate('equipments')
@@ -34,7 +27,7 @@ router.get('/all', (req, res) => {
 // @Route GET /myAlfred/api/service/professional
 // View all professional services
 router.get('/professional', (req, res) => {
-  Service.find({ professional_access: true}, 'label')
+  req.context.getModel('Service').find({ professional_access: true}, 'label')
   .sort({'label': 1})
     .then(services => {
       if (!services) {
@@ -49,7 +42,7 @@ router.get('/professional', (req, res) => {
 // @Route GET /myAlfred/api/service/particular
 // View all pro services
 router.get('/particular', (req, res) => {
-  Service.find({ particular_access: true}, 'label')
+  req.context.getModel('Service').find({ particular_access: true}, 'label')
   .sort({'label': 1})
     .then(services => {
       if (!services) {
@@ -64,56 +57,34 @@ router.get('/particular', (req, res) => {
 // @Route GET /myAlfred/api/service/allCount
 // View all service with count of serviceUser
 router.get('/allCount', (req, res) => {
-  // FIX : only for Mongo V4
-  /**
-   Service.aggregate().lookup({
-    from: "serviceusers", localField: "_id", foreignField: "service", as:'serviceusers'
-    })
-   .then(services => {
-      if(typeof services !== 'undefined' && services.length > 0){
-        var counts=[]
-        services.forEach( s => {
-          counts.push({ _id: s._id, label: `${s.label} (${s.serviceusers.length})` })
-        });
-        res.json(counts)
-      }
-      else {
-        return res.status(400).json({msg: 'No service found'});
-      }
-    })
-   .catch(err => {
-      console.error(err)
-      res.status(404).json({ service: 'No service found' })
-    });
-   */
-  Service.find({})
+  req.context.getModel('Service').find({})
     .sort({label: 1})
     .then(services => {
-      ServiceUser.find({})
+      req.context.getModel('ServiceUser').find({})
         .then(sus => {
-          var counts = [];
+          let counts = []
           services.forEach(service => {
-            const suCount = sus.filter(su => su.service._id.equals(service._id)).length;
-            counts.push({_id: service._id, label: `${service.label} (${suCount})`});
-          });
-          res.json(counts);
+            const suCount = sus.filter(su => su.service._id.equals(service._id)).length
+            counts.push({_id: service._id, label: `${service.label} (${suCount})`})
+          })
+          return res.json(counts)
         })
         .catch(err => {
-          console.error(err);
-          res.status(404).json({service: 'No service found'});
-        });
+          console.error(err)
+          return res.status(404).json({service: 'No service found'})
+        })
     })
     .catch(err => {
-      console.error(err);
-      res.status(404).json({service: 'No service found'});
-    });
-});
+      console.error(err)
+      return res.status(404).json({service: `No service found:${err}`})
+    })
+})
 
 // @Route GET /myAlfred/api/service/random/home
 // View random service homepage
 router.get('/random/home', (req, res) => {
 
-  Service.countDocuments().exec(function (err, count) {
+  req.context.getModel('Service').countDocuments().exec(function (err, count) {
 
     let limitrecords = 6;
 
@@ -126,7 +97,7 @@ router.get('/random/home', (req, res) => {
     let random = Math.floor(Math.random() * count);
 
 
-    Service.find().populate('category').limit(6).skip(random).exec(
+    req.context.getModel('Service').find().populate('category').limit(6).skip(random).exec(
       function (err, result) {
 
         res.json(result);
@@ -140,7 +111,7 @@ router.get('/random/home', (req, res) => {
 // View one service
 router.get('/:id', (req, res) => {
 
-  Service.findById(req.params.id)
+  req.context.getModel('Service').findById(req.params.id)
     .populate('tags')
     .populate('equipments')
     .populate('category')
@@ -160,7 +131,7 @@ router.get('/:id', (req, res) => {
 // View all service per category
 router.get('/all/:category', (req, res) => {
 
-  Service.find({category: req.params.category})
+  req.context.getModel('Service').find({category: req.params.category})
     .sort({'label': 1})
     .populate('tags')
     .populate('equipments')
@@ -181,10 +152,10 @@ router.get('/all/:category', (req, res) => {
 // View all service per category filtered by already provided Alfred's services
 router.get('/currentAlfred/:category', passport.authenticate('jwt', {session: false}), async (req, res) => {
 
-  let serviceUsers = await ServiceUser.find({user: req.user});
+  let serviceUsers = await req.context.getModel('ServiceUser').find({user: req.user});
   serviceUsers = serviceUsers.map(s => s.service);
 
-  Service.find({category: req.params.category, _id: {$nin: serviceUsers}})
+  req.context.getModel('Service').find({category: req.params.category, _id: {$nin: serviceUsers}})
     .sort({'label': 1})
     .populate('tags')
     .populate('equipments')
@@ -205,7 +176,7 @@ router.get('/currentAlfred/:category', passport.authenticate('jwt', {session: fa
 // View all service per tags
 router.get('/all/tags/:tags', (req, res) => {
 
-  Service.find({tags: req.params.tags})
+  req.context.getModel('Service').find({tags: req.params.tags})
     .sort({'label': 1})
     .populate('tags')
     .populate('equipments')
@@ -228,7 +199,7 @@ router.get('/all/tags/:tags', (req, res) => {
 // Return { category_name : { services} }
 router.get('/keyword/:kw', (req, res) => {
 
-  Service.find({}, 'label s_label particular_access professional_access')
+  req.context.getModel('Service').find({}, 'label s_label particular_access professional_access')
     .populate('category', 's_particular_label s_professional_label')
     .populate({path: 'prestations', select:'s_label particular_access professional_access private_alfred', populate:{path:'job', select:'s_label'}})
     .sort({s_label:1})

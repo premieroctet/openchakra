@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 // TODO: supprimer name_logo, logo2, nae_logo2
 const EquipmentSchema = new Schema({
@@ -14,6 +14,6 @@ const EquipmentSchema = new Schema({
     type: String,
   },
   name_logo2: String,
-});
+})
 
-module.exports = EquipmentUser = mongoose.model('equipment', EquipmentSchema);
+module.exports = EquipmentSchema
