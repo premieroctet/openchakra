@@ -9,8 +9,8 @@ function Footer({classes}) {
   return(
     <>
       <Grid className={classes.mainContainer}>
-        <Grid style={{width: '100%', margin: 0, display: 'flex', justifyContent: 'space-between'}}>
-          <Grid>
+        <Grid container spacing={3} style={{width: '100%', margin: 0}}>
+          <Grid item xl={4} lg={4} md={12} sm={12} xs={12} className={classes.containerLogo}>
             <img
               alt={'logo_myAlfred'}
               title={'logo_myAlfred'}
@@ -18,7 +18,7 @@ function Footer({classes}) {
               height={98}
             />
           </Grid>
-          <Grid>
+          <Grid item xl={4} lg={4} md={6} sm={6} xs={12}>
             <Grid container spacing={2} style={{width: '100%', margin: 0, marginBottom: '3vh'}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
                 <Typography>{AVOCOTES.address}</Typography>
@@ -36,7 +36,7 @@ function Footer({classes}) {
               </Grid>
             </Grid>
           </Grid>
-          <Grid>
+          <Grid item xl={4} lg={4} md={6} sm={6} xs={12}>
             <Grid container spacing={2} style={{width: '100%', margin: 0, display: 'flex', flexDirection: 'column'}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
                 <Typography>{AVOCOTES.askQuestion}</Typography>
@@ -53,7 +53,6 @@ function Footer({classes}) {
                 <Typography>{`${AVOCOTES.phoneTextFirst } ${ AVOCOTES.phoneTextSecond}`}</Typography>
               </Grid>
             </Grid>
-
           </Grid>
         </Grid>
       </Grid>

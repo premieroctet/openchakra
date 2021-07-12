@@ -4,6 +4,10 @@ export default theme => ({
     width: '100%',
     paddingRight: '10%',
     paddingLeft: '10%',
+    [theme.breakpoints.down('xs')]: {
+      paddingRight: '5%',
+      paddingLeft: '5%',
+    },
   },
   containerText: {
     margin: 0,
@@ -14,6 +18,9 @@ export default theme => ({
   dividerContainer: {
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
+    },
   },
   titleSection: {
     color: 'black',

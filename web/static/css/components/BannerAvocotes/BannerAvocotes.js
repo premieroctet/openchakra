@@ -4,6 +4,9 @@ export default theme => ({
     width: '100%',
     height: '60vh',
     margin: 0,
+    [theme.breakpoints.down('sm')]:{
+      height: '80vh'
+    },
   },
   title: {
     color: 'white',

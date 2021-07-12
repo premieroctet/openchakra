@@ -7,6 +7,7 @@ export default theme => ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     color: 'white',
+
   },
   container: {
     display: 'flex',
@@ -23,5 +24,9 @@ export default theme => ({
     width: 500,
     padding: 10,
     margin: 0,
+    [theme.breakpoints.down('xs')]: {
+      width: '80%',
+
+    },
   },
 })

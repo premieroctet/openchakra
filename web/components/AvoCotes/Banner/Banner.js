@@ -18,7 +18,7 @@ function Banner({classes}) {
           />
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerImgAndTitle}>
-          <Grid container item xl={6} lg={6} md={6} sm={6} xs={6}>
+          <Grid container item xl={6} lg={6} md={6} sm={12} xs={12}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <h1 className={classes.title}>{AVOCOTES.title}</h1>
             </Grid>
@@ -26,7 +26,7 @@ function Banner({classes}) {
               <h3 className={classes.subtitle}>{AVOCOTES.subtitle}</h3>
             </Grid>
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+          <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
             <img
               alt={'equipement'}
               title={'equipment'}
