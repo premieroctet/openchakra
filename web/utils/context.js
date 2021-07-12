@@ -4,6 +4,7 @@ const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
 const {isB2BDisabled} = require('../config/config')
 const jwt = require('jsonwebtoken')
+const {getPartnerFromHostname}=require('./partner')
 
 const getLoggedUser = () => {
   if (typeof localStorage=='undefined') {
@@ -170,10 +171,14 @@ const getUserLabel = user => {
   })
 }
 
+const getPartner = () => {
+  return getPartnerFromHostname(window.location.hostname)
+}
+
 module.exports = {
   isB2BStyle, isB2BEmployee, isB2BAdmin, isB2BManager, isModeCompany, isApplication, isMobile,
   getRole, setStatusRegister, removeStatusRegister, hasStatusRegister,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
-  getUserLabel, isLoggedUserRegistered, isIOS, isAndroid,
+  getUserLabel, isLoggedUserRegistered, isIOS, isAndroid, getPartner,
 }
