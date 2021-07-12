@@ -6,8 +6,6 @@ const passport = require('passport');
 const nodemailer = require('nodemailer');
 const {sendNewMessageToAlfred, sendNewMessageToClient} = require('../../utils/mailing');
 
-const ChatRooms = require('../../models/ChatRooms');
-
 // FIX : sendNewMessage de client vers Alfred en double
 
 router.get('/test', (req, res) => res.json({msg: 'ChatRooms Works!'}));
@@ -15,7 +13,7 @@ router.get('/test', (req, res) => res.json({msg: 'ChatRooms Works!'}));
 // Get chatrooms for one user
 router.get('/userChatRooms', passport.authenticate('jwt', {session: false}), (req, res) => {
   const user = mongoose.Types.ObjectId(req.user.id);
-  ChatRooms.find({
+  req.context.getModel('ChatRoom').find({
     $or: [
       {
         emitter: user,
@@ -45,7 +43,7 @@ router.get('/userChatRooms', passport.authenticate('jwt', {session: false}), (re
 
 // Get one chatroom
 router.get('/userChatRoom/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  ChatRooms.findById(req.params.id)
+  req.context.getModel('ChatRoom').findById(req.params.id)
     .populate('attendees')
     .then(chatroom => {
       if (!chatroom) {
@@ -67,17 +65,22 @@ router.post('/addAndConnect', (req, res) => {
   const emitter = mongoose.Types.ObjectId(req.body.emitter);
   const recipient = mongoose.Types.ObjectId(req.body.recipient);
   const random = uuidv4();
-  ChatRooms.findOne({attendees: {$all: [req.body.emitter, req.body.recipient]}})
+  req.context.getModel('ChatRoom').findOne({attendees: {$all: [req.body.emitter, req.body.recipient]}})
     .then(users => {
       if (!users) {
-        chatRoomFields = {};
-        chatRoomFields.name = 'room-' + random;
-        chatRoomFields.lu = req.body.lu;
-        chatRoomFields.emitter = emitter;
-        chatRoomFields.recipient = recipient;
-
-        const newChat = new ChatRooms(chatRoomFields);
-        newChat.save().then(chat => res.json(chat)).catch(err => console.error(err));
+        chatRoomFields = {
+          name: `room-${random}`,
+          lu: req.body.lu,
+          emitter: emitter,
+          recipient: recipient,
+        }
+        req.context.getModel('ChatRoom').create(chatRoomFields)
+          .then(chat => {
+            res.json(chat)
+          })
+          .catch(err => {
+            console.error(err)
+          })
       }
 
       if (users) {
@@ -91,7 +94,7 @@ router.post('/addAndConnect', (req, res) => {
 });
 
 router.put('/saveMessages/:id', (req, res) => {
-  ChatRooms.findByIdAndUpdate(req.params.id, {
+  req.context.getModel('ChatRoom').findByIdAndUpdate(req.params.id, {
     lusender: req.body.messages.lusender,
     lurecipient: req.body.messages.lurecipient,
     messages: req.body.messages,
@@ -101,7 +104,7 @@ router.put('/saveMessages/:id', (req, res) => {
         return res.status(404).json({msg: 'no chatroom found'});
       }
       if (chatroom) {
-        Booking.findById(req.body.booking_id)
+        req.context.getModel('Booking').findById(req.body.booking_id)
           .populate('alfred')
           .populate('user')
           .then(b => {
@@ -121,35 +124,37 @@ router.put('/saveMessages/:id', (req, res) => {
 });
 
 router.put('/addMessage/:id', (req, res) => {
-  ChatRooms.findById(req.params.id)
+  req.context.getModel('ChatRoom').findById(req.params.id)
     .then(chatroom => {
       if (!chatroom) {
-        return res.status(404).json({msg: 'no chatroom found'});
+        return res.status(404).json({msg: 'no chatroom found'})
       }
-      if (chatroom) {
-        chatroom.messages.push(req.body.message)
-        chatroom.save()
-          .then( chatroom => {
-          Booking.findById(req.body.booking_id)
+      chatroom.messages.push(req.body.message)
+      chatroom.save()
+        .then(chatroom => {
+          req.context.getModel('Booking').findById(req.body.booking_id)
             .populate('alfred')
             .populate('user')
             .then(b => {
               if (b.alfred._id.equals(req.body.message.idsender)) {
-                sendNewMessageToClient(b, req.params.id, req);
-              } else {
-                sendNewMessageToAlfred(b, req.params.id, req);
+                sendNewMessageToClient(b, req.params.id, req)
+              }
+              else {
+                sendNewMessageToAlfred(b, req.params.id, req)
               }
             })
-          })
-          .catch(err => console.error(err));
-        return res.json();
-      }
+        })
+        .catch(err => {
+          console.error(err)
+          return res.ststuas(400).json(err)
+        })
+      return res.json()
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 router.put('/viewMessages/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  ChatRooms.findById(req.params.id)
+  req.context.getModel('ChatRoom').findById(req.params.id)
     .then(chatroom => {
       if (!chatroom) {
         res.status(404).json({msg: 'Aucun chat trouvé'});
@@ -170,7 +175,7 @@ router.put('/viewMessages/:id', passport.authenticate('jwt', {session: false}), 
 
 router.get('/nonViewedMessages', passport.authenticate('jwt', {session: false}), (req, res) => {
   const user = mongoose.Types.ObjectId(req.user.id);
-  ChatRooms.find({
+  req.context.getModel('ChatRoom').find({
     $or: [
       {
         emitter: user,
@@ -211,7 +216,7 @@ router.get('/nonViewedMessages', passport.authenticate('jwt', {session: false}),
 
 router.get('/nonViewedMessagesCount', passport.authenticate('jwt', {session: false}), (req, res) => {
   const user = mongoose.Types.ObjectId(req.user.id);
-  ChatRooms.find({$or: [{emitter: user}, {recipient: user}]})
+  req.context.getModel('ChatRoom').find({$or: [{emitter: user}, {recipient: user}]})
     .populate('emitter', 'id')
     .populate('recipient', 'id')
     .then(chatrooms => {
@@ -229,7 +234,7 @@ router.get('/nonViewedMessagesCount', passport.authenticate('jwt', {session: fal
 });
 
 router.put('/addBookingId/:id', (req, res) => {
-  ChatRooms.findByIdAndUpdate(req.params.id, {booking: mongoose.Types.ObjectId(req.body.booking)})
+  req.context.getModel('ChatRoom').findByIdAndUpdate(req.params.id, {booking: mongoose.Types.ObjectId(req.body.booking)})
     .then(chatroom => {
       if (!chatroom) {
         return res.status(404).json({msg: 'error'});
@@ -242,7 +247,7 @@ router.put('/addBookingId/:id', (req, res) => {
 });
 
 router.delete('/chatRoom/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  ChatRooms.deleteOne(req.params.id)
+  req.context.getModel('ChatRoom').deleteOne(req.params.id)
     .then(() => {
       res.json({success: true});
     })

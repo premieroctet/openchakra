@@ -1,20 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const csv = require('fast-csv');
-
 const fs = require('fs');
 
-
-const Calculating = require('../../models/Calculating');
-
 router.get('/test', (req, res) => res.json({msg: 'Calculating Works!'}));
-
 
 // @Route GET /myAlfred/api/calculating/all
 // View all calculating system
 router.get('/all', (req, res) => {
 
-  Calculating.find()
+  req.context.getModel('Calculating').find()
     .then(calculating => {
       if (typeof calculating !== 'undefined' && calculating.length > 0) {
         res.json(calculating);
@@ -55,20 +50,17 @@ router.get('/all', (req, res) => {
 // @Route GET /myAlfred/api/calculating/:id
 // View one calculating system
 router.get('/:id', (req, res) => {
-
-  Calculating.findById(req.params.id)
+  req.context.getModel('Calculating').findById(req.params.id)
     .then(calculating => {
       if (Object.keys(calculating).length === 0 && calculating.constructor === Object) {
-        return res.status(400).json({msg: 'No calculating found'});
-      } else {
-        res.json(calculating);
+        return res.status(400).json({msg: 'No calculating found'})
       }
-
+      return res.json(calculating)
     })
-    .catch(err => res.status(404).json({calculating: 'No calculating found'}));
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({calculating: `No calculating found:${err}`})
+    })
+})
 
-
-});
-
-
-module.exports = router;
+module.exports = router

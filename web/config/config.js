@@ -26,13 +26,13 @@ const is_development_nossl = () => {
   return get_mode()==MODES.DEVELOPMENT_NOSSL
 }
 
-const appName = 'myalfred';
+const appName = 'myalfred'
 
 const DATABASE_PRODUCTION='test-myAlfred'
 const DATABASE_TEST='test-myAlfred-V2'
 
 const databaseName = MODE==MODES.PRODUCTION ? DATABASE_PRODUCTION : DATABASE_TEST
-const serverPort = process.env.PORT || 3122;
+const serverPort = process.env.PORT || 3122
 
 const SERVER_PROD = is_production() || is_development()
 
@@ -51,18 +51,18 @@ const get_host_url = () => {
 }
 
 const MANGOPAY_CONFIG_PROD = {
- clientId: 'myalfredprod',
- clientApiKey: 'j8R8fLZmUderNNp27siCqMAJ3y7Bv7BB82trfGuhqSKcYpEZ91',
- baseUrl: 'https://api.mangopay.com',
- sandbox: false,
+  clientId: 'myalfredprod',
+  clientApiKey: 'j8R8fLZmUderNNp27siCqMAJ3y7Bv7BB82trfGuhqSKcYpEZ91',
+  baseUrl: 'https://api.mangopay.com',
+  sandbox: false,
 }
 
 const MANGOPAY_CONFIG_TEST = {
- clientId: 'testmyalfredv2',
- clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
- sandbox: true,
- logClass: () => {
- },
+  clientId: 'testmyalfredv2',
+  clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
+  sandbox: true,
+  logClass: () => {
+  },
 }
 
 const MANGOPAY_CONFIG = is_production() ? MANGOPAY_CONFIG_PROD : MANGOPAY_CONFIG_TEST
@@ -88,7 +88,7 @@ const completeConfig = {
     appUrl: `http://localhost:${serverPort}`,
   },
 
-};
+}
 
 const mailConfig = {
   user: 'sebastien.auvray@my-alfred.io',
@@ -96,8 +96,9 @@ const mailConfig = {
   clientSecret: source.web.client_secret,
   refreshToken: '1//040qqd968fTUmCgYIARAAGAQSNwF-L9Iry-KzNeNu-Eg4YJGYtS9_zn5K4rnt7hxvcsPvh69BEUwhoqslW3oAETeYWLWBxo8zKtk',
   accessToken: 'ya29.Il-7B9vPQ9meRKDhLu1cARHVXyGEiGiIidmgeLCB7LLszjByPxRVWJ8mw_u2AQh5ZXeUiXgPyAX9H-KjgXX7pwArP6Bp_TC1OrMR-fOFAMITK0OuOPWKjk11Z0AUhP4dxw',
-};
+}
 
+// TODO computeUrl (req, path) => https://hostname/path
 const computeUrl = req => {
   return `https://${req.headers.host}`
 }
@@ -106,12 +107,12 @@ const SIRET = {
   token: 'ca27811b-126c-35db-aaf0-49aea431706e',
   siretUrl: 'https://api.insee.fr/entreprises/sirene/V3/siret',
   sirenUrl: 'https://api.insee.fr/entreprises/sirene/V3/siren',
-};
+}
 
 // Enable.disable Google & Facebook login
-const ENABLE_GF_LOGIN = false;
+const ENABLE_GF_LOGIN = false
 
-const PROVIDERS = ENABLE_GF_LOGIN ? [GOOGLE_PROVIDER, FACEBOOK_PROVIDER] : [];
+const PROVIDERS = ENABLE_GF_LOGIN ? [GOOGLE_PROVIDER, FACEBOOK_PROVIDER] : []
 
 const displayConfig = () => {
   console.log(`Configuration is:\n\

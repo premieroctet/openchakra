@@ -4,11 +4,6 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
-
-const Reviews = require('../../models/Reviews');
-const User = require('../../models/User');
-const Booking = require('../../models/Booking');
-
 router.get('/test', (req, res) => res.json({msg: 'Reviews Works!'}));
 
 // @Route POST /myAlfred/api/reviews/add/alfred
@@ -41,35 +36,42 @@ router.post('/add/alfred', passport.authenticate('jwt', {session: false}), (req,
 
   reviewFields.note_alfred.global = (quality + relational + prestation) / 3;
 
-  const newReviews = new Reviews(reviewFields);
-  newReviews.save().then(() => {
-    Booking.findByIdAndUpdate(req.body.booking, {alfred_evaluated: true})
-      .then(() => res.json('ok'))
-      .catch(error => console.error(error));
-  }).catch(err => console.error(err));
-
-  User.findByIdAndUpdate(req.body.alfred, {
-    $inc: {number_of_reviews: 1},
-  })
+  req.context.getModel('Review').create(reviewFields)
     .then(() => {
-        User.findById(req.body.alfred)
-          .then(user => {
-            const score = (quality + relational + prestation) / 3;
-            if (user.number_of_reviews === 1) {
-              user.score = score.toFixed(2);
-            } else {
-              // FIX : mauvais calcul de moyenne
-              user.score = ((user.score + score) / 2).toFixed(2);
-            }
-            user.save().then(users => console.log('reviews update')).catch(err => console.error(err));
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      },
-    )
-    .catch(err => console.error(err));
-});
+      req.context.getModel('Booking').findByIdAndUpdate(req.body.booking, {alfred_evaluated: true})
+        .then(() => res.json('ok'))
+        .catch(err => {
+          console.error(err)
+          res.status(400).json(err)
+        })
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
+
+  req.context.getModel('User').findByIdAndUpdate(req.body.alfred, {$inc: {number_of_reviews: 1}})
+    .then(() => {
+      req.context.getModel('User').findById(req.body.alfred)
+        .then(user => {
+          const score = (quality + relational + prestation) / 3
+          if (user.number_of_reviews === 1) {
+            user.score = score.toFixed(2)
+          }
+          else {
+            // FIX : mauvais calcul de moyenne
+            user.score = ((user.score + score) / 2).toFixed(2)
+          }
+          user.save()
+            .then(() => console.log('reviews update'))
+            .catch(err => console.error(err))
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    })
+    .catch(err => console.error(err))
+})
 
 // @Route POST /myAlfred/api/reviews/add/client
 // Add a review for a client
@@ -98,16 +100,16 @@ router.post('/add/client', passport.authenticate('jwt', {session: false}), (req,
 
   const newReviews = new Reviews(reviewFields);
   newReviews.save().then(() => {
-    Booking.findByIdAndUpdate(req.body.booking, {user_evaluated: true})
+    req.context.getModel('Booking').findByIdAndUpdate(req.body.booking, {user_evaluated: true})
       .then(() => res.json('ok'))
       .catch(error => console.log(error));
   }).catch(err => console.error(err));
 
-  User.findByIdAndUpdate(req.body.client, {
+  req.context.getModel('User').findByIdAndUpdate(req.body.client, {
     $inc: {number_of_reviews_client: 1},
   })
     .then(() => {
-        User.findById(req.body.client)
+        req.context.getModel('User').findById(req.body.client)
           .then(user => {
             const score = (reception + relational + accuracy) / 3;
             if (user.number_of_reviews_client === 1) {
@@ -131,7 +133,7 @@ router.post('/add/client', passport.authenticate('jwt', {session: false}), (req,
 router.get('/:user_id', (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.user_id);
   var result = {careful: 0, punctual: 0, flexible: 0, reactive: 0};
-  Reviews.find({alfred: userId})
+  req.context.getModel('Review').find({alfred: userId})
     .then(reviews => {
       if (typeof reviews !== 'undefined' && reviews.length > 0) {
         reviews.forEach(r => {
@@ -160,7 +162,7 @@ router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) =>
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
   if (admin) {
-    Reviews.find()
+    req.context.getModel('Review').find()
       .populate('alfred')
       .populate('user')
       .then(reviews => {
@@ -180,7 +182,7 @@ router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) =>
 
 router.get('/customerReviewsCurrent', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id);
-  Reviews.find({alfred: userId, note_client: undefined})
+  req.context.getModel('Review').find({alfred: userId, note_client: undefined})
     .populate('alfred', '-id_card')
     .populate('user', '-id_card')
     .populate('serviceUser')
@@ -193,7 +195,7 @@ router.get('/customerReviewsCurrent', passport.authenticate('jwt', {session: fal
 
 router.get('/alfredReviewsCurrent', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id);
-  Reviews.find({user: userId, note_alfred: undefined})
+  req.context.getModel('Review').find({user: userId, note_alfred: undefined})
     .populate('alfred', '-id_card')
     .populate('user', '-id_card')
     .populate('serviceUser')
@@ -206,7 +208,7 @@ router.get('/alfredReviewsCurrent', passport.authenticate('jwt', {session: false
 
 router.get('/profile/customerReviewsCurrent/:id', (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.id);
-  Reviews.find({alfred: userId, note_client: undefined})
+  req.context.getModel('Review').find({alfred: userId, note_client: undefined})
     .populate('alfred', 'firstname name email')
     .populate('user', 'firstname name email')
     .populate('serviceUser', 'service')
@@ -219,7 +221,7 @@ router.get('/profile/customerReviewsCurrent/:id', (req, res) => {
 
 router.get('/profile/alfredReviewsCurrent/:id', (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.id);
-  Reviews.find({user: userId, note_alfred: undefined})
+  req.context.getModel('Review').find({user: userId, note_alfred: undefined})
     .populate('alfred', 'firstname name email')
     .populate('user', 'firstname name email')
     .populate('serviceUser')
@@ -233,7 +235,7 @@ router.get('/profile/alfredReviewsCurrent/:id', (req, res) => {
 // @Route GET /myAlfred/api/reviews/alfred/:id
 // View the reviews list for one alfred
 router.get('/alfred/:id', (req, res) => {
-  Reviews.find({alfred: req.params.id, note_client: undefined})
+  req.context.getModel('Review').find({alfred: req.params.id, note_client: undefined})
     .populate('alfred')
     .populate('user')
     .then(reviews => {
@@ -250,7 +252,7 @@ router.get('/alfred/:id', (req, res) => {
 // View one review
 // @Access private
 router.get('/review/:id', (req, res) => {
-  Reviews.findById(req.params.id)
+  req.context.getModel('Review').findById(req.params.id)
     .populate('alfred')
     .populate('user')
     .populate({path: 'serviceUser', populate: {path: 'service', select: 'label'}})
@@ -270,7 +272,7 @@ router.get('/review/:id', (req, res) => {
 // Delete one review
 // @Access private
 router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Reviews.findById(req.params.id)
+  req.context.getModel('Review').findById(req.params.id)
     .then(reviews => {
       reviews.remove().then(() => res.json({success: true}));
     })

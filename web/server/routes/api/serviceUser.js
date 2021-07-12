@@ -3,13 +3,6 @@ const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const path = require('path');
-const ServiceUser = require('../../models/ServiceUser');
-const Shop = require('../../models/Shop');
-const Group = require('../../models/Group');
-const Service = require('../../models/Service');
-const User = require('../../models/User');
-const Availability = require('../../models/Availability');
-const Prestation = require('../../models/Prestation');
 const axios = require('axios');
 const https = require('https');
 const multer = require('multer');
@@ -61,7 +54,7 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
 }]), passport.authenticate('jwt', {session: false}), (req, res) => {
 
 
-  ServiceUser.findOne({
+  req.context.getModel('ServiceUser').findOne({
     user: req.user.id,
     service: req.body.service,
   })
@@ -78,76 +71,83 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
       fields.experience_years = req.body.experience_years;
       if (req.body.graduated === 'true') {
         fields.graduated = true;
-      } else {
+      }
+      else {
         fields.graduated = false;
       }
 
-      const diploma = 'diploma';
-      const certification = 'certification';
+      const diploma = 'diploma'
+      const certification = 'certificatio';
       if (diploma in req.files) {
-        fields.diploma = {};
-        fields.diploma.name = req.body.diplomaLabel;
-        fields.diploma.year = req.body.diplomaYear;
-        fields.diploma.file = req.files['diploma'][0].path;
-      } else {
-        console.log('No file uploaded');
+        fields.diploma = {}
+        fields.diploma.name = req.body.diplomaLabel
+        fields.diploma.year = req.body.diplomaYear
+        fields.diploma.file = req.files.diploma[0].path
+      }
+      else {
+        console.log('No file uploaded')
       }
       if (req.body.is_certified === 'true') {
-        fields.is_certified = true;
-      } else {
-        fields.is_certified = false;
+        fields.is_certified = true
+      }
+      else {
+        fields.is_certified = false
       }
       if (certification in req.files) {
-        fields.certification = {};
-        fields.certification.name = req.body.certificationLabel;
-        fields.certification.year = req.body.certificationYear;
-        fields.certification.file = req.files['certification'][0].path;
-      } else {
-        console.log('No file uploaded');
+        fields.certification = {}
+        fields.certification.name = req.body.certificationLabel
+        fields.certification.year = req.body.certificationYear
+        fields.certification.file = req.files.certification[0].path
       }
-      fields.description = req.body.description;
-      fields.equipments = JSON.parse(req.body.equipments);
-      fields.majoration = {};
-      if (req.body.active === 'true') {
-        fields.majoration.active = true;
-      } else {
-        fields.majoration.active = false;
+      else {
+        console.log('No file uploaded')
+      }
+      fields.description = req.body.description
+      fields.equipments = JSON.parse(req.body.equipments)
+      fields.majoration = {
+        active: Boolean(req.body.active),
+        price: parseInt(req.body.price),
+      }
+      fields.service_address = {
+        address: req.body.address,
+        zip_code: req.body.zip_code,
+        city: req.body.city,
+        country: req.body.country,
+        gps: {
+          lat: req.body.lat,
+          lng: req.body.lng,
+        },
       }
 
-      fields.service_address = {};
-      fields.service_address.address = req.body.address;
-      fields.service_address.zip_code = req.body.zip_code;
-      fields.service_address.city = req.body.city;
-      fields.service_address.country = req.body.country;
+      fields.location = {
+        home: req.body.home === 'true',
+        alfred: req.body.alfred === 'true',
+        visio: req.body.visio === 'true',
+      }
 
-      fields.service_address.gps = {};
-      fields.service_address.gps.lat = req.body.lat;
-      fields.service_address.gps.lng = req.body.lng;
+      fields.travel_tax = req.body.travel_tax === 'null' ? null : req.body.travel_tax
+      fields.pick_tax = req.body.pick_tax === 'null' ? null : req.body.pick_tax
 
-      fields.majoration.price = parseInt(req.body.price);
-      fields.location = {};
-      fields.location.home = req.body.home === 'true';
-      fields.location.alfred = req.body.alfred === 'true';
-      fields.location.visio = req.body.visio === 'true';
-
-      fields.travel_tax = req.body.travel_tax === 'null' ? null : req.body.travel_tax;
-      fields.pick_tax = req.body.pick_tax === 'null' ? null : req.body.pick_tax;
-
-      const newService = new ServiceUser(fields);
-      newService.save().then(service => res.json(service)).catch(err => console.error(err));
+      req.context.getModel('ServiceUser').create(fields)
+        .then(service => {
+          res.json(service)
+        })
+        .catch(err => {
+          console.error(err)
+        })
 
     })
     .catch(error => {
-      console.error(error);
-    });
-});
+      console.error(error)
+    })
+})
 
 // @Route POST /myAlfred/api/serviceUser/addUpdate
 // SAU : Add or update serviceUser in the shop
 // @Access private
 router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  ServiceUser.findOne({ _id : req.params.serviceuser_id})
+  req.context.getModel('ServiceUser').findOne({ _id : req.params.serviceuser_id})
     .then(su => {
       if (!su) {
         su = {}
@@ -160,7 +160,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
       let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
       let newPrestaModels = newPrestations.map(p => Prestation({
         ...p,
-        s_label : normalize(p.label),
+        s_label: normalize(p.label),
         service: req.body.service,
         billing: [p.billing],
         filter_presentation: null,
@@ -169,7 +169,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
         professional_access: req.body.professional_access,
       }));
 
-      const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({insertedIds: []});
+      const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : emptyPromise({insertedIds: []});
       r.catch(error => console.log('Error insert many' + JSON.stringify(error, null, 2)))
         .then(result => {
           var newIds = result.insertedIds;
@@ -184,14 +184,14 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
             su.prestations.push(newp);
           });
 
-          const promise = req.params.serviceuser_id ? ServiceUser.findByIdAndUpdate(su._id, su, {new: true})  : ServiceUser.create(su)
+          const promise = req.params.serviceuser_id ? req.context.getModel('ServiceUser').findByIdAndUpdate(su._id, su, {new: true})  : req.context.getModel('ServiceUser').create(su)
           promise
             .then(su => {
               if (req.params.serviceuser_id) {
                 return res.json(su)
               }
               else {
-                Shop.update({alfred: req.user.id}, { $push: { services: su}})
+                req.context.getModel('Shop').update({alfred: req.user.id}, { $push: { services: su}})
                   .then(shop => {
                     return res.json(su)
                   })
@@ -218,7 +218,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
 // Update status serviceUser
 // @Access private
 router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, res) => {
-  ServiceUser.updateMany({user: req.user.id}, {status: req.body.status})
+  req.context.getModel('ServiceUser').updateMany({user: req.user.id}, {status: req.body.status})
     .then(serviceUser => {
       res.json(serviceUser);
     })
@@ -231,7 +231,7 @@ router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, 
 router.put('/editWithCity/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
 
       serviceUser.prestations = req.body.prestations;
@@ -271,7 +271,7 @@ router.put('/editWithCity/:id', passport.authenticate('jwt', {
 router.put('/addPrestation/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
 
 
@@ -292,7 +292,7 @@ router.put('/addPrestation/:id', passport.authenticate('jwt', {
 // Edit the price of a prestation for a service
 // @Access private
 router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false,}), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
       const index = serviceUser.prestations
         .map(item => item.id)
@@ -307,7 +307,7 @@ router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false,}
 // Add a diploma for a service
 // @Access private
 router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
       serviceUser.diploma = {}
       serviceUser.diploma.name = req.body.name;
@@ -330,7 +330,7 @@ router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authentic
 router.post('/addCertification/:id', upload.single('file_certification'), passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
       serviceUser.certification.name = req.body.name;
       serviceUser.certification.year = req.body.year;
@@ -350,7 +350,7 @@ router.post('/addCertification/:id', upload.single('file_certification'), passpo
 // @Access private
 router.get('/all', (req, res) => {
 
-  ServiceUser.find()
+  req.context.getModel('ServiceUser').find()
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
@@ -373,7 +373,7 @@ router.get('/all', (req, res) => {
 // @Access private
 router.get('/all/category/:category', (req, res) => {
   let allServices = [];
-  ServiceUser.find()
+  req.context.getModel('ServiceUser').find()
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
@@ -396,7 +396,7 @@ router.get('/all/category/:category', (req, res) => {
 // Count number of service per category
 router.get('/category/:id', (req, res) => {
 
-  ServiceUser.find()
+  req.context.getModel('ServiceUser').find()
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
@@ -427,9 +427,9 @@ router.get('/category/:id', (req, res) => {
 // @Access private
 router.get('/near', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      ServiceUser.find()
+      req.context.getModel('ServiceUser').find()
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
@@ -479,9 +479,9 @@ router.get('/near', passport.authenticate('jwt', {session: false}), (req, res) =
 // @Access private
 router.get('/near/:service', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      ServiceUser.find({service: req.params.service})
+      req.context.getModel('ServiceUser').find({service: req.params.service})
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
@@ -530,7 +530,7 @@ router.post('/search', (req, res) => {
   console.log(`Searching ${JSON.stringify(req.body)}`);
 
   const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
-  ServiceUser.find(filter, 'prestations.prestation service_address location perimeter description')
+  req.context.getModel('ServiceUser').find(filter, 'prestations.prestation service_address location perimeter description')
     .populate({path: 'user', select: 'firstname'})
     .populate({
       path: 'service', select: 'label s_label description',
@@ -563,12 +563,12 @@ router.post('/search', (req, res) => {
       }
       // Manager : filtrer les services autorisés
       if (getRole(req)==MANAGER) {
-        Group.findOne({ members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
-          .then ( group => {
+        req.context.getModel('Group').findOne({ members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
+          .then(group => {
             sus = serviceFilters.filterServicesIds(sus, group.allowed_services.map(s=>s.service._id))
             return res.json(sus)
           })
-          .catch (err => {
+          .catch(err => {
             console.error(err)
             return res.status(400).json(err)
           })
@@ -590,7 +590,7 @@ router.post('/search', (req, res) => {
 router.post('/nearCity', (req, res) => {
   const dat = req.body.city;
   const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), '[eéèêaàoôuù]');
-  ServiceUser.find({'service_address.city': {$regex: data, $options: 'i'}})
+  req.context.getModel('ServiceUser').find({'service_address.city': {$regex: data, $options: 'i'}})
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
@@ -605,7 +605,7 @@ router.post('/nearCity', (req, res) => {
 // @Access private
 router.get('/cardPreview/:id', (req, res) => {
   const suId = mongoose.Types.ObjectId(req.params.id);
-  ServiceUser.findOne(suId, 'label picture alfred service service_address.city service_address.gps graduated is_certified level description')
+  req.context.getModel('ServiceUser').findOne(suId, 'label picture alfred service service_address.city service_address.gps graduated is_certified level description')
     .populate({path: 'service', select: 'picture label'})
     .populate({path: 'user', select: 'firstname picture avatar_letters'})
     .catch(err => {
@@ -613,9 +613,9 @@ router.get('/cardPreview/:id', (req, res) => {
       res.status(404).json({error: err});
     })
     .then(su => {
-      Shop.findOne({alfred: su.user}, 'is_professional')
+      req.context.getModel('Shop').findOne({alfred: su.user}, 'is_professional')
         .then(shop => {
-          Reviews.find({alfred: su.user, note_client: undefined, serviceUser: su._id})
+          req.context.getModel('Review').find({alfred: su.user, note_client: undefined, serviceUser: su._id})
             .then(reviews => {
               const result = {
                 _id: su._id, label: su.service.label, picture: su.service.picture,
@@ -637,9 +637,9 @@ router.get('/cardPreview/:id', (req, res) => {
 // @Access private
 router.get('/nearOther/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      ServiceUser.find()
+      req.context.getModel('ServiceUser').find()
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
@@ -682,9 +682,9 @@ router.get('/nearOther/:id', passport.authenticate('jwt', {session: false}), (re
 // @Access private
 router.get('/all/nearOther/:id/:service', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      ServiceUser.find({service: req.params.service})
+      req.context.getModel('ServiceUser').find({service: req.params.service})
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
@@ -741,7 +741,7 @@ router.get('/home/:partpro', (req, res) => {
   };
 
   const filter= req.params.partpro==PRO ? { 'professional_access':true} : { 'particular_access':true}
-  ServiceUser.find(filter, 'user service service_address')
+  req.context.getModel('ServiceUser').find(filter, 'user service service_address')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
     .populate('user', 'picture firstname score billing_address')
     .populate('service', 'label picture')
@@ -775,7 +775,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
 
-  ServiceUser.find({
+  req.context.getModel('ServiceUser').find({
     user: req.user.id,
   })
     .populate('service')
@@ -808,7 +808,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
 // @Access private
 router.get('/:id', (req, res) => {
 
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .populate('user', '-id_card')
     .populate('service')
     .populate({
@@ -842,7 +842,7 @@ router.get('/:id', (req, res) => {
 // @Access private
 router.get('/allUserServices/:id', (req, res) => {
   let userId = mongoose.Types.ObjectId(req.params.id);
-  ServiceUser.find({user: userId})
+  req.context.getModel('ServiceUser').find({user: userId})
     .populate('service')
     .then(services => {
       res.json(services);
@@ -857,7 +857,7 @@ router.get('/allUserServices/:id', (req, res) => {
 router.put('/deletePrestation/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
       const removeIndex = serviceUser.prestations
         .map(item => item.id)
@@ -874,7 +874,7 @@ router.put('/deletePrestation/:id', passport.authenticate('jwt', {
 // @Route PUT /myAlfred/api/serviceUser/views/:id
 // Update number of views for a service
 router.put('/views/:id', (req, res) => {
-  ServiceUser.findByIdAndUpdate(req.params.id, {
+  req.context.getModel('ServiceUser').findByIdAndUpdate(req.params.id, {
     $inc: {
       number_of_views: 1,
     },
@@ -901,7 +901,7 @@ router.put('/views/:id', (req, res) => {
 router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(services => {
       services.diploma = undefined;
       services.graduated = false;
@@ -920,7 +920,7 @@ router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
 router.delete('/delete/certification/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(services => {
       services.certification = undefined;
       services.is_certified = false;
@@ -939,7 +939,7 @@ router.delete('/delete/certification/:id', passport.authenticate('jwt', {
 router.delete('/current/allServices', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.deleteMany({
+  req.context.getModel('ServiceUser').deleteMany({
     user: req.user.id,
   })
     .then(() => {
@@ -959,10 +959,10 @@ router.delete('/current/allServices', passport.authenticate('jwt', {
 router.delete('/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(event => {
       event.remove().then(() => {
-        Shop.findOne({
+        req.context.getModel('Shop').findOne({
           alfred: req.user.id,
         })
           .then(shop => {

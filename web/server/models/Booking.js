@@ -1,9 +1,7 @@
 const mongoose = require('mongoose')
 const moment = require('moment')
-const {invoiceFormat} = require('../../utils/invoice')
 const {BOOK_STATUS, ROLES} = require('../../utils/consts')
 const Schema = mongoose.Schema
-const CountSchema = require('./Count')
 
 const BookingSchema = new Schema({
   reference: {
@@ -34,7 +32,7 @@ const BookingSchema = new Schema({
   },
   equipments: [{
     type: Schema.Types.ObjectId,
-    ref: 'equipment',
+    ref: 'Equipment',
   }],
   // Total amount
   amount: {
@@ -67,11 +65,11 @@ const BookingSchema = new Schema({
   },
   alfred: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
   },
   prestations: [{
     name: {
@@ -97,7 +95,7 @@ const BookingSchema = new Schema({
   },
   chatroom: {
     type: Schema.Types.ObjectId,
-    ref: 'chatRooms',
+    ref: 'ChatRoom',
   },
   fileUpload: [{
     type: Schema.Types.Mixed,
@@ -192,4 +190,5 @@ BookingSchema.virtual('calendar_display').get(function() {
 })
 
 
-module.exports = Booking = mongoose.model('booking', BookingSchema)
+//module.exports = Booking = mongoose.model('booking', BookingSchema)
+module.exports = BookingSchema
