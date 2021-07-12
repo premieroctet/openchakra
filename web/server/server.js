@@ -51,7 +51,8 @@ const app = express()
 const SocketIo = require('socket.io')
 const swaggerUi = require('swagger-ui-express')
 const swaggerDocument = require('./swagger.json')
-const {ServerContext}=require('./utils/serverContext')
+const {serverContextFromRequest}=require('./utils/serverContext')
+const util=require('util')
 
 nextApp.prepare().then(() => {
 
@@ -69,7 +70,7 @@ nextApp.prepare().then(() => {
 
   // Context handling
   app.use((req, res, next) => {
-    req.context=new ServerContext(req)
+    req.context=serverContextFromRequest(req)
     next()
   })
 

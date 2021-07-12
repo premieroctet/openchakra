@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Admin = mongoose.mongo.Admin
+const {is_development, is_validation}=require('../../config/config')
 
 const EXCLUDE_DBS='admin local config'.split(' ')
 
@@ -17,6 +18,7 @@ class ConnectionPool {
 
   constructor() {
     this.connections={}
+    this.databases=[]
     this.loadDatabases()
   }
 
@@ -28,6 +30,12 @@ class ConnectionPool {
         .then(result => {
           let allDatabases = result.databases
           this.databases=allDatabases.map(d => d.name).filter(d => !EXCLUDE_DBS.includes(d))
+          this.databases=this.databases.filter(db => {
+            if (is_development() || is_validation()) {
+              return db!='test-myAlfred'
+            }
+            return db!='test-myAlfred-V2'
+          })
           console.log(`Detected databases:${this.databases}`)
         })
     })

@@ -308,7 +308,7 @@ router.get('/activeAccount', passport.authenticate('jwt', {session: false}), (re
   promise
     .then(entity => {
       const id_mangopay = entity.id_mangopay
-      consolei.Users.getBankAccounts(id_mangopay)
+      req.context.getModel('Users').getBankAccounts(id_mangopay)
         .then(accounts => {
           accounts.forEach(a => {
             if (a.Active) {

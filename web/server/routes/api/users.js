@@ -21,6 +21,8 @@ const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
 const {ensureDirectoryExists, isImageFile} = require('../../utils/filesystem')
+const {connectionPool}=require('../../utils/database')
+const {serverContextFromPartner}=require('../../utils/serverContext')
 
 
 axios.defaults.withCredentials = true
@@ -1217,29 +1219,30 @@ router.get('/hook', (req, res) => {
 });
 
 
-
 // Create mango client account for all user with no id_mangopay
 if (is_production() || is_validation()) {
-  new CronJob('0 */15 * * * *', function () {
-    console.log("Customers who need mango account");
-    req.context.getModel('User').find({id_mangopay: null, active: true})
-      .limit(100)
-      .then(usrs => {
-        usrs.forEach(user => {
-          console.log(`Found customer ${user.name}, age ${user.age}`)
-          if (user.age<18) {
-	    console.warn(`User ${user._id} skipped, age ${user.age}<18`)
-	  }
-  	  else if (user.age>120) {
-	    console.warn(`User ${user._id} skipped, age ${user.age}>120`)
-	  }
-	  else {
-            createMangoClient(user)
-          }
+  new CronJob('0 */15 * * * *', () => {
+    console.log('Customers who need mango account')
+    connectionPool.databases.map(db => serverContextFromPartner(db)).forEach(context => {
+      context.getModel('User').find({id_mangopay: null, active: true})
+        .limit(100)
+        .then(usrs => {
+          usrs.forEach(user => {
+            console.log(`Found customer ${user.name}, age ${user.age}`)
+            if (user.age<18) {
+              console.warn(`User ${user._id} skipped, age ${user.age}<18`)
+            }
+            else if (user.age>120) {
+              console.warn(`User ${user._id} skipped, age ${user.age}>120`)
+            }
+            else {
+              createMangoClient(user)
+            }
+          })
         })
-      })
-      .catch(err => console.error(err))
-  }, null, true, 'Europe/Paris');
+        .catch(err => console.error(err))
+    })
+  }, null, true, 'Europe/Paris')
 }
 
 module.exports = router;

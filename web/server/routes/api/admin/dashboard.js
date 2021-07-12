@@ -66,12 +66,14 @@ router.post('/billing/all', passport.authenticate('admin', {session: false}), (r
           errors.label = 'Cette méthode de facturation existe déjà'
           return res.status(400).json(errors)
         }
-        const newBilling = new Billing({
+
+        const newBilling={
           label: req.body.label,
-        })
+        }
 
-        newBilling.save().then(billing => res.json(billing)).catch(err => console.error(err))
-
+        req.context.getModel('Billing').create(newBilling)
+          .then(billing => res.json(billing))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -119,12 +121,7 @@ router.get('/billing/all', passport.authenticate('admin', {session: false}), (re
     req.context.getModel('Billing').find()
       .sort({label: 1})
       .then(billings => {
-        if (!billings) {
-          return res.status(400).json({msg: 'No billing found'})
-        }
-
         res.json(billings)
-
       })
       .catch(() => res.status(404).json({billing: 'No billing found'}))
   }
@@ -215,9 +212,6 @@ router.get('/users/all', passport.authenticate('admin', {session: false}), (req,
       .populate({path: 'shop', select: 'creation_date'})
       .sort({creation_date: -1})
       .then(users => {
-        if (!users) {
-          res.status(400).json({msg: 'No users found'})
-        }
         res.json(users)
       })
       .catch(err => {
@@ -242,9 +236,6 @@ router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), 
       // .populate('service.category', 'label')
       .populate({path: 'user', select: 'email shop', populate: {path: 'shop', select: 'is_professional'}})
       .then(services => {
-        if (!services) {
-          res.status(400).json({msg: 'No services found'})
-        }
         res.json(services)
       })
       .catch(err => {
@@ -778,12 +769,14 @@ router.post('/calculating/all', passport.authenticate('admin', {session: false})
           errors.label = 'Cette méthode de calcul existe déjà'
           return res.status(400).json(errors)
         }
-        const newCalculating = new Calculating({
+
+        const newCalculating={
           label: req.body.label,
-        })
+        }
 
-        newCalculating.save().then(calculating => res.json(calculating)).catch(err => console.error(err))
-
+        req.context.getModel('Calculating').create(newCalculating)
+          .then(calculating => res.json(calculating))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -804,12 +797,7 @@ router.get('/calculating/all', passport.authenticate('admin', {session: false}),
   if (admin) {
     req.context.getModel('Calculating').find()
       .then(calculating => {
-        if (!calculating) {
-          return res.status(400).json({msg: 'No calculating found'})
-        }
-
         res.json(calculating)
-
       })
       .catch(err => res.status(404).json({calculating: 'No billing found'}))
   }
@@ -832,10 +820,9 @@ router.get('/calculating/all/:id', passport.authenticate('admin', {session: fals
     req.context.getModel('Calculating').findById(req.params.id)
       .then(calculating => {
         if (!calculating) {
-          return res.status(400).json({msg: 'No calculating found'})
+          return res.status(404).json({msg: 'No calculating found'})
         }
         res.json(calculating)
-
       })
       .catch(err => res.status(404).json({billing: 'No calculating found'}))
   }
@@ -909,12 +896,13 @@ router.post('/filterPresentation/all', passport.authenticate('admin', {session: 
           errors.label = 'Ce filtre existe déjà'
           return res.status(400).json(errors)
         }
-        const newFilterPresentation = new FilterPresentation({
+        const newFilterPresentation={
           label: req.body.label,
-        })
+        }
 
-        newFilterPresentation.save().then(filterPresentation => res.json(filterPresentation)).catch(err => console.error(err))
-
+        req.context.getModel('FilterPresentation').create(newFilterPresentation)
+          .then(filterPresentation => res.json(filterPresentation))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -1037,12 +1025,13 @@ router.post('/job/all', passport.authenticate('admin', {session: false}), (req, 
           errors.label = 'Ce métier existe déjà'
           return res.status(400).json(errors)
         }
-        const newJob = new Job({
+        const newJob={
           label: req.body.label,
-        })
+        }
 
-        newJob.save().then(job => res.json(job)).catch(err => console.error(err))
-
+        req.context.getModel('Job').create(newJob)
+          .then(job => res.json(job))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -1163,10 +1152,13 @@ router.post('/searchFilter/all', passport.authenticate('admin', {session: false}
           errors.label = 'Ce filtre existe déjà'
           return res.status(400).json(errors)
         }
-        const newSearchFilter = new SearchFilter({
+        const newSearchFilter={
           label: req.body.label,
-        })
-        newSearchFilter.save().then(searchFilter => res.json(searchFilter)).catch(err => console.error(err))
+        }
+
+        req.context.getModel('SearchFilter').create(newSearchFilter)
+          .then(searchFilter => res.json(searchFilter))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -1280,20 +1272,21 @@ router.post('/tags/all', passport.authenticate('admin', {session: false}), (req,
       return res.status(400).json(errors)
     }
 
-    Tags.findOne({label: req.body.label})
+    req.context.getModel('Tag').findOne({label: req.body.label})
       .then(tags => {
         if (tags) {
           errors.label = 'Ce tags existe déjà'
           return res.status(400).json(errors)
         }
-        const newTags = new Tags({
+        const newTag={
           label: req.body.label,
           title: req.body.title,
           description: req.body.description,
-        })
+        }
 
-        newTags.save().then(tags => res.json(tags)).catch(err => console.error(err))
-
+        req.context.getModel('Tag').create(newTag)
+          .then(tags => res.json(tags))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -1314,13 +1307,7 @@ router.get('/tags/all', passport.authenticate('admin', {session: false}), (req, 
     req.context.getModel('Tag').find()
       .sort({label: 1})
       .then(tags => {
-        if (!tags) {
-          return res.status(400).json({msg: 'No tags found'})
-        }
-        res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count')
-        res.setHeader('X-Total-Count', tags.length)
         res.json(tags)
-
       })
       .catch(err => {
         console.error(err)
@@ -1448,15 +1435,17 @@ router.post('/category/all', uploadCat.single('picture'), passport.authenticate(
           errors.label = 'Cette catégorie existe déjà'
           return res.status(400).json(errors)
         }
-        const newCategory = new Category({
+        const newCategory={
           label: req.body.label,
           s_label: normalize(req.body.label),
           picture: req.file.path,
           description: req.body.description,
           tags: JSON.parse(req.body.tags),
-        })
+        }
 
-        newCategory.save().then(category => res.json(category)).catch(err => console.error(err))
+        req.context.getModel('Category').create(newCategory)
+          .then(category => res.json(category))
+          .catch(err => console.error(err))
 
       })
   }
@@ -1641,16 +1630,17 @@ router.post('/equipment/all', upload.fields([{name: 'logo', maxCount: 1}, {
           errors.label = 'Cet équipement existe déjà '
           return res.status(400).json(errors)
         }
-        const newEquipment = new Equipment({
+        const newEquipment={
           label: req.body.label,
           logo: req.files.logo[0].path,
           name_logo: req.files.logo[0].filename,
           logo2: req.files.logo2[0].path,
           name_logo2: req.files.logo2[0].filename,
-        })
+        }
 
-        newEquipment.save().then(equipment => res.json(equipment)).catch(err => console.error(err))
-
+        req.context.getModel('Equipment').create(newEquipment)
+          .then(equipment => res.json(equipment))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -1815,7 +1805,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
           errors.label = 'Ce service existe déjà'
           return res.status(400).json(errors)
         }
-        const newService = new Service({
+        const newService={
           label: req.body.label,
           s_label: normalize(req.body.label),
           category: mongoose.Types.ObjectId(req.body.category),
@@ -1833,10 +1823,11 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
           travel_tax: req.body.travel_tax,
           professional_access: req.body.professional_access,
           particular_access: req.body.particular_access,
-        })
+        }
 
-        newService.save().then(service => res.json(service)).catch(err => console.error(err))
-
+        req.context.getModel('Service').create(newService)
+          .then(service => res.json(service))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -2041,8 +2032,8 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
           errors.label = 'Cette prestation existe déjà'
           return res.status(400).json(errors)
         }
-        console.log(`Body:${JSON.stringify(req.body)}`)
-        const newPrestation = new Prestation({
+
+        const newPrestation={
           label: req.body.label,
           s_label: normalize(req.body.label),
           price: req.body.price,
@@ -2061,12 +2052,11 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
           professional_access: req.body.professional_access,
           particular_access: req.body.particular_access,
           private_company: req.body.private_company,
-        })
-        newPrestation.save()
+        }
+
+        req.context.getModel('Prestation').create(newPrestation)
           .then(prestation => res.json(prestation))
           .catch(err => res.status(400).json(err))
-
-
       })
   }
   else {
@@ -2261,15 +2251,13 @@ router.post('/shopBanner/all', uploadBanner.single('picture'), passport.authenti
           errors.label = 'Cette bannière existe déjà'
           return res.status(400).json(errors)
         }
-        const newBanner = new ShopBanner({
+        const newBanner={
           label: req.body.label,
           picture: req.file.path,
-
-
-        })
-
-        newBanner.save().then(banner => res.json(banner)).catch(err => console.error(err))
-
+        }
+        req.context.getModel('ShopBanner').create(newBanner)
+          .then(banner => res.json(banner))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -2386,7 +2374,6 @@ router.put('/shopBanner/all/:id', passport.authenticate('admin', {session: false
   else {
     res.status(403).json({msg: 'Access denied'})
   }
-
 })
 
 // OPTIONS
@@ -2406,21 +2393,20 @@ router.post('/options/all', passport.authenticate('admin', {session: false}), (r
         if (options) {
           return res.status(400).json({msg: 'Cette option existe déjà'})
         }
-        const newOptions = new Options({
+        const newOption={
           label: req.body.label,
           description: req.body.description,
           billing: req.body.billing,
-        })
+        }
 
-        newOptions.save().then(options => res.json(options)).catch(err => console.error(err))
-
+        req.context.getModel('Option').create(newOption)
+          .then(options => res.json(options))
+          .catch(err => console.error(err))
       })
   }
   else {
     res.status(403).json({msg: 'Access denied'})
   }
-
-
 })
 
 // @Route GET /myAlfred/api/admin/options/all

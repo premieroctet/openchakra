@@ -12,6 +12,8 @@ const {is_production, is_validation}=require('../../../config/config')
 const {normalize} = require('../../../utils/text');
 const {ensureDirectoryExists} = require('../../utils/filesystem')
 const validateShopInput = require('../../validation/shop');
+const {connectionPool}=require('../../utils/database')
+const {serverContextFromPartner}=require('../../utils/serverContext')
 
 ensureDirectoryExists('static/profile/idCard/')
 const storage = multer.diskStorage({
@@ -400,28 +402,29 @@ router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, 
 
 // Create mango provider account for all alfred with shops
 if (is_production() || is_validation()) {
-  new CronJob('0 */15 * * * *', function () {
-    console.log('Alfred who need mango account');
-    User.find({is_alfred: true, mangopay_provider_id: null, active: true})
-      .then(alfreds => {
-        alfreds.forEach(alfred => {
-          req.context.getModel('Shop').findOne({alfred: alfred})
-            .then(shop => {
-              console.log(`Found alfred ${alfred.name} and shop ${shop._id}`);
-              if (alfred.age<18 || alfred.age>120) {
-                console.log(`Create Mango provider skipped, ${alfred.email} age ${alfred.age}`)
-              }
-              else {
-                createMangoProvider(alfred, shop);
-              }
-            })
-            .catch(err => {
-              console.error(`Mangopay provider creation error ${alfred._id}:${err}`)
-            });
-        });
-
-      });
-  }, null, true, 'Europe/Paris');
+  new CronJob('0 */15 * * * *', () => {
+    console.log('Alfred who need mango account')
+    connectionPool.databases.map(db => serverContextFromPartner(db)).forEach(context => {
+      context.getModel('User').find({is_alfred: true, mangopay_provider_id: null, active: true})
+        .then(alfreds => {
+          alfreds.forEach(alfred => {
+            req.context.getModel('Shop').findOne({alfred: alfred})
+              .then(shop => {
+                console.log(`Found alfred ${alfred.name} and shop ${shop._id}`)
+                if (alfred.age<18 || alfred.age>120) {
+                  console.log(`Create Mango provider skipped, ${alfred.email} age ${alfred.age}`)
+                }
+                else {
+                  createMangoProvider(alfred, shop)
+                }
+              })
+              .catch(err => {
+                console.error(`Mangopay provider creation error ${alfred._id}:${err}`)
+              })
+          })
+        })
+    })
+  }, null, true, 'Europe/Paris')
 }
 
-module.exports = router;
+module.exports = router

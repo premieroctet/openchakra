@@ -71,41 +71,18 @@ const send_cookie = (user, role, res) => {
   })
 }
 
-class ServerContext {
-  constructor(request) {
-    this.request=request
+class PartnerServerContext {
+  constructor(partner) {
+    this.partner=partner
     this.connection=null
-    this.user=null
     const models='User Album Availability Billing Booking Calculating Calendar Category ChatRoom Company Count Equipment Favori FilterPresentation Group Job Message Newsletter Option Prestation Prospect ResetToken Review SearchFilter Service ServiceUser ShopBanner Shop Tag User'.split(' ')
     models.forEach(m => {
       this.getModel(m)
     })
-    const user_id=get_logged_id(this.request)
-    if (user_id) {
-      this.getModel('User').findById(user_id)
-        .then(user => {
-          this.user=user
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
-  }
-
-  getPartner = () => {
-    const host=this.request.hostname
-    if (['my-alfred.io', 'my-alfred.io', 'alfred-business.com', 'localhost', 'sebhd.freeboxos.fr'].includes(host)) {
-      return null
-    }
-    const subdomain=host.split('.')[0]
-    if (subdomain=='www') {
-      return null
-    }
-    return subdomain
   }
 
   getDbName = () => {
-    const partner=this.getPartner()
+    const partner=this.partner
     if (partner) {
       return partner
     }
@@ -113,10 +90,6 @@ class ServerContext {
       return 'test-myAlfred-V2'
     }
     return 'test-myAlfred'
-  }
-
-  getUser = () => {
-    return this.user
   }
 
   getConnection() {
@@ -136,6 +109,40 @@ class ServerContext {
     const model=this.getConnection().model(modelName, schema)
     return model
   }
+}
+
+class RequestServerContext extends PartnerServerContext {
+  constructor(request) {
+    super(RequestServerContext.getPartner(request))
+    this.request=request
+    this.user=null
+    const user_id=get_logged_id(request)
+    if (user_id) {
+      this.getModel('User').findById(user_id)
+        .then(user => {
+          this.user=user
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }
+  }
+
+  static getPartner = request => {
+    const host=request.hostname
+    if (['my-alfred.io', 'my-alfred.io', 'alfred-business.com', 'localhost', 'sebhd.freeboxos.fr'].includes(host)) {
+      return null
+    }
+    const subdomain=host.split('.')[0]
+    if (subdomain=='www') {
+      return null
+    }
+    return subdomain
+  }
+
+  getUser = () => {
+    return this.user
+  }
 
   isAdmin = () => {
     return get_token(this.request) && get_token(this.request).is_admin
@@ -143,5 +150,15 @@ class ServerContext {
 
 }
 
+
+const serverContextFromRequest = req => {
+  return new RequestServerContext(req)
+}
+
+const serverContextFromPartner = partner => {
+  return new PartnerServerContext(partner)
+}
+
+
 module.exports = {get_logged_id, getRole, isB2BAdmin, isB2BManager,
-  isB2BEmployee, isModeCompany, send_cookie, get_token, ServerContext}
+  isB2BEmployee, isModeCompany, send_cookie, get_token, serverContextFromRequest, serverContextFromPartner}

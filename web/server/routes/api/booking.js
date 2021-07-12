@@ -19,6 +19,7 @@ const {
 } = require('../../utils/mailing')
 const {getRole} = require('../../utils/serverContext')
 const {connectionPool}=require('../../utils/database')
+const {serverContextFromPartner}=require('../../utils/serverContext')
 
 moment.locale('fr')
 
@@ -292,10 +293,10 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
 })
 
 new CronJob('0 */15 * * * *', (() => {
-  const getNextNumber = (type, key) => {
+  const getNextNumber = (context, type, key) => {
     return new Promise((resolve, reject) => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}
-      Count.updateOne({type: type, key: key}, updateObj, {upsert: true})
+      context.getModel('Count').updateOne({type: type, key: key}, updateObj, {upsert: true})
         .then(() => {
           Count.findOne({type: type, key: key}).then(res => {
             resolve(res)
@@ -310,49 +311,55 @@ new CronJob('0 */15 * * * *', (() => {
   }
 
   const date = moment().startOf('day')
-  Booking.find({status: BOOK_STATUS.CONFIRMED, paid: false})
-    .populate('user')
-    .populate('alfred')
-    .catch(err => console.error(err))
-    .then(booking => {
-      booking.forEach(b => {
-        const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
-        if (moment(date).isSameOrAfter(end_date)) {
-          const type = ['billing', 'receipt', 'myalfred_billing']
-          const key = getKeyDate()
-          Promise.all([getNextNumber(type[ 0 ], key), getNextNumber(type[ 1 ], key), getNextNumber(type[ 2 ], key)]).then(
-            values => {
-              values.map((res, i) => {
-                const attribute = `${type[ i ]}_number`
-                b[ attribute ] = `${type[ i ].charAt(0).toUpperCase()}${key}${invoiceFormat(res.value, 5)}`
+
+  connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
+    context.getModel('Booking').find({status: BOOK_STATUS.CONFIRMED, paid: false})
+      .populate('user')
+      .populate('alfred')
+      .catch(err => console.error(err))
+      .then(booking => {
+        booking.forEach(b => {
+          const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
+          if (moment(date).isSameOrAfter(end_date)) {
+            const type = ['billing', 'receipt', 'myalfred_billing']
+            const key = getKeyDate()
+            Promise.all([getNextNumber(type[ 0 ], key), getNextNumber(type[ 1 ], key), getNextNumber(type[ 2 ], key)]).then(
+              values => {
+                values.map((res, i) => {
+                  const attribute = `${type[ i ]}_number`
+                  b[ attribute ] = `${type[ i ].charAt(0).toUpperCase()}${key}${invoiceFormat(res.value, 5)}`
+                })
+              },
+            )
+            b.status = BOOK_STATUS.FINISHED
+            b.save()
+              .then(bo => {
+                sendLeaveCommentForAlfred(bo)
+                sendLeaveCommentForClient(bo)
               })
-            },
-          )
-          b.status = BOOK_STATUS.FINISHED
-          b.save()
-            .then(bo => {
-              sendLeaveCommentForAlfred(bo)
-              sendLeaveCommentForClient(bo)
-            })
-            .catch(err => console.error(err))
-        }
-      },
-      )
-    })
+              .catch(err => console.error(err))
+          }
+        },
+        )
+      })
+  })
+
 }), null, true, 'Europe/Paris')
 
 // Handle terminated but not paid bookings
 new CronJob('0 */15 * * * *', (() => {
-  Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
-    .populate('user')
-    .populate('alfred')
-    .then(bookings => {
-      bookings.forEach(booking => {
-        payAlfred(booking)
+  connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
+    context.getModel('Booking').find({status: BOOK_STATUS.FINISHED, paid: false})
+      .populate('user')
+      .populate('alfred')
+      .then(bookings => {
+        bookings.forEach(booking => {
+          payAlfred(booking)
+        })
+      }).catch(err => {
+        console.error(err)
       })
-    }).catch(err => {
-      console.error(err)
-    })
+  })
 }), null, true, 'Europe/Paris')
 
 // Expiration réervation en attente de confirmation :
@@ -361,31 +368,33 @@ new CronJob('0 */15 * * * *', (() => {
 new CronJob('0 */15 * * * *', (() => {
   console.log('Checking expired bookings')
   const currentDate = moment().startOf('day')
-  Booking.find({$or: [{status: BOOK_STATUS.TO_CONFIRM}, {status: BOOK_STATUS.TO_PAY}]})
-    .populate('user')
-    .populate('alfred')
-    .then(booking => {
-      booking.forEach(b => {
-        const expirationDate = moment(b.date).add(EXPIRATION_DELAY, 'days').startOf('day')
-        // Expired because Alfred did not answer
-        const answerExpired = moment(currentDate).isSameOrAfter(expirationDate)
-        // Expired because prestation date passed
-        const prestaDateExpired = moment().isSameOrAfter(b.date_prestation_moment)
-        if (answerExpired || prestaDateExpired) {
-          const reason = answerExpired ? `Alfred did not confirm within ${EXPIRATION_DELAY} days` : 'prestation date passed'
-          console.log(`Booking ${b._id} expired : ${reason}`)
-          b.status = BOOK_STATUS.EXPIRED
-          b.save()
-            .then(bo => {
-              sendBookingExpiredToAlfred(bo)
-              sendBookingExpiredToClient(bo)
-            })
-            .catch(err => {
-              console.error(err)
-            })
-        }
+  connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
+    context.getModel('Booking').find({$or: [{status: BOOK_STATUS.TO_CONFIRM}, {status: BOOK_STATUS.TO_PAY}]})
+      .populate('user')
+      .populate('alfred')
+      .then(booking => {
+        booking.forEach(b => {
+          const expirationDate = moment(b.date).add(EXPIRATION_DELAY, 'days').startOf('day')
+          // Expired because Alfred did not answer
+          const answerExpired = moment(currentDate).isSameOrAfter(expirationDate)
+          // Expired because prestation date passed
+          const prestaDateExpired = moment().isSameOrAfter(b.date_prestation_moment)
+          if (answerExpired || prestaDateExpired) {
+            const reason = answerExpired ? `Alfred did not confirm within ${EXPIRATION_DELAY} days` : 'prestation date passed'
+            console.log(`Booking ${b._id} expired : ${reason}`)
+            b.status = BOOK_STATUS.EXPIRED
+            b.save()
+              .then(bo => {
+                sendBookingExpiredToAlfred(bo)
+                sendBookingExpiredToClient(bo)
+              })
+              .catch(err => {
+                console.error(err)
+              })
+          }
+        })
       })
-    })
+  })
 }), null, true, 'Europe/Paris')
 
 // pattern reference
