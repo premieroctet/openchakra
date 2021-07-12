@@ -3,6 +3,7 @@ const {ADMIN, MANAGER, EMPLOYEE} = require('../../utils/consts')
 const keys = require('../config/keys')
 const {is_development, is_validation} = require('../../config/config')
 const {connectionPool}=require('./database')
+const {getPartnerFromHostname}=require('../../utils/partner')
 
 const get_token = req => {
   const auth = req.headers.authorization
@@ -130,14 +131,7 @@ class RequestServerContext extends PartnerServerContext {
 
   static getPartner = request => {
     const host=request.hostname
-    if (['my-alfred.io', 'my-alfred.io', 'alfred-business.com', 'localhost', 'sebhd.freeboxos.fr'].includes(host)) {
-      return null
-    }
-    const subdomain=host.split('.')[0]
-    if (subdomain=='www') {
-      return null
-    }
-    return subdomain
+    return getPartnerFromHostname(request.hostname)
   }
 
   getUser = () => {
