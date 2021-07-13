@@ -6,10 +6,10 @@ function Asset(props) {
 
   useEffect(() => {
     if(getPartner()) {
-      setUrl(`/getPartner${props.src} `)
+      setUrl(`/static/assets/${getPartner()}/${props.src} `)
     }
     else{
-      setUrl(props.src)
+      setUrl(`/static/assets/${props.src}`)
     }
   })
 

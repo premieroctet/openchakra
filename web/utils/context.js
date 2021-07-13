@@ -1,4 +1,5 @@
 import {isAndroid, isIOS, getUA} from 'react-device-detect'
+import { setAxiosAuthentication } from './authentication'
 const isWebview = require('is-webview')
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')

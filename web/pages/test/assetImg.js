@@ -9,7 +9,7 @@ export default class assetImg extends React.Component {
   render() {
     return(
       <div>
-        <Asset src={'/assets/img/banner/bannerProfile.svg'}/>
+        <Asset src={'bannerProfile.svg'}/>
       </div>
     )
   }
