@@ -19,7 +19,7 @@ function setupSecurityPack() {
       <Grid style={{marginTop: '5vh'}}>
         <BannerContact/>
       </Grid>
-      <Grid style={{marginTop: '5vh'}}>
+      <Grid style={{marginTop: '5vh', marginBottom: '10vh'}}>
         <OurCompany/>
       </Grid>
       <Grid style={{marginTop: '5vh'}}>

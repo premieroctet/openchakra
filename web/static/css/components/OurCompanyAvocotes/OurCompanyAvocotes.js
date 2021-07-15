@@ -5,12 +5,8 @@ export default theme => ({
     alignItems: 'center',
     margin: 0,
     width: '100%',
-    paddingLeft: '35%',
-    paddingRight: '35%',
-    [theme.breakpoints.down('lg')]: {
-      paddingLeft: '30%',
-      paddingRight: '30%',
-    },
+    paddingLeft: '30%',
+    paddingRight: '30%',
     [theme.breakpoints.down('md')]: {
       paddingLeft: '20%',
       paddingRight: '20%',

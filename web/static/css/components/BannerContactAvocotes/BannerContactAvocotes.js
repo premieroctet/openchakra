@@ -7,7 +7,11 @@ export default theme => ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     color: 'white',
-
+  },
+  blur: {
+    backgroundColor: 'rgba(82,82,82,0.7)',
+    width: '100%',
+    height: '100%',
   },
   container: {
     display: 'flex',

@@ -10,24 +10,26 @@ function BannerContact({classes}) {
   return(
     <>
       <Grid className={classes.mainContainer}>
-        <Grid container className={classes.container}>
-          <Grid item>
-            <h2 style={{textAlign: 'center', color: 'white'}}>{AVOCOTES.askQuestion}</h2>
-          </Grid>
-          <Grid item>
-            <h2 style={{textAlign: 'center', color: 'white'}}>{AVOCOTES.contactUs}</h2>
-          </Grid>
-          <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-            <Grid container spacing={2} className={classes.containerFakeButton}>
-              <Grid item>
-                <Typography style={{fontWeight: 'bold', fontSize: 30}}>{AVOCOTES.phone}</Typography>
-              </Grid>
-              <Grid item>
-                <Grid>
-                  <Typography>{AVOCOTES.phoneTextFirst}</Typography>
+        <Grid className={classes.blur}>
+          <Grid container className={classes.container}>
+            <Grid item>
+              <h2 style={{textAlign: 'center', color: 'white'}}>{AVOCOTES.askQuestion}</h2>
+            </Grid>
+            <Grid item>
+              <h2 style={{textAlign: 'center', color: 'white'}}>{AVOCOTES.contactUs}</h2>
+            </Grid>
+            <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+              <Grid container spacing={2} className={classes.containerFakeButton}>
+                <Grid item>
+                  <Typography style={{fontWeight: 'bold', fontSize: 30}}>{AVOCOTES.phone}</Typography>
                 </Grid>
-                <Grid>
-                  <Typography>{AVOCOTES.phoneTextSecond}</Typography>
+                <Grid item>
+                  <Grid>
+                    <Typography>{AVOCOTES.phoneTextFirst}</Typography>
+                  </Grid>
+                  <Grid>
+                    <Typography>{AVOCOTES.phoneTextSecond}</Typography>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
