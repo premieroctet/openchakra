@@ -149,7 +149,7 @@ class SelectPrestation extends React.Component {
                     </Grid>
                   }
                   <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                    {prestas ? prestas.map(p => {
+                    {prestas ? _.sortBy(prestas, 'order').map(p => {
                       let isEditable = p._id.length === GID_LEN
                       let presta = this.state.prestations[ p._id ]
                       return (
@@ -195,7 +195,7 @@ class SelectPrestation extends React.Component {
               <Typography>{SHOP.parameter.descriptionIsPro}</Typography>
             </Grid>
             <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
-              {this.state.grouped[ COMPANY_PRIVATE_FLTR ].map(res => {
+              {_.sortBy(this.state.grouped[ COMPANY_PRIVATE_FLTR ], 'order').map(res => {
                 let isEditable = res._id.length === GID_LEN
                 let presta = this.state.prestations[ res._id ]
                 return(

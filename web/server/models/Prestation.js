@@ -78,6 +78,12 @@ const PrestationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Company',
   },
+  order: {
+    type: Number,
+    get: v => Math.round(v),
+    set: v => Math.round(v),
+    default: 1,
+  },
 })
 
 PrestationSchema.index({label: 'text'})

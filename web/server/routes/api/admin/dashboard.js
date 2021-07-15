@@ -2052,6 +2052,7 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
           professional_access: req.body.professional_access,
           particular_access: req.body.particular_access,
           private_company: req.body.private_company,
+          order: req.body.order ? parseInt(req.body.order) : 1,
         }
 
         req.context.getModel('Prestation').create(newPrestation)
@@ -2096,7 +2097,7 @@ router.get('/prestation/all', passport.authenticate('admin', {session: false}), 
   const admin = decode.is_admin
 
   if (admin) {
-    req.context.getModel('Prestation').find({}, 'label cesu_eligible particular_access professional_access')
+    req.context.getModel('Prestation').find({}, 'label cesu_eligible particular_access professional_access order')
       .sort({s_label: 1, category: 1})
       .populate({path: 'service', select: 'label', populate: {
         path: 'category', select: 'particular_label professional_label'},
@@ -2203,6 +2204,7 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
         professional_access: req.body.professional_access,
         particular_access: req.body.particular_access,
         private_company: req.body.private_company,
+        order: req.body.order ? parseInt(req.body.order) : 1,
       },
     },
     {new: true})

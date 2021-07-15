@@ -199,31 +199,40 @@ class view extends React.Component {
   }
 
   onChange = e => {
-    const state = this.state.prestation;
-    state[e.target.name] = e.target.value;
-    this.setState({prestation: state});
+    const {name, value}=e.target
+    const state = this.state.prestation
+    if (name=='order') {
+      const val=parseInt(value)
+      if (!isNaN(val)) {
+        state[name] = val
+      }
+    }
+    else {
+      state[name] = value
+    }
+    this.setState({prestation: state})
   };
 
   onChangeBool = e => {
-    const state = this.state.prestation;
-    const {name, checked} = e.target;
+    const state = this.state.prestation
+    const {name, checked} = e.target
     state[name]=checked
-    this.setState({prestation: state});
+    this.setState({prestation: state})
   };
 
   onCesuChange = e => {
-    const checked = e.target.checked;
-    this.setState({cesu_eligible: checked});
+    const checked = e.target.checked
+    this.setState({cesu_eligible: checked})
   };
 
   onChange2 = e => {
-    const {name, value} = e.target;
-    this.setState({[name]: value});
+    const {name, value} = e.target
+    this.setState({[name]: value})
     if (name == 'service') {
-      this.setState({current_service: this.state.all_service.find(s => s._id.toString() == value.toString())});
+      this.setState({current_service: this.state.all_service.find(s => s._id.toString() == value.toString())})
     }
     if (name == 'filter_presentation') {
-      this.setState({current_filter_presentation: this.state.all_filter_presentation.find(f => f._id.toString() == value.toString())});
+      this.setState({current_filter_presentation: this.state.all_filter_presentation.find(f => f._id.toString() == value.toString())})
     }
   };
 
@@ -239,59 +248,61 @@ class view extends React.Component {
   }
 
   handleChangeTags = selectedTags => {
-    this.setState({selectedTags});
+    this.setState({selectedTags})
 
   };
 
   handleChangeBilling = selectedBilling => {
-    this.setState({selectedBilling});
+    this.setState({selectedBilling})
 
   };
 
   onSubmit = e => {
-    e.preventDefault();
-    let arrayTags = [];
-    let arrayBilling = [];
+    e.preventDefault()
+    let arrayTags = []
+    let arrayBilling = []
 
     if (this.state.selectedTags != null) {
       this.state.selectedTags.forEach(w => {
-        arrayTags.push(w.value);
-      });
+        arrayTags.push(w.value)
+      })
     }
 
     if (this.state.selectedBilling != null) {
       this.state.selectedBilling.forEach(w => {
-        arrayBilling.push(w.value);
-      });
+        arrayBilling.push(w.value)
+      })
     }
-    const tags = arrayTags;
-    const service = this.state.service;
-    const billing = arrayBilling;
-    const job = this.state.job;
-    const filter_presentation = this.state.filter_presentation;
-    const {label, price, description, professional_access, particular_access} = this.state.prestation;
-    const id = this.props.prestation_id;
-    const cesu_eligible = this.state.cesu_eligible;
-    const private_company = this.state.prestation.private_company;
+    const tags = arrayTags
+    const service = this.state.service
+    const billing = arrayBilling
+    const job = this.state.job
+    const filter_presentation = this.state.filter_presentation
+    const {label, price, description, professional_access, particular_access} = this.state.prestation
+    const id = this.props.prestation_id
+    const cesu_eligible = this.state.cesu_eligible
+    const private_company = this.state.prestation.private_company
+    const order = this.state.prestation.order
 
     axios.put(`/myAlfred/api/admin/prestation/all/${id}`, {
       label, price, billing, service, filter_presentation,
-      job, description, tags, cesu_eligible, particular_access,professional_access,
-      private_company
+      job, description, tags, cesu_eligible, particular_access, professional_access,
+      private_company, order,
     })
-      .then(res => {
-        snackBarSuccess('Prestation modifiée avec succès');
+      .then(() => {
+        snackBarSuccess('Prestation modifiée avec succès')
+        this.componentDidMount()
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
         else {
           this.setState({errors: err.response.data})
         }
-      });
+      })
   };
 
   handleClick() {
@@ -418,6 +429,18 @@ class view extends React.Component {
                       closeMenuOnSelect={false}
                     />
                   </FormControl>
+                </Grid>
+                <Grid item style={{width: '100%', marginTop: 20}}>
+                  <Typography style={{fontSize: 20}}>Ordre</Typography>
+                  <TextField
+                  id="standard-with-placeholder"
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="order"
+                  value={prestation.order}
+                  onChange={this.onChange}
+                  />
                 </Grid>
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
