@@ -5,9 +5,8 @@ export default theme => ({
     color: 'white',
   },
   containerLogo: {
-    [theme.breakpoints.down('md')]: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })

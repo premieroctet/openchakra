@@ -15,6 +15,12 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  secondText: {
+    marginTop: '-70px',
+    [theme.breakpoints.down('md')]: {
+      marginTop: 'initial',
+    },
+  },
   dividerContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -25,6 +31,12 @@ export default theme => ({
   titleSection: {
     color: 'black',
     textAlign: 'center',
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: '-50px',
+    [theme.breakpoints.down('md')]: {
+      marginBottom: 0,
+    },
   },
   containerForm: {
     backgroundColor: '#F7F7F7',
