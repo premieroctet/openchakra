@@ -420,6 +420,18 @@ class view extends React.Component {
                   </FormControl>
                 </Grid>
                 <Grid item style={{width: '100%', marginTop: 20}}>
+                  <Typography style={{fontSize: 20}}>Ordre</Typography>
+                  <TextField
+                  id="standard-with-placeholder"
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="order"
+                  value={prestation.order}
+                  onChange={this.onChange}
+                  />
+                </Grid>
+                <Grid item style={{width: '100%', marginTop: 20}}>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
                     <Typography style={{fontSize: 20}}>Filtre de présentation</Typography>
                     <Select
