@@ -14,6 +14,7 @@ const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
 import axios from 'axios'
 import AlgoliaPlaces from 'algolia-places-react'
 import FormHelperText from '@material-ui/core/FormHelperText'
+import {isEmailOk, isPhoneOk} from '../../../utils/sms'
 const moment = require('moment')
 moment.locale('fr')
 
@@ -36,7 +37,8 @@ function Form({classes}) {
   const [quantities, setQuantities] = useState({})
   const [totalPrice, setTotalPrice] = useState(0)
   const [service, setService] = useState(null)
-  const [errors, setErrors] = useState({})
+  const [emailValidator, setEmailValidator] = useState(false)
+  const [phoneValidator, setPhoneValidator] = useState(false)
 
   function updateTotalPrice() {
     let total=0
@@ -80,10 +82,8 @@ function Form({classes}) {
   }
 
   const payEnabled = () => {
-    if (!email || !firstname || !name || !address || !address.gps.lat || !address.gps.lng || !phone || !totalPrice) {
-      return false
-    }
-    return true
+    return !(!email || !firstname || !name || !address || !address.gps.lat || !address.gps.lng || !phone || !totalPrice || !emailValidator || !phoneValidator)
+
   }
 
   const onSubmit = () => {
@@ -94,7 +94,6 @@ function Form({classes}) {
       .catch(err => {
         const errors=err.response.data
         snackBarError(Object.values(errors))
-        setErrors(errors)
       })
   }
 
@@ -103,6 +102,21 @@ function Form({classes}) {
       updateTotalPrice()
       return
     }
+
+    if (isEmailOk(email)) {
+      setEmailValidator(true)
+    }
+    else{
+      setEmailValidator(false)
+    }
+
+    if(isPhoneOk(phone)) {
+      setPhoneValidator(true)
+    }
+    else{
+      setPhoneValidator(false)
+    }
+
     axios.get(`/myAlfred/api/service/partner/${AVOCOTES_COMPANY_NAME}`)
       .then(res => {
         setQuantities(res.data.prestations.map(p => p._id.toString()).reduce((acc, curr) => ({...acc, [curr]: 0}), {}))
@@ -120,7 +134,7 @@ function Form({classes}) {
           <h2 className={classes.title}>{AVOCOTES.titleCordonnates}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Email" value={email} onChange={e => setEmail(e.target.value)} error={errors.email}/>
+          <TextField id="standard-basic" label="Email" value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 ? false : !emailValidator} helperText={email.length === 0 ? null : !emailValidator ? 'Veuillez entrer un e-mail valide' : null}/>
         </Grid>
         <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
           <TextField id="standard-basic" label="Prénom" value={firstname} onChange={e => setFirstname(e.target.value)}/>
@@ -155,7 +169,7 @@ function Form({classes}) {
           <FormHelperText>Veuillez selectionner une adresse dans la liste.</FormHelperText>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Téléphone" value={phone} onChange={e => setPhone(e.target.value)}/>
+          <TextField id="standard-basic" label="Téléphone" value={phone} onChange={e => setPhone(e.target.value)} error={phone.length === 0 ? false : !phoneValidator} helperText={phone.length === 0 ? null : !phoneValidator ? 'Veuillez entrer un n° téléphone valide' : null}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h2 className={classes.title}>{AVOCOTES.titleDetails}</h2>
