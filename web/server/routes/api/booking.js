@@ -20,6 +20,7 @@ const {
 const {getRole} = require('../../utils/serverContext')
 const {connectionPool}=require('../../utils/database')
 const {serverContextFromPartner}=require('../../utils/serverContext')
+const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
 
 moment.locale('fr')
 
@@ -290,6 +291,14 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
       }
     })
     .catch(err => console.error(err))
+})
+
+router.post('/avocotes', (req, res) => {
+  const {errors, isValid} = validateAvocotesCustomer(req.body)
+  if (!isValid) {
+    return res.status(400).json(errors)
+  }
+
 })
 
 new CronJob('0 */15 * * * *', (() => {

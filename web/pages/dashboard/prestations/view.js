@@ -18,7 +18,8 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Link from 'next/link';
+import Link from 'next/link'
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import Checkbox from '@material-ui/core/Checkbox';
 
@@ -283,14 +284,16 @@ class view extends React.Component {
     const cesu_eligible = this.state.cesu_eligible
     const private_company = this.state.prestation.private_company
     const order = this.state.prestation.order
+    const company_price = this.state.prestation.company_price
 
     axios.put(`/myAlfred/api/admin/prestation/all/${id}`, {
       label, price, billing, service, filter_presentation,
       job, description, tags, cesu_eligible, particular_access, professional_access,
-      private_company, order,
+      private_company, order, company_price,
     })
       .then(() => {
         snackBarSuccess('Prestation modifiée avec succès')
+        this.setState({errors: {}})
         this.componentDidMount()
       })
       .catch(err => {
@@ -300,7 +303,9 @@ class view extends React.Component {
           Router.push({pathname: '/login'})
         }
         else {
-          this.setState({errors: err.response.data})
+          const errors=err.response.data
+          this.setState({errors: errors})
+          snackBarError(Object.values(errors))
         }
       })
   };
@@ -336,7 +341,6 @@ class view extends React.Component {
     const {all_job} = this.state;
     const {all_tags} = this.state;
     const {companies} = this.state;
-    console.log(prestation.private_company)
 
     const categories = all_category.map(e => (
       <MenuItem value={e._id}>{e.label}</MenuItem>
@@ -356,83 +360,83 @@ class view extends React.Component {
     return (
       <Layout>
         <Grid container className={classes.loginContainer}>
-            <Grid>
-              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>{prestation.label}</Typography>
+          <Grid>
+            <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+              <Typography style={{fontSize: 30}}>{prestation.label}</Typography>
+            </Grid>
+            <form onSubmit={this.onSubmit}>
+              <Grid item>
+                <TextField
+                  id="standard-with-placeholder"
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="label"
+                  value={prestation.label}
+                  onChange={this.onChange}
+                  error={this.state.errors.label}
+                />
               </Grid>
-              <form onSubmit={this.onSubmit}>
-                <Grid item>
-                  <TextField
-                    id="standard-with-placeholder"
-                    margin="normal"
-                    style={{width: '100%'}}
-                    type="text"
-                    name="label"
-                    value={prestation.label}
-                    onChange={this.onChange}
-                    error={this.state.errors.label}
-                  />
-                </Grid>
-                <Grid item style={{marginTop: 20, display: 'flex', 'align-items': 'center'}}>
-                  <Checkbox
-                    name={`cesu_eligible`}
-                    checked={this.state.cesu_eligible}
-                    onChange={this.onCesuChange}
-                  />
-                  <Typography>Eligible au CESU</Typography>
-                </Grid>
-                <Grid item style={{marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Prix moyen</Typography>
-                  <TextField
-                    id="standard-with-placeholder"
-                    margin="normal"
-                    style={{width: '100%'}}
-                    type="text"
-                    name="price"
-                    value={prestation.price}
-                    onChange={this.onChange}
+              <Grid item style={{marginTop: 20, display: 'flex', 'align-items': 'center'}}>
+                <Checkbox
+                  name={`cesu_eligible`}
+                  checked={this.state.cesu_eligible}
+                  onChange={this.onCesuChange}
+                />
+                <Typography>Eligible au CESU</Typography>
+              </Grid>
+              <Grid item style={{marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Prix moyen</Typography>
+                <TextField
+                  id="standard-with-placeholder"
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="price"
+                  value={prestation.price}
+                  onChange={this.onChange}
 
-                  />
-                </Grid>
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <Typography style={{fontSize: 20}}>Service</Typography>
-                    <Select
-                      input={<Input name="service" id="genre-label-placeholder"/>}
-                      displayEmpty
-                      name="service"
-                      value={this.state.service}
-                      onChange={this.onChange2}
-                      className={classes.selectEmpty}
-                      error={this.state.errors.service}
-                    >
-                      <MenuItem value="">
-                        <em>...</em>
+                />
+              </Grid>
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Typography style={{fontSize: 20}}>Service</Typography>
+                  <Select
+                    input={<Input name="service" id="genre-label-placeholder"/>}
+                    displayEmpty
+                    name="service"
+                    value={this.state.service}
+                    onChange={this.onChange2}
+                    className={classes.selectEmpty}
+                    error={this.state.errors.service}
+                  >
+                    <MenuItem value="">
+                      <em>...</em>
+                    </MenuItem>
+                    {all_service.map(e => (
+                      <MenuItem key={e._id} value={e._id}>
+                        {e.label}
                       </MenuItem>
-                      {all_service.map(e => (
-                        <MenuItem key={e._id} value={e._id}>
-                          {e.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Méthodes de facturations</Typography>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <Select2
-                      value={this.state.selectedBilling}
-                      onChange={this.handleChangeBilling}
-                      options={optionsBilling}
-                      isMulti
-                      isSearchable
-                      closeMenuOnSelect={false}
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Ordre</Typography>
-                  <TextField
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Méthodes de facturations</Typography>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Select2
+                    value={this.state.selectedBilling}
+                    onChange={this.handleChangeBilling}
+                    options={optionsBilling}
+                    isMulti
+                    isSearchable
+                    closeMenuOnSelect={false}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Ordre</Typography>
+                <TextField
                   id="standard-with-placeholder"
                   margin="normal"
                   style={{width: '100%'}}
@@ -440,152 +444,172 @@ class view extends React.Component {
                   name="order"
                   value={prestation.order}
                   onChange={this.onChange}
-                  />
-                </Grid>
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <Typography style={{fontSize: 20}}>Filtre de présentation</Typography>
-                    <Select
-                      input={<Input name="filter_presentation" id="genre-label-placeholder"/>}
-                      displayEmpty
-                      name="filter_presentation"
-                      value={this.state.filter_presentation}
-                      onChange={this.onChange2}
-                      className={classes.selectEmpty}
-                    >
-                      <MenuItem value="">
-                        <em>...</em>
+                />
+              </Grid>
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Typography style={{fontSize: 20}}>Filtre de présentation</Typography>
+                  <Select
+                    input={<Input name="filter_presentation" id="genre-label-placeholder"/>}
+                    displayEmpty
+                    name="filter_presentation"
+                    value={this.state.filter_presentation}
+                    onChange={this.onChange2}
+                    className={classes.selectEmpty}
+                  >
+                    <MenuItem value="">
+                      <em>...</em>
+                    </MenuItem>
+                    {all_filter_presentation.map(e => (
+                      <MenuItem key={e._id} value={e._id}>
+                        {e.label}
                       </MenuItem>
-                      {all_filter_presentation.map(e => (
-                        <MenuItem key={e._id} value={e._id}>
-                          {e.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
                   <Typography style={{fontSize: 20}}>Métier</Typography>
-                    <Select
-                      input={<Input name="job" id="genre-label-placeholder"/>}
-                      displayEmpty
-                      name="job"
-                      value={this.state.job}
-                      onChange={this.onChange2}
-                      className={classes.selectEmpty}
-                      error={this.state.errors.job}
-                    >
-                      <MenuItem key={''} value="">
-                        <em>...</em>
+                  <Select
+                    input={<Input name="job" id="genre-label-placeholder"/>}
+                    displayEmpty
+                    name="job"
+                    value={this.state.job}
+                    onChange={this.onChange2}
+                    className={classes.selectEmpty}
+                    error={this.state.errors.job}
+                  >
+                    <MenuItem key={''} value="">
+                      <em>...</em>
+                    </MenuItem>
+                    {all_job.map(e => (
+                      <MenuItem key={e._id} value={e._id}>
+                        {e.label}
                       </MenuItem>
-                      {all_job.map(e => (
-                        <MenuItem key={e._id} value={e._id}>
-                          {e.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item style={{marginTop: 20}}>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item style={{marginTop: 20}}>
                 <Typography style={{fontSize: 20}}>Description</Typography>
-                  <TextField
-                    id="standard-with-placeholder"
-                    margin="normal"
-                    style={{width: '100%'}}
-                    type="text"
-                    multiline
-                    rows={4}
-                    name="description"
-                    value={prestation.description}
-                    onChange={this.onChange}
-                    error={this.state.errors.description}
+                <TextField
+                  id="standard-with-placeholder"
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  multiline
+                  rows={4}
+                  name="description"
+                  value={prestation.description}
+                  onChange={this.onChange}
+                  error={this.state.errors.description}
+                />
+              </Grid>
+              <Typography style={{fontSize: 20}}>
+                Prestation proposée
+              </Typography>
+              <em style={{color: 'red'}}>{this.state.errors.access}</em><br/>
+              <FormControlLabel
+                control={
+                  <Checkbox color="primary"
+                    checked={prestation.particular_access ? 'checked' : ''}
+                    name="particular_access" onChange={this.onChangeBool}
                   />
-                </Grid>
-                <Typography style={{fontSize: 20}}>
-                  Prestation proposée
-                </Typography>
-                <em style={{ color: 'red'}}>{this.state.errors.access}</em><br/>
-                <FormControlLabel
-                  control={
-                    <Checkbox color="primary"
-                              checked={prestation.particular_access ? 'checked' : ''}
-                              name="particular_access" onChange={this.onChangeBool}
-                              />
-                  }
-                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux particuliers</p></React.Fragment>}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox color="primary"
-                              checked={prestation.professional_access ? 'checked' : ''}
-                              name="professional_access" onChange={this.onChangeBool}
-                              />
-                  }
-                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux professionels</p>
-                  </React.Fragment>}
-                />
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
+                }
+                label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux particuliers</p></React.Fragment>}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox color="primary"
+                    checked={prestation.professional_access ? 'checked' : ''}
+                    name="professional_access" onChange={this.onChangeBool}
+                  />
+                }
+                label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux professionels</p>
+                </React.Fragment>}
+              />
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
                   <Typography style={{fontSize: 20}}>Restreindre à la compagnie</Typography>
-                    <Select
-                      input={<Input name="job" id="genre-label-placeholder"/>}
-                      displayEmpty
-                      name="private_company"
-                      value={prestation.private_company ? prestation.private_company.toString():null}
-                      onChange={this.onChangeCompany}
-                      className={classes.selectEmpty}
-                      error={this.state.errors.company}
-                    >
-                      <MenuItem key={''} value={null}>
-                        <em>...</em>
+                  <Select
+                    input={<Input name="job" id="genre-label-placeholder"/>}
+                    displayEmpty
+                    name="private_company"
+                    value={prestation.private_company ? prestation.private_company.toString():null}
+                    onChange={this.onChangeCompany}
+                    className={classes.selectEmpty}
+                    error={this.state.errors.company}
+                  >
+                    <MenuItem key={''} value={null}>
+                      <em>...</em>
+                    </MenuItem>
+                    {companies.map(e => (
+                      <MenuItem key={e._id} value={e._id.toString()}>
+                        {e.name}
                       </MenuItem>
-                      {companies.map(e => (
-                        <MenuItem key={e._id} value={e._id.toString()}>
-                          {e.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              { prestation.private_company &&
+              { prestation.private_company &&
                 <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Tags</Typography>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <Select2
-                      value={this.state.selectedTags}
-                      onChange={this.handleChangeTags}
-                      options={optionsTags}
-                      isMulti
-                      isSearchable
-                      closeMenuOnSelect={false}
-
+                    <Typography style={{fontSize: 20}}>Tarif partenaire</Typography>
+                    <TextField
+                      name={'company_price'}
+                      value={prestation ? prestation.company_price : 0}
+                      type={'number'}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+                      onChange={this.onChange}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                        inputProps: {min: 0},
+                      }}
+                      error={this.state.errors.company_price}
                     />
                   </FormControl>
                 </Grid>
+              }
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Tags</Typography>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Select2
+                    value={this.state.selectedTags}
+                    onChange={this.handleChangeTags}
+                    options={optionsTags}
+                    isMulti
+                    isSearchable
+                    closeMenuOnSelect={false}
+
+                  />
+                </FormControl>
+              </Grid>
 
 
-                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
-                    Modifier
-                  </Button>
-                  <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
-                    Supprimer
-                  </Button>
-                </Grid>
-              </form>
-              <Link href={`editPicture?id=${this.props.prestation_id}`}>
-                <Button type="button" variant="contained" color="primary" style={{width: '100%'}}>
-                  Modifier la photo
+              <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
+                <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                  Modifier
                 </Button>
-              </Link>
-            </Grid>
+                <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
+                  onClick={this.handleClick}>
+                  Supprimer
+                </Button>
+              </Grid>
+            </form>
+            <Link href={`editPicture?id=${this.props.prestation_id}`}>
+              <Button type="button" variant="contained" color="primary" style={{width: '100%'}}>
+                Modifier la photo
+              </Button>
+            </Link>
+          </Grid>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
 

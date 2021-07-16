@@ -84,6 +84,10 @@ const PrestationSchema = new Schema({
     set: v => Math.round(v),
     default: 1,
   },
+  // Price in partner catalog
+  company_price: {
+    type: Number,
+  },
 })
 
 PrestationSchema.index({label: 'text'})

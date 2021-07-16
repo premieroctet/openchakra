@@ -26,7 +26,7 @@ function MainSection({classes}) {
             <h2 className={classes.titleSection}>{AVOCOTES.titleEquipment}</h2>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Typography>Les équipments</Typography>
+            <Typography>Les équipements</Typography>
           </Grid>
         </Grid>
         <Grid item xl={2} lg={2} md={2} sm={2} xs={2} className={classes.dividerContainer}>

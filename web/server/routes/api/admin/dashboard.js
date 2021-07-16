@@ -2053,6 +2053,7 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
           particular_access: req.body.particular_access,
           private_company: req.body.private_company,
           order: req.body.order ? parseInt(req.body.order) : 1,
+          company_price: req.body.company_price && req.body.private_company ? parseInt(req.body.company_price) : 0,
         }
 
         req.context.getModel('Prestation').create(newPrestation)
@@ -2205,6 +2206,7 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
         particular_access: req.body.particular_access,
         private_company: req.body.private_company,
         order: req.body.order ? parseInt(req.body.order) : 1,
+        company_price: req.body.company_price && req.body.private_company ? parseInt(req.body.company_price) : 0,
       },
     },
     {new: true})

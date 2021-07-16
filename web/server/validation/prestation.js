@@ -36,8 +36,12 @@ module.exports = function validatePrestationInput(data) {
     errors.access = 'Le service ne peut être accessible à personne'
   }
 
+  if (data.private_company && !parseInt(data.company_price)) {
+    errors.company_price = "Le tarif d'entreprise doit être fourni"
+  }
+
   return {
     errors,
     isValid: isEmpty(errors),
-  };
-};
+  }
+}

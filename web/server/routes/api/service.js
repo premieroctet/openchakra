@@ -201,20 +201,20 @@ router.get('/keyword/:kw', (req, res) => {
 
   req.context.getModel('Service').find({}, 'label s_label particular_access professional_access')
     .populate('category', 's_particular_label s_professional_label')
-    .populate({path: 'prestations', select:'s_label particular_access professional_access private_alfred', populate:{path:'job', select:'s_label'}})
-    .sort({s_label:1})
-    .then( services => {
-      var result = {[PART]:[], [PRO]:[]}
-      Object.keys(result).forEach( access_type => {
+    .populate({path: 'prestations', select: 's_label particular_access professional_access private_alfred', populate: {path: 'job', select: 's_label'}})
+    .sort({s_label: 1})
+    .then(services => {
+      let result = {[PART]: [], [PRO]: []}
+      Object.keys(result).forEach(access_type => {
         const attribute=`${access_type}_access`
         const label=`s_${access_type}_label`
-        services.filter(s => s[attribute]).forEach( service => {
-          var keywords= [service.s_label, service.category[label]]
-          service.prestations.filter(p => p[attribute] && !p.private_alfred).forEach( p => {
+        services.filter(s => s[attribute]).forEach(service => {
+          let keywords= [service.s_label, service.category[label]]
+          service.prestations.filter(p => p[attribute] && !p.private_alfred).forEach(p => {
             keywords.push(p.s_label, p.job && p.job.s_label ? p.job.s_label : '')
           })
           // single string with unique words
-          keywords = _.uniq(keywords.filter( kw => Boolean(kw)).join(' ').split(' ')).join(' ')
+          keywords = _.uniq(keywords.filter(kw => Boolean(kw)).join(' ').split(' ')).join(' ')
           result[access_type].push({
             _id: service._id,
             label: service.label,
@@ -224,10 +224,36 @@ router.get('/keyword/:kw', (req, res) => {
       })
       res.json(result)
     })
-    .catch( err => {
+    .catch(err => {
       console.error(err)
       res.status(400).json(err)
     })
-});
+})
+
+router.get('/partner/:partner_name', (req, res) => {
+  const company_name=req.params.partner_name
+  req.context.getModel('company').findOne({name: company_name}, '_id')
+    .then(company => {
+      if (!company) {
+        return res.status(404).json(`No company ${company_name} found`)
+      }
+      return req.context.getModel('prestation').find({private_company: company}, '_id')
+        .populate('service', '_id')
+    })
+    .then(prestations => {
+      const count=Object.keys(_(prestations).countBy(p => p.service._id.toString()).value()).length
+      if (count!=1) {
+        return res.status(500).json(`${count} services différents trouvés pour ${company_name}`)
+      }
+      return req.context.getModel('service').findOne({_id: prestations[0].service})
+        .populate('prestations')
+    })
+    .then(service => {
+      res.json(service)
+    })
+    .catch(err => {
+      res.status(400).json(err)
+    })
+})
 
 module.exports = router;
