@@ -1,45 +1,45 @@
-import {TextField} from "@material-ui/core";
-import BusinessIcon from '@material-ui/icons/Business';
-const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
-import LanguageIcon from '@material-ui/icons/Language';
+import {TextField} from '@material-ui/core'
+import BusinessIcon from '@material-ui/icons/Business'
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
+import LanguageIcon from '@material-ui/icons/Language'
 const {setAxiosAuthentication} = require('../../utils/authentication')
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
 import axios from 'axios'
-import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/components/About/About';
-import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
-import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
-import RoomIcon from '@material-ui/icons/Room';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
+import {withStyles} from '@material-ui/core/styles'
+import styles from '../../static/css/components/About/About'
+import WorkOutlineIcon from '@material-ui/icons/WorkOutline'
+import ListAlfredConditions from '../ListAlfredConditions/ListAlfredConditions'
+import RoomIcon from '@material-ui/icons/Room'
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
+import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined'
 import UserAvatar from '../Avatar/UserAvatar'
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 import Topic from '../../hoc/Topic/Topic'
 import AlgoliaPlaces from 'algolia-places-react'
 import MultipleSelect from 'react-select'
 import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
 import CreateIcon from '@material-ui/icons/Create'
 import {isEditableUser} from '../../utils/context'
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Divider from "@material-ui/core/Divider";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
+import Divider from '@material-ui/core/Divider'
+import InputLabel from '@material-ui/core/InputLabel'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 
-const {frenchFormat} = require('../../utils/text');
-const moment = require('moment');
-moment.locale('fr');
+const {frenchFormat} = require('../../utils/text')
+const moment = require('moment')
+moment.locale('fr')
 
-const DialogTitle = withStyles(styles)((props) => {
-  const {children, classes, onClose, ...other} = props;
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography {...other} className={classes.root}>
       <Typography variant="h6">{children}</Typography>
@@ -49,13 +49,13 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
 class About extends CompanyComponent {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: null,
       newAddress: null,
@@ -69,9 +69,9 @@ class About extends CompanyComponent {
       activityArea: '',
       sizeCompany: '',
       website: '',
-      company:null,
+      company: null,
 
-    };
+    }
   }
 
   componentDidMount = () => {
@@ -79,38 +79,38 @@ class About extends CompanyComponent {
   };
 
   loadUser = () => {
-    this.setState({showEdition: false});
-    setAxiosAuthentication();
+    this.setState({showEdition: false})
+    setAxiosAuthentication()
 
-      axios.get(`/myAlfred/api/users/users/${this.props.user}`)
-        .then(res => {
-          const user = res.data;
-          if (user.company) {
-            axios.get(`/myAlfred/api/companies/companies/${user.company}`)
-              .then( res =>{
-                const company = res.data;
-                this.setState({
-                  user: user,
-                  userLanguages: user.languages.map(l => ({value: l, label: l})),
-                  company: company,
-                  website: company.website,
-                  activityArea: company.activity,
-                  sizeCompany: company.size,
-                  billing_address: company.billing_address,
-                  companyName: company.name,
-                  description: company.description,
-                  siret: company.siret,
-                  vat_number: company.vat_number,
-                  vat_subject: company.vat_subject
-                })
+    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
+      .then(res => {
+        const user = res.data
+        if (user.company) {
+          axios.get(`/myAlfred/api/companies/companies/${user.company}`)
+            .then(res => {
+              const company = res.data
+              this.setState({
+                user: user,
+                userLanguages: user.languages.map(l => ({value: l, label: l})),
+                company: company,
+                website: company.website,
+                activityArea: company.activity,
+                sizeCompany: company.size,
+                billing_address: company.billing_address,
+                companyName: company.name,
+                description: company.description,
+                siret: company.siret,
+                vat_number: company.vat_number,
+                vat_subject: company.vat_subject,
               })
+            })
             .catch(err => console.error(err))
         }
         else {
           this.setState({
             user: user,
             userLanguages: user.languages.map(l => ({value: l, label: l})),
-            billing_address: user.billing_address
+            billing_address: user.billing_address,
           })
         }
       })
@@ -127,10 +127,10 @@ class About extends CompanyComponent {
         gps: {
           lat: result.suggestion.latlng.lat,
           lng: result.suggestion.latlng.lng,
-        }
+        },
       }
       :
-      null;
+      null
     this.setState({newAddress: newAddress}, () => this.objectsEqual())
   };
 
@@ -139,10 +139,10 @@ class About extends CompanyComponent {
   };
 
   save = () => {
-    const {newAddress, languages} = this.state;
-    setAxiosAuthentication();
+    const {newAddress, languages} = this.state
+    setAxiosAuthentication()
 
-    if(this.isModeCompany()){
+    if(this.isModeCompany()) {
       axios.put('/myAlfred/api/companies/profile/editProfile', {
         activity: this.state.activityArea,
         size: this.state.sizeCompany,
@@ -152,28 +152,29 @@ class About extends CompanyComponent {
         description: this.state.description,
         siret: this.state.siret,
         vat_number: this.state.vat_number,
-        vat_subject: this.state.vat_subject
-        }
-      ).then( res =>{
-        snackBarSuccess("Profil modifié avec succès");
+        vat_subject: this.state.vat_subject,
+      },
+      ).then(res => {
+        snackBarSuccess('Profil modifié avec succès')
         this.componentDidMount()
-      }).catch( err => {
-        snackBarError(err.response.data);
+      }).catch(err => {
+        snackBarError(err.response.data)
       })
-    }else{
+    }
+    else{
       axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(res => {
-          axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(res => {
-              snackBarSuccess('Profil modifié avec succès');
-              setTimeout(this.loadUser, 1000)
-            }
-          ).catch(err => {
-            console.error(err)
-          })
-        }
-      ).catch(err => {
+        axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(res => {
+          snackBarSuccess('Profil modifié avec succès')
+          setTimeout(this.loadUser, 1000)
+        },
+        ).catch(err => {
           console.error(err)
-        }
-      );
+        })
+      },
+      ).catch(err => {
+        console.error(err)
+      },
+      )
     }
   };
 
@@ -183,43 +184,46 @@ class About extends CompanyComponent {
 
 
   openEdition = () => {
-    const {user} = this.state;
+    const {user} = this.state
 
     this.setState({
       showEdition: true,
       languages: user.languages.map(l => ({value: l, label: l})),
-      newAddress: user.billing_address
+      newAddress: user.billing_address,
     }, () => this.objectsEqual())
   };
 
   objectsEqual = () => {
-    let o1 = this.state.languages;
-    let o2 = this.state.userLanguages;
-    let o3 = this.state.newAddress ? this.state.newAddress.gps : null;
-    let o4 = this.state.billing_address.gps;
+    let o1 = this.state.languages
+    let o2 = this.state.userLanguages
+    let o3 = this.state.newAddress ? this.state.newAddress.gps : null
+    let o4 = this.state.billing_address.gps
 
     if (o1 && o1.length !== 0 && o3 !== null) {
       if (o1.join('') === o2.join('') && o3.lat === o4.lat && o3.lng === o4.lng) {
         this.setState({enabledEdition: true})
-      } else if (o1.join('') !== o2.join('') || o3.lat !== o4.lat && o3.lng !== o4.lng) {
-        this.setState({enabledEdition: false})
-      } else {
+      }
+      else if (o1.join('') !== o2.join('') || o3.lat !== o4.lat && o3.lng !== o4.lng) {
         this.setState({enabledEdition: false})
       }
-    } else {
+      else {
+        this.setState({enabledEdition: false})
+      }
+    }
+    else {
       this.setState({enabledEdition: true})
     }
   };
 
-  handleChange = (event) => {
-    let {name, value} = event.target;
-    this.setState({[name] : value});
+  handleChange = event => {
+    let {name, value} = event.target
+    this.setState({[name]: value})
   };
 
-  modalEditDialog = (classes) => {
-    const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, company, website} = this.state;
+  modalEditDialog = classes => {
+    const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, company, website} = this.state
     const address = newAddress || (user ? user.billing_address : null)
-    const placeholder = address ? `${address.city}, ${address.country}` : 'Entrez votre adresse';
+    const placeholder = address ? `${address.city}, ${address.country}` : 'Entrez votre adresse'
 
     return (
       <Dialog
@@ -243,7 +247,7 @@ class About extends CompanyComponent {
               <Grid item xs={12} lg={12}>
                 <h3 style={{
                   fontWeight: 'bold',
-                  textTransform: 'initial'
+                  textTransform: 'initial',
                 }}>
                   {this.isModeCompany() ? 'Site Web' : 'Lieu d\'habitation'}
                 </h3>
@@ -282,7 +286,7 @@ class About extends CompanyComponent {
                 <h3
                   style={{
                     fontWeight: 'bold',
-                    textTransform: 'initial'
+                    textTransform: 'initial',
                   }}>{this.isModeCompany() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
               </Grid>
               <Grid item xs={12}>
@@ -314,7 +318,7 @@ class About extends CompanyComponent {
                         placeholder={'Taille de l’entreprise'}
                       >
                         {
-                          Object.keys(COMPANY_SIZE).map((res, index) =>(
+                          Object.keys(COMPANY_SIZE).map((res, index) => (
                             <MenuItem key={index} value={res}>{COMPANY_SIZE[res]}</MenuItem>
                           ))
                         }
@@ -323,14 +327,14 @@ class About extends CompanyComponent {
                 }
               </Grid>
             </Grid>
-              {
+            {
               this.isModeCompany() ?
                 <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <h3
                       style={{
                         fontWeight: 'bold',
-                        textTransform: 'initial'
+                        textTransform: 'initial',
                       }}>Secteur d’activité</h3>
                   </Grid>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -342,11 +346,11 @@ class About extends CompanyComponent {
                         value={activityArea}
                         onChange={this.handleChange}
                         label={'Secteur d’activité'}
-                        name={"activityArea"}
+                        name={'activityArea'}
                         placeholder={'Secteur d’activité'}
                       >
                         {
-                          Object.keys(COMPANY_ACTIVITY).map((res,index) =>(
+                          Object.keys(COMPANY_ACTIVITY).map((res, index) => (
                             <MenuItem key={index} value={res}>{COMPANY_ACTIVITY[res]}</MenuItem>
                           ))
                         }
@@ -355,13 +359,13 @@ class About extends CompanyComponent {
                   </Grid>
                 </Grid>
                 : null
-              }
+            }
             <Grid style={{marginTop: '2vh', width: '100%'}}>
               <Divider/>
               <Grid style={{marginTop: '2vh', width: '100%'}}>
                 <Button
                   onClick={() => {
-                    this.save();
+                    this.save()
                   }}
                   variant="contained"
                   classes={{root: classes.buttonSave}}
@@ -380,47 +384,47 @@ class About extends CompanyComponent {
 
 
   render() {
-    const {displayTitlePicture, classes} = this.props;
-    const {user, company, showEdition} = this.state;
+    const {displayTitlePicture, classes} = this.props
+    const {user, company, showEdition} = this.state
 
-    var place = this.isModeCompany() ? company ? company.billing_address.city : "Pas d'addresse" : user ? user.billing_address.city : "Pas d'adresse";
+    let place = this.isModeCompany() ? company ? company.billing_address.city : "Pas d'addresse" : user ? user.billing_address.city : "Pas d'adresse"
 
-    const editable = isEditableUser(user);
+    const editable = isEditableUser(user)
 
     const wrapperComponentProps = !this.isModeCompany()?
       [
         {
           label: 'Lieu',
           summary: place,
-          IconName: user ? <RoomIcon fontSize="large"/> : ''
+          IconName: user ? <RoomIcon fontSize="large"/> : '',
         },
         {
           label: 'Langues',
           summary: user ? user.languages.join(', ') || null : '',
-          IconName: user ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : ''
+          IconName: user ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : '',
         },
         {
           label: 'Vérification',
           summary: user ? user.id_card_status_text : '',
-          IconName: user ? <CheckCircleOutlineIcon fontSize="large"/> : ''
+          IconName: user ? <CheckCircleOutlineIcon fontSize="large"/> : '',
         },
       ]
       :
       [
         {
           label: 'Site web',
-          summary: company.website ? company.website : 'Non renseigné' ,
-          IconName: <LanguageIcon fontSize="large"/>
+          summary: company.website ? company.website : 'Non renseigné',
+          IconName: <LanguageIcon fontSize="large"/>,
         },
         {
           label: 'Taille de l’entreprise',
-          summary: company.size !== '' ? Object.keys(COMPANY_SIZE).map((res) => {if(res === company.size){return COMPANY_SIZE[res]}}): 'Pas sélectionner',
-          IconName: <BusinessIcon fontSize="large"/>
+          summary: company.size !== '' ? Object.keys(COMPANY_SIZE).map(res => { if(res === company.size) { return COMPANY_SIZE[res] } }): 'Pas sélectionner',
+          IconName: <BusinessIcon fontSize="large"/>,
         },
         {
           label: 'Secteur d’activité',
-          summary: company.activity !== '' ? Object.keys(COMPANY_ACTIVITY).map((res) => {if(res === company.activity){return COMPANY_ACTIVITY[res]}}) : 'Pas sélectionner',
-          IconName: <WorkOutlineIcon fontSize="large"/>
+          summary: company.activity !== '' ? Object.keys(COMPANY_ACTIVITY).map(res => { if(res === company.activity) { return COMPANY_ACTIVITY[res] } }) : 'Pas sélectionner',
+          IconName: <WorkOutlineIcon fontSize="large"/>,
         },
       ]
 

@@ -15,6 +15,10 @@ const {is_development}=require('../../../config/config')
 const {AVOCOTES_COMPANY_NAME}=require('../../../utils/consts')
 import Router from 'next/router'
 import axios from 'axios'
+import AlgoliaPlaces from 'algolia-places-react'
+import FormHelperText from '@material-ui/core/FormHelperText'
+const moment = require('moment')
+moment.locale('fr')
 
 
 const DEV_ADDRESS={address: '260 Rue Louis Blanc', zip_code: '76100', city: 'Rouen', country: 'France', gps: {lat: 49.4247, lng: 1.0762}}
@@ -23,7 +27,16 @@ function Form({classes}) {
   const [email, setEmail] = useState('')
   const [firstname, setFirstname] = useState('')
   const [name, setName] = useState('')
-  const [address, setAddress] = useState(is_development() ? DEV_ADDRESS : {})
+  const [address, setAddress] = useState({
+    city: null,
+    address: null,
+    zip_code: null,
+    country: null,
+    gps: {
+      lat: null,
+      lng: null,
+    },
+  })
   const [phone, setPhone] = useState('')
   const [quantities, setQuantities] = useState({})
   const [totalPrice, setTotalPrice] = useState(0)
@@ -54,8 +67,25 @@ function Form({classes}) {
     }
   }
 
+  function onAddressChanged(suggestion) {
+    const newAddress = suggestion ?
+      {
+        city: suggestion.city,
+        address: suggestion.name,
+        zip_code: suggestion.postcode,
+        country: suggestion.country,
+        gps: {
+          lat: suggestion.latlng.lat,
+          lng: suggestion.latlng.lng,
+        },
+      }
+      :
+      null
+    setAddress(newAddress)
+  }
+
   const payEnabled = () => {
-    if (!email || !firstname || !name || !address || !phone || !totalPrice) {
+    if (!email || !firstname || !name || !address || !address.gps.lat || !address.gps.lng || !phone || !totalPrice) {
       return false
     }
     return true
@@ -132,7 +162,30 @@ function Form({classes}) {
           <TextField id="standard-basic" label="Nom" value={name} onChange={e => setName(e.target.value)}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Adresse" value={address} onChange={e => setAddress(e.target.value)}/>
+          <AlgoliaPlaces
+            className={classes.algoliaplaces}
+            placeholder='Addresse'
+            options={{
+              appId: 'plKATRG826CP',
+              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+              language: 'fr',
+              countries: ['fr'],
+              type: 'address',
+
+            }}
+            onChange={({query, rawAnswer, suggestion, suggestionIndex}) => onAddressChanged(suggestion)}
+            onClear={() => setAddress({
+              city: null,
+              address: null,
+              zip_code: null,
+              country: null,
+              gps: {
+                lat: null,
+                lng: null,
+              },
+            })}
+          />
+          <FormHelperText>Veuillez selectionner une adresse dans la liste.</FormHelperText>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <TextField id="standard-basic" label="Téléphone" value={phone} onChange={e => setPhone(e.target.value)}/>
