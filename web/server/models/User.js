@@ -318,6 +318,11 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(ROLES),
   }],
+  // Avocotés : lien vers compagnie avocotes
+  company_customer: {
+    type: Schema.Types.ObjectId,
+    ref: 'Company',
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 UserSchema.virtual('id_card_error_text').get(function() {

@@ -30,7 +30,7 @@ const isEmpty = require('../server/validation/is-empty');
 const {isDateAvailable} = require('../utils/dateutils')
 const {emptyPromise} = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
-const {computeDistanceKm, computeBookingReference} = require('../utils/functions');
+const {computeDistanceKm, computeBookingReference} = require('../utils/text');
 const {snackBarError}=require('../utils/notifications')
 
 const moment = require('moment');

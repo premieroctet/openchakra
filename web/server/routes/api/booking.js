@@ -4,9 +4,7 @@ const passport = require('passport')
 const mongoose = require('mongoose')
 const crypto = require('crypto')
 const moment = require('moment')
-const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts')
-const Booking = require('../../models/Booking')
-const Count = require('../../models/Count')
+const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
 const {getKeyDate} = require('../../utils/booking')
 const {invoiceFormat} = require('../../../utils/converters')
 const {payAlfred} = require('../../utils/mangopay')
@@ -15,12 +13,15 @@ const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
-  sendLeaveCommentForClient, sendLeaveCommentForAlfred,
+  sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert,
 } = require('../../utils/mailing')
 const {getRole} = require('../../utils/serverContext')
 const {connectionPool}=require('../../utils/database')
 const {serverContextFromPartner}=require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
+const {computeBookingReference}=require('../../../utils/text')
+const {createMangoClient}=require('../../utils/mangopay')
+const {computeUrl}=require('../../../config/config')
 
 moment.locale('fr')
 
@@ -262,29 +263,49 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
         return res.status(404).json({msg: 'no booking found'})
       }
       if (booking) {
-        if (booking.status === BOOK_STATUS.TO_CONFIRM) {
-          sendBookingDetails(booking)
-          sendNewBookingManual(booking, req)
+        if (booking.user.company_customer) {
+          // Prévenir les admmins d'une nouvelle résa
+          req.context.getModel('User').find({is_admin: true}, 'firstname email phone')
+            .then(admins => {
+              const search_link = new URL('/search', computeUrl(req))
+              const prestations=booking.prestations.map(p => p.name).join(',')
+              const msg=`Chercher les prestations '${prestations}' pour le compte ${booking.user.email} via ${search_link}`
+              const subject=`Nouvelle réservation Avocotés pour ${booking.user.email}`
+              admins.forEach(admin => {
+                sendAlert(admin, subject, msg)
+              })
+            })
+            .catch(err => {
+              console.error(err)
+            })
+
         }
-        if (booking.status === BOOK_STATUS.CONFIRMED) {
-          sendBookingConfirmed(booking)
-        }
-        if (booking.status === BOOK_STATUS.REFUSED) {
-          if (canceller_id === booking.user._id) {
-            sendBookingRefusedToAlfred(booking, req)
-          } else {
-            sendBookingRefusedToClient(booking, req)
+        else {
+          if (booking.status === BOOK_STATUS.TO_CONFIRM) {
+            sendBookingDetails(booking)
+            sendNewBookingManual(booking, req)
           }
-        }
-        if (booking.status === BOOK_STATUS.PREAPPROVED) {
-          sendAskInfoPreapproved(booking, req)
-        }
-        if (booking.status === BOOK_STATUS.CANCELED) {
-          if (canceller_id === booking.user._id) {
-            sendBookingCancelledByClient(booking)
+          if (booking.status === BOOK_STATUS.CONFIRMED) {
+            sendBookingConfirmed(booking)
           }
-          else {
-            sendBookingCancelledByAlfred(booking, req)
+          if (booking.status === BOOK_STATUS.REFUSED) {
+            if (canceller_id === booking.user._id) {
+              sendBookingRefusedToAlfred(booking, req)
+            }
+            else {
+              sendBookingRefusedToClient(booking, req)
+            }
+          }
+          if (booking.status === BOOK_STATUS.PREAPPROVED) {
+            sendAskInfoPreapproved(booking, req)
+          }
+          if (booking.status === BOOK_STATUS.CANCELED) {
+            if (canceller_id === booking.user._id) {
+              sendBookingCancelledByClient(booking)
+            }
+            else {
+              sendBookingCancelledByAlfred(booking, req)
+            }
           }
         }
         return res.json(booking)
@@ -299,6 +320,38 @@ router.post('/avocotes', (req, res) => {
     return res.status(400).json(errors)
   }
 
+  req.context.getModel('company').findOne({name: AVOCOTES_COMPANY_NAME})
+    .then(company => {
+      const userData={
+        firstname: req.body.firstname,
+        name: req.body.name,
+        phone: req.body.phone,
+        email: req.body.email,
+        billing_address: req.body.address,
+        company_customer: company,
+        birthday: '01/01/1980',
+        password: 'tagada',
+      }
+      return req.context.getModel('User').findOneAndUpdate({email: req.body.email}, userData, {upsert: true})
+    })
+    .then(user => {
+      if (!user.id_mangopay) {
+        createMangoClient(user)
+      }
+      let bookData={
+        user: user, address: user.billing_address,
+        service: req.body.service._id, amount: req.body.totalPrice, fees: 0,
+        prestations: req.body.prestations, reference: computeBookingReference(user, user),
+      }
+      return req.context.getModel('Booking').create(bookData)
+    })
+    .then(booking => {
+      return res.json(booking)
+    })
+    .catch(err => {
+      console.error(err)
+      res.json(err)
+    })
 })
 
 new CronJob('0 */15 * * * *', (() => {
@@ -307,7 +360,7 @@ new CronJob('0 */15 * * * *', (() => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}
       context.getModel('Count').updateOne({type: type, key: key}, updateObj, {upsert: true})
         .then(() => {
-          Count.findOne({type: type, key: key}).then(res => {
+          context.getModel('Count').findOne({type: type, key: key}).then(res => {
             resolve(res)
           }).catch(err => {
             console.error(err)

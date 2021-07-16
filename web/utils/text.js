@@ -1,4 +1,5 @@
 const stripBom = require('strip-bom')
+const moment=require('moment')
 
 const ARTICLES = 'le la les un une de des d l à'.split(/ /g);
 const SIREN_LENGTH=9
@@ -157,6 +158,11 @@ const isMobilePhone= number => {
   return res
 }
 
+const computeBookingReference = (user, alfred) => {
+  var reference = user.avatar_letters + alfred.avatar_letters + '_' + moment().format('DDMMYYYY');
+  return reference;
+};
+
 module.exports = {
   normalize,
   matches,
@@ -174,4 +180,5 @@ module.exports = {
   isSiretSirenLength,
   insensitiveComparator,
   isMobilePhone,
-};
+  computeBookingReference,
+}
