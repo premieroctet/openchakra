@@ -164,7 +164,7 @@ router.post('/avocotePayIn', (req, res) => {
     })
     .catch(error => {
       console.error(error)
-      return res.status(404).json({error: err})
+      return res.status(404).json({error: error})
     })
 })
 

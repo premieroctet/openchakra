@@ -249,10 +249,11 @@ router.get('/partner/:partner_name', (req, res) => {
         .populate('prestations')
     })
     .then(service => {
-      res.json(service)
+      return res.json(service)
     })
     .catch(err => {
-      res.status(400).json(err)
+      console.error(err)
+      return res.status(400).json(err)
     })
 })
 

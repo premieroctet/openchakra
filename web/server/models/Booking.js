@@ -148,6 +148,7 @@ const BookingSchema = new Schema({
     type: String,
   },
   cesu_amount: {
+
     type: Number,
     default: 0,
   },
@@ -164,6 +165,16 @@ const BookingSchema = new Schema({
   },
   myalfred_billing_number: {
     type: String,
+  },
+  // Réservation par un client Avocotés
+  company_customer: {
+    type: Schema.Types.ObjectId,
+    ref: 'Company',
+  },
+  // Réservation du client dans le cas de la réservation par l'Afred pour avocotes
+  customer_booking: {
+    type: Schema.Types.ObjectId,
+    ref: 'Booking',
   },
 }, {toJSON: {virtuals: true, getters: true}})
 

@@ -554,7 +554,6 @@ class view extends React.Component {
                 </FormControl>
               </Grid>
               { prestation.private_company &&
-              { prestation.private_company &&
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
                     <Typography style={{fontSize: 20}}>Tarif partenaire</Typography>

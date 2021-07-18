@@ -308,7 +308,7 @@ const GOOGLE_PROVIDER = 'google'
 const FACEBOOK_PROVIDER = 'facebook'
 
 const AMAZON_HOST='my-alfred.io'
-const LOCAL_HOST='sebhd.freeboxos.fr'
+const LOCAL_HOST='localhost'
 
 const SKILLS={
   careful: {

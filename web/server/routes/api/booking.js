@@ -128,6 +128,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.serviceUserId = req.body.serviceUserId
   bookingFields.cesu_amount = req.body.cesu_amount
   bookingFields.user_role = getRole(req) || null
+  bookingFields.customer_booking = req.body.customer_booking
 
   req.context.getModel('Booking').create(bookingFields)
     .then(booking => {
@@ -202,6 +203,17 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
     })
     .catch(err => console.error(err))
 
+})
+
+// @Route GET /myAlfred/api/booking/avocotes
+// Returns all booking from avocotes customer
+// @Access private
+router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('booking').find({company_customer: {$exists: true, $ne: null}})
+    .populate('user')
+    .then(bookings => {
+      res.json(bookings)
+    })
 })
 
 // @Route GET /myAlfred/booking/:id
@@ -314,6 +326,9 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     .catch(err => console.error(err))
 })
 
+// @Route POST /myAlfred/api/booking/avocotes
+// Create user, mango accounbt and booking for avocotes
+// @Access public
 router.post('/avocotes', (req, res) => {
   const {errors, isValid} = validateAvocotesCustomer(req.body)
   if (!isValid) {
@@ -342,6 +357,7 @@ router.post('/avocotes', (req, res) => {
         user: user, address: user.billing_address,
         service: req.body.service._id, amount: req.body.totalPrice, fees: 0,
         prestations: req.body.prestations, reference: computeBookingReference(user, user),
+        company_customer: user.company_customer,
       }
       return req.context.getModel('Booking').create(bookData)
     })
