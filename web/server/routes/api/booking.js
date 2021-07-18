@@ -226,6 +226,7 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     .populate('user', '-id_card')
     .populate('prestation')
     .populate('equipments')
+    .populate({path: 'customer_booking', populate: {path: 'user'}})
     .then(booking => {
       if (booking) {
         res.json(booking)

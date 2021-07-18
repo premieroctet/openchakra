@@ -298,6 +298,11 @@ class AllReservations extends React.Component {
                       <Grid>
                         <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}>{booking.service}</Typography>
                       </Grid>
+                      { booking.customer_booking &&
+                        <Grid>
+                          <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}><strong>Réservation Avocotés</strong></Typography>
+                        </Grid>
+                      }
                     </Grid>
                     <Grid item xl={1} lg={1} md={6} sm={3} xs={4} className={classes.priceContainer}>
                       <Typography className={classes.alfredAmount}><strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong></Typography>
