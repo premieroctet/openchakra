@@ -12,6 +12,8 @@ const {isB2BAdmin, isB2BManager, isB2BEmployee, isModeCompany}=require('../../ut
 const {computeUrl} = require('../../../config/config')
 const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
+// TODO: PROBLEME : Le pay in id d'une résa client avcocotés n'est pas sauvegardé
+
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}))
 
 /* eslint-disable no-multi-str */
@@ -116,6 +118,64 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
     .catch(error => {
       console.error(error)
       return res.status(404).json({error: err})
+    })
+})
+
+// POST /myAlfred/api/payment/avocotePayIn
+// @access private
+router.post('/avocotesPayIn', (req, res) => {
+  const bookingId= req.body.bookingId
+  const returnUrl= `/paymentSuccess?booking_id=${bookingId}`
+
+  req.context.getModel('booking').findById(bookingId)
+    .populate('user')
+    .then(booking => {
+      const amount = booking.amount*100
+      const fees = 0
+      const id_mangopay = booking.user.id_mangopay
+      mangoApi.Users.getWallets(id_mangopay)
+        .then(wallets => {
+          const wallet_id = wallets[0].Id
+          mangoApi.PayIns.create({
+            AuthorId: id_mangopay,
+            DebitedFunds: {
+              Currency: 'EUR',
+              Amount: amount,
+            },
+            Fees: {
+              Currency: 'EUR',
+              Amount: fees,
+            },
+            ReturnURL: `${computeUrl(req)}${returnUrl}`,
+            CardType: 'CB_VISA_MASTERCARD',
+            PaymentType: 'CARD',
+            ExecutionType: 'WEB',
+            Culture: 'FR',
+            CreditedWalletId: wallet_id,
+            SecureModeReturnURL: `${computeUrl(req)}${returnUrl}`,
+            Tag: `Booking ${booking.reference}`,
+          })
+            .then(payin => {
+              console.log(`Avocote PayIn created:${payin}`)
+              req.context.getModel('Booking').findByIdAndUpdate(bookingId, {mangopay_payin_id: payin.Id})
+                .then(() => console.log('booking update ok'))
+                .catch(err => console.error(`booking update error:${err}`))
+              console.log(`Created Payin ${JSON.stringify(payin)}`)
+              res.json(payin)
+            })
+            .catch(error => {
+              console.error(`Error at Avocotes payin:${error}`)
+              return res.status(404).json({error: error})
+            })
+        })
+        .catch(error => {
+          console.error(`Error at Avocotes payIn get Wallets:${error}`)
+          return res.status(404).json({error: error})
+        })
+    })
+    .catch(error => {
+      console.error(`Error at Avocotes payIn get booking:${error}`)
+      return res.status(404).json({error: error})
     })
 })
 

@@ -1,52 +1,54 @@
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
-import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
-import Layout from '../hoc/Layout/Layout';
-import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle';
-import Grid from '@material-ui/core/Grid';
-import Router from 'next/router';
-import axios from 'axios';
-import UserAvatar from '../components/Avatar/UserAvatar';
-import Typography from '@material-ui/core/Typography';
-import Schedule from '../components/Schedule/Schedule';
-import Button from '@material-ui/core/Button';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import MapComponent from '../components/map';
-import {registerLocale} from 'react-datepicker';
-import fr from 'date-fns/locale/fr';
-import {Helmet} from 'react-helmet';
-import Link from 'next/link';
-import Topic from "../hoc/Topic/Topic";
-import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import SummaryCommentary from "../components/SummaryCommentary/SummaryCommentary"
-import DrawerBooking from "../components/Drawer/DrawerBooking/DrawerBooking";
-import LayoutMobile from "../hoc/Layout/LayoutMobile";
+const {setAxiosAuthentication}=require('../utils/authentication')
+import React from 'react'
+import {withStyles} from '@material-ui/core/styles'
+import Layout from '../hoc/Layout/Layout'
+import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
+import Grid from '@material-ui/core/Grid'
+import Router from 'next/router'
+import axios from 'axios'
+import UserAvatar from '../components/Avatar/UserAvatar'
+import Typography from '@material-ui/core/Typography'
+import Schedule from '../components/Schedule/Schedule'
+import Button from '@material-ui/core/Button'
+import Drawer from '@material-ui/core/Drawer'
+import Hidden from '@material-ui/core/Hidden'
+import MapComponent from '../components/map'
+import {registerLocale} from 'react-datepicker'
+import fr from 'date-fns/locale/fr'
+import {Helmet} from 'react-helmet'
+import Link from 'next/link'
+import Topic from '../hoc/Topic/Topic'
+import ListAlfredConditions from '../components/ListAlfredConditions/ListAlfredConditions'
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import SummaryCommentary from '../components/SummaryCommentary/SummaryCommentary'
+import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
+import LayoutMobile from '../hoc/Layout/LayoutMobile'
 const {BOOK_STATUS, COMM_CLIENT, MANAGER}=require('../utils/consts')
-const isEmpty = require('../server/validation/is-empty');
+const isEmpty = require('../server/validation/is-empty')
 const {isDateAvailable} = require('../utils/dateutils')
-const {emptyPromise} = require('../utils/promise');
-const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
-const {computeDistanceKm, computeBookingReference} = require('../utils/functions');
+const {emptyPromise} = require('../utils/promise')
+const {isMomentAvailable, getDeadLine} = require('../utils/dateutils')
+const {computeDistanceKm} = require('../utils/functions')
+const {computeBookingReference} = require('../utils/text')
 const {snackBarError}=require('../utils/notifications')
+const _=require('lodash')
 
-const moment = require('moment');
-const {isB2BAdmin, isB2BManager, getRole, isModeCompany}=require('../utils/context')
+const moment = require('moment')
+const {isB2BAdmin, isB2BManager, getRole, isModeCompany, isLoggedUserAdmin}=require('../utils/context')
 
-moment.locale('fr');
-registerLocale('fr', fr);
+moment.locale('fr')
+registerLocale('fr', fr)
 
 // TODO : gérer affichage si utilisateur non connecté
 class UserServicesPreview extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: null,
       shop: {},
-      reviews:[],
+      reviews: [],
       serviceUser: {},
       alfred: {},
       service: {},
@@ -78,11 +80,13 @@ class UserServicesPreview extends React.Component {
       errors: {},
       isChecked: false,
       use_cesu: false,
-      albums:[],
+      albums: [],
       excludedDays: [],
       available_budget: Number.MAX_SAFE_INTEGER,
       pending: false,
-    };
+      avocotes: null,
+      all_avocotes: [],
+    }
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
     this.book = this.book.bind(this)
@@ -90,12 +94,8 @@ class UserServicesPreview extends React.Component {
     this.isInPerimeter = this.isInPerimeter.bind(this)
   }
 
-  setState = (st, cb) => {
-    return super.setState(st, cb)
-  }
-
   static getInitialProps({query: {id, address}}) {
-    return {service_id: id, address: address};
+    return {service_id: id, address: address}
   }
 
   // Converts 'all' to 'main'
@@ -105,107 +105,114 @@ class UserServicesPreview extends React.Component {
 
   componentDidMount() {
 
-    const id = this.props.service_id;
+    const id = this.props.service_id
 
     setAxiosAuthentication()
 
-    let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
+    let bookingObj = JSON.parse(localStorage.getItem('bookingObj'))
     if (bookingObj && bookingObj.serviceUserId.toString() !== id) {
-      bookingObj = null;
-      localStorage.removeItem('bookingObj');
+      bookingObj = null
+      localStorage.removeItem('bookingObj')
     }
 
-    var st={}
+    let st={}
+    axios.get('/myAlfred/api/booking/avocotes')
+      .then(res => {
+        this.setState({all_avocotes: res.data})
+      })
+      .catch(err => {
+        console.error(err)
+      })
     axios.get(`/myAlfred/api/serviceUser/${id}`)
       .then(res => {
-        let serviceUser = res.data;
-        var count = Object.fromEntries(serviceUser.prestations.map(p => [p._id, null]))
+        let serviceUser = res.data
+        let count = Object.fromEntries(serviceUser.prestations.map(p => [p._id, null]))
 
         if (bookingObj) {
           serviceUser.prestations.forEach(p => {
             const bookP = bookingObj.prestations.find(bp => {
-              return bp.name === p.prestation.label;
-            });
+              return bp.name === p.prestation.label
+            })
             if (bookP) {
-              count[p._id] = parseInt(bookP.value);
+              count[p._id] = parseInt(bookP.value)
             }
-          });
+          })
         }
 
-        var st = []
+        let st = []
         axios.get('/myAlfred/api/users/current')
-          .catch (err => {})
+          .catch(err => {
+            console.error(err)
+          })
           .then(res => {
             let user = res ? res.data : null
             // Filter private_company prestations
             serviceUser.prestations=serviceUser.prestations.filter(p => {
               const company=p.prestation.private_company
               if (company) {
-                return isModeCompany() && user && user.company==company
+                return isLoggedUserAdmin() || (isModeCompany() && user && user.company==company)
               }
-              else {
-                return true
-              }
+              return true
             })
             // Mode compagnie : l'admin a un budget illimité comme un user standard, le manager a le budget de son département
             if (user && user.company) {
               axios.get(`/myAlfred/api/companies/budget/${user._id}/${getRole()}`)
-                .then ( res => {
+                .then(res => {
                   this.setState({available_budget: res.data, role: getRole()})
                 })
-                .catch (err => {
+                .catch(err => {
                   console.error(err)
                   this.setState({available_budget: 0})
                 })
               axios.get(`/myAlfred/api/companies/supported/${user._id}/${serviceUser.service._id}/${getRole()}`)
-                .then( res => {
+                .then(res => {
                   const percent=res.data
                   this.setState({company_percent: percent})
                 })
-                .catch (err => {
+                .catch(err => {
                   console.error(err)
                 })
 
             }
-            st['user']=user
-            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+            st.user=user
+            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
             promise
               .then(res => {
-                var allAddresses = {'main': res.data.billing_address};
+                let allAddresses = {'main': res.data.billing_address}
                 res.data.service_address.forEach(addr => {
                   allAddresses[addr._id] = addr
-                });
-                st['allAddresses']=allAddresses
+                })
+                st.allAddresses=allAddresses
 
                 axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
                   .then(res => {
-                    let availabilities = res.data;
-                    st['availabilities']=availabilities
+                    let availabilities = res.data
+                    st.availabilities=availabilities
                     const excludedDays = this.getExcludedDays(availabilities)
-                    st['excludedDays']=excludedDays
-                    axios.get('/myAlfred/api/reviews/' + serviceUser.user._id)
+                    st.excludedDays=excludedDays
+                    axios.get(`/myAlfred/api/reviews/${serviceUser.user._id}`)
                       .then(response => {
-                        const skills = response.data;
-                        st['skills']=skills
-                        axios.get('/myAlfred/api/shop/alfred/' + serviceUser.user._id)
+                        const skills = response.data
+                        st.skills=skills
+                        axios.get(`/myAlfred/api/shop/alfred/${ serviceUser.user._id}`)
                           .then(res => {
-                            let shop = res.data;
-                            st['shop']=shop
-                            st['flexible']=shop.flexible_cancel
-                            st['moderate']=shop.moderate_cancel
-                            st['strict']=shop.strict_cancel
-                            st['use_cesu']=shop.cesu !== 'Disabled'
+                            let shop = res.data
+                            st.shop=shop
+                            st.flexible=shop.flexible_cancel
+                            st.moderate=shop.moderate_cancel
+                            st.strict=shop.strict_cancel
+                            st.use_cesu=shop.cesu !== 'Disabled'
                             axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
                               .then(res => {
-                                var reviews = res.data;
+                                let reviews = res.data
                                 if (id) {
-                                  reviews = reviews.filter(r => r.serviceUser._id === id);
+                                  reviews = reviews.filter(r => r.serviceUser._id === id)
                                 }
-                                st['reviews']=reviews
-                                const equipmentsPromise=serviceUser.service.equipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
+                                st.reviews=reviews
+                                const equipmentsPromise=serviceUser.service.equipments.map(res => axios.get(`/myAlfred/api/equipment/${res}`))
                                 Promise.all(equipmentsPromise)
-                                  .then( res => {
-                                    st['allDetailEquipments']=res.map( r => r.data)
+                                  .then(res => {
+                                    st.allDetailEquipments=res.map(r => r.data)
                                     this.setState({
                                       serviceUser: serviceUser,
                                       service: serviceUser.service,
@@ -219,10 +226,10 @@ class UserServicesPreview extends React.Component {
                                       time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
                                       location: bookingObj ? bookingObj.location : null,
                                       commission: bookingObj ? bookingObj.fees : null,
-                                      ...st
+                                      ...st,
                                     }, () => {
                                       if (!bookingObj) {
-                                        this.setDefaultLocation();
+                                        this.setDefaultLocation()
                                       }
                                       this.computeTotal()
                                     })
@@ -233,227 +240,267 @@ class UserServicesPreview extends React.Component {
                   })
               })
               .catch(err => console.error(err))
+          })
       })
-    })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
 
-    localStorage.removeItem('bookingObj');
+    localStorage.removeItem('bookingObj')
   }
 
-  getExcludedDays = (availabilities) =>  {
+  getExcludedDays = availabilities => {
     const date=moment(new Date())
-    var currMoment=moment(date).set("date", 1)
-    const endMoment=moment(date).add(1, "year")
-    var exclude=[]
+    let currMoment=moment(date).set('date', 1)
+    const endMoment=moment(date).add(1, 'year')
+    let exclude=[]
     while (currMoment<endMoment) {
       if (!isDateAvailable(currMoment, availabilities)) {
         exclude.push(currMoment.toDate())
       }
-      currMoment.add(1, "d")
+      currMoment.add(1, 'd')
     }
     return exclude
   }
 
 
   setDefaultLocation = () => {
-    console.log('setDefaultLocation')
-    const serviceUser = this.state.serviceUser;
-    const user = this.state.user;
-    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.get_prop_address() || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
-    this.setState({location: location});
-  };
+    const serviceUser = this.state.serviceUser
+    const user = this.state.user
+    let location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.get_prop_address() || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null
+    this.setState({location: location})
+  }
 
   computeReservationDate = () => {
-    var dt = moment(this.state.date);
-    var tm = moment(this.state.time);
+    let dt = moment(this.state.date)
+    let tm = moment(this.state.time)
     if (!dt.isValid() || !tm.isValid()) {
-      return null;
+      return null
     }
-    dt.hour(tm.hour()).minute(tm.minute());
-    return dt;
-  };
+    dt.hour(tm.hour()).minute(tm.minute())
+    return dt
+  }
+
+  getAvocotesBooking = () => {
+    const {avocotes, all_avocotes}=this.state
+    if (!avocotes) {
+      return null
+    }
+    const avocotes_booking=all_avocotes.find(a => a._id==avocotes)
+    if (avocotes_booking) {
+      console.error(`Can not find booking ${avocotes}`)
+    }
+    return avocotes_booking
+  }
+
+  onAvocotesChanged = event => {
+    const {name, value}=event.target
+    const {all_avocotes, serviceUser}=this.state
+    const avocotes_booking=all_avocotes.find(a => a._id==value)
+    if (!avocotes_booking) {
+      return snackBarError('Pas de booking trouvé')
+    }
+    const suPrestaNames=serviceUser.prestations.map(p => p.prestation.label)
+    const avocotesPrestaNames=avocotes_booking.prestations.map(p => p.name)
+    const diff=_.difference(avocotesPrestaNames, suPrestaNames)
+    if (diff.length>0) {
+      return snackBarError(`Impossible de réserver cet Alfred pour avocôtés, prestations manquantes: ${diff.join(',')}`)
+    }
+    let count={}
+    avocotes_booking.prestations.forEach(p => {
+      const presta = serviceUser.prestations.find(pr => pr.prestation.label == p.name)
+      count[presta._id]=p.value
+    })
+    const allAddresses={'main': avocotes_booking.address}
+    this.setState({[name]: value, count: count, allAddresses: allAddresses}, () => this.computeTotal())
+  }
 
   checkBook = () => {
-    var errors = {};
+    let errors = {}
     if (Object.values(this.state.count).every(v => !v)) {
-      errors['prestations'] = 'Sélectionnez au moins une prestation';
+      errors.prestations = 'Sélectionnez au moins une prestation'
     }
     else if (this.state.totalPrestations < this.state.serviceUser.minimum_basket) {
-      errors['prestations'] = 'Commande minimum des prestation de ' + this.state.serviceUser.minimum_basket + '€ requise';
+      errors.prestations = `Commande minimum des prestation de ${this.state.serviceUser.minimum_basket}€ requise`
     }
 
     if (!errors.datetime && this.state.date == null) {
-      errors['datetime'] = 'Sélectionnez une date';
+      errors.datetime = 'Sélectionnez une date'
     }
 
     if (!errors.datetime && this.state.time == null) {
-      errors['datetime'] = 'Sélectionnez une heure';
+      errors.datetime = 'Sélectionnez une heure'
     }
 
-    const reservationDate = this.computeReservationDate();
+    const reservationDate = this.computeReservationDate()
     if (!errors.datetime && reservationDate.isValid() && !isMomentAvailable(reservationDate, this.state.availabilities)) {
-      errors['datetime'] = this.state.alfred.firstname + ' n\'est pas disponible à cette date/heure';
+      errors.datetime = `${this.state.alfred.firstname} n'est pas disponible à cette date/heure`
     }
 
-    const minBookingDate = getDeadLine(this.state.serviceUser.deadline_before_booking);
+    const minBookingDate = getDeadLine(this.state.serviceUser.deadline_before_booking)
     if (!errors.datetime && reservationDate.isBefore(minBookingDate)) {
-      errors['datetime'] = 'Le délai de prévenance n\'est pas respecté';
+      errors.datetime = 'Le délai de prévenance n\'est pas respecté'
     }
 
     if (reservationDate && reservationDate.isBefore(moment())) {
-      errors['datetime'] = 'Réservation impossible avant maintenant';
+      errors.datetime = 'Réservation impossible avant maintenant'
     }
 
     if (!this.state.location) {
-      errors['location'] = 'Sélectionnez un lieu de prestation';
+      errors.location = 'Sélectionnez un lieu de prestation'
     }
 
     if (this.hasWarningBudget()) {
-      errors['total'] = 'Le montant dépasse le budget disponible pour votre département';
+      errors.total = 'Le montant dépasse le budget disponible pour votre département'
     }
     if (this.hasWarningSelf()) {
-      errors['user'] = 'Vous ne pouvez pas vous réserver vous-même';
+      errors.user = 'Vous ne pouvez pas vous réserver vous-même'
     }
-    this.setState({errors: errors});
-  };
+    this.setState({errors: errors})
+  }
 
   extractFilters = () => {
-    let result = {};
+    let result = {}
     if (this.state.prestations.length === 0) {
-      return result;
+      return result
     }
     this.state.prestations.forEach(p => {
       if (p.prestation == null) {
         // FIX : réaffecter les prestations persos
-        console.error(`Error:${p.id} has a null prestation`);
-      } else {
-        var filter = p.prestation.filter_presentation;
-        var key = !filter || filter.label === 'Aucun' ? '' : filter.label;
+        console.error(`Error:${p.id} has a null prestation`)
+      }
+      else {
+        let filter = p.prestation.filter_presentation
+        let key = !filter || filter.label === 'Aucun' ? '' : filter.label
         if (key in result) {
-          result[key].push(p);
-        } else {
-          result[key] = [p];
+          result[key].push(p)
+        }
+        else {
+          result[key] = [p]
         }
       }
-    });
-    return result;
-  };
+    })
+    return result
+  }
 
   toggleDrawer = (side, open) => event => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
+      return
     }
-    this.setState({...this.state, [side]: open});
-  };
+    this.setState({...this.state, [side]: open})
+  }
 
   onChangeTime = tm => {
-    this.onChange({target: {name: 'time', value: tm}});
-  };
+    this.onChange({target: {name: 'time', value: tm}})
+  }
 
   onChangeDate = dt => {
-    this.onChange({target: {name: 'date', value: dt}});
-  };
+    this.onChange({target: {name: 'date', value: dt}})
+  }
 
   onChange = event => {
-    const {name, value} = event.target;
-    var st={[name]:value}
+    const {name, value} = event.target
+    let st={[name]: value}
     if (name === 'location' && value !== 'alfred') {
-      st['pick_tax']=null
-      st['isChecked']=false
+      st.pick_tax=null
+      st.isChecked=false
     }
     this.setState(st, this.checkBook)
-  };
+  }
 
   onLocationChanged = (id, checked) => {
     // Ne pas permettre la déselection
     if (!checked) {
       return
     }
-    this.onChange({target: {name: 'location', value: checked ? id : null}});
-  };
+    this.onChange({target: {name: 'location', value: checked ? id : null}})
+  }
 
-  onQtyChanged = (state, id) => (event) => {
-    let value = this.state.count[id];
+  onQtyChanged = (state, id) => event => {
+    let value = this.state.count[id]
     if (!value) {
-      value = null;
+      value = null
     }
-    value = parseInt(value);
-    value = !isNaN(value) && value >= 0 ? value : null;
-    let count = this.state.count;
-    if(state=== 'add'){
-      count[id] = value + 1;
+    value = parseInt(value)
+    value = !isNaN(value) && value >= 0 ? value : null
+    let count = this.state.count
+    if(state=== 'add') {
+      count[id] = value + 1
 
-    }else{
-      count[id] = Math.max(0, value - 1);
     }
-      this.setState({count: count}, () => this.computeTotal());
-  };
+    else{
+      count[id] = Math.max(0, value - 1)
+    }
+    this.setState({count: count}, () => this.computeTotal())
+  }
 
   isServiceAtHome = () => {
     return this.state.location && (!['visio', 'alfred'].includes(this.state.location))
   }
 
   computeTravelTax = () => {
-    return this.state.serviceUser.travel_tax && this.isServiceAtHome() ? this.state.serviceUser.travel_tax : 0;
-  };
+    return this.state.serviceUser.travel_tax && this.isServiceAtHome() ? this.state.serviceUser.travel_tax : 0
+  }
 
   computePickTax = () => {
-    return this.state.isChecked && this.state.location === 'alfred' ? this.state.serviceUser.pick_tax : 0;
-  };
+    return this.state.isChecked && this.state.location === 'alfred' ? this.state.serviceUser.pick_tax : 0
+  }
 
   computeTotal = () => {
     const {available_budget, company_percent}=this.state
 
-    let totalPrestations = 0;
-    let totalCesu = 0;
-    let count = this.state.count;
+    let totalPrestations = 0
+    let totalCesu = 0
+    let count = this.state.count
     this.state.prestations.forEach(p => {
       if (count[p._id] > 0) {
-        totalPrestations += count[p._id] * p.price;
+        totalPrestations += count[p._id] * p.price
         if (p.prestation.cesu_eligible && this.state.use_cesu) {
-          totalCesu += count[p._id] * p.price;
+          totalCesu += count[p._id] * p.price
         }
       }
-    });
-    const travelTax = this.computeTravelTax();
-    const pickTax = this.computePickTax();
-    totalPrestations += travelTax ? parseFloat(travelTax) : 0;
-    totalPrestations += pickTax ? parseFloat(pickTax) : 0;
+    })
+    const travelTax = this.computeTravelTax()
+    const pickTax = this.computePickTax()
+    totalPrestations += travelTax ? parseFloat(travelTax) : 0
+    totalPrestations += pickTax ? parseFloat(pickTax) : 0
 
     // Ajout frais dep & retrait/livraison si CESU
     if (totalCesu) {
-      totalCesu += travelTax ? parseFloat(travelTax) : 0;
-      totalCesu += pickTax ? parseFloat(pickTax) : 0;
+      totalCesu += travelTax ? parseFloat(travelTax) : 0
+      totalCesu += pickTax ? parseFloat(pickTax) : 0
     }
 
-    let commission = totalPrestations * COMM_CLIENT;
-    let total = totalPrestations;
-    total += commission;
+    let commission = totalPrestations * COMM_CLIENT
+    const avocotes=this.getAvocotesBooking()
+    if (avocotes) {
+      commission = avocotes.amount-totalPrestations
+    }
+    let total = totalPrestations
+    total += commission
 
-    const company_amount=Math.min( total*company_percent, available_budget)
+    const company_amount=Math.min(total*company_percent, available_budget)
     this.setState({
       totalPrestations: totalPrestations,
       commission: commission,
       total: total,
       company_amount: company_amount,
       cesu_total: totalCesu,
-    }, () => this.checkBook());
-  };
+    }, () => this.checkBook())
+  }
 
   isInPerimeter = () => {
-    const coordSU = this.state.serviceUser.service_address.gps;
+    const coordSU = this.state.serviceUser.service_address.gps
     if (!this.getClientAddress()) {
       return false
     }
-    const coordUser = this.getClientAddress().gps;
-    const dist = computeDistanceKm(coordSU, coordUser);
-    const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter);
-    return inPerimeter;
-  };
+    const coordUser = this.getClientAddress().gps
+    const dist = computeDistanceKm(coordSU, coordUser)
+    const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter)
+    return inPerimeter
+  }
 
   hasWarningPerimeter = () => {
     if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user)) {
-      return false;
+      return false
     }
     if (isEmpty(this.state.location)) {
       return true
@@ -462,7 +509,7 @@ class UserServicesPreview extends React.Component {
       return true
     }
     return false
-  };
+  }
 
   hasWarningBudget = () => {
     if (getRole()==MANAGER) {
@@ -507,54 +554,55 @@ class UserServicesPreview extends React.Component {
       'main': this.getClientAddressLabel(),
       'alfred': `Chez ${this.state.alfred.firstname}`,
       'visio': 'En visio',
-    };
-    if (!this.state.location) {
-      return '';
-    } else {
-      return titles[this.state.location];
     }
-  };
+    if (!this.state.location) {
+      return ''
+    } else {
+      return titles[this.state.location]
+    }
+  }
 
   onPickTaxChanged = (id, checked) => {
-    this.setState({isChecked: !this.state.isChecked});
-    this.onChange({target: {name: 'pick_tax', value: checked ? this.state.serviceUser.pick_tax : null}});
-  };
+    this.setState({isChecked: !this.state.isChecked})
+    this.onChange({target: {name: 'pick_tax', value: checked ? this.state.serviceUser.pick_tax : null}})
+  }
 
   book = actual => { //actual : true=> book, false=>infos request
 
-    const {count, user, serviceUser, pending} = this.state
+    const {count, user, serviceUser, pending, avocotes} = this.state
 
     if (pending) {
       snackBarError(`Réservation en cours de traitement`)
       return
     }
 
-    let prestations = [];
+    let prestations = []
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
-        prestations.push({price: p.price, value: count[p._id], name: p.prestation.label});
+        prestations.push({price: p.price, value: count[p._id], name: p.prestation.label})
       }
-    });
+    })
 
-    let place;
+    let place
     if (user) {
       switch (this.state.location) {
-        case 'alfred':
-          place = this.state.serviceUser.service_address;
-          break;
-        case 'visio':
-          break;
-        default:
-          place = this.getClientAddress()
+      case 'alfred':
+        place = this.state.serviceUser.service_address
+        break
+      case 'visio':
+        break
+      default:
+        place = this.getClientAddress()
       }
     }
 
+    const avocotes_booking = this.getAvocotesBooking()
 
     let bookingObj = {
       reference: user ? computeBookingReference(user, this.state.serviceUser.user) : '',
       service: this.state.serviceUser.service.label,
       serviceId: this.state.serviceUser.service._id,
-      address: place,
+      address: avocotes_booking ? avocotes_booking.address : place,
       location: this.state.location,
       equipments: this.state.serviceUser.equipments,
       amount: this.state.total,
@@ -568,9 +616,10 @@ class UserServicesPreview extends React.Component {
       pick_tax: this.computePickTax(),
       cesu_amount: this.state.cesu_total,
       fees: this.state.commission,
-      status: actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
+      status: avocotes_booking ? BOOK_STATUS.TO_CONFIRM : actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
       serviceUserId: this.state.serviceUser._id,
-    };
+      customer_booking: avocotes_booking ? avocotes_booking._id : null,
+    }
 
     let chatPromise = !user ?
       emptyPromise({res: null})
@@ -578,23 +627,23 @@ class UserServicesPreview extends React.Component {
       axios.post('/myAlfred/api/chatRooms/addAndConnect', {
         emitter: this.state.user._id,
         recipient: this.state.serviceUser.user._id,
-      });
+      })
 
     chatPromise.then(res => {
 
       if (user) {
-        bookingObj['chatroom'] = res.data._id;
+        bookingObj.chatroom = res.data._id
       }
 
       if (this.state.selectedOption !== null) {
-        bookingObj.option = this.state.selectedOption;
+        bookingObj.option = this.state.selectedOption
       }
 
-      localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
+      localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
 
       if (!this.state.user) {
         localStorage.setItem('path', Router.asPath)
-        Router.push('/?login=true');
+        Router.push('/?login=true')
         return
       }
 
@@ -602,18 +651,21 @@ class UserServicesPreview extends React.Component {
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
           const booking = response.data
-          axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: booking._id})
+          axios.put(`/myAlfred/api/chatRooms/addBookingId/${bookingObj.chatroom}`, {booking: booking._id})
             .then(() => {
-              if (actual) {
-                Router.push({pathname: '/confirmPayment',query: {booking_id: booking._id}})
+              if (booking.customer_booking) {
+                Router.push({pathname: '/paymentSuccess', query: {booking_id: booking._id}})
+              }
+              else if (actual) {
+                Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
               }
               else {
                 Router.push(`/profile/messages?user=${response.data.user}&relative=${response.data.alfred}`)
               }
-            });
+            })
         })
         .catch(err => {
-          this.setState({ pending: false})
+          this.setState({pending: false})
           console.error(err)
         })
     })
@@ -621,28 +673,28 @@ class UserServicesPreview extends React.Component {
 
   formatDeadline = dl => {
     if (!dl) {
-      return dl;
+      return dl
     }
-    dl = dl.replace('jours', 'jour(s)').replace('semaines', 'semaine(s)').replace('heures', 'heure(s)');
-    return dl;
-  };
+    dl = dl.replace('jours', 'jour(s)').replace('semaines', 'semaine(s)').replace('heures', 'heure(s)')
+    return dl
+  }
 
   computePricedPrestations = () => {
-    const count = this.state.count;
-    var result = {};
+    const count = this.state.count
+    var result = {}
     this.state.prestations.forEach(p => {
       if (count[p._id]) {
-        result[p.prestation.label] = count[p._id] * p.price;
+        result[p.prestation.label] = count[p._id] * p.price
       }
-    });
-    return result;
-  };
+    })
+    return result
+  }
 
   // TODO : force computing disponibility
   scheduleDateChanged = (dates, mmt, mode) => {
-    const dt = new Date([...dates][0]);
+    const dt = new Date([...dates][0])
     this.setState({date : dt, time: mode==='week' ? mmt : undefined}, () => this.checkBook())
-  };
+  }
 
   loadAlbums = () => {
     axios.get(`/myAlfred/api/users/profile/albums/${this.state.alfred._id}`)
@@ -650,18 +702,20 @@ class UserServicesPreview extends React.Component {
         this.setState({ albums: res.data})
       })
       .catch (err => console.error(err))
-  };
+  }
 
   getAlbum = (id) => {
     return this.state.albums.find( a => a._id===id)
-  };
+  }
 
   content = (classes) => {
-    const serviceAddress = this.state.serviceUser.service_address;
+    const serviceAddress = this.state.serviceUser.service_address
 
-    const filters = this.extractFilters();
+    const filters = this.extractFilters()
 
-    const pricedPrestations = this.computePricedPrestations();
+    const pricedPrestations = this.computePricedPrestations()
+
+    const avocotes_booking=this.getAvocotesBooking()
 
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
@@ -681,10 +735,16 @@ class UserServicesPreview extends React.Component {
                         <Typography variant="h6">{this.state.alfred.firstname} - {this.state.service.label}</Typography>
                       </Grid>
                       {
-                        serviceAddress ?
+                        serviceAddress &&
                           <Grid>
-                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{serviceAddress.city}, {serviceAddress.country} - {this.state.serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
-                          </Grid> : null
+                            <Typography style={{color: 'rgba(39,37,37,35%)'}}>{serviceAddress.city}, {serviceAddress.country} - {this.state.serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
+                          </Grid>
+                      }
+                      {
+                        avocotes_booking &&
+                          <Grid>
+                            <Typography style={{color: 'rgba(39,37,37,35%)'}}>{`Réservation Avocotés pour ${avocotes_booking.user.full_name}`}</Typography>
+                          </Grid>
                       }
                     </Grid>
                     <Grid>
@@ -817,6 +877,7 @@ class UserServicesPreview extends React.Component {
                           onLocationChanged={this.onLocationChanged}
                           computeTravelTax={this.computeTravelTax}
                           getLocationLabel={this.getLocationLabel}
+                          onAvocotesChanged={this.onAvocotesChanged}
                           warningPerimeter={this.hasWarningPerimeter()}
                           warningBudget={this.hasWarningBudget()}
                           warningSelf={this.hasWarningSelf()}
@@ -844,6 +905,7 @@ class UserServicesPreview extends React.Component {
                     onLocationChanged={this.onLocationChanged}
                     computeTravelTax={this.computeTravelTax}
                     getLocationLabel={this.getLocationLabel}
+                    onAvocotesChanged={this.onAvocotesChanged}
                     warningPerimeter={this.hasWarningPerimeter()}
                     warningBudget={this.hasWarningBudget()}
                     warningSelf={this.hasWarningSelf()}
@@ -875,11 +937,11 @@ class UserServicesPreview extends React.Component {
         </Grid>
       </Grid>
     )
-  };
+  }
 
   render() {
-    const {classes, address} = this.props;
-    const {service,alfred, user} = this.state;
+    const {classes, address} = this.props
+    const {service,alfred, user} = this.state
 
     if (!this.state.serviceUser) {
       return null
@@ -911,4 +973,4 @@ class UserServicesPreview extends React.Component {
   }
 }
 
-export default withStyles(styles)(UserServicesPreview);
+export default withStyles(styles)(UserServicesPreview)

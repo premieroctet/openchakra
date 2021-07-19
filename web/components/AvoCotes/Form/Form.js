@@ -11,6 +11,9 @@ import RemoveIcon from '@material-ui/icons/Remove'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
+const {is_development}=require('../../../config/config')
+const {AVOCOTES_COMPANY_NAME}=require('../../../utils/consts')
+import Router from 'next/router'
 import axios from 'axios'
 import AlgoliaPlaces from 'algolia-places-react'
 import FormHelperText from '@material-ui/core/FormHelperText'
@@ -18,8 +21,10 @@ import {isEmailOk, isPhoneOk} from '../../../utils/sms'
 const moment = require('moment')
 moment.locale('fr')
 
+
+const DEV_ADDRESS={address: '260 Rue Louis Blanc', zip_code: '76100', city: 'Rouen', country: 'France', gps: {lat: 49.4247, lng: 1.0762}}
+
 function Form({classes}) {
-  const AVOCOTES_COMPANY_NAME='AOD avocotés'
   const [email, setEmail] = useState('')
   const [firstname, setFirstname] = useState('')
   const [name, setName] = useState('')
@@ -87,9 +92,43 @@ function Form({classes}) {
   }
 
   const onSubmit = () => {
-    axios.post('/myAlfred/api/booking/avocotes', {email, firstname, name, address, phone})
-      .then(() => {
-        snackBarSuccess('ok')
+    let prestations=[]
+    service.prestations.forEach(p => {
+      if (quantities[p._id]) {
+        prestations.push({name: p.label, price: p.company_price, value: quantities[p._id]})
+      }
+    })
+    axios.post('/myAlfred/api/booking/avocotes', {
+      email: email,
+      firstname: firstname,
+      name: name,
+      address: address,
+      phone: phone,
+      service: service,
+      totalPrice: totalPrice,
+      prestations: prestations,
+    })
+      .then(res => {
+        const booking=res.data
+        axios.post('/myAlfred/api/payment/avocotesPayIn', {bookingId: booking._id})
+          .then(res => {
+            const payInResult=res.data
+            console.log(`Got payIn result:${JSON.stringify(payInResult, null, 2)}`)
+            if (payInResult.SecureModeNeeded) {
+              Router.push(payInResult.SecureModeRedirectURL)
+            }
+            else if (payInResult.RedirectURL) {
+              Router.push(payInResult.RedirectURL)
+            }
+            else {
+              Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`)
+            }
+          })
+
+          .catch(err => {
+            console.error(err)
+            snackBarError(err)
+          })
       })
       .catch(err => {
         const errors=err.response.data
@@ -98,6 +137,7 @@ function Form({classes}) {
   }
 
   useEffect(() => {
+    console.log(JSON.stringify(quantities))
     if (service) {
       updateTotalPrice()
       return

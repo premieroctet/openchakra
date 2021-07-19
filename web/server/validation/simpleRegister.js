@@ -262,11 +262,12 @@ const validateCompanyGroup = (data, update) =>{
 const validateAvocotesCustomer = data =>{
   let errors = {}
 
+  console.log(data.quantities)
   data.email = data.email || ''
-  data.firstname = data.name || ''
+  data.firstname = data.firstname || ''
   data.name = data.name || ''
   data.phone = data.phone || ''
-  data.phone = data.email || ''
+  data.email = data.email || ''
   data.service = data.service || ''
 
   if (Validator.isEmpty(data.firstname)) {
@@ -293,8 +294,13 @@ const validateAvocotesCustomer = data =>{
     errors.email = "L'email est invalide"
   }
 
-  if (Validator.isEmpty(data.service)) {
+  if (!data.service) {
     errors.email = 'Le service est inconnu'
+  }
+
+  console.log(JSON.stringify(data.prestations))
+  if (!data.prestations || _.sum(data.prestations.map(p => p.value))==0) {
+    errors.prestations = 'Sélectionnez au moins une prestation'
   }
 
   return {

@@ -30,11 +30,6 @@ const computeDistanceKm = (latlon1, latlon2) => {
   }
 };
 
-const computeBookingReference = (user, alfred) => {
-  var reference = user.avatar_letters + alfred.avatar_letters + '_' + moment().format('DDMMYYYY');
-  return reference;
-};
-
 const computeAverageNotes = notes => {
   var res = {};
   if (isEmpty(notes)) {
@@ -60,6 +55,5 @@ const computeSumSkills = skills => {
 };
 
 module.exports = {
-  computeDistanceKm, computeBookingReference, computeAverageNotes,
-  computeSumSkills,
+  computeDistanceKm, computeAverageNotes, computeSumSkills,
 };
