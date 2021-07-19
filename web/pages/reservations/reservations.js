@@ -318,7 +318,7 @@ class AllReservations extends React.Component {
                         </Button>
                       </Grid>
                       {
-                        reservationType === 1 ?
+                        reservationType === 1 && !booking.customer_booking ?
                           <Grid item>
                             <Button
                               variant={'contained'}
