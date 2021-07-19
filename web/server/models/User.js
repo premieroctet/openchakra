@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const {getMangopayMessage} = require('../../utils/i18n');
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const {getMangopayMessage} = require('../../utils/i18n')
 const {hideIllegal} = require('../../utils/text')
 const moment = require('moment')
 const {ACCOUNT_MIN_AGE, ROLES}=require('../../utils/consts')
@@ -31,7 +31,7 @@ const UserSchema = new Schema({
   birthday: {
     type: Date,
     max: maxBirth,
-    //required: true,
+    // required: true,
   },
   phone: {
     type: String,
@@ -111,7 +111,7 @@ const UserSchema = new Schema({
   },
   description: {
     type: String,
-    set : text => hideIllegal(text)
+    set: text => hideIllegal(text),
   },
   id_card: {
     recto: {
@@ -269,11 +269,11 @@ const UserSchema = new Schema({
   },
   resetToken: {
     type: Schema.Types.ObjectId,
-    ref: 'resetToken',
+    ref: 'ResetToken',
   },
   chatRooms: {
     type: Schema.Types.ObjectId,
-    ref: 'chatRooms',
+    ref: 'ChatRoom',
   },
   // Mangopay as client
   id_mangopay: {
@@ -309,7 +309,7 @@ const UserSchema = new Schema({
   },
   company: {
     type: Schema.Types.ObjectId,
-    ref: 'company',
+    ref: 'Company',
   },
   position: {
     type: String,
@@ -318,40 +318,45 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(ROLES),
   }],
-}, {toJSON: {virtuals: true, getters: true}});
+  // Avocotés : lien vers compagnie avocotes
+  company_customer: {
+    type: Schema.Types.ObjectId,
+    ref: 'Company',
+  },
+}, {toJSON: {virtuals: true, getters: true}})
 
-UserSchema.virtual('id_card_error_text').get(function () {
-  return getMangopayMessage(this.id_card_error);
-});
+UserSchema.virtual('id_card_error_text').get(function() {
+  return getMangopayMessage(this.id_card_error)
+})
 
-UserSchema.virtual('id_card_status_text').get(function () {
-  return getMangopayMessage(this.id_card_status);
-});
+UserSchema.virtual('id_card_status_text').get(function() {
+  return getMangopayMessage(this.id_card_status)
+})
 
-UserSchema.virtual('avatar_letters').get(function () {
-  const first_letter = this.firstname ? this.firstname.charAt(0) : '';
-  const second_letter = this.name ? this.name.charAt(0) : '';
-  return (first_letter + second_letter).toUpperCase();
-});
+UserSchema.virtual('avatar_letters').get(function() {
+  const first_letter = this.firstname ? this.firstname.charAt(0) : ''
+  const second_letter = this.name ? this.name.charAt(0) : ''
+  return (first_letter + second_letter).toUpperCase()
+})
 
-UserSchema.virtual('full_name').get(function () {
+UserSchema.virtual('full_name').get(function() {
   return `${this.firstname} ${this.name}`
-});
+})
 
-UserSchema.virtual('age').get(function () {
+UserSchema.virtual('age').get(function() {
   if (!this.birthday) {
     return null
   }
   const age = moment().diff(this.birthday, 'years')
   return age
-});
+})
 
-UserSchema.virtual('is_employee').get(function () {
+UserSchema.virtual('is_employee').get(function() {
   return Boolean(this.company)
-});
+})
 
 // Registered => has firstname, name, email, birthday, password, address
-UserSchema.virtual('is_registered').get(function () {
+UserSchema.virtual('is_registered').get(function() {
   const REQUIRED=['firstname', 'name', 'email', 'birthday', 'password']
   if (REQUIRED.find(r => !this[r])) {
     return false
@@ -360,12 +365,12 @@ UserSchema.virtual('is_registered').get(function () {
     return false
   }
   return true
-});
+})
 
 UserSchema.virtual('shop', {
-   ref: 'shop', //The Model to use
-   localField: '_id', //Find in Model, where localField
-   foreignField: 'alfred', // is equal to foreignField
-});
+  ref: 'Shop', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'alfred', // is equal to foreignField
+})
 
-module.exports = User = mongoose.model('users', UserSchema);
+module.exports = UserSchema

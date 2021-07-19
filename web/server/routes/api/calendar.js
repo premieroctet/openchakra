@@ -3,8 +3,6 @@ const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
-const Calendar = require('../../models/Calendar');
-
 router.get('/test', (req, res) => res.json({msg: 'Calendar Works!'}));
 
 //@Route POST /myAlfred/api/calendar/add
@@ -12,7 +10,7 @@ router.get('/test', (req, res) => res.json({msg: 'Calendar Works!'}));
 // @Access private
 router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  Calendar.findOne({user: req.user.id}).then(calendar => {
+  req.context.getModel('Calendar').findOne({user: req.user.id}).then(calendar => {
     if (calendar) {
       const newEvent = {
         title: req.body.title,
@@ -48,7 +46,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 // View all calendar
 router.get('/all', (req, res) => {
 
-  Calendar.find()
+  req.context.getModel('Calendar').find()
     .populate('user')
     .then(event => {
       if (typeof event !== 'undefined' && event.length > 0) {
@@ -65,7 +63,7 @@ router.get('/all', (req, res) => {
 // View one calendar
 router.get('/:id', (req, res) => {
 
-  Calendar.findById(req.params.id)
+  req.context.getModel('Calendar').findById(req.params.id)
     .populate('user')
     .then(event => {
       if (Object.keys(event).length === 0 && event.constructor === Object) {
@@ -85,7 +83,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
-  Calendar.findById(req.params.id)
+  req.context.getModel('Calendar').findById(req.params.id)
     .then(event => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'});
@@ -101,7 +99,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
 // Delete event from calendar
 // @Access private
 router.delete('/event/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-    Calendar.findOne({user: req.user.id})
+    req.context.getModel('Calendar').findOne({user: req.user.id})
       .then(calendar => {
         const removeIndex = calendar.events
           .map(item => item.id)

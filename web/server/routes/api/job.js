@@ -1,15 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const Job = require('../../models/Job');
-
 router.get('/test', (req, res) => res.json({msg: 'Job Works!'}));
 
 // @Route GET /myAlfred/api/job/all
 // View all job
 router.get('/all', (req, res) => {
 
-  Job.find()
+  req.context.getModel('Job').find()
     .then(job => {
       if (typeof job !== 'undefined' && job.length > 0) {
         res.json(job);
@@ -25,17 +23,18 @@ router.get('/all', (req, res) => {
 // View one job
 router.get('/:id', (req, res) => {
 
-  Job.findById(req.params.id)
+  req.context.getModel('Job').findById(req.params.id)
     .then(job => {
-      if (Object.keys(job).length === 0 && job.constructor === Object) {
-        return res.status(400).json({msg: 'No job found'});
-      } else {
-        res.json(job);
+      if (!job) {
+        return res.status(400).json({msg: 'No job found'})
       }
-
+      res.json(job)
     })
-    .catch(err => res.status(404).json({job: 'No job found'}));
-});
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({job: `No job found:${err}`})
+    })
+})
 
 
 module.exports = router;

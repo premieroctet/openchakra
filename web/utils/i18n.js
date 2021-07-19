@@ -169,7 +169,7 @@ const SHOP = {
   },
   service: {
     title: 'Votre service',
-    //subtitle: 'Sélectionnez votre service. Si vous souhaitez en proposer plusieurs, vous pourrez en ajouter autant que vous le souhaitez par la suite.',
+    // subtitle: 'Sélectionnez votre service. Si vous souhaitez en proposer plusieurs, vous pourrez en ajouter autant que vous le souhaitez par la suite.',
     subtitle: 'Sélectionnez votre service, vous pouvez saisir des mots-clés pour faciliter la recherche. Si vous souhaitez en proposer plusieurs, vous pourrez en ajouter autant que vous le souhaitez par la suite.',
     subtitle_update: 'Vous allez modifier le service indiqué ci-dessous',
     content_particular: 'Liste des services aux particuliers',
@@ -254,6 +254,33 @@ const SHOP = {
     condition_moderate: 'Modérées: Remboursement intégral jusqu\'à 5 jours avant la prestation',
     condition_strict: 'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation',
   },
+}
+
+const AVOCOTES = {
+  title: 'Besoin d\'un coup de pouce pour installer votre pack Avocotés protection ?',
+  subtitle: 'Confiez l\'installation de votre Pack SECURITE Avocotés Protection à un entrepeneur local & qualifé',
+  titleSection: 'A propos de l\'installateur',
+  description: 'Alfred on-demand est partenaire d\'Avocotés pour toutes les demandes d\'installation de matériel de télésurveillance. Nos entrepreneurs sont des indépendants locaux, qualifiés et vérifiés par nos équipes. Chaque entrepreneur est formé à l\'installation du matériel Avocotés par nos soins.',
+  descriptionSecond: 'Notre équipe vous contacte par téléphone afin de fixer avec vous un créneau qui s\'intégre dans vos impératifs. Pour toute question relative à votre installation, n\'hésitez pas à nous contacter au 02 35 00 00 00.',
+  titleEquipment: 'Materiel apporte et fourni par votre installateur :',
+  titleCordonnates: 'Vos coordonnées :',
+  titleDetails: 'Détaillez votre commande :',
+  totalText: 'Coût total de mon installation :',
+  paidButton: 'Payer',
+  helperText: '* les télecommandes ne nécessitent pas d\'installation',
+  askQuestion: 'Une question sur votre installation ?',
+  contactUs: 'Contactez nous',
+  phone: '02 35 00 00 00',
+  phoneTextFirst: 'Appel gratuit depuis la',
+  phoneTextSecond: 'France metropolitaine',
+  ourCompanyTitleFirst: 'Pourquoi faire confiance à Alfred pour',
+  ourCompanyTitleSecond: 'l\'installation de mon pack avocotes protection ?',
+  ourCompanyDescriptionFirst: 'Grâce à notre communauté d\'entrepreneurs indépendants, quel que soit votre besoin en matière de services, Alfred on-demand y répond et vous accompagne dans votre démarche.',
+  ourCompanyDescriptionSecond: 'Nous sélectionnons pour vous les meilleurs talents en parfaite adéquation avec vos besoins, en essayant de nous adpater aux mieux à vos contraintes d\'agenda. Nos installateurs sont vérifiés et formés aux solutions Avocotés pour vous prêter main-forte dans le cadre de votre installation.',
+  address: '5 rue jacques Monod',
+  postal: '76130 mont saint aignan',
+  phoneContact: 'tel.: 02 35 00 00 00',
+  mail: 'Mail: avocotes@alfred-ondemand.fr',
 }
 
 const BOOKING = {
@@ -484,4 +511,5 @@ module.exports = {
   BOOKING,
   FAQ,
   INFOBARMOBILE_MESSAGE,
+  AVOCOTES
 }

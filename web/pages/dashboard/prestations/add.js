@@ -18,6 +18,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select2 from 'react-select';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
 
 import Checkbox from '@material-ui/core/Checkbox';
 
@@ -84,13 +86,15 @@ class add extends React.Component {
       // Selected company
       private_company: null,
       cesu_eligible: false,
-      professional_access:false,
-      particular_access:false,
+      professional_access: false,
+      particular_access: false,
+      order: null,
+      company_price: 0,
       errors: {},
-    };
-    this.onChangeFile = this.onChangeFile.bind(this);
-    this.handleChangeTags = this.handleChangeTags.bind(this);
-    this.handleChangeBilling = this.handleChangeBilling.bind(this);
+    }
+    this.onChangeFile = this.onChangeFile.bind(this)
+    this.handleChangeTags = this.handleChangeTags.bind(this)
+    this.handleChangeBilling = this.handleChangeBilling.bind(this)
   }
 
   componentDidMount() {
@@ -235,15 +239,18 @@ class add extends React.Component {
     body.particular_access=this.state.particular_access
     body.professional_access=this.state.professional_access
     body.private_company=this.state.private_company
+    body.company_price = this.state.company_price
+    body.order = this.state.order
 
     axios
       .post('/myAlfred/api/admin/prestation/all', body)
       .then(res => {
-        alert('Prestation ajoutée');
+        snackBarSuccess('Prestation ajoutée');
         Router.push({pathname: '/dashboard/prestations/all'});
       })
       .catch(err => {
-          console.error(err);
+          console.error(err)
+          snackBarError(Object.values(err.response.data))
           this.setState({errors: err.response.data});
 
           if (err.response.status === 401 || err.response.status === 403) {
@@ -257,25 +264,20 @@ class add extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
-    const {all_service} = this.state;
-    const {all_billing} = this.state;
-    const {all_filter_presentation} = this.state;
-    const {all_job} = this.state;
-    const {all_tags} = this.state;
-    const {errors} = this.state;
-    const {companies, private_company, particular_access, professional_access} = this.state;
+    const {classes} = this.props
+    const {all_service, all_billing, all_filter_presentation, all_job, all_tags} = this.state
+    const {errors} = this.state
+    const {companies, private_company, particular_access, professional_access, order, company_price} = this.state
 
     const optionsTags = all_tags.map(tag => ({
       label: tag.label,
       value: tag._id,
-    }));
+    }))
 
     const optionsBilling = all_billing.map(billing => ({
       label: billing.label,
       value: billing._id,
-    }));
-
+    }))
 
     return (
       <Layout>
@@ -365,6 +367,19 @@ class add extends React.Component {
                   </FormControl>
                   <em style={{color: 'red'}}>{errors.billing}</em>
                 </Grid>
+		              <Grid item style={{width: '100%', marginTop: 20}}>
+                  <Typography style={{fontSize: 20}}>Ordre</Typography>
+                  <TextField
+                    id="standard-with-placeholder"
+                    margin="normal"
+                    style={{width: '100%'}}
+                    type="text"
+                    name="order"
+                    value={order}
+                    onChange={this.onChange}
+                  />
+                </Grid>
+
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
                     <InputLabel shrink htmlFor="genre-label-placeholder">
@@ -482,6 +497,26 @@ class add extends React.Component {
                     </Select>
                   </FormControl>
                 </Grid>
+              { private_company &&
+                <Grid item style={{width: '100%', marginTop: 20}}>
+                  <FormControl className={classes.formControl} style={{width: '100%'}}>
+                    <Typography style={{fontSize: 20}}>Tarif partenaire</Typography>
+                    <TextField
+                      name={'company_price'}
+                      value={company_price || 0}
+                      type={'number'}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+                      onChange={this.onChange}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                        inputProps: {min: 0},
+                      }}
+                      error={this.state.errors.company_price}
+                    />
+                  </FormControl>
+                </Grid>
+              }
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <Typography style={{fontSize: 17}}>Tags</Typography>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>

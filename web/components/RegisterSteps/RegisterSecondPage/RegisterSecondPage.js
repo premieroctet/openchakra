@@ -1,64 +1,64 @@
-import React from 'react';
-import withStyles from "@material-ui/core/styles/withStyles";
-import Grid from "@material-ui/core/Grid";
-import {Typography} from "@material-ui/core";
-import AlgoliaPlaces from "algolia-places-react";
-import TextField from "@material-ui/core/TextField";
-import PhoneIphoneOutlinedIcon from "@material-ui/icons/PhoneIphoneOutlined";
-import Checkbox from "@material-ui/core/Checkbox";
-import Button from "@material-ui/core/Button";
-import NumberFormat from 'react-number-format';
-import PropTypes from "prop-types";
+import React from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import AlgoliaPlaces from 'algolia-places-react'
+import TextField from '@material-ui/core/TextField'
+import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined'
+import Checkbox from '@material-ui/core/Checkbox'
+import Button from '@material-ui/core/Button'
+import NumberFormat from 'react-number-format'
+import PropTypes from 'prop-types'
 import styles from '../../../static/css/components/RegisterSteps/RegisterSecondPage/RegisterSecondPage'
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import CguContent from "../../CguContent/CguContent";
-import DialogActions from "@material-ui/core/DialogActions";
-const {ACCOUNT_MIN_AGE} = require('../../../utils/consts');
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import CguContent from '../../CguContent/CguContent'
+import DialogActions from '@material-ui/core/DialogActions'
+const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
 
 
 function NumberFormatCustom(props) {
-  const {inputref, onChange, ...other} = props;
+  const {inputref, onChange, ...other} = props
 
   return (
     <NumberFormat
       {...other}
       getInputRef={inputref}
-      onValueChange={(values) => {
+      onValueChange={values => {
         onChange({
           target: {
             name: props.name,
             value: values.value,
           },
-        });
+        })
       }}
       isNumericString
     />
-  );
+  )
 }
 
 NumberFormatCustom.propTypes = {
-  //inputRef: PropTypes.func.isRequired,
+  // inputRef: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-};
+}
 
-class RegisterSecondPage extends React.Component{
+class RegisterSecondPage extends React.Component {
 
   constructor() {
-    super();
+    super()
     this.state={
-      open: false
+      open: false,
     }
   }
 
-  dialogCgu = (classes) => {
-    const {open} = this.state;
+  dialogCgu = classes => {
+    const {open} = this.state
 
     const handleClose = () => {
       this.setState({open: false})
-    };
+    }
 
     return (
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
@@ -78,7 +78,7 @@ class RegisterSecondPage extends React.Component{
   }
 
   render() {
-    const{classes, state}= this.props;
+    const{classes, state}= this.props
 
     return(
       <Grid container>
@@ -99,20 +99,20 @@ class RegisterSecondPage extends React.Component{
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item style={{width: '100%'}}>
               <form>
-              <AlgoliaPlaces
-                className={classes.textFieldAlgo}
-                placeholder='Recherchez votre adresse'
-                options={{
-                  appId: 'plKATRG826CP',
-                  apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                  language: 'fr',
-                  countries: ['fr'],
-                  type: 'address',
+                <AlgoliaPlaces
+                  className={classes.textFieldAlgo}
+                  placeholder='Recherchez votre adresse'
+                  options={{
+                    appId: 'plKATRG826CP',
+                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                    language: 'fr',
+                    countries: ['fr'],
+                    type: 'address',
 
-                }}
-                onChange={(suggestion) => this.props.onChangeAddress(suggestion)}
-                onClear={() => this.props.onChangeAddress(null)}
-              />
+                  }}
+                  onChange={suggestion => this.props.onChangeAddress(suggestion)}
+                  onClear={() => this.props.onChangeAddress(null)}
+                />
               </form>
               <em style={{color: 'red'}}>{state.cityError}</em>
             </Grid>
@@ -135,7 +135,7 @@ class RegisterSecondPage extends React.Component{
                   <TextField
                     label="Jour"
                     placeholder="Jour"
-                    onChange={(e) => this.props.onChangeBirthdayDate(e)}
+                    onChange={e => this.props.onChangeBirthdayDate(e)}
                     inputProps={{
                       maxLength: 2,
                     }}
@@ -150,7 +150,7 @@ class RegisterSecondPage extends React.Component{
                   <TextField
                     label="Mois"
                     placeholder="Mois"
-                    onChange={(e) => this.props.onChangeBirthdayMonth(e)}
+                    onChange={e => this.props.onChangeBirthdayMonth(e)}
                     inputProps={{
                       maxLength: 2,
                     }}
@@ -164,7 +164,7 @@ class RegisterSecondPage extends React.Component{
                   <TextField
                     label="Année"
                     placeholder="Année"
-                    onChange={(e) => this.props.onChangeBirthdayYear(e)}
+                    onChange={e => this.props.onChangeBirthdayYear(e)}
                     inputProps={{
                       maxLength: 4,
                     }}
@@ -202,7 +202,7 @@ class RegisterSecondPage extends React.Component{
                   type={'number'}
                   name="phone"
                   value={state.phone}
-                  onChange={(e) => this.props.onChangePhone(e)}
+                  onChange={e => this.props.onChangePhone(e)}
                 />
               </Grid>
             </Grid>
@@ -215,12 +215,12 @@ class RegisterSecondPage extends React.Component{
                 <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
                   <Checkbox
                     checked={state.checked}
-                    onChange={(e) => this.props.handleChecked(e)}
+                    onChange={e => this.props.handleChecked(e)}
                     value="checked"
                     color="primary"
                   />
                 </Grid>
-                <Grid  item xl={11} lg={11} md={11} sm={11} xs={11}>
+                <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
                   <Button onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>J’accepte les
                     conditions
                     générales d’utilisation de My-Alfred.</Button>
@@ -235,4 +235,4 @@ class RegisterSecondPage extends React.Component{
   }
 }
 
-export default withStyles(styles)(RegisterSecondPage);
+export default withStyles(styles)(RegisterSecondPage)

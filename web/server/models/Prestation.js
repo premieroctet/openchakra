@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const {normalize} = require('../../utils/text');
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const PrestationSchema = new Schema({
   label: {
@@ -13,32 +12,32 @@ const PrestationSchema = new Schema({
   },
   service: {
     type: Schema.Types.ObjectId,
-    ref: 'service',
+    ref: 'Service',
     required: true,
   },
   billing: [{
     type: Schema.Types.ObjectId,
-    ref: 'billing',
+    ref: 'Billing',
   }],
   filter_presentation: {
     type: Schema.Types.ObjectId,
-    ref: 'filterPresentation',
+    ref: 'FilterPresentation',
   },
   search_filter: [{
     type: Schema.Types.ObjectId,
-    ref: 'searchFilter',
+    ref: 'SearchFilter',
   }],
   category: {
     type: Schema.Types.ObjectId,
-    ref: 'category',
+    ref: 'Category',
   },
   calculating: {
     type: Schema.Types.ObjectId,
-    ref: 'calculating',
+    ref: 'Calculating',
   },
   job: {
     type: Schema.Types.ObjectId,
-    ref: 'job',
+    ref: 'Job',
   },
   description: {
     type: String,
@@ -48,11 +47,11 @@ const PrestationSchema = new Schema({
   },
   tags: [{
     type: Schema.Types.ObjectId,
-    ref: 'tag',
+    ref: 'Tag',
   }],
   private_alfred: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
   },
   s_label: {
     type: String,
@@ -77,12 +76,20 @@ const PrestationSchema = new Schema({
   },
   private_company: {
     type: Schema.Types.ObjectId,
-    ref: 'companies',
+    ref: 'Company',
+  },
+  order: {
+    type: Number,
+    get: v => Math.round(v),
+    set: v => Math.round(v),
+    default: 1,
+  },
+  // Price in partner catalog
+  company_price: {
+    type: Number,
   },
 })
 
-PrestationSchema.index({label: 'text'});
+PrestationSchema.index({label: 'text'})
 
-const Prestation = mongoose.model('prestation', PrestationSchema);
-
-module.exports = Prestation;
+module.exports = PrestationSchema

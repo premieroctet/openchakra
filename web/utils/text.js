@@ -1,65 +1,66 @@
 const stripBom = require('strip-bom')
+const moment=require('moment')
 
-const ARTICLES = 'le la les un une de des d l à'.split(/ /g);
+const ARTICLES = 'le la les un une de des d l à'.split(/ /g)
 const SIREN_LENGTH=9
 const SIRET_LENGTH=14
 
 const normalize = str => {
   str = str ? str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : ''
   return str
-};
+}
 
 // Escapes special characters for regex
 const escapeText = txt => {
-  return txt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-};
+  return txt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
 
 const createRegExp = str => {
-  str = escapeText(normalize(str)).split(/ |'/g);
+  str = escapeText(normalize(str)).split(/ |'/g)
   // Remove articles
-  str = str.filter(s => !ARTICLES.includes(s));
-  const regexp = new RegExp(str.join('|'), 'i');
-  return regexp;
-};
+  str = str.filter(s => !ARTICLES.includes(s))
+  const regexp = new RegExp(str.join('|'), 'i')
+  return regexp
+}
 
 const createRegExpAND = str => {
-  str = escapeText(normalize(str)).split(/ |'/g);
+  str = escapeText(normalize(str)).split(/ |'/g)
   // Remove articles
-  str = str.filter(s => !ARTICLES.includes(s));
-  const regexp = new RegExp(str.map(s => `(?=.*\\b${s}\\b)`).join(''), 'i');
-  return regexp;
-};
+  str = str.filter(s => !ARTICLES.includes(s))
+  const regexp = new RegExp(str.map(s => `(?=.*\\b${s}\\b)`).join(''), 'i')
+  return regexp
+}
 
 const createRegExpOR = str => {
-  str = escapeText(normalize(str)).split(/ |'/g);
+  str = escapeText(normalize(str)).split(/ |'/g)
   // Remove articles
-  str = str.filter(s => !ARTICLES.includes(s));
-  const regexp = new RegExp(str.map(s => `\\b${s}\\b`).join('|'), 'i');
-  return regexp;
-};
+  str = str.filter(s => !ARTICLES.includes(s))
+  const regexp = new RegExp(str.map(s => `\\b${s}\\b`).join('|'), 'i')
+  return regexp
+}
 
 const matches = (str, keywords) => {
-  const regexps = createRegExp(keywords);
-  const ok = regexps.test(str);
-  return ok;
-};
+  const regexps = createRegExp(keywords)
+  const ok = regexps.test(str)
+  return ok
+}
 
 const formatIban = iban => {
-  const result = iban.split('').map((l, idx) => (idx + 1) % 4 == 0 ? l + ' ' : l).join('');
-  return result;
-};
+  const result = iban.split('').map((l, idx) => (idx + 1) % 4 == 0 ? l + ' ' : l).join('')
+  return result
+}
 
 const maskIban = iban => {
-  const len = iban.length;
-  const masked = iban.slice(0, 4) + 'X'.repeat(len - 8) + iban.slice(-4);
-  return masked;
-};
+  const len = iban.length
+  const masked = iban.slice(0, 4) + 'X'.repeat(len - 8) + iban.slice(-4)
+  return masked
+}
 
 const frenchFormat = str => {
-  const reg = /de ([éèêàaeiou])/i;
-  const result = str.replace(reg, 'd\'$1');
-  return result;
-};
+  const reg = /de ([éèêàaeiou])/i
+  const result = str.replace(reg, 'd\'$1')
+  return result
+}
 
 const normalizePhone = p => {
   if (p) {
@@ -157,6 +158,11 @@ const isMobilePhone= number => {
   return res
 }
 
+const computeBookingReference = (user, alfred) => {
+  var reference = user.avatar_letters + alfred.avatar_letters + '_' + moment().format('DDMMYYYY')
+  return reference
+}
+
 module.exports = {
   normalize,
   matches,
@@ -174,4 +180,5 @@ module.exports = {
   isSiretSirenLength,
   insensitiveComparator,
   isMobilePhone,
-};
+  computeBookingReference,
+}

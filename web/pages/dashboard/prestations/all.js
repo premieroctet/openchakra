@@ -10,6 +10,7 @@ class all extends DataPage {
       {headerName: "_id", field: "_id", width: 0},
       models.textColumn({headerName: "Privée", field: "alfred", cellRenderer: "privateRenderer", }),
       models.textColumn({headerName: "Label", field: "label"}),
+      {headerName: "Ordre", field: "order"},
       models.textColumn({headerName: "Catégorie", field: "category_label"}),
       models.textColumn({headerName: "Service", field: "service.label"}),
       models.booleanColumn({headerName: "Pros", field: "professional_access"}),

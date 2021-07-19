@@ -4,9 +4,7 @@ const passport = require('passport')
 const mongoose = require('mongoose')
 const crypto = require('crypto')
 const moment = require('moment')
-const {BOOK_STATUS, EXPIRATION_DELAY} = require('../../../utils/consts')
-const Booking = require('../../models/Booking')
-const Count = require('../../models/Count')
+const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
 const {getKeyDate} = require('../../utils/booking')
 const {invoiceFormat} = require('../../../utils/converters')
 const {payAlfred} = require('../../utils/mangopay')
@@ -15,9 +13,15 @@ const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
-  sendLeaveCommentForClient, sendLeaveCommentForAlfred,
+  sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert,
 } = require('../../utils/mailing')
 const {getRole} = require('../../utils/serverContext')
+const {connectionPool}=require('../../utils/database')
+const {serverContextFromPartner}=require('../../utils/serverContext')
+const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
+const {computeBookingReference}=require('../../../utils/text')
+const {createMangoClient}=require('../../utils/mangopay')
+const {computeUrl}=require('../../../config/config')
 
 moment.locale('fr')
 
@@ -26,7 +30,7 @@ router.get('/test', (req, res) => res.json({msg: 'Booking Works!'}))
 // @Route GET /myAlfred/api/booking/alfredBooking
 router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id)
-  Booking.find({alfred: userId})
+  req.context.getModel('Booking').find({alfred: userId})
     .sort([['date', -1]])
     .populate('user', ['name', 'firstname', 'picture', 'company'])
     .populate('chatroom')
@@ -43,7 +47,7 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
 
 router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id)
-  Booking.find({user: userId})
+  req.context.getModel('Booking').find({user: userId})
     .sort([['date', -1]])
     .populate('alfred', '-id_card')
     .populate({
@@ -67,7 +71,7 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
 
 router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id)
-  Booking.find({
+  req.context.getModel('Booking').find({
     $and: [
       {
         $or: [
@@ -87,7 +91,7 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
     .then(booking => {
       booking.forEach(b => {
         if (!moment(b.date).isBetween(moment(b.date), moment(b.date).add(1, 'd'))) {
-          Booking.findByIdAndUpdate(b._id, {status: BOOK_STATUS.EXPIRED}, {new: true})
+          req.context.getModel('Booking').findByIdAndUpdate(b._id, {status: BOOK_STATUS.EXPIRED}, {new: true})
             .then(newB => {
               res.json(newB)
             })
@@ -123,16 +127,14 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.status = req.body.status
   bookingFields.serviceUserId = req.body.serviceUserId
   bookingFields.cesu_amount = req.body.cesu_amount
-  bookingFields.user_role = getRole(req)
+  bookingFields.user_role = getRole(req) || null
+  bookingFields.customer_booking = req.body.customer_booking
 
-  const newBooking = new Booking(bookingFields)
-
-
-  newBooking.save()
+  req.context.getModel('Booking').create(bookingFields)
     .then(booking => {
       if (booking.status === BOOK_STATUS.INFO || booking.status === BOOK_STATUS.TO_CONFIRM) {
         // Reload to get user,alfred,service
-        Booking.findById(booking._id)
+        req.context.getModel('Booking').findById(booking._id)
           .populate('alfred')
           .populate('user')
           .then(book => {
@@ -152,7 +154,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
             console.error(err)
           })
       }
-      console.log(booking)
+      console.log(`New booking:${booking}`)
       res.json(booking)
     })
     .catch(err => {
@@ -166,32 +168,36 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 // @Access private
 router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  Booking.find()
+  req.context.getModel('Booking').find()
     .populate('alfred')
     .populate('user')
     .populate('prestation')
     .then(booking => {
       if (typeof booking !== 'undefined' && booking.length > 0) {
         res.json(booking)
-      } else {
+      }
+      else {
         return res.status(400).json({msg: 'No booking found'})
       }
     })
-    .catch(() => res.status(404).json({booking: 'No booking found'}))
+    .catch(() => {
+      res.status(404).json({booking: 'No booking found'})
+    })
 })
 
 // @Route GET /myAlfred/api/booking/currentAlfred
 // View all the booking for the current alfred
 // @Access private
 router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({alfred: req.user.id})
+  req.context.getModel('Booking').find({alfred: req.user.id})
     .populate('alfred', {path: 'picture'})
     .populate('user')
     .populate('prestation')
     .then(booking => {
       if (booking) {
         res.json(booking)
-      } else {
+      }
+      else {
         return res.status(400).json({msg: 'No booking found'})
       }
     })
@@ -199,20 +205,37 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 
 })
 
+// @Route GET /myAlfred/api/booking/avocotes
+// Returns all booking from avocotes customer
+// @Access private
+router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('booking').find({company_customer: {$exists: true, $ne: null}})
+    .populate('user')
+    .then(customer_bookings => {
+      req.context.getModel('booking').find({customer_booking: {$in: customer_bookings.map(b => b._id)}}, {'customer_booking': 1})
+        .then(admin_bookings => {
+          let pending_customer_bookings=customer_bookings.filter(b => !admin_bookings.map(a => a.customer_booking.toString()).includes(b._id.toString()))
+          res.json(pending_customer_bookings)
+        })
+    })
+})
+
 // @Route GET /myAlfred/booking/:id
 // View one booking
 // @Access private
 router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  Booking.findById(req.params.id)
+  req.context.getModel('Booking').findById(req.params.id)
     .populate('alfred', '-id_card')
     .populate('user', '-id_card')
     .populate('prestation')
     .populate('equipments')
+    .populate({path: 'customer_booking', populate: {path: 'user'}})
     .then(booking => {
       if (booking) {
         res.json(booking)
-      } else {
+      }
+      else {
         return res.status(400).json({msg: 'No booking found'})
       }
     })
@@ -227,11 +250,13 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 // Delete one booking
 // @Access private
 router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.findById(req.params.id)
+  req.context.getModel('Booking').findById(req.params.id)
     .then(message => {
       message.remove().then(() => res.json({success: true}))
     })
-    .catch(() => res.status(404).json({bookingnotfound: 'No booking found'}))
+    .catch(() => {
+      res.status(404).json({bookingnotfound: 'No booking found'})
+    })
 })
 
 router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -245,7 +270,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
   }
 
   console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}`)
-  Booking.findByIdAndUpdate(req.params.id, obj, {new: true})
+  req.context.getModel('Booking').findByIdAndUpdate(req.params.id, obj, {new: true})
     .populate('alfred')
     .populate('user')
     .populate('prestation')
@@ -255,28 +280,49 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
         return res.status(404).json({msg: 'no booking found'})
       }
       if (booking) {
-        if (booking.status === BOOK_STATUS.TO_CONFIRM) {
-          sendBookingDetails(booking)
-          sendNewBookingManual(booking, req)
+        if (booking.user.company_customer) {
+          // Prévenir les admmins d'une nouvelle résa
+          req.context.getModel('User').find({is_admin: true}, 'firstname email phone')
+            .then(admins => {
+              const search_link = new URL('/search', computeUrl(req))
+              const prestations=booking.prestations.map(p => p.name).join(',')
+              const msg=`Chercher les prestations '${prestations}' pour le compte ${booking.user.email} via ${search_link}`
+              const subject=`Nouvelle réservation Avocotés pour ${booking.user.email}`
+              admins.forEach(admin => {
+                sendAlert(admin, subject, msg)
+              })
+            })
+            .catch(err => {
+              console.error(err)
+            })
+
         }
-        if (booking.status === BOOK_STATUS.CONFIRMED) {
-          sendBookingConfirmed(booking)
-        }
-        if (booking.status === BOOK_STATUS.REFUSED) {
-          if (canceller_id === booking.user._id) {
-            sendBookingRefusedToAlfred(booking, req)
-          } else {
-            sendBookingRefusedToClient(booking, req)
+        else {
+          if (booking.status === BOOK_STATUS.TO_CONFIRM) {
+            sendBookingDetails(booking)
+            sendNewBookingManual(booking, req)
           }
-        }
-        if (booking.status === BOOK_STATUS.PREAPPROVED) {
-          sendAskInfoPreapproved(booking, req)
-        }
-        if (booking.status === BOOK_STATUS.CANCELED) {
-          if (canceller_id === booking.user._id) {
-            sendBookingCancelledByClient(booking)
-          } else {
-            sendBookingCancelledByAlfred(booking, req)
+          if (booking.status === BOOK_STATUS.CONFIRMED) {
+            sendBookingConfirmed(booking)
+          }
+          if (booking.status === BOOK_STATUS.REFUSED) {
+            if (canceller_id === booking.user._id) {
+              sendBookingRefusedToAlfred(booking, req)
+            }
+            else {
+              sendBookingRefusedToClient(booking, req)
+            }
+          }
+          if (booking.status === BOOK_STATUS.PREAPPROVED) {
+            sendAskInfoPreapproved(booking, req)
+          }
+          if (booking.status === BOOK_STATUS.CANCELED) {
+            if (canceller_id === booking.user._id) {
+              sendBookingCancelledByClient(booking)
+            }
+            else {
+              sendBookingCancelledByAlfred(booking, req)
+            }
           }
         }
         return res.json(booking)
@@ -285,13 +331,62 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     .catch(err => console.error(err))
 })
 
+// @Route POST /myAlfred/api/booking/avocotes
+// Create user, mango accounbt and booking for avocotes
+// @Access public
+router.post('/avocotes', (req, res) => {
+  const {errors, isValid} = validateAvocotesCustomer(req.body)
+  if (!isValid) {
+    return res.status(400).json(errors)
+  }
+
+  req.context.getModel('company').findOne({name: AVOCOTES_COMPANY_NAME})
+    .then(company => {
+      const userData={
+        firstname: req.body.firstname,
+        name: req.body.name,
+        phone: req.body.phone,
+        email: req.body.email,
+        billing_address: req.body.address,
+        company_customer: company,
+        birthday: '01/01/1980',
+        password: 'tagada',
+      }
+      return req.context.getModel('User').findOneAndUpdate({email: req.body.email}, userData, {upsert: true, new: true})
+    })
+    .then(user => {
+      console.log(`Created DB user:${JSON.stringify(user)}`)
+      return createMangoClient(user)
+    })
+    .then(user => {
+      console.log(`Created Mango user:${JSON.stringify(user)}`)
+      return user.save()
+    })
+    .then(user => {
+      let bookData={
+        user: user, address: user.billing_address,
+        service: req.body.service._id, amount: req.body.totalPrice, fees: 0,
+        prestations: req.body.prestations, reference: computeBookingReference(user, user),
+        company_customer: user.company_customer,
+      }
+      return req.context.getModel('Booking').create(bookData)
+    })
+    .then(booking => {
+      return res.json(booking)
+    })
+    .catch(err => {
+      console.error(err)
+      res.json(err)
+    })
+})
+
 new CronJob('0 */15 * * * *', (() => {
-  const getNextNumber = (type, key) => {
+  const getNextNumber = (context, type, key) => {
     return new Promise((resolve, reject) => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}
-      Count.updateOne({type: type, key: key}, updateObj, {upsert: true})
+      context.getModel('Count').updateOne({type: type, key: key}, updateObj, {upsert: true})
         .then(() => {
-          Count.findOne({type: type, key: key}).then(res => {
+          context.getModel('Count').findOne({type: type, key: key}).then(res => {
             resolve(res)
           }).catch(err => {
             console.error(err)
@@ -304,49 +399,56 @@ new CronJob('0 */15 * * * *', (() => {
   }
 
   const date = moment().startOf('day')
-  Booking.find({status: BOOK_STATUS.CONFIRMED, paid: false})
-    .populate('user')
-    .populate('alfred')
-    .catch(err => console.error(err))
-    .then(booking => {
-      booking.forEach(b => {
-        const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
-        if (moment(date).isSameOrAfter(end_date)) {
-          const type = ['billing', 'receipt', 'myalfred_billing']
-          const key = getKeyDate()
-          Promise.all([getNextNumber(type[ 0 ], key), getNextNumber(type[ 1 ], key), getNextNumber(type[ 2 ], key)]).then(
-            values => {
-              values.map((res, i) => {
-                const attribute = `${type[ i ]}_number`
-                b[ attribute ] = `${type[ i ].charAt(0).toUpperCase()}${key}${invoiceFormat(res.value, 5)}`
+
+  connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
+    context.getModel('Booking').find({status: BOOK_STATUS.CONFIRMED, paid: false})
+      .populate('user')
+      .populate('alfred')
+      .catch(err => console.error(err))
+      .then(booking => {
+        booking.forEach(b => {
+          const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
+          if (moment(date).isSameOrAfter(end_date)) {
+            const type = ['billing', 'receipt', 'myalfred_billing']
+            const key = getKeyDate()
+            Promise.all([getNextNumber(type[ 0 ], key), getNextNumber(type[ 1 ], key), getNextNumber(type[ 2 ], key)]).then(
+              values => {
+                values.map((res, i) => {
+                  const attribute = `${type[ i ]}_number`
+                  b[ attribute ] = `${type[ i ].charAt(0).toUpperCase()}${key}${invoiceFormat(res.value, 5)}`
+                })
+              },
+            )
+            b.status = BOOK_STATUS.FINISHED
+            b.save()
+              .then(bo => {
+                sendLeaveCommentForAlfred(bo)
+                sendLeaveCommentForClient(bo)
               })
-            },
-          )
-          b.status = BOOK_STATUS.FINISHED
-          b.save()
-            .then(bo => {
-              sendLeaveCommentForAlfred(bo)
-              sendLeaveCommentForClient(bo)
-            })
-            .catch(err => console.error(err))
-        }
-      },
-      )
-    })
+              .catch(err => console.error(err))
+          }
+        },
+        )
+      })
+  })
+
 }), null, true, 'Europe/Paris')
 
 // Handle terminated but not paid bookings
 new CronJob('0 */15 * * * *', (() => {
-  Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
-    .populate('user')
-    .populate('alfred')
-    .then(bookings => {
-      bookings.forEach(booking => {
-        payAlfred(booking)
+  connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
+    context.getModel('Booking').find({status: BOOK_STATUS.FINISHED, paid: false})
+      .populate('user')
+      .populate('alfred')
+      .populate({path: 'customer_booking', populate: {path: 'user'}})
+      .then(bookings => {
+        bookings.forEach(booking => {
+          payAlfred(booking)
+        })
+      }).catch(err => {
+        console.error(err)
       })
-    }).catch(err => {
-      console.error(err)
-    })
+  })
 }), null, true, 'Europe/Paris')
 
 // Expiration réervation en attente de confirmation :
@@ -355,31 +457,33 @@ new CronJob('0 */15 * * * *', (() => {
 new CronJob('0 */15 * * * *', (() => {
   console.log('Checking expired bookings')
   const currentDate = moment().startOf('day')
-  Booking.find({$or: [{status: BOOK_STATUS.TO_CONFIRM}, {status: BOOK_STATUS.TO_PAY}]})
-    .populate('user')
-    .populate('alfred')
-    .then(booking => {
-      booking.forEach(b => {
-        const expirationDate = moment(b.date).add(EXPIRATION_DELAY, 'days').startOf('day')
-        // Expired because Alfred did not answer
-        const answerExpired = moment(currentDate).isSameOrAfter(expirationDate)
-        // Expired because prestation date passed
-        const prestaDateExpired = moment().isSameOrAfter(b.date_prestation_moment)
-        if (answerExpired || prestaDateExpired) {
-          const reason = answerExpired ? `Alfred did not confirm within ${EXPIRATION_DELAY} days` : 'prestation date passed'
-          console.log(`Booking ${b._id} expired : ${reason}`)
-          b.status = BOOK_STATUS.EXPIRED
-          b.save()
-            .then(bo => {
-              sendBookingExpiredToAlfred(bo)
-              sendBookingExpiredToClient(bo)
-            })
-            .catch(err => {
-              console.error(err)
-            })
-        }
+  connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
+    context.getModel('Booking').find({$or: [{status: BOOK_STATUS.TO_CONFIRM}, {status: BOOK_STATUS.TO_PAY}]})
+      .populate('user')
+      .populate('alfred')
+      .then(booking => {
+        booking.forEach(b => {
+          const expirationDate = moment(b.date).add(EXPIRATION_DELAY, 'days').startOf('day')
+          // Expired because Alfred did not answer
+          const answerExpired = moment(currentDate).isSameOrAfter(expirationDate)
+          // Expired because prestation date passed
+          const prestaDateExpired = moment().isSameOrAfter(b.date_prestation_moment)
+          if (answerExpired || prestaDateExpired) {
+            const reason = answerExpired ? `Alfred did not confirm within ${EXPIRATION_DELAY} days` : 'prestation date passed'
+            console.log(`Booking ${b._id} expired : ${reason}`)
+            b.status = BOOK_STATUS.EXPIRED
+            b.save()
+              .then(bo => {
+                sendBookingExpiredToAlfred(bo)
+                sendBookingExpiredToClient(bo)
+              })
+              .catch(err => {
+                console.error(err)
+              })
+          }
+        })
       })
-    })
+  })
 }), null, true, 'Europe/Paris')
 
 // pattern reference

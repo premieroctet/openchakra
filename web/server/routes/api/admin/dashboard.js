@@ -9,20 +9,6 @@ const crypto = require('crypto')
 
 const validateBillingInput = require('../../../validation/billing')
 const {validateCompanyProfile} = require('../../../validation/simpleRegister')
-const User = require('../../../models/User')
-const Company = require('../../../models/Company')
-const Calculating = require('../../../models/Calculating')
-const FilterPresentation = require('../../../models/FilterPresentation')
-const Job = require('../../../models/Job')
-const SearchFilter = require('../../../models/SearchFilter')
-const Tags = require('../../../models/Tags')
-const Category = require('../../../models/Category')
-const Equipment = require('../../../models/Equipment')
-const Service = require('../../../models/Service')
-const Prestation = require('../../../models/Prestation')
-const ShopBanner = require('../../../models/ShopBanner')
-const Options = require('../../../models/Options')
-const Prospect = require('../../../models/Prospect')
 const validatePrestationInput = require('../../../validation/prestation')
 const validateRegisterAdminInput = require('../../../validation/registerAdmin')
 const validateCategoryInput = require('../../../validation/category')
@@ -39,13 +25,13 @@ const _ = require('lodash')
 const {computeUrl}=require('../../../../config/config')
 const {delayedPromise}=require('../../../../utils/promise')
 const {get_token, send_cookie}=require('../../../utils/serverContext')
-const {ensureDirectoryExists} = require('../../../utils/filesystem')
+const {ensureDirectoryExists, isTxtFile} = require('../../../utils/filesystem')
 
 // For Node < 12.0
 if (!Promise.allSettled) {
   Promise.allSettled = promises =>
     Promise.all(
-      promises.map((promise) => {
+      promises.map(promise => {
         return promise
           .then(value => ({
             status: 'fulfilled',
@@ -74,18 +60,20 @@ router.post('/billing/all', passport.authenticate('admin', {session: false}), (r
       return res.status(400).json(errors)
     }
 
-    Billing.findOne({label: req.body.label})
+    req.context.getModel('Billing').findOne({label: req.body.label})
       .then(billing => {
         if (billing) {
           errors.label = 'Cette méthode de facturation existe déjà'
           return res.status(400).json(errors)
         }
-        const newBilling = new Billing({
+
+        const newBilling={
           label: req.body.label,
-        })
+        }
 
-        newBilling.save().then(billing => res.json(billing)).catch(err => console.error(err))
-
+        req.context.getModel('Billing').create(newBilling)
+          .then(billing => res.json(billing))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -100,9 +88,9 @@ router.post('/billing/all', passport.authenticate('admin', {session: false}), (r
 // @Access private
 router.get('/shops/extract', passport.authenticate('admin', {session: false}), (req, res) => {
   let result = []
-  User.find()
+  req.context.getModel('User').find()
     .then(users => {
-      Shop.find()
+      req.context.getModel('Shop').find()
         .then(shops => {
           users.forEach(user => {
             let shop = shops.filter(s => s.alfred && s.alfred._id.equals(user._id))
@@ -130,15 +118,10 @@ router.get('/billing/all', passport.authenticate('admin', {session: false}), (re
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Billing.find()
+    req.context.getModel('Billing').find()
       .sort({label: 1})
       .then(billings => {
-        if (!billings) {
-          return res.status(400).json({msg: 'No billing found'})
-        }
-
         res.json(billings)
-
       })
       .catch(() => res.status(404).json({billing: 'No billing found'}))
   }
@@ -158,7 +141,7 @@ router.get('/billing/all/:id', passport.authenticate('admin', {session: false}),
   const admin = decode.is_admin
 
   if (admin) {
-    Billing.findById(req.params.id)
+    req.context.getModel('Billing').findById(req.params.id)
       .then(billing => {
         if (!billing) {
           return res.status(400).json({msg: 'No billing found'})
@@ -182,7 +165,7 @@ router.delete('/billing/all/:id', passport.authenticate('admin', {session: false
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  Billing.findById(req.params.id)
+  req.context.getModel('Billing').findById(req.params.id)
     .then(billing => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -203,7 +186,7 @@ router.put('/billing/all/:id', passport.authenticate('admin', {session: false}),
   const admin = decode.is_admin
 
   if (admin) {
-    Billing.findByIdAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+    req.context.getModel('Billing').findByIdAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
       .then(billing => {
         res.json(billing)
       })
@@ -225,13 +208,10 @@ router.get('/users/all', passport.authenticate('admin', {session: false}), (req,
   const admin = decode.is_admin
 
   if (admin) {
-    User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone')
+    req.context.getModel('User').find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone')
       .populate({path: 'shop', select: 'creation_date'})
       .sort({creation_date: -1})
       .then(users => {
-        if (!users) {
-          res.status(400).json({msg: 'No users found'})
-        }
         res.json(users)
       })
       .catch(err => {
@@ -251,14 +231,11 @@ router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), 
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    ServiceUser.find({}, '_id perimeter location service_address.zip_code service_address.city')
+    req.context.getModel('ServiceUser').find({}, '_id perimeter location service_address.zip_code service_address.city')
       .populate({path: 'service', select: 'label category', populate: {path: 'category', select: 'label'}})
       // .populate('service.category', 'label')
       .populate({path: 'user', select: 'email shop', populate: {path: 'shop', select: 'is_professional'}})
       .then(services => {
-        if (!services) {
-          res.status(400).json({msg: 'No services found'})
-        }
         res.json(services)
       })
       .catch(err => {
@@ -279,7 +256,7 @@ router.get('/users/all_light', passport.authenticate('admin', {session: false}),
   const admin = decode.is_admin
 
   if (admin) {
-    User.find({active: true}, 'firstname name email roles')
+    req.context.getModel('User').find({active: true}, 'firstname name email roles')
       .sort({name: 1})
       .then(user => {
         if (!user) {
@@ -299,7 +276,7 @@ router.get('/users/all_light', passport.authenticate('admin', {session: false}),
 // @Access private
 router.get('/serviceUsersMap', (req, res) => {
 
-  ServiceUser.find({}, '_id service_address.gps')
+  req.context.getModel('ServiceUser').find({}, '_id service_address.gps')
     // .populate('user','-id_card')
     .populate('service', '_id label')
     .populate('user', 'firstname')
@@ -326,7 +303,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
   const role = req.body.role
 
   // Find user by email
-  User.findOne({email})
+  req.context.getModel('User').findOne({email})
     .populate('shop', 'is_particular')
     .then(user => {
       // Check for user
@@ -353,14 +330,17 @@ router.get('/users/users', passport.authenticate('admin', {session: false}), (re
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    User.find({is_admin: false, is_alfred: false})
+    req.context.getModel('User').find({is_admin: false, is_alfred: false})
       .then(user => {
         if (!user) {
           res.status(400).json({msg: 'No users found'})
         }
         res.json(user)
       })
-      .catch(err => res.status(404).json({users: 'No billing found'}))
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({users: 'No billing found'})
+      })
   }
   else {
     res.status(403).json({msg: 'Access denied'})
@@ -375,7 +355,7 @@ router.get('/users/users/:id', passport.authenticate('admin', {session: false}),
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    User.findById(req.params.id)
+    req.context.getModel('User').findById(req.params.id)
       .then(user => {
         if (!user) {
           return res.status(400).json({msg: 'No user found'})
@@ -383,7 +363,10 @@ router.get('/users/users/:id', passport.authenticate('admin', {session: false}),
         res.json(user)
 
       })
-      .catch(err => res.status(404).json({user: 'No user found'}))
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({user: 'No user found'})
+      })
   }
   else {
     res.status(403).json({msg: 'Access denied'})
@@ -399,11 +382,14 @@ router.put('/users/users/:id', passport.authenticate('admin', {session: false}),
   const admin = decode.is_admin
 
   if (admin) {
-    User.findOneAndUpdate({_id: req.params.id}, {$set: {active: req.body.active}}, {new: true})
+    req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {$set: {active: req.body.active}}, {new: true})
       .then(user => {
         res.json(user)
       })
-      .catch(err => res.status(404).json({usernotfound: 'No user found'}))
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({usernotfound: 'No user found'})
+      })
   }
   else {
     res.status(403).json({msg: 'Access denied'})
@@ -420,11 +406,14 @@ router.put('/users/users/idCard/:id', passport.authenticate('admin', {session: f
   const admin = decode.is_admin
 
   if (admin) {
-    User.findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: true}}, {new: true})
+    req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: true}}, {new: true})
       .then(user => {
         res.json(user)
       })
-      .catch(err => res.status(404).json({usernotfound: 'No user found'}))
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({usernotfound: 'No user found'})
+      })
   }
   else {
     res.status(403).json({msg: 'Access denied'})
@@ -441,7 +430,7 @@ router.put('/users/users/idCard/delete/:id', passport.authenticate('admin', {ses
   const admin = decode.is_admin
 
   if (admin) {
-    User.findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: false}}, {new: true})
+    req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: false}}, {new: true})
       .then(user => {
         res.json(user)
       })
@@ -462,7 +451,7 @@ router.delete('/users/users/:id', passport.authenticate('admin', {session: false
   const admin = decode.is_admin
 
 
-  User.findById(req.params.id)
+  req.context.getModel('User').findById(req.params.id)
     .then(user => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -483,7 +472,7 @@ router.get('/users/alfred', passport.authenticate('admin', {session: false}), (r
   const admin = decode.is_admin
 
   if (admin) {
-    User.find({is_alfred: true})
+    req.context.getModel('User').find({is_alfred: true})
       .sort({name: 1})
       .then(user => {
         if (!user) {
@@ -507,7 +496,7 @@ router.get('/users/alfred/:id', passport.authenticate('admin', {session: false})
   const admin = decode.is_admin
 
   if (admin) {
-    User.findById(req.params.id)
+    req.context.getModel('User').findById(req.params.id)
       .then(user => {
         if (!user) {
           return res.status(400).json({msg: 'No user found'})
@@ -531,7 +520,7 @@ router.put('/users/alfred/:id', passport.authenticate('admin', {session: false})
   const admin = decode.is_admin
 
   if (admin) {
-    User.findOneAndUpdate({_id: req.params.id}, {
+    req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {
       $set: {
         is_alfred: req.body.is_alfred,
         active: req.body.active,
@@ -558,7 +547,7 @@ router.put('/users/alfred/idCard/:id', passport.authenticate('admin', {session: 
   const admin = decode.is_admin
 
   if (admin) {
-    User.findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: true}}, {new: true})
+    req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: true}}, {new: true})
       .then(user => {
         res.json(user)
       })
@@ -579,7 +568,7 @@ router.put('/users/alfred/idCard/delete/:id', passport.authenticate('admin', {se
   const admin = decode.is_admin
 
   if (admin) {
-    User.findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: false}}, {new: true})
+    req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: false}}, {new: true})
       .then(user => {
         res.json(user)
       })
@@ -598,7 +587,7 @@ router.delete('/users/alfred/:id', passport.authenticate('admin', {session: fals
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  User.findById(req.params.id)
+  req.context.getModel('User').findById(req.params.id)
     .then(user => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -618,7 +607,7 @@ router.get('/users/admin', passport.authenticate('admin', {session: false}), (re
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    User.find({is_admin: true})
+    req.context.getModel('User').find({is_admin: true})
       .sort({name: 1})
       .then(user => {
         if (!user) {
@@ -642,7 +631,7 @@ router.get('/users/admin/:id', passport.authenticate('admin', {session: false}),
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    User.findById(req.params.id)
+    req.context.getModel('User').findById(req.params.id)
       .then(user => {
         if (!user) {
           return res.status(400).json({msg: 'No user found'})
@@ -671,13 +660,13 @@ router.post('/users/admin', passport.authenticate('admin', {session: false}), (r
       return res.status(400).json(errors)
     }
 
-    User.findOne({email: req.body.email, is_admin: true})
+    req.context.getModel('User').findOne({email: req.body.email, is_admin: true})
       .then(user => {
         if (user) {
           errors.email = 'Email déjà existant'
           return res.status(400).json(errors)
         }
-        const newUser = new User({
+        const newUser = {
           name: req.body.name,
           firstname: req.body.firstname,
           email: req.body.email,
@@ -685,15 +674,14 @@ router.post('/users/admin', passport.authenticate('admin', {session: false}), (r
           birthday: req.body.birthday,
           phone: req.body.phone,
           is_admin: true,
-
-        })
+        }
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) {
               throw err
             }
             newUser.password = hash
-            newUser.save()
+            req.context.getModel('User').create(newUser)
               .then(user => res.json(user))
               .catch(err => console.error(err))
           })
@@ -718,7 +706,7 @@ router.put('/users/admin/:id', passport.authenticate('admin', {session: false}),
   const admin = decode.is_admin
 
   if (admin) {
-    User.findOneAndUpdate({_id: req.params.id}, {
+    req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {
       $set: {
         name: req.body.name,
         firstname: req.body.firstname,
@@ -746,7 +734,7 @@ router.delete('/users/admin/:id', passport.authenticate('admin', {session: false
   const admin = decode.is_admin
 
 
-  User.findById(req.params.id)
+  req.context.getModel('User').findById(req.params.id)
     .then(user => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -775,18 +763,20 @@ router.post('/calculating/all', passport.authenticate('admin', {session: false})
       return res.status(400).json(errors)
     }
 
-    Calculating.findOne({label: req.body.label})
+    req.context.getModel('Calculating').findOne({label: req.body.label})
       .then(calculating => {
         if (calculating) {
           errors.label = 'Cette méthode de calcul existe déjà'
           return res.status(400).json(errors)
         }
-        const newCalculating = new Calculating({
+
+        const newCalculating={
           label: req.body.label,
-        })
+        }
 
-        newCalculating.save().then(calculating => res.json(calculating)).catch(err => console.error(err))
-
+        req.context.getModel('Calculating').create(newCalculating)
+          .then(calculating => res.json(calculating))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -805,14 +795,9 @@ router.get('/calculating/all', passport.authenticate('admin', {session: false}),
   const admin = decode.is_admin
 
   if (admin) {
-    Calculating.find()
+    req.context.getModel('Calculating').find()
       .then(calculating => {
-        if (!calculating) {
-          return res.status(400).json({msg: 'No calculating found'})
-        }
-
         res.json(calculating)
-
       })
       .catch(err => res.status(404).json({calculating: 'No billing found'}))
   }
@@ -832,13 +817,12 @@ router.get('/calculating/all/:id', passport.authenticate('admin', {session: fals
   const admin = decode.is_admin
 
   if (admin) {
-    Calculating.findById(req.params.id)
+    req.context.getModel('Calculating').findById(req.params.id)
       .then(calculating => {
         if (!calculating) {
-          return res.status(400).json({msg: 'No calculating found'})
+          return res.status(404).json({msg: 'No calculating found'})
         }
         res.json(calculating)
-
       })
       .catch(err => res.status(404).json({billing: 'No calculating found'}))
   }
@@ -856,7 +840,7 @@ router.delete('/calculating/all/:id', passport.authenticate('admin', {session: f
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  Calculating.findById(req.params.id)
+  req.context.getModel('Calculating').findById(req.params.id)
     .then(calculating => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -877,7 +861,7 @@ router.put('calculating/all/:id', passport.authenticate('admin', {session: false
   const admin = decode.is_admin
 
   if (admin) {
-    Calculating.findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+    req.context.getModel('Calculating').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
       .then(calculating => {
         res.json(calculating)
       })
@@ -906,18 +890,19 @@ router.post('/filterPresentation/all', passport.authenticate('admin', {session: 
       return res.status(400).json(errors)
     }
 
-    FilterPresentation.findOne({label: req.body.label})
+    req.context.getModel('FilterPresentation').findOne({label: req.body.label})
       .then(filterPresentation => {
         if (filterPresentation) {
           errors.label = 'Ce filtre existe déjà'
           return res.status(400).json(errors)
         }
-        const newFilterPresentation = new FilterPresentation({
+        const newFilterPresentation={
           label: req.body.label,
-        })
+        }
 
-        newFilterPresentation.save().then(filterPresentation => res.json(filterPresentation)).catch(err => console.error(err))
-
+        req.context.getModel('FilterPresentation').create(newFilterPresentation)
+          .then(filterPresentation => res.json(filterPresentation))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -935,7 +920,7 @@ router.get('/filterPresentation/all', passport.authenticate('admin', {session: f
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    FilterPresentation.find()
+    req.context.getModel('FilterPresentation').find()
       .sort({label: 1})
       .then(filterPresentation => {
         if (!filterPresentation) {
@@ -962,7 +947,7 @@ router.get('/filterPresentation/all/:id', passport.authenticate('admin', {sessio
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    FilterPresentation.findById(req.params.id)
+    req.context.getModel('FilterPresentation').findById(req.params.id)
       .then(filterPresentation => {
         if (!filterPresentation) {
           return res.status(400).json({msg: 'No filterPresentation found'})
@@ -985,7 +970,7 @@ router.delete('/filterPresentation/all/:id', passport.authenticate('admin', {ses
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  FilterPresentation.findById(req.params.id)
+  req.context.getModel('FilterPresentation').findById(req.params.id)
     .then(filterPresentation => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -1006,7 +991,7 @@ router.put('/filterPresentation/all/:id', passport.authenticate('admin', {sessio
   const admin = decode.is_admin
 
   if (admin) {
-    FilterPresentation.findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+    req.context.getModel('FilterPresentation').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
       .then(filterPresentation => {
         res.json(filterPresentation)
       })
@@ -1034,18 +1019,19 @@ router.post('/job/all', passport.authenticate('admin', {session: false}), (req, 
       return res.status(400).json(errors)
     }
 
-    Job.findOne({label: req.body.label})
+    req.context.getModel('Job').findOne({label: req.body.label})
       .then(job => {
         if (job) {
           errors.label = 'Ce métier existe déjà'
           return res.status(400).json(errors)
         }
-        const newJob = new Job({
+        const newJob={
           label: req.body.label,
-        })
+        }
 
-        newJob.save().then(job => res.json(job)).catch(err => console.error(err))
-
+        req.context.getModel('Job').create(newJob)
+          .then(job => res.json(job))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -1063,7 +1049,7 @@ router.get('/job/all', passport.authenticate('admin', {session: false}), (req, r
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Job.find()
+    req.context.getModel('Job').find()
       .sort({label: 1})
       .then(job => {
         if (!job) {
@@ -1088,7 +1074,7 @@ router.get('/job/all/:id', passport.authenticate('admin', {session: false}), (re
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Job.findById(req.params.id)
+    req.context.getModel('Job').findById(req.params.id)
       .then(job => {
         if (!job) {
           return res.status(400).json({msg: 'No job found'})
@@ -1111,7 +1097,7 @@ router.delete('/job/all/:id', passport.authenticate('admin', {session: false}), 
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  Job.findById(req.params.id)
+  req.context.getModel('Job').findById(req.params.id)
     .then(job => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -1132,7 +1118,7 @@ router.put('/job/all/:id', passport.authenticate('admin', {session: false}), (re
   const admin = decode.is_admin
 
   if (admin) {
-    Job.findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+    req.context.getModel('Job').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
       .then(job => {
         res.json(job)
       })
@@ -1160,25 +1146,24 @@ router.post('/searchFilter/all', passport.authenticate('admin', {session: false}
       return res.status(400).json(errors)
     }
 
-    SearchFilter.findOne({label: req.body.label})
+    req.context.getModel('SearchFilter').findOne({label: req.body.label})
       .then(searchFilter => {
         if (searchFilter) {
           errors.label = 'Ce filtre existe déjà'
           return res.status(400).json(errors)
         }
-        const newSearchFilter = new SearchFilter({
+        const newSearchFilter={
           label: req.body.label,
-        })
+        }
 
-        newSearchFilter.save().then(searchFilter => res.json(searchFilter)).catch(err => console.error(err))
-
+        req.context.getModel('SearchFilter').create(newSearchFilter)
+          .then(searchFilter => res.json(searchFilter))
+          .catch(err => console.error(err))
       })
   }
   else {
     res.status(403).json({msg: 'Access denied'})
   }
-
-
 })
 
 // @Route GET /myAlfred/api/admin/searchFilter/all
@@ -1189,7 +1174,7 @@ router.get('/searchFilter/all', passport.authenticate('admin', {session: false})
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    SearchFilter.find()
+    req.context.getModel('SearchFilter').find()
       .then(searchFilter => {
         if (!searchFilter) {
           return res.status(400).json({msg: 'No searchFilter found'})
@@ -1215,7 +1200,7 @@ router.get('/searchFilter/all/:id', passport.authenticate('admin', {session: fal
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    SearchFilter.findById(req.params.id)
+    req.context.getModel('SearchFilter').findById(req.params.id)
       .then(searchFilter => {
         if (!searchFilter) {
           return res.status(400).json({msg: 'No searchFilter found'})
@@ -1238,7 +1223,7 @@ router.delete('/searchFilter/all/:id', passport.authenticate('admin', {session: 
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  SearchFilter.findById(req.params.id)
+  req.context.getModel('SearchFilter').findById(req.params.id)
     .then(searchFilter => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -1259,7 +1244,7 @@ router.put('/searchFilter/all/:id', passport.authenticate('admin', {session: fal
   const admin = decode.is_admin
 
   if (admin) {
-    SearchFilter.findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+    req.context.getModel('SearchFilter').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
       .then(searchFilter => {
         res.json(searchFilter)
       })
@@ -1287,20 +1272,21 @@ router.post('/tags/all', passport.authenticate('admin', {session: false}), (req,
       return res.status(400).json(errors)
     }
 
-    Tags.findOne({label: req.body.label})
+    req.context.getModel('Tag').findOne({label: req.body.label})
       .then(tags => {
         if (tags) {
           errors.label = 'Ce tags existe déjà'
           return res.status(400).json(errors)
         }
-        const newTags = new Tags({
+        const newTag={
           label: req.body.label,
           title: req.body.title,
           description: req.body.description,
-        })
+        }
 
-        newTags.save().then(tags => res.json(tags)).catch(err => console.error(err))
-
+        req.context.getModel('Tag').create(newTag)
+          .then(tags => res.json(tags))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -1318,18 +1304,15 @@ router.get('/tags/all', passport.authenticate('admin', {session: false}), (req, 
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Tags.find()
+    req.context.getModel('Tag').find()
       .sort({label: 1})
       .then(tags => {
-        if (!tags) {
-          return res.status(400).json({msg: 'No tags found'})
-        }
-        res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count')
-        res.setHeader('X-Total-Count', tags.length)
         res.json(tags)
-
       })
-      .catch(err => res.status(404).json({tags: 'No tags found'}))
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({tags: 'No tags found'})
+      })
   }
   else {
     res.status(403).json({msg: 'Access denied'})
@@ -1345,7 +1328,7 @@ router.get('/tags/all/:id', passport.authenticate('admin', {session: false}), (r
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Tags.findById(req.params.id)
+    req.context.getModel('Tag').findById(req.params.id)
       .then(tags => {
         if (!tags) {
           return res.status(400).json({msg: 'No tags found'})
@@ -1368,7 +1351,7 @@ router.delete('/tags/all/:id', passport.authenticate('admin', {session: false}),
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  Tags.findById(req.params.id)
+  req.context.getModel('Tag').findById(req.params.id)
     .then(tags => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -1389,7 +1372,7 @@ router.put('/tags/all/:id', passport.authenticate('admin', {session: false}), (r
   const admin = decode.is_admin
 
   if (admin) {
-    Tags.findOneAndUpdate({_id: req.params.id}, {
+    req.context.getModel('Tag').findOneAndUpdate({_id: req.params.id}, {
       $set: {
         label: req.body.label,
         title: req.body.title,
@@ -1425,8 +1408,7 @@ const storageProspect = multer.memoryStorage()
 const uploadProspect = multer({
   storage: storageProspect,
   fileFilter: function(req, file, callback) {
-    let ext = path.extname(file.originalname).toLowerCase()
-    if(ext !== '.csv' && ext !== '.txt') {
+    if (!isTxtFile(file.originalName)) {
       return callback(new Error('Fichier csv attendu (.csv ou .txt)'))
     }
     callback(null, true)
@@ -1447,21 +1429,23 @@ router.post('/category/all', uploadCat.single('picture'), passport.authenticate(
       return res.status(400).json(errors)
     }
 
-    Category.findOne({label: req.body.label})
+    req.context.getModel('Category').findOne({label: req.body.label})
       .then(category => {
         if (category) {
           errors.label = 'Cette catégorie existe déjà'
           return res.status(400).json(errors)
         }
-        const newCategory = new Category({
+        const newCategory={
           label: req.body.label,
           s_label: normalize(req.body.label),
           picture: req.file.path,
           description: req.body.description,
           tags: JSON.parse(req.body.tags),
-        })
+        }
 
-        newCategory.save().then(category => res.json(category)).catch(err => console.error(err))
+        req.context.getModel('Category').create(newCategory)
+          .then(category => res.json(category))
+          .catch(err => console.error(err))
 
       })
   }
@@ -1492,7 +1476,7 @@ passport.authenticate('admin', {session: false}), (req, res) => {
     if (req.files.professional_picture) {
       attributes.professional_picture = req.files.professional_picture[0].path
     }
-    Category.findByIdAndUpdate(req.params.id, attributes, {new: true})
+    req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
       .then(category => {
         res.json(category)
       })
@@ -1510,7 +1494,7 @@ router.get('/category/all', passport.authenticate('admin', {session: false}), (r
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Category.find()
+    req.context.getModel('Category').find()
       .sort({'label': 1})
       .populate('tags')
       .then(category => {
@@ -1522,7 +1506,10 @@ router.get('/category/all', passport.authenticate('admin', {session: false}), (r
         res.json(category)
 
       })
-      .catch(err => res.status(404).json({category: 'No billing found'}))
+      .catch(err => {
+        console.error(err)
+        return res.status(404).json({category: 'No billing found'})
+      })
   }
   else {
     res.status(403).json({msg: 'Access denied'})
@@ -1537,7 +1524,7 @@ router.get('/category/all/:id', passport.authenticate('admin', {session: false})
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Category.findById(req.params.id)
+    req.context.getModel('Category').findById(req.params.id)
       .populate('tags')
       .then(category => {
         if (!category) {
@@ -1561,7 +1548,7 @@ router.delete('/category/all/:id', passport.authenticate('admin', {session: fals
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  Category.findById(req.params.id)
+  req.context.getModel('Category').findById(req.params.id)
     .then(category => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -1591,7 +1578,7 @@ router.put('/category/all/:id?', passport.authenticate('admin', {session: false}
       tags: req.body.tags,
     }
     const promise=req.params.id ?
-      Category.findByIdAndUpdate(req.params.id, attributes, {new: true})
+      req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
       :
       new Category(attributes).save()
     promise
@@ -1637,22 +1624,23 @@ router.post('/equipment/all', upload.fields([{name: 'logo', maxCount: 1}, {
       return res.status(400).json(errors)
     }
 
-    Equipment.findOne({label: req.body.label})
+    req.context.getModel('Equipment').findOne({label: req.body.label})
       .then(equipment => {
         if (equipment) {
           errors.label = 'Cet équipement existe déjà '
           return res.status(400).json(errors)
         }
-        const newEquipment = new Equipment({
+        const newEquipment={
           label: req.body.label,
           logo: req.files.logo[0].path,
           name_logo: req.files.logo[0].filename,
           logo2: req.files.logo2[0].path,
           name_logo2: req.files.logo2[0].filename,
-        })
+        }
 
-        newEquipment.save().then(equipment => res.json(equipment)).catch(err => console.error(err))
-
+        req.context.getModel('Equipment').create(newEquipment)
+          .then(equipment => res.json(equipment))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -1676,7 +1664,7 @@ router.post('/equipment/editPicture/:id', upload.fields([{name: 'logo', maxCount
 
   if (admin) {
 
-    Equipment.findByIdAndUpdate(req.params.id, {
+    req.context.getModel('Equipment').findByIdAndUpdate(req.params.id, {
       logo: req.files.logo[0].path,
       logo2: req.files.logo2[0].path,
     }, {new: true})
@@ -1699,7 +1687,7 @@ router.get('/equipment/all', passport.authenticate('admin', {session: false}), (
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Equipment.find()
+    req.context.getModel('Equipment').find()
       .sort({label: 1})
       .then(equipment => {
         if (!equipment) {
@@ -1726,7 +1714,7 @@ router.get('/equipment/all/:id', passport.authenticate('admin', {session: false}
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Equipment.findById(req.params.id)
+    req.context.getModel('Equipment').findById(req.params.id)
       .then(equipment => {
         if (!equipment) {
           return res.status(400).json({msg: 'No equipment found'})
@@ -1749,7 +1737,7 @@ router.delete('/equipment/all/:id', passport.authenticate('admin', {session: fal
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  Equipment.findById(req.params.id)
+  req.context.getModel('Equipment').findById(req.params.id)
     .then(equipment => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -1770,7 +1758,7 @@ router.put('/equipment/all/:id', passport.authenticate('admin', {session: false}
   const admin = decode.is_admin
 
   if (admin) {
-    Equipment.findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+    req.context.getModel('Equipment').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
       .then(equipment => {
         res.json(equipment)
 
@@ -1811,13 +1799,13 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
       return res.status(400).json(errors)
     }
 
-    Service.findOne({label: req.body.label})
+    req.context.getModel('Service').findOne({label: req.body.label})
       .then(service => {
         if (service) {
           errors.label = 'Ce service existe déjà'
           return res.status(400).json(errors)
         }
-        const newService = new Service({
+        const newService={
           label: req.body.label,
           s_label: normalize(req.body.label),
           category: mongoose.Types.ObjectId(req.body.category),
@@ -1835,10 +1823,11 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
           travel_tax: req.body.travel_tax,
           professional_access: req.body.professional_access,
           particular_access: req.body.particular_access,
-        })
+        }
 
-        newService.save().then(service => res.json(service)).catch(err => console.error(err))
-
+        req.context.getModel('Service').create(newService)
+          .then(service => res.json(service))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -1859,7 +1848,7 @@ router.post('/service/editPicture/:id', uploadService.single('picture'), passpor
 
   if (admin) {
 
-    Service.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+    req.context.getModel('Service').findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
       .then(service => {
         res.json(service)
       })
@@ -1880,7 +1869,7 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
   const admin = decode.is_admin
 
   if (admin) {
-    Service.find()
+    req.context.getModel('Service').find()
       .sort({'label': 1})
       .populate('tags', ['label'])
       .populate('equipments', 'label')
@@ -1914,7 +1903,7 @@ router.get('/service/all/:id', passport.authenticate('admin', {session: false}),
   const admin = decode.is_admin
 
   if (admin) {
-    Service.findById(req.params.id)
+    req.context.getModel('Service').findById(req.params.id)
       .populate('tags')
       .populate('equipments')
       .populate('category')
@@ -1940,7 +1929,7 @@ router.delete('/service/all/:id', passport.authenticate('admin', {session: false
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  Service.findById(req.params.id)
+  req.context.getModel('Service').findById(req.params.id)
     .then(service => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -1967,7 +1956,7 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
       return res.status(400).json(errors)
     }
 
-    Service.findByIdAndUpdate({_id: req.params.id},
+    req.context.getModel('Service').findByIdAndUpdate({_id: req.params.id},
       {
         $set: {
           label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
@@ -1989,7 +1978,7 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
           updates.particular_access=req.body.particular_access
         }
         if (Object.keys(updates).length>0) {
-          Prestation.updateMany({service: service._id}, {$set: updates})
+          req.context.getModel('Prestation').updateMany({service: service._id}, {$set: updates})
             .then(res => console.log(`Prestations updated:${JSON.stringify(res)}`))
             .catch(err => console.error(`Prestations update error:${err}`))
         }
@@ -2033,7 +2022,7 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
       return res.status(400).json(errors)
     }
 
-    Prestation.findOne({
+    req.context.getModel('Prestation').findOne({
       label: req.body.label,
       filter_presentation: req.body.filter_presentation,
       service: req.body.service,
@@ -2043,8 +2032,8 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
           errors.label = 'Cette prestation existe déjà'
           return res.status(400).json(errors)
         }
-        console.log(`Body:${JSON.stringify(req.body)}`)
-        const newPrestation = new Prestation({
+
+        const newPrestation={
           label: req.body.label,
           s_label: normalize(req.body.label),
           price: req.body.price,
@@ -2063,12 +2052,13 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
           professional_access: req.body.professional_access,
           particular_access: req.body.particular_access,
           private_company: req.body.private_company,
-        })
-        newPrestation.save()
+          order: req.body.order ? parseInt(req.body.order) : 1,
+          company_price: req.body.company_price && req.body.private_company ? parseInt(req.body.company_price) : 0,
+        }
+
+        req.context.getModel('Prestation').create(newPrestation)
           .then(prestation => res.json(prestation))
           .catch(err => res.status(400).json(err))
-
-
       })
   }
   else {
@@ -2088,7 +2078,7 @@ router.post('/prestation/editPicture/:id', uploadPrestation.single('picture'), p
 
   if (admin) {
 
-    Prestation.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+    req.context.getModel('Prestation').findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
       .then(prestation => {
         res.json(prestation)
       })
@@ -2108,7 +2098,7 @@ router.get('/prestation/all', passport.authenticate('admin', {session: false}), 
   const admin = decode.is_admin
 
   if (admin) {
-    Prestation.find({}, 'label cesu_eligible particular_access professional_access')
+    req.context.getModel('Prestation').find({}, 'label cesu_eligible particular_access professional_access order')
       .sort({s_label: 1, category: 1})
       .populate({path: 'service', select: 'label', populate: {
         path: 'category', select: 'particular_label professional_label'},
@@ -2139,7 +2129,7 @@ router.get('/prestation/all/:id', passport.authenticate('admin', {session: false
   const admin = decode.is_admin
 
   if (admin) {
-    Prestation.findById(req.params.id)
+    req.context.getModel('Prestation').findById(req.params.id)
       .populate('service')
       .populate('billing')
       .populate('filter_presentation')
@@ -2171,7 +2161,7 @@ router.delete('/prestation/all/:id', passport.authenticate('admin', {session: fa
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  Prestation.findById(req.params.id)
+  req.context.getModel('Prestation').findById(req.params.id)
     .then(prestation => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -2197,7 +2187,7 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
       return res.status(400).json(errors)
     }
 
-    Prestation.findOneAndUpdate({_id: req.params.id}, {
+    req.context.getModel('Prestation').findOneAndUpdate({_id: req.params.id}, {
       $set: {
         label: req.body.label,
         s_label: normalize(req.body.label),
@@ -2215,6 +2205,8 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
         professional_access: req.body.professional_access,
         particular_access: req.body.particular_access,
         private_company: req.body.private_company,
+        order: req.body.order ? parseInt(req.body.order) : 1,
+        company_price: req.body.company_price && req.body.private_company ? parseInt(req.body.company_price) : 0,
       },
     },
     {new: true})
@@ -2257,21 +2249,19 @@ router.post('/shopBanner/all', uploadBanner.single('picture'), passport.authenti
     if (!isValid) {
       return res.status(400).json(errors)
     }
-    ShopBanner.findOne({label: req.body.label})
+    req.context.getModel('ShopBanner').findOne({label: req.body.label})
       .then(service => {
         if (service) {
           errors.label = 'Cette bannière existe déjà'
           return res.status(400).json(errors)
         }
-        const newBanner = new ShopBanner({
+        const newBanner={
           label: req.body.label,
           picture: req.file.path,
-
-
-        })
-
-        newBanner.save().then(banner => res.json(banner)).catch(err => console.error(err))
-
+        }
+        req.context.getModel('ShopBanner').create(newBanner)
+          .then(banner => res.json(banner))
+          .catch(err => console.error(err))
       })
   }
   else {
@@ -2291,7 +2281,7 @@ router.post('/shopBanner/editPicture/:id', uploadBanner.single('picture'), passp
 
   if (admin) {
 
-    ShopBanner.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+    req.context.getModel('ShopBanner').findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
       .then(banner => {
         res.json(banner)
       })
@@ -2310,7 +2300,7 @@ router.get('/shopBanner/all', passport.authenticate('admin', {session: false}), 
   const admin = decode.is_admin
 
   if (admin) {
-    ShopBanner.find()
+    req.context.getModel('ShopBanner').find()
       .sort({label: 1})
       .then(banner => {
         if (!banner) {
@@ -2334,7 +2324,7 @@ router.get('/shopBanner/all/:id', passport.authenticate('admin', {session: false
   const admin = decode.is_admin
 
   if (admin) {
-    ShopBanner.findById(req.params.id)
+    req.context.getModel('ShopBanner').findById(req.params.id)
       .then(banner => {
         if (!banner) {
           return res.status(400).json({msg: 'No banner found'})
@@ -2358,7 +2348,7 @@ router.delete('/shopBanner/all/:id', passport.authenticate('admin', {session: fa
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  ShopBanner.findById(req.params.id)
+  req.context.getModel('ShopBanner').findById(req.params.id)
     .then(banner => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -2379,7 +2369,7 @@ router.put('/shopBanner/all/:id', passport.authenticate('admin', {session: false
   const admin = decode.is_admin
 
   if (admin) {
-    ShopBanner.findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+    req.context.getModel('ShopBanner').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
       .then(banner => {
         res.json(banner)
       })
@@ -2388,7 +2378,6 @@ router.put('/shopBanner/all/:id', passport.authenticate('admin', {session: false
   else {
     res.status(403).json({msg: 'Access denied'})
   }
-
 })
 
 // OPTIONS
@@ -2408,21 +2397,20 @@ router.post('/options/all', passport.authenticate('admin', {session: false}), (r
         if (options) {
           return res.status(400).json({msg: 'Cette option existe déjà'})
         }
-        const newOptions = new Options({
+        const newOption={
           label: req.body.label,
           description: req.body.description,
           billing: req.body.billing,
-        })
+        }
 
-        newOptions.save().then(options => res.json(options)).catch(err => console.error(err))
-
+        req.context.getModel('Option').create(newOption)
+          .then(options => res.json(options))
+          .catch(err => console.error(err))
       })
   }
   else {
     res.status(403).json({msg: 'Access denied'})
   }
-
-
 })
 
 // @Route GET /myAlfred/api/admin/options/all
@@ -2521,7 +2509,7 @@ router.put('/options/all/:id', passport.authenticate('admin', {session: false}),
 
 // TODO: récupérer en sum/aggréation par mois
 router.get('/registrations', (req, res) => {
-  User.find({}, 'creation_date')
+  req.context.getModel('User').find({}, 'creation_date')
     .sort({creation_date: 1})
     .then(users => {
       const monthDates = users.map(user => new Date(user.creation_date.getFullYear(), user.creation_date.getMonth()).getTime())
@@ -2545,7 +2533,7 @@ router.get('/ages', (req, res) => {
 
   const alfred = JSON.parse(req.query.alfred || 'false')
   const fltr = alfred ? {is_alfred: true} : {}
-  User.find(fltr, 'birthday')
+  req.context.getModel('User').find(fltr, 'birthday')
     .sort({'birthday': -1})
     .then(users => {
       const labels=users.filter(u => u.age<100).map(u => get_label(u.age))
@@ -2573,15 +2561,15 @@ router.get('/statistics', (req, res) => {
 
   if (admin) {
     let stats = {}
-    User.count()
+    req.context.getModel('User').count()
       .catch(err => res.status(404).json({statistics: 'Error on users'}))
       .then(nb_users => {
         stats.users = nb_users
-        User.find({is_alfred: true}).count()
+        req.context.getModel('User').find({is_alfred: true}).count()
           .catch(err => res.status(404).json({statistics: 'Error on alfred'}))
           .then(nb_alfred => {
             stats.alfred = nb_alfred
-            ServiceUser.find()
+            req.context.getModel('ServiceUser').find()
               .catch(err => res.status(404).json({statistics: 'Error on alfred'}))
               .then(services => {
                 stats.services = services.length
@@ -2600,12 +2588,9 @@ router.get('/statistics', (req, res) => {
 // Get all bookings
 // @Access private
 router.get('/booking/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-
-  if (admin) {
-    Booking.find()
+  const context = req.context
+  if (context.isAdmin()) {
+    context.getModel('Booking').find()
       .populate('alfred', 'firstname name')
       .populate('user', 'firstname name')
       .sort({date: -1})
@@ -2634,7 +2619,7 @@ router.get('/prospect/all', passport.authenticate('admin', {session: false}), (r
     return res.status(403).json({msg: 'Access denied'})
   }
 
-  Prospect.aggregate([
+  req.context.getModel('Prospect').aggregate([
     {$sort: {'category': 1, 'contacted': 1}},
     {$group: {_id: {'category': '$category', 'contacted': '$contacted'}, total: {$sum: 1}}},
   ])
@@ -2656,8 +2641,9 @@ router.get('/prospect/all', passport.authenticate('admin', {session: false}), (r
 })
 
 router.get('/prospect/fields', passport.authenticate('admin', {session: false}), (req, res) => {
-  const schema_fields = Object.keys(Prospect.schema.obj).sort()
-  const schema_required = schema_fields.filter(k => Prospect.schema.obj[k].required && !Prospect.schema.obj[k].default)
+  const schema = req.context.getModel('Prospect').schema.obj
+  const schema_fields = Object.keys(schema).sort()
+  const schema_required = schema_fields.filter(k => schema[k].required && !schema[k].default)
   res.json({mandatory: schema_required, fields: schema_fields})
 })
 
@@ -2668,14 +2654,14 @@ router.get('/prospect/fields', passport.authenticate('admin', {session: false}),
 // @Access private
 router.get('/companies/all', passport.authenticate('admin', {session: false}), (req, res) => {
 
-  Company.find()
+  req.context.getModel('Company').find()
     .sort({'name': 1})
     .lean()
     .then(companies => {
       if (!companies) {
         return res.status(400).json({msg: 'No company found'})
       }
-      User.find({company: {$exists: true, $ne: null}}, 'company')
+      req.context.getModel('User').find({company: {$exists: true, $ne: null}}, 'company')
         .then(users => {
           companies.forEach(company => {
             company.employees = users.filter(u => u.company.toString() == company._id.toString()).length
@@ -2690,7 +2676,7 @@ router.get('/companies/all', passport.authenticate('admin', {session: false}), (
 // View one company
 // @Access private
 router.get('/companies/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  Company.findById(req.params.id)
+  req.context.getModel('Company').findById(req.params.id)
     .then(company => {
       if (!company) {
         return res.status(400).json({msg: 'No company found'})
@@ -2704,7 +2690,7 @@ router.get('/companies/:id', passport.authenticate('admin', {session: false}), (
 // View one company
 // @Access private
 router.get('/companies/:id/users', passport.authenticate('admin', {session: false}), (req, res) => {
-  User.find({company: req.params.id}, 'firstname name email roles')
+  req.context.getModel('User').find({company: req.params.id}, 'firstname name email roles')
     .then(users => {
       if (!users) {
         return res.status(400).json({msg: 'No company found'})
@@ -2725,12 +2711,12 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
     return res.status(400).json(errors)
   }
 
-  Company.findOne({name: req.body.name})
+  req.context.getModel('Company').findOne({name: req.body.name})
     .then(company => {
       if (company && company._id != req.body._id) {
         return res.status(400).json({error: 'Cette entreprise existe déjà'})
       }
-      const promise=req.body._id ? Company.findByIdAndUpdate(req.body._id, req.body, {new: true})
+      const promise=req.body._id ? req.context.getModel('Company').findByIdAndUpdate(req.body._id, req.body, {new: true})
         :
         new Company(req.body).save()
       promise
@@ -2739,20 +2725,20 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
             return res.status(400).json({msg: 'No company found'})
           }
           if (req.body.admin_email) {
-            User.findOne({email: req.body.admin_email})
+            req.context.getModel('User').findOne({email: req.body.admin_email})
               .then(user => {
                 if (user) {
                   return res.status(400).json({error: 'Un compte avec cet email existe déjà'})
                 }
 
-                const newUser= new User({
+                const newUser= {
                   firstname: req.body.admin_firstname,
                   name: req.body.admin_name,
                   email: req.body.admin_email,
                   company: company._id,
                   password: crypto.randomBytes(10).toString('hex'),
                   roles: [ADMIN],
-                })
+                }
                 console.log(`Generated user with password ${newUser.password}`)
                 bcrypt.genSalt(10, (err, salt) => {
                   bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -2760,7 +2746,7 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
                       throw err
                     }
                     newUser.password = hash
-                    newUser.save()
+                    req.context.getModel('User').create(newUser)
                       .then(() => {
                         axios.post(new URL('/myAlfred/api/users/forgotPassword', computeUrl(req)).toString(), {email: req.body.admin_email, role: ADMIN})
                           .then(() => {
@@ -2806,7 +2792,7 @@ router.put('/companies/all/:id', passport.authenticate('admin', {session: false}
       return res.status(400).json(errors)
     }
 
-    Service.findByIdAndUpdate({_id: req.params.id},
+    req.context.getModel('Service').findByIdAndUpdate({_id: req.params.id},
       {
         $set: {
           label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
@@ -2828,7 +2814,7 @@ router.put('/companies/all/:id', passport.authenticate('admin', {session: false}
           updates.particular_access=req.body.particular_access
         }
         if (Object.keys(updates).length>0) {
-          Prestation.updateMany({service: service._id}, {$set: updates})
+          req.context.getModel('Prestation').updateMany({service: service._id}, {$set: updates})
             .then(res => console.log(`Prestations updated:${JSON.stringify(res)}`))
             .catch(err => console.error(`Prestations update error:${err}`))
         }
@@ -2904,7 +2890,7 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
       all_ads = all_ads.filter(a => a && a.status=='active' && a.has_phone)
       req_result.push(`Annonces actives avec téléphone:${all_ads.length}`)
 
-      Prospect.find({list_id: {$exists: true}}, 'ad_id')
+      req.context.getModel('Prospect').find({list_id: {$exists: true}}, 'ad_id')
         .then(prospects => {
           prospects = prospects.map(p => p.list_id)
           // Retirer les prospects connus en BD par leur ad_id
@@ -2934,7 +2920,7 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
                     provider: 'le bon coin',
                     ad_id: ad.list_id,
                   }
-                  db_promises.push(Prospect.create(pData))
+                  db_promises.push(req.context.getModel('Prospect').create(pData))
                 }
               })
               Promise.allSettled(db_promises)
@@ -2967,13 +2953,14 @@ router.post('/prospect/add', passport.authenticate('admin', {session: false}), (
       res.status(404).json({errors: err.message})
     }
     else {
-      Prospect.find({}, 'phone')
+      req.context.getModel('Prospect').find({}, 'phone')
         .then(phones => {
           const contents = bufferToString(req.file.buffer)
           let records = csv_parse(contents, {columns: true, delimiter: ';'})
 
-          const schema_fields = Object.keys(Prospect.schema.obj).sort()
-          const schema_required = schema_fields.filter(k => Prospect.schema.obj[k].required && !Prospect.schema.obj[k].default)
+          const schema = req.context.getModel('Prospect').schema.obj
+          const schema_fields = Object.keys(schema).sort()
+          const schema_required = schema_fields.filter(k => schema[k].required && !schema[k].default)
           const data_fields = Object.keys(records[0]).sort()
           const missing = schema_required.filter(att => !data_fields.includes(att))
           const extra = data_fields.filter(att => !schema_fields.includes(att))
@@ -3015,7 +3002,7 @@ router.post('/prospect/add', passport.authenticate('admin', {session: false}), (
           const after = records.length
           const delta=before-after
 
-          Prospect.insertMany(records, {silent: true})
+          req.context.getModel('Prospect').insertMany(records, {silent: true})
             .then(() => res.json(`${after}/${before} prospects importés après suppression des ${delta} doublons ou lignes vides`))
             .catch(err => {
               console.log('error')
@@ -3035,12 +3022,12 @@ router.post('/prospect/add', passport.authenticate('admin', {session: false}), (
 // @Access public
 router.get('/prospect/tocontact/:category', (req, res) => {
   let result = []
-  Prospect.find(
+  req.context.getModel('Prospect').find(
     {$and: [{category: req.params.category}, {$or: [{contacted: false}, {contacted: null}]}]},
   )
     .sort({category: 1})
     .then(prospects => {
-      Prospect.updateMany(
+      req.context.getModel('Prospect').updateMany(
         {$and: [{category: req.params.category}, {$or: [{contacted: false}, {contacted: null}]}]},
         {contacted: true},
       )
@@ -3073,7 +3060,7 @@ router.post('/kyc_validate/:alfred_id', passport.authenticate('admin', {session:
   const admin = decode.is_admin
 
   if (admin) {
-    User.findOne({_id: mongoose.Types.ObjectId(req.params.alfred_id)})
+    req.context.getModel('User').findOne({_id: mongoose.Types.ObjectId(req.params.alfred_id)})
       .then(user => {
         addIdIfRequired(user)
         res.json(result)

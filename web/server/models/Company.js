@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../utils/consts');
-const {hideIllegal} = require('../../utils/text');
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../utils/consts')
+const {hideIllegal} = require('../../utils/text')
 
 
 const CompanySchema = new Schema({
@@ -53,42 +53,40 @@ const CompanySchema = new Schema({
       type: String,
     },
   }],
-  vat_subject : {
+  vat_subject: {
     type: Boolean,
     required: true,
     default: false,
   },
-  vat_number : {
+  vat_number: {
     type: String,
   },
   activity: {
-    type : String,
-    enum : Object.keys(COMPANY_ACTIVITY),
+    type: String,
+    enum: Object.keys(COMPANY_ACTIVITY),
   },
   size: {
-    type : String,
-    enum : Object.keys(COMPANY_SIZE),
+    type: String,
+    enum: Object.keys(COMPANY_SIZE),
   },
   description: {
     type: String,
-    set : text => hideIllegal(text)
+    set: text => hideIllegal(text),
   },
   // Legal repesentative
-  representative : {
+  representative: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
   },
   // Mangopay as client
   id_mangopay: {
     type: String,
     default: null,
   },
-}, {toJSON: {virtuals: true, getters: true}});
+}, {toJSON: {virtuals: true, getters: true}})
 
-CompanySchema.virtual('full_name').get(function () {
+CompanySchema.virtual('full_name').get(function() {
   return this.name
 })
 
-const Company = mongoose.model('company', CompanySchema);
-
-module.exports = Company
+module.exports = CompanySchema

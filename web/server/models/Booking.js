@@ -1,9 +1,7 @@
 const mongoose = require('mongoose')
 const moment = require('moment')
-const {invoiceFormat} = require('../../utils/invoice')
 const {BOOK_STATUS, ROLES} = require('../../utils/consts')
 const Schema = mongoose.Schema
-const CountSchema = require('./Count')
 
 const BookingSchema = new Schema({
   reference: {
@@ -34,7 +32,7 @@ const BookingSchema = new Schema({
   },
   equipments: [{
     type: Schema.Types.ObjectId,
-    ref: 'equipment',
+    ref: 'Equipment',
   }],
   // Total amount
   amount: {
@@ -53,11 +51,11 @@ const BookingSchema = new Schema({
   },
   date_prestation: {
     type: String,
-    required: true,
+    //required: true,
   },
   time_prestation: {
     type: Date,
-    required: true,
+    //required: true,
   },
   end_date: {
     type: Date,
@@ -67,11 +65,11 @@ const BookingSchema = new Schema({
   },
   alfred: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
   },
   prestations: [{
     name: {
@@ -97,7 +95,7 @@ const BookingSchema = new Schema({
   },
   chatroom: {
     type: Schema.Types.ObjectId,
-    ref: 'chatRooms',
+    ref: 'ChatRoom',
   },
   fileUpload: [{
     type: Schema.Types.Mixed,
@@ -150,6 +148,7 @@ const BookingSchema = new Schema({
     type: String,
   },
   cesu_amount: {
+
     type: Number,
     default: 0,
   },
@@ -166,6 +165,16 @@ const BookingSchema = new Schema({
   },
   myalfred_billing_number: {
     type: String,
+  },
+  // Réservation par un client Avocotés
+  company_customer: {
+    type: Schema.Types.ObjectId,
+    ref: 'Company',
+  },
+  // Réservation du client dans le cas de la réservation par l'Afred pour avocotes
+  customer_booking: {
+    type: Schema.Types.ObjectId,
+    ref: 'Booking',
   },
 }, {toJSON: {virtuals: true, getters: true}})
 
@@ -192,4 +201,5 @@ BookingSchema.virtual('calendar_display').get(function() {
 })
 
 
-module.exports = Booking = mongoose.model('booking', BookingSchema)
+//module.exports = Booking = mongoose.model('booking', BookingSchema)
+module.exports = BookingSchema

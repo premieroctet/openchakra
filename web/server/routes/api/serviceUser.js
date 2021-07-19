@@ -1,56 +1,49 @@
-const express = require('express');
-const router = express.Router();
-const passport = require('passport');
-const mongoose = require('mongoose');
-const path = require('path');
-const ServiceUser = require('../../models/ServiceUser');
-const Shop = require('../../models/Shop');
-const Group = require('../../models/Group');
-const Service = require('../../models/Service');
-const User = require('../../models/User');
-const Availability = require('../../models/Availability');
-const Prestation = require('../../models/Prestation');
-const axios = require('axios');
-const https = require('https');
-const multer = require('multer');
-const crypto = require('crypto');
-const geolib = require('geolib');
-const _ = require('lodash');
-const moment = require('moment');
-const isEmpty = require('../../validation/is-empty');
-const {data2ServiceUser} = require('../../utils/mapping');
-const {emptyPromise} = require('../../../utils/promise');
-const {computeUrl} = require('../../../config/config');
-const serviceFilters = require('../../utils/filters');
-const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts');
-const {normalize} = require('../../../utils/text');
+const express = require('express')
+const router = express.Router()
+const passport = require('passport')
+const mongoose = require('mongoose')
+const path = require('path')
+const axios = require('axios')
+const https = require('https')
+const multer = require('multer')
+const crypto = require('crypto')
+const geolib = require('geolib')
+const _ = require('lodash')
+const moment = require('moment')
+const isEmpty = require('../../validation/is-empty')
+const {data2ServiceUser} = require('../../utils/mapping')
+const {emptyPromise} = require('../../../utils/promise')
+const {computeUrl} = require('../../../config/config')
+const serviceFilters = require('../../utils/filters')
+const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
+const {normalize} = require('../../../utils/text')
 const parse = require('url-parse')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
 const {ensureDirectoryExists} = require('../../utils/filesystem')
 
-moment.locale('fr');
+moment.locale('fr')
 
 ensureDirectoryExists('static/profile/diploma/')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'static/profile/diploma/');
+    cb(null, 'static/profile/diploma/')
   },
   filename: function (req, file, cb) {
-    let datetimestamp = Date.now();
-    let key = crypto.randomBytes(5).toString('hex');
-    cb(null, datetimestamp + '_' + key + '_' + file.originalname);
+    let datetimestamp = Date.now()
+    let key = crypto.randomBytes(5).toString('hex')
+    cb(null, datetimestamp + '_' + key + '_' + file.originalname)
   },
-});
+})
 const upload = multer({
   storage: storage,
   fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname).toLowerCase();
+    let ext = path.extname(file.originalname).toLowerCase()
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
-      return callback(new Error('Error extension'));
+      return callback(new Error('Error extension'))
     }
-    callback(null, true);
+    callback(null, true)
   },
-});
+})
 
 // @Route POST /myAlfred/api/serviceUser/add
 // Connect an alfred to a service
@@ -61,137 +54,144 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
 }]), passport.authenticate('jwt', {session: false}), (req, res) => {
 
 
-  ServiceUser.findOne({
+  req.context.getModel('ServiceUser').findOne({
     user: req.user.id,
     service: req.body.service,
   })
     .then(service => {
-      const fields = {};
-      fields.user = req.user.id;
-      fields.service = mongoose.Types.ObjectId(req.body.service);
-      fields.city = req.body.city;
-      fields.perimeter = req.body.perimeter;
-      fields.minimum_basket = req.body.minimum_basket;
-      fields.deadline_before_booking = req.body.deadline_before_booking;
-      fields.prestations = JSON.parse(req.body.prestations);
-      fields.option = JSON.parse(req.body.option);
-      fields.experience_years = req.body.experience_years;
+      const fields = {}
+      fields.user = req.user.id
+      fields.service = mongoose.Types.ObjectId(req.body.service)
+      fields.city = req.body.city
+      fields.perimeter = req.body.perimeter
+      fields.minimum_basket = req.body.minimum_basket
+      fields.deadline_before_booking = req.body.deadline_before_booking
+      fields.prestations = JSON.parse(req.body.prestations)
+      fields.option = JSON.parse(req.body.option)
+      fields.experience_years = req.body.experience_years
       if (req.body.graduated === 'true') {
-        fields.graduated = true;
-      } else {
-        fields.graduated = false;
+        fields.graduated = true
+      }
+      else {
+        fields.graduated = false
       }
 
-      const diploma = 'diploma';
-      const certification = 'certification';
+      const diploma = 'diploma'
+      const certification = 'certificatio'
       if (diploma in req.files) {
-        fields.diploma = {};
-        fields.diploma.name = req.body.diplomaLabel;
-        fields.diploma.year = req.body.diplomaYear;
-        fields.diploma.file = req.files['diploma'][0].path;
-      } else {
-        console.log('No file uploaded');
+        fields.diploma = {}
+        fields.diploma.name = req.body.diplomaLabel
+        fields.diploma.year = req.body.diplomaYear
+        fields.diploma.file = req.files.diploma[0].path
+      }
+      else {
+        console.log('No file uploaded')
       }
       if (req.body.is_certified === 'true') {
-        fields.is_certified = true;
-      } else {
-        fields.is_certified = false;
+        fields.is_certified = true
+      }
+      else {
+        fields.is_certified = false
       }
       if (certification in req.files) {
-        fields.certification = {};
-        fields.certification.name = req.body.certificationLabel;
-        fields.certification.year = req.body.certificationYear;
-        fields.certification.file = req.files['certification'][0].path;
-      } else {
-        console.log('No file uploaded');
+        fields.certification = {}
+        fields.certification.name = req.body.certificationLabel
+        fields.certification.year = req.body.certificationYear
+        fields.certification.file = req.files.certification[0].path
       }
-      fields.description = req.body.description;
-      fields.equipments = JSON.parse(req.body.equipments);
-      fields.majoration = {};
-      if (req.body.active === 'true') {
-        fields.majoration.active = true;
-      } else {
-        fields.majoration.active = false;
+      else {
+        console.log('No file uploaded')
+      }
+      fields.description = req.body.description
+      fields.equipments = JSON.parse(req.body.equipments)
+      fields.majoration = {
+        active: Boolean(req.body.active),
+        price: parseInt(req.body.price),
+      }
+      fields.service_address = {
+        address: req.body.address,
+        zip_code: req.body.zip_code,
+        city: req.body.city,
+        country: req.body.country,
+        gps: {
+          lat: req.body.lat,
+          lng: req.body.lng,
+        },
       }
 
-      fields.service_address = {};
-      fields.service_address.address = req.body.address;
-      fields.service_address.zip_code = req.body.zip_code;
-      fields.service_address.city = req.body.city;
-      fields.service_address.country = req.body.country;
+      fields.location = {
+        home: req.body.home === 'true',
+        alfred: req.body.alfred === 'true',
+        visio: req.body.visio === 'true',
+      }
 
-      fields.service_address.gps = {};
-      fields.service_address.gps.lat = req.body.lat;
-      fields.service_address.gps.lng = req.body.lng;
+      fields.travel_tax = req.body.travel_tax === 'null' ? null : req.body.travel_tax
+      fields.pick_tax = req.body.pick_tax === 'null' ? null : req.body.pick_tax
 
-      fields.majoration.price = parseInt(req.body.price);
-      fields.location = {};
-      fields.location.home = req.body.home === 'true';
-      fields.location.alfred = req.body.alfred === 'true';
-      fields.location.visio = req.body.visio === 'true';
-
-      fields.travel_tax = req.body.travel_tax === 'null' ? null : req.body.travel_tax;
-      fields.pick_tax = req.body.pick_tax === 'null' ? null : req.body.pick_tax;
-
-      const newService = new ServiceUser(fields);
-      newService.save().then(service => res.json(service)).catch(err => console.error(err));
+      req.context.getModel('ServiceUser').create(fields)
+        .then(service => {
+          res.json(service)
+        })
+        .catch(err => {
+          console.error(err)
+        })
 
     })
     .catch(error => {
-      console.error(error);
-    });
-});
+      console.error(error)
+    })
+})
 
 // @Route POST /myAlfred/api/serviceUser/addUpdate
 // SAU : Add or update serviceUser in the shop
 // @Access private
 router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  ServiceUser.findOne({ _id : req.params.serviceuser_id})
+  req.context.getModel('ServiceUser').findOne({ _id : req.params.serviceuser_id})
     .then(su => {
       if (!su) {
         su = {}
       }
-      const data = req.body;
-      su = data2ServiceUser(data, su);
-      su.user = req.user.id;
+      const data = req.body
+      su = data2ServiceUser(data, su)
+      su.user = req.user.id
 
       // FIX : créer les prestations custom avant
-      let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
+      let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN)
       let newPrestaModels = newPrestations.map(p => Prestation({
         ...p,
-        s_label : normalize(p.label),
+        s_label: normalize(p.label),
         service: req.body.service,
         billing: [p.billing],
         filter_presentation: null,
         private_alfred: req.user.id,
         particular_access: req.body.particular_access,
         professional_access: req.body.professional_access,
-      }));
+      }))
 
-      const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({insertedIds: []});
+      const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : emptyPromise({insertedIds: []})
       r.catch(error => console.log('Error insert many' + JSON.stringify(error, null, 2)))
         .then(result => {
-          var newIds = result.insertedIds;
+          var newIds = result.insertedIds
           // Update news prestations ids
           newPrestations.forEach((p, idx) => {
-            p._id = newIds[idx];
-            console.log('Presta sauvegardée : ' + JSON.stringify(p));
-          });
+            p._id = newIds[idx]
+            console.log('Presta sauvegardée : ' + JSON.stringify(p))
+          })
           su.prestations=[]
           Object.values(req.body.prestations).forEach(presta => {
-            const newp = {prestation: presta._id, billing: presta.billing, price: presta.price};
-            su.prestations.push(newp);
-          });
+            const newp = {prestation: presta._id, billing: presta.billing, price: presta.price}
+            su.prestations.push(newp)
+          })
 
-          const promise = req.params.serviceuser_id ? ServiceUser.findByIdAndUpdate(su._id, su, {new: true})  : ServiceUser.create(su)
+          const promise = req.params.serviceuser_id ? req.context.getModel('ServiceUser').findByIdAndUpdate(su._id, su, {new: true})  : req.context.getModel('ServiceUser').create(su)
           promise
             .then(su => {
               if (req.params.serviceuser_id) {
                 return res.json(su)
               }
               else {
-                Shop.update({alfred: req.user.id}, { $push: { services: su}})
+                req.context.getModel('Shop').update({alfred: req.user.id}, { $push: { services: su}})
                   .then(shop => {
                     return res.json(su)
                   })
@@ -205,25 +205,25 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
               console.error(err)
               res.status(400).json(error)
             })
-        });
+        })
 
 
     })
     .catch(error => {
-      console.error(error);
-    });
-});
+      console.error(error)
+    })
+})
 
 // @Route PUT /myAlfred/api/serviceUser/editStatus
 // Update status serviceUser
 // @Access private
 router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, res) => {
-  ServiceUser.updateMany({user: req.user.id}, {status: req.body.status})
+  req.context.getModel('ServiceUser').updateMany({user: req.user.id}, {status: req.body.status})
     .then(serviceUser => {
-      res.json(serviceUser);
+      res.json(serviceUser)
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route PUT /myAlfred/api/serviceUser/editWithCity/:id
 // Update a serviceUser
@@ -231,23 +231,23 @@ router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, 
 router.put('/editWithCity/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
 
-      serviceUser.prestations = req.body.prestations;
-      serviceUser.option = req.body.options;
-      serviceUser.service_address.address = req.body.address;
-      serviceUser.service_address.zip_code = req.body.zip_code;
-      serviceUser.service_address.city = req.body.city;
-      serviceUser.service_address.country = req.body.country;
-      serviceUser.service_address.gps.lat = req.body.lat;
-      serviceUser.service_address.gps.lng = req.body.lng;
-      serviceUser.perimeter = req.body.perimeter;
-      serviceUser.minimum_basket = req.body.minimum_basket;
-      serviceUser.deadline_before_booking = req.body.deadline_before_booking;
-      serviceUser.equipments = req.body.equipments;
-      serviceUser.description = req.body.description;
-      serviceUser.level = req.body.level;
+      serviceUser.prestations = req.body.prestations
+      serviceUser.option = req.body.options
+      serviceUser.service_address.address = req.body.address
+      serviceUser.service_address.zip_code = req.body.zip_code
+      serviceUser.service_address.city = req.body.city
+      serviceUser.service_address.country = req.body.country
+      serviceUser.service_address.gps.lat = req.body.lat
+      serviceUser.service_address.gps.lng = req.body.lng
+      serviceUser.perimeter = req.body.perimeter
+      serviceUser.minimum_basket = req.body.minimum_basket
+      serviceUser.deadline_before_booking = req.body.deadline_before_booking
+      serviceUser.equipments = req.body.equipments
+      serviceUser.description = req.body.description
+      serviceUser.level = req.body.level
 
 
       serviceUser.save()
@@ -257,13 +257,13 @@ router.put('/editWithCity/:id', passport.authenticate('jwt', {
         .catch(err => {
           console.error(err)
           res.status(404).json(err)
-        });
+        })
     })
     .catch(err => {
       console.error(err)
       res.status(404).json(err)
-    });
-});
+    })
+})
 
 // @Route PUT /myAlfred/api/serviceUser/addPrestation
 // Add a prestation for a service
@@ -271,58 +271,58 @@ router.put('/editWithCity/:id', passport.authenticate('jwt', {
 router.put('/addPrestation/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
 
 
       const newPrestation = {
         prestation: mongoose.Types.ObjectId(req.body.prestation),
         price: req.body.price,
-      };
-      serviceUser.prestations.unshift(newPrestation);
+      }
+      serviceUser.prestations.unshift(newPrestation)
 
 
-      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
+      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err))
 
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route PUT /myAlfred/api/serviceUser/editPrestation
 // Edit the price of a prestation for a service
 // @Access private
 router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false,}), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
       const index = serviceUser.prestations
         .map(item => item.id)
-        .indexOf(req.body.prestation);
-      serviceUser.prestations[index].price = req.body.price;
-      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
+        .indexOf(req.body.prestation)
+      serviceUser.prestations[index].price = req.body.price
+      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err))
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route POST /myAlfred/api/serviceUser/addDiploma/:id
 // Add a diploma for a service
 // @Access private
 router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
       serviceUser.diploma = {}
-      serviceUser.diploma.name = req.body.name;
-      serviceUser.diploma.year = req.body.year;
-      serviceUser.diploma.skills = JSON.parse(req.body.skills);
-      const diploma = 'file_diploma';
+      serviceUser.diploma.name = req.body.name
+      serviceUser.diploma.year = req.body.year
+      serviceUser.diploma.skills = JSON.parse(req.body.skills)
+      const diploma = 'file_diploma'
       if (req.file) {
-        serviceUser.diploma.file = req.file.path;
+        serviceUser.diploma.file = req.file.path
       }
-      serviceUser.graduated = true;
+      serviceUser.graduated = true
 
-      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
+      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err))
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route POST /myAlfred/api/serviceUser/addCertification/:id
 // Add a certification for a service
@@ -330,73 +330,73 @@ router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authentic
 router.post('/addCertification/:id', upload.single('file_certification'), passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
-      serviceUser.certification.name = req.body.name;
-      serviceUser.certification.year = req.body.year;
-      serviceUser.certification.skills = JSON.parse(req.body.skills);
+      serviceUser.certification.name = req.body.name
+      serviceUser.certification.year = req.body.year
+      serviceUser.certification.skills = JSON.parse(req.body.skills)
       if (req.file) {
-        serviceUser.certification.file = req.file.path;
+        serviceUser.certification.file = req.file.path
       }
-      serviceUser.is_certified = true;
+      serviceUser.is_certified = true
 
-      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
+      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err))
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route GET /myAlfred/api/serviceUser/all
 // View all service per user
 // @Access private
 router.get('/all', (req, res) => {
 
-  ServiceUser.find()
+  req.context.getModel('ServiceUser').find()
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
       if (typeof service !== 'undefined' && service.length > 0) {
-        res.json(service);
+        res.json(service)
       } else {
         return res.status(400).json({
           msg: 'No service found',
-        });
+        })
       }
 
     })
     .catch(err => res.status(404).json({
       service: 'No service found',
-    }));
-});
+    }))
+})
 
 // @Route GET /myAlfred/api/serviceUser/all/category/:category
 // View all service user per category
 // @Access private
 router.get('/all/category/:category', (req, res) => {
-  let allServices = [];
-  ServiceUser.find()
+  let allServices = []
+  req.context.getModel('ServiceUser').find()
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
       if (typeof service !== 'undefined' && service.length > 0) {
         service.forEach(e => {
           if (e.service.category == req.params.category) {
-            allServices.push(e);
+            allServices.push(e)
           }
-        });
+        })
       } else {
-        return res.status(400).json({msg: 'No service found'});
+        return res.status(400).json({msg: 'No service found'})
       }
-      res.json(allServices);
+      res.json(allServices)
 
     })
-    .catch(err => res.status(404).json({service: 'No service found'}));
-});
+    .catch(err => res.status(404).json({service: 'No service found'}))
+})
 
 // @Route GET /myAlfred/api/serviceUser/category/:id
 // Count number of service per category
 router.get('/category/:id', (req, res) => {
 
-  ServiceUser.find()
+  req.context.getModel('ServiceUser').find()
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
@@ -405,132 +405,130 @@ router.get('/category/:id', (req, res) => {
           if (e.service.category == req.params.id) {
             res.json({
               length: service.length,
-            });
+            })
           } else {
             res.json({
               length: 0,
-            });
+            })
           }
-        });
+        })
       } else {
         return res.status(400).json({
           msg: 'No service found',
-        });
+        })
       }
 
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route GET /myAlfred/api/serviceUser/near
 // View all service by city
 // @Access private
 router.get('/near', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      ServiceUser.find()
+      req.context.getModel('ServiceUser').find()
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
-          const gps = user.billing_address.gps;
-          const latUser = gps.lat;
-          const lngUser = gps.lng;
-          const allService = [];
+          const gps = user.billing_address.gps
+          const latUser = gps.lat
+          const lngUser = gps.lng
+          const allService = []
           service.forEach(e => {
-            //console.log("Service:"+e.perimeter,JSON.stringify(service));
-            const gpsAlfred = e.service_address.gps;
-            //console.log("GPS service:"+JSON.stringify(gpsAlfred));
-            const latAlfred = gpsAlfred.lat;
-            const lngAlfred = gpsAlfred.lng;
+            const gpsAlfred = e.service_address.gps
+            const latAlfred = gpsAlfred.lat
+            const lngAlfred = gpsAlfred.lng
             if (latAlfred == null || lngAlfred == null) {
-              //console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred));
+              //console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred))
             } else {
 
-              /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+              /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000))
 
               if(!isNear) {
-                const removeIndex = service.findIndex(i => i._id == e._id);
-                service.splice(removeIndex, 1);
+                const removeIndex = service.findIndex(i => i._id == e._id)
+                service.splice(removeIndex, 1)
               }*/
               var distance = geolib.convertDistance(geolib.getDistance({
                 latitude: latUser,
                 longitude: lngUser,
-              }, {latitude: latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
+              }, {latitude: latAlfred, longitude: lngAlfred}), 'km').toFixed(2)
               if (distance < e.perimeter) {
-                allService.push(e);
+                allService.push(e)
               }
             }
 
-          });
-          res.json(allService);
+          })
+          res.json(allService)
 
         })
         .catch(err => {
-          console.error(err);
-          res.status(404).json({service: 'No service found'});
-        });
-    });
+          console.error(err)
+          res.status(404).json({service: 'No service found'})
+        })
+    })
 
-});
+})
 
 // @Route GET /myAlfred/api/serviceUser/near/:service
 // View all serviceUser by address and service
 // @Access private
 router.get('/near/:service', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      ServiceUser.find({service: req.params.service})
+      req.context.getModel('ServiceUser').find({service: req.params.service})
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
-          const gps = user.billing_address.gps;
-          const latUser = gps.lat;
-          const lngUser = gps.lng;
+          const gps = user.billing_address.gps
+          const latUser = gps.lat
+          const lngUser = gps.lng
 
           service.forEach(e => {
-            const gpsAlfred = e.service_address.gps;
-            const latAlfred = gpsAlfred.lat;
-            const lngAlfred = gpsAlfred.lng;
+            const gpsAlfred = e.service_address.gps
+            const latAlfred = gpsAlfred.lat
+            const lngAlfred = gpsAlfred.lng
 
             const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser}, {
               latitude: latAlfred,
               longitude: lngAlfred,
-            }, (e.perimeter * 1000));
+            }, (e.perimeter * 1000))
 
             if (!isNear) {
-              const removeIndex = service.findIndex(i => i._id === e._id);
-              service.splice(removeIndex, 1);
+              const removeIndex = service.findIndex(i => i._id === e._id)
+              service.splice(removeIndex, 1)
             }
 
 
-          });
+          })
 
-          res.json(service);
+          res.json(service)
 
         })
-        .catch(err => res.status(404).json({service: 'No service found'}));
-    });
+        .catch(err => res.status(404).json({service: 'No service found'}))
+    })
 
-});
+})
 
 // @Route POST /myAlfred/api/serviceUser/search
 // Search serviceUser according to optional coordinates, keyword, cat/service/prestation
 router.post('/search', (req, res) => {
-  const start2 = process.hrtime();
-  const kw = req.body.keyword;
-  const gps = req.body.gps;
-  const category = req.body.category;
-  const service = req.body.service;
-  const prestation = req.body.prestation;
-  const restrictPerimeter = req.body.perimeter;
+  const start2 = process.hrtime()
+  const kw = req.body.keyword
+  const gps = req.body.gps
+  const category = req.body.category
+  const service = req.body.service
+  const prestation = req.body.prestation
+  const restrictPerimeter = req.body.perimeter
   const status = req.body.status; // PRO or PART
 
-  console.log(`Searching ${JSON.stringify(req.body)}`);
+  console.log(`Searching ${JSON.stringify(req.body)}`)
 
   const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
-  ServiceUser.find(filter, 'prestations.prestation service_address location perimeter description')
+  req.context.getModel('ServiceUser').find(filter, 'prestations.prestation service_address location perimeter description')
     .populate({path: 'user', select: 'firstname'})
     .populate({
       path: 'service', select: 'label s_label description',
@@ -540,125 +538,129 @@ router.post('/search', (req, res) => {
       path: 'prestations.prestation', select: 's_label description', match: filter,
       populate: {path: 'job', select: 's_label'},
     })
-    .then(sus => {
+    .then(result => {
+      let sus=result
+      console.log(`Found ${sus.length} before filtering`)
       if (category) {
-        sus = sus.filter(su => su.service.category._id.toString() == category);
+        sus = sus.filter(su => su.service.category._id.toString() == category)
       }
       if (service) {
-        sus = sus.filter(su => su.service._id.toString() == service);
+        sus = sus.filter(su => su.service._id.toString() == service)
       }
       if (prestation) {
-        sus = sus.filter(su => su.prestations.some(p => p.prestation && p.prestation._id.toString() == prestation));
+        sus = sus.filter(su => su.prestations.some(p => p.prestation && p.prestation._id.toString() == prestation))
       }
       if (kw) {
-        sus = serviceFilters.filterServicesKeyword(sus, kw, status);
+        sus = serviceFilters.filterServicesKeyword(sus, kw, status)
       }
+      console.log(`Found ${sus.length} after keyword filtering`)
       if (gps) {
         try {
-          sus = serviceFilters.filterServicesGPS(sus, JSON.parse(req.body.gps), restrictPerimeter);
+          sus = serviceFilters.filterServicesGPS(sus, JSON.parse(req.body.gps), restrictPerimeter)
         }
         catch (err) {
-          sus = serviceFilters.filterServicesGPS(sus, req.body.gps, restrictPerimeter);
+          sus = serviceFilters.filterServicesGPS(sus, req.body.gps, restrictPerimeter)
         }
       }
+      console.log(`Found ${sus.length} after gps filtering`)
       // Manager : filtrer les services autorisés
       if (getRole(req)==MANAGER) {
-        Group.findOne({ members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
-          .then ( group => {
-            sus = serviceFilters.filterServicesIds(sus, group.allowed_services.map(s=>s.service._id))
-            return res.json(sus)
+        req.context.getModel('Group').findOne({members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
+          .then(group => {
+            const manager_sus = serviceFilters.filterServicesIds(sus, group.allowed_services.map(s => s.service._id))
+            return res.json(manager_sus)
           })
-          .catch (err => {
+          .catch(err => {
             console.error(err)
             return res.status(400).json(err)
           })
       }
       else {
-        const elapsed = process.hrtime(start2);
-        console.log(`Fast Search found ${sus.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`);
-        return res.json(sus);
+        const elapsed = process.hrtime(start2)
+        console.log(`Fast Search found ${sus.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`)
+        return res.json(sus)
       }
     })
     .catch(err => {
-      console.error(err);
-      return res.status(404).json(err);
-    });
-});
+      console.error(err)
+      return res.status(404).json(err)
+    })
+})
 
 // @Route GET /myAlfred/api/serviceUser/near/:city
 // View all serviceUser by city
 router.post('/nearCity', (req, res) => {
-  const dat = req.body.city;
-  const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), '[eéèêaàoôuù]');
-  ServiceUser.find({'service_address.city': {$regex: data, $options: 'i'}})
+  const dat = req.body.city
+  const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), '[eéèêaàoôuù]')
+  req.context.getModel('ServiceUser').find({'service_address.city': {$regex: data, $options: 'i'}})
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
-      res.json(service);
+      res.json(service)
     })
-    .catch(err => res.status(404).json({service: 'No service found'}));
+    .catch(err => res.status(404).json({service: 'No service found'}))
 
-});
+})
 
 // @Route GET /myAlfred/api/serviceUser/cardPreview/:id
 // Data fro serviceUser cardPreview
 // @Access private
 router.get('/cardPreview/:id', (req, res) => {
-  const suId = mongoose.Types.ObjectId(req.params.id);
-  ServiceUser.findOne(suId, 'label picture alfred service service_address.city service_address.gps graduated is_certified level description')
+  const suId = mongoose.Types.ObjectId(req.params.id)
+  req.context.getModel('ServiceUser').findOne(suId, 'label picture alfred service service_address.city service_address.gps graduated is_certified level description')
     .populate({path: 'service', select: 'picture label'})
     .populate({path: 'user', select: 'firstname picture avatar_letters'})
     .catch(err => {
-      console.error(err);
-      res.status(404).json({error: err});
+      console.error(err)
+      res.status(404).json({error: err})
     })
     .then(su => {
-      Shop.findOne({alfred: su.user}, 'is_professional')
+      req.context.getModel('Shop').findOne({alfred: su.user}, 'is_professional')
         .then(shop => {
-          Reviews.find({alfred: su.user, note_client: undefined, serviceUser: su._id})
+          req.context.getModel('Review').find({alfred: su.user, note_client: undefined, serviceUser: su._id})
             .then(reviews => {
               const result = {
                 _id: su._id, label: su.service.label, picture: su.service.picture,
                 alfred: su.user, city: su.service_address ? su.service_address.city : '', graduated: su.graduated,
                 is_certified: su.is_certified, level: su.level, is_professional: shop.is_professional,
                 gps: su.service_address ? su.service_address.gps : null, reviews: reviews, description: su.description
-              };
-              res.json(result);
-            });
+              }
+              res.json(result)
+            })
         })
         .catch(err => {
-          console.error(err);
-          res.status(404).json({error: err});
-        });
-    });
-});
+          console.error(err)
+          res.status(404).json({error: err})
+        })
+    })
+})
 // @Route GET /myAlfred/api/serviceUser/nearOther
 // View all service around other address
 // @Access private
 router.get('/nearOther/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      ServiceUser.find()
+      req.context.getModel('ServiceUser').find()
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
-          const addressIndex = user.service_address.findIndex(i => i._id == req.params.id);
-          const gps = user.service_address[addressIndex];
-          const latUser = gps.lat;
-          const lngUser = gps.lng;
-          const allService = [];
+          const addressIndex = user.service_address.findIndex(i => i._id == req.params.id)
+          const gps = user.service_address[addressIndex]
+          const latUser = gps.lat
+          const lngUser = gps.lng
+          const allService = []
 
           service.forEach(e => {
-            const gpsAlfred = e.service_address.gps;
-            const latAlfred = gpsAlfred.lat;
-            const lngAlfred = gpsAlfred.lng;
+            const gpsAlfred = e.service_address.gps
+            const latAlfred = gpsAlfred.lat
+            const lngAlfred = gpsAlfred.lng
 
-            /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+            /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000))
 
             if(!isNear) {
-                const removeIndex = service.findIndex(i => i._id === e._id);
-                service.splice(removeIndex, 1);
+                const removeIndex = service.findIndex(i => i._id === e._id)
+                service.splice(removeIndex, 1)
             }*/
             if (geolib.convertDistance(
               geolib.getDistance(
@@ -667,55 +669,55 @@ router.get('/nearOther/:id', passport.authenticate('jwt', {session: false}), (re
               ),
               'km',
             ).toFixed(2) < e.perimeter) {
-              allService.push(e);
+              allService.push(e)
             }
-          });
-          res.json(allService);
+          })
+          res.json(allService)
         })
-        .catch(err => res.status(404).json({service: 'No service found'}));
-    });
+        .catch(err => res.status(404).json({service: 'No service found'}))
+    })
 
-});
+})
 
 // @Route GET /myAlfred/api/serviceUser/all/:service
 // View all serviceUser by service
 // @Access private
 router.get('/all/nearOther/:id/:service', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  User.findById(req.user.id)
+  req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      ServiceUser.find({service: req.params.service})
+      req.context.getModel('ServiceUser').find({service: req.params.service})
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
-          const addressIndex = user.service_address.findIndex(i => i._id == req.params.id);
-          const gps = user.service_address[addressIndex];
-          const latUser = gps.lat;
-          const lngUser = gps.lng;
+          const addressIndex = user.service_address.findIndex(i => i._id == req.params.id)
+          const gps = user.service_address[addressIndex]
+          const latUser = gps.lat
+          const lngUser = gps.lng
 
           service.forEach(e => {
-            const gpsAlfred = e.service_address.gps;
-            const latAlfred = gpsAlfred.lat;
-            const lngAlfred = gpsAlfred.lng;
+            const gpsAlfred = e.service_address.gps
+            const latAlfred = gpsAlfred.lat
+            const lngAlfred = gpsAlfred.lng
 
             const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser}, {
               latitude: latAlfred,
               longitude: lngAlfred,
-            }, (e.perimeter * 1000));
+            }, (e.perimeter * 1000))
 
             if (!isNear) {
-              const removeIndex = service.findIndex(i => i._id === e._id);
-              service.splice(removeIndex, 1);
+              const removeIndex = service.findIndex(i => i._id === e._id)
+              service.splice(removeIndex, 1)
             }
-          });
-          res.json(service);
+          })
+          res.json(service)
         })
         .catch(err => res.status(404).json({
           service: 'No service found',
-        }));
-    });
+        }))
+    })
 
-});
+})
 
 // @Route GET /myAlfred/api/serviceUser/home(?gps=XXX)
 // View service for home, sorted according to GPS if provided
@@ -730,18 +732,18 @@ router.get('/home/:partpro', (req, res) => {
   }
 
   const shuffleArray = array => {
-    let i = array.length - 1;
+    let i = array.length - 1
     for (; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
+      const j = Math.floor(Math.random() * (i + 1))
+      const temp = array[i]
+      array[i] = array[j]
+      array[j] = temp
     }
-    return array;
-  };
+    return array
+  }
 
   const filter= req.params.partpro==PRO ? { 'professional_access':true} : { 'particular_access':true}
-  ServiceUser.find(filter, 'user service service_address')
+  req.context.getModel('ServiceUser').find(filter, 'user service service_address')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
     .populate('user', 'picture firstname score billing_address')
     .populate('service', 'label picture')
@@ -752,21 +754,21 @@ router.get('/home/:partpro', (req, res) => {
           services = _.uniqBy(services, su => su.user)
         }
         else {
-          services = shuffleArray(services);
+          services = shuffleArray(services)
         }
-        res.json(services.slice(0, 6));
+        res.json(services.slice(0, 6))
       } else {
         return res.status(400).json({
           msg: 'No service found',
-        });
+        })
       }
 
     })
     .catch(err => {
-      console.error(err);
-      res.status(404).json({service: 'No service found'});
-    });
-});
+      console.error(err)
+      res.status(404).json({service: 'No service found'})
+    })
+})
 
 // @Route GET /myAlfred/api/serviceUser/currentAlfred
 // View all service for the current alfred
@@ -775,7 +777,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
 
-  ServiceUser.find({
+  req.context.getModel('ServiceUser').find({
     user: req.user.id,
   })
     .populate('service')
@@ -792,23 +794,23 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
       if (Object.keys(service).length === 0 && service.constructor === Object) {
         return res.status(400).json({
           msg: 'No service found',
-        });
+        })
       } else {
-        res.json(service);
+        res.json(service)
       }
 
     })
     .catch(err => res.status(404).json({
       service: 'No service found',
-    }));
-});
+    }))
+})
 
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser
 // @Access private
 router.get('/:id', (req, res) => {
 
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .populate('user', '-id_card')
     .populate('service')
     .populate({
@@ -826,29 +828,29 @@ router.get('/:id', (req, res) => {
       if (Object.keys(service).length === 0 && service.constructor === Object) {
         return res.status(400).json({
           msg: 'No service found',
-        });
+        })
       } else {
-        res.json(service);
+        res.json(service)
       }
 
     })
     .catch(err => res.status(404).json({
       service: 'No service found' + err,
-    }));
-});
+    }))
+})
 
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser
 // @Access private
 router.get('/allUserServices/:id', (req, res) => {
-  let userId = mongoose.Types.ObjectId(req.params.id);
-  ServiceUser.find({user: userId})
+  let userId = mongoose.Types.ObjectId(req.params.id)
+  req.context.getModel('ServiceUser').find({user: userId})
     .populate('service')
     .then(services => {
-      res.json(services);
+      res.json(services)
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 
 // @Route PUT /myAlfred/serviceUser/deletePrestation/:id
@@ -857,24 +859,24 @@ router.get('/allUserServices/:id', (req, res) => {
 router.put('/deletePrestation/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
       const removeIndex = serviceUser.prestations
         .map(item => item.id)
-        .indexOf(req.body.prestation);
+        .indexOf(req.body.prestation)
 
-      serviceUser.prestations.splice(removeIndex, 1);
+      serviceUser.prestations.splice(removeIndex, 1)
 
 
-      serviceUser.save().then(list => res.json(list));
+      serviceUser.save().then(list => res.json(list))
     })
-    .catch(err => res.status(404).json(err));
-});
+    .catch(err => res.status(404).json(err))
+})
 
 // @Route PUT /myAlfred/api/serviceUser/views/:id
 // Update number of views for a service
 router.put('/views/:id', (req, res) => {
-  ServiceUser.findByIdAndUpdate(req.params.id, {
+  req.context.getModel('ServiceUser').findByIdAndUpdate(req.params.id, {
     $inc: {
       number_of_views: 1,
     },
@@ -885,15 +887,15 @@ router.put('/views/:id', (req, res) => {
       if (!service) {
         return res.status(400).json({
           msg: 'No service found',
-        });
+        })
       }
-      res.json(service);
+      res.json(service)
 
     })
     .catch(err => res.status(404).json({
       user: 'No service found',
-    }));
-});
+    }))
+})
 
 // @Route DELETE /myAlfred/api/serviceUser/delete/diploma/:id
 // Delete diploma for a service
@@ -901,18 +903,18 @@ router.put('/views/:id', (req, res) => {
 router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(services => {
-      services.diploma = undefined;
-      services.graduated = false;
+      services.diploma = undefined
+      services.graduated = false
 
-      services.save().then(service => res.json(service)).catch(err => console.error(err));
+      services.save().then(service => res.json(service)).catch(err => console.error(err))
 
     })
     .catch(err => res.status(404).json({
       servicenotfound: 'No service found',
-    }));
-});
+    }))
+})
 
 // @Route DELETE /myAlfred/api/serviceUser/delete/certification/:id
 // Delete certification for a service
@@ -920,18 +922,18 @@ router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
 router.delete('/delete/certification/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(services => {
-      services.certification = undefined;
-      services.is_certified = false;
+      services.certification = undefined
+      services.is_certified = false
 
-      services.save().then(service => res.json(service)).catch(err => console.error(err));
+      services.save().then(service => res.json(service)).catch(err => console.error(err))
 
     })
     .catch(err => res.status(404).json({
       servicenotfound: 'No service found',
-    }));
-});
+    }))
+})
 
 // @Route DELETE /myAlfred/api/serviceUser/current/allServices
 // Delete all the service for an alfred
@@ -939,19 +941,19 @@ router.delete('/delete/certification/:id', passport.authenticate('jwt', {
 router.delete('/current/allServices', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.deleteMany({
+  req.context.getModel('ServiceUser').deleteMany({
     user: req.user.id,
   })
     .then(() => {
       res.json({
         success: true,
-      });
+      })
 
     })
     .catch(err => res.status(404).json({
       servicenotfound: 'No service found',
-    }));
-});
+    }))
+})
 
 // @Route DELETE /myAlfred/api/serviceUser/:id
 // Delete a service for an alfred
@@ -959,27 +961,27 @@ router.delete('/current/allServices', passport.authenticate('jwt', {
 router.delete('/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  ServiceUser.findById(req.params.id)
+  req.context.getModel('ServiceUser').findById(req.params.id)
     .then(event => {
       event.remove().then(() => {
-        Shop.findOne({
+        req.context.getModel('Shop').findOne({
           alfred: req.user.id,
         })
           .then(shop => {
             const removeIndex = shop.services
-              .indexOf(req.params.id);
+              .indexOf(req.params.id)
 
-            shop.services.splice(removeIndex, 1);
+            shop.services.splice(removeIndex, 1)
 
 
-            shop.save().then(newShop => res.json(newShop)).catch(err => console.error(err));
-          });
-      });
+            shop.save().then(newShop => res.json(newShop)).catch(err => console.error(err))
+          })
+      })
     })
     .catch(err => res.status(404).json({
       eventnotfound: 'No event found',
-    }));
-});
+    }))
+})
 
 
-module.exports = router;
+module.exports = router

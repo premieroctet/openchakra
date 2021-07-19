@@ -1,31 +1,31 @@
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
-import React from 'react';
-import Link from 'next/link';
-import Grid from '@material-ui/core/Grid';
-import {withStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import axios from 'axios';
-import moment from 'moment';
-import UserAvatar from '../../components/Avatar/UserAvatar';
-import io from 'socket.io-client';
-import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview';
-import Button from '@material-ui/core/Button';
-import BookingDetail from '../../components/BookingDetail/BookingDetail';
-import Router from 'next/router';
+import React from 'react'
+import Link from 'next/link'
+import Grid from '@material-ui/core/Grid'
+import {withStyles} from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+import moment from 'moment'
+import UserAvatar from '../../components/Avatar/UserAvatar'
+import io from 'socket.io-client'
+import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview'
+import Button from '@material-ui/core/Button'
+import BookingDetail from '../../components/BookingDetail/BookingDetail'
+import Router from 'next/router'
 
 const {BOOK_STATUS} = require('../../utils/consts')
-import DatePicker, {registerLocale} from 'react-datepicker';
-import fr from 'date-fns/locale/fr';
-import Hidden from "@material-ui/core/Hidden";
-import {PDFDownloadLink} from "@react-pdf/renderer";
-import BillingGeneration from "../BillingGeneration/BillingGeneration";
-import NoSSR from "react-no-ssr";
+import DatePicker, {registerLocale} from 'react-datepicker'
+import fr from 'date-fns/locale/fr'
+import Hidden from "@material-ui/core/Hidden"
+import {PDFDownloadLink} from "@react-pdf/renderer"
+import BillingGeneration from "../BillingGeneration/BillingGeneration"
+import NoSSR from "react-no-ssr"
 
 const {BOOKING} = require('../../utils/i18n')
 const {getUserLabel} = require('../../utils/context')
 
-registerLocale('fr', fr);
-moment.locale('fr');
+registerLocale('fr', fr)
+moment.locale('fr')
 
 const Input2 = ({value, onClick}) => (
   <Button value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"
@@ -33,12 +33,12 @@ const Input2 = ({value, onClick}) => (
     {value}
   </Button>
 
-);
+)
 
 class BookingPreview extends React.Component {
   constructor(props) {
-    super(props);
-    this.child = React.createRef();
+    super(props)
+    this.child = React.createRef()
     this.state = {
       booking_id: null,
       bookingObj: null,
@@ -48,7 +48,7 @@ class BookingPreview extends React.Component {
       loading: false,
       user_label: '',
       alfred_label: '',
-    };
+    }
     this.routingDetailsMessage = this.routingDetailsMessage.bind(this)
     this.getPrestationMinMoment = this.getPrestationMinMoment.bind(this)
   }
@@ -56,7 +56,7 @@ class BookingPreview extends React.Component {
   static getInitialProps({query: {id, user}}) {
     return {
       booking_id: id,
-    };
+    }
   }
 
   getPrestationMinMoment = () => {
@@ -73,7 +73,7 @@ class BookingPreview extends React.Component {
   }
 
   componentDidMount() {
-    const booking_id = this.props.booking_id;
+    const booking_id = this.props.booking_id
 
     axios.get(`/myAlfred/api/shop/alfred/${booking_id}`)
       .then(res => {
@@ -84,13 +84,13 @@ class BookingPreview extends React.Component {
       })
 
 
-    this.setState({booking_id: booking_id});
+    this.setState({booking_id: booking_id})
 
     setAxiosAuthentication()
 
     axios.get('/myAlfred/api/users/current').then(res => {
-      let result = res.data;
-      this.setState({currentUser: result});
+      let result = res.data
+      this.setState({currentUser: result})
 
       axios.get(`/myAlfred/api/booking/${booking_id}`).then(res => {
         const booking = res.data
@@ -101,7 +101,7 @@ class BookingPreview extends React.Component {
             is_alfred: booking.alfred._id === result._id,
             end_datetime: end_datetime,
           },
-        );
+        )
 
         getUserLabel(booking.user)
           .then( res => this.setState({user_label : res}))
@@ -110,42 +110,42 @@ class BookingPreview extends React.Component {
 
         if (res.data.serviceUserId) {
           axios.get(`/myAlfred/api/serviceUser/${this.state.bookingObj.serviceUserId}`).then(res => {
-            let resultat = res.data;
+            let resultat = res.data
             this.setState({category: resultat.service.category})
           }).catch(error => {
-            console.error(error);
-          });
+            console.error(error)
+          })
         }
 
-        this.socket = io();
+        this.socket = io()
         this.socket.on('connect', socket => {
-          this.socket.emit('booking', this.state.bookingObj._id);
-        });
+          this.socket.emit('booking', this.state.bookingObj._id)
+        })
         this.socket.on('displayStatus', data => {
-          this.setState({bookingObj: data});
-        });
+          this.setState({bookingObj: data})
+        })
       })
         .catch(error => {
-          console.error(error);
-        });
+          console.error(error)
+        })
     })
       .catch(error => {
-        console.error(error);
+        console.error(error)
         if (error.response && error.response.status === 401 || error.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
 
   }
 
   changeStatus(status) {
     axios.put(`/myAlfred/api/booking/modifyBooking/${this.state.booking_id}`, {status: status})
       .then(res => {
-        this.setState({bookingObj: res.data});
-        this.socket.emit('changeStatus', this.state.bookingObj);
+        this.setState({bookingObj: res.data})
+        this.socket.emit('changeStatus', this.state.bookingObj)
       })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
   }
 
   onChangeEndDate = ev => {
@@ -163,37 +163,37 @@ class BookingPreview extends React.Component {
   }
 
   computePricedPrestations() {
-    var result = {};
+    var result = {}
     if (this.state.bookingObj) {
       this.state.bookingObj.prestations.forEach(p => {
-        result[p.name] = p.price * p.value;
-      });
+        result[p.name] = p.price * p.value
+      })
     }
-    return result;
+    return result
   }
 
   computeCountPrestations() {
-    var result = {};
+    var result = {}
     if (this.state.bookingObj) {
       this.state.bookingObj.prestations.forEach(p => {
-        result[p.name] = p.value;
-      });
+        result[p.name] = p.value
+      })
     }
-    return result;
+    return result
   }
 
   onConfirm = () => {
     const {end_datetime} = this.state
-    const endDate = moment(end_datetime).format('YYYY-MM-DD');
-    const endHour = moment(end_datetime).format('HH:mm');
-    const modifyObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.CONFIRMED};
+    const endDate = moment(end_datetime).format('YYYY-MM-DD')
+    const endHour = moment(end_datetime).format('HH:mm')
+    const modifyObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.CONFIRMED}
 
     axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, modifyObj)
       .then(res => {
-        this.setState({bookingObj: res.data});
-        setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
+        this.setState({bookingObj: res.data})
+        setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
       })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
   }
 
   routingDetailsMessage() {
@@ -205,38 +205,38 @@ class BookingPreview extends React.Component {
         user: this.state.currentUser._id,
         relative: displayUser._id
       },
-    });
+    })
   }
 
   callDrawer = () => {
-    this.child.current.handleDrawerToggle();
-  };
+    this.child.current.handleDrawerToggle()
+  }
 
   phoneDigit(str, index, chr) {
-    if (index > str.length - 1) return str;
-    return str.substring(0, index) + chr + str.substring(index + 1);
+    if (index > str.length - 1) return str
+    return str.substring(0, index) + chr + str.substring(index + 1)
   }
 
   render() {
-    const {classes} = this.props;
-    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime, loading, is_pro, user_label, alfred_label} = this.state;
+    const {classes} = this.props
+    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime, loading, is_pro, user_label, alfred_label} = this.state
 
     if (!bookingObj || !currentUser) {
       return null
     }
-    const pricedPrestations = this.computePricedPrestations();
-    const countPrestations = this.computeCountPrestations();
+    const pricedPrestations = this.computePricedPrestations()
+    const countPrestations = this.computeCountPrestations()
 
-    const amount = is_alfred ? parseFloat(bookingObj.alfred_amount) : parseFloat(bookingObj.amount);
-    const alfred_fee = 0;
-    const client_fee = is_alfred ? 0 : bookingObj.fees;
+    const amount = is_alfred ? parseFloat(bookingObj.alfred_amount) : parseFloat(bookingObj.amount)
+    const alfred_fee = 0
+    const client_fee = is_alfred ? 0 : bookingObj.fees
 
     // Am i the service provider ?
-    const amIAlfred = currentUser._id === bookingObj.alfred._id;
-    const displayUser = amIAlfred ? bookingObj.user : bookingObj.alfred;
-    const displayUserLabel = amIAlfred ? user_label : alfred_label;
+    const amIAlfred = currentUser._id === bookingObj.alfred._id
+    const displayUser = amIAlfred ? bookingObj.user : bookingObj.alfred
+    const displayUserLabel = amIAlfred ? user_label : alfred_label
 
-    const status = bookingObj.status;
+    const status = bookingObj.status
     const paymentTitle =
       amIAlfred ?
         status === BOOK_STATUS.REFUSED ? 'Paiement non réalisé'
@@ -257,10 +257,11 @@ class BookingPreview extends React.Component {
       `du ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}
        au ${moment(bookingObj.end_date).format('DD/MM/YYYY')} à ${bookingObj.end_time}`
       :
-      `le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`;
+      `le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`
 
-    const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone;
+    const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone
 
+    const customer_booking_title = bookingObj.customer_booking && `Réservation Avocotés pour le compte de ${bookingObj.customer_booking.user.full_name}`
 
     return (
       <Grid>
@@ -296,6 +297,11 @@ class BookingPreview extends React.Component {
                           }
                         </h2>
                       </Grid>
+                      { customer_booking_title &&
+                        <Typography>
+                          {customer_booking_title}
+                        </Typography>
+                      }
                     </Grid>
                   </Grid>
                   {bookingObj.billing_number !== null && bookingObj.receipt_number !== null ?
@@ -658,7 +664,7 @@ class BookingPreview extends React.Component {
                               src={`/static/equipments/${equipment.logo}`}
                             />
                           </Grid>
-                        );
+                        )
                       })
                     ) : (
                       <Grid style={{marginTop: '2%'}}>
@@ -754,8 +760,8 @@ class BookingPreview extends React.Component {
           </Grid>
         )}
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(BookingPreview);
+export default withStyles(styles)(BookingPreview)

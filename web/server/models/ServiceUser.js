@@ -1,26 +1,26 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const {hideIllegal} = require('../../utils/text')
 
 const ServiceUserSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
     required: true,
   },
   service: {
     type: Schema.Types.ObjectId,
-    ref: 'service',
+    ref: 'Service',
   },
   prestations: [{
     prestation: {
       type: Schema.Types.ObjectId,
-      ref: 'prestation',
+      ref: 'Prestation',
     },
     billing: {
       type: Schema.Types.ObjectId,
-      ref: 'billing',
+      ref: 'Billing',
       required: true,
     },
     price: {
@@ -30,7 +30,7 @@ const ServiceUserSchema = new Schema({
   }],
   equipments: [{
     type: Schema.Types.ObjectId,
-    ref: 'equipment',
+    ref: 'Equipment',
   }],
   service_address: {
     type: {
@@ -78,7 +78,7 @@ const ServiceUserSchema = new Schema({
     },
     skills: [{
       type: String,
-    }]
+    }],
   },
   is_certified: {
     type: Boolean,
@@ -96,7 +96,7 @@ const ServiceUserSchema = new Schema({
     },
     skills: [{
       type: String,
-    }]
+    }],
   },
   option: {
     label: {
@@ -114,21 +114,20 @@ const ServiceUserSchema = new Schema({
   },
   description: {
     type: String,
-    set : text => hideIllegal(text)
+    set: text => hideIllegal(text),
   },
   level: {
     type: Number,
   },
   experience_title: {
-    type: String
+    type: String,
   },
   experience_description: {
-    type: String
+    type: String,
   },
   experience_skills: [{
-      type: String
-    }
-  ],
+    type: String,
+  }],
   number_of_views: {
     type: Number,
     default: 0,
@@ -145,14 +144,14 @@ const ServiceUserSchema = new Schema({
   // Frais livraison
   pick_tax: {
     type: Number,
-    default:0,
-    required:true
+    default: 0,
+    required: true,
   },
   // Frais déplacement
   travel_tax: {
     type: Number,
-    default:0,
-    required:true
+    default: 0,
+    required: true,
   },
   // Particulars can book
   particular_access: {
@@ -166,6 +165,6 @@ const ServiceUserSchema = new Schema({
     required: true,
     sparse: true,
   },
-});
+})
 
-module.exports = ServiceUser = mongoose.model('serviceUser', ServiceUserSchema);
+module.exports = ServiceUserSchema

@@ -1,9 +1,11 @@
 import {isAndroid, isIOS, getUA} from 'react-device-detect'
+import { setAxiosAuthentication } from './authentication'
 const isWebview = require('is-webview')
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
 const {isB2BDisabled} = require('../config/config')
 const jwt = require('jsonwebtoken')
+const {getPartnerFromHostname}=require('./partner')
 
 const getLoggedUser = () => {
   if (typeof localStorage=='undefined') {
@@ -150,7 +152,7 @@ const isEditableUser = user => {
 }
 
 const getUserLabel = user => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     if (!user) {
       resolve('')
     }
@@ -164,10 +166,15 @@ const getUserLabel = user => {
           console.error(err)
           resolve(user.firstname)
         })
-    } else {
+    }
+    else {
       resolve(user.firstname)
     }
   })
+}
+
+const getPartner = () => {
+  return getPartnerFromHostname(window.location.hostname)
 }
 
 module.exports = {
@@ -175,5 +182,5 @@ module.exports = {
   getRole, setStatusRegister, removeStatusRegister, hasStatusRegister,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
-  getUserLabel, isLoggedUserRegistered, isIOS, isAndroid,
+  getUserLabel, isLoggedUserRegistered, isIOS, isAndroid, getPartner,
 }

@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const FilterPresentation = require('../../models/FilterPresentation');
-
 router.get('/test', (req, res) => res.json({msg: 'FilterPresentation Works!'}));
 
 
@@ -10,7 +8,7 @@ router.get('/test', (req, res) => res.json({msg: 'FilterPresentation Works!'}));
 // View all filterPresentation
 router.get('/all', (req, res) => {
 
-  FilterPresentation.find()
+  req.context.getModel('FilterPresentation').find()
     .then(filterPresentation => {
       if (typeof filterPresentation !== 'undefined' && filterPresentation.length > 0) {
         res.json(filterPresentation);
@@ -26,17 +24,17 @@ router.get('/all', (req, res) => {
 // View one filterPresentation
 router.get('/:id', (req, res) => {
 
-  FilterPresentation.findById(req.params.id)
+  req.context.getModel('FilterPresentation').findById(req.params.id)
     .then(filterPresentation => {
-      if (Object.keys(filterPresentation).length === 0 && filterPresentation.constructor === Object) {
-        return res.status(400).json({msg: 'No filterPresentation found'});
-      } else {
-        res.json(filterPresentation);
+      if (!filterPresentation) {
+        return res.status(400).json({msg: 'No filterPresentation found'})
       }
-
+      res.json(filterPresentation)
     })
-    .catch(err => res.status(404).json({billing: 'No filterPresentation found'}));
-});
+    .catch(err => {
+      res.status(404).json({billing: `No filterPresentation found:${err}`})
+    })
+})
 
 
 module.exports = router;

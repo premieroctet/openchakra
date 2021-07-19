@@ -101,7 +101,7 @@ class ConfirmPayment extends React.Component {
   }
 
   handleStep = () => {
-      this.setState({activeStep: this.state.activeStep + 1});
+    this.setState({activeStep: this.state.activeStep + 1})
   };
 
   payDirect = () => {

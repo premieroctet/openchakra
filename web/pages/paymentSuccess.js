@@ -1,73 +1,84 @@
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
-import React from 'react';
-import axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import Typography from "@material-ui/core/Typography";
-import Router from 'next/router';
-import {withStyles} from '@material-ui/core/styles';
-import io from 'socket.io-client';
+import React from 'react'
+import axios from 'axios'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import Router from 'next/router'
+import {withStyles} from '@material-ui/core/styles'
+import io from 'socket.io-client'
 
-import LayoutPayment from "../hoc/Layout/LayoutPayment";
+import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
 const {BOOK_STATUS}=require('../utils/consts')
 
+const {is_production}=require('../config/config')
+const {snackBarError}=require('../utils/notifications')
+
 class paymentSuccess extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: {},
       booking: null,
       success: false,
-    };
+    }
   }
 
   static getInitialProps({query: {booking_id, transactionId}}) {
-    return {booking_id: booking_id, transaction_id: transactionId};
+    return {booking_id: booking_id, transaction_id: transactionId}
   }
 
   componentDidMount() {
 
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        let user = res.data;
-        this.setState({user: user});
+        let user = res.data
+        this.setState({user: user})
       })
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
     axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
-      .then (res => {
+      .then(res => {
         const booking = res.data
+        this.setState({booking: booking})
         axios.get(`/myAlfred/api/payment/payin/${booking.mangopay_payin_id}`)
           .then(result => {
-            let transaction = result.data;
-            if (transaction.Status === 'FAILED') {
-              Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`);
-            } else {
+            let transaction = result.data
+            console.log(`Transaction:${JSON.stringify(transaction)}`)
+            if (is_production() &&transaction.Status === 'FAILED') {
+              Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`)
+            }
+            else {
               this.setState({success: true})
+              if (transaction.Status == 'FAILED') {
+                snackBarError('Attention, payIn échoué mais on continue en dev/validation')
+              }
               const booking_id = this.props.booking_id
-              this.socket = io();
-              this.socket.on('connect', socket => {
-                this.socket.emit('booking', booking_id);
-                const newStatus = booking.status==BOOK_STATUS.PREAPPROVED ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
+              this.socket = io()
+              this.socket.on('connect', () => {
+                this.socket.emit('booking', booking_id)
+                const newStatus = booking.user.company_customer ? BOOK_STATUS.CUSTOMER_PAID : booking.status==BOOK_STATUS.PREAPPROVED ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
                 axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {status: newStatus})
                   .then(res => {
-                    setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
-                    localStorage.removeItem('booking_id');
-                    setTimeout(() => Router.push('/reservations/reservations'), 4000)
+                    setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
+                    localStorage.removeItem('booking_id')
+                    if (!booking.user.company_customer) {
+                      setTimeout(() => Router.push('/reservations/reservations'), 4000)
+                    }
                   })
-                  .catch();
-              });
+                  .catch()
+              })
             }
-          });
+          })
       })
-      .catch (err => {
+      .catch(err => {
         console.error(err)
       })
 
@@ -75,8 +86,8 @@ class paymentSuccess extends React.Component {
 
 
   render() {
-    const {classes} = this.props;
-    const {success} = this.state
+    const {classes} = this.props
+    const {success, booking} = this.state
 
     if (!success) {
       return null
@@ -96,12 +107,21 @@ class paymentSuccess extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid>
-                  <Grid>
-                    <Typography>Vous allez être redirigé vers votre page Mes Réservations.</Typography>
-                  </Grid>
-                  <Grid>
-                    <Typography>Si la redirection ne fonctionne pas <a href={'/reservations/reservations'}>cliquez ici</a></Typography>
-                  </Grid>
+                  { booking.user.company_customer ?
+                    <Grid>
+                      <Typography>Nous allons maintenant chercher pour vous l'Alfred qui répondra à votre service.
+                      Vous serez informé sous peu de la date de prestation.</Typography>
+                    </Grid>
+                    :
+                    <>
+                      <Grid>
+                        <Typography>Vous allez être redirigé vers votre page Mes Réservations.</Typography>
+                      </Grid>
+                      <Grid>
+                        <Typography>Si la redirection ne fonctionne pas <a href={'/reservations/reservations'}>cliquez ici</a></Typography>
+                      </Grid>
+                    </>
+                  }
                 </Grid>
               </Grid>
 
@@ -109,9 +129,9 @@ class paymentSuccess extends React.Component {
           </Grid>
         </LayoutPayment>
       </React.Fragment>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(paymentSuccess);
+export default withStyles(styles)(paymentSuccess)
