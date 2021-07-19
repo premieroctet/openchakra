@@ -7,10 +7,91 @@ const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType')
 const mangoApi = new mangopay(MANGOPAY_CONFIG)
-const process=require('process')
 const request = require('request')
 const {MANGOPAY_ERRORS}=require('../../utils/mangopay_messages')
 const {ADMIN, MANAGER}=require('../../utils/consts')
+
+const getWallet = mangopay_id => {
+  return new Promise((resolve, reject) => {
+    mangoApi.Users.getWallets(id_mangopay_user)
+      .then(wallets => {
+        if (wallets.length==0) {
+          return reject(`No active bank account for mangopay #${mangopay_id}`)
+        }
+        resolve(wallets[0])
+      })
+      .catch(err => {
+        reject(err)
+      })
+  })
+}
+
+const createTransfer = (source_user_id, destination_user_id, debt_amount, fees=0) => {
+  return new Promise((resolve, reject) => {
+    Promise.all([source_user_id, destination_user_id].map(u => getWallet(u)))
+      .then(res => {
+        const [source_wallet_id, dest_wallet_id]=res
+        const transfer= mangoApi.Transfers.create({
+          AuthorId: source_user_id,
+          DebitedFunds: {Currency: 'EUR', Amount: amount},
+          Fees: {Currency: 'EUR', Amount: fees},
+          DebitedWalletId: source_wallet_id,
+          CreditedWalletId: dest_wallet_id,
+        })
+        if (trsf.Status == 'FAILED') {
+          return reject(`Transfer #${trsf.Id} failed`)
+        }
+        return resolve(transfer)
+      })
+      .catch(err => {
+        return reject(err)
+      })
+  })
+}
+
+const getBankAccount = mangopay_id => {
+  return new Promise((resolve, reject) => {
+    mangoApi.Users.getBankAccounts(mangopay_id)
+      .then(accounts => {
+        active_accounts = accounts.filter(a => a.Active)
+        if (active_accounts.length == 0) {
+          return reject(`No active bank account for mangopay #${mangopay_id}`)
+        }
+        return resolve(active_accounts[0])
+      })
+      .catch(err => {
+        reject(err)
+      })
+  })
+}
+
+const createPayout = (mangopay_id, amount) => {
+  return new Promise((resolve, reject) => {
+    getWallet(mangopay_id)
+      .then(wallet_id => {
+        getBankAccount(mangopay_id)
+          .then(bank_account_id => {
+            const payOut= mangoApi.PayOuts.create({
+              AuthorId: mangopay_id,
+              DebitedFunds: {Currency: 'EUR', Amount: amount},
+              Fees: {Currency: 'EUR', Amount: 0},
+              BankAccountId: bank_account_id,
+              DebitedWalletId: wallet_id,
+              BankWireRef: 'My Alfred',
+              PaymentType: 'BANK_WIRE',
+            })
+            resolve(payOut)
+          })
+          .catch(err => {
+            return reject(err)
+          })
+      })
+      .catch(err => {
+        return reject(err)
+      })
+  })
+
+}
 
 const createMangoClient = user => {
   return new Promise((resolve, reject) => {
@@ -110,21 +191,21 @@ const createMangoProvider = (user, shop) => {
 const createOrUpdateMangoCompany = company => {
 
   if (!company.representative.birthday) {
-    throw "La date de naissance de l'administrateur est requise"
+    throw new Error("La date de naissance de l'administrateur est requise")
   }
 
   console.log(`Creating/updating mango company for company ${company.name}, representative is ${company.representative.full_name}`)
 
-  var address=new mangoApi.models.Address({
-      AddressLine1: company.billing_address.address,
-      AddressLine2: '',
-      City: company.billing_address.city,
-      Region: '',
-      PostalCode: company.billing_address.zip_code,
-      Country: 'FR',
+  let address=new mangoApi.models.Address({
+    AddressLine1: company.billing_address.address,
+    AddressLine2: '',
+    City: company.billing_address.city,
+    Region: '',
+    PostalCode: company.billing_address.zip_code,
+    Country: 'FR',
   })
 
-  var companyData = {
+  let companyData = {
     PersonType: PersonType.Legal,
     Name: company.name,
     Email: company.representative.email,
@@ -138,23 +219,23 @@ const createOrUpdateMangoCompany = company => {
     LegalRepresentativeNationality: 'FR',
     LegalRepresentativeCountryOfResidence: 'FR',
     CompanyNumber: company.siret,
-    Tag: `Company ${company.name}/Repr. ${company.representative.full_name}`
+    Tag: `Company ${company.name}/Repr. ${company.representative.full_name}`,
   }
 
   const is_update = company.id_mangopay
 
   const method = is_update ?
-      mangoApi.Users.update({Id : company.id_mangopay, ...companyData})
-      :
-      mangoApi.Users.create(companyData)
+    mangoApi.Users.update({Id: company.id_mangopay, ...companyData})
+    :
+    mangoApi.Users.create(companyData)
 
   method
     .then(mangopay_company => {
       console.log(`Created Mango company ${JSON.stringify(mangopay_company)}`)
       company.id_mangopay = mangopay_company.Id
       company.save()
-        .then( res => console.log(`Created/update company ${JSON.stringify(company)}`))
-        .catch( err => console.error(err))
+        .then(() => console.log(`Created/update company ${JSON.stringify(company)}`))
+        .catch(err => console.error(err))
       if (!is_update) {
         mangoApi.Wallets.create({
           Owners: [mangopay_company.Id],
@@ -186,27 +267,27 @@ const addIdIfRequired = user => {
       user.identity_proof_id = documentId
       user.id_card_status = KycDocumentStatus.Created
       user.save()
-        .then(u => console.log(`User saved id proof ${user.identity_proof_id}`))
+        .then(u => console.log(`User saved id proof ${u.identity_proof_id}`))
         .catch(err => console.error(err))
 
       const id_recto = path.resolve(user.id_card.recto)
       mangoApi.Users.createKycPageFromFile(id, documentId, id_recto)
-        .then(resultRecto => {
+        .then(() => {
           console.log(`Created KyCPage recto ${id_recto}`)
           const id_verso = user.id_card.verso ? path.resolve(user.id_card.verso) : null
 
           const prom = id_verso == null ? emptyPromise() : mangoApi.Users.createKycPageFromFile(id, documentId, id_verso)
           prom.then(resultVerso => {
-            console.log(resultVerso ? `Created KyCPage verso ${id_verso}` : `No verso required`)
+            console.log(resultVerso ? `Created KyCPage verso ${id_verso}` : 'No verso required')
             // TODO : PersonType.Legal : ask for validation only on first resrvation
             console.log('Asking for KYC validation')
             const updateObj = {Id: documentId, Status: KycDocumentStatus.ValidationAsked}
             mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
               .then(() => console.log('Validation asked OK'))
-              .catch(err => console.error('Validation asked error:${err}'))
+              .catch(err => console.error(`Validation asked error:${err}`))
             user.id_card_status = KycDocumentStatus.ValidationAsked
             user.save()
-              .then(u => console.log(`User ${user._id} set ${user.identity_proof_id} to ${KycDocumentStatus.ValidationAsked}`))
+              .then(u => console.log(`User ${u._id} set ${u.identity_proof_id} to ${KycDocumentStatus.ValidationAsked}`))
               .catch(err => console.error(err))
           })
             .catch(err => {
@@ -236,135 +317,100 @@ const addRegistrationProof = user => {
       user.registration_proof_id = documentId
       user.registration_proof_status = KycDocumentStatus.Created
       user.save()
-        .then(u => console.log(`User saved registration proof ${user.identity_proof_id}`))
+        .then(u => console.log(`User saved registration proof ${u.identity_proof_id}`))
         .catch(err => console.error(err))
 
       const id_reg = path.resolve(user.registration_proof)
       mangoApi.Users.createKycPageFromFile(id, documentId, id_reg)
-        .then(result => {
+        .then(() => {
           console.log(`Created KyCPage recto ${id_reg}`)
 
           console.log('Asking for KYC validation')
           const updateObj = {Id: documentId, Status: KycDocumentStatus.ValidationAsked}
           mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
             .then(() => console.log('Validation asked OK'))
-            .catch(err => console.error('Validation asked error:${err}'))
+            .catch(err => console.error(`Validation asked error:${err}`))
           user.registration_proof_status = KycDocumentStatus.ValidationAsked
           user.save()
-            .then(u => console.log(`User ${user._id} set ${user.registration_proof_id} to ${KycDocumentStatus.ValidationAsked}`))
+            .then(u => console.log(`User ${u._id} set ${u.registration_proof_id} to ${KycDocumentStatus.ValidationAsked}`))
             .catch(err => console.error(err))
         })
     })
     .catch(err => console.error(err))
 }
 
+/**
+* payAlfred : transfers from customer to alfred and pays out Alfred
+* - standard : transfer booking.amount-booking.fees from customer to Alfred. Fees were taken during pay in
+* - avocotes : transfer booking.amount-booking.fees from customer to Alfred, including fees to My Alfred
+*/
 const payAlfred = booking => {
   console.log(`Starting paying of booking ${booking._id}`)
-  const amount = (booking.amount - booking.fees) * 100
   const id_mangopay_alfred = booking.alfred.mangopay_provider_id
   const role = booking.user_role
 
-  const promise= [ADMIN, MANAGER].includes(role) ? Company.findById(booking.user.company) : emptyPromise(booking.user)
+  let promise = null
+  let amount = (booking.amount - booking.fees) * 100
+  let fees = 0
+  if ([ADMIN, MANAGER].includes(role)) {
+    promise = Company.findById(booking.user.company)
+  }
+  // Avocotés : debit from customer account, fees are admin booking fees
+  else if (booking.customer_booking) {
+    promise = emptyPromise(booking.customer_booking.user)
+    amount = booking.amount
+    fees = booking.fees
+  }
+  else {
+    promise = emptyPromise(booking.user)
+  }
 
-  // TODO payAlffred pour client Avocotés : alfred_amount pour Alfred, fees pour My Alfred
+  // TODO payAlfred pour client Avocotés : alfred_amount pour Alfred, fees pour My Alfred
   promise
     .then(entity => {
       const id_mangopay_user=entity.id_mangopay
-      console.log(`payAlfred : Got entity ${entity._id}, mangopay_id:${id_mangopay_user}`)
-      mangoApi.Users.getWallets(id_mangopay_user)
-        .then(wallets => {
-          const wallet_id = wallets[0].Id
-          mangoApi.Users.getWallets(id_mangopay_alfred)
+
+      const transferPromise = booking.mangopay_transfer_id ?
+        emptyPromise({Id: booking.mangopay_transfer_id})
+        :
+        createTransfer(id_mangopay_user, id_mangopay_alfred, amount, fees)
+      transferPromise
+        .then(transfer => {
+          if (transfer) {
+            booking.mangopay_transfer_id = transfer.Id
+            booking.save().then().catch(err => console.error(err))
+          }
+          createPayout(id_mangopay_alfred, amount)
+            .then(payout => {
+              booking.mangopay_payout_id = payout.Id
+              booking.paid = true
+              booking.date_payment = moment()
+              booking.save().then().catch()
+            })
             .catch(err => {
-              console.error(`GetWallets Alfred ${id_mangopay_alfred}:${JSON.stringify(err)}`)
-              return
-            })
-            .then(wallet_alfred => {
-              const id_wallet_alfred = wallet_alfred[0].Id
-
-              const transferPromise = booking.mangopay_transfer_id ?
-                emptyPromise()
-                :
-                mangoApi.Transfers.create({
-                  AuthorId: id_mangopay_user,
-                  DebitedFunds: {Currency: 'EUR', Amount: amount},
-                  Fees: {Currency: 'EUR', Amount: 0},
-                  DebitedWalletId: wallet_id,
-                  CreditedWalletId: id_wallet_alfred,
-                })
-
-              transferPromise.then(trsf => {
-                if (trsf) { // Transfer did not already exist
-                  if (trsf.Status == 'FAILED') {
-                    console.error(`Transfer failed:${trsf.ResultMessage}`)
-                    return
-                  }
-                  booking.mangopay_transfer_id = trsf.Id
-                  booking.save()
-                    .then(b => console.log(`Set transfer to ${trsf.Id} to booking ${b._id}]`))
-                    .catch(err => {
-                      console.log(`Error creating transfer for booking ${b._id}:${err}`)
-                      return
-                    })
-                }
-                mangoApi.Users.getBankAccounts(id_mangopay_alfred)
-                  .catch(err => {
-                    console.error(err)
-                    return
-                  })
-                  .then(accounts => {
-                    accounts = accounts.filter(a => a.Active)
-                    if (accounts.length == 0) {
-                      console.log(`No active bank account for Alfred ${id_mangopay_alfred}`)
-                      return
-                    }
-                    mangoApi.PayOuts.create({
-                      AuthorId: id_mangopay_alfred,
-                      DebitedFunds: {Currency: 'EUR', Amount: amount},
-                      Fees: {Currency: 'EUR', Amount: 0},
-                      BankAccountId: accounts[0].Id,
-                      DebitedWalletId: id_wallet_alfred,
-                      BankWireRef: 'My Alfred',
-                      PaymentType: 'BANK_WIRE',
-                    })
-                      .then(po => {
-                        console.log(`Create payout OK:${JSON.stringify(po)}`)
-                        booking.mangopay_payout_id = po.Id
-                        booking.paid = true
-                        booking.date_payment = moment()
-                        booking.save().then().catch()
-                      })
-                      .catch(err => {
-                        console.error(`Create Payout error:${JSON.stringify(err)}`)
-                      })
-                  })
-              })
-                .catch(err => {
-                  console.error(`Create transfer error:${err}`)
-                })
+              console.error(err)
             })
         })
-        .catch(err => {
-          return console.error(`payAlfred:${err}`)
-        })
+    })
+    .catch(err => {
+      console.error(err)
     })
 }
 
 // TODO : update hook s'il existe pour éviter les warning au démarrage
 const install_hooks= (hook_types, url) => {
-  return
-  if (is_development() && !['darwin', 'linux'].includes(process.platform)) {
+  if (is_development()) {
     return console.log(`Dev mode: skipped install_hooks(${hook_types})`)
   }
 
-  var host=get_host_url()
+  let host=get_host_url()
   if (is_development()) {
     host=host.replace('https', 'http')
   }
   const hook_url = new URL(url, host)
 
   mangoApi.Hooks.getAll()
-    .then (declared_hooks => {
+    .then(declared_hooks => {
 
       const hook_data={
         Tag: 'MyAlfred hook',
@@ -375,32 +421,28 @@ const install_hooks= (hook_types, url) => {
 
       hook_types.forEach(hook_type => {
         const hook = declared_hooks.find(h => h.EventType == hook_type)
-        var request
-        if (hook) {
-          request = mangoApi.Hooks.update({ Id: hook.Id, EventType: hook_type, ...hook_data})
-        }
-        else {
-          request = mangoApi.Hooks.create({EventType: hook_type, ...hook_data})
-        }
+        const request = hook ?
+          mangoApi.Hooks.update({Id: hook.Id, EventType: hook_type, ...hook_data})
+          :
+          mangoApi.Hooks.create({EventType: hook_type, ...hook_data})
         request
-          .then( res => {
+          .then(() => {
             console.log(`${hook ? 'Updated' : 'Created'} ${hook_type} to ${hook_url}`)
           })
-          .catch ( err => {
+          .catch(err => {
             console.error(`Error for ${hook_type}:${err}`)
-            //console.error(err)
           })
       })
     })
-    .catch (err => {
+    .catch(err => {
       console.error(err)
     })
 }
 
 const createCard = (id_mangopay, card_number, expiration_date, csv) => {
   return new Promise((resolve, reject) => {
-    mangoApi.CardRegistrations.create({UserId: id_mangopay,Currency: 'EUR', })
-      .then(function (cardRegistrationData) {
+    mangoApi.CardRegistrations.create({UserId: id_mangopay, Currency: 'EUR'})
+      .then(cardRegistrationData => {
         const options = {
           url: cardRegistrationData.CardRegistrationURL,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -412,7 +454,7 @@ const createCard = (id_mangopay, card_number, expiration_date, csv) => {
             cardCvx: csv,
           },
         }
-        request.post(options, function (err, data, result) {
+        request.post(options, (err, data, result) => {
           if (result.includes("errorCode")) {
             const code=parseInt(result.split('=')[1])
             console.log(`Card creation error:${code}`)
@@ -427,7 +469,7 @@ const createCard = (id_mangopay, card_number, expiration_date, csv) => {
             })
         }, options)
       })
-      .catch (err => {
+      .catch(err => {
         console.error(err)
         reject(err)
       })
