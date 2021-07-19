@@ -1,4 +1,4 @@
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import Layout from '../hoc/Layout/Layout'
@@ -715,6 +715,8 @@ class UserServicesPreview extends React.Component {
 
     const pricedPrestations = this.computePricedPrestations()
 
+    const avocotes_booking=this.getAvocotesBooking()
+
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
         <Grid>
@@ -733,10 +735,16 @@ class UserServicesPreview extends React.Component {
                         <Typography variant="h6">{this.state.alfred.firstname} - {this.state.service.label}</Typography>
                       </Grid>
                       {
-                        serviceAddress ?
+                        serviceAddress &&
                           <Grid>
-                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{serviceAddress.city}, {serviceAddress.country} - {this.state.serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
-                          </Grid> : null
+                            <Typography style={{color: 'rgba(39,37,37,35%)'}}>{serviceAddress.city}, {serviceAddress.country} - {this.state.serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
+                          </Grid>
+                      }
+                      {
+                        avocotes_booking &&
+                          <Grid>
+                            <Typography style={{color: 'rgba(39,37,37,35%)'}}>{`Réservation Avocotés pour ${avocotes_booking.user.full_name}`}</Typography>
+                          </Grid>
                       }
                     </Grid>
                     <Grid>

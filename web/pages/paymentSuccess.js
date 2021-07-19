@@ -12,6 +12,9 @@ import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
 const {BOOK_STATUS}=require('../utils/consts')
 
+const {is_production}=require('../config/config')
+const {snackBarError}=require('../utils/notifications')
+
 class paymentSuccess extends React.Component {
   constructor(props) {
     super(props)
@@ -48,11 +51,15 @@ class paymentSuccess extends React.Component {
         axios.get(`/myAlfred/api/payment/payin/${booking.mangopay_payin_id}`)
           .then(result => {
             let transaction = result.data
-            if (transaction.Status === 'FAILED') {
+            console.log(`Transaction:${JSON.stringify(transaction)}`)
+            if (is_production() &&transaction.Status === 'FAILED') {
               Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`)
             }
             else {
               this.setState({success: true})
+              if (transaction.Status == 'FAILED') {
+                snackBarError('Attention, payIn échoué mais on continue en dev/validation')
+              }
               const booking_id = this.props.booking_id
               this.socket = io()
               this.socket.on('connect', () => {

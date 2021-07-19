@@ -33,7 +33,7 @@ class DrawerBooking extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      expanded: false
+      expanded: false,
     }
   }
 
@@ -41,52 +41,52 @@ class DrawerBooking extends React.Component {
     this.setState({expanded: isExpanded ? panel : false})
   }
 
-  selectedPresta = (prestations, classes) => (
-     _.sortBy(prestations, p => p && p.prestation ? p.prestation.order : 0).map((p, index) => (
-        <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-            <Grid container style={{display: 'flex', flexDirection: 'column'}}>
-              <Grid>
-                <Typography>{p.prestation.label}</Typography>
-              </Grid>
-              <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                <Grid>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : '?'}€</Typography>
-                </Grid>
-                <Grid style={{marginLeft : '5%', marginRight: '5%'}}>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>/</Typography>
-                </Grid>
-                <Grid style={{whiteSpace: 'nowrap'}}>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
-                </Grid>
-              </Grid>
-              {p.prestation.cesu_eligible && this.props.use_cesu ?
-                <Grid>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}><em>Eligible au <a style={{color:'rgba(39,37,37,35%)'}} href={'#'}>CESU</a></em></Typography>
-                </Grid>
-                : null
-              }
+  selectedPresta = prestations => (
+    _.sortBy(prestations, p => (p && p.prestation ? p.prestation.order: 0)).map((p, index) => (
+      <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
+        <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+          <Grid container style={{display: 'flex', flexDirection: 'column'}}>
+            <Grid>
+              <Typography>{p.prestation.label}</Typography>
             </Grid>
-          </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <Grid>
-                <IconButton onClick={this.props.onQtyChanged('remove', p._id)}>
-                  <RemoveIcon/>
-                </IconButton>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : '?'}€</Typography>
               </Grid>
-              <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
-                <Typography>{this.props.count[p._id] ? this.props.count[p._id] : 0}</Typography>
+              <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>/</Typography>
               </Grid>
+              <Grid style={{whiteSpace: 'nowrap'}}>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
+              </Grid>
+            </Grid>
+            {p.prestation.cesu_eligible && this.props.use_cesu ?
               <Grid>
-                <IconButton onClick={this.props.onQtyChanged('add', p._id)}>
-                  <AddIcon/>
-                </IconButton>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}><em>Eligible au <a style={{color: 'rgba(39,37,37,35%)'}} href={'#'}>CESU</a></em></Typography>
               </Grid>
+              : null
+            }
+          </Grid>
+        </Grid>
+        <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
+          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Grid>
+              <IconButton onClick={this.props.onQtyChanged('remove', p._id)}>
+                <RemoveIcon/>
+              </IconButton>
+            </Grid>
+            <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
+              <Typography>{this.props.count[p._id] ? this.props.count[p._id] : 0}</Typography>
+            </Grid>
+            <Grid>
+              <IconButton onClick={this.props.onQtyChanged('add', p._id)}>
+                <AddIcon/>
+              </IconButton>
             </Grid>
           </Grid>
         </Grid>
-     ))
+      </Grid>
+    ))
   )
 
   accordion = (prestations,fltr, classes) => {
@@ -100,7 +100,7 @@ class DrawerBooking extends React.Component {
           <Typography>{fltr ? fltr : ''}</Typography>
         </AccordionSummary>
         <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-          {this.selectedPresta(prestations, classes)}
+          {this.selectedPresta(prestations)}
         </AccordionDetails>
       </Accordion>
     )
@@ -234,7 +234,7 @@ class DrawerBooking extends React.Component {
                       <Grid style={{zIndex: 0}} key={index}>
                         {
                           fltr === '' ?
-                            this.selectedPresta(prestations, classes) :
+                            this.selectedPresta(prestations) :
                             this.accordion(prestations,fltr, classes)
                         }
                       </Grid>
@@ -387,16 +387,16 @@ class DrawerBooking extends React.Component {
               </Accordion>
             </Grid>
             <Grid>
-            { all_avocotes.length>0 &&
+              { all_avocotes.length>0 &&
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 20}}>
                 <Typography>Réservation Avocotés pour</Typography>
                 <Select value={avocotes} name='avocotes' multi={false} onChange={this.props.onAvocotesChanged}>
                   {all_avocotes.map(avocotes =>
-                    <MenuItem value={avocotes._id}>{`${avocotes.user.email} pour ${avocotes.prestations.map(p => p.name).join(',')}`}</MenuItem>
+                    <MenuItem value={avocotes._id}>{`${avocotes.user.full_name} pour ${avocotes.prestations.map(p => p.name).join(',')}`}</MenuItem>
                   )}
                 </Select>
               </Grid>
-            }
+              }
             </Grid>
             <Grid>
               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -412,7 +412,7 @@ class DrawerBooking extends React.Component {
                     <Typography>Réserver</Typography>
                   </Button>
                 </Grid>
-                <Grid style={{marginTop:15,  marginBottom: 15}}>
+                <Grid style={{marginTop:15, marginBottom: 15}}>
                   <Typography style={{color: 'rgba(39, 37, 37, 0.35)'}}>Choix du paiement à l’étape suivante</Typography>
                 </Grid>
                 <Grid>

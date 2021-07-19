@@ -211,8 +211,12 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('booking').find({company_customer: {$exists: true, $ne: null}})
     .populate('user')
-    .then(bookings => {
-      res.json(bookings)
+    .then(customer_bookings => {
+      req.context.getModel('booking').find({customer_booking: {$in: customer_bookings.map(b => b._id)}}, {'customer_booking': 1})
+        .then(admin_bookings => {
+          let pending_customer_bookings=customer_bookings.filter(b => !admin_bookings.map(a => a.customer_booking.toString()).includes(b._id.toString()))
+          res.json(pending_customer_bookings)
+        })
     })
 })
 
@@ -348,12 +352,17 @@ router.post('/avocotes', (req, res) => {
         birthday: '01/01/1980',
         password: 'tagada',
       }
-      return req.context.getModel('User').findOneAndUpdate({email: req.body.email}, userData, {upsert: true})
+      return req.context.getModel('User').findOneAndUpdate({email: req.body.email}, userData, {upsert: true, new: true})
     })
     .then(user => {
-      if (!user.id_mangopay) {
-        createMangoClient(user)
-      }
+      console.log(`Created DB user:${JSON.stringify(user)}`)
+      return createMangoClient(user)
+    })
+    .then(user => {
+      console.log(`Created Mango user:${JSON.stringify(user)}`)
+      return user.save()
+    })
+    .then(user => {
       let bookData={
         user: user, address: user.billing_address,
         service: req.body.service._id, amount: req.body.totalPrice, fees: 0,
@@ -431,6 +440,7 @@ new CronJob('0 */15 * * * *', (() => {
     context.getModel('Booking').find({status: BOOK_STATUS.FINISHED, paid: false})
       .populate('user')
       .populate('alfred')
+      .populate({path: 'customer_booking', populate: {path: 'user'}})
       .then(bookings => {
         bookings.forEach(booking => {
           payAlfred(booking)

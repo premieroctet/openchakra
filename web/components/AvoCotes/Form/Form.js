@@ -98,15 +98,22 @@ function Form({classes}) {
         prestations.push({name: p.label, price: p.company_price, value: quantities[p._id]})
       }
     })
-    axios.post('/myAlfred/api/booking/avocotes',
-      {email, firstname, name, address, phone, service, totalPrice, prestations}
-    )
+    axios.post('/myAlfred/api/booking/avocotes', {
+      email: email,
+      firstname: firstname,
+      name: name,
+      address: address,
+      phone: phone,
+      service: service,
+      totalPrice: totalPrice,
+      prestations: prestations,
+    })
       .then(res => {
         const booking=res.data
-        axios.post('/myAlfred/api/payment/avocotePayIn', {bookingId: booking._id})
+        axios.post('/myAlfred/api/payment/avocotesPayIn', {bookingId: booking._id})
           .then(res => {
             const payInResult=res.data
-            console.log(JSON.stringify(payInResult, null, 2))
+            console.log(`Got payIn result:${JSON.stringify(payInResult, null, 2)}`)
             if (payInResult.SecureModeNeeded) {
               Router.push(payInResult.SecureModeRedirectURL)
             }

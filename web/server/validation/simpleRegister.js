@@ -264,10 +264,10 @@ const validateAvocotesCustomer = data =>{
 
   console.log(data.quantities)
   data.email = data.email || ''
-  data.firstname = data.name || ''
+  data.firstname = data.firstname || ''
   data.name = data.name || ''
   data.phone = data.phone || ''
-  data.phone = data.email || ''
+  data.email = data.email || ''
   data.service = data.service || ''
 
   if (Validator.isEmpty(data.firstname)) {

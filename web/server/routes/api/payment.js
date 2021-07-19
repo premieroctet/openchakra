@@ -12,6 +12,8 @@ const {isB2BAdmin, isB2BManager, isB2BEmployee, isModeCompany}=require('../../ut
 const {computeUrl} = require('../../../config/config')
 const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
+// TODO: PROBLEME : Le pay in id d'une résa client avcocotés n'est pas sauvegardé
+
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}))
 
 /* eslint-disable no-multi-str */
@@ -121,7 +123,7 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
 
 // POST /myAlfred/api/payment/avocotePayIn
 // @access private
-router.post('/avocotePayIn', (req, res) => {
+router.post('/avocotesPayIn', (req, res) => {
   const bookingId= req.body.bookingId
   const returnUrl= `/paymentSuccess?booking_id=${bookingId}`
 
@@ -154,16 +156,25 @@ router.post('/avocotePayIn', (req, res) => {
             Tag: `Booking ${booking.reference}`,
           })
             .then(payin => {
-              req.context.getModel('Booking').findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
+              console.log(`Avocote PayIn created:${payin}`)
+              req.context.getModel('Booking').findByIdAndUpdate(bookingId, {mangopay_payin_id: payin.Id})
                 .then(() => console.log('booking update ok'))
                 .catch(err => console.error(`booking update error:${err}`))
               console.log(`Created Payin ${JSON.stringify(payin)}`)
               res.json(payin)
             })
+            .catch(error => {
+              console.error(`Error at Avocotes payin:${error}`)
+              return res.status(404).json({error: error})
+            })
+        })
+        .catch(error => {
+          console.error(`Error at Avocotes payIn get Wallets:${error}`)
+          return res.status(404).json({error: error})
         })
     })
     .catch(error => {
-      console.error(error)
+      console.error(`Error at Avocotes payIn get booking:${error}`)
       return res.status(404).json({error: error})
     })
 })
