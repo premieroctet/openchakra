@@ -41,4 +41,7 @@ export default theme => ({
     backgroundColor: 'transparent',
     fontSize: '1rem',
   },
+  textField: {
+    width: '100%',
+  },
 })

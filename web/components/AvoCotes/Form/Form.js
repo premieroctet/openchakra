@@ -24,7 +24,7 @@ moment.locale('fr')
 
 const DEV_ADDRESS={address: '260 Rue Louis Blanc', zip_code: '76100', city: 'Rouen', country: 'France', gps: {lat: 49.4247, lng: 1.0762}}
 
-function Form({classes}) {
+function Form({classes, props}) {
   const [email, setEmail] = useState('')
   const [firstname, setFirstname] = useState('')
   const [name, setName] = useState('')
@@ -121,7 +121,7 @@ function Form({classes}) {
               Router.push(payInResult.RedirectURL)
             }
             else {
-              Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`)
+              Router.push(`/paymentSuccess?booking_id=${props.booking_id}`)
             }
           })
 
@@ -174,13 +174,13 @@ function Form({classes}) {
           <h2 className={classes.title}>{AVOCOTES.titleCordonnates}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Email" value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 ? false : !emailValidator} helperText={email.length === 0 ? 'Veuillez entrer un e-mail' : !emailValidator ? 'Veuillez entrer un e-mail valide' : null}/>
+          <TextField id="standard-basic" label="Email" classes={{root: classes.textField}} value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 ? false : !emailValidator} helperText={email.length === 0 ? 'Veuillez entrer un e-mail' : !emailValidator ? 'Veuillez entrer un e-mail valide' : null}/>
         </Grid>
-        <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-          <TextField id="standard-basic" label="Prénom" value={firstname} onChange={e => setFirstname(e.target.value)}  helperText={firstname.length === 0 ? 'Veuillez entrer votre prénom' : null}/>
+        <Grid item xl={6} lg={6} md={12} sm={6} xs={12}>
+          <TextField id="standard-basic" label="Prénom" classes={{root: classes.textField}} value={firstname} onChange={e => setFirstname(e.target.value)} helperText={firstname.length === 0 ? 'Veuillez entrer votre prénom' : null}/>
         </Grid>
-        <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-          <TextField id="standard-basic" label="Nom" value={name} onChange={e => setName(e.target.value)} helperText={name.length === 0 ? 'Veuillez entrer votre nom' : null}/>
+        <Grid item xl={6} lg={6} md={12} sm={6} xs={12}>
+          <TextField id="standard-basic" label="Nom" classes={{root: classes.textField}} value={name} onChange={e => setName(e.target.value)} helperText={name.length === 0 ? 'Veuillez entrer votre nom' : null}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <AlgoliaPlaces
@@ -209,7 +209,7 @@ function Form({classes}) {
           {!address.gps.lat || !address.gps.lng ? <FormHelperText>Veuillez selectionner une adresse dans la liste.</FormHelperText>:null}
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Téléphone" value={phone} onChange={e => setPhone(e.target.value)} error={phone.length === 0 ? false : !phoneValidator} helperText={phone.length === 0 ? 'Veuillez entrer un n° téléphone' : !phoneValidator ? 'Veuillez entrer un n° téléphone valide' : null}/>
+          <TextField id="standard-basic" label="Téléphone" classes={{root: classes.textField}} value={phone} onChange={e => setPhone(e.target.value)} error={phone.length === 0 ? false : !phoneValidator} helperText={phone.length === 0 ? 'Veuillez entrer un n° téléphone' : !phoneValidator ? 'Veuillez entrer un n° téléphone valide' : null}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h2 className={classes.title}>{AVOCOTES.titleDetails}</h2>

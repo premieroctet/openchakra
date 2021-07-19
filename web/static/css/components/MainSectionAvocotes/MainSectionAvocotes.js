@@ -24,7 +24,7 @@ export default theme => ({
   dividerContainer: {
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'none',
     },
   },
