@@ -87,7 +87,7 @@ function Form({classes}) {
   }
 
   const payEnabled = () => {
-    return !(!email || !firstname || !name || !address || !address.gps.lat || !address.gps.lng || !phone || !totalPrice || !emailValidator || !phoneValidator)
+    return !(!email || firstname.length > 0 || name.length > 0 || !address || !address.gps.lat || !address.gps.lng || !phone || !totalPrice || !emailValidator || !phoneValidator)
 
   }
 
@@ -174,13 +174,13 @@ function Form({classes}) {
           <h2 className={classes.title}>{AVOCOTES.titleCordonnates}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Email" value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 ? false : !emailValidator} helperText={email.length === 0 ? null : !emailValidator ? 'Veuillez entrer un e-mail valide' : null}/>
+          <TextField id="standard-basic" label="Email" value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 ? false : !emailValidator} helperText={email.length === 0 ? 'Veuillez entrer un e-mail' : !emailValidator ? 'Veuillez entrer un e-mail valide' : null}/>
         </Grid>
         <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-          <TextField id="standard-basic" label="Prénom" value={firstname} onChange={e => setFirstname(e.target.value)}/>
+          <TextField id="standard-basic" label="Prénom" value={firstname} onChange={e => setFirstname(e.target.value)}  helperText={firstname.length === 0 ? 'Veuillez entrer votre prénom' : null}/>
         </Grid>
         <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-          <TextField id="standard-basic" label="Nom" value={name} onChange={e => setName(e.target.value)}/>
+          <TextField id="standard-basic" label="Nom" value={name} onChange={e => setName(e.target.value)} helperText={name.length === 0 ? 'Veuillez entrer votre nom' : null}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <AlgoliaPlaces
@@ -206,10 +206,10 @@ function Form({classes}) {
               },
             })}
           />
-          <FormHelperText>Veuillez selectionner une adresse dans la liste.</FormHelperText>
+          {!address.gps.lat || !address.gps.lng ? <FormHelperText>Veuillez selectionner une adresse dans la liste.</FormHelperText>:null}
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Téléphone" value={phone} onChange={e => setPhone(e.target.value)} error={phone.length === 0 ? false : !phoneValidator} helperText={phone.length === 0 ? null : !phoneValidator ? 'Veuillez entrer un n° téléphone valide' : null}/>
+          <TextField id="standard-basic" label="Téléphone" value={phone} onChange={e => setPhone(e.target.value)} error={phone.length === 0 ? false : !phoneValidator} helperText={phone.length === 0 ? 'Veuillez entrer un n° téléphone' : !phoneValidator ? 'Veuillez entrer un n° téléphone valide' : null}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h2 className={classes.title}>{AVOCOTES.titleDetails}</h2>
