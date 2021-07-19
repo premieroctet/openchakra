@@ -531,11 +531,11 @@ class UserServicesPreview extends React.Component {
     }
     const{address}=this.props
     if (!address || ['client', 'main', 'all'].includes(address)) {
-      return allAddresses['main']
+      return allAddresses.main
     }
-    var res = user ? allAddresses[address] : null
+    let res = user ? allAddresses[address] : null
     if (res) {
-      res.gps = { lat: res.lat, lng: res.lng}
+      res.gps = {lat: res.lat, lng: res.lng}
     }
     return res
   }
@@ -545,7 +545,7 @@ class UserServicesPreview extends React.Component {
     if (['client', 'main'].includes(location)) {
       return 'A mon adresse principale'
     }
-    return user ? (allAddresses[location] || {label:''}).label : ''
+    return user ? (allAddresses[location] || {label: ''}).label : ''
   }
 
   getLocationLabel = () => {
@@ -557,9 +557,9 @@ class UserServicesPreview extends React.Component {
     }
     if (!this.state.location) {
       return ''
-    } else {
-      return titles[this.state.location]
     }
+    return titles[this.state.location]
+
   }
 
   onPickTaxChanged = (id, checked) => {
@@ -567,12 +567,12 @@ class UserServicesPreview extends React.Component {
     this.onChange({target: {name: 'pick_tax', value: checked ? this.state.serviceUser.pick_tax : null}})
   }
 
-  book = actual => { //actual : true=> book, false=>infos request
+  book = actual => { // actual : true=> book, false=>infos request
 
     const {count, user, serviceUser, pending, avocotes} = this.state
 
     if (pending) {
-      snackBarError(`Réservation en cours de traitement`)
+      snackBarError('Réservation en cours de traitement')
       return
     }
 
@@ -681,7 +681,7 @@ class UserServicesPreview extends React.Component {
 
   computePricedPrestations = () => {
     const count = this.state.count
-    var result = {}
+    let result = {}
     this.state.prestations.forEach(p => {
       if (count[p._id]) {
         result[p.prestation.label] = count[p._id] * p.price
@@ -693,22 +693,22 @@ class UserServicesPreview extends React.Component {
   // TODO : force computing disponibility
   scheduleDateChanged = (dates, mmt, mode) => {
     const dt = new Date([...dates][0])
-    this.setState({date : dt, time: mode==='week' ? mmt : undefined}, () => this.checkBook())
+    this.setState({date: dt, time: mode==='week' ? mmt : undefined}, () => this.checkBook())
   }
 
   loadAlbums = () => {
     axios.get(`/myAlfred/api/users/profile/albums/${this.state.alfred._id}`)
-      .then( res => {
-        this.setState({ albums: res.data})
+      .then(res => {
+        this.setState({albums: res.data})
       })
-      .catch (err => console.error(err))
+      .catch(err => console.error(err))
   }
 
-  getAlbum = (id) => {
-    return this.state.albums.find( a => a._id===id)
+  getAlbum = id => {
+    return this.state.albums.find(a => a._id===id)
   }
 
-  content = (classes) => {
+  content = classes => {
     const serviceAddress = this.state.serviceUser.service_address
 
     const filters = this.extractFilters()
@@ -774,17 +774,17 @@ class UserServicesPreview extends React.Component {
                             {
                               label: this.state.alfred.firstname ? 'Délai de prévenance' : '',
                               summary: this.state.alfred.firstname ? `${this.state.alfred.firstname} a besoin de ${this.formatDeadline(this.state.serviceUser.deadline_before_booking)} pour préparer son service` : '',
-                              IconName:this.state. alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : ''
+                              IconName: this.state. alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : '',
                             },
                             {
-                              label:  this.state.alfred.firstname ? 'Conditions d’annulation' : '',
+                              label: this.state.alfred.firstname ? 'Conditions d’annulation' : '',
                               summary: this.state.alfred.firstname ? `${this.state.alfred.firstname} vous permet d’annuler votre réservation jusqu’à ${this.state.flexible ? '1 jour' : this.state.moderate ? '5 jours' : '10 jours'} avant la date prévue` : '',
-                              IconName:  this.state.alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : ''
+                              IconName: this.state.alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : '',
                             },
                             {
-                              label:  this.state.alfred.firstname ? 'Panier minimum' : '',
+                              label: this.state.alfred.firstname ? 'Panier minimum' : '',
                               summary: this.state.alfred.firstname ? `Le panier minimum de ${this.state.alfred.firstname} est de ${this.state.serviceUser.minimum_basket}€` : '',
-                              IconName:  this.state.alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : ''
+                              IconName: this.state.alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : '',
                             },
                           ]
                         }
@@ -928,7 +928,7 @@ class UserServicesPreview extends React.Component {
                       titleTopic={'Commentaires'}
                       titleSummary={this.state.alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${this.state.alfred.firstname} !` : ''}
                     >
-                      <SummaryCommentary user={this.state.alfred._id}  serviceUser={this.props.service_id}/>
+                      <SummaryCommentary user={this.state.alfred._id} serviceUser={this.props.service_id}/>
                     </Topic>
                   </Grid>
               }
@@ -941,7 +941,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes, address} = this.props
-    const {service,alfred, user} = this.state
+    const {service, alfred, user} = this.state
 
     if (!this.state.serviceUser) {
       return null

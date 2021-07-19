@@ -3,22 +3,21 @@ import {createGenerateClassName, createMuiTheme} from '@material-ui/core/styles'
 
 
 const PRIMARY = 'rgba(178,204,251,1)'
+const SECONDARY = 'rgba(248, 207, 97, 1)'
+const ERRORCOLOR = '#B26879'
+const COLORTITLE = ''
+const COLORSUBTITLE = ''
+const TEXTCOLOR = ''
 
 // A theme with custom primary and secondary color.
 // It's optional.
 const theme = createMuiTheme({
-  h3: {
-    fontFamily: 'Montserrat, sans-serif',
-  },
-  h2: {
-    color: 'green',
-  },
   palette: {
     primary: {
       main: PRIMARY,
     },
-    secondary: {
-      main: '#B26879',
+    error: {
+      main: ERRORCOLOR,
     },
     b2b: {
       main: '#353A51',
@@ -32,8 +31,8 @@ const theme = createMuiTheme({
     white: {
       main: 'rgba(255,255,255,1)',
     },
-    yellow: {
-      main: 'rgba(248, 207, 97, 1)',
+    secondary: {
+      main: SECONDARY,
     },
     black: {
       main: 'rgba(53,44,42,1)',
@@ -44,6 +43,9 @@ const theme = createMuiTheme({
     placeHolder: {
       main: 'rgba(0, 0, 0, 0.87)',
     },
+  },
+  title: {
+
   },
   typography: {
     fontSize: 14,
