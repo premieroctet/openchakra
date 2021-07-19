@@ -209,10 +209,10 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 // Returns all booking from avocotes customer
 // @Access private
 router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('booking').find({company_customer: {$exists: true, $ne: null}})
+  req.context.getModel('Booking').find({company_customer: {$exists: true, $ne: null}})
     .populate('user')
     .then(customer_bookings => {
-      req.context.getModel('booking').find({customer_booking: {$in: customer_bookings.map(b => b._id)}}, {'customer_booking': 1})
+      req.context.getModel('Booking').find({customer_booking: {$in: customer_bookings.map(b => b._id)}}, {'customer_booking': 1})
         .then(admin_bookings => {
           let pending_customer_bookings=customer_bookings.filter(b => !admin_bookings.map(a => a.customer_booking.toString()).includes(b._id.toString()))
           res.json(pending_customer_bookings)
@@ -340,7 +340,7 @@ router.post('/avocotes', (req, res) => {
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('company').findOne({name: AVOCOTES_COMPANY_NAME})
+  req.context.getModel('Company').findOne({name: AVOCOTES_COMPANY_NAME})
     .then(company => {
       const userData={
         firstname: req.body.firstname,
