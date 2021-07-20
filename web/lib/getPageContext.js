@@ -16,6 +16,9 @@ const theme = createMuiTheme({
     primary: {
       main: PRIMARY,
     },
+    secondary: {
+      main: SECONDARY,
+    },
     error: {
       main: ERRORCOLOR,
     },
@@ -31,9 +34,7 @@ const theme = createMuiTheme({
     white: {
       main: 'rgba(255,255,255,1)',
     },
-    secondary: {
-      main: SECONDARY,
-    },
+
     black: {
       main: 'rgba(53,44,42,1)',
     },

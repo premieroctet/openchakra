@@ -24,7 +24,7 @@ moment.locale('fr')
 
 const DEV_ADDRESS={address: '260 Rue Louis Blanc', zip_code: '76100', city: 'Rouen', country: 'France', gps: {lat: 49.4247, lng: 1.0762}}
 
-function Form({classes, props}) {
+function Form({classes, booking_id}) {
   const [email, setEmail] = useState('')
   const [firstname, setFirstname] = useState('')
   const [name, setName] = useState('')
@@ -121,7 +121,7 @@ function Form({classes, props}) {
               Router.push(payInResult.RedirectURL)
             }
             else {
-              Router.push(`/paymentSuccess?booking_id=${props.booking_id}`)
+              Router.push(`/paymentSuccess?booking_id=${booking_id}`)
             }
           })
 
@@ -137,7 +137,6 @@ function Form({classes, props}) {
   }
 
   useEffect(() => {
-    console.log(JSON.stringify(quantities))
     if (service) {
       updateTotalPrice()
       return

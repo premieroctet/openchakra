@@ -28,7 +28,7 @@ export default theme => ({
     color: 'white',
     textTransform: 'initial',
     fontWeight: 'bold',
-    backgroundColor: theme.palette.yellow.main,
+    backgroundColor: theme.palette.secondary.main,
   },
   backButton:{
     textTransform: 'initial',

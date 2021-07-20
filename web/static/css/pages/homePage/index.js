@@ -64,7 +64,7 @@ export default theme => ({
   howItWorksComponent: {
     justifyContent: 'center',
     marginTop: '2%',
-    backgroundColor: theme.palette.yellow.main,
+    backgroundColor: theme.palette.secondary.main,
   },
   howItWorksComponentB2b: {
     justifyContent: 'center',

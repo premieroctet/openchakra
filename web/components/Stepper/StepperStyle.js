@@ -54,7 +54,7 @@ export default theme => ({
       lineHeight: 1.5,
     },
     '& .MuiStepIcon-root.MuiStepIcon-active':{
-      color: theme.palette.yellow.main
+      color: theme.palette.secondary.main
     },
     '& .MuiStepIcon-root.MuiStepIcon-completed':{
       fill: 'white',

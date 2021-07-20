@@ -1,179 +1,179 @@
 export default theme => ({
-  cardServiceInfoPaper:{
+  cardServiceInfoPaper: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: 20,
     display: 'flex',
     justifyContent: 'center',
     height: 450,
   },
-  cardServiceInfoContent:{
-    display:'flex',
+  cardServiceInfoContent: {
+    display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  cardServiceInfoTitle:{
+  cardServiceInfoTitle: {
     color: theme.palette.white.main,
     fontFamily: theme.typography.fontFamily,
   },
 
-  cardServiceInfoText:{
+  cardServiceInfoText: {
     color: theme.palette.white.main,
     fontFamily: theme.typography.fontFamily,
   },
-  cardServicePaper:{
+  cardServicePaper: {
     borderRadius: 20,
     display: 'flex',
     justifyContent: 'center',
     height: 450,
     cursor: 'pointer',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       height: '30vh',
 
-    }
+    },
   },
-  profileModecardServicePaper:{
-    height:300,
+  profileModecardServicePaper: {
+    height: 300,
     borderRadius: 20,
     display: 'flex',
     justifyContent: 'center',
     cursor: 'pointer',
 
   },
-  cardServiceMainStyle:{
+  cardServiceMainStyle: {
     width: '80%',
     marginTop: '8%',
     marginBottom: '5%',
     display: 'flex',
     flexDirection: 'column',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       flexDirection: 'row',
       alignItems: 'center',
       width: '90%',
-    }
+    },
   },
-  cardServiceFlexContainer:{
+  cardServiceFlexContainer: {
     display: 'flex',
-    justifyContent :'center',
+    justifyContent: 'center',
     position: 'relative',
-    [theme.breakpoints.down('xs')]:{
-      width: '50%'
-    }
+    [theme.breakpoints.down('xs')]: {
+      width: '50%',
+    },
   },
-  cardServicePicsContainer:{
+  cardServicePicsContainer: {
     width: '100%',
     height: 200,
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       width: 125,
-      height: 125
-    }
+      height: 125,
+    },
   },
 
-  profileModecardServicePicsContainer:{
+  profileModecardServicePicsContainer: {
     width: '100%',
     height: '100%',
   },
 
-  cardServiceBackgroundPics:{
+  cardServiceBackgroundPics: {
     width: '100%',
     height: '100%',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
-    borderRadius: 20
+    borderRadius: 20,
   },
-  cardServiceChipName:{
+  cardServiceChipName: {
     position: 'absolute',
-    bottom:0,
-    left:0
+    bottom: 0,
+    left: 0,
   },
 
-  cardServiceChip:{
+  cardServiceChip: {
     backgroundColor: theme.palette.white.main,
   },
-  cardServicePlaceContainer:{
+  cardServicePlaceContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       marginTop: '1vh',
       marginBottom: '1vh',
-      marginLeft: '1vh'
-    }
+      marginLeft: '1vh',
+    },
   },
-  cardServicePlaceLogo:{
-    marginRight: '3%'
+  cardServicePlaceLogo: {
+    marginRight: '3%',
   },
 
-  stylecardServiceDistance:{
+  stylecardServiceDistance: {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
 
-  cardServiceScoreAndButtonContainer:{
+  cardServiceScoreAndButtonContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
 
-  cardServiceRatingContainer:{
+  cardServiceRatingContainer: {
     display: 'flex',
     flexDirection: 'row',
-    width: '50%'
+    width: '50%',
   },
-  cardPreviewRatingBox:{
+  cardPreviewRatingBox: {
     display: 'flex',
     alignItems: 'center',
-    margin:0,
-    padding: 0
+    margin: 0,
+    padding: 0,
   },
-  cardServiceBoxRatingDisplay:{
+  cardServiceBoxRatingDisplay: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-  cardServiceRating:{
+  cardServiceRating: {
     marginRight: '20%',
-    marginLeft: '20%'
+    marginLeft: '20%',
   },
 
-  cardServiceLabelService:{
+  cardServiceLabelService: {
     fontFamily: theme.typography.textLabel.fontFamily,
     fontWeight: theme.typography.textLabel.fontWeight,
     fontSize: theme.typography.textLabel.fontSize,
-    margin: theme.typography.textLabel.margin
+    margin: theme.typography.textLabel.margin,
   },
 
-  dataContainer:{
+  dataContainer: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     marginTop: '3vh',
-    [theme.breakpoints.down('xs')]:{
-      margin:0,
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
       width: '50%',
-      flex: 'inherit'
-    }
+      flex: 'inherit',
+    },
   },
 
-  labelDataContainer:{
-    [theme.breakpoints.down('xs')]:{
+  labelDataContainer: {
+    [theme.breakpoints.down('xs')]: {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      overflow: 'hidden'
-    }
+      overflow: 'hidden',
+    },
   },
-  profileModeCardService:{
+  profileModeCardService: {
     width: '90%',
     padding: '5%',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       alignItems: 'center',
 
-    }
+    },
   },
-  profileModeDataContainer:{
+  profileModeDataContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -181,65 +181,68 @@ export default theme => ({
     height: '30%',
     justifyContent: 'center',
   },
-  cardKmContainer:{
+  cardKmContainer: {
     display: 'flex',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    overflow: 'hidden'
+    overflow: 'hidden',
 
   },
-  labelService:{
-    [theme.breakpoints.down('xs')]:{
-      marginLeft: '2vh'
-    }
+  labelService: {
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: '2vh',
+    },
   },
-  profileModecardServiceFlexContainer:{
+  profileModecardServiceFlexContainer: {
     width: '100%',
-    height:'60%',
+    height: '60%',
     position: 'relative',
   },
-  mainCardServiceContainer:{
+  mainCardServiceContainer: {
     width: '100%',
-    [theme.breakpoints.down('xs')]:{
-      padding:10
-    }
+    [theme.breakpoints.down('xs')]: {
+      padding: 10,
+    },
   },
-  containerDescription:{
-    height:70,
+  containerDescription: {
+    height: 70,
 
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       marginLeft: '2vh',
-      height: 'initial'
-    }
+      height: 'initial',
+    },
   },
-  descriptionStyle:{
-    color:'rgba(39,37,37,35%)',
+  descriptionStyle: {
+    color: 'rgba(39,37,37,35%)',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
-    lineClamp:3,
-    boxOrient:'vertical',
+    lineClamp: 3,
+    boxOrient: 'vertical',
     display: '-webkit-box',
-    [theme.breakpoints.down('md')]:{
-      lineClamp:2,
+    [theme.breakpoints.down('md')]: {
+      lineClamp: 2,
 
     },
-    [theme.breakpoints.down('xs')]:{
-      lineClamp:1,
+    [theme.breakpoints.down('xs')]: {
+      lineClamp: 1,
 
-    }
-  },
-  carServiceInfoContainer:{
-    [theme.breakpoints.only('xs')]:{
-      display:'none',
-    },
-    [theme.breakpoints.only('sm')]:{
-      display:'none',
     },
   },
-  containerDistance:{
-    [theme.breakpoints.only('xs')]:{
-      display:'none',
+  carServiceInfoContainer: {
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
     },
-  }
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
+    },
+  },
+  containerDistance: {
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
+    },
+  },
+  colorError: {
+    color: theme.palette.error.main,
+  },
 
 })
