@@ -206,13 +206,17 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 })
 
 // @Route GET /myAlfred/api/booking/avocotes
-// Returns all booking from avocotes customer
+// Returns all bookings from avocotes customer not already handled
 // @Access private
 router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('Booking').find({company_customer: {$exists: true, $ne: null}})
     .populate('user')
     .then(customer_bookings => {
-      req.context.getModel('Booking').find({customer_booking: {$in: customer_bookings.map(b => b._id)}}, {'customer_booking': 1})
+      req.context.getModel('Booking').find({
+        customer_booking: {$in: customer_bookings.map(b => b._id)},
+        status: {$in: CONFIRMED, FINISHED, TO_CONFIRM, PREAPPROVED},
+      },
+      {'customer_booking': 1})
         .then(admin_bookings => {
           let pending_customer_bookings=customer_bookings.filter(b => !admin_bookings.map(a => a.customer_booking.toString()).includes(b._id.toString()))
           res.json(pending_customer_bookings)
