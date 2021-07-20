@@ -214,7 +214,7 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
     .then(customer_bookings => {
       req.context.getModel('Booking').find({
         customer_booking: {$in: customer_bookings.map(b => b._id)},
-        status: {$in: CONFIRMED, FINISHED, TO_CONFIRM, PREAPPROVED},
+        status: {$in: [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED, BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.PREAPPROVED, BOOK_STATUS.TO_PAY]},
       },
       {'customer_booking': 1})
         .then(admin_bookings => {
