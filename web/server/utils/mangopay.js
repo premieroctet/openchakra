@@ -340,11 +340,11 @@ const addRegistrationProof = user => {
 }
 
 /**
-* payAlfred : transfers from customer to alfred and pays out Alfred
+* payBooking : transfers from customer to alfred and pays out Alfred
 * - standard : transfer booking.amount-booking.fees from customer to Alfred. Fees were taken during pay in
 * - avocotes : transfer booking.amount-booking.fees from customer to Alfred, including fees to My Alfred
 */
-const payAlfred = booking => {
+const payBooking = booking => {
   console.log(`Starting paying of booking ${booking._id}`)
   const id_mangopay_alfred = booking.alfred.mangopay_provider_id
   const role = booking.user_role
@@ -365,7 +365,7 @@ const payAlfred = booking => {
     promise = emptyPromise(booking.user)
   }
 
-  // TODO payAlfred pour client Avocotés : alfred_amount pour Alfred, fees pour My Alfred
+  // TODO payBooking pour client Avocotés : alfred_amount pour Alfred, fees pour My Alfred
   promise
     .then(entity => {
       const id_mangopay_user=entity.id_mangopay
@@ -483,7 +483,7 @@ module.exports = {
   createOrUpdateMangoCompany,
   addIdIfRequired,
   addRegistrationProof,
-  payAlfred,
+  payBooking,
   install_hooks,
   createCard,
 }

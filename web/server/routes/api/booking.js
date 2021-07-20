@@ -7,7 +7,7 @@ const moment = require('moment')
 const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
 const {getKeyDate} = require('../../utils/booking')
 const {invoiceFormat} = require('../../../utils/converters')
-const {payAlfred} = require('../../utils/mangopay')
+const {payBooking} = require('../../utils/mangopay')
 const CronJob = require('cron').CronJob
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
@@ -448,7 +448,7 @@ new CronJob('0 */15 * * * *', (() => {
       .populate({path: 'customer_booking', populate: {path: 'user'}})
       .then(bookings => {
         bookings.forEach(booking => {
-          payAlfred(booking)
+          payBooking(booking)
         })
       }).catch(err => {
         console.error(err)
