@@ -275,6 +275,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     .populate('user')
     .populate('prestation')
     .populate('equipments')
+    .populate({path: 'customer_booking', populate: {path: 'user'}})
     .then(booking => {
       if (!booking) {
         return res.status(404).json({msg: 'no booking found'})
