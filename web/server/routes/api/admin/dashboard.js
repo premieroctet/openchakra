@@ -2593,6 +2593,7 @@ router.get('/booking/all', passport.authenticate('admin', {session: false}), (re
     context.getModel('Booking').find()
       .populate('alfred', 'firstname name')
       .populate('user', 'firstname name')
+      .populate({path: 'customer_booking', populate: {path: 'user'}})
       .sort({date: -1})
       .catch(err => {
         console.error(err)

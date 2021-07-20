@@ -13,12 +13,12 @@ const {ADMIN, MANAGER}=require('../../utils/consts')
 
 const getWallet = mangopay_id => {
   return new Promise((resolve, reject) => {
-    mangoApi.Users.getWallets(id_mangopay_user)
+    mangoApi.Users.getWallets(mangopay_id)
       .then(wallets => {
         if (wallets.length==0) {
           return reject(`No active bank account for mangopay #${mangopay_id}`)
         }
-        resolve(wallets[0])
+        resolve(wallets[0].Id)
       })
       .catch(err => {
         reject(err)
@@ -33,17 +33,18 @@ const createTransfer = (source_user_id, destination_user_id, debt_amount, fees=0
         const [source_wallet_id, dest_wallet_id]=res
         const transfer= mangoApi.Transfers.create({
           AuthorId: source_user_id,
-          DebitedFunds: {Currency: 'EUR', Amount: amount},
+          DebitedFunds: {Currency: 'EUR', Amount: debt_amount},
           Fees: {Currency: 'EUR', Amount: fees},
           DebitedWalletId: source_wallet_id,
           CreditedWalletId: dest_wallet_id,
         })
-        if (trsf.Status == 'FAILED') {
+        if (transfer.Status == 'FAILED') {
           return reject(`Transfer #${trsf.Id} failed`)
         }
         return resolve(transfer)
       })
       .catch(err => {
+        console.error(err)
         return reject(err)
       })
   })
@@ -57,7 +58,7 @@ const getBankAccount = mangopay_id => {
         if (active_accounts.length == 0) {
           return reject(`No active bank account for mangopay #${mangopay_id}`)
         }
-        return resolve(active_accounts[0])
+        return resolve(active_accounts[0].Id)
       })
       .catch(err => {
         reject(err)
@@ -71,7 +72,8 @@ const createPayout = (mangopay_id, amount) => {
       .then(wallet_id => {
         getBankAccount(mangopay_id)
           .then(bank_account_id => {
-            const payOut= mangoApi.PayOuts.create({
+            console.log(`got bank account id ${bank_account_id}`)
+            mangoApi.PayOuts.create({
               AuthorId: mangopay_id,
               DebitedFunds: {Currency: 'EUR', Amount: amount},
               Fees: {Currency: 'EUR', Amount: 0},
@@ -80,7 +82,14 @@ const createPayout = (mangopay_id, amount) => {
               BankWireRef: 'My Alfred',
               PaymentType: 'BANK_WIRE',
             })
-            resolve(payOut)
+              .then(payOut => {
+                console.log(`Payout:${JSON.stringify(payOut, null, 2)}`)
+                resolve(payOut)
+              })
+              .catch(err => {
+                console.error(err)
+                reject(err)
+              })
           })
           .catch(err => {
             return reject(err)
@@ -365,6 +374,7 @@ const payBooking = booking => {
     promise = emptyPromise(booking.user)
   }
 
+  console.log('Before promise')
   // TODO payBooking pour client Avocotés : alfred_amount pour Alfred, fees pour My Alfred
   promise
     .then(entity => {
@@ -378,7 +388,7 @@ const payBooking = booking => {
         .then(transfer => {
           if (transfer) {
             booking.mangopay_transfer_id = transfer.Id
-            booking.save().then().catch(err => console.error(err))
+            booking.save().catch(err => console.error(err))
           }
           createPayout(id_mangopay_alfred, amount)
             .then(payout => {
@@ -430,7 +440,7 @@ const install_hooks= (hook_types, url) => {
             console.log(`${hook ? 'Updated' : 'Created'} ${hook_type} to ${hook_url}`)
           })
           .catch(err => {
-            console.error(`Error for ${hook_type}:${err}`)
+            console.error(`Error for ${hook_type}:${JSON.stringify(err)}`)
           })
       })
     })

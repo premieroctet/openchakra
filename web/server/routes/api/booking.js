@@ -124,7 +124,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.fees = req.body.fees
   bookingFields.travel_tax = req.body.travel_tax
   bookingFields.pick_tax = req.body.pick_tax
-  bookingFields.status = req.body.status
+  bookingFields.status = req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status
   bookingFields.serviceUserId = req.body.serviceUserId
   bookingFields.cesu_amount = req.body.cesu_amount
   bookingFields.user_role = getRole(req) || null
@@ -172,6 +172,7 @@ router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) =>
     .populate('alfred')
     .populate('user')
     .populate('prestation')
+    .populate({path: 'customer_booking', populate: {path: 'user'}})
     .then(booking => {
       if (typeof booking !== 'undefined' && booking.length > 0) {
         res.json(booking)
@@ -414,6 +415,7 @@ new CronJob('0 */15 * * * *', (() => {
         booking.forEach(b => {
           const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
           if (moment(date).isSameOrAfter(end_date)) {
+            /**
             const type = ['billing', 'receipt', 'myalfred_billing']
             const key = getKeyDate()
             Promise.all([getNextNumber(type[ 0 ], key), getNextNumber(type[ 1 ], key), getNextNumber(type[ 2 ], key)]).then(
@@ -424,6 +426,7 @@ new CronJob('0 */15 * * * *', (() => {
                 })
               },
             )
+            */
             b.status = BOOK_STATUS.FINISHED
             b.save()
               .then(bo => {

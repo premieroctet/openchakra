@@ -194,7 +194,7 @@ class BookingPreview extends React.Component {
     const modifyObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.CONFIRMED}
 
     axios.put(`/myAlfred/api/booking/modifyBooking/${this.state.booking_id}`, modifyObj)
-      .then(() => {
+      .then(res => {
         this.componentDidMount()
         setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
       })
