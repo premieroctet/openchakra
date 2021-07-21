@@ -20,6 +20,8 @@ function AlfredConditions({classes, shop}) {
   const[noBookingRequest, setNoBookingRequest]= useState(shop.no_booking_request)
   const[welcomeMessage, setWelcomeMessage]= useState(shop.welcome_message)
   const[alfredShop, setAlfredShop] = useState(shop)
+  const[conditions, setCondition] = useState({})
+  const[losconditiones, setConditionnes]= useState()
 
   useEffect(() => {
     setAlfredShop(shop)
@@ -50,13 +52,18 @@ function AlfredConditions({classes, shop}) {
     }).catch(err => { console.error(err) })
   }, [profilePicture, idCard, isFlexible, isModerate, isStrict, alfredRecommandations, bookingRequest, noBookingRequest, welcomeMessage, myAlfredConditions])
 
+  function onAlfredConditionsChanged(id, checked) {
+    if (!checked) {
+      id = (parseInt(id) - 1).toString()
+    }
+    id = Math.max(parseInt(id), 0).toString()
+    setConditionnes(id)
+  }
+
   return (
     <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
       <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
         <h2 className={classes.policySizeTitle}>{SHOP.bookingCondition.title}</h2>
-      </Grid>
-      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-        <h3 className={classes.policySizeSubtitle}>{SHOP.bookingCondition.subtitle}</h3>
       </Grid>
       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
         <h4 className={classes.policySizeSubtitle}
@@ -68,7 +75,9 @@ function AlfredConditions({classes, shop}) {
             key={moment()}
             id={ALF_CONDS.BASIC}
             label={SHOP.bookingCondition.conditions_bacsic}
-            onChange={() => setMyAlfredConditions(!myAlfredConditions)}
+            onChange={() => {
+              setMyAlfredConditions(true)
+            }}
             checked={myAlfredConditions}
           />
         </Grid>
@@ -77,7 +86,9 @@ function AlfredConditions({classes, shop}) {
             key={moment()}
             id={ALF_CONDS.PICTURE}
             label={SHOP.bookingCondition.conditions_picture}
-            onChange={() => setProfilePicture(!profilePicture)}
+            onChange={() => {
+              setProfilePicture(!profilePicture)
+            }}
             checked={profilePicture}
           />
         </Grid>
@@ -86,7 +97,11 @@ function AlfredConditions({classes, shop}) {
             key={moment()}
             id={ALF_CONDS.ID_CARD}
             label={SHOP.bookingCondition.conditions_idCard}
-            onChange={() => setIdCard(!idCard)}
+            onChange={() => {
+              setIdCard(!idCard)
+              setMyAlfredConditions(true)
+              setProfilePicture(true)
+            }}
             checked={idCard}
           />
         </Grid>
@@ -95,7 +110,13 @@ function AlfredConditions({classes, shop}) {
             key={moment()}
             id={ALF_CONDS.RECOMMEND}
             label={SHOP.bookingCondition.conditions_recommend}
-            onChange={() => setAlfredRecommandations(!alfredRecommandations)}
+            onChange={() => {
+              setAlfredRecommandations(!alfredRecommandations)
+              setMyAlfredConditions(true)
+              setProfilePicture(true)
+              setIdCard(true)
+
+            }}
             checked={alfredRecommandations}
           />
         </Grid>
