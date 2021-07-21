@@ -7,7 +7,6 @@ import {SHOP} from '../../utils/i18n'
 import ButtonSwitch from '../ButtonSwitch/ButtonSwitch'
 import moment from 'moment'
 import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts'
-import {snackBarSuccess} from '../../utils/notifications'
 
 function AlfredConditions({classes, shop}) {
   const[idCard, setIdCard] = useState(shop.identity_card)
