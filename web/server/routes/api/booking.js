@@ -387,6 +387,7 @@ router.post('/avocotes', (req, res) => {
 })
 
 new CronJob('0 */15 * * * *', (() => {
+  console.log('Checking terminated bookings')
   const getNextNumber = (context, type, key) => {
     return new Promise((resolve, reject) => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}
@@ -407,10 +408,10 @@ new CronJob('0 */15 * * * *', (() => {
   const date = moment().startOf('day')
 
   connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
+    console.log(`Checking for database ${context.getDbName()}`)
     context.getModel('Booking').find({status: BOOK_STATUS.CONFIRMED, paid: false})
       .populate('user')
       .populate('alfred')
-      .catch(err => console.error(err))
       .then(booking => {
         booking.forEach(b => {
           const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
@@ -438,12 +439,14 @@ new CronJob('0 */15 * * * *', (() => {
         },
         )
       })
+      .catch(err => console.error(err))
   })
 
 }), null, true, 'Europe/Paris')
 
 // Handle terminated but not paid bookings
 new CronJob('0 */15 * * * *', (() => {
+  console.log('Checking bookings to pay')
   connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
     context.getModel('Booking').find({status: BOOK_STATUS.FINISHED, paid: false})
       .populate('user')

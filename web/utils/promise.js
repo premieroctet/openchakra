@@ -1,8 +1,8 @@
 
 function emptyPromise(val = null) {
-  return new Promise((resolve) => {
-    resolve(val);
-  });
+  return new Promise(resolve => {
+    resolve(val)
+  })
 }
 
 const delayedPromise = (delay_ms, promise_fn) => {
@@ -11,12 +11,12 @@ const delayedPromise = (delay_ms, promise_fn) => {
     setTimeout(() => {
       console.log(`Lauching promise ${promise_fn}`)
       promise_fn()
-        .then( res => {
-          console.log(`delayedPromise ok:${res}`)
+        .then(res => {
+          console.log('delayedPromise ok')
           resolve(res)
         })
-        .catch( err => {
-          console.error(`delayedPromise NOK:${err}`)
+        .catch(err => {
+          console.error('delayedPromise NOK')
           reject(err)
         })
     },

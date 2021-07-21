@@ -10,6 +10,7 @@ const mangoApi = new mangopay(MANGOPAY_CONFIG)
 const request = require('request')
 const {MANGOPAY_ERRORS}=require('../../utils/mangopay_messages')
 const {ADMIN, MANAGER}=require('../../utils/consts')
+const {delayedPromise}=require('../../utils/promise')
 
 const getWallet = mangopay_id => {
   return new Promise((resolve, reject) => {
@@ -27,21 +28,36 @@ const getWallet = mangopay_id => {
 }
 
 const createTransfer = (source_user_id, destination_user_id, debt_amount, fees=0) => {
+  console.log('Creating transfer')
   return new Promise((resolve, reject) => {
     Promise.all([source_user_id, destination_user_id].map(u => getWallet(u)))
       .then(res => {
         const [source_wallet_id, dest_wallet_id]=res
-        const transfer= mangoApi.Transfers.create({
+        mangoApi.Transfers.create({
           AuthorId: source_user_id,
-          DebitedFunds: {Currency: 'EUR', Amount: debt_amount},
-          Fees: {Currency: 'EUR', Amount: fees},
+          DebitedFunds: {Currency: 'EUR', Amount: debt_amount*100},
+          Fees: {Currency: 'EUR', Amount: fees*100},
           DebitedWalletId: source_wallet_id,
           CreditedWalletId: dest_wallet_id,
         })
-        if (transfer.Status == 'FAILED') {
-          return reject(`Transfer #${trsf.Id} failed`)
-        }
-        return resolve(transfer)
+          .then(transfer => {
+            delayedPromise(500, () => mangoApi.Transfers.get(transfer.Id))
+              .then(transfer => {
+                console.log(`Created transfer #${transfer.Id} with status ${transfer.Status}`)
+                if (transfer.Status == 'FAILED') {
+                  return reject(`Transfer #${transfer.Id} failed`)
+                }
+                return resolve(transfer)
+              })
+              .catch(err => {
+                console.error(err)
+                return reject(err)
+              })
+          })
+          .catch(err => {
+            console.error(err)
+            return reject(err)
+          })
       })
       .catch(err => {
         console.error(err)
@@ -66,7 +82,7 @@ const getBankAccount = mangopay_id => {
   })
 }
 
-const createPayout = (mangopay_id, amount) => {
+const createPayout = (mangopay_id, amount, fees=0) => {
   return new Promise((resolve, reject) => {
     getWallet(mangopay_id)
       .then(wallet_id => {
@@ -75,16 +91,26 @@ const createPayout = (mangopay_id, amount) => {
             console.log(`got bank account id ${bank_account_id}`)
             mangoApi.PayOuts.create({
               AuthorId: mangopay_id,
-              DebitedFunds: {Currency: 'EUR', Amount: amount},
-              Fees: {Currency: 'EUR', Amount: 0},
+              DebitedFunds: {Currency: 'EUR', Amount: amount*100},
+              Fees: {Currency: 'EUR', Amount: fees*100},
               BankAccountId: bank_account_id,
               DebitedWalletId: wallet_id,
               BankWireRef: 'My Alfred',
               PaymentType: 'BANK_WIRE',
             })
               .then(payOut => {
-                console.log(`Payout:${JSON.stringify(payOut, null, 2)}`)
-                resolve(payOut)
+                delayedPromise(500, () => mangoApi.PayOuts.get(payOut.Id))
+                  .then(payOut => {
+                    console.log(`Created payout ${payOut.Id} with status ${payOut.Status}`)
+                    if (payOut.Status=='FAILED') {
+                      reject(`Payout ${payOut.Id} failed`)
+                    }
+                    resolve(payOut)
+                  })
+                  .catch(err => {
+                    console.error(err)
+                    reject(err)
+                  })
               })
               .catch(err => {
                 console.error(err)
@@ -400,6 +426,9 @@ const payBooking = booking => {
             .catch(err => {
               console.error(err)
             })
+        })
+        .catch(err => {
+          console.error(err)
         })
     })
     .catch(err => {
