@@ -660,7 +660,7 @@ class UserServicesPreview extends React.Component {
                 Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
               }
               else {
-                Router.push(`/profile/messages?user=${response.data.user}&relative=${response.data.alfred}`)
+                Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
               }
             })
         })

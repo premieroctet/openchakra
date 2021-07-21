@@ -22,6 +22,7 @@ const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
 const {computeBookingReference}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
+const uuidv4 = require('uuid/v4')
 
 moment.locale('fr')
 
@@ -148,6 +149,30 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
             }
             if (booking.status === BOOK_STATUS.CONFIRMED) {
               sendNewBooking(book, req)
+            }
+            // Si user et alfred définis, ajouter un message dans le chatroom
+            if (book.user && book.alfred) {
+              const filter={
+                $and: [
+                  {emitter: {$in: [book.alfred._id, book.user._id]}},
+                  {recipient: {$in: [book.alfred._id, book.user._id]}},
+                ],
+              }
+              const message={
+                user: book.user.firstname,
+                content: `Service ${book.service} de ${book.alfred.firstname} pour ${book.user.firstname}`,
+                date: moment(),
+                idsender: book.user._id,
+              }
+              const update={
+                $setOnInsert: {name: `room-${uuidv4()}`},
+                $set: {booking: book._id, emitter: book.user._id, recipient: book.alfred._id},
+                $addToSet: {messages: message},
+              }
+              const options={new: true, upsert: true}
+              req.context.getModel('ChatRoom').findOneAndUpdate(filter, update, options)
+                .then(() => console.log('Chatroom maj'))
+                .catch(err => console.error(err))
             }
           })
           .catch(err => {
