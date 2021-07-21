@@ -1,18 +1,16 @@
 const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import React from 'react'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 
-import Layout from '../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
-//import Select from "@material-ui/core/Select";
-import Select from 'react-dropdown-select';
-import Input from '@material-ui/core/Input';
-import FormControl from '@material-ui/core/FormControl';
+import Layout from '../../hoc/Layout/Layout'
+import axios from 'axios'
+import Router from 'next/router'
+import Select from 'react-dropdown-select'
+import Input from '@material-ui/core/Input'
 
 const {ROLES} = require('../../utils/consts')
 
@@ -44,71 +42,60 @@ const styles = {
   chip: {
     margin: 2,
   },
-};
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+}
 
 class logAsUser extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       user: props.email,
       roles: [],
       role: null,
       errors: null,
-      muUsers:[],
-    };
+      muUsers: [],
+    }
 
-    this.onUserChanged = this.onUserChanged.bind(this);
+    this.onUserChanged = this.onUserChanged.bind(this)
   }
 
   static getInitialProps({query: {email}}) {
-    return {email: email};
+    return {email: email}
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/admin/users/all_light`)
+    axios.get('/myAlfred/api/admin/users/all_light')
       .then(response => {
-        let users = response.data;
+        let users = response.data
         const muUsers = users.map(u => {
           return {
             label: `${u.name} ${u.firstname} ${u.email} (${u._id})`,
             value: u.email,
             key: u.id,
             roles: u.roles,
-          };
-        });
-        this.setState({muUsers: muUsers});
+          }
+        })
+        this.setState({muUsers: muUsers})
 
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response && (err.response.status === 401 || err.response.status === 403)) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
-      });
+      })
   }
 
   onUserChanged = e => {
     this.setState({
       user: e[0].value,
-      roles: e[0].roles.map(r => { return { label: ROLES[r], value: r}}),
-      role: e[0].roles.length==1 ? e[0].roles[0] : null});
-  };
+      roles: e[0].roles.map(r => { return {label: ROLES[r], value: r} }),
+      role: e[0].roles.length==1 ? e[0].roles[0] : null})
+  }
 
   onRoleChanged = e => {
     console.log(JSON.stringify(e))
@@ -116,27 +103,27 @@ class logAsUser extends React.Component {
   }
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
 
     setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/loginAs', {
-      username: this.state.user, role: this.state.role
+      username: this.state.user, role: this.state.role,
     })
-      .then(res => {
+      .then(() => {
         setAuthToken()
-        Router.push('/');
+        Router.push('/')
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response) {
-          this.setState({errors: err.response.data});
+          this.setState({errors: err.response.data})
         }
-      });
-  };
+      })
+  }
 
   render() {
-    const {classes} = this.props;
-    const {muUsers, user, roles, role} = this.state;
+    const {classes} = this.props
+    const {muUsers, user, roles, role} = this.state
 
     console.log(`User ${user}, roles:${roles}, role:${role}`)
     const logEnabled = user && (roles.length==0 || role)
@@ -152,15 +139,15 @@ class logAsUser extends React.Component {
               <form onSubmit={this.onSubmit}>
                 <Grid item style={{width: '100%'}}>
                   <Typography style={{fontSize: 20}}>Se connecter en tant que</Typography>
-                    <Select
-                      input={<Input name="user" id="genre-label-placeholder"/>}
-                      displayEmpty
-                      name="user"
-                      onChange={this.onUserChanged}
-                      options={muUsers}
-                      values={muUsers.filter(m => m.value==user)}
-                      multi={false}
-                    >
+                  <Select
+                    input={<Input name="user" id="genre-label-placeholder"/>}
+                    displayEmpty
+                    name="user"
+                    onChange={this.onUserChanged}
+                    options={muUsers}
+                    values={muUsers.filter(m => m.value==user)}
+                    multi={false}
+                  >
                   </Select>
                   { roles && roles.length>0 ?
                     <>
@@ -183,7 +170,7 @@ class logAsUser extends React.Component {
                 <em style={{color: 'red'}}>{this.state.errors}</em>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                   <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}
-                          disabled={!logEnabled}>
+                    disabled={!logEnabled}>
                     Connexion
                   </Button>
                 </Grid>
@@ -192,9 +179,9 @@ class logAsUser extends React.Component {
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(logAsUser);
+export default withStyles(styles)(logAsUser)

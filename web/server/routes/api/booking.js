@@ -7,7 +7,7 @@ const moment = require('moment')
 const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
 const {getKeyDate} = require('../../utils/booking')
 const {invoiceFormat} = require('../../../utils/converters')
-const {payAlfred} = require('../../utils/mangopay')
+const {payBooking} = require('../../utils/mangopay')
 const CronJob = require('cron').CronJob
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
@@ -22,6 +22,7 @@ const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
 const {computeBookingReference}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
+const uuidv4 = require('uuid/v4')
 
 moment.locale('fr')
 
@@ -124,7 +125,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.fees = req.body.fees
   bookingFields.travel_tax = req.body.travel_tax
   bookingFields.pick_tax = req.body.pick_tax
-  bookingFields.status = req.body.status
+  bookingFields.status = req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status
   bookingFields.serviceUserId = req.body.serviceUserId
   bookingFields.cesu_amount = req.body.cesu_amount
   bookingFields.user_role = getRole(req) || null
@@ -149,6 +150,30 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
             if (booking.status === BOOK_STATUS.CONFIRMED) {
               sendNewBooking(book, req)
             }
+            // Si user et alfred définis, ajouter un message dans le chatroom
+            if (book.user && book.alfred) {
+              const filter={
+                $and: [
+                  {emitter: {$in: [book.alfred._id, book.user._id]}},
+                  {recipient: {$in: [book.alfred._id, book.user._id]}},
+                ],
+              }
+              const message={
+                user: book.user.firstname,
+                content: `Service ${book.service} de ${book.alfred.firstname} pour ${book.user.firstname}`,
+                date: moment(),
+                idsender: book.user._id,
+              }
+              const update={
+                $setOnInsert: {name: `room-${uuidv4()}`},
+                $set: {booking: book._id, emitter: book.user._id, recipient: book.alfred._id},
+                $addToSet: {messages: message},
+              }
+              const options={new: true, upsert: true}
+              req.context.getModel('ChatRoom').findOneAndUpdate(filter, update, options)
+                .then(() => console.log('Chatroom maj'))
+                .catch(err => console.error(err))
+            }
           })
           .catch(err => {
             console.error(err)
@@ -172,6 +197,7 @@ router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) =>
     .populate('alfred')
     .populate('user')
     .populate('prestation')
+    .populate({path: 'customer_booking', populate: {path: 'user'}})
     .then(booking => {
       if (typeof booking !== 'undefined' && booking.length > 0) {
         res.json(booking)
@@ -206,13 +232,17 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 })
 
 // @Route GET /myAlfred/api/booking/avocotes
-// Returns all booking from avocotes customer
+// Returns all bookings from avocotes customer not already handled
 // @Access private
 router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('booking').find({company_customer: {$exists: true, $ne: null}})
+  req.context.getModel('Booking').find({company_customer: {$exists: true, $ne: null}})
     .populate('user')
     .then(customer_bookings => {
-      req.context.getModel('booking').find({customer_booking: {$in: customer_bookings.map(b => b._id)}}, {'customer_booking': 1})
+      req.context.getModel('Booking').find({
+        customer_booking: {$in: customer_bookings.map(b => b._id)},
+        status: {$in: [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED, BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.PREAPPROVED, BOOK_STATUS.TO_PAY]},
+      },
+      {'customer_booking': 1})
         .then(admin_bookings => {
           let pending_customer_bookings=customer_bookings.filter(b => !admin_bookings.map(a => a.customer_booking.toString()).includes(b._id.toString()))
           res.json(pending_customer_bookings)
@@ -275,6 +305,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     .populate('user')
     .populate('prestation')
     .populate('equipments')
+    .populate({path: 'customer_booking', populate: {path: 'user'}})
     .then(booking => {
       if (!booking) {
         return res.status(404).json({msg: 'no booking found'})
@@ -340,7 +371,7 @@ router.post('/avocotes', (req, res) => {
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('company').findOne({name: AVOCOTES_COMPANY_NAME})
+  req.context.getModel('Company').findOne({name: AVOCOTES_COMPANY_NAME})
     .then(company => {
       const userData={
         firstname: req.body.firstname,
@@ -381,6 +412,7 @@ router.post('/avocotes', (req, res) => {
 })
 
 new CronJob('0 */15 * * * *', (() => {
+  console.log('Checking terminated bookings')
   const getNextNumber = (context, type, key) => {
     return new Promise((resolve, reject) => {
       const updateObj = {type: type, key: key, $inc: {value: 1}}
@@ -401,14 +433,15 @@ new CronJob('0 */15 * * * *', (() => {
   const date = moment().startOf('day')
 
   connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
+    console.log(`Checking for database ${context.getDbName()}`)
     context.getModel('Booking').find({status: BOOK_STATUS.CONFIRMED, paid: false})
       .populate('user')
       .populate('alfred')
-      .catch(err => console.error(err))
       .then(booking => {
         booking.forEach(b => {
           const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
           if (moment(date).isSameOrAfter(end_date)) {
+            /**
             const type = ['billing', 'receipt', 'myalfred_billing']
             const key = getKeyDate()
             Promise.all([getNextNumber(type[ 0 ], key), getNextNumber(type[ 1 ], key), getNextNumber(type[ 2 ], key)]).then(
@@ -419,6 +452,7 @@ new CronJob('0 */15 * * * *', (() => {
                 })
               },
             )
+            */
             b.status = BOOK_STATUS.FINISHED
             b.save()
               .then(bo => {
@@ -430,12 +464,14 @@ new CronJob('0 */15 * * * *', (() => {
         },
         )
       })
+      .catch(err => console.error(err))
   })
 
 }), null, true, 'Europe/Paris')
 
 // Handle terminated but not paid bookings
 new CronJob('0 */15 * * * *', (() => {
+  console.log('Checking bookings to pay')
   connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
     context.getModel('Booking').find({status: BOOK_STATUS.FINISHED, paid: false})
       .populate('user')
@@ -443,7 +479,7 @@ new CronJob('0 */15 * * * *', (() => {
       .populate({path: 'customer_booking', populate: {path: 'user'}})
       .then(bookings => {
         bookings.forEach(booking => {
-          payAlfred(booking)
+          payBooking(booking)
         })
       }).catch(err => {
         console.error(err)

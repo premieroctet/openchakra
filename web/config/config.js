@@ -61,8 +61,8 @@ const MANGOPAY_CONFIG_TEST = {
   clientId: 'testmyalfredv2',
   clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
   sandbox: true,
-  logClass: () => {
-  },
+  logClass: () => {},
+  errorHandler: (options, err) => {}
 }
 
 const MANGOPAY_CONFIG = is_production() ? MANGOPAY_CONFIG_PROD : MANGOPAY_CONFIG_TEST

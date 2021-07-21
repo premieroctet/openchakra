@@ -232,12 +232,12 @@ router.get('/keyword/:kw', (req, res) => {
 
 router.get('/partner/:partner_name', (req, res) => {
   const company_name=req.params.partner_name
-  req.context.getModel('company').findOne({name: company_name}, '_id')
+  req.context.getModel('Company').findOne({name: company_name}, '_id')
     .then(company => {
       if (!company) {
         return res.status(404).json(`No company ${company_name} found`)
       }
-      return req.context.getModel('prestation').find({private_company: company}, '_id')
+      return req.context.getModel('Prestation').find({private_company: company}, '_id')
         .populate('service', '_id')
     })
     .then(prestations => {
@@ -245,7 +245,7 @@ router.get('/partner/:partner_name', (req, res) => {
       if (count!=1) {
         return res.status(500).json(`${count} services différents trouvés pour ${company_name}`)
       }
-      return req.context.getModel('service').findOne({_id: prestations[0].service})
+      return req.context.getModel('Service').findOne({_id: prestations[0].service})
         .populate('prestations')
     })
     .then(service => {
