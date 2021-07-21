@@ -1,3 +1,5 @@
+import CguContent from '../CguContent/CguContent'
+
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 const {setAuthToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'

@@ -1,5 +1,8 @@
-import {SheetsRegistry} from 'jss';
-import {createGenerateClassName, createMuiTheme} from '@material-ui/core/styles';
+import {SheetsRegistry} from 'jss'
+import {createGenerateClassName, createMuiTheme} from '@material-ui/core/styles'
+
+
+const PRIMARY = 'rgba(178,204,251,1)'
 
 // A theme with custom primary and secondary color.
 // It's optional.
@@ -7,36 +10,39 @@ const theme = createMuiTheme({
   h3: {
     fontFamily: 'Montserrat, sans-serif',
   },
+  h2: {
+    color: 'green',
+  },
   palette: {
     primary: {
-      main: 'rgba(178,204,251,1)',
+      main: PRIMARY,
     },
     secondary: {
       main: '#B26879',
     },
     b2b: {
-      main: '#353A51'
+      main: '#353A51',
     },
     link: {
-      main: '#4C89C4'
+      main: '#4C89C4',
     },
     backgroundGrey: {
-      main: '#EDEDED'
+      main: '#EDEDED',
     },
     white: {
-      main: 'rgba(255,255,255,1)'
+      main: 'rgba(255,255,255,1)',
     },
     yellow: {
-      main: 'rgba(248, 207, 97, 1)'
+      main: 'rgba(248, 207, 97, 1)',
     },
     black: {
-      main: 'rgba(53,44,42,1)'
+      main: 'rgba(53,44,42,1)',
     },
     lightBlack: {
-      main: 'rgba(38,38,38,6)'
+      main: 'rgba(38,38,38,6)',
     },
     placeHolder: {
-      main: 'rgba(0, 0, 0, 0.87)'
+      main: 'rgba(0, 0, 0, 0.87)',
     },
   },
   typography: {
@@ -51,37 +57,37 @@ const theme = createMuiTheme({
       fontFamily: 'Montserrat, sans-serif',
       fontWeight: 'bold',
       fontSize: '32px',
-      margin: 0
+      margin: 0,
     },
     subTitle: {
       fontFamily: 'Montserrat, sans-serif',
       fontWeight: 'bold',
       fontSize: '20px',
-      margin: 0
+      margin: 0,
     },
     sectionTitle: {
       fontFamily: 'Montserrat, sans-serif',
       fontWeight: 'bold',
       fontSize: '18px',
-      margin: 0
+      margin: 0,
     },
     text: {
       fontFamily: 'Montserrat, sans-serif',
       fontWeight: '500',
       fontSize: '16px',
-      margin: 0
+      margin: 0,
     },
     textAlfredName: {
       fontFamily: 'Montserrat, sans-serif',
       fontWeight: '800',
       fontSize: '12px',
-      margin: 0
+      margin: 0,
     },
     textLabel: {
       fontFamily: 'Montserrat, sans-serif',
       fontWeight: '500',
       fontSize: '10px',
-      margin: 0
+      margin: 0,
     },
     buttonLink: {
       fontFamily: 'Montserrat, sans-serif',
@@ -99,13 +105,13 @@ const theme = createMuiTheme({
     whiteButtonContained: {
       fontFamily: 'Montserrat, sans-serif',
       fontWeight: 'bold',
-      fontSize: '18px'
+      fontSize: '18px',
     },
     infoBar: {
       fontFamily: 'Montserrat, sans-serif',
       lineHeight: '23px',
       fontSize: 14,
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     },
     placeHolder: {
       fontFamily: 'Montserrat, sans-serif',
@@ -116,46 +122,46 @@ const theme = createMuiTheme({
   },
   border: {
     button: {
-      borderRadius: 37
+      borderRadius: 37,
     },
     buttonDiscover: {
-      borderRadius: 24
+      borderRadius: 24,
     },
     blackButton: {
-      borderRadius: 39
+      borderRadius: 39,
     },
     whiteButton: {
       borderRadius: 15,
-      border: '2px solid rgba(112,112,112,1)'
+      border: '2px solid rgba(112,112,112,1)',
     },
     textField: {
-      borderRadius: 39
+      borderRadius: 39,
     },
     categoryCard: {
-      borderRadius: 50
-    }
+      borderRadius: 50,
+    },
   },
   padding: {
     blackButton: {
-      padding: '12px 38px'
+      padding: '12px 38px',
     },
     whiteButton: {
-      padding: '5px 30px'
+      padding: '5px 30px',
     },
     whiteButtonContained: {
-      padding: '6px 38px'
+      padding: '6px 38px',
     },
     homePage: {
       section: {
-        padding: '8%'
-      }
+        padding: '8%',
+      },
     },
     infoBar: {
       paddingTop: 20,
-      paddingBottom: 20
-    }
+      paddingBottom: 20,
+    },
   },
-});
+})
 
 function createPageContext() {
   return {
@@ -166,22 +172,22 @@ function createPageContext() {
     sheetsRegistry: new SheetsRegistry(),
     // The standard class name generator.
     generateClassName: createGenerateClassName(),
-  };
+  }
 }
 
-let pageContext;
+let pageContext
 
 export default function getPageContext() {
   // Make sure to create a new context for every server-side request so that data
   // isn't shared between connections (which would be bad).
   if (!process.browser) {
-    return createPageContext();
+    return createPageContext()
   }
 
   // Reuse context on the client-side.
   if (!pageContext) {
-    pageContext = createPageContext();
+    pageContext = createPageContext()
   }
 
-  return pageContext;
+  return pageContext
 }
