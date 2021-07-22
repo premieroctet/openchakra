@@ -1,17 +1,17 @@
 export default theme => ({
-  userServicePreviewWarningContainer:{
+  userServicePreviewWarningContainer: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   borderContentRight: {
     border: '2px solid #d2d2d2',
     borderRadius: 30,
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.down('xs')]:{
-      border: 'inherit'
-    }
+    [theme.breakpoints.down('xs')]: {
+      border: 'inherit',
+    },
   },
   iconButtonStyle: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -31,43 +31,44 @@ export default theme => ({
   },
   datePickerStyle: {
     border: 'none',
-    width: '100%'
+    width: '100%',
   },
-  rootAccordion:{
+  rootAccordion: {
     boxShadow: 'inherit',
     padding: '4px 6px',
     border: '1px solid rgba(112,112,112,0.5)',
     borderRadius: '14px !important',
-    width: '100%'
+    width: '100%',
   },
-  userServicePreviewAccordionDetails:{
+  userServicePreviewAccordionDetails: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
 
-  userServicePreviewAccordionNoShadow:{
-    boxShadow: 'none'
+  userServicePreviewAccordionNoShadow: {
+    boxShadow: 'none',
   },
-  hideOnBigSreen:{
-    [theme.breakpoints.up('lg')]:{
-      display: 'none'
-    }
+  hideOnBigSreen: {
+    [theme.breakpoints.up('lg')]: {
+      display: 'none',
+    },
   },
-
-
-  userServicePButtonResa:{
+  cancelButton: {
+    color: theme.palette.error.main,
+  },
+  userServicePButtonResa: {
     color: 'white',
     borderRadius: 14,
     textTransform: 'initial',
     padding: '5%',
-    width: '100%'
+    width: '100%',
   },
-  mainDrawerBooking:{
+  mainDrawerBooking: {
     width: '80%',
     paddingTop: '5%',
     paddingBottom: '5%',
-    [theme.breakpoints.down('xs')]:{
-      width: '95%'
-    }
-  }
+    [theme.breakpoints.down('xs')]: {
+      width: '95%',
+    },
+  },
 })

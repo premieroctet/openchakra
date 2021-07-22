@@ -1,14 +1,14 @@
-import React from 'react';
-import withStyles from "@material-ui/core/styles/withStyles";
-import Grid from "@material-ui/core/Grid";
-import {Typography} from "@material-ui/core";
-import Link from "next/link";
-import Button from "@material-ui/core/Button";
-import styles from '../../../static/css/components/RegisterSteps/RegisterThirdPage/RegisterThirdPage';
+import React from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import Link from 'next/link'
+import Button from '@material-ui/core/Button'
+import styles from '../../../static/css/components/RegisterSteps/RegisterThirdPage/RegisterThirdPage'
 
-class RegisterThirdPage extends React.Component{
+class RegisterThirdPage extends React.Component {
   render() {
-    const{classes, state} = this.props;
+    const{classes} = this.props
 
     return(
       <Grid container>
@@ -40,7 +40,7 @@ class RegisterThirdPage extends React.Component{
                     <a style={{textDecoration: 'none'}}>
                       <Button
                         variant={'contained'}
-                        color={'secondary'}
+                        classes={{root: classes.cancelButton}}
                         style={{color: 'white', textTransform: 'initial'}}>
                         Proposer mes services
                       </Button>
@@ -75,4 +75,4 @@ class RegisterThirdPage extends React.Component{
 
 }
 
-export default withStyles(styles)(RegisterThirdPage);
+export default withStyles(styles)(RegisterThirdPage)

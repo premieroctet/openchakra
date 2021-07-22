@@ -1,43 +1,43 @@
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
-const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
-import React from 'react';
-import axios from 'axios';
-import moment from 'moment';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Router from 'next/router';
-import {withStyles} from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import {pdfjs} from 'react-pdf';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {Helmet} from 'react-helmet';
-import styles from '../../static/css/pages/trustAndVerification/trustAndVerification';
-import Siret from '../../components/Siret/Siret';
-import {Radio, RadioGroup} from '@material-ui/core';
-import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
-import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
-import LayoutAccount from "../../hoc/Layout/LayoutAccount";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-const {CESU} = require('../../utils/consts');
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-const I18N = require('../../utils/i18n');
-moment.locale('fr');
+const {snackBarSuccess} = require('../../utils/notifications')
+import React from 'react'
+import axios from 'axios'
+import moment from 'moment'
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import Router from 'next/router'
+import {withStyles} from '@material-ui/core/styles'
+import MenuItem from '@material-ui/core/MenuItem'
+import {pdfjs} from 'react-pdf'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import {Helmet} from 'react-helmet'
+import styles from '../../static/css/pages/trustAndVerification/trustAndVerification'
+import Siret from '../../components/Siret/Siret'
+import {Radio, RadioGroup} from '@material-ui/core'
+import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch'
+import DocumentEditor from '../../components/DocumentEditor/DocumentEditor'
+import LayoutAccount from '../../hoc/Layout/LayoutAccount'
+import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+const {CESU} = require('../../utils/consts')
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+const I18N = require('../../utils/i18n')
+moment.locale('fr')
 
 // TODO : nettoyer les attributes doublons (ex siret et company.siret)
 // TODO : prendre en compte vat_subject et vat_number
 class trustAndVerification extends React.Component {
   constructor(props) {
-    super(props);
-    this.child = React.createRef();
+    super(props)
+    this.child = React.createRef()
     this.state = {
       user: {},
       type: 'identite',
@@ -68,93 +68,93 @@ class trustAndVerification extends React.Component {
       id_card_status: null,
       id_card_error: null,
       deleteConfirmMessage: null,
-    };
-    this.editSiret = this.editSiret.bind(this);
-    this.callDrawer = this.callDrawer.bind(this);
-    this.onSiretChange = this.onSiretChange.bind(this);
-    this.statusSaveEnabled = this.statusSaveEnabled.bind(this);
-    this.deleteRecto = this.deleteRecto.bind(this);
-    this.deleteRegistrationProof = this.deleteRegistrationProof.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    }
+    this.editSiret = this.editSiret.bind(this)
+    this.callDrawer = this.callDrawer.bind(this)
+    this.onSiretChange = this.onSiretChange.bind(this)
+    this.statusSaveEnabled = this.statusSaveEnabled.bind(this)
+    this.deleteRecto = this.deleteRecto.bind(this)
+    this.deleteRegistrationProof = this.deleteRegistrationProof.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
+    this.handleClose = this.handleClose.bind(this)
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
-        let user = res.data;
-        var st = {'user': user}
+        let user = res.data
+        let st = {'user': user}
         if (user.id_card) {
-          st['card'] = user.id_card
+          st.card = user.id_card
           if (user.id_card.recto) {
-            st['ext'] = user.id_card.recto.split('.').pop();
+            st.ext = user.id_card.recto.split('.').pop()
           }
           if (user.id_card.verso) {
-            st['extVerso'] = user.id_card.verso.split('.').pop();
+            st.extVerso = user.id_card.verso.split('.').pop()
           }
           if (user.id_card.recto) {
-            this.setState({type: user.id_card.verso ? 'identite' : 'passeport'});
+            this.setState({type: user.id_card.verso ? 'identite' : 'passeport'})
           }
         }
         if (user.registration_proof) {
-          st['registration_proof'] = user.registration_proof
-          st['extRegistrationProof'] = user.registration_proof.split('.').pop();
+          st.registration_proof = user.registration_proof
+          st.extRegistrationProof = user.registration_proof.split('.').pop()
         }
-        st['id_card_status'] = user.id_card_status_text
+        st.id_card_status = user.id_card_status_text
         if (user.id_card_error) {
-          st['id_card_error'] = user.id_card_error_text
+          st.id_card_error = user.id_card_error_text
         }
-        this.setState(st);
+        this.setState(st)
         if (user.is_alfred) {
-          this.setState({alfred: true});
+          this.setState({alfred: true})
           axios.get('/myAlfred/api/shop/currentAlfred')
             .then(response => {
-              let user = response.data;
+              let user = response.data
               this.setState({
                 cis: user.cis,
                 cesu: user.cesu,
                 professional: user.is_professional,
                 company: user.company,
-              });
+              })
 
-            });
+            })
         }
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
   }
 
 
   handleClose() {
-    this.setState({open: false, deleteCb: null});
+    this.setState({open: false, deleteCb: null})
   }
 
   handleDelete() {
-    this.deleteCb();
-    this.handleClose();
+    this.deleteCb()
+    this.handleClose()
   }
 
   onChange = e => {
-    const {name, value} = e.target;
+    const {name} = e.target
     this.setState({[e.target.name]: e.target.value},
       () => {
         if (name === 'siret') {
-          this.handleSiret();
+          this.handleSiret()
         }
-      });
+      })
   };
 
   onCISChange = (id, checked) => {
-    const event = {target: {name: 'cis', value: checked}};
-    this.onChange(event);
+    const event = {target: {name: 'cis', value: checked}}
+    this.onChange(event)
   };
 
   onChangePartPro = event => {
@@ -165,14 +165,14 @@ class trustAndVerification extends React.Component {
   };
 
   onSiretChange = data => {
-    this.setState({company: data});
+    this.setState({company: data})
   };
 
   onRectoChange = e => {
     this.setState({
       id_recto: e.target.files[0],
       recto_file: URL.createObjectURL(e.target.files[0]),
-      ext_upload: e.target.files[0].name.split('.').pop()
+      ext_upload: e.target.files[0].name.split('.').pop(),
     })
   }
 
@@ -180,7 +180,7 @@ class trustAndVerification extends React.Component {
     this.setState({
       id_verso: e.target.files[0],
       verso_file: URL.createObjectURL(e.target.files[0]),
-      extVerso_upload: e.target.files[0].name.split('.').pop()
+      extVerso_upload: e.target.files[0].name.split('.').pop(),
     })
   }
 
@@ -188,67 +188,66 @@ class trustAndVerification extends React.Component {
     this.setState({
       id_registrationproof: e.target.files[0],
       registration_proof_file: URL.createObjectURL(e.target.files[0]),
-      extRegistrationProof_upload: e.target.files[0].name.split('.').pop()
+      extRegistrationProof_upload: e.target.files[0].name.split('.').pop(),
     })
   }
 
   handleSiret() {
-    const code = this.state.siret;
+    const code = this.state.siret
     axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siret/${code}`)
       .then(res => {
-        const data = res.data;
+        const data = res.data
         this.setState({
           name: data.etablissement.l1_normalisee,
-        });
-        const date = data.etablissement.date_creation;
-        const year = date.substring(0, 4);
-        const month = date.substring(4, 6);
-        const day = date.substring(6, 8);
-        const result = day + '/' + month + '/' + year;
-        this.setState({creation_date: result});
+        })
+        const date = data.etablissement.date_creation
+        const year = date.substring(0, 4)
+        const month = date.substring(4, 6)
+        const day = date.substring(6, 8)
+        const result = `${day }/${ month }/${ year}`
+        this.setState({creation_date: result})
       })
-      .catch();
+      .catch()
 
   }
 
   onSubmit = e => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('myCardR', this.state.id_recto);
-    formData.append('myCardV', this.state.id_verso);
+    e.preventDefault()
+    const formData = new FormData()
+    formData.append('myCardR', this.state.id_recto)
+    formData.append('myCardV', this.state.id_verso)
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
       },
-    };
+    }
     axios.post('/myAlfred/api/users/profile/idCard', formData, config)
-      .then((response) => {
-        snackBarSuccess('Pièce d\'identité ajoutée');
+      .then(() => {
+        snackBarSuccess('Pièce d\'identité ajoutée')
         this.componentDidMount()
       })
       .catch(err => {
         console.error(err)
-      });
+      })
   };
 
   addVerso() {
-    const formData = new FormData();
-    formData.append('myCardV', this.state.id_verso);
+    const formData = new FormData()
+    formData.append('myCardV', this.state.id_verso)
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
       },
-    };
+    }
     axios.post('/myAlfred/api/users/profile/idCard/addVerso', formData, config)
-      .then((response) => {
-        snackBarSuccess('Carte d\'identité ajoutée');
-        this.componentDidMount
-        ()
-      }).catch();
+      .then(() => {
+        snackBarSuccess('Carte d\'identité ajoutée')
+        this.componentDidMount()
+      }).catch()
   }
 
   onDocumentLoadSuccess = ({numPages}) => {
-    this.setState({numPages});
+    this.setState({numPages})
   };
 
   editSiret() {
@@ -258,27 +257,27 @@ class trustAndVerification extends React.Component {
       company: this.state.company,
       cesu: this.state.cesu,
       cis: this.state.cis,
-    };
+    }
     axios.put('/myAlfred/api/shop/editStatus', newStatus)
-      .then(res => {
-        snackBarSuccess('Statut modifié');
-        const data = {status: this.state.professional ? 'Pro' : 'Particulier'};
-        return axios.put('/myAlfred/api/serviceUser/editStatus', data);
+      .then(() => {
+        snackBarSuccess('Statut modifié')
+        const data = {status: this.state.professional ? 'Pro' : 'Particulier'}
+        return axios.put('/myAlfred/api/serviceUser/editStatus', data)
       })
       .then(() => {
-        const formData = new FormData();
+        const formData = new FormData()
         if (this.state.id_registrationproof) {
-          formData.append('registrationProof', this.state.id_registrationproof);
-          const config = {headers: {'content-type': 'multipart/form-data'}};
+          formData.append('registrationProof', this.state.id_registrationproof)
+          const config = {headers: {'content-type': 'multipart/form-data'}}
           axios.post('/myAlfred/api/users/profile/registrationProof/add', formData, config)
-            .then(response => {
-              snackBarSuccess('Document d\'immatriculation ajouté');
+            .then(() => {
+              snackBarSuccess('Document d\'immatriculation ajouté')
               this.componentDidMount()
             })
             .catch(err => console.error(err))
         }
       })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
   }
   deleteRecto(force = false) {
     if (!force) {
@@ -286,16 +285,17 @@ class trustAndVerification extends React.Component {
         open: true,
         deleteCb: () => this.deleteRecto(true),
         deleteConfirmMessage: I18N.ID_CARD_CONFIRM_DELETION,
-      });
-    } else {
+      })
+    }
+    else {
       axios.delete('/myAlfred/api/users/profile/idCard/recto')
         .then(() => {
           snackBarSuccess('Pièce d\'identité supprimée')
           this.componentDidMount()
         })
         .catch(err => {
-          console.error(err);
-        });
+          console.error(err)
+        })
     }
   }
 
@@ -305,45 +305,41 @@ class trustAndVerification extends React.Component {
         open: true,
         deleteCb: () => this.deleteRegistrationProof(true),
         deleteConfirmMessage: I18N.REGISTRATION_PROOF_CONFIRM_DELETION,
-      });
-    } else {
+      })
+    }
+    else {
       axios.delete('/myAlfred/api/users/profile/registrationProof')
         .then(() => {
-          snackBarSuccess('Document d\immatriculation supprimé');
+          snackBarSuccess('Document d\immatriculation supprimé')
           this.componentDidMount()
         })
         .catch(err => {
-          console.error(err);
-        });
+          console.error(err)
+        })
     }
   }
 
   callDrawer() {
-    this.child.current.handleDrawerToggle();
+    this.child.current.handleDrawerToggle()
   }
 
   statusSaveEnabled = () => {
     const {professional, cesu, company}=this.state
     if (professional) {
       if (!(company && company.siret && company.name)) {
-        console.log(`Invalid company:${company}`)
         return false
       }
       if (company.vat_subject && !company.vat_number) {
-        console.log(`VAT subject without vat number:${company}`)
         return false
       }
     }
-    else {
-      if (!cesu) {
-        console.log(`No CESU choice`)
-        return false
-      }
+    else if (!cesu) {
+      return false
     }
     return true
   };
 
-  modalDeleteConfirmMessage = () => {
+  modalDeleteConfirmMessage = classes => {
     return (
       <Dialog
         open={this.state.open}
@@ -361,7 +357,7 @@ class trustAndVerification extends React.Component {
           <Button onClick={this.handleClose} color="primary">
             Annuler
           </Button>
-          <Button onClick={this.handleDelete} color="secondary" autoFocus>
+          <Button onClick={this.handleDelete} classes={{root: classes.cancelButton}}>
             Supprimer
           </Button>
         </DialogActions>
@@ -370,7 +366,7 @@ class trustAndVerification extends React.Component {
   };
 
 
-  content = (classes) => {
+  content = classes => {
     return (
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -393,9 +389,7 @@ class trustAndVerification extends React.Component {
             <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez ou modifiez vos documents d'identité.</Typography>
           </Grid>
         </Grid>
-
         <Grid>
-
           <Grid className={classes.searchFilterRightContainer}>
             <Grid className={classes.searchFilterRightLabel}>
               <h3>Type de document</h3>
@@ -407,9 +401,9 @@ class trustAndVerification extends React.Component {
                   id="simple-select-placeholder-label"
                   value={this.state.type}
                   name={'type'}
-                  onChange={(event) => {
-                    this.onChange(event);
-                    this.setState({selected: true});
+                  onChange={event => {
+                    this.onChange(event)
+                    this.setState({selected: true})
                   }}
                   displayEmpty
                   disableUnderline
@@ -487,8 +481,8 @@ class trustAndVerification extends React.Component {
                     control={
                       <Radio
                         checked={!this.state.professional}
-                        onChange={(e) => {
-                          this.onChangePartPro(e);
+                        onChange={e => {
+                          this.onChangePartPro(e)
                         }}
                         value={!this.state.professional}
                         name="particular"
@@ -522,8 +516,8 @@ class trustAndVerification extends React.Component {
                     control={
                       <Radio
                         checked={this.state.professional}
-                        onChange={(e) => {
-                          this.onChangePartPro(e);
+                        onChange={e => {
+                          this.onChangePartPro(e)
                         }}
                         value={this.state.professional}
                         name="professional"
@@ -575,7 +569,7 @@ class trustAndVerification extends React.Component {
                 null
               }
               <Grid style={{marginTop: '10vh'}}>
-                <Button  variant="contained" className={classes.buttonSave}
+                <Button variant="contained" className={classes.buttonSave}
                   onClick={this.editSiret} disabled={!this.statusSaveEnabled()}>
                   Enregistrer
                 </Button>
@@ -589,7 +583,7 @@ class trustAndVerification extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
     const {user} = this.state
 
     if (!user) {
@@ -601,7 +595,7 @@ class trustAndVerification extends React.Component {
         <Helmet>
           <title> Profil - Confiance et vérification - My Alfred </title>
           <meta property="description"
-                content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
+            content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
         <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount>
@@ -613,10 +607,10 @@ class trustAndVerification extends React.Component {
             {this.content(classes)}
           </LayoutMobile>
         </Grid>
-        {this.state.open ? this.modalDeleteConfirmMessage() : null}
+        {this.state.open ? this.modalDeleteConfirmMessage(classes) : null}
       </React.Fragment>
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(trustAndVerification);
+export default withStyles(styles)(trustAndVerification)

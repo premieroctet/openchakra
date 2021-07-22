@@ -37,4 +37,7 @@ export default theme => ({
       marginTop: '2%',
     },
   },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+  },
 })

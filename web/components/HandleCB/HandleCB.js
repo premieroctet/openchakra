@@ -3,10 +3,8 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../static/css/components/HandleCB/HandleCB'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
 import PaymentCard from '../Payment/PaymentCard/PaymentCard'
 import IconButton from '@material-ui/core/IconButton'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import NumberFormat from 'react-number-format'
@@ -208,7 +206,7 @@ class HandleCB extends React.Component {
     )
   };
 
-  modalDeleteCreditCard = () => {
+  modalDeleteCreditCard = classes => {
     return (
       <Dialog
         open={this.state.showDeleteCard}
@@ -227,7 +225,7 @@ class HandleCB extends React.Component {
           <Button onClick={this.handleCloseDial} color="primary">
             Annuler
           </Button>
-          <Button onClick={this.deleteCard} color="secondary" autoFocus>
+          <Button onClick={this.deleteCard} classes={{root: classes.buttonCancel}}>
             Supprimer
           </Button>
         </DialogActions>

@@ -155,7 +155,7 @@ function Form({classes, booking_id}) {
         console.error(err)
       })
   }, [service, quantities])
-  
+
   return(
     <>
       <Grid container className={classes.mainContainer} spacing={2}>

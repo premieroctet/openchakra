@@ -45,9 +45,6 @@ const theme = createMuiTheme({
       main: 'rgba(0, 0, 0, 0.87)',
     },
   },
-  title: {
-
-  },
   typography: {
     fontSize: 14,
     lineHeight: '20px',

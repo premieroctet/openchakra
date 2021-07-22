@@ -9,4 +9,7 @@ export default theme => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
+  buttonCancel: {
+    color: theme.palette.error.main,
+  },
 })

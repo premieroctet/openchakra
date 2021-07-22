@@ -1,18 +1,20 @@
+import {snackBarSuccess} from '../../../utils/notifications'
+
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
-import Link from 'next/link';
+import React from 'react'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Layout from '../../../hoc/Layout/Layout'
+import axios from 'axios'
+import Router from 'next/router'
+import Link from 'next/link'
 
 
-const styles = {
+const styles = theme => ({
   loginContainer: {
     alignItems: 'center',
     height: '100vh',
@@ -31,94 +33,97 @@ const styles = {
     color: 'black',
     fontSize: 12,
   },
-};
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: 'white',
+  },
+})
 
 class view extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       equipment: {},
 
-    };
+    }
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClick = this.handleClick.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
-    return {equipment_id: id};
+    return {equipment_id: id}
 
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    const id = this.props.equipment_id;
+    localStorage.setItem('path', Router.pathname)
+    const id = this.props.equipment_id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/equipment/all/${id}`)
       .then(response => {
-        let equipment = response.data;
-        this.setState({equipment: equipment});
+        let equipment = response.data
+        this.setState({equipment: equipment})
 
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
 
   }
 
   onChange = e => {
-    const state = this.state.equipment;
-    state[e.target.name] = e.target.value;
-    this.setState({equipment: state});
+    const state = this.state.equipment
+    state[e.target.name] = e.target.value
+    this.setState({equipment: state})
   };
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const {label} = this.state.equipment;
-    const id = this.props.equipment_id;
+    const {label} = this.state.equipment
+    const id = this.props.equipment_id
     axios.put(`/myAlfred/api/admin/equipment/all/${id}`, {label})
-      .then(res => {
-
-        alert('Equipement modifié avec succès');
-        Router.push({pathname: '/dashboard/equipments/all'});
+      .then(() => {
+        snackBarSuccess('Equipement modifié avec succès')
+        Router.push({pathname: '/dashboard/equipments/all'})
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
   };
 
   handleClick() {
-    const id = this.props.equipment_id;
+    const id = this.props.equipment_id
     axios.delete(`/myAlfred/api/admin/equipment/all/${id}`)
-      .then(res => {
-        alert('Equipement supprimé avec succès');
-        Router.push({pathname: '/dashboard/equipments/all'});
+      .then(() => {
+        snackBarSuccess('Equipement supprimé avec succès')
+        Router.push({pathname: '/dashboard/equipments/all'})
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
 
 
-  };
+  }
 
 
   render() {
-    const {classes} = this.props;
-    const {equipment} = this.state;
+    const {classes} = this.props
+    const {equipment} = this.state
 
 
     return (
@@ -152,8 +157,8 @@ class view extends React.Component {
                   <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Modifier
                   </Button>
-                  <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
+                  <Button type="button" variant="contained" classes={{root: classes.cancelButton}} style={{width: '100%'}}
+                    onClick={this.handleClick}>
                     Supprimer
                   </Button>
                 </Grid>
@@ -167,9 +172,9 @@ class view extends React.Component {
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(view);
+export default withStyles(styles)(view)

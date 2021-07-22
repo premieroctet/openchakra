@@ -30,7 +30,7 @@ const styles = theme => ({
     fontSize: 'xx-large',
   },
   errorButton: {
-    color: theme.palette.error.main
+    backgroundColor: theme.palette.error.main
   },
 })
 

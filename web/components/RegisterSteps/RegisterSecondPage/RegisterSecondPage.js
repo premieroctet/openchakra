@@ -67,7 +67,7 @@ class RegisterSecondPage extends React.Component {
           <CguContent/>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color={'secondary'}>Fermer</Button>
+          <Button onClick={handleClose} classes={{root: classes.cancelButton}}>Fermer</Button>
         </DialogActions>
       </Dialog>
     )
@@ -114,7 +114,7 @@ class RegisterSecondPage extends React.Component {
                   onClear={() => this.props.onChangeAddress(null)}
                 />
               </form>
-              <em style={{color: 'red'}}>{state.cityError}</em>
+              <em className={classes.cancelButton}>{state.cityError}</em>
             </Grid>
           </Grid>
         </Grid>
