@@ -142,7 +142,7 @@ router.post('/register', (req, res) => {
         return res.status(400).json(errors)
       }
 
-      let user = db_user || {}
+      let user = {}
       user.name = req.body.name
       user.gender = req.body.gender
       user.firstname = req.body.firstname
@@ -168,7 +168,7 @@ router.post('/register', (req, res) => {
           throw err
         }
         user.password = hash
-        user.save()
+        req.context.getModel('User').create(user)
           .then(user => {
             createMangoClient(user)
             sendVerificationMail(user, req)
