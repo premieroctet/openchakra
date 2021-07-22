@@ -61,7 +61,7 @@ class ProfileServices extends React.Component {
             </Box>
           </Grid> : null : null
         }
-        {isEditableUser(user) ? <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
+        {isEditableUser(user) && shop.length > 0 ? <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
           <Box>
             <AlfredConditions shop={shop}/>
           </Box>
