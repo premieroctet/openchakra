@@ -110,10 +110,11 @@ const filterPartnerServices = (sus, admin) => {
     return sus
   }
   sus = sus.map(su => {
-    su.prestations = su.prestations.filter(p => {
+    su.prestations = su.prestations.filter((p,index) => {
       // TODO : pourquoi j'ai des prestas à null ?
       if (!p.prestation) {
-        console.error(`Missing prestations.prestation for serviceUser #${su._id}`)
+        console.error(`Missing prestations.prestation for presta #${index} in serviceUser #${su._id}`)
+        console.log(su.prestations.map(p => p && p.prestation && p.prestation._id))
       }
       return p && p.prestation && !p.prestation.private_company
     })

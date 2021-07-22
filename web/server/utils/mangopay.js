@@ -385,7 +385,7 @@ const payBooking = booking => {
   const role = booking.user_role
 
   let promise = null
-  let amount = (booking.amount - booking.fees) * 100
+  let amount = booking.amount - booking.fees
   let fees = 0
   if ([ADMIN, MANAGER].includes(role)) {
     promise = Company.findById(booking.user.company)
