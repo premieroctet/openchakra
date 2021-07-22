@@ -548,10 +548,11 @@ router.post('/search', (req, res) => {
       if (kw) {
         sus = serviceFilters.filterServicesKeyword(sus, kw, status)
       }
+      console.log(`Remaining ${sus.length} after keyword filtering`)
 
       sus = serviceFilters.filterPartnerServices(sus, req.context.isAdmin())
+      console.log(`Remaining ${sus.length} after keyword filtering`)
 
-      console.log(`Found ${sus.length} after keyword filtering`)
       if (gps) {
         try {
           sus = serviceFilters.filterServicesGPS(sus, JSON.parse(req.body.gps), restrictPerimeter)
@@ -560,7 +561,7 @@ router.post('/search', (req, res) => {
           sus = serviceFilters.filterServicesGPS(sus, req.body.gps, restrictPerimeter)
         }
       }
-      console.log(`Found ${sus.length} after gps filtering`)
+      console.log(`Remaining ${sus.length} after gps filtering`)
 
       // Manager : filtrer les services autorisés
       if (getRole(req)==MANAGER) {
