@@ -17,19 +17,9 @@ const {BOOK_STATUS} = require('../../utils/consts')
 import DatePicker, {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
 import Hidden from '@material-ui/core/Hidden'
-/**
-import {PDFDownloadLink} from '@react-pdf/renderer'
-import BillingGeneration from '../BillingGeneration/BillingGeneration'
-*/
-import NoSSR from 'react-no-ssr'
 
 const {BOOKING} = require('../../utils/i18n')
 const {getUserLabel} = require('../../utils/context')
-
-const HIDE_BILLING=false
-if (!HIDE_BILLING) {
-
-}
 registerLocale('fr', fr)
 moment.locale('fr')
 
@@ -59,7 +49,7 @@ class BookingPreview extends React.Component {
     this.getPrestationMinMoment = this.getPrestationMinMoment.bind(this)
   }
 
-  static getInitialProps({query: {id, user}}) {
+  static getInitialProps({query: {id}}) {
     return {
       booking_id: id,
     }
@@ -224,7 +214,7 @@ class BookingPreview extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime, loading, is_pro, user_label, alfred_label} = this.state
+    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime, user_label, alfred_label} = this.state
 
     if (!bookingObj || !currentUser) {
       return null
@@ -308,37 +298,6 @@ class BookingPreview extends React.Component {
                         }
                       </Grid>
                     </Grid>
-                    {/** bookingObj.billing_number !== null && bookingObj.receipt_number !== null &&
-                      <NoSSR>
-                        <Grid style={{textAlign: 'center', fontSize: '20px'}}>
-                          {
-                            loading ? 'Chargement en cours...' :
-                              <Grid onClick={this.setLoading}
-                              >
-                                {
-                              <PDFDownloadLink
-                                document={<BillingGeneration bookingObj={bookingObj} is_pro={is_pro}/>}
-                                fileName=
-                                  {
-                                    is_pro ? "facture" + bookingObj.billing_number + ".pdf"
-                                      : "recepisse" + bookingObj.receipt_number + ".pdf"
-                                  }
-                                style={{
-                                  textDecoration: 'none',
-                                  color: '#CCDCFB'
-                                }}
-                              >
-                                Télécharger
-                                {
-                                  is_pro ? " ma facture" : " mon récépissé"
-                                }
-                              </PDFDownloadLink>
-                              }
-                              </Grid>
-                          }
-                        </Grid>
-                      </NoSSR>
-                    */}
                     <hr className={classes.hrSeparator}/>
                     {bookingObj === null ||
                   currentUser === null ? null : bookingObj.status ===
@@ -582,11 +541,11 @@ class BookingPreview extends React.Component {
                                     </Typography>
                                   </Grid>
                                   <Grid className={classes.buttonConfirmResa}>
-                                    <Button variant={'contained'} className={classes.buttonConfirm}
+                                    <Button color={'primary'} variant={'contained'} className={classes.buttonConfirm}
                                       onClick={this.onConfirm}>Confirmer</Button>
                                   </Grid>
                                   <Grid>
-                                    <Button variant={'outlined'} color={'primary'}
+                                    <Button variant={'outlined'} classes
                                       onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}>Refuser</Button>
                                   </Grid>
                                 </Grid>
