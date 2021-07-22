@@ -131,7 +131,7 @@ class RequestServerContext extends PartnerServerContext {
 
   static getPartner = request => {
     const host=request.hostname
-    return getPartnerFromHostname(request.hostname)
+    return getPartnerFromHostname(host)
   }
 
   getUser = () => {
