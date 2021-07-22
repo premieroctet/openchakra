@@ -100,7 +100,26 @@ const filterServicesKeyword = (serviceUsers, keyword, status) => {
 }
 
 const filterServicesIds = (sus, serviceids) => {
-  return sus.filter( su => serviceids.includes(su.service._id))
+  return sus.filter(su => serviceids.includes(su.service._id))
 }
 
-module.exports = {filterServicesGPS, filterServicesKeyword, distanceComparator, filterServicesIds}
+// For non admin, remove prestations linked to companies
+// Then remove services having no prestation
+const filterPartnerServices = (sus, admin) => {
+  if (admin) {
+    return sus
+  }
+  sus = sus.map(su => {
+    su.prestations = su.prestations.filter(p => {
+      // TODO : pourquoi j'ai des prestas à null ?
+      return p && p.prestation && !p.prestation.private_company
+    })
+    return su
+  })
+    .filter(su => su.prestations.length>0)
+  return sus
+}
+
+module.exports = {
+  filterServicesGPS, filterServicesKeyword, distanceComparator,
+  filterServicesIds, filterPartnerServices}
