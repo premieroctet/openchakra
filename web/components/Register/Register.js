@@ -23,6 +23,7 @@ import TextField from '@material-ui/core/TextField'
 import DialogActions from '@material-ui/core/DialogActions'
 let parse = require('url-parse')
 import {hasStatusRegister, removeStatusRegister, getRole} from '../../utils/context'
+import { isEmailOk } from '../../utils/sms'
 const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms')
 const {STEPS}=require('../../utils/registerStep')
@@ -196,8 +197,8 @@ class Register extends React.Component {
   }
 
   onChangeEmail = event => {
-    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    if (event.target.value.match(regex)) {
+    const regex = isEmailOk(event.target.value)
+    if (regex) {
       this.setState({emailValidator: true, emailError: ''})
     }
     else {
@@ -207,7 +208,7 @@ class Register extends React.Component {
   }
 
 
-  onChangePassword = e => {
+  onChangePassword = () => {
     this.setState({
       status1: checkPass1(this.state.password),
       status2: checkPass2(this.state.password, this.state.password2),

@@ -7,7 +7,6 @@ import {TextField} from '@material-ui/core'
 import axios from 'axios'
 import {setAxiosAuthentication} from '../../../utils/authentication'
 import {COMPANY_ACTIVITY, COMPANY_SIZE} from '../../../utils/consts'
-import Typography from '@material-ui/core/Typography'
 import HandleCB from '../../HandleCB/HandleCB'
 import HandleRIB from '../../HandleRIB/HandleRIB'
 import HandleAddresses from '../../HandleAddresses/HandleAddresses'
@@ -86,7 +85,7 @@ class AccountCompany extends React.Component {
 
   render() {
     const {classes} = this.props
-    const{companyName, sizeCompany, siret, activityArea, tva, billing_address, service_address} = this.state
+    const{companyName, sizeCompany, siret, activityArea, tva, billing_address} = this.state
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%', margin: 0}}>

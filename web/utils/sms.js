@@ -1,4 +1,8 @@
+const Validator = require('validator')
+
+
 class RegExpParam extends RegExp {
+
 
   constructor(reg, repl) {
     super(reg)
@@ -24,18 +28,11 @@ const fillSms = (pattern, values) => {
 }
 
 const isPhoneOk = value => {
-  if (!value) {
-    return false
-  }
-  return !!value.match(/^(33|0)\d{9}$/)
+  return Validator.isMobilePhone(value, ['fr-FR'])
 }
 const isEmailOk = value => {
-  const emailReg = new RegExp(/^([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})/i)
-  const valid = emailReg.test(value)
-  if (!valid) {
-    return false
-  }
-  return true
+  return Validator.isEmail(value)
 
 }
+
 module.exports = {fillSms, isPhoneOk, isEmailOk}

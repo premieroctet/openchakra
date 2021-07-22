@@ -110,7 +110,7 @@ class editProfile extends React.Component {
   };
   onChangePhone = event => {
     let value = event.target.value
-    if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤é¨'èùçà]/) || value.length > 11) {
+    if (isPhoneOk(value) || value.length > 11) {
     }
     else {
       const phoneOk = isPhoneOk(value)
