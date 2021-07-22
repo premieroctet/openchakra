@@ -89,7 +89,7 @@ class DrawerBooking extends React.Component {
     ))
   )
 
-  accordion = (prestations,fltr, classes) => {
+  accordion = (prestations, fltr, classes) => {
     return(
       <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
         <AccordionSummary
@@ -106,9 +106,9 @@ class DrawerBooking extends React.Component {
     )
   }
 
-  getExcludedTimes = () =>  {
-    var currMoment=moment(this.props.date || new Date()).set({hour:0, minute:0})
-    var exclude=[]
+  getExcludedTimes = () => {
+    let currMoment=moment(this.props.date || new Date()).set({hour: 0, minute: 0})
+    let exclude=[]
     while (currMoment.hour()!=23 || currMoment.minute()!=30) {
       if (!isMomentAvailable(currMoment, this.props.availabilities)) {
         exclude.push(currMoment.toDate())
@@ -164,7 +164,7 @@ class DrawerBooking extends React.Component {
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent:(inputref) => {
+                        inputComponent: inputref => {
                           return (
                             <DatePicker
                               selected={date}
@@ -178,7 +178,7 @@ class DrawerBooking extends React.Component {
                             />
                           )
                         },
-                        disableUnderline: true
+                        disableUnderline: true,
                       }}
                     />
                   </Grid>
@@ -189,7 +189,7 @@ class DrawerBooking extends React.Component {
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent:(inputref) => {
+                        inputComponent: inputref => {
                           return (
                             <DatePicker
                               selected={time}
@@ -206,14 +206,14 @@ class DrawerBooking extends React.Component {
                             />
                           )
                         },
-                        disableUnderline: true
+                        disableUnderline: true,
                       }}
                     />
                   </Grid>
                 </Grid>
               </Grid>
               <Grid>
-                <em style={{color: '#f87280'}}>{errors['datetime']}</em>
+                <em style={{color: '#f87280'}}>{errors.datetime}</em>
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
@@ -227,24 +227,24 @@ class DrawerBooking extends React.Component {
                 </AccordionSummary>
                 <AccordionDetails classes={{root: classes.userServicePreviewAccordionDetails}}>
                   {
-                  Object.keys(filters).sort().map((key, index) => {
-                    let fltr = key
-                    let prestations = filters[key]
-                    return (
-                      <Grid style={{zIndex: 0}} key={index}>
-                        {
-                          fltr === '' ?
-                            this.selectedPresta(prestations) :
-                            this.accordion(prestations,fltr, classes)
-                        }
-                      </Grid>
-                    )
-                  })
-                }
+                    Object.keys(filters).sort().map((key, index) => {
+                      let fltr = key
+                      let prestations = filters[key]
+                      return (
+                        <Grid style={{zIndex: 0}} key={index}>
+                          {
+                            fltr === '' ?
+                              this.selectedPresta(prestations) :
+                              this.accordion(prestations, fltr, classes)
+                          }
+                        </Grid>
+                      )
+                    })
+                  }
                 </AccordionDetails>
               </Accordion>
               <Grid>
-                <em style={{color: '#f87280'}}>{errors['prestations']}</em>
+                <em style={{color: '#f87280'}}>{errors.prestations}</em>
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
@@ -277,7 +277,7 @@ class DrawerBooking extends React.Component {
                         <ButtonSwitch
                           key={moment()}
                           id='alfred'
-                          label={'Chez ' + alfred.firstname}
+                          label={`Chez ${ alfred.firstname}`}
                           isEditable={false}
                           isPrice={false}
                           isOption={false}
@@ -302,7 +302,7 @@ class DrawerBooking extends React.Component {
                       : null
                   }
                   <Grid>
-                    <em style={{color: '#f87280'}}>{errors['location']}</em>
+                    <em style={{color: '#f87280'}}>{errors.location}</em>
                   </Grid>
                 </AccordionDetails>
               </Accordion>
@@ -350,8 +350,8 @@ class DrawerBooking extends React.Component {
                   </AccordionDetails>
                 </Accordion>
               </Grid>
-            : null
-          }
+              : null
+            }
             <Grid style={{marginBottom: 30}}>
               <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}} expanded={expanded === 'panel4'} onChange={this.handleChange('panel4')}>
                 <AccordionSummary
@@ -364,10 +364,10 @@ class DrawerBooking extends React.Component {
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20}}>
                     <Grid >
-                        <Typography>{this.props.getLocationLabel()}</Typography>
+                      <Typography>{this.props.getLocationLabel()}</Typography>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
-                        <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
+                      <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
                     </Grid>
                   </Grid>
                   <Grid style={{display: 'flex', flexDirection: 'column'}}>
@@ -392,7 +392,7 @@ class DrawerBooking extends React.Component {
                 <Typography>Réservation Avocotés pour</Typography>
                 <Select value={avocotes} name='avocotes' multi={false} onChange={this.props.onAvocotesChanged}>
                   {all_avocotes.map(avocotes =>
-                    <MenuItem value={avocotes._id}>{`${avocotes.user.full_name} pour ${avocotes.prestations.map(p => p.name).join(',')}`}</MenuItem>
+                    <MenuItem value={avocotes._id}>{`${avocotes.user.full_name} pour ${avocotes.prestations.map(p => p.name).join(',')}`}</MenuItem>,
                   )}
                 </Select>
               </Grid>
@@ -412,7 +412,7 @@ class DrawerBooking extends React.Component {
                     <Typography>Réserver</Typography>
                   </Button>
                 </Grid>
-                <Grid style={{marginTop:15, marginBottom: 15}}>
+                <Grid style={{marginTop: 15, marginBottom: 15}}>
                   <Typography style={{color: 'rgba(39, 37, 37, 0.35)'}}>Choix du paiement à l’étape suivante</Typography>
                 </Grid>
                 <Grid>

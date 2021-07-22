@@ -38,7 +38,7 @@ export default theme => ({
   },
   iconButton: {
     padding: 10,
-    backgroundColor: theme.palette.yellow.main,
+    backgroundColor: theme.palette.secondary.main,
     color: theme.palette.white.main,
   },
 })

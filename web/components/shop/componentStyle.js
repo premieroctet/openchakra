@@ -107,4 +107,11 @@ export default theme => ({
       display: 'none',
     },
   },
-});
+  buttonError: {
+    margin: theme.spacing(1),
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+    },
+    color: theme.palette.error.main,
+  },
+})

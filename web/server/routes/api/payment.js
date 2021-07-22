@@ -127,7 +127,7 @@ router.post('/avocotesPayIn', (req, res) => {
   const bookingId= req.body.bookingId
   const returnUrl= `/paymentSuccess?booking_id=${bookingId}`
 
-  req.context.getModel('booking').findById(bookingId)
+  req.context.getModel('Booking').findById(bookingId)
     .populate('user')
     .then(booking => {
       const amount = booking.amount*100

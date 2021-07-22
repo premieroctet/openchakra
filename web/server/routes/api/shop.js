@@ -1,36 +1,36 @@
-const express = require('express');
-const router = express.Router();
-const passport = require('passport');
-const mongoose = require('mongoose');
-const multer = require('multer');
-const axios = require('axios');
-const CronJob = require('cron').CronJob;
-const {sendShopDeleted, sendShopOnline} = require('../../utils/mailing');
-const {createMangoProvider} = require('../../utils/mangopay');
-const {GID_LEN} = require('../../../utils/consts');
+const express = require('express')
+const router = express.Router()
+const passport = require('passport')
+const mongoose = require('mongoose')
+const multer = require('multer')
+const axios = require('axios')
+const CronJob = require('cron').CronJob
+const {sendShopDeleted, sendShopOnline} = require('../../utils/mailing')
+const {createMangoProvider} = require('../../utils/mangopay')
+const {GID_LEN} = require('../../../utils/consts')
 const {is_production, is_validation}=require('../../../config/config')
-const {normalize} = require('../../../utils/text');
+const {normalize} = require('../../../utils/text')
 const {ensureDirectoryExists} = require('../../utils/filesystem')
-const validateShopInput = require('../../validation/shop');
+const validateShopInput = require('../../validation/shop')
 const {connectionPool}=require('../../utils/database')
 const {serverContextFromPartner}=require('../../utils/serverContext')
 
 ensureDirectoryExists('static/profile/idCard/')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'static/profile/idCard/');
+    cb(null, 'static/profile/idCard/')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, file.originalname)
   },
-});
+})
 const upload = multer({
   storage: storage,
-});
+})
 
 router.get('/test', (req, res) => res.json({
   msg: 'Shop Works!',
-}));
+}))
 
 // FIX import or require
 const ALF_CONDS = { // my alfred condiitons
@@ -38,13 +38,13 @@ const ALF_CONDS = { // my alfred condiitons
   PICTURE: '1',
   ID_CARD: '2',
   RECOMMEND: '3',
-};
+}
 
 const CANCEL_MODE = {
   FLEXIBLE: '0',
   MODERATE: '1',
   STRICT: '2',
-};
+}
 
 // @Route POST /myAlfred/api/shop/add
 // Create a shop
@@ -52,46 +52,50 @@ const CANCEL_MODE = {
 // FIX : inclure les disponibilites
 router.post('/add', passport.authenticate('jwt', {session: false}), async (req, res) => {
 
-  console.log('Creating shop');
-  const {isValid, errors} = validateShopInput(req.body);
+  console.log('Creating shop')
+  const {isValid, errors} = validateShopInput(req.body)
 
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json(errors)
   }
 
   req.context.getModel('Shop').findOne({alfred: req.user.id})
     .then(shop => {
-      if (shop === null) {
-        shop = new Shop();
-        shop.alfred = req.user.id;
+      let newShop=false
+      if (!shop) {
+        shop = {}
+        shop.alfred = req.user.id
+        newShop=true
       }
 
-      shop.booking_request = req.body.booking_request;
-      shop.no_booking_request = !shop.booking_request;
-      shop.my_alfred_conditions = req.body.my_alfred_conditions == ALF_CONDS.BASIC;
-      shop.profile_picture = req.body.my_alfred_conditions == ALF_CONDS.PICTURE;
-      shop.identity_card = req.body.my_alfred_conditions == ALF_CONDS.ID_CARD;
-      shop.recommandations = req.body.my_alfred_conditions == ALF_CONDS.RECOMMEND;
-      shop.welcome_message = req.body.welcome_message;
-      shop.flexible_cancel = req.body.cancel_mode == CANCEL_MODE.FLEXIBLE;
-      shop.moderate_cancel = req.body.cancel_mode == CANCEL_MODE.MODERATE;
-      shop.strict_cancel = req.body.cancel_mode == CANCEL_MODE.STRICT;
-      shop.verified_phone = req.body.verified_phone;
-      shop.is_particular = req.body.is_particular;
-      shop.is_professional = !shop.is_particular;
-      shop.cesu = req.body.cesu;
-      shop.cis = req.body.cis;
+      shop.booking_request = req.body.booking_request
+      shop.no_booking_request = !shop.booking_request
+      shop.my_alfred_conditions = req.body.my_alfred_conditions == ALF_CONDS.BASIC
+      shop.profile_picture = req.body.my_alfred_conditions == ALF_CONDS.PICTURE
+      shop.identity_card = req.body.my_alfred_conditions == ALF_CONDS.ID_CARD
+      shop.recommandations = req.body.my_alfred_conditions == ALF_CONDS.RECOMMEND
+      shop.welcome_message = req.body.welcome_message
+      shop.flexible_cancel = req.body.cancel_mode == CANCEL_MODE.FLEXIBLE
+      shop.moderate_cancel = req.body.cancel_mode == CANCEL_MODE.MODERATE
+      shop.strict_cancel = req.body.cancel_mode == CANCEL_MODE.STRICT
+      shop.verified_phone = req.body.verified_phone
+      shop.is_particular = req.body.is_particular
+      shop.is_professional = !shop.is_particular
+      shop.cesu = req.body.cesu
+      shop.cis = req.body.cis
 
       // FIX: save company
-      shop.company = null;
+      shop.company = null
       if (req.body.company) {
-        shop.company = req.body.company;
+        shop.company = req.body.company
       }
 
-      shop.picture = 'static/shopBanner/sky-690293_1920.jpg';
+      shop.picture = 'static/shopBanner/sky-690293_1920.jpg'
 
-      console.log('Saving shop:' + JSON.stringify(shop));
-      shop.save()
+      const promise=newShop?req.context.getModel('Shop').create(shop):shop.save()
+
+      console.log(`Saving shop:${JSON.stringify(shop)}`)
+      promise
         .then(shop => {
           req.context.getModel('User').findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
             .then(alfred => {
@@ -100,27 +104,27 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
                   console.log(`Create Mango provider skipped, ${alfred.email} age ${alfred.age}`)
                 }
                 else {
-                  createMangoProvider(alfred, shop);
+                  createMangoProvider(alfred, shop)
                 }
               }
-              sendShopOnline(alfred, req);
-              res.json(shop);
+              sendShopOnline(alfred, req)
+              res.json(shop)
             })
             .catch(err => {
               console.error(err)
               res.status(404).json(err)
-            });
+            })
         })
         .catch(err => {
           console.error(err)
           res.status(404).json(err)
-        });
+        })
       })
       .catch(err => {
         console.error(err)
         res.status(404).json(err)
-      });
-});
+      })
+})
 
 
 // @Route GET /myAlfred/api/shop/all
@@ -139,17 +143,17 @@ router.get('/all', (req, res) => {
     })
     .then(shop => {
       if (typeof shop !== 'undefined' && shop.length > 0) {
-        res.json(shop);
+        res.json(shop)
       } else {
         return res.status(400).json({
           msg: 'No shop found',
-        });
+        })
       }
     })
     .catch(err => res.status(404).json({
       shop: 'No shop found',
-    }));
-});
+    }))
+})
 
 // @Route GET /myAlfred/api/shop/allStatus
 // View all shop status (pro/particular)
@@ -184,17 +188,17 @@ router.get('/all/:id', (req, res) => {
       if (Object.keys(shop).length === 0 && shop.constructor === Object) {
         return res.status(400).json({
           msg: 'No shop found',
-        });
+        })
       }
-      res.json(shop);
+      res.json(shop)
 
     })
     .catch(err => res.status(404).json({
       shop: 'No shop found',
-    }));
+    }))
 
 
-});
+})
 
 // @Route GET /myAlfred/api/shop/alfred/:alfred_id
 // Get a shop with alfred id
@@ -228,17 +232,17 @@ router.get('/alfred/:id_alfred', (req, res) => {
       if (Object.keys(shop).length === 0 && shop.constructor === Object) {
         return res.status(400).json({
           msg: 'No shop found',
-        });
+        })
       }
-      res.json(shop);
+      res.json(shop)
 
     })
     .catch(err => res.status(404).json({
       shop: 'No shop found',
-    }));
+    }))
 
 
-});
+})
 
 // @Route GET /myAlfred/api/shop/currentAlfred
 // Get a shop with current alfred id
@@ -260,17 +264,17 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
       if (Object.keys(shop).length === 0 && shop.constructor === Object) {
         return res.status(400).json({
           msg: 'No shop found',
-        });
+        })
       }
-      res.json(shop);
+      res.json(shop)
 
     })
     .catch(err => res.status(404).json({
       shop: 'No shop found',
-    }));
+    }))
 
 
-});
+})
 
 // @Route DELETE /myAlfred/api/shop/current/delete
 // Delete one shop
@@ -281,14 +285,14 @@ router.delete('/current/delete', passport.authenticate('jwt', {session: false}),
     .populate('alfred')
     .then(shop => {
       shop.remove().then(() => {
-        sendShopDeleted(shop.alfred);
-        res.json({success: true});
-      });
+        sendShopDeleted(shop.alfred)
+        res.json({success: true})
+      })
     })
     .catch(err => res.status(404).json({
       shopnotfound: 'No shop found',
-    }));
-});
+    }))
+})
 
 // @Route DELETE /myAlfred/api/shop/:id
 // Delete one shop
@@ -300,12 +304,12 @@ router.delete('/:id', passport.authenticate('jwt', {
     .then(shop => {
       shop.remove().then(() => res.json({
         success: true,
-      }));
+      }))
     })
     .catch(err => res.status(404).json({
       shopnotfound: 'No shop found',
-    }));
-});
+    }))
+})
 
 
 // @Route PUT /myAlfred/api/shop/editBanner
@@ -322,12 +326,12 @@ router.put('/editBanner', passport.authenticate('jwt', {
     new: true,
   })
     .then(shop => {
-      res.json(shop);
+      res.json(shop)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 // @Route PUT /myAlfred/api/shop/editWelcomeMessage
 // Edit welcome message for a shop
@@ -343,12 +347,12 @@ router.put('/editWelcomeMessage', passport.authenticate('jwt', {
     new: true,
   })
     .then(shop => {
-      res.json(shop);
+      res.json(shop)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 // @Route PUT /myAlfred/api/shop/editParameters
 // Edit booking parameters for a shop
@@ -373,12 +377,12 @@ router.put('/editParameters', passport.authenticate('jwt', {
     new: true,
   })
     .then(shop => {
-      res.json(shop);
+      res.json(shop)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 // @Route PUT /myAlfred/api/shop/editStatus
 // Edit personal status for a shop
@@ -392,12 +396,12 @@ router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, 
     cis: req.body.cis,
   }, {new: true})
     .then(shop => {
-      res.json(shop);
+      res.json(shop)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 
 // Create mango provider account for all alfred with shops

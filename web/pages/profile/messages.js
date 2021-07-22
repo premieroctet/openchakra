@@ -235,8 +235,15 @@ class Messages extends React.Component {
     this.setState({tabIndex: childState.tabIndex})
   };
 
-  content = (classes) => {
-    const relatives = this.getRelatives();
+  content = classes => {
+    const relatives = this.getRelatives()
+    const countChats=relatives.length
+
+    const msg_descr = countChats==0 ?
+      "Vous n'avez aucune conversation"
+      : countChats==1 ? 'Vous avez une conversation'
+        : `Vous avez ${countChats} conversations`
+
     return(
       <Grid style={{width: '100%'}}>
         <Grid>
@@ -244,13 +251,13 @@ class Messages extends React.Component {
             <h2>Mes messages</h2>
           </Grid>
           <Grid>
-            <Typography>{`Vous avez ${relatives.length} conversations `}</Typography>
+            <Typography>{msg_descr}</Typography>
           </Grid>
         </Grid>
         <Grid>
           <Divider style={{marginTop: '3vh', marginBottom: '3vh'}}/>
         </Grid>
-        {relatives.map( (m, index) => {
+        {relatives.map((m, index) => {
           return (
             <Grid key={index}>
               <Grid>
