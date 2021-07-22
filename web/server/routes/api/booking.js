@@ -23,6 +23,7 @@ const {computeBookingReference}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
 const uuidv4 = require('uuid/v4')
+const {inspect} = require('util')
 
 moment.locale('fr')
 
@@ -299,7 +300,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     obj.end_time = req.body.end_time
   }
 
-  console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}`)
+  console.trace(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}, req is ${inspect(req)}`)
   req.context.getModel('Booking').findByIdAndUpdate(req.params.id, obj, {new: true})
     .populate('alfred')
     .populate('user')
