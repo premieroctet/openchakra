@@ -11,7 +11,6 @@ import RemoveIcon from '@material-ui/icons/Remove'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
-const {is_development}=require('../../../config/config')
 const {AVOCOTES_COMPANY_NAME}=require('../../../utils/consts')
 import Router from 'next/router'
 import axios from 'axios'
@@ -21,8 +20,6 @@ import {isEmailOk, isPhoneOk} from '../../../utils/sms'
 const moment = require('moment')
 moment.locale('fr')
 
-
-const DEV_ADDRESS={address: '260 Rue Louis Blanc', zip_code: '76100', city: 'Rouen', country: 'France', gps: {lat: 49.4247, lng: 1.0762}}
 
 function Form({classes, booking_id}) {
   const [email, setEmail] = useState('')
@@ -42,8 +39,6 @@ function Form({classes, booking_id}) {
   const [quantities, setQuantities] = useState({})
   const [totalPrice, setTotalPrice] = useState(0)
   const [service, setService] = useState(null)
-  const [emailValidator, setEmailValidator] = useState(false)
-  const [phoneValidator, setPhoneValidator] = useState(false)
 
   function updateTotalPrice() {
     let total=0
@@ -86,8 +81,16 @@ function Form({classes, booking_id}) {
     setAddress(newAddress)
   }
 
-  const payEnabled = () => {
-    return !(!email || firstname.length > 0 || name.length > 0 || !address || !address.gps.lat || !address.gps.lng || !phone || !totalPrice || !emailValidator || !phoneValidator)
+  function emailValidator() {
+    return !!isEmailOk(email)
+  }
+
+  function phoneValidator() {
+    return !!isPhoneOk(phone)
+  }
+
+  function payEnabled() {
+    return !(firstname.length > 0 && name.length > 0 && address.gps.lat !== null && address.gps.lng !== null && emailValidator() && phoneValidator())
 
   }
 
@@ -142,19 +145,6 @@ function Form({classes, booking_id}) {
       return
     }
 
-    if (isEmailOk(email)) {
-      setEmailValidator(true)
-    }
-    else{
-      setEmailValidator(false)
-    }
-
-    if(isPhoneOk(phone)) {
-      setPhoneValidator(true)
-    }
-    else{
-      setPhoneValidator(false)
-    }
 
     axios.get(`/myAlfred/api/service/partner/${AVOCOTES_COMPANY_NAME}`)
       .then(res => {
@@ -164,8 +154,8 @@ function Form({classes, booking_id}) {
       .catch(err => {
         console.error(err)
       })
-  })
-
+  }, [service, quantities])
+  
   return(
     <>
       <Grid container className={classes.mainContainer} spacing={2}>
@@ -173,7 +163,7 @@ function Form({classes, booking_id}) {
           <h2 className={classes.title}>{AVOCOTES.titleCordonnates}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Email" classes={{root: classes.textField}} value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 ? false : !emailValidator} helperText={email.length === 0 ? 'Veuillez entrer un e-mail' : !emailValidator ? 'Veuillez entrer un e-mail valide' : null}/>
+          <TextField id="standard-basic" label="Email" classes={{root: classes.textField}} value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 ? false : !emailValidator()} helperText={email.length === 0 ? 'Veuillez entrer un e-mail' : !emailValidator() ? 'Veuillez entrer un e-mail valide' : null}/>
         </Grid>
         <Grid item xl={6} lg={6} md={12} sm={6} xs={12}>
           <TextField id="standard-basic" label="Prénom" classes={{root: classes.textField}} value={firstname} onChange={e => setFirstname(e.target.value)} helperText={firstname.length === 0 ? 'Veuillez entrer votre prénom' : null}/>
@@ -208,7 +198,7 @@ function Form({classes, booking_id}) {
           {!address.gps.lat || !address.gps.lng ? <FormHelperText>Veuillez selectionner une adresse dans la liste.</FormHelperText>:null}
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Téléphone" classes={{root: classes.textField}} value={phone} onChange={e => setPhone(e.target.value)} error={phone.length === 0 ? false : !phoneValidator} helperText={phone.length === 0 ? 'Veuillez entrer un n° téléphone' : !phoneValidator ? 'Veuillez entrer un n° téléphone valide' : null}/>
+          <TextField id="standard-basic" label="Téléphone" classes={{root: classes.textField}} value={phone} onChange={e => setPhone(e.target.value)} error={phone.length === 0 ? false : !phoneValidator()} helperText={phone.length === 0 ? 'Veuillez entrer un n° téléphone' : !phoneValidator() ? 'Veuillez entrer un n° téléphone valide' : null}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h2 className={classes.title}>{AVOCOTES.titleDetails}</h2>
@@ -252,7 +242,7 @@ function Form({classes, booking_id}) {
           </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Button variant="contained" classes={{root: classes.buttonPaid}} disabled={!payEnabled()} onClick={onSubmit}>
+          <Button variant="contained" classes={{root: classes.buttonPaid}} disabled={payEnabled()} onClick={onSubmit}>
             {AVOCOTES.paidButton}
           </Button>
         </Grid>
