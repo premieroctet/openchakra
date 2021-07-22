@@ -45,6 +45,11 @@ const theme = createMuiTheme({
       main: 'rgba(0, 0, 0, 0.87)',
     },
   },
+  monbackground: {
+    backgroundColor: 'green',
+    fontSize: '25px',
+    fontWeight: 'bold'
+  },
   typography: {
     fontSize: 14,
     lineHeight: '20px',
