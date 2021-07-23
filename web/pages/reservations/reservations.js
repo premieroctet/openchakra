@@ -23,7 +23,6 @@ import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 const {BOOK_STATUS}=require('../../utils/consts')
-const {getUserLabel}=require('../../utils/context')
 import Router from 'next/router'
 
 const DialogTitle = withStyles(styles)(props => {
@@ -92,19 +91,6 @@ class AllReservations extends React.Component {
       })
   }
 
-  loadUserLabels = bookings => {
-    bookings.forEach(booking => {
-      getUserLabel(booking.alfred)
-        .then(res => {
-          this.setState({[booking.alfred._id]: res})
-        })
-      getUserLabel(booking.user)
-        .then(res => {
-          this.setState({[booking.user._id]: res})
-        })
-    })
-  }
-
   loadBookings = () => {
     axios.get('/myAlfred/api/booking/alfredBooking')
       .then(res => {
@@ -115,7 +101,6 @@ class AllReservations extends React.Component {
           .then(res => {
             const userBookings=res.data
             this.setState({userReservations: userBookings})
-            this.loadUserLabels(alfredBookings.concat(userBookings))
           })
       })
   }
@@ -285,7 +270,7 @@ class AllReservations extends React.Component {
                     </Grid>
                     <Grid item xl={5} lg={5} md={6} sm={6} xs={8} className={classes.descriptionContainer}>
                       <Grid className={classes.bookingNameContainer}>
-                        <Typography><strong> {booking.status} - {alfredMode ? this.state[booking.user._id] : this.state[booking.alfred._id]}</strong></Typography>
+                        <Typography><strong> {booking.status} - {alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
                       </Grid>
                       <Grid>
                         <Typography>

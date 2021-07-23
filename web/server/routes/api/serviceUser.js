@@ -825,18 +825,15 @@ router.get('/:id', (req, res) => {
     .populate('equipments')
     .populate('service.equipments')
     .then(service => {
-      if (Object.keys(service).length === 0 && service.constructor === Object) {
-        return res.status(400).json({
-          msg: 'No service found',
-        })
-      } else {
-        res.json(service)
+      if (!service) {
+        return res.status(404).json({msg: 'No service found'})
       }
-
+      res.json(service)
     })
-    .catch(err => res.status(404).json({
-      service: 'No service found' + err,
-    }))
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({service: `No service found:${ err}`})
+    })
 })
 
 // @Route GET /myAlfred/api/serviceUser/:id

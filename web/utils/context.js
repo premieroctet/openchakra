@@ -151,28 +151,6 @@ const isEditableUser = user => {
   return isEditable
 }
 
-const getUserLabel = user => {
-  return new Promise(resolve => {
-    if (!user) {
-      resolve('')
-    }
-    if (user.company) {
-      setAxiosAuthentication()
-      axios.get(`/myAlfred/api/companies/name/${user.company}`)
-        .then(res => {
-          resolve(`${user.firstname} pour ${res.data.name}`)
-        })
-        .catch(err => {
-          console.error(err)
-          resolve(user.firstname)
-        })
-    }
-    else {
-      resolve(user.firstname)
-    }
-  })
-}
-
 const getPartner = () => {
   return getPartnerFromHostname(window.location.hostname)
 }
@@ -182,5 +160,5 @@ module.exports = {
   getRole, setStatusRegister, removeStatusRegister, hasStatusRegister,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
-  getUserLabel, isLoggedUserRegistered, isIOS, isAndroid, getPartner,
+  isLoggedUserRegistered, isIOS, isAndroid, getPartner,
 }
