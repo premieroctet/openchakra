@@ -300,7 +300,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     obj.end_time = req.body.end_time
   }
 
-  console.trace(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}, req is ${inspect(req)}`)
+  console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}, req is ${req.originalUrl}`)
   req.context.getModel('Booking').findByIdAndUpdate(req.params.id, obj, {new: true})
     .populate('alfred')
     .populate('user')
@@ -454,6 +454,7 @@ new CronJob('0 */15 * * * *', (() => {
               },
             )
             */
+            console.log(`Booking #${b._id} terminated`)
             b.status = BOOK_STATUS.FINISHED
             b.save()
               .then(bo => {
@@ -480,6 +481,7 @@ new CronJob('0 */15 * * * *', (() => {
       .populate({path: 'customer_booking', populate: {path: 'user'}})
       .then(bookings => {
         bookings.forEach(booking => {
+          console.log(`Booking #${booking._id} to pay`)
           payBooking(booking)
         })
       }).catch(err => {
