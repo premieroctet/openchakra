@@ -6,7 +6,7 @@ import BannerContact from '../components/AvoCotes/BannerContact/BannerContact'
 import OurCompany from '../components/AvoCotes/OurCompany/OurCompany'
 import Footer from '../components/AvoCotes/Footer/Footer'
 
-function setupSecurityPack() {
+function avocotesLandingPage() {
 
   return(
     <Grid>
@@ -29,4 +29,4 @@ function setupSecurityPack() {
   )
 }
 
-export default setupSecurityPack
+export default avocotesLandingPage
