@@ -25,8 +25,9 @@ const storage = multer.diskStorage({
     cb(null, 'static/profile/diploma/')
   },
   filename: function(req, file, cb) {
+    let datetimestamp = Date.now()
     let key = crypto.randomBytes(5).toString('hex')
-    cb(null, `${datetimestam }_${key}_${file.originalname}`)
+    cb(null, `${datetimestamp}_${key}_${file.originalname}`)
   },
 })
 const upload = multer({
@@ -304,11 +305,10 @@ router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false,}
 router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
-      serviceUser.diploma = {}
+      serviceUser.diploma = serviceUser.diploma || {}
       serviceUser.diploma.name = req.body.name
       serviceUser.diploma.year = req.body.year
       serviceUser.diploma.skills = JSON.parse(req.body.skills)
-      const diploma = 'file_diploma'
       if (req.file) {
         serviceUser.diploma.file = req.file.path
       }
@@ -327,6 +327,7 @@ router.post('/addCertification/:id', upload.single('file_certification'), passpo
 }), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
+      serviceUser.certification = serviceUser.certification || {}
       serviceUser.certification.name = req.body.name
       serviceUser.certification.year = req.body.year
       serviceUser.certification.skills = JSON.parse(req.body.skills)

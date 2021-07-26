@@ -293,7 +293,7 @@ class creaShop extends React.Component {
           axios.post(su_url, cloned_shop)
             .then(su_res => {
               const su = su_res.data
-              // Update token
+              // Update token in case of shop creation (i.e. becomes Alfred)
               if (mode == CREASHOP_MODE.CREATION) {
                 axios.get('/myAlfred/api/users/token')
                   .then(() => setAuthToken())
@@ -301,13 +301,13 @@ class creaShop extends React.Component {
               }
               snackBarSuccess(mode==CREASHOP_MODE.CREATION ? 'Boutique créée' : mode==CREASHOP_MODE.SERVICE_ADD ? 'Votre service a été créé' : 'Votre service a été modifié')
               let su_id = su._id
-              if (cloned_shop.diplomaName || cloned_shop.diplomaPicture || cloned_shop.diplomaYear) {
-                let dpChanged = typeof (cloned_shop.diplomaPicture) == 'object'
+              const diplomaChanged = typeof cloned_shop.diplomaPicture=='object'
+              if (cloned_shop.diplomaName || diplomaChanged || cloned_shop.diplomaYear) {
                 const formData = new FormData()
                 formData.append('name', cloned_shop.diplomaName)
                 formData.append('year', cloned_shop.diplomaYear)
                 formData.append('skills', JSON.stringify(cloned_shop.diplomaSkills))
-                if (dpChanged) {
+                if (diplomaChanged) {
                   formData.append('file_diploma', cloned_shop.diplomaPicture)
                 }
 
@@ -318,13 +318,13 @@ class creaShop extends React.Component {
                   .catch(err => console.error(err))
               }
 
-              if (cloned_shop.certificationName || cloned_shop.certificationPicture || cloned_shop.certificationYear) {
-                let cpChanged = typeof (cloned_shop.certificationPicture) == 'object'
+              const certificationChanged = typeof cloned_shop.certificationPicture=='object'
+              if (cloned_shop.certificationName || certificationChanged || cloned_shop.certificationYear) {
                 const formData = new FormData()
                 formData.append('name', cloned_shop.certificationName)
                 formData.append('year', cloned_shop.certificationYear)
                 formData.append('skills', JSON.stringify(cloned_shop.certificationSkills))
-                if (cpChanged) {
+                if (certificationChanged) {
                   formData.append('file_certification', cloned_shop.certificationPicture)
                 }
 
