@@ -49,8 +49,6 @@ const blog = require('./routes/api/blog')
 const path = require('path')
 const app = express()
 const SocketIo = require('socket.io')
-const swaggerUi = require('swagger-ui-express')
-const swaggerDocument = require('./swagger.json')
 const {serverContextFromRequest}=require('./utils/serverContext')
 const util=require('util')
 
@@ -107,8 +105,6 @@ nextApp.prepare().then(() => {
   app.use('/myAlfred/api/payment', payment)
   app.use('/myAlfred/api/authentication', authRoutes)
   app.use('/blog', blog)
-
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
   // const port = process.env.PORT || 5000;
   const rootPath = path.join(__dirname, '/..')
