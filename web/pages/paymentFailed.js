@@ -11,41 +11,51 @@ import {withStyles} from '@material-ui/core/styles';
 
 class PaymentFailed extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: {},
+      booking: null,
+    }
+  }
 
-
-    };
-
+  static getInitialProps({query: {booking_id}}) {
+    return {booking_id: booking_id}
   }
 
   componentDidMount() {
-
-    localStorage.setItem('path', Router.pathname);
-    let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
-    axios
-      .get('/myAlfred/api/users/current')
+    axios.get('/myAlfred/api/users/current')
       .then(res => {
-        let user = res.data;
-        this.setState({user: user});
+        let user = res.data
+        this.setState({user: user})
       })
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/'});
+          Router.push({pathname: '/'})
         }
-      });
-
-
+      })
+    axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
+      .then(res => {
+        this.setState({booking: res.data})
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
+    const {booking}=this.state
 
+    if (!booking) {
+      return null
+    }
+    const avocotes_mode = Boolean(booking.company_customer)
 
+    const booking_link = avocotes_mode ? '/avocotes' : '/reservations/reservations'
     return (
       <React.Fragment>
         <LayoutPayment>
@@ -62,12 +72,14 @@ class PaymentFailed extends React.Component {
                 </Grid>
                 <Grid style={{marginTop: '5vh'}}>
                   <Grid>
-                    <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={()=> Router.push('/reservations/reservations')}>
+                    <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push(booking_link)}>
                       Retour aux réservations
                     </Button>
-                    <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={()=> Router.push('/')}>
-                      Retour à l'accueil
-                    </Button>
+                    { !avocotes_mode &&
+                      <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push('/')}>
+                        Retour à l'accueil
+                      </Button>
+                    }
                   </Grid>
                 </Grid>
               </Grid>
@@ -75,8 +87,8 @@ class PaymentFailed extends React.Component {
           </Grid>
         </LayoutPayment>
       </React.Fragment>
-    );
-  };
+    )
+  }
 }
 
 

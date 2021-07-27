@@ -12,7 +12,7 @@ import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
 const {BOOK_STATUS}=require('../utils/consts')
 
-const {is_production}=require('../config/config')
+const {is_production, is_validation}=require('../config/config')
 const {snackBarError}=require('../utils/notifications')
 
 class paymentSuccess extends React.Component {
@@ -52,30 +52,28 @@ class paymentSuccess extends React.Component {
           .then(result => {
             let transaction = result.data
             console.log(`Transaction:${JSON.stringify(transaction)}`)
-            if (is_production() &&transaction.Status === 'FAILED') {
-              Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`)
+            if ((is_production() || is_validation()) && transaction.Status === 'FAILED') {
+              return Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`)
             }
-            else {
-              this.setState({success: true})
-              if (transaction.Status == 'FAILED') {
-                snackBarError('Attention, payIn échoué mais on continue en dev/validation')
-              }
-              const booking_id = this.props.booking_id
-              this.socket = io()
-              this.socket.on('connect', () => {
-                this.socket.emit('booking', booking_id)
-                const newStatus = booking.user.company_customer ? BOOK_STATUS.CUSTOMER_PAID : booking.status==BOOK_STATUS.PREAPPROVED ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
-                axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {status: newStatus})
-                  .then(res => {
-                    setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
-                    localStorage.removeItem('booking_id')
-                    if (!booking.user.company_customer) {
-                      setTimeout(() => Router.push('/reservations/reservations'), 4000)
-                    }
-                  })
-                  .catch()
-              })
+            this.setState({success: true})
+            if (transaction.Status == 'FAILED') {
+              snackBarError('Attention, payIn échoué mais on continue en dev/validation')
             }
+            const booking_id = this.props.booking_id
+            this.socket = io()
+            this.socket.on('connect', () => {
+              this.socket.emit('booking', booking_id)
+              const newStatus = booking.user.company_customer ? BOOK_STATUS.CUSTOMER_PAID : booking.status==BOOK_STATUS.PREAPPROVED ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
+              axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {status: newStatus})
+                .then(res => {
+                  setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
+                  localStorage.removeItem('booking_id')
+                  if (!booking.user.company_customer) {
+                    setTimeout(() => Router.push('/reservations/reservations'), 4000)
+                  }
+                })
+                .catch()
+            })
           })
       })
       .catch(err => {
