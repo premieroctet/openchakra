@@ -114,7 +114,7 @@ class AllReservations extends React.Component {
   }
 
   isFinished = reservation => {
-    return [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.FINISHED, BOOK_STATUS.EXPIRED].includes(reservation.status)
+    return [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.FINISHED, BOOK_STATUS.EXPIRED].includes(reservation.status)
   }
 
   isComing = reservation => {
