@@ -108,7 +108,7 @@ class Cancel extends React.Component {
                         }}
                         onClick={() => this.props.onMaintain(this.props.booking_id)}
                       >
-                        Maintenir
+                        Retour
                       </Button>
                     </Grid>
                     <Grid>
@@ -123,7 +123,7 @@ class Cancel extends React.Component {
                           this.props.onMaintain(this.props.booking_id)
                         }}
                       >
-                        Annuler
+                        Confirmer l'annulation
                       </Button>
                     </Grid>
                   </Grid>
