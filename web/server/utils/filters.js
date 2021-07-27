@@ -85,7 +85,6 @@ const filterServicesKeyword = (serviceUsers, keyword, status) => {
       return regexp.test(su.service && su.service.s_label) ||
         regexp.test(su.service && su.service.category && su.service.category[catLabel]) ||
         regexp.test(normalize(su.service && su.service.description)) ||
-        regexp.test(normalize(su.description)) ||
         su.prestations.some(p => p.prestation &&
           (regexp.test(p.prestation.s_label) ||
            regexp.test(normalize(p.prestation.description)) ||
