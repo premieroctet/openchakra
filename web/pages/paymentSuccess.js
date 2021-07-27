@@ -39,10 +39,7 @@ class paymentSuccess extends React.Component {
         this.setState({user: user})
       })
       .catch(err => {
-        if (err.response.status === 401 || err.response.status === 403) {
-          clearAuthenticationToken()
-          Router.push({pathname: '/'})
-        }
+        console.error(err)
       })
     axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
       .then(res => {
@@ -52,13 +49,10 @@ class paymentSuccess extends React.Component {
           .then(result => {
             let transaction = result.data
             console.log(`Transaction:${JSON.stringify(transaction)}`)
-            if ((is_production() || is_validation()) && transaction.Status === 'FAILED') {
+            if (transaction.Status === 'FAILED') {
               return Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`)
             }
             this.setState({success: true})
-            if (transaction.Status == 'FAILED') {
-              snackBarError('Attention, payIn échoué mais on continue en dev/validation')
-            }
             const booking_id = this.props.booking_id
             this.socket = io()
             this.socket.on('connect', () => {

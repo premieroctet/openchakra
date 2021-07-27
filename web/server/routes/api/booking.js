@@ -15,7 +15,7 @@ const {
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
   sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert,
 } = require('../../utils/mailing')
-const {getRole} = require('../../utils/serverContext')
+const {getRole, get_logged_id} = require('../../utils/serverContext')
 const {connectionPool}=require('../../utils/database')
 const {serverContextFromPartner}=require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
@@ -253,10 +253,12 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
 
 // @Route GET /myAlfred/booking/:id
 // View one booking
-// @Access private
-router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+// @Access public
+router.get('/:id', (req, res) => {
 
-  req.context.getModel('Booking').findById(req.params.id)
+  // Si utilisateur non connecté, on ne retourne le booking que si c'est un AvoCotés (i.e. company_customer)
+  const filter=get_logged_id(req) ? {} : {company_customer: {$ne: null}}
+  req.context.getModel('Booking').findOne({...filter, _id: req.params.id})
     .populate('alfred', '-id_card')
     .populate('user', '-id_card')
     .populate('prestation')
@@ -290,7 +292,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
     })
 })
 
-router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/modifyBooking/:id', (req, res) => {
   const obj = {status: req.body.status}
   const canceller_id = req.body.user
   if (req.body.end_date) {

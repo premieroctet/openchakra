@@ -31,10 +31,7 @@ class PaymentFailed extends React.Component {
         this.setState({user: user})
       })
       .catch(err => {
-        if (err.response.status === 401 || err.response.status === 403) {
-          clearAuthenticationToken()
-          Router.push({pathname: '/'})
-        }
+        console.error(err)
       })
     axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
       .then(res => {
