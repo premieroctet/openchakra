@@ -354,6 +354,10 @@ class UserServicesPreview extends React.Component {
     if (this.hasWarningSelf()) {
       errors.user = 'Vous ne pouvez pas vous réserver vous-même'
     }
+    if (this.hasWarningPerimeter()) {
+      errors.alfred = 'Cet Alfred se trouve trop loin de chez vous pour être réservé!'
+    }
+
     this.setState({errors: errors})
   }
 
