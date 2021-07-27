@@ -234,7 +234,7 @@ class BookingPreview extends React.Component {
       `le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`
 
     const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone
-    const customer_booking_title = bookingObj.customer_booking && `Réservation Avocotés pour le compte de ${bookingObj.customer_booking.user.full_name}`
+    const customer_booking_title = bookingObj.customer_booking && `Réservation AvoCotés pour le compte de ${bookingObj.customer_booking.user.full_name}`
 
     return (
       <Grid>

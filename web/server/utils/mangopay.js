@@ -378,7 +378,7 @@ const addRegistrationProof = user => {
 /**
 * payBooking : transfers from customer to alfred and pays out Alfred
 * - standard : transfer booking.amount-booking.fees from customer to Alfred. Fees were taken during pay in
-* - avocotes : transfer booking.amount-booking.fees from customer to Alfred, including fees to My Alfred
+* - AvoCotés : transfer booking.amount-booking.fees from customer to Alfred, including fees to My Alfred
 */
 const payBooking = booking => {
   console.log(`Starting paying of booking ${booking._id}, amount ${booking.amount}, fees ${booking.fees}`)

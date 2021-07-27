@@ -285,7 +285,7 @@ class AllReservations extends React.Component {
                       </Grid>
                       { booking.customer_booking &&
                         <Grid>
-                          <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}><strong>Réservation Avocotés</strong></Typography>
+                          <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}><strong>Réservation AvoCotés</strong></Typography>
                         </Grid>
                       }
                     </Grid>

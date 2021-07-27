@@ -389,7 +389,7 @@ class DrawerBooking extends React.Component {
             <Grid>
               { all_avocotes.length>0 &&
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 20}}>
-                <Typography>Réservation Avocotés pour</Typography>
+                <Typography>Réservation AvoCotés pour</Typography>
                 <Select value={avocotes} name='avocotes' multi={false} onChange={this.props.onAvocotesChanged}>
                   {all_avocotes.map(avocotes =>
                     <MenuItem value={avocotes._id}>{`${avocotes.user.full_name} pour ${avocotes.prestations.map(p => p.name).join(',')}`}</MenuItem>,
