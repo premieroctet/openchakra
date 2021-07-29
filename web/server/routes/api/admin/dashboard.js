@@ -2719,7 +2719,7 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
       }
       const promise=req.body._id ? req.context.getModel('Company').findByIdAndUpdate(req.body._id, req.body, {new: true})
         :
-        new Company(req.body).save()
+        req.context.getModel('Company').create(req.body)
       promise
         .then(company => {
           if (!company) {
