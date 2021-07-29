@@ -77,10 +77,10 @@ class BigList extends React.Component {
     const frameworkComponents={
       'statusRenderer': models.StatusRenderer,
       'dateRenderer': models.DateRenderer,
-      'mangopayRenderer' : models.MangopayRenderer,
-      'statusFilter' : models.StatusFilter,
-      'pictureRenderer' : models.PictureRenderer,
-      'privateRenderer' : models.PrivateRenderer,
+      'mangopayRenderer': models.MangopayRenderer,
+      'statusFilter': models.StatusFilter,
+      'pictureRenderer': models.PictureRenderer,
+      'privateRenderer': models.PrivateRenderer,
       'dateTimeRenderer': models.DateTimeRenderer,
       'booleanRenderer': models.BooleanRenderer,
       'enumRenderer': models.EnumRenderer,
@@ -88,11 +88,13 @@ class BigList extends React.Component {
       'warningRenderer': models.WarningRenderer,
       'linkRenderer': models.LinkRenderer,
       'currencyRenderer': models.CurrencyRenderer,
+      'colorRenderer': models.ColorRenderer,
+      'fontRenderer': models.FontRenderer,
     }
 
     const defaultColDef={
       sortable: true,
-      filter:true,
+      filter: true,
       resizable: true,
       filterParams: {
         buttons: ['reset', 'apply'],
@@ -102,17 +104,17 @@ class BigList extends React.Component {
     return (
       <>
         <Grid container className={classes.signupContainer}>
-            <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-              <Typography style={{fontSize: 30}}>{title}</Typography>
-              { this.props.onAddClick ?
-                <IconButton onClick={this.onAddClick}><AddCircleRoundedIcon/></IconButton>
-                :
-                null
-              }
-              <IconButton onClick={this.onDownloadClick}><GetAppIcon/></IconButton>
-            </Grid>
-            <Paper style={{height: '600px', width: '100%'}} className={"ag-theme-balham"}>
-              <AgGridReact rowData={data} columnDefs={columnDefs} enableSorting={true}
+          <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+            <Typography style={{fontSize: 30}}>{title}</Typography>
+            { this.props.onAddClick ?
+              <IconButton onClick={this.onAddClick}><AddCircleRoundedIcon/></IconButton>
+              :
+              null
+            }
+            <IconButton onClick={this.onDownloadClick}><GetAppIcon/></IconButton>
+          </Grid>
+          <Paper style={{height: '600px', width: '100%'}} className={'ag-theme-balham'}>
+            <AgGridReact rowData={data} columnDefs={columnDefs} enableSorting={true}
               enableFilter={true} pagination={true} defaultColDef={defaultColDef}
               frameworkComponents={frameworkComponents}
               {...this.props}
@@ -133,14 +135,14 @@ class BigList extends React.Component {
                 notContains: 'Ne contient pas',
                 startsWith: 'Comence par',
                 endsWith: 'Finit par',
-                filterOoo: 'Filtrer...'
+                filterOoo: 'Filtrer...',
               }}
               onRowClicked={ this.props.onRowClicked}
               onCellClicked={ this.props.onCellClicked}
               onFirstDataRendered={this.fitColumns}
               ref={this.gridRef}
-              />
-            </Paper>
+            />
+          </Paper>
         </Grid>
       </>
     )

@@ -86,33 +86,6 @@ router.post('/billing/all', passport.authenticate('admin', {session: false}), (r
 // @Route GET /myAlfred/api/admin/billing/all
 // View all billings system
 // @Access private
-router.get('/shops/extract', passport.authenticate('admin', {session: false}), (req, res) => {
-  let result = []
-  req.context.getModel('User').find()
-    .then(users => {
-      req.context.getModel('Shop').find()
-        .then(shops => {
-          users.forEach(user => {
-            let shop = shops.filter(s => s.alfred && s.alfred._id.equals(user._id))
-            shop = shop.length > 0 ? shop[0] : {_doc: {}}
-            let data = {}
-            Object.keys(user._doc).forEach(k => {
-              data[`user.${k}`] = JSON.stringify(user[k])
-            })
-            Object.keys(shop._doc).forEach(k => {
-              data[`shop.${k}`] = JSON.stringify(shop[k])
-            })
-            result.push(data)
-          })
-          res.json(result)
-        })
-        .catch()
-    })
-})
-
-// @Route GET /myAlfred/api/admin/billing/all
-// View all billings system
-// @Access private
 router.get('/billing/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
@@ -3081,5 +3054,15 @@ router.get('/context', (req, res) => {
   res.json(get_token(req))
 })
 
-passport.authenticate('admin', {session: false}),
+router.get('/uiConfiguration', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('UiConfiguration').find()
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
 module.exports = router

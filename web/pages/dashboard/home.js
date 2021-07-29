@@ -1,20 +1,18 @@
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react';
+import React from 'react'
 
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
-import Router from 'next/router';
-import Layout from '../../hoc/Layout/Layout';
-import axios from 'axios';
-import Link from 'next/link';
-import {CSVLink} from 'react-csv';
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Router from 'next/router'
+import Layout from '../../hoc/Layout/Layout'
+import Link from 'next/link'
+import {CSVLink} from 'react-csv'
 
 const {isLoggedUserAdmin}=require('../../utils/context')
 
-const jwt = require('jsonwebtoken');
-const styles = theme => ({
+const styles = () => ({
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',
@@ -35,92 +33,67 @@ const styles = theme => ({
     fontSize: 12,
     lineHeight: 4.15,
   },
-});
+})
 
 class home extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = {
-      is_admin: '',
-      shopsData: [],
-    };
+    super(props)
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     if (!isLoggedUserAdmin()) {
-      Router.push('/login');
-    } else {
-      this.setState({is_admin: true});
+      Router.push('/login')
     }
     setAxiosAuthentication()
-    /**
-    TODO : générer boutiques si nécessaire seulement
-    axios.get('/myAlfred/api/admin/shops/extract')
-      .then(res => this.setState({shopsData: res.data}))
-      .catch(err => console.error(err));
-    */
   }
 
   render() {
-    const {classes} = this.props;
-    const admin = this.state.is_admin;
+    const {classes} = this.props
 
     return (
       <Layout>
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid>
-              {admin ?
-                <Grid>
-                  <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                    <Typography style={{fontSize: 30}}>Maintenance</Typography>
-                  </Grid>
-                  <Link href="/dashboard/logAsUser"><a>Connexion en tant qu'autre utilisateur</a></Link><br/>
-
-                  <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                    <Typography style={{fontSize: 30}}>Moniteur</Typography>
-                  </Grid>
-                  <Link href="/dashboard/statistics"><a>Statistiques</a></Link><br/>
-                  <Link href="/dashboard/map"><a>Carte des services</a></Link><br/>
-                  <Link href="/dashboard/bookings"><a>Réservations</a></Link><br/>
-                  <Link href="/dashboard/prospect"><a>Prospection</a></Link><br/>
-                  <Link href="http://my-alfred.io:2000/blog/admin"><a>Administration WordPress</a></Link><br/>
-
-                  <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                    <Typography style={{fontSize: 30}}>Base de données</Typography>
-                  </Grid>
-                  <Link href="/dashboard/users/all"><a>Comptes</a></Link><br/>
-                  <Link href="/dashboard/serviceusers/all"><a>Services des Alfred</a></Link><br/>
-                  <Link href="/dashboard/companies/all"><a>Entreprises</a></Link><br/>
-                  <Link href="/dashboard/category/all"><a>Catégories</a></Link><br/>
-                  <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
-                  <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>
-                  <Link href="/dashboard/job/all"><a>Métiers</a></Link><br/>
-                  <Link href="/dashboard/tags/all"><a>Tags</a></Link><br/>
-                  <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
-                  <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
-                  <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
-                  <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
-                  { false ? // Générer boutiques si nécessaire seulement
-                    <CSVLink asyncOnClick={true} data={this.state.shopsData} filename="shops.csv" separator={';'}
-                             target="_blank">Export boutiques</CSVLink>
-                    :
-                    null
-                  }
-                </Grid>
-                :
+              <Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <Typography style={{fontSize: 30}}>Accès refusé</Typography>
+                  <Typography style={{fontSize: 30}}>Maintenance</Typography>
                 </Grid>
-              }
+                <Link href="/dashboard/logAsUser"><a>Connexion en tant qu'autre utilisateur</a></Link><br/>
 
+                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                  <Typography style={{fontSize: 30}}>Moniteur</Typography>
+                </Grid>
+                <Link href="/dashboard/statistics"><a>Statistiques</a></Link><br/>
+                <Link href="/dashboard/map"><a>Carte des services</a></Link><br/>
+                <Link href="/dashboard/bookings"><a>Réservations</a></Link><br/>
+                <Link href="/dashboard/prospect"><a>Prospection</a></Link><br/>
+                <Link href="http://my-alfred.io:2000/blog/admin"><a>Administration WordPress</a></Link><br/>
+
+                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                  <Typography style={{fontSize: 30}}>Base de données</Typography>
+                </Grid>
+                <Link href="/dashboard/ui"><a>Paramétrage UI</a></Link><br/>
+                <Link href="/dashboard/users/all"><a>Comptes</a></Link><br/>
+                <Link href="/dashboard/serviceusers/all"><a>Services des Alfred</a></Link><br/>
+                <Link href="/dashboard/companies/all"><a>Entreprises</a></Link><br/>
+                <Link href="/dashboard/category/all"><a>Catégories</a></Link><br/>
+                <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
+                <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>
+                <Link href="/dashboard/job/all"><a>Métiers</a></Link><br/>
+                <Link href="/dashboard/tags/all"><a>Tags</a></Link><br/>
+                <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
+                <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
+                <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
+                <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
+              </Grid>
             </Grid>
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(home);
+export default withStyles(styles)(home)
