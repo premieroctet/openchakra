@@ -73,8 +73,8 @@ class logAsUser extends React.Component {
         const muUsers = users.map(u => {
           return {
             label: `${u.name} ${u.firstname} ${u.email} (${u._id})`,
-            value: u.email,
-            key: u.id,
+            value: u._id,
+            key: u.email,
             roles: u.roles,
           }
         })
@@ -92,7 +92,7 @@ class logAsUser extends React.Component {
 
   onUserChanged = e => {
     this.setState({
-      user: e[0].value,
+      user: e[0],
       roles: e[0].roles.map(r => { return {label: ROLES[r], value: r} }),
       role: e[0].roles.length==1 ? e[0].roles[0] : null})
   }
@@ -107,7 +107,7 @@ class logAsUser extends React.Component {
 
     setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/loginAs', {
-      username: this.state.user, role: this.state.role,
+      username: this.state.user.key, role: this.state.role,
     })
       .then(() => {
         setAuthToken()
