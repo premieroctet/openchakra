@@ -112,6 +112,7 @@ class UserServicesPreview extends React.Component {
 
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'))
     if (bookingObj && bookingObj.serviceUserId.toString() !== id) {
+      console.warn('Incorrect bookingObj.serviceUserId')
       bookingObj = null
       localStorage.removeItem('bookingObj')
     }
@@ -234,9 +235,7 @@ class UserServicesPreview extends React.Component {
                                       commission: bookingObj ? bookingObj.fees : null,
                                       ...st,
                                     }, () => {
-                                      if (!bookingObj) {
-                                        this.setDefaultLocation()
-                                      }
+                                      this.setDefaultLocation()
                                       this.computeTotal()
                                     })
                                   })

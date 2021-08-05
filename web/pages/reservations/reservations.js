@@ -230,7 +230,7 @@ class AllReservations extends React.Component {
     newBooking.date_prestation = null
     newBooking.time_prestation = null
     localStorage.setItem('bookingObj', JSON.stringify(newBooking))
-    Router.push(`/userServicePreview?id=${ newBooking.serviceUserId}`)
+    Router.push(`/userServicePreview?id=${ newBooking.serviceUserId}&address=main`)
 
   }
 
