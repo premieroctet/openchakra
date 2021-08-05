@@ -1,5 +1,3 @@
-POouvoir fournir la location du booking de reservations/reservations vers userServicePreview
-
 require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]')
 
 const {is_production, is_validation, is_development, is_development_nossl, displayConfig} = require('../config/config')
