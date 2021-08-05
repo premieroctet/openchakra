@@ -534,10 +534,10 @@ class UserServicesPreview extends React.Component {
       return null
     }
     const{address}=this.props
-    if (!address || ['client', 'main', 'all'].includes(address)) {
+    if (!(address || this.state.location) || ['client', 'main', 'all'].includes(address)) {
       return allAddresses.main
     }
-    let res = user ? allAddresses[address] : null
+    let res = user ? allAddresses[address||this.state.location] : null
     if (res) {
       res.gps = {lat: res.lat, lng: res.lng}
     }
