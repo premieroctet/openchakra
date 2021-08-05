@@ -1,5 +1,5 @@
-const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
-import {withStyles} from '@material-ui/core/styles';
+const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
+import {withStyles} from '@material-ui/core/styles'
 import axios from 'axios'
 const models = require('../../../components/BigList/models')
 
@@ -7,14 +7,14 @@ class all extends DataPage {
 
   getColumnDefs = () => {
     return [
-      {headerName: "_id", field: "_id", width: 0},
-      models.textColumn({headerName: "Label", field: "label"}),
-      models.pictureColumn({headerName: "Illustration", field: "picture"}),
+      {headerName: '_id', field: '_id', width: 0},
+      models.textColumn({headerName: 'Label', field: 'label'}),
+      models.pictureColumn({headerName: 'Illustration', field: 'picture'}),
     ]
   }
 
   getTitle = () => {
-    return "Equipements"
+    return 'Equipements'
   }
 
   loadData = () => {
@@ -24,12 +24,16 @@ class all extends DataPage {
         equipments.forEach ( e => {
           e.picture=`/static/equipments/${e.logo}`
         })
-        this.setState({data: equipments});
+        this.setState({data: equipments})
       })
   }
 
-  onCellClicked = (data, field) => {
+  onCellClicked = data => {
     window.open(`/dashboard/equipments/view?id=${data._id}`, '_blank')
+  }
+
+  onAddClicked = () => {
+    window.open('/dashboard/equipments/view', '_blank')
   }
 
 }

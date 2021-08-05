@@ -83,6 +83,7 @@ class UserServicesPreview extends React.Component {
       albums: [],
       excludedDays: [],
       available_budget: Number.MAX_SAFE_INTEGER,
+      allAddresses: {},
       pending: false,
       avocotes: null,
       all_avocotes: [],
@@ -178,11 +179,16 @@ class UserServicesPreview extends React.Component {
             const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
             promise
               .then(res => {
-                let allAddresses = {'main': res.data.billing_address}
-                res.data.service_address.forEach(addr => {
-                  allAddresses[addr._id] = addr
-                })
-                st.allAddresses=allAddresses
+                if (res.data) {
+                  let allAddresses = {'main': res.data.billing_address}
+                  res.data.service_address.forEach(addr => {
+                    allAddresses[addr._id] = addr
+                  })
+                  st.allAddresses=allAddresses
+                }
+                else {
+                  st.allAddresses = {}
+                }
 
                 axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
                   .then(res => {

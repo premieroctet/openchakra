@@ -115,7 +115,7 @@ class PictureRenderer extends React.Component {
     if (this.props.value) {
       return (
         <div>
-          <img style={{ width: 'auto', height: rowHeight }} src={`${this.props.value}`}/>
+          <img style={{width: 'auto', height: rowHeight}} src={`${this.props.value}`}/>
         </div>
       )
     }

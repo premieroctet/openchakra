@@ -79,8 +79,6 @@ router.post('/billing/all', passport.authenticate('admin', {session: false}), (r
   else {
     res.status(403).json({msg: 'Access denied'})
   }
-
-
 })
 
 // @Route GET /myAlfred/api/admin/billing/all
@@ -128,8 +126,6 @@ router.get('/billing/all', passport.authenticate('admin', {session: false}), (re
   else {
     res.status(403).json({msg: 'Access denied'})
   }
-
-
 })
 
 // @Route GET /myAlfred/api/admin/billing/all/:id
@@ -154,8 +150,6 @@ router.get('/billing/all/:id', passport.authenticate('admin', {session: false}),
   else {
     res.status(403).json({msg: 'Access denied'})
   }
-
-
 })
 
 // @Route DELETE /myAlfred/api/admin/billing/:id
@@ -274,7 +268,7 @@ router.get('/users/all_light', passport.authenticate('admin', {session: false}),
 // @Route GET /myAlfred/api/admin/serviceUsersMap
 // View all service per user for map view (light)
 // @Access private
-router.get('/serviceUsersMap', (req, res) => {
+router.get('/serviceUsersMap', passport.authenticate('admin', {session: false}), (req, res) => {
 
   req.context.getModel('ServiceUser').find({}, '_id service_address.gps')
     // .populate('user','-id_card')
@@ -1464,26 +1458,17 @@ router.put('/category/editPicture/:id', uploadCat.fields([
   {name: 'professional_picture', maxCount: 1}]),
 passport.authenticate('admin', {session: false}), (req, res) => {
 
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-
-  if (admin) {
-    let attributes = {}
-    if (req.files.particular_picture) {
-      attributes.particular_picture = req.files.particular_picture[0].path
-    }
-    if (req.files.professional_picture) {
-      attributes.professional_picture = req.files.professional_picture[0].path
-    }
-    req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
-      .then(category => {
-        res.json(category)
-      })
+  let attributes = {}
+  if (req.files.particular_picture) {
+    attributes.particular_picture = req.files.particular_picture[0].path
   }
-  else {
-    res.status(403).json({msg: 'Access denied'})
+  if (req.files.professional_picture) {
+    attributes.professional_picture = req.files.professional_picture[0].path
   }
+  req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
+    .then(category => {
+      res.json(category)
+    })
 })
 
 // @Route GET /myAlfred/api/admin/category/all
@@ -1564,41 +1549,32 @@ router.delete('/category/all/:id', passport.authenticate('admin', {session: fals
 // Update a category
 // @Access private
 router.put('/category/all/:id?', passport.authenticate('admin', {session: false}), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
 
-  if (admin) {
-    let attributes={
-      particular_label: req.body.particular_label,
-      s_particular_label: normalize(req.body.particular_label),
-      professional_label: req.body.professional_label,
-      s_professional_label: normalize(req.body.professional_label),
-      description: req.body.description,
-      tags: req.body.tags,
-    }
-    const promise=req.params.id ?
-      req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
-      :
-      new Category(attributes).save()
-    promise
-      .then(category => {
-        res.json(category)
-      })
-      .catch(err => {
-        console.error(err)
-        res.status(404).json({categorynotfound: 'No category found'})
-      })
+  let attributes={
+    particular_label: req.body.particular_label,
+    s_particular_label: normalize(req.body.particular_label),
+    professional_label: req.body.professional_label,
+    s_professional_label: normalize(req.body.professional_label),
+    description: req.body.description,
+    tags: req.body.tags,
   }
-  else {
-    res.status(403).json({msg: 'Access denied'})
-  }
-
+  const promise=req.params.id ?
+    req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
+    :
+    new Category(attributes).save()
+  promise
+    .then(category => {
+      res.json(category)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({categorynotfound: 'No category found'})
+    })
 })
 
 // EQUIPMENTS
 ensureDirectoryExists('static/equipments/')
-const storage = multer.diskStorage({
+const storageEquipment = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, 'static/equipments/')
   },
@@ -1606,170 +1582,105 @@ const storage = multer.diskStorage({
     cb(null, file.originalname)
   },
 })
-const upload = multer({storage: storage})
+
+const uploadEquipment = multer({storage: storageEquipment})
+
 // @Route POST /myAlfred/api/admin/equipment/all
 // Add equipment for service
 // @Access private
-router.post('/equipment/all', upload.fields([{name: 'logo', maxCount: 1}, {
-  name: 'logo2',
-  maxCount: 1,
-}]), passport.authenticate('admin', {session: false}), (req, res) => {
+router.post('/equipment/all', uploadEquipment.single('logo'), passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateBillingInput(req.body)
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-
-  if (admin) {
-    if (!isValid) {
-      return res.status(400).json(errors)
-    }
-
-    req.context.getModel('Equipment').findOne({label: req.body.label})
-      .then(equipment => {
-        if (equipment) {
-          errors.label = 'Cet équipement existe déjà '
-          return res.status(400).json(errors)
-        }
-        const newEquipment={
-          label: req.body.label,
-          logo: req.files.logo[0].path,
-          name_logo: req.files.logo[0].filename,
-          logo2: req.files.logo2[0].path,
-          name_logo2: req.files.logo2[0].filename,
-        }
-
-        req.context.getModel('Equipment').create(newEquipment)
-          .then(equipment => res.json(equipment))
-          .catch(err => console.error(err))
-      })
-  }
-  else {
-    res.status(403).json({msg: 'Access denied'})
+  if (!isValid) {
+    return res.status(400).json(errors)
   }
 
+  req.context.getModel('Equipment').findOne({label: req.body.label})
+    .then(equipment => {
+      if (equipment) {
+        errors.label = 'Cet équipement existe déjà '
+        return res.status(400).json(errors)
+      }
+      const newEquipment={
+        label: req.body.label,
+        logo: req.file.originalname,
+      }
 
+      req.context.getModel('Equipment').create(newEquipment)
+        .then(equipment => res.json(equipment))
+        .catch(err => console.error(err))
+    })
 })
 
-// @Route POST /myAlfred/api/admin/equipment/editPicture/:id
-// Edit the logo for equipment
+// @Route PUT /myAlfred/api/admin/equipment/all/:id
+// Update a equipment system
 // @Access private
-router.post('/equipment/editPicture/:id', upload.fields([{name: 'logo', maxCount: 1}, {
-  name: 'logo2',
-  maxCount: 1,
-}]), passport.authenticate('admin', {session: false}), (req, res) => {
-
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-
-  if (admin) {
-
-    req.context.getModel('Equipment').findByIdAndUpdate(req.params.id, {
-      logo: req.files.logo[0].path,
-      logo2: req.files.logo2[0].path,
-    }, {new: true})
-      .then(equipment => {
-        res.json(equipment)
-      })
+router.put('/equipment/all/:id', uploadEquipment.single('logo'), passport.authenticate('admin', {session: false}), (req, res) => {
+  let data={label: req.body.label}
+  if (req.file && req.file.path) {
+    data.logo=req.file.originalname
   }
-  else {
-    res.status(403).json({msg: 'Access denied'})
-  }
-
-
+  console.log(JSON.stringify(req.file))
+  req.context.getModel('Equipment').findOneAndUpdate({_id: req.params.id}, {$set: data}, {new: true})
+    .then(equipment => {
+      res.json(equipment)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({equipmentnotfound: 'No equipment found'})
+    })
 })
 
 // @Route GET /myAlfred/api/admin/equipment/all
 // View all equipments
 // @Access private
 router.get('/equipment/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-  if (admin) {
-    req.context.getModel('Equipment').find()
-      .sort({label: 1})
-      .then(equipment => {
-        if (!equipment) {
-          return res.status(400).json({msg: 'No equipment found'})
-        }
-        res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count')
-        res.setHeader('X-Total-Count', equipment.length)
-        res.json(equipment)
+  req.context.getModel('Equipment').find()
+    .sort({label: 1})
+    .then(equipment => {
+      if (!equipment) {
+        return res.status(400).json({msg: 'No equipment found'})
+      }
+      res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count')
+      res.setHeader('X-Total-Count', equipment.length)
+      res.json(equipment)
 
-      })
-      .catch(err => res.status(404).json({equipment: 'No equipment found'}))
-  }
-  else {
-    res.status(403).json({msg: 'Access denied'})
-  }
-
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({equipment: 'No equipment found'})
+    })
 })
 
 // @Route GET /myAlfred/api/admin/equipment/all/:id
 // View one equipments
 // @Access private
 router.get('/equipment/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-  if (admin) {
-    req.context.getModel('Equipment').findById(req.params.id)
-      .then(equipment => {
-        if (!equipment) {
-          return res.status(400).json({msg: 'No equipment found'})
-        }
-        res.json(equipment)
+  req.context.getModel('Equipment').findById(req.params.id)
+    .then(equipment => {
+      if (!equipment) {
+        return res.status(400).json({msg: 'No equipment found'})
+      }
+      res.json(equipment)
 
-      })
-      .catch(err => res.status(404).json({equipment: 'No equipment found'}))
-  }
-  else {
-    res.status(403).json({msg: 'Access denied'})
-  }
-
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({equipment: 'No equipment found'})
+    })
 })
 
 // @Route DELETE /myAlfred/api/admin/equipment/all/:id
 // Delete one equipment system
 // @Access private
 router.delete('/equipment/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
   req.context.getModel('Equipment').findById(req.params.id)
     .then(equipment => {
-      if (!admin) {
-        return res.status(401).json({notauthorized: 'User not authorized'})
-
-
-      }
       equipment.remove().then(() => res.json({success: true}))
     })
-    .catch(err => res.status(404).json({equipmentnotfound: 'No equipment found'}))
-})
-
-// @Route PUT /myAlfred/api/admin/equipment/all/:id
-// Update a equipment system
-// @Access private
-router.put('/equipment/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-
-  if (admin) {
-    req.context.getModel('Equipment').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
-      .then(equipment => {
-        res.json(equipment)
-
-
-      })
-      .catch(err => res.status(404).json({equipmentnotfound: 'No equipment found'}))
-  }
-  else {
-    res.status(403).json({msg: 'Access denied'})
-  }
-
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({equipmentnotfound: 'No equipment found'})
+    })
 })
 
 // SERVICE
@@ -1789,74 +1700,50 @@ const uploadService = multer({storage: storageService})
 // Add service for prestation
 // @Access private
 router.post('/service/all', uploadService.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
-  const {errors, isValid} = validateServiceInput(req.body)
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-
-  if (admin) {
-    if (!isValid) {
-      return res.status(400).json(errors)
-    }
-
-    req.context.getModel('Service').findOne({label: req.body.label})
-      .then(service => {
-        if (service) {
-          errors.label = 'Ce service existe déjà'
-          return res.status(400).json(errors)
-        }
-        const newService={
-          label: req.body.label,
-          s_label: normalize(req.body.label),
-          category: mongoose.Types.ObjectId(req.body.category),
-          equipments: JSON.parse(req.body.equipments),
-          tags: JSON.parse(req.body.tags),
-          picture: req.file.path,
-          description: req.body.description,
-          majoration: req.body.majoration,
-          location: {
-            alfred: req.body['location.alfred'] == 'true',
-            client: req.body['location.client'] == 'true',
-            visio: req.body['location.visio'] == 'true',
-          },
-          pick_tax: req.body.pick_tax,
-          travel_tax: req.body.travel_tax,
-          professional_access: req.body.professional_access,
-          particular_access: req.body.particular_access,
-        }
-
-        req.context.getModel('Service').create(newService)
-          .then(service => res.json(service))
-          .catch(err => console.error(err))
-      })
-  }
-  else {
-    res.status(403).json({msg: 'Access denied'})
+  if (!isValid) {
+    return res.status(400).json(errors)
   }
 
+  req.context.getModel('Service').findOne({label: req.body.label})
+    .then(service => {
+      if (service) {
+        errors.label = 'Ce service existe déjà'
+        return res.status(400).json(errors)
+      }
+      const newService={
+        label: req.body.label,
+        s_label: normalize(req.body.label),
+        category: mongoose.Types.ObjectId(req.body.category),
+        equipments: JSON.parse(req.body.equipments),
+        tags: JSON.parse(req.body.tags),
+        picture: req.file.path,
+        description: req.body.description,
+        majoration: req.body.majoration,
+        location: {
+          alfred: req.body['location.alfred'] == 'true',
+          client: req.body['location.client'] == 'true',
+          visio: req.body['location.visio'] == 'true',
+        },
+        pick_tax: req.body.pick_tax,
+        travel_tax: req.body.travel_tax,
+        professional_access: req.body.professional_access,
+        particular_access: req.body.particular_access,
+      }
 
+      req.context.getModel('Service').create(newService)
+        .then(service => res.json(service))
+        .catch(err => console.error(err))
+    })
 })
 
 // @Route POST /myAlfred/api/admin/service/editPicture/:id
 // Edit picture
 // @Access private
 router.post('/service/editPicture/:id', uploadService.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
-
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-
-  if (admin) {
-
-    req.context.getModel('Service').findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
-      .then(service => {
-        res.json(service)
-      })
-  }
-  else {
-    res.status(403).json({msg: 'Access denied'})
-  }
-
+  req.context.getModel('Service').findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+    .then(service => {
+      res.json(service)
+    })
 })
 
 // @Route GET /myAlfred/api/admin/service/all
@@ -1864,34 +1751,25 @@ router.post('/service/editPicture/:id', uploadService.single('picture'), passpor
 // @Access private
 router.get('/service/all', passport.authenticate('admin', {session: false}), (req, res) => {
 
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
+  req.context.getModel('Service').find()
+    .sort({'label': 1})
+    .populate('tags', ['label'])
+    .populate('equipments', 'label')
+    .populate('category', 'particular_label professional_label')
+    .populate('prestations', 'particular_access professional_access')
+    .then(service => {
+      if (!service) {
+        return res.status(400).json({msg: 'No service found'})
+      }
+      res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count')
+      res.setHeader('X-Total-Count', service.length)
+      res.json(service)
 
-  if (admin) {
-    req.context.getModel('Service').find()
-      .sort({'label': 1})
-      .populate('tags', ['label'])
-      .populate('equipments', 'label')
-      .populate('category', 'particular_label professional_label')
-      .populate('prestations', 'particular_access professional_access')
-      .then(service => {
-        if (!service) {
-          return res.status(400).json({msg: 'No service found'})
-        }
-        res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count')
-        res.setHeader('X-Total-Count', service.length)
-        res.json(service)
-
-      })
-      .catch(err => {
-        console.error(err)
-        res.status(404).json({service: 'No service found'})
-      })
-  }
-  else {
-    res.status(403).json({msg: 'Access denied'})
-  }
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({service: 'No service found'})
+    })
 })
 
 // @Route GET /myAlfred/api/admin/service/all/:id
@@ -1914,7 +1792,10 @@ router.get('/service/all/:id', passport.authenticate('admin', {session: false}),
         res.json(service)
 
       })
-      .catch(err => res.status(404).json({billing: 'No service found'}))
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({billing: 'No service found'})
+      })
   }
   else {
     res.status(403).json({msg: 'Access denied'})
@@ -2508,7 +2389,7 @@ router.put('/options/all/:id', passport.authenticate('admin', {session: false}),
 })
 
 // TODO: récupérer en sum/aggréation par mois
-router.get('/registrations', (req, res) => {
+router.get('/registrations', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('User').find({}, 'creation_date')
     .sort({creation_date: 1})
     .then(users => {
@@ -2519,7 +2400,7 @@ router.get('/registrations', (req, res) => {
 })
 
 // TODO: récupérer en sum/aggréation par age
-router.get('/ages', (req, res) => {
+router.get('/ages', passport.authenticate('admin', {session: false}), (req, res) => {
 
   const get_label = age => {
     if (age<=25) { return '<25' }
@@ -2551,7 +2432,7 @@ router.get('/ages', (req, res) => {
 // Get satistics (users, shops, services)
 // @Access private
 // router.get('/statistics',passport.authenticate('admin',{session:false}),(req,res)=> {
-router.get('/statistics', (req, res) => {
+router.get('/statistics', passport.authenticate('admin', {session: false}), (req, res) => {
   //
   // const token = req.headers.authorization.split(' ')[1];
   // const decode = jwt.decode(token);
@@ -3021,7 +2902,7 @@ router.post('/prospect/add', passport.authenticate('admin', {session: false}), (
 // @Route GET /myAlfred/api/admin/prospect/tocontact
 // View all billings system
 // @Access public
-router.get('/prospect/tocontact/:category', (req, res) => {
+router.get('/prospect/tocontact/:category', passport.authenticate('admin', {session: false}), (req, res) => {
   let result = []
   req.context.getModel('Prospect').find(
     {$and: [{category: req.params.category}, {$or: [{contacted: false}, {contacted: null}]}]},
@@ -3077,9 +2958,8 @@ router.post('/kyc_validate/:alfred_id', passport.authenticate('admin', {session:
   }
 })
 
-router.get('/context', (req, res) => {
+router.get('/context', passport.authenticate('admin', {session: false}), (req, res) => {
   res.json(get_token(req))
 })
 
-passport.authenticate('admin', {session: false}),
 module.exports = router
