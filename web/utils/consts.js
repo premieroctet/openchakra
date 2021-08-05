@@ -351,7 +351,7 @@ const MAX_DESCRIPTION_LENGTH=300
 const BOOK_STATUS= {
   CONFIRMED: 'Confirmée',
   REFUSED: 'Refusée',
-  CANCELED: 'Annulée',
+  CANCELLED: 'Annulée',
   FINISHED: 'Terminée',
   EXPIRED: 'Expirée',
   TO_CONFIRM: 'En attente de confirmation',
