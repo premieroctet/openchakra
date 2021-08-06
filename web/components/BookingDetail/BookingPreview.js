@@ -216,7 +216,7 @@ class BookingPreview extends React.Component {
         status === BOOK_STATUS.REFUSED ? 'Paiement non réalisé'
           : [BOOK_STATUS.FINISHED, BOOK_STATUS.CONFIRMED].includes(status) ? 'Versement' : 'Revenus potentiels'
         :
-        [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED].includes(status) ?
+        [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED].includes(status) ?
           'Paiement non réalisé'
           :
           status === BOOK_STATUS.FINISHED ?

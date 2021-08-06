@@ -688,7 +688,7 @@ router.get('/budget/:user_id/:role', passport.authenticate('jwt', {session: fals
         user: user_predicate,
         date: {$gt: start_date},
         user_role: role,
-        status: {$nin: [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]},
+        status: {$nin: [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]},
       })
         .then(bookings => {
           console.log(`Found ${bookings.length} bookings`)

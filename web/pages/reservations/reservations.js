@@ -114,7 +114,7 @@ class AllReservations extends React.Component {
   }
 
   isFinished = reservation => {
-    return [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.FINISHED, BOOK_STATUS.EXPIRED].includes(reservation.status)
+    return [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.FINISHED, BOOK_STATUS.EXPIRED].includes(reservation.status)
   }
 
   isComing = reservation => {
@@ -230,7 +230,7 @@ class AllReservations extends React.Component {
     newBooking.date_prestation = null
     newBooking.time_prestation = null
     localStorage.setItem('bookingObj', JSON.stringify(newBooking))
-    Router.push(`/userServicePreview?id=${ newBooking.serviceUserId}`)
+    Router.push(`/userServicePreview?id=${ newBooking.serviceUserId}&address=main`)
 
   }
 

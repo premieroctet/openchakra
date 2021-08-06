@@ -163,7 +163,7 @@ const createMangoClient = user => {
           })
       })
       .catch(err => {
-        reject(`Création mangopay user ${user.full_name}:${JSON.stringify(err)}`)
+        reject(`Création mangopay user ${user._id} ${user.full_name}:${JSON.stringify(err)}`)
       })
   })
 }

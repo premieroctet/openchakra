@@ -194,7 +194,7 @@ BookingSchema.virtual('calendar_display').get(function() {
   if (!this.status) {
     return false
   }
-  if ([BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.REFUSED].includes(this.status)) {
+  if ([BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED, BOOK_STATUS.REFUSED].includes(this.status)) {
     return false
   }
   return true

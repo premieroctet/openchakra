@@ -107,7 +107,9 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
                   createMangoProvider(alfred, shop)
                 }
               }
-              sendShopOnline(alfred, req)
+              if (newShop) {
+                sendShopOnline(alfred, req)
+              }
               res.json(shop)
             })
             .catch(err => {

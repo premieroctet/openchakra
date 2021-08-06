@@ -24,7 +24,7 @@ const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
 const uuidv4 = require('uuid/v4')
 const {inspect} = require('util')
-
+const {stateMachineFactory} = require('../../../utils/BookingStateMachine')
 moment.locale('fr')
 
 router.get('/test', (req, res) => res.json({msg: 'Booking Works!'}))
@@ -303,7 +303,7 @@ router.put('/modifyBooking/:id', (req, res) => {
   }
 
   console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}, req is ${req.originalUrl}`)
-  req.context.getModel('Booking').findByIdAndUpdate(req.params.id, obj, {new: true})
+  req.context.getModel('Booking').findById(req.params.id)
     .populate('alfred')
     .populate('user')
     .populate('prestation')
@@ -311,58 +311,71 @@ router.put('/modifyBooking/:id', (req, res) => {
     .populate({path: 'customer_booking', populate: {path: 'user'}})
     .then(booking => {
       if (!booking) {
-        return res.status(404).json({msg: 'no booking found'})
+        return res.status(404).json('No booking #${req.params.id}')
       }
-      if (booking) {
-        if (booking.user.company_customer) {
-          // Prévenir les admmins d'une nouvelle résa
-          req.context.getModel('User').find({is_admin: true}, 'firstname email phone')
-            .then(admins => {
-              const search_link = new URL('/search', computeUrl(req))
-              const prestations=booking.prestations.map(p => p.name).join(',')
-              const msg=`Chercher les prestations '${prestations}' pour le compte ${booking.user.email} via ${search_link}`
-              const subject=`Nouvelle réservation Avocotés pour ${booking.user.email}`
-              admins.forEach(admin => {
-                sendAlert(admin, subject, msg)
-              })
-            })
-            .catch(err => {
-              console.error(err)
-            })
+      const machine=stateMachineFactory(booking.status)
+      machine.checkAllowed(obj.status)
+      booking.status=obj.status
+      booking.end_date = obj.end_date || booking.end_date
+      booking.end_time = obj.end_time || booking.end_time
 
-        }
-        else {
-          if (booking.status === BOOK_STATUS.TO_CONFIRM) {
-            sendBookingDetails(booking)
-            sendNewBookingManual(booking, req)
+      booking.save()
+        .then(booking => {
+          if (booking.user.company_customer && status==BOOK_STATUS.CUSTOMER_PAID) {
+            // Prévenir les admins d'une nouvelle résa
+            req.context.getModel('User').find({is_admin: true}, 'firstname email phone')
+              .then(admins => {
+                const search_link = new URL('/search', computeUrl(req))
+                const prestations=booking.prestations.map(p => p.name).join(',')
+                const msg=`Chercher les prestations '${prestations}' pour le compte ${booking.user.email} via ${search_link}`
+                const subject=`Nouvelle réservation Avocotés pour ${booking.user.email}`
+                admins.forEach(admin => {
+                  sendAlert(admin, subject, msg)
+                })
+              })
+              .catch(err => {
+                console.error(err)
+              })
           }
-          if (booking.status === BOOK_STATUS.CONFIRMED) {
-            sendBookingConfirmed(booking)
-          }
-          if (booking.status === BOOK_STATUS.REFUSED) {
-            if (canceller_id === booking.user._id) {
-              sendBookingRefusedToAlfred(booking, req)
+          else {
+            if (booking.status === BOOK_STATUS.TO_CONFIRM) {
+              sendBookingDetails(booking)
+              sendNewBookingManual(booking, req)
             }
-            else {
-              sendBookingRefusedToClient(booking, req)
+            if (booking.status === BOOK_STATUS.CONFIRMED) {
+              sendBookingConfirmed(booking)
+            }
+            if (booking.status === BOOK_STATUS.REFUSED) {
+              if (canceller_id === booking.user._id) {
+                sendBookingRefusedToAlfred(booking, req)
+              }
+              else {
+                sendBookingRefusedToClient(booking, req)
+              }
+            }
+            if (booking.status === BOOK_STATUS.PREAPPROVED) {
+              sendAskInfoPreapproved(booking, req)
+            }
+            if (booking.status === BOOK_STATUS.CANCELLED) {
+              if (canceller_id === booking.user._id) {
+                sendBookingCancelledByClient(booking)
+              }
+              else {
+                sendBookingCancelledByAlfred(booking, req)
+              }
             }
           }
-          if (booking.status === BOOK_STATUS.PREAPPROVED) {
-            sendAskInfoPreapproved(booking, req)
-          }
-          if (booking.status === BOOK_STATUS.CANCELED) {
-            if (canceller_id === booking.user._id) {
-              sendBookingCancelledByClient(booking)
-            }
-            else {
-              sendBookingCancelledByAlfred(booking, req)
-            }
-          }
-        }
-        return res.json(booking)
-      }
+          return res.json(booking)
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(500).json(err.toString())
+        })
     })
-    .catch(err => console.error(err))
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err.toString())
+    })
 })
 
 // @Route POST /myAlfred/api/booking/avocotes
@@ -401,7 +414,7 @@ router.post('/avocotes', (req, res) => {
         user: user, address: user.billing_address,
         service: req.body.service._id, amount: req.body.totalPrice, fees: 0,
         prestations: req.body.prestations, reference: computeBookingReference(user, user),
-        company_customer: user.company_customer,
+        company_customer: user.company_customer, status: BOOK_STATUS.TO_PAY,
       }
       return req.context.getModel('Booking').create(bookData)
     })

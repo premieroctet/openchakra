@@ -187,17 +187,15 @@ class CardService extends React.Component {
                     <RoomIcon/>
                   </Grid>
                   <Grid className={classes.cardKmContainer}>
-                    { distance ?
-                      <Grid className={classes.containerDistance}>
+                    { distance &&
+                      <>
                         <Grid style={{whiteSpace: 'nowrap'}}>
-                          <Typography>{`À ${' '} ${distance} ${' '}km `}</Typography>
+                          <Typography>{`À ${distance} km`}</Typography>
                         </Grid>
                         <Grid>
                           <Typography>-</Typography>
                         </Grid>
-                      </Grid>
-                      :
-                      null
+                      </>
                     }
                     <Grid style={{overflow: 'hidden'}}>
                       <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>

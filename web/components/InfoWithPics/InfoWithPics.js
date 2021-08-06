@@ -30,7 +30,7 @@ class InfoWithPics extends React.Component {
                                     <Grid className={classes.infoWithPicsMarginRight}>
                                         {data.IconName}
                                     </Grid> :
-                                    data.name_logo && data.logo ?
+                                    data.label && data.logo ?
                                         <Grid className={classes.infoWithPicsMarginRight}>
                                             <img
                                                 style={{
