@@ -74,7 +74,7 @@ class home extends React.Component {
                 <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                   <Typography style={{fontSize: 30}}>Base de données</Typography>
                 </Grid>
-                <Link href="/dashboard/ui"><a>Paramétrage UI</a></Link><br/>
+                <Link href="/dashboard/uiconfiguration"><a>Configuration UI</a></Link><br/>
                 <Link href="/dashboard/users/all"><a>Comptes</a></Link><br/>
                 <Link href="/dashboard/serviceusers/all"><a>Services des Alfred</a></Link><br/>
                 <Link href="/dashboard/companies/all"><a>Entreprises</a></Link><br/>

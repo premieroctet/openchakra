@@ -2936,7 +2936,18 @@ router.get('/context', passport.authenticate('admin', {session: false}), (req, r
 })
 
 router.get('/uiConfiguration', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('UiConfiguration').find()
+  req.context.getModel('UIConfiguration').find()
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+router.put('/uiConfiguration/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('UIConfiguration').findByIdAndUpdate({_id: req.params.id}, req.body)
     .then(result => {
       res.json(result)
     })

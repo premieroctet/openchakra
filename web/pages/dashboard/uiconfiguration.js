@@ -7,7 +7,10 @@ import Grid from '@material-ui/core/Grid'
 import axios from 'axios'
 import _ from 'lodash'
 import ColorPicker from '../../components/Editor/ColorPicker'
-import HtmlEditor from '../../components/Editor/HtmlEditor'
+const {setAxiosAuthentication} = require('../../utils/authentication')
+//import HtmlEditor from '../../components/Editor/HtmlEditor'
+import HtmlEditor from '../../components/Editor/HtmlEditor2'
+import NoSSR from 'react-no-ssr'
 
 const styles = () => ({
   signupContainer: {
@@ -18,17 +21,18 @@ const styles = () => ({
   },
 })
 
-
 class Parameter extends React.Component {
 
   render = () => {
-    const {value}=this.props
+    const {value, onChange}=this.props
     return (
-      <>
-        <div>{value.label}</div>
-        { value.type=='color' && <ColorPicker value={value.color_value} /> }
-        { value.type=='text' && <HtmlEditor value={value.color_value} /> }
-      </>
+      <NoSSR>
+        <div style={{width: '80%'}}>
+          <div>{value.label}</div>
+          { value.type=='color' && <ColorPicker value={value.color_value} onChange={onChange} /> }
+          { value.type=='text' && <HtmlEditor value={value.text_value} onChange={onChange} /> }
+        </div>
+      </NoSSR>
     )
   }
 }
@@ -38,7 +42,7 @@ class UIParameters extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      parameters: {},
+      parameters: [],
     }
   }
 
@@ -47,18 +51,33 @@ class UIParameters extends React.Component {
   }
 
   componentDidMount = () => {
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/admin/uiConfiguration')
       .then(response => {
         let parameters=response.data
-        parameters=_.groupBy(parameters, 'page')
         this.setState({parameters: parameters})
-        console.log(`Got ${Object.entries(parameters)[0]}`)
+      })
+  }
+
+  onChange = parameter_id => value => {
+    const {parameters}=this.state
+    const p=parameters.find(p => p._id ==parameter_id)
+    p.value = value
+    setAxiosAuthentication()
+    axios.put(`/myAlfred/api/admin/uiConfiguration/${p._id}`, p)
+      .then(() => {
+        console.log('ok')
+        this.setState({parameters: parameters})
+      })
+      .then(() => {
+        console.log('ok')
       })
   }
 
   render = () => {
     const {classes}=this.props
     const {parameters}=this.state
+    const groupedParameters= _.groupBy(parameters, 'page')
 
     return (
       <Layout>
@@ -68,14 +87,14 @@ class UIParameters extends React.Component {
           </Grid>
           <Paper style={{width: '100%'}}>
             {
-              Object.keys(parameters).map(page => {
-                const params=parameters[page]
+              Object.keys(groupedParameters).map(page => {
+                const params=groupedParameters[page]
                 return (
                   <>
                     <h1>Page {page}</h1>
                     {
                       params.map(p =>
-                        <Parameter value={p} />
+                        <Parameter value={p} onChange={this.onChange(p._id)}/>,
                       )
                     }
                   </>

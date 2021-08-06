@@ -7,8 +7,8 @@ const UIConfigurationSchema = new Schema({
     type: String,
     required: true,
   },
-  // Parameter name
-  name: {
+  // Parameter path in CSS or whatever
+  style_path: {
     type: String,
     required: true,
   },
@@ -21,9 +21,8 @@ const UIConfigurationSchema = new Schema({
   type: {
     type: String,
     required: true,
-    enum: ['color', 'font', 'text', 'picture'],
+    enum: ['color', 'font', 'text', 'picture', 'menu'],
   },
-
   value: {
     type: String,
     required: true,

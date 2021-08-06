@@ -100,6 +100,7 @@
     "react-number-format": "^4.4.4",
     "react-pdf": "^4.1.0",
     "react-pdfmake": "^0.3.0",
+    "react-quill": "^2.0.0-beta.2",
     "react-radio-group": "^3.0.3",
     "react-responsive-carousel": "^3.2.12",
     "react-select": "^3.2.0",
