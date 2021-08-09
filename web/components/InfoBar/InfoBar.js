@@ -10,14 +10,14 @@ import {combineStyles} from '../../utils/functions'
 function InfoBar({classes}) {
 
   return (
-    <Grid container className={`${classes.infoBarMainStyle} ${classes.headerInfoBarBgc}`}>
+    <Grid container className={`${classes.infoBarMainStyle} ${classes.headerInfobar}`}>
       <Grid item className={classes.infoBarLinkContainer}>
         <Grid className={classes.infoBarPicsContainer}>
           <img src={'/static/assets/img/warning.svg'} alt={'warning'} title={'warning'} width={'100%'}
             height={'100%'}/>
         </Grid>
         <Grid>
-          <Typography className={`${classes.infoBarColorText} ${classes.headerInfoBarColor}`}>{INFOBAR_MESSAGE.message}</Typography>
+          <Typography className={`${classes.infoBarColorText} ${classes.headerInfobar}`}>{INFOBAR_MESSAGE.message}</Typography>
         </Grid>
       </Grid>
     </Grid>
