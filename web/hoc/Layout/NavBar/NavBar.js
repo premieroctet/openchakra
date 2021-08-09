@@ -1,3 +1,5 @@
+import { combineStyles } from '../../../utils/functions'
+
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React, {Component} from 'react'
 import Button from '@material-ui/core/Button'
@@ -46,6 +48,7 @@ import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BSty
 const {emptyPromise} = require('../../../utils/promise.js')
 const {formatAddress} = require('../../../utils/text.js')
 import Slider from '@material-ui/core/Slider'
+import customStyle from '../../../static/assets/css/custom'
 const {PRO, PART, EMPLOYEE}=require('../../../utils/consts')
 
 const Transition = React.forwardRef((props, ref) => {
@@ -1231,7 +1234,7 @@ class NavBar extends Component {
 
     return (
       <Grid className={this.state.ifHomePage ? isB2BStyle(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={'static'} className={classes.navbarAppBar} style={{backgroundColor: isB2BStyle(user) && companyPage || this.state.ifHomePage ? 'transparent' : isB2BStyle(user) && !companyPage ?'#353A51' : null}}>
+        <AppBar position={'static'} className={`${ isB2BStyle(user) && companyPage || this.state.ifHomePage ? classes.navbarAppBarNoBg : isB2BStyle(user) && !companyPage ? classes.navbarAppBarWithBg : null} ${classes.headerBackgroundcolor}`}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Grid className={classes.hiddenOnlyXs}>
               <Grid container style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin: 0}}>
@@ -1264,4 +1267,6 @@ class NavBar extends Component {
   }
 }
 
-export default withStyles(styles)(NavBar)
+const combinedStyles = combineStyles(styles, customStyle)
+
+export default withStyles(combinedStyles)(NavBar)

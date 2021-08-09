@@ -5,9 +5,6 @@ import {createGenerateClassName, createMuiTheme} from '@material-ui/core/styles'
 const PRIMARY = 'rgba(178,204,251,1)'
 const SECONDARY = 'rgba(248, 207, 97, 1)'
 const ERRORCOLOR = '#B26879'
-const COLORTITLE = ''
-const COLORSUBTITLE = ''
-const TEXTCOLOR = ''
 
 // A theme with custom primary and secondary color.
 // It's optional.
