@@ -1147,11 +1147,18 @@ class NavBar extends Component {
                         onClick={() => Router.push('/creaShop/creaShop')}
                       />
                     :
-                    <Tab
-                      classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                      label={NAVBAR_MENU.registerServices}
-                      onClick={this.handleOpenRegister}
-                    />
+                    <>
+                      <Tab
+                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        label={NAVBAR_MENU.registerServices}
+                        onClick={this.handleOpenRegister}
+                      />
+                      <Tab
+                        classes={{root: classes.navbarTabRoot}}
+                        label={NAVBAR_MENU.contactUs}
+                        onClick={() => Router.push('/contact')}
+                      />
+                    </>
                   }
                 </>
           }
