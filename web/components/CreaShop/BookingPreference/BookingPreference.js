@@ -140,7 +140,7 @@ class BookingPreference extends React.Component {
               {service.equipments.map((result, index) => {
                 const selected=this.state.equipments.includes(result._id)
                 return (
-                  <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
+                  <Grid key={index} item xl={1} lg={1} md={1} sm={1} xs={1}>
                     <label style={{cursor: 'pointer'}}>
                       <img
                         src={`/static/equipments/${result.logo}`}

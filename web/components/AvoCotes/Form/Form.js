@@ -90,7 +90,7 @@ function Form({classes, booking_id}) {
   }
 
   function payEnabled() {
-    return !(firstname.length > 0 && name.length > 0 && address.gps.lat !== null && address.gps.lng !== null && emailValidator() && phoneValidator())
+    return (totalPrice>0 && firstname.length > 0 && name.length > 0 && address.gps.lat !== null && address.gps.lng !== null && emailValidator() && phoneValidator())
 
   }
 
@@ -163,18 +163,18 @@ function Form({classes, booking_id}) {
           <h2 className={classes.title}>{AVOCOTES.titleCordonnates}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Email" classes={{root: classes.textField}} value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 ? false : !emailValidator()} helperText={email.length === 0 ? 'Veuillez entrer un e-mail' : !emailValidator() ? 'Veuillez entrer un e-mail valide' : null}/>
+          <TextField id="standard-basic" label="Email" classes={{root: classes.textField}} value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 || !emailValidator()} helperText={email.length === 0 ? 'Veuillez entrer un e-mail' : !emailValidator() ? 'Veuillez entrer un e-mail valide' : null}/>
         </Grid>
         <Grid item xl={6} lg={6} md={12} sm={6} xs={12}>
-          <TextField id="standard-basic" label="Prénom" classes={{root: classes.textField}} value={firstname} onChange={e => setFirstname(e.target.value)} helperText={firstname.length === 0 ? 'Veuillez entrer votre prénom' : null}/>
+          <TextField id="standard-basic" label="Prénom" classes={{root: classes.textField}} value={firstname} onChange={e => setFirstname(e.target.value)} helperText={firstname.length === 0 ? 'Veuillez entrer votre prénom' : null} error={firstname.length==0}/>
         </Grid>
         <Grid item xl={6} lg={6} md={12} sm={6} xs={12}>
-          <TextField id="standard-basic" label="Nom" classes={{root: classes.textField}} value={name} onChange={e => setName(e.target.value)} helperText={name.length === 0 ? 'Veuillez entrer votre nom' : null}/>
+          <TextField id="standard-basic" label="Nom" classes={{root: classes.textField}} value={name} onChange={e => setName(e.target.value)} helperText={name.length === 0 ? 'Veuillez entrer votre nom' : null} error={name.length==0}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <AlgoliaPlaces
             className={classes.algoliaplaces}
-            placeholder='Addresse'
+            placeholder='Adresse'
             options={{
               appId: 'plKATRG826CP',
               apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -195,10 +195,10 @@ function Form({classes, booking_id}) {
               },
             })}
           />
-          {!address.gps.lat || !address.gps.lng ? <FormHelperText>Veuillez selectionner une adresse dans la liste.</FormHelperText>:null}
+          {!address.gps.lat || !address.gps.lng ? <FormHelperText style={{color: '#B26879'}}>Veuillez sélectionner une adresse dans la liste.</FormHelperText>:null}
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <TextField id="standard-basic" label="Téléphone" classes={{root: classes.textField}} value={phone} onChange={e => setPhone(e.target.value)} error={phone.length === 0 ? false : !phoneValidator()} helperText={phone.length === 0 ? 'Veuillez entrer un n° téléphone' : !phoneValidator() ? 'Veuillez entrer un n° téléphone valide' : null}/>
+          <TextField id="standard-basic" label="Téléphone" classes={{root: classes.textField}} value={phone} onChange={e => setPhone(e.target.value)} error={phone.length == 0 || !phoneValidator()} helperText={phone.length === 0 ? 'Veuillez entrer un n° téléphone' : !phoneValidator() ? 'Veuillez entrer un n° téléphone valide' : null}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h2 className={classes.title}>{AVOCOTES.titleDetails}</h2>
@@ -242,7 +242,7 @@ function Form({classes, booking_id}) {
           </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Button variant="contained" classes={{root: classes.buttonPaid}} disabled={payEnabled()} onClick={onSubmit}>
+          <Button variant="contained" classes={{root: classes.buttonPaid}} disabled={!payEnabled()} onClick={onSubmit}>
             {AVOCOTES.paidButton}
           </Button>
         </Grid>

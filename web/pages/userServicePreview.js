@@ -83,6 +83,7 @@ class UserServicesPreview extends React.Component {
       albums: [],
       excludedDays: [],
       available_budget: Number.MAX_SAFE_INTEGER,
+      allAddresses: {},
       pending: false,
       avocotes: null,
       all_avocotes: [],
@@ -111,6 +112,7 @@ class UserServicesPreview extends React.Component {
 
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'))
     if (bookingObj && bookingObj.serviceUserId.toString() !== id) {
+      console.warn('Incorrect bookingObj.serviceUserId')
       bookingObj = null
       localStorage.removeItem('bookingObj')
     }
@@ -178,11 +180,16 @@ class UserServicesPreview extends React.Component {
             const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
             promise
               .then(res => {
-                let allAddresses = {'main': res.data.billing_address}
-                res.data.service_address.forEach(addr => {
-                  allAddresses[addr._id] = addr
-                })
-                st.allAddresses=allAddresses
+                if (res.data) {
+                  let allAddresses = {'main': res.data.billing_address}
+                  res.data.service_address.forEach(addr => {
+                    allAddresses[addr._id] = addr
+                  })
+                  st.allAddresses=allAddresses
+                }
+                else {
+                  st.allAddresses = {}
+                }
 
                 axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
                   .then(res => {
@@ -228,9 +235,7 @@ class UserServicesPreview extends React.Component {
                                       commission: bookingObj ? bookingObj.fees : null,
                                       ...st,
                                     }, () => {
-                                      if (!bookingObj) {
-                                        this.setDefaultLocation()
-                                      }
+                                      this.setDefaultLocation()
                                       this.computeTotal()
                                     })
                                   })
@@ -354,6 +359,10 @@ class UserServicesPreview extends React.Component {
     if (this.hasWarningSelf()) {
       errors.user = 'Vous ne pouvez pas vous réserver vous-même'
     }
+    if (this.hasWarningPerimeter()) {
+      errors.alfred = 'Cet Alfred se trouve trop loin de chez vous pour être réservé!'
+    }
+
     this.setState({errors: errors})
   }
 

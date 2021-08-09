@@ -351,7 +351,7 @@ router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {sessio
         user: {$in: group.members},
         date: {$gt: start_date},
         user_role: MANAGER,
-        status: {$nin: [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]},
+        status: {$nin: [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]},
       })
         .then(bookings => {
           const consumed = _.sumBy(bookings, b => b.amount)

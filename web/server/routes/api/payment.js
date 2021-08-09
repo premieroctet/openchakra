@@ -388,7 +388,7 @@ router.get('/activeAccount', passport.authenticate('jwt', {session: false}), (re
 // GET /myAlfred/api/payment/transactions
 // View transaction for a user
 // @access private
-router.get('/payin/:payin_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/payin/:payin_id', (req, res) => {
   mangoApi.PayIns.get(req.params.payin_id)
     .then(payin => {
       console.log(`Got payin:${JSON.stringify(payin)}`)

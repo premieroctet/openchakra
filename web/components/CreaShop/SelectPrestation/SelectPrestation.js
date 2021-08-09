@@ -214,7 +214,14 @@ class SelectPrestation extends React.Component {
                       billing={presta ? presta.billing : null}
                     />
                     {
-                      res.description ? <Typography>Infos : {res.description}</Typography> : null
+                      // Display dangerouslySetInnerHTML for company private prestations only
+                      res.description ?
+                        res.private_company ?
+                          <Typography>Infos: <div dangerouslySetInnerHTML={{__html: res.description}} /></Typography>
+                          :
+                          <Typography>Infos : {res.description}</Typography>
+                        :
+                        null
                     }
                   </Grid>
                 )

@@ -85,7 +85,6 @@ const filterServicesKeyword = (serviceUsers, keyword, status) => {
       return regexp.test(su.service && su.service.s_label) ||
         regexp.test(su.service && su.service.category && su.service.category[catLabel]) ||
         regexp.test(normalize(su.service && su.service.description)) ||
-        regexp.test(normalize(su.description)) ||
         su.prestations.some(p => p.prestation &&
           (regexp.test(p.prestation.s_label) ||
            regexp.test(normalize(p.prestation.description)) ||
@@ -100,7 +99,30 @@ const filterServicesKeyword = (serviceUsers, keyword, status) => {
 }
 
 const filterServicesIds = (sus, serviceids) => {
-  return sus.filter( su => serviceids.includes(su.service._id))
+  return sus.filter(su => serviceids.includes(su.service._id))
 }
 
-module.exports = {filterServicesGPS, filterServicesKeyword, distanceComparator, filterServicesIds}
+// For non admin, remove prestations linked to companies
+// Then remove services having no prestation
+const filterPartnerServices = (sus, admin) => {
+  if (admin) {
+    return sus
+  }
+  sus = sus.map(su => {
+    su.prestations = su.prestations.filter((p,index) => {
+      // TODO : pourquoi j'ai des prestas à null ?
+      if (!p.prestation) {
+        console.error(`Missing prestations.prestation for presta #${index} in serviceUser #${su._id}`)
+        console.log(su.prestations.map(p => p && p.prestation && p.prestation._id))
+      }
+      return p && p.prestation && !p.prestation.private_company
+    })
+    return su
+  })
+    .filter(su => su.prestations.length>0)
+  return sus
+}
+
+module.exports = {
+  filterServicesGPS, filterServicesKeyword, distanceComparator,
+  filterServicesIds, filterPartnerServices}

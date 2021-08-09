@@ -23,7 +23,7 @@ router.post('/addRecurrent',passport.authenticate('jwt',{session: false}),(req,r
       return res.status(400).json(errors);
   }
 
-  const promise = req.body._id ? req.context.getModel('Availability').findOne({_id : req.body._id}) : emptyPromise(new Availability())
+  const promise = req.body._id ? req.context.getModel('Availability').findOne({_id : req.body._id}) : emptyPromise({})
   promise
     .then( avail => {
       avail.user = req.user.id
@@ -36,7 +36,8 @@ router.post('/addRecurrent',passport.authenticate('jwt',{session: false}),(req,r
       avail.available= req.body.available
       avail.timelapses= req.body.timelapses
 
-      avail.save()
+      const savePromise=req.body._id ? avail.save() : req.context.getModel('Availability').create(avail)
+      savePromise
         .then(availability => {
           res.json(availability)
         })
@@ -67,13 +68,13 @@ router.post('/addPunctual', passport.authenticate('jwt', {session: false}), (req
       Array(...req.body.punctuals).forEach( punctual => {
         var avail=getAvailabilityForDate(moment(punctual), availabilities)
         if (!avail) {
-          avail = new Availability({
+          avail = {
             user:req.user.id,
             period: undefined,
             punctual: punctual,
             available: false,
             timelapses: []
-          });
+          }
         }
         avail.available = req.body.available
 
@@ -93,7 +94,8 @@ router.post('/addPunctual', passport.authenticate('jwt', {session: false}), (req
             avail.timelapses=[]
         }
 
-        avail.save()
+        const promiseSave = avail._id ? avail.save() : req.context.getModel('Availability').create(avail)
+        promiseSave
           .then(availability => {
             console.log(`Saved punctual availability ${JSON.stringify(availability)}`)
           })

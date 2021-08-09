@@ -51,8 +51,9 @@ class Cancel extends React.Component {
         this.setState({bookingObj: res.data})
         setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
       })
-
-      .catch(err => console.error(err))
+      .catch(err => {
+        console.error(err)
+      })
   }
 
   render() {
@@ -108,7 +109,7 @@ class Cancel extends React.Component {
                         }}
                         onClick={() => this.props.onMaintain(this.props.booking_id)}
                       >
-                        Maintenir
+                        Retour
                       </Button>
                     </Grid>
                     <Grid>
@@ -119,11 +120,11 @@ class Cancel extends React.Component {
                           textTransform: 'initial',
                         }}
                         onClick={() => {
-                          this.changeStatus(BOOK_STATUS.CANCELED)
+                          this.changeStatus(BOOK_STATUS.CANCELLED)
                           this.props.onMaintain(this.props.booking_id)
                         }}
                       >
-                        Annuler
+                        Confirmer l'annulation
                       </Button>
                     </Grid>
                   </Grid>

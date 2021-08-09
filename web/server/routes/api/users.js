@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 const path = require('path')
 const axiosCookieJarSupport = require('axios-cookiejar-support').default
 const tough = require('tough-cookie')
-const {is_production, is_validation, computeUrl}=require('../../../config/config')
+const {is_production, is_validation, is_development, computeUrl}=require('../../../config/config')
 const CronJob = require('cron').CronJob
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
@@ -1228,15 +1228,21 @@ if (is_production() || is_validation()) {
         .limit(100)
         .then(usrs => {
           usrs.forEach(user => {
-            console.log(`Found customer ${user.name}, age ${user.age}`)
             if (user.age<18) {
-              console.warn(`User ${user._id} skipped, age ${user.age}<18`)
+              console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}<18`)
             }
             else if (user.age>120) {
-              console.warn(`User ${user._id} skipped, age ${user.age}>120`)
+              console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}>120`)
             }
             else {
               createMangoClient(user)
+                .then(user => {
+                  console.log(`Created mango for ${user._id} ${user.full_name}`)
+                  user.save()
+                })
+                .catch(err => {
+                  console.error(err)
+                })
             }
           })
         })

@@ -19,7 +19,6 @@ import fr from 'date-fns/locale/fr'
 import Hidden from '@material-ui/core/Hidden'
 
 const {BOOKING} = require('../../utils/i18n')
-const {getUserLabel} = require('../../utils/context')
 registerLocale('fr', fr)
 moment.locale('fr')
 
@@ -36,14 +35,11 @@ class BookingPreview extends React.Component {
     super(props)
     this.child = React.createRef()
     this.state = {
-      booking_id: null,
       bookingObj: null,
       currentUser: null,
       is_alfred: null,
       end_datetime: null,
       loading: false,
-      user_label: '',
-      alfred_label: '',
     }
     this.routingDetailsMessage = this.routingDetailsMessage.bind(this)
     this.getPrestationMinMoment = this.getPrestationMinMoment.bind(this)
@@ -69,21 +65,10 @@ class BookingPreview extends React.Component {
   }
 
   componentDidMount() {
+
     const booking_id = this.props.booking_id
 
-    axios.get(`/myAlfred/api/shop/alfred/${booking_id}`)
-      .then(res => {
-        this.setState({is_pro: !!res.data.is_professional})
-      })
-      .catch(err => {
-        console.error(err)
-      })
-
-
-    this.setState({booking_id: booking_id})
-
     setAxiosAuthentication()
-
     axios.get('/myAlfred/api/users/current').then(res => {
       let result = res.data
       this.setState({currentUser: result})
@@ -98,11 +83,6 @@ class BookingPreview extends React.Component {
             end_datetime: end_datetime,
           },
         )
-
-        getUserLabel(booking.user)
-          .then(res => this.setState({user_label: res}))
-        getUserLabel(booking.alfred)
-          .then(res => this.setState({alfred_label: res}))
 
         if (res.data.serviceUserId) {
           axios.get(`/myAlfred/api/serviceUser/${this.state.bookingObj.serviceUserId}`).then(res => {
@@ -135,7 +115,7 @@ class BookingPreview extends React.Component {
   }
 
   changeStatus(status) {
-    axios.put(`/myAlfred/api/booking/modifyBooking/${this.state.booking_id}`, {status: status})
+    axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, {status: status})
       .then(() => {
         this.componentDidMount()
         this.socket.emit('changeStatus', this.state.bookingObj)
@@ -183,7 +163,7 @@ class BookingPreview extends React.Component {
     const endHour = moment(end_datetime).format('HH:mm')
     const modifyObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.CONFIRMED}
 
-    axios.put(`/myAlfred/api/booking/modifyBooking/${this.state.booking_id}`, modifyObj)
+    axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, modifyObj)
       .then(res => {
         this.componentDidMount()
         setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
@@ -213,8 +193,8 @@ class BookingPreview extends React.Component {
   }
 
   render() {
-    const {classes} = this.props
-    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime, user_label, alfred_label} = this.state
+    const {classes, booking_id} = this.props
+    const {bookingObj, currentUser, is_alfred, end_datetime} = this.state
 
     if (!bookingObj || !currentUser) {
       return null
@@ -229,7 +209,6 @@ class BookingPreview extends React.Component {
     // Am i the service provider ?
     const amIAlfred = currentUser._id === bookingObj.alfred._id
     const displayUser = amIAlfred ? bookingObj.user : bookingObj.alfred
-    const displayUserLabel = amIAlfred ? user_label : alfred_label
 
     const status = bookingObj.status
     const paymentTitle =
@@ -237,7 +216,7 @@ class BookingPreview extends React.Component {
         status === BOOK_STATUS.REFUSED ? 'Paiement non réalisé'
           : [BOOK_STATUS.FINISHED, BOOK_STATUS.CONFIRMED].includes(status) ? 'Versement' : 'Revenus potentiels'
         :
-        [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED].includes(status) ?
+        [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED].includes(status) ?
           'Paiement non réalisé'
           :
           status === BOOK_STATUS.FINISHED ?
@@ -255,7 +234,7 @@ class BookingPreview extends React.Component {
       `le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`
 
     const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone
-    const customer_booking_title = bookingObj.customer_booking && `Réservation Avocotés pour le compte de ${bookingObj.customer_booking.user.full_name}`
+    const customer_booking_title = bookingObj.customer_booking && `Réservation AvoCotés pour le compte de ${bookingObj.customer_booking.user.full_name}`
 
     return (
       <Grid>
@@ -274,7 +253,7 @@ class BookingPreview extends React.Component {
                       <Grid item xs={9} sm={9} md={9} xl={9} lg={9}>
                         <Grid>
                           <Typography>
-                            {displayUserLabel}
+                            {displayUser.full_name}
                           </Typography>
                         </Grid>
                         <Grid style={{marginTop: '2%'}}>

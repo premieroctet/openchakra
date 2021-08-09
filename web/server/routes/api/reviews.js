@@ -98,8 +98,7 @@ router.post('/add/client', passport.authenticate('jwt', {session: false}), (req,
 
   reviewFields.note_client.global = (reception + relational + accuracy) / 3;
 
-  const newReviews = new Reviews(reviewFields);
-  newReviews.save().then(() => {
+  req.context.getModel('Review').create(reviewFields).then(() => {
     req.context.getModel('Booking').findByIdAndUpdate(req.body.booking, {user_evaluated: true})
       .then(() => res.json('ok'))
       .catch(error => console.log(error));

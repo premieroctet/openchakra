@@ -3,19 +3,15 @@ const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
 const path = require('path')
-const axios = require('axios')
-const https = require('https')
 const multer = require('multer')
 const crypto = require('crypto')
 const geolib = require('geolib')
 const _ = require('lodash')
 const moment = require('moment')
-const isEmpty = require('../../validation/is-empty')
 const {data2ServiceUser} = require('../../utils/mapping')
 const {emptyPromise} = require('../../../utils/promise')
-const {computeUrl} = require('../../../config/config')
 const serviceFilters = require('../../utils/filters')
-const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
+const {GID_LEN, PRO, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
 const {normalize} = require('../../../utils/text')
 const parse = require('url-parse')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
@@ -25,18 +21,18 @@ moment.locale('fr')
 
 ensureDirectoryExists('static/profile/diploma/')
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function(req, file, cb) {
     cb(null, 'static/profile/diploma/')
   },
-  filename: function (req, file, cb) {
+  filename: function(req, file, cb) {
     let datetimestamp = Date.now()
     let key = crypto.randomBytes(5).toString('hex')
-    cb(null, datetimestamp + '_' + key + '_' + file.originalname)
+    cb(null, `${datetimestamp}_${key}_${file.originalname}`)
   },
 })
 const upload = multer({
   storage: storage,
-  fileFilter: function (req, file, callback) {
+  fileFilter: function(req, file, callback) {
     let ext = path.extname(file.originalname).toLowerCase()
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
       return callback(new Error('Error extension'))
@@ -309,11 +305,10 @@ router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false,}
 router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
-      serviceUser.diploma = {}
+      serviceUser.diploma = serviceUser.diploma || {}
       serviceUser.diploma.name = req.body.name
       serviceUser.diploma.year = req.body.year
       serviceUser.diploma.skills = JSON.parse(req.body.skills)
-      const diploma = 'file_diploma'
       if (req.file) {
         serviceUser.diploma.file = req.file.path
       }
@@ -332,6 +327,7 @@ router.post('/addCertification/:id', upload.single('file_certification'), passpo
 }), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
+      serviceUser.certification = serviceUser.certification || {}
       serviceUser.certification.name = req.body.name
       serviceUser.certification.year = req.body.year
       serviceUser.certification.skills = JSON.parse(req.body.skills)
@@ -535,7 +531,7 @@ router.post('/search', (req, res) => {
       populate: {path: 'category', select: status==PRO ? 's_professional_label':'s_particular_label'},
     })
     .populate({
-      path: 'prestations.prestation', select: 's_label description', match: filter,
+      path: 'prestations.prestation', match: filter,
       populate: {path: 'job', select: 's_label'},
     })
     .then(result => {
@@ -553,7 +549,11 @@ router.post('/search', (req, res) => {
       if (kw) {
         sus = serviceFilters.filterServicesKeyword(sus, kw, status)
       }
-      console.log(`Found ${sus.length} after keyword filtering`)
+      console.log(`Remaining ${sus.length} after keyword filtering`)
+
+      sus = serviceFilters.filterPartnerServices(sus, req.context.isAdmin())
+      console.log(`Remaining ${sus.length} after keyword filtering`)
+
       if (gps) {
         try {
           sus = serviceFilters.filterServicesGPS(sus, JSON.parse(req.body.gps), restrictPerimeter)
@@ -562,7 +562,8 @@ router.post('/search', (req, res) => {
           sus = serviceFilters.filterServicesGPS(sus, req.body.gps, restrictPerimeter)
         }
       }
-      console.log(`Found ${sus.length} after gps filtering`)
+      console.log(`Remaining ${sus.length} after gps filtering`)
+
       // Manager : filtrer les services autorisés
       if (getRole(req)==MANAGER) {
         req.context.getModel('Group').findOne({members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
@@ -825,18 +826,15 @@ router.get('/:id', (req, res) => {
     .populate('equipments')
     .populate('service.equipments')
     .then(service => {
-      if (Object.keys(service).length === 0 && service.constructor === Object) {
-        return res.status(400).json({
-          msg: 'No service found',
-        })
-      } else {
-        res.json(service)
+      if (!service) {
+        return res.status(404).json({msg: 'No service found'})
       }
-
+      res.json(service)
     })
-    .catch(err => res.status(404).json({
-      service: 'No service found' + err,
-    }))
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({service: `No service found:${ err}`})
+    })
 })
 
 // @Route GET /myAlfred/api/serviceUser/:id

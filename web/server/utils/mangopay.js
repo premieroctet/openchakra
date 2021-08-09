@@ -28,7 +28,7 @@ const getWallet = mangopay_id => {
 }
 
 const createTransfer = (source_user_id, destination_user_id, debt_amount, fees=0) => {
-  console.log('Creating transfer')
+  console.log(`Creating transfer from ${source_user_id} to ${destination_user_id}, amount ${debt_amount}, fees ${fees}`)
   return new Promise((resolve, reject) => {
     Promise.all([source_user_id, destination_user_id].map(u => getWallet(u)))
       .then(res => {
@@ -83,6 +83,7 @@ const getBankAccount = mangopay_id => {
 }
 
 const createPayout = (mangopay_id, amount, fees=0) => {
+  console.log(`Creating payout for ${mangopay_id}, amount ${amount}, fees ${fees}`)
   return new Promise((resolve, reject) => {
     getWallet(mangopay_id)
       .then(wallet_id => {
@@ -162,7 +163,7 @@ const createMangoClient = user => {
           })
       })
       .catch(err => {
-        reject(`Création mangopay user ${user.full_name}:${JSON.stringify(err)}`)
+        reject(`Création mangopay user ${user._id} ${user.full_name}:${JSON.stringify(err)}`)
       })
   })
 }
@@ -377,15 +378,15 @@ const addRegistrationProof = user => {
 /**
 * payBooking : transfers from customer to alfred and pays out Alfred
 * - standard : transfer booking.amount-booking.fees from customer to Alfred. Fees were taken during pay in
-* - avocotes : transfer booking.amount-booking.fees from customer to Alfred, including fees to My Alfred
+* - AvoCotés : transfer booking.amount-booking.fees from customer to Alfred, including fees to My Alfred
 */
 const payBooking = booking => {
-  console.log(`Starting paying of booking ${booking._id}`)
+  console.log(`Starting paying of booking ${booking._id}, amount ${booking.amount}, fees ${booking.fees}`)
   const id_mangopay_alfred = booking.alfred.mangopay_provider_id
   const role = booking.user_role
 
   let promise = null
-  let amount = (booking.amount - booking.fees) * 100
+  let amount = booking.amount - booking.fees
   let fees = 0
   if ([ADMIN, MANAGER].includes(role)) {
     promise = Company.findById(booking.user.company)
@@ -416,7 +417,7 @@ const payBooking = booking => {
             booking.mangopay_transfer_id = transfer.Id
             booking.save().catch(err => console.error(err))
           }
-          createPayout(id_mangopay_alfred, amount)
+          createPayout(id_mangopay_alfred, amount-fees)
             .then(payout => {
               booking.mangopay_payout_id = payout.Id
               booking.paid = true

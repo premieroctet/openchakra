@@ -659,17 +659,6 @@ router.get('/billings', passport.authenticate('b2badmin', {session: false}),
       })
 })
 
-router.get('/name/:company_id', (req, res) => {
-  req.context.getModel('Company').findById(req.params.company_id, 'name')
-    .then( company => {
-      res.json(company)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(400).json()
-    })
-})
-
 // @Route GET /myAlfred/api/companies/budget/:role
 // Returns remaining budget for user_id & role in the period
 // @Access private user
@@ -699,7 +688,7 @@ router.get('/budget/:user_id/:role', passport.authenticate('jwt', {session: fals
         user: user_predicate,
         date: {$gt: start_date},
         user_role: role,
-        status: {$nin: [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]},
+        status: {$nin: [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]},
       })
         .then(bookings => {
           console.log(`Found ${bookings.length} bookings`)

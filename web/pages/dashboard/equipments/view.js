@@ -1,29 +1,31 @@
-import {snackBarSuccess} from '../../../utils/notifications'
-
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react'
+
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
 import {withStyles} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import Layout from '../../../hoc/Layout/Layout'
-import axios from 'axios'
 import Router from 'next/router'
-import Link from 'next/link'
+import Layout from '../../../hoc/Layout/Layout'
+import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor'
+const {snackBarSuccess}=require('../../../utils/notifications')
+import axios from 'axios'
 
 
 const styles = theme => ({
-  loginContainer: {
+  signupContainer: {
     alignItems: 'center',
-    height: '100vh',
-    justifyContent: 'center',
+    height: '170vh',
+    justifyContent: 'top',
     flexDirection: 'column',
+
   },
   card: {
     padding: '1.5rem 3rem',
-    width: 400,
+    width: '90%',
+    marginTop: '100px',
   },
   cardContant: {
     flexDirection: 'column',
@@ -32,142 +34,143 @@ const styles = theme => ({
     textDecoration: 'none',
     color: 'black',
     fontSize: 12,
-  },
-  cancelButton: {
-    backgroundColor: theme.palette.error.main,
-    color: 'white',
+    lineHeight: 4.15,
   },
 })
 
 class view extends React.Component {
-
   constructor(props) {
     super(props)
-
     this.state = {
-      equipment: {},
-
+      label: '',
+      logo: null,
+      errors: {},
     }
 
-    this.handleClick = this.handleClick.bind(this)
+    this.onLabelChange = this.onLabelChange.bind(this)
+    this.onLogoChange = this.onLogoChange.bind(this)
+    this.onFormSubmit = this.onFormSubmit.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
-    return {equipment_id: id}
+    return {id: id}
+  }
 
+  isEdition = () => {
+    return Boolean(this.props.id)
   }
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.props.equipment_id
+    if (!this.props.id) {
+      return
+    }
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/admin/equipment/all/${id}`)
+    axios.get(`/myAlfred/api/admin/equipment/all/${this.props.id}`)
       .then(response => {
         let equipment = response.data
-        this.setState({equipment: equipment})
-
+        this.setState({...equipment})
       })
       .catch(err => {
         console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/'})
+          Router.push({pathname: '/login'})
         }
       })
-
   }
 
-  onChange = e => {
-    const state = this.state.equipment
-    state[e.target.name] = e.target.value
-    this.setState({equipment: state})
-  };
-
-  onSubmit = e => {
+  onFormSubmit(e) {
     e.preventDefault()
-
-    const {label} = this.state.equipment
-    const id = this.props.equipment_id
-    axios.put(`/myAlfred/api/admin/equipment/all/${id}`, {label})
-      .then(() => {
-        snackBarSuccess('Equipement modifié avec succès')
-        Router.push({pathname: '/dashboard/equipments/all'})
-      })
-      .catch(err => {
-        console.error(err)
-        if (err.response.status === 401 || err.response.status === 403) {
-          clearAuthenticationToken()
-          Router.push({pathname: '/'})
+    this.setState({errors: {}})
+    const {label, logo}=this.state
+    const formData = new FormData()
+    formData.append('label', label)
+    // Logo changed ?
+    if (logo && logo.arrayBuffer) {
+      formData.append('logo', logo)
+    }
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    }
+    setAxiosAuthentication()
+    const action=this.isEdition() ?
+      axios.put(`/myAlfred/api/admin/equipment/all/${this.props.id}`, formData, config)
+      :
+      axios.post('/myAlfred/api/admin/equipment/all', formData, config)
+    action
+      .then(response => {
+        snackBarSuccess(`Equipment ${this.isEdition() ? 'modifié' : 'ajouté'}`)
+        if (!this.isEdition()) {
+          Router.push(`/dashboard/equipments/view?id=${response.data._id}`)
         }
       })
-  };
-
-  handleClick() {
-    const id = this.props.equipment_id
-    axios.delete(`/myAlfred/api/admin/equipment/all/${id}`)
-      .then(() => {
-        snackBarSuccess('Equipement supprimé avec succès')
-        Router.push({pathname: '/dashboard/equipments/all'})
-      })
-      .catch(err => {
-        console.error(err)
-        if (err.response.status === 401 || err.response.status === 403) {
+      .catch(error => {
+        console.error(error)
+        this.setState({errors: error.response.data})
+        if (error.response.status === 401 || error.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/'})
+          Router.push({pathname: '/login'})
         }
       })
-
-
   }
 
+  onLogoChange(e) {
+    this.setState({logo: e.target.files[0]})
+  }
+
+  onLabelChange(e) {
+    this.setState({label: e.target.value})
+  }
 
   render() {
     const {classes} = this.props
-    const {equipment} = this.state
+    const {errors, logo, label} = this.state
 
-
+    const title=`${this.isEdition() ? 'Modifier' : 'Ajouter'} un équipement`
     return (
       <Layout>
-        <Grid container className={classes.loginContainer}>
+        <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>{equipment.label}</Typography>
+                <Typography style={{fontSize: 30}}>{title}</Typography>
               </Grid>
-              <form onSubmit={this.onSubmit}>
+              <form onSubmit={this.onFormSubmit}>
                 <Grid item>
                   <TextField
                     id="standard-with-placeholder"
+                    label="Label"
+                    placeholder="Label"
                     margin="normal"
                     style={{width: '100%'}}
                     type="text"
                     name="label"
-                    value={equipment.label}
-                    onChange={this.onChange}
-
+                    value={label}
+                    onChange={this.onLabelChange}
+                    error={errors.label}
                   />
+                  <em>{errors.label}</em>
                 </Grid>
                 <Grid item>
-                  <img src={`/static/equipments/${equipment.logo}`} alt={'logo'} width={100}/>
-                </Grid>
-                <Grid item>
-                  <img src={`../../../${equipment.logo2}`} alt={'logo2'} width={100}/>
+                  <DocumentEditor
+                    key={'particular'}
+                    ext={this.state.ext}
+                    ext_upload={this.state.particular_ext}
+                    db_document={logo && `static/equipments/${logo}`}
+                    uploaded_file={logo && logo.arrayBuffer ? URL.createObjectURL(logo) : null}
+                    onChange={this.onLogoChange}
+                    title={'Cliquez pour modifier'}
+                  />
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                   <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
-                    Modifier
-                  </Button>
-                  <Button type="button" variant="contained" classes={{root: classes.cancelButton}} style={{width: '100%'}}
-                    onClick={this.handleClick}>
-                    Supprimer
+                    Enregistrer
                   </Button>
                 </Grid>
               </form>
-              <Link href={`editPicture?id=${this.props.equipment_id}`}>
-                <Button type="button" variant="contained" color="primary" style={{width: '100%'}}>
-                  Modifier les logos
-                </Button>
-              </Link>
             </Grid>
           </Card>
         </Grid>
@@ -175,6 +178,5 @@ class view extends React.Component {
     )
   }
 }
-
 
 export default withStyles(styles)(view)
