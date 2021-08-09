@@ -38,4 +38,7 @@ export default theme => ({
   buttonCGU: {
     textTransform: 'initial',
   },
+  cancelButton: {
+    color: theme.palette.error.main,
+  },
 })

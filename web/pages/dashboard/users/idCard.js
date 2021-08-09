@@ -1,20 +1,22 @@
+import {snackBarSuccess} from '../../../utils/notifications'
+
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import {Document, Page, pdfjs} from 'react-pdf';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
+import React from 'react'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import {Document, Page, pdfjs} from 'react-pdf'
+import Layout from '../../../hoc/Layout/Layout'
+import axios from 'axios'
+import Router from 'next/router'
 
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 
-const styles = {
+const styles = theme => ({
   loginContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -33,12 +35,15 @@ const styles = {
     color: 'black',
     fontSize: 12,
   },
-};
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+  },
+})
 
 class idCard extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       haveCard: false,
@@ -50,80 +55,80 @@ class idCard extends React.Component {
       user: {},
 
 
-    };
+    }
 
   }
 
   static getInitialProps({query: {id}}) {
-    return {user_id: id};
+    return {user_id: id}
 
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    const id = this.props.user_id;
+    localStorage.setItem('path', Router.pathname)
+    const id = this.props.user_id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/users/users/${id}`)
       .then(response => {
 
-        let user = response.data;
-        this.setState({user: user});
+        let user = response.data
+        this.setState({user: user})
         if (user.id_card !== undefined) {
-          this.setState({haveCard: true, card: user.id_card});
+          this.setState({haveCard: true, card: user.id_card})
           if (user.id_card.recto !== undefined) {
-            const ext = user.id_card.recto.split('.').pop();
-            this.setState({ext: ext});
+            const ext = user.id_card.recto.split('.').pop()
+            this.setState({ext: ext})
           }
           if (user.id_card.verso !== undefined) {
-            const extVerso = user.id_card.verso.split('.').pop();
-            this.setState({ext2: extVerso});
+            const extVerso = user.id_card.verso.split('.').pop()
+            this.setState({ext2: extVerso})
           }
         }
 
 
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
 
   }
 
   onDocumentLoadSuccess = ({numPages}) => {
-    this.setState({numPages});
+    this.setState({numPages})
   };
 
   validateCard() {
-    const id = this.props.user_id;
-    axios.put('/myAlfred/api/admin/users/users/idCard/' + id)
+    const id = this.props.user_id
+    axios.put(`/myAlfred/api/admin/users/users/idCard/${ id}`)
       .then(() => {
-        alert('Carte d\'identité validée');
-        Router.push({pathname: '/dashboard/users/all'});
+        snackBarSuccess('Carte d\'identité validée')
+        Router.push({pathname: '/dashboard/users/all'})
       })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
   }
 
   deleteCard() {
-    const id = this.props.user_id;
-    axios.put('/myAlfred/api/admin/users/users/idCard/delete/' + id)
+    const id = this.props.user_id
+    axios.put(`/myAlfred/api/admin/users/users/idCard/delete/${ id}`)
       .then(() => {
-        alert('Validation supprimée');
-        Router.push({pathname: '/dashboard/users/all'});
+        snackBarSuccess('Validation supprimée')
+        Router.push({pathname: '/dashboard/users/all'})
       })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
   }
 
 
   render() {
-    const {classes} = this.props;
-    const {user} = this.state;
-    const {haveCard} = this.state;
-    const {ext} = this.state;
-    const {ext2} = this.state;
-    const {card} = this.state;
+    const {classes} = this.props
+    const {user} = this.state
+    const {haveCard} = this.state
+    const {ext} = this.state
+    const {ext2} = this.state
+    const {card} = this.state
 
 
     return (
@@ -174,32 +179,25 @@ class idCard extends React.Component {
                   </Grid>
                   <Grid item xs={12}>
                     {user.id_confirmed ?
-                      <Button onClick={() => this.deleteCard()} variant={'contained'} color={'secondary'}
-                              style={{color: 'white'}}>Supprimer la confirmation</Button>
+                      <Button onClick={() => this.deleteCard()} variant={'contained'} classes={{root: classes.cancelButton}}
+                        style={{color: 'white'}}>Supprimer la confirmation</Button>
                       :
                       <Button onClick={() => this.validateCard()} variant={'contained'} color={'primary'}
-                              style={{color: 'white'}}>Valider la carte d'ientité</Button>
+                        style={{color: 'white'}}>Valider la carte d'ientité</Button>
                     }
 
                   </Grid>
                 </>
-
-
                 :
-
                 <p>Aucune carte d'identité ou passeport</p>
-
-
               }
-
-
             </Grid>
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(idCard);
+export default withStyles(styles)(idCard)

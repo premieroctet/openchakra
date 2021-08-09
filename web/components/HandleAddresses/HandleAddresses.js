@@ -241,7 +241,7 @@ class HandleAddresses extends React.Component {
       })
   };
 
-  modalDeleteAddress = () => {
+  modalDeleteAddress = classes => {
     return (
       <Dialog
         open={this.state.open}
@@ -259,7 +259,7 @@ class HandleAddresses extends React.Component {
           <Button onClick={() => this.handleClose()} color="primary">
             Annuler
           </Button>
-          <Button onClick={() => this.deleteAddress(this.state.delete_address_id)} color="secondary">
+          <Button onClick={() => this.deleteAddress(this.state.delete_address_id)} classes={{root: classes.cancelButton}}>
             Supprimer
           </Button>
         </DialogActions>
@@ -435,7 +435,7 @@ class HandleAddresses extends React.Component {
         <Grid>
           <Divider style={{height: 2, width: '100%', marginTop: '5vh'}}/>
         </Grid>
-        {open ? this.modalDeleteAddress() : null}
+        {open ? this.modalDeleteAddress(classes) : null}
       </Grid>
     )
   }

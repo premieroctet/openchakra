@@ -26,6 +26,8 @@ import {isAndroid} from 'react-device-detect'
 const {PRO, PART} = require('../utils/consts')
 const {getLoggedUserId} = require('../utils/context')
 import Router from 'next/router'
+import {combineStyles} from '../utils/functions'
+import customStyle from '../static/assets/css/custom'
 
 
 const DialogTitle = withStyles(styles)(props => {
@@ -150,7 +152,7 @@ class Home extends React.Component {
           />
         </Helmet>
         <Grid>
-          <Grid className={classes.infoBarContainer}>
+          <Grid className={`${classes.infoBarContainer} ${classes.headerInfobarDisplay}`}>
             <InfoBar/>
           </Grid>
           <Grid container className={classes.navbarAndBannerContainer}>
@@ -242,4 +244,5 @@ class Home extends React.Component {
   }
 }
 
-export default withStyles(styles)(Home)
+const combinedStyles = combineStyles(styles, customStyle)
+export default withStyles(combinedStyles)(Home)

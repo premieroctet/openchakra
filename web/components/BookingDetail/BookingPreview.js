@@ -309,9 +309,7 @@ class BookingPreview extends React.Component {
                                     <Grid item md={4} xs={12}>
                                       <Link
                                         href={`/evaluateClient?booking=${bookingObj._id}&id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
-                                        <Button color={'secondary'} variant={'contained'} style={{color: 'white'}}>Evaluer
-                                    mon client
-                                        </Button>
+                                        <Button color={'primary'} variant={'contained'} style={{color: 'white'}}>Evaluer mon client</Button>
                                       </Link>
                                     </Grid>
                                   </Grid>}
@@ -524,7 +522,7 @@ class BookingPreview extends React.Component {
                                       onClick={this.onConfirm}>Confirmer</Button>
                                   </Grid>
                                   <Grid>
-                                    <Button variant={'outlined'} classes
+                                    <Button variant={'outlined'} classes={{root: classes.buttonCancel}}
                                       onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}>Refuser</Button>
                                   </Grid>
                                 </Grid>

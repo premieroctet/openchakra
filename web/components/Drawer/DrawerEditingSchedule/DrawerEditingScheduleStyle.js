@@ -20,8 +20,11 @@ export default theme => ({
     paddingTop: 2,
     paddingBottom: 2,
   },
-  marginSaveButton:{
+  marginSaveButton: {
     marginTop: '5vh',
     marginBottom: '5vh',
-  }
+  },
+  buttonCancel: {
+    color: theme.palette.error.main,
+  },
 })

@@ -4,31 +4,26 @@ import {INFOBAR_MESSAGE} from '../../utils/i18n'
 import {Typography} from '@material-ui/core'
 import styles from '../../static/css/components/InfoBar/InfoBar'
 import withStyles from '@material-ui/core/styles/withStyles'
+import customStyle from '../../static/assets/css/custom'
+import {combineStyles} from '../../utils/functions'
 
+function InfoBar({classes}) {
 
-class InfoBar extends React.Component {
-  constructor(props) {
-    super(props)
-
-  }
-
-  render() {
-    const {classes} = this.props
-
-    return (
-      <Grid container className={classes.infoBarMainStyle}>
-        <Grid item className={classes.infoBarLinkContainer}>
-          <Grid className={classes.infoBarPicsContainer}>
-            <img src={'/static/assets/img/warning.svg'} alt={'warning'} title={'warning'} width={'100%'}
-              height={'100%'}/>
-          </Grid>
-          <Grid>
-            <Typography className={classes.infoBarColorText}>{INFOBAR_MESSAGE.message}</Typography>
-          </Grid>
+  return (
+    <Grid container className={`${classes.infoBarMainStyle} ${classes.headerInfoBarBgc}`}>
+      <Grid item className={classes.infoBarLinkContainer}>
+        <Grid className={classes.infoBarPicsContainer}>
+          <img src={'/static/assets/img/warning.svg'} alt={'warning'} title={'warning'} width={'100%'}
+            height={'100%'}/>
+        </Grid>
+        <Grid>
+          <Typography className={`${classes.infoBarColorText} ${classes.headerInfoBarColor}`}>{INFOBAR_MESSAGE.message}</Typography>
         </Grid>
       </Grid>
-    )
-  }
+    </Grid>
+  )
 }
 
-export default withStyles(styles)(InfoBar)
+const combinedStyles = combineStyles(styles, customStyle)
+
+export default withStyles(combinedStyles)(InfoBar)

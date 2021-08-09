@@ -1,35 +1,35 @@
-const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication');
-import React, {Fragment} from 'react';
-import axios from 'axios';
-import moment from 'moment';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Router from 'next/router';
-import {withStyles} from '@material-ui/core/styles';
-import {Helmet} from 'react-helmet';
-import styles from '../../static/css/pages/security/security';
-import IconButton from '@material-ui/core/IconButton';
-import {checkPass1, checkPass2} from '../../utils/passwords';
-import LayoutAccount from "../../hoc/Layout/LayoutAccount";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import Switch from "@material-ui/core/Switch";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
-import Dialog from "@material-ui/core/Dialog";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import Input from '@material-ui/core/Input';
-const {snackBarSuccess} = require('../../utils/notifications');
+const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication')
+import React, {Fragment} from 'react'
+import axios from 'axios'
+import moment from 'moment'
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import Router from 'next/router'
+import {withStyles} from '@material-ui/core/styles'
+import {Helmet} from 'react-helmet'
+import styles from '../../static/css/pages/security/security'
+import IconButton from '@material-ui/core/IconButton'
+import {checkPass1, checkPass2} from '../../utils/passwords'
+import LayoutAccount from '../../hoc/Layout/LayoutAccount'
+import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
+import Switch from '@material-ui/core/Switch'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogActions from '@material-ui/core/DialogActions'
+import Dialog from '@material-ui/core/Dialog'
+import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import Input from '@material-ui/core/Input'
+const {snackBarSuccess} = require('../../utils/notifications')
 
 
-moment.locale('fr');
+moment.locale('fr')
 
-const IOSSwitch = withStyles((theme) => ({
+const IOSSwitch = withStyles(theme => ({
   root: {
     width: 72,
     height: 26,
@@ -40,7 +40,7 @@ const IOSSwitch = withStyles((theme) => ({
     padding: 2,
     '&$checked': {
       transform: 'translateX(46px)',
-      color: 'rgba(248,207,97,1)',
+      color: theme.palette.secondary.main,
       '& + $track': {
         backgroundColor: 'white',
         opacity: 1,
@@ -48,7 +48,7 @@ const IOSSwitch = withStyles((theme) => ({
       },
     },
     '&$focusVisible $thumb': {
-      color: 'rgba(248,207,97,1)',
+      color: theme.palette.secondary.main,
       border: '6px solid #fff',
     },
   },
@@ -65,7 +65,7 @@ const IOSSwitch = withStyles((theme) => ({
   },
   checked: {},
   focusVisible: {},
-}))(({ classes, ...props }) => {
+}))(({classes, ...props}) => {
   return (
     <Switch
       focusVisibleClassName={classes.focusVisible}
@@ -79,13 +79,13 @@ const IOSSwitch = withStyles((theme) => ({
       }}
       {...props}
     />
-  );
-});
+  )
+})
 
 
 class security extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: {},
       password: '',
@@ -103,20 +103,20 @@ class security extends React.Component {
       showCurrentPassword: false,
       showNewPassword: false,
       showConfirmPassword: false,
-    };
+    }
     this.handleClose=this.handleClose.bind(this)
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     this.loadData()
   }
 
   loadData= () => {
-    setAxiosAuthentication();
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        let user = res.data;
+        let user = res.data
         this.setState({
           user: user,
           last_login: user.last_login,
@@ -131,38 +131,39 @@ class security extends React.Component {
           wrongPassword: false,
           isAdmin: user.is_admin,
 
-        });
+        })
       })
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
-          clearAuthenticationToken();
-          Router.push({pathname: '/'});
+          clearAuthenticationToken()
+          Router.push({pathname: '/'})
         }
-      });
+      })
   };
 
   onChange = e => {
-    this.setState({[e.target.name]: e.target.value});
+    this.setState({[e.target.name]: e.target.value})
   };
 
   onChangePassword = e => {
-    this.setState({[e.target.name]: e.target.value, wrongPassword: false});
+    this.setState({[e.target.name]: e.target.value, wrongPassword: false})
     if (e.target.value !== '') {
-      this.setState({check: true});
+      this.setState({check: true})
 
-    } else {
-      this.setState({check: false});
+    }
+    else {
+      this.setState({check: false})
     }
   };
 
   handleChange = name => event => {
-    this.setState({[name]: event.target.checked});
-    const data = {index_google: !this.state.index_google};
+    this.setState({[name]: event.target.checked})
+    const data = {index_google: !this.state.index_google}
     axios.put('/myAlfred/api/users/account/indexGoogle', data)
       .then(() => {
-        snackBarSuccess('Compte mis à jour');
+        snackBarSuccess('Compte mis à jour')
       })
-      .catch( err => {console.error(err)});
+      .catch(err => { console.error(err) })
   };
 
   deleteShop = () => {
@@ -172,23 +173,23 @@ class security extends React.Component {
           .then(() => {
             axios.put('/myAlfred/api/users/users/deleteAlfred')
               .then(() => {
-                this.setState({open: false});
+                this.setState({open: false})
                 axios.get('/myAlfred/api/users/token')
-                  .then ( res => {
-                    setAuthToken();
+                  .then(() => {
+                    setAuthToken()
                     this.loadData()
                   })
               })
-              .catch(err => {console.error(err)});
+              .catch(err => { console.error(err) })
           })
-          .catch(err => {console.error(err)});
+          .catch(err => { console.error(err) })
 
 
       })
-      .catch(err => {console.error(err)});
+      .catch(err => { console.error(err) })
     axios.delete('/myAlfred/api/availability/currentAlfred')
       .then()
-      .catch(err => {console.error(err)});
+      .catch(err => { console.error(err) })
   };
 
   deleteAccount = () => {
@@ -199,28 +200,29 @@ class security extends React.Component {
             .then(() => {
               axios.put('/myAlfred/api/users/current/delete')
                 .then(() => {
-                  snackBarSuccess('Compte désactivé');
-                  this.setState({open2: false});
-                  clearAuthenticationToken();
-                  Router.push('/');
+                  snackBarSuccess('Compte désactivé')
+                  this.setState({open2: false})
+                  clearAuthenticationToken()
+                  Router.push('/')
                 })
-                .catch(err => {console.error(err)});
+                .catch(err => { console.error(err) })
             })
-            .catch(err => {console.error(err)});
+            .catch(err => { console.error(err) })
         })
-        .catch(err => {console.error(err)});
+        .catch(err => { console.error(err) })
       axios.delete('/myAlfred/api/availability/currentAlfred')
         .then()
-        .catch(err => {console.error(err)});
-    } else {
+        .catch(err => { console.error(err) })
+    }
+    else {
       axios.put('/myAlfred/api/users/current/delete')
         .then(() => {
-          snackBarSuccess('Compte désactivé');
-          this.setState({open2: false});
-          clearAuthenticationToken();
-          Router.push('/');
+          snackBarSuccess('Compte désactivé')
+          this.setState({open2: false})
+          clearAuthenticationToken()
+          Router.push('/')
         })
-        .catch(err => {console.error(err)});
+        .catch(err => { console.error(err) })
     }
   };
 
@@ -228,43 +230,43 @@ class security extends React.Component {
     this.setState({
       check1: checkPass1(this.state.newPassword).check,
       check2: checkPass2(this.state.newPassword, this.state.newPassword2).check,
-    });
+    })
   };
 
   onSubmit = e => {
-    e.preventDefault();
-    const data = {password: this.state.password, newPassword: this.state.newPassword};
+    e.preventDefault()
+    const data = {password: this.state.password, newPassword: this.state.newPassword}
     axios
       .put('/myAlfred/api/users/profile/editPassword', data)
-      .then((res) => {
-        snackBarSuccess('Mot de passe modifié');
-        setTimeout(this.loadData, 1000);
+      .then(() => {
+        snackBarSuccess('Mot de passe modifié')
+        setTimeout(this.loadData, 1000)
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.data.wrongPassword) {
-          this.setState({wrongPassword: true});
+          this.setState({wrongPassword: true})
         }
-      });
+      })
   };
 
   handleClickOpen() {
-    this.setState({open: true});
+    this.setState({open: true})
   }
 
   handleClose() {
-    this.setState({open: false});
+    this.setState({open: false})
   }
 
   handleClickOpen2() {
-    this.setState({open2: true});
+    this.setState({open2: true})
   }
 
   handleClose2() {
-    this.setState({open2: false});
+    this.setState({open2: false})
   }
 
-  modalDeleteAccount = () =>{
+  modalDeleteAccount = classes => {
     return(
       <Dialog
         open={this.state.open2}
@@ -283,7 +285,7 @@ class security extends React.Component {
           <Button onClick={() => this.handleClose2()} color="primary">
             Annuler
           </Button>
-          <Button onClick={() => this.deleteAccount()} color="secondary" autoFocus>
+          <Button onClick={() => this.deleteAccount()} classes={{root: classes.cancelButton}} autoFocus>
             Désactiver
           </Button>
         </DialogActions>
@@ -291,7 +293,7 @@ class security extends React.Component {
     )
   };
 
-  modalDeleteShop = () =>{
+  modalDeleteShop = classes => {
     return(
       <Dialog
         open={this.state.open}
@@ -311,7 +313,7 @@ class security extends React.Component {
           <Button onClick={() => this.handleClose()} color="primary">
             Annuler
           </Button>
-          <Button onClick={() => this.deleteShop()} color="secondary" autoFocus>
+          <Button onClick={() => this.deleteShop()} classes={{root: classes.cancelButton}}>
             Supprimer
           </Button>
         </DialogActions>
@@ -319,12 +321,12 @@ class security extends React.Component {
     )
   };
 
-  content = (classes) => {
-    const {showCurrentPassword, showNewPassword, showConfirmPassword}=this.state;
-    const checkButtonValidate = this.state.isAdmin ? this.state.check1 && this.state.check2 : this.state.check && this.state.check1 && this.state.check2;
+  content = classes => {
+    const {showCurrentPassword, showNewPassword, showConfirmPassword}=this.state
+    const checkButtonValidate = this.state.isAdmin ? this.state.check1 && this.state.check2 : this.state.check && this.state.check1 && this.state.check2
 
     return(
-      <Grid  style={{display: 'flex', flexDirection: 'column', width: '100%'}} >
+      <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}} >
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
             <h2>Sécurité</h2>
@@ -334,7 +336,7 @@ class security extends React.Component {
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid>
@@ -354,7 +356,7 @@ class security extends React.Component {
                       <Grid item xs={12} md={4} xl={12}>
                         <Input
                           placeholder={this.state.wrongPassword ? 'Mot de passe erroné' : 'Mot de passe actuel'}
-                          type={ showCurrentPassword ? "text" : "password"}
+                          type={ showCurrentPassword ? 'text' : 'password'}
                           name="password"
                           value={this.state.password}
                           onChange={this.onChangePassword}
@@ -373,13 +375,13 @@ class security extends React.Component {
                             </InputAdornment>
                           }
                         />
-                        <em style={{ color:"red"}}>{this.state.wrongPassword ? "Mot de passe erroné" : ""}</em>
+                        <em className={classes.cancelButton}>{this.state.wrongPassword ? 'Mot de passe erroné' : ''}</em>
                       </Grid> : null
                   }
-                  <Grid item xs={12} md={4}  xl={12}>
+                  <Grid item xs={12} md={4} xl={12}>
                     <Input
                       placeholder={'Nouveau mot de passe'}
-                      type= {showNewPassword ? "text" : "password" }
+                      type= {showNewPassword ? 'text' : 'password' }
                       name="newPassword"
                       value={this.state.newPassword}
                       onChange={this.onChange}
@@ -398,12 +400,12 @@ class security extends React.Component {
                         </InputAdornment>
                       }
                     />
-                    <em style={{ color:"red"}}>{checkPass1(this.state.newPassword).error}</em>
+                    <em className={classes.cancelButton}>{checkPass1(this.state.newPassword).error}</em>
                   </Grid>
-                  <Grid item xs={12} md={4}  xl={12}>
+                  <Grid item xs={12} md={4} xl={12}>
                     <Input
                       placeholder={'Répéter le mot de passe'}
-                      type={showConfirmPassword ? "text" : "password" }
+                      type={showConfirmPassword ? 'text' : 'password' }
                       name="newPassword2"
                       value={this.state.newPassword2}
                       onChange={this.onChange}
@@ -422,7 +424,7 @@ class security extends React.Component {
                         </InputAdornment>
                       }
                     />
-                    <em style={{ color:"red"}}>{checkPass2(this.state.newPassword, this.state.newPassword2).error}</em>
+                    <em className={classes.cancelButton}>{checkPass2(this.state.newPassword, this.state.newPassword2).error}</em>
                   </Grid>
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'left', marginTop: 30}}>
@@ -435,7 +437,7 @@ class security extends React.Component {
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid>
@@ -466,7 +468,7 @@ class security extends React.Component {
                 <Grid item xl={8}>
                   <h4>Je souhaite supprimer ma boutique de services.</h4>
                 </Grid>
-                <Grid item  xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
+                <Grid item xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
                   <Button
                     onClick={() => this.handleClickOpen()}
                     variant="contained"
@@ -509,8 +511,8 @@ class security extends React.Component {
 
 
   render() {
-    const {classes} = this.props;
-    const {last_login, open, open2, user} = this.state;
+    const {classes} = this.props
+    const {open, open2, user} = this.state
 
     if (!user) {
       return null
@@ -521,7 +523,7 @@ class security extends React.Component {
         <Helmet>
           <title>Compte - Sécurité - My Alfred </title>
           <meta property="description"
-                content="Modifiez votre mot de passe et gérez la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
+            content="Modifiez votre mot de passe et gérez la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
         </Helmet>
         <Grid className={classes.layoutAccounContainer}>
           <LayoutAccount>
@@ -533,11 +535,11 @@ class security extends React.Component {
             {this.content(classes)}
           </LayoutMobile>
         </Grid>
-          {open ? this.modalDeleteShop() : null}
-          {open2 ? this.modalDeleteAccount() : null}
+        {open ? this.modalDeleteShop(classes) : null}
+        {open2 ? this.modalDeleteAccount(classes) : null}
       </Fragment>
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(security);
+export default withStyles(styles)(security)

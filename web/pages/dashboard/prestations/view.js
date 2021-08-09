@@ -1,31 +1,27 @@
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-
-
-import Select2 from 'react-select';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Select2 from 'react-select'
+import Layout from '../../../hoc/Layout/Layout'
+import axios from 'axios'
+import Router from 'next/router'
+import Select from '@material-ui/core/Select'
+import Input from '@material-ui/core/Input'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Link from 'next/link'
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment from '@material-ui/core/InputAdornment'
 
-import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox'
 
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
 
-const styles = {
+const styles = theme => ({
   loginContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -51,12 +47,16 @@ const styles = {
   chip: {
     margin: 2,
   },
-};
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: 'white',
+  },
+})
 
 class view extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       prestation: {},
@@ -84,100 +84,100 @@ class view extends React.Component {
       selectedBilling: null,
       companies: [],
       errors: {},
-    };
+    }
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChangeTags = this.handleChangeTags.bind(this);
-    this.handleChangeBilling = this.handleChangeBilling.bind(this);
+    this.handleClick = this.handleClick.bind(this)
+    this.handleChangeTags = this.handleChangeTags.bind(this)
+    this.handleChangeBilling = this.handleChangeBilling.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
-    return {prestation_id: id};
+    return {prestation_id: id}
 
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    const id = this.props.prestation_id;
+    localStorage.setItem('path', Router.pathname)
+    const id = this.props.prestation_id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/prestation/all/${id}`)
       .then(response => {
-        let prestation = response.data;
+        let prestation = response.data
         this.setState({
           prestation: prestation, current_service: prestation.service,
           current_billing: prestation.billing, current_category: prestation.category,
           current_job: prestation.job, current_filter_presentation: prestation.filter_presentation,
           current_tags: prestation.tags, cesu_eligible: prestation.cesu_eligible,
-        });
+        })
         this.setState({
           service: prestation.service._id,
           billing: prestation.billing._id,
           filter_presentation: prestation.filter_presentation ? prestation.filter_presentation._id : null,
           job: prestation.job ? prestation.job._id : '',
-        });
+        })
 
         this.setState({
           selectedTags: this.state.current_tags.map(b => ({
             label: b.label,
             value: b._id,
           })),
-        });
+        })
 
         this.setState({
           selectedBilling: this.state.current_billing.map(q => ({
             label: q.label,
             value: q._id,
           })),
-        });
+        })
 
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response && (err.response.status === 401 || err.response.status === 403)) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
 
     axios.get('/myAlfred/api/admin/category/all')
-      .then((response) => {
-        let category = response.data;
-        this.setState({all_category: category});
-      }).catch((error) => {
-      console.log(error);
-    });
+      .then(response => {
+        let category = response.data
+        this.setState({all_category: category})
+      }).catch(error => {
+        console.log(error)
+      })
 
     axios.get('/myAlfred/api/admin/service/all')
-      .then((response) => {
-        let service = response.data;
-        this.setState({all_service: service});
-      }).catch((error) => {
-      console.log(error);
-    });
+      .then(response => {
+        let service = response.data
+        this.setState({all_service: service})
+      }).catch(error => {
+        console.log(error)
+      })
 
     axios.get('/myAlfred/api/admin/billing/all')
-      .then((response) => {
-        let billing = response.data;
-        this.setState({all_billing: billing});
-      }).catch((error) => {
-      console.log(error);
-    });
+      .then(response => {
+        let billing = response.data
+        this.setState({all_billing: billing})
+      }).catch(error => {
+        console.log(error)
+      })
 
     axios.get('/myAlfred/api/admin/job/all')
-      .then((response) => {
-        let job = response.data;
-        this.setState({all_job: job});
-      }).catch((error) => {
-      console.log(error);
-    });
+      .then(response => {
+        let job = response.data
+        this.setState({all_job: job})
+      }).catch(error => {
+        console.log(error)
+      })
 
     axios.get('/myAlfred/api/admin/filterPresentation/all')
-      .then((response) => {
-        let filter_presentation = response.data;
-        this.setState({all_filter_presentation: filter_presentation});
-      }).catch((error) => {
-      console.log(error);
-    });
+      .then(response => {
+        let filter_presentation = response.data
+        this.setState({all_filter_presentation: filter_presentation})
+      }).catch(error => {
+        console.log(error)
+      })
 
     axios.get('/myAlfred/api/admin/tags/all')
       .then(response => {
@@ -300,7 +300,7 @@ class view extends React.Component {
         console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'})
+          Router.push({pathname: '/'})
         }
         else {
           const errors=err.response.data
@@ -311,50 +311,33 @@ class view extends React.Component {
   };
 
   handleClick() {
-    const id = this.props.prestation_id;
+    const id = this.props.prestation_id
     axios.delete(`/myAlfred/api/admin/prestation/all/${id}`)
-      .then(res => {
-        snackBarSuccess('Prestation supprimée avec succès');
-        Router.push({pathname: '/dashboard/prestations/all'});
+      .then(() => {
+        snackBarSuccess('Prestation supprimée avec succès')
+        Router.push({pathname: '/dashboard/prestations/all'})
       })
       .catch(err => {
-        console.error(err);
-      });
+        console.error(err)
+      })
 
 
-  };
+  }
 
 
   render() {
-    const {classes} = this.props;
-    const {prestation} = this.state;
-    const {current_service} = this.state;
-    const {current_billing} = this.state;
-    const {current_category} = this.state;
-    const {current_filter_presentation} = this.state;
-    const {current_job} = this.state;
-    const {current_tags} = this.state;
-    const {all_category} = this.state;
-    const {all_service} = this.state;
-    const {all_billing} = this.state;
-    const {all_filter_presentation} = this.state;
-    const {all_job} = this.state;
-    const {all_tags} = this.state;
-    const {companies} = this.state;
-
-    const categories = all_category.map(e => (
-      <MenuItem value={e._id}>{e.label}</MenuItem>
-    ));
+    const {classes} = this.props
+    const {prestation, all_service, all_billing, all_filter_presentation, all_job, all_tags, companies} = this.state
 
     const optionsTags = all_tags.map(tag => ({
       label: tag.label,
       value: tag._id,
-    }));
+    }))
 
     const optionsBilling = all_billing.map(billing => ({
       label: billing.label,
       value: billing._id,
-    }));
+    }))
 
 
     return (
@@ -379,7 +362,7 @@ class view extends React.Component {
               </Grid>
               <Grid item style={{marginTop: 20, display: 'flex', 'align-items': 'center'}}>
                 <Checkbox
-                  name={`cesu_eligible`}
+                  name={'cesu_eligible'}
                   checked={this.state.cesu_eligible}
                   onChange={this.onCesuChange}
                 />
@@ -593,7 +576,7 @@ class view extends React.Component {
                 <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                   Modifier
                 </Button>
-                <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
+                <Button type="button" variant="contained" classes={{root: classes.cancelButton}} style={{width: '100%'}}
                   onClick={this.handleClick}>
                   Supprimer
                 </Button>
@@ -612,4 +595,4 @@ class view extends React.Component {
 }
 
 
-export default withStyles(styles)(view);
+export default withStyles(styles)(view)

@@ -176,7 +176,7 @@ class HandleRIB extends React.Component {
     )
   };
 
-  modalDeleteRib = id => {
+  modalDeleteRib = (id, classes) => {
     return (
       <Dialog
         open={this.state.showDeleteRib}
@@ -194,7 +194,7 @@ class HandleRIB extends React.Component {
           <Button onClick={() => this.handleClose()} color="primary">
             Annuler
           </Button>
-          <Button onClick={() => this.deleteAccount(id)} color="secondary" autoFocus>
+          <Button onClick={() => this.deleteAccount(id)} classes={{root: classes.buttonCancel}}>
             Supprimer
           </Button>
         </DialogActions>
@@ -314,7 +314,7 @@ class HandleRIB extends React.Component {
           </Grid>
         </Grid>
         {showAddRib ? this.modalAddRib(errors, classes) : null}
-        {showDeleteRib ? this.modalDeleteRib(accounts[0].Id) : null}
+        {showDeleteRib ? this.modalDeleteRib(accounts[0].Id, classes) : null}
       </Grid>
     )
   }

@@ -96,53 +96,7 @@ export default theme => ({
       width: '100%',
     },
   },
-  rondYellow: {
-    width: '30px',
-    height: '30px',
-    backgroundColor: '#A7D571',
-    borderRadius: '100%',
-    border:
-      '0.4px solid rgba(112,112,112,0.26)',
-    marginTop: '15%',
-  },
-  rondGrey: {
-    width: '30px',
-    height: '30px',
-    backgroundColor: '#C4C4C4',
-    borderRadius: '100%',
-    border:
-      '0.4px solid rgba(112,112,112,0.26)',
-    marginTop: '15%',
-  },
-  rondOrange: {
-    width: '30px',
-    height: '30px',
-    backgroundColor: '#D5A771',
-    borderRadius: '100%',
-    border:
-      '0.4px solid rgba(112,112,112,0.26)',
-    marginTop: '15%',
-  },
-  buttonReservaionRed: {
-    textAlign: 'center',
-    height: '40px',
-    minWidth: '250px',
-    backgroundColor: '#F8727F',
-    lineHeight: 2.5,
-    borderRadius: '50px',
-    marginTop: '20%',
-    cursor: 'pointer',
-  },
-  buttonReservationNo: {
-    textAlign: 'center',
-    height: '40px',
-    minWidth: '250px',
-    lineHeight: 2.5,
-    borderRadius: '50px',
-    border: '1px solid black',
-    marginTop: '20%',
-    cursor: 'pointer',
-  },
+
   containerStateResa: {
     display: 'flex',
     alignItems: 'center',
@@ -159,20 +113,12 @@ export default theme => ({
     width: '100%',
 
   },
-  marginLeftLabel: {
-    marginLeft: 30,
-  },
   equipmentContainer: {
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
     },
   },
-  navbarShopContainer: {
-    width: '100%',
-    [theme.breakpoints.down('xs')]: {
-      display: 'none',
-    },
-  },
+
   detailsReservationContainer: {
     display: 'flex',
     width: '100%',
@@ -207,10 +153,7 @@ export default theme => ({
     textAlign: 'center',
     width: '100%',
   },
-  phoneContainerWeb: {
-    display: 'flex',
-    flexDirection: 'row',
-    JustifyContent: 'space-between',
-    width: '100%',
+  buttonCancel: {
+    color: theme.palette.error.main,
   },
 })

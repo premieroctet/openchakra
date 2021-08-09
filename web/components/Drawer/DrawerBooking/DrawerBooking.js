@@ -134,7 +134,7 @@ class DrawerBooking extends React.Component {
           warningPerimeter || warningBudget || warningSelf ?
             <Grid className={classes.userServicePreviewWarningContainer}>
               <Grid>
-                <CancelIcon color={'secondary'}/>
+                <CancelIcon classes={{root: classes.cancelButton}}/>
               </Grid>
               <Grid>
                 { warningPerimeter ? <Typography>Cet Alfred se trouve trop loin de chez vous pour être réservé!</Typography> : null }
@@ -152,7 +152,7 @@ class DrawerBooking extends React.Component {
                 </Grid>
                 <Grid className={classes.hideOnBigSreen}>
                   <IconButton aria-label='Edit' className={classes.iconButtonStyle}>
-                    <CloseIcon color={'secondary'} onClick={this.props.toggleDrawer(side, false)}/>
+                    <CloseIcon classes={{root: classes.cancelButton}} onClick={this.props.toggleDrawer(side, false)}/>
                   </IconButton>
                 </Grid>
               </Grid>
@@ -164,7 +164,7 @@ class DrawerBooking extends React.Component {
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent: inputref => {
+                        inputComponent: () => {
                           return (
                             <DatePicker
                               selected={date}
@@ -189,7 +189,7 @@ class DrawerBooking extends React.Component {
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent: inputref => {
+                        inputComponent: () => {
                           return (
                             <DatePicker
                               selected={time}
@@ -213,7 +213,7 @@ class DrawerBooking extends React.Component {
                 </Grid>
               </Grid>
               <Grid>
-                <em style={{color: '#f87280'}}>{errors.datetime}</em>
+                <em className={classes.cancelButton}>{errors.datetime}</em>
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
@@ -244,7 +244,7 @@ class DrawerBooking extends React.Component {
                 </AccordionDetails>
               </Accordion>
               <Grid>
-                <em style={{color: '#f87280'}}>{errors.prestations}</em>
+                <em className={classes.cancelButton}>{errors.prestations}</em>
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
@@ -302,7 +302,7 @@ class DrawerBooking extends React.Component {
                       : null
                   }
                   <Grid>
-                    <em style={{color: '#f87280'}}>{errors.location}</em>
+                    <em className={classes.cancelButton}>{errors.location}</em>
                   </Grid>
                 </AccordionDetails>
               </Accordion>

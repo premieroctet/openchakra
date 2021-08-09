@@ -14,4 +14,7 @@ export default theme => ({
   textField: {
     width: '100%',
   },
+  cancelButton: {
+    color: theme.palette.error.main,
+  },
 })

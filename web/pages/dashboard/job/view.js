@@ -1,17 +1,17 @@
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
+import React from 'react'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Layout from '../../../hoc/Layout/Layout'
+import axios from 'axios'
+import Router from 'next/router'
 const {snackBarSuccess} = require('../../../utils/notifications')
 
-const styles = {
+const styles = theme => ({
   loginContainer: {
     alignItems: 'center',
     height: '100vh',
@@ -30,7 +30,11 @@ const styles = {
     color: 'black',
     fontSize: 12,
   },
-};
+  cancelButton: {
+    color: 'white',
+    backgroundColor: theme.palette.error.main,
+  },
+})
 
 class view extends React.Component {
 
@@ -65,7 +69,7 @@ class view extends React.Component {
         console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'})
+          Router.push({pathname: '/'})
         }
       })
 
@@ -89,39 +93,38 @@ class view extends React.Component {
         Router.push({pathname: '/dashboard/job/all'})
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
 
 
   };
 
   handleClick() {
-    const id = this.props.job_id;
+    const id = this.props.job_id
     axios.delete(`/myAlfred/api/admin/job/all/${id}`)
-      .then(res => {
-
-        alert('Métier supprimé avec succès');
-        Router.push({pathname: '/dashboard/job/all'});
+      .then(() => {
+        snackBarSuccess('Métier supprimé avec succès')
+        Router.push({pathname: '/dashboard/job/all'})
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
 
 
-  };
+  }
 
 
   render() {
-    const {classes} = this.props;
-    const {job} = this.state;
+    const {classes} = this.props
+    const {job} = this.state
 
 
     return (
@@ -149,8 +152,8 @@ class view extends React.Component {
                   <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Modifier
                   </Button>
-                  <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
+                  <Button type="button" variant="contained" classes={{root: classes.cancelButton}} style={{width: '100%'}}
+                    onClick={this.handleClick}>
                     Supprimer
                   </Button>
                 </Grid>
@@ -159,9 +162,9 @@ class view extends React.Component {
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(view);
+export default withStyles(styles)(view)
