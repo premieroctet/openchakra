@@ -738,7 +738,7 @@ class NavBar extends Component {
           getContentAnchorEl={null}
           anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
           transformOrigin={{vertical: 'top', horizontal: 'center'}}
-          className={'customBurger'}
+
         >
           {user ?
             <Grid>
