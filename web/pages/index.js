@@ -185,7 +185,7 @@ class Home extends React.Component {
             >
             </iframe> : null
           }
-          <Grid container className={classes.mainContainerStyle}>
+          <Grid container className={`customslidecat ${classes.mainContainerStyle}`}>
             <Grid className={classes.generalWidthContainer}>
               <CategoryTopic category={category}/>
             </Grid>
