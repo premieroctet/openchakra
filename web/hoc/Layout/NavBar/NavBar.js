@@ -792,6 +792,7 @@ class NavBar extends Component {
           <Button
             variant="outlined"
             classes={{root: isB2BStyle(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
+            className={classes.buttonSignin}
             onClick={this.handleOpenRegister}>
             {NAVBAR_MENU.signIn}
           </Button>
@@ -799,6 +800,7 @@ class NavBar extends Component {
         <Grid className={classes.navbarRegisterContainer}>
           <Button
             classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
+            className={classes.buttonLogin}
             onClick={this.handleOpenLogin}>
             {NAVBAR_MENU.logIn}
           </Button>
