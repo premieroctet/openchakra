@@ -1,4 +1,11 @@
-.customBurger {
-    color: blue;
-    background-color: green;
-}
+/** searchbar **/
+
+/** background color de la seach**/
+.search{}
+
+/** color placeholder **/
+.search, input::placeholder{}
+/** color de saisie **/
+.search, input{}
+/** le service | l'adresse | les dates **/
+.search label{}

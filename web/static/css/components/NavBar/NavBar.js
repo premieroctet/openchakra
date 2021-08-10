@@ -77,9 +77,12 @@ export default theme => ({
       border: 0,
       padding: '6px 0 7px',
       height: '1.1876em',
-      opacity: '0.65',
-      transition: 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
       boxSizing: 'content-box',
+      backgroundColor: 'inherit',
+    },
+    '& input::placeholder': {
+      color: 'rgba(0, 0, 0, 0.87)',
+      transition: 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     },
     '& .ap-input-icon': {
       display: 'none',

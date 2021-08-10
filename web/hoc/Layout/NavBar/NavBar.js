@@ -728,7 +728,7 @@ class NavBar extends Component {
           aria-label="open drawer"
           onClick={this.handleOpenMenuItem}
         >
-          <MenuIcon className={`customBurger ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}/>
+          <MenuIcon className={`customBurgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}/>
         </IconButton>
         <Menu
           anchorEl={anchorEl}
@@ -738,7 +738,7 @@ class NavBar extends Component {
           getContentAnchorEl={null}
           anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
           transformOrigin={{vertical: 'top', horizontal: 'center'}}
-
+          classes={{paper: 'customBurger'}}
         >
           {user ?
             <Grid>
@@ -791,7 +791,7 @@ class NavBar extends Component {
           <Button
             variant="outlined"
             classes={{root: isB2BStyle(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
-            className={classes.customButtonSignin}
+            className={'customButtonSignin'}
             onClick={this.handleOpenRegister}>
             {NAVBAR_MENU.signIn}
           </Button>
@@ -799,7 +799,7 @@ class NavBar extends Component {
         <Grid className={classes.navbarRegisterContainer}>
           <Button
             classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
-            className={classes.customButtonLogin}
+            className={'customButtonLogin'}
             onClick={this.handleOpenLogin}>
             {NAVBAR_MENU.logIn}
           </Button>
@@ -911,7 +911,7 @@ class NavBar extends Component {
 
     return (
       <Grid className={ifHomePage ? isB2BStyle(user) ? classes.navbarSearchContainerB2B : classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
-        <Paper classes={{root: classes.navbarSearch}}>
+        <Paper classes={{root: `search ${classes.navbarSearch}`}}>
           <Grid container style={{margin: 0, width: '100%'}}>
             <Grid
               container
@@ -1002,7 +1002,7 @@ class NavBar extends Component {
                           <InputLabel shrink>{SEARCHBAR.labelWhere}</InputLabel>
                         </Grid> : null
                     }
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhere}}>
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'search'} classes={{root: `${classes.navbarRootTextFieldWhere}`}}>
                       <AlgoliaPlaces
                         placeholder={SEARCHBAR.where}
                         options={{
