@@ -41,22 +41,22 @@ class BannerPresentation extends React.Component {
         <Grid container spacing={2} style={{width: '100%', margin: 0}} item xl={6} lg={6} md={12} sm={12} xs={12}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'bannerh1'}>
             <h2 className={classes.bannerPresentationTitle}>
-              <span className={`bannerh1 ${classes.titleSpan}`}>{title}</span>
+              <span className={`custombannerh1 ${classes.titleSpan}`}>{title}</span>
             </h2>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'bannerh2'}>
             <h2 className={classes.bannerPresentationTitle}>
-              <span className={`bannerh2 ${classes.subtitleSpan}`}>{subTitle}</span>
+              <span className={`custombannerh2 ${classes.subtitleSpan}`}>{subTitle}</span>
             </h2>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'bannercontent'}>
-            <Typography className={`bannercontent ${classes.bannerPresentationText}`}>{text}</Typography>
+            <Typography className={`custombannercontent ${classes.bannerPresentationText}`}>{text}</Typography>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerLinkDiscrover}>
             <Link href={'/search?search=1'}>
               <Button
                 variant={'outlined' }
-                classes={{root: `bannerbutton ${classes.bannerPresentationButtonB2b}`}}>
+                classes={{root: `custombannerbutton ${classes.bannerPresentationButtonB2b}`}}>
                 {BANNER_PRESENTATION.button}
               </Button>
             </Link>

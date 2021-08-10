@@ -911,7 +911,7 @@ class NavBar extends Component {
 
     return (
       <Grid className={ifHomePage ? isB2BStyle(user) ? classes.navbarSearchContainerB2B : classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
-        <Paper classes={{root: `search ${classes.navbarSearch}`}}>
+        <Paper classes={{root: `customsearch ${classes.navbarSearch}`}}>
           <Grid container style={{margin: 0, width: '100%'}}>
             <Grid
               container
@@ -1002,7 +1002,7 @@ class NavBar extends Component {
                           <InputLabel shrink>{SEARCHBAR.labelWhere}</InputLabel>
                         </Grid> : null
                     }
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'search'} classes={{root: `${classes.navbarRootTextFieldWhere}`}}>
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsearch'} classes={{root: `${classes.navbarRootTextFieldWhere}`}}>
                       <AlgoliaPlaces
                         placeholder={SEARCHBAR.where}
                         options={{
@@ -1059,7 +1059,7 @@ class NavBar extends Component {
             <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', alignItems: 'center'}}>
               <IconButton
                 classes={{root: classes.iconButton}}
-                style={{backgroundColor: isB2BStyle(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+                className={`customsearchMagnify ${isB2BStyle(this.state.user) ? classes.iconColorB2b : classes.iconColor}`}
                 aria-label="search"
                 onClick={() => this.findService()}>
                 <SearchIcon/>

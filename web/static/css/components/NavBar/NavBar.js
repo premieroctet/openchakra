@@ -56,6 +56,14 @@ export default theme => ({
     color: theme.palette.white.main,
   },
 
+  iconColorB2b: {
+    backgroundColor: '#b0cdc8',
+  },
+
+  iconColor: {
+    backgroundColor: 'rgba(248, 207, 97, 1)',
+  },
+
   navbarFormControlAddress: {
     width: '100%',
   },
