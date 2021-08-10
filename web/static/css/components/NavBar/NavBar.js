@@ -442,4 +442,10 @@ export default theme => ({
     height: '100%',
     color: theme.palette.white.main,
   },
+  menuIconB2b: {
+    color: '#353A51',
+  },
+  menuIcon: {
+    color: 'white',
+  },
 })
