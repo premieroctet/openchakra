@@ -19,7 +19,6 @@ class ColorPicker extends React.Component {
 
   render() {
 
-    console.log(`Color: ${this.props.value}`)
     return (
       <ChromePicker
         color={this.state.color}

@@ -22,6 +22,8 @@ yarn-error.log*
 **/package-lock.json
 
 
+web/static/assets/css/custom.js
+
 # Created by https://www.gitignore.io/api/linux,macos,windows,webstorm+all,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=linux,macos,windows,webstorm+all,visualstudiocode
 

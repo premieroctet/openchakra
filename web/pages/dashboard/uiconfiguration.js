@@ -8,9 +8,9 @@ import axios from 'axios'
 import _ from 'lodash'
 import ColorPicker from '../../components/Editor/ColorPicker'
 const {setAxiosAuthentication} = require('../../utils/authentication')
-//import HtmlEditor from '../../components/Editor/HtmlEditor'
 import HtmlEditor from '../../components/Editor/HtmlEditor2'
 import NoSSR from 'react-no-ssr'
+import Checkbox from '@material-ui/core/Checkbox'
 
 const styles = () => ({
   signupContainer: {
@@ -29,8 +29,9 @@ class Parameter extends React.Component {
       <NoSSR>
         <div style={{width: '80%'}}>
           <div>{value.label}</div>
-          { value.type=='color' && <ColorPicker value={value.color_value} onChange={onChange} /> }
-          { value.type=='text' && <HtmlEditor value={value.text_value} onChange={onChange} /> }
+          { value.type=='color' && <ColorPicker value={value.value || ''} onChange={onChange} /> }
+          { value.type=='text' && <HtmlEditor value={value.value} onChange={onChange} /> }
+          { value.type=='visibility' && <Checkbox checked={Boolean(value.value)} onChange={(ev, checked) => onChange(checked? 'true' : null)} /> }
         </div>
       </NoSSR>
     )
@@ -62,15 +63,15 @@ class UIParameters extends React.Component {
   onChange = parameter_id => value => {
     const {parameters}=this.state
     const p=parameters.find(p => p._id ==parameter_id)
+    console.log(`onChange:${p.label}=>${value}`)
     p.value = value
     setAxiosAuthentication()
     axios.put(`/myAlfred/api/admin/uiConfiguration/${p._id}`, p)
       .then(() => {
-        console.log('ok')
         this.setState({parameters: parameters})
       })
-      .then(() => {
-        console.log('ok')
+      .catch(error => {
+        console.error(err)
       })
   }
 
