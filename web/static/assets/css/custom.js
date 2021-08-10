@@ -3,7 +3,15 @@ export default theme => ({
   headerInfobar: {},
 
   /** Header**/
-  headerBackgroundcolor: {},
+  header: {},
+
+  /** Menu Fixe**/
+  navbar: {},
+
+  /** Menu Burger**/
+  burger: {},
+  buttonSignin: {},
+  buttonLogin: {},
 
 
 })

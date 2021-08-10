@@ -1,4 +1,4 @@
-import { combineStyles } from '../../../utils/functions'
+import {combineStyles} from '../../../utils/functions'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React, {Component} from 'react'
@@ -730,7 +730,7 @@ class NavBar extends Component {
           aria-label="open drawer"
           onClick={this.handleOpenMenuItem}
         >
-          <MenuIcon style={{color: companyPage ? '#353A51' : 'white'}}/>
+          <MenuIcon className={`${classes.burger} ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}/>
         </IconButton>
         <Menu
           anchorEl={anchorEl}
@@ -1115,16 +1115,19 @@ class NavBar extends Component {
                 <>
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    className={classes.navbar}
                     label={'Services aux entreprises'}
                     onClick={() => Router.push('/blog/elementor-211/')}
                   />
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    className={classes.navbar}
                     label={'Services aux collaborateurs'}
                     onClick={() => Router.push('/blog/services-aux-collaborateurs/')}
                   />
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    className={classes.navbar}
                     label={'Tarifs'}
                     onClick={() => Router.push('/blog/tarifs')}
                   />
@@ -1133,6 +1136,7 @@ class NavBar extends Component {
                 <>
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    className={classes.navbar}
                     label={NAVBAR_MENU.ourServices}
                     onClick={() => Router.push('/search?search=1')}
                   />
@@ -1140,18 +1144,21 @@ class NavBar extends Component {
                     user.is_alfred ?
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        className={classes.navbar}
                         label={NAVBAR_MENU.myServices}
                         onClick={() => Router.push(`/profile/services?user=${user._id}`)}
                       />
                       :
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        className={classes.navbar}
                         label={NAVBAR_MENU.registerServices}
                         onClick={() => Router.push('/creaShop/creaShop')}
                       />
                     :
                     <Tab
                       classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                      className={classes.navbar}
                       label={NAVBAR_MENU.registerServices}
                       onClick={this.handleOpenRegister}
                     />
