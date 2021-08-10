@@ -26,6 +26,7 @@ const {computeUrl}=require('../../../../config/config')
 const {delayedPromise}=require('../../../../utils/promise')
 const {get_token, send_cookie}=require('../../../utils/serverContext')
 const {ensureDirectoryExists, isTxtFile} = require('../../../utils/filesystem')
+const {createUIConfiguration} = require('../../../utils/ui')
 
 // For Node < 12.0
 if (!Promise.allSettled) {
@@ -2949,6 +2950,11 @@ router.get('/uiConfiguration', passport.authenticate('admin', {session: false}),
 router.put('/uiConfiguration/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('UIConfiguration').findByIdAndUpdate({_id: req.params.id}, req.body)
     .then(result => {
+      // Generate custom css
+      req.context.getModel('UIConfiguration').find().sort('style_path')
+        .then(configurations => {
+          createUIConfiguration(configurations)
+        })
       res.json(result)
     })
     .catch(err => {

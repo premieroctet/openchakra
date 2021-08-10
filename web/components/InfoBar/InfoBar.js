@@ -4,26 +4,26 @@ import {INFOBAR_MESSAGE} from '../../utils/i18n'
 import {Typography} from '@material-ui/core'
 import styles from '../../static/css/components/InfoBar/InfoBar'
 import withStyles from '@material-ui/core/styles/withStyles'
-import customStyle from '../../static/assets/css/custom'
+import customStyle from '../../static/assets/css/custom.css'
 import {combineStyles} from '../../utils/functions'
 
 function InfoBar({classes}) {
 
   return (
-    <Grid container className={`${classes.infoBarMainStyle} ${classes.headerInfoBarBgc}`}>
+    <Grid container className={`${classes.infoBarMainStyle} ${classes.headerInfoBar}`}>
       <Grid item className={classes.infoBarLinkContainer}>
         <Grid className={classes.infoBarPicsContainer}>
           <img src={'/static/assets/img/warning.svg'} alt={'warning'} title={'warning'} width={'100%'}
             height={'100%'}/>
         </Grid>
         <Grid>
-          <Typography className={`${classes.infoBarColorText} ${classes.headerInfoBarColor}`}>{INFOBAR_MESSAGE.message}</Typography>
+          <Typography className={`headerInfoBar` }>{INFOBAR_MESSAGE.message}</Typography>
         </Grid>
       </Grid>
     </Grid>
   )
 }
 
-const combinedStyles = combineStyles(styles, customStyle)
+const combinedStyles = styles //combineStyles(styles, customStyle)
 
 export default withStyles(combinedStyles)(InfoBar)

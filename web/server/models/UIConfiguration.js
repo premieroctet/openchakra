@@ -21,28 +21,12 @@ const UIConfigurationSchema = new Schema({
   type: {
     type: String,
     required: true,
-    enum: ['color', 'font', 'text', 'picture', 'menu'],
+    enum: ['color', 'font', 'text', 'picture', 'menu', 'visibility'],
   },
   value: {
     type: String,
     required: true,
   },
 }, {toJSON: {virtuals: true, getters: true}})
-
-UIConfigurationSchema.virtual('color_value').get(function() {
-  return this.type=='color' ? this.value : null
-})
-
-UIConfigurationSchema.virtual('font_value').get(function() {
-  return this.type=='font' ? this.value : null
-})
-
-UIConfigurationSchema.virtual('text_value').get(function() {
-  return this.type=='text' ? this.value : null
-})
-
-UIConfigurationSchema.virtual('picture_value').get(function() {
-  return this.type=='picture' ? this.value : null
-})
 
 module.exports = UIConfigurationSchema
