@@ -20,10 +20,13 @@ class ColorPicker extends React.Component {
   render() {
 
     return (
-      <ChromePicker
-        color={this.state.color}
-        onChangeComplete={this.onChangeComplete}
-      />
+      <>
+        <h2>{this.props.title}</h2>
+        <ChromePicker
+          color={this.state.color}
+          onChangeComplete={this.onChangeComplete}
+        />
+      </>
     )
   }
 

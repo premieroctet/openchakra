@@ -1,21 +1,21 @@
 const fs=require('fs/promises')
 
+/**
+  Creates CSS from configurations
+  config : {classname, attributes:{name,value}}
+*/
 createUIConfiguration = configuration => {
-  let config={}
-  configuration.forEach(parameter => {
-    const [clazz, attribute] = parameter.style_path.split('.')
-    if (!(clazz in config)) { config[clazz]={} }
-    console.log(`Path:${parameter.style_path}, value:${parameter.value}`)
-    if (parameter.value !== null) {
-      config[clazz][attribute]=parameter.type=='visibility' ? parameter.value ? 'block' : 'none' : parameter.value
-    }
-  })
-  console.log(`Configuration:${JSON.stringify(config)}`)
-  //let output=`export default theme => (${JSON.stringify(config, null, 2)}\n)`
-  console.log(`Output:${output}`)
-  fs.writeFile('static/assets/css/custom.css', output)
-    .then(res => {
-      console.log(`res ok:${res}`)
+  console.log(`Configuration:${JSON.stringify(configuration)}`)
+  fs.open('static/assets/css/custom.css', 'w')
+    .then(handle => {
+      configuration.forEach(config => {
+        handle.write(`.${config.className} {\n`)
+        config.attributes.forEach(attribute => {
+          handle.write(`\t${attribute.name}: ${attribute.value};\n`)
+        })
+        handle.write('}\n')
+      })
+      handle.close()
     })
     .catch(err => {
       console.error(`Error:${err}`)

@@ -1,51 +1,75 @@
 import React from 'react'
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import 'draft-js/dist/Draft.css'
-import {stateToHTML} from 'draft-js-export-html'
-//import {stateFromHTML} from 'draft-js-import-html'
-import {EditorState, convertToRaw, convertFromRaw} from 'draft-js'
-import {Editor} from 'react-draft-wysiwyg'
+//import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+
 
 class HtmlEditor extends React.Component {
-
   constructor(props) {
     super(props)
-    this.state={
-      editorState: EditorState.createEmpty(),
+    if (typeof document != 'undefined') {
+      this.quill = require('react-quill')
     }
   }
 
-  componentDidMount = () => {
-    if (this.props.value) {
-      const st=EditorState.createWithContent(convertFromRaw(this.props.value))
-      this.setState({editorState: st})
-    }
-  }
-  onEditorStateChange = editorState => {
-    this.setState({editorState: editorState})
+  onChange = html => {
     if (this.props.onChange) {
-      console.log(stateToHTML(editorState.getCurrentContent()))
-      this.props.onChange(convertToRaw(editorState.getCurrentContent()))
+      this.props.onChange(html)
     }
   }
 
   render() {
 
-    const {editorState}=this.state
-
+    const ReactQuill=this.quill
+    if (!ReactQuill) {
+      return null
+    }
+    let Font = ReactQuill.Quill.import('formats/font')
+    // We do not add Aref Ruqaa since it is the default
+    Font.whitelist = ["Roboto", "Raleway", "Montserrat", "Lato", "Rubik"]
+    ReactQuill.Quill.register(Font, true)
     return (
       <>
-        <Editor
-          editorState={editorState}
-          toolbarClassName="toolbarClassName"
-          wrapperClassName="wrapperClassName"
-          editorClassName="editorClassName"
-          onEditorStateChange={this.onEditorStateChange}
+        <h2>{this.props.title}</h2>
+        <ReactQuill
+          theme={'snow'}
+          onChange={this.onChange}
+          value={this.props.value}
+          modules={HtmlEditor.modules}
+          formats={HtmlEditor.formats}
+          //bounds={'.app'}
+          //placeholder={this.props.placeholder}
         />
       </>
     )
   }
 
 }
+
+HtmlEditor.modules = {
+  toolbar: [
+    [{'header': '1'}, {'header': '2'}, {'font': ["Roboto", "Raleway", "Montserrat", "Lato", "Rubik"]}],
+    [{size: []}],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{'list': 'ordered'}, {'list': 'bullet'},
+      {'indent': '-1'}, {'indent': '+1'}],
+    ['link', 'image', 'video'],
+    ['clean'],
+  ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  },
+}
+/*
+ * Quill editor formats
+ * See https://quilljs.com/docs/formats/
+ */
+HtmlEditor.formats = [
+  'header', 'font', 'size',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image', 'video',
+]
+
 
 export default HtmlEditor

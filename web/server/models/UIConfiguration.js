@@ -8,12 +8,7 @@ const UIConfigurationSchema = new Schema({
     required: true,
   },
   // Parameter path in CSS or whatever
-  style_path: {
-    type: String,
-    required: true,
-  },
-  // Parameter label
-  label: {
+  className: {
     type: String,
     required: true,
   },
@@ -21,12 +16,13 @@ const UIConfigurationSchema = new Schema({
   type: {
     type: String,
     required: true,
-    enum: ['color', 'font', 'text', 'picture', 'menu', 'visibility'],
+    enum: ['component', 'button', 'menu'],
   },
-  value: {
-    type: String,
-    required: true,
-  },
+  // Attributes
+  attributes: [{
+    name: String,
+    value: String,
+  }],
 }, {toJSON: {virtuals: true, getters: true}})
 
 module.exports = UIConfigurationSchema

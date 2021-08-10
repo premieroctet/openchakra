@@ -102,7 +102,7 @@
     "consistent-this": [ 2, "self" ],
     "eol-last": 2,
     //"func-style": [ 2, "expression" ],
-    "indent": [ "error", 2],
+    "indent": [ "error", 2, { "SwitchCase": 1 } ],
     "key-spacing": [ 2, { "beforeColon": false, "afterColon": true } ],
     //"new-cap": 2,
     "new-parens": 2,

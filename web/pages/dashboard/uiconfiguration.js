@@ -8,9 +8,9 @@ import axios from 'axios'
 import _ from 'lodash'
 import ColorPicker from '../../components/Editor/ColorPicker'
 const {setAxiosAuthentication} = require('../../utils/authentication')
-import HtmlEditor from '../../components/Editor/HtmlEditor2'
+import HtmlEditor from '../../components/Editor/HtmlEditor'
+import Visibility from '../../components/Editor/Visibility'
 import NoSSR from 'react-no-ssr'
-import Checkbox from '@material-ui/core/Checkbox'
 
 const styles = () => ({
   signupContainer: {
@@ -21,17 +21,40 @@ const styles = () => ({
   },
 })
 
+const TITLES={
+  'background-color': 'Couleur de fond',
+  'color': 'Couleur du texte',
+  'display': 'Afficher',
+  'contents': 'Texte',
+}
+
+const ATTRIBUTES={
+  'component': [['color', 'color'], ['background-color', 'color'], ['display', 'visibility'], ['contents', 'text']],
+  'button': [['color', 'color'], ['background-color', 'color'], ['display', 'visibility'], ['contents', 'text']],
+}
+
 class Parameter extends React.Component {
 
   render = () => {
     const {value, onChange}=this.props
+    console.log(`Parameter:value is ${JSON.stringify(value)}`)
+    const attributes=ATTRIBUTES[value.type]
     return (
       <NoSSR>
         <div style={{width: '80%'}}>
           <div>{value.label}</div>
-          { value.type=='color' && <ColorPicker value={value.value || ''} onChange={onChange} /> }
-          { value.type=='text' && <HtmlEditor value={value.value} onChange={onChange} /> }
-          { value.type=='visibility' && <Checkbox checked={Boolean(value.value)} onChange={(ev, checked) => onChange(checked? 'true' : null)} /> }
+          {
+            attributes.map(att => {
+              const [att_name, att_type] = att
+              const pAtt=value.attributes.find(a => a.name==att_name) || {value: ''}
+              switch (att_type) {
+                case 'color': return <ColorPicker title={TITLES[att_name]} value={pAtt.value} onChange={onChange(att_name)} />
+                case 'text': return <HtmlEditor title={TITLES[att_name]} value={pAtt.value} onChange={onChange(att_name)} />
+                case 'visibility': return <Visibility title={TITLES[att_name]} value={pAtt.value} onChange={onChange(att_name)} />
+                default: return null
+              }
+            })
+          }
         </div>
       </NoSSR>
     )
@@ -60,17 +83,23 @@ class UIParameters extends React.Component {
       })
   }
 
-  onChange = parameter_id => value => {
+  onChange = parameter_id => att_name => value => {
     const {parameters}=this.state
     const p=parameters.find(p => p._id ==parameter_id)
-    console.log(`onChange:${p.label}=>${value}`)
-    p.value = value
+    console.log(`onChange:${p.label}/${att_name}=>${value}`)
+    let attr = p.attributes.find(a => a.name==att_name)
+    if (attr) {
+      attr.value=value
+    }
+    else {
+      p.attributes.push({name: att_name, value: value})
+    }
     setAxiosAuthentication()
     axios.put(`/myAlfred/api/admin/uiConfiguration/${p._id}`, p)
       .then(() => {
         this.setState({parameters: parameters})
       })
-      .catch(error => {
+      .catch(err => {
         console.error(err)
       })
   }
