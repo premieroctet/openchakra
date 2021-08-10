@@ -1,36 +1,32 @@
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {withStyles} from '@material-ui/core/styles';
-import Layout from '../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
-import Paper from '@material-ui/core/Paper';
-import HomeIcon from '@material-ui/icons/Home';
-const  {BigList}=require('../../components/BigList/BigList')
-const moment = require('moment-timezone');
-moment.locale('fr');
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Layout from '../../hoc/Layout/Layout'
+import Router from 'next/router'
+import Paper from '@material-ui/core/Paper'
+const {BigList}=require('../../components/BigList/BigList')
+const moment = require('moment-timezone')
+moment.locale('fr')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 
-const styles = theme => ({
+const styles = () => ({
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',
     flexDirection: 'column',
 
   },
-});
+})
 
 class DataPage extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       data: [],
     }
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     // TODO Gérer un retour 401 => login
     this.loadData()
@@ -44,12 +40,12 @@ class DataPage extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
-    const {data} = this.state;
+    const {classes} = this.props
+    const {data} = this.state
 
     return (
       <Layout>
-        <Grid container className={classes.signupContainer} style={{width:'100%'}}>
+        <Grid container className={classes.signupContainer} style={{width: '100%'}}>
           <Grid style={{width: '90%'}}>
             <Paper style={{width: '100%'}}>
               <BigList
@@ -58,15 +54,14 @@ class DataPage extends React.Component {
                 classes={classes}
                 title={this.getTitle()}
                 onCellClicked={this._onCellClicked}
-		            onAddClick={this.onAddClicked}
+                onAddClick={this.onAddClicked}
               />
             </Paper>
           </Grid>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
-//export default withStyles(styles)(DataPage);
 module.exports={DataPage, styles}
