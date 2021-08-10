@@ -162,7 +162,7 @@ class Home extends React.Component {
               sm={12}
               md={12}
               xs={12}
-              className={isB2BStyle(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}
+              className={`banner ${isB2BStyle(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}` }
             >
               <Grid className={`${classes.navbarComponentPosition} customHeader`}>
                 <NavBar ref={this.child}/>

@@ -1,35 +1,35 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import {BANNER_PRESENTATION, B2B_BANNER_PRESENTATION} from '../../../utils/i18n';
-import Link from 'next/link';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import {BANNER_PRESENTATION, B2B_BANNER_PRESENTATION} from '../../../utils/i18n'
+import Link from 'next/link'
 import styles from '../../../static/css/components/BannerPresentation/BannerPresentation'
-import withStyles from "@material-ui/core/styles/withStyles";
-import {isB2BStyle} from "../../../utils/context.js";
-import Typography from "@material-ui/core/Typography";
-import axios from "axios";
-const {setAxiosAuthentication}=require('../../../utils/authentication');
-
+import withStyles from '@material-ui/core/styles/withStyles'
+import {isB2BStyle} from '../../../utils/context.js'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+const {setAxiosAuthentication}=require('../../../utils/authentication')
+import '../../../static/assets/css/custom.css'
 
 class BannerPresentation extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
-      user: {}
+      user: {},
     }
   }
 
   componentDidMount() {
     setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current').then(res =>{
-      let result = res.data;
+    axios.get('/myAlfred/api/users/current').then(res => {
+      let result = res.data
       this.setState({user: result})
     }).catch(err => console.error(err))
   }
 
   render() {
-    const {classes} = this.props;
-    const {user} = this.state;
+    const {classes} = this.props
+    const {user} = this.state
 
     const title = isB2BStyle(user) ? B2B_BANNER_PRESENTATION.title : BANNER_PRESENTATION.title
     const subTitle = isB2BStyle(user) ? B2B_BANNER_PRESENTATION.subTitle : BANNER_PRESENTATION.subTitle
@@ -37,26 +37,26 @@ class BannerPresentation extends React.Component {
 
 
     return (
-      <Grid container spacing={2} style={{width: '100%', margin:0}}>
+      <Grid container spacing={2} style={{width: '100%', margin: 0}}>
         <Grid container spacing={2} style={{width: '100%', margin: 0}} item xl={6} lg={6} md={12} sm={12} xs={12}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'bannerh1'}>
             <h2 className={classes.bannerPresentationTitle}>
-              <span className={classes.titleSpan}>{title}</span>
+              <span className={`bannerh1 ${classes.titleSpan}`}>{title}</span>
             </h2>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'bannerh2'}>
             <h2 className={classes.bannerPresentationTitle}>
-              <span className={classes.subtitleSpan}>{subTitle}</span>
+              <span className={`bannerh2 ${classes.subtitleSpan}`}>{subTitle}</span>
             </h2>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Typography className={classes.bannerPresentationText}>{text}</Typography>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'bannercontent'}>
+            <Typography className={`bannercontent ${classes.bannerPresentationText}`}>{text}</Typography>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerLinkDiscrover}>
             <Link href={'/search?search=1'}>
               <Button
                 variant={'outlined' }
-                classes={{root: classes.bannerPresentationButtonB2b }}>
+                classes={{root: `bannerbutton ${classes.bannerPresentationButtonB2b}`}}>
                 {BANNER_PRESENTATION.button}
               </Button>
             </Link>
@@ -70,7 +70,7 @@ class BannerPresentation extends React.Component {
             : null
         }
       </Grid>
-    );
+    )
   }
 
 }
