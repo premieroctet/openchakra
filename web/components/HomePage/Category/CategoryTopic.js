@@ -40,7 +40,7 @@ class CategoryTopic extends React.Component {
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnXs}>
-            <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search?search=1')}>
+            <Button variant={'outlined'} className={'customcatbutton'} classes={{root: `${classes.categoryButton}`}} onClick={() => Router.push('/search?search=1')}>
               {CATEGORY.button}
             </Button>
           </Grid>
@@ -60,7 +60,7 @@ class CategoryTopic extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.buttonDiscoverMobile}>
-          <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search?search=1')}>
+          <Button variant={'outlined'} className={'customcatbutton'} classes={{root: `customcatbutton ${classes.categoryButton}`}} onClick={() => Router.push('/search?search=1')}>
             {CATEGORY.button}
           </Button>
         </Grid>
