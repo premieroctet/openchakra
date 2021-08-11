@@ -190,12 +190,12 @@ class Home extends React.Component {
               <CategoryTopic category={category}/>
             </Grid>
           </Grid>
-          <Grid container className={isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}>
+          <Grid container className={`customhowitworks ${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
             <Grid className={classes.generalWidthContainer}>
               <HowItWorks/>
             </Grid>
           </Grid>
-          <Grid container className={classes.mainContainerStyle}>
+          <Grid container className={`customouralfred ${classes.mainContainerStyle}`}>
             <Grid className={classes.generalWidthContainer}>
               <OurAlfred alfred={alfred}/>
             </Grid>
