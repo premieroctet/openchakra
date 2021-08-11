@@ -7,6 +7,11 @@ const UIConfigurationSchema = new Schema({
     type: String,
     required: true,
   },
+  // Comopnent label
+  label: {
+    type: String,
+    required: true,
+  },
   // Parameter path in CSS or whatever
   className: {
     type: String,
@@ -22,6 +27,11 @@ const UIConfigurationSchema = new Schema({
   attributes: [{
     name: String,
     value: String,
+  }],
+  // Available menu, i.e. {label: "Mon profil", id: 'profile'}
+  menus: [{
+    label: String,
+    id: String,
   }],
 }, {toJSON: {virtuals: true, getters: true}})
 
