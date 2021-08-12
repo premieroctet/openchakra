@@ -1,59 +1,59 @@
 export default theme => ({
-  newsLetterMainStyle:{
+  newsLetterMainStyle: {
     paddingLeft: theme.padding.homePage.section.padding,
     paddingRight: theme.padding.homePage.section.padding,
     marginTop: '10vh',
-    marginBottom: '10vh'
+    marginBottom: '10vh',
   },
-  newsLetterMainContainer:{
+  newsLetterMainContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-  newsLetterLeftContainer:{
+  newsLetterLeftContainer: {
     display: 'flex',
     flexDirection: 'column',
     width: '30%',
-    [theme.breakpoints.down('md')]:{
-      width: '50%'
-    }
+    [theme.breakpoints.down('md')]: {
+      width: '50%',
+    },
   },
-  newsLetterTitle:{
+  newsLetterTitle: {
     fontFamily: theme.typography.subTitle.fontFamily,
     fontWeight: theme.typography.subTitle.fontWeight,
     margin: theme.typography.subTitle.margin,
   },
-  newsLetterSubTitle:{
+  newsLetterSubTitle: {
     fontFamily: theme.typography.text.fontFamily,
     color: theme.typography.text.color,
     fontWeight: theme.typography.text.fontWeight,
-    fontSize: theme.typography.text.fontSize
+    fontSize: theme.typography.text.fontSize,
   },
 
-  newsLetterRightContainer:{
+  newsLetterRightContainer: {
     display: 'flex',
     flexDirection: 'column',
     width: '30%',
     alignItems: 'center',
-    [theme.breakpoints.down('md')]:{
-      width: '40%'
-    }
+    [theme.breakpoints.down('md')]: {
+      width: '40%',
+    },
   },
-  newsLetterContainer:{
-    width: '100%'
+  newsLetterContainer: {
+    width: '100%',
   },
-  newsLetterTextField:{
+  newsLetterTextField: {
     width: '100%',
     marginBottom: '8%',
-    [`& fieldset`]: {
+    ['& fieldset']: {
       borderRadius: theme.border.textField.borderRadius,
     },
   },
-  newsLetterEmailIcon:{
-    color: 'rgba(128,128,128,1)'
+  newsLetterEmailIcon: {
+    color: 'rgba(128,128,128,1)',
   },
-  newsLetterButton:{
+  newsLetterButton: {
     color: theme.palette.white.main,
     fontWeight: theme.typography.blackButton.fontWeight,
     fontFamily: theme.typography.blackButton.fontFamily,
@@ -62,14 +62,14 @@ export default theme => ({
     padding: theme.padding.blackButton.padding,
   },
 
-  newsLetterButtonGoogle:{
+  newsLetterButtonGoogle: {
     fontWeight: theme.typography.blackButton.fontWeight,
     fontFamily: theme.typography.blackButton.fontFamily,
     borderRadius: theme.border.blackButton.borderRadius,
     padding: theme.padding.blackButton.padding,
-    width: '100%'
+    width: '100%',
   },
-  newsLetterText:{
+  newsLetterText: {
     color: theme.palette.black.main,
     fontSize: theme.typography.text.fontSize,
     fontWeight: theme.typography.text.fontWeight,

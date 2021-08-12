@@ -201,13 +201,13 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           {
-            isB2BStyle(user) ? null : <Grid container className={classes.becomeAlfredComponent}>
+            isB2BStyle(user) ? null : <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
               <Grid className={classes.generalWidthContainer}>
                 <ResaService triggerLogin={this.callLogin}/>
               </Grid>
             </Grid>
           }
-          <Grid className={classes.newsLetterContainer}>
+          <Grid className={`customnewsletter ${classes.newsLetterContainer}`}>
             {
               isB2BStyle(user) ? null : <Grid container className={classes.mainNewsLetterStyle}>
                 <Grid className={classes.generalWidthContainerNewsLtter}>
@@ -219,7 +219,7 @@ class Home extends React.Component {
           <Grid>
             <Divider/>
           </Grid>
-          <Grid className={classes.hideAndShowTrustAndSecurity}>
+          <Grid className={`custumtrustandsecurity ${classes.hideAndShowTrustAndSecurity}`}>
             <Grid className={classes.trustAndSecurityContainer}>
               <Grid className={classes.trustAndSecurityComponent}>
                 <TrustAndSecurity/>
