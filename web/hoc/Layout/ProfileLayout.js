@@ -78,8 +78,8 @@ class ProfileLayout extends CompanyComponent {
             <Grid className={classes.profilLayoutBackgroundContainer}>
               <Grid className={classes.profilLayoutMargin}>
                 <Grid className={classes.profilLayoutBox}>
-                  <Grid className={isB2BStyle() ? classes.profilLayoutBannerImgPro : classes.profilLayoutBannerImg}>
-                    <Grid className={classes.profilLayoutAvatar}>
+                  <Grid className={`customprofilbanner ${isB2BStyle() ? classes.profilLayoutBannerImgPro : classes.profilLayoutBannerImg}`}>
+                    <Grid className={`customprofilbanneravatar ${classes.profilLayoutAvatar}`}>
                       <UserAvatar alt={!this.isModeCompany() ? user.firstname : company ? company.name : ''} user={!this.isModeCompany() ? user : company ? company : ''} fireRefresh={this.componentDidMount}/>
                     </Grid>
                   </Grid>
@@ -91,11 +91,11 @@ class ProfileLayout extends CompanyComponent {
                   }}>
                     <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Grid>
-                        {this.isModeCompany() ? <h3>{company ? company.name : ''}</h3> : <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
+                        {this.isModeCompany() ? <h3>{company ? company.name : ''}</h3> : <h3 className={'customprofilbannertitle'}>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
                         }
                       </Grid>
                       {this.isModeCompany() ? null : <Grid>
-                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
+                        <Typography className={'customprofilbannertext'} style={{color: 'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
                       </Grid>
                       }
 
