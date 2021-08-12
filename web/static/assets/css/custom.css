@@ -10,6 +10,14 @@
 /** le service | l'adresse | les dates **/
 .search label{}
 
-.custombuttonlogin{
-    border : 5px solid red !important;
+.customlayoutaccountbackground{
+    background-color: yellow !important;
+}
+
+.customeditprofiltextfield input{
+    color: white !important
+}
+
+.customboxlayoutaccount{
+    background-color: green !important;
 }
