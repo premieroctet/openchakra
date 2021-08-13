@@ -108,16 +108,17 @@ class HandleRIB extends React.Component {
         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseModalAddRib}>
           <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Grid>
-              <h4>Ajouter un RIB</h4>
+              <h4 className={'customhandleribdialogtitle'}>Ajouter un RIB</h4>
             </Grid>
             <Grid>
-              <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajouter un RIB en toute sécurité</Typography>
+              <Typography className={'customhandleribdialogsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Ajouter un RIB en toute sécurité</Typography>
             </Grid>
           </Grid>
         </DialogTitle>
         <DialogContent>
           <Grid style={{margin: '15px'}}>
             <TextField
+              className={'customhandleribdialogiban'}
               id="outlined-name"
               style={{width: '100%'}}
               value={this.state.iban}
@@ -133,6 +134,7 @@ class HandleRIB extends React.Component {
           </Grid>
           <Grid style={{margin: '15px'}}>
             <TextField
+              className={'customhandleribdialogbic'}
               style={{width: '100%'}}
               value={this.state.bic}
               name={'bic'}
@@ -149,7 +151,7 @@ class HandleRIB extends React.Component {
             <Button
               onClick={this.onSubmit}
               variant="contained"
-              classes={{root: classes.buttonSave}}
+              classes={{root: `customhandleribsavebuttton ${classes.buttonSave}`}}
             >
               Enregistrer le RIB
             </Button>
@@ -162,11 +164,11 @@ class HandleRIB extends React.Component {
             </Grid>
             <Grid>
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Toutes les données de paiement sur My Alfred sont
+                <Typography className={'customhandleribsecurity1'} style={{color: 'rgba(39,37,37,35%)'}}>Toutes les données de paiement sur My Alfred sont
                   chiffrées.</Typography>
               </Grid>
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de
+                <Typography className={'customhandleribsecurity2'} style={{color: 'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de
                   confiance.</Typography>
               </Grid>
             </Grid>
@@ -243,17 +245,17 @@ class HandleRIB extends React.Component {
       <Grid>
         <Grid style={{display: 'flex', alignItems: 'center'}}>
           <Grid>
-            <h3>RIB enregistrés</h3>
+            <h3 className={'customhandleribtitle'}>RIB enregistrés</h3>
           </Grid>
-          <Grid>
+          <Grid className={'customhandleribadd'}>
             <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={this.handleClick}>
               <AddCircleOutlineOutlinedIcon/>
             </IconButton>
           </Grid>
         </Grid>
-
         <Grid>
           <Typography
+            className={'customhandleribsubtitle'}
             style={{color: 'rgba(39,37,37,35%)'}}>{is_pro ? 'Renseignez un rib pour permettre à vos collaborateurs le paiement par prélèvement bancaire.' : 'Choisissez le versement directement sur votre compte bancaire.'}</Typography>
         </Grid>
         {accounts.length>0 ?

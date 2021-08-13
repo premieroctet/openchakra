@@ -19,7 +19,7 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
-
+import '../../static/assets/css/custom.css'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -123,6 +123,7 @@ class HandleCB extends React.Component {
         onClose={() => this.handleCloseCreditCard()}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        classes={{paper: 'customhandlecbdialog'}}
       >
         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseCreditCard}>
           <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -138,6 +139,7 @@ class HandleCB extends React.Component {
           <Grid style={{display: 'flex', flexDirection: 'column'}}>
             <Grid style={{margin: '15px'}}>
               <NumberFormat
+                className={'customhandlecbnumb'}
                 customInput={TextField}
                 variant={'outlined'}
                 label="Numéro de carte"
@@ -151,6 +153,7 @@ class HandleCB extends React.Component {
             </Grid>
             <Grid style={{margin: '15px'}}>
               <NumberFormat
+                className={'customhandlecbdate'}
                 customInput={TextField}
                 variant={'outlined'}
                 label="Date d'expiration"
@@ -164,6 +167,7 @@ class HandleCB extends React.Component {
             </Grid>
             <Grid style={{margin: '15px'}}>
               <TextField
+                className={'customhandlecbcvv'}
                 label="CVV"
                 variant="outlined"
                 value={csv}
@@ -179,7 +183,7 @@ class HandleCB extends React.Component {
             <Button
               onClick={this.addCard}
               variant="contained"
-              classes={{root: classes.buttonSave}}
+              classes={{root: `customhandlecbsavebutton ${classes.buttonSave}`}}
             >
               Enregistrer la carte
             </Button>
@@ -241,16 +245,16 @@ class HandleCB extends React.Component {
       <Grid>
         <Grid style={{display: 'flex', alignItems: 'center'}}>
           <Grid>
-            <h3>Cartes enregistrées</h3>
+            <h3 className={'customhandlecbtitle'}>Cartes enregistrées</h3>
           </Grid>
-          <Grid>
+          <Grid className={'customhandlecbaddcb'}>
             <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={this.callAddCreditCard}>
               <AddCircleOutlineOutlinedIcon/>
             </IconButton>
           </Grid>
         </Grid>
         <Grid>
-          <Typography style={{color: 'rgba(39,37,37,35%)'}}>Payez encore plus rapidement sans communiquer vos
+          <Typography className={'customhandlecbsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Payez encore plus rapidement sans communiquer vos
             informations financières.</Typography>
         </Grid>
         <Grid style={{marginTop: '5vh'}}>

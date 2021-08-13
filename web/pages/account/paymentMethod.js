@@ -52,16 +52,16 @@ class paymentMethod extends React.Component {
               plus vite lors de vos réservations.</Typography>
           </Grid>
         </Grid>
-        <Grid>
+        <Grid className={'customlayoutaccountcb'}>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
-        <Grid>
+        <Grid className={'customlayoutaccountcb'}>
           <HandleCB/>
         </Grid>
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
-        <Grid>
+        <Grid className={'customlayoutaccountrib'}>
           <HandleRIB/>
         </Grid>
       </Grid>
