@@ -430,7 +430,7 @@ class HandleAddresses extends React.Component {
             </Grid>
             <Grid item xs={12} style={{marginBottom: '12vh'}}>
               <Button disabled={!(this.state.suggestion_new && this.state.new_label)} variant="contained"
-                className={`customhandleaddressesaddnewbutton${classes.buttonSave}`} onClick={this.onSubmitNew}>
+                className={`customhandleaddressesaddnewbutton ${classes.buttonSave}`} onClick={this.onSubmitNew}>
                   Ajouter
               </Button>
             </Grid>

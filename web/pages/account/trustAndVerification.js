@@ -27,6 +27,7 @@ import Divider from '@material-ui/core/Divider'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+import '../../static/assets/css/custom.css'
 const {CESU} = require('../../utils/consts')
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 const I18N = require('../../utils/i18n')
@@ -371,10 +372,10 @@ class trustAndVerification extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2>Vérification</h2>
+            <h2 className={'customtrustandveriftitle'}>Vérification</h2>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Vérifiez votre email, votre numéro de téléphone et votre
+            <Typography className={'customtrustandverifsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Vérifiez votre email, votre numéro de téléphone et votre
               identité.</Typography>
           </Grid>
         </Grid>
@@ -383,16 +384,16 @@ class trustAndVerification extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h3>Pièce d'identité</h3>
+            <h3 className={'customtrustandverifidtitle'}>Pièce d'identité</h3>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez ou modifiez vos documents d'identité.</Typography>
+            <Typography className={'customtrustandverifidsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez ou modifiez vos documents d'identité.</Typography>
           </Grid>
         </Grid>
         <Grid>
           <Grid className={classes.searchFilterRightContainer}>
             <Grid className={classes.searchFilterRightLabel}>
-              <h3>Type de document</h3>
+              <h3 className={'customtrustandverifdocumenttitle'}>Type de document</h3>
             </Grid>
             <Grid>
               <FormControl>
@@ -453,13 +454,13 @@ class trustAndVerification extends React.Component {
             }
             {this.state.id_recto === null && this.state.id_verso !== null ?
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
-                <Button onClick={() => this.addVerso()} variant="contained" className={classes.buttonSave}>
+                <Button onClick={() => this.addVerso()} variant="contained" className={`customtrustandverifsaveverso ${classes.buttonSave}`}>
                   Enregistrer verso
                 </Button>
               </Grid>
               :
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
-                <Button onClick={this.onSubmit} variant="contained" className={classes.buttonSave}>
+                <Button onClick={this.onSubmit} variant="contained" className={`customtrustandverifsavedoc ${classes.buttonSave}`}>
                   Enregistrer
                 </Button>
               </Grid>
@@ -473,13 +474,14 @@ class trustAndVerification extends React.Component {
           {this.state.alfred ?
             <Grid style={{marginBottom: '12vh'}}>
               <Grid>
-                <h3>Votre statut</h3>
+                <h3 className={'customtrustandverifstatustitle'}>Votre statut</h3>
               </Grid>
               <Grid>
                 <Grid>
                   <FormControlLabel
                     control={
                       <Radio
+                        className={'customtrustandverifparticular'}
                         checked={!this.state.professional}
                         onChange={e => {
                           this.onChangePartPro(e)
@@ -497,15 +499,15 @@ class trustAndVerification extends React.Component {
                     <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[0]}/>
-                        <Typography>Je veux être déclaré(e) en CESU</Typography>
+                        <Typography className={'customtrustandverifcesu'}>Je veux être déclaré(e) en CESU</Typography>
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[1]}/>
-                        <Typography> J'accepte d'être déclaré en CES </Typography>
+                        <Typography className={'customtrustandverifces'}> J'accepte d'être déclaré en CES </Typography>
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[2]}/>
-                        <Typography>Je n'accepte pas d'être déclaré(e) en CESU</Typography>
+                        <Typography className={'customtrustandverifnocesu'}>Je n'accepte pas d'être déclaré(e) en CESU</Typography>
                       </Grid>
                     </RadioGroup>
                   </Grid>
@@ -515,6 +517,7 @@ class trustAndVerification extends React.Component {
                   <FormControlLabel
                     control={
                       <Radio
+                        className={'customtrustandverifradiopro'}
                         checked={this.state.professional}
                         onChange={e => {
                           this.onChangePartPro(e)
@@ -530,7 +533,7 @@ class trustAndVerification extends React.Component {
               </Grid>
               {this.state.professional ?
                 <Grid container style={{marginTop: '5vh'}}>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} className={'customtrustandverifcis'}>
                     <ButtonSwitch
                       label="Je suis éligible au Crédit Impôt Service"
                       onChange={this.onCISChange}
@@ -545,13 +548,13 @@ class trustAndVerification extends React.Component {
                   </Grid>
                   <Grid>
                     <Grid style={{marginTop: '10vh'}}>
-                      <h3>Document d'immatriculation</h3>
+                      <h3 className={'customtrustandverifdocimma'}>Document d'immatriculation</h3>
                     </Grid>
-                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                    <Typography className={'customtrustandverifpdf'} style={{color: 'rgba(39,37,37,35%)'}}>
                       Insérez ici le document d'immatriculation de votre entreprise (extrait de K-Bis, document
                       d'immatriculation de micro-entreprise).<br/>
                       Vous pouvez télécharger ce document en version PDF&nbsp;
-                      <a color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
+                      <a className={'customtrustandveriflink'} color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
                       >sur le site de l'INSEE</a>
                     </Typography>
                   </Grid>
@@ -569,7 +572,7 @@ class trustAndVerification extends React.Component {
                 null
               }
               <Grid style={{marginTop: '10vh'}}>
-                <Button variant="contained" className={classes.buttonSave}
+                <Button variant="contained" className={`customtrustandverifsavebutton ${classes.buttonSave}`}
                   onClick={this.editSiret} disabled={!this.statusSaveEnabled()}>
                   Enregistrer
                 </Button>
