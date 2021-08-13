@@ -25,6 +25,7 @@ import DateField from '../../components/DateField/DateField'
 const {is_production}=require('../../config/config')
 const {isPhoneOk} = require('../../utils/sms')
 const moment = require('moment')
+import '../../static/assets/css/custom.css'
 
 moment.locale('fr')
 
@@ -100,24 +101,23 @@ class editProfile extends React.Component {
     const state = this.state.user
     let value = event.target.value
 
-    if (value.match(/[0-9^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/)) {
-    }
-    else {
+    if (!value.match(/[0-9^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/)) {
       value = value.charAt(0).toUpperCase() + value.slice(1)
       state[event.target.name] = value
       this.setState({user: state})
     }
   };
+
   onChangePhone = event => {
     let value = event.target.value
-    if (isPhoneOk(value) || value.length > 11) {
+    if (value.match(/^[0-9]*$/) && value.length < 12) {
+      this.setState({phone: value})
     }
     else {
       const phoneOk = isPhoneOk(value)
       if (phoneOk && value.startsWith('0')) {
-        value = `33${ value.substring(1)}`
+        this.setState({phone: `33${ value.substring(1)}`})
       }
-      this.setState({phone: value})
     }
   };
 
@@ -148,7 +148,7 @@ class editProfile extends React.Component {
       .then(() => {
         snackBarSuccess('Mail envoyé')
       })
-      .catch(err => {
+      .catch(() => {
         snackBarError('email non envoyé')
       })
   };
@@ -158,7 +158,7 @@ class editProfile extends React.Component {
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
         this.setState({smsCodeOpen: true}, () => this.onSubmit())
-        var txt = is_production() ? 'Le SMS a été envoyé' : `Dev : le code est ${res.data.sms_code}`;
+        let txt = is_production() ? 'Le SMS a été envoyé' : `Dev : le code est ${res.data.sms_code}`
         snackBarSuccess(txt)
       })
       .catch(err => {
@@ -186,12 +186,12 @@ class editProfile extends React.Component {
           snackBarError('Le code est incorrect')
         }
       })
-      .catch(err =>
+      .catch(() =>
         snackBarError('Erreur à la vérification du code'),
       )
   };
 
-  dialogConfirmPhone = classes => {
+  dialogConfirmPhone = () => {
     return (
       <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
@@ -233,7 +233,7 @@ class editProfile extends React.Component {
     this.setState({birthday: e.target.value})
   };
 
-  onSubmit = e => {
+  onSubmit = () => {
     const birthday = this.state.birthday
     const {email, name, firstname, description, gender, job, diplomes, school} = this.state.user
     const {phone} = this.state
@@ -241,7 +241,7 @@ class editProfile extends React.Component {
     axios.put('/myAlfred/api/users/profile/editProfile', {
       email, name, firstname, birthday, description, gender, phone, job, diplomes, school,
     })
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Profil modifié avec succès')
         this.setState({errors: {}}, () => this.loadUser())
       })
@@ -267,7 +267,7 @@ class editProfile extends React.Component {
         <Grid container spacing={3} style={{marginTop: '5vh'}}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
-              classes={{root: classes.textField}}
+              classes={{root: `customeditprofiltextfield ${classes.textField}`}}
               value={user.firstname || ''}
               onChange={this.onChangeName}
               name={'firstname'}
@@ -279,7 +279,7 @@ class editProfile extends React.Component {
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
-              classes={{root: classes.textField}}
+              classes={{root: `customeditprofiltextfield ${classes.textField}`}}
               value={user.name || ''}
               onChange={this.onChangeName}
               name={'name'}
@@ -289,9 +289,9 @@ class editProfile extends React.Component {
               error={!!(errors && errors.name)}
             />
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customeditprofilabout'}>
             <TextField
-              classes={{root: classes.textField}}
+              classes={{root: `customeditprofiltextfield ${classes.textField}`}}
               value={user.description || ''}
               multiline
               rows={5}
@@ -303,7 +303,7 @@ class editProfile extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}
             style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
-            <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
+            <Typography className={'customeditprofillimit'}>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -311,12 +311,12 @@ class editProfile extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h2 style={{whiteSpace: 'nowrap'}}>Informations personnelles</h2>
+            <h2 className={'custometiprofiltitleinfo'} style={{whiteSpace: 'nowrap'}}>Informations personnelles</h2>
           </Grid>
           <Grid container spacing={3} style={{marginTop: '10vh'}}>
             <Grid item xl={6} lg={6} xs={12} sm={12} md={12}>
               <TextField
-                classes={{root: classes.textField}}
+                classes={{root: `customeditprofiltextfield ${classes.textField}`}}
                 value={user.gender || ''}
                 select
                 variant={'outlined'}
@@ -346,7 +346,7 @@ class editProfile extends React.Component {
           <Grid container spacing={3}>
             <Grid item xs={12} lg={6} md={12} sm={12} xl={6}>
               <TextField
-                classes={{root: classes.textField}}
+                classes={{root: `customeditprofiltextfield ${classes.textField}`}}
                 value={user.email || ''}
                 onChange={this.onChange}
                 name={'email'}
@@ -365,14 +365,14 @@ class editProfile extends React.Component {
                 color={'primary'}
                 onClick={() => (user.is_confirmed ? this.onSubmit() : this.sendEmail())}
                 disabled={user.email ? !!(userEmail === user.email && user.is_confirmed) : true}
-                classes={{root: classes.buttonCheckPhone}}
+                classes={{root: `customeditprofilcheckemail ${classes.buttonCheckPhone}`}}
               >
                 {userEmail === user.email && user.is_confirmed === true ? 'Votre email est vérifié' : userEmail !== user.email ? 'Enregistrer votre nouvel email' : 'Vérifier votre email'}
               </Button>
             </Grid>
             <Grid item xs={12} lg={6} md={12} sm={12} xl={6}>
               <TextField
-                classes={{root: classes.textField}}
+                classes={{root: `customeditprofiltextfield ${classes.textField}`}}
                 value={this.state.phone || ''}
                 onChange={this.onChangePhone}
                 name={'phone'}
@@ -390,7 +390,7 @@ class editProfile extends React.Component {
                 color={'primary'}
                 onClick={this.submitPhone}
                 disabled={user.phone ? !!(phone === user.phone && user.phone_confirmed || user.phone.length !== 11) : true}
-                classes={{root: classes.buttonCheckPhone}}
+                classes={{root: `customeditprofilcheckphone ${classes.buttonCheckPhone}`}}
               >
                 {phone === user.phone && user.phone_confirmed === true ? 'Votre téléphone est vérifié' : phone !== user.phone ? 'Enregistrer votre nouveau téléphone' : 'Vérifiez votre téléphone'}
               </Button>
@@ -402,12 +402,12 @@ class editProfile extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h2>Informations facultatives</h2>
+            <h2 className={'customeditprofillasttitle'}>Informations facultatives</h2>
           </Grid>
           <Grid container style={{marginTop: '10vh'}} spacing={3}>
-            <Grid item xs={12} lg={12} md={12} sm={12}>
+            <Grid item xs={12} lg={12} md={12} sm={12} className={'customeditprofildiploma'}>
               <TextField
-                classes={{root: classes.textField}}
+                classes={{root: `customeditprofiltextfield ${classes.textField}`}}
                 value={user.diplomes || ''}
                 onChange={this.onChangeName}
                 name={'diplomes'}
@@ -416,9 +416,9 @@ class editProfile extends React.Component {
                 label={'Diplômes'}
               />
             </Grid>
-            <Grid item xs={12} lg={12} md={12} sm={12}>
+            <Grid item xs={12} lg={12} md={12} sm={12} className={'customeditprofilschool'}>
               <TextField
-                classes={{root: classes.textField}}
+                classes={{root: `customeditprofiltextfield ${classes.textField}`}}
                 value={user.school || ''}
                 onChange={this.onChangeName}
                 name={'school'}
@@ -427,9 +427,9 @@ class editProfile extends React.Component {
                 label={'Ecoles'}
               />
             </Grid>
-            <Grid item xs={12} lg={12} md={12} sm={12}>
+            <Grid item xs={12} lg={12} md={12} sm={12} className={'customeditprofiljob'}>
               <TextField
-                classes={{root: classes.textField}}
+                classes={{root: `customeditprofiltextfield ${classes.textField}`}}
                 value={user.job || ''}
                 onChange={this.onChangeName}
                 name={'job'}
@@ -449,7 +449,7 @@ class editProfile extends React.Component {
               onClick={this.onSubmit}
               variant="contained"
               color="primary"
-              classes={{root: classes.button}}
+              classes={{root: `customeditprofilsave ${classes.button}`}}
             >
               Enregistrer
             </Button>

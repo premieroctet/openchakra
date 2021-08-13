@@ -1,6 +1,6 @@
 const fs=require('fs').promises
 const validateCss = require('css-validator')
-const _=require('lodash')
+
 /**
   Creates CSS from configurations
   config : {classname, attributes:{name,value}}

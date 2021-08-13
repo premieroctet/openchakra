@@ -1,31 +1,28 @@
-import React from 'react';
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import FacebookIcon from '@material-ui/icons/Facebook';
-import {NEWS_LETTER} from '../../../utils/i18n';
-import axios from 'axios';
-import EmailIcon from '@material-ui/icons/Email';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import {NEWS_LETTER} from '../../../utils/i18n'
+import EmailIcon from '@material-ui/icons/Email'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import styles from '../../../static/css/components/NewsLetter/NewsLetter'
-import withStyles from "@material-ui/core/styles/withStyles";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
+import withStyles from '@material-ui/core/styles/withStyles'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import Slide from '@material-ui/core/Slide'
+import CloseIcon from '@material-ui/icons/Close'
+import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
+import '../../../static/assets/css/custom.css'
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => {
+  return <Slide direction="up" ref={ref} {...props} />
+})
 
 
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
@@ -35,43 +32,43 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
-class NewsLetter extends React.Component{
+class NewsLetter extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
       email: '',
       modalSubscription: false,
-      modalSubscriptionFailed: false
+      modalSubscriptionFailed: false,
     }
   }
 
-  handleOnchange = (event) =>{
+  handleOnchange = event => {
     this.setState({[event.target.name]: event.target.value})
   };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
+  handleSubmit = event => {
+    event.preventDefault()
 
-    var form_data = new FormData();
+    let form_data = new FormData()
 
     const obj = {
       EMAIL: this.state.email,
-      email_address_check: "",
-      locale: "fr",
-    };
+      email_address_check: '',
+      locale: 'fr',
+    }
 
-    for ( var key in obj ) {
-      form_data.append(key, obj[key]);
+    for (let key in obj) {
+      form_data.append(key, obj[key])
     }
 
     fetch('https://cef7ace9.sibforms.com/serve/MUIEAMozm6936onrqiPaove-mb4-eZhjKq9N50iJ7FVKRVk4NFAVimF-eRdZmyw9XmVuQh9ItQdDfS1NJLu11EDcUGdHWDoNY13qixwVVhV1R_OjaeI5i5iVjN7Jl86BzlIwoqHgutCV84BudSu-zdJ1Jrq0dAHZBFarwabS9kqbbKhRu9hK2T5XHv6cw8K5NdVf1hkL_BMB3hy7', {
       method: 'POST',
       mode: 'no-cors',
-      body: form_data
-    }).then(() => this.setState({modalSubscription: true})).catch((err) => this.setState({modalSubscriptionFailed: true}, () => console.error(err)));
+      body: form_data,
+    }).then(() => this.setState({modalSubscription: true})).catch(err => this.setState({modalSubscriptionFailed: true}, () => console.error(err)))
   };
 
   modalSubscription = () => {
@@ -112,7 +109,7 @@ class NewsLetter extends React.Component{
             Une erreur est survenue veuillez réessayer ultérieurement, pour plus d'informations contactez-nous via notre chat instantané ou directement par e-mail :
             <a href={'mailto:hello@my-alfred.io'}>
             hello@my-alfred.io
-          </a>
+            </a>
           </Typography>
         </DialogContent>
       </Dialog>
@@ -121,9 +118,8 @@ class NewsLetter extends React.Component{
 
 
   render() {
-    const {classes} = this.props;
-    const {modalSubscription, modalSubscriptionFailed} = this.state;
-
+    const {classes} = this.props
+    const {modalSubscription, modalSubscriptionFailed} = this.state
 
 
     return (
@@ -131,10 +127,10 @@ class NewsLetter extends React.Component{
         <Grid className={classes.newsLetterMainContainer}>
           <Grid className={classes.newsLetterLeftContainer}>
             <Grid>
-              <h2 className={classes.newsLetterTitle}>{NEWS_LETTER.title}</h2>
+              <h2 className={`customnewsletterh2 ${classes.newsLetterTitle}`}>{NEWS_LETTER.title}</h2>
             </Grid>
             <Grid>
-              <p className={classes.newsLetterSubTitle}>{NEWS_LETTER.text}</p>
+              <p className={`customnewslettertext ${classes.newsLetterSubTitle}`}>{NEWS_LETTER.text}</p>
             </Grid>
           </Grid>
           <Grid className={classes.newsLetterRightContainer}>
@@ -145,12 +141,12 @@ class NewsLetter extends React.Component{
                   placeholder="Email"
                   variant="outlined"
                   name="email"
-                  classes={{root: classes.newsLetterTextField}}
-                  InputLabelProps={{ shrink: false }}
+                  classes={{root: `customnewletterbutton ${classes.newsLetterTextField}`}}
+                  InputLabelProps={{shrink: false}}
                   onChange={this.handleOnchange}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start" >
+                      <InputAdornment position="start">
                         <EmailIcon className={classes.newsLetterEmailIcon}/>
                       </InputAdornment>
                     ),
@@ -160,7 +156,7 @@ class NewsLetter extends React.Component{
             </Grid>
             <Grid className={classes.newsLetterContainer}>
               <Grid>
-                <Button style={{ width: '100%'}} variant={'outlined'} classes={{root : classes.newsLetterButton}} onClick={this.handleSubmit}>{NEWS_LETTER.button}</Button>
+                <Button style={{width: '100%'}} variant={'outlined'} classes={{root: `customnewsletterbutton ${classes.newsLetterButton}`}} onClick={this.handleSubmit}>{NEWS_LETTER.button}</Button>
               </Grid>
             </Grid>
           </Grid>
@@ -168,8 +164,8 @@ class NewsLetter extends React.Component{
         {modalSubscription ? this.modalSubscription() : null}
         {modalSubscriptionFailed ? this.modalSubscriptionFailed() : null}
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles (styles) (NewsLetter);
+export default withStyles(styles)(NewsLetter)

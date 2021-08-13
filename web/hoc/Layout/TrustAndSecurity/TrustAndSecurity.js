@@ -1,40 +1,40 @@
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import AlarmOnIcon from '@material-ui/icons/AlarmOn';
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import TextsmsIcon from '@material-ui/icons/Textsms';
-import Typography from "@material-ui/core/Typography";
-import withStyles from "@material-ui/core/styles/withStyles";
-import styles from '../../../static/css/components/TrustAndSecurity/TrustAndSecurity';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import AlarmOnIcon from '@material-ui/icons/AlarmOn'
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser'
+import TextsmsIcon from '@material-ui/icons/Textsms'
+import Typography from '@material-ui/core/Typography'
+import withStyles from '@material-ui/core/styles/withStyles'
+import styles from '../../../static/css/components/TrustAndSecurity/TrustAndSecurity'
+import '../../../static/assets/css/custom.css'
 
-class TrustAndSecurity extends React.Component{
+class TrustAndSecurity extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
-      items:[
+      items: [
         {
-          title:'Réservation en instantané',
+          title: 'Réservation en instantané',
           text: 'Avec un délai de prévenance bien sûr ;)',
-          icon: <AlarmOnIcon fontSize="large"/>
+          icon: <AlarmOnIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
         },
         {
-          title:'Paiement 100% sécurisé',
+          title: 'Paiement 100% sécurisé',
           text: 'Par la Nasa et le Pentagone',
-          icon: <VerifiedUserIcon fontSize="large"/>
+          icon: <VerifiedUserIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
         },
         {
-          title:'Notre équipe',
+          title: 'Notre équipe',
           text: 'Toujours à votre écoute ',
-          icon: <TextsmsIcon fontSize="large"/>
-        }
-        ]
+          icon: <TextsmsIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
+        },
+      ],
     }
   }
 
   render() {
-    const{items} = this.state;
-    const{classes} = this.props;
+    const{items} = this.state
+    const{classes} = this.props
     return(
       <Grid container spacing={2} style={{margin: 0, width: '100%'}} className={classes.trustAndSecurityMainContainer} >
         {
@@ -45,18 +45,18 @@ class TrustAndSecurity extends React.Component{
               </Grid>
               <Grid style={{marginLeft: '3vh'}}>
                 <Grid>
-                  <Typography><strong>{res.title}</strong></Typography>
+                  <Typography className={'customtrustandsecuritytitle'}><strong>{res.title}</strong></Typography>
                 </Grid>
                 <Grid>
-                  <Typography>{res.text}</Typography>
+                  <Typography className={'customtrustandsecuritytext'}>{res.text}</Typography>
                 </Grid>
               </Grid>
             </Grid>
           ))
         }
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles (styles) (TrustAndSecurity);
+export default withStyles(styles)(TrustAndSecurity)

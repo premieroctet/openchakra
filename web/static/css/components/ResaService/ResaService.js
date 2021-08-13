@@ -3,12 +3,12 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: '3%'
+    padding: '3%',
   },
   becomeAlfredContainer: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   becomeAlfredTitle: {
     color: theme.palette.white.main,
@@ -21,9 +21,9 @@ export default theme => ({
     color: theme.palette.white.main,
     fontWeight: theme.typography.text.fontWeight,
     fontSize: theme.typography.text.fontSize,
-    [theme.breakpoints.down('xs')]:{
-      textAlign: 'center'
-    }
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center',
+    },
   },
   resaServiceButton: {
     fontWeight: theme.typography.blackButton.fontWeight,

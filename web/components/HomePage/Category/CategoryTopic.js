@@ -10,6 +10,7 @@ import withSlide from '../../../hoc/Slide/SlideShow'
 import withGrid from '../../../hoc/Grid/GridCard'
 const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel')
 const CategorySlide=withSlide(withGrid(CategoryCard))
+import '../../../static/assets/css/custom.css'
 
 class CategoryTopic extends React.Component {
   constructor(props) {
@@ -26,20 +27,20 @@ class CategoryTopic extends React.Component {
       <Grid className={classes.categoryMainContainer}>
         <Grid className={classes.categoryContainer}>
           <Grid className={classes.categoryLeftContainer}>
-            <Grid className={classes.categoryImgContainer}>
+            <Grid className={`customslidelogo ${classes.categoryImgContainer}`}>
               <img src={'/static/assets/faq/star.svg'} alt={'iconStar'} title={'iconStar'} />
             </Grid>
             <Grid className={classes.categoryTextContainer}>
               <Grid>
-                <p className={classes.categoryTitle}>{CATEGORY.title}</p>
+                <p className={`customslideh1 ${classes.categoryTitle}`}>{CATEGORY.title}</p>
               </Grid>
               <Grid>
-                <p className={classes.categoryText}>{CATEGORY.text}</p>
+                <p className={`customslidetext ${classes.categoryText}`}>{CATEGORY.text}</p>
               </Grid>
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnXs}>
-            <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search?search=1')}>
+            <Button variant={'outlined'} className={'customcatbutton'} classes={{root: `${classes.categoryButton}`}} onClick={() => Router.push('/search?search=1')}>
               {CATEGORY.button}
             </Button>
           </Grid>
@@ -59,7 +60,7 @@ class CategoryTopic extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.buttonDiscoverMobile}>
-          <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search?search=1')}>
+          <Button variant={'outlined'} className={'customcatbutton'} classes={{root: `customcatbutton ${classes.categoryButton}`}} onClick={() => Router.push('/search?search=1')}>
             {CATEGORY.button}
           </Button>
         </Grid>

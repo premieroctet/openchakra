@@ -25,7 +25,7 @@ import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import Input from '@material-ui/core/Input'
 const {snackBarSuccess} = require('../../utils/notifications')
-
+import '../../static/assets/css/custom.css'
 
 moment.locale('fr')
 
@@ -329,10 +329,10 @@ class security extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}} >
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2>Sécurité</h2>
+            <h2 className={'customsecuritytitle'}>Sécurité</h2>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Modifiez votre mot de passe et gérez votre compte.</Typography>
+            <Typography className={'customsecuritysubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Modifiez votre mot de passe et gérez votre compte.</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -340,10 +340,10 @@ class security extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h3>Mot de passe</h3>
+            <h3 className={'customsecuritypasswordtitle'}>Mot de passe</h3>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Modifiez votre mot de passe.</Typography>
+            <Typography className={'customsecuritypasswordsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Modifiez votre mot de passe.</Typography>
           </Grid>
         </Grid>
         <Grid style={{marginTop: '10vh'}}>
@@ -361,7 +361,7 @@ class security extends React.Component {
                           value={this.state.password}
                           onChange={this.onChangePassword}
                           variant={'outlined'}
-                          classes={{root: classes.textfield}}
+                          classes={{root: `custumsecurityinputpassadmin ${classes.textfield}`}}
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
@@ -375,7 +375,7 @@ class security extends React.Component {
                             </InputAdornment>
                           }
                         />
-                        <em className={classes.cancelButton}>{this.state.wrongPassword ? 'Mot de passe erroné' : ''}</em>
+                        <em className={`custumsecurityerrorpass ${classes.cancelButton}`}>{this.state.wrongPassword ? 'Mot de passe erroné' : ''}</em>
                       </Grid> : null
                   }
                   <Grid item xs={12} md={4} xl={12}>
@@ -387,7 +387,7 @@ class security extends React.Component {
                       onChange={this.onChange}
                       variant={'outlined'}
                       onKeyUp={this.onClick1}
-                      classes={{root: classes.textfield}}
+                      classes={{root: `custumsecurityrepeatpass ${classes.textfield}`}}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
@@ -400,7 +400,7 @@ class security extends React.Component {
                         </InputAdornment>
                       }
                     />
-                    <em className={classes.cancelButton}>{checkPass1(this.state.newPassword).error}</em>
+                    <em className={`custumsecurityrepeatnewpass ${classes.cancelButton}`}>{checkPass1(this.state.newPassword).error}</em>
                   </Grid>
                   <Grid item xs={12} md={4} xl={12}>
                     <Input
@@ -411,7 +411,7 @@ class security extends React.Component {
                       onChange={this.onChange}
                       variant={'outlined'}
                       onKeyUp={this.onClick1}
-                      classes={{root: classes.textfield}}
+                      classes={{root: `customsecurityrepeatpass ${classes.textfield}`}}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
@@ -424,11 +424,11 @@ class security extends React.Component {
                         </InputAdornment>
                       }
                     />
-                    <em className={classes.cancelButton}>{checkPass2(this.state.newPassword, this.state.newPassword2).error}</em>
+                    <em className={`customsecurityrepeatpasserror ${classes.cancelButton}` }>{checkPass2(this.state.newPassword, this.state.newPassword2).error}</em>
                   </Grid>
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'left', marginTop: 30}}>
-                  <Button disabled={!checkButtonValidate} type="submit" className={classes.buttonSave} variant="contained">
+                  <Button disabled={!checkButtonValidate} type="submit" className={`customsecurityconfirmpass ${classes.buttonSave}`} variant="contained">
                     Valider
                   </Button>
                 </Grid>
@@ -441,7 +441,7 @@ class security extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h3>Mon compte</h3>
+            <h3 className={'customsecurityaccounttitle'}>Mon compte</h3>
           </Grid>
           <Grid>
             <Typography style={{color: 'rgba(39,37,37,35%)'}}>Gérez votre compte.</Typography>

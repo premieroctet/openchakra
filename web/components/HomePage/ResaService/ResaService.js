@@ -40,15 +40,15 @@ class ResaService extends React.Component {
       <Grid className={classes.ResaServiceMainContainer}>
         <Grid className={classes.becomeAlfredContainer}>
           <Grid>
-            <h2 className={classes.becomeAlfredTitle}>{RESA_SERVICE.title}</h2>
+            <h2 className={`customresaserviceh2 ${classes.becomeAlfredTitle}`}>{RESA_SERVICE.title}</h2>
           </Grid>
           <Grid>
-            <p className={classes.becomeAlfredText}>{RESA_SERVICE.text}</p>
+            <p className={`customresaservicetext ${classes.becomeAlfredText}`}>{RESA_SERVICE.text}</p>
           </Grid>
           <Grid>
             <Button
               variant={'contained'}
-              className={classes.resaServiceButton}
+              className={`customresaservicebutton ${classes.resaServiceButton}`}
               onClick={this.handleController}
               style={{
                 color: homePage ? 'rgba(178,204,251,1)' : '#F8CF61',

@@ -21,6 +21,7 @@ import {isB2BAdmin} from '../../utils/context'
 import {clearAuthenticationToken, setAxiosAuthentication} from '../../utils/authentication'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
+import '../../static/assets/css/custom.css'
 
 class HandleAddresses extends React.Component {
   constructor(props) {
@@ -278,7 +279,7 @@ class HandleAddresses extends React.Component {
             <Grid>
               <Grid>
                 <Grid>
-                  <h3>{ pro_mode ? 'Mon siège social' : 'Mon adresse principale'}</h3>
+                  <h3 className={'customhandleaddressestitle'}>{ pro_mode ? 'Mon siège social' : 'Mon adresse principale'}</h3>
                 </Grid>
                 {this.addressLabel(billing_address)}
               </Grid>
@@ -286,6 +287,7 @@ class HandleAddresses extends React.Component {
                 <Grid container spacing={3}>
                   <Grid item xs={12} xl={12} lg={12} md={12} sm={12}>
                     <AlgoliaPlaces
+                      className={'customhandleaddressesalgolia'}
                       placeholder='Modifiez votre adresse'
                       options={{
                         appId: 'plKATRG826CP',
@@ -299,7 +301,7 @@ class HandleAddresses extends React.Component {
                   </Grid>
                   <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
                     <Button disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained"
-                      className={classes.buttonSave} onClick={this.onSubmitMain}>
+                      classes={{root: `customhandleaddressessavebutton ${classes.buttonSave}`}} onClick={this.onSubmitMain}>
                       Valider
                     </Button>
                   </Grid>
@@ -313,7 +315,7 @@ class HandleAddresses extends React.Component {
         <Grid>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>{ pro_mode ? 'Autres sites' : "Mon carnet d'adresses"}</h3>
+              <h3 className={'customhandleaddressesbooktitle'}>{ pro_mode ? 'Autres sites' : "Mon carnet d'adresses"}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.setState({addNewMode: !this.state.addNewMode, selected_address: null})}>
@@ -322,7 +324,7 @@ class HandleAddresses extends React.Component {
             </Grid>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+            <Typography className={'customhandleaddressessubtitlebook'} style={{color: 'rgba(39,37,37,35%)'}}>
               {isB2BAdmin(user) ? 'Ajoutez vos sites et gagnez du temps' :
                 'Ajoutez plusieurs adresses et gagnez du temps.'}
             </Typography>
@@ -343,7 +345,7 @@ class HandleAddresses extends React.Component {
                         placeholder={'Ecrire ici'}
                         variant={'outlined'}
                         label={'Nom de l\'adresse'}
-                        className={classes.textField}
+                        className={`customhandleaddressesname ${classes.textField}`}
                       />
                       :
                       <h4>{e.label}</h4>
@@ -369,6 +371,7 @@ class HandleAddresses extends React.Component {
                 </Typography>
                 {selected_address && selected_address._id == e._id ?
                   <AlgoliaPlaces
+                    className={'customhandleaddressesupdateaddresses'}
                     placeholder='Modifiez votre adresse'
                     options={{
                       appId: 'plKATRG826CP',
@@ -386,7 +389,7 @@ class HandleAddresses extends React.Component {
               </Grid>
               {selected_address && selected_address._id == e._id ?
                 <Grid item xs={12}>
-                  <Button variant="contained" className={classes.buttonSave}
+                  <Button variant="contained" className={`customhandleaddressesupdatebuttonsave ${classes.buttonSave}`}
                     onClick={event => this.onSubmitSecondary(event, this.state.selected_address._id)}>
                       Enregistrer
                   </Button>
@@ -408,11 +411,12 @@ class HandleAddresses extends React.Component {
                 placeholder={'Ecrire ici'}
                 variant={'outlined'}
                 label={ pro_mode ? 'Nom du site' : "Intitulé de l\'adresse"}
-                className={classes.textField}
+                className={`customhandleaddressesaddnewname ${classes.textField}`}
               />
             </Grid>
             <Grid item xs={12}>
               <AlgoliaPlaces
+                className={'customhandleaddressesaddnewalgo'}
                 placeholder='Recherchez votre adresse'
                 options={{
                   appId: 'plKATRG826CP',
@@ -426,7 +430,7 @@ class HandleAddresses extends React.Component {
             </Grid>
             <Grid item xs={12} style={{marginBottom: '12vh'}}>
               <Button disabled={!(this.state.suggestion_new && this.state.new_label)} variant="contained"
-                className={classes.buttonSave} onClick={this.onSubmitNew}>
+                className={`customhandleaddressesaddnewbutton ${classes.buttonSave}`} onClick={this.onSubmitNew}>
                   Ajouter
               </Button>
             </Grid>

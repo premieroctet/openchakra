@@ -45,23 +45,23 @@ class paymentMethod extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2>Modes de paiement</h2>
+            <h2 className={'custompaymentmethodtitle'}>Modes de paiement</h2>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>N'hésitez pas à enregistrer un mode de paiement pour aller
+            <Typography className={'custompaymentmethodsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>N'hésitez pas à enregistrer un mode de paiement pour aller
               plus vite lors de vos réservations.</Typography>
           </Grid>
         </Grid>
-        <Grid>
+        <Grid className={'customlayoutaccountcb'}>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
-        <Grid>
+        <Grid className={'customlayoutaccountcb'}>
           <HandleCB/>
         </Grid>
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
-        <Grid>
+        <Grid className={'customlayoutaccountrib'}>
           <HandleRIB/>
         </Grid>
       </Grid>

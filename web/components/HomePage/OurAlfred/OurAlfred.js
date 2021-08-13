@@ -24,20 +24,20 @@ class OurAlfred extends React.Component {
       <Grid className={classes.ourAlfredMainStyle}>
         <Grid className={classes.ourAlfredMainContainer}>
           <Grid className={classes.ourAlfredMainHeader}>
-            <Grid className={classes.ourAlfredImgContainer}>
+            <Grid className={`customouralfredicon ${classes.ourAlfredImgContainer}`}>
               <img src={'/static/assets/faq/star.svg'} alt={'iconStar'} title={'iconStar'}/>
             </Grid>
             <Grid className={classes.ourAlfredTextContainer}>
               <Grid>
-                <Typography className={classes.ourAlfredTitle}>Nos Alfred</Typography>
+                <Typography className={`custumouralfredh1 ${classes.ourAlfredTitle}`}>Nos Alfred</Typography>
               </Grid>
               <Grid>
-                <Typography className={classes.ourAlfredSubtitle}>Découvrez les profils de nos Alfred</Typography>
+                <Typography className={`customouralfredtext ${classes.ourAlfredSubtitle}`}>Découvrez les profils de nos Alfred</Typography>
               </Grid>
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnMobile}>
-            <Button classes={{root: classes.ourAlfredButton}} onClick={() => Router.push('/search?search=1')}>Tout découvrir</Button>
+            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search?search=1')}>Tout découvrir</Button>
           </Grid>
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>

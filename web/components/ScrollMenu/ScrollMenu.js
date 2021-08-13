@@ -8,7 +8,7 @@ import querystring from 'querystring'
 import Router from 'next/router'
 import _ from 'lodash'
 
-function a11yProps(index, res) {
+function a11yProps(index) {
   return {
     id: `scrollable-force-tab-${index}`,
     'aria-controls': `vertical-tabpanel-${index}`,
@@ -56,7 +56,7 @@ class ScrollMenu extends React.Component {
             onChange={this.handleChange}
             aria-label="scrollable force tabs"
             scrollButtons="on"
-            classes={{indicator: classes.scrollMenuIndicator}}
+            classes={{indicator: `customscrollmenu ${classes.scrollMenuIndicator}`}}
           >
             {
               categories ?

@@ -6,6 +6,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import Link from 'next/link'
 import axios from 'axios'
 const {isB2BStyle}=require('../../../utils/context')
+import '../../../static/assets/css/custom.css'
 
 class CategoryCard extends React.Component {
 
@@ -50,7 +51,7 @@ class CategoryCard extends React.Component {
               className={classes.categoryCardBackground}
             />
           </Grid>
-          <Grid>
+          <Grid className={'customcardcat'}>
             <h6>{isB2BStyle(user) ? item.professional_label : item.particular_label}</h6>
           </Grid>
         </Grid>

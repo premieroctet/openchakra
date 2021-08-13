@@ -1,35 +1,34 @@
-import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
-import styles from './LogInStyle';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Link from 'next/link';
-import Button from '@material-ui/core/Button';
-const  {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
-import axios from 'axios';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
-import OAuth from '../OAuth/OAuth';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
+import React from 'react'
+import {withStyles} from '@material-ui/core/styles'
+import styles from './LogInStyle'
+import Grid from '@material-ui/core/Grid'
+import Link from 'next/link'
+import Button from '@material-ui/core/Button'
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
+import axios from 'axios'
+import MailOutlineIcon from '@material-ui/icons/MailOutline'
+import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined'
+import OAuth from '../OAuth/OAuth'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import IconButton from '@material-ui/core/IconButton'
+import Input from '@material-ui/core/Input'
 const {snackBarError}=require('../../utils/notifications')
-const {is_development}=require('../../config/config')
-const {PROVIDERS, ROLES} = require('../../utils/consts');
-const {ENABLE_GF_LOGIN} = require('../../config/config');
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
-import {COMPANY_ACTIVITY, EMPLOYEE} from "../../utils/consts";
-const {isB2BStyle, isLoggedUserAlfredPro}=require('../../utils/context')
+const {PROVIDERS, ROLES} = require('../../utils/consts')
+const {ENABLE_GF_LOGIN} = require('../../config/config')
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
+import {EMPLOYEE} from '../../utils/consts'
+const {isB2BStyle}=require('../../utils/context')
+import '../../static/assets/css/custom.css'
 
 class LogIn extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       username: '',
@@ -39,67 +38,67 @@ class LogIn extends React.Component {
       // Roles : null : pas de réposne du serveur, [] : réponse serveur pas de rôle pour l'email
       roles: null,
       selectedRole: null,
-    };
+    }
   }
 
   onChange = e => {
-    const {name, value} = e.target;
-    if(name === 'username'){
+    const {name, value} = e.target
+    if(name === 'username') {
       // TODO aller chercher les rôles au bout d'une tepo, sinon GET /roles trop nombreux
       this.setState({roles: null})
       axios.get(`/myAlfred/api/users/roles/${e.target.value}`)
-        .then( res =>{
-          const roles = res.data;
-          const filteredRoles = roles.filter( r => isB2BStyle() ? r != EMPLOYEE : r == EMPLOYEE)
+        .then(res => {
+          const roles = res.data
+          const filteredRoles = roles.filter(r => (isB2BStyle() ? r != EMPLOYEE : r == EMPLOYEE))
           const selectedRole = filteredRoles.length == 1 ? filteredRoles[0] : null
-          console.log({roles: filteredRoles, selectedRole : selectedRole})
-          this.setState({roles: filteredRoles, selectedRole : selectedRole} )
+          console.log({roles: filteredRoles, selectedRole: selectedRole})
+          this.setState({roles: filteredRoles, selectedRole: selectedRole})
         })
-        .catch( err => {
-          console.error(err);
+        .catch(err => {
+          console.error(err)
           this.setState({selectedRole: null, roles: ''})
-      })
+        })
     }
-    this.setState({[name]: value});
+    this.setState({[name]: value})
   };
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
 
     const user = {
       username: this.state.username,
       password: this.state.password,
       role: this.state.selectedRole,
       b2b_login: isB2BStyle(),
-    };
+    }
 
     axios.post('/myAlfred/api/users/login', user)
-      .then(res => {
+      .then(() => {
         setAuthToken()
         setAxiosAuthentication()
-        this.props.login();
+        this.props.login()
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response) {
-	        snackBarError(err.response.data);
-          this.setState({errors: err.response.data});
+          snackBarError(err.response.data)
+          this.setState({errors: err.response.data})
         }
-      });
+      })
   };
 
    handleClickShowPassword = () => {
-    this.setState({ showPassword: !this.state.showPassword });
-  };
+     this.setState({showPassword: !this.state.showPassword})
+   };
 
-  handleMouseDownPassword = (event) =>{
-    event.preventDefault();
+  handleMouseDownPassword = event => {
+    event.preventDefault()
   };
 
   render() {
-    const {classes, callRegister, id} = this.props;
-    const {errors, username, password, showPassword, roles, selectedRole} = this.state;
-    const showRoles = isB2BStyle() && roles && roles.length >= 1;
+    const {classes, callRegister} = this.props
+    const {errors, username, password, showPassword, roles, selectedRole} = this.state
+    const showRoles = isB2BStyle() && roles && roles.length >= 1
 
     const loginDisabled = roles==null || (roles.length>0 && !selectedRole) || !password
 
@@ -169,7 +168,7 @@ class LogIn extends React.Component {
                       label="Mot de passe"
                       placeholder="Mot de passe"
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       name="password"
                       value={password}
                       onChange={this.onChange}
@@ -209,9 +208,9 @@ class LogIn extends React.Component {
                             name={'selectedRole'}
                           >
                             {
-                              Object.keys(roles).map((role,index) =>(
-                                  <MenuItem key={index} value={roles[role]}>{ROLES[roles[role]]}</MenuItem>
-                                ))
+                              Object.keys(roles).map((role, index) => (
+                                <MenuItem key={index} value={roles[role]}>{ROLES[roles[role]]}</MenuItem>
+                              ))
                             }
                           </Select>
                         </FormControl>
@@ -222,17 +221,16 @@ class LogIn extends React.Component {
               }
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer}>
-                  <Button onClick={this.onSubmit} disabled={loginDisabled} variant="contained" color="primary" style={{width: '100%', color: 'white'}}>
+                  <Button onClick={this.onSubmit} disabled={loginDisabled} variant="contained" color="primary" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>
                     Connexion
                   </Button>
                 </Grid>
               </Grid>
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer} style={{flexDirection: 'column'}}>
-                  <Link href={'/forgotPassword'}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot
+                  <Link href={'/forgotPassword'}><a color="primary" className={`customloginforgetpassword ${classes.forgetPassword}`}>Mot
                     de passe oublié ?</a></Link>
-                  <a color="primary" onClick={callRegister}
-                     style={{textDecoration: 'none', color: '#2FBCD3', cursor: 'pointer'}}>Pas encore inscrit ?
+                  <a color="primary" onClick={callRegister} className={`customloginredirectionlink ${classes.redirectionSignin}` }>Pas encore inscrit ?
                     Inscrivez-vous !</a>
                 </Grid>
               </Grid>
@@ -240,8 +238,8 @@ class LogIn extends React.Component {
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(LogIn);
+export default withStyles(styles)(LogIn)

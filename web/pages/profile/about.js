@@ -172,8 +172,8 @@ class ProfileAbout extends CompanyComponent {
   save = () => {
     const {newAddress, languages} = this.state
     setAxiosAuthentication()
-    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(res => {
-      axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(res => {
+    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then( () => {
+      axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then( () => {
         snackBarSuccess('Profil modifié avec succès')
         setTimeout(this.loadUser, 1000)
       },
@@ -190,7 +190,7 @@ class ProfileAbout extends CompanyComponent {
   };
 
   modalEditDialog = classes => {
-    const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, company, website} = this.state
+    const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, website} = this.state
     const address = newAddress || (user ? user.billing_address : null)
     const placeholder = address ? `${address.city}, ${address.country}` : 'Entrez votre adresse'
 
