@@ -43,6 +43,9 @@ createUIConfiguration = configuration => {
         className=`${className}, input`
         name='color'
       }
+      if (name=='border-radius') {
+        value = `${value}px`
+      }
       if (!(className in cssClasses)) {
         cssClasses[className]={}
       }
@@ -50,7 +53,7 @@ createUIConfiguration = configuration => {
     })
   })
   const output=Object.entries(cssClasses).map(([k, v]) => {
-    const atts=Object.entries(v).map(([k, v]) => `\t${k}: ${v};`).join('\n')
+    const atts=Object.entries(v).map(([k, v]) => `\t${k}: ${v} !important;`).join('\n')
     return `.${k} {\n${atts}\n}`
   }).join('\n')
 
