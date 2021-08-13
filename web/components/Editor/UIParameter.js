@@ -14,6 +14,10 @@ const TITLES={
   'border-radius': 'Rayon de bordure',
   'display': 'Afficher',
   'content': 'Contenu',
+  'magnify-background-color': 'Couleur de loupe',
+  'info-color': "Couleur du texte d'information",
+  'example-color': "Couleur du texte d'exemple",
+  'input-color': "Couleur de saisie",
 }
 
 const ATTRIBUTES={
@@ -21,7 +25,7 @@ const ATTRIBUTES={
   'button': [['color', 'color'], ['background-color', 'color'], ['border-radius', 'integer'], ['border-color', 'color'], ['display', 'visibility'], ['content', 'text']],
   'menuitem': [['display', 'visibility']],
   'logo': [['background-color', 'color'], ['content', 'picture']],
-  'search': [['background-color', 'color'], ['content', 'picture']],
+  'searchbar': [['background-color', 'color'], ['magnify-background-color', 'color'], ['info-color', 'color'], ['example-color', 'color'], ['input-color', 'color']],
 }
 
 const getTitle = att_name => {

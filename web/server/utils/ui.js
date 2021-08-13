@@ -27,6 +27,22 @@ createUIConfiguration = configuration => {
         className=`${config.className}_${id}`
         name = property
       }
+      if (name=='magnify-background-color') {
+        className=`${className}Magnify`
+        name='background-color'
+      }
+      if (name=='info-color') {
+        className=`${className} label`
+        name='color'
+      }
+      if (name=='example-color') {
+        className=`${className}, input::placeholder`
+        name='color'
+      }
+      if (name=='input-color') {
+        className=`${className}, input`
+        name='color'
+      }
       if (!(className in cssClasses)) {
         cssClasses[className]={}
       }

@@ -21,7 +21,7 @@ const UIConfigurationSchema = new Schema({
   type: {
     type: String,
     required: true,
-    enum: ['component', 'button', 'menu', 'group', 'logo'],
+    enum: ['component', 'button', 'menu', 'group', 'logo', 'searchbar'],
   },
   // In case of type "group"
   componentType: {
