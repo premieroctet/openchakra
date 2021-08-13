@@ -21,15 +21,20 @@ const UIConfigurationSchema = new Schema({
   type: {
     type: String,
     required: true,
-    enum: ['component', 'button', 'menu'],
+    enum: ['component', 'button', 'menu', 'group', 'logo'],
+  },
+  // In case of type "group"
+  componentType: {
+    type: String,
+    required: false,
   },
   // Attributes
   attributes: [{
     name: String,
     value: String,
   }],
-  // Available menu, i.e. {label: "Mon profil", id: 'profile'}
-  menus: [{
+  // In case of type "group"
+  components: [{
     label: String,
     id: String,
   }],

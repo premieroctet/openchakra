@@ -33,6 +33,7 @@
     "console-stamp": "^0.2.9",
     "cors": "^2.8.5",
     "cron": "^1.7.2",
+    "css-validator": "^0.10.0",
     "csv-parse": "^4.15.3",
     "date-fns": "^2.17.0",
     "email-templates": "^7.2.0",

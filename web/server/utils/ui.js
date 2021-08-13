@@ -1,45 +1,56 @@
 const fs=require('fs').promises
+const validateCss = require('css-validator')
 const _=require('lodash')
 /**
   Creates CSS from configurations
   config : {classname, attributes:{name,value}}
 */
 createUIConfiguration = configuration => {
-  console.log(`Configuration:${JSON.stringify(configuration)}`)
-  fs.open('static/assets/css/custom.css', 'w')
-    .then(handle => {
-      configuration.forEach(config => {
-        const simpleAtt = config.attributes.filter(att => !(att.name.includes('.')))
-        const subClasses = _.groupBy(config.attributes.filter(att => att.name.includes('.')), att => att.name.split('.')[0])
-        console.log(JSON.stringify(subClasses, null, 2))
-        handle.write(`.${config.className} {\n`)
-        simpleAtt.forEach(attribute => {
-          handle.write(`\t${attribute.name}: ${attribute.value};\n`)
-        })
-        handle.write('}\n')
-        // Subclasses => il y a un menu
-        Object.keys(subClasses).forEach(subClass => {
-          const attributes=subClasses[subClass]
-          handle.write(`.${config.className}_${subClass} {\n`)
-          attributes.forEach(attribute => {
-            handle.write(`\t${attribute.name.split('.')[1]}: ${attribute.value};\n`)
-          })
-          const colorAtt = simpleAtt.find(att => att.name=='color')
-          const bkColorAtt = simpleAtt.find(att => att.name=='background-color')
-          if (colorAtt) {
-            handle.write(`\t${colorAtt.name}: ${colorAtt.value};\n`)
-          }
-          if (bkColorAtt) {
-            handle.write(`\t${bkColorAtt.name}: ${bkColorAtt.value};\n`)
-          }
-          handle.write('}\n')
-        })
+  let cssClasses={}
+  // Transklate classes : menu, search bar, etc...
+  configuration.forEach(config => {
+    config.attributes.forEach(attribute => {
+      let className=config.className
+      let name=attribute.name
+      let value=attribute.value
+      if (name=='content') {
+        if (config.type=='logo') {
+          if (!value.startsWith('/')) { value=`/${value}` }
+          value = `url('${value}')`
+        }
+        else {
+          value = `'"${value}"'`
+        }
+      }
+      if (name.includes('.') && config.type=='group') {
+        const [id, property] = name.split('.')
+        className=`${config.className}_${id}`
+        name = property
+      }
+      if (!(className in cssClasses)) {
+        cssClasses[className]={}
+      }
+      cssClasses[className][name]= value
+    })
+  })
+  const output=Object.entries(cssClasses).map(([k, v]) => {
+    const atts=Object.entries(v).map(([k, v]) => `\t${k}: ${v};`).join('\n')
+    return `.${k} {\n${atts}\n}`
+  }).join('\n')
+
+  validateCss(output, (err, data) => {
+    const error = err || !data.validity
+    if (error) {
+      console.error(`CSS generation error, output in /tmp/custom.css\nError:${JSON.stringify(data, null, 2)}`)
+    }
+    fs.writeFile(error ? '/tmp/custom.css' : 'static/assets/css/custom.css', output)
+      .then(() => {
+        console.log('CSS saved')
       })
-      handle.close()
-    })
-    .catch(err => {
-      console.error(`Error:${err}`)
-    })
+      .catch(err => {
+        console.error(`CSS write error:${err}`)
+      })
+  })
 }
 
 module.exports = {

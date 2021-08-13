@@ -13,12 +13,13 @@ class GroupEditor extends React.Component {
   render() {
     const {group}=this.props
 
+    const colorValue = (group.attributes.find(a => a.name=='color') || {value: ''}).value
+    const bkValue = (group.attributes.find(a => a.name=='background-color')|| {value: ''}).value
     return (
       <>
-        <h2>{group.label}</h2>
-        <ColorPicker title={'Couleur du texte'} value={null} onChange={this.onChange('color')} />
-        <ColorPicker title={'Couleur du fond'} value={null} onChange={this.onChange('background-color')} />
-        <h3>Afficher les éléments</h3>
+        <ColorPicker title={'Couleur du texte'} value={colorValue} onChange={this.onChange('color')} />
+        <ColorPicker title={'Couleur du fond'} value={bkValue} onChange={this.onChange('background-color')} />
+        <h3>{`Afficher les ${group.componentType=='menuitem' ? 'menus' : 'boutons'}`}</h3>
         <ul style={{listStyleType: 'none'}}>
           {
             group.components.map(m => {

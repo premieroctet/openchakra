@@ -13,13 +13,12 @@ const TITLES={
   'border-color': 'Couleur de bordure',
   'border-radius': 'Rayon de bordure',
   'display': 'Afficher',
-  'contents': 'Texte',
-  'content': 'Image',
+  'content': 'Contenu',
 }
 
 const ATTRIBUTES={
-  'component': [['display', 'visibility'], ['color', 'color'], ['background-color', 'color'], ['contents', 'text']],
-  'button': [['color', 'color'], ['background-color', 'color'], ['border-radius', 'integer'], ['border-color', 'color'], ['display', 'visibility'], ['contents', 'text']],
+  'component': [['display', 'visibility'], ['color', 'color'], ['background-color', 'color'], ['content', 'text']],
+  'button': [['color', 'color'], ['background-color', 'color'], ['border-radius', 'integer'], ['border-color', 'color'], ['display', 'visibility'], ['content', 'text']],
   'menuitem': [['display', 'visibility']],
   'logo': [['background-color', 'color'], ['content', 'picture']],
   'search': [['background-color', 'color'], ['content', 'picture']],
@@ -42,7 +41,7 @@ class UIParameter extends React.Component {
     const {parameter, onChange}=this.props
 
     if (parameter.type=='group') {
-      return <GroupEditor group={parameter} onChange={onChange} />
+      return <div><GroupEditor group={parameter} onChange={onChange} /></div>
     }
     const attributes=ATTRIBUTES[parameter.type]
 
@@ -55,7 +54,8 @@ class UIParameter extends React.Component {
             if (this.props.prefix) {
               att_name=`${this.props.prefix}.${att_name}`
             }
-            const pAtt=parameter.attributes.find(a => a.name==att_name) || {value: ''}
+            let pAtt=parameter.attributes.find(a => a.name==att_name)
+            pAtt = pAtt || {value: ''}
             switch (att_type) {
               case 'color': return <ColorPicker title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} />
               case 'text': return <HtmlEditor title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} />
