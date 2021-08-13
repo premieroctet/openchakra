@@ -1,6 +1,6 @@
 import React from 'react'
-//import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import Grid from '@material-ui/core/Grid'
 
 
 class HtmlEditor extends React.Component {
@@ -28,7 +28,7 @@ class HtmlEditor extends React.Component {
     Font.whitelist = ["Roboto", "Raleway", "Montserrat", "Lato", "Rubik"]
     ReactQuill.Quill.register(Font, true)
     return (
-      <>
+      <Grid>
         <h2>{this.props.title}</h2>
         <ReactQuill
           theme={'snow'}
@@ -36,10 +36,8 @@ class HtmlEditor extends React.Component {
           value={this.props.value}
           modules={HtmlEditor.modules}
           formats={HtmlEditor.formats}
-          //bounds={'.app'}
-          //placeholder={this.props.placeholder}
         />
-      </>
+      </Grid>
     )
   }
 

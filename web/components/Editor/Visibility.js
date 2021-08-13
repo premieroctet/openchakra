@@ -1,5 +1,6 @@
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
+import Grid from '@material-ui/core/Grid'
 
 class VisibilityEditor extends React.Component {
   constructor(props) {
@@ -13,15 +14,14 @@ class VisibilityEditor extends React.Component {
   }
 
   render() {
-    console.log(`Visibility:${this.props.value}`)
     return (
-      <>
-        <h2>{this.props.title}</h2>
+      <Grid style={{display: 'flex'}}>
         <Checkbox
-          checked={this.props.value=='block'}
+          checked={['block', null, undefined, ''].includes(this.props.value)}
           onChange={(ev, checked) => this.onChange(checked? 'block' : 'none')}
         />
-      </>
+        <h2>{this.props.title}</h2>
+      </Grid>
     )
   }
 
