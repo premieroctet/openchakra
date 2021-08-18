@@ -1,6 +1,6 @@
 export default theme => ({
   root: {
-    overflow:'hidden',
+    overflow: 'hidden',
     width: '100%',
 
   },
@@ -18,71 +18,71 @@ export default theme => ({
       fill: 'white',
     },
   },
-  stepLabelRoot:{
-    '& .MuiStepLabel-labelContainer':{
-      overflow:'hidden',
-      '& span':{
-        overflow:'hidden',
+  stepLabelRoot: {
+    '& .MuiStepLabel-labelContainer': {
+      overflow: 'hidden',
+      '& span': {
+        overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
-      }
+      },
     },
   },
-  stepRoot:{
-    overflow: 'hidden'
+  stepRoot: {
+    overflow: 'hidden',
   },
-  stepperRoot:{
+  stepperRoot: {
     backgroundColor: 'transparent',
     width: '100%',
     display: 'flex',
   },
-  stepLabelShop:{
-    '& span':{
+  stepLabelShop: {
+    '& span': {
       fontSize: '1rem',
       lineHeight: 1.5,
-      color:'#E2E2E2',
+      color: '#E2E2E2',
 
     },
-    '& .MuiStepLabel-labelContainer':{
+    '& .MuiStepLabel-labelContainer': {
       marginTop: 4,
-      marginBottom: 4
+      marginBottom: 4,
     },
-    '& .MuiStepLabel-label.MuiStepLabel-active':{
+    '& .MuiStepLabel-label.MuiStepLabel-active': {
       fontWeight: 'bold',
       color: 'white',
       fontSize: '1rem',
       lineHeight: 1.5,
     },
-    '& .MuiStepIcon-root.MuiStepIcon-active':{
-      color: theme.palette.secondary.main
+    '& .MuiStepIcon-root.MuiStepIcon-active': {
+      color: theme.palette.secondary.main,
     },
-    '& .MuiStepIcon-root.MuiStepIcon-completed':{
+    '& .MuiStepIcon-root.MuiStepIcon-completed': {
       fill: 'white',
     },
-    '& .MuiStepLabel-label.MuiStepLabel-completed':{
+    '& .MuiStepLabel-label.MuiStepLabel-completed': {
       fontSize: '1rem',
       lineHeight: 1.5,
-      color: 'white'
+      color: 'white',
     },
-    '& .MuiSvgIcon-root':{
-      fill : 'white',
+    '& .MuiSvgIcon-root': {
+      fill: 'white',
       height: '1.5em',
-      width: '1.5em'
-    }
+      width: '1.5em',
+    },
   },
-  stepShop:{
+  stepShop: {
     padding: 16,
   },
-  stepperShop:{
+  stepperShop: {
     padding: 0,
     backgroundColor: 'transparent',
     width: '100%',
     display: 'flex',
   },
-  stepIconShop:{
+  stepIconShop: {
     minWidth: 56,
     '& .MuiStepIcon-text': {
       fill: 'white',
     },
-  }
+  },
 })
