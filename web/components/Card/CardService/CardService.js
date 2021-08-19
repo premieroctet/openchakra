@@ -94,7 +94,7 @@ class CardService extends React.Component {
       .catch(err => console.error(err))
   }
 
-  modalDeleteServices = (classes) => {
+  modalDeleteServices = classes => {
     return(
       <Dialog
         open={this.state.open}
@@ -152,7 +152,7 @@ class CardService extends React.Component {
     return(
       <Grid className={classes.mainCardServiceContainer}>
         <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
-          <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => {profileMode && editable ? null : window.open(resa_link, '_blank') }}>
+          <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
             <Grid className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
               <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
                 <Grid style={{backgroundImage: `url("/${picture}")`}} className={classes.cardServiceBackgroundPics}/>

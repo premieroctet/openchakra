@@ -132,6 +132,19 @@ const getMangopayMessage = msg_id => {
   return MANGOPAY_MESSAGES[ msg_id ] || MANGOPAY_ERRORS[ parseInt(msg_id) ] || `Erreur inconnue:${msg_id}`
 }
 
+const PROFIL = {
+  place: 'Habite à',
+  languages: 'Langues',
+  verification: 'Vérification',
+  noaddresses: 'Pas d\'adresse',
+  website: 'Site web',
+  companysize: 'Taille de l’entreprise',
+  activity: 'Secteur d’activité',
+  nothing: 'Non renseigné',
+  confirmed: 'Profil confirmé',
+  unconfirmed: 'Profil non confirmé',
+}
+
 const SHOP = {
   addService: 'Ajoutez des services',
   createShop: 'Proposez votre premier service',
@@ -512,5 +525,6 @@ module.exports = {
   BOOKING,
   FAQ,
   INFOBARMOBILE_MESSAGE,
-  AVOCOTES
+  AVOCOTES,
+  PROFIL
 }
