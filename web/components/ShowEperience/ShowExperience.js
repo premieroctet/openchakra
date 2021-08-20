@@ -6,7 +6,7 @@ import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import Chip from '@material-ui/core/Chip'
 import Divider from '@material-ui/core/Divider'
-import {Paper} from '@material-ui/core'
+import WorkIcon from '@material-ui/icons/Work';
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
 
@@ -36,8 +36,13 @@ class ShowExperience extends React.Component {
 
     return(
       <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3>Experience</h3>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          <Grid>
+            <WorkIcon classes={{root: classes.workIcon}}/>
+          </Grid>
+          <Grid style={{marginLeft: 10}}>
+            <h3>Experience</h3>
+          </Grid>
         </Grid>
         <Grid container item spacing={2} xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
           {
@@ -50,7 +55,7 @@ class ShowExperience extends React.Component {
                     </Grid>
                     <Grid container item xl={10} lg={10} style={{margin: 0, width: '100%', display: 'flex', alignItems: 'center'}}>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <h3 style={{margin: 0, color: 'black'}}>{res.experience_title.charAt(0).toUpperCase() + res.experience_title.slice(1)}</h3>
+                        <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{res.experience_title.charAt(0).toUpperCase() + res.experience_title.slice(1)}</Typography>
                       </Grid>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                         <Typography>{res.experience_description}</Typography>

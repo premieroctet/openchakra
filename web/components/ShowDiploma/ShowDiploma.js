@@ -5,6 +5,10 @@ import styles from '../../static/css/components/ShowDiploma/ShowDiploma'
 import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import Chip from '@material-ui/core/Chip'
+import Divider from '@material-ui/core/Divider'
+import SchoolIcon from '@material-ui/icons/School'
+import CloudDoneOutlinedIcon from '@material-ui/icons/CloudDoneOutlined'
+import CloudOffOutlinedIcon from '@material-ui/icons/CloudOffOutlined'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
 
@@ -35,23 +39,49 @@ class ShowDiploma extends React.Component {
     const {classes} = this.props
     const {services} = this.state
     const diploma = services.map(res => res.diploma).filter(r => Boolean(r))
+    diploma.sort((a, b) => ((a.year < b.year) ? 1 : ((b.year < a.year) ? -1 : 0)))
 
     return(
       <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3>Diplômes</h3>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          <Grid>
+            <SchoolIcon classes={{root: classes.diplomaIcon}}/>
+          </Grid>
+          <Grid style={{marginLeft: 10}}>
+            <h3>Diplômes</h3>
+          </Grid>
         </Grid>
-        <Grid container spacing={2} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
+        <Grid container spacing={1} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
           {
             diploma ?
               diploma.map(res => {
                 return(
                   <>
                     <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <h4 style={{margin: 0}}>{res.name}</h4>
+                      <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{res.name.charAt(0).toUpperCase() + res.name.slice(1)}</Typography>
                     </Grid>
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <Typography>Diplôme obtenu en {res.year}</Typography>
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                      <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>Diplôme obtenu en {res.year} -</em></Typography>
+                      {
+                        res.file ?
+                          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                            <Grid style={{marginLeft: '3px'}}>
+                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Diplôme joint</em></Typography>
+                            </Grid>
+                            <Grid style={{marginLeft: '5px'}}>
+                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudDoneOutlinedIcon/></em></Typography>
+                            </Grid>
+                          </Grid>
+                          :
+                          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                            <Grid style={{marginLeft: '3px'}}>
+                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Diplôme non joint</em></Typography>
+                            </Grid>
+                            <Grid style={{marginLeft: '5px'}}>
+                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudOffOutlinedIcon/></em></Typography>
+                            </Grid>
+                          </Grid>
+                      }
                     </Grid>
                     {
                       res.skills && res.skills.length > 0 ?
@@ -60,6 +90,7 @@ class ShowDiploma extends React.Component {
                             res.skills.map(s => {
                               return(
                                 <Chip
+                                  classes={{root: classes.chip}}
                                   label={`#${s}`}
                                 />
                               )
@@ -67,7 +98,9 @@ class ShowDiploma extends React.Component {
                           }
                         </Grid> : null
                     }
-
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{marginTop: '3vh'}}>
+                      <Divider/>
+                    </Grid>
                   </>
                 )
               }) : null

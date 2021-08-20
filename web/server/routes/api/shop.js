@@ -1,32 +1,17 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
-const mongoose = require('mongoose')
-const multer = require('multer')
-const axios = require('axios')
 const CronJob = require('cron').CronJob
 const {sendShopDeleted, sendShopOnline} = require('../../utils/mailing')
 const {createMangoProvider} = require('../../utils/mangopay')
-const {GID_LEN} = require('../../../utils/consts')
 const {is_production, is_validation}=require('../../../config/config')
-const {normalize} = require('../../../utils/text')
 const {ensureDirectoryExists} = require('../../utils/filesystem')
 const validateShopInput = require('../../validation/shop')
 const {connectionPool}=require('../../utils/database')
 const {serverContextFromPartner}=require('../../utils/serverContext')
 
 ensureDirectoryExists('static/profile/idCard/')
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'static/profile/idCard/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  },
-})
-const upload = multer({
-  storage: storage,
-})
+
 
 router.get('/test', (req, res) => res.json({
   msg: 'Shop Works!',
@@ -50,9 +35,8 @@ const CANCEL_MODE = {
 // Create a shop
 // @Access private
 // FIX : inclure les disponibilites
-router.post('/add', passport.authenticate('jwt', {session: false}), async (req, res) => {
+router.post('/add', passport.authenticate('jwt', {session: false}), async(req, res) => {
 
-  console.log('Creating shop')
   const {isValid, errors} = validateShopInput(req.body)
 
   if (!isValid) {
@@ -94,7 +78,6 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
 
       const promise=newShop?req.context.getModel('Shop').create(shop):shop.save()
 
-      console.log(`Saving shop:${JSON.stringify(shop)}`)
       promise
         .then(shop => {
           req.context.getModel('User').findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
@@ -121,11 +104,11 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
           console.error(err)
           res.status(404).json(err)
         })
-      })
-      .catch(err => {
-        console.error(err)
-        res.status(404).json(err)
-      })
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
 })
 
 
@@ -146,13 +129,14 @@ router.get('/all', (req, res) => {
     .then(shop => {
       if (typeof shop !== 'undefined' && shop.length > 0) {
         res.json(shop)
-      } else {
+      }
+      else {
         return res.status(400).json({
           msg: 'No shop found',
         })
       }
     })
-    .catch(err => res.status(404).json({
+    .catch(() => res.status(404).json({
       shop: 'No shop found',
     }))
 })
@@ -195,7 +179,7 @@ router.get('/all/:id', (req, res) => {
       res.json(shop)
 
     })
-    .catch(err => res.status(404).json({
+    .catch(() => res.status(404).json({
       shop: 'No shop found',
     }))
 
@@ -239,7 +223,7 @@ router.get('/alfred/:id_alfred', (req, res) => {
       res.json(shop)
 
     })
-    .catch(err => res.status(404).json({
+    .catch(() => res.status(404).json({
       shop: 'No shop found',
     }))
 
@@ -271,7 +255,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
       res.json(shop)
 
     })
-    .catch(err => res.status(404).json({
+    .catch(() => res.status(404).json({
       shop: 'No shop found',
     }))
 
@@ -291,7 +275,7 @@ router.delete('/current/delete', passport.authenticate('jwt', {session: false}),
         res.json({success: true})
       })
     })
-    .catch(err => res.status(404).json({
+    .catch(() => res.status(404).json({
       shopnotfound: 'No shop found',
     }))
 })
@@ -308,7 +292,7 @@ router.delete('/:id', passport.authenticate('jwt', {
         success: true,
       }))
     })
-    .catch(err => res.status(404).json({
+    .catch(() => res.status(404).json({
       shopnotfound: 'No shop found',
     }))
 })

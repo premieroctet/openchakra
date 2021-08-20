@@ -41,4 +41,7 @@ export default theme => ({
     color: 'white',
     fontWeight: 'bold',
   },
+  workIcon: {
+    color: '#696767',
+  },
 })
