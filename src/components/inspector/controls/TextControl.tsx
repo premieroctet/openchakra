@@ -33,8 +33,7 @@ const TextControl: React.FC<TextControlPropsType> = ({
         size="sm"
         value={value || ''}
         type="text"
-        // width={hasColumn ? '10rem' : '100%'}
-        width="100vw"
+        width={hasColumn ? '10rem' : '100%'}
         placeholder={placeholder}
         onChange={setValueFromEvent}
       />
