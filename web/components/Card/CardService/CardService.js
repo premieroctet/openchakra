@@ -8,7 +8,6 @@ import Box from '@material-ui/core/Box'
 import Rating from '@material-ui/lab/Rating'
 import RoomIcon from '@material-ui/icons/Room'
 import Chip from '@material-ui/core/Chip'
-import Avatar from '@material-ui/core/Avatar'
 import styles from '../../../static/css/components/Card/CardService/CardService'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -21,6 +20,8 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
+import SchoolIcon from '@material-ui/icons/School'
+import ExtensionIcon from '@material-ui/icons/Extension'
 const {isEditableUser}=require('../../../utils/context')
 
 class CardServiceInfo extends React.Component {
@@ -149,6 +150,23 @@ class CardService extends React.Component {
 
     const editable = isEditableUser(alfred)
 
+    const Icons = () => (
+      <>
+        {
+          cpData.graduated ?
+            <Grid style={{margin: 5}}>
+              <SchoolIcon classes={{root: classes.colorIconSchool}}/>
+            </Grid> : null
+        }
+        {
+          cpData.is_certified ?
+            <Grid style={{margin: 5}}>
+              <ExtensionIcon classes={{root: classes.colorIconExtension}} />
+            </Grid> : null
+        }
+      </>
+    )
+
     return(
       <Grid className={classes.mainCardServiceContainer}>
         <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
@@ -172,9 +190,18 @@ class CardService extends React.Component {
                     </Grid>
                   </Grid>
                   :
-                  <Grid className={classes.cardServiceChipName}>
-                    <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null} className={classes.cardServiceChip} />
-                  </Grid>
+                  <>
+                    <Grid className={classes.cardServiceChipName}>
+                      <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: classes.cardServiceChip}} />
+                    </Grid>
+                    {
+                      cpData.is_professional ?
+                        <Grid className={classes.cardServiceChipPro}>
+                          <Chip label={'Pro'} classes={{root: classes.cardServiceChipBckg}}/>
+                        </Grid> : null
+                    }
+                  </>
+
               }
             </Grid>
             <Grid className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>

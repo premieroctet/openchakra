@@ -85,9 +85,19 @@ export default theme => ({
     bottom: 0,
     left: 0,
   },
-
+  cardServiceChipPro: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
   cardServiceChip: {
     backgroundColor: theme.palette.white.main,
+  },
+  cardServiceChipBckg: {
+    backgroundColor: theme.palette.secondary.main,
+    fontWeight: 'bold',
+    color: 'white',
+
   },
   cardServicePlaceContainer: {
     display: 'flex',
@@ -243,6 +253,12 @@ export default theme => ({
   },
   colorError: {
     color: theme.palette.error.main,
+  },
+  colorIconSchool: {
+    color: theme.palette.primary.main,
+  },
+  colorIconExtension: {
+    color: theme.palette.primary.main,
   },
 
 })
