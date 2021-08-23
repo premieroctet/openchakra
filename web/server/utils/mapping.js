@@ -18,9 +18,11 @@ const data2ServiceUser = (data, su) => {
   su.experience_title = data.experience_title;
   su.experience_description = data.experience_description;
   su.experience_skills = data.experience_skills;
+  su.experience_yearRange = data.experience_yearRange;
 
 
-  su.professional_access = data.professional_access
+
+    su.professional_access = data.professional_access
   su.particular_access = data.particular_access
 
   su.service_address = data.service_address;

@@ -51,7 +51,7 @@ class ShowDiploma extends React.Component {
             <h3>Diplômes</h3>
           </Grid>
         </Grid>
-        <Grid container spacing={1} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
+        <Grid container spacing={2} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
           {
             diploma ?
               diploma.map(res => {

@@ -31,12 +31,12 @@ class AssetsService extends React.Component {
       certificationYear: props.certificationYear || '',
       certificationName: props.certificationName || '',
       certificationPicture: props.certificationPicture || '',
-      level: props.level,
       diplomaSkills: props.diplomaSkills || [],
       certificationSkills: props.certificationSkills || [],
       experience_skills: props.experience_skills || [],
       experience_title: props.experience_title || '',
       experience_description: props.experience_description || '',
+      experience_yearRange: props.experience_yearRange || '',
       newExperienceSkill: '',
       newDiplomaSkill: '',
       newCertificationSkill: '',
@@ -56,11 +56,14 @@ class AssetsService extends React.Component {
 
   handleChange = event => {
     let attributes={[event.target.name]: event.target.value}
-    if (name == 'diplomaName' && isEmpty(value)) {
+    if (name === 'diplomaName' && isEmpty(value)) {
       attributes.diplomaYear = null
     }
-    if (name == 'certificationName' && isEmpty(value)) {
+    if (name === 'certificationName' && isEmpty(value)) {
       attributes.certificationYear = null
+    }
+    if(name === 'experience_yearRange' && isEmpty(value)) {
+      attributes.experience_yearRange = null
     }
     if (name.toLowerCase().includes('skill')) {
       attributes[name]=value.trim()
@@ -129,17 +132,17 @@ class AssetsService extends React.Component {
             <FormControl variant="outlined" style={{width: '100%'}}>
               <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.experience_label}</InputLabel>
               <Select
-                value={this.state.level}
+                value={this.state.experience_yearRange}
                 style={{width: '100%'}}
                 variant="outlined"
-                name="level"
+                name="experience_yearRange"
                 onChange={this.handleChange}
                 label={SHOP.assets.experience_label}
               >
-                <MenuItem value="1">{SHOP.assets.experience_yearRange_0}</MenuItem>
-                <MenuItem value="2">{SHOP.assets.experience_yearRange_1}</MenuItem>
-                <MenuItem value="3">{SHOP.assets.experience_yearRange_2}</MenuItem>
-                <MenuItem value="4">{SHOP.assets.experience_yearRange_3}</MenuItem>
+                <MenuItem value={SHOP.assets.experience_yearRange_0}>{SHOP.assets.experience_yearRange_0}</MenuItem>
+                <MenuItem value={SHOP.assets.experience_yearRange_1}>{SHOP.assets.experience_yearRange_1}</MenuItem>
+                <MenuItem value={SHOP.assets.experience_yearRange_2}>{SHOP.assets.experience_yearRange_2}</MenuItem>
+                <MenuItem value={SHOP.assets.experience_yearRange_3}>{SHOP.assets.experience_yearRange_3}</MenuItem>
               </Select>
             </FormControl>
           </Grid>

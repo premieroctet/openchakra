@@ -6,7 +6,7 @@ import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import Chip from '@material-ui/core/Chip'
 import Divider from '@material-ui/core/Divider'
-import WorkIcon from '@material-ui/icons/Work';
+import WorkIcon from '@material-ui/icons/Work'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
 
@@ -61,7 +61,7 @@ class ShowExperience extends React.Component {
                         <Typography>{res.experience_description}</Typography>
                       </Grid>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Diplôme obtenu en {res.year}</em></Typography>
+                        <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Expérience : {res.experience_yearRange}</em></Typography>
                       </Grid>
                       {
                         res.experience_skills && res.experience_skills.length > 0 ?

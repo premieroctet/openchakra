@@ -125,6 +125,9 @@ const ServiceUserSchema = new Schema({
   experience_description: {
     type: String,
   },
+  experience_yearRange: {
+    type: String,
+  },
   experience_skills: [{
     type: String,
   }],
