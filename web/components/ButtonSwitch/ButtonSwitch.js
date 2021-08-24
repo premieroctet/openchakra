@@ -115,7 +115,7 @@ class ButtonSwitch extends React.Component {
                   value={this.price}
                   label={<Typography style={{color: '#696767'}}>Tarif</Typography>}
                   type="number"
-                  className={classes.textField}
+                  classes={{root: `custombuttonswitchplaceholder ${classes.textField}`}}
                   disabled={!checked || priceDisabled}
                   onChange={this.onChangePrice}
                   InputProps={{

@@ -8,6 +8,7 @@ import axios from 'axios'
 import styles from '../../../static/css/components/BookingPreference/BookingPreference'
 import Checkbox from '@material-ui/core/Checkbox'
 import {SHOP} from '../../../utils/i18n'
+import '../../../static/assets/css/custom.css'
 
 // FIX : réafficher la ville de référence
 
@@ -68,15 +69,15 @@ class BookingPreference extends React.Component {
           <h2 className={classes.policySizeTitle}>{SHOP.preference.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 style={{color: '#403f3f'}}>{SHOP.preference.subtitle}</h3>
+          <h3 style={{color: '#403f3f'}} className={'custombookprefesubtitle'}>{SHOP.preference.subtitle}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_delay_prevenance} </h4>
+          <h4 className={`custombookprefedelay ${classes.policySizeSubtitle}`} style={{margin: 0}}>{SHOP.preference.title_delay_prevenance} </h4>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <p className={classes.policySizeContent}>Par exemple, si vous indiquez un délai de 24 heures, un client devra réserver votre service au moins 24 heures avant votre intervention.</p>
+          <p className={`custombookprefexempledelay ${classes.policySizeContent}`}>{SHOP.exemple_delay}</p>
         </Grid>
-        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}} className={'custombookprefdelaycontainer'}>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
             <Grid item xl={2} lg={2} md={6} sm={6} xs={12}>
               <TextField
@@ -87,6 +88,7 @@ class BookingPreference extends React.Component {
                 label={'Délai'}
                 style={{width: '100%'}}
                 onChange={this.handleChange}
+                classes={{root: 'custombookprefdelayfield'}}
               />
             </Grid>
             <Grid item xl={2} lg={2} md={6} sm={6} xs={12}>
@@ -98,6 +100,7 @@ class BookingPreference extends React.Component {
                 label={SHOP.preference.units_dalay_prevenance}
                 onChange={this.handleChange}
                 style={{width: '100%'}}
+                classes={{root: 'custombookprefperiod'}}
               >
                 <MenuItem value="heures">{SHOP.preference.hours}</MenuItem>
                 <MenuItem value="jours">{SHOP.preference.days}</MenuItem>
@@ -106,19 +109,20 @@ class BookingPreference extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_minimum_basket}</h4>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'custombookprefbasketcontainer'}>
+          <h4 className={`custombookprefbaskettitle ${classes.policySizeSubtitle}`} style={{margin: 0}}>{SHOP.preference.title_minimum_basket}</h4>
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <p className={classes.policySizeContent}>{SHOP.preference.subtitle_minimum_basket}</p>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'custombookprefbasketcontainer'}>
+          <p className={`custombookprefbasketsubtilte ${classes.policySizeContent}`}>{SHOP.preference.subtitle_minimum_basket}</p>
         </Grid>
-        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}} className={'custombookprefbasketcontainer'}>
           <Grid item xl={2} lg={2} md={6} sm={12} xs={12}>
             <TextField
               type="number"
               name={'minimum_basket'}
               style={{width: '100%'}}
               value={this.state.minimum_basket}
+              classes={{root: 'custombookpreffieldbasket'}}
               label={SHOP.preference.textfield_minimum_basket}
               variant="outlined"
               onChange={this.handleChange}

@@ -17,6 +17,7 @@ import Chip from '@material-ui/core/Chip'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import _ from 'lodash'
+import '../../../static/assets/css/custom.css'
 
 // TODO: gérer les images des diplômes et crtifications en cas de modification de service
 class AssetsService extends React.Component {
