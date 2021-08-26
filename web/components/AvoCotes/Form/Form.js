@@ -156,6 +156,7 @@ function Form({classes, booking_id}) {
       })
   }, [service, quantities])
 
+  const totalPriceTxt=`${Number(totalPrice||0).toFixed(2)} €`
   return(
     <>
       <Grid container className={classes.mainContainer} spacing={2}>
@@ -238,7 +239,7 @@ function Form({classes, booking_id}) {
             <Typography>{AVOCOTES.totalText}</Typography>
           </Grid>
           <Grid item>
-            <Typography>{totalPrice}</Typography>
+            <Typography>{totalPriceTxt}</Typography>
           </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
