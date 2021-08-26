@@ -281,12 +281,12 @@ class Messages extends React.Component {
     return (
       <React.Fragment>
         <Grid className={classes.layoutMessagesContainer}>
-          <LayoutMessages handleChange={this.handleChangeTab} {...this.state} userInfo={user}>
+          <LayoutMessages handleChange={this.handleChangeTab} {...this.state} user={user}>
             {this.content(classes)}
           </LayoutMessages>
         </Grid>
         <Grid className={classes.layoutMobileMessageContainer}>
-          <LayoutMobileMessages handleChange={this.handleChangeTab} {...this.state} currentIndex={3} userInfo={user}>
+          <LayoutMobileMessages handleChange={this.handleChangeTab} {...this.state} currentIndex={3} user={user}>
             {this.content(classes)}
           </LayoutMobileMessages>
         </Grid>

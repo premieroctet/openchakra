@@ -25,10 +25,10 @@ class LayoutMessages extends React.Component {
   }
 
   render() {
-    const{children, tabIndex, classes, userInfo}= this.props
+    const{children, tabIndex, classes, user}= this.props
 
     return(
-      <Layout user={userInfo}>
+      <Layout user={user}>
         <Grid style={{display: 'flex', justifyContent: 'center'}}>
           <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', width: '100%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
@@ -36,13 +36,13 @@ class LayoutMessages extends React.Component {
             </Grid>
             <Grid>
               <Tabs
-                value={userInfo && !userInfo.is_alfred ? 0 : tabIndex}
-                onChange={userInfo && !userInfo.is_alfred ? null : this.handleChange}
+                value={user && !user.is_alfred ? 0 : tabIndex}
+                onChange={user && !user.is_alfred ? null : this.handleChange}
                 aria-label="scrollable force tabs"
                 classes={{indicator: classes.scrollIndicator}}
               >
                 {
-                  userInfo && userInfo.is_alfred ?
+                  user && user.is_alfred ?
                     <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTabLayoutMessage} />
                     :null
 
