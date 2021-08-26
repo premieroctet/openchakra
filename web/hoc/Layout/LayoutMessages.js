@@ -21,7 +21,7 @@ class LayoutMessages extends React.Component {
   }
 
   handleChange = (event, newValue) => {
-    this.setState({tabIndex: newValue}, () => this.props.handleChange())
+    this.setState({tabIndex: newValue}, () => this.props.handleChange(event, newValue))
   }
 
   render() {

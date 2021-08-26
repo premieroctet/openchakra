@@ -44,7 +44,6 @@ class Messages extends React.Component {
 
   constructor(props) {
     super(props)
-    this.child = React.createRef()
     this.messageDetailsRef = React.createRef()
     this.state={
       tabIndex: 0,
@@ -229,9 +228,8 @@ class Messages extends React.Component {
     )
   }
 
-  handleChange = () => {
-    let childState = this.child.current.state
-    this.setState({tabIndex: childState.tabIndex})
+  handleChangeTab = (event, newValue) => {
+    this.setState({tabIndex: newValue})
   }
 
   content = () => {
@@ -283,12 +281,12 @@ class Messages extends React.Component {
     return (
       <React.Fragment>
         <Grid className={classes.layoutMessagesContainer}>
-          <LayoutMessages ref={this.child} handleChange={this.handleChange} {...this.state} userInfo={user}>
+          <LayoutMessages handleChange={this.handleChangeTab} {...this.state} userInfo={user}>
             {this.content(classes)}
           </LayoutMessages>
         </Grid>
         <Grid className={classes.layoutMobileMessageContainer}>
-          <LayoutMobileMessages ref={this.child} handleChange={this.handleChange} {...this.state} currentIndex={3} userInfo={user}>
+          <LayoutMobileMessages handleChange={this.handleChangeTab} {...this.state} currentIndex={3} userInfo={user}>
             {this.content(classes)}
           </LayoutMobileMessages>
         </Grid>
