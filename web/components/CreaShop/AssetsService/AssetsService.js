@@ -17,6 +17,7 @@ import Chip from '@material-ui/core/Chip'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import _ from 'lodash'
+import {YEARS_RANGE} from '../../../utils/consts'
 
 // TODO: gérer les images des diplômes et crtifications en cas de modification de service
 class AssetsService extends React.Component {
@@ -36,10 +37,10 @@ class AssetsService extends React.Component {
       experience_skills: props.experience_skills || [],
       experience_title: props.experience_title || '',
       experience_description: props.experience_description || '',
-      experience_yearRange: props.experience_yearRange || '',
       newExperienceSkill: '',
       newDiplomaSkill: '',
       newCertificationSkill: '',
+      level: props.level,
     }
     this.handleChange = this.handleChange.bind(this)
     this.handlePicture=this.handlePicture.bind(this)
@@ -61,9 +62,6 @@ class AssetsService extends React.Component {
     }
     if (name === 'certificationName' && isEmpty(value)) {
       attributes.certificationYear = null
-    }
-    if(name === 'experience_yearRange' && isEmpty(value)) {
-      attributes.experience_yearRange = null
     }
     if (name.toLowerCase().includes('skill')) {
       attributes[name]=value.trim()
@@ -132,17 +130,18 @@ class AssetsService extends React.Component {
             <FormControl variant="outlined" style={{width: '100%'}}>
               <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.experience_label}</InputLabel>
               <Select
-                value={this.state.experience_yearRange}
+                value={this.state.level}
                 style={{width: '100%'}}
                 variant="outlined"
-                name="experience_yearRange"
+                name="level"
                 onChange={this.handleChange}
                 label={SHOP.assets.experience_label}
               >
-                <MenuItem value={SHOP.assets.experience_yearRange_0}>{SHOP.assets.experience_yearRange_0}</MenuItem>
-                <MenuItem value={SHOP.assets.experience_yearRange_1}>{SHOP.assets.experience_yearRange_1}</MenuItem>
-                <MenuItem value={SHOP.assets.experience_yearRange_2}>{SHOP.assets.experience_yearRange_2}</MenuItem>
-                <MenuItem value={SHOP.assets.experience_yearRange_3}>{SHOP.assets.experience_yearRange_3}</MenuItem>
+                {
+                  Object.keys(YEARS_RANGE).map((res, index) => (
+                    <MenuItem key={index + 1} value={res}>{YEARS_RANGE[res]}</MenuItem>
+                  ))
+                }
               </Select>
             </FormControl>
           </Grid>

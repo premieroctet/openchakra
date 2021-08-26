@@ -55,54 +55,57 @@ class ShowDiploma extends React.Component {
           {
             diploma ?
               diploma.map(res => {
-                return(
-                  <>
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{res.name.charAt(0).toUpperCase() + res.name.slice(1)}</Typography>
-                    </Grid>
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                      <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>Diplôme obtenu en {res.year} -</em></Typography>
+                if(res.name) {
+                  return(
+                    <>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                        <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{res.name.charAt(0).toUpperCase() + res.name.slice(1)}</Typography>
+                      </Grid>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>{res.year ? `Diplôme obtenu en : ${res.year}` : 'Date d\'obtention non renseigné'} -</em></Typography>
+                        {
+                          res.file ?
+                            <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                              <Grid style={{marginLeft: '3px'}}>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Diplôme joint</em></Typography>
+                              </Grid>
+                              <Grid style={{marginLeft: '5px'}}>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudDoneOutlinedIcon/></em></Typography>
+                              </Grid>
+                            </Grid>
+                            :
+                            <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                              <Grid style={{marginLeft: '3px'}}>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Diplôme non joint</em></Typography>
+                              </Grid>
+                              <Grid style={{marginLeft: '5px'}}>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudOffOutlinedIcon/></em></Typography>
+                              </Grid>
+                            </Grid>
+                        }
+                      </Grid>
                       {
-                        res.file ?
-                          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                            <Grid style={{marginLeft: '3px'}}>
-                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Diplôme joint</em></Typography>
-                            </Grid>
-                            <Grid style={{marginLeft: '5px'}}>
-                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudDoneOutlinedIcon/></em></Typography>
-                            </Grid>
-                          </Grid>
-                          :
-                          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                            <Grid style={{marginLeft: '3px'}}>
-                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Diplôme non joint</em></Typography>
-                            </Grid>
-                            <Grid style={{marginLeft: '5px'}}>
-                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudOffOutlinedIcon/></em></Typography>
-                            </Grid>
-                          </Grid>
+                        res.skills && res.skills.length > 0 ?
+                          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.chipsContainer}>
+                            {
+                              res.skills.map(s => {
+                                return(
+                                  <Chip
+                                    classes={{root: classes.chip}}
+                                    label={`#${s}`}
+                                  />
+                                )
+                              })
+                            }
+                          </Grid> : null
                       }
-                    </Grid>
-                    {
-                      res.skills && res.skills.length > 0 ?
-                        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.chipsContainer}>
-                          {
-                            res.skills.map(s => {
-                              return(
-                                <Chip
-                                  classes={{root: classes.chip}}
-                                  label={`#${s}`}
-                                />
-                              )
-                            })
-                          }
-                        </Grid> : null
-                    }
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{marginTop: '3vh'}}>
-                      <Divider/>
-                    </Grid>
-                  </>
-                )
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{marginTop: '3vh'}}>
+                        <Divider/>
+                      </Grid>
+                    </>
+                  )
+                }
+                return null
               }) : null
           }
         </Grid>

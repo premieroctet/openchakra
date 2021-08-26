@@ -43,8 +43,8 @@ class ShowCertification extends React.Component {
     return(
       <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <Grid>
-            <ExtensionIcon classes={{root: classes.certifIcon}}/>
+          <Grid style={{display: 'flex'}}>
+            <img title={'certification_icon'} alt={'certification_icon'} height={24} width={24} src={'/static/assets/icon/pro_icon.svg'}/>
           </Grid>
           <Grid style={{marginLeft: 10}}>
             <h3>Certifications</h3>
@@ -61,12 +61,12 @@ class ShowCertification extends React.Component {
                         <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{x.name.charAt(0).toUpperCase() + x.name.slice(1)}</Typography>
                       </Grid>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>Certification obtenu en {x.year} -</em></Typography>
+                        <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>{x.year ? `Certification obtenue en ${x.year} -` : 'Date d\'obtention non renseigné -' } </em></Typography>
                         {
                           x.file ?
                             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                               <Grid style={{marginLeft: '3px'}}>
-                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Certification joint</em></Typography>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Certification jointe</em></Typography>
                               </Grid>
                               <Grid style={{marginLeft: '5px'}}>
                                 <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudDoneOutlinedIcon/></em></Typography>
@@ -75,7 +75,7 @@ class ShowCertification extends React.Component {
                             :
                             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                               <Grid style={{marginLeft: '3px'}}>
-                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Certification non joint</em></Typography>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Certification non jointe</em></Typography>
                               </Grid>
                               <Grid style={{marginLeft: '5px'}}>
                                 <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudOffOutlinedIcon/></em></Typography>

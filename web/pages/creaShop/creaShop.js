@@ -70,7 +70,6 @@ class creaShop extends React.Component {
         experience_description: '',
         experience_title: '',
         experience_skills: [],
-        experience_yearRange: '',
         service_address: null,
         perimeter: 10,
         // End
@@ -163,7 +162,6 @@ class creaShop extends React.Component {
                     shop.deadline_unit = su.deadline_before_booking.split(' ')[1]
                   }
                   shop.minimum_basket = su.minimum_basket
-                  shop.experience_yearRange = su.experience_yearRange
                   shop.experience_description = su.experience_description
                   shop.experience_title = su.experience_title
                   shop.experience_skills = su.experience_skills
@@ -409,7 +407,6 @@ class creaShop extends React.Component {
         experience_skills: state.experience_skills,
         experience_title: state.experience_title,
         experience_description: state.experience_description,
-        experience_yearRange: state.experience_yearRange,
         diplomaSkills: state.diplomaSkills,
         certificationSkills: state.certificationSkills,
       },

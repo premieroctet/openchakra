@@ -22,10 +22,10 @@ export default theme => ({
   },
   cardServicePaper: {
     borderRadius: 20,
-    display: 'flex',
-    justifyContent: 'center',
     height: 450,
     cursor: 'pointer',
+    display: 'flex',
+    justifyContent: 'center',
     [theme.breakpoints.down('xs')]: {
       height: '30vh',
 
@@ -41,13 +41,10 @@ export default theme => ({
   },
   cardServiceMainStyle: {
     width: '80%',
-    marginTop: '8%',
-    marginBottom: '5%',
-    display: 'flex',
-    flexDirection: 'column',
+    height: '100%',
+    paddingTop: 15,
+    margin: 0,
     [theme.breakpoints.down('xs')]: {
-      flexDirection: 'row',
-      alignItems: 'center',
       width: '90%',
     },
   },
@@ -60,7 +57,6 @@ export default theme => ({
     },
   },
   cardServicePicsContainer: {
-    width: '100%',
     height: 200,
     [theme.breakpoints.down('xs')]: {
       width: 125,
@@ -74,15 +70,15 @@ export default theme => ({
   },
 
   cardServiceBackgroundPics: {
-    width: '100%',
-    height: '100%',
+    width: 250,
+    height: 200,
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     borderRadius: 20,
   },
   cardServiceChipName: {
     position: 'absolute',
-    bottom: 0,
+    bottom: '19px',
     left: 0,
   },
   cardServiceChipPro: {
@@ -92,6 +88,8 @@ export default theme => ({
   },
   cardServiceChip: {
     backgroundColor: theme.palette.white.main,
+    display: 'flex',
+    flexDirection: 'row-reverse',
   },
   cardServiceChipBckg: {
     backgroundColor: theme.palette.secondary.main,
@@ -155,10 +153,6 @@ export default theme => ({
   },
 
   dataContainer: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
     marginTop: '3vh',
     [theme.breakpoints.down('xs')]: {
       margin: 0,
@@ -199,6 +193,7 @@ export default theme => ({
 
   },
   labelService: {
+    height: 60,
     [theme.breakpoints.down('xs')]: {
       marginLeft: '2vh',
     },
@@ -215,7 +210,7 @@ export default theme => ({
     },
   },
   containerDescription: {
-    height: 70,
+    height: 50,
 
     [theme.breakpoints.down('xs')]: {
       marginLeft: '2vh',
@@ -226,13 +221,9 @@ export default theme => ({
     color: 'rgba(39,37,37,35%)',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
-    lineClamp: 3,
+    lineClamp: 2,
     boxOrient: 'vertical',
     display: '-webkit-box',
-    [theme.breakpoints.down('md')]: {
-      lineClamp: 2,
-
-    },
     [theme.breakpoints.down('xs')]: {
       lineClamp: 1,
 
@@ -254,11 +245,31 @@ export default theme => ({
   colorError: {
     color: theme.palette.error.main,
   },
-  colorIconSchool: {
-    color: theme.palette.primary.main,
+  buttonShowProfil: {
+    borderRadius: theme.border.whiteButton.borderRadius,
+    textTransform: theme.typography.textTransform,
+    padding: theme.padding.whiteButton.padding,
+    fontWeight: theme.typography.whiteButton.fontWeight,
+    backgroundColor: 'black',
+    color: 'white',
+  },
+  iconContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  buttonShowProfilContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  lastContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   colorIconExtension: {
-    color: theme.palette.primary.main,
+    filter: 'invert(66%) sepia(0%) saturate(2996%) hue-rotate(65deg) brightness(110%) contrast(114%)',
   },
-
+  colorIconSchool: {
+    color: 'rgb(199, 199, 199)',
+  },
 })

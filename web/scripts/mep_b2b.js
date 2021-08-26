@@ -99,7 +99,6 @@ const mep_b2b = () => {
         professional_access: false,
         experience_title: '',
         experience_description: '',
-        experience_yearRange: '',
         experience_skils: [],
       },
     }, {new: true})
