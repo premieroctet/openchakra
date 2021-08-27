@@ -104,7 +104,6 @@
     "react-toastify": "^5.3.2",
     "react-vis": "^1.11.7",
     "reactjs-pdf-reader": "^1.0.8",
-    "request": "^2.88.0",
     "rrule": "^2.6.8",
     "sendinblue-api": "^1.0.8",
     "sib-api-v3-sdk": "^7.2.2",

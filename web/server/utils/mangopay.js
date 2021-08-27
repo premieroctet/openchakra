@@ -7,10 +7,10 @@ const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType')
 const mangoApi = new mangopay(MANGOPAY_CONFIG)
-const request = require('request')
 const {MANGOPAY_ERRORS}=require('../../utils/mangopay_messages')
 const {ADMIN, MANAGER}=require('../../utils/consts')
 const {delayedPromise}=require('../../utils/promise')
+const axios=require('axios')
 
 const getWallet = mangopay_id => {
   return new Promise((resolve, reject) => {
@@ -484,30 +484,34 @@ const createCard = (id_mangopay, card_number, expiration_date, csv) => {
     mangoApi.CardRegistrations.create({UserId: id_mangopay, Currency: 'EUR'})
       .then(cardRegistrationData => {
         const options = {
-          url: cardRegistrationData.CardRegistrationURL,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          form: {
-            data: cardRegistrationData.PreregistrationData,
-            accessKeyRef: cardRegistrationData.AccessKey,
-            cardNumber: card_number,
-            cardExpirationDate: expiration_date,
-            cardCvx: csv,
-          },
         }
-        request.post(options, (err, data, result) => {
-          if (result.includes("errorCode")) {
-            const code=parseInt(result.split('=')[1])
-            console.log(`Card creation error:${code}`)
-            const errMsg = MANGOPAY_ERRORS[code] || `Erreur inconnue #${code}`
-            reject(errMsg)
-            return
-          }
-          cardRegistrationData.RegistrationData = result
-          mangoApi.CardRegistrations.update(cardRegistrationData)
-            .then(newCard => {
-              resolve(newCard)
-            })
-        }, options)
+        const params = new URLSearchParams()
+        params.append('data', cardRegistrationData.PreregistrationData)
+        params.append('accessKeyRef', cardRegistrationData.AccessKey)
+        params.append('cardNumber', card_number)
+        params.append('cardExpirationDate', expiration_date)
+        params.append('cardCvx', csv)
+
+        axios.post(cardRegistrationData.CardRegistrationURL, params, options)
+          .then(result => {
+            const regData=result.data
+            if (regData.includes('errorCode')) {
+              const code=parseInt(regData.split('=')[1])
+              console.error(`Card creation error:${code}`)
+              const errMsg = MANGOPAY_ERRORS[code] || `Erreur inconnue #${code}`
+              return reject(errMsg)
+            }
+            cardRegistrationData.RegistrationData = regData
+            return mangoApi.CardRegistrations.update(cardRegistrationData)
+          })
+          .then(newCard => {
+            return resolve(newCard)
+          })
+          .catch(err => {
+            console.error(err)
+            return reject(err)
+          })
       })
       .catch(err => {
         console.error(err)
