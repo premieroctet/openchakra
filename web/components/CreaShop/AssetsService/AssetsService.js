@@ -123,15 +123,15 @@ class AssetsService extends React.Component {
           <Divider/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle}>{SHOP.assets.experience_title}</h4>
+          <h4 className={`customassetexptitle ${classes.policySizeSubtitle}`}>{SHOP.assets.experience_title}</h4>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={12} className={'customassetcontexpyear'}>
             <FormControl variant="outlined" style={{width: '100%'}}>
               <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.experience_label}</InputLabel>
               <Select
                 value={this.state.level}
-                style={{width: '100%'}}
+                style={{root: `customassetfieldexpyear ${classes.widthField}`}}
                 variant="outlined"
                 name="level"
                 onChange={this.handleChange}
@@ -144,20 +144,20 @@ class AssetsService extends React.Component {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={12} className={'customassetexptitlecont'}>
             <TextField
               variant={'outlined'}
               label={'Titre'}
               value={this.state.experience_title}
               name='experience_title'
               onChange={this.handleChange}
-              style={{width: '100%'}}
+              classes={{root: `customassetexptitlefield ${classes.expTitle}`}}
             />
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customassetexpcontdescription'}>
             <TextField
               id="outlined-basic"
-              style={{width: '100%'}}
+              classes={{root: `customassetexpfielddescription ${classes.expDescription}`}}
               label={SHOP.assets.experience_label_description}
               variant="outlined"
               value={this.state.experience_description}
@@ -167,10 +167,10 @@ class AssetsService extends React.Component {
               onChange={this.handleChange}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={9}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={9} className={'customassetcontexpcomp'}>
             <TextField
               id="outlined-basic"
-              style={{width: '100%'}}
+              classes={{root: `customassetexpcompfield ${classes.expCompetence}`}}
               label={SHOP.assets.obtain_competence}
               variant="outlined"
               value={this.state.newExperienceSkill}
@@ -184,9 +184,9 @@ class AssetsService extends React.Component {
               }}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={3} style={{display: 'flex'}}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={3} style={{display: 'flex'}} className={'customassetexpcontadd'}>
             <IconButton aria-label="AddCircleOutlineIcon" disabled={!this.state.newExperienceSkill}>
-              <AddCircleOutlineIcon onClick={() => this.addSkill('experience_skills', 'newExperienceSkill')}/>
+              <AddCircleOutlineIcon onClick={() => this.addSkill('experience_skills', 'newExperienceSkill')} classes={{root: 'customassetexpiconadd'}}/>
             </IconButton>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.chipsContainer}>
@@ -203,14 +203,14 @@ class AssetsService extends React.Component {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid>
-            <h4 className={classes.policySizeSubtitle}>{SHOP.assets.diploma_title}</h4>
+            <h4 className={`customassetdiplomatitle ${classes.policySizeSubtitle}`}>{SHOP.assets.diploma_title}</h4>
           </Grid>
           <Grid>
-            <Typography style={{color: '#696767'}}><em>{SHOP.assets.diploma_subtitle}</em></Typography>
+            <Typography style={{color: '#696767'}} className={'customassetdiplomasubtitle'}><em>{SHOP.assets.diploma_subtitle}</em></Typography>
           </Grid>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-          <Grid item xl={6} lg={2} md={6} sm={6} xs={12}>
+          <Grid item xl={6} lg={2} md={6} sm={6} xs={12} className={'customassetdiplomayearcont'}>
             <FormControl variant={'outlined'} style={{width: '100%'}}>
               <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.year_obtain}</InputLabel>
               <Select
@@ -219,6 +219,7 @@ class AssetsService extends React.Component {
                 name='diplomaYear'
                 onChange={this.handleChange}
                 style={{width: '100%'}}
+                classes={{root: 'customassetdiplomayear'}}
                 variant="outlined"
               >
                 {this.state.dates.map(date => {
@@ -233,20 +234,22 @@ class AssetsService extends React.Component {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xl={6} lg={10} md={6} sm={6} xs={12}>
+          <Grid item xl={6} lg={10} md={6} sm={6} xs={12} className={'customassetdiplomaconttitle'}>
             <TextField
               value={this.state.diplomaName}
               label="Titre"
               variant="outlined"
               style={{width: '100%'}}
+              classes={{root: 'customassetdiplomatitlefield'}}
               name='diplomaName'
               onChange={this.handleChange}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={9}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={9} className={'customassetskillcont'}>
             <TextField
               id="outlined-basic"
               style={{width: '100%'}}
+              classes={{root: 'customassetskillfield'}}
               label={SHOP.assets.obtain_competence}
               variant="outlined"
               value={this.state.newDiplomaSkill}
@@ -260,9 +263,9 @@ class AssetsService extends React.Component {
               }}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={3} style={{display: 'flex'}}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={3} style={{display: 'flex'}} className={'customassetskilconticon'}>
             <IconButton aria-label="AddCircleOutlineIcon">
-              <AddCircleOutlineIcon onClick={() => this.addSkill('diplomaSkills', 'newDiplomaSkill')}/>
+              <AddCircleOutlineIcon onClick={() => this.addSkill('diplomaSkills', 'newDiplomaSkill')} classes={{root: 'customassetskillicon'}}/>
             </IconButton>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.chipsContainer}>
@@ -285,7 +288,7 @@ class AssetsService extends React.Component {
                 onChange={this.handlePicture}
               />
               <label htmlFor="diploma-file">
-                <Button variant="contained" color="primary" component="span" classes={{root: classes.buttonUpload}}>
+                <Button variant="contained" color="primary" component="span" classes={{root: `customassetskillbutton ${classes.buttonUpload}`}}>
                   {SHOP.assets.button_joinDiploma}
                 </Button>
               </label>
@@ -308,14 +311,14 @@ class AssetsService extends React.Component {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid>
-            <h4 className={classes.policySizeSubtitle}>{SHOP.assets.certification_title}</h4>
+            <h4 className={`customassetcertiftitle ${classes.policySizeSubtitle}`}>{SHOP.assets.certification_title}</h4>
           </Grid>
           <Grid>
-            <Typography style={{color: '#696767'}}><em>{SHOP.assets.certification_subtitle}</em></Typography>
+            <Typography style={{color: '#696767'}} className={'customassetcertifsubtitle'}><em>{SHOP.assets.certification_subtitle}</em></Typography>
           </Grid>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-          <Grid item xl={6} lg={2} md={6} sm={6} xs={12}>
+          <Grid item xl={6} lg={2} md={6} sm={6} xs={12} className={'customassetcertifyearcont'}>
             <FormControl variant={'outlined'} style={{width: '100%'}}>
               <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.year_obtain}</InputLabel>
               <Select
@@ -324,6 +327,7 @@ class AssetsService extends React.Component {
                 name={'certificationYear'}
                 onChange={this.handleChange}
                 style={{width: '100%'}}
+                classes={{root: 'customassetcertifyearfield'}}
                 variant="outlined"
               >
                 {dates.map(date => {
@@ -332,20 +336,22 @@ class AssetsService extends React.Component {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xl={6} lg={10} md={6} sm={6} xs={12}>
+          <Grid item xl={6} lg={10} md={6} sm={6} xs={12} className={'customassetcertifnamecont'}>
             <TextField
               value={this.state.certificationName}
               label={SHOP.assets.certification_name}
               variant="outlined"
               style={{width: '100%'}}
+              classes={{root: 'customassetcertifnamefield'}}
               name='certificationName'
               onChange={this.handleChange}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={9}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={9} className={'customassetcertifskillcont'}>
             <TextField
               id="outlined-basic"
               style={{width: '100%'}}
+              classes={{root: 'customassetskillfield'}}
               label={SHOP.assets.obtain_competence}
               variant="outlined"
               value={this.state.newCertificationSkill}
@@ -359,9 +365,9 @@ class AssetsService extends React.Component {
               }}
             />
           </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={3} style={{display: 'flex'}}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={3} style={{display: 'flex'}} className={'customassetcertifaddcont'}>
             <IconButton aria-label="AddCircleOutlineIcon">
-              <AddCircleOutlineIcon onClick={() => this.addSkill('certificationSkills', 'newCertificationSkill')}/>
+              <AddCircleOutlineIcon onClick={() => this.addSkill('certificationSkills', 'newCertificationSkill')} classes={{root: 'customassetcertifbuttonicon'}}/>
             </IconButton>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.chipsContainer}>
@@ -384,7 +390,7 @@ class AssetsService extends React.Component {
                 onChange={this.handlePicture}
               />
               <label htmlFor="certification-file">
-                <Button variant="contained" color="primary" component="span" classes={{root: classes.buttonUpload}}>
+                <Button variant="contained" color="primary" component="span" classes={{root: `customassetcertifjoinbutton ${classes.buttonUpload}`}}>
                   {SHOP.assets.button_joinCertification}
                 </Button>
               </label>
