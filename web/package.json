@@ -22,7 +22,7 @@
     "ag-grid-react": "^24.1.1",
     "algolia-places-react": "^1.6.1",
     "apexcharts": "^3.25.0",
-    "axios": "^0.18.0",
+    "axios": "0.21.1",
     "axios-cookiejar-support": "^1.0.1",
     "axios-debug-log": "^0.8.2",
     "babel-preset-env": "^1.7.0",
