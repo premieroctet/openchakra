@@ -1,50 +1,50 @@
 import React from 'react'
 import axios from 'axios'
-import Grid from "@material-ui/core/Grid";
+import Grid from '@material-ui/core/Grid'
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
-import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/pages/profile/calendar/calendar';
+import {withStyles} from '@material-ui/core/styles'
+import styles from '../../static/css/pages/profile/calendar/calendar'
 import {getLoggedUserId} from '../../utils/context'
-import Topic from "../../hoc/Topic/Topic";
-import Box from "../../components/Box/Box";
-import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
+import Topic from '../../hoc/Topic/Topic'
+import Box from '../../components/Box/Box'
+import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
 const {setAxiosAuthentication} = require('../../utils/authentication')
 
 class ProfileCalendar extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
-      availabilities:[],
-      bookings : [],
+      availabilities: [],
+      bookings: [],
     }
   }
 
   static getInitialProps({query: {user}}) {
-    return {user: user};
+    return {user: user}
   }
 
   loadAvailabilities = () => {
     axios.get(`/myAlfred/api/availability/userAvailabilities/${this.props.user}`)
       .then(res => {
-        this.setState({availabilities: res.data});
+        this.setState({availabilities: res.data})
       })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
     setAxiosAuthentication()
-    Promise.all(['alfredBooking', 'userBooking'].map( u => axios.get(`/myAlfred/api/booking/${u}`)))
+    Promise.all(['alfredBooking', 'userBooking'].map(u => axios.get(`/myAlfred/api/booking/${u}`)))
       .then(res => {
         const bookings = res[0].data.concat(res[1].data)
-        this.setState({bookings : bookings})
+        this.setState({bookings: bookings})
       })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
   };
 
   componentDidMount() {
     this.loadAvailabilities()
   }
 
-  content = (classes, bookings, user, readOnly) =>{
+  content = (classes, bookings, user, readOnly) => {
     return(
       <Grid container className={classes.mainContainerSchedule}>
         <Grid item xs={12} xl={12}>
@@ -74,9 +74,9 @@ class ProfileCalendar extends React.Component {
   };
 
   render() {
-    const {user, classes, index}=this.props;
+    const {user, classes, index}=this.props
     const {bookings}=this.state
-    const readOnly = this.props.user!==getLoggedUserId();
+    const readOnly = this.props.user!==getLoggedUserId()
 
     if (!user) {
       return null
