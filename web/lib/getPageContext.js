@@ -1,5 +1,5 @@
 import {SheetsRegistry} from 'jss'
-import {createGenerateClassName, createMuiTheme} from '@material-ui/core/styles'
+import {createGenerateClassName, createTheme} from '@material-ui/core/styles'
 
 
 const PRIMARY = 'rgba(178,204,251,1)'
@@ -11,7 +11,7 @@ const TEXTCOLOR = ''
 
 // A theme with custom primary and secondary color.
 // It's optional.
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: PRIMARY,
