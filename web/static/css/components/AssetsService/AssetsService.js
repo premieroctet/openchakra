@@ -37,4 +37,7 @@ export default theme => ({
       justifyContent: 'center',
     },
   },
+  textfieldMultiline: {
+    width: '100%'
+  },
 })

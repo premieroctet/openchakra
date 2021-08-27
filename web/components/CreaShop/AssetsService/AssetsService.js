@@ -97,19 +97,19 @@ class AssetsService extends React.Component {
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
-          <h2 className={classes.policySizeTitle}>{SHOP.assets.title}</h2>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={`customassetcontainerexpertise ${classes.titleContainer}`}>
+          <h2 className={`customassetitle ${classes.policySizeTitle}`}>{SHOP.assets.title}</h2>
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 className={classes.policySizeSubtitle}>{SHOP.assets.subtitle}</h3>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customassetcontainerexpertise'}>
+          <h3 className={`customassetsubtitle ${classes.policySizeSubtitle}`}>{SHOP.assets.subtitle}</h3>
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={classes.policySizeSubtitle}>{SHOP.assets.expertise_title}</h4>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customassetcontainerexpertise'}>
+          <h4 className={`customassetexpertise ${classes.policySizeSubtitle}`}>{SHOP.assets.expertise_title}</h4>
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customassetcontainerexpertise'}>
           <TextField
             id="outlined-basic"
-            style={{width: '100%'}}
+            classes={{root: `customassetmultiline ${classes.textfieldMultiline}`}}
             label={SHOP.assets.expertise_label}
             variant="outlined"
             value={this.state.description}
@@ -119,7 +119,7 @@ class AssetsService extends React.Component {
             rows="4"
           />
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customassetcontainerexpertise'}>
           <Divider/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
