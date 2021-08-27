@@ -185,7 +185,8 @@ class NavBar extends Component {
     this.setState({setOpenLogin: true, setOpenRegister: null})
   };
 
-  handleCloseLogin = () => {
+  handleCloseLogin = (event, reason) => {
+    if (reason=='backdropClick') { return }
     this.setState({setOpenLogin: false})
   };
 
@@ -194,7 +195,8 @@ class NavBar extends Component {
     this.setState({setOpenRegister: user_id, setOpenLogin: false})
   };
 
-  handleCloseRegister = () => {
+  handleCloseRegister = (event, reason) => {
+    if (reason=='backdropClick') { return }
     if (this.state.activeStep === 2) {
       removeStatusRegister()
       this.setState({setOpenRegister: null}, () => Router.push('/search?search=1'))
@@ -1207,7 +1209,6 @@ class NavBar extends Component {
           onClose={this.handleCloseLogin}
           TransitionComponent={Transition}
           classes={{paperWidthSm: classes.navbarPaperWidth}}
-          disableBackdropClick={true}
           disableEscapeKeyDown={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
@@ -1230,7 +1231,6 @@ class NavBar extends Component {
           open={setOpenRegister}
           onClose={this.handleCloseRegister}
           TransitionComponent={Transition}
-          disableBackdropClick={true}
           disableEscapeKeyDown={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>

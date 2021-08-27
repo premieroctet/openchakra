@@ -125,7 +125,6 @@ class SelectService extends React.Component {
   getSelectedOption = (options, service) => {
     const {particular_professional_access}=this.state
     let opts=particular_professional_access ? [].concat(...options.map(o => o.options)) : options
-    console.log(JSON.stringify(opts.slice(0, 5), null, 2))
     return opts.find(o => o._id==service)
   }
 

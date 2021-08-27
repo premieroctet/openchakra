@@ -12,6 +12,7 @@ import AddIcon from '@material-ui/icons/Add'
 import {SHOP} from '../../../utils/i18n'
 import _ from 'lodash'
 const {getLoggedUserId}=require('../../../utils/context')
+const {isB2BDisabled}=require('../../../config/config')
 
 // TODO fix prestaitons personnalisées qui disparaissent lors du clic sur "Précédent"
 class SelectPrestation extends React.Component {
@@ -37,6 +38,8 @@ class SelectPrestation extends React.Component {
     const alfred_id = getLoggedUserId()
     const part = this.props.particular_access
     const pro = this.props.professional_access
+    const alfredPro = !this.props.is_particular
+
     let billings = null
     setAxiosAuthentication()
     axios.get('/myAlfred/api/billing/all')
@@ -53,12 +56,14 @@ class SelectPrestation extends React.Component {
     axios.get(`/myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         let prestations = res.data
-        // Filter paarticular/professional
-        prestations=prestations.filter(p => (p.particular_access && part)||(p.professional_access && pro))
+        // Filter particular/professional
+        if (!isB2BDisabled()) {
+          prestations=prestations.filter(p => (p.particular_access && part)||(p.professional_access && pro))
+        }
         // Remove private belonging to other Alfreds
         prestations = prestations.filter(p => !p.private_alfred || p.private_alfred == alfred_id)
         let private_prestations = prestations.filter(p => Boolean(p.private_alfred))
-        let companyPrestations = prestations.filter(p => Boolean(p.private_company))
+        let companyPrestations = prestations.filter(p => alfredPro && Boolean(p.private_company))
         let public_prestations = prestations.filter(p => !p.private_alfred && !p.private_company)
         let grouped = _.mapValues(_.groupBy(public_prestations, 'filter_presentation.label'),
           clist => clist.map(el => _.omit(el, 'filter_presentation.label')))
