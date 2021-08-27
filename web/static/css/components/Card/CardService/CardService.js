@@ -26,10 +26,6 @@ export default theme => ({
     cursor: 'pointer',
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.down('xs')]: {
-      height: '30vh',
-
-    },
   },
   profileModecardServicePaper: {
     height: 300,
@@ -37,7 +33,15 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center',
     cursor: 'pointer',
-
+    [theme.breakpoints.down('lg')]: {
+      width: 245,
+    },
+    [theme.breakpoints.down('md')]: {
+      width: 275,
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: 300,
+    },
   },
   cardServiceMainStyle: {
     width: '80%',
@@ -53,14 +57,13 @@ export default theme => ({
     justifyContent: 'center',
     position: 'relative',
     [theme.breakpoints.down('xs')]: {
-      width: '50%',
+      width: '100%',
     },
   },
   cardServicePicsContainer: {
     height: 200,
     [theme.breakpoints.down('xs')]: {
-      width: 125,
-      height: 125,
+      width: '100%',
     },
   },
 
@@ -75,11 +78,24 @@ export default theme => ({
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     borderRadius: 20,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  },
+  cardServiceBackgroundPicsProfil: {
+    height: '100%',
+    width: '100%',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    borderRadius: 20,
   },
   cardServiceChipName: {
     position: 'absolute',
     bottom: '19px',
     left: 0,
+    [theme.breakpoints.down('xs')]: {
+      bottom: '18px',
+    },
   },
   cardServiceChipPro: {
     position: 'absolute',
@@ -101,11 +117,6 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    [theme.breakpoints.down('xs')]: {
-      marginTop: '1vh',
-      marginBottom: '1vh',
-      marginLeft: '1vh',
-    },
   },
   cardServicePlaceLogo: {
     marginRight: '3%',
@@ -154,11 +165,6 @@ export default theme => ({
 
   dataContainer: {
     marginTop: '3vh',
-    [theme.breakpoints.down('xs')]: {
-      margin: 0,
-      width: '50%',
-      flex: 'inherit',
-    },
   },
 
   labelDataContainer: {
@@ -171,11 +177,6 @@ export default theme => ({
   profileModeCardService: {
     width: '90%',
     padding: '5%',
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-      alignItems: 'center',
-
-    },
   },
   profileModeDataContainer: {
     display: 'flex',
@@ -194,10 +195,15 @@ export default theme => ({
   },
   labelService: {
     height: 60,
+  },
+  labelServiceProfil: {
+    height: 60,
+    textAlign: 'center',
     [theme.breakpoints.down('xs')]: {
       marginLeft: '2vh',
     },
   },
+
   profileModecardServiceFlexContainer: {
     width: '100%',
     height: '60%',
@@ -209,13 +215,16 @@ export default theme => ({
       padding: 10,
     },
   },
+  mainCardServiceContainerProfil: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    [theme.breakpoints.down('md')]: {
+      flexDirection: 'inherit',
+    },
+  },
   containerDescription: {
     height: 50,
-
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: '2vh',
-      height: 'initial',
-    },
   },
   descriptionStyle: {
     color: 'rgba(39,37,37,35%)',
@@ -224,10 +233,6 @@ export default theme => ({
     lineClamp: 2,
     boxOrient: 'vertical',
     display: '-webkit-box',
-    [theme.breakpoints.down('xs')]: {
-      lineClamp: 1,
-
-    },
   },
   carServiceInfoContainer: {
     [theme.breakpoints.only('xs')]: {

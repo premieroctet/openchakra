@@ -168,12 +168,12 @@ class CardService extends React.Component {
     )
 
     return(
-      <Grid className={classes.mainCardServiceContainer}>
+      <Grid className={profileMode ? classes.mainCardServiceContainerProfil : classes.mainCardServiceContainer}>
         <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
           <Grid container spacing={1} className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
               <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
-                <Grid style={{backgroundImage: `url("/${picture}")`}} className={classes.cardServiceBackgroundPics}/>
+                <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}/>
               </Grid>
               {
                 profileMode && editable ?
@@ -204,7 +204,7 @@ class CardService extends React.Component {
               }
             </Grid>
             <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.labelService}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.labelServiceProfil : classes.labelService}>
                 <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
               </Grid>
               { profileMode ? null :
