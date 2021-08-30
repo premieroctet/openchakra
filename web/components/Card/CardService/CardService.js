@@ -142,31 +142,6 @@ class CardService extends React.Component {
       )
     }
 
-    if (this.props.item===undefined) {
-      return null
-    }
-
-    const picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
-
-    const editable = isEditableUser(alfred)
-
-    const Icons = () => (
-      <>
-        {
-          cpData.is_certified ?
-            <Grid style={{margin: 5}}>
-              <img title={'certification_icon'} alt={'certification_icon'} height={20} width={20} src={'/static/assets/icon/pro_icon.svg'} className={classes.colorIconExtension} />
-            </Grid> : null
-        }
-        {
-          cpData.graduated ?
-            <Grid style={{margin: 5}}>
-              <SchoolIcon classes={{root: classes.colorIconSchool}}/>
-            </Grid> : null
-        }
-      </>
-    )
-
     const cardServiceLoading = () => {
       return(
         <Grid className={classes.mainCardServiceContainer}>
@@ -196,6 +171,29 @@ class CardService extends React.Component {
         </Grid>
       )
     }
+    
+    const picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
+
+    const editable = isEditableUser(alfred)
+
+    const Icons = () => (
+      <>
+        {
+          cpData.is_certified ?
+            <Grid style={{margin: 5}}>
+              <img title={'certification_icon'} alt={'certification_icon'} height={20} width={20} src={'/static/assets/icon/pro_icon.svg'} className={classes.colorIconExtension} />
+            </Grid> : null
+        }
+        {
+          cpData.graduated ?
+            <Grid style={{margin: 5}}>
+              <SchoolIcon classes={{root: classes.colorIconSchool}}/>
+            </Grid> : null
+        }
+      </>
+    )
+
+
 
     return(
       loading ?
