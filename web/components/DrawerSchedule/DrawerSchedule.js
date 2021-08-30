@@ -104,7 +104,7 @@ class DrawerSchedule extends React.Component {
               startIcon={this.state.eventsSelected.size > 0 ? <SettingsIcon /> : <AddCircleOutlineIcon />}
               onClick={this.handleDrawerToggle}
               color={'primary'}
-              
+              classe={{root: classes.buttonAction}}
             >
               { this.state.eventsSelected.size > 0 ? 'Modifier vos disponibilités' : 'Paramétrez vos disponibilités'}
             </Button>

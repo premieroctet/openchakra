@@ -32,7 +32,9 @@ import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
+import {PROFIL} from '../../utils/i18n'
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 const {frenchFormat} = require('../../utils/text')
 const moment = require('moment')
@@ -154,7 +156,7 @@ class About extends CompanyComponent {
         vat_number: this.state.vat_number,
         vat_subject: this.state.vat_subject,
       },
-      ).then(res => {
+      ).then(() => {
         snackBarSuccess('Profil modifié avec succès')
         this.componentDidMount()
       }).catch(err => {
@@ -162,8 +164,8 @@ class About extends CompanyComponent {
       })
     }
     else{
-      axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(res => {
-        axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(res => {
+      axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(() => {
+        axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(() => {
           snackBarSuccess('Profil modifié avec succès')
           setTimeout(this.loadUser, 1000)
         },
@@ -221,7 +223,7 @@ class About extends CompanyComponent {
   };
 
   modalEditDialog = classes => {
-    const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, company, website} = this.state
+    const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, website} = this.state
     const address = newAddress || (user ? user.billing_address : null)
     const placeholder = address ? `${address.city}, ${address.country}` : 'Entrez votre adresse'
 
@@ -387,43 +389,43 @@ class About extends CompanyComponent {
     const {displayTitlePicture, classes} = this.props
     const {user, company, showEdition} = this.state
 
-    let place = this.isModeCompany() ? company ? company.billing_address.city : "Pas d'addresse" : user ? user.billing_address.city : "Pas d'adresse"
+    let place = this.isModeCompany() ? company ? company.billing_address.city : PROFIL.noaddresses : user ? user.billing_address.city : PROFIL.noaddresses
 
     const editable = isEditableUser(user)
 
     const wrapperComponentProps = !this.isModeCompany()?
       [
         {
-          label: 'Lieu',
+          label: PROFIL.place,
           summary: place,
-          IconName: user ? <RoomIcon fontSize="large"/> : '',
+          IconName: user ? <RoomIcon fontSize="large"/> : PROFIL.nothing,
         },
         {
-          label: 'Langues',
-          summary: user ? user.languages.join(', ') || null : '',
+          label: PROFIL.languages,
+          summary: user ? user.languages ? user.languages.join(', ') || null : PROFIL.nothing : '',
           IconName: user ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : '',
         },
         {
-          label: 'Vérification',
-          summary: user ? user.id_card_status_text : '',
-          IconName: user ? <CheckCircleOutlineIcon fontSize="large"/> : '',
+          label: PROFIL.verification,
+          summary: user ? user.is_confirmed ? PROFIL.confirmed : PROFIL.nothing : PROFIL.unconfirmed,
+          IconName: user ? user.is_confirmed ? <CheckCircleOutlineIcon fontSize="large"/> : <HighlightOffIcon fontSize={'large'}/> : '',
         },
       ]
       :
       [
         {
-          label: 'Site web',
-          summary: company.website ? company.website : 'Non renseigné',
+          label: PROFIL.website,
+          summary: company.website ? company.website : PROFIL.nothing,
           IconName: <LanguageIcon fontSize="large"/>,
         },
         {
-          label: 'Taille de l’entreprise',
-          summary: company.size !== '' ? Object.keys(COMPANY_SIZE).map(res => { if(res === company.size) { return COMPANY_SIZE[res] } }): 'Pas sélectionner',
+          label: PROFIL.companysize,
+          summary: company.size !== '' ? Object.keys(COMPANY_SIZE).map(res => { if(res === company.size) { return COMPANY_SIZE[res] } }): PROFIL.nothing,
           IconName: <BusinessIcon fontSize="large"/>,
         },
         {
-          label: 'Secteur d’activité',
-          summary: company.activity !== '' ? Object.keys(COMPANY_ACTIVITY).map(res => { if(res === company.activity) { return COMPANY_ACTIVITY[res] } }) : 'Pas sélectionner',
+          label: PROFIL.activity,
+          summary: company.activity !== '' ? Object.keys(COMPANY_ACTIVITY).map(res => { if(res === company.activity) { return COMPANY_ACTIVITY[res] } }) : PROFIL.nothing,
           IconName: <WorkOutlineIcon fontSize="large"/>,
         },
       ]

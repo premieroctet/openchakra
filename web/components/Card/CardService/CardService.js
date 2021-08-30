@@ -8,7 +8,6 @@ import Box from '@material-ui/core/Box'
 import Rating from '@material-ui/lab/Rating'
 import RoomIcon from '@material-ui/icons/Room'
 import Chip from '@material-ui/core/Chip'
-import Avatar from '@material-ui/core/Avatar'
 import styles from '../../../static/css/components/Card/CardService/CardService'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -21,6 +20,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
+import SchoolIcon from '@material-ui/icons/School'
 import {Skeleton} from '@material-ui/lab'
 const {isEditableUser}=require('../../../utils/context')
 
@@ -142,6 +142,31 @@ class CardService extends React.Component {
       )
     }
 
+    if (this.props.item===undefined) {
+      return null
+    }
+
+    const picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
+
+    const editable = isEditableUser(alfred)
+
+    const Icons = () => (
+      <>
+        {
+          cpData.is_certified ?
+            <Grid style={{margin: 5}}>
+              <img title={'certification_icon'} alt={'certification_icon'} height={20} width={20} src={'/static/assets/icon/pro_icon.svg'} className={classes.colorIconExtension} />
+            </Grid> : null
+        }
+        {
+          cpData.graduated ?
+            <Grid style={{margin: 5}}>
+              <SchoolIcon classes={{root: classes.colorIconSchool}}/>
+            </Grid> : null
+        }
+      </>
+    )
+
     const cardServiceLoading = () => {
       return(
         <Grid className={classes.mainCardServiceContainer}>
@@ -172,20 +197,15 @@ class CardService extends React.Component {
       )
     }
 
-    const picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
-
-    const editable = isEditableUser(alfred)
-
     return(
       loading ?
-        cardServiceLoading()
-        :
-        <Grid className={classes.mainCardServiceContainer}>
+        cardServiceLoading() :
+        <Grid className={profileMode ? classes.mainCardServiceContainerProfil : classes.mainCardServiceContainer}>
           <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
-            <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
-              <Grid className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
+            <Grid container spacing={1} className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
                 <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
-                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={classes.cardServiceBackgroundPics}/>
+                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}/>
                 </Grid>
                 {
                   profileMode && editable ?
@@ -202,30 +222,38 @@ class CardService extends React.Component {
                       </Grid>
                     </Grid>
                     :
-                    <Grid className={classes.cardServiceChipName}>
-                      <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null} className={classes.cardServiceChip} />
-                    </Grid>
+                    <>
+                      <Grid className={classes.cardServiceChipName}>
+                        <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: classes.cardServiceChip}} />
+                      </Grid>
+                      {
+                        cpData.is_professional ?
+                          <Grid className={classes.cardServiceChipPro}>
+                            <Chip label={'Pro'} classes={{root: classes.cardServiceChipBckg}}/>
+                          </Grid> : null
+                      }
+                    </>
                 }
               </Grid>
-              <Grid className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
-                <Grid className={classes.labelService}>
+              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.labelServiceProfil : classes.labelService}>
                   <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
                 </Grid>
                 { profileMode ? null :
-                  <Grid className={classes.cardServicePlaceContainer}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServicePlaceContainer}>
                     <Grid className={classes.cardServicePlaceLogo}>
                       <RoomIcon/>
                     </Grid>
                     <Grid className={classes.cardKmContainer}>
                       { distance &&
-                      <>
-                        <Grid style={{whiteSpace: 'nowrap'}}>
-                          <Typography>{`À ${distance} km`}</Typography>
-                        </Grid>
-                        <Grid>
-                          <Typography>-</Typography>
-                        </Grid>
-                      </>
+                        <>
+                          <Grid style={{whiteSpace: 'nowrap'}}>
+                            <Typography>{`À ${distance} km`}</Typography>
+                          </Grid>
+                          <Grid>
+                            <Typography>-</Typography>
+                          </Grid>
+                        </>
                       }
                       <Grid style={{overflow: 'hidden'}}>
                         <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
@@ -235,43 +263,52 @@ class CardService extends React.Component {
                 }
                 {
                   profileMode ? null :
-                    <Grid className={classes.containerDescription}>
-                      <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : 'Cet alfred est peut être trop timide pour parler de lui !'}</Typography>
-                    </Grid>
-                }
-
-                <Grid className={classes.cardServiceScoreAndButtonContainer}>
-                  <Grid className={classes.cardServiceRatingContainer}>
-                    <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
-                      { cpData.reviews && cpData.reviews.length>0 ?
-                        <Rating
-                          name="simple-controlled"
-                          value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
-                          max={1}
-                          readOnly
-                        />
-                        :
-                        null
-                      }
-                      <Grid className={classes.cardServiceBoxRatingDisplay}>
-                        <Grid className={classes.cardServiceRating}>
-                          { notes.global && notes.global >0 ?
-                            <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
-                            :
-                            null
-                          }
+                    <>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
+                        <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : 'Cet alfred est peut être trop timide pour parler de lui !'}</Typography>
+                      </Grid>
+                      <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceScoreAndButtonContainer}>
+                        <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceRatingContainer}>
+                          <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
+                            { cpData.reviews && cpData.reviews.length>0 ?
+                              <Rating
+                                name="simple-controlled"
+                                value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
+                                max={1}
+                                readOnly
+                              />
+                              :
+                              null
+                            }
+                            <Grid className={classes.cardServiceBoxRatingDisplay}>
+                              <Grid className={classes.cardServiceRating}>
+                                { notes.global && notes.global >0 ?
+                                  <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
+                                  :
+                                  null
+                                }
+                              </Grid>
+                              <Grid>
+                                { cpData.reviews && cpData.reviews.length >0 ?
+                                  <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
+                                  :
+                                  null
+                                }
+                              </Grid>
+                            </Grid>
+                          </Box>
                         </Grid>
-                        <Grid>
-                          { cpData.reviews && cpData.reviews.length >0 ?
-                            <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
-                            :
-                            null
-                          }
+                        <Grid item xl={9} lg={9} md={9} sm={9} xs={9} className={classes.buttonShowProfilContainer}>
+                          <Button
+                            variant={'contained'}
+                            classes={{root: classes.buttonShowProfil}}
+                          >
+                              Voir
+                          </Button>
                         </Grid>
                       </Grid>
-                    </Box>
-                  </Grid>
-                </Grid>
+                    </>
+                }
               </Grid>
             </Grid>
           </Paper>

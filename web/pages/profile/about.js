@@ -397,7 +397,7 @@ class ProfileAbout extends CompanyComponent {
           }
           <Grid item xs={12}>
             <Grid>
-              <h3 >Habite à </h3>
+              <h3>Habite à </h3>
             </Grid>
             <Grid style={{margin: 3}}/>
             {
@@ -448,19 +448,19 @@ class ProfileAbout extends CompanyComponent {
         {
           !company_mode ?
             <>
-              <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Box>
                   <ShowExperience user={user}/>
                 </Box>
               </Grid>
               <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
                 <Box>
-                  <ShowDiploma user={user}/>
+                  <ShowCertification user={user}/>
                 </Box>
               </Grid>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
                 <Box>
-                  <ShowCertification user={user}/>
+                  <ShowDiploma user={user}/>
                 </Box>
               </Grid>
             </>: null
