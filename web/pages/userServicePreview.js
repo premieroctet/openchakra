@@ -290,7 +290,7 @@ class UserServicesPreview extends React.Component {
       return null
     }
     const avocotes_booking=all_avocotes.find(a => a._id==avocotes)
-    if (avocotes_booking) {
+    if (!avocotes_booking) {
       console.error(`Can not find booking ${avocotes}`)
     }
     return avocotes_booking
@@ -412,7 +412,7 @@ class UserServicesPreview extends React.Component {
       st.pick_tax=null
       st.isChecked=false
     }
-    this.setState(st, this.checkBook)
+    this.setState(st, this.computeTotal)
   }
 
   onLocationChanged = (id, checked) => {
