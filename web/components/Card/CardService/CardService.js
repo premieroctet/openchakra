@@ -145,9 +145,9 @@ class CardService extends React.Component {
     const cardServiceLoading = () => {
       return(
         <Grid className={classes.mainCardServiceContainer}>
-          <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
-            <Grid className={classes.cardServiceMainStyle} style={{position: 'relative'}}>
-              <Grid className={classes.cardServicePicsContainer}>
+          <Paper elevation={1} className={classes.paperloadingCard}>
+            <Grid className={classes.cardLoadingImgCont}>
+              <Grid className={classes.cardLoadingCard}>
                 <Skeleton animation="wave" variant="rect" className={classes.media} />
               </Grid>
               <Grid>
@@ -163,7 +163,7 @@ class CardService extends React.Component {
                 <Skeleton animation="wave" height={10} width="50%" style={{margin: 5}}/>
               </Grid>
               <Grid style={{position: 'absolute', bottom: 0, right: 0}}>
-                <Skeleton animation="wave"  width={80} height={50} style={{borderRadius: 20}}/>
+                <Skeleton animation="wave" width={80} height={50} style={{borderRadius: 24, padding: '5px 30px'}}/>
               </Grid>
             </Grid>
 

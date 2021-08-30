@@ -1,5 +1,3 @@
-import {Skeleton} from '@material-ui/lab'
-
 const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -24,8 +22,6 @@ const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')
 import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import CardContent from '@material-ui/core/CardContent'
-import {Card, CardHeader} from '@material-ui/core'
 const SearchResults=withSlide(withGrid(CardService))
 const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
@@ -432,10 +428,10 @@ class SearchPage extends React.Component {
               </Grid>
               <Grid container >
                 {
-                  true ? <Grid className={classes.searchLoadingContainer} item container spacing={2} xl={12} lg={12} md={12} sm={12} xs={12}>
+                  this.state.searching ? <Grid className={classes.searchLoadingContainer} item container spacing={2} xl={12} lg={12} md={12} sm={12} xs={12}>
                     {
                       [...Array(8)].map(() => (
-                        <Grid item xl={3} lg={4} md={3} sm={3} xs={1}>
+                        <Grid item xl={3} lg={3} md={4} sm={6} xs={12}>
                           <CardService loading={true}/>
                         </Grid>
 
