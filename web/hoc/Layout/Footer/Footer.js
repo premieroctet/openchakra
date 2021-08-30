@@ -69,7 +69,6 @@ class Footer extends React.Component {
         open={setOpenRegister}
         onClose={this.handleCloseRegister}
         TransitionComponent={Transition}
-        disableBackdropClick={true}
         disableEscapeKeyDown={true}
       >
         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
@@ -82,7 +81,8 @@ class Footer extends React.Component {
     )
   }
 
-  handleCloseRegister = () => {
+  handleCloseRegister = (event, reason) => {
+    if (reason=='backdropClick') { return }
     if (this.state.activeStep === 2) {
       this.setState({setOpenRegister: false}, () => this.componentDidMount())
     }

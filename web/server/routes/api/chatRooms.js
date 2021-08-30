@@ -3,7 +3,6 @@ const router = express.Router();
 const uuidv4 = require('uuid/v4');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const nodemailer = require('nodemailer');
 const {sendNewMessageToAlfred, sendNewMessageToClient} = require('../../utils/mailing');
 
 // FIX : sendNewMessage de client vers Alfred en double

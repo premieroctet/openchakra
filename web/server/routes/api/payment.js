@@ -368,7 +368,7 @@ router.get('/activeAccount', passport.authenticate('jwt', {session: false}), (re
   promise
     .then(entity => {
       const id_mangopay = entity.id_mangopay
-      req.context.getModel('Users').getBankAccounts(id_mangopay)
+      mangoApi.Users.getBankAccounts(id_mangopay)
         .then(accounts => {
           accounts.forEach(a => {
             if (a.Active) {
@@ -380,7 +380,7 @@ router.get('/activeAccount', passport.authenticate('jwt', {session: false}), (re
         })
     })
     .catch(err => {
-      console.error(JSON.stringify(err))
+      console.error(err)
       res.json([])
     })
 })

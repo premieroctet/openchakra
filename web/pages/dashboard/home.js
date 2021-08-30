@@ -7,9 +7,7 @@ import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import Router from 'next/router';
 import Layout from '../../hoc/Layout/Layout';
-import axios from 'axios';
 import Link from 'next/link';
-import {CSVLink} from 'react-csv';
 
 const {isLoggedUserAdmin}=require('../../utils/context')
 
@@ -102,12 +100,6 @@ class home extends React.Component {
                   <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
                   <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                   <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
-                  { false ? // Générer boutiques si nécessaire seulement
-                    <CSVLink asyncOnClick={true} data={this.state.shopsData} filename="shops.csv" separator={';'}
-                             target="_blank">Export boutiques</CSVLink>
-                    :
-                    null
-                  }
                 </Grid>
                 :
                 <Grid item style={{display: 'flex', justifyContent: 'center'}}>
