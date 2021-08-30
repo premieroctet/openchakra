@@ -245,4 +245,10 @@ export default theme => ({
     color: theme.palette.error.main,
   },
 
+  media: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20
+  }
+
 })

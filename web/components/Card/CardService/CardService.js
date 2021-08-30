@@ -21,6 +21,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
+import {Skeleton} from '@material-ui/lab'
 const {isEditableUser}=require('../../../utils/context')
 
 class CardServiceInfo extends React.Component {
@@ -94,7 +95,7 @@ class CardService extends React.Component {
       .catch(err => console.error(err))
   }
 
-  modalDeleteServices = (classes) => {
+  modalDeleteServices = classes => {
     return(
       <Dialog
         open={this.state.open}
@@ -121,7 +122,7 @@ class CardService extends React.Component {
   };
 
   render() {
-    const {classes, gps, profileMode, address} = this.props
+    const {classes, gps, profileMode, address, loading} = this.props
     const {cpData, alfred, open} = this.state
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null
@@ -141,8 +142,34 @@ class CardService extends React.Component {
       )
     }
 
-    if (this.props.item===undefined) {
-      return null
+    const cardServiceLoading = () => {
+      return(
+        <Grid className={classes.mainCardServiceContainer}>
+          <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
+            <Grid className={classes.cardServiceMainStyle} style={{position: 'relative'}}>
+              <Grid className={classes.cardServicePicsContainer}>
+                <Skeleton animation="wave" variant="rect" className={classes.media} />
+              </Grid>
+              <Grid>
+                <Skeleton animation="wave" height={10} width="50%" style={{margin: 5, marginTop: 20}}/>
+              </Grid>
+              <Grid>
+                <Skeleton animation="wave" height={10} width="80%" style={{margin: 5}}/>
+              </Grid>
+              <Grid>
+                <Skeleton animation="wave" height={10} width="70%" style={{margin: 5}}/>
+              </Grid>
+              <Grid>
+                <Skeleton animation="wave" height={10} width="50%" style={{margin: 5}}/>
+              </Grid>
+              <Grid style={{position: 'absolute', bottom: 0, right: 0}}>
+                <Skeleton animation="wave"  width={80} height={50} style={{borderRadius: 20}}/>
+              </Grid>
+            </Grid>
+
+          </Paper>
+        </Grid>
+      )
     }
 
     const picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
@@ -150,44 +177,47 @@ class CardService extends React.Component {
     const editable = isEditableUser(alfred)
 
     return(
-      <Grid className={classes.mainCardServiceContainer}>
-        <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
-          <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => {profileMode && editable ? null : window.open(resa_link, '_blank') }}>
-            <Grid className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
-              <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
-                <Grid style={{backgroundImage: `url("/${picture}")`}} className={classes.cardServiceBackgroundPics}/>
-              </Grid>
-              {
-                profileMode && editable ?
-                  <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
-                    <Grid>
-                      <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
-                        <EditIcon style={{color: 'white'}} />
-                      </IconButton>
+      loading ?
+        cardServiceLoading()
+        :
+        <Grid className={classes.mainCardServiceContainer}>
+          <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
+            <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
+              <Grid className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
+                <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
+                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={classes.cardServiceBackgroundPics}/>
+                </Grid>
+                {
+                  profileMode && editable ?
+                    <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
+                      <Grid>
+                        <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
+                          <EditIcon style={{color: 'white'}} />
+                        </IconButton>
+                      </Grid>
+                      <Grid style={{marginLeft: '10px'}}>
+                        <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
+                          <DeleteForeverIcon style={{color: 'white'}} />
+                        </IconButton>
+                      </Grid>
                     </Grid>
-                    <Grid style={{marginLeft: '10px'}}>
-                      <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
-                        <DeleteForeverIcon style={{color: 'white'}} />
-                      </IconButton>
+                    :
+                    <Grid className={classes.cardServiceChipName}>
+                      <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null} className={classes.cardServiceChip} />
                     </Grid>
-                  </Grid>
-                  :
-                  <Grid className={classes.cardServiceChipName}>
-                    <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null} className={classes.cardServiceChip} />
-                  </Grid>
-              }
-            </Grid>
-            <Grid className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
-              <Grid className={classes.labelService}>
-                <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
+                }
               </Grid>
-              { profileMode ? null :
-                <Grid className={classes.cardServicePlaceContainer}>
-                  <Grid className={classes.cardServicePlaceLogo}>
-                    <RoomIcon/>
-                  </Grid>
-                  <Grid className={classes.cardKmContainer}>
-                    { distance &&
+              <Grid className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
+                <Grid className={classes.labelService}>
+                  <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
+                </Grid>
+                { profileMode ? null :
+                  <Grid className={classes.cardServicePlaceContainer}>
+                    <Grid className={classes.cardServicePlaceLogo}>
+                      <RoomIcon/>
+                    </Grid>
+                    <Grid className={classes.cardKmContainer}>
+                      { distance &&
                       <>
                         <Grid style={{whiteSpace: 'nowrap'}}>
                           <Typography>{`À ${distance} km`}</Typography>
@@ -196,57 +226,57 @@ class CardService extends React.Component {
                           <Typography>-</Typography>
                         </Grid>
                       </>
-                    }
-                    <Grid style={{overflow: 'hidden'}}>
-                      <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
+                      }
+                      <Grid style={{overflow: 'hidden'}}>
+                        <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              }
-              {
-                profileMode ? null :
-                  <Grid className={classes.containerDescription}>
-                    <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : 'Cet alfred est peut être trop timide pour parler de lui !'}</Typography>
-                  </Grid>
-              }
+                }
+                {
+                  profileMode ? null :
+                    <Grid className={classes.containerDescription}>
+                      <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : 'Cet alfred est peut être trop timide pour parler de lui !'}</Typography>
+                    </Grid>
+                }
 
-              <Grid className={classes.cardServiceScoreAndButtonContainer}>
-                <Grid className={classes.cardServiceRatingContainer}>
-                  <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
-                    { cpData.reviews && cpData.reviews.length>0 ?
-                      <Rating
-                        name="simple-controlled"
-                        value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
-                        max={1}
-                        readOnly
-                      />
-                      :
-                      null
-                    }
-                    <Grid className={classes.cardServiceBoxRatingDisplay}>
-                      <Grid className={classes.cardServiceRating}>
-                        { notes.global && notes.global >0 ?
-                          <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
-                          :
-                          null
-                        }
+                <Grid className={classes.cardServiceScoreAndButtonContainer}>
+                  <Grid className={classes.cardServiceRatingContainer}>
+                    <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
+                      { cpData.reviews && cpData.reviews.length>0 ?
+                        <Rating
+                          name="simple-controlled"
+                          value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
+                          max={1}
+                          readOnly
+                        />
+                        :
+                        null
+                      }
+                      <Grid className={classes.cardServiceBoxRatingDisplay}>
+                        <Grid className={classes.cardServiceRating}>
+                          { notes.global && notes.global >0 ?
+                            <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
+                            :
+                            null
+                          }
+                        </Grid>
+                        <Grid>
+                          { cpData.reviews && cpData.reviews.length >0 ?
+                            <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
+                            :
+                            null
+                          }
+                        </Grid>
                       </Grid>
-                      <Grid>
-                        { cpData.reviews && cpData.reviews.length >0 ?
-                          <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
-                          :
-                          null
-                        }
-                      </Grid>
-                    </Grid>
-                  </Box>
+                    </Box>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Paper>
-        {open ? this.modalDeleteServices(classes) : null}
-      </Grid>
+          </Paper>
+          {open ? this.modalDeleteServices(classes) : null}
+        </Grid>
     )
   }
 }
