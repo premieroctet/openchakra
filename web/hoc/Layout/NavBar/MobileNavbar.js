@@ -144,12 +144,14 @@ class MobileNavbar extends React.Component{
     this.setState({setOpenLogin: true, setOpenRegister: false});
   };
 
-  handleCloseLogin = () => {
+  handleCloseLogin = (event, reason) => {
+    if (reason=='backdropClick') { return }
     this.setState({setOpenLogin: false});
   };
 
 
-  handleCloseRegister = () => {
+  handleCloseRegister = (event, reason) => {
+    if (reason=='backdropClick') { return }
     if (this.state.activeStep === 2) {
       this.setState({setOpenRegister: false}, () => this.componentDidMount());
     } else {
@@ -192,7 +194,6 @@ class MobileNavbar extends React.Component{
         onClose={this.handleCloseLogin}
         TransitionComponent={Transition}
         classes={{paperWidthSm: classes.navbarPaperWidth}}
-        disableBackdropClick={true}
         disableEscapeKeyDown={true}
       >
         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
@@ -238,7 +239,6 @@ class MobileNavbar extends React.Component{
         open={this.state.setOpenRegister}
         onClose={this.handleCloseRegister}
         TransitionComponent={Transition}
-        disableBackdropClick={true}
         disableEscapeKeyDown={true}
       >
         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>

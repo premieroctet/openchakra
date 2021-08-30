@@ -96,7 +96,7 @@ class HandleCB extends React.Component {
 
     axios.post('/myAlfred/api/payment/createCard', obj)
       .then(() => {
-        snackBarSuccess('Carte ajouté !')
+        snackBarSuccess('Carte ajoutée !')
         this.setState({error: null, showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount())
       })
       .catch(err => {
