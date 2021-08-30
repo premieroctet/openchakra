@@ -180,11 +180,11 @@ class SelectService extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
-          <h2 className={classes.policySizeTitle}>{SHOP.service.title}</h2>
+          <h2 className={`customselectservicetitle ${classes.policySizeTitle}`}>{SHOP.service.title}</h2>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
-            <h3 style={{ color: '#403f3f' }}>{
+            <h3 className={'customselectservicesubtitle'} style={{color: '#403f3f'}}>{
               mode == CREASHOP_MODE.SERVICE_UPDATE ? SHOP.service.subtitle_update : SHOP.service.subtitle
             }</h3>
             { CREASHOP_MODE.SERVICE_UPDATE ? null : <h3>{SHOP.service.explanation}</h3>}
@@ -254,6 +254,7 @@ class SelectService extends React.Component {
             placeholder={SHOP.service.placeholder}
             value={this.getSelectedOption(options, service)}
             styles={professional_access && particular_access ? tabbedStyle : ''}
+            classes={{root: 'customseectserviceplaceholder'}}
           />
         </Grid>
       </Grid>

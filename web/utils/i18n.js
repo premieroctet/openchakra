@@ -205,6 +205,7 @@ const SHOP = {
     title: 'Préférences',
     subtitle: 'Indiquez vos préférences de réservation. Ces préférences s’appliqueront lorsqu’un client souhaite vous réserver.',
     title_delay_prevenance: 'De quel délai souhaitez-vous disposer entre la réservation et la réalisation du services ?',
+    exemple_delay: 'Par exemple, si vous indiquez un délai de 24 heures, un client devra réserver votre service au moins 24 heures avant votre intervention.',
     units_dalay_prevenance: 'Heures/jours/semaines',
     label_delay_prevenance: '',
     hours: 'heure(s)',

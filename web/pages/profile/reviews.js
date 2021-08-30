@@ -1,27 +1,27 @@
 import React from 'react'
-import Grid from "@material-ui/core/Grid";
+import Grid from '@material-ui/core/Grid'
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
-import {withStyles} from '@material-ui/core/styles';
-import AskQuestion from "../../components/AskQuestion/AskQuestion";
-import Box from "../../components/Box/Box";
-import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
-import {isEditableUser} from "../../utils/context";
+import {withStyles} from '@material-ui/core/styles'
+import AskQuestion from '../../components/AskQuestion/AskQuestion'
+import Box from '../../components/Box/Box'
+import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
+import {isEditableUser} from '../../utils/context'
 import styles from '../../static/css/pages/profile/reviews/reviews'
 
 class ProfileReviews extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state={}
   }
 
   static getInitialProps({query: {user}}) {
-    return {user: user};
+    return {user: user}
   }
 
   content = (classes, user) => {
-    const editable = isEditableUser(user);
+    const editable = isEditableUser(user)
 
     return(
       <Grid container>
@@ -37,14 +37,14 @@ class ProfileReviews extends React.Component {
                 <AskQuestion user={user}/>
               </Grid>
             </Grid>
-             : null
+            : null
         }
       </Grid>
     )
   };
 
   render() {
-    const {user, classes}=this.props;
+    const {user, classes}=this.props
 
     if (!user) {
       return null

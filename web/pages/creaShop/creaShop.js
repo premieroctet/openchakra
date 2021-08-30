@@ -21,6 +21,7 @@ const {is_development, isB2BDisabled}=require('../../config/config')
 const {snackBarSuccess}=require('../../utils/notifications')
 const {getLoggedUserId, isB2BStyle}=require('../../utils/context')
 const {STEPS}=require('./creaShopSteps')
+import '../../static/assets/css/custom.css'
 
 class creaShop extends React.Component {
 
@@ -563,7 +564,7 @@ class creaShop extends React.Component {
               open={mobileOpen}
               onClose={this.handleDrawerToggle}
               classes={{
-                paper: classes.drawerPaper,
+                paper: `customshoppaper ${classes.drawerPaper}`,
               }}
               ModalProps={{
                 keepMounted: true, // Better open performance on mobile.
@@ -575,7 +576,7 @@ class creaShop extends React.Component {
           <Hidden smDown implementation="css">
             <Drawer
               classes={{
-                paper: classes.drawerPaper,
+                paper: `customshoppaper ${classes.drawerPaper}`,
               }}
               variant="permanent"
               open
@@ -611,7 +612,7 @@ class creaShop extends React.Component {
             <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 11 : is_development() ? 5 : 11} lg={activeStep === 0 ? 11 : is_development() ? 5 : 11} md={activeStep === 0 ? 11 : is_development() ? 5 : 11} sm={activeStep === 0 ? 11 : is_development() ? 5 : 11} xs={activeStep === 0 ? 12 : is_development() ? 6 : 11}>
               <Button
                 variant="contained"
-                classes={{root: classes.nextButton}}
+                classes={{root: `customcreashopbuttonnext ${classes.nextButton}`}}
                 onClick={this.handleNext}
                 disabled={this.nextDisabled()}
               >

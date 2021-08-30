@@ -29,60 +29,6 @@ import '../../static/assets/css/custom.css'
 
 moment.locale('fr')
 
-const IOSSwitch = withStyles(theme => ({
-  root: {
-    width: 72,
-    height: 26,
-    padding: 0,
-    margin: theme.spacing(1),
-  },
-  switchBase: {
-    padding: 2,
-    '&$checked': {
-      transform: 'translateX(46px)',
-      color: theme.palette.secondary.main,
-      '& + $track': {
-        backgroundColor: 'white',
-        opacity: 1,
-        border: `1px solid ${theme.palette.grey[400]}`,
-      },
-    },
-    '&$focusVisible $thumb': {
-      color: theme.palette.secondary.main,
-      border: '6px solid #fff',
-    },
-  },
-  thumb: {
-    width: 20,
-    height: 20,
-  },
-  track: {
-    borderRadius: 26 / 2,
-    border: `1px solid ${theme.palette.grey[400]}`,
-    backgroundColor: theme.palette.grey[50],
-    opacity: 1,
-    transition: theme.transitions.create(['background-color', 'border']),
-  },
-  checked: {},
-  focusVisible: {},
-}))(({classes, ...props}) => {
-  return (
-    <Switch
-      focusVisibleClassName={classes.focusVisible}
-      disableRipple
-      classes={{
-        root: classes.root,
-        switchBase: classes.switchBase,
-        thumb: classes.thumb,
-        track: classes.track,
-        checked: classes.checked,
-      }}
-      {...props}
-    />
-  )
-})
-
-
 class security extends React.Component {
   constructor(props) {
     super(props)
@@ -444,21 +390,30 @@ class security extends React.Component {
             <h3 className={'customsecurityaccounttitle'}>Mon compte</h3>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Gérez votre compte.</Typography>
+            <Typography className={'customsecurityaccountsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Gérez votre compte.</Typography>
           </Grid>
         </Grid>
         <Grid style={{marginTop: '10vh'}}>
           <Grid container style={{alignItems: 'center'}} spacing={3}>
             <Grid item xl={8} xs={6}>
-              <h4>Je souhaite que mon compte apparaisse dans les résultats des moteurs de recherche</h4>
+              <h4 className={'customsecurityaccounth4'}>Je souhaite que mon compte apparaisse dans les résultats des moteurs de recherche</h4>
             </Grid>
             <Grid item xl={4} xs={6} style={{flexDirection: 'row-reverse', display: 'flex'}}>
-              <IOSSwitch
+              <Switch
                 checked={this.state.index_google}
                 onChange={this.handleChange('index_google')}
                 value={'index_google'}
                 color="primary"
                 inputProps={{'aria-label': 'primary checkbox'}}
+                focusVisibleClassName={classes.focusVisible}
+                disableRipple
+                classes={{
+                  root: classes.root,
+                  switchBase: `customiosswitch  ${classes.switchBase}`,
+                  thumb: classes.thumb,
+                  track: classes.track,
+                  checked: classes.checked,
+                }}
               />
             </Grid>
           </Grid>
@@ -466,13 +421,13 @@ class security extends React.Component {
             {this.state.user.is_alfred ?
               <Grid container spacing={3} style={{alignItems: 'center'}}>
                 <Grid item xl={8}>
-                  <h4>Je souhaite supprimer ma boutique de services.</h4>
+                  <h4 className={'customsecurityaccountdelete'}>Je souhaite supprimer ma boutique de services.</h4>
                 </Grid>
                 <Grid item xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
                   <Button
                     onClick={() => this.handleClickOpen()}
                     variant="contained"
-                    classes={{root: classes.buttonSave}}
+                    classes={{root: `customsecuritybuttondelete ${classes.buttonSave}`}}
                   >
                     Supprimer
                   </Button>
@@ -485,7 +440,7 @@ class security extends React.Component {
             <Grid container style={{alignItems: 'center'}} spacing={3}>
               <Grid item xl={8} style={{display: 'flex', flexDirection: 'column'}}>
                 <Grid>
-                  <h4>Je souhaite désactiver mon compte.</h4>
+                  <h4 className={'customsecurityaccountdesactivate'}>Je souhaite désactiver mon compte.</h4>
                 </Grid>
                 <Grid>
                   <Typography style={{color: 'rgba(39,37,37,35%)'}}>
@@ -497,7 +452,7 @@ class security extends React.Component {
                 <Button
                   onClick={() => this.handleClickOpen2()}
                   variant="contained"
-                  classes={{root: classes.buttonSave}}
+                  classes={{root: `customsecuritybuttondesactivate ${classes.buttonSave}`}}
                 >
                   Désactiver
                 </Button>

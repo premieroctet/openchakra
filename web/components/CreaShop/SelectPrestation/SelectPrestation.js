@@ -125,10 +125,10 @@ class SelectPrestation extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
-          <h2 className={classes.policySizeTitle}>{SHOP.parameter.title}</h2>
+          <h2 className={`customselectprestatitle ${classes.policySizeTitle}`}>{SHOP.parameter.title}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 style={{color: '#403f3f'}}>{SHOP.parameter.subtitle}</h3>
+          <h3 className={'customsselectprestasubtitle'} style={{color: '#403f3f'}}>{SHOP.parameter.subtitle}</h3>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -141,7 +141,7 @@ class SelectPrestation extends React.Component {
                 className={classes.margin}
               >
                 <AddIcon className={classes.extendedIcon}/>
-                <Typography style={{textTransform: 'initial', color: 'white'}}>{SHOP.parameter.presta_perso}</Typography>
+                <Typography className={'customsettingservicecustombutton'} style={{textTransform: 'initial', color: 'white'}}>{SHOP.parameter.presta_perso}</Typography>
               </Fab>
             </Grid>
             {Object.keys(this.state.grouped).map((fltr, i) => {
@@ -150,7 +150,7 @@ class SelectPrestation extends React.Component {
                 <Grid key={i} className={classes.maxWidth}>
                   {
                     fltr === COMPANY_PRIVATE_FLTR ? null : <Grid className={classes.marginThirty}>
-                      <Typography style={{color: '#403f3f'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? 'Prestations standard' : fltr === 'Prestations personnalisées' && this.state.grouped[ 'Prestations personnalisées' ].length === 0 ? '' : fltr}</Typography>
+                      <Typography className={'customselectprestasection'} style={{color: '#403f3f'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? 'Prestations standard' : fltr === 'Prestations personnalisées' && this.state.grouped[ 'Prestations personnalisées' ].length === 0 ? '' : fltr}</Typography>
                     </Grid>
                   }
                   <Grid container spacing={2} style={{margin: 0, width: '100%'}}>

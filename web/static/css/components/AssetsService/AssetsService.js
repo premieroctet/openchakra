@@ -37,4 +37,19 @@ export default theme => ({
       justifyContent: 'center',
     },
   },
+  textfieldMultiline: {
+    width: '100%',
+  },
+  widthField: {
+    width: '100%',
+  },
+  expTitle: {
+    width: '100%',
+  },
+  expDescription: {
+    width: '100%',
+  },
+  expCompetence: {
+    width: '100%',
+  },
 })

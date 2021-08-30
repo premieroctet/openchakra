@@ -33,4 +33,39 @@ export default theme => ({
   cancelButton: {
     color: theme.palette.error.main,
   },
+  root: {
+    width: 72,
+    height: 26,
+    padding: 0,
+    margin: theme.spacing(1),
+  },
+  switchBase: {
+    padding: 2,
+    '&$checked': {
+      transform: 'translateX(46px)',
+      color: theme.palette.secondary.main,
+      '& + $track': {
+        backgroundColor: 'white',
+        opacity: 1,
+        border: `1px solid ${theme.palette.grey[400]}`,
+      },
+    },
+    '&$focusVisible $thumb': {
+      color: theme.palette.secondary.main,
+      border: '6px solid #fff',
+    },
+  },
+  thumb: {
+    width: 20,
+    height: 20,
+  },
+  track: {
+    borderRadius: 26 / 2,
+    border: `1px solid ${theme.palette.grey[400]}`,
+    backgroundColor: theme.palette.grey[50],
+    opacity: 1,
+    transition: theme.transitions.create(['background-color', 'border']),
+  },
+  checked: {},
+  focusVisible: {},
 })

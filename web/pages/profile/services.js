@@ -9,9 +9,9 @@ import AskQuestion from '../../components/AskQuestion/AskQuestion'
 import Box from '../../components/Box/Box'
 import axios from 'axios'
 import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
-import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions'
 import AlfredConditions from '../../components/AlfredConditions/AlfredConditions'
 const {isEditableUser}=require('../../utils/context')
+import '../../static/assets/css/custom.css'
 
 class ProfileServices extends React.Component {
 
