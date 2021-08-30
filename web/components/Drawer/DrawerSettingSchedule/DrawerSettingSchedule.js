@@ -3,18 +3,19 @@ import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import Divider from '@material-ui/core/Divider'
-import {Button, Accordion, AccordionDetails, AccordionSummary} from '@material-ui/core'
+import { Accordion, AccordionDetails, AccordionSummary, Button } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
-import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers'
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import frLocale from 'date-fns/locale/fr'
 import Chip from '@material-ui/core/Chip'
-import {DAYS} from '../../../utils/converters'
+import { DAYS } from '../../../utils/converters'
 import SelectSlotTimer from '../../SelectSlotTimer/SelectSlotTimer'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from './DrawerSettingScheduleStyle'
 import axios from 'axios'
+
 const {timelapsesSetToArray} = require('../../../utils/dateutils')
 
 class DrawerSettingSchedule extends React.Component {
@@ -35,8 +36,7 @@ class DrawerSettingSchedule extends React.Component {
   }
 
   isDirty = () => {
-    const dirty = this.state.dirty
-    return dirty
+    return this.state.dirty
   }
 
   loadAvailabilities = () => {
@@ -138,7 +138,7 @@ class DrawerSettingSchedule extends React.Component {
     };
 
 
-    save = (index) => {
+    save = index => {
       const availability = this.state.availabilities[index]
       axios.post('/myAlfred/api/availability/addRecurrent', {
         _id: availability._id,
@@ -200,7 +200,7 @@ class DrawerSettingSchedule extends React.Component {
         <Grid>
           <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
             <Grid>
-              <h2>Paramétrez vos disponibilités</h2>
+              <h2 className={'customschedulesettingtitle'}>Paramétrez vos disponibilités</h2>
             </Grid>
             <Grid>
               <IconButton aria-label="CLOSE">
@@ -226,10 +226,10 @@ class DrawerSettingSchedule extends React.Component {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Grid style={{width: '100%'}}>
-                        <Grid>
+                        <Grid className={'customsettingscheduledelaycont'}>
                           <h3>Période :</h3>
                         </Grid>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} className={'customsettingscheduledelaycont'}>
                           <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
                             <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
                               <Grid>
