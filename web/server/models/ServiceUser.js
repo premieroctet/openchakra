@@ -149,9 +149,18 @@ const ServiceUserSchema = new Schema({
   },
   // Frais déplacement
   travel_tax: {
-    type: Number,
-    default: 0,
-    required: true,
+    // Prix au kilometre (euros)
+    rate: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    // Kilomètres facturés à partir de 'from'
+    from: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
   },
   // Particulars can book
   particular_access: {
