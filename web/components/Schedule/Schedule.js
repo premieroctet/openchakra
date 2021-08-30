@@ -11,7 +11,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import Hidden from '@material-ui/core/Hidden'
 import {isMobile} from '../../utils/context'
 import Router from 'next/router'
-
+import '../../static/assets/css/custom.css'
 
 const {isDateAvailable, isMomentAvailable} = require('../../utils/dateutils')
 moment.locale('fr')
@@ -125,7 +125,7 @@ class Schedule extends React.Component {
                 </Grid> : null
             }
             <Grid item>
-              <span>{`${date.format('MMMM') } ${ date.format('YYYY')}`}</span>
+              <span className={'customschedulemonthheader'}>{`${date.format('MMMM') } ${ date.format('YYYY')}`}</span>
             </Grid>
             {
               this.props.nbSchedule === 1 ?
@@ -162,7 +162,7 @@ class Schedule extends React.Component {
         <Grid className={classes.schedule_containerLabelSelector}>
           <Hidden only={['xs']}>
             <Grid
-              className={eventsSelected.has(newDate) ? classes.schedule_labelSelectorActive : classes.schedule_labelSelector}>
+              className={eventsSelected.has(newDate) ? `customscheduleactive ${classes.schedule_labelSelectorActive}` : `customschedulehover ${classes.schedule_labelSelector}`}>
               <Typography className={classes.schedule_monthDateHeaderLabel}>{event.label}</Typography>
             </Grid>
           </Hidden>
@@ -299,10 +299,10 @@ class Schedule extends React.Component {
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container
             style={{justifyContent: 'space-between', margin: 0, width: '100%'}} spacing={3}>
             <Grid>
-              <Button onClick={this.previousMonth} variant={'contained'}>&#8249;</Button>
+              <Button onClick={this.previousMonth} variant={'contained'} classes={{root: `customscheduleprevbutton`}}>&#8249;</Button>
             </Grid>
             <Grid>
-              <Button onClick={this.nextMonth} variant={'contained'}>&#8250;</Button>
+              <Button onClick={this.nextMonth} variant={'contained'} classes={{root: `customschedulenextbutton`}}>&#8250;</Button>
             </Grid>
           </Grid>
           :

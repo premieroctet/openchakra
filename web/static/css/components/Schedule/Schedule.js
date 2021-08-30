@@ -131,6 +131,7 @@ export default theme => ({
     '& .rbc-month-row': {
       display: 'flex',
       justifyContent: 'center',
+      marginLeft: '-1px',
     },
     '& .rbc-date-cell': {
       display: 'flex',
