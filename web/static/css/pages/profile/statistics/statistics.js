@@ -1,84 +1,84 @@
 export default theme => ({
-  statContainer:{
+  statContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
   },
-  statContainerLabel:{
+  statContainerLabel: {
     marginRight: '3vh',
-    color:'rgba(39,37,37,35%)'
+    color: 'rgba(39,37,37,35%)',
   },
-  statPadding:{
-    paddingRight: '34px !important'
+  statPadding: {
+    paddingRight: '34px !important',
   },
-  statResultContainer:{
+  statResultContainer: {
     marginTop: '10vh',
     marginBottom: '12vh',
-    backgroundColor:'rgba(229,229,229,1)',
+    backgroundColor: 'rgba(229,229,229,1)',
     borderRadius: 44,
     padding: '5%',
     display: 'flex',
     justifyContent: 'space-around',
     flexWrap: 'nowrap',
-    [theme.breakpoints.down('sm')]:{
-      flexDirection: 'column'
-    }
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
-  statResultData:{
+  statResultData: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'row',
       marginTop: '3vh',
       marginBottom: '3vh',
-    }
+    },
   },
-  statData:{
+  statData: {
     marginTop: '3vh',
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('sm')]: {
       margin: 0,
-      justifyContent: 'flex-end'
-    }
+      justifyContent: 'flex-end',
+    },
   },
-  statResultLabel:{
-    [theme.breakpoints.down('sm')]:{
-      display : 'flex',
-      justifyContent: 'left'
-    }
+  statResultLabel: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      justifyContent: 'left',
+    },
   },
-  containerAskQuestion:{
+  containerAskQuestion: {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.only('xs')]:{
-      display : 'none',
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('sm')]:{
-      display : 'none',
-    }
-  },
-  profileLayoutContainer:{
-    [theme.breakpoints.only('xs')]:{
-      display : 'none',
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
     },
   },
-  layoutMobileProfileContainer:{
-    [theme.breakpoints.only('xl')]:{
-      display : 'none',
+  profileLayoutContainer: {
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('lg')]:{
-      display : 'none',
+  },
+  layoutMobileProfileContainer: {
+    [theme.breakpoints.only('xl')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('md')]:{
-      display : 'none',
+    [theme.breakpoints.only('lg')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('sm')]:{
-      display : 'none',
+    [theme.breakpoints.only('md')]: {
+      display: 'none',
     },
-  }
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
+    },
+  },
 })
