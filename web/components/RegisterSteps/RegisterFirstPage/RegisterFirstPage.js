@@ -1,25 +1,26 @@
-import React from 'react';
-import withStyles from "@material-ui/core/styles/withStyles";
-import Grid from "@material-ui/core/Grid";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import TextField from "@material-ui/core/TextField";
-import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
-import LockOpenOutlinedIcon from "@material-ui/icons/LockOpenOutlined";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import styles from '../../../static/css/components/RegisterSteps/RegisterFirstPage/RegisterFirstPage';
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import React from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Grid from '@material-ui/core/Grid'
+import MailOutlineIcon from '@material-ui/icons/MailOutline'
+import TextField from '@material-ui/core/TextField'
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline'
+import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import styles from '../../../static/css/components/RegisterSteps/RegisterFirstPage/RegisterFirstPage'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import IconButton from '@material-ui/core/IconButton'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import '../../../static/assets/css/custom.css'
 
-class RegisterFirstPage extends React.Component{
+class RegisterFirstPage extends React.Component {
 
   render() {
-    const{classes, state} = this.props;
+    const{classes, state} = this.props
 
     return(
       <Grid container>
-        <Grid className={classes.margin}>
+        <Grid className={`customregistercontemail ${classes.margin}`}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
               <MailOutlineIcon className={classes.colorIcon}/>
@@ -32,14 +33,14 @@ class RegisterFirstPage extends React.Component{
                 style={{width: '100%'}}
                 type="email"
                 value={state.email}
-                onChange={(e) => this.props.onChangeEmail(e)}
+                onChange={e => this.props.onChangeEmail(e)}
                 error={state.errors.email}
                 helperText={state.errors.email}
               />
             </Grid>
           </Grid>
         </Grid>
-        <Grid className={classes.margin}>
+        <Grid className={`customregistercontfirstname ${classes.margin}`}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
               <PersonOutlineIcon className={classes.colorIcon}/>
@@ -53,14 +54,14 @@ class RegisterFirstPage extends React.Component{
                 type="text"
                 name="firstname"
                 value={state.firstname}
-                onChange={(e) => this.props.onChange(e)}
+                onChange={e => this.props.onChange(e)}
                 error={state.errors.firstname}
               />
             </Grid>
             <em style={{color: 'red'}}>{state.errors.firstname}</em>
           </Grid>
         </Grid>
-        <Grid className={classes.margin}>
+        <Grid className={`customregistercontname ${classes.margin}`}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
               <PersonOutlineIcon className={classes.colorIcon}/>
@@ -73,14 +74,14 @@ class RegisterFirstPage extends React.Component{
                 type="text"
                 name="name"
                 value={state.name}
-                onChange={(e) => this.props.onChange(e)}
+                onChange={e => this.props.onChange(e)}
                 error={state.errors.name}
               />
             </Grid>
             <em style={{color: 'red'}}>{state.errors.name}</em>
           </Grid>
         </Grid>
-        <Grid className={classes.margin}>
+        <Grid className={`customregistercontmdp ${classes.margin}`}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid className={classes.margin}>
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
@@ -92,11 +93,11 @@ class RegisterFirstPage extends React.Component{
                     label="Créer un mot de passe"
                     placeholder="Créer un mot de passe"
                     style={{width: '100%'}}
-                    type={state.showPassword ? "text" : "password"}
+                    type={state.showPassword ? 'text' : 'password'}
                     name="password"
                     value={state.password}
-                    onChange={(e) => this.props.onChange(e)}
-                    onKeyUp={(e) => this.props.onChangePassword(e)}
+                    onChange={e => this.props.onChange(e)}
+                    onKeyUp={e => this.props.onChangePassword(e)}
                     error={state.status1.error}
                     helperText={state.status1.error}
                     InputProps={{
@@ -106,12 +107,12 @@ class RegisterFirstPage extends React.Component{
                             tabIndex="-1"
                             aria-label="toggle password visibility"
                             onClick={() => this.props.handleClickShowPassword()}
-                            onMouseDown={(e) => e.preventDefault()}
+                            onMouseDown={e => e.preventDefault()}
                           >
                             {state.showPassword ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
                         </InputAdornment>
-                      )
+                      ),
                     }}
                   />
                 </Grid>
@@ -127,26 +128,26 @@ class RegisterFirstPage extends React.Component{
                     label="Confirmer mot de passe"
                     placeholder="Confirmer mot de passe"
                     style={{width: '100%'}}
-                    type={state.showPassword2 ? "text" : "password"}
+                    type={state.showPassword2 ? 'text' : 'password'}
                     name="password2"
                     value={state.password2}
-                    onChange={(e) => this.props.onChange(e)}
-                    onKeyUp={(e) => this.props.onChangePassword(e)}
+                    onChange={e => this.props.onChange(e)}
+                    onKeyUp={e => this.props.onChangePassword(e)}
                     error={state.status2.error}
                     helperText={state.status2.error}
                     InputProps={{
                       endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          tabIndex="-1"
-                          aria-label="toggle password visibility"
-                          onClick={() => this.props.handleClickShowPassword2()}
-                          onMouseDown={(e) => e.preventDefault()}
-                        >
-                          {state.showPassword2 ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                      )
+                        <InputAdornment position="end">
+                          <IconButton
+                            tabIndex="-1"
+                            aria-label="toggle password visibility"
+                            onClick={() => this.props.handleClickShowPassword2()}
+                            onMouseDown={e => e.preventDefault()}
+                          >
+                            {state.showPassword2 ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
                     }}
                   />
                 </Grid>
@@ -159,4 +160,4 @@ class RegisterFirstPage extends React.Component{
   }
 }
 
-export default withStyles(styles)(RegisterFirstPage);
+export default withStyles(styles)(RegisterFirstPage)
