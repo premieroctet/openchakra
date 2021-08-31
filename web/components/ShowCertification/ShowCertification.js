@@ -1,58 +1,110 @@
-import React from 'react';
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import axios from "axios";
-import withStyles from "@material-ui/core/styles/withStyles";
-import styles from '../../static/css/components/ShowCertification/ShowCertification';
-const {setAxiosAuthentication}=require('../../utils/authentication');
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+import withStyles from '@material-ui/core/styles/withStyles'
+import styles from '../../static/css/components/ShowCertification/ShowCertification'
+import ExtensionIcon from '@material-ui/icons/Extension'
+import Chip from '@material-ui/core/Chip'
+import Divider from '@material-ui/core/Divider'
+import CloudDoneOutlinedIcon from '@material-ui/icons/CloudDoneOutlined'
+import CloudOffOutlinedIcon from '@material-ui/icons/CloudOffOutlined'
+const {setAxiosAuthentication}=require('../../utils/authentication')
 
-class ShowCertification extends React.Component{
+class ShowCertification extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
       services: [],
     }
   }
 
   componentDidMount() {
-    setAxiosAuthentication();
+    setAxiosAuthentication()
 
     axios.get(`/myAlfred/api/shop/alfred/${this.props.user}`)
       .then(response => {
-        let shop = response.data;
+        let shop = response.data
         this.setState({
           shop: shop,
-          services: shop.services
+          services: shop.services,
         })
       }).catch(err => console.error(err))
   }
 
   render() {
-    const {shop, services} = this.state;
+    const {shop, services} = this.state
+    const {classes} = this.props
 
     let certifications = services.map(a => a.certification).filter(c => Boolean(c))
+    certifications.sort((a, b) => ((a.year < b.year) ? 1 : ((b.year < a.year) ? -1 : 0)))
+
 
     return(
-      <Grid container spacing={2} style={{margin: 0, width:'100%'}}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3>Certifications</h3>
+      <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          <Grid style={{display: 'flex'}}>
+            <img title={'certification_icon'} alt={'certification_icon'} height={24} width={24} src={'/static/assets/icon/pro_icon.svg'}/>
+          </Grid>
+          <Grid style={{marginLeft: 10}}>
+            <h3>Certifications</h3>
+          </Grid>
         </Grid>
         <Grid container spacing={2} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
           {
             shop ?
               certifications.map(x => {
-                if(x.name){
+                if(x.name) {
                   return(
-                    <Grid container spacing={2} item xl={3} lg={3} md={3} sm={3} xs={3} style={{margin:0, width: '100%', boxShadow:'0px 0px 6px -2px #696767', borderRadius: 30}}>
-                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-                        <h4>{x.name}</h4>
+                    <>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                        <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{x.name.charAt(0).toUpperCase() + x.name.slice(1)}</Typography>
                       </Grid>
-                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-                        <Typography>{x.year}</Typography>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>{x.year ? `Certification obtenue en ${x.year} -` : 'Date d\'obtention non renseigné -' } </em></Typography>
+                        {
+                          x.file ?
+                            <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                              <Grid style={{marginLeft: '3px'}}>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Certification jointe</em></Typography>
+                              </Grid>
+                              <Grid style={{marginLeft: '5px'}}>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudDoneOutlinedIcon/></em></Typography>
+                              </Grid>
+                            </Grid>
+                            :
+                            <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                              <Grid style={{marginLeft: '3px'}}>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Certification non jointe</em></Typography>
+                              </Grid>
+                              <Grid style={{marginLeft: '5px'}}>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudOffOutlinedIcon/></em></Typography>
+                              </Grid>
+                            </Grid>
+                        }
                       </Grid>
-                    </Grid>
+                      {
+                        x.skills && x.skills.length > 0 ?
+                          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.chipsContainer}>
+                            {
+                              x.skills.map(s => {
+                                return(
+                                  <Chip
+                                    classes={{root: classes.chip}}
+                                    label={`#${s}`}
+                                  />
+                                )
+                              })
+                            }
+                          </Grid> : null
+                      }
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{marginTop: '3vh'}}>
+                        <Divider/>
+                      </Grid>
+                    </>
                   )
-                }})
+                }
+              })
               : null
           }
         </Grid>
@@ -61,4 +113,4 @@ class ShowCertification extends React.Component{
   }
 }
 
-export default withStyles(styles) (ShowCertification);
+export default withStyles(styles)(ShowCertification)

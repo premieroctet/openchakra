@@ -236,7 +236,10 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 // Returns all bookings from avocotes customer not already handled
 // @Access private
 router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Booking').find({company_customer: {$exists: true, $ne: null}})
+  req.context.getModel('Booking').find({
+    company_customer: {$exists: true, $ne: null},
+    status: {$nin: [BOOK_STATUS.FINISHED, BOOK_STATUS.CANCELLED]},
+  })
     .populate('user')
     .then(customer_bookings => {
       req.context.getModel('Booking').find({

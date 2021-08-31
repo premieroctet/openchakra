@@ -22,10 +22,12 @@ const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')
 import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import Hidden from '@material-ui/core/Hidden'
 const SearchResults=withSlide(withGrid(CardService))
 const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
 const {emptyPromise}=require('../utils/promise')
+
 moment.locale('fr')
 
 class SearchDataModel extends SlideGridDataModel {
@@ -441,7 +443,7 @@ class SearchPage extends React.Component {
                         address={selectedAddress}
                       />
                     </Grid>
-                    <Grid className={classes.hideOnBigScreen} item xs={12}>
+                    <Hidden only={['xs', 'lg', 'md', 'sm']} >
                       <InfiniteScroll
                         dataLength={scroll_count}
                         next={() => this.setState({scroll_count: this.state.scroll_count+this.SCROLL_DELTA}) }
@@ -460,7 +462,7 @@ class SearchPage extends React.Component {
                           )
                         }
                       </InfiniteScroll>
-                    </Grid>
+                    </Hidden>
                   </Grid>
                 }
               </Grid>
