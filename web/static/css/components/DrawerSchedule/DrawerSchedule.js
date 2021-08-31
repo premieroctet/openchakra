@@ -1,41 +1,44 @@
 export default theme => ({
-  drawerScheduleDrawerPaper:{
+  drawerScheduleDrawerPaper: {
     width: '90%',
     borderRadius: 17,
-    padding: '5%'
+    padding: '5%',
   },
-  drawerPaperAnchorBottom:{
+  drawerPaperAnchorBottom: {
     left: '10vh',
-    [theme.breakpoints.down('md')]:{
+    [theme.breakpoints.down('md')]: {
       left: 'inherit',
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
-  drawerScheduleButton:{
+  drawerScheduleButton: {
     marginRight: theme.spacing(2),
   },
-  buttonShowContainer:{
+  buttonShowContainer: {
     marginTop: '5vh',
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
-    }
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
+    },
   },
-  containerFab:{
+  containerFab: {
     position: 'fixed',
     bottom: '15vh',
     zIndex: 6,
     right: 0,
-    [theme.breakpoints.only('xl')]:{
-      display: 'none'
+    [theme.breakpoints.only('xl')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('lg')]:{
-      display: 'none'
+    [theme.breakpoints.only('lg')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('md')]:{
-      display: 'none'
+    [theme.breakpoints.only('md')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
     },
-  }
+  },
+  buttonAction: {
+    fontWeight: 'bold',
+  },
 })

@@ -132,6 +132,19 @@ const getMangopayMessage = msg_id => {
   return MANGOPAY_MESSAGES[ msg_id ] || MANGOPAY_ERRORS[ parseInt(msg_id) ] || `Erreur inconnue:${msg_id}`
 }
 
+const PROFIL = {
+  place: 'Habite à',
+  languages: 'Langues',
+  verification: 'Vérification',
+  noaddresses: 'Pas d\'adresse',
+  website: 'Site web',
+  companysize: 'Taille de l’entreprise',
+  activity: 'Secteur d’activité',
+  nothing: 'Non renseigné',
+  confirmed: 'Profil confirmé',
+  unconfirmed: 'Profil non confirmé',
+}
+
 const SHOP = {
   addService: 'Ajoutez des services',
   createShop: 'Proposez votre premier service',
@@ -223,10 +236,6 @@ const SHOP = {
     expertise_label: 'Votre expertise',
     experience_title: 'Votre expérience',
     experience_label: 'Experience',
-    experience_yearRange_0: 'Entre 0 et 1 an',
-    experience_yearRange_1: 'Entre 1 et 5 ans',
-    experience_yearRange_2: 'Entre 5 et 10 ans',
-    experience_yearRange_3: 'Plus de 10 ans',
     experience_label_description: 'Décrivrez votre expérience',
     obtain_competence: 'Compétences',
     diploma_title: 'Votre diplôme',
@@ -512,5 +521,6 @@ module.exports = {
   BOOKING,
   FAQ,
   INFOBARMOBILE_MESSAGE,
-  AVOCOTES
+  AVOCOTES,
+  PROFIL
 }

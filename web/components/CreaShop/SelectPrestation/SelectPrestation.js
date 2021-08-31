@@ -189,49 +189,48 @@ class SelectPrestation extends React.Component {
           </Grid>
         </Grid>
         {
-          this.state.grouped[ COMPANY_PRIVATE_FLTR ] && this.state.grouped[ COMPANY_PRIVATE_FLTR ].length>0 ? <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Divider/>
-            </Grid>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3 style={{color: '#696767'}}>{SHOP.parameter.titleIsPro}</h3>
-            </Grid>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Typography>{SHOP.parameter.descriptionIsPro}</Typography>
-            </Grid>
-            <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
-              {_.sortBy(this.state.grouped[ COMPANY_PRIVATE_FLTR ], 'order').map(res => {
-                let isEditable = res._id.length === GID_LEN
-                let presta = this.state.prestations[ res._id ]
-                return(
-                  <Grid key={res._id} item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <ButtonSwitch
-                      isOption={true}
-                      isPrice={true}
-                      width={'100%'}
-                      label={res.label}
-                      id={res._id}
-                      checked={res.isCustomPresta ? true : presta != null}
-                      billings={res.billing}
-                      onChange={this.prestationSelected}
-                      isEditable={isEditable}
-                      price={presta ? presta.price : null}
-                      billing={presta ? presta.billing : null}
-                    />
-                    {
-                      // Display dangerouslySetInnerHTML for company private prestations only
-                      res.description ?
-                        res.private_company ?
-                          <Typography>Infos: <div dangerouslySetInnerHTML={{__html: res.description}} /></Typography>
-                          :
-                          <Typography>Infos : {res.description}</Typography>
+          this.state.grouped[ COMPANY_PRIVATE_FLTR ] && this.state.grouped[ COMPANY_PRIVATE_FLTR ].length>0 ? <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <Divider/>
+          </Grid>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <h3 style={{color: '#696767'}}>{SHOP.parameter.titleIsPro}</h3>
+          </Grid>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <Typography>{SHOP.parameter.descriptionIsPro} <a href='/static/assets/avocotes/guide_boutique.pdf' target='_blank'>Cliquez ici pour consulter la notice d'installation.</a></Typography>
+          </Grid>
+          <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
+            {_.sortBy(this.state.grouped[ COMPANY_PRIVATE_FLTR ], 'order').map(res => {
+              let isEditable = res._id.length === GID_LEN
+              let presta = this.state.prestations[ res._id ]
+              return(
+                <Grid key={res._id} item xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <ButtonSwitch
+                    isOption={true}
+                    isPrice={true}
+                    width={'100%'}
+                    label={res.label}
+                    id={res._id}
+                    checked={res.isCustomPresta ? true : presta != null}
+                    billings={res.billing}
+                    onChange={this.prestationSelected}
+                    isEditable={isEditable}
+                    price={presta ? presta.price : null}
+                    billing={presta ? presta.billing : null}
+                  />
+                  {
+                    // Display dangerouslySetInnerHTML for company private prestations only
+                    res.description ?
+                      res.private_company ?
+                        <Typography>Infos: <div dangerouslySetInnerHTML={{__html: res.description}} /></Typography>
                         :
-                        null
-                    }
-                  </Grid>
-                )
-              })}
-            </Grid>
+                        <Typography>Infos : {res.description}</Typography>
+                      :
+                      null
+                  }
+                </Grid>
+              )
+            })}
+          </Grid>
           </Grid> : null
         }
       </Grid>

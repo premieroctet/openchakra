@@ -17,6 +17,7 @@ import Chip from '@material-ui/core/Chip'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import _ from 'lodash'
+import {YEARS_RANGE} from '../../../utils/consts'
 
 // TODO: gérer les images des diplômes et crtifications en cas de modification de service
 class AssetsService extends React.Component {
@@ -31,7 +32,6 @@ class AssetsService extends React.Component {
       certificationYear: props.certificationYear || '',
       certificationName: props.certificationName || '',
       certificationPicture: props.certificationPicture || '',
-      level: props.level,
       diplomaSkills: props.diplomaSkills || [],
       certificationSkills: props.certificationSkills || [],
       experience_skills: props.experience_skills || [],
@@ -40,6 +40,7 @@ class AssetsService extends React.Component {
       newExperienceSkill: '',
       newDiplomaSkill: '',
       newCertificationSkill: '',
+      level: props.level,
     }
     this.handleChange = this.handleChange.bind(this)
     this.handlePicture=this.handlePicture.bind(this)
@@ -56,10 +57,10 @@ class AssetsService extends React.Component {
 
   handleChange = event => {
     let attributes={[event.target.name]: event.target.value}
-    if (name == 'diplomaName' && isEmpty(value)) {
+    if (name === 'diplomaName' && isEmpty(value)) {
       attributes.diplomaYear = null
     }
-    if (name == 'certificationName' && isEmpty(value)) {
+    if (name === 'certificationName' && isEmpty(value)) {
       attributes.certificationYear = null
     }
     if (name.toLowerCase().includes('skill')) {
@@ -136,10 +137,11 @@ class AssetsService extends React.Component {
                 onChange={this.handleChange}
                 label={SHOP.assets.experience_label}
               >
-                <MenuItem value="1">{SHOP.assets.experience_yearRange_0}</MenuItem>
-                <MenuItem value="2">{SHOP.assets.experience_yearRange_1}</MenuItem>
-                <MenuItem value="3">{SHOP.assets.experience_yearRange_2}</MenuItem>
-                <MenuItem value="4">{SHOP.assets.experience_yearRange_3}</MenuItem>
+                {
+                  Object.keys(YEARS_RANGE).map((res, index) => (
+                    <MenuItem key={index + 1} value={res}>{YEARS_RANGE[res]}</MenuItem>
+                  ))
+                }
               </Select>
             </FormControl>
           </Grid>

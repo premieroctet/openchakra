@@ -143,7 +143,7 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
 // @Access private
 router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('ServiceUser').findOne({ _id : req.params.serviceuser_id})
+  req.context.getModel('ServiceUser').findOne({_id: req.params.serviceuser_id})
     .then(su => {
       if (!su) {
         su = {}
@@ -166,13 +166,13 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
       }))
 
       const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : emptyPromise({insertedIds: []})
-      r.catch(error => console.log('Error insert many' + JSON.stringify(error, null, 2)))
+      r.catch(error => console.log(`Error insert many${ JSON.stringify(error, null, 2)}`))
         .then(result => {
-          var newIds = result.insertedIds
+          let newIds = result.insertedIds
           // Update news prestations ids
           newPrestations.forEach((p, idx) => {
             p._id = newIds[idx]
-            console.log('Presta sauvegardée : ' + JSON.stringify(p))
+            console.log(`Presta sauvegardée : ${ JSON.stringify(p)}`)
           })
           su.prestations=[]
           Object.values(req.body.prestations).forEach(presta => {
@@ -180,22 +180,22 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
             su.prestations.push(newp)
           })
 
-          const promise = req.params.serviceuser_id ? req.context.getModel('ServiceUser').findByIdAndUpdate(su._id, su, {new: true})  : req.context.getModel('ServiceUser').create(su)
+          const promise = req.params.serviceuser_id ? req.context.getModel('ServiceUser').findByIdAndUpdate(su._id, su, {new: true}) : req.context.getModel('ServiceUser').create(su)
           promise
             .then(su => {
               if (req.params.serviceuser_id) {
                 return res.json(su)
               }
-              else {
-                req.context.getModel('Shop').update({alfred: req.user.id}, { $push: { services: su}})
-                  .then(shop => {
-                    return res.json(su)
-                  })
-                  .catch(error => {
-                    console.error(error)
-                    res.status(400).json(error)
-                  })
-                }
+
+              req.context.getModel('Shop').update({alfred: req.user.id}, {$push: {services: su}})
+                .then(() => {
+                  return res.json(su)
+                })
+                .catch(error => {
+                  console.error(error)
+                  res.status(400).json(error)
+                })
+
             })
             .catch(err => {
               console.error(err)
@@ -287,7 +287,7 @@ router.put('/addPrestation/:id', passport.authenticate('jwt', {
 // @Route PUT /myAlfred/api/serviceUser/editPrestation
 // Edit the price of a prestation for a service
 // @Access private
-router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false,}), (req, res) => {
+router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
       const index = serviceUser.prestations
@@ -352,14 +352,15 @@ router.get('/all', (req, res) => {
     .then(service => {
       if (typeof service !== 'undefined' && service.length > 0) {
         res.json(service)
-      } else {
+      }
+      else {
         return res.status(400).json({
           msg: 'No service found',
         })
       }
 
     })
-    .catch(err => res.status(404).json({
+    .catch(() => res.status(404).json({
       service: 'No service found',
     }))
 })
@@ -379,13 +380,14 @@ router.get('/all/category/:category', (req, res) => {
             allServices.push(e)
           }
         })
-      } else {
+      }
+      else {
         return res.status(400).json({msg: 'No service found'})
       }
       res.json(allServices)
 
     })
-    .catch(err => res.status(404).json({service: 'No service found'}))
+    .catch(() => res.status(404).json({service: 'No service found'}))
 })
 
 // @Route GET /myAlfred/api/serviceUser/category/:id
@@ -402,13 +404,15 @@ router.get('/category/:id', (req, res) => {
             res.json({
               length: service.length,
             })
-          } else {
+          }
+          else {
             res.json({
               length: 0,
             })
           }
         })
-      } else {
+      }
+      else {
         return res.status(400).json({
           msg: 'No service found',
         })
@@ -438,16 +442,17 @@ router.get('/near', passport.authenticate('jwt', {session: false}), (req, res) =
             const latAlfred = gpsAlfred.lat
             const lngAlfred = gpsAlfred.lng
             if (latAlfred == null || lngAlfred == null) {
-              //console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred))
-            } else {
+              // console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred))
+            }
+            else {
 
-              /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000))
+              /* const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000))
 
               if(!isNear) {
                 const removeIndex = service.findIndex(i => i._id == e._id)
                 service.splice(removeIndex, 1)
               }*/
-              var distance = geolib.convertDistance(geolib.getDistance({
+              let distance = geolib.convertDistance(geolib.getDistance({
                 latitude: latUser,
                 longitude: lngUser,
               }, {latitude: latAlfred, longitude: lngAlfred}), 'km').toFixed(2)
@@ -519,7 +524,7 @@ router.post('/search', (req, res) => {
   const service = req.body.service
   const prestation = req.body.prestation
   const restrictPerimeter = req.body.perimeter
-  const status = req.body.status; // PRO or PART
+  const status = req.body.status // PRO or PART
 
   console.log(`Searching ${JSON.stringify(req.body)}`)
 
@@ -624,7 +629,7 @@ router.get('/cardPreview/:id', (req, res) => {
                 _id: su._id, label: su.service.label, picture: su.service.picture,
                 alfred: su.user, city: su.service_address ? su.service_address.city : '', graduated: su.graduated,
                 is_certified: su.is_certified, level: su.level, is_professional: shop.is_professional,
-                gps: su.service_address ? su.service_address.gps : null, reviews: reviews, description: su.description
+                gps: su.service_address ? su.service_address.gps : null, reviews: reviews, description: su.description,
               }
               res.json(result)
             })
@@ -657,7 +662,7 @@ router.get('/nearOther/:id', passport.authenticate('jwt', {session: false}), (re
             const latAlfred = gpsAlfred.lat
             const lngAlfred = gpsAlfred.lng
 
-            /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000))
+            /* const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000))
 
             if(!isNear) {
                 const removeIndex = service.findIndex(i => i._id === e._id)
@@ -726,7 +731,7 @@ router.get('/all/nearOther/:id/:service', passport.authenticate('jwt', {session:
 router.get('/home/:partpro', (req, res) => {
   const query=parse(req.originalUrl, true).query
 
-  var gps=null
+  let gps=null
   // Sort according to GPS coordinates
   if (query.gps) {
     gps=JSON.parse(query.gps)
@@ -743,7 +748,7 @@ router.get('/home/:partpro', (req, res) => {
     return array
   }
 
-  const filter= req.params.partpro==PRO ? { 'professional_access':true} : { 'particular_access':true}
+  const filter= req.params.partpro==PRO ? {'professional_access': true} : {'particular_access': true}
   req.context.getModel('ServiceUser').find(filter, 'user service service_address')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
     .populate('user', 'picture firstname score billing_address')
@@ -758,7 +763,8 @@ router.get('/home/:partpro', (req, res) => {
           services = shuffleArray(services)
         }
         res.json(services.slice(0, 6))
-      } else {
+      }
+      else {
         return res.status(400).json({
           msg: 'No service found',
         })
@@ -796,9 +802,9 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
         return res.status(400).json({
           msg: 'No service found',
         })
-      } else {
-        res.json(service)
       }
+      res.json(service)
+
 
     })
     .catch(err => res.status(404).json({
