@@ -25,6 +25,7 @@ import SendIcon from '@material-ui/icons/Send'
 import DialogActions from '@material-ui/core/DialogActions'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import Router from 'next/router'
+import '../../static/assets/css/custom.css'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -245,14 +246,14 @@ class Messages extends React.Component {
       <Grid style={{width: '100%'}}>
         <Grid>
           <Grid>
-            <h2>Mes messages</h2>
+            <h2 className={'custommessagestitle'}>Mes messages</h2>
           </Grid>
           <Grid>
             <Typography>{msg_descr}</Typography>
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{marginTop: '3vh', marginBottom: '3vh'}}/>
+          <Divider style={{marginTop: '3vh', marginBottom: '3vh'}} className={'custommessagesdivider'}/>
         </Grid>
         {relatives.map((m, index) => {
           return (

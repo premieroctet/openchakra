@@ -29,7 +29,6 @@ export default theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'row',
       marginTop: '3vh',
@@ -46,6 +45,7 @@ export default theme => ({
     },
   },
   statResultLabel: {
+    textAlign: 'center',
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
       justifyContent: 'left',

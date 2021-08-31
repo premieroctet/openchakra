@@ -207,7 +207,7 @@ class AllReservations extends React.Component {
     )
   }
 
-  bookingPreApprouved = classes =>{
+  bookingPreApprouved = classes => {
     const {bookingPreApprouved}=this.state
 
     return (
@@ -323,7 +323,7 @@ class AllReservations extends React.Component {
                 </Grid>
               )
             })) :
-            <Typography>{ `Vous n'avez aucune réservation en tant qu'${alfredMode ? 'Alfred' : 'utilisateur'}` }</Typography>
+            <Typography className={'customresanoresamessage'}>{ `Vous n'avez aucune réservation en tant qu'${alfredMode ? 'Alfred' : 'utilisateur'}` }</Typography>
           }
         </Grid>
       </Grid>
