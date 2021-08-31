@@ -51,6 +51,13 @@ const computeSumSkills = skills => {
   return res
 }
 
+const roundCurrency = amount => {
+  if (!amount) {
+    return amount
+  }
+  return Math.round(amount*100)/100
+}
+
 module.exports = {
-  computeDistanceKm, computeAverageNotes, computeSumSkills
+  computeDistanceKm, computeAverageNotes, computeSumSkills, roundCurrency,
 }

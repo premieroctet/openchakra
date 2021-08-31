@@ -121,7 +121,7 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
         visio: req.body.visio === 'true',
       }
 
-      fields.travel_tax = req.body.travel_tax === 'null' ? null : req.body.travel_tax
+      fields.travel_tax = JSON.parse(req.body.travel_tax)
       fields.pick_tax = req.body.pick_tax === 'null' ? null : req.body.pick_tax
 
       req.context.getModel('ServiceUser').create(fields)

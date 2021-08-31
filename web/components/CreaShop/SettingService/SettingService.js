@@ -3,6 +3,7 @@ const {setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import styles from '../../../static/css/components/SettingService/SettingService'
+import TravelTax from '../../TravelTax/TravelTax'
 import {withStyles} from '@material-ui/core/styles'
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
 import axios from 'axios'
@@ -17,7 +18,7 @@ class SettingService extends React.Component {
 
     this.state = {
       location: props.location || {},
-      travel_tax: props.travel_tax || 0,
+      travel_tax: props.travel_tax || null,
       pick_tax: props.pick_tax || 0,
       perimeter: props.perimeter,
     }
@@ -72,6 +73,10 @@ class SettingService extends React.Component {
 
   onOptionChanged(opt_id, checked, price) {
     this.setState({[opt_id]: checked ? price : null}, () => this.fireOnChange())
+  }
+
+  onTravelTaxChanged = travel_tax => {
+    this.setState({travel_tax: travel_tax}, () => this.fireOnChange())
   }
 
   fireOnChange() {
@@ -149,20 +154,12 @@ class SettingService extends React.Component {
                 style={{margin: 0}}>{SHOP.settingService.section_option_title}</h4>
             </Grid> : null
           }
-          {service && service.travel_tax && location.client ? // FIX : voir pourquoi le ButtonSwitch ne se check pas
-
+          {service && service.travel_tax && location.client &&
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <ButtonSwitch
-                ckecked={Boolean(travel_tax)}
-                price={travel_tax}
-                id='travel_tax'
-                label={SHOP.settingService.apply_moving_price}
-                isPrice={true}
-                onChange={this.onOptionChanged}
-              />
-            </Grid> : null
+              <TravelTax tax={travel_tax} onChange={this.onTravelTaxChanged}/>
+            </Grid>
           }
-          {service && service.pick_tax ?
+          {service && service.pick_tax &&
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
                 checked={!!pick_tax}
@@ -172,7 +169,7 @@ class SettingService extends React.Component {
                 isPrice={true}
                 onChange={this.onOptionChanged}
               />
-            </Grid> : null
+            </Grid>
           }
         </Grid>
       </Grid>

@@ -164,7 +164,7 @@ class DrawerBooking extends React.Component {
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent: inputref => {
+                        inputComponent: () => {
                           return (
                             <DatePicker
                               selected={date}
@@ -189,7 +189,7 @@ class DrawerBooking extends React.Component {
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent: inputref => {
+                        inputComponent: () => {
                           return (
                             <DatePicker
                               selected={time}
@@ -318,13 +318,13 @@ class DrawerBooking extends React.Component {
                     <Typography>Option(s) de la prestation</Typography>
                   </AccordionSummary>
                   <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                    {serviceUser.travel_tax && location === 'client' ?
+                    {this.props.computeTravelTax() ?
                       <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                         <Grid>
                           Frais de déplacement
                         </Grid>
                         <Grid>
-                          {serviceUser.travel_tax.toFixed(2)}€
+                          {this.props.computeTravelTax()}€
                         </Grid>
                       </Grid>
                       : null

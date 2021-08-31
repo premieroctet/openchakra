@@ -30,7 +30,7 @@ const isEmpty = require('../server/validation/is-empty')
 const {isDateAvailable} = require('../utils/dateutils')
 const {emptyPromise} = require('../utils/promise')
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils')
-const {computeDistanceKm} = require('../utils/functions')
+const {computeDistanceKm, roundCurrency} = require('../utils/functions')
 const {computeBookingReference} = require('../utils/text')
 const {snackBarError}=require('../utils/notifications')
 const _=require('lodash')
@@ -446,7 +446,19 @@ class UserServicesPreview extends React.Component {
   }
 
   computeTravelTax = () => {
-    return this.state.serviceUser.travel_tax && this.isServiceAtHome() ? this.state.serviceUser.travel_tax : 0
+    const {travel_tax}=this.state.serviceUser
+    if (!travel_tax || !this.isServiceAtHome()) {
+      return 0
+    }
+    let dist = this.computeDistance()
+    if (dist==null) {
+      return 0
+    }
+    dist = dist-travel_tax.from
+    if (dist<0) {
+      return 0
+    }
+    return roundCurrency(dist*travel_tax.rate)
   }
 
   computePickTax = () => {
@@ -488,21 +500,29 @@ class UserServicesPreview extends React.Component {
 
     const company_amount=Math.min(total*company_percent, available_budget)
     this.setState({
-      totalPrestations: totalPrestations,
-      commission: commission,
-      total: total,
-      company_amount: company_amount,
-      cesu_total: totalCesu,
+      totalPrestations: roundCurrency(totalPrestations),
+      commission: roundCurrency(commission),
+      total: roundCurrency(total),
+      company_amount: roundCurrency(company_amount),
+      cesu_total: roundCurrency(totalCesu),
     }, () => this.checkBook())
   }
 
-  isInPerimeter = () => {
+  computeDistance = () => {
     const coordSU = this.state.serviceUser.service_address.gps
     if (!this.getClientAddress()) {
-      return false
+      return null
     }
     const coordUser = this.getClientAddress().gps
     const dist = computeDistanceKm(coordSU, coordUser)
+    return dist
+  }
+
+  isInPerimeter = () => {
+    if (!this.getClientAddress()) {
+      return false
+    }
+    const dist = this.computeDistance()
     const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter)
     return inPerimeter
   }

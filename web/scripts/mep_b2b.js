@@ -2,21 +2,23 @@ const {connectionPool}=require('../server/utils/database')
 const {serverContextFromPartner}=require('../server/utils/serverContext')
 
 // MAJ serviceUsers correspondant à 932556 : affiner frais de déplacement
+// Suppression des frais de déplacement si travel_tax type null/undefined/number
 const mep_b2b = () => {
   console.log(connectionPool.databases)
   connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
     console.log(`MEP updating database ${context.getDbName()}`)
     const ServiceUser=context.getModel('ServiceUser')
-    ServiceUser.find({travel_tax: {$ne: null}}, 'travel_tax')
+    ServiceUser.find({}, 'travel_tax')
       .then(results => {
         results.forEach(r => {
-          if (!r._doc.travel_tax || typeof r._doc.travel_tax == 'number') {
-            r.travel_tax={rate: r._doc.travel_tax || 0, from: 0}
+          if (['undefined', 'number'].includes(typeof r._doc.travel_tax)) {
+            const org=r._doc.travel_tax
+            r.travel_tax= null
             r.save()
-            console.log('Saved')
+            console.log(`Update serviceUser #${r._id} travel_tax:${org}=>${r.travel_tax}`)
           }
           else {
-            console.log('Did not save')
+            console.log(`Did not update serviceUser #${r._id} travel_tax:${r.travel_tax}`)
           }
         })
       })

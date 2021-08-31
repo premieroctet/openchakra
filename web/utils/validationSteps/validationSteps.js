@@ -32,7 +32,7 @@ const settingService = shop => {
   if (Object.values(shop.location).every(v => !v)) {
     return false;
   }
-  if (isNaN(shop.travel_tax)) {
+  if (shop.travel_tax && !shop.travel_tax.rate) {
     return false;
   }
   if (isNaN(shop.pick_tax)) {

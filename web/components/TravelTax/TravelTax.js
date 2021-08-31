@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField'
 import styles from './../ButtonSwitch/ButtonSwitchStyle'
 import Grid from '@material-ui/core/Grid'
 import InputAdornment from '@material-ui/core/InputAdornment'
+const {roundCurrency}=require('../../utils/functions')
 
 const IOSSwitch = withStyles(theme => ({
   root: {
@@ -63,19 +64,18 @@ class TravelTax extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      tax: this.props.tax || {rate: 0, from: 0},
+      tax: this.props.tax || null,
     }
   }
 
   onToggle = event => {
-    const {name, value}=event.target
+    const {name}=event.target
     console.log(`onToggle:${event.target.name}`)
-    if (name=='none') {
-      this.setState({tax: null})
+    let tax=null
+    if (name!='none') {
+      tax = {rate: 0, from: 0}
     }
-    else {
-      this.setState({tax: {rate: 0, from: 0}})
-    }
+    this.setState({tax: tax}, () => this.props.onChange && this.props.onChange(tax))
   }
 
   onChangeValue = event => {
@@ -83,12 +83,12 @@ class TravelTax extends React.Component {
     console.log(`Value:${typeof value}`)
     const tax=this.state.tax
     if (name=='rate') {
-      tax[name]=Math.floor(parseFloat(value)*100)/100
+      tax[name]=roundCurrency(value)
     }
     else if (name=='from') {
       tax[name]=parseInt(value)
     }
-    this.setState({tax: tax})
+    this.setState({tax: tax}, () => this.props.onChange && this.props.onChange(tax))
   }
 
   render() {

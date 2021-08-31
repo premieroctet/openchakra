@@ -53,7 +53,7 @@ class creaShop extends React.Component {
         prestations: {},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
-        travel_tax: 0, // Frais de déplacement
+        travel_tax: null, // Frais de déplacement
         pick_tax: 0, // Frais de livraison/enlèvmeent
         minimum_basket: 0,
         diplomaName: null,
@@ -165,6 +165,9 @@ class creaShop extends React.Component {
                   shop.experience_description = su.experience_description
                   shop.experience_title = su.experience_title
                   shop.experience_skills = su.experience_skills
+
+                  shop.pick_tax = su.pick_tax
+                  shop.travel_tax = su.travel_tax
 
                   let prestations={}
                   su.prestations.forEach(presta => {
