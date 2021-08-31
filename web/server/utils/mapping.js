@@ -10,7 +10,7 @@ const data2ServiceUser = (data, su) => {
   su.description = data.description;
   su.equipments = data.equipments;
 
-  su.travel_tax = data.travel_tax || 0;
+  su.travel_tax = data.travel_tax
   su.pick_tax = data.pick_tax || 0;
   su.location = data.location;
 
