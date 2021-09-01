@@ -27,6 +27,7 @@ const SearchResults=withSlide(withGrid(CardService))
 const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
 const {emptyPromise}=require('../utils/promise')
+import '../static/assets/css/custom.css'
 
 moment.locale('fr')
 
@@ -421,7 +422,7 @@ class SearchPage extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid className={classes.searchMainContainerResult}>
+          <Grid className={`customsearchmain ${classes.searchMainContainerResult}`}>
             <Grid className={classes.searchContainerDisplayResult}>
               <Grid className={classes.displayNbAvailable}>
                 {
@@ -451,7 +452,7 @@ class SearchPage extends React.Component {
                         address={selectedAddress}
                       />
                     </Grid>
-                    <Hidden only={['xs', 'lg', 'md', 'sm']} >
+                    <Hidden only={['xl', 'lg', 'md', 'sm']}>
                       <InfiniteScroll
                         dataLength={scroll_count}
                         next={() => this.setState({scroll_count: this.state.scroll_count+this.SCROLL_DELTA}) }
