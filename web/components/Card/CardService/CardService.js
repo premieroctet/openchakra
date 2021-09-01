@@ -23,6 +23,7 @@ import Router from 'next/router'
 import SchoolIcon from '@material-ui/icons/School'
 import {Skeleton} from '@material-ui/lab'
 const {isEditableUser}=require('../../../utils/context')
+import '../../../static/assets/css/custom.css'
 
 class CardServiceInfo extends React.Component {
   constructor(props) {
@@ -33,13 +34,13 @@ class CardServiceInfo extends React.Component {
 
     return (
       <Grid>
-        <Paper elevation={1} className={classes.cardServiceInfoPaper}>
+        <Paper elevation={1} className={`customcardinfopaper ${classes.cardServiceInfoPaper}`}>
           <Grid className={classes.cardServiceInfoContent}>
             <Grid>
-              <h2 className={classes.cardServiceInfoTitle}>Besoin d'aide ?</h2>
+              <h2 className={`customcardinfotitle ${classes.cardServiceInfoTitle}`}>Besoin d'aide ?</h2>
             </Grid>
             <Grid>
-              <p className={classes.cardServiceInfoText}>Utilisez notre chat en direct !</p>
+              <p className={`customcardinfosubtitle ${classes.cardServiceInfoText}`}>Utilisez notre chat en direct !</p>
             </Grid>
           </Grid>
         </Paper>
@@ -136,7 +137,7 @@ class CardService extends React.Component {
     }
     if (this.props.item===null) {
       return (
-        <Grid className={classes.carServiceInfoContainer}>
+        <Grid className={`customcardinfocont ${classes.carServiceInfoContainer}`}>
           <CardServiceInfo classes={classes} />
         </Grid>
       )
@@ -171,7 +172,7 @@ class CardService extends React.Component {
         </Grid>
       )
     }
-    
+
     const picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
 
     const editable = isEditableUser(alfred)
@@ -199,7 +200,7 @@ class CardService extends React.Component {
       loading ?
         cardServiceLoading() :
         <Grid className={profileMode ? classes.mainCardServiceContainerProfil : classes.mainCardServiceContainer}>
-          <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
+          <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : `customcardpaper ${classes.cardServicePaper}`}>
             <Grid container spacing={1} className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
                 <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
@@ -222,7 +223,7 @@ class CardService extends React.Component {
                     :
                     <>
                       <Grid className={classes.cardServiceChipName}>
-                        <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: classes.cardServiceChip}} />
+                        <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: `customcardchipname ${classes.cardServiceChip}`}} />
                       </Grid>
                       {
                         cpData.is_professional ?
