@@ -5,6 +5,7 @@ import {Typography} from '@material-ui/core'
 import Link from 'next/link'
 import Button from '@material-ui/core/Button'
 import styles from '../../../static/css/components/RegisterSteps/RegisterThirdPage/RegisterThirdPage'
+import '../../../static/assets/css/custom.css'
 
 class RegisterThirdPage extends React.Component {
   render() {
@@ -15,11 +16,11 @@ class RegisterThirdPage extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid>
-              <h2 className={classes.titleRegister}>Inscription terminée</h2>
+              <h2 className={`customregistertitleend ${classes.titleRegister}`}>Inscription terminée</h2>
             </Grid>
             <Grid className={classes.newContainer}>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 20, textAlign: 'center'}}>
-                <Typography>Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My
+                <Typography className={'customregistersuccesstext'}>Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My
                   Alfred</Typography>
               </Grid>
               <Grid item className={classes.responsiveButton}>
@@ -29,6 +30,7 @@ class RegisterThirdPage extends React.Component {
                       <Button
                         variant={'contained'}
                         color={'primary'}
+                        classes={{root: 'customregisterexplorebutton'}}
                         style={{color: 'white', textTransform: 'initial'}}>
                         Commencez à explorer
                       </Button>
@@ -40,17 +42,16 @@ class RegisterThirdPage extends React.Component {
                     <a style={{textDecoration: 'none'}}>
                       <Button
                         variant={'contained'}
-                        classes={{root: classes.cancelButton}}
+                        classes={{root: `customregisterservicesbutton ${classes.cancelButton}`}}
                         style={{color: 'white', textTransform: 'initial'}}>
                         Proposer mes services
                       </Button>
                     </a>
                   </Link>
                 </Grid>
-
               </Grid>
               <Grid style={{marginTop: 20}}>
-                <hr/>
+                <hr className={'customregisterdividerend'}/>
                 <Grid style={{marginTop: 20}}>
                   <Link href={'/needHelp/needHelp'}>
                     <a target="_blank" style={{

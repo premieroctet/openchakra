@@ -464,9 +464,9 @@ class Register extends React.Component {
   dialogPhone = () => {
     return(
       <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
+        <DialogTitle id="form-dialog-title" className={'customregisterdialogtitle'}>Confirmation du numéro de téléphone</DialogTitle>
         <DialogContent>
-          <DialogContentText>Saisissez le code reçu par SMS</DialogContentText>
+          <DialogContentText className={'customregisterdialogsubtitle'}>Saisissez le code reçu par SMS</DialogContentText>
           <TextField
             autoFocus
             id="name"
@@ -482,10 +482,11 @@ class Register extends React.Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.confirmLater()} color="primary">
+          <Button onClick={() => this.confirmLater()} color="primary" classes={{root: 'customregisterdialogconfirmlater'}}>
             Confirmer plus tard
           </Button>
           <Button
+            classes={{root: 'customregisterdialogconfirm'}}
             disabled={this.state.smsCode.length !== 4}
             onClick={() => this.checkSmsCode()}
             color="primary">
