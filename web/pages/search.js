@@ -384,7 +384,7 @@ class SearchPage extends React.Component {
             />
           </Grid>
         </Grid>
-        <Grid className={classes.searchMainConainer}>
+        <Grid className={`customsearchmain ${classes.searchMainConainer}`}>
           <Grid className={classes.searchMainContainerHeader}>
             <Grid className={classes.searchContainerHeader}>
               <Grid className={classes.searchSecondFilterContainer}>

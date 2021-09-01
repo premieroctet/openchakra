@@ -27,6 +27,7 @@ const {isMomentAvailable} = require('../../../utils/dateutils')
 const moment = require('moment')
 const _=require('lodash')
 moment.locale('fr')
+import '../../../static/assets/css/custom.css'
 
 class DrawerBooking extends React.Component {
 
@@ -217,7 +218,7 @@ class DrawerBooking extends React.Component {
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.rootAccordion}} expanded={this.state.expanded === 'panel1'} onChange={this.handleChange('panel1')}>
+              <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={this.state.expanded === 'panel1'} onChange={this.handleChange('panel1')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon/>}
                   aria-controls='panel1a-content'
@@ -248,7 +249,7 @@ class DrawerBooking extends React.Component {
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.rootAccordion}} expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
+              <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls='panel1a-content'
@@ -309,7 +310,7 @@ class DrawerBooking extends React.Component {
             </Grid>
             {serviceUser.pick_tax || this.props.computeTravelTax() ?
               <Grid style={{marginBottom: 30}}>
-                <Accordion classes={{root: classes.rootAccordion}} expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
+                <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls='panel1a-content'
@@ -402,7 +403,7 @@ class DrawerBooking extends React.Component {
               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <Grid style={{width: '100%'}}>
                   <Button
-                    classes={{root: classes.userServicePButtonResa}}
+                    classes={{root: `custombookinresabutton ${classes.userServicePButtonResa}`}}
                     variant='contained'
                     color='primary'
                     aria-label='add'
@@ -413,7 +414,7 @@ class DrawerBooking extends React.Component {
                   </Button>
                 </Grid>
                 <Grid style={{marginTop: 15, marginBottom: 15}}>
-                  <Typography style={{color: 'rgba(39, 37, 37, 0.35)'}}>Choix du paiement à l’étape suivante</Typography>
+                  <Typography className={'custombookinginfoprice'} style={{color: 'rgba(39, 37, 37, 0.35)'}}>Choix du paiement à l’étape suivante</Typography>
                 </Grid>
                 <Grid>
                   <Button
@@ -421,7 +422,7 @@ class DrawerBooking extends React.Component {
                     disabled={!isEmpty(errors)}
                     onClick={() => this.props.book(false)}
                   >
-                    <Typography style={{textDecoration: 'underline', textTransform: 'initial'}}>Demande d’informations</Typography>
+                    <Typography style={{textDecoration: 'underline', textTransform: 'initial'}} className={'custombookingaskinfo'}>Demande d’informations</Typography>
                   </Button>
                 </Grid>
               </Grid>

@@ -34,6 +34,7 @@ const {computeDistanceKm, roundCurrency} = require('../utils/functions')
 const {computeBookingReference} = require('../utils/text')
 const {snackBarError}=require('../utils/notifications')
 const _=require('lodash')
+import '../static/assets/css/custom.css'
 
 const moment = require('moment')
 const {isB2BAdmin, isB2BManager, getRole, isModeCompany, isLoggedUserAdmin}=require('../utils/context')
@@ -749,7 +750,7 @@ class UserServicesPreview extends React.Component {
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
         <Grid>
-          <Grid className={classes.mainContainer}>
+          <Grid className={`custompreviewmain ${classes.mainContainer}`}>
             <Grid container className={classes.widthContainer}>
               <Grid item xl={6} lg={6} md={12} sm={12} xs={12} className={classes.leftContainer}>
                 <Grid container className={classes.avatarAnDescription}>
@@ -766,7 +767,7 @@ class UserServicesPreview extends React.Component {
                       {
                         serviceAddress &&
                           <Grid>
-                            <Typography style={{color: 'rgba(39,37,37,35%)'}}>{serviceAddress.city}, {serviceAddress.country} - {this.state.serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
+                            <Typography style={{color: 'rgba(39,37,37,35%)'}} className={'custompreviewplace'}>{serviceAddress.city}, {serviceAddress.country} - {this.state.serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
                           </Grid>
                       }
                       {
@@ -783,12 +784,12 @@ class UserServicesPreview extends React.Component {
                           query: {user: this.state.alfred._id},
                         }}
                       >
-                        <Button variant={'outlined'} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
+                        <Button variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
                       </Link>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid style={{marginTop: '10%'}}>
+                <Grid className={'custompreviewboxdescription'} style={{marginTop: '10%'}}>
                   <Grid className={classes.overrideCssChild}>
                     <Topic
                       titleTopic={'Description'}
@@ -821,7 +822,7 @@ class UserServicesPreview extends React.Component {
                     </Topic>
                   </Grid>
                 </Grid>
-                <Grid className={classes.scheduleContainer}>
+                <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>
                   <Topic
                     underline={true}
                     titleTopic={'Sélectionnez vos dates'}
@@ -862,7 +863,7 @@ class UserServicesPreview extends React.Component {
                     </Topic>
                   </Grid> : null
                 }
-                <Grid className={classes.perimeterContent}>
+                <Grid className={`custompreviewbookingmap ${classes.perimeterContent}`}>
                   {
                     this.state.serviceUser && this.state.serviceUser.service_address ?
                       <Grid style={{width: '100%'}}>
@@ -892,7 +893,7 @@ class UserServicesPreview extends React.Component {
                     </Button>
                   </Grid>
                   <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
-                    <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)}>
+                    <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)} classes={{root: 'custompreviewdrawer'}}>
                       <Grid className={classes.drawerContent}>
                         <DrawerBooking
                           side={'bottom'}
