@@ -40,7 +40,7 @@ class ColorPicker extends React.Component {
     const {color, open}=this.state
     return (
       <Grid style={{display: 'flex'}}>
-        <Button variant={'contained'} style={{backgroundColor: color, borderRadius: '40px'}} onClick={this.onColorToggle}></Button>
+        <Button variant={'contained'} style={{backgroundColor: color, borderRadius: '40px'}} onClick={this.onColorToggle}/>
         { open &&
           <div style={ popover }>
             <div style={ cover } onClick={this.onColorToggle}/>
