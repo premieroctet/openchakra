@@ -14,7 +14,7 @@ class IntegerEditor extends React.Component {
     const {value, title}=this.props
     return (
       <Grid style={{display: 'flex'}}>
-        <h2>{title}</h2>
+        <span>{title}</span>
         <TextField
           value={value}
           label={title}

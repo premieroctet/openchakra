@@ -50,7 +50,7 @@ class ColorPicker extends React.Component {
             />
           </div>
         }
-        <h2>{this.props.title}</h2>
+        <span>{this.props.title}</span>
       </Grid>
     )
   }

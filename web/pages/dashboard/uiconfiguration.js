@@ -135,12 +135,12 @@ class UIParameters extends React.Component {
               pageParameters && Object.keys(pageParameters).map(component_name => (
                 <Accordion defaultExpanded={false}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    {component_name}
+                    <h2>{component_name}</h2>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Grid style={{display: 'flex', flexDirection: 'column'}}>
                       { pageParameters[component_name].map(parameter => (
-                        <UIParameter parameter={parameter} onChange={this.onChange(parameter._id)}/>
+                        <UIParameter title={parameter.label} parameter={parameter} onChange={this.onChange(parameter._id)}/>
                       ))
                       }
                     </Grid>

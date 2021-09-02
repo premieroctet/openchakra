@@ -50,7 +50,9 @@ createUIConfiguration = configuration => {
       if (!(className in cssClasses)) {
         cssClasses[className]={}
       }
-      cssClasses[className][name]= value
+      if (!(name=='display' && value=='block')) {
+        cssClasses[className][name]= value
+      }
     })
   })
   const output=Object.entries(cssClasses).map(([k, v]) => {
