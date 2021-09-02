@@ -21,8 +21,9 @@ import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
 import SchoolIcon from '@material-ui/icons/School'
-import ExtensionIcon from '@material-ui/icons/Extension'
+import {Skeleton} from '@material-ui/lab'
 const {isEditableUser}=require('../../../utils/context')
+import '../../../static/assets/css/custom.css'
 
 class CardServiceInfo extends React.Component {
   constructor(props) {
@@ -33,13 +34,13 @@ class CardServiceInfo extends React.Component {
 
     return (
       <Grid>
-        <Paper elevation={1} className={classes.cardServiceInfoPaper}>
+        <Paper elevation={1} className={`customcardinfopaper ${classes.cardServiceInfoPaper}`}>
           <Grid className={classes.cardServiceInfoContent}>
             <Grid>
-              <h2 className={classes.cardServiceInfoTitle}>Besoin d'aide ?</h2>
+              <h2 className={`customcardinfotitle ${classes.cardServiceInfoTitle}`}>Besoin d'aide ?</h2>
             </Grid>
             <Grid>
-              <p className={classes.cardServiceInfoText}>Utilisez notre chat en direct !</p>
+              <p className={`customcardinfosubtitle ${classes.cardServiceInfoText}`}>Utilisez notre chat en direct !</p>
             </Grid>
           </Grid>
         </Paper>
@@ -122,7 +123,7 @@ class CardService extends React.Component {
   };
 
   render() {
-    const {classes, gps, profileMode, address} = this.props
+    const {classes, gps, profileMode, address, loading} = this.props
     const {cpData, alfred, open} = this.state
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null
@@ -136,8 +137,38 @@ class CardService extends React.Component {
     }
     if (this.props.item===null) {
       return (
-        <Grid className={classes.carServiceInfoContainer}>
+        <Grid className={`customcardinfocont ${classes.carServiceInfoContainer}`}>
           <CardServiceInfo classes={classes} />
+        </Grid>
+      )
+    }
+
+    const cardServiceLoading = () => {
+      return(
+        <Grid className={classes.mainCardServiceContainer}>
+          <Paper elevation={1} className={classes.paperloadingCard}>
+            <Grid className={classes.cardLoadingImgCont}>
+              <Grid className={classes.cardLoadingCard}>
+                <Skeleton animation="wave" variant="rect" className={classes.media} />
+              </Grid>
+              <Grid>
+                <Skeleton animation="wave" height={10} width="50%" style={{margin: 5, marginTop: 20}}/>
+              </Grid>
+              <Grid>
+                <Skeleton animation="wave" height={10} width="80%" style={{margin: 5}}/>
+              </Grid>
+              <Grid>
+                <Skeleton animation="wave" height={10} width="70%" style={{margin: 5}}/>
+              </Grid>
+              <Grid>
+                <Skeleton animation="wave" height={10} width="50%" style={{margin: 5}}/>
+              </Grid>
+              <Grid style={{position: 'absolute', bottom: 0, right: 0}}>
+                <Skeleton animation="wave" width={80} height={50} style={{borderRadius: 24, padding: '5px 30px'}}/>
+              </Grid>
+            </Grid>
+
+          </Paper>
         </Grid>
       )
     }
@@ -163,151 +194,125 @@ class CardService extends React.Component {
       </>
     )
 
+
+
     return(
-      <Grid className={profileMode ? classes.mainCardServiceContainerProfil : classes.mainCardServiceContainer}>
-        <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
-          <Grid container spacing={1} className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
-              <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
-                <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}/>
-              </Grid>
-              {
-                profileMode && editable ?
-                  <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
-                    <Grid>
-                      <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
-                        <EditIcon style={{color: 'white'}} />
-                      </IconButton>
-                    </Grid>
-                    <Grid style={{marginLeft: '10px'}}>
-                      <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
-                        <DeleteForeverIcon style={{color: 'white'}} />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                  :
-                  <>
-                    <Grid className={classes.cardServiceChipName}>
-                      <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: classes.cardServiceChip}} />
-                    </Grid>
-                    {
-                      cpData.is_professional ?
-                        <Grid className={classes.cardServiceChipPro}>
-                          <Chip label={'Pro'} classes={{root: classes.cardServiceChipBckg}}/>
-                        </Grid> : null
-                    }
-                  </>
-              }
-            </Grid>
-            <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.labelServiceProfil : classes.labelService}>
-                <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
-              </Grid>
-              { profileMode ? null :
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServicePlaceContainer}>
-                  <Grid className={classes.cardServicePlaceLogo}>
-                    <RoomIcon/>
-                  </Grid>
-                  <Grid className={classes.cardKmContainer}>
-                    { distance &&
-                      <>
-                        <Grid style={{whiteSpace: 'nowrap'}}>
-                          <Typography>{`À ${distance} km`}</Typography>
-                        </Grid>
-                        <Grid>
-                          <Typography>-</Typography>
-                        </Grid>
-                      </>
-                    }
-                    <Grid style={{overflow: 'hidden'}}>
-                      <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
-                    </Grid>
-                  </Grid>
+      loading ?
+        cardServiceLoading() :
+        <Grid className={profileMode ? classes.mainCardServiceContainerProfil : classes.mainCardServiceContainer}>
+          <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : `customcardpaper ${classes.cardServicePaper}`}>
+            <Grid container spacing={1} className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
+                <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
+                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}/>
                 </Grid>
-              }
-              {
-                profileMode ? null :
-                  <>
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
-                      <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : 'Cet alfred est peut être trop timide pour parler de lui !'}</Typography>
+                {
+                  profileMode && editable ?
+                    <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
+                      <Grid>
+                        <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
+                          <EditIcon style={{color: 'white'}} />
+                        </IconButton>
+                      </Grid>
+                      <Grid style={{marginLeft: '10px'}}>
+                        <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
+                          <DeleteForeverIcon style={{color: 'white'}} />
+                        </IconButton>
+                      </Grid>
                     </Grid>
-                    <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceScoreAndButtonContainer}>
-                      <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceRatingContainer}>
-                        <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
-                          { cpData.reviews && cpData.reviews.length>0 ?
-                            <Rating
-                              name="simple-controlled"
-                              value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
-                              max={1}
-                              readOnly
-                            />
-                            :
-                            null
-                          }
-                          <Grid className={classes.cardServiceBoxRatingDisplay}>
-                            <Grid className={classes.cardServiceRating}>
-                              { notes.global && notes.global >0 ?
-                                <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
-                                :
-                                null
-                              }
-                            </Grid>
-                            <Grid>
-                              { cpData.reviews && cpData.reviews.length >0 ?
-                                <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
-                                :
-                                null
-                              }
-                            </Grid>
+                    :
+                    <>
+                      <Grid className={classes.cardServiceChipName}>
+                        <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: `customcardchipname ${classes.cardServiceChip}`}} />
+                      </Grid>
+                      {
+                        cpData.is_professional ?
+                          <Grid className={classes.cardServiceChipPro}>
+                            <Chip label={'Pro'} classes={{root: classes.cardServiceChipBckg}}/>
+                          </Grid> : null
+                      }
+                    </>
+                }
+              </Grid>
+              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.labelServiceProfil : classes.labelService}>
+                  <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
+                </Grid>
+                { profileMode ? null :
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServicePlaceContainer}>
+                    <Grid className={classes.cardServicePlaceLogo}>
+                      <RoomIcon/>
+                    </Grid>
+                    <Grid className={classes.cardKmContainer}>
+                      { distance &&
+                        <>
+                          <Grid style={{whiteSpace: 'nowrap'}}>
+                            <Typography>{`À ${distance} km`}</Typography>
                           </Grid>
-                        </Box>
-                      </Grid>
-                      <Grid item xl={9} lg={9} md={9} sm={9} xs={9} className={classes.buttonShowProfilContainer}>
-                        <Button
-                          variant={'contained'}
-                          classes={{root: classes.buttonShowProfil}}
-                        >
-                          Voir
-                        </Button>
+                          <Grid>
+                            <Typography>-</Typography>
+                          </Grid>
+                        </>
+                      }
+                      <Grid style={{overflow: 'hidden'}}>
+                        <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
                       </Grid>
                     </Grid>
-                  </>
-              }
-            </Grid>
-            {/*
-              profileMode ? null :
-                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.lastContainer}>
-                  {
-                    cpData.is_certified || cpData.graduated ?
-                      <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.iconContainer}>
-                        {
-                          cpData.graduated ?
-                            <Grid style={{margin: 5}}>
-                              <SchoolIcon/>
-                            </Grid> : null
-                        }
-                        {
-                          cpData.is_certified ?
-                            <Grid style={{margin: 5}}>
-                              <img title={'certification_icon'} alt={'certification_icon'} height={20} width={20} src={'/static/assets/icon/pro_icon.svg'}/>
-                            </Grid> : null
-                        }
-                      </Grid> : null
-                  }
-                  <Grid item xl={9} lg={9} md={9} sm={9} xs={9} className={classes.buttonShowProfilContainer}>
-                    <Button
-                      variant={'contained'}
-                      classes={{root: classes.buttonShowProfil}}
-                    >
-                      Voir
-                    </Button>
                   </Grid>
-                </Grid>
-            */}
-          </Grid>
-        </Paper>
-        {open ? this.modalDeleteServices(classes) : null}
-      </Grid>
+                }
+                {
+                  profileMode ? null :
+                    <>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
+                        <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : 'Cet alfred est peut être trop timide pour parler de lui !'}</Typography>
+                      </Grid>
+                      <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceScoreAndButtonContainer}>
+                        <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceRatingContainer}>
+                          <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
+                            { cpData.reviews && cpData.reviews.length>0 ?
+                              <Rating
+                                name="simple-controlled"
+                                value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
+                                max={1}
+                                readOnly
+                              />
+                              :
+                              null
+                            }
+                            <Grid className={classes.cardServiceBoxRatingDisplay}>
+                              <Grid className={classes.cardServiceRating}>
+                                { notes.global && notes.global >0 ?
+                                  <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
+                                  :
+                                  null
+                                }
+                              </Grid>
+                              <Grid>
+                                { cpData.reviews && cpData.reviews.length >0 ?
+                                  <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
+                                  :
+                                  null
+                                }
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </Grid>
+                        <Grid item xl={9} lg={9} md={9} sm={9} xs={9} className={classes.buttonShowProfilContainer}>
+                          <Button
+                            variant={'contained'}
+                            classes={{root: classes.buttonShowProfil}}
+                          >
+                              Voir
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </>
+                }
+              </Grid>
+            </Grid>
+          </Paper>
+          {open ? this.modalDeleteServices(classes) : null}
+        </Grid>
     )
   }
 }

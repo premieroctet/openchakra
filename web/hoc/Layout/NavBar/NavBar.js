@@ -1232,6 +1232,7 @@ class NavBar extends Component {
           onClose={this.handleCloseRegister}
           TransitionComponent={Transition}
           disableEscapeKeyDown={true}
+          classes={{paper: 'customnavbarregisterdialog'}}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
           <DialogContent dividers={false} className={classes.navbarMuidialogContent}>

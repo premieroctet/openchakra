@@ -27,6 +27,7 @@ const SearchResults=withSlide(withGrid(CardService))
 const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
 const {emptyPromise}=require('../utils/promise')
+import '../static/assets/css/custom.css'
 
 moment.locale('fr')
 
@@ -349,10 +350,6 @@ class SearchPage extends React.Component {
       })
   }
 
-  isDateFilterSet = () => {
-    return this.state.startDate != null || this.state.endDate != null
-  };
-
   handleChange = event => {
     this.setState({filters: event.target.value})
   };
@@ -383,7 +380,7 @@ class SearchPage extends React.Component {
             />
           </Grid>
         </Grid>
-        <Grid className={classes.searchMainConainer}>
+        <Grid className={`customsearchmain ${classes.searchMainConainer}`}>
           <Grid className={classes.searchMainContainerHeader}>
             <Grid className={classes.searchContainerHeader}>
               <Grid className={classes.searchSecondFilterContainer}>
@@ -421,7 +418,7 @@ class SearchPage extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid className={classes.searchMainContainerResult}>
+          <Grid className={`customsearchmain ${classes.searchMainContainerResult}`}>
             <Grid className={classes.searchContainerDisplayResult}>
               <Grid className={classes.displayNbAvailable}>
                 {
@@ -430,8 +427,16 @@ class SearchPage extends React.Component {
               </Grid>
               <Grid container >
                 {
-                  this.state.searching ? <Grid className={classes.searchLoadingContainer} item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <CircularProgress/>
+                  this.state.searching ? <Grid className={classes.searchLoadingContainer} item container spacing={2} xl={12} lg={12} md={12} sm={12} xs={12}>
+                    {
+                      [...Array(8)].map(() => (
+                        <Grid item xl={3} lg={3} md={4} sm={6} xs={12}>
+                          <CardService loading={true}/>
+                        </Grid>
+
+                      ))
+                    }
+
                   </Grid> : serviceUsers.length===0 ? null : <Grid container className={classes.searchMainContainer} spacing={3}>
                     <Grid item className={classes.hideOnMobile}>
                       <SearchResults
@@ -443,7 +448,7 @@ class SearchPage extends React.Component {
                         address={selectedAddress}
                       />
                     </Grid>
-                    <Hidden only={['xs', 'lg', 'md', 'sm']} >
+                    <Hidden only={['xl', 'lg', 'md', 'sm']}>
                       <InfiniteScroll
                         dataLength={scroll_count}
                         next={() => this.setState({scroll_count: this.state.scroll_count+this.SCROLL_DELTA}) }

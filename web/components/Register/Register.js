@@ -23,13 +23,14 @@ import TextField from '@material-ui/core/TextField'
 import DialogActions from '@material-ui/core/DialogActions'
 let parse = require('url-parse')
 import {hasStatusRegister, removeStatusRegister, getRole} from '../../utils/context'
-import { isEmailOk } from '../../utils/sms'
+import {isEmailOk} from '../../utils/sms'
 const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms')
 const {STEPS}=require('../../utils/registerStep')
 const {getLoggedUserId, isLoggedUserRegistered} = require('../../utils/context')
 const {EMPLOYEE} = require('../../utils/consts')
 const {is_production}=require('../../config/config')
+import '../../static/assets/css/custom.css'
 
 registerLocale('fr', fr)
 
@@ -153,7 +154,7 @@ class Register extends React.Component {
     }
   }
 
-  dialogCgu = classes => {
+  dialogCgu = () => {
     const {open} = this.state
     const handleClose = () => {
       this.setState({open: false})
@@ -243,7 +244,7 @@ class Register extends React.Component {
         snackBarSuccess(txt)
         this.setState({smsCodeOpen: true})
       })
-      .catch(err => {
+      .catch(() => {
         snackBarError('Impossible d\'envoyer le SMS')
         this.setState({serverError: true})
       })
@@ -268,7 +269,7 @@ class Register extends React.Component {
           snackBarError('Le code est incorrect')
         }
       })
-      .catch(err => {
+      .catch(() => {
         snackBarError('Erreur à la vérification du code')
       })
   };
@@ -354,7 +355,7 @@ class Register extends React.Component {
       })
   };
 
-  submitPhone = e => {
+  submitPhone = () => {
 
     if(!this.state.phone && hasStatusRegister()) {
       Router.push('/creaShop/creaShop')
@@ -376,7 +377,7 @@ class Register extends React.Component {
     setAxiosAuthentication()
     axios
       .put('/myAlfred/api/users/profile/phone', newPhone)
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Téléphone ajouté')
       })
       .catch(err =>
@@ -460,12 +461,12 @@ class Register extends React.Component {
     this.setState({activeStep: this.state.activeStep - 1})
   };
 
-  dialogPhone = classes => {
+  dialogPhone = () => {
     return(
       <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
+        <DialogTitle id="form-dialog-title" className={'customregisterdialogtitle'}>Confirmation du numéro de téléphone</DialogTitle>
         <DialogContent>
-          <DialogContentText>Saisissez le code reçu par SMS</DialogContentText>
+          <DialogContentText className={'customregisterdialogsubtitle'}>Saisissez le code reçu par SMS</DialogContentText>
           <TextField
             autoFocus
             id="name"
@@ -481,10 +482,11 @@ class Register extends React.Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.confirmLater()} color="primary">
+          <Button onClick={() => this.confirmLater()} color="primary" classes={{root: 'customregisterdialogconfirmlater'}}>
             Confirmer plus tard
           </Button>
           <Button
+            classes={{root: 'customregisterdialogconfirm'}}
             disabled={this.state.smsCode.length !== 4}
             onClick={() => this.checkSmsCode()}
             color="primary">
@@ -507,7 +509,7 @@ class Register extends React.Component {
             {
               activeStep === 0 ?
                 <Grid>
-                  <h2 className={classes.titleRegister}>Inscription</h2>
+                  <h2 className={`customregistertitle ${classes.titleRegister}`}>Inscription</h2>
                 </Grid> : null
             }
             <Grid className={classes.containerSwitch}>
@@ -525,17 +527,17 @@ class Register extends React.Component {
                       activeStep={activeStep}
                       className={classes.rootStepper}
                       classes={{
-                        progress: classes.progress,
+                        progress: `customregisterprogress ${classes.progress}`,
                       }}
                       nextButton={
                         <Button size="small" onClick={() => this.handleNext(activeStep)}
-                          disabled={activeStep === 0 ? firstPageValidator : secondPageValidator || pending}>
+                          disabled={activeStep === 0 ? firstPageValidator : secondPageValidator || pending} classes={{root: 'customregisternavnext'}}>
                           {activeStep === 0 ? 'Suivant' : 'Terminer'}
                           <KeyboardArrowRight/>
                         </Button>
                       }
                       backButton={
-                        <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+                        <Button size="small" onClick={this.handleBack} disabled={activeStep === 0} classes={{root: 'customregisternavprev'}}>
                           <KeyboardArrowLeft/>
                           Précédent
                         </Button>
@@ -544,14 +546,12 @@ class Register extends React.Component {
                   </Grid>
                   <Grid container className={classes.bottomContainer}>
                     <Grid item>
-                      <a color={'primary'} onClick={callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}}>Vous
+                      <a color={'primary'} onClick={callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}} className={'customregisteralreadyaccount'}>Vous
                         avez déjà un compte My Alfred ?</a>
                     </Grid>
                   </Grid>
-
                 </Grid> : null
             }
-
           </Grid>
         </Grid>
         {smsCodeOpen ? this.dialogPhone(classes) : null}

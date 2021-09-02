@@ -11,6 +11,7 @@ import Drawer from '@material-ui/core/Drawer'
 import axios from 'axios'
 import Button from '@material-ui/core/Button'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import '../../static/assets/css/custom.css'
 
 class DrawerSchedule extends React.Component {
   constructor(props) {
@@ -101,7 +102,7 @@ class DrawerSchedule extends React.Component {
         <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
           <Grid className={classes.buttonShowContainer}>
             <Button
-              startIcon={this.state.eventsSelected.size > 0 ? <SettingsIcon /> : <AddCircleOutlineIcon />}
+              startIcon={this.state.eventsSelected.size > 0 ? <SettingsIcon classes={{root: 'customscheduleseticon'}}/> : <AddCircleOutlineIcon classes={{root: 'customscheduleaddicon'}}/>}
               onClick={this.handleDrawerToggle}
               color={'primary'}
               classe={{root: classes.buttonAction}}

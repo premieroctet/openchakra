@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios'
 import CardService from '../Card/CardService/CardService'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -13,7 +12,7 @@ class Services extends React.Component {
 
 
   render() {
-    const {classes, shop, onDelete}=this.props
+    const {shop, onDelete}=this.props
 
     if (!shop.services) {
       return null

@@ -250,6 +250,35 @@ export default theme => ({
   colorError: {
     color: theme.palette.error.main,
   },
+
+  media: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+  },
+
+  paperloadingCard: {
+    borderRadius: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    height: 450,
+    cursor: 'pointer',
+  },
+
+  cardLoadingImgCont: {
+    position: 'relative',
+    width: '80%',
+    marginTop: '8%',
+    marginBottom: '5%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
+  cardLoadingCard: {
+    width: '100%',
+    height: 200,
+  },
+
   buttonShowProfil: {
     borderRadius: theme.border.whiteButton.borderRadius,
     textTransform: theme.typography.textTransform,

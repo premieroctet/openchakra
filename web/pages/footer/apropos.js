@@ -1,27 +1,28 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import {withStyles} from "@material-ui/core/styles";
-import styles from '../../static/css/pages/footer/apropos/apropos';
-import LayoutFaq from "../../hoc/Layout/LayoutFaq";
-import Typography from "@material-ui/core/Typography";
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import {withStyles} from '@material-ui/core/styles'
+import styles from '../../static/css/pages/footer/apropos/apropos'
+import LayoutFaq from '../../hoc/Layout/LayoutFaq'
+import Typography from '@material-ui/core/Typography'
+import '../../static/assets/css/custom.css'
 
 class Apropos extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
     return (
       <LayoutFaq>
         <Grid container spacing={4} style={{margin: 0, width: '100%'}}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={`customaproposdatecont ${classes.containerApropos}`}>
             <Grid className={classes.containerWidth}>
               <Grid>
-                <h2 style={{textAlign: 'center'}}>Fondé en 2019</h2>
+                <h2 className={'customaproposdatetitle'} style={{textAlign: 'center'}}>Fondé en 2019</h2>
               </Grid>
               <Grid>
-                <Typography style={{textAlign: 'justify'}}>My Alfred est né de l’envie de nous simplifier la vie. Nous voulions répondre à une
+                <Typography className={'customaproposdatetext'} style={{textAlign: 'justify'}}>My Alfred est né de l’envie de nous simplifier la vie. Nous voulions répondre à une
                   question simple : Comment gagner du temps ? Aujourd’hui, nous sommes heureux de répondre
                   à une multitude de problématiques. En créant une plateforme d’économie collaborative,
                   nous voulons simplifiez votre quotidien mais nous espérons aussi rapprocher les
@@ -31,13 +32,13 @@ class Apropos extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={`customaproposwearecont ${classes.containerApropos}`}>
             <Grid className={classes.containerWidth}>
               <Grid>
-                <h2 style={{textAlign: 'center'}}>Nous sommes My Alfred</h2>
+                <h2 className={'customaproposwearetitle'} style={{textAlign: 'center'}}>Nous sommes My Alfred</h2>
               </Grid>
               <Grid>
-                <Typography style={{textAlign: 'justify'}}>Nous sommes persuadés que l’économie collaborative favorise le développement de nouvelles
+                <Typography className={'customaproposwearetext'} style={{textAlign: 'justify'}}>Nous sommes persuadés que l’économie collaborative favorise le développement de nouvelles
                   formes d’emploi pour des entrepreneurs qui ont soif de liberté, de créativité et
                   d’activité multiples.
                   Nous mettons en relation des particuliers, des entrepreneurs pour que chacun puisse
@@ -50,13 +51,13 @@ class Apropos extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={`customaproposwhatiscont ${classes.containerApropos}`}>
             <Grid className={classes.containerWidth}>
               <Grid>
-                <h2 style={{textAlign: 'center'}}>My Alfred, qu'est-ce que c'est ?</h2>
+                <h2 className={'customaproposwhatistitle'} style={{textAlign: 'center'}}>My Alfred, qu'est-ce que c'est ?</h2>
               </Grid>
               <Grid>
-                <Typography style={{textAlign: 'justify'}}>My Alfred crée des liens entre les personnes en leur donnant la possibilité de réserver
+                <Typography className={'customaproposwhatistext'} style={{textAlign: 'justify'}}>My Alfred crée des liens entre les personnes en leur donnant la possibilité de réserver
                   des services partout en France. Les Alfred constituent le moteur de la communauté et
                   fournissent à notre communauté des services de qualités, comme s’ils le faisaient pour
                   eux même. Plus de 20 000 prestations sont recensées sur My Alfred, portées par plusieurs
@@ -66,13 +67,13 @@ class Apropos extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={`customaproposservicescont ${classes.containerApropos}`}>
             <Grid className={classes.containerWidth}>
               <Grid>
-                <h2 style={{textAlign: 'center'}}>Qu'est-ce que les services d’Alfred ? </h2>
+                <h2 className={'customaproposservicestitle'} style={{textAlign: 'center'}}>Qu'est-ce que les services d’Alfred ? </h2>
               </Grid>
               <Grid>
-                <Typography style={{textAlign: 'justify'}}>Si vous disposez d’un talent, d’une passion ou tout simplement de temps, vous pouvez
+                <Typography className={'customaproposservicestext'} style={{textAlign: 'justify'}}>Si vous disposez d’un talent, d’une passion ou tout simplement de temps, vous pouvez
                   gagner de l'argent en les mettant à la disposition de notre communauté. En quelques
                   minutes, vous proposez vos services, fixez vos conditions et créez votre profil
                   d’Alfred, vous permettant de bénéficier d’une grande visibilité, une interface
@@ -81,32 +82,32 @@ class Apropos extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={`customaproposmissioncont ${classes.containerApropos}`}>
             <Grid className={classes.containerWidth}>
               <Grid>
-                <h2 style={{textAlign: 'center'}}>Notre mission</h2>
+                <h2 className={'customaproposmissiontitle'} style={{textAlign: 'center'}}>Notre mission</h2>
               </Grid>
               <Grid>
-                <Typography style={{textAlign: 'justify'}}>Notre mission est de créer un lieu de rencontres et d’opportunités, où trouver la bonne
+                <Typography className={'customaproposmissiontext'} style={{textAlign: 'justify'}}>Notre mission est de créer un lieu de rencontres et d’opportunités, où trouver la bonne
                   personne n’est plus un problème.
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={`customaproposvisioncont ${classes.containerApropos}`}>
             <Grid className={classes.containerWidth}>
               <Grid>
-                <h2 style={{textAlign: 'center'}}>Notre vision</h2>
+                <h2 className={'customaproposvisiontitle'} style={{textAlign: 'center'}}>Notre vision</h2>
               </Grid>
               <Grid>
-                <Typography style={{textAlign: 'justify'}}>Nous aimerions que My Alfred puisse vous accompagner au quotidien. Notre communauté est
+                <Typography className={'customaproposvisiontext'} style={{textAlign: 'justify'}}>Nous aimerions que My Alfred puisse vous accompagner au quotidien. Notre communauté est
                   au coeur de ce que nous faisons et nous souhaitons créez un espace où règne la confiance
                   et la simplicité.
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
-      </Grid>
+        </Grid>
       </LayoutFaq>
     )
   }

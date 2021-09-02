@@ -12,10 +12,17 @@ export default theme => ({
     width: '100%',
     marginTop: '4vh',
   },
+  textFieldChipsActive: {
+    color: 'white',
+    fontWeight: 'bold',
+    margin: 3,
+    //backgroundColor: '#4fbdd7',
+  },
   textFieldChips: {
     color: 'white',
     fontWeight: 'bold',
     margin: 3,
+    backgroundColor: '#c4c4c4',
   },
   marginSaveButton: {
     marginTop: '5vh',

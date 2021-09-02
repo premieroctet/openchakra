@@ -1,16 +1,17 @@
-const {setAxiosAuthentication}=require('../../utils/authentication');
-import React from "react";
-import styles from '../../static/css/components/Layout/LayoutReserations/LayoutReservations';
-import withStyles from "@material-ui/core/styles/withStyles";
-import Grid from "@material-ui/core/Grid";
-import Layout from "./Layout";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+const {setAxiosAuthentication}=require('../../utils/authentication')
+import React from 'react'
+import styles from '../../static/css/components/Layout/LayoutReserations/LayoutReservations'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Grid from '@material-ui/core/Grid'
+import Layout from './Layout'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import '../../static/assets/css/custom.css'
 
-class LayoutReservations extends React.Component{
+class LayoutReservations extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
       reservationStatus: 0,
       reservationType: 1,
@@ -18,19 +19,19 @@ class LayoutReservations extends React.Component{
   }
 
   componentDidMount = () => {
-    setAxiosAuthentication();
+    setAxiosAuthentication()
   };
 
   render() {
-    const {user} = this.state;
-    const {classes, children, reservationType, userInfo} = this.props;
+    const {user} = this.state
+    const {classes, children, reservationType, userInfo} = this.props
 
     return(
       <Layout user={user}>
-        <Grid style={{display:'flex', justifyContent:'center'}}>
-          <Grid style={{display: 'flex', justifyContent:'center', flexDirection: 'column', alignItems:'center', width: '100%'}}>
+        <Grid style={{display: 'flex', justifyContent: 'center'}}>
+          <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', width: '100%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
-              <h2>Mes réservations</h2>
+              <h2 className={'customlayoutresatitle'}>Mes réservations</h2>
             </Grid>
             <Grid>
               <Tabs
@@ -43,7 +44,7 @@ class LayoutReservations extends React.Component{
                 {
                   userInfo && userInfo.is_alfred ?
                     <Tab label={"Mes réservations d'Alfred"} className={classes.scrollMenuTab} />
-                   : null
+                    : null
                 }
                 <Tab label={"Mes réservations d'utilisateur"} className={classes.scrollMenuTab} />
               </Tabs>
@@ -56,8 +57,8 @@ class LayoutReservations extends React.Component{
           </Grid>
         </Grid>
       </Layout>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(LayoutReservations);
+export default withStyles(styles)(LayoutReservations)

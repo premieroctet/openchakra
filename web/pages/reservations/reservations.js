@@ -24,6 +24,7 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 const {BOOK_STATUS}=require('../../utils/consts')
 import Router from 'next/router'
+import '../../static/assets/css/custom.css'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -207,7 +208,7 @@ class AllReservations extends React.Component {
     )
   }
 
-  bookingPreApprouved = classes =>{
+  bookingPreApprouved = classes => {
     const {bookingPreApprouved}=this.state
 
     return (
@@ -323,7 +324,7 @@ class AllReservations extends React.Component {
                 </Grid>
               )
             })) :
-            <Typography>{ `Vous n'avez aucune réservation en tant qu'${alfredMode ? 'Alfred' : 'utilisateur'}` }</Typography>
+            <Typography className={'customresanoresamessage'}>{ `Vous n'avez aucune réservation en tant qu'${alfredMode ? 'Alfred' : 'utilisateur'}` }</Typography>
           }
         </Grid>
       </Grid>
