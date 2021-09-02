@@ -5,9 +5,12 @@ import {Typography} from '@material-ui/core'
 import styles from '../../static/css/components/InfoBar/InfoBar'
 import withStyles from '@material-ui/core/styles/withStyles'
 import '../../static/assets/css/custom.css'
+import {useTranslation} from "react-i18next"
 
 function InfoBar({classes}) {
 
+  const {t, i18n} = useTranslation('custom')
+  console.log(`I18N language:${i18n.language}`)
   return (
     <Grid container className={`${classes.infoBarMainStyle} customHeaderinfobar`}>
       <Grid item className={classes.infoBarLinkContainer}>
@@ -16,7 +19,7 @@ function InfoBar({classes}) {
             height={'100%'}/>
         </Grid>
         <Grid>
-          <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{INFOBAR_MESSAGE.message}</Typography>
+          <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{t('INFOBAR_MESSAGE')}</Typography>
         </Grid>
       </Grid>
     </Grid>

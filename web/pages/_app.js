@@ -15,7 +15,21 @@ import 'react-datepicker/dist/react-datepicker.css'
 import '../static/cssdashboard.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import '../static/style1.css'
+import {I18nextProvider} from 'react-i18next'
+import i18next from 'i18next'
+import customfr from '../translations/fr/common.json'
 
+i18next.init({
+  languages: ['fr'],
+  defaultLanguage: 'fr',
+  lng: 'fr',
+  resources: {
+    fr: {
+      custom: customfr,
+    },
+  },
+  debug: true,
+})
 
 class MyApp extends App {
   constructor() {
@@ -41,47 +55,49 @@ class MyApp extends App {
   render() {
     const {Component, pageProps} = this.props
     return (
-      <Container>
-        <Head>
-          <title>My Alfred</title>
-          <meta property="og:image" content="https://my-alfred.io/static/presentation.jpg"/>
-          <meta property="og:description"
-            content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous"/>
-          <meta property="description"
-            content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous"/>
-          <meta property="og:type" content="website"/>
-          <meta property="og:url" content="https://my-alfred.io"/>
-          <meta property="og:image:secure_url" content="https://my-alfred.io/static/presentation.jpg"/>
-          <meta property="og:title" content="My Alfred - services autour de chez vous"/>
-          <meta property="fb:app_id" content="512626602698236"/>
-          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-            integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-            crossOrigin=""/>
-          <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
-          <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
-          <link rel="preconnect" href="https://fonts.gstatic.com"/>
-          <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
-        </Head>
-        {/* Wrap every page in Jss and Theme providers */}
+      <I18nextProvider i18n={i18next}>
+        <Container>
+          <Head>
+            <title>My Alfred</title>
+            <meta property="og:image" content="https://my-alfred.io/static/presentation.jpg"/>
+            <meta property="og:description"
+              content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous"/>
+            <meta property="description"
+              content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous"/>
+            <meta property="og:type" content="website"/>
+            <meta property="og:url" content="https://my-alfred.io"/>
+            <meta property="og:image:secure_url" content="https://my-alfred.io/static/presentation.jpg"/>
+            <meta property="og:title" content="My Alfred - services autour de chez vous"/>
+            <meta property="fb:app_id" content="512626602698236"/>
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+              integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+              crossOrigin=""/>
+            <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
+            <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com"/>
+            <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
+          </Head>
+          {/* Wrap every page in Jss and Theme providers */}
 
-        <JssProvider
-          registry={this.pageContext.sheetsRegistry}
-          generateClassName={this.pageContext.generateClassName}
-        >
-          {/* MuiThemeProvider makes the theme available down the React
-              tree thanks to React context. */}
-          <MuiThemeProvider
-            theme={this.pageContext.theme}
+          <JssProvider
+            registry={this.pageContext.sheetsRegistry}
+            generateClassName={this.pageContext.generateClassName}
           >
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline/>
-            {/* Pass pageContext to the _document though the renderPage enhancer
-                to render collected styles on server-side. */}
-            <Component pageContext={this.pageContext} {...pageProps} />
-          </MuiThemeProvider>
-        </JssProvider>
+            {/* MuiThemeProvider makes the theme available down the React
+                tree thanks to React context. */}
+            <MuiThemeProvider
+              theme={this.pageContext.theme}
+            >
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline/>
+              {/* Pass pageContext to the _document though the renderPage enhancer
+                  to render collected styles on server-side. */}
+              <Component pageContext={this.pageContext} {...pageProps} />
+            </MuiThemeProvider>
+          </JssProvider>
 
-      </Container>
+        </Container>
+      </I18nextProvider>
     )
   }
 }
