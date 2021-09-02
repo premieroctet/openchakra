@@ -26,7 +26,7 @@ const {computeUrl}=require('../../../../config/config')
 const {delayedPromise}=require('../../../../utils/promise')
 const {get_token, send_cookie}=require('../../../utils/serverContext')
 const {ensureDirectoryExists, isTxtFile} = require('../../../utils/filesystem')
-const {createUIConfiguration} = require('../../../utils/ui')
+const {createUIConfiguration} = require('../../../utils/ui_generation')
 
 // For Node < 12.0
 if (!Promise.allSettled) {
@@ -2947,14 +2947,64 @@ router.get('/uiConfiguration', passport.authenticate('admin', {session: false}),
     })
 })
 
+router.post('/uiConfiguration/generate', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('UIConfiguration').find()
+    .then(config => {
+      createUIConfiguration(config)
+      res.json('ok')
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
+
+ensureDirectoryExists('static/custom/')
+const customCat = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, 'static/custom/')
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname)
+  },
+})
+
+const uploadCustom = multer({storage: customCat})
+
+router.put('/uiConfiguration/:id/:att/picture', uploadCustom.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('UIConfiguration').findById(req.params.id)
+    .then(config => {
+      const att=config.attributes.find(att => att.name==req.params.att)
+      if (att) {
+        att.value=req.file.path
+      }
+      else {
+        config.attributes.push({name: req.params.att, value: reqf.file.path})
+      }
+      config.save()
+        .then(config => {
+          res.json(config)
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(500).json(err)
+        })
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
 router.put('/uiConfiguration/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+  // Hide "file" attributes
+  req.body.attributes.forEach(a => {
+    if (typeof a.value == 'object') {
+      a.value=null
+    }
+  })
   req.context.getModel('UIConfiguration').findByIdAndUpdate({_id: req.params.id}, req.body)
     .then(result => {
-      // Generate custom css
-      req.context.getModel('UIConfiguration').find().sort('style_path')
-        .then(configurations => {
-          createUIConfiguration(configurations)
-        })
       res.json(result)
     })
     .catch(err => {

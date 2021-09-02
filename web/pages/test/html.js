@@ -1,10 +1,5 @@
 import React from 'react'
-import HtmlEditor from '../../components/Editor/Htmleditor'
-import dynamic from 'next/dynamic'
-const Editor = dynamic(
-  () => import('react-draft-wysiwyg').then(mod => mod.Editor),
-  {ssr: false},
-)
+import HtmlEditor from '../../components/Editor/HtmlEditor'
 
 class HtmlEditorTest extends React.Component {
 
