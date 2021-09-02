@@ -26,12 +26,12 @@ const TITLES={
   'magnify-background-color': 'Couleur de loupe',
   'info-color': "Couleur du texte d'information",
   'example-color': "Couleur du texte d'exemple",
-  'input-color': "Couleur de saisie",
+  'input-color': 'Couleur de saisie',
 }
 
 const ATTRIBUTES_TYPES={
   'component': [['display', 'visibility'], ['color', 'color'], ['background-color', 'color'], ['content', 'text']],
-  'button': [['color', 'color'], ['background-color', 'color'], ['border-radius', 'integer'], ['border-color', 'color'], ['display', 'visibility'], ['content', 'text']],
+  'button': [['display', 'visibility'], ['color', 'color'], ['background-color', 'color'], ['border-color', 'color'], ['border-radius', 'integer'], ['content', 'text']],
   'menuitem': [['display', 'visibility']],
   'logo': [['background-color', 'color'], ['content', 'picture']],
   'searchbar': [['background-color', 'color'], ['magnify-background-color', 'color'], ['info-color', 'color'], ['example-color', 'color'], ['input-color', 'color']],
@@ -51,7 +51,7 @@ class UIParameter extends React.Component {
   }
 
   render = () => {
-    const {parameter, onChange}=this.props
+    const {parameter, title, onChange}=this.props
 
     if (parameter.type=='group') {
       return <div><GroupEditor group={parameter} onChange={onChange} /></div>
@@ -60,7 +60,7 @@ class UIParameter extends React.Component {
 
     return (
       <div style={{width: '80%'}}>
-        <h2>{parameter.label}</h2>
+        <span>{title}</span>
         {
           attributes.map(att => {
             let [att_name, att_type] = att

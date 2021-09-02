@@ -20,7 +20,7 @@ class VisibilityEditor extends React.Component {
           checked={['block', null, undefined, ''].includes(this.props.value)}
           onChange={(ev, checked) => this.onChange(checked? 'block' : 'none')}
         />
-        <h2>{this.props.title}</h2>
+        <span>{this.props.title}</span>
       </Grid>
     )
   }

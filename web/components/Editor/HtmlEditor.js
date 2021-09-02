@@ -29,7 +29,7 @@ class HtmlEditor extends React.Component {
     ReactQuill.Quill.register(Font, true)
     return (
       <Grid>
-        <h2>{this.props.title}</h2>
+        <span>{this.props.title}</span>
         <ReactQuill
           theme={'snow'}
           onChange={this.onChange}
