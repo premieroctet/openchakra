@@ -16,6 +16,7 @@ function withSlide(WrappedComponent) {
 
     onPageChange = (event, pageIndex) => {
       this.setState({pageIndex: pageIndex-1})
+      document.getElementById('wrappedComponent').scrollIntoView()
     };
 
     render() {
@@ -40,7 +41,7 @@ function withSlide(WrappedComponent) {
             { /** TODO importer les styles directement */ }
             <Grid container className={style.slideShowContainer}>
               <Grid container style={{display: 'flex', justifyContent: 'center'}}>
-                <Grid style={{width: '100%'}}>
+                <Grid style={{width: '100%'}} id={'wrappedComponent'}>
                   <WrappedComponent {...this.props} page={pageIndex}/>
                 </Grid>
               </Grid>
