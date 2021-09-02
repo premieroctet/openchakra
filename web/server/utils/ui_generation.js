@@ -10,9 +10,10 @@ createUIConfiguration = configuration => {
   // Transklate classes : menu, search bar, etc...
   configuration.forEach(config => {
     config.attributes.forEach(attribute => {
-      let className=config.className
+      let className=config.classname
       let name=attribute.name
       let value=attribute.value
+      console.log(`Generating ${className} ${name} ${value}`)
       if (name=='content') {
         if (config.type=='logo') {
           if (!value.startsWith('/')) { value=`/${value}` }

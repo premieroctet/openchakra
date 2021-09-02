@@ -113,7 +113,7 @@ class UIParameters extends React.Component {
     const {classes}=this.props
     const {parameters, page}=this.state
     const groupedParameters= _.groupBy(parameters, 'page')
-    const pageParameters=groupedParameters[page]
+    const pageParameters=_.groupBy(groupedParameters[page], 'component')
     const selectedTab = Object.keys(groupedParameters).findIndex(p => p==page)
 
     return (
@@ -126,19 +126,24 @@ class UIParameters extends React.Component {
           <Paper style={{width: '100%'}}>
             <Tabs value={selectedTab==-1 ? false:selectedTab}>
               {
-                Object.keys(groupedParameters).map(p =>
-                  <Tab label={p} onClick={() => this.setState({page: p})} />,
+                Object.keys(groupedParameters).map(page =>
+                  <Tab label={page} onClick={() => this.setState({page: page})} />,
                 )
               }
             </Tabs>
             {
-              pageParameters && pageParameters.map(parameter => (
+              pageParameters && Object.keys(pageParameters).map(component_name => (
                 <Accordion defaultExpanded={false}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    {parameter.label}
+                    {component_name}
                   </AccordionSummary>
                   <AccordionDetails>
-                    <UIParameter parameter={parameter} onChange={this.onChange(parameter._id)}/>
+                    <Grid style={{display: 'flex', flexDirection: 'column'}}>
+                      { pageParameters[component_name].map(parameter => (
+                        <UIParameter parameter={parameter} onChange={this.onChange(parameter._id)}/>
+                      ))
+                      }
+                    </Grid>
                   </AccordionDetails>
                 </Accordion>
               ))

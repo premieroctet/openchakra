@@ -26,7 +26,7 @@ const {computeUrl}=require('../../../../config/config')
 const {delayedPromise}=require('../../../../utils/promise')
 const {get_token, send_cookie}=require('../../../utils/serverContext')
 const {ensureDirectoryExists, isTxtFile} = require('../../../utils/filesystem')
-const {createUIConfiguration} = require('../../../utils/ui')
+const {createUIConfiguration} = require('../../../utils/ui_generation')
 
 // For Node < 12.0
 if (!Promise.allSettled) {

@@ -2,18 +2,18 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const UIConfigurationSchema = new Schema({
-  // Parameter name
+  // Page name
   page: {
     type: String,
     required: true,
   },
-  // Comopnent label
-  label: {
+  // Component label
+  component: {
     type: String,
     required: true,
   },
   // Parameter path in CSS or whatever
-  className: {
+  classname: {
     type: String,
     required: true,
   },
@@ -21,7 +21,7 @@ const UIConfigurationSchema = new Schema({
   type: {
     type: String,
     required: true,
-    enum: ['component', 'button', 'menu', 'group', 'logo', 'searchbar'],
+    //enum: ['attribute', 'component', 'button', 'menu', 'group', 'logo', 'searchbar'],
   },
   // In case of type "group"
   componentType: {
