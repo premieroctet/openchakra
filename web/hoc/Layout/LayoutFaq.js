@@ -1,20 +1,21 @@
-import React from 'react';
-import Grid from "@material-ui/core/Grid";
-import withStyles from "@material-ui/core/styles/withStyles";
-import styles from '../../static/css/components/Layout/LayoutFaq/LayoutFaq';
-import Header from './About/Header';
-import Footer from './About/Footer';
-import Router from 'next/router';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import withStyles from '@material-ui/core/styles/withStyles'
+import styles from '../../static/css/components/Layout/LayoutFaq/LayoutFaq'
+import Header from './About/Header'
+import Footer from './About/Footer'
+import Router from 'next/router'
+import '../../static/assets/css/custom.css'
 
 
 class LayoutFaq extends React.Component {
   constructor(props) {
-    super(props);
-    this.child = React.createRef();
+    super(props)
+    this.child = React.createRef()
 
     this.state = {
       becomeAlfredPage: false,
-      search: ''
+      search: '',
     }
 
   }
@@ -26,18 +27,18 @@ class LayoutFaq extends React.Component {
   }
 
   sendSearch = () => {
-    let state = this.child.current.state;
-    this.setState({search: state.search}, () => this.props.onSearchChange());
+    let state = this.child.current.state
+    this.setState({search: state.search}, () => this.props.onSearchChange())
   };
 
   callClearFunction = () => {
-    this.setState({search: ''}, () => this.props.callClearFunction());
+    this.setState({search: ''}, () => this.props.callClearFunction())
   };
 
 
   render() {
-    const {classes, children} = this.props;
-    const {becomeAlfredPage} = this.state;
+    const {classes, children} = this.props
+    const {becomeAlfredPage} = this.state
 
     return (
       <Grid className={classes.mainContainerLayoutFaq}>
@@ -45,7 +46,7 @@ class LayoutFaq extends React.Component {
         <Grid className={becomeAlfredPage ? classes.becomeAlfredPageContainer : classes.childrenContainer}>
           {children}
         </Grid>
-        <Grid className={classes.footerContainerFaq}>
+        <Grid className={`customlayoutfaqfootercont ${classes.footerContainerFaq}`}>
           <Footer/>
         </Grid>
       </Grid>
@@ -53,4 +54,4 @@ class LayoutFaq extends React.Component {
   }
 }
 
-export default withStyles(styles)(LayoutFaq);
+export default withStyles(styles)(LayoutFaq)

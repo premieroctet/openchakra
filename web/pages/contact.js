@@ -1,24 +1,19 @@
-import React, {Fragment} from 'react';
-import Grid from '@material-ui/core/Grid';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import {withStyles} from "@material-ui/core/styles";
-import styles from '../static/css/pages/footer/contact/contact';
-import LayoutFaq from "../hoc/Layout/LayoutFaq";
-import NeedMoreFaq from "../hoc/Layout/Faq/NeedMoreFaq";
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import MailOutlineIcon from '@material-ui/icons/MailOutline'
+import {withStyles} from '@material-ui/core/styles'
+import styles from '../static/css/pages/footer/contact/contact'
+import LayoutFaq from '../hoc/Layout/LayoutFaq'
 
 class Contact extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
 
     return (
       <LayoutFaq>
@@ -29,7 +24,7 @@ class Contact extends React.Component {
             </Grid>
             <Grid style={{display: 'flex'}}>
               <Grid>
-                <Typography>Du Lundi au Vendredi 10H - 18 H</Typography>
+                <Typography>Du Lundi au Vendredi 10H - 18H</Typography>
               </Grid>
             </Grid>
           </Grid>
