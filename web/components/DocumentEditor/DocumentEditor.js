@@ -78,7 +78,7 @@ class DocumentEditor extends React.Component {
         </Grid>
         :
         <Grid item xs={12} className={classes.containerRecto}>
-          <label style={{display: 'inline-block', marginTop: 15, textAlign: 'center'}} className="forminputs">
+          <label style={{display: 'inline-block', marginTop: 15, textAlign: 'center', width: '100%'}} className="forminputs">
             <p style={{cursor: 'pointer', color: 'darkgrey', fontSize: '0.9rem'}}>{title}</p>
             <input disabled={disabled} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}}
               name="myCardR" type="file"

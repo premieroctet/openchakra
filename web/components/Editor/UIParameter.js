@@ -5,6 +5,8 @@ import Visibility from './Visibility'
 import IntegerEditor from './IntegerEditor'
 import GroupEditor from './GroupEditor'
 import PictureEditor from './PictureEditor'
+import Grid from '@material-ui/core/Grid'
+import Divider from '@material-ui/core/Divider'
 
 const ATT_TYPES={
   'color': 'color',
@@ -59,8 +61,11 @@ class UIParameter extends React.Component {
     const attributes=ATTRIBUTES_TYPES[parameter.type] || [[parameter.type, ATT_TYPES[parameter.type]]]
 
     return (
-      <div style={{width: '80%'}}>
-        <span>{title}</span>
+      <Grid container spacing={2}>
+        <Grid item xl={12}>
+          <h3 style={{color: 'black'}}>{title}</h3>
+        </Grid>
+
         {
           attributes.map(att => {
             let [att_name, att_type] = att
@@ -71,16 +76,16 @@ class UIParameter extends React.Component {
             console.log(`AttName:${att_name}`)
             pAtt = pAtt || {value: ''}
             switch (att_type) {
-              case 'color': return <ColorPicker title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} />
-              case 'text': return <HtmlEditor title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} />
-              case 'visibility': return <Visibility title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} />
-              case 'integer': return <IntegerEditor title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} />
-              case 'picture': return <PictureEditor title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} />
+              case 'color': return <Grid item xl={12}><ColorPicker title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} /></Grid>
+              case 'text': return <Grid item xl={12}><HtmlEditor title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} /></Grid>
+              case 'visibility': return <Grid item xl={12}><Visibility title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} name={title}/></Grid>
+              case 'integer': return <Grid item xl={12}><IntegerEditor title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} /></Grid>
+              case 'picture': return <Grid item xl={12}><PictureEditor title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} /></Grid>
               default: return null
             }
           })
         }
-      </div>
+      </Grid>
     )
   }
 }

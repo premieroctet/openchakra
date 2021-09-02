@@ -2,6 +2,7 @@ import React from 'react'
 import {ChromePicker} from 'react-color'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
+import Divider from '@material-ui/core/Divider'
 
 const popover = {
   position: 'absolute',
@@ -39,18 +40,25 @@ class ColorPicker extends React.Component {
 
     const {color, open}=this.state
     return (
-      <Grid style={{display: 'flex'}}>
-        <Button variant={'contained'} style={{backgroundColor: color, borderRadius: '40px'}} onClick={this.onColorToggle}/>
+      <Grid container spacing={2}>
+        <Grid item xl={1}>
+          <Button variant={'contained'} style={{backgroundColor: color, height: 40, borderRadius: 20}} onClick={this.onColorToggle}/>
+        </Grid>
         { open &&
-          <div style={ popover }>
-            <div style={ cover } onClick={this.onColorToggle}/>
+          <Grid item xl={12} style={ popover }>
+            <Grid style={ cover } onClick={this.onColorToggle}/>
             <ChromePicker
               color={this.state.color}
               onChangeComplete={this.onChangeComplete}
             />
-          </div>
+          </Grid>
         }
-        <span>{this.props.title}</span>
+        <Grid item xl={11} style={{display: 'flex', alignItems: 'center'}}>
+          <span>{this.props.title}</span>
+        </Grid>
+        <Grid item xl={12}>
+          <Divider/>
+        </Grid>
       </Grid>
     )
   }
