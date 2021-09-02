@@ -350,10 +350,6 @@ class SearchPage extends React.Component {
       })
   }
 
-  isDateFilterSet = () => {
-    return this.state.startDate != null || this.state.endDate != null
-  };
-
   handleChange = event => {
     this.setState({filters: event.target.value})
   };
