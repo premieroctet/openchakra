@@ -7,6 +7,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import querystring from 'querystring'
 import Router from 'next/router'
 import _ from 'lodash'
+import {withTranslation} from 'react-i18next'
 
 function a11yProps(index) {
   return {
@@ -46,6 +47,7 @@ class ScrollMenu extends React.Component {
       console.error(`ScrollMenu:Mode ${mode} inconnu`)
     }
 
+    const {t}=this.props
     return(
       <Grid style={{maxWidth: '100%'}}>
         <Grid>
@@ -61,7 +63,6 @@ class ScrollMenu extends React.Component {
             {
               categories ?
                 categories.map((res, index) => {
-
                   let url = mode === 'account' ? `/account${ res.url}`
                     :
                     mode === 'profile' ? `/profile${ res.url }?${ querystring.stringify({...extraParams})}`
@@ -72,7 +73,7 @@ class ScrollMenu extends React.Component {
                           :
                           ''
                   return(
-                    <Tab key={index} label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={() => this.controllerUrl(url)}/>
+                    <Tab key={index} label={t(res.label)} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={() => this.controllerUrl(url)}/>
                   )
                 },
                 ) : null
@@ -84,4 +85,4 @@ class ScrollMenu extends React.Component {
   }
 }
 
-export default withStyles(styles)(ScrollMenu)
+export default withTranslation()(withStyles(styles)(ScrollMenu))
