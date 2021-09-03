@@ -1,5 +1,4 @@
-import {withTranslation} from 'react-i18next'
-export default withTranslation()(theme => ({)
+export default theme => ({
   marginMainContainer: {
     marginLeft: '5%',
     marginRight: '5%',
