@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/TrustAndSecurity/TrustAndSecurity'
 import '../../../static/assets/css/custom.css'
+import {TRUST_SECURITY} from '../../../utils/i18n'
 
 class TrustAndSecurity extends React.Component {
   constructor(props) {
@@ -14,18 +15,18 @@ class TrustAndSecurity extends React.Component {
     this.state={
       items: [
         {
-          title: 'Réservation en instantané',
-          text: 'Avec un délai de prévenance bien sûr ;)',
+          title: TRUST_SECURITY.first_item.title,
+          text: TRUST_SECURITY.first_item.text,
           icon: <AlarmOnIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
         },
         {
-          title: 'Paiement 100% sécurisé',
-          text: 'Par la Nasa et le Pentagone',
+          title: TRUST_SECURITY.second_item.title,
+          text: TRUST_SECURITY.second_item.text,
           icon: <VerifiedUserIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
         },
         {
-          title: 'Notre équipe',
-          text: 'Toujours à votre écoute ',
+          title: TRUST_SECURITY.third_item.title,
+          text: TRUST_SECURITY.third_item.text,
           icon: <TextsmsIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
         },
       ],

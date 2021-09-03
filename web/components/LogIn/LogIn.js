@@ -25,6 +25,7 @@ import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
 import {EMPLOYEE} from '../../utils/consts'
 const {isB2BStyle}=require('../../utils/context')
 import '../../static/assets/css/custom.css'
+import {LOGIN} from '../../utils/i18n'
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -107,7 +108,7 @@ class LogIn extends React.Component {
         <Grid style={{width: '100%'}}>
           <Grid className={classes.newContainer}>
             <Grid>
-              <h2 className={classes.titleRegister}>Connexion</h2>
+              <h2 className={classes.titleRegister}>{LOGIN.title}</h2>
             </Grid>
             {ENABLE_GF_LOGIN ?
               <Grid className={classes.margin}>
@@ -145,8 +146,8 @@ class LogIn extends React.Component {
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
-                      label="Email"
-                      placeholder="Email"
+                      label={LOGIN.input_label}
+                      placeholder={LOGIN.input_label}
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
                       name="username"
                       value={username}
@@ -165,8 +166,8 @@ class LogIn extends React.Component {
                   <Grid item className={classes.widthTextField}>
                     <Input
                       id="standard-with-placeholder"
-                      label="Mot de passe"
-                      placeholder="Mot de passe"
+                      label={LOGIN.input_password}
+                      placeholder={LOGIN.input_password}
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
                       type={showPassword ? 'text' : 'password'}
                       name="password"
@@ -199,7 +200,7 @@ class LogIn extends React.Component {
                       </Grid>
                       <Grid item className={classes.widthTextField}>
                         <FormControl className={classes.formControl}>
-                          <InputLabel id="demo-simple-select-label">Rôle</InputLabel>
+                          <InputLabel id="demo-simple-select-label">{LOGIN.input_role}</InputLabel>
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
@@ -222,16 +223,14 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer}>
                   <Button onClick={this.onSubmit} disabled={loginDisabled} variant="contained" color="primary" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>
-                    Connexion
+                    {LOGIN.button}
                   </Button>
                 </Grid>
               </Grid>
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer} style={{flexDirection: 'column'}}>
-                  <Link href={'/forgotPassword'}><a color="primary" className={`customloginforgetpassword ${classes.forgetPassword}`}>Mot
-                    de passe oublié ?</a></Link>
-                  <a color="primary" onClick={callRegister} className={`customloginredirectionlink ${classes.redirectionSignin}` }>Pas encore inscrit ?
-                    Inscrivez-vous !</a>
+                  <Link href={'/forgotPassword'}><a color="primary" className={`customloginforgetpassword ${classes.forgetPassword}`}>{LOGIN.FORGOTTEN_PASSWORD}</a></Link>
+                  <a color="primary" onClick={callRegister} className={`customloginredirectionlink ${classes.redirectionSignin}` }>{LOGIN.REGISTER_YET}</a>
                 </Grid>
               </Grid>
             </Grid>

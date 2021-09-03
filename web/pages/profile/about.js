@@ -172,8 +172,8 @@ class ProfileAbout extends CompanyComponent {
   save = () => {
     const {newAddress, languages} = this.state
     setAxiosAuthentication()
-    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then( () => {
-      axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then( () => {
+    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(() => {
+      axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(() => {
         snackBarSuccess('Profil modifié avec succès')
         setTimeout(this.loadUser, 1000)
       },

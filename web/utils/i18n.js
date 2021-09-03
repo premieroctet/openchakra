@@ -111,6 +111,31 @@ const HOW_IT_WORKS = {
   rightText: 'Vous pouvez consulter des centaines de profils, choisir votre Alfred, réserver et payer en ligne votre service. Notre équipe vous accompagne à chaque étape !',
 }
 
+const TRUST_SECURITY = {
+  first_item: {
+    title: 'Réservation en instantané',
+    text: 'Avec un délai de prévenance bien sûr',
+  },
+  second_item: {
+    title: 'Paiement 100% sécurisé',
+    text: 'Par la Nasa et le Pentagone',
+  },
+  third_item: {
+    title: 'Notre équipe',
+    text: 'Toujours à votre écoute',
+  },
+}
+
+const LOGIN = {
+  title: 'Connexion',
+  input_label: 'Email',
+  input_password: 'Mot de passe',
+  input_role: 'Rôle',
+  button: 'Connexion',
+  FORGOTTEN_PASSWORD: 'Mot de passe oublié ?',
+  REGISTER_YET: 'Pas encore inscrit ? Inscrivez-vous !',
+}
+
 
 const NEWS_LETTER = {
   title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
@@ -530,5 +555,7 @@ module.exports = {
   INFOBARMOBILE_MESSAGE,
   AVOCOTES,
   PROFIL,
-  OUR_ALFRED
+  OUR_ALFRED,
+  TRUST_SECURITY,
+  LOGIN,
 }
