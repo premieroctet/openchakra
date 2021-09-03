@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -34,4 +35,4 @@ class GallerySlidePics extends React.Component{
 
 }
 
-export default GallerySlidePics
+export default withTranslation()(GallerySlidePics)

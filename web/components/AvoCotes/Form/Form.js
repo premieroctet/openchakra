@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {useState, useEffect} from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/FormAvocotes/FormAvocotes'
@@ -255,4 +256,4 @@ function Form({classes, booking_id}) {
   )
 }
 
-export default withStyles(styles)(Form)
+export default withTranslation()(withStyles(styles)(Form))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 
 
@@ -42,4 +43,4 @@ class Thumb extends React.Component {
   }
 }
 
-export default Thumb
+export default withTranslation()(Thumb)

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import styles from './LogInStyle'
@@ -242,4 +243,4 @@ class LogIn extends React.Component {
   }
 }
 
-export default withStyles(styles)(LogIn)
+export default withTranslation()(withStyles(styles)(LogIn))

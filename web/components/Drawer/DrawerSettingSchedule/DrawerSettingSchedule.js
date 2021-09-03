@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
@@ -354,4 +355,4 @@ class DrawerSettingSchedule extends React.Component {
     }
 }
 
-export default withStyles(styles, {withTheme: true})(DrawerSettingSchedule)
+export default withTranslation()(withStyles(styles, {withTheme: true})(DrawerSettingSchedule))

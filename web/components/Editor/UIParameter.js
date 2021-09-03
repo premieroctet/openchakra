@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import ColorPicker from './ColorPicker'
 import HtmlEditor from './HtmlEditor'
@@ -85,4 +86,4 @@ class UIParameter extends React.Component {
   }
 }
 
-export default UIParameter
+export default withTranslation()(UIParameter)

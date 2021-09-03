@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
@@ -16,7 +17,7 @@ moment.locale('fr');
 
 const DATE_COUPURE_INSEE = moment('2020-06-09');
 
-class siret extends React.Component {
+class Siret extends React.Component {
 
   constructor(props) {
     super(props);
@@ -194,4 +195,4 @@ class siret extends React.Component {
 }
 
 
-export default withStyles(styles)(siret);
+export default withTranslation()(withStyles(styles)(Siret))

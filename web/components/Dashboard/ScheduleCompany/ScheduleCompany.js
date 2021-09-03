@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 
@@ -15,4 +16,4 @@ class ScheduleCompany extends React.Component{
   }
 }
 
-export default ScheduleCompany
+export default withTranslation()(ScheduleCompany)

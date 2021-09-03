@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import 'react-quill/dist/quill.snow.css'
 import Grid from '@material-ui/core/Grid'
@@ -70,4 +71,4 @@ HtmlEditor.formats = [
 ]
 
 
-export default HtmlEditor
+export default withTranslation()(HtmlEditor)

@@ -1,9 +1,10 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import { DataGrid } from '@material-ui/data-grid';
 
 
-export default class Pagination extends React.Component{
+export default withTranslation()(class Pagination extends React.Component{)
   constructor(props) {
     super(props);
     this.state={

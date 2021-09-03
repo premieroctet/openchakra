@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import IconButton from '@material-ui/core/IconButton'
 import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
@@ -141,4 +142,4 @@ class UserAvatar extends React.Component {
   }
 }
 
-export default withStyles(styles)(UserAvatar)
+export default withTranslation()(withStyles(styles)(UserAvatar))

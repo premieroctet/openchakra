@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Tabs from '@material-ui/core/Tabs'
@@ -7,7 +8,6 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import querystring from 'querystring'
 import Router from 'next/router'
 import _ from 'lodash'
-import {withTranslation} from 'react-i18next'
 
 function a11yProps(index) {
   return {
@@ -85,4 +85,4 @@ class ScrollMenu extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(ScrollMenu))
+export default withTranslation()(withTranslation()(withStyles(styles)(ScrollMenu)))

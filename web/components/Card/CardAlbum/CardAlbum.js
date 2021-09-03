@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react"
 import Grid from "@material-ui/core/Grid"
 
@@ -23,4 +24,4 @@ class CardAlbum extends React.Component{
   }
 }
 
-export default CardAlbum
+export default withTranslation()(CardAlbum)

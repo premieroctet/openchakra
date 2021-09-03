@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import InfoWithPics from "../InfoWithPics/InfoWithPics";
@@ -24,4 +25,4 @@ class ListAlfredConditions extends React.Component{
   }
 }
 
-export default ListAlfredConditions
+export default withTranslation()(ListAlfredConditions)

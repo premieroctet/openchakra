@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -122,4 +123,4 @@ Notes.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, {withTheme: true})(Notes);
+export default withTranslation()(withStyles(styles, {withTheme: true})(Notes))

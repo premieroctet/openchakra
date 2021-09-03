@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import { classnames } from '@material-ui/data-grid'
 
 const {setAxiosAuthentication} = require('../../utils/authentication')
@@ -138,4 +139,4 @@ class Cancel extends React.Component {
   }
 }
 
-export default withStyles(styles)(Cancel)
+export default withTranslation()(withStyles(styles)(Cancel))

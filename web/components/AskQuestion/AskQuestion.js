@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -40,4 +41,4 @@ class AskQuestion extends React.Component{
 
 }
 
-export default AskQuestion;
+export default withTranslation()(AskQuestion)

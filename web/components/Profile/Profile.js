@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -32,4 +33,4 @@ class Profile extends React.Component {
   }
 }
 
-export default withStyles (styles) (Profile);
+export default withTranslation()(withStyles (styles) (Profile))

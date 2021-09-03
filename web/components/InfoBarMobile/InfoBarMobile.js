@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import {Typography} from "@material-ui/core";
@@ -58,4 +59,4 @@ class InfoBarMobile extends React.Component {
   }
 }
 
-export default withStyles(styles)(InfoBarMobile);
+export default withTranslation()(withStyles(styles)(InfoBarMobile))

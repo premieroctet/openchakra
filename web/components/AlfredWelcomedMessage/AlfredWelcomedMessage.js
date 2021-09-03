@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
@@ -90,4 +91,4 @@ AlfredWelcomedMessage.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, {withTheme: true})(AlfredWelcomedMessage);
+export default withTranslation()(withStyles(styles, {withTheme: true})(AlfredWelcomedMessage))

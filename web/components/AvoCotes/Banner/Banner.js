@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import styles from '../../../static/css/components/BannerAvocotes/BannerAvocotes'
@@ -40,4 +41,4 @@ function Banner({classes}) {
   )
 }
 
-export default withStyles(styles)(Banner)
+export default withTranslation()(withStyles(styles)(Banner))

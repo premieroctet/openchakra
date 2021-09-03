@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import Grid from '@material-ui/core/Grid';
@@ -104,4 +105,4 @@ class EmployeeImportDialog extends React.Component {
 
 }
 
-export default withStyles(styles)(EmployeeImportDialog)
+export default withTranslation()(withStyles(styles)(EmployeeImportDialog))

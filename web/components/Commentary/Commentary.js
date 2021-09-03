@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
@@ -96,4 +97,4 @@ Commentary.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, {withTheme: true})(Commentary);
+export default withTranslation()(withStyles(styles, {withTheme: true})(Commentary))

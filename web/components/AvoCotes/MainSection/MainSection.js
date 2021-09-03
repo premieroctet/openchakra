@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {useState, useEffect} from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/MainSectionAvocotes/MainSectionAvocotes'
@@ -71,4 +72,4 @@ function MainSection({classes}) {
   )
 }
 
-export default withStyles(styles)(MainSection)
+export default withTranslation()(withStyles(styles)(MainSection))

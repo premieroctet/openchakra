@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
@@ -174,4 +175,4 @@ class BookingPreference extends React.Component {
   }
 }
 
-export default withStyles(styles)(BookingPreference)
+export default withTranslation()(withStyles(styles)(BookingPreference))

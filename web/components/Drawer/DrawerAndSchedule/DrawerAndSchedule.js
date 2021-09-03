@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import DrawerSchedule from '../../DrawerSchedule/DrawerSchedule'
@@ -69,4 +70,4 @@ class DrawerAndSchedule extends React.Component {
   }
 }
 
-export default withStyles(styles)(DrawerAndSchedule)
+export default withTranslation()(withStyles(styles)(DrawerAndSchedule))

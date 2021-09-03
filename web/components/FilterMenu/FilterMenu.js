@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -571,4 +572,4 @@ class FilterMenu extends React.Component{
   }
 }
 
-export default withStyles(styles)(FilterMenu);
+export default withTranslation()(withStyles(styles)(FilterMenu))

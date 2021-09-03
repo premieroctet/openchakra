@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Grid from '@material-ui/core/Grid'
@@ -322,4 +323,4 @@ class HandleRIB extends React.Component {
   }
 }
 
-export default withStyles(styles)(HandleRIB)
+export default withTranslation()(withStyles(styles)(HandleRIB))

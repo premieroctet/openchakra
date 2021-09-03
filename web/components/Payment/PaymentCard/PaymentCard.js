@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Radio from '@material-ui/core/Radio'
@@ -69,4 +70,4 @@ class PaymentCard extends React.Component {
   }
 }
 
-export default withStyles(styles)(PaymentCard)
+export default withTranslation()(withStyles(styles)(PaymentCard))

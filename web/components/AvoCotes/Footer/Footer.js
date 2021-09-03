@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/FooterAvocotes/FooterAvocotes'
@@ -60,4 +61,4 @@ function Footer({classes}) {
   )
 }
 
-export default withStyles(styles)(Footer)
+export default withTranslation()(withStyles(styles)(Footer))

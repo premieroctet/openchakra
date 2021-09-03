@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {Fragment} from 'react';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
@@ -91,4 +92,4 @@ class alfredBanner extends React.Component {
 
 }
 
-export default withStyles(styles, {withTheme: true})(alfredBanner);
+export default withTranslation()(withStyles(styles, {withTheme: true})(alfredBanner))

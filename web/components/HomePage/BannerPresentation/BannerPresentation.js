@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
@@ -75,4 +76,4 @@ class BannerPresentation extends React.Component {
 
 }
 
-export default withStyles(styles)(BannerPresentation)
+export default withTranslation()(withStyles(styles)(BannerPresentation))

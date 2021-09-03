@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
 import React from 'react';
@@ -50,4 +51,4 @@ NavBarShop.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, {withTheme: true})(NavBarShop);
+export default withTranslation()(withStyles(styles, {withTheme: true})(NavBarShop))

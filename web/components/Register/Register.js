@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import CguContent from '../CguContent/CguContent'
 
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
@@ -561,4 +562,4 @@ class Register extends React.Component {
 
 }
 
-export default withStyles(styles)(Register)
+export default withTranslation()(withStyles(styles)(Register))

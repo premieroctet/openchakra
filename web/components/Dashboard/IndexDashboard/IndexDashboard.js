@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Box from "../../Box/Box";
@@ -153,4 +154,4 @@ class IndexDashboard extends React.Component{
 
 }
 
-export default withStyles(styles)(IndexDashboard)
+export default withTranslation()(withStyles(styles)(IndexDashboard))

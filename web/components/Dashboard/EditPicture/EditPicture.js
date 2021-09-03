@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react';
 import Router from 'next/router';
@@ -100,4 +101,4 @@ EditPicture.propTypes = {
 };
 
 
-export default withStyles(styles, {withTheme: true})(EditPicture);
+export default withTranslation()(withStyles(styles, {withTheme: true})(EditPicture))

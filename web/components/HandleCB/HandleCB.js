@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../static/css/components/HandleCB/HandleCB'
@@ -268,4 +269,4 @@ class HandleCB extends React.Component {
   }
 }
 
-export default withStyles(styles)(HandleCB)
+export default withTranslation()(withStyles(styles)(HandleCB))

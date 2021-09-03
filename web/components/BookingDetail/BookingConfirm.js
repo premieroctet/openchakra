@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react'
 import Typography from '@material-ui/core/Typography'
@@ -413,4 +414,4 @@ class BookingConfirm extends React.Component {
   }
 }
 
-export default withStyles(styles)(BookingConfirm)
+export default withTranslation()(withStyles(styles)(BookingConfirm))

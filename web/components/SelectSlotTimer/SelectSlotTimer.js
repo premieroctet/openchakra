@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import Chip from '@material-ui/core/Chip';
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
@@ -55,4 +56,4 @@ class SelectSlotTimer extends React.Component {
   }
 }
 
-export default withStyles(styles, {withTheme: true})(SelectSlotTimer);
+export default withTranslation()(withStyles(styles, {withTheme: true})(SelectSlotTimer))

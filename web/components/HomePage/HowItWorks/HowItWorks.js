@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {HOW_IT_WORKS} from '../../../utils/i18n'
@@ -33,4 +34,4 @@ class HowItWorks extends React.Component {
 
 }
 
-export default withStyles(styles)(HowItWorks)
+export default withTranslation()(withStyles(styles)(HowItWorks))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
@@ -19,4 +20,4 @@ class Badges extends React.Component {
   }
 }
 
-export default withStyles(styles, {withTheme: true})(Badges)
+export default withTranslation()(withStyles(styles, {withTheme: true})(Badges))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import Switch from '@material-ui/core/Switch'
@@ -158,4 +159,4 @@ class ButtonSwitch extends React.Component {
   }
 }
 
-export default withStyles(styles)(ButtonSwitch)
+export default withTranslation()(withStyles(styles)(ButtonSwitch))

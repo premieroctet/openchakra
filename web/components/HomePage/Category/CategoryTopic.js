@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
@@ -69,4 +70,4 @@ class CategoryTopic extends React.Component {
   }
 }
 
-export default withStyles(styles)(CategoryTopic)
+export default withTranslation()(withStyles(styles)(CategoryTopic))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import styles from '../../static/css/components/ShowExperience/ShowExperience'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -103,4 +104,4 @@ class ShowExperience extends React.Component {
 
 }
 
-export default withStyles(styles)(ShowExperience)
+export default withTranslation()(withStyles(styles)(ShowExperience))

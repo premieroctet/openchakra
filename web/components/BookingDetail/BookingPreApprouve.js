@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import axios from 'axios';
@@ -352,4 +353,4 @@ class BookingPreApprouve extends React.Component {
   }
 }
 
-export default withStyles(styles)(BookingPreApprouve);
+export default withTranslation()(withStyles(styles)(BookingPreApprouve))

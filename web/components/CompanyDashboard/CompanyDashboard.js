@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import ListItem from '@material-ui/core/ListItem'
@@ -200,4 +201,4 @@ CompanyDashboard.propTypes = {
   window: PropTypes.func,
 }
 
-export default withStyles(styles)(CompanyDashboard)
+export default withTranslation()(withStyles(styles)(CompanyDashboard))

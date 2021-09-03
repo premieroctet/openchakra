@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/OurCompanyAvocotes/OurCompanyAvocotes'
@@ -26,4 +27,4 @@ function OurCompany({classes}) {
   )
 }
 
-export default withStyles(styles)(OurCompany)
+export default withTranslation()(withStyles(styles)(OurCompany))

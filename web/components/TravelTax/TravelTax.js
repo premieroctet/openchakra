@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import Switch from '@material-ui/core/Switch'
@@ -150,4 +151,4 @@ class TravelTax extends React.Component {
   }
 }
 
-export default withStyles(styles)(TravelTax)
+export default withTranslation()(withStyles(styles)(TravelTax))

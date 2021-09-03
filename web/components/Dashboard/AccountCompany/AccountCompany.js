@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Box from '../../Box/Box'
@@ -135,4 +136,4 @@ class AccountCompany extends React.Component {
   }
 }
 
-export default withStyles(styles)(AccountCompany)
+export default withTranslation()(withStyles(styles)(AccountCompany))
