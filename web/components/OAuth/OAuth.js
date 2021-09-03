@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 
@@ -5,7 +6,6 @@ import {Typography} from '@material-ui/core'
 import styles from '../../static/css/components/InfoBar/InfoBar'
 import withStyles from '@material-ui/core/styles/withStyles'
 import '../../static/assets/css/custom.css'
-import {withTranslation} from 'react-i18next'
 
 function InfoBar({classes, t}) {
 

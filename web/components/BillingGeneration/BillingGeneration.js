@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 import {Page, Text, View, Document, StyleSheet, Image, Link, Font} from '@react-pdf/renderer';
 import {moneyFormat} from '../../utils/converters';

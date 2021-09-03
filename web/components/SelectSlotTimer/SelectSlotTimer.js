@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import Chip from '@material-ui/core/Chip';
 import React from 'react';
 import Grid from '@material-ui/core/Grid';

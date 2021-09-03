@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';

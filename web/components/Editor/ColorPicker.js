@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {ChromePicker} from 'react-color'
 import Button from '@material-ui/core/Button'

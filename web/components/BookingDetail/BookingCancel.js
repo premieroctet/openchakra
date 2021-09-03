@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import { classnames } from '@material-ui/data-grid'
 
 const {setAxiosAuthentication} = require('../../utils/authentication')

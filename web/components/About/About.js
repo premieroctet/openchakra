@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import {TextField} from '@material-ui/core'
 import BusinessIcon from '@material-ui/icons/Business'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')

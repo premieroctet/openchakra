@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'

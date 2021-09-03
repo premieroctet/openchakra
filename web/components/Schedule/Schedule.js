@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {Calendar, momentLocalizer, Views} from 'react-big-calendar'
 import _ from 'lodash'

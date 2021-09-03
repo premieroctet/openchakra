@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import CardService from '../Card/CardService/CardService'
 import Grid from '@material-ui/core/Grid'

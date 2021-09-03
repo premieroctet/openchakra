@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import {snackBarError, snackBarSuccess} from "../../utils/notifications";
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';

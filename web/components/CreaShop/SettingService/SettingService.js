@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import InputAdornment from '@material-ui/core/InputAdornment'
 const {setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react'

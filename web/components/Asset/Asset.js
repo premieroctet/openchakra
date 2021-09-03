@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {useEffect, useState} from 'react'
 import {getPartner} from '../../utils/context'
 

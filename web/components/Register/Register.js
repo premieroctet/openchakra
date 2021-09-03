@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import CguContent from '../CguContent/CguContent'
 
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')

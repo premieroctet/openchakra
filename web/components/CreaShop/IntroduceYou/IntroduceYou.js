@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'

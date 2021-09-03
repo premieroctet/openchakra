@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import styles from './BoxStyle';
 import withStyles from "@material-ui/core/styles/withStyles";

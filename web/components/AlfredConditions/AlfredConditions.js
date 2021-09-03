@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
 import React, {useEffect, useState} from 'react'
 import {withStyles} from '@material-ui/core/styles'
