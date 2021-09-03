@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import {
   deviceType,
@@ -13,7 +14,7 @@ import {
 } from 'react-device-detect';
 import {isApplication, isMobile} from '../../utils/context';
 
-export default class device extends React.Component {
+export default withTranslation()(class device extends React.Component {)
 
   render() {
     return (

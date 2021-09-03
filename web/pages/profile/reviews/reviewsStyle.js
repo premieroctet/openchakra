@@ -1,4 +1,5 @@
-export default theme => ({
+import {withTranslation} from 'react-i18next'
+export default withTranslation()(theme => ({)
   bigContainer: {
     marginTop: 70,
     flexGrow: 1,

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -27,4 +28,4 @@ function Custom404({classes}) {
   )
 }
 
-export default withStyles(styles)(Custom404)
+export default withTranslation()(withStyles(styles)(Custom404))

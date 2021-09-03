@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {useEffect, useState} from 'react'
 import Select from 'react-select'
 import axios from 'axios'
@@ -25,4 +26,4 @@ function linkedinAPI() {
   )
 }
 
-export default linkedinAPI
+export default withTranslation()(linkedinAPI)

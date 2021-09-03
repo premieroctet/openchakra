@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 
 const {getField} = require("../../server/utils/booking");
@@ -22,4 +23,4 @@ class Invoice extends React.Component {
   }
 }
 
-export default Invoice
+export default withTranslation()(Invoice)

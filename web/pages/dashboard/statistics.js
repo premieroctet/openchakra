@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication, clearAuthenticationToken}=require('../../utils/authentication')
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
@@ -192,4 +193,4 @@ class statistics extends React.Component {
   };
 }
 
-export default withStyles(styles)(statistics);
+export default withTranslation()(withStyles(styles)(statistics);)

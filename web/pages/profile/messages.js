@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -297,4 +298,4 @@ class Messages extends React.Component {
   }
 
 }
-export default withStyles(styles)(Messages)
+export default withTranslation()(withStyles(styles)(Messages))

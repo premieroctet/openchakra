@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
 const {snackBarSuccess} = require('../../utils/notifications')
 const {setAxiosAuthentication}=require('../../utils/authentication')
@@ -541,4 +542,4 @@ class ProfileAbout extends CompanyComponent {
   }
 }
 
-export default withStyles(styles)(ProfileAbout)
+export default withTranslation()(withStyles(styles)(ProfileAbout))

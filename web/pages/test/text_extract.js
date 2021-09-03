@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 const i18n = require('../../utils/i18n')
 
@@ -41,4 +42,4 @@ class TextExtractTest extends React.Component {
 
 }
 
-export default TextExtractTest
+export default withTranslation()(TextExtractTest)

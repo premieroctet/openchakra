@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import {snackBarSuccess} from '../../../utils/notifications'
 
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
@@ -200,4 +201,4 @@ class idCard extends React.Component {
 }
 
 
-export default withStyles(styles)(idCard)
+export default withTranslation()(withStyles(styles)(idCard))

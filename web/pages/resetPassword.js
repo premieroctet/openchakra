@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -151,4 +152,4 @@ class resetPassword extends React.Component {
 }
 
 
-export default withStyles(styles)(resetPassword);
+export default withTranslation()(withStyles(styles)(resetPassword);)

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
@@ -490,4 +491,4 @@ class editProfile extends React.Component {
   }
 }
 
-export default withStyles(styles)(editProfile)
+export default withTranslation()(withStyles(styles)(editProfile))

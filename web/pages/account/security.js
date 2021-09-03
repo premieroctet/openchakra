@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication')
 import React, {Fragment} from 'react'
 import axios from 'axios'
@@ -497,4 +498,4 @@ class security extends React.Component {
   }
 }
 
-export default withStyles(styles)(security)
+export default withTranslation()(withStyles(styles)(security))

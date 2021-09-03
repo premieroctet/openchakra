@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import Layout from '../../hoc/Layout/Layout'
@@ -156,4 +157,4 @@ class UIParameters extends React.Component {
 
 }
 
-export default withStyles(styles)(UIParameters)
+export default withTranslation()(withStyles(styles)(UIParameters))

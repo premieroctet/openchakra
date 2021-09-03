@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -52,4 +53,4 @@ class personalInformation extends React.Component{
   }
 }
 
-export default personalInformation;
+export default withTranslation()(personalInformation;)

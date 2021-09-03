@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
@@ -95,4 +96,4 @@ scheduleTest.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, {withTheme: true})(scheduleTest);
+export default withTranslation()(withStyles(styles, {withTheme: true})(scheduleTest);)

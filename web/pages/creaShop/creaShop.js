@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import MenuIcon from '@material-ui/icons/Menu'
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
@@ -637,4 +638,4 @@ creaShop.propTypes = {
   window: PropTypes.func,
 }
 
-export default withStyles(styles)(creaShop)
+export default withTranslation()(withStyles(styles)(creaShop))

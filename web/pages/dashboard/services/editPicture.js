@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Layout from '../../../hoc/Layout/Layout';
 import EditPicture from '../../../components/Dashboard/EditPicture/EditPicture';
@@ -26,4 +27,4 @@ class editPicture extends React.Component {
   };
 }
 
-export default editPicture;
+export default withTranslation()(editPicture;)

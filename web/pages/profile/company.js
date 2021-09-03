@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import SnackBar from "../../components/SnackBar/SnackBar";
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
@@ -324,4 +325,4 @@ class Company extends React.Component {
   }
 }
 
-export default withStyles(styles)(Company)
+export default withTranslation()(withStyles(styles)(Company))

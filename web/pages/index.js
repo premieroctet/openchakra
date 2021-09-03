@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import axios from 'axios'
 import React from 'react'
 import Footer from '../hoc/Layout/Footer/Footer'
@@ -243,4 +244,4 @@ class Home extends React.Component {
   }
 }
 
-export default withStyles(styles)(Home)
+export default withTranslation()(withStyles(styles)(Home))

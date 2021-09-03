@@ -1,10 +1,11 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Button from '@material-ui/core/Button'
 import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
-export default function App() {
+export default withTranslation()(function App() {)
   const [snackPack, setSnackPack] = React.useState([])
   const [open, setOpen] = React.useState(false)
   const [messageInfo, setMessageInfo] = React.useState(undefined); React.useEffect(() => {

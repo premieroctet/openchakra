@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -502,4 +503,4 @@ class SearchPage extends React.Component {
 }
 
 
-export default withWidth()(withStyles(styles)(SearchPage))
+export default withTranslation()(withWidth()(withStyles(styles)(SearchPage)))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import LogoPng from '../../static/assets/icon/logo.png'
 import LogoJpg from '../../static/assets/icon/logo.jpg'
@@ -31,4 +32,4 @@ class ImageImportTest extends React.Component{
 
 }
 
-export default ImageImportTest
+export default withTranslation()(ImageImportTest)

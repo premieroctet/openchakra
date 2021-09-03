@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
@@ -142,4 +143,4 @@ class editPicture extends React.Component {
 }
 
 
-export default withStyles(styles)(editPicture);
+export default withTranslation()(withStyles(styles)(editPicture);)

@@ -24,4 +24,4 @@ function InfoBar({classes, t}) {
   )
 }
 
-export default withTranslation()(withTranslation()(withStyles(styles)(InfoBar)))
+export default withTranslation()(withStyles(styles)(InfoBar))

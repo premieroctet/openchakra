@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
@@ -359,4 +360,4 @@ class view extends React.Component {
 }
 
 
-export default withStyles(styles)(view);
+export default withTranslation()(withStyles(styles)(view);)

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Layout from '../../hoc/Layout/Layout';
 import Grid from '@material-ui/core/Grid';
@@ -75,4 +76,4 @@ class Privacypolicy extends React.Component {
   };
 }
 
-export default withStyles(styles)(Privacypolicy);
+export default withTranslation()(withStyles(styles)(Privacypolicy);)

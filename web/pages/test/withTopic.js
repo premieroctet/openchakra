@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Topic from '../../hoc/Topic/Topic';
 import Schedule from "../../components/Schedule/Schedule";
@@ -48,4 +49,4 @@ class testwithTopic extends React.Component{
 
 }
 
-export default withStyles(styles) (testwithTopic)
+export default withTranslation()(withStyles(styles) (testwithTopic))

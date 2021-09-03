@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 
@@ -19,4 +20,4 @@ class CSSTest extends React.Component{
 
 }
 
-export default CSSTest
+export default withTranslation()(CSSTest)

@@ -73,7 +73,7 @@ class ScrollMenu extends React.Component {
                           :
                           ''
                   return(
-                    <Tab key={index} label={t(res.label)} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={() => this.controllerUrl(url)}/>
+                    <Tab key={index} label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={() => this.controllerUrl(url)}/>
                   )
                 },
                 ) : null
@@ -85,4 +85,4 @@ class ScrollMenu extends React.Component {
   }
 }
 
-export default withTranslation()(withTranslation()(withStyles(styles)(ScrollMenu)))
+export default withTranslation(withStyles(styles)(ScrollMenu))

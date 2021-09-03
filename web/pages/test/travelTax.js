@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import TravelTax from '../../components/TravelTax/TravelTax'
 
@@ -18,4 +19,4 @@ class TravelTaxTest extends React.Component {
   }
 }
 
-export default TravelTaxTest
+export default withTranslation()(TravelTaxTest)

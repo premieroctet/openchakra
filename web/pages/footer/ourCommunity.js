@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
@@ -38,4 +39,4 @@ class OurCommunity extends React.Component {
   }
 }
 
-export default withStyles(styles)(OurCommunity)
+export default withTranslation()(withStyles(styles)(OurCommunity))

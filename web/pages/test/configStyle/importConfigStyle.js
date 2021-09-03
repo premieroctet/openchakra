@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {useStyles} from './style'
@@ -11,4 +12,4 @@ function importConfigStyle() {
   )
 }
 
-export default importConfigStyle
+export default withTranslation()(importConfigStyle)

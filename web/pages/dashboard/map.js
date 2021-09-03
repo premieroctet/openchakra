@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -180,4 +181,4 @@ class ServicesMap extends React.Component {
   };
 }
 
-export default withStyles(styles)(ServicesMap);
+export default withTranslation()(withStyles(styles)(ServicesMap);)

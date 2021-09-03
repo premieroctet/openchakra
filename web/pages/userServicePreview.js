@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
@@ -1003,4 +1004,4 @@ class UserServicesPreview extends React.Component {
   }
 }
 
-export default withStyles(styles)(UserServicesPreview)
+export default withTranslation()(withStyles(styles)(UserServicesPreview))

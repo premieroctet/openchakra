@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import axios from 'axios'
@@ -604,4 +605,4 @@ class notifications extends React.Component {
   }
 }
 
-export default withStyles(styles)(notifications)
+export default withTranslation()(withStyles(styles)(notifications))

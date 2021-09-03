@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
@@ -74,4 +75,4 @@ class ProfilePictures extends React.Component {
 
 }
 
-export default withStyles(styles)(ProfilePictures)
+export default withTranslation()(withStyles(styles)(ProfilePictures))

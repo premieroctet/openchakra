@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import axios from 'axios'
 const {isB2BAdmin, isB2BManager, getLoggedUser}=require('../../utils/context')
@@ -48,4 +49,4 @@ class ContextTest extends React.Component {
 
 }
 
-export default ContextTest
+export default withTranslation()(ContextTest)

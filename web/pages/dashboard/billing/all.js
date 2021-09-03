@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
 const {textColumn}=require('../../../components/BigList/models')
@@ -34,4 +35,4 @@ class all extends DataPage {
 
 }
 
-export default withStyles(styles)(all);
+export default withTranslation()(withStyles(styles)(all);)

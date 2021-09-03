@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import {snackBarSuccess} from '../../../utils/notifications'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
@@ -159,4 +160,4 @@ class view extends React.Component {
 }
 
 
-export default withStyles(styles)(view)
+export default withTranslation()(withStyles(styles)(view))

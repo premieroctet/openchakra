@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import axios from 'axios';
 const {setAxiosAuthentication, clearAuthenticationToken}=require('../../utils/authentication')
 
@@ -254,4 +255,4 @@ class all extends React.Component {
   };
 }
 
-export default withStyles(styles)(all);
+export default withTranslation()(withStyles(styles)(all);)
