@@ -28,6 +28,8 @@ i18next.init({
       custom: customfr,
     },
   },
+  ns: ['custom'],
+  defaultNS: 'custom',
   debug: true,
 })
 
