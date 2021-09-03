@@ -39,6 +39,7 @@ import ShowExperience from '../../components/ShowEperience/ShowExperience'
 import ShowDiploma from '../../components/ShowDiploma/ShowDiploma'
 import ShowCertification from '../../components/ShowCertification/ShowCertification'
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
+import {ABOUT} from '../../utils/i18n'
 
 const moment=require('moment')
 moment.locale('fr')
@@ -192,7 +193,7 @@ class ProfileAbout extends CompanyComponent {
   modalEditDialog = classes => {
     const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, website} = this.state
     const address = newAddress || (user ? user.billing_address : null)
-    const placeholder = address ? `${address.city}, ${address.country}` : 'Entrez votre adresse'
+    const placeholder = address ? `${address.city}, ${address.country}` : ABOUT.address_placeholder
 
     return (
       <Dialog
@@ -205,8 +206,8 @@ class ProfileAbout extends CompanyComponent {
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}/>
         <DialogContent>
           <Topic
-            titleTopic={this.isModeCompany() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
-            titleSummary={this.isModeCompany() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
+            titleTopic={this.isModeCompany() ? ABOUT.b2b_title_topic : ABOUT.title_topic}
+            titleSummary={this.isModeCompany() ? ABOUT.b2b_titlesummary_topic : ABOUT.titlesummary_topic}
             underline={true}/>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -215,7 +216,7 @@ class ProfileAbout extends CompanyComponent {
                   fontWeight: 'bold',
                   textTransform: 'initial',
                 }}>
-                  {this.isModeCompany() ? 'Site Web' : 'Lieu d\'habitation'}
+                  {this.isModeCompany() ? ABOUT.website : ABOUT.label_address}
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -224,7 +225,7 @@ class ProfileAbout extends CompanyComponent {
                     <TextField
                       name={'website'}
                       variant={'outlined'}
-                      label={'Site Web'}
+                      label={ABOUT.textfield_website}
                       value={website || ''}
                       style={{width: '100%'}}
                       onChange={this.handleChange}
@@ -253,7 +254,7 @@ class ProfileAbout extends CompanyComponent {
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial',
-                  }}>{this.isModeCompany() ? 'Taille de l\'entreprise' : 'Langues parlées'}</h3>
+                  }}>{this.isModeCompany() ? ABOUT.size_company : ABOUT.spoken_languages}</h3>
               </Grid>
               <Grid item xs={12}>
                 {
@@ -269,19 +270,19 @@ class ProfileAbout extends CompanyComponent {
                       isMulti
                       isSearchable
                       closeMenuOnSelect={false}
-                      placeholder={'Sélectionnez vos langues'}
-                      noOptionsMessage={() => 'Plus d\'options disponibles'}
+                      placeholder={ABOUT.textfield_languages}
+                      noOptionsMessage={() => ABOUT.option_message}
                     /> :
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-outlined-label">Taille de l’entreprise</InputLabel>
+                      <InputLabel id="demo-simple-select-outlined-label">{ABOUT.label_size_company}</InputLabel>
                       <Select
                         labelId="demo-simple-select-outlined-label"
                         id="demo-simple-select-outlined"
                         value={sizeCompany}
                         onChange={this.handleChange}
-                        label={'Taille de l’entreprise'}
+                        label={ABOUT.textfield_size_company}
                         name={'sizeCompany'}
-                        placeholder={'Taille de l’entreprise'}
+                        placeholder={ABOUT.textfield_size_company}
                       >
                         {
                           Object.keys(COMPANY_SIZE).map((res, index) => (
@@ -301,19 +302,19 @@ class ProfileAbout extends CompanyComponent {
                       style={{
                         fontWeight: 'bold',
                         textTransform: 'initial',
-                      }}>Secteur d’activité</h3>
+                      }}>{ABOUT.b2b_activity}</h3>
                   </Grid>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-outlined-label">Secteur d’activité</InputLabel>
+                      <InputLabel id="demo-simple-select-outlined-label">{ABOUT.b2b_activity_label}</InputLabel>
                       <Select
                         labelId="demo-simple-select-outlined-label"
                         id="demo-simple-select-outlined"
                         value={activityArea}
                         onChange={this.handleChange}
-                        label={'Secteur d’activité'}
+                        label={ABOUT.b2b_activity_label}
                         name={'activityArea'}
-                        placeholder={'Secteur d’activité'}
+                        placeholder={ABOUT.b2b_activity_label}
                       >
                         {
                           Object.keys(COMPANY_ACTIVITY).map((res, index) => (
@@ -338,7 +339,7 @@ class ProfileAbout extends CompanyComponent {
                   color={'primary'}
                   disabled={!this.isModeCompany() ? enabledEdition : false}
                 >
-                  Modifier
+                  {ABOUT.button_update}
                 </Button>
               </Grid>
             </Grid>
@@ -432,7 +433,7 @@ class ProfileAbout extends CompanyComponent {
                   </Grid>
                   <Grid style={{margin: 3}}/>
                   <Grid>
-                    <Typography style={{color: 'black'}}>à un profil vérifié</Typography>
+                    <Typography style={{color: 'black'}}>{ABOUT.alfred_certifed}</Typography>
                   </Grid>
                   <Grid>
                     <CheckCircleOutlineIcon/>

@@ -136,6 +136,76 @@ const LOGIN = {
   REGISTER_YET: 'Pas encore inscrit ? Inscrivez-vous !',
 }
 
+const ABOUT = {
+  address_placeholder: 'Entrez votre adresse',
+  b2b_title_topic: 'Modifiez les informations de votre entreprises',
+  title_topic: 'Modifiez vos informations',
+  b2b_titlesummary_topic: 'Ici, vous pouvez modifier les informations de votre entreprise',
+  titlesummary_topic: 'Ici, vous pouvez modifier vos informations',
+  website: 'Site Web',
+  label_address: 'Lieu d\'habitation',
+  textfield_website: 'Site Web',
+  size_company: 'Taille de l\'entreprise',
+  label_size_company: 'Taille de l’entreprise',
+  textfield_size_company: 'Taille de l’entreprise',
+  spoken_languages: 'Langues parlées',
+  textfield_languages: 'Sélectionnez vos langues',
+  option_message: 'Plus d\'options disponibles',
+  b2b_activity: 'Secteur d’activité',
+  b2b_activity_label: 'Secteur d’activité',
+  button_update: 'Modifier',
+  alfred_certifed: 'à un profil vérifié',
+}
+
+const LAYOUT_ABOUT = {
+  my_name_is: 'Je m\'appelle',
+  text: 'et j’ai hâte de vous rencontrer !',
+  item_about: 'À propos',
+  item_service: 'Services',
+  item_review: 'Avis',
+  item_my_services: 'Mes services',
+  item_my_reviews: 'Mes avis',
+  item_my_schedule: 'Mon calendrier',
+  item_my_stat: 'Mes statistiques',
+}
+
+
+const EDIT_PROFIL = {
+  email_send: 'Mail envoyé',
+  error_email: 'email non envoyé',
+  sms_send: 'Le SMS a été envoyé',
+  sms_error: 'Impossible d\'envoyer le SMS',
+  validate_phone: 'Votre numéro de téléphone est validé',
+  incorrect_code: 'Le code est incorrect',
+  error_verif_code: 'Erreur à la vérification du code',
+  dialog_title_phone: 'Confirmation du numéro de téléphone',
+  dialog_text_phone: 'Saisissez le code reçu par SMS',
+  dialog_textfield_placeholder: '0000',
+  dialog_button_confirm_later: 'Confirmer plus tard',
+  dialog_button_confirm: 'Confirmer',
+  title: 'Modifier votre profil',
+  textfield_firstname: 'Prénom',
+  textfield_name: 'Nom',
+  textfield_about_me: 'A propos de moi',
+  char_max: 'caractères max',
+  personnal_info: 'Informations personnelles',
+  gender: 'Sexe',
+  textfield_email_placeholder: 'Email',
+  textfield_email_label: '\'Adresse email\'',
+  user_email_check: 'Votre email est vérifié',
+  user_newemail_check: 'Enregistrer votre nouvel email',
+  check_your_email: 'Vérifier votre email',
+  textfield_phone: 'Téléphone',
+  user_phone_check: 'Votre téléphone est vérifié',
+  user_newphone_check: 'Enregistrer votre nouveau téléphone',
+  check_your_phone: 'Vérifiez votre téléphone',
+  user_info_options: 'Informations facultatives',
+  textfield_user_diploma: 'Diplômes',
+  textfield_user_school: 'Ecoles',
+  textfield_user_job: 'Emploi',
+  save_button: 'Enregistrer',
+}
+
 
 const NEWS_LETTER = {
   title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
@@ -558,4 +628,8 @@ module.exports = {
   OUR_ALFRED,
   TRUST_SECURITY,
   LOGIN,
+  ABOUT,
+  LAYOUT_ABOUT,
+  EDIT_PROFIL,
+
 }
