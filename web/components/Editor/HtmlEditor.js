@@ -25,7 +25,7 @@ class HtmlEditor extends React.Component {
     }
     let Font = ReactQuill.Quill.import('formats/font')
     // We do not add Aref Ruqaa since it is the default
-    Font.whitelist = ["Roboto", "Raleway", "Montserrat", "Lato", "Rubik"]
+    Font.whitelist = ['Roboto', 'Raleway', 'Montserrat', 'Lato', 'Rubik']
     ReactQuill.Quill.register(Font, true)
     return (
       <Grid>
@@ -45,7 +45,7 @@ class HtmlEditor extends React.Component {
 
 HtmlEditor.modules = {
   toolbar: [
-    [{'header': '1'}, {'header': '2'}, {'font': ["Roboto", "Raleway", "Montserrat", "Lato", "Rubik"]}],
+    [{'header': '1'}, {'header': '2'}, {'font': ['Roboto', 'Raleway', 'Montserrat', 'Lato', 'Rubik']}],
     [{size: []}],
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
     [{'list': 'ordered'}, {'list': 'bullet'},

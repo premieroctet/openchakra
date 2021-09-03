@@ -132,6 +132,12 @@ const getMangopayMessage = msg_id => {
   return MANGOPAY_MESSAGES[ msg_id ] || MANGOPAY_ERRORS[ parseInt(msg_id) ] || `Erreur inconnue:${msg_id}`
 }
 
+const OUR_ALFRED ={
+  title: 'Nos Alfred',
+  text: 'Découvrez les profils de nos Alfred',
+  button: '',
+}
+
 const PROFIL = {
   place: 'Habite à',
   languages: 'Langues',
@@ -523,5 +529,6 @@ module.exports = {
   FAQ,
   INFOBARMOBILE_MESSAGE,
   AVOCOTES,
-  PROFIL
+  PROFIL,
+  OUR_ALFRED
 }
