@@ -523,5 +523,5 @@ module.exports = {
   FAQ,
   INFOBARMOBILE_MESSAGE,
   AVOCOTES,
-  PROFIL
+  PROFIL,
 }

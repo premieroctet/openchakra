@@ -1,6 +1,6 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import {INFOBAR_MESSAGE} from '../../utils/i18n'
+
 import {Typography} from '@material-ui/core'
 import styles from '../../static/css/components/InfoBar/InfoBar'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -19,7 +19,7 @@ function InfoBar({classes}) {
             height={'100%'}/>
         </Grid>
         <Grid>
-          <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{t('INFOBAR_MESSAGE')}</Typography>
+          <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{t('INFOBAR_MESSAGE.message')}</Typography>
         </Grid>
       </Grid>
     </Grid>
