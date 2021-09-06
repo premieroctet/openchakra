@@ -29,4 +29,4 @@ class editPicture extends React.Component {
 }
 
 
-export default withTranslation()(editPicture;)
+export default withTranslation()(editPicture)

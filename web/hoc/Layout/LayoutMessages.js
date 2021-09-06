@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -63,4 +64,4 @@ class LayoutMessages extends React.Component {
 
 }
 
-export default withStyles(styles)(LayoutMessages)
+export default withTranslation()(withStyles(styles)(LayoutMessages))

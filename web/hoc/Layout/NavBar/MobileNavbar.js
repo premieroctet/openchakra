@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
@@ -417,4 +418,4 @@ class MobileNavbar extends React.Component{
 
 }
 
-export default withStyles (styles) (MobileNavbar);
+export default withTranslation()(withStyles(styles)(MobileNavbar))

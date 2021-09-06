@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/components/Layout/LayoutMobileSearch/LayoutMobileSearch'
@@ -47,4 +48,4 @@ class LayoutMobileSearch extends React.Component{
   }
 }
 
-export default withStyles(styles)(LayoutMobileSearch);
+export default withTranslation()(withStyles(styles)(LayoutMobileSearch))

@@ -233,4 +233,4 @@ class ConfirmPayment extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(ConfirmPayment);)
+export default withTranslation()(withStyles(styles)(ConfirmPayment))

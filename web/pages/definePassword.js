@@ -178,5 +178,4 @@ class definePassword extends React.Component {
   };
 }
 
-export default withTranslation()(withStyles(styles)(definePassword);)
-
+export default withTranslation()(withStyles(styles)(definePassword))

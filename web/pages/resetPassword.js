@@ -152,4 +152,4 @@ class resetPassword extends React.Component {
 }
 
 
-export default withTranslation()(withStyles(styles)(resetPassword);)
+export default withTranslation()(withStyles(styles)(resetPassword))

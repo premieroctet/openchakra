@@ -360,4 +360,4 @@ class view extends React.Component {
 }
 
 
-export default withTranslation()(withStyles(styles)(view);)
+export default withTranslation()(withStyles(styles)(view))

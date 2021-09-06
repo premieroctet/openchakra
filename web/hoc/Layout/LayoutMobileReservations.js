@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/components/Layout/LayoutMobileReservations/LayoutMobileReservations';
@@ -67,4 +68,4 @@ class LayoutMobileReservations extends React.Component{
   }
 }
 
-export default withStyles (styles) (LayoutMobileReservations);
+export default withTranslation()(withStyles(styles)(LayoutMobileReservations))

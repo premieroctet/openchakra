@@ -240,4 +240,4 @@ class EvaluateClient extends React.Component {
 }
 
 
-export default withTranslation()(withStyles(styles)(EvaluateClient);)
+export default withTranslation()(withStyles(styles)(EvaluateClient))

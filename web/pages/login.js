@@ -13,4 +13,4 @@ class login extends Component {
   }
 }
 
-export default withTranslation()(login;)
+export default withTranslation()(login)

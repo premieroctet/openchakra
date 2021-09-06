@@ -96,4 +96,4 @@ class forgotPassword extends React.Component {
 }
 
 
-export default withTranslation()(withStyles(styles)(forgotPassword);)
+export default withTranslation()(withStyles(styles)(forgotPassword))

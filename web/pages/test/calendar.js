@@ -77,4 +77,4 @@ class calendarTest extends React.Component {
 
 }
 
-export default withTranslation()(withStyles(styles, {withTheme: true})(calendarTest);)
+export default withTranslation()(withStyles(styles, {withTheme: true})(calendarTest))

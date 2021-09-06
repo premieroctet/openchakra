@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
@@ -49,4 +50,4 @@ class LayoutEvaluate extends React.Component{
 
 }
 
-export default LayoutEvaluate
+export default withTranslation()(LayoutEvaluate)

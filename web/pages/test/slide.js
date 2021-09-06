@@ -32,4 +32,4 @@ class SlideTest extends React.Component{
 
 }
 
-export default withTranslation()(withStyles(styles, {withTheme: true})(SlideTest);)
+export default withTranslation()(withStyles(styles, {withTheme: true})(SlideTest))

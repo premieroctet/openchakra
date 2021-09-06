@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import HeaderColor from "./HeaderColor/HeaderColor";
 import TrustAndSecurityBar from "./TrustAndSecurityBar/TrustAndSecurityBar";
@@ -21,4 +22,4 @@ class LayoutPayment extends React.Component{
   }
 }
 
-export default LayoutPayment;
+export default withTranslation()(LayoutPayment)

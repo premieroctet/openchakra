@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import Layout from '../../hoc/Layout/Layout'
@@ -119,4 +120,4 @@ class ProfileLayout extends CompanyComponent {
   }
 }
 
-export default withStyles(styles)(ProfileLayout)
+export default withTranslation()(withStyles(styles)(ProfileLayout))

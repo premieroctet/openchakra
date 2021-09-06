@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React, {Component} from 'react'
 import Button from '@material-ui/core/Button'
@@ -135,14 +136,16 @@ class NavBar extends Component {
             res.data.service_address.forEach(addr => {
               allAddresses[addr._id] = addr
             })
-            this.setState({allAddresses: allAddresses})
+            this.setState({
+              allAddresses: allAddresses,
+              selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''
+            })
           })
       })
       .catch(err => {
         console.error(err)
       })
 
-    this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''})
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/category/${isB2BStyle() ? PRO : PART}`)
       .then(res => {
@@ -1195,7 +1198,6 @@ class NavBar extends Component {
   render() {
     const {user, ifHomePage, setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state
     const {classes} = this.props
-
     const logged = user != null
 
     const dialogLogin = () => {
@@ -1283,4 +1285,4 @@ class NavBar extends Component {
   }
 }
 
-export default withStyles(styles)(NavBar)
+export default withTranslation()(withStyles(styles)(NavBar))

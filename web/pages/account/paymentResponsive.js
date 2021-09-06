@@ -43,4 +43,4 @@ class PaymentResponsive extends React.Component{
 }
 
 
-export default withTranslation()(PaymentResponsive;)
+export default withTranslation()(PaymentResponsive)

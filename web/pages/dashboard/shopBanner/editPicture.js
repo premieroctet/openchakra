@@ -143,4 +143,4 @@ class editPicture extends React.Component {
 }
 
 
-export default withTranslation()(withStyles(styles)(editPicture);)
+export default withTranslation()(withStyles(styles)(editPicture))

@@ -122,4 +122,4 @@ class all extends React.Component {
   };
 }
 
-export default withTranslation()(withStyles(styles)(all);)
+export default withTranslation()(withStyles(styles)(all))

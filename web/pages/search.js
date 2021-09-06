@@ -94,6 +94,7 @@ class SearchPage extends React.Component {
   }
 
   static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date}}) {
+    console.log('getInitialProps')
     // FIX : set city nin AlgoPlaces if provided
     let init = {
       keyword: keyword,
@@ -108,6 +109,7 @@ class SearchPage extends React.Component {
     if (gps) {
       init.gps = gps
     }
+    console.log(`getInitialProps:init is ${init}`)
     return init
   }
 
@@ -118,6 +120,7 @@ class SearchPage extends React.Component {
   }
 
   componentDidMount() {
+
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
@@ -296,6 +299,7 @@ class SearchPage extends React.Component {
   search(forceFilter) {
     this.setState({searching: true})
 
+    console.log(`Searching keyowrd:${this.state.keyword}`)
     let filters = {}
 
     // GPS
@@ -486,16 +490,16 @@ class SearchPage extends React.Component {
 
     return (
       <React.Fragment>
-        <Grid className={classes.layoutContainer}>
+        <Hidden only={['xs']}>
           <Layout key={selectedAddress||gps||keyword} user={user} keyword={keyword} selectedAddress={selectedAddress} gps={gps}>
             {this.content(classes)}
           </Layout>
-        </Grid>
-        <Grid className={classes.layoutMobileSearchContainer}>
+        </Hidden>
+        <Hidden only={['sm', 'md', 'lg', 'xl']}>
           <LayoutMobileSearch filter={this.filter} currentIndex={1}>
             {this.content(classes)}
           </LayoutMobileSearch>
-        </Grid>
+        </Hidden>
 
       </React.Fragment>
     )

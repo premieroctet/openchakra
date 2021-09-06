@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Link from '../../../components/Link/Link'
@@ -33,4 +34,4 @@ class Footer extends React.Component {
   }
 }
 
-export default withStyles(styles)(Footer)
+export default withTranslation()(withStyles(styles)(Footer))

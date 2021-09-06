@@ -17,7 +17,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import '../static/style1.css'
 import {I18nextProvider} from 'react-i18next'
 import i18next from 'i18next'
-import customfr from '../translations/fr/common.json'
+import customfr from '../translations/fr/custom.json'
 
 i18next.init({
   languages: ['fr'],

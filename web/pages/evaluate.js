@@ -261,4 +261,4 @@ class Evaluate extends React.Component {
 }
 
 
-export default withTranslation()(withStyles(styles)(Evaluate);)
+export default withTranslation()(withStyles(styles)(Evaluate))

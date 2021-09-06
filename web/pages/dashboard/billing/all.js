@@ -35,4 +35,4 @@ class all extends DataPage {
 
 }
 
-export default withTranslation()(withStyles(styles)(all);)
+export default withTranslation()(withStyles(styles)(all))

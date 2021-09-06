@@ -99,4 +99,4 @@ class validateAccount extends React.Component {
     };
 }
 
-export default withTranslation()(withStyles(styles)(validateAccount);)
+export default withTranslation()(withStyles(styles)(validateAccount))
