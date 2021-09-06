@@ -16,8 +16,8 @@ class BasePage extends React.Component {
   }
 
   getURLProp = key => {
-    const url_props = parse(window.location.href, true).query
-    return url_props[key]
+    const props = this.getURLProps() || {}
+    return props[key]
   }
 
 }
