@@ -64,7 +64,6 @@ class ProfileAbout extends CompanyComponent {
   constructor(props) {
     super(props)
     this.state={
-      user: props.user,
       alfred: null,
       showEdition: false,
       enabledEdition: true,
@@ -75,8 +74,9 @@ class ProfileAbout extends CompanyComponent {
       newLanguages: null,
       company: null,
     }
-
+    this.loadUser = this.loadUser.bind(this)
   }
+
   componentDidMount = () => {
     this.loadUser()
   };
@@ -111,7 +111,8 @@ class ProfileAbout extends CompanyComponent {
       })
     }).catch(err => console.error(err))
 
-    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
+    console.log(this.getURLProps())
+    axios.get(`/myAlfred/api/users/users/${this.getURLProps().user}`)
       .then(res => {
         const user = res.data
         if (user.company) {
@@ -371,10 +372,6 @@ class ProfileAbout extends CompanyComponent {
     this.setState({languages: languages}, () => this.objectsEqual())
   };
 
-  static getInitialProps({query: {user}}) {
-    return {user: user}
-  }
-
   content = (classes, user, alfred, company) => {
     const editable = isEditableUser(user)
 
@@ -517,7 +514,8 @@ class ProfileAbout extends CompanyComponent {
   };
 
   render() {
-    const {classes, user}=this.props
+    const {classes}=this.props
+    const {user}=this.getURLProps()
     const {showEdition, alfred, company}=this.state
 
     if(!user && alfred) {
