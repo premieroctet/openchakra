@@ -1,13 +1,17 @@
-import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
-import Topic from '../../hoc/Topic/Topic'
-import {withStyles} from '@material-ui/core/styles'
-import styles from '../../static/css/pages/profile/statistics/statistics'
 import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Grid from '@material-ui/core/Grid'
 import MenuItem from '@material-ui/core/MenuItem'
+import React from 'react'
 import loadable from 'loadable-components'
+
+import BasePage from '../basePage';
+import Topic from '../../hoc/Topic/Topic'
+import styles from '../../static/css/pages/profile/statistics/statistics'
+
+const {setAxiosAuthentication}=require('../../utils/authentication')
+
 const Chart = loadable(() => import('react-apexcharts'))
 import Router from 'next/router'
 import axios from 'axios'
@@ -42,7 +46,7 @@ const CHART_OPTIONS= {
   },
 }
 
-class ProfileStatistics extends React.Component {
+class ProfileStatistics extends BasePage {
 
   constructor(props) {
     super(props)
@@ -71,10 +75,6 @@ class ProfileStatistics extends React.Component {
     }
   }
 
-  static getInitialProps({query: {user}}) {
-    return {user: user}
-  }
-
   componentDidMount() {
 
     localStorage.setItem('path', Router.pathname)
@@ -84,7 +84,6 @@ class ProfileStatistics extends React.Component {
       const revenus2layer = revenus1layerbis.data
       revenus2layer.forEach(revenus2layerbis => {
         const revenusall = revenus2layerbis.x
-
       })
     })
 
@@ -404,7 +403,9 @@ class ProfileStatistics extends React.Component {
   };
 
   render() {
-    const {classes, user}=this.props
+    const {classes}=this.props
+    const {user}=this.getURLProps()
+
 
     if (!user) {
       return null
