@@ -1,41 +1,40 @@
-import {withTranslation} from 'react-i18next'
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
-import ProfileLayout from '../../hoc/Layout/ProfileLayout'
-import AddService from '../../components/AddService/AddService'
-import Services from '../../components/Services/Services'
-import {withStyles} from '@material-ui/core/styles'
-import styles from '../../static/css/pages/profile/services/services'
-import AskQuestion from '../../components/AskQuestion/AskQuestion'
-import Box from '../../components/Box/Box'
-import axios from 'axios'
-import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
-import AlfredConditions from '../../components/AlfredConditions/AlfredConditions'
-const {isEditableUser}=require('../../utils/context')
 import '../../static/assets/css/custom.css'
 
-class ProfileServices extends React.Component {
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import axios from 'axios'
+
+import AddService from '../../components/AddService/AddService'
+import AlfredConditions from '../../components/AlfredConditions/AlfredConditions'
+import AskQuestion from '../../components/AskQuestion/AskQuestion'
+import BasePage from '../basePage'
+import Box from '../../components/Box/Box'
+import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
+import Services from '../../components/Services/Services'
+import styles from '../../static/css/pages/profile/services/services'
+
+const {isEditableUser}=require('../../utils/context')
+
+class ProfileServices extends BasePage {
 
   constructor(props) {
     super(props)
     this.state={
-      user: props.user,
       shop: {},
     }
   }
 
   componentDidMount() {
-    axios.get(`/myAlfred/api/shop/alfred/${this.state.user}`)
+    axios.get(`/myAlfred/api/shop/alfred/${this.getURLProps().user}`)
       .then(response => {
         let shop = response.data
         this.setState({
           shop: shop,
         })
       }).catch(err => console.error(err))
-  }
-
-  static getInitialProps({query: {user}}) {
-    return {user: user}
   }
 
   onDelete = () => {
@@ -81,7 +80,8 @@ class ProfileServices extends React.Component {
 
   render() {
     const {classes}=this.props
-    const {shop, user}=this.state
+    const {shop}=this.state
+    const {user}=this.getURLProps()
 
     if (!user) {
       return null
