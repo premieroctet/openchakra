@@ -54,7 +54,7 @@ class BannerPresentation extends React.Component {
             <Typography className={`custombannercontent ${classes.bannerPresentationText}`}>{text}</Typography>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerLinkDiscrover}>
-            <Link href={'/search?search=1'}>
+            <Link href={'/search'}>
               <Button
                 variant={'outlined' }
                 classes={{root: `custombannerbutton ${classes.bannerPresentationButtonB2b}`}}>

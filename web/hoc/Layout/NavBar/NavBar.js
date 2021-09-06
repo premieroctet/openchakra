@@ -202,7 +202,7 @@ class NavBar extends Component {
     if (reason=='backdropClick') { return }
     if (this.state.activeStep === 2) {
       removeStatusRegister()
-      this.setState({setOpenRegister: null}, () => Router.push('/search?search=1'))
+      this.setState({setOpenRegister: null}, () => Router.push('/search'))
     }
     else {
       removeStatusRegister()
@@ -230,7 +230,7 @@ class NavBar extends Component {
       Router.push('/company/dashboard/companyDashboard')
     }
     else {
-      Router.push('/search?search=1')
+      Router.push('/search')
     }
   };
 
@@ -323,7 +323,7 @@ class NavBar extends Component {
   }
 
   findService = () => {
-    let queryParams = {search: 1}
+    let queryParams = {}
     if (this.state.keyword) {
       queryParams.keyword = this.state.keyword
     }
@@ -1144,7 +1144,7 @@ class NavBar extends Component {
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                     className={classes.customNavbar}
                     label={NAVBAR_MENU.ourServices}
-                    onClick={() => Router.push('/search?search=1')}
+                    onClick={() => Router.push('/search')}
                   />
                   {user ?
                     user.is_alfred ?

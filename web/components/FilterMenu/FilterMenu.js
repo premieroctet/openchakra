@@ -239,7 +239,7 @@ class FilterMenu extends React.Component{
   };
 
   render() {
-    const{classes, mounting, search, searching, serviceUsers} = this.props;
+    const{classes, mounting, searching, serviceUsers} = this.props;
     const {
       statusFilterSet, statusFilterVisible, individualSelected, proSelected,
       dateFilterSet, dateFilterVisible, startDate, endDate, focusedInput,

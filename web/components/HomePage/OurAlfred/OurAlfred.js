@@ -38,7 +38,7 @@ class OurAlfred extends React.Component {
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnMobile}>
-            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search?search=1')}>Tout découvrir</Button>
+            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search')}>Tout découvrir</Button>
           </Grid>
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
@@ -56,7 +56,7 @@ class OurAlfred extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.containerMobileButton}>
-          <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search?search=1')}>
+          <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search')}>
             {CATEGORY.button}
           </Button>
         </Grid>

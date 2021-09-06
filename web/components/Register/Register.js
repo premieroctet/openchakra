@@ -263,7 +263,7 @@ class Register extends React.Component {
             Router.push('/creaShop/creaShop')
           }
           else if (getRole() == EMPLOYEE) {
-            Router.push('/search?search=1')
+            Router.push('/search')
           }
         }
         else {

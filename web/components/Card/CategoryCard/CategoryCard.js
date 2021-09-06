@@ -44,7 +44,7 @@ class CategoryCard extends React.Component {
     }
     return (
       <Link
-        href={`/search?search=1&category=${ item._id }${gps ? `&gps=${ JSON.stringify(gps)}` : ''}`}>
+        href={`/search?category=${ item._id }${gps ? `&gps=${ JSON.stringify(gps)}` : ''}`}>
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer'}}>
           <Grid className={classes.categoryCardMedia}>
             <Grid

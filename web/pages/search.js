@@ -30,6 +30,7 @@ const {PRO, PART}=require('../utils/consts')
 const {emptyPromise}=require('../utils/promise')
 import '../static/assets/css/custom.css'
 
+
 moment.locale('fr')
 
 class SearchDataModel extends SlideGridDataModel {
@@ -93,7 +94,7 @@ class SearchPage extends React.Component {
     this.SCROLL_DELTA=30
   }
 
-  static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date}}) {
+  static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, date}}) {
     console.log('getInitialProps')
     // FIX : set city nin AlgoPlaces if provided
     let init = {
@@ -103,7 +104,6 @@ class SearchPage extends React.Component {
       category: category,
       service: service,
       prestation: prestation,
-      search: search,
       date: date,
     }
     if (gps) {
@@ -124,8 +124,10 @@ class SearchPage extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
+
     // Mount components gets criterion from URL
     // If date in URL then force filter after search
+
     let st = {
       keyword: 'keyword' in this.props ? this.props.keyword : '',
       gps: 'gps' in this.props ? JSON.parse(this.props.gps) : null,
@@ -296,7 +298,7 @@ class SearchPage extends React.Component {
     }
   };
 
-  search(forceFilter) {
+  search = forceFilter => {
     this.setState({searching: true})
 
     console.log(`Searching keyowrd:${this.state.keyword}`)
@@ -378,7 +380,6 @@ class SearchPage extends React.Component {
               gps={this.state.gps}
               filter={this.filter}
               mounting={this.state.mounting}
-              search={this.props.search}
               searching={this.state.searching}
               serviceUsers={serviceUsers}
               displayPerimeter={this.state.gps}
@@ -482,7 +483,6 @@ class SearchPage extends React.Component {
       </Grid>
     )
   };
-
 
   render() {
     const {classes} = this.props

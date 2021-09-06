@@ -127,7 +127,7 @@ class MobileNavbar extends React.Component{
       Router.push( `/company/dashboard/companyDashboard`)
     }
     else {
-      Router.push('/search?search=1');
+      Router.push('/search');
     }
   };
 
@@ -165,7 +165,7 @@ class MobileNavbar extends React.Component{
   };
 
   findService = () => {
-    var queryParams = {search: 1};
+    var queryParams = {};
     if (this.state.keyword) {
       queryParams['keyword'] = this.state.keyword;
     }

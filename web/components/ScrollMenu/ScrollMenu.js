@@ -69,7 +69,7 @@ class ScrollMenu extends React.Component {
                       :
                       mode === 'faq' ? res.url
                         :
-                        mode === 'search' ? `/search?search=1&category=${ res._id }${gps ? `&gps=${ JSON.stringify(gps)}` : ''}`
+                        mode === 'search' ? `/search?category=${ res._id }${gps ? `&gps=${ JSON.stringify(gps)}` : ''}`
                           :
                           ''
                   return(

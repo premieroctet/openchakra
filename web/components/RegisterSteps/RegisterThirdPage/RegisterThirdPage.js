@@ -26,7 +26,7 @@ class RegisterThirdPage extends React.Component {
               </Grid>
               <Grid item className={classes.responsiveButton}>
                 <Grid item style={{marginRight: '1%'}}>
-                  <Link href={'/search?search=1'}>
+                  <Link href={'/search'}>
                     <a style={{textDecoration: 'none'}}>
                       <Button
                         variant={'contained'}
