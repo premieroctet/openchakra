@@ -1,6 +1,7 @@
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
+const BasePage = require('./basePage')
 import {withStyles} from '@material-ui/core/styles'
 import Layout from '../hoc/Layout/Layout'
 import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
@@ -44,7 +45,7 @@ moment.locale('fr')
 registerLocale('fr', fr)
 
 // TODO : gérer affichage si utilisateur non connecté
-class UserServicesPreview extends React.Component {
+class UserServicesPreview extends BasePage {
   constructor(props) {
     super(props)
     this.state = {
@@ -97,18 +98,14 @@ class UserServicesPreview extends React.Component {
     this.isInPerimeter = this.isInPerimeter.bind(this)
   }
 
-  static getInitialProps({query: {id, address}}) {
-    return {service_id: id, address: address}
-  }
-
   // Converts 'all' to 'main'
   get_prop_address = () => {
-    return this.props.address=='all' ? 'main' : this.props.address
+    return this.getURLProps().address=='all' ? 'main' : this.getURLProps().address
   }
 
   componentDidMount() {
 
-    const id = this.props.service_id
+    const id = this.getURLProps().id
 
     setAxiosAuthentication()
 
@@ -560,7 +557,7 @@ class UserServicesPreview extends React.Component {
     if (!user) {
       return null
     }
-    const{address}=this.props
+    const{address}=this.getURLProps()
     if (!address || ['client', 'main', 'all'].includes(address)) {
       return allAddresses.main
     }
@@ -959,7 +956,7 @@ class UserServicesPreview extends React.Component {
                       titleTopic={'Commentaires'}
                       titleSummary={this.state.alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${this.state.alfred.firstname} !` : ''}
                     >
-                      <SummaryCommentary user={this.state.alfred._id} serviceUser={this.props.service_id}/>
+                      <SummaryCommentary user={this.state.alfred._id} serviceUser={this.getURLProps().id}/>
                     </Topic>
                   </Grid>
               }
@@ -971,7 +968,8 @@ class UserServicesPreview extends React.Component {
   }
 
   render() {
-    const {classes, address} = this.props
+    const {classes} = this.props
+    const {address} = this.getURLProps()
     const {service, alfred, user} = this.state
 
     if (!this.state.serviceUser) {
