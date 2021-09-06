@@ -1,31 +1,35 @@
-import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
+import '../../static/assets/css/custom.css'
+
 import {withStyles} from '@material-ui/core/styles'
-import axios from 'axios'
-import Typography from '@material-ui/core/Typography'
-import moment from 'moment'
-import UserAvatar from '../../components/Avatar/UserAvatar'
-import styles from '../../static/css/pages/reservations/reservations'
+import {withTranslation} from 'react-i18next'
 import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
+import CloseIcon from '@material-ui/icons/Close'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
-import BookingPreview from '../../components/BookingDetail/BookingPreview'
+import Divider from '@material-ui/core/Divider'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import React from 'react'
+import Router from 'next/router'
+import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+import moment from 'moment'
+
+import BasePage from '../basePage'
 import BookingCancel from '../../components/BookingDetail/BookingCancel'
 import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
-import LayoutReservations from '../../hoc/Layout/LayoutReservations'
-import Divider from '@material-ui/core/Divider'
+import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import CloseIcon from '@material-ui/icons/Close'
+import LayoutReservations from '../../hoc/Layout/LayoutReservations'
+import UserAvatar from '../../components/Avatar/UserAvatar'
+import styles from '../../static/css/pages/reservations/reservations'
+
 const {BOOK_STATUS}=require('../../utils/consts')
-import Router from 'next/router'
-import '../../static/assets/css/custom.css'
+const {setAxiosAuthentication}=require('../../utils/authentication')
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -45,7 +49,7 @@ moment.locale('fr')
 
 // TODO RASSEMBLER ALLRESERVATIONS + COMINGRESERVATIONS + FINISHEDRESERVATIONS
 
-class AllReservations extends React.Component {
+class AllReservations extends BasePage {
   constructor(props) {
     super(props)
     this.state = {
@@ -63,12 +67,6 @@ class AllReservations extends React.Component {
     }
   }
 
-  static getInitialProps({query: {id}}) {
-    return {
-      id: id,
-    }
-  }
-
   componentDidMount() {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
@@ -81,8 +79,8 @@ class AllReservations extends React.Component {
           reservationType: result.is_alfred ? 0 : 1,
         })
         this.loadBookings()
-        if (this.props.id) {
-          setTimeout(() => this.setState({bookingPreview: this.props.id}), 1000)
+        if (this.getURLProps().id) {
+          setTimeout(() => this.setState({bookingPreview: this.getURLProps().id}), 1000)
         }
       })
       .catch(err => {
