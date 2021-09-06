@@ -14,6 +14,7 @@ import Divider from '@material-ui/core/Divider'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 const {isB2BAdmin}=require('../../utils/context')
 import '../../static/assets/css/custom.css'
+import {MY_ADDRESSES} from '../../utils/i18n'
 
 moment.locale('fr')
 
@@ -66,10 +67,10 @@ class myAddresses extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'customadressestitle'}>{ pro_mode ? 'Mes sites' : 'Mes adresses'}</h2>
+            <h2 className={'customadressestitle'}>{ pro_mode ? MY_ADDRESSES.title_b2b : MY_ADDRESSES.title}</h2>
           </Grid>
           <Grid>
-            <Typography className={'customadressessubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Ici, vous pouvez gérer {pro_mode ? `les sites de ${company_name}` : 'vos adresses'}.</Typography>
+            <Typography className={'customadressessubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{pro_mode ? MY_ADDRESSES.subtitle_b2b + {company_name} : MY_ADDRESSES.subtitle}.</Typography>
           </Grid>
         </Grid>
         <Grid>

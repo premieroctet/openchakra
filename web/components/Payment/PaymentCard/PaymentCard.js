@@ -6,6 +6,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 import IconButton from '@material-ui/core/IconButton'
 import styles from '../../../static/css/components/PaymentCard/PaymentCard'
 import withStyles from '@material-ui/core/styles/withStyles'
+import {PAYMENT_CARD} from '../../../utils/i18n'
 
 class PaymentCard extends React.Component {
   constructor(props) {
@@ -58,11 +59,11 @@ class PaymentCard extends React.Component {
             )
           })
           :
-          <Typography>Aucun mode de paiement enregistré</Typography>
+          <Typography>{PAYMENT_CARD.no_cb_saved}</Typography>
         }
         {
-          cards && cards.length==0 ?
-            <Typography>Aucun mode de paiement enregistré</Typography> : null
+          cards && cards.length===0 ?
+            <Typography>{PAYMENT_CARD.no_cb_saved}</Typography> : null
         }
       </Grid>
     )

@@ -13,6 +13,7 @@ import Divider from '@material-ui/core/Divider'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import HandleCB from '../../components/HandleCB/HandleCB'
 import HandleRIB from '../../components/HandleRIB/HandleRIB'
+import {PAYMENT_METHOD} from '../../utils/i18n'
 
 moment.locale('fr')
 
@@ -45,11 +46,10 @@ class paymentMethod extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'custompaymentmethodtitle'}>Modes de paiement</h2>
+            <h2 className={'custompaymentmethodtitle'}>{PAYMENT_METHOD.title}</h2>
           </Grid>
           <Grid>
-            <Typography className={'custompaymentmethodsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>N'hésitez pas à enregistrer un mode de paiement pour aller
-              plus vite lors de vos réservations.</Typography>
+            <Typography className={'custompaymentmethodsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{PAYMENT_METHOD.subtitle}</Typography>
           </Grid>
         </Grid>
         <Grid className={'customlayoutaccountcb'}>

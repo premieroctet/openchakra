@@ -27,53 +27,53 @@ export default theme => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
-  socialAndLegalContainer:{
+  socialAndLegalContainer: {
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column-reverse',
 
-    }
+    },
   },
-  legalContainer:{
+  legalContainer: {
     margin: 0,
     width: '100%',
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('sm')]: {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
 
-    }
+    },
   },
-  socialContainer:{
+  socialContainer: {
     margin: 0,
     width: '100%',
     display: 'flex',
     justifyContent: 'flex-end',
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('sm')]: {
       justifyContent: 'center',
-    }
+    },
   },
-  containerSectionFooter:{
-    width:'100%',
-    margin:0,
+  containerSectionFooter: {
+    width: '100%',
+    margin: 0,
     display: 'flex',
     flexDirection: 'column',
-    [theme.breakpoints.down('sm')]:{
-      textAlign: 'center'
-    }
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'center',
+    },
   },
-  storeContainer:{
+  storeContainer: {
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('sm')]: {
       justifyContent: 'center',
-      flexDirection: 'column'
-    }
+      flexDirection: 'column',
+    },
   },
-  hiddenOnMobile:{
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
-    }
-  }
+  hiddenOnMobile: {
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
+    },
+  },
 
 })

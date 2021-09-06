@@ -191,7 +191,7 @@ const EDIT_PROFIL = {
   personnal_info: 'Informations personnelles',
   gender: 'Sexe',
   textfield_email_placeholder: 'Email',
-  textfield_email_label: '\'Adresse email\'',
+  textfield_email_label: 'Adresse email',
   user_email_check: 'Votre email est vérifié',
   user_newemail_check: 'Enregistrer votre nouvel email',
   check_your_email: 'Vérifier votre email',
@@ -206,6 +206,92 @@ const EDIT_PROFIL = {
   save_button: 'Enregistrer',
 }
 
+const PAYMENT_METHOD = {
+  title: 'Modes de paiement',
+  subtitle: 'N\'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.',
+}
+
+const HANDLE_CB = {
+  cb_saves_title: 'Cartes enregistrées',
+  cb_subtitle_paid: 'Payez encore plus rapidement sans communiquer vos informations financières.',
+  cb_title_dialog_delete: 'Voulez-vous vraiment supprimer votre carte bancaire ?',
+  cb_content_dialog_delete: 'Si vous supprimez votre carte bancaire vous ne pourrez plus l\'utiliser par la suite avec ce compte.',
+  cb_cancel_dialog_delete: 'Annuler',
+  cb_delete_dialog_delete: 'Supprimer',
+  cb_title_dialog_add: 'Enregistrer une carte',
+  cb_subtitle_dialog_add: 'Ajouter une carte en toute sécurité',
+  cb_dialog_nb_add: 'Numéro de carte',
+  cb_dialog_placeholdercb_add: 'Votre carte de crédit',
+  cb_dialog_expdate_add: 'Date d\'expiration',
+  cb_dialog_placeholderexpdate_add: 'MM/YY',
+  cb_dialog_cvv_add: 'CVV',
+  cb_dialog_savecb_add: 'Enregistrer la carte',
+  cb_dialog_crypdata_add: 'Toutes les données de paiement sur My Alfred sont cryptées.',
+  cb_dialog_mongo_add: 'Elles sont gérées par mangopay notre partenaire de confiance.',
+  snackbar_add: 'Carte ajoutée !',
+  snackbar_delete: 'Carte supprimé !',
+}
+
+const PAYMENT_CARD = {
+  no_cb_saved: 'Aucun mode de paiement enregistré',
+}
+
+const HANDLE_RIB = {
+  snackbar_rib_add: 'RIB ajouté',
+  snackbar_error_rib_add: 'Erreur à l\'ajout du RIB',
+  snackbar_rib_delete: 'Compte bancaire supprimé',
+  snackbar_rib_error_delete: 'Un erreur est survenue',
+  dialog_add_rib_title: 'Ajouter un RIB',
+  dialog_add_rib_subitle: 'Ajouter un RIB en toute sécurité',
+  dialog_add_rib_iban: 'IBAN',
+  dialog_add_rib_bic: 'Code SWIFT / BIC',
+  dialog_add_rib_button_save: 'Enregistrer le RIB',
+  dialog_add_rib_data: 'Toutes les données de paiement sur My Alfred sont chiffrées.',
+  dialog_add_rib_mongo: 'Elles sont gérées par mangopay notre partenaire de confiance.',
+  dialog_delete_rib_title: 'Voulez-vous vraiment supprimer votre RIB ?',
+  dialog_delete_rib_content: 'Si vous supprimez votre RIB vous ne pourrez plus l\'utiliser par la suite avec ce compte.',
+  dialog_delete_rib_cancel: 'Annuler',
+  dialog_delete_rib_button: 'Supprimer',
+  title: 'RIB enregistrés',
+  subtitle_b2b: 'Renseignez un rib pour permettre à vos collaborateurs le paiement par prélèvement bancaire.',
+  subtitle: 'Choisissez le versement directement sur votre compte bancaire.',
+  no_rib: 'Aucun RIB enregistré',
+  info_data: 'Toutes les données de paiement sur My Alfred sont chiffrées.',
+  mango_info: 'Elles sont gérées par mangopay notre partenaire de confiance.',
+}
+
+const MY_ADDRESSES = {
+  title: 'Mes adresses',
+  title_b2b: 'Mes sites',
+  subtitle: 'Ici, vous pouvez gérer vos adresses',
+  subtitle_b2b: 'Ici, vous pouvez gérer les sites de',
+}
+
+const HANDLE_ADDRESSES = {
+  snackbar_addresses_update: 'Adresse principale modifiée',
+  snackbar_addresses_add: 'Adresse ajoutée',
+  snackbar_addresses_update_success: 'Adresse modifiée avec succès',
+  snackbar_addresses_delete: 'Adresse supprimée',
+  dialog_delete_title: 'Supprimer cette adresse ?',
+  dialog_delete_content: 'Voulez-vous vraiment supprimer cette adresse ?',
+  dialog_delete_cancel: 'Annuler',
+  dialog_delete_button: 'Supprimer',
+  title_b2b: 'Mon siège social',
+  title: 'Mon adresse principale',
+  placeholder_algo: 'Modifiez votre adresse',
+  submit_button: 'Valider',
+  book_title_b2b: 'Autres sites',
+  book_title: 'Mon carnet d\'adresses',
+  b2b_title_add_sites: 'Ajoutez vos sites et gagnez du temps',
+  title_add_sites: 'Ajoutez plusieurs adresses et gagnez du temps.',
+  textfield_name_placeholder_add_sites: 'Ecrire ici',
+  textfield_name_add_sites: 'Nom de l\'adresse',
+  submit_secondary_button: 'Enregistrer',
+  textfield_name_site: 'Nom du site',
+  textfield_name_addresses: 'Intitulé de l\'adresse',
+  algo_find_your_addresses: 'Recherchez votre adresse',
+  button_add_new_adresses: 'Ajouter',
+}
 
 const NEWS_LETTER = {
   title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
@@ -631,5 +717,10 @@ module.exports = {
   ABOUT,
   LAYOUT_ABOUT,
   EDIT_PROFIL,
-
+  PAYMENT_METHOD,
+  HANDLE_CB,
+  HANDLE_RIB,
+  PAYMENT_CARD,
+  MY_ADDRESSES,
+  HANDLE_ADDRESSES,
 }
