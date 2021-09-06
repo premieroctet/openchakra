@@ -1,5 +1,6 @@
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../utils/authentication')
+const BasePage=require('./basePage')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
@@ -63,7 +64,7 @@ class SearchDataModel extends SlideGridDataModel {
 
 }
 
-class SearchPage extends React.Component {
+class SearchPage extends BasePage {
 
   // FIX : page blanche quand redirigée depuis home page non connectée
   constructor(props) {
@@ -94,25 +95,6 @@ class SearchPage extends React.Component {
     this.SCROLL_DELTA=30
   }
 
-  static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, date}}) {
-    console.log('getInitialProps')
-    // FIX : set city nin AlgoPlaces if provided
-    let init = {
-      keyword: keyword,
-      city: city,
-      selectedAddress: selectedAddress,
-      category: category,
-      service: service,
-      prestation: prestation,
-      date: date,
-    }
-    if (gps) {
-      init.gps = gps
-    }
-    console.log(`getInitialProps:init is ${init}`)
-    return init
-  }
-
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
       window.location.reload()
@@ -127,31 +109,32 @@ class SearchPage extends React.Component {
 
     // Mount components gets criterion from URL
     // If date in URL then force filter after search
+    const url_props=this.getURLProps()
 
     let st = {
-      keyword: 'keyword' in this.props ? this.props.keyword : '',
-      gps: 'gps' in this.props ? JSON.parse(this.props.gps) : null,
-      city: this.props.city || '',
+      keyword: 'keyword' in url_props ? url_props.keyword : '',
+      gps: 'gps' in url_props ? JSON.parse(url_props.gps) : null,
+      city: url_props.city || '',
     }
-    if ('date' in this.props && this.props.date) {
-      let startDate = moment(parseInt(this.props.date))
+    if ('date' in url_props && url_props.date) {
+      let startDate = moment(parseInt(url_props.date))
       startDate.hour(0).minute(0).second(0)
-      let endDate = moment(parseInt(this.props.date))
+      let endDate = moment(parseInt(url_props.date))
       endDate.hour(23).minute(59).second(59)
       st.startDate = startDate
       st.endDate = endDate
     }
-    if ('category' in this.props) {
-      st.category = this.props.category
+    if ('category' in url_props) {
+      st.category = url_props.category
     }
-    if ('service' in this.props) {
-      st.service = this.props.service
+    if ('service' in url_props) {
+      st.service = url_props.service
     }
-    if ('prestation' in this.props) {
-      st.prestation = this.props.prestation
+    if ('prestation' in url_props) {
+      st.prestation = url_props.prestation
     }
-    if ('selectedAddress' in this.props) {
-      st.selectedAddress = this.props.selectedAddress
+    if ('selectedAddress' in url_props) {
+      st.selectedAddress = url_props.selectedAddress
     }
     setAxiosAuthentication()
 
@@ -183,26 +166,22 @@ class SearchPage extends React.Component {
                       allAddresses[ addr._id ] = {lat: addr.lat, lng: addr.lng}
                     })
                     st.allAddresses=allAddresses
-                    if ('selectedAddress' in this.props && this.props.selectedAddress !== 'all') {
-                      st.gps = allAddresses[ this.props.selectedAddress ]
+                    if ('selectedAddress' in url_props && url_props.selectedAddress !== 'all') {
+                      st.gps = allAddresses[ url_props.selectedAddress ]
                     }
-                    if (!this.props.selectedAddress && !this.props.gps) {
+                    if (!url_props.selectedAddress && !url_props.gps) {
                       st.gps = allAddresses.main
                       st.selectedAddress = 'main'
                     }
                     this.setState(st, () => {
-                      if (this.props.search) {
-                        this.search('date' in this.props)
-                      }
+                      this.search('date' in url_props)
                       this.setState({mounting: false})
                     })
                   })
               })
               .catch(() => {
                 this.setState(st, () => {
-                  if (this.props.search) {
-                    this.search('date' in this.props)
-                  }
+                  this.search('date' in url_props)
                   this.setState({mounting: false})
                 })
               })
@@ -301,6 +280,7 @@ class SearchPage extends React.Component {
   search = forceFilter => {
     this.setState({searching: true})
 
+    const url_props = this.getURLProps()
     console.log(`Searching keyowrd:${this.state.keyword}`)
     let filters = {}
 
@@ -321,16 +301,16 @@ class SearchPage extends React.Component {
     }
     else {
       // Category
-      if (this.props.category) {
-        filters.category = this.props.category
+      if (url_props.category) {
+        filters.category = url_props.category
       }
       // Service
-      if (this.props.service) {
-        filters.service = this.props.service
+      if (url_props.service) {
+        filters.service = url_props.service
       }
       // Prestation
-      if (this.props.prestation) {
-        filters.prestation = this.props.prestation
+      if (url_props.prestation) {
+        filters.prestation = url_props.prestation
       }
     }
 
