@@ -1,24 +1,26 @@
+import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import Router from 'next/router'
+import axios from 'axios'
+import moment from 'moment'
+
+import AddressAndFacturation from '../components/Payment/AddressAndFacturation/AddressAndFacturation'
+import BasePage from './basePage'
+import LayoutPayment from '../hoc/Layout/LayoutPayment'
+import PaymentChoice from '../components/Payment/PaymentChoice/PaymentChoice'
+import Stepper from '../components/Stepper/Stepper'
+import styles from '../static/css/pages/confirmPayment/confirmPayment'
+
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../utils/authentication')
-import React from 'react';
-import axios from 'axios';
-import moment from 'moment';
-import Grid from '@material-ui/core/Grid';
-import Router from 'next/router';
-import {withStyles} from '@material-ui/core/styles';
-import styles from '../static/css/pages/confirmPayment/confirmPayment';
-
-import Stepper from "../components/Stepper/Stepper";
-import AddressAndFacturation from "../components/Payment/AddressAndFacturation/AddressAndFacturation";
-import PaymentChoice from "../components/Payment/PaymentChoice/PaymentChoice";
-import LayoutPayment from "../hoc/Layout/LayoutPayment";
-
 const {snackBarError}=require('../utils/notifications')
-moment.locale('fr');
 
-class ConfirmPayment extends React.Component {
+moment.locale('fr')
+
+class ConfirmPayment extends BasePage {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: null,
       currentUser: null,
@@ -44,17 +46,13 @@ class ConfirmPayment extends React.Component {
       id_card: '',
       cardSelected: false,
       pending: false,
-    };
-  }
-
-  static getInitialProps({query: {booking_id}}) {
-    return {booking_id: booking_id};
+    }
   }
 
   componentDidMount() {
 
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
+    axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
       .then(res => {
         const bookingObj = res.data
         this.setState({
@@ -68,10 +66,10 @@ class ConfirmPayment extends React.Component {
           grandTotal: bookingObj.amount,
           cesu_total: bookingObj.cesu_amount,
           alfredId: bookingObj.alfred._id,
-          equipments: bookingObj.equipments
+          equipments: bookingObj.equipments,
         })
 
-        axios.get('/myAlfred/api/serviceUser/' + bookingObj.serviceUserId).then(res => {
+        axios.get(`/myAlfred/api/serviceUser/${bookingObj.serviceUserId}`).then(res => {
           this.setState({user: res.data.user})
         })
 
@@ -79,45 +77,46 @@ class ConfirmPayment extends React.Component {
 
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        this.setState({currentUser: res.data});
+        this.setState({currentUser: res.data})
       })
       .catch(err => {
         if (err.response && (err.response.status === 401 || err.response.status === 403)) {
           clearAuthenticationToken()
-          Router.push({pathname: '/'});
+          Router.push({pathname: '/'})
         }
       })
 
     axios.get('/myAlfred/api/payment/cards')
       .then(response => {
-        let cards = response.data;
-        this.setState({cards: cards});
+        let cards = response.data
+        this.setState({cards: cards})
       })
       .catch(err => {
-        console.error(err);
-      });
+        console.error(err)
+      })
 
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
 
   }
 
   handleStep = () => {
     this.setState({activeStep: this.state.activeStep + 1})
-  };
+  }
 
   payDirect = () => {
     const {pending}=this.state
     if (pending) {
-      return snackBarError(`Paiement en cours de traitement`)
+      return snackBarError('Paiement en cours de traitement')
     }
-    const total = parseFloat(this.state.grandTotal);
-    const fees = parseFloat(this.state.fees);
+    const booking_id=this.getURLProps().booking_id
+    const total = parseFloat(this.state.grandTotal)
+    const fees = parseFloat(this.state.fees)
     const data = {
-      booking_id: this.props.booking_id,
+      booking_id: booking_id,
       id_card: this.state.id_card,
       amount: total,
       fees: fees,
-    };
+    }
     this.setState({pending: true})
     axios.post('/myAlfred/api/payment/payInDirect', data)
       .then(res => {
@@ -125,29 +124,28 @@ class ConfirmPayment extends React.Component {
         if (payInResult.SecureModeNeeded) {
           Router.push(payInResult.SecureModeRedirectURL)
         }
+        else if (payInResult.RedirectURL) {
+          Router.push(payInResult.RedirectURL)
+        }
         else {
-          if (payInResult.RedirectURL) {
-            Router.push(payInResult.RedirectURL)
-          }
-          else {
-            Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`)
-          }
+          Router.push(`/paymentSuccess?booking_id=${booking_id}`)
         }
       })
-      .catch( err => {
+      .catch(err => {
         this.setState({pending: false})
         console.error(err)
-      });
-  };
+      })
+  }
 
   pay = () => {
-    const total = parseFloat(this.state.grandTotal);
-    const fees = parseFloat(this.state.fees);
+    const booking_id=this.getURLProps().booking_id
+    const total = parseFloat(this.state.grandTotal)
+    const fees = parseFloat(this.state.fees)
     const data = {
-      booking_id: this.props.booking_id,
+      booking_id: booking_id,
       amount: total,
       fees: fees,
-    };
+    }
 
     axios.post('/myAlfred/api/payment/payIn', data)
       .then(res => {
@@ -159,33 +157,33 @@ class ConfirmPayment extends React.Component {
           Router.push(payInResult.RedirectURL)
         }
         else {
-          Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`)
+          Router.push(`/paymentSuccess?booking_id=${booking_id}`)
         }
       })
       .catch(err => {
-        console.error(err);
-      });
-  };
+        console.error(err)
+      })
+  }
 
   computePricedPrestations() {
-    let result = {};
+    let result = {}
     this.state.prestations.forEach(p => {
-      result[p.name] = p.price * p.value;
-    });
-    return result;
+      result[p.name] = p.price * p.value
+    })
+    return result
   }
 
   computeCountPrestations() {
-    let result = {};
+    let result = {}
     this.state.prestations.forEach(p => {
-      result[p.name] = p.value;
-    });
-    return result;
+      result[p.name] = p.value
+    })
+    return result
   }
 
-  handleCardSelected = (e) =>{
-      this.setState({id_card: e});
-  };
+  handleCardSelected = e => {
+    this.setState({id_card: e})
+  }
 
   renderSwitch(stepIndex) {
     switch (stepIndex) {
@@ -194,7 +192,7 @@ class ConfirmPayment extends React.Component {
           {...this.state}
           handleStep={this.handleStep}
           pricedPrestations={this.computePricedPrestations}
-          countPrestations={this.computeCountPrestations}/>;
+          countPrestations={this.computeCountPrestations}/>
       case 1:
         return <PaymentChoice
           {...this.state}
@@ -203,13 +201,15 @@ class ConfirmPayment extends React.Component {
           payDirect={this.payDirect}
           pay={this.pay}
           handleCardSelected={this.handleCardSelected}
-        />;
+        />
+      default:
+        return null
     }
   }
 
   render() {
-    const {classes} = this.props;
-    const {currentUser, user, activeStep} = this.state;
+    const {classes} = this.props
+    const {currentUser, user, activeStep} = this.state
 
     return (
       <React.Fragment>
@@ -222,14 +222,14 @@ class ConfirmPayment extends React.Component {
                   steps={['ADRESSE & FACTURATION', 'PAIEMENT']}
                   orientation={'horizontal'}/>
               </Grid>
-              <Grid  className={classes.mainContainer}>
+              <Grid className={classes.mainContainer}>
                 {this.renderSwitch(activeStep)}
               </Grid>
             </LayoutPayment>
           </Grid>
         )}
       </React.Fragment>
-    );
+    )
   }
 }
 
