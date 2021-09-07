@@ -8,7 +8,6 @@ import About from '../../components/About/About'
 import Presentation from '../../components/Presentation/Presentation'
 import Skills from '../../components/Skills/Skills'
 import Badges from '../../components/Badges/Badges'
-import Hashtags from '../../components/Hashtags/Hashtags'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../../static/css/pages/profile/about/about'
 import AskQuestion from '../../components/AskQuestion/AskQuestion'
@@ -51,7 +50,7 @@ class Company extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: props.user,
+      user: this.getURLProps().user,
       company: null,
       showEdition: false,
       enabledEdition: true,
@@ -80,7 +79,7 @@ class Company extends React.Component {
   loadUser = () => {
     this.setState({showEdition: false})
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/users/${this.props.user}`)
+    axios.get(`/myAlfred/api/users/${this.getURLProps().user}`)
       .then(res => {
         const user = res.data
         this.setState({
@@ -205,10 +204,6 @@ class Company extends React.Component {
     )
   }
 
-  static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index: indexAccount}
-  }
-
   content = (classes, user, company) => {
     const editable = isEditableUser(user)
     return (
@@ -280,23 +275,13 @@ class Company extends React.Component {
             <Badges user={user}/>
           </Box>
         </Grid>
-        {false ?
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.aboutHastagsContainer}>
-            <Box>
-              <Hashtags user={user}/>
-            </Box>
-          </Grid>
-          :
-          null
-        }
         {
-          !editable ?
+          !editable &&
             <Grid className={classes.containerAskQuestion} item>
               <Grid style={{width: '70%'}}>
                 <AskQuestion user={user}/>
               </Grid>
             </Grid>
-            : null
         }
 
       </Grid>
@@ -304,7 +289,9 @@ class Company extends React.Component {
   }
 
   render() {
-    const {classes, index, user} = this.props
+    const {classes} = this.props
+    const user=this.getURLProps().user
+    const index=this.getURLProps().indexAccount
     const {company} = this.state
     if (!user && company) {
       return null
