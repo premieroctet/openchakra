@@ -1,15 +1,18 @@
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
-import React from 'react'
+import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
-import {Typography} from '@material-ui/core'
-import TextField from '@material-ui/core/TextField'
-import {withStyles} from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Layout from '../../../hoc/Layout/Layout'
-import axios from 'axios'
+import React from 'react'
 import Router from 'next/router'
+import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
+
+import BasePage from '../../basePage'
+import Layout from '../../../hoc/Layout/Layout'
+
+const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
 const {snackBarSuccess} = require('../../../utils/notifications')
 
 const styles = theme => ({
@@ -37,7 +40,7 @@ const styles = theme => ({
   },
 })
 
-class view extends React.Component {
+class View extends BasePage {
 
   constructor(props) {
     super(props)
@@ -45,26 +48,18 @@ class view extends React.Component {
     this.state = {
       job: {},
       label: '',
-
     }
-
     this.handleClick = this.handleClick.bind(this)
-  }
-
-  static getInitialProps({query: {id}}) {
-    return {job_id: id}
-
   }
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.props.job_id
+    const id = this.getURLProps().id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/job/all/${id}`)
       .then(response => {
         let job = response.data
         this.setState({job: job})
-
       })
       .catch(err => {
         console.error(err)
@@ -73,7 +68,6 @@ class view extends React.Component {
           Router.push({pathname: '/'})
         }
       })
-
   }
 
   onChange = e => {
@@ -86,10 +80,9 @@ class view extends React.Component {
     e.preventDefault()
 
     const {label} = this.state.job
-    const id = this.props.job_id
+    const id = this.getURLProps().id
     axios.put(`/myAlfred/api/admin/job/all/${id}`, {label})
       .then(() => {
-
         snackBarSuccess('Métier modifié avec succès')
         Router.push({pathname: '/dashboard/job/all'})
       })
@@ -100,12 +93,10 @@ class view extends React.Component {
           Router.push({pathname: '/'})
         }
       })
-
-
-  };
+  }
 
   handleClick() {
-    const id = this.props.job_id
+    const id = this.getURLProps().id
     axios.delete(`/myAlfred/api/admin/job/all/${id}`)
       .then(() => {
         snackBarSuccess('Métier supprimé avec succès')
@@ -168,4 +159,4 @@ class view extends React.Component {
 }
 
 
-export default withTranslation()(withStyles(styles)(view))
+export default withTranslation()(withStyles(styles)(View))
