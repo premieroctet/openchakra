@@ -54,11 +54,6 @@ class View extends BasePage {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  static getInitialProps({query: {id}}) {
-    return {banner_id: id}
-
-  }
-
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
     const id = this.getURLProps().id
