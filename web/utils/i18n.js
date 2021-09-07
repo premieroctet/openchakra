@@ -327,7 +327,37 @@ const TRUST_VERIFICATION = {
   insee_link: 'sur le site de l\'INSEE',
   download_document_imma: 'Télécharger document d\'immatriculation',
   save_document_imma: 'Enregistrer',
+}
 
+const SECURITY = {
+  snackbar_account_update: 'Compte mis à jour',
+  snackbar_account_desactivate: 'Compte désactivé',
+  snackbar_mdp_update: 'Mot de passe modifié',
+  dialog_delete_account_title: 'Désactiver votre compte ?',
+  dialog_delete_account_content: 'Attention, cette action est irréversible. Si vous souhaitez ne plus être référencé par les moteurs de recherche, vous pouvez désactiver l’indexation par les moteurs de recherche.',
+  dialog_delete_account_cancel: 'Annuler',
+  dialog_delete_account_confirm: 'Désactiver',
+  dialog_delete_shop_title: 'Supprimer votre boutique ?',
+  dialog_delete_shop_content: 'Attention, cette action est irréversible. Si vous souhaitez garder votre boutique sans que les utilisateurs puissent réserver vos services, vous pouvez supprimer vos disponibilités sur votre calendrier.',
+  dialog_delete_shop_cancel: 'Annuler',
+  dialog_delete_shop_confirm: 'Supprimer',
+  title: 'Sécurité',
+  subtitle: 'Modifiez votre mot de passe et gérez votre compte.',
+  password: 'Mot de passe',
+  update_password: 'Modifiez votre mot de passe.',
+  placeholder_password_error: 'Mot de passe erroné',
+  placeholder_password_actual: 'Mot de passe actuel',
+  placeholder_newpassword: 'Nouveau mot de passe',
+  placeholder_repeat_password: 'Répéter le mot de passe',
+  validate_button_password: 'Valider',
+  my_account: 'Mon compte',
+  handle_my_account: 'Gérez votre compte.',
+  index_my_account: 'Je souhaite que mon compte apparaisse dans les résultats des moteurs de recherche',
+  delete_my_account: 'Je souhaite supprimer ma boutique de services.',
+  delete_my_account_button: 'Supprimer',
+  desactivate_my_account: 'Je souhaite désactiver mon compte.',
+  caution_desactivate_my_account: 'Attention, cette action est irréversible !',
+  button_desactivate_my_account: 'Désactiver',
 }
 
 const NEWS_LETTER = {
@@ -761,4 +791,5 @@ module.exports = {
   MY_ADDRESSES,
   HANDLE_ADDRESSES,
   TRUST_VERIFICATION,
+  SECURITY,
 }
