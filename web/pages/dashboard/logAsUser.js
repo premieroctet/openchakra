@@ -62,10 +62,6 @@ class LogAsUser extends BasePage {
     this.onUserChanged = this.onUserChanged.bind(this)
   }
 
-  static getInitialProps({query: {email}}) {
-    return {email: email}
-  }
-
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
