@@ -1,32 +1,37 @@
-import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
-import {withStyles} from '@material-ui/core/styles'
-import styles from '../../static/css/pages/profile/messages/messages'
-import axios from 'axios'
-import Typography from '@material-ui/core/Typography'
-const moment=require('moment')
-import MessageSummary from '../../components/MessageSummary/MessageSummary'
-import _ from 'lodash'
-import Dialog from '@material-ui/core/Dialog'
-import DialogContent from '@material-ui/core/DialogContent'
-import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
-import LayoutMessages from '../../hoc/Layout/LayoutMessages'
-import Divider from '@material-ui/core/Divider'
-import LayoutMobileMessages from '../../hoc/Layout/LayoutMobileMessages'
-import IconButton from '@material-ui/core/IconButton'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import CloseIcon from '@material-ui/icons/Close'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import OutlinedInput from '@material-ui/core/OutlinedInput'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import SendIcon from '@material-ui/icons/Send'
-import DialogActions from '@material-ui/core/DialogActions'
-import UserAvatar from '../../components/Avatar/UserAvatar'
-import Router from 'next/router'
 import '../../static/assets/css/custom.css'
+
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import CloseIcon from '@material-ui/icons/Close'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import Divider from '@material-ui/core/Divider'
+import FormControl from '@material-ui/core/FormControl'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import InputLabel from '@material-ui/core/InputLabel'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import OutlinedInput from '@material-ui/core/OutlinedInput'
+import React from 'react'
+import Router from 'next/router'
+import SendIcon from '@material-ui/icons/Send'
+import Typography from '@material-ui/core/Typography'
+import _ from 'lodash'
+import axios from 'axios'
+
+import BasePage from '../basePage'
+import LayoutMessages from '../../hoc/Layout/LayoutMessages'
+import LayoutMobileMessages from '../../hoc/Layout/LayoutMobileMessages'
+import MessageSummary from '../../components/MessageSummary/MessageSummary'
+import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
+import UserAvatar from '../../components/Avatar/UserAvatar'
+import styles from '../../static/css/pages/profile/messages/messages'
+
+const moment=require('moment')
+
+const {setAxiosAuthentication}=require('../../utils/authentication')
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -42,7 +47,7 @@ const DialogTitle = withStyles(styles)(props => {
   )
 })
 
-class Messages extends React.Component {
+class Messages extends BasePage {
 
   constructor(props) {
     super(props)
@@ -80,8 +85,9 @@ class Messages extends React.Component {
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then(res => {
         const chats=res.data.filter(c => c.booking && c.booking.alfred && c.messages)
-        if (checkRelative && this.props.relative) {
-          axios.get(`/myAlfred/api/users/users/${this.props.relative}`)
+        const relative = this.getURLProps().relative
+        if (checkRelative && relative) {
+          axios.get(`/myAlfred/api/users/users/${relative}`)
             .then(res => this.setState({chats: chats, relativeDetails: res.data}))
         }
         else {
@@ -91,19 +97,18 @@ class Messages extends React.Component {
 
   }
 
-  static getInitialProps({query: {user, relative}}) {
-    return {user: user, relative: relative}
-  }
-
   getChatsRelative = relativeId => {
+    const user=this.getURLProps().user
     return this.state.chats.slice().filter(c =>
-      (c.emitter._id===this.props.user && c.recipient._id===relativeId)
+      (c.emitter._id===user && c.recipient._id===relativeId)
       ||
-      (c.emitter._id===relativeId && c.recipient._id===this.props.user),
+      (c.emitter._id===relativeId && c.recipient._id===user),
     )
   }
 
   getRelatives = () => {
+    const user=this.getURLProps().user
+
     let {chats, tabIndex} = this.state
     if (!chats || chats.length===0) {
       return []
@@ -112,14 +117,14 @@ class Messages extends React.Component {
     // Filter chats for Alfred or client
     chats=chats.slice()
     if (tabIndex===0) {
-      chats=chats.filter(c => c.booking.alfred===this.props.user)
+      chats=chats.filter(c => c.booking.alfred===user)
     }
     else {
-      chats=chats.filter(c => c.booking.user===this.props.user)
+      chats=chats.filter(c => c.booking.user===user)
     }
 
     chats = chats.sort((c1, c2) => moment(c2.latest)-moment(c1.latest))
-    const users=_.uniqBy(chats.map(c => (c.emitter._id.toString()===this.props.user ? c.recipient : c.emitter)), '_id')
+    const users=_.uniqBy(chats.map(c => (c.emitter._id.toString()===user ? c.recipient : c.emitter)), '_id')
     return users
   }
 
