@@ -1,11 +1,10 @@
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import {withStyles} from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import styles from '../../static/css/pages/profile/messages/messages'
 import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
-const moment=require('moment')
 import MessageSummary from '../../components/MessageSummary/MessageSummary'
 import _ from 'lodash'
 import Dialog from '@material-ui/core/Dialog'
@@ -26,6 +25,9 @@ import DialogActions from '@material-ui/core/DialogActions'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import Router from 'next/router'
 import '../../static/assets/css/custom.css'
+import {MESSAGES} from '../../utils/i18n'
+
+const moment=require('moment')
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -147,8 +149,7 @@ class Messages extends React.Component {
 
   getBookingId = chats => {
     let sortedChats = chats.slice().sort((c1, c2) => c2.latest-c1.latest)
-    const booking=sortedChats[0].booking
-    return booking
+    return sortedChats[0].booking
   }
 
   onDetailsClosed = () => {
@@ -180,7 +181,7 @@ class Messages extends React.Component {
               </Grid>
               <Grid>
                 <Typography style={{textAlign: 'center', whiteSpace: 'nowrap'}}>
-                  {this.state.lastMessageDate ? `Dernier message ${moment(this.state.lastMessageDate).calendar()}` : 'Aucun message'}
+                  {this.state.lastMessageDate ? MESSAGES.last_message + moment(this.state.lastMessageDate).calendar() : MESSAGES.no_message}
                 </Typography>
               </Grid>
             </Grid>
@@ -201,7 +202,7 @@ class Messages extends React.Component {
         <DialogActions classes={{root: classes.dialogActionRoot}}>
           <Grid>
             <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="standard-adornment">Saisissez votre message</InputLabel>
+              <InputLabel htmlFor="standard-adornment">{MESSAGES.dialog_title_content}</InputLabel>
               <OutlinedInput
                 id="standard-adornment-password"
                 type={'text'}
@@ -209,7 +210,7 @@ class Messages extends React.Component {
                 value={this.state.message}
                 onChange={this.handleChangeMessage}
                 // onKeyDown={e => {if (e.key === 'Enter') this.handleSubmitMessage(e)}}
-                label={'Saisissez votre message'}
+                label={MESSAGES.label}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -237,16 +238,13 @@ class Messages extends React.Component {
     const relatives = this.getRelatives()
     const countChats=relatives.length
 
-    const msg_descr = countChats==0 ?
-      "Vous n'avez aucune conversation"
-      : countChats==1 ? 'Vous avez une conversation'
-        : `Vous avez ${countChats} conversations`
+    const msg_descr = countChats===0 ? MESSAGES.no_conversation : countChats === 1 ? MESSAGES.one_conversation : MESSAGES.you_got + countChats + MESSAGES.conversation
 
     return(
       <Grid style={{width: '100%'}}>
         <Grid>
           <Grid>
-            <h2 className={'custommessagestitle'}>Mes messages</h2>
+            <h2 className={'custommessagestitle'}>{MESSAGES.my_messages}</h2>
           </Grid>
           <Grid>
             <Typography>{msg_descr}</Typography>

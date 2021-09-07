@@ -583,6 +583,30 @@ const STATISTICS = {
   commentary: 'Commentaires',
 }
 
+const MESSAGES = {
+  last_message: 'Dernier message ',
+  no_message: 'Aucun message',
+  dialog_title_content: 'Saisissez votre message',
+  no_conversation: 'Vous n\'avez aucune conversation',
+  one_conversation: 'Vous avez une conversation',
+  you_got: 'Vous avez',
+  conversation: ' conversations',
+  my_messages: 'Mes messages',
+  label: 'Saisissez votre message',
+
+}
+
+const MESSAGE_DETAIL = {
+  browser_compatibility: 'Votre navigateur ne supporte pas les notifications',
+  notif: 'Vous recevrez des notifications pour cette conversation',
+  new_messages: 'Nouveaux Messages',
+
+}
+
+const MESSAGE_SUMMARY = {
+  no_message: 'Aucun message',
+}
+
 const AVOCOTES = {
   title: 'Besoin d\'un coup de pouce pour installer votre pack AvoCotés protection ?',
   subtitle: 'Confiez l\'installation de votre Pack SECURITE AvoCotés Protection à un entrepeneur local & qualifé',
@@ -861,4 +885,7 @@ module.exports = {
   ASK_QUESTION,
   SUMMARY_COMMENTARY,
   STATISTICS,
+  MESSAGES,
+  MESSAGE_DETAIL,
+  MESSAGE_SUMMARY,
 }
