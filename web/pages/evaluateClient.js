@@ -29,11 +29,6 @@ class EvaluateClient extends BasePage {
     }
   }
 
-  static getInitialProps({query: {booking, id, client}}) {
-    return {booking: booking, service_id: id, client: client}
-
-  }
-
   componentDidMount() {
     const id = this.getURLProps().id
     localStorage.setItem('path', Router.pathname)
