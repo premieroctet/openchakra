@@ -1,38 +1,46 @@
+import {Helmet} from 'react-helmet'
 import {withTranslation} from 'react-i18next'
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import withStyles from "@material-ui/core/styles/withStyles";
-import styles from '../../static/css/pages/profile/editProfileCompany/editProfileCompany';
-import {Helmet} from "react-helmet";
-import LayoutAccount from "../../hoc/Layout/LayoutAccount";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import Router from "next/router";
-import axios from "axios";
-import Divider from "@material-ui/core/Divider";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-const {setAxiosAuthentication} = require('../../utils/authentication');
-const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import AlgoliaPlaces from "algolia-places-react";
-import {COMPANY_ACTIVITY, COMPANY_SIZE} from '../../utils/consts';
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormHelperText from '@material-ui/core/FormHelperText';
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
-const {isB2BAdmin} = require('../../utils/context');
-import DateField from '../../components/DateField/DateField'
-const moment=require('moment');
-moment.locale('fr');
+import AlgoliaPlaces from 'algolia-places-react'
+import Button from '@material-ui/core/Button'
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
+import Checkbox from '@material-ui/core/Checkbox'
+import Divider from '@material-ui/core/Divider'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import Grid from '@material-ui/core/Grid'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import React from 'react'
+import Router from 'next/router'
+import Select from '@material-ui/core/Select'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+import withStyles from '@material-ui/core/styles/withStyles'
 
-class editProfileCompany extends React.Component{
+import {
+  COMPANY_ACTIVITY,
+  COMPANY_SIZE,
+  MAX_DESCRIPTION_LENGTH,
+} from '../../utils/consts'
+import BasePage from '../basePage'
+import DateField from '../../components/DateField/DateField'
+import LayoutAccount from '../../hoc/Layout/LayoutAccount'
+import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+import styles from '../../static/css/pages/profile/editProfileCompany/editProfileCompany'
+
+const moment=require('moment')
+
+const {isB2BAdmin} = require('../../utils/context')
+const {setAxiosAuthentication} = require('../../utils/authentication')
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
+
+moment.locale('fr')
+
+class editProfileCompany extends BasePage {
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
       user: {},
       activityArea: '',
@@ -48,27 +56,22 @@ class editProfileCompany extends React.Component{
       name: '',
       company: {},
       billing_address: {},
-      birthday : null,
+      birthday: null,
     }
 
   }
 
-  static getInitialProps({query: {indexAccount}}) {
-    return {index: indexAccount};
-
-  }
-
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     this.loadUser()
   }
 
   loadUser = () => {
-    setAxiosAuthentication();
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
-        let user = res.data;
+        let user = res.data
         this.setState({
           user: user,
           email: user.email,
@@ -76,21 +79,21 @@ class editProfileCompany extends React.Component{
           name: user.name,
           position: user.position,
           birthday: user.birthday ? moment(user.birthday).format('YYYY-MM-DD') : null,
-        });
-        if(!isB2BAdmin(user)){
-          Router.push({pathname: '/'});
+        })
+        if(!isB2BAdmin(user)) {
+          Router.push({pathname: '/'})
         }
       })
       .catch(err => {
-          console.error(err);
-          if (err.response.status === 401 || err.response.status === 403) {
-            Router.push({pathname: '/'});
-          }
-        },
-      );
+        console.error(err)
+        if (err.response.status === 401 || err.response.status === 403) {
+          Router.push({pathname: '/'})
+        }
+      },
+      )
 
-    axios.get('/myAlfred/api/companies/current').then(res =>{
-      let company = res.data;
+    axios.get('/myAlfred/api/companies/current').then(res => {
+      let company = res.data
       this.setState({
         company: company,
         companyName: company.name,
@@ -101,48 +104,49 @@ class editProfileCompany extends React.Component{
         descriptionCompany: company.description,
         billing_address: company.billing_address,
         vat_subject: company.vat_subject,
-        website: company.website
+        website: company.website,
 
       })
     }).catch(err => {
       console.error(err)
     })
-  };
+  }
 
-  handleChange = (event) => {
-    let {name, value} = event.target;
+  handleChange = event => {
+    let {name, value} = event.target
     console.log(`onCHange:${name}=>${value}`)
     if (name === 'siret') {
-      if(value.match(/^[0-9]*$/)){
-        value = value.replace(/ /g, '');
-        this.setState({[name] : value});
+      if(value.match(/^[0-9]*$/)) {
+        value = value.replace(/ /g, '')
+        this.setState({[name]: value})
       }
     }
     else if(name === 'vat_subject') {
       this.setState({[name]: !this.state.vat_subject})
-    }else{
-      this.setState({[name] : value});
     }
-  };
+    else{
+      this.setState({[name]: value})
+    }
+  }
 
-  onBillingAdressChange = ({suggestion}) =>{
+  onBillingAdressChange = ({suggestion}) => {
     const newAddress = suggestion ?
       {
         city: suggestion.city,
         address: suggestion.name,
         zip_code: suggestion.postcode,
         country: suggestion.country,
-        gps:{
+        gps: {
           lat: suggestion.latlng.lat,
           lng: suggestion.latlng.lng,
-        }
+        },
       }
       :
-      null;
-    this.setState({ billing_address : newAddress })
-  };
+      null
+    this.setState({billing_address: newAddress})
+  }
 
-  onSubmitProfilCompany = () =>{
+  onSubmitProfilCompany = () => {
 
     axios.put('/myAlfred/api/companies/profile/editProfile', {
       activity: this.state.activityArea,
@@ -153,19 +157,20 @@ class editProfileCompany extends React.Component{
       vat_number: this.state.vat_subject ? this.state.tva : '',
       billing_address: this.state.billing_address,
       vat_subject: this.state.vat_subject,
-      website: this.state.website
-      }
-    ).then( res =>{
-      snackBarSuccess("Profil modifié avec succès");
-      this.loadUser()
-    }).catch( err => {
-      snackBarError(err.response.data);
+      website: this.state.website,
     })
-  };
+      .then(() => {
+        snackBarSuccess('Profil modifié avec succès')
+        this.loadUser()
+      })
+      .catch(err => {
+        snackBarError(err.response.data)
+      })
+  }
 
-  onSubmitAbout = () =>{
+  onSubmitAbout = () => {
 
-    var postData = {
+    let postData = {
       position: this.state.position,
       email: this.state.email,
       name: this.state.name,
@@ -178,28 +183,30 @@ class editProfileCompany extends React.Component{
     }
 
     axios.put('/myAlfred/api/users/profile/editProProfile', postData)
-      .then(res => {
-        snackBarSuccess("Profil modifié avec succès");
-       this.loadUser();
+      .then(() => {
+        snackBarSuccess('Profil modifié avec succès')
+        this.loadUser()
       })
       .catch(err => {
-        err.response ?
-          snackBarError(err.response.data) : null
-      });
-  };
+        console.error(err)
+        if (err.response) {
+          snackBarError(err.response.data)
+        }
+      })
+  }
 
   sendEmail = () => {
     axios.get('/myAlfred/api/users/sendMailVerification')
       .then(() => {
-        snackBarSuccess("Mail envoyé")
+        snackBarSuccess('Mail envoyé')
       })
-      .catch( err => {
-        snackBarError('Mail non envoyé')
-      });
-  };
+      .catch(err => {
+        snackBarError(`Mail non envoyé:${err}`)
+      })
+  }
 
-  content = (classes) => {
-    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user, billing_address, placeholderAlgolia, birthday} = this.state;
+  content = classes => {
+    const {activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user, billing_address, birthday} = this.state
 
     const position_width = this.is_legal_representative() ? 6 : 12
     return(
@@ -271,22 +278,22 @@ class editProfileCompany extends React.Component{
                   control={
                     <Checkbox
                       checked={vat_subject}
-                      name="vat_subject"
+                      name='vat_subject'
                       onChange={this.handleChange}
-                      color="primary"
+                      color='primary'
                     />
                   }
-                  label="Assujetti à la TVA"
+                  label='Assujetti à la TVA'
                 />
               </FormHelperText>
             </Grid>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">Taille de l’entreprise</InputLabel>
+            <FormControl variant='outlined' className={classes.formControl}>
+              <InputLabel id='demo-simple-select-outlined-label'>Taille de l’entreprise</InputLabel>
               <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
+                labelId='demo-simple-select-outlined-label'
+                id='demo-simple-select-outlined'
                 value={sizeCompany}
                 onChange={this.handleChange}
                 label={'Taille de l’entreprise'}
@@ -294,28 +301,28 @@ class editProfileCompany extends React.Component{
                 placeholder={'Taille de l’entreprise'}
               >
                 {
-                  Object.keys(COMPANY_SIZE).map((res, index) =>(
-                    <MenuItem key={index} value={res}>{COMPANY_SIZE[res]}</MenuItem>
+                  Object.keys(COMPANY_SIZE).map(res => (
+                    <MenuItem key={res} value={res}>{COMPANY_SIZE[res]}</MenuItem>
                   ))
                 }
               </Select>
             </FormControl>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">Secteur d’activité</InputLabel>
+            <FormControl variant='outlined' className={classes.formControl}>
+              <InputLabel id='demo-simple-select-outlined-label'>Secteur d’activité</InputLabel>
               <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
+                labelId='demo-simple-select-outlined-label'
+                id='demo-simple-select-outlined'
                 value={activityArea}
                 onChange={this.handleChange}
                 label={'Secteur d’activité'}
-                name={"activityArea"}
+                name={'activityArea'}
                 placeholder={'Secteur d’activité'}
               >
                 {
-                  Object.keys(COMPANY_ACTIVITY).map((res,index) =>(
-                    <MenuItem key={index} value={res}>{COMPANY_ACTIVITY[res]}</MenuItem>
+                  Object.keys(COMPANY_ACTIVITY).map(res => (
+                    <MenuItem key={res} value={res}>{COMPANY_ACTIVITY[res]}</MenuItem>
                   ))
                 }
               </Select>
@@ -335,7 +342,7 @@ class editProfileCompany extends React.Component{
             />
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}
-                style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
+            style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
             <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
           </Grid>
         </Grid>
@@ -343,8 +350,8 @@ class editProfileCompany extends React.Component{
           <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>
             <Button
               onClick={this.onSubmitProfilCompany}
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               classes={{root: classes.button}}
             >
               Enregistrer
@@ -357,7 +364,7 @@ class editProfileCompany extends React.Component{
         <Grid>
           <Grid>
             <h2 style={{whiteSpace: 'nowrap'}}>À propos de vous
-            { this.is_legal_representative() ? " - vous êtes le représentant légal" : null }
+              { this.is_legal_representative() ? ' - vous êtes le représentant légal' : null }
             </h2>
           </Grid>
           <Grid container spacing={3} style={{marginTop: '5vh'}}>
@@ -395,15 +402,15 @@ class editProfileCompany extends React.Component{
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
                 InputProps={{
-                  endAdornment: email === user.email && user.is_confirmed === true ? <CheckCircleOutlineIcon /> : null
+                  endAdornment: email === user.email && user.is_confirmed === true ? <CheckCircleOutlineIcon /> : null,
                 }}
               />
             </Grid>
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
               <Button
-                variant="contained"
+                variant='contained'
                 color={'primary'}
-                onClick={() => user.is_confirmed ? this.onSubmitAbout() : this.sendEmail()}
+                onClick={() => (user.is_confirmed ? this.onSubmitAbout() : this.sendEmail())}
                 disabled={user.email ? !!(email === user.email && user.is_confirmed) : true}
                 classes={{root: classes.buttonCheckPhone}}
               >
@@ -425,7 +432,7 @@ class editProfileCompany extends React.Component{
               <Grid item xl={6} lg={6} xs={6} sm={6} md={6}>
                 <DateField
                   classes={{root: classes.textFieldDatePicker}}
-                  variant="outlined"
+                  variant='outlined'
                   label={'Date de naissance'}
                   name={'birthday'}
                   value={birthday}
@@ -441,8 +448,8 @@ class editProfileCompany extends React.Component{
           <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>
             <Button
               onClick={this.onSubmitAbout}
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               classes={{root: classes.button}}
             >
               Enregistrer
@@ -451,7 +458,7 @@ class editProfileCompany extends React.Component{
         </Grid>
       </Grid>
     )
-  };
+  }
 
   is_legal_representative = () => {
     const {user, company}=this.state
@@ -463,8 +470,9 @@ class editProfileCompany extends React.Component{
   }
 
   render() {
-    const {classes, index} = this.props;
-    const {user} = this.state;
+    const {classes} = this.props
+    const {user} = this.state
+    const index=this.getURLProps().indexAccount
 
     if (!user) {
       return null
@@ -474,8 +482,8 @@ class editProfileCompany extends React.Component{
       <React.Fragment>
         <Helmet>
           <title>Profil - Modifier mon profil - My Alfred </title>
-          <meta property="description"
-                content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
+          <meta property='description'
+            content='Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !'/>
         </Helmet>
         <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount index={index} contextUser={user}>
@@ -488,7 +496,7 @@ class editProfileCompany extends React.Component{
           </LayoutMobile>
         </Grid>
       </React.Fragment>
-    );
+    )
   }
 }
 
