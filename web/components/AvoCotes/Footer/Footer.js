@@ -15,7 +15,7 @@ function Footer({classes}) {
             <img
               alt={'logo_myAlfred'}
               title={'logo_myAlfred'}
-              src={'../../../static/assets/icon/logoOnDemand.svg'}
+              src={'/static/assets/icon/logoOnDemand.svg'}
               height={98}
             />
           </Grid>

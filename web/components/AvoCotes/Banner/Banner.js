@@ -14,7 +14,7 @@ function Banner({classes}) {
           <img
             alt={'logo_myAlfred'}
             title={'logo_myAlfred'}
-            src={'../../../static/assets/icon/logoOnDemand.svg'}
+            src={'/static/assets/icon/logoOnDemand.svg'}
             height={64}
           />
         </Grid>
@@ -31,7 +31,7 @@ function Banner({classes}) {
             <img
               alt={'equipement'}
               title={'equipment'}
-              src={'../../../static/assets/img/avocotes/avocote.svg'}
+              src={'/static/assets/img/avocotes/avocote.svg'}
               className={classes.imgEquipment}
             />
           </Grid>

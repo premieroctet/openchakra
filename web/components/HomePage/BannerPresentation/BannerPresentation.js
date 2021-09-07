@@ -66,7 +66,7 @@ class BannerPresentation extends React.Component {
         {
           isB2BStyle(user) ?
             <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.illuContainer}>
-              <img title={'illuB2b'} alt={'illuB2b'} src={`../../../static/assets/img/homePage/${isB2BStyle(user) ? 'b2bIllu.svg' : 'illuHeader.png'}`} className={classes.illuStyle}/>
+              <img title={'illuB2b'} alt={'illuB2b'} src={`/static/assets/img/homePage/${isB2BStyle(user) ? 'b2bIllu.svg' : 'illuHeader.png'}`} className={classes.illuStyle}/>
             </Grid>
             : null
         }

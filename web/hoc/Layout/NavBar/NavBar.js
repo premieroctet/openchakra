@@ -138,7 +138,7 @@ class NavBar extends Component {
             })
             this.setState({
               allAddresses: allAddresses,
-              selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''
+              selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
             })
           })
       })
@@ -260,8 +260,8 @@ class NavBar extends Component {
     }
   };
 
-  onCategoriesFilterChanged = categories => {
-    categories = categories || []
+  onCategoriesFilterChanged = pcategories => {
+    categories = pcategories || []
     const filteredServices=this.state.allServices.filter(s => {
       return categories.map(c => c.value).includes(s.category)
     })
@@ -271,8 +271,8 @@ class NavBar extends Component {
     this.setState({categories: categories, filteredServices: filteredServices, services: services})
   };
 
-  onServicesFilterChanged = services => {
-    services = services || []
+  onServicesFilterChanged = pservices => {
+    services = pservices || []
     this.setState({services: services || []})
   };
 
@@ -1096,7 +1096,7 @@ class NavBar extends Component {
         sm={1}
         onClick={() => Router.push('/')}
       >
-        <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
+        <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'/static/assets/icon/logo.svg'}
           className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
       </Grid>
     )

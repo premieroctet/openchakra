@@ -101,7 +101,7 @@ class CompanyDashboard extends React.Component {
               <img
                 alt={'logo_myAlfred'}
                 title={'logo_myAlfred'}
-                src={'../../../static/assets/icon/logo.svg'}
+                src={'/static/assets/icon/logo.svg'}
                 height={64}
                 style={{filter: 'invert(1)'}}/>
             </Grid>

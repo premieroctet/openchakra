@@ -58,9 +58,9 @@ class EditPicture extends React.Component {
     const formData = new FormData()
     formData.append('picture', this.state.picture)
     axios.post(`/myAlfred/api/admin/${this.props.type}/editPicture/${this.props.id}`, formData)
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Photo modifiée avec succès')
-        Router.push({pathname: `/dashboard/${this.props.type}` + `s/all`})
+        Router.push({pathname: `/dashboard/${this.props.type}s/all`})
       })
       .catch(err => {
         console.error(err)

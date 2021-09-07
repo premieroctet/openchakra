@@ -101,7 +101,7 @@ class Header extends React.Component {
     return (
       <Grid>
         <Grid className={'customlayoutfaqheaderbanner'} style={{
-          backgroundImage: "url('../../../static/assets/img/footer/footerBanner.svg')",
+          backgroundImage: "url('/static/assets/img/footer/footerBanner.svg')",
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           width: '100%',

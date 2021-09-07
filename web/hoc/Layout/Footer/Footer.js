@@ -269,7 +269,7 @@ class Footer extends React.Component {
                     <Grid item>
                       <a href={'https://apps.apple.com/us/app/my-alfred/id1544073864'} target={'_blank'}>
                         <img alt={'appleStore'} title={'badge_applestore'} width={126.5} height={40}
-                          src={'../../static/assets/img/footer/ios/ios_black.svg'}/>
+                          src={'/static/assets/img/footer/ios/ios_black.svg'}/>
                       </a>
                     </Grid> : null
                 }
@@ -277,7 +277,7 @@ class Footer extends React.Component {
                   !isIOS ? <Grid item>
                     <a href={'https://play.google.com/store/apps/details?id=com.myalfred'} target={'_blank'}>
                       <img alt={'googlePlay'} title={'badge_android'} width={153}
-                        src={'../../static/assets/img/footer/android/android.png'}/>
+                        src={'/static/assets/img/footer/android/android.png'}/>
                     </a>
                   </Grid> : null
                 }
