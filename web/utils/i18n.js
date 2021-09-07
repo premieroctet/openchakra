@@ -360,6 +360,27 @@ const SECURITY = {
   button_desactivate_my_account: 'Désactiver',
 }
 
+const NOTIFICATIONS = {
+  snackbar_account_update: 'Compte mis à jour',
+  my_notif: 'Mes notifications',
+  subtitle: 'Choisissez les notifications que vous souhaitez recevoir',
+  messages_title: 'Messages',
+  receive_messages: 'Recevez des messages de la part des Alfred et des utilisateurs y compris les demandes de réservations.',
+  email: 'Email',
+  push_notif: 'Notification push',
+  sms_notif: 'SMS',
+  rappel_notif: 'Rappel',
+  rappel_notif_tarif: 'Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et d’autres rappels relatifs à vos activités sur My-Alfred.',
+  promo_title: 'Promotions & Astuces',
+  coupon_title: 'Recevez des coupons, des informations promotionnelles, des enquêtes, et des informations de la part de My-Alfred et de ses partenaires.',
+  phone: 'Appel téléphonique',
+  commu_title: 'Politique & communauté',
+  presta_service: 'Recevez des nouvelles sur les réglementations liées aux prestations de services',
+  assistance_account: 'Assistance du compte',
+  security_conf: 'Vos réservations, des informations légales, des questions de sécurité et de confidentialité. Pour votre sécurité, vous ne pouvez pas désactiver les notifications par email.',
+
+}
+
 const NEWS_LETTER = {
   title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
   text: 'Inscrivez-vous gratuitement à notre super Newsletter pour recevoir les informations et les bons plans de la communauté.',
@@ -792,4 +813,5 @@ module.exports = {
   HANDLE_ADDRESSES,
   TRUST_VERIFICATION,
   SECURITY,
+  NOTIFICATIONS
 }
