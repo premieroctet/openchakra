@@ -1,22 +1,20 @@
-import {withTranslation} from 'react-i18next'
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
-import React from 'react'
-import axios from 'axios'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import Router from 'next/router'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
 import io from 'socket.io-client'
 
+import BasePage from './basePage'
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
 const {BOOK_STATUS}=require('../utils/consts')
+const {setAxiosAuthentication}=require('../utils/authentication')
 
-const {is_production, is_validation}=require('../config/config')
-const {snackBarError}=require('../utils/notifications')
-
-class paymentSuccess extends React.Component {
+class paymentSuccess extends BasePage {
   constructor(props) {
     super(props)
     this.state = {
@@ -26,12 +24,7 @@ class paymentSuccess extends React.Component {
     }
   }
 
-  static getInitialProps({query: {booking_id, transactionId}}) {
-    return {booking_id: booking_id, transaction_id: transactionId}
-  }
-
   componentDidMount() {
-
     localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
@@ -42,7 +35,8 @@ class paymentSuccess extends React.Component {
       .catch(err => {
         console.error(err)
       })
-    axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
+    const booking_id = this.getURLProps().booking_id
+    axios.get(`/myAlfred/api/booking/${booking_id}`)
       .then(res => {
         const booking = res.data
         this.setState({booking: booking})
@@ -51,10 +45,9 @@ class paymentSuccess extends React.Component {
             let transaction = result.data
             console.log(`Transaction:${JSON.stringify(transaction)}`)
             if (transaction.Status === 'FAILED') {
-              return Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`)
+              return Router.push(`/paymentFailed?booking_id=${booking_id}`)
             }
             this.setState({success: true})
-            const booking_id = this.props.booking_id
             this.socket = io()
             this.socket.on('connect', () => {
               this.socket.emit('booking', booking_id)
