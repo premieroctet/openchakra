@@ -2,7 +2,7 @@ import React from 'react'
 import CardService from '../Card/CardService/CardService'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-
+import {SERVICES} from '../../utils/i18n'
 
 class Services extends React.Component {
 
@@ -23,10 +23,10 @@ class Services extends React.Component {
 
     return (
       <React.Fragment>
-        { part_services.length==0 ? null :
+        { part_services.length===0 ? null :
           <>
             <Grid>
-              <Typography>Services aux particuliers ({part_services.length})</Typography>
+              <Typography>{SERVICES.particular_service} ({part_services.length})</Typography>
             </Grid>
             <Grid container spacing={2} style={{marginTop: 50, marginLeft: 0, marginRight: 0, marginBottom: 0, width: '100%'}}>
               {
@@ -39,10 +39,10 @@ class Services extends React.Component {
             </Grid>
           </>
         }
-        { shop.is_particular || pro_services.length==0 ? null :
+        { shop.is_particular || pro_services.length===0 ? null :
           <>
             <Grid>
-              <Typography style={{marginTop: '20px'}}>Services aux professionnels ({pro_services.length})</Typography>
+              <Typography style={{marginTop: '20px'}}>{SERVICES.pro_service} ({pro_services.length})</Typography>
             </Grid>
             <Grid container spacing={2} style={{marginTop: '5vh'}}>
               {

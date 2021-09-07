@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../../static/css/components/AddService/AddService'
 import {Button} from '@material-ui/core'
-import {SHOP} from '../../utils/i18n'
+import {SHOP, ADD_SERVICES} from '../../utils/i18n'
 import Typography from '@material-ui/core/Typography'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 const {isLoggedUserAlfred}=require('../../utils/context')
@@ -31,7 +31,7 @@ class AddService extends React.Component {
     return (
       <Grid className={classes.containerAddService}>
         <Grid className={classes.containerTitle}>
-          <h3 className={'customaddservicestitle'}>Mes services</h3>
+          <h3 className={'customaddservicestitle'}>{ADD_SERVICES.title}</h3>
         </Grid>
         <Button classes={{root: `customaddservicesbutton ${classes.buttonAddService}`}} onClick={this.clickService} startIcon={<AddCircleOutlineIcon />}>
           { isLoggedUserAlfred() ?
@@ -40,7 +40,7 @@ class AddService extends React.Component {
             SHOP.createShop
           }
         </Button>
-        <Typography className={`customaddservicessubtitle ${classes.descriptionAddService}`}>Développez votre boutique et ajoutez de nouveaux services !</Typography>
+        <Typography className={`customaddservicessubtitle ${classes.descriptionAddService}`}>{ADD_SERVICES.add_service}</Typography>
       </Grid>
     )
   }
