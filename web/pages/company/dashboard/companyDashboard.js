@@ -4,7 +4,7 @@ import CompanyDashboard from '../../../components/CompanyDashboard/CompanyDashbo
 import Grid from '@material-ui/core/Grid'
 const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
-export default withTranslation()(class dashboardPage extends React.Component {)
+class DashboardPage extends React.Component {
   constructor(props) {
     super(props)
     this.state={
@@ -32,3 +32,5 @@ export default withTranslation()(class dashboardPage extends React.Component {)
     )
   }
 }
+
+export default withTranslation()(DashboardPage)
