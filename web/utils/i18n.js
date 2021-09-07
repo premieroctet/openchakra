@@ -293,6 +293,43 @@ const HANDLE_ADDRESSES = {
   button_add_new_adresses: 'Ajouter',
 }
 
+const TRUST_VERIFICATION = {
+  snackbar_id_add: 'Pièce d\'identité ajoutée',
+  snackbar_card_add: 'Carte d\'identité ajoutée',
+  snackbar_status_update: 'Statut modifié',
+  snackbar_doc_add: 'Document d\'immatriculation ajouté',
+  snackbar_id_delete: 'Pièce d\'identité supprimée',
+  snackbar_doc_delete: 'Document d\immatriculation supprimé',
+  dialog_delete_title: 'Confirmation',
+  dialog_delete_cancel: 'Annuler',
+  dialog_delete_confirm: 'Supprimer',
+  title: 'Vérification',
+  subtitle: 'Vérifiez votre email, votre numéro de téléphone et votre identité.',
+  identity_title: 'Pièce d\'identité',
+  identity_add_title: 'Ajoutez ou modifiez vos documents d\'identité.',
+  document_type: 'Type de document',
+  passport: 'Passeport',
+  id_card: 'Carte d\'identité',
+  download_recto: 'Télécharger recto',
+  download_verso: 'Télécharger verso',
+  save_verso: 'Enregistrer verso',
+  save_button: 'Enregistrer',
+  your_status: 'Votre statut',
+  particular: 'Je suis un particulier',
+  declare_cesu: 'Je veux être déclaré(e) en CESU',
+  declare_ces: 'J\'accepte d\'être déclaré en CES',
+  no_cesu: 'Je n\'accepte pas d\'être déclaré(e) en CESU',
+  professional: 'Je suis un professionnel',
+  eligible_credit: 'Je suis éligible au Crédit Impôt Service',
+  document_title: 'Document d\'immatriculation',
+  insert_document: 'Insérez ici le document d\'immatriculation de votre entreprise (extrait de K-Bis, document d\'immatriculation de micro-entreprise).',
+  pdf_info: 'Vous pouvez télécharger ce document en version PDF&nbsp;',
+  insee_link: 'sur le site de l\'INSEE',
+  download_document_imma: 'Télécharger document d\'immatriculation',
+  save_document_imma: 'Enregistrer',
+
+}
+
 const NEWS_LETTER = {
   title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
   text: 'Inscrivez-vous gratuitement à notre super Newsletter pour recevoir les informations et les bons plans de la communauté.',
@@ -723,4 +760,5 @@ module.exports = {
   PAYMENT_CARD,
   MY_ADDRESSES,
   HANDLE_ADDRESSES,
+  TRUST_VERIFICATION,
 }
