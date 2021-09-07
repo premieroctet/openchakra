@@ -5,7 +5,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
-export default withTranslation()(function App() {)
+function App() {
   const [snackPack, setSnackPack] = React.useState([])
   const [open, setOpen] = React.useState(false)
   const [messageInfo, setMessageInfo] = React.useState(undefined); React.useEffect(() => {
@@ -50,3 +50,5 @@ export default withTranslation()(function App() {)
     </div>
   )
 }
+
+export default withTranslation()(App)

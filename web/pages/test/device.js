@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   deviceType,
   osName,
@@ -10,10 +10,10 @@ import {
   getUA,
   isWinPhone,
   deviceDetect,
-} from 'react-device-detect';
-import {isApplication, isMobile} from '../../utils/context';
+} from 'react-device-detect'
+import {isApplication, isMobile} from '../../utils/context'
 
-export default class device extends React.Component {
+class DeviceTest extends React.Component {
 
   render() {
     return (
@@ -34,3 +34,5 @@ export default class device extends React.Component {
     )
   }
 }
+
+export default DeviceTest

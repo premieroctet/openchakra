@@ -1,5 +1,4 @@
-import {withTranslation} from 'react-i18next'
-export default withTranslation()(theme => ({)
+export default theme => ({
   containercalendar: {
     display: 'flex',
     marginTop: 100,
