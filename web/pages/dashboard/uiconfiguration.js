@@ -139,7 +139,7 @@ class UIParameters extends React.Component {
                     <h2>{component_name}</h2>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Grid style={{display: 'flex', flexDirection: 'column'}}>
+                    <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
                       { pageParameters[component_name].map(parameter => (
                         <UIParameter title={parameter.label} parameter={parameter} onChange={this.onChange(parameter._id)}/>
                       ))

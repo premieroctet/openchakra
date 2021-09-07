@@ -111,6 +111,275 @@ const HOW_IT_WORKS = {
   rightText: 'Vous pouvez consulter des centaines de profils, choisir votre Alfred, réserver et payer en ligne votre service. Notre équipe vous accompagne à chaque étape !',
 }
 
+const TRUST_SECURITY = {
+  first_item: {
+    title: 'Réservation en instantané',
+    text: 'Avec un délai de prévenance bien sûr',
+  },
+  second_item: {
+    title: 'Paiement 100% sécurisé',
+    text: 'Par la Nasa et le Pentagone',
+  },
+  third_item: {
+    title: 'Notre équipe',
+    text: 'Toujours à votre écoute',
+  },
+}
+
+const LOGIN = {
+  title: 'Connexion',
+  input_label: 'Email',
+  input_password: 'Mot de passe',
+  input_role: 'Rôle',
+  button: 'Connexion',
+  FORGOTTEN_PASSWORD: 'Mot de passe oublié ?',
+  REGISTER_YET: 'Pas encore inscrit ? Inscrivez-vous !',
+}
+
+const ABOUT = {
+  address_placeholder: 'Entrez votre adresse',
+  b2b_title_topic: 'Modifiez les informations de votre entreprises',
+  title_topic: 'Modifiez vos informations',
+  b2b_titlesummary_topic: 'Ici, vous pouvez modifier les informations de votre entreprise',
+  titlesummary_topic: 'Ici, vous pouvez modifier vos informations',
+  website: 'Site Web',
+  label_address: 'Lieu d\'habitation',
+  textfield_website: 'Site Web',
+  size_company: 'Taille de l\'entreprise',
+  label_size_company: 'Taille de l’entreprise',
+  textfield_size_company: 'Taille de l’entreprise',
+  spoken_languages: 'Langues parlées',
+  textfield_languages: 'Sélectionnez vos langues',
+  option_message: 'Plus d\'options disponibles',
+  b2b_activity: 'Secteur d’activité',
+  b2b_activity_label: 'Secteur d’activité',
+  button_update: 'Modifier',
+  alfred_certifed: 'à un profil vérifié',
+}
+
+const LAYOUT_ABOUT = {
+  my_name_is: 'Je m\'appelle',
+  text: 'et j’ai hâte de vous rencontrer !',
+  item_about: 'À propos',
+  item_service: 'Services',
+  item_review: 'Avis',
+  item_my_services: 'Mes services',
+  item_my_reviews: 'Mes avis',
+  item_my_schedule: 'Mon calendrier',
+  item_my_stat: 'Mes statistiques',
+}
+
+
+const EDIT_PROFIL = {
+  email_send: 'Mail envoyé',
+  error_email: 'email non envoyé',
+  sms_send: 'Le SMS a été envoyé',
+  sms_error: 'Impossible d\'envoyer le SMS',
+  validate_phone: 'Votre numéro de téléphone est validé',
+  incorrect_code: 'Le code est incorrect',
+  error_verif_code: 'Erreur à la vérification du code',
+  dialog_title_phone: 'Confirmation du numéro de téléphone',
+  dialog_text_phone: 'Saisissez le code reçu par SMS',
+  dialog_textfield_placeholder: '0000',
+  dialog_button_confirm_later: 'Confirmer plus tard',
+  dialog_button_confirm: 'Confirmer',
+  title: 'Modifier votre profil',
+  textfield_firstname: 'Prénom',
+  textfield_name: 'Nom',
+  textfield_about_me: 'A propos de moi',
+  char_max: 'caractères max',
+  personnal_info: 'Informations personnelles',
+  gender: 'Sexe',
+  textfield_email_placeholder: 'Email',
+  textfield_email_label: 'Adresse email',
+  user_email_check: 'Votre email est vérifié',
+  user_newemail_check: 'Enregistrer votre nouvel email',
+  check_your_email: 'Vérifier votre email',
+  textfield_phone: 'Téléphone',
+  user_phone_check: 'Votre téléphone est vérifié',
+  user_newphone_check: 'Enregistrer votre nouveau téléphone',
+  check_your_phone: 'Vérifiez votre téléphone',
+  user_info_options: 'Informations facultatives',
+  textfield_user_diploma: 'Diplômes',
+  textfield_user_school: 'Ecoles',
+  textfield_user_job: 'Emploi',
+  save_button: 'Enregistrer',
+}
+
+const PAYMENT_METHOD = {
+  title: 'Modes de paiement',
+  subtitle: 'N\'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.',
+}
+
+const HANDLE_CB = {
+  cb_saves_title: 'Cartes enregistrées',
+  cb_subtitle_paid: 'Payez encore plus rapidement sans communiquer vos informations financières.',
+  cb_title_dialog_delete: 'Voulez-vous vraiment supprimer votre carte bancaire ?',
+  cb_content_dialog_delete: 'Si vous supprimez votre carte bancaire vous ne pourrez plus l\'utiliser par la suite avec ce compte.',
+  cb_cancel_dialog_delete: 'Annuler',
+  cb_delete_dialog_delete: 'Supprimer',
+  cb_title_dialog_add: 'Enregistrer une carte',
+  cb_subtitle_dialog_add: 'Ajouter une carte en toute sécurité',
+  cb_dialog_nb_add: 'Numéro de carte',
+  cb_dialog_placeholdercb_add: 'Votre carte de crédit',
+  cb_dialog_expdate_add: 'Date d\'expiration',
+  cb_dialog_placeholderexpdate_add: 'MM/YY',
+  cb_dialog_cvv_add: 'CVV',
+  cb_dialog_savecb_add: 'Enregistrer la carte',
+  cb_dialog_crypdata_add: 'Toutes les données de paiement sur My Alfred sont cryptées.',
+  cb_dialog_mongo_add: 'Elles sont gérées par mangopay notre partenaire de confiance.',
+  snackbar_add: 'Carte ajoutée !',
+  snackbar_delete: 'Carte supprimé !',
+}
+
+const PAYMENT_CARD = {
+  no_cb_saved: 'Aucun mode de paiement enregistré',
+}
+
+const HANDLE_RIB = {
+  snackbar_rib_add: 'RIB ajouté',
+  snackbar_error_rib_add: 'Erreur à l\'ajout du RIB',
+  snackbar_rib_delete: 'Compte bancaire supprimé',
+  snackbar_rib_error_delete: 'Un erreur est survenue',
+  dialog_add_rib_title: 'Ajouter un RIB',
+  dialog_add_rib_subitle: 'Ajouter un RIB en toute sécurité',
+  dialog_add_rib_iban: 'IBAN',
+  dialog_add_rib_bic: 'Code SWIFT / BIC',
+  dialog_add_rib_button_save: 'Enregistrer le RIB',
+  dialog_add_rib_data: 'Toutes les données de paiement sur My Alfred sont chiffrées.',
+  dialog_add_rib_mongo: 'Elles sont gérées par mangopay notre partenaire de confiance.',
+  dialog_delete_rib_title: 'Voulez-vous vraiment supprimer votre RIB ?',
+  dialog_delete_rib_content: 'Si vous supprimez votre RIB vous ne pourrez plus l\'utiliser par la suite avec ce compte.',
+  dialog_delete_rib_cancel: 'Annuler',
+  dialog_delete_rib_button: 'Supprimer',
+  title: 'RIB enregistrés',
+  subtitle_b2b: 'Renseignez un rib pour permettre à vos collaborateurs le paiement par prélèvement bancaire.',
+  subtitle: 'Choisissez le versement directement sur votre compte bancaire.',
+  no_rib: 'Aucun RIB enregistré',
+  info_data: 'Toutes les données de paiement sur My Alfred sont chiffrées.',
+  mango_info: 'Elles sont gérées par mangopay notre partenaire de confiance.',
+}
+
+const MY_ADDRESSES = {
+  title: 'Mes adresses',
+  title_b2b: 'Mes sites',
+  subtitle: 'Ici, vous pouvez gérer vos adresses',
+  subtitle_b2b: 'Ici, vous pouvez gérer les sites de',
+}
+
+const HANDLE_ADDRESSES = {
+  snackbar_addresses_update: 'Adresse principale modifiée',
+  snackbar_addresses_add: 'Adresse ajoutée',
+  snackbar_addresses_update_success: 'Adresse modifiée avec succès',
+  snackbar_addresses_delete: 'Adresse supprimée',
+  dialog_delete_title: 'Supprimer cette adresse ?',
+  dialog_delete_content: 'Voulez-vous vraiment supprimer cette adresse ?',
+  dialog_delete_cancel: 'Annuler',
+  dialog_delete_button: 'Supprimer',
+  title_b2b: 'Mon siège social',
+  title: 'Mon adresse principale',
+  placeholder_algo: 'Modifiez votre adresse',
+  submit_button: 'Valider',
+  book_title_b2b: 'Autres sites',
+  book_title: 'Mon carnet d\'adresses',
+  b2b_title_add_sites: 'Ajoutez vos sites et gagnez du temps',
+  title_add_sites: 'Ajoutez plusieurs adresses et gagnez du temps.',
+  textfield_name_placeholder_add_sites: 'Ecrire ici',
+  textfield_name_add_sites: 'Nom de l\'adresse',
+  submit_secondary_button: 'Enregistrer',
+  textfield_name_site: 'Nom du site',
+  textfield_name_addresses: 'Intitulé de l\'adresse',
+  algo_find_your_addresses: 'Recherchez votre adresse',
+  button_add_new_adresses: 'Ajouter',
+}
+
+const TRUST_VERIFICATION = {
+  snackbar_id_add: 'Pièce d\'identité ajoutée',
+  snackbar_card_add: 'Carte d\'identité ajoutée',
+  snackbar_status_update: 'Statut modifié',
+  snackbar_doc_add: 'Document d\'immatriculation ajouté',
+  snackbar_id_delete: 'Pièce d\'identité supprimée',
+  snackbar_doc_delete: 'Document d\immatriculation supprimé',
+  dialog_delete_title: 'Confirmation',
+  dialog_delete_cancel: 'Annuler',
+  dialog_delete_confirm: 'Supprimer',
+  title: 'Vérification',
+  subtitle: 'Vérifiez votre email, votre numéro de téléphone et votre identité.',
+  identity_title: 'Pièce d\'identité',
+  identity_add_title: 'Ajoutez ou modifiez vos documents d\'identité.',
+  document_type: 'Type de document',
+  passport: 'Passeport',
+  id_card: 'Carte d\'identité',
+  download_recto: 'Télécharger recto',
+  download_verso: 'Télécharger verso',
+  save_verso: 'Enregistrer verso',
+  save_button: 'Enregistrer',
+  your_status: 'Votre statut',
+  particular: 'Je suis un particulier',
+  declare_cesu: 'Je veux être déclaré(e) en CESU',
+  declare_ces: 'J\'accepte d\'être déclaré en CES',
+  no_cesu: 'Je n\'accepte pas d\'être déclaré(e) en CESU',
+  professional: 'Je suis un professionnel',
+  eligible_credit: 'Je suis éligible au Crédit Impôt Service',
+  document_title: 'Document d\'immatriculation',
+  insert_document: 'Insérez ici le document d\'immatriculation de votre entreprise (extrait de K-Bis, document d\'immatriculation de micro-entreprise).',
+  pdf_info: 'Vous pouvez télécharger ce document en version PDF&nbsp;',
+  insee_link: 'sur le site de l\'INSEE',
+  download_document_imma: 'Télécharger document d\'immatriculation',
+  save_document_imma: 'Enregistrer',
+}
+
+const SECURITY = {
+  snackbar_account_update: 'Compte mis à jour',
+  snackbar_account_desactivate: 'Compte désactivé',
+  snackbar_mdp_update: 'Mot de passe modifié',
+  dialog_delete_account_title: 'Désactiver votre compte ?',
+  dialog_delete_account_content: 'Attention, cette action est irréversible. Si vous souhaitez ne plus être référencé par les moteurs de recherche, vous pouvez désactiver l’indexation par les moteurs de recherche.',
+  dialog_delete_account_cancel: 'Annuler',
+  dialog_delete_account_confirm: 'Désactiver',
+  dialog_delete_shop_title: 'Supprimer votre boutique ?',
+  dialog_delete_shop_content: 'Attention, cette action est irréversible. Si vous souhaitez garder votre boutique sans que les utilisateurs puissent réserver vos services, vous pouvez supprimer vos disponibilités sur votre calendrier.',
+  dialog_delete_shop_cancel: 'Annuler',
+  dialog_delete_shop_confirm: 'Supprimer',
+  title: 'Sécurité',
+  subtitle: 'Modifiez votre mot de passe et gérez votre compte.',
+  password: 'Mot de passe',
+  update_password: 'Modifiez votre mot de passe.',
+  placeholder_password_error: 'Mot de passe erroné',
+  placeholder_password_actual: 'Mot de passe actuel',
+  placeholder_newpassword: 'Nouveau mot de passe',
+  placeholder_repeat_password: 'Répéter le mot de passe',
+  validate_button_password: 'Valider',
+  my_account: 'Mon compte',
+  handle_my_account: 'Gérez votre compte.',
+  index_my_account: 'Je souhaite que mon compte apparaisse dans les résultats des moteurs de recherche',
+  delete_my_account: 'Je souhaite supprimer ma boutique de services.',
+  delete_my_account_button: 'Supprimer',
+  desactivate_my_account: 'Je souhaite désactiver mon compte.',
+  caution_desactivate_my_account: 'Attention, cette action est irréversible !',
+  button_desactivate_my_account: 'Désactiver',
+}
+
+const NOTIFICATIONS = {
+  snackbar_account_update: 'Compte mis à jour',
+  my_notif: 'Mes notifications',
+  subtitle: 'Choisissez les notifications que vous souhaitez recevoir',
+  messages_title: 'Messages',
+  receive_messages: 'Recevez des messages de la part des Alfred et des utilisateurs y compris les demandes de réservations.',
+  email: 'Email',
+  push_notif: 'Notification push',
+  sms_notif: 'SMS',
+  rappel_notif: 'Rappel',
+  rappel_notif_tarif: 'Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et d’autres rappels relatifs à vos activités sur My-Alfred.',
+  promo_title: 'Promotions & Astuces',
+  coupon_title: 'Recevez des coupons, des informations promotionnelles, des enquêtes, et des informations de la part de My-Alfred et de ses partenaires.',
+  phone: 'Appel téléphonique',
+  commu_title: 'Politique & communauté',
+  presta_service: 'Recevez des nouvelles sur les réglementations liées aux prestations de services',
+  assistance_account: 'Assistance du compte',
+  security_conf: 'Vos réservations, des informations légales, des questions de sécurité et de confidentialité. Pour votre sécurité, vous ne pouvez pas désactiver les notifications par email.',
+
+}
 
 const NEWS_LETTER = {
   title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
@@ -130,6 +399,12 @@ const getMangopayMessage = msg_id => {
     return null
   }
   return MANGOPAY_MESSAGES[ msg_id ] || MANGOPAY_ERRORS[ parseInt(msg_id) ] || `Erreur inconnue:${msg_id}`
+}
+
+const OUR_ALFRED ={
+  title: 'Nos Alfred',
+  text: 'Découvrez les profils de nos Alfred',
+  button: '',
 }
 
 const PROFIL = {
@@ -524,4 +799,19 @@ module.exports = {
   INFOBARMOBILE_MESSAGE,
   AVOCOTES,
   PROFIL,
+  OUR_ALFRED,
+  TRUST_SECURITY,
+  LOGIN,
+  ABOUT,
+  LAYOUT_ABOUT,
+  EDIT_PROFIL,
+  PAYMENT_METHOD,
+  HANDLE_CB,
+  HANDLE_RIB,
+  PAYMENT_CARD,
+  MY_ADDRESSES,
+  HANDLE_ADDRESSES,
+  TRUST_VERIFICATION,
+  SECURITY,
+  NOTIFICATIONS
 }

@@ -6,9 +6,11 @@ import {Typography} from '@material-ui/core'
 import styles from '../../static/css/components/InfoBar/InfoBar'
 import withStyles from '@material-ui/core/styles/withStyles'
 import '../../static/assets/css/custom.css'
+import {useTranslation} from 'react-i18next'
 
 function InfoBar({classes, t}) {
 
+  const {t, i18n} = useTranslation('custom')
   return (
     <Grid container className={`${classes.infoBarMainStyle} customHeaderinfobar`}>
       <Grid item className={classes.infoBarLinkContainer}>

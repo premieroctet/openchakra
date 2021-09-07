@@ -24,6 +24,7 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import {isB2BAdmin} from '../../utils/context'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
+import {HANDLE_RIB} from '../../utils/i18n'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -87,12 +88,12 @@ class HandleRIB extends React.Component {
   deleteAccount(account_id) {
     axios.delete(`/myAlfred/api/payment/account/${account_id}`)
       .then(() => {
-        snackBarSuccess('Compte bancaire supprimé')
+        snackBarSuccess(HANDLE_RIB.snackbar_rib_delete)
         this.handleClose()
         this.componentDidMount()
       })
       .catch(() => {
-        snackBarError('Un erreur est survenue')
+        snackBarError(HANDLE_RIB.snackbar_rib_error_delete)
         this.handleClose()
       })
 
@@ -109,10 +110,10 @@ class HandleRIB extends React.Component {
         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseModalAddRib}>
           <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Grid>
-              <h4 className={'customhandleribdialogtitle'}>Ajouter un RIB</h4>
+              <h4 className={'customhandleribdialogtitle'}>{HANDLE_RIB.dialog_add_rib_title}</h4>
             </Grid>
             <Grid>
-              <Typography className={'customhandleribdialogsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Ajouter un RIB en toute sécurité</Typography>
+              <Typography className={'customhandleribdialogsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{HANDLE_RIB.dialog_add_rib_subitle}</Typography>
             </Grid>
           </Grid>
         </DialogTitle>
@@ -127,8 +128,8 @@ class HandleRIB extends React.Component {
               onChange={this.onChange}
               margin="normal"
               variant="outlined"
-              placeholder={'IBAN'}
-              label={'IBAN'}
+              placeholder={HANDLE_RIB.dialog_add_rib_iban}
+              label={HANDLE_RIB.dialog_add_rib_iban}
               error={errors.iban}
               helperText={errors.iban}
             />
@@ -142,8 +143,8 @@ class HandleRIB extends React.Component {
               onChange={this.onChange}
               margin="normal"
               variant="outlined"
-              placeholder={'Code SWIFT / BIC'}
-              label={'Code SWIFT / BIC'}
+              placeholder={HANDLE_RIB.dialog_add_rib_bic}
+              label={HANDLE_RIB.dialog_add_rib_bic}
               error={errors.bic}
               helperText={errors.bic}
             />
@@ -154,7 +155,7 @@ class HandleRIB extends React.Component {
               variant="contained"
               classes={{root: `customhandleribsavebuttton ${classes.buttonSave}`}}
             >
-              Enregistrer le RIB
+              {HANDLE_RIB.dialog_add_rib_button_save}
             </Button>
           </Grid>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
@@ -165,12 +166,10 @@ class HandleRIB extends React.Component {
             </Grid>
             <Grid>
               <Grid>
-                <Typography className={'customhandleribsecurity1'} style={{color: 'rgba(39,37,37,35%)'}}>Toutes les données de paiement sur My Alfred sont
-                  chiffrées.</Typography>
+                <Typography className={'customhandleribsecurity1'} style={{color: 'rgba(39,37,37,35%)'}}>{HANDLE_RIB.dialog_add_rib_data}</Typography>
               </Grid>
               <Grid>
-                <Typography className={'customhandleribsecurity2'} style={{color: 'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de
-                  confiance.</Typography>
+                <Typography className={'customhandleribsecurity2'} style={{color: 'rgba(39,37,37,35%)'}}>{HANDLE_RIB.dialog_add_rib_mongo}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -187,18 +186,18 @@ class HandleRIB extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{'Voulez-vous vraiment supprimer votre RIB ?'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{HANDLE_RIB.dialog_delete_rib_title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Si vous supprimez votre RIB vous ne pourrez plus l'utiliser par la suite avec ce compte.
+            {HANDLE_RIB.dialog_delete_rib_content}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose()} color="primary">
-            Annuler
+            {HANDLE_RIB.dialog_delete_rib_cancel}
           </Button>
           <Button onClick={() => this.deleteAccount(id)} classes={{root: classes.buttonCancel}}>
-            Supprimer
+            {HANDLE_RIB.dialog_delete_rib_button}
           </Button>
         </DialogActions>
       </Dialog>
@@ -215,7 +214,7 @@ class HandleRIB extends React.Component {
     this.setState({errors: {}})
     axios.post('/myAlfred/api/payment/bankAccount', data)
       .then(() => {
-        snackBarSuccess('RIB ajouté')
+        snackBarSuccess(HANDLE_RIB.snackbar_rib_add)
         this.handleCloseModalAddRib()
         this.setState({showAddRib: false})
         axios.get('/myAlfred/api/payment/activeAccount')
@@ -227,7 +226,7 @@ class HandleRIB extends React.Component {
 
       })
       .catch(err => {
-        snackBarError('Erreur à l\'ajout du RIB')
+        snackBarError(HANDLE_RIB.snackbar_error_rib_add)
         try {
           this.setState({errors: err.response.data.errors})
         }
@@ -246,7 +245,7 @@ class HandleRIB extends React.Component {
       <Grid>
         <Grid style={{display: 'flex', alignItems: 'center'}}>
           <Grid>
-            <h3 className={'customhandleribtitle'}>RIB enregistrés</h3>
+            <h3 className={'customhandleribtitle'}>{HANDLE_RIB.title}</h3>
           </Grid>
           <Grid className={'customhandleribadd'}>
             <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={this.handleClick}>
@@ -257,7 +256,7 @@ class HandleRIB extends React.Component {
         <Grid>
           <Typography
             className={'customhandleribsubtitle'}
-            style={{color: 'rgba(39,37,37,35%)'}}>{is_pro ? 'Renseignez un rib pour permettre à vos collaborateurs le paiement par prélèvement bancaire.' : 'Choisissez le versement directement sur votre compte bancaire.'}</Typography>
+            style={{color: 'rgba(39,37,37,35%)'}}>{is_pro ? HANDLE_RIB.subtitle_b2b : HANDLE_RIB.subtitle}</Typography>
         </Grid>
         {accounts.length>0 ?
           <Grid container style={{marginTop: '10vh', display: 'flex', alignItems: 'center'}}>
@@ -285,7 +284,7 @@ class HandleRIB extends React.Component {
           </Grid>
           :
           <Grid style={{marginTop: '5vh'}}>
-            <Typography>Aucun RIB enregistré</Typography>
+            <Typography>{HANDLE_RIB.no_rib}</Typography>
           </Grid>
         }
         <Grid>
@@ -307,12 +306,10 @@ class HandleRIB extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <Typography style={{color: 'rgba(39,37,37,35%)'}}>Toutes les données de paiement sur My Alfred sont
-                chiffrées.</Typography>
+              <Typography style={{color: 'rgba(39,37,37,35%)'}}>{HANDLE_RIB.info_data}</Typography>
             </Grid>
             <Grid>
-              <Typography style={{color: 'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de
-                confiance.</Typography>
+              <Typography style={{color: 'rgba(39,37,37,35%)'}}>{HANDLE_RIB.mango_info}</Typography>
             </Grid>
           </Grid>
         </Grid>

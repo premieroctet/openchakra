@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
 import Switch from '@material-ui/core/Switch'
-import {toast} from 'react-toastify'
+import {snackBarSuccess} from '../../utils/notifications'
 import {Helmet} from 'react-helmet'
 import styles from '../../static/css/pages/account/notifications/notifications'
 import LayoutAccount from '../../hoc/Layout/LayoutAccount'
@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import '../../static/assets/css/custom.css'
+import {NOTIFICATIONS} from '../../utils/i18n'
 
 
 moment.locale('fr')
@@ -81,7 +82,7 @@ class notifications extends React.Component {
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'})
+          Router.push({pathname: '/'})
         }
       },
       )
@@ -112,9 +113,9 @@ class notifications extends React.Component {
 
     axios.put('/myAlfred/api/users/account/notifications', data)
       .then(() => {
-        toast.info('Compte mis à jour')
+        snackBarSuccess(NOTIFICATIONS.snackbar_account_update)
       })
-      .catch()
+      .catch(err => console.error(err))
   };
 
   content = classes => {
@@ -122,10 +123,10 @@ class notifications extends React.Component {
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'customtitlenotif'}>Mes notifications</h2>
+            <h2 className={'customtitlenotif'}>{NOTIFICATIONS.my_notif}</h2>
           </Grid>
           <Grid>
-            <Typography className={'customsubtitlenotif'}>Choisissez les notifications que vous souhaitez recevoir </Typography>
+            <Typography className={'customsubtitlenotif'}>{NOTIFICATIONS.subtitle}</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -134,14 +135,14 @@ class notifications extends React.Component {
         <Grid>
           <Grid>
             <Grid>
-              <h2 className={'customnotifmessage'}>Messages</h2>
+              <h2 className={'customnotifmessage'}>{NOTIFICATIONS.messages_title}</h2>
             </Grid>
             <Grid>
-              <Typography className={'customnotifmessagesubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Recevez des messages de la part des Alfred et des utilisateurs y compris les demandes de réservations.</Typography>
+              <Typography className={'customnotifmessagesubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{NOTIFICATIONS.receive_messages}</Typography>
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Email</Typography>
+                <Typography>{NOTIFICATIONS.email}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -163,7 +164,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Notification push</Typography>
+                <Typography>{NOTIFICATIONS.push_notif}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -186,7 +187,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>SMS</Typography>
+                <Typography>{NOTIFICATIONS.sms_notif}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -213,17 +214,16 @@ class notifications extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <h2 className={'customnotifraptitle'}>Rappel</h2>
+              <h2 className={'customnotifraptitle'}>{NOTIFICATIONS.rappel_notif}</h2>
             </Grid>
             <Grid>
               <Typography className={'customnotifrapsubtitle'}>
-                Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et
-                d’autres rappels relatifs à vos activités sur My-Alfred.
+                {NOTIFICATIONS.rappel_notif_tarif}
               </Typography>
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Email</Typography>
+                <Typography>{NOTIFICATIONS.email}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -246,7 +246,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Notification push</Typography>
+                <Typography>{NOTIFICATIONS.push_notif}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -269,7 +269,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>SMS</Typography>
+                <Typography>{NOTIFICATIONS.sms_notif}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -296,18 +296,16 @@ class notifications extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <h2 className={'customnotifpromtitle'}>Promotions & Astuces</h2>
+              <h2 className={'customnotifpromtitle'}>{NOTIFICATIONS.promo_title}</h2>
             </Grid>
             <Grid>
               <Typography className={'customnotifpromsubtitle'}>
-                Recevez des coupons, des informations promotionnelles, des enquêtes, et des informations de la part
-                de My-Alfred
-                et de ses partenaires.
+                {NOTIFICATIONS.coupon_title}
               </Typography>
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Email</Typography>
+                <Typography>{NOTIFICATIONS.email}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -330,7 +328,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Notification push</Typography>
+                <Typography>{NOTIFICATIONS.push_notif}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -353,7 +351,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>SMS</Typography>
+                <Typography>{NOTIFICATIONS.sms_notif}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -376,7 +374,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Appel téléphonique</Typography>
+                <Typography>{NOTIFICATIONS.phone}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -403,16 +401,16 @@ class notifications extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <h2 className={'customnotifcommutitle'}>Politique & communauté </h2>
+              <h2 className={'customnotifcommutitle'}>{NOTIFICATIONS.commu_title}</h2>
             </Grid>
             <Grid>
               <Typography className={'customnotifcommusubtitle'}>
-                Recevez des nouvelles sur les réglementations liées aux prestations de services
+                {NOTIFICATIONS.presta_service}
               </Typography>
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Email</Typography>
+                <Typography>{NOTIFICATIONS.email}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -435,7 +433,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Notification push</Typography>
+                <Typography>{NOTIFICATIONS.push_notif}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -458,7 +456,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>SMS</Typography>
+                <Typography>{NOTIFICATIONS.sms_notif}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -485,19 +483,16 @@ class notifications extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <h2 className={'customnotifassisttitle'}>Assistance du compte </h2>
+              <h2 className={'customnotifassisttitle'}>{NOTIFICATIONS.assistance_account} </h2>
             </Grid>
             <Grid>
               <Typography className={'customnotifassistsubtitle'}>
-                Vos réservations,
-                des informations légales,
-                des questions de sécurité et de confidentialité.
-                Pour votre sécurité, vous ne pouvez pas désactiver les notifications par email.
+                {NOTIFICATIONS.security_conf}
               </Typography>
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Email</Typography>
+                <Typography>{NOTIFICATIONS.email}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -520,7 +515,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>Notification push</Typography>
+                <Typography>{NOTIFICATIONS.push_notif}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -543,7 +538,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>SMS</Typography>
+                <Typography>{NOTIFICATIONS.sms_notif}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch

@@ -3,7 +3,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import Button from '@material-ui/core/Button'
-import {CATEGORY} from '../../../utils/i18n'
+import {CATEGORY, OUR_ALFRED} from '../../../utils/i18n'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/OurAlfred/OurAlfred'
 import withSlide from '../../../hoc/Slide/SlideShow'
@@ -21,6 +21,7 @@ class OurAlfred extends React.Component {
   render() {
     const{classes, alfred} = this.props
 
+
     return(
       <Grid className={classes.ourAlfredMainStyle}>
         <Grid className={classes.ourAlfredMainContainer}>
@@ -30,15 +31,15 @@ class OurAlfred extends React.Component {
             </Grid>
             <Grid className={classes.ourAlfredTextContainer}>
               <Grid>
-                <Typography className={`custumouralfredh1 ${classes.ourAlfredTitle}`}>Nos Alfred</Typography>
+                <Typography className={`custumouralfredh1 ${classes.ourAlfredTitle}`}>{OUR_ALFRED.title}</Typography>
               </Grid>
               <Grid>
-                <Typography className={`customouralfredtext ${classes.ourAlfredSubtitle}`}>Découvrez les profils de nos Alfred</Typography>
+                <Typography className={`customouralfredtext ${classes.ourAlfredSubtitle}`}>{OUR_ALFRED.text}</Typography>
               </Grid>
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnMobile}>
-            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search')}>Tout découvrir</Button>
+            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search')}>{CATEGORY.button}</Button>
           </Grid>
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>

@@ -14,14 +14,19 @@ class IntegerEditor extends React.Component {
   render() {
     const {value, title}=this.props
     return (
-      <Grid style={{display: 'flex'}}>
-        <span>{title}</span>
-        <TextField
-          value={value}
-          label={title}
-          type="number"
-          onChange={this.onChange}
-        />
+      <Grid container spacing={2} style={{display: 'flex', alignItems: 'center'}}>
+        <Grid item>
+          <TextField
+            value={value}
+            label={title}
+            type="number"
+            variant={'outlined'}
+            onChange={this.onChange}
+          />
+        </Grid>
+        <Grid item>
+          <span>{title}</span>
+        </Grid>
       </Grid>
     )
   }

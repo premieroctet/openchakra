@@ -11,6 +11,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import Typography from '@material-ui/core/Typography'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 const CompanyComponent = require('../b2b/CompanyComponent')
+import {LAYOUT_ABOUT} from '../../utils/i18n'
 
 class ProfileLayout extends CompanyComponent {
 
@@ -21,24 +22,24 @@ class ProfileLayout extends CompanyComponent {
       company: null,
     }
     this.nonlogged_items = [
-      {label: 'À propos', url: '/about'},
-      {label: 'Services', url: '/services'},
+      {label: LAYOUT_ABOUT.item_about, url: '/about'},
+      {label: LAYOUT_ABOUT.item_service, url: '/services'},
       // { label: 'Photos', url: '/pictures' }, TODO : Albums 899538 899547
-      {label: 'Avis', url: '/reviews'},
+      {label: LAYOUT_ABOUT.item_review, url: '/reviews'},
     ]
     this.logged_items = [
-      {label: 'À propos', url: '/about'},
-      {label: 'Mes services', url: '/services'},
+      {label: LAYOUT_ABOUT.item_about, url: '/about'},
+      {label: LAYOUT_ABOUT.item_my_services, url: '/services'},
       // { label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
-      {label: 'Mes avis', url: '/reviews'},
+      {label: LAYOUT_ABOUT.item_my_reviews, url: '/reviews'},
     ]
     this.logged_alfred_items = [
-      {label: 'À propos', url: '/about'},
-      {label: 'Mes services', url: '/services'},
+      {label: LAYOUT_ABOUT.item_about, url: '/about'},
+      {label: LAYOUT_ABOUT.item_my_services, url: '/services'},
       // { label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
-      {label: 'Mes avis', url: '/reviews'},
-      {label: 'Mon calendrier', url: '/calendar'},
-      {label: 'Mes statistiques', url: '/statistics'},
+      {label: LAYOUT_ABOUT.item_my_reviews, url: '/reviews'},
+      {label: LAYOUT_ABOUT.item_my_schedule, url: '/calendar'},
+      {label: LAYOUT_ABOUT.item_my_stat, url: '/statistics'},
     ]
   }
 
@@ -92,11 +93,11 @@ class ProfileLayout extends CompanyComponent {
                   }}>
                     <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Grid>
-                        {this.isModeCompany() ? <h3>{company ? company.name : ''}</h3> : <h3 className={'customprofilbannertitle'}>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
+                        {this.isModeCompany() ? <h3>{company ? company.name : ''}</h3> : <h3 className={'customprofilbannertitle'}>{`${LAYOUT_ABOUT.my_name_is} ${user ? user.firstname : ''}`}</h3>
                         }
                       </Grid>
                       {this.isModeCompany() ? null : <Grid>
-                        <Typography className={'customprofilbannertext'} style={{color: 'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
+                        <Typography className={'customprofilbannertext'} style={{color: 'rgba(39,37,37,35%)'}}>{LAYOUT_ABOUT.text}</Typography>
                       </Grid>
                       }
 

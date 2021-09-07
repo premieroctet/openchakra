@@ -25,6 +25,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import Input from '@material-ui/core/Input'
+import {SECURITY} from '../../utils/i18n'
 const {snackBarSuccess} = require('../../utils/notifications')
 import '../../static/assets/css/custom.css'
 
@@ -108,7 +109,7 @@ class security extends React.Component {
     const data = {index_google: !this.state.index_google}
     axios.put('/myAlfred/api/users/account/indexGoogle', data)
       .then(() => {
-        snackBarSuccess('Compte mis à jour')
+        snackBarSuccess(SECURITY.snackbar_account_update)
       })
       .catch(err => { console.error(err) })
   };
@@ -130,8 +131,6 @@ class security extends React.Component {
               .catch(err => { console.error(err) })
           })
           .catch(err => { console.error(err) })
-
-
       })
       .catch(err => { console.error(err) })
     axios.delete('/myAlfred/api/availability/currentAlfred')
@@ -164,7 +163,7 @@ class security extends React.Component {
     else {
       axios.put('/myAlfred/api/users/current/delete')
         .then(() => {
-          snackBarSuccess('Compte désactivé')
+          snackBarSuccess(SECURITY.snackbar_account_desactivate)
           this.setState({open2: false})
           clearAuthenticationToken()
           Router.push('/')
@@ -186,7 +185,7 @@ class security extends React.Component {
     axios
       .put('/myAlfred/api/users/profile/editPassword', data)
       .then(() => {
-        snackBarSuccess('Mot de passe modifié')
+        snackBarSuccess(SECURITY.snackbar_mdp_update)
         setTimeout(this.loadData, 1000)
       })
       .catch(err => {
@@ -221,19 +220,18 @@ class security extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{'Désactiver votre compte ?'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{SECURITY.dialog_delete_account_title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Attention, cette action est irréversible. Si vous souhaitez ne plus être référencé par les
-            moteurs de recherche, vous pouvez désactiver l’indexation par les moteurs de recherche.
+            {SECURITY.dialog_delete_account_content}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose2()} color="primary">
-            Annuler
+            {SECURITY.dialog_delete_account_cancel}
           </Button>
           <Button onClick={() => this.deleteAccount()} classes={{root: classes.cancelButton}} autoFocus>
-            Désactiver
+            {SECURITY.dialog_delete_account_confirm}
           </Button>
         </DialogActions>
       </Dialog>
@@ -248,20 +246,18 @@ class security extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{'Supprimer votre boutique ?'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{SECURITY.dialog_delete_shop_title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Attention, cette action est irréversible. Si vous souhaitez garder votre boutique sans que les
-            utilisateurs puissent réserver vos services, vous pouvez supprimer vos disponibilités sur votre
-            calendrier.
+            {SECURITY.dialog_delete_shop_content}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose()} color="primary">
-            Annuler
+            {SECURITY.dialog_delete_shop_cancel}
           </Button>
           <Button onClick={() => this.deleteShop()} classes={{root: classes.cancelButton}}>
-            Supprimer
+            {SECURITY.dialog_delete_shop_confirm}
           </Button>
         </DialogActions>
       </Dialog>
@@ -276,10 +272,10 @@ class security extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}} >
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'customsecuritytitle'}>Sécurité</h2>
+            <h2 className={'customsecuritytitle'}>{SECURITY.title}</h2>
           </Grid>
           <Grid>
-            <Typography className={'customsecuritysubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Modifiez votre mot de passe et gérez votre compte.</Typography>
+            <Typography className={'customsecuritysubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{SECURITY.subtitle}</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -287,10 +283,10 @@ class security extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h3 className={'customsecuritypasswordtitle'}>Mot de passe</h3>
+            <h3 className={'customsecuritypasswordtitle'}>{SECURITY.password}</h3>
           </Grid>
           <Grid>
-            <Typography className={'customsecuritypasswordsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Modifiez votre mot de passe.</Typography>
+            <Typography className={'customsecuritypasswordsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{SECURITY.update_password}</Typography>
           </Grid>
         </Grid>
         <Grid style={{marginTop: '10vh'}}>
@@ -302,7 +298,7 @@ class security extends React.Component {
                     !this.state.isAdmin ?
                       <Grid item xs={12} md={4} xl={12}>
                         <Input
-                          placeholder={this.state.wrongPassword ? 'Mot de passe erroné' : 'Mot de passe actuel'}
+                          placeholder={this.state.wrongPassword ? SECURITY.placeholder_password_error : SECURITY.placeholder_password_actual}
                           type={ showCurrentPassword ? 'text' : 'password'}
                           name="password"
                           value={this.state.password}
@@ -322,12 +318,12 @@ class security extends React.Component {
                             </InputAdornment>
                           }
                         />
-                        <em className={`custumsecurityerrorpass ${classes.cancelButton}`}>{this.state.wrongPassword ? 'Mot de passe erroné' : ''}</em>
+                        <em className={`custumsecurityerrorpass ${classes.cancelButton}`}>{this.state.wrongPassword ? SECURITY.placeholder_password_error : ''}</em>
                       </Grid> : null
                   }
                   <Grid item xs={12} md={4} xl={12}>
                     <Input
-                      placeholder={'Nouveau mot de passe'}
+                      placeholder={SECURITY.placeholder_newpassword}
                       type= {showNewPassword ? 'text' : 'password' }
                       name="newPassword"
                       value={this.state.newPassword}
@@ -351,7 +347,7 @@ class security extends React.Component {
                   </Grid>
                   <Grid item xs={12} md={4} xl={12}>
                     <Input
-                      placeholder={'Répéter le mot de passe'}
+                      placeholder={SECURITY.placeholder_repeat_password}
                       type={showConfirmPassword ? 'text' : 'password' }
                       name="newPassword2"
                       value={this.state.newPassword2}
@@ -376,7 +372,7 @@ class security extends React.Component {
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'left', marginTop: 30}}>
                   <Button disabled={!checkButtonValidate} type="submit" className={`customsecurityconfirmpass ${classes.buttonSave}`} variant="contained">
-                    Valider
+                    {SECURITY.validate_button_password}
                   </Button>
                 </Grid>
               </form>
@@ -388,16 +384,16 @@ class security extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h3 className={'customsecurityaccounttitle'}>Mon compte</h3>
+            <h3 className={'customsecurityaccounttitle'}>{SECURITY.my_account}</h3>
           </Grid>
           <Grid>
-            <Typography className={'customsecurityaccountsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Gérez votre compte.</Typography>
+            <Typography className={'customsecurityaccountsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{SECURITY.handle_my_account}</Typography>
           </Grid>
         </Grid>
         <Grid style={{marginTop: '10vh'}}>
           <Grid container style={{alignItems: 'center'}} spacing={3}>
             <Grid item xl={8} xs={6}>
-              <h4 className={'customsecurityaccounth4'}>Je souhaite que mon compte apparaisse dans les résultats des moteurs de recherche</h4>
+              <h4 className={'customsecurityaccounth4'}>{SECURITY.index_my_account}</h4>
             </Grid>
             <Grid item xl={4} xs={6} style={{flexDirection: 'row-reverse', display: 'flex'}}>
               <Switch
@@ -422,7 +418,7 @@ class security extends React.Component {
             {this.state.user.is_alfred ?
               <Grid container spacing={3} style={{alignItems: 'center'}}>
                 <Grid item xl={8}>
-                  <h4 className={'customsecurityaccountdelete'}>Je souhaite supprimer ma boutique de services.</h4>
+                  <h4 className={'customsecurityaccountdelete'}>{SECURITY.delete_my_account}</h4>
                 </Grid>
                 <Grid item xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
                   <Button
@@ -430,7 +426,7 @@ class security extends React.Component {
                     variant="contained"
                     classes={{root: `customsecuritybuttondelete ${classes.buttonSave}`}}
                   >
-                    Supprimer
+                    {SECURITY.delete_my_account_button}
                   </Button>
                 </Grid>
               </Grid>
@@ -441,11 +437,11 @@ class security extends React.Component {
             <Grid container style={{alignItems: 'center'}} spacing={3}>
               <Grid item xl={8} style={{display: 'flex', flexDirection: 'column'}}>
                 <Grid>
-                  <h4 className={'customsecurityaccountdesactivate'}>Je souhaite désactiver mon compte.</h4>
+                  <h4 className={'customsecurityaccountdesactivate'}>{SECURITY.desactivate_my_account}</h4>
                 </Grid>
                 <Grid>
                   <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                    Attention, cette action est irréversible !
+                    {SECURITY.caution_desactivate_my_account}
                   </Typography>
                 </Grid>
               </Grid>
@@ -455,7 +451,7 @@ class security extends React.Component {
                   variant="contained"
                   classes={{root: `customsecuritybuttondesactivate ${classes.buttonSave}`}}
                 >
-                  Désactiver
+                  {SECURITY.button_desactivate_my_account}
                 </Button>
               </Grid>
             </Grid>

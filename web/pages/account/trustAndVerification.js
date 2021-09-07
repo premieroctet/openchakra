@@ -29,6 +29,7 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import '../../static/assets/css/custom.css'
+import {TRUST_VERIFICATION} from '../../utils/i18n'
 const {CESU} = require('../../utils/consts')
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 const I18N = require('../../utils/i18n')
@@ -225,7 +226,7 @@ class trustAndVerification extends React.Component {
     }
     axios.post('/myAlfred/api/users/profile/idCard', formData, config)
       .then(() => {
-        snackBarSuccess('Pièce d\'identité ajoutée')
+        snackBarSuccess(TRUST_VERIFICATION.snackbar_id_add)
         this.componentDidMount()
       })
       .catch(err => {
@@ -243,7 +244,7 @@ class trustAndVerification extends React.Component {
     }
     axios.post('/myAlfred/api/users/profile/idCard/addVerso', formData, config)
       .then(() => {
-        snackBarSuccess('Carte d\'identité ajoutée')
+        snackBarSuccess(TRUST_VERIFICATION.snackbar_card_add)
         this.componentDidMount()
       }).catch()
   }
@@ -262,7 +263,7 @@ class trustAndVerification extends React.Component {
     }
     axios.put('/myAlfred/api/shop/editStatus', newStatus)
       .then(() => {
-        snackBarSuccess('Statut modifié')
+        snackBarSuccess(TRUST_VERIFICATION.snackbar_status_update)
         const data = {status: this.state.professional ? 'Pro' : 'Particulier'}
         return axios.put('/myAlfred/api/serviceUser/editStatus', data)
       })
@@ -273,7 +274,7 @@ class trustAndVerification extends React.Component {
           const config = {headers: {'content-type': 'multipart/form-data'}}
           axios.post('/myAlfred/api/users/profile/registrationProof/add', formData, config)
             .then(() => {
-              snackBarSuccess('Document d\'immatriculation ajouté')
+              snackBarSuccess(TRUST_VERIFICATION.snackbar_doc_add)
               this.componentDidMount()
             })
             .catch(err => console.error(err))
@@ -292,7 +293,7 @@ class trustAndVerification extends React.Component {
     else {
       axios.delete('/myAlfred/api/users/profile/idCard/recto')
         .then(() => {
-          snackBarSuccess('Pièce d\'identité supprimée')
+          snackBarSuccess(TRUST_VERIFICATION.snackbar_id_delete)
           this.componentDidMount()
         })
         .catch(err => {
@@ -312,7 +313,7 @@ class trustAndVerification extends React.Component {
     else {
       axios.delete('/myAlfred/api/users/profile/registrationProof')
         .then(() => {
-          snackBarSuccess('Document d\immatriculation supprimé')
+          snackBarSuccess(TRUST_VERIFICATION.snackbar_doc_delete)
           this.componentDidMount()
         })
         .catch(err => {
@@ -349,7 +350,7 @@ class trustAndVerification extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{'Confirmation'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{TRUST_VERIFICATION.dialog_delete_title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {this.state.deleteConfirmMessage}
@@ -357,10 +358,10 @@ class trustAndVerification extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">
-            Annuler
+            {TRUST_VERIFICATION.dialog_delete_cancel}
           </Button>
           <Button onClick={this.handleDelete} classes={{root: classes.cancelButton}}>
-            Supprimer
+            {TRUST_VERIFICATION.dialog_delete_confirm}
           </Button>
         </DialogActions>
       </Dialog>
@@ -373,11 +374,10 @@ class trustAndVerification extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'customtrustandveriftitle'}>Vérification</h2>
+            <h2 className={'customtrustandveriftitle'}>{TRUST_VERIFICATION.title}</h2>
           </Grid>
           <Grid>
-            <Typography className={'customtrustandverifsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Vérifiez votre email, votre numéro de téléphone et votre
-              identité.</Typography>
+            <Typography className={'customtrustandverifsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{TRUST_VERIFICATION.subtitle}</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -385,16 +385,16 @@ class trustAndVerification extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h3 className={'customtrustandverifidtitle'}>Pièce d'identité</h3>
+            <h3 className={'customtrustandverifidtitle'}>{TRUST_VERIFICATION.identity_title}</h3>
           </Grid>
           <Grid>
-            <Typography className={'customtrustandverifidsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez ou modifiez vos documents d'identité.</Typography>
+            <Typography className={'customtrustandverifidsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{TRUST_VERIFICATION.identity_add_title}</Typography>
           </Grid>
         </Grid>
         <Grid>
           <Grid className={classes.searchFilterRightContainer}>
             <Grid className={classes.searchFilterRightLabel}>
-              <h3 className={'customtrustandverifdocumenttitle'}>Type de document</h3>
+              <h3 className={'customtrustandverifdocumenttitle'}>{TRUST_VERIFICATION.document_type}</h3>
             </Grid>
             <Grid>
               <FormControl>
@@ -412,10 +412,10 @@ class trustAndVerification extends React.Component {
                   classes={{select: classes.searchSelectPadding}}
                 >
                   <MenuItem value={'passeport'}>
-                    Passeport
+                    {TRUST_VERIFICATION.passport}
                   </MenuItem>
                   <MenuItem value={'identite'}>
-                    Carte d'identité
+                    {TRUST_VERIFICATION.id_card}
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -432,7 +432,7 @@ class trustAndVerification extends React.Component {
                 onChange={this.onRectoChange}
                 onDelete={() => this.deleteRecto(false)}
                 disabled={!this.state.type}
-                title={'Télécharger recto'}
+                title={TRUST_VERIFICATION.download_recto}
               />
               :
               null
@@ -448,7 +448,7 @@ class trustAndVerification extends React.Component {
                   onChange={this.onVersoChange}
                   onDelete={() => this.deleteRecto(false)}
                   disabled={this.state.type !== 'identite'}
-                  title={'Télécharger verso'}
+                  title={TRUST_VERIFICATION.download_verso}
                 />
                 :
                 null
@@ -456,13 +456,13 @@ class trustAndVerification extends React.Component {
             {this.state.id_recto === null && this.state.id_verso !== null ?
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
                 <Button onClick={() => this.addVerso()} variant="contained" className={`customtrustandverifsaveverso ${classes.buttonSave}`}>
-                  Enregistrer verso
+                  {TRUST_VERIFICATION.save_verso}
                 </Button>
               </Grid>
               :
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
                 <Button onClick={this.onSubmit} variant="contained" className={`customtrustandverifsavedoc ${classes.buttonSave}`}>
-                  Enregistrer
+                  {TRUST_VERIFICATION.save_button}
                 </Button>
               </Grid>
             }
@@ -475,7 +475,7 @@ class trustAndVerification extends React.Component {
           {this.state.alfred ?
             <Grid style={{marginBottom: '12vh'}}>
               <Grid>
-                <h3 className={'customtrustandverifstatustitle'}>Votre statut</h3>
+                <h3 className={'customtrustandverifstatustitle'}>{TRUST_VERIFICATION.your_status}</h3>
               </Grid>
               <Grid>
                 <Grid>
@@ -492,7 +492,7 @@ class trustAndVerification extends React.Component {
                         color="primary"
                       />
                     }
-                    label="Je suis un particulier"
+                    label={TRUST_VERIFICATION.particular}
                   />
                 </Grid>
                 {!this.state.professional ?
@@ -500,15 +500,15 @@ class trustAndVerification extends React.Component {
                     <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[0]}/>
-                        <Typography className={'customtrustandverifcesu'}>Je veux être déclaré(e) en CESU</Typography>
+                        <Typography className={'customtrustandverifcesu'}>{TRUST_VERIFICATION.declare_cesu}</Typography>
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[1]}/>
-                        <Typography className={'customtrustandverifces'}> J'accepte d'être déclaré en CES </Typography>
+                        <Typography className={'customtrustandverifces'}>{TRUST_VERIFICATION.declare_ces}</Typography>
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[2]}/>
-                        <Typography className={'customtrustandverifnocesu'}>Je n'accepte pas d'être déclaré(e) en CESU</Typography>
+                        <Typography className={'customtrustandverifnocesu'}>{TRUST_VERIFICATION.no_cesu}</Typography>
                       </Grid>
                     </RadioGroup>
                   </Grid>
@@ -528,7 +528,7 @@ class trustAndVerification extends React.Component {
                         color="primary"
                       />
                     }
-                    label="Je suis un professionnel"
+                    label={TRUST_VERIFICATION.professional}
                   />
                 </Grid>
               </Grid>
@@ -536,7 +536,7 @@ class trustAndVerification extends React.Component {
                 <Grid container style={{marginTop: '5vh'}}>
                   <Grid item xs={12} className={'customtrustandverifcis'}>
                     <ButtonSwitch
-                      label="Je suis éligible au Crédit Impôt Service"
+                      label={TRUST_VERIFICATION.eligible_credit}
                       onChange={this.onCISChange}
                       checked={this.state.cis}
                     />
@@ -549,14 +549,13 @@ class trustAndVerification extends React.Component {
                   </Grid>
                   <Grid>
                     <Grid style={{marginTop: '10vh'}}>
-                      <h3 className={'customtrustandverifdocimma'}>Document d'immatriculation</h3>
+                      <h3 className={'customtrustandverifdocimma'}>{TRUST_VERIFICATION.document_title}</h3>
                     </Grid>
                     <Typography className={'customtrustandverifpdf'} style={{color: 'rgba(39,37,37,35%)'}}>
-                      Insérez ici le document d'immatriculation de votre entreprise (extrait de K-Bis, document
-                      d'immatriculation de micro-entreprise).<br/>
-                      Vous pouvez télécharger ce document en version PDF&nbsp;
+                      {TRUST_VERIFICATION.insert_document}<br/>
+                      {TRUST_VERIFICATION.pdf_info}
                       <a className={'customtrustandveriflink'} color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
-                      >sur le site de l'INSEE</a>
+                      >{TRUST_VERIFICATION.insee_link}</a>
                     </Typography>
                   </Grid>
                   <DocumentEditor
@@ -566,7 +565,7 @@ class trustAndVerification extends React.Component {
                     uploaded_file={this.state.registration_proof_file}
                     onChange={this.onRegistrationProofChanged}
                     onDelete={() => this.deleteRegistrationProof(false)}
-                    title={'Télécharger document d\'immatriculation'}
+                    title={TRUST_VERIFICATION.download_document_imma}
                   />
                 </Grid>
                 :
@@ -575,7 +574,7 @@ class trustAndVerification extends React.Component {
               <Grid style={{marginTop: '10vh'}}>
                 <Button variant="contained" className={`customtrustandverifsavebutton ${classes.buttonSave}`}
                   onClick={this.editSiret} disabled={!this.statusSaveEnabled()}>
-                  Enregistrer
+                  {TRUST_VERIFICATION.save_document_imma}
                 </Button>
               </Grid>
             </Grid>
