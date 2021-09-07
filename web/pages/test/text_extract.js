@@ -14,7 +14,7 @@ class TextExtractTest extends React.Component {
       return `${prefix}=${data}`
     }
     if (['object'].includes(typeof data)) {
-      return Object.keys(data).map(k => this.getIdentifiers(prefix+k+'.', data[k]))
+      return Object.keys(data).map(k => this.getIdentifiers(`${prefix}${prefix ? '.' :''}${k}`, data[k]))
     }
   }
 
