@@ -48,4 +48,4 @@ class MobileTest extends React.Component {
   }
 }
 
-export default withTranslation()(MobileTest)
+export default withTranslation('custom', {withRef: true})(MobileTest)

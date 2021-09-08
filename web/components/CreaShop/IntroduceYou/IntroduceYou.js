@@ -221,4 +221,4 @@ class IntroduceYou extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(IntroduceYou))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(IntroduceYou))

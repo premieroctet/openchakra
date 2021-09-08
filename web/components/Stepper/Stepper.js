@@ -48,4 +48,4 @@ class Stepper extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(Stepper))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Stepper))

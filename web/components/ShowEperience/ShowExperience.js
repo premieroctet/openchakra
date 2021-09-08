@@ -104,4 +104,4 @@ class ShowExperience extends React.Component {
 
 }
 
-export default withTranslation()(withStyles(styles)(ShowExperience))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ShowExperience))

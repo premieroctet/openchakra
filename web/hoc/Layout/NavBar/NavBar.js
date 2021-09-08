@@ -1285,4 +1285,4 @@ class NavBar extends Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(NavBar))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(NavBar))

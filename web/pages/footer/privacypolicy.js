@@ -421,4 +421,4 @@ class Privacypolicy extends React.Component {
 }
 
 
-export default withTranslation()(withStyles(styles)(Privacypolicy))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Privacypolicy))

@@ -49,4 +49,4 @@ class testwithTopic extends React.Component{
 
 }
 
-export default withTranslation()(withStyles(styles) (testwithTopic))
+export default withTranslation('custom', {withRef: true})(withStyles(styles) (testwithTopic))

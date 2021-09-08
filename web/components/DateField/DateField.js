@@ -29,4 +29,4 @@ class DateField extends React.Component {
   }
 }
 
-export default withTranslation()(DateField)
+export default withTranslation('custom', {withRef: true})(DateField)

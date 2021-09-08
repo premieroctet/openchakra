@@ -31,4 +31,4 @@ class HtmlEditorTest extends React.Component {
 
 }
 
-export default withTranslation()(HtmlEditorTest)
+export default withTranslation('custom', {withRef: true})(HtmlEditorTest)

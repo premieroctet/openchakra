@@ -59,4 +59,4 @@ class InfoBarMobile extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(InfoBarMobile))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(InfoBarMobile))

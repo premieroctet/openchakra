@@ -320,4 +320,4 @@ class HandleRIB extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(HandleRIB))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(HandleRIB))

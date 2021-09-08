@@ -61,4 +61,4 @@ class All extends DataPage {
 
 }
 
-export default withTranslation()(withStyles(styles)(All))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(All))

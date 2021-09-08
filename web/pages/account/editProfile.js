@@ -491,4 +491,4 @@ class editProfile extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(editProfile))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(editProfile))

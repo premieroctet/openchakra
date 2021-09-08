@@ -85,4 +85,4 @@ class validateAccount extends BasePage {
   }
 }
 
-export default withTranslation()(withStyles(styles)(validateAccount))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(validateAccount))

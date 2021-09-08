@@ -25,4 +25,4 @@ class EditServicePicture extends BasePage {
   }
 }
 
-export default withTranslation()(EditServicePicture)
+export default withTranslation('custom', {withRef: true})(EditServicePicture)

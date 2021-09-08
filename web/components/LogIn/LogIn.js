@@ -242,4 +242,4 @@ class LogIn extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(LogIn))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(LogIn))

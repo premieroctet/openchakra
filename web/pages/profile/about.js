@@ -541,4 +541,4 @@ class ProfileAbout extends CompanyComponent {
   }
 }
 
-export default withTranslation()(withStyles(styles)(ProfileAbout))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileAbout))

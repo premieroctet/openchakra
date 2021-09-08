@@ -61,4 +61,4 @@ class Services extends React.Component {
   }
 }
 
-export default withTranslation()(Services)
+export default withTranslation('custom', {withRef: true})(Services)

@@ -446,4 +446,4 @@ class HandleAddresses extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(HandleAddresses))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(HandleAddresses))

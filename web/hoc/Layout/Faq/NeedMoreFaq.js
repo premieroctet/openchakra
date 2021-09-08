@@ -39,4 +39,4 @@ class NeedMoreFaq extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(NeedMoreFaq))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(NeedMoreFaq))

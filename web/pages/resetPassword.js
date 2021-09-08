@@ -151,4 +151,4 @@ class resetPassword extends BasePage {
 }
 
 
-export default withTranslation()(withStyles(styles)(resetPassword))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(resetPassword))

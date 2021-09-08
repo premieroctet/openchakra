@@ -33,4 +33,4 @@ class DashboardPage extends React.Component {
   }
 }
 
-export default withTranslation()(DashboardPage)
+export default withTranslation('custom', {withRef: true})(DashboardPage)

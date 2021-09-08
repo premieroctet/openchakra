@@ -114,4 +114,4 @@ class myAddresses extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(myAddresses))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(myAddresses))

@@ -169,4 +169,4 @@ class NewsLetter extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(NewsLetter))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(NewsLetter))

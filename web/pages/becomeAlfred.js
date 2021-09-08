@@ -19,4 +19,4 @@ class BecomeAlfred extends Component {
   }
 }
 
-export default withTranslation()(BecomeAlfred)
+export default withTranslation('custom', {withRef: true})(BecomeAlfred)

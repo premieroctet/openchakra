@@ -72,4 +72,4 @@ function MainSection({classes}) {
   )
 }
 
-export default withTranslation()(withStyles(styles)(MainSection))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(MainSection))

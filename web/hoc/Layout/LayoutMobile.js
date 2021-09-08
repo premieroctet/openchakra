@@ -56,4 +56,4 @@ class LayoutMobile extends React.Component{
   }
 }
 
-export default withTranslation()(LayoutMobile)
+export default withTranslation('custom', {withRef: true})(LayoutMobile)

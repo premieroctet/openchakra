@@ -22,4 +22,4 @@ class CguPage extends React.Component {
 }
 
 
-export default withTranslation()((CguPage))
+export default withTranslation('custom', {withRef: true})((CguPage))

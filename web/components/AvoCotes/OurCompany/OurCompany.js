@@ -27,4 +27,4 @@ function OurCompany({classes}) {
   )
 }
 
-export default withTranslation()(withStyles(styles)(OurCompany))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(OurCompany))

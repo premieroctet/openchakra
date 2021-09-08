@@ -68,4 +68,4 @@ class SkillsTest extends React.Component{
 
 }
 
-export default withTranslation()(SkillsTest)
+export default withTranslation('custom', {withRef: true})(SkillsTest)

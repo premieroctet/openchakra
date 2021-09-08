@@ -437,4 +437,4 @@ class DrawerBooking extends React.Component {
 
 }
 
-export default withTranslation()(withStyles(styles)(DrawerBooking))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(DrawerBooking))

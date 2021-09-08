@@ -63,4 +63,4 @@ class CategoryCard extends React.Component {
 
 }
 
-export default withTranslation()(withStyles(styles)(CategoryCard))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(CategoryCard))

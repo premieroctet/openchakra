@@ -26,4 +26,4 @@ function linkedinAPI() {
   )
 }
 
-export default withTranslation()(linkedinAPI)
+export default withTranslation('custom', {withRef: true})(linkedinAPI)

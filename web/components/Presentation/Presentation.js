@@ -223,4 +223,4 @@ class Presentation extends CompanyComponent {
   }
 }
 
-export default withTranslation()(withStyles(styles, {withTheme: true})(Presentation))
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(Presentation))

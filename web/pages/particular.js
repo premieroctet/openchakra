@@ -20,4 +20,4 @@ class Particular extends React.Component {
 
 }
 
-export default withTranslation()(Particular)
+export default withTranslation('custom', {withRef: true})(Particular)

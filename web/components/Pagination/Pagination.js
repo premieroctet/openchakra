@@ -34,4 +34,4 @@ class Pagination extends React.Component {
   }
 }
 
-export default withTranslation()(Pagination)
+export default withTranslation('custom', {withRef: true})(Pagination)

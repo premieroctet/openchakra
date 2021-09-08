@@ -418,4 +418,4 @@ class ProfileStatistics extends BasePage {
   }
 
 }
-export default withTranslation()(withStyles(styles)(ProfileStatistics))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileStatistics))

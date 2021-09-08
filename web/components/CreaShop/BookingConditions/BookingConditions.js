@@ -154,4 +154,4 @@ class BookingConditions extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(BookingConditions))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingConditions))

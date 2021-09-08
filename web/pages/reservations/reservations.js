@@ -357,4 +357,4 @@ class AllReservations extends BasePage {
   }
 }
 
-export default withTranslation()(withStyles(styles)(AllReservations))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(AllReservations))

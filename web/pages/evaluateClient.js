@@ -236,4 +236,4 @@ class EvaluateClient extends BasePage {
 }
 
 
-export default withTranslation()(withStyles(styles)(EvaluateClient))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(EvaluateClient))

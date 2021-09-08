@@ -212,4 +212,4 @@ class myProfile extends CompanyComponent {
 
 }
 
-export default withTranslation()(withStyles(styles)(myProfile))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(myProfile))

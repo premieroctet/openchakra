@@ -600,4 +600,4 @@ class notifications extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(notifications))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(notifications))

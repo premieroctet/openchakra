@@ -414,4 +414,4 @@ class BookingConfirm extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(BookingConfirm))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingConfirm))

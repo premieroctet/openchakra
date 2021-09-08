@@ -53,4 +53,4 @@ class Invoices extends React.Component {
   }
 }
 
-export default withTranslation()(Invoices)
+export default withTranslation('custom', {withRef: true})(Invoices)

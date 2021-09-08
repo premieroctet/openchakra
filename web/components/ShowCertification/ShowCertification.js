@@ -114,4 +114,4 @@ class ShowCertification extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(ShowCertification))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ShowCertification))

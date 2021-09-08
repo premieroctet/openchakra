@@ -30,4 +30,4 @@ class TrustAndSecurityBar extends React.Component{
   }
 }
 
-export default withTranslation()(TrustAndSecurityBar)
+export default withTranslation('custom', {withRef: true})(TrustAndSecurityBar)

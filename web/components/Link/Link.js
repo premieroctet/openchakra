@@ -22,4 +22,4 @@ Link.propTypes = {
   children: PropTypes.node,
 }
 
-export default withTranslation()(Link)
+export default withTranslation('custom', {withRef: true})(Link)

@@ -32,4 +32,4 @@ class ImageImportTest extends React.Component{
 
 }
 
-export default withTranslation()(ImageImportTest)
+export default withTranslation('custom', {withRef: true})(ImageImportTest)

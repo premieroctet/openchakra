@@ -23,4 +23,4 @@ class EditPrestationPicture extends BasePage {
   }
 }
 
-export default withTranslation()(EditPrestationPicture)
+export default withTranslation('custom', {withRef: true})(EditPrestationPicture)

@@ -500,4 +500,4 @@ class editProfileCompany extends BasePage {
   }
 }
 
-export default withTranslation()(withStyles(styles)(editProfileCompany))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(editProfileCompany))

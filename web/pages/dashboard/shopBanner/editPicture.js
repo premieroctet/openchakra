@@ -122,4 +122,4 @@ class EditPicture extends BasePage {
 }
 
 
-export default withTranslation()(withStyles(styles)(EditPicture))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(EditPicture))

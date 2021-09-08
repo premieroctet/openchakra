@@ -101,4 +101,4 @@ class ProfileCalendar extends BasePage {
 
 }
 
-export default withTranslation()(withStyles(styles)(ProfileCalendar))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileCalendar))

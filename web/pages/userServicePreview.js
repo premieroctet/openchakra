@@ -1002,4 +1002,4 @@ class UserServicesPreview extends BasePage {
   }
 }
 
-export default withTranslation()(withStyles(styles)(UserServicesPreview))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(UserServicesPreview))

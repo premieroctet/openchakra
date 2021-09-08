@@ -255,4 +255,4 @@ class all extends React.Component {
   };
 }
 
-export default withTranslation()(withStyles(styles)(all))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(all))

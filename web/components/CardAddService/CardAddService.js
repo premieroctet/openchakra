@@ -49,4 +49,4 @@ CardAddService.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withTranslation()(withStyles(styles, {withTheme: true})(CardAddService))
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(CardAddService))

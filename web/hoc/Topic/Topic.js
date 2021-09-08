@@ -57,4 +57,4 @@ class Topic extends React.Component {
 
 }
 
-export default withTranslation()(withStyles(styles)(Topic))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Topic))

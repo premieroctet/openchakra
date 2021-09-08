@@ -142,4 +142,4 @@ class UserAvatar extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(UserAvatar))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(UserAvatar))

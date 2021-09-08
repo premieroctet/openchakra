@@ -175,4 +175,4 @@ class BookingPreference extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(BookingPreference))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingPreference))

@@ -22,4 +22,4 @@ class LayoutPayment extends React.Component{
   }
 }
 
-export default withTranslation()(LayoutPayment)
+export default withTranslation('custom', {withRef: true})(LayoutPayment)

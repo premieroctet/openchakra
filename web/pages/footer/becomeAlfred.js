@@ -156,4 +156,4 @@ class BecomeAlfred extends React.Component {
 
 }
 
-export default withTranslation()(withStyles(styles)(BecomeAlfred))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BecomeAlfred))

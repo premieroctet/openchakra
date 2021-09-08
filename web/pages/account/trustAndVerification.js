@@ -616,4 +616,4 @@ class trustAndVerification extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(trustAndVerification))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(trustAndVerification))

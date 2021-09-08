@@ -159,4 +159,4 @@ class ButtonSwitch extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(ButtonSwitch))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ButtonSwitch))

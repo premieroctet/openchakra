@@ -354,4 +354,4 @@ class B2BApiTest extends React.Component {
  }
 }
 
-export default withTranslation()(B2BApiTest)
+export default withTranslation('custom', {withRef: true})(B2BApiTest)

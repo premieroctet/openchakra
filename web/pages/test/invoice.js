@@ -23,4 +23,4 @@ class Invoice extends React.Component {
   }
 }
 
-export default withTranslation()(Invoice)
+export default withTranslation('custom', {withRef: true})(Invoice)

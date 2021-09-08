@@ -591,4 +591,4 @@ class View extends BasePage {
 }
 
 
-export default withTranslation()(withStyles(styles)(View))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))

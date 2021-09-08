@@ -58,4 +58,4 @@ class ColorPickerTest extends React.Component {
 
 }
 
-export default withTranslation()(ColorPickerTest)
+export default withTranslation('custom', {withRef: true})(ColorPickerTest)

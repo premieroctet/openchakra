@@ -31,4 +31,4 @@ class OurTeam extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(OurTeam))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(OurTeam))

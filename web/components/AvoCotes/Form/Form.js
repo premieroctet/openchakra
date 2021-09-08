@@ -256,4 +256,4 @@ function Form({classes, booking_id}) {
   )
 }
 
-export default withTranslation()(withStyles(styles)(Form))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Form))

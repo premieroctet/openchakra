@@ -42,4 +42,4 @@ class TextExtractTest extends React.Component {
 
 }
 
-export default withTranslation()(TextExtractTest)
+export default withTranslation('custom', {withRef: true})(TextExtractTest)

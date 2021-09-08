@@ -318,4 +318,4 @@ class CardService extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(CardService))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(CardService))

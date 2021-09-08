@@ -24,4 +24,4 @@ class CardAlbum extends React.Component{
   }
 }
 
-export default withTranslation()(CardAlbum)
+export default withTranslation('custom', {withRef: true})(CardAlbum)

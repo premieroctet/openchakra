@@ -383,4 +383,4 @@ class Schedule extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(Schedule))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Schedule))

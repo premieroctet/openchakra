@@ -102,4 +102,4 @@ class paymentMethod extends React.Component {
 }
 
 
-export default withTranslation()(withStyles(styles)(paymentMethod))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(paymentMethod))

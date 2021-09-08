@@ -141,4 +141,4 @@ class SummaryCommentary extends React.Component {
   }
 }
 
-export default withTranslation()(WithStyles(styles)(SummaryCommentary))
+export default withTranslation('custom', {withRef: true})(WithStyles(styles)(SummaryCommentary))

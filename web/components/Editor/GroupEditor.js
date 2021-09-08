@@ -39,4 +39,4 @@ class GroupEditor extends React.Component {
 
 }
 
-export default withTranslation()(GroupEditor)
+export default withTranslation('custom', {withRef: true})(GroupEditor)

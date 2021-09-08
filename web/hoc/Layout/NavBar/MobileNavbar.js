@@ -418,4 +418,4 @@ class MobileNavbar extends React.Component{
 
 }
 
-export default withTranslation()(withStyles(styles)(MobileNavbar))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(MobileNavbar))

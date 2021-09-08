@@ -41,4 +41,4 @@ class AskQuestion extends React.Component {
 
 }
 
-export default withTranslation()(AskQuestion)
+export default withTranslation('custom', {withRef: true})(AskQuestion)

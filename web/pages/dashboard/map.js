@@ -181,4 +181,4 @@ class ServicesMap extends React.Component {
   };
 }
 
-export default withTranslation()(withStyles(styles)(ServicesMap))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ServicesMap))

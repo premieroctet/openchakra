@@ -92,4 +92,4 @@ class alfredBanner extends React.Component {
 
 }
 
-export default withTranslation()(withStyles(styles, {withTheme: true})(alfredBanner))
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(alfredBanner))

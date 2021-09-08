@@ -56,4 +56,4 @@ class SelectSlotTimer extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles, {withTheme: true})(SelectSlotTimer))
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(SelectSlotTimer))

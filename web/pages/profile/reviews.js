@@ -69,4 +69,4 @@ class ProfileReviews extends BasePage {
 
 }
 
-export default withTranslation()(withStyles(styles)(ProfileReviews))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileReviews))

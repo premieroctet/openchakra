@@ -25,4 +25,4 @@ class ListAlfredConditions extends React.Component{
   }
 }
 
-export default withTranslation()(ListAlfredConditions)
+export default withTranslation('custom', {withRef: true})(ListAlfredConditions)

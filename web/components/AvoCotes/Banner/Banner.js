@@ -41,4 +41,4 @@ function Banner({classes}) {
   )
 }
 
-export default withTranslation()(withStyles(styles)(Banner))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Banner))

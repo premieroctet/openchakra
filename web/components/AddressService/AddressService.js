@@ -43,4 +43,4 @@ class AddressService extends React.Component {
   }
 }
 
-export default withTranslation()(AddressService)
+export default withTranslation('custom', {withRef: true})(AddressService)

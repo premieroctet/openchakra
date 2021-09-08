@@ -51,4 +51,4 @@ function App() {
   )
 }
 
-export default withTranslation()(App)
+export default withTranslation('custom', {withRef: true})(App)

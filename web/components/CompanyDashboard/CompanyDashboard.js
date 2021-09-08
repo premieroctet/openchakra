@@ -201,4 +201,4 @@ CompanyDashboard.propTypes = {
   window: PropTypes.func,
 }
 
-export default withTranslation()(withStyles(styles)(CompanyDashboard))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(CompanyDashboard))

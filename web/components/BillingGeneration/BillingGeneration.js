@@ -463,4 +463,4 @@ class BillingGeneration extends React.Component {
   }
 }
 
-export default withTranslation()((BillingGeneration))
+export default withTranslation('custom', {withRef: true})((BillingGeneration))

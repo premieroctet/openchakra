@@ -16,4 +16,4 @@ class ScheduleCompany extends React.Component{
   }
 }
 
-export default withTranslation()(ScheduleCompany)
+export default withTranslation('custom', {withRef: true})(ScheduleCompany)

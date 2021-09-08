@@ -16,4 +16,4 @@ class AssetImg extends React.Component {
   }
 }
 
-export default withTranslation()(AssetImg)
+export default withTranslation('custom', {withRef: true})(AssetImg)

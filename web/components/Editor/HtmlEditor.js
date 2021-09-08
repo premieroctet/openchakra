@@ -71,4 +71,4 @@ HtmlEditor.formats = [
 ]
 
 
-export default withTranslation()(HtmlEditor)
+export default withTranslation('custom', {withRef: true})(HtmlEditor)

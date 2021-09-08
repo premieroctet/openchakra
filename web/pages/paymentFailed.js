@@ -89,4 +89,4 @@ class PaymentFailed extends BasePage {
 }
 
 
-export default withTranslation()(withStyles(styles)(PaymentFailed))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(PaymentFailed))

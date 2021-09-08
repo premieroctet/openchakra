@@ -49,4 +49,4 @@ class ContextTest extends React.Component {
 
 }
 
-export default withTranslation()(ContextTest)
+export default withTranslation('custom', {withRef: true})(ContextTest)

@@ -171,4 +171,4 @@ class DefinePassword extends BasePage {
   }
 }
 
-export default withTranslation()(withStyles(styles)(DefinePassword))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(DefinePassword))

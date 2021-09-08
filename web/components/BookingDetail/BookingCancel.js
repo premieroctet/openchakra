@@ -139,4 +139,4 @@ class Cancel extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(Cancel))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Cancel))

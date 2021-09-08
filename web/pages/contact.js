@@ -63,4 +63,4 @@ class Contact extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(Contact))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Contact))

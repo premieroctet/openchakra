@@ -41,4 +41,4 @@ function BannerContact({classes}) {
   )
 }
 
-export default withTranslation()(withStyles(styles)(BannerContact))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BannerContact))

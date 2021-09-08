@@ -299,4 +299,4 @@ class Messages extends BasePage {
   }
 
 }
-export default withTranslation()(withStyles(styles)(Messages))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Messages))

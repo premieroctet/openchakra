@@ -12,4 +12,4 @@ function importConfigStyle() {
   )
 }
 
-export default withTranslation()(importConfigStyle)
+export default withTranslation('custom', {withRef: true})(importConfigStyle)

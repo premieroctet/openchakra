@@ -55,4 +55,4 @@ class LayoutFaq extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(LayoutFaq))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(LayoutFaq))

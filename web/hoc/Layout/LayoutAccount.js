@@ -89,4 +89,4 @@ class LayoutAccount extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(LayoutAccount))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(LayoutAccount))

@@ -185,4 +185,4 @@ class LogAsUser extends BasePage {
 }
 
 
-export default withTranslation()(withStyles(styles)(LogAsUser))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(LogAsUser))

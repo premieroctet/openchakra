@@ -20,4 +20,4 @@ class NeedHelp extends React.Component {
   }
 }
 
-export default withTranslation()(NeedHelp)
+export default withTranslation('custom', {withRef: true})(NeedHelp)

@@ -76,4 +76,4 @@ class BannerPresentation extends React.Component {
 
 }
 
-export default withTranslation()(withStyles(styles)(BannerPresentation))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BannerPresentation))

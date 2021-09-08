@@ -127,4 +127,4 @@ class LayoutMobileProfile extends React.Component{
   }
 }
 
-export default withTranslation()(withStyles (styles) (LayoutMobileProfile))
+export default withTranslation('custom', {withRef: true})(withStyles (styles) (LayoutMobileProfile))

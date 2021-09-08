@@ -195,4 +195,4 @@ class Siret extends React.Component {
 }
 
 
-export default withTranslation()(withStyles(styles)(Siret))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Siret))

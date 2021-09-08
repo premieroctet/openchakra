@@ -71,4 +71,4 @@ class PaymentCard extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(PaymentCard))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(PaymentCard))

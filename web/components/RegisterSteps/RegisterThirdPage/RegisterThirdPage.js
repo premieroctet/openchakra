@@ -77,4 +77,4 @@ class RegisterThirdPage extends React.Component {
 
 }
 
-export default withTranslation()(withStyles(styles)(RegisterThirdPage))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(RegisterThirdPage))

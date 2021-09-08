@@ -61,4 +61,4 @@ class RolesTest extends React.Component{
 
 }
 
-export default withTranslation()(RolesTest)
+export default withTranslation('custom', {withRef: true})(RolesTest)

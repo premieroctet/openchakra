@@ -21,4 +21,4 @@ function Asset(props) {
   )
 }
 
-export default withTranslation()(Asset)
+export default withTranslation('custom', {withRef: true})(Asset)

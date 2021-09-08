@@ -71,4 +71,4 @@ class MessageSummary extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(MessageSummary))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(MessageSummary))

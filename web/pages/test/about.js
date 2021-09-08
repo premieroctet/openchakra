@@ -73,4 +73,4 @@ class AboutTest extends BasePage {
 
 }
 
-export default withTranslation()(AboutTest)
+export default withTranslation('custom', {withRef: true})(AboutTest)

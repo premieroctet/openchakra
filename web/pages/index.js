@@ -244,4 +244,4 @@ class Home extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(Home))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Home))

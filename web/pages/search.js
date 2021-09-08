@@ -487,4 +487,4 @@ class SearchPage extends BasePage {
 }
 
 
-export default withTranslation()(withWidth()(withStyles(styles)(SearchPage)))
+export default withTranslation('custom', {withRef: true})(withWidth()(withStyles(styles)(SearchPage)))

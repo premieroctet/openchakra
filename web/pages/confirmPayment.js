@@ -233,4 +233,4 @@ class ConfirmPayment extends BasePage {
   }
 }
 
-export default withTranslation()(withStyles(styles)(ConfirmPayment))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ConfirmPayment))

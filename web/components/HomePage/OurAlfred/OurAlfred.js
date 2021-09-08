@@ -67,4 +67,4 @@ class OurAlfred extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(OurAlfred))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(OurAlfred))

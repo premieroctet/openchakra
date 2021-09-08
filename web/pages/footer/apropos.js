@@ -114,4 +114,4 @@ class Apropos extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(Apropos))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Apropos))

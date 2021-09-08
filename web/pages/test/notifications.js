@@ -25,4 +25,4 @@ class TestNotification extends React.Component {
 
 }
 
-export default withTranslation()(TestNotification)
+export default withTranslation('custom', {withRef: true})(TestNotification)

@@ -94,4 +94,4 @@ class PaymentChoice extends React.Component{
   }
 }
 
-export default withTranslation()(withStyles(styles) (PaymentChoice))
+export default withTranslation('custom', {withRef: true})(withStyles(styles) (PaymentChoice))

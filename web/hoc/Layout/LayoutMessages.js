@@ -64,4 +64,4 @@ class LayoutMessages extends React.Component {
 
 }
 
-export default withTranslation()(withStyles(styles)(LayoutMessages))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(LayoutMessages))

@@ -61,4 +61,4 @@ OAuth.propTypes = {
   login: PropTypes.string.isRequired,
 };
 
-export default withTranslation()(withStyles(styles)(OAuth))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(OAuth))

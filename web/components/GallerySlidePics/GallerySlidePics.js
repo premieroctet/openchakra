@@ -35,4 +35,4 @@ class GallerySlidePics extends React.Component{
 
 }
 
-export default withTranslation()(GallerySlidePics)
+export default withTranslation('custom', {withRef: true})(GallerySlidePics)

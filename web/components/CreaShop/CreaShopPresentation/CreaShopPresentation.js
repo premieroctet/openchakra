@@ -76,4 +76,4 @@ class CreaShopPresentation extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(CreaShopPresentation))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(CreaShopPresentation))

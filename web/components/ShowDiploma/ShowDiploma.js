@@ -115,4 +115,4 @@ class ShowDiploma extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(ShowDiploma))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ShowDiploma))

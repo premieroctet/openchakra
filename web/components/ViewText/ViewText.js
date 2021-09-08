@@ -18,4 +18,4 @@ class ViewText extends React.Component {
   }
 }
 
-export default withTranslation()((ViewText))
+export default withTranslation('custom', {withRef: true})((ViewText))

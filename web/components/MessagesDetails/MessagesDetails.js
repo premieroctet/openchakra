@@ -247,4 +247,4 @@ class MessagesDetails extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(MessagesDetails))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(MessagesDetails))

@@ -39,4 +39,4 @@ class OurCommunity extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(OurCommunity))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(OurCommunity))

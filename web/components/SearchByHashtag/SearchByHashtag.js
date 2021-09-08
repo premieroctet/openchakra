@@ -34,4 +34,4 @@ class SearchByHashtag extends React.Component{
   }
 }
 
-export default withTranslation()(SearchByHashtag)
+export default withTranslation('custom', {withRef: true})(SearchByHashtag)
