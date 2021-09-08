@@ -19,7 +19,7 @@ import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
 import {isEditableUser} from '../../utils/context'
 import '../../static/assets/css/custom.css'
-
+import {STATISTICS} from '../../utils/i18n'
 
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 
@@ -78,14 +78,6 @@ class ProfileStatistics extends React.Component {
 
     localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
-    const revenus1layer = this.state.revenus
-    revenus1layer.forEach(revenus1layerbis => {
-      const revenus2layer = revenus1layerbis.data
-      revenus2layer.forEach(revenus2layerbis => {
-        const revenusall = revenus2layerbis.x
-
-      })
-    })
 
     this.loadMonthStatistics()
     this.loadYearStatistics()
@@ -95,7 +87,6 @@ class ProfileStatistics extends React.Component {
     this.setState({year: e.target.value}, () => this.loadHistoYear())
   };
 
-
   statisticMonthChanged= event => {
     this.setState({statisticsMonth: event.target.value}, () => this.loadMonthStatistics())
   };
@@ -103,7 +94,6 @@ class ProfileStatistics extends React.Component {
   statisticYearChanged= event => {
     this.setState({statisticsYear: event.target.value}, () => this.loadYearStatistics())
   };
-
 
   loadHistoYear = () => {
     const year = this.state.year
@@ -122,7 +112,6 @@ class ProfileStatistics extends React.Component {
               totalYear: totalComing + annualIncome,
             })
           })
-
       })
       .catch(err => {
         console.error(err)
@@ -166,12 +155,12 @@ class ProfileStatistics extends React.Component {
       <Grid container stylerr={{width: '100%'}} spacing={3}>
         <Grid item xs={12} className={'customstatincomecont'}>
           <Box>
-            <Topic underline={true} titleTopic={'Mes revenus'} titleSummary={"Ici, vous pouvez suivre l'évolution de vos revenus et vos statistiques prévisionnelles"}>
+            <Topic underline={true} titleTopic={STATISTICS.title_topic_incomes} titleSummary={STATISTICS.subtitle_topic_incomes}>
               <Grid>
                 <Grid>
                   <Grid className={classes.statContainer}>
                     <Grid className={classes.statContainerLabel}>
-                      <Typography className={'customstatyearincomestitle'}>Année</Typography>
+                      <Typography className={'customstatyearincomestitle'}>{STATISTICS.year}</Typography>
                     </Grid>
                     <Grid>
                       <FormControl>
@@ -204,7 +193,7 @@ class ProfileStatistics extends React.Component {
                 <Grid container className={`customstatgenriccont ${classes.statResultContainer}`}>
                   <Grid container className={classes.statResultData}>
                     <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                      <Typography className={'customstatincomestotal'}><strong>Revenus perçus</strong></Typography>
+                      <Typography className={'customstatincomestotal'}><strong>{STATISTICS.incomes_get}</strong></Typography>
                     </Grid>
                     <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                       <Typography><strong>{this.state.totalPaid}€</strong></Typography>
@@ -215,7 +204,7 @@ class ProfileStatistics extends React.Component {
                   </Grid>
                   <Grid container className={classes.statResultData}>
                     <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                      <Typography className={'customstatincomeswilltotal'}><strong>Revenus à venir</strong></Typography>
+                      <Typography className={'customstatincomeswilltotal'}><strong>{STATISTICS.incomes_will}</strong></Typography>
                     </Grid>
                     <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                       <Typography><strong>{this.state.totalComing}€</strong></Typography>
@@ -226,10 +215,10 @@ class ProfileStatistics extends React.Component {
                   </Grid>
                   <Grid container className={classes.statResultData}>
                     <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                      <Typography className={'customstatincomeswillyeartotal'}><strong>{`Revenus prévisionnels ${this.state.year}`}</strong></Typography>
+                      <Typography className={'customstatincomeswillyeartotal'}><strong>{STATISTICS.incomes_previ + this.state.year}</strong></Typography>
                     </Grid>
                     <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
-                      <Typography><strong>{this.state.totalYear}€</strong></Typography>
+                      <Typography><strong>{this.state.totalYear + STATISTICS.euro}</strong></Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -239,13 +228,13 @@ class ProfileStatistics extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Box>
-            <Topic underline={true} titleTopic={'Mes statistiques'} titleSummary={'Retrouvez vos nombres de vues, de commentaires ou encore de prestations réalisées'}>
+            <Topic underline={true} titleTopic={STATISTICS.my_stat} titleSummary={STATISTICS.my_stat_subtitle}>
               <Grid item style={{width: '100%'}}>
                 <Grid container style={{width: '100%'}}>
                   <Grid container style={{width: '100%'}}>
                     <Grid className={classes.statContainer}>
                       <Grid className={classes.statContainerLabel}>
-                        <Typography>Mois</Typography>
+                        <Typography>{STATISTICS.month}</Typography>
                       </Grid>
                       <Grid>
                         <FormControl>
@@ -271,7 +260,7 @@ class ProfileStatistics extends React.Component {
                     <Grid container className={`customstatgenriccont ${classes.statResultContainer}`}>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstattotalstatmonth'}><strong>Revenu total</strong></Typography>
+                          <Typography className={'customstattotalstatmonth'}><strong>{STATISTICS.incomes_total}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthIncomes.toFixed(2)}€</strong></Typography>
@@ -282,7 +271,7 @@ class ProfileStatistics extends React.Component {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatdonemonth'}><strong>Prestations réalisées</strong></Typography>
+                          <Typography className={'customstatdonemonth'}><strong>{STATISTICS.services_done}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthPrestations}</strong></Typography>
@@ -293,7 +282,7 @@ class ProfileStatistics extends React.Component {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatviewmonth'}><strong>Vues du profil</strong></Typography>
+                          <Typography className={'customstatviewmonth'}><strong>{STATISTICS.view_profil}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthViewsServices}</strong></Typography>
@@ -304,7 +293,7 @@ class ProfileStatistics extends React.Component {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatcommentarymonth'}><strong>Commentaires</strong></Typography>
+                          <Typography className={'customstatcommentarymonth'}><strong>{STATISTICS.commentary}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthReviews}</strong></Typography>
@@ -317,7 +306,7 @@ class ProfileStatistics extends React.Component {
                   <Grid container style={{width: '100%'}}>
                     <Grid className={classes.statContainer}>
                       <Grid className={classes.statContainerLabel}>
-                        <Typography>Année</Typography>
+                        <Typography>{STATISTICS.year}</Typography>
                       </Grid>
                       <Grid>
                         <FormControl>
@@ -343,10 +332,10 @@ class ProfileStatistics extends React.Component {
                     <Grid container className={`customstatgenriccont ${classes.statResultContainer}`}>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstattotalstatmonth'}><strong>Revenu total</strong></Typography>
+                          <Typography className={'customstattotalstatmonth'}><strong>{STATISTICS.incomes_total}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
-                          <Typography><strong>{this.state.yearIncomes.toFixed(2)}€</strong></Typography>
+                          <Typography><strong>{this.state.yearIncomes.toFixed(2) + STATISTICS.euro}</strong></Typography>
                         </Grid>
                       </Grid>
                       <Grid>
@@ -354,7 +343,7 @@ class ProfileStatistics extends React.Component {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatdonemonth'}><strong>Prestations réalisées</strong></Typography>
+                          <Typography className={'customstatdonemonth'}><strong>{STATISTICS.services_done}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.yearPrestations}</strong></Typography>
@@ -365,7 +354,7 @@ class ProfileStatistics extends React.Component {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatviewmonth'}><strong>Vues du profil</strong></Typography>
+                          <Typography className={'customstatviewmonth'}><strong>{STATISTICS.view_profil}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.yearViewsServices}</strong></Typography>
@@ -376,7 +365,7 @@ class ProfileStatistics extends React.Component {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatcommentarymonth'}><strong>Commentaires</strong></Typography>
+                          <Typography className={'customstatcommentarymonth'}><strong>{STATISTICS.commentary}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.yearReviews}</strong></Typography>

@@ -299,10 +299,10 @@ class Schedule extends React.Component {
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container
             style={{justifyContent: 'space-between', margin: 0, width: '100%'}} spacing={3}>
             <Grid>
-              <Button onClick={this.previousMonth} variant={'contained'} classes={{root: `customscheduleprevbutton`}}>&#8249;</Button>
+              <Button onClick={this.previousMonth} variant={'contained'} classes={{root: 'customscheduleprevbutton'}}>&#8249;</Button>
             </Grid>
             <Grid>
-              <Button onClick={this.nextMonth} variant={'contained'} classes={{root: `customschedulenextbutton`}}>&#8250;</Button>
+              <Button onClick={this.nextMonth} variant={'contained'} classes={{root: 'customschedulenextbutton'}}>&#8250;</Button>
             </Grid>
           </Grid>
           :
