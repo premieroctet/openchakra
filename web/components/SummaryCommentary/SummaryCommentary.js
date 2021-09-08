@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import Router from 'next/router'
 import '../../static/assets/css/custom.css'
+import {SUMMARY_COMMENTARY} from '../../utils/i18n'
 
 
 class SummaryCommentary extends React.Component {
@@ -40,7 +41,7 @@ class SummaryCommentary extends React.Component {
       .then(res => {
         let reviews=res.data
         if (serviceUser) {
-          reviews=reviews.filter(r => r.serviceUser._id==serviceUser)
+          reviews=reviews.filter(r => r.serviceUser._id===serviceUser)
         }
         this.setState({customerReviews: reviews})
       })
@@ -85,7 +86,7 @@ class SummaryCommentary extends React.Component {
               </Grid>
             </Grid>
             <Grid>
-              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewglobalgrade'}>NOTE GENERALE</Typography>
+              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewglobalgrade'}>{SUMMARY_COMMENTARY.global_grade}</Typography>
             </Grid>
           </Grid>
           <Grid item className={classes.summaryContainerCommentary}>
@@ -95,7 +96,7 @@ class SummaryCommentary extends React.Component {
               </Typography>
             </Grid>
             <Grid style={{marginTop: '2%'}}>
-              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewcommentary'}>COMMENTAIRES</Typography>
+              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewcommentary'}>{SUMMARY_COMMENTARY.commentary}</Typography>
             </Grid>
           </Grid>
           <Grid item className={classes.summaryContainerCompliments}>
@@ -103,7 +104,7 @@ class SummaryCommentary extends React.Component {
               <Typography><strong>{complimentsCount}</strong></Typography>
             </Grid>
             <Grid>
-              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewcomp'}>COMPLIMENTS</Typography>
+              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewcomp'}>{SUMMARY_COMMENTARY.compliments}</Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -111,7 +112,7 @@ class SummaryCommentary extends React.Component {
           <Grid>
             <Grid style={{display: 'flex', alignItems: 'center', marginTop: '5vh'}}>
               <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>
-                { showCommentary ? 'Cacher les commentaires' : 'Voir les commentaires'}
+                { showCommentary ? SUMMARY_COMMENTARY.button_hide_commentary : SUMMARY_COMMENTARY.button_show_commentary}
               </Button>
             </Grid>
           </Grid> : null

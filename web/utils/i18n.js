@@ -541,6 +541,72 @@ const SHOP = {
   },
 }
 
+const ADD_SERVICES = {
+  title: 'Mes services',
+  add_service: 'Développez votre boutique et ajoutez de nouveaux services !',
+}
+
+const SERVICES = {
+  particular_service: 'Services aux particuliers',
+  pro_service: 'Services aux professionnels',
+}
+
+const ASK_QUESTION = {
+  title: 'Vous souhaitez poser une question à ',
+  question: ' ?',
+  info: 'Rendez-vous sur la page du service qui vous intéresse, cliquez sur « demande d’informations » en dessous du bouton réserver. Vous pourrez alors poser toutes vos questions à  ',
+  exclamation: ' !',
+}
+
+const SUMMARY_COMMENTARY = {
+  global_grade: 'NOTE GENERALE',
+  commentary: 'COMMENTAIRES',
+  compliments: 'COMPLIMENTS',
+  button_hide_commentary: 'Cacher les commentaires',
+  button_show_commentary: 'Voir les commentaires',
+}
+
+const STATISTICS = {
+  title_topic_incomes: 'Mes revenus',
+  subtitle_topic_incomes: 'Ici, vous pouvez suivre l\'évolution de vos revenus et vos statistiques prévisionnelles',
+  year: 'Année',
+  month: 'Mois',
+  incomes_get: 'Revenus perçus',
+  incomes_will: 'Revenus à venir',
+  incomes_previ: 'Revenus prévisionnels ',
+  euro: ' €',
+  my_stat: 'Mes statistiques',
+  my_stat_subtitle: 'Retrouvez vos nombres de vues, de commentaires ou encore de prestations réalisées',
+  incomes_total: 'Revenu total',
+  services_done: 'Prestations réalisées',
+  view_profil: 'Vues du profil',
+  commentary: 'Commentaires',
+}
+
+const MESSAGES = {
+  last_message: 'Dernier message ',
+  no_message: 'Aucun message',
+  dialog_title_content: 'Saisissez votre message',
+  no_conversation: 'Vous n\'avez aucune conversation',
+  one_conversation: 'Vous avez une conversation',
+  you_got: 'Vous avez',
+  conversation: ' conversations',
+  my_messages: 'Mes messages',
+  label: 'Saisissez votre message',
+
+}
+
+const MESSAGE_DETAIL = {
+  browser_compatibility: 'Votre navigateur ne supporte pas les notifications',
+  notif: 'Vous recevrez des notifications pour cette conversation',
+  new_messages: 'Nouveaux Messages',
+
+}
+
+const MESSAGE_SUMMARY = {
+  no_message: 'Aucun message',
+}
+
 const AVOCOTES = {
   title: 'Besoin d\'un coup de pouce pour installer votre pack AvoCotés protection ?',
   subtitle: 'Confiez l\'installation de votre Pack SECURITE AvoCotés Protection à un entrepeneur local & qualifé',
@@ -571,6 +637,10 @@ const AVOCOTES = {
 
 const BOOKING = {
   MSG_EVALUATE: 'Vous avez 15 jours pour évaluer votre client. Une fois que votre client aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !',
+  payment_no_finish: 'Paiement non réalisé',
+  payment: 'Paiement',
+  payment_if_accept: 'Paiement si acceptation',
+  potential_incomes: 'Revenus potentiels',
 }
 
 const FAQ_ALFRED = {
@@ -813,5 +883,13 @@ module.exports = {
   HANDLE_ADDRESSES,
   TRUST_VERIFICATION,
   SECURITY,
-  NOTIFICATIONS
+  NOTIFICATIONS,
+  ADD_SERVICES,
+  SERVICES,
+  ASK_QUESTION,
+  SUMMARY_COMMENTARY,
+  STATISTICS,
+  MESSAGES,
+  MESSAGE_DETAIL,
+  MESSAGE_SUMMARY,
 }

@@ -1,46 +1,44 @@
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/components/MessageSummary/MessageSummary';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import {withStyles} from '@material-ui/core/styles'
+import styles from '../../static/css/components/MessageSummary/MessageSummary'
 import UserAvatar from '../Avatar/UserAvatar'
-import Typography from '@material-ui/core/Typography';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
-import axios from 'axios';
-const {frenchFormat} = require('../../utils/text');
-const moment=require('moment');
-moment.locale('fr');
+import Typography from '@material-ui/core/Typography'
+import DeleteIcon from '@material-ui/icons/Delete'
+import IconButton from '@material-ui/core/IconButton'
+import axios from 'axios'
+import {MESSAGE_SUMMARY} from '../../utils/i18n'
+const moment=require('moment')
+moment.locale('fr')
 
 class MessageSummary extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-    };
+    }
   }
 
   getLastMessage = () => {
-    var {chats, relative}=this.props;
-    chats = chats.sort( (c1, c2) => c2.latest-c1.latest);
+    let {chats}=this.props
+    chats = chats.sort((c1, c2) => c2.latest-c1.latest)
     return chats[0].messages.slice().reverse()[0]
   };
 
   deleteMessages = e => {
-    e.stopPropagation();
-    this.props.chats.forEach( chat => {
-      axios.delete(`/myAlfred/api/chatRooms/userChatRooms/${chat._id}`)
-        .then( res => console.log(`Chat supprimé:${chat._id}`))
-        .then( err => console.log(`Erreur chat supprimé:${chat._id}:${err}`))
-    });
+    e.stopPropagation()
+    this.props.chats.forEach(chat => {
+      axios.delete(`/myAlfred/api/chatRooms/userChatRooms/${chat._id}`).catch(err => console.error(`Erreur chat supprimé:${chat._id}:${err}`))
+    })
   };
 
   render() {
-    const {relative, chats, classes}=this.props;
+    const {relative}=this.props
 
-    const last = this.getLastMessage();
+    const last = this.getLastMessage()
     return (
-      <Grid container style={{ width:'100%', display:'flex', flexDirection:'row', cursor: 'pointer'}} onClick={() => this.props.cbDetails(relative)}>
+      <Grid container style={{width: '100%', display: 'flex', flexDirection: 'row', cursor: 'pointer'}} onClick={() => this.props.cbDetails(relative)}>
         <Grid style={{width: '100%'}}>
           <Grid style={{display: 'flex', justifyContent: 'flex-end'}}>
             <Typography>
@@ -58,7 +56,7 @@ class MessageSummary extends React.Component {
                 <Typography><strong>{relative.firstname}</strong></Typography>
               </Grid>
               <Grid>
-                <Typography style={{textOverflow: 'ellipsis'}}>{last ? last.content : 'Aucun message'}</Typography>
+                <Typography style={{textOverflow: 'ellipsis'}}>{last ? last.content : MESSAGE_SUMMARY.no_message}</Typography>
               </Grid>
             </Grid>
           </Grid>

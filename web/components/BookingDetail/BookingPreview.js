@@ -57,7 +57,7 @@ class BookingPreview extends React.Component {
     if (!bookingObj) {
       return null
     }
-    const mini = moment(`${bookingObj.date_prestation} $${moment(bookingObj.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
+    const mini = moment(`${bookingObj.date_prestation} ${moment(bookingObj.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
     return mini
   }
 
@@ -76,7 +76,7 @@ class BookingPreview extends React.Component {
 
       axios.get(`/myAlfred/api/booking/${booking_id}`).then(res => {
         const booking = res.data
-        const end_datetime = moment(`${booking.date_prestation} $${moment(booking.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
+        const end_datetime = moment(`${booking.date_prestation} ${moment(booking.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
         this.setState(
           {
             bookingObj: booking,
@@ -125,14 +125,14 @@ class BookingPreview extends React.Component {
   }
 
   onChangeEndDate = ev => {
-    const m = moment(`${moment(ev).format('DD/MM/YYYY')} $${moment(this.state.end_datetime).format('HH:mm')}`, 'DD/MM/YYYY HH:mm')
+    const m = moment(`${moment(ev).format('DD/MM/YYYY')} ${moment(this.state.end_datetime).format('HH:mm')}`, 'DD/MM/YYYY HH:mm')
     if (m.isAfter(this.getPrestationMinMoment())) {
       this.setState({end_datetime: m})
     }
   }
 
   onChangeEndTime = ev => {
-    const m = moment(`$${moment(this.state.end_datetime).format('DD/MM/YYYY')} ${moment(ev).format('HH:mm')}`, 'DD/MM/YYYY HH:mm')
+    const m = moment(`${moment(this.state.end_datetime).format('DD/MM/YYYY')} ${moment(ev).format('HH:mm')}`, 'DD/MM/YYYY HH:mm')
     if (m.isAfter(this.getPrestationMinMoment())) {
       this.setState({end_datetime: m})
     }
@@ -214,19 +214,19 @@ class BookingPreview extends React.Component {
     const status = bookingObj.status
     const paymentTitle =
       amIAlfred ?
-        status === BOOK_STATUS.REFUSED ? 'Paiement non réalisé'
+        status === BOOK_STATUS.REFUSED ? BOOKING.payment_no_finish
           : [BOOK_STATUS.FINISHED, BOOK_STATUS.CONFIRMED].includes(status) ? 'Versement' : 'Revenus potentiels'
         :
         [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED].includes(status) ?
-          'Paiement non réalisé'
+          BOOKING.payment_no_finish
           :
           status === BOOK_STATUS.FINISHED ?
-            'Paiement'
+            BOOKING.payment
             :
             [BOOK_STATUS.CONFIRMED, BOOK_STATUS.PREAPPROVED, BOOK_STATUS.INFO, BOOK_STATUS.TO_CONFIRM].includes(status) ?
-              'Paiement si acceptation'
+              BOOKING.payment_if_accept
               :
-              'Revenus potentiels'
+              BOOKING.potential_incomes
 
     const momentTitle = [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
       `du ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}
@@ -561,9 +561,7 @@ class BookingPreview extends React.Component {
                                 )
                                   :
                                   bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.user._id ?
-                                    (
-                                      null
-                                    )
+                                    null
                                     :
                                     bookingObj.status === BOOK_STATUS.PREAPPROVED && currentUser._id === bookingObj.user._id ? (
                                       <Grid className={classes.groupButtonsContainer}>
