@@ -25,12 +25,12 @@ class TextExtractTest extends React.Component {
   getQueries = () => {
     const ids=this.getIdentifiers('', i18n).flat(6)
     const queries=ids.filter(i => i).map(obj => {
-      console.log(obj)
       let [k, v]=Object.entries(obj)[0]
+      const compName=k.split('.')[0]
       v=v.replace(/['’]/g, "\\'")
       return `db.uiconfigurations.update(
-        {page: 'textes', component: '${k}', label: '${v}'},
-        {$set : {classname: 'null', type:'content', attributes: [{name:'content', value: '${v}'}]}},
+        {page: 'textes', component: '${compName}', label: '${v}'},
+        {$set : {classname: '${k}', type:'content', attributes: [{name:'content', value: '${v}'}]}},
         {upsert: true})`
     })
     return queries
