@@ -5,10 +5,10 @@ const validateCss = require('css-validator')
   Creates CSS from configurations
   config : {classname, attributes:{name,value}}
 */
-createUIConfiguration = configuration => {
+createCSSConfiguration = items => {
   let cssClasses={}
   // Transklate classes : menu, search bar, etc...
-  configuration.forEach(config => {
+  items.forEach(config => {
     config.attributes.forEach(attribute => {
       let className=config.classname
       let name=attribute.name
@@ -73,6 +73,30 @@ createUIConfiguration = configuration => {
         console.error(`CSS write error:${err}`)
       })
   })
+}
+
+createI18NConfiguration = items => {
+  console.log(`Generating items ${items}`)
+  items = items.filter(i => i.attributes && i.attributes.length)
+  const formattedItems=items.map(it => `\t"${it.component}": "${it.attributes[0].value.replace(/"/g, '\\"')}"`).join(',\n')
+  const output=`{\n${formattedItems}\n}`
+  fs.writeFile('translations/fr/custom.json', output)
+    .then(() => {
+      console.log('CSS saved')
+    })
+    .catch(err => {
+      console.error(`CSS write error:${err}`)
+    })
+}
+
+createUIConfiguration = configuration => {
+  console.log(`Got ${configuration.length} items`)
+  const css_items = configuration.filter(c => c.type != 'content')
+  console.log(`Got ${css_items.length} CSS items`)
+  createCSSConfiguration(css_items)
+  const i18n_items = configuration.filter(c => c.type == 'content')
+  console.log(`Got ${i18n_items.length} I18N items`)
+  createI18NConfiguration(i18n_items)
 }
 
 module.exports = {

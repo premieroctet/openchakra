@@ -2,6 +2,7 @@ import {withTranslation} from 'react-i18next'
 import React from 'react'
 const i18n = require('../../utils/i18n')
 import _ from 'lodash'
+import Button from '@material-ui/core/Button'
 
 class TextExtractTest extends React.Component {
   constructor(props) {
@@ -25,7 +26,8 @@ class TextExtractTest extends React.Component {
     const ids=this.getIdentifiers('', i18n).flat(6)
     const queries=ids.filter(i => i).map(obj => {
       console.log(obj)
-      const [k, v]=Object.entries(obj)[0]
+      let [k, v]=Object.entries(obj)[0]
+      v=v.replace(/['’]/g, "\\'")
       return `db.uiconfigurations.update(
         {page: 'textes', component: '${k}', label: '${v}'},
         {$set : {classname: 'null', type:'content', attributes: [{name:'content', value: '${v}'}]}},
@@ -36,16 +38,23 @@ class TextExtractTest extends React.Component {
 
   render() {
 
-    const ids=this.getQueries()//this.getIdentifiers('', i18n).flat(6)
+    const ids=this.state.sql_mode ?
+      this.getQueries():
+      this.getIdentifiers('', i18n).flat(6).map(o => o && Object.entries(o).map(i=>i.join('=')))
 
     return(
       <>
-        <h1>Textes ({ids.length})</h1>
-        {_.sortBy(ids).map(id => (
-          <>
-            <div>{id}</div>
-          </>
-        ))}
+        <h1>
+          <Button variant='outlined' color={this.state.sql_mode ? 'primary': 'black'} onClick={() => this.setState({sql_mode: false})}>Textes</Button>
+          <Button variant='outlined' color={this.state.sql_mode ? 'black': 'primary'} onClick={() => this.setState({sql_mode: true})}>Requêtes Mongo</Button> ({ids.length})
+        </h1>
+        <code>
+          {_.sortBy(ids).map(id => (
+            <>
+              <div>{id}</div>
+            </>
+          ))}
+        </code>
       </>
     )
   }
