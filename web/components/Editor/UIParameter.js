@@ -7,7 +7,6 @@ import IntegerEditor from './IntegerEditor'
 import GroupEditor from './GroupEditor'
 import PictureEditor from './PictureEditor'
 import Grid from '@material-ui/core/Grid'
-import Divider from '@material-ui/core/Divider'
 
 const ATT_TYPES={
   'color': 'color',
