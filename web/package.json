@@ -69,6 +69,7 @@
     "react-dom": "^16.14.0",
     "react-dropdown-select": "^4.7.3",
     "react-helmet": "6.1.0",
+    "react-html-parser": "^2.0.2",
     "react-i18next": "^11.11.4",
     "react-infinite-scroll-component": "^5.1.0",
     "react-input-range": "^1.3.0",
