@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/FooterAvocotes/FooterAvocotes'
@@ -14,7 +15,7 @@ function Footer({classes}) {
             <img
               alt={'logo_myAlfred'}
               title={'logo_myAlfred'}
-              src={'../../../static/assets/icon/logoOnDemand.svg'}
+              src={'/static/assets/icon/logoOnDemand.svg'}
               height={98}
             />
           </Grid>
@@ -60,4 +61,4 @@ function Footer({classes}) {
   )
 }
 
-export default withStyles(styles)(Footer)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Footer))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Router from 'next/router'
@@ -46,4 +47,4 @@ class AddService extends React.Component {
   }
 }
 
-export default withStyles(styles)(AddService)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(AddService))

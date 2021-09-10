@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {useEffect, useState} from 'react'
 import {getPartner} from '../../utils/context'
 
@@ -20,4 +21,4 @@ function Asset(props) {
   )
 }
 
-export default Asset
+export default withTranslation('custom', {withRef: true})(Asset)

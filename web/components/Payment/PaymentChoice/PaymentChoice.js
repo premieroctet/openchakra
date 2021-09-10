@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -93,4 +94,4 @@ class PaymentChoice extends React.Component{
   }
 }
 
-export default withStyles(styles) (PaymentChoice);
+export default withTranslation('custom', {withRef: true})(withStyles(styles) (PaymentChoice))

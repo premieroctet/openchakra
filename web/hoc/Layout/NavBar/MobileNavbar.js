@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
@@ -126,7 +127,7 @@ class MobileNavbar extends React.Component{
       Router.push( `/company/dashboard/companyDashboard`)
     }
     else {
-      Router.push('/search?search=1');
+      Router.push('/search');
     }
   };
 
@@ -164,7 +165,7 @@ class MobileNavbar extends React.Component{
   };
 
   findService = () => {
-    var queryParams = {search: 1};
+    var queryParams = {};
     if (this.state.keyword) {
       queryParams['keyword'] = this.state.keyword;
     }
@@ -417,4 +418,4 @@ class MobileNavbar extends React.Component{
 
 }
 
-export default withStyles (styles) (MobileNavbar);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(MobileNavbar))

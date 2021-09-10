@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import {TextField} from '@material-ui/core'
 import BusinessIcon from '@material-ui/icons/Business'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
@@ -470,4 +471,4 @@ class About extends CompanyComponent {
   }
 }
 
-export default withStyles(styles)(About)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(About))

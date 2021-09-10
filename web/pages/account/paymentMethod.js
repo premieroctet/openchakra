@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import axios from 'axios'
@@ -101,4 +102,4 @@ class paymentMethod extends React.Component {
 }
 
 
-export default withStyles(styles)(paymentMethod)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(paymentMethod))

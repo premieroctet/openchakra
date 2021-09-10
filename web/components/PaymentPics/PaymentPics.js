@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 
@@ -46,4 +47,4 @@ class PaymentPics extends React.Component{
 
 }
 
-export default PaymentPics;
+export default withTranslation('custom', {withRef: true})(PaymentPics)

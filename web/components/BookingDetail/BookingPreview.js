@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import Link from 'next/link'
@@ -666,4 +667,4 @@ class BookingPreview extends React.Component {
   }
 }
 
-export default withStyles(styles)(BookingPreview)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingPreview))

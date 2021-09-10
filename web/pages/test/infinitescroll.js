@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -65,4 +66,4 @@ class InfiniteTest extends React.Component {
  }
 }
 
-export default InfiniteTest
+export default withTranslation('custom', {withRef: true})(InfiniteTest)

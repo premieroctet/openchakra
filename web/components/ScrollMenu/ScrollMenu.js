@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Tabs from '@material-ui/core/Tabs'
@@ -46,6 +47,7 @@ class ScrollMenu extends React.Component {
       console.error(`ScrollMenu:Mode ${mode} inconnu`)
     }
 
+    const {t}=this.props
     return(
       <Grid style={{maxWidth: '100%'}}>
         <Grid>
@@ -61,14 +63,13 @@ class ScrollMenu extends React.Component {
             {
               categories ?
                 categories.map((res, index) => {
-
                   let url = mode === 'account' ? `/account${ res.url}`
                     :
                     mode === 'profile' ? `/profile${ res.url }?${ querystring.stringify({...extraParams})}`
                       :
                       mode === 'faq' ? res.url
                         :
-                        mode === 'search' ? `/search?search=1&category=${ res._id }${gps ? `&gps=${ JSON.stringify(gps)}` : ''}`
+                        mode === 'search' ? `/search?category=${ res._id }${gps ? `&gps=${ JSON.stringify(gps)}` : ''}`
                           :
                           ''
                   return(
@@ -84,4 +85,4 @@ class ScrollMenu extends React.Component {
   }
 }
 
-export default withStyles(styles)(ScrollMenu)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ScrollMenu))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
@@ -96,4 +97,4 @@ class AddressAndFacturation extends React.Component{
 
 }
 
-export default withStyles(styles) (AddressAndFacturation);
+export default withTranslation('custom', {withRef: true})(withStyles(styles) (AddressAndFacturation))

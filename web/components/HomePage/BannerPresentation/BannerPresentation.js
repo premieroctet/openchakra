@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
@@ -53,7 +54,7 @@ class BannerPresentation extends React.Component {
             <Typography className={`custombannercontent ${classes.bannerPresentationText}`}>{text}</Typography>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerLinkDiscrover}>
-            <Link href={'/search?search=1'}>
+            <Link href={'/search'}>
               <Button
                 variant={'outlined' }
                 classes={{root: `custombannerbutton ${classes.bannerPresentationButtonB2b}`}}>
@@ -65,7 +66,7 @@ class BannerPresentation extends React.Component {
         {
           isB2BStyle(user) ?
             <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.illuContainer}>
-              <img title={'illuB2b'} alt={'illuB2b'} src={`../../../static/assets/img/homePage/${isB2BStyle(user) ? 'b2bIllu.svg' : 'illuHeader.png'}`} className={classes.illuStyle}/>
+              <img title={'illuB2b'} alt={'illuB2b'} src={`/static/assets/img/homePage/${isB2BStyle(user) ? 'b2bIllu.svg' : 'illuHeader.png'}`} className={classes.illuStyle}/>
             </Grid>
             : null
         }
@@ -75,4 +76,4 @@ class BannerPresentation extends React.Component {
 
 }
 
-export default withStyles(styles)(BannerPresentation)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BannerPresentation))

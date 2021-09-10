@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Link from '../../../components/Link/Link'
@@ -38,4 +39,4 @@ class NeedMoreFaq extends React.Component {
   }
 }
 
-export default withStyles(styles)(NeedMoreFaq)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(NeedMoreFaq))

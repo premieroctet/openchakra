@@ -1,20 +1,22 @@
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react'
-
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
-import {Typography} from '@material-ui/core'
-import TextField from '@material-ui/core/TextField'
-import {withStyles} from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
+import React from 'react'
 import Router from 'next/router'
-import Layout from '../../../hoc/Layout/Layout'
-import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor'
-const {snackBarSuccess}=require('../../../utils/notifications')
+import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
+import BasePage from '../../basePage'
+import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor'
+import Layout from '../../../hoc/Layout/Layout'
 
-const styles = theme => ({
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
+const {snackBarSuccess}=require('../../../utils/notifications')
+
+const styles = () => ({
   signupContainer: {
     alignItems: 'center',
     height: '170vh',
@@ -38,7 +40,7 @@ const styles = theme => ({
   },
 })
 
-class view extends React.Component {
+class View extends BasePage {
   constructor(props) {
     super(props)
     this.state = {
@@ -52,21 +54,18 @@ class view extends React.Component {
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
 
-  static getInitialProps({query: {id}}) {
-    return {id: id}
-  }
-
   isEdition = () => {
-    return Boolean(this.props.id)
+    return Boolean(this.getURLProps().id)
   }
 
   componentDidMount() {
+    const id=this.getURLProps().id
     localStorage.setItem('path', Router.pathname)
-    if (!this.props.id) {
+    if (!id) {
       return
     }
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/admin/equipment/all/${this.props.id}`)
+    axios.get(`/myAlfred/api/admin/equipment/all/${id}`)
       .then(response => {
         let equipment = response.data
         this.setState({...equipment})
@@ -96,8 +95,9 @@ class view extends React.Component {
       },
     }
     setAxiosAuthentication()
+    const id=this.getURLProps().id
     const action=this.isEdition() ?
-      axios.put(`/myAlfred/api/admin/equipment/all/${this.props.id}`, formData, config)
+      axios.put(`/myAlfred/api/admin/equipment/all/${id}`, formData, config)
       :
       axios.post('/myAlfred/api/admin/equipment/all', formData, config)
     action
@@ -179,4 +179,4 @@ class view extends React.Component {
   }
 }
 
-export default withStyles(styles)(view)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))

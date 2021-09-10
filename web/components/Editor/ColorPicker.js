@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {ChromePicker} from 'react-color'
 import Button from '@material-ui/core/Button'
@@ -65,4 +66,4 @@ class ColorPicker extends React.Component {
 
 }
 
-export default ColorPicker
+export default withTranslation('custom', {withRef: true})(ColorPicker)

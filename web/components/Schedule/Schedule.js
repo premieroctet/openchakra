@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {Calendar, momentLocalizer, Views} from 'react-big-calendar'
 import _ from 'lodash'
@@ -382,4 +383,4 @@ class Schedule extends React.Component {
   }
 }
 
-export default withStyles(styles)(Schedule)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Schedule))

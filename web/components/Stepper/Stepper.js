@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
@@ -47,4 +48,4 @@ class Stepper extends React.Component {
   }
 }
 
-export default withStyles(styles)(Stepper)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Stepper))

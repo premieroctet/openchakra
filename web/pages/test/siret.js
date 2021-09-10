@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import axios from 'axios'
 
@@ -32,4 +33,4 @@ class SiretTest extends React.Component{
 
 }
 
-export default SiretTest
+export default withTranslation('custom', {withRef: true})(SiretTest)

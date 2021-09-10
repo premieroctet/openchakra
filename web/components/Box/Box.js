@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import styles from './BoxStyle';
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -16,4 +17,4 @@ class Box extends React.Component {
   }
 }
 
-export default withStyles(styles)(Box)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Box))

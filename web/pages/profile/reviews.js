@@ -1,23 +1,24 @@
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
-import ProfileLayout from '../../hoc/Layout/ProfileLayout'
-import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
 import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+
+import {isEditableUser} from '../../utils/context'
 import AskQuestion from '../../components/AskQuestion/AskQuestion'
+import BasePage from '../basePage'
 import Box from '../../components/Box/Box'
 import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
-import {isEditableUser} from '../../utils/context'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
+import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
 import styles from '../../static/css/pages/profile/reviews/reviews'
 
-class ProfileReviews extends React.Component {
+class ProfileReviews extends BasePage {
 
   constructor(props) {
     super(props)
-    this.state={}
-  }
+    this.state={
 
-  static getInitialProps({query: {user}}) {
-    return {user: user}
+    }
   }
 
   content = (classes, user) => {
@@ -44,7 +45,8 @@ class ProfileReviews extends React.Component {
   };
 
   render() {
-    const {user, classes}=this.props
+    const {classes}=this.props
+    const {user}=this.getURLProps()
 
     if (!user) {
       return null
@@ -67,4 +69,4 @@ class ProfileReviews extends React.Component {
 
 }
 
-export default withStyles(styles)(ProfileReviews)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileReviews))

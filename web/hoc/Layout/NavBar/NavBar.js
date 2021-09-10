@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React, {Component} from 'react'
 import Button from '@material-ui/core/Button'
@@ -135,14 +136,16 @@ class NavBar extends Component {
             res.data.service_address.forEach(addr => {
               allAddresses[addr._id] = addr
             })
-            this.setState({allAddresses: allAddresses})
+            this.setState({
+              allAddresses: allAddresses,
+              selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
+            })
           })
       })
       .catch(err => {
         console.error(err)
       })
 
-    this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''})
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/category/${isB2BStyle() ? PRO : PART}`)
       .then(res => {
@@ -199,7 +202,7 @@ class NavBar extends Component {
     if (reason=='backdropClick') { return }
     if (this.state.activeStep === 2) {
       removeStatusRegister()
-      this.setState({setOpenRegister: null}, () => Router.push('/search?search=1'))
+      this.setState({setOpenRegister: null}, () => Router.push('/search'))
     }
     else {
       removeStatusRegister()
@@ -227,7 +230,7 @@ class NavBar extends Component {
       Router.push('/company/dashboard/companyDashboard')
     }
     else {
-      Router.push('/search?search=1')
+      Router.push('/search')
     }
   };
 
@@ -257,8 +260,8 @@ class NavBar extends Component {
     }
   };
 
-  onCategoriesFilterChanged = categories => {
-    categories = categories || []
+  onCategoriesFilterChanged = pcategories => {
+    categories = pcategories || []
     const filteredServices=this.state.allServices.filter(s => {
       return categories.map(c => c.value).includes(s.category)
     })
@@ -268,8 +271,8 @@ class NavBar extends Component {
     this.setState({categories: categories, filteredServices: filteredServices, services: services})
   };
 
-  onServicesFilterChanged = services => {
-    services = services || []
+  onServicesFilterChanged = pservices => {
+    services = pservices || []
     this.setState({services: services || []})
   };
 
@@ -320,7 +323,7 @@ class NavBar extends Component {
   }
 
   findService = () => {
-    let queryParams = {search: 1}
+    let queryParams = {}
     if (this.state.keyword) {
       queryParams.keyword = this.state.keyword
     }
@@ -1093,7 +1096,7 @@ class NavBar extends Component {
         sm={1}
         onClick={() => Router.push('/')}
       >
-        <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
+        <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'/static/assets/icon/logo.svg'}
           className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
       </Grid>
     )
@@ -1141,7 +1144,7 @@ class NavBar extends Component {
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                     className={classes.customNavbar}
                     label={NAVBAR_MENU.ourServices}
-                    onClick={() => Router.push('/search?search=1')}
+                    onClick={() => Router.push('/search')}
                   />
                   {user ?
                     user.is_alfred ?
@@ -1195,7 +1198,6 @@ class NavBar extends Component {
   render() {
     const {user, ifHomePage, setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state
     const {classes} = this.props
-
     const logged = user != null
 
     const dialogLogin = () => {
@@ -1283,4 +1285,4 @@ class NavBar extends Component {
   }
 }
 
-export default withStyles(styles)(NavBar)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(NavBar))

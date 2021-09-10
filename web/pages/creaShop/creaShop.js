@@ -1,29 +1,34 @@
-import CssBaseline from '@material-ui/core/CssBaseline'
-import MenuIcon from '@material-ui/icons/Menu'
-const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
-import styles from '../../static/css/pages/creaShop/creaShopStyle'
-import {withStyles} from '@material-ui/core/styles'
-import Stepper from '../../components/Stepper/Stepper'
-import Button from '@material-ui/core/Button'
-import axios from 'axios'
-import {ALF_CONDS, CANCEL_MODE, GID_LEN, CREASHOP_MODE} from '../../utils/consts.js'
-import Router from 'next/router'
-import IconButton from '@material-ui/core/IconButton'
-import Hidden from '@material-ui/core/Hidden'
-import Drawer from '@material-ui/core/Drawer'
-import PropTypes from 'prop-types'
-import List from '@material-ui/core/List'
-import Box from '../../components/Box/Box'
-const {getDefaultAvailability}=require('../../utils/dateutils')
-const {is_development, isB2BDisabled}=require('../../config/config')
-const {snackBarSuccess}=require('../../utils/notifications')
-const {getLoggedUserId, isB2BStyle}=require('../../utils/context')
-const {STEPS}=require('./creaShopSteps')
 import '../../static/assets/css/custom.css'
 
-class creaShop extends React.Component {
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Drawer from '@material-ui/core/Drawer'
+import Grid from '@material-ui/core/Grid'
+import Hidden from '@material-ui/core/Hidden'
+import IconButton from '@material-ui/core/IconButton'
+import List from '@material-ui/core/List'
+import MenuIcon from '@material-ui/icons/Menu'
+import PropTypes from 'prop-types'
+import React from 'react'
+import Router from 'next/router'
+import axios from 'axios'
+
+import {ALF_CONDS, CANCEL_MODE, GID_LEN, CREASHOP_MODE} from '../../utils/consts.js'
+import BasePage from '../basePage'
+import Box from '../../components/Box/Box'
+import Stepper from '../../components/Stepper/Stepper'
+import styles from '../../static/css/pages/creaShop/creaShopStyle'
+
+const {STEPS}=require('./creaShopSteps')
+const {getDefaultAvailability}=require('../../utils/dateutils')
+const {getLoggedUserId, isB2BStyle}=require('../../utils/context')
+const {is_development, isB2BDisabled}=require('../../config/config')
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
+const {snackBarSuccess}=require('../../utils/notifications')
+
+class creaShop extends BasePage {
 
   constructor(props) {
     super(props)
@@ -81,10 +86,6 @@ class creaShop extends React.Component {
     this.scheduleDrawer = React.createRef()
   }
 
-  static getInitialProps({query: {serviceuser_id}}) {
-    return {serviceuser_id: serviceuser_id}
-  }
-
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
 
@@ -127,8 +128,8 @@ class creaShop extends React.Component {
             shop.is_certified=true
 
             // Si mode ajout de service, récupérer les services de la boutique pour les excludre des choix
-            if (this.props.serviceuser_id) {
-              axios.get(`/myAlfred/api/serviceUser/${this.props.serviceuser_id}`)
+            if (this.getURLProps().serviceuser_id) {
+              axios.get(`/myAlfred/api/serviceUser/${this.getURLProps().serviceuser_id}`)
                 .then(serviceUser => {
                   const su=serviceUser.data
                   shop.service = su.service._id
@@ -298,7 +299,7 @@ class creaShop extends React.Component {
       setAxiosAuthentication()
       axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(() => {
-          const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.props.serviceuser_id || ''}`
+          const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.getURLProps().serviceuser_id || ''}`
           axios.post(su_url, cloned_shop)
             .then(su_res => {
               const su = su_res.data
@@ -637,4 +638,4 @@ creaShop.propTypes = {
   window: PropTypes.func,
 }
 
-export default withStyles(styles)(creaShop)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(creaShop))

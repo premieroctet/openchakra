@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import CancelIcon from '@material-ui/icons/Cancel'
@@ -436,4 +437,4 @@ class DrawerBooking extends React.Component {
 
 }
 
-export default withStyles(styles)(DrawerBooking)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(DrawerBooking))

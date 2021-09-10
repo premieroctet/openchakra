@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -43,7 +44,7 @@ class CategoryCard extends React.Component {
     }
     return (
       <Link
-        href={`/search?search=1&category=${ item._id }${gps ? `&gps=${ JSON.stringify(gps)}` : ''}`}>
+        href={`/search?category=${ item._id }${gps ? `&gps=${ JSON.stringify(gps)}` : ''}`}>
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer'}}>
           <Grid className={classes.categoryCardMedia}>
             <Grid
@@ -62,4 +63,4 @@ class CategoryCard extends React.Component {
 
 }
 
-export default withStyles(styles)(CategoryCard)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(CategoryCard))

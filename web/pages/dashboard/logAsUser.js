@@ -1,18 +1,20 @@
-const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication')
-import React from 'react'
-import Card from '@material-ui/core/Card'
-import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
 import Button from '@material-ui/core/Button'
-
-import Layout from '../../hoc/Layout/Layout'
-import axios from 'axios'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import Input from '@material-ui/core/Input'
+import React from 'react'
 import Router from 'next/router'
 import Select from 'react-dropdown-select'
-import Input from '@material-ui/core/Input'
+import axios from 'axios'
+
+import BasePage from '../basePage'
+import Layout from '../../hoc/Layout/Layout'
 
 const {ROLES} = require('../../utils/consts')
+const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication')
 
 const styles = {
   loginContainer: {
@@ -44,13 +46,13 @@ const styles = {
   },
 }
 
-class logAsUser extends React.Component {
+class LogAsUser extends BasePage {
 
   constructor(props) {
     super(props)
 
     this.state = {
-      user: props.email,
+      user: null,
       roles: [],
       role: null,
       errors: null,
@@ -58,10 +60,6 @@ class logAsUser extends React.Component {
     }
 
     this.onUserChanged = this.onUserChanged.bind(this)
-  }
-
-  static getInitialProps({query: {email}}) {
-    return {email: email}
   }
 
   componentDidMount() {
@@ -79,7 +77,10 @@ class logAsUser extends React.Component {
           }
         })
         this.setState({muUsers: muUsers})
-
+        const email=this.getURLProps().email
+        if (email) {
+          this.setState({user: muUsers.find(m => m.key==email)})
+        }
       })
       .catch(err => {
         console.error(err)
@@ -145,7 +146,7 @@ class logAsUser extends React.Component {
                     name="user"
                     onChange={this.onUserChanged}
                     options={muUsers}
-                    values={muUsers.filter(m => m.value==user)}
+                    values={muUsers.filter(m => m.value==(user && user.value))}
                     multi={false}
                   >
                   </Select>
@@ -184,4 +185,4 @@ class logAsUser extends React.Component {
 }
 
 
-export default withStyles(styles)(logAsUser)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(LogAsUser))

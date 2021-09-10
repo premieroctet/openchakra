@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import DocumentEditor from '../DocumentEditor/DocumentEditor'
@@ -37,4 +38,4 @@ class PictureEditor extends React.Component {
 
 }
 
-export default PictureEditor
+export default withTranslation('custom', {withRef: true})(PictureEditor)

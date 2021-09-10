@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
@@ -1100,4 +1101,4 @@ class CguContent extends React.Component {
 
 }
 
-export default withStyles(styles)(CguContent)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(CguContent))

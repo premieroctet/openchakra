@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import Typography from '@material-ui/core/Typography'
@@ -56,4 +57,4 @@ class Topic extends React.Component {
 
 }
 
-export default withStyles(styles)(Topic)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Topic))

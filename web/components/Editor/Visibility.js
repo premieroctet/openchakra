@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
@@ -39,4 +40,4 @@ class VisibilityEditor extends React.Component {
 }
 
 
-export default VisibilityEditor
+export default withTranslation('custom', {withRef: true})(VisibilityEditor)

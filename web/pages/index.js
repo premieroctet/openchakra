@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import axios from 'axios'
 import React from 'react'
 import Footer from '../hoc/Layout/Footer/Footer'
@@ -92,7 +93,7 @@ class Home extends React.Component {
       }).catch(err => console.error(err))
   }
 
-  dialogStore = classes => {
+  dialogStore = () => {
     const {open} = this.state
 
 
@@ -100,7 +101,7 @@ class Home extends React.Component {
       <Dialog onClose={() => this.setState({open: false})} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({open: false})}>
           <Grid style={{display: 'flex'}}>
-            <img style={{marginRight: '7vh'}} src="../static/assets/icon/iconBlueDeep20@3x-2.png" alt="icone application myAlfred"/>
+            <img style={{marginRight: '7vh'}} src="/static/assets/icon/iconBlueDeep20@3x-2.png" alt="icone application myAlfred"/>
             <Grid>
               Application My&nbsp;Alfred
             </Grid>
@@ -243,4 +244,4 @@ class Home extends React.Component {
   }
 }
 
-export default withStyles(styles)(Home)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Home))

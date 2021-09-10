@@ -1,8 +1,9 @@
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import axios from 'axios'
-import {ASK_QUESTION} from '../../utils/i18n'
+import {withTranslation} from 'react-i18next'
+import React from "react"
+import Grid from "@material-ui/core/Grid"
+import Typography from "@material-ui/core/Typography"
+import axios from "axios";import
+{ASK_QUESTION} from '../../utils/i18n'
 
 class AskQuestion extends React.Component {
   constructor(props) {
@@ -40,4 +41,4 @@ class AskQuestion extends React.Component {
 
 }
 
-export default AskQuestion
+export default withTranslation('custom', {withRef: true})(AskQuestion)

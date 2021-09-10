@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Grid from '@material-ui/core/Grid'
@@ -114,4 +115,4 @@ class ShowDiploma extends React.Component {
   }
 }
 
-export default withStyles(styles)(ShowDiploma)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ShowDiploma))

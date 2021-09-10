@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import NavBar from './NavBar/NavBar'
@@ -84,7 +85,7 @@ class Layout extends React.Component {
           </Grid>
           <Grid className={classes.generalWidthFooter}>
             <Grid style={{width: '85%'}}>
-              <Footer/>
+              {<Footer/>}
             </Grid>
           </Grid>
         </Grid>
@@ -93,4 +94,4 @@ class Layout extends React.Component {
   }
 }
 
-export default withStyles(styles)(Layout)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Layout))

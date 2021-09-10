@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import CardService from '../Card/CardService/CardService'
 import Grid from '@material-ui/core/Grid'
@@ -60,4 +61,4 @@ class Services extends React.Component {
   }
 }
 
-export default Services
+export default withTranslation('custom', {withRef: true})(Services)

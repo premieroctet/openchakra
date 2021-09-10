@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import ColorPicker from './ColorPicker'
 import HtmlEditor from './HtmlEditor'
@@ -6,7 +7,6 @@ import IntegerEditor from './IntegerEditor'
 import GroupEditor from './GroupEditor'
 import PictureEditor from './PictureEditor'
 import Grid from '@material-ui/core/Grid'
-import Divider from '@material-ui/core/Divider'
 
 const ATT_TYPES={
   'color': 'color',
@@ -73,14 +73,14 @@ class UIParameter extends React.Component {
               att_name=`${this.props.prefix}.${att_name}`
             }
             let pAtt=parameter.attributes.find(a => a.name==att_name)
-            console.log(`AttName:${att_name}`)
             pAtt = pAtt || {value: ''}
+            const props={key: att_name, title: getTitle(att_name), value: pAtt.value, onChange: onChange(att_name)}
             switch (att_type) {
-              case 'color': return <Grid item xl={12}><ColorPicker title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} /></Grid>
-              case 'text': return <Grid item xl={12}><HtmlEditor title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} /></Grid>
-              case 'visibility': return <Grid item xl={12}><Visibility title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} name={title}/></Grid>
-              case 'integer': return <Grid item xl={12}><IntegerEditor title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} /></Grid>
-              case 'picture': return <Grid item xl={12}><PictureEditor title={getTitle(att_name)} value={pAtt.value} onChange={onChange(att_name)} /></Grid>
+              case 'color': return <Grid item xl={12}><ColorPicker {...props} /></Grid>
+              case 'text': return <Grid item xl={12}><HtmlEditor {...props} /></Grid>
+              case 'visibility': return <Grid item xl={12}><Visibility {...props} name={title}/></Grid>
+              case 'integer': return <Grid item xl={12}><IntegerEditor {...props} /></Grid>
+              case 'picture': return <Grid item xl={12}><PictureEditor {...props} /></Grid>
               default: return null
             }
           })
@@ -90,4 +90,4 @@ class UIParameter extends React.Component {
   }
 }
 
-export default UIParameter
+export default withTranslation('custom', {withRef: true})(UIParameter)

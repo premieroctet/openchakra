@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -238,7 +239,7 @@ class FilterMenu extends React.Component{
   };
 
   render() {
-    const{classes, mounting, search, searching, serviceUsers} = this.props;
+    const{classes, mounting, searching, serviceUsers} = this.props;
     const {
       statusFilterSet, statusFilterVisible, individualSelected, proSelected,
       dateFilterSet, dateFilterVisible, startDate, endDate, focusedInput,
@@ -571,4 +572,4 @@ class FilterMenu extends React.Component{
   }
 }
 
-export default withStyles(styles)(FilterMenu);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(FilterMenu))

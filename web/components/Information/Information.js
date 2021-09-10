@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -41,4 +42,4 @@ class Information extends React.Component {
   }
 }
 
-export default withStyles(styles)(Information);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Information))

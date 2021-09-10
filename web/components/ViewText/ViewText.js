@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import {Text, View} from '@react-pdf/renderer';
 
@@ -17,4 +18,4 @@ class ViewText extends React.Component {
   }
 }
 
-export default (ViewText)
+export default withTranslation('custom', {withRef: true})((ViewText))

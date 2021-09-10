@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 import MobileNavbar from "./NavBar/MobileNavbar";
 import Grid from "@material-ui/core/Grid";
@@ -55,4 +56,4 @@ class LayoutMobile extends React.Component{
   }
 }
 
-export default LayoutMobile
+export default withTranslation('custom', {withRef: true})(LayoutMobile)

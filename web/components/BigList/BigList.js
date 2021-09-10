@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import { AgGridReact } from 'ag-grid-react'
 import {Typography} from '@material-ui/core';

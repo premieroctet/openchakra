@@ -1,29 +1,28 @@
-import React from 'react';
-import Layout from '../../../hoc/Layout/Layout';
-import EditPicture from '../../../components/Dashboard/EditPicture/EditPicture';
+import {withTranslation} from 'react-i18next'
+import React from 'react'
 
-class editPicture extends React.Component {
+import BasePage from '../../basePage'
+import EditPicture from '../../../components/Dashboard/EditPicture/EditPicture'
+import Layout from '../../../hoc/Layout/Layout'
+
+class EditServicePicture extends BasePage {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       id: null,
       type: 'service',
-    };
-  }
-
-  static getInitialProps({query: {id}}) {
-    return {prestation_id: id};
+    }
   }
 
   render() {
     return (
       <Layout>
-        <EditPicture type={this.state.type} id={this.props.prestation_id}/>
+        <EditPicture type={this.state.type} id={this.getURLProps().id}/>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
-export default editPicture;
+export default withTranslation('custom', {withRef: true})(EditServicePicture)

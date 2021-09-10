@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../static/css/components/HandleAddresses/HandleAddresses'
@@ -445,4 +446,4 @@ class HandleAddresses extends React.Component {
   }
 }
 
-export default withStyles(styles)(HandleAddresses)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(HandleAddresses))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import ColorPicker from './ColorPicker'
 import UIParameter from './UIParameter'
@@ -38,4 +39,4 @@ class GroupEditor extends React.Component {
 
 }
 
-export default GroupEditor
+export default withTranslation('custom', {withRef: true})(GroupEditor)

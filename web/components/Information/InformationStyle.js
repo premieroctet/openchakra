@@ -1,6 +1,6 @@
-export default theme => ({
+export default () => ({
   paperOverride: {
-    backgroundImage: 'url(../../static/assets/img/warning.svg)',
+    backgroundImage: 'url(/static/assets/img/warning.svg)',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
     backgroundColor: 'white',

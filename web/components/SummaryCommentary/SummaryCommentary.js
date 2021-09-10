@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
@@ -140,4 +141,4 @@ class SummaryCommentary extends React.Component {
   }
 }
 
-export default WithStyles(styles)(SummaryCommentary)
+export default withTranslation('custom', {withRef: true})(WithStyles(styles)(SummaryCommentary))

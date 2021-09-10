@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
@@ -126,4 +127,4 @@ class LayoutMobileProfile extends React.Component{
   }
 }
 
-export default withStyles (styles) (LayoutMobileProfile);
+export default withTranslation('custom', {withRef: true})(withStyles (styles) (LayoutMobileProfile))

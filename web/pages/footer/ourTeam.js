@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {Fragment} from 'react';
 import Grid from '@material-ui/core/Grid';
 import layoutStyle from "../../static/css/pages/layout/layoutStyle"
@@ -30,4 +31,4 @@ class OurTeam extends React.Component {
   }
 }
 
-export default withStyles(styles)(OurTeam)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(OurTeam))

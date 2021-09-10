@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import HandleAddresses from '../../components/HandleAddresses/HandleAddresses'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
@@ -113,4 +114,4 @@ class myAddresses extends React.Component {
   }
 }
 
-export default withStyles(styles)(myAddresses)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(myAddresses))
