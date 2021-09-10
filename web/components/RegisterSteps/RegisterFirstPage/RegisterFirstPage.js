@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import '../../../static/assets/css/custom.css'
+import {REGISTER_FIRST_PAGE} from '../../../utils/i18n'
 
 class RegisterFirstPage extends React.Component {
 
@@ -28,8 +29,8 @@ class RegisterFirstPage extends React.Component {
             <Grid item className={classes.widthTextField}>
               <TextField
                 id="input-with-icon-grid"
-                label="Email"
-                placeholder="Email"
+                label={REGISTER_FIRST_PAGE.textfield_email}
+                placeholder={REGISTER_FIRST_PAGE.textfield_email_placeholder}
                 style={{width: '100%'}}
                 type="email"
                 value={state.email}
@@ -48,8 +49,8 @@ class RegisterFirstPage extends React.Component {
             <Grid item className={classes.widthTextField}>
               <TextField
                 id="standard-with-placeholder"
-                label="Prénom"
-                placeholder="Prénom"
+                label={REGISTER_FIRST_PAGE.textfield_firstname}
+                placeholder={REGISTER_FIRST_PAGE.textfield_firstname_placeholder}
                 style={{width: '100%'}}
                 type="text"
                 name="firstname"
@@ -68,8 +69,8 @@ class RegisterFirstPage extends React.Component {
             </Grid>
             <Grid item className={classes.widthTextField}>
               <TextField
-                label="Nom"
-                placeholder="Nom"
+                label={REGISTER_FIRST_PAGE.textfield_name}
+                placeholder={REGISTER_FIRST_PAGE.textfield_name_placeholder}
                 style={{width: '100%'}}
                 type="text"
                 name="name"
@@ -90,8 +91,8 @@ class RegisterFirstPage extends React.Component {
                 </Grid>
                 <Grid item className={classes.widthTextField}>
                   <TextField
-                    label="Créer un mot de passe"
-                    placeholder="Créer un mot de passe"
+                    label={REGISTER_FIRST_PAGE.textfield_create_password}
+                    placeholder={REGISTER_FIRST_PAGE.textfield_create_password_placeholder}
                     style={{width: '100%'}}
                     type={state.showPassword ? 'text' : 'password'}
                     name="password"
@@ -125,8 +126,8 @@ class RegisterFirstPage extends React.Component {
                 </Grid>
                 <Grid item className={classes.widthTextField}>
                   <TextField
-                    label="Confirmer mot de passe"
-                    placeholder="Confirmer mot de passe"
+                    label={REGISTER_FIRST_PAGE.textfield_confirm_password}
+                    placeholder={REGISTER_FIRST_PAGE.textfield_confirm_password_placeholder}
                     style={{width: '100%'}}
                     type={state.showPassword2 ? 'text' : 'password'}
                     name="password2"

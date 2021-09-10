@@ -1,5 +1,5 @@
 import CguContent from '../CguContent/CguContent'
-
+import {REGISTER} from '../../utils/i18n'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 const {setAuthToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
@@ -87,7 +87,7 @@ class Register extends React.Component {
 
   componentDidMount() {
     if (getLoggedUserId() && isLoggedUserRegistered()) {
-      snackBarError('Vous êtes déjà inscrit')
+      snackBarError(REGISTER.snackbar_already_logged)
       window.location = '/'
     }
 
@@ -161,11 +161,10 @@ class Register extends React.Component {
     }
     return (
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle onClose={() => this.setState({open: false})}>
-        </DialogTitle>
+        <DialogTitle onClose={() => this.setState({open: false})}/>
         <DialogContent>
           <CguContent/>
-          <Button style={{float: 'right'}} onClick={handleClose}>Fermer</Button>
+          <Button style={{float: 'right'}} onClick={handleClose}>{REGISTER.dialog_cgu_close}</Button>
         </DialogContent>
       </Dialog>
     )
@@ -203,7 +202,7 @@ class Register extends React.Component {
       this.setState({emailValidator: true, emailError: ''})
     }
     else {
-      this.setState({emailValidator: false, emailError: 'Veuillez entrer une adresse email valide.'})
+      this.setState({emailValidator: false, emailError: REGISTER.textfield_email_error})
     }
     this.setState({email: event.target.value}, () => this.validatorFirstStep())
   }
@@ -240,12 +239,12 @@ class Register extends React.Component {
     setAxiosAuthentication()
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
-        let txt = is_production() ? 'Le SMS a été envoyé' : `Dev : le code est ${res.data.sms_code}`
+        let txt = is_production() ? REGISTER.snackbar_sms_send : `Dev : le code est ${res.data.sms_code}`
         snackBarSuccess(txt)
         this.setState({smsCodeOpen: true})
       })
       .catch(() => {
-        snackBarError('Impossible d\'envoyer le SMS')
+        snackBarError(REGISTER.snackbar_sms_error)
         this.setState({serverError: true})
       })
   };
@@ -255,7 +254,7 @@ class Register extends React.Component {
     axios.post('/myAlfred/api/users/checkSMSVerification', {sms_code: this.state.smsCode})
       .then(res => {
         if (res.data.sms_code_ok) {
-          snackBarSuccess('Votre numéro de téléphone est validé')
+          snackBarSuccess(REGISTER.snackbar_phone_valid)
           this.setState({smsCodeOpen: false, phoneConfirmed: true})
           if(hasStatusRegister()) {
             removeStatusRegister()
@@ -266,11 +265,11 @@ class Register extends React.Component {
           }
         }
         else {
-          snackBarError('Le code est incorrect')
+          snackBarError(REGISTER.snackbar_error_code_phone)
         }
       })
       .catch(() => {
-        snackBarError('Erreur à la vérification du code')
+        snackBarError(REGISTER.snackbar_error_check_phone)
       })
   };
 
@@ -378,7 +377,7 @@ class Register extends React.Component {
     axios
       .put('/myAlfred/api/users/profile/phone', newPhone)
       .then(() => {
-        snackBarSuccess('Téléphone ajouté')
+        snackBarSuccess(REGISTER.snackbar_phone_add)
       })
       .catch(err =>
         console.error(err),
@@ -464,13 +463,13 @@ class Register extends React.Component {
   dialogPhone = () => {
     return(
       <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title" className={'customregisterdialogtitle'}>Confirmation du numéro de téléphone</DialogTitle>
+        <DialogTitle id="form-dialog-title" className={'customregisterdialogtitle'}>{REGISTER.dialog_phone_title}</DialogTitle>
         <DialogContent>
-          <DialogContentText className={'customregisterdialogsubtitle'}>Saisissez le code reçu par SMS</DialogContentText>
+          <DialogContentText className={'customregisterdialogsubtitle'}>{REGISTER.dialog_phone_content}</DialogContentText>
           <TextField
             autoFocus
             id="name"
-            label="Code"
+            label={REGISTER.textfield_code}
             type="number"
             placeholder="0000"
             maxLength="4"
@@ -483,14 +482,14 @@ class Register extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.confirmLater()} color="primary" classes={{root: 'customregisterdialogconfirmlater'}}>
-            Confirmer plus tard
+            {REGISTER.dialog_phone_confirm_later}
           </Button>
           <Button
             classes={{root: 'customregisterdialogconfirm'}}
             disabled={this.state.smsCode.length !== 4}
             onClick={() => this.checkSmsCode()}
             color="primary">
-            Confirmer
+            {REGISTER.dialog_phone_confirm}
           </Button>
         </DialogActions>
       </Dialog>
@@ -509,7 +508,7 @@ class Register extends React.Component {
             {
               activeStep === 0 ?
                 <Grid>
-                  <h2 className={`customregistertitle ${classes.titleRegister}`}>Inscription</h2>
+                  <h2 className={`customregistertitle ${classes.titleRegister}`}>{REGISTER.title}</h2>
                 </Grid> : null
             }
             <Grid className={classes.containerSwitch}>
@@ -532,22 +531,21 @@ class Register extends React.Component {
                       nextButton={
                         <Button size="small" onClick={() => this.handleNext(activeStep)}
                           disabled={activeStep === 0 ? firstPageValidator : secondPageValidator || pending} classes={{root: 'customregisternavnext'}}>
-                          {activeStep === 0 ? 'Suivant' : 'Terminer'}
+                          {activeStep === 0 ? REGISTER.next_button : REGISTER.finish_button}
                           <KeyboardArrowRight/>
                         </Button>
                       }
                       backButton={
                         <Button size="small" onClick={this.handleBack} disabled={activeStep === 0} classes={{root: 'customregisternavprev'}}>
                           <KeyboardArrowLeft/>
-                          Précédent
+                          {REGISTER.previous_button}
                         </Button>
                       }
                     />
                   </Grid>
                   <Grid container className={classes.bottomContainer}>
                     <Grid item>
-                      <a color={'primary'} onClick={callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}} className={'customregisteralreadyaccount'}>Vous
-                        avez déjà un compte My Alfred ?</a>
+                      <a color={'primary'} onClick={callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}} className={'customregisteralreadyaccount'}>{REGISTER.link_already_account}</a>
                     </Grid>
                   </Grid>
                 </Grid> : null

@@ -211,6 +211,42 @@ const PAYMENT_METHOD = {
   subtitle: 'N\'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.',
 }
 
+const REGISTER = {
+  snackbar_already_logged: 'Vous êtes déjà inscrit',
+  snackbar_sms_send: 'Le SMS a été envoyé',
+  snackbar_sms_error: 'Impossible d\'envoyer le SMS',
+  snackbar_phone_valid: 'Votre numéro de téléphone est validé',
+  snackbar_error_code_phone: 'Le code est incorrect',
+  snackbar_error_check_phone: 'Erreur à la vérification du code',
+  snackbar_phone_add: 'Téléphone ajouté',
+  dialog_phone_title: 'Confirmation du numéro de téléphone',
+  dialog_phone_content: 'Saisissez le code reçu par SMS',
+  dialog_cgu_close: 'Fermer',
+  dialog_phone_confirm_later: 'Confirmer plus tard',
+  dialog_phone_confirm: 'Confirmer',
+  textfield_email_error: 'Veuillez entrer une adresse email valide.',
+  textfield_code: 'Code',
+  title: 'Inscription',
+  next_button: 'Suivant',
+  previous_button: 'Précédent',
+  link_already_account: 'Vous avez déjà un compte My Alfred ?',
+  finish_button: 'Terminer',
+}
+
+const REGISTER_FRIST_PAGE = {
+  textfield_email: 'Email',
+  textfield_email_placeholder: 'Email',
+  textfield_firstname: 'Prénom',
+  textfield_firstname_placeholder: 'Prénom',
+  textfield_name: 'Nom',
+  textfield_name_placeholder: 'Nom',
+  textfield_create_password: 'Créer un mot de passe',
+  textfield_create_password_placeholder: 'Créer un mot de passe',
+  textfield_confirm_password: 'Confirmer mot de passe',
+  textfield_confirm_password_placeholder: 'Confirmer mot de passe',
+
+}
+
 const HANDLE_CB = {
   cb_saves_title: 'Cartes enregistrées',
   cb_subtitle_paid: 'Payez encore plus rapidement sans communiquer vos informations financières.',
@@ -924,4 +960,6 @@ module.exports = {
   MESSAGES,
   MESSAGE_DETAIL,
   MESSAGE_SUMMARY,
+  REGISTER,
+  REGISTER_FRIST_PAGE,
 }
