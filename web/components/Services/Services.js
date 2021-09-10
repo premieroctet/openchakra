@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import CardService from '../Card/CardService/CardService'
@@ -27,7 +28,7 @@ class Services extends React.Component {
         { part_services.length===0 ? null :
           <>
             <Grid>
-              <Typography>{SERVICES.particular_service} ({part_services.length})</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('SERVICES.particular_service'))} ({part_services.length})</Typography>
             </Grid>
             <Grid container spacing={2} style={{marginTop: 50, marginLeft: 0, marginRight: 0, marginBottom: 0, width: '100%'}}>
               {
@@ -43,7 +44,7 @@ class Services extends React.Component {
         { shop.is_particular || pro_services.length===0 ? null :
           <>
             <Grid>
-              <Typography style={{marginTop: '20px'}}>{SERVICES.pro_service} ({pro_services.length})</Typography>
+              <Typography style={{marginTop: '20px'}}>{ReactHtmlParser(this.props.t('SERVICES.pro_service'))} ({pro_services.length})</Typography>
             </Grid>
             <Grid container spacing={2} style={{marginTop: '5vh'}}>
               {

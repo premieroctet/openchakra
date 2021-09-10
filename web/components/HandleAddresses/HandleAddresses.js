@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -252,18 +253,18 @@ class HandleAddresses extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{HANDLE_ADDRESSES.dialog_delete_title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.dialog_delete_title'))}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {HANDLE_ADDRESSES.dialog_delete_content}
+            {ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.dialog_delete_content'))}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose()} color="primary">
-            {HANDLE_ADDRESSES.dialog_delete_cancel}
+            {ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.dialog_delete_cancel'))}
           </Button>
           <Button onClick={() => this.deleteAddress(this.state.delete_address_id)} classes={{root: classes.cancelButton}}>
-            {HANDLE_ADDRESSES.dialog_delete_button}
+            {ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.dialog_delete_button'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -290,7 +291,7 @@ class HandleAddresses extends React.Component {
                   <Grid item xs={12} xl={12} lg={12} md={12} sm={12}>
                     <AlgoliaPlaces
                       className={'customhandleaddressesalgolia'}
-                      placeholder={HANDLE_ADDRESSES.placeholder_algo}
+                      placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.placeholder_algo'))}
                       options={{
                         appId: 'plKATRG826CP',
                         apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -304,7 +305,7 @@ class HandleAddresses extends React.Component {
                   <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
                     <Button disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained"
                       classes={{root: `customhandleaddressessavebutton ${classes.buttonSave}`}} onClick={this.onSubmitMain}>
-                      {HANDLE_ADDRESSES.submit_button}
+                      {ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.submit_button'))}
                     </Button>
                   </Grid>
                 </Grid>
@@ -343,9 +344,9 @@ class HandleAddresses extends React.Component {
                         value={this.state.edit_label}
                         onChange={this.onChange}
                         name={'edit_label'}
-                        placeholder={HANDLE_ADDRESSES.textfield_name_placeholder_add_sites}
+                        placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.textfield_name_placeholder_add_sites'))}
                         variant={'outlined'}
-                        label={HANDLE_ADDRESSES.textfield_name_add_sites}
+                        label={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.textfield_name_add_sites'))}
                         className={`customhandleaddressesname ${classes.textField}`}
                       />
                       :
@@ -373,7 +374,7 @@ class HandleAddresses extends React.Component {
                 {selected_address && selected_address._id == e._id ?
                   <AlgoliaPlaces
                     className={'customhandleaddressesupdateaddresses'}
-                    placeholder={HANDLE_ADDRESSES.placeholder_algo}
+                    placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.placeholder_algo'))}
                     options={{
                       appId: 'plKATRG826CP',
                       apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -392,7 +393,7 @@ class HandleAddresses extends React.Component {
                 <Grid item xs={12}>
                   <Button variant="contained" className={`customhandleaddressesupdatebuttonsave ${classes.buttonSave}`}
                     onClick={event => this.onSubmitSecondary(event, this.state.selected_address._id)}>
-                    {HANDLE_ADDRESSES.submit_secondary_button}
+                    {ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.submit_secondary_button'))}
                   </Button>
                 </Grid>
                 :
@@ -409,7 +410,7 @@ class HandleAddresses extends React.Component {
                 value={this.state.new_label}
                 onChange={this.onChange}
                 name={'new_label'}
-                placeholder={HANDLE_ADDRESSES.textfield_name_placeholder_add_sites}
+                placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.textfield_name_placeholder_add_sites'))}
                 variant={'outlined'}
                 label={ pro_mode ? HANDLE_ADDRESSES.textfield_name_site : HANDLE_ADDRESSES.textfield_name_addresses}
                 className={`customhandleaddressesaddnewname ${classes.textField}`}
@@ -418,7 +419,7 @@ class HandleAddresses extends React.Component {
             <Grid item xs={12}>
               <AlgoliaPlaces
                 className={'customhandleaddressesaddnewalgo'}
-                placeholder={HANDLE_ADDRESSES.algo_find_your_addresses}
+                placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.algo_find_your_addresses'))}
                 options={{
                   appId: 'plKATRG826CP',
                   apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -432,7 +433,7 @@ class HandleAddresses extends React.Component {
             <Grid item xs={12} style={{marginBottom: '12vh'}}>
               <Button disabled={!(this.state.suggestion_new && this.state.new_label)} variant="contained"
                 className={`customhandleaddressesaddnewbutton ${classes.buttonSave}`} onClick={this.onSubmitNew}>
-                {HANDLE_ADDRESSES.button_add_new_adresses}
+                {ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.button_add_new_adresses'))}
               </Button>
             </Grid>
           </Grid>

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import CguContent from '../CguContent/CguContent'
 import {REGISTER} from '../../utils/i18n'
@@ -165,7 +166,7 @@ class Register extends React.Component {
         <DialogTitle onClose={() => this.setState({open: false})}/>
         <DialogContent>
           <CguContent/>
-          <Button style={{float: 'right'}} onClick={handleClose}>{REGISTER.dialog_cgu_close}</Button>
+          <Button style={{float: 'right'}} onClick={handleClose}>{ReactHtmlParser(this.props.t('REGISTER.dialog_cgu_close'))}</Button>
         </DialogContent>
       </Dialog>
     )
@@ -464,13 +465,13 @@ class Register extends React.Component {
   dialogPhone = () => {
     return(
       <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title" className={'customregisterdialogtitle'}>{REGISTER.dialog_phone_title}</DialogTitle>
+        <DialogTitle id="form-dialog-title" className={'customregisterdialogtitle'}>{ReactHtmlParser(this.props.t('REGISTER.dialog_phone_title'))}</DialogTitle>
         <DialogContent>
-          <DialogContentText className={'customregisterdialogsubtitle'}>{REGISTER.dialog_phone_content}</DialogContentText>
+          <DialogContentText className={'customregisterdialogsubtitle'}>{ReactHtmlParser(this.props.t('REGISTER.dialog_phone_content'))}</DialogContentText>
           <TextField
             autoFocus
             id="name"
-            label={REGISTER.textfield_code}
+            label={ReactHtmlParser(this.props.t('REGISTER.textfield_code'))}
             type="number"
             placeholder="0000"
             maxLength="4"
@@ -483,14 +484,14 @@ class Register extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.confirmLater()} color="primary" classes={{root: 'customregisterdialogconfirmlater'}}>
-            {REGISTER.dialog_phone_confirm_later}
+            {ReactHtmlParser(this.props.t('REGISTER.dialog_phone_confirm_later'))}
           </Button>
           <Button
             classes={{root: 'customregisterdialogconfirm'}}
             disabled={this.state.smsCode.length !== 4}
             onClick={() => this.checkSmsCode()}
             color="primary">
-            {REGISTER.dialog_phone_confirm}
+            {ReactHtmlParser(this.props.t('REGISTER.dialog_phone_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -509,7 +510,7 @@ class Register extends React.Component {
             {
               activeStep === 0 ?
                 <Grid>
-                  <h2 className={`customregistertitle ${classes.titleRegister}`}>{REGISTER.title}</h2>
+                  <h2 className={`customregistertitle ${classes.titleRegister}`}>{ReactHtmlParser(this.props.t('REGISTER.title'))}</h2>
                 </Grid> : null
             }
             <Grid className={classes.containerSwitch}>
@@ -539,14 +540,14 @@ class Register extends React.Component {
                       backButton={
                         <Button size="small" onClick={this.handleBack} disabled={activeStep === 0} classes={{root: 'customregisternavprev'}}>
                           <KeyboardArrowLeft/>
-                          {REGISTER.previous_button}
+                          {ReactHtmlParser(this.props.t('REGISTER.previous_button'))}
                         </Button>
                       }
                     />
                   </Grid>
                   <Grid container className={classes.bottomContainer}>
                     <Grid item>
-                      <a color={'primary'} onClick={callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}} className={'customregisteralreadyaccount'}>{REGISTER.link_already_account}</a>
+                      <a color={'primary'} onClick={callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}} className={'customregisteralreadyaccount'}>{ReactHtmlParser(this.props.t('REGISTER.link_already_account'))}</a>
                     </Grid>
                   </Grid>
                 </Grid> : null

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react'
@@ -181,27 +182,27 @@ class SelectService extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
-          <h2 className={`customselectservicetitle ${classes.policySizeTitle}`}>{SHOP.service.title}</h2>
+          <h2 className={`customselectservicetitle ${classes.policySizeTitle}`}>{ReactHtmlParser(this.props.t('SHOP.service.title'))}</h2>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
             <h3 className={'customselectservicesubtitle'} style={{color: '#403f3f'}}>{
               mode == CREASHOP_MODE.SERVICE_UPDATE ? SHOP.service.subtitle_update : SHOP.service.subtitle
             }</h3>
-            { CREASHOP_MODE.SERVICE_UPDATE ? null : <h3>{SHOP.service.explanation}</h3>}
+            { CREASHOP_MODE.SERVICE_UPDATE ? null : <h3>{ReactHtmlParser(this.props.t('SHOP.service.explanation'))}</h3>}
           </Grid>
           {is_particular || !displayAccess ? null :
             <>
               <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                 <h4 className={classes.policySizeSubtitle}
-                  style={{margin: 0}}>{SHOP.creation.is_profesionnal_propose_missions}</h4>
+                  style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.creation.is_profesionnal_propose_missions'))}</h4>
               </Grid>
               <Grid item xl={12} lg={12} sm={12} md={12} xs={12} spacing={1} style={{width: '100%', margin: 0}}>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <ButtonSwitch
                     key={moment()}
                     label={<Typography
-                      className={classes.policySizeContent}>{SHOP.creation.textfield_company}</Typography>}
+                      className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.textfield_company'))}</Typography>}
                     onChange={this.handleChangeCompany}
                     value={professional_access}
                     name={'professional_access'}
@@ -212,7 +213,7 @@ class SelectService extends React.Component {
                   <ButtonSwitch
                     key={moment()}
                     label={<Typography
-                      className={classes.policySizeContent}>{SHOP.creation.textfield_particular}</Typography>}
+                      className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.textfield_particular'))}</Typography>}
                     onChange={this.handleChangeParticular}
                     value={particular_access}
                     name={'particular_access'}
@@ -223,7 +224,7 @@ class SelectService extends React.Component {
                   <ButtonSwitch
                     key={moment()}
                     label={<Typography
-                      className={classes.policySizeContent}>{SHOP.creation.textfield_company_and_particular}</Typography>}
+                      className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.textfield_company_and_particular'))}</Typography>}
                     onChange={this.handleChangeBoth}
                     value={particular_professional_access}
                     name={'particular_professional_access'}
@@ -252,7 +253,7 @@ class SelectService extends React.Component {
             filterOption={this.searchFn}
             isLoading={loading}
             loadingMessage={() => 'Recherche des services'}
-            placeholder={SHOP.service.placeholder}
+            placeholder={ReactHtmlParser(this.props.t('SHOP.service.placeholder'))}
             value={this.getSelectedOption(options, service)}
             styles={professional_access && particular_access ? tabbedStyle : ''}
             classes={{root: 'customseectserviceplaceholder'}}

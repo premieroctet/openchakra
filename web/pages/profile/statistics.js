@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
@@ -156,12 +157,12 @@ class ProfileStatistics extends BasePage {
       <Grid container stylerr={{width: '100%'}} spacing={3}>
         <Grid item xs={12} className={'customstatincomecont'}>
           <Box>
-            <Topic underline={true} titleTopic={STATISTICS.title_topic_incomes} titleSummary={STATISTICS.subtitle_topic_incomes}>
+            <Topic underline={true} titleTopic={ReactHtmlParser(this.props.t('STATISTICS.title_topic_incomes'))} titleSummary={ReactHtmlParser(this.props.t('STATISTICS.subtitle_topic_incomes'))}>
               <Grid>
                 <Grid>
                   <Grid className={classes.statContainer}>
                     <Grid className={classes.statContainerLabel}>
-                      <Typography className={'customstatyearincomestitle'}>{STATISTICS.year}</Typography>
+                      <Typography className={'customstatyearincomestitle'}>{ReactHtmlParser(this.props.t('STATISTICS.year'))}</Typography>
                     </Grid>
                     <Grid>
                       <FormControl>
@@ -194,7 +195,7 @@ class ProfileStatistics extends BasePage {
                 <Grid container className={`customstatgenriccont ${classes.statResultContainer}`}>
                   <Grid container className={classes.statResultData}>
                     <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                      <Typography className={'customstatincomestotal'}><strong>{STATISTICS.incomes_get}</strong></Typography>
+                      <Typography className={'customstatincomestotal'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.incomes_get'))}</strong></Typography>
                     </Grid>
                     <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                       <Typography><strong>{this.state.totalPaid}€</strong></Typography>
@@ -205,7 +206,7 @@ class ProfileStatistics extends BasePage {
                   </Grid>
                   <Grid container className={classes.statResultData}>
                     <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                      <Typography className={'customstatincomeswilltotal'}><strong>{STATISTICS.incomes_will}</strong></Typography>
+                      <Typography className={'customstatincomeswilltotal'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.incomes_will'))}</strong></Typography>
                     </Grid>
                     <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                       <Typography><strong>{this.state.totalComing}€</strong></Typography>
@@ -219,7 +220,7 @@ class ProfileStatistics extends BasePage {
                       <Typography className={'customstatincomeswillyeartotal'}><strong>{STATISTICS.incomes_previ + this.state.year}</strong></Typography>
                     </Grid>
                     <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
-                      <Typography><strong>{this.state.totalYear + STATISTICS.euro}</strong></Typography>
+                      <Typography><strong>{`${this.state.totalYear}€`}</strong></Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -229,13 +230,13 @@ class ProfileStatistics extends BasePage {
         </Grid>
         <Grid item xs={12}>
           <Box>
-            <Topic underline={true} titleTopic={STATISTICS.my_stat} titleSummary={STATISTICS.my_stat_subtitle}>
+            <Topic underline={true} titleTopic={ReactHtmlParser(this.props.t('STATISTICS.my_stat'))} titleSummary={ReactHtmlParser(this.props.t('STATISTICS.my_stat_subtitle'))}>
               <Grid item style={{width: '100%'}}>
                 <Grid container style={{width: '100%'}}>
                   <Grid container style={{width: '100%'}}>
                     <Grid className={classes.statContainer}>
                       <Grid className={classes.statContainerLabel}>
-                        <Typography>{STATISTICS.month}</Typography>
+                        <Typography>{ReactHtmlParser(this.props.t('STATISTICS.month'))}</Typography>
                       </Grid>
                       <Grid>
                         <FormControl>
@@ -261,7 +262,7 @@ class ProfileStatistics extends BasePage {
                     <Grid container className={`customstatgenriccont ${classes.statResultContainer}`}>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstattotalstatmonth'}><strong>{STATISTICS.incomes_total}</strong></Typography>
+                          <Typography className={'customstattotalstatmonth'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.incomes_total'))}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthIncomes.toFixed(2)}€</strong></Typography>
@@ -272,7 +273,7 @@ class ProfileStatistics extends BasePage {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatdonemonth'}><strong>{STATISTICS.services_done}</strong></Typography>
+                          <Typography className={'customstatdonemonth'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.services_done'))}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthPrestations}</strong></Typography>
@@ -283,7 +284,7 @@ class ProfileStatistics extends BasePage {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatviewmonth'}><strong>{STATISTICS.view_profil}</strong></Typography>
+                          <Typography className={'customstatviewmonth'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.view_profil'))}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthViewsServices}</strong></Typography>
@@ -294,7 +295,7 @@ class ProfileStatistics extends BasePage {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatcommentarymonth'}><strong>{STATISTICS.commentary}</strong></Typography>
+                          <Typography className={'customstatcommentarymonth'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.commentary'))}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthReviews}</strong></Typography>
@@ -307,7 +308,7 @@ class ProfileStatistics extends BasePage {
                   <Grid container style={{width: '100%'}}>
                     <Grid className={classes.statContainer}>
                       <Grid className={classes.statContainerLabel}>
-                        <Typography>{STATISTICS.year}</Typography>
+                        <Typography>{ReactHtmlParser(this.props.t('STATISTICS.year'))}</Typography>
                       </Grid>
                       <Grid>
                         <FormControl>
@@ -333,10 +334,10 @@ class ProfileStatistics extends BasePage {
                     <Grid container className={`customstatgenriccont ${classes.statResultContainer}`}>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstattotalstatmonth'}><strong>{STATISTICS.incomes_total}</strong></Typography>
+                          <Typography className={'customstattotalstatmonth'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.incomes_total'))}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
-                          <Typography><strong>{this.state.yearIncomes.toFixed(2) + STATISTICS.euro}</strong></Typography>
+                          <Typography><strong>{`${this.state.yearIncomes.toFixed(2)}€`}</strong></Typography>
                         </Grid>
                       </Grid>
                       <Grid>
@@ -344,7 +345,7 @@ class ProfileStatistics extends BasePage {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatdonemonth'}><strong>{STATISTICS.services_done}</strong></Typography>
+                          <Typography className={'customstatdonemonth'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.services_done'))}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.yearPrestations}</strong></Typography>
@@ -355,7 +356,7 @@ class ProfileStatistics extends BasePage {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatviewmonth'}><strong>{STATISTICS.view_profil}</strong></Typography>
+                          <Typography className={'customstatviewmonth'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.view_profil'))}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.yearViewsServices}</strong></Typography>
@@ -366,7 +367,7 @@ class ProfileStatistics extends BasePage {
                       </Grid>
                       <Grid container className={classes.statResultData}>
                         <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                          <Typography className={'customstatcommentarymonth'}><strong>{STATISTICS.commentary}</strong></Typography>
+                          <Typography className={'customstatcommentarymonth'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.commentary'))}</strong></Typography>
                         </Grid>
                         <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.yearReviews}</strong></Typography>

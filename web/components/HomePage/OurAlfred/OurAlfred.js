@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -31,15 +32,15 @@ class OurAlfred extends React.Component {
             </Grid>
             <Grid className={classes.ourAlfredTextContainer}>
               <Grid>
-                <Typography className={`custumouralfredh1 ${classes.ourAlfredTitle}`}>{OUR_ALFRED.title}</Typography>
+                <Typography className={`custumouralfredh1 ${classes.ourAlfredTitle}`}>{ReactHtmlParser(this.props.t('OUR_ALFRED.title'))}</Typography>
               </Grid>
               <Grid>
-                <Typography className={`customouralfredtext ${classes.ourAlfredSubtitle}`}>{OUR_ALFRED.text}</Typography>
+                <Typography className={`customouralfredtext ${classes.ourAlfredSubtitle}`}>{ReactHtmlParser(this.props.t('OUR_ALFRED.text'))}</Typography>
               </Grid>
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnMobile}>
-            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search')}>{CATEGORY.button}</Button>
+            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search')}>{ReactHtmlParser(this.props.t('CATEGORY.button'))}</Button>
           </Grid>
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
@@ -58,7 +59,7 @@ class OurAlfred extends React.Component {
         </Grid>
         <Grid className={classes.containerMobileButton}>
           <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search')}>
-            {CATEGORY.button}
+            {ReactHtmlParser(this.props.t('CATEGORY.button'))}
           </Button>
         </Grid>
       </Grid>

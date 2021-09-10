@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import axios from 'axios'
@@ -86,7 +87,7 @@ class SummaryCommentary extends React.Component {
               </Grid>
             </Grid>
             <Grid>
-              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewglobalgrade'}>{SUMMARY_COMMENTARY.global_grade}</Typography>
+              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewglobalgrade'}>{ReactHtmlParser(this.props.t('SUMMARY_COMMENTARY.global_grade'))}</Typography>
             </Grid>
           </Grid>
           <Grid item className={classes.summaryContainerCommentary}>
@@ -96,7 +97,7 @@ class SummaryCommentary extends React.Component {
               </Typography>
             </Grid>
             <Grid style={{marginTop: '2%'}}>
-              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewcommentary'}>{SUMMARY_COMMENTARY.commentary}</Typography>
+              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewcommentary'}>{ReactHtmlParser(this.props.t('SUMMARY_COMMENTARY.commentary'))}</Typography>
             </Grid>
           </Grid>
           <Grid item className={classes.summaryContainerCompliments}>
@@ -104,7 +105,7 @@ class SummaryCommentary extends React.Component {
               <Typography><strong>{complimentsCount}</strong></Typography>
             </Grid>
             <Grid>
-              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewcomp'}>{SUMMARY_COMMENTARY.compliments}</Typography>
+              <Typography style={{color: 'rgba(39,37,37,35%)', fontWeight: 'bold'}} className={'customreviewcomp'}>{ReactHtmlParser(this.props.t('SUMMARY_COMMENTARY.compliments'))}</Typography>
             </Grid>
           </Grid>
         </Grid>

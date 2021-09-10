@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -60,11 +61,11 @@ class PaymentCard extends React.Component {
             )
           })
           :
-          <Typography>{PAYMENT_CARD.no_cb_saved}</Typography>
+          <Typography>{ReactHtmlParser(this.props.t('PAYMENT_CARD.no_cb_saved'))}</Typography>
         }
         {
           cards && cards.length===0 ?
-            <Typography>{PAYMENT_CARD.no_cb_saved}</Typography> : null
+            <Typography>{ReactHtmlParser(this.props.t('PAYMENT_CARD.no_cb_saved'))}</Typography> : null
         }
       </Grid>
     )

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React, {Component} from 'react'
@@ -493,7 +494,7 @@ class NavBar extends Component {
                   :
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhereP}}>
                     <AlgoliaPlaces
-                      placeholder={SEARCHBAR.where}
+                      placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
                       options={{
                         appId: 'plKATRG826CP',
                         apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -679,7 +680,7 @@ class NavBar extends Component {
                 isMulti
                 isSearchable
                 closeMenuOnSelect={true}
-                placeholder={SEARCHBAR.labelCategory}
+                placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}
               />
             </Grid>
             <Grid className={classes.filterMenuContentMainStyleDateFilter}>
@@ -691,7 +692,7 @@ class NavBar extends Component {
                 isMulti
                 isSearchable
                 closeMenuOnSelect={true}
-                placeholder={SEARCHBAR.labelService}
+                placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}
               />
             </Grid>
           </DialogContent>
@@ -798,7 +799,7 @@ class NavBar extends Component {
             classes={{root: isB2BStyle(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
             className={'customButtonSignin'}
             onClick={this.handleOpenRegister}>
-            {NAVBAR_MENU.signIn}
+            {ReactHtmlParser(this.props.t('NAVBAR_MENU.signIn'))}
           </Button>
         </Grid>
         <Grid className={classes.navbarRegisterContainer}>
@@ -806,7 +807,7 @@ class NavBar extends Component {
             classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
             className={'customButtonLogin'}
             onClick={this.handleOpenLogin}>
-            {NAVBAR_MENU.logIn}
+            {ReactHtmlParser(this.props.t('NAVBAR_MENU.logIn'))}
           </Button>
         </Grid>
       </Grid>
@@ -894,14 +895,14 @@ class NavBar extends Component {
               variant="outlined"
               classes={{root: isB2BStyle(user) ? classes.navbarSignInB2BContained : classes.navbarSignIn}}
               onClick={() => Router.push('/blog/inscription-entreprise/')}>
-              {NAVBAR_MENU.signIn}
+              {ReactHtmlParser(this.props.t('NAVBAR_MENU.signIn'))}
             </Button>
           </Grid>
           <Grid>
             <Button
               classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
               onClick={this.handleOpenLogin}>
-              {NAVBAR_MENU.logIn}
+              {ReactHtmlParser(this.props.t('NAVBAR_MENU.logIn'))}
             </Button>
           </Grid>
         </Grid>
@@ -1004,12 +1005,12 @@ class NavBar extends Component {
                     {
                       this.state.ifHomePage ?
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                          <InputLabel shrink>{SEARCHBAR.labelWhere}</InputLabel>
+                          <InputLabel shrink>{ReactHtmlParser(this.props.t('SEARCHBAR.labelWhere'))}</InputLabel>
                         </Grid> : null
                     }
                     <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsearch'} classes={{root: `${classes.navbarRootTextFieldWhere}`}}>
                       <AlgoliaPlaces
-                        placeholder={SEARCHBAR.where}
+                        placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
                         options={{
                           appId: 'plKATRG826CP',
                           apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -1051,7 +1052,7 @@ class NavBar extends Component {
                               locale='fr'
                               showMonthDropdown
                               dateFormat="dd/MM/yyyy"
-                              placeholderText={SEARCHBAR.when}
+                              placeholderText={ReactHtmlParser(this.props.t('SEARCHBAR.when'))}
                               minDate={new Date()}
                             />)
                         },
@@ -1143,7 +1144,7 @@ class NavBar extends Component {
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                     className={classes.customNavbar}
-                    label={NAVBAR_MENU.ourServices}
+                    label={ReactHtmlParser(this.props.t('NAVBAR_MENU.ourServices'))}
                     onClick={() => Router.push('/search')}
                   />
                   {user ?
@@ -1151,14 +1152,14 @@ class NavBar extends Component {
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                         className={classes.customNavbar}
-                        label={NAVBAR_MENU.myServices}
+                        label={ReactHtmlParser(this.props.t('NAVBAR_MENU.myServices'))}
                         onClick={() => Router.push(`/profile/services?user=${user._id}`)}
                       />
                       :
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                         className={classes.customNavbar}
-                        label={NAVBAR_MENU.registerServices}
+                        label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
                         onClick={() => Router.push('/creaShop/creaShop')}
                       />
                     :
@@ -1166,12 +1167,12 @@ class NavBar extends Component {
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                         className={classes.customNavbar}
-                        label={NAVBAR_MENU.registerServices}
+                        label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
                         onClick={this.handleOpenRegister}
                       />
                       <Tab
                         classes={{root: classes.navbarTabRoot}}
-                        label={NAVBAR_MENU.contactUs}
+                        label={ReactHtmlParser(this.props.t('NAVBAR_MENU.contactUs'))}
                         onClick={() => Router.push('/contact')}
                       />
                     </>
@@ -1186,7 +1187,7 @@ class NavBar extends Component {
                 :
                 <Tab
                   classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                  label={NAVBAR_MENU.businessSide}
+                  label={ReactHtmlParser(this.props.t('NAVBAR_MENU.businessSide'))}
                   onClick={() => Router.push('/professional')}
                 />
           }

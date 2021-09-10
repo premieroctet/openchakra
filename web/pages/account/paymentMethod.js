@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
@@ -47,10 +48,10 @@ class paymentMethod extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'custompaymentmethodtitle'}>{PAYMENT_METHOD.title}</h2>
+            <h2 className={'custompaymentmethodtitle'}>{ReactHtmlParser(this.props.t('PAYMENT_METHOD.title'))}</h2>
           </Grid>
           <Grid>
-            <Typography className={'custompaymentmethodsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{PAYMENT_METHOD.subtitle}</Typography>
+            <Typography className={'custompaymentmethodsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('PAYMENT_METHOD.subtitle'))}</Typography>
           </Grid>
         </Grid>
         <Grid className={'customlayoutaccountcb'}>

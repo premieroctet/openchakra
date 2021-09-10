@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -130,10 +131,10 @@ class HandleCB extends React.Component {
         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseCreditCard}>
           <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Grid>
-              <h4>{HANDLE_CB.cb_title_dialog_add}</h4>
+              <h4>{ReactHtmlParser(this.props.t('HANDLE_CB.cb_title_dialog_add'))}</h4>
             </Grid>
             <Grid>
-              <Typography style={{color: 'rgba(39,37,37,35%)'}}>{HANDLE_CB.cb_subtitle_dialog_add}</Typography>
+              <Typography style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('HANDLE_CB.cb_subtitle_dialog_add'))}</Typography>
             </Grid>
           </Grid>
         </DialogTitle>
@@ -144,12 +145,12 @@ class HandleCB extends React.Component {
                 className={'customhandlecbnumb'}
                 customInput={TextField}
                 variant={'outlined'}
-                label={HANDLE_CB.cb_dialog_nb_add}
+                label={ReactHtmlParser(this.props.t('HANDLE_CB.cb_dialog_nb_add'))}
                 name={'card_number'}
                 onChange={this.onChange}
                 value={card_number}
                 format="#### #### #### ####"
-                placeholder={HANDLE_CB.cb_dialog_placeholdercb_add}
+                placeholder={ReactHtmlParser(this.props.t('HANDLE_CB.cb_dialog_placeholdercb_add'))}
                 style={{width: '100%'}}
               />
             </Grid>
@@ -158,19 +159,19 @@ class HandleCB extends React.Component {
                 className={'customhandlecbdate'}
                 customInput={TextField}
                 variant={'outlined'}
-                label={HANDLE_CB.cb_dialog_expdate_add}
+                label={ReactHtmlParser(this.props.t('HANDLE_CB.cb_dialog_expdate_add'))}
                 name={'expiration_date'}
                 onChange={this.onChange}
                 value={expiration_date}
                 format="##/##"
-                placeholder={HANDLE_CB.cb_dialog_placeholderexpdate_add}
+                placeholder={ReactHtmlParser(this.props.t('HANDLE_CB.cb_dialog_placeholderexpdate_add'))}
                 style={{width: '100%'}}
               />
             </Grid>
             <Grid style={{margin: '15px'}}>
               <TextField
                 className={'customhandlecbcvv'}
-                label={HANDLE_CB.cb_dialog_cvv_add}
+                label={ReactHtmlParser(this.props.t('HANDLE_CB.cb_dialog_cvv_add'))}
                 variant="outlined"
                 value={csv}
                 onChange={this.onChange}
@@ -187,7 +188,7 @@ class HandleCB extends React.Component {
               variant="contained"
               classes={{root: `customhandlecbsavebutton ${classes.buttonSave}`}}
             >
-              {HANDLE_CB.cb_dialog_savecb_add}
+              {ReactHtmlParser(this.props.t('HANDLE_CB.cb_dialog_savecb_add'))}
             </Button>
           </Grid>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
@@ -198,10 +199,10 @@ class HandleCB extends React.Component {
             </Grid>
             <Grid>
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{HANDLE_CB.cb_dialog_crypdata_add}</Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('HANDLE_CB.cb_dialog_crypdata_add'))}</Typography>
               </Grid>
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{HANDLE_CB.cb_dialog_mongo_add}</Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('HANDLE_CB.cb_dialog_mongo_add'))}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -219,18 +220,18 @@ class HandleCB extends React.Component {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle
-          id="alert-dialog-title">{HANDLE_CB.cb_title_dialog_delete}</DialogTitle>
+          id="alert-dialog-title">{ReactHtmlParser(this.props.t('HANDLE_CB.cb_title_dialog_delete'))}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {HANDLE_CB.cb_content_dialog_delete}
+            {ReactHtmlParser(this.props.t('HANDLE_CB.cb_content_dialog_delete'))}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleCloseDial} color="primary">
-            {HANDLE_CB.cb_cancel_dialog_delete}
+            {ReactHtmlParser(this.props.t('HANDLE_CB.cb_cancel_dialog_delete'))}
           </Button>
           <Button onClick={this.deleteCard} classes={{root: classes.buttonCancel}}>
-            {HANDLE_CB.cb_delete_dialog_delete}
+            {ReactHtmlParser(this.props.t('HANDLE_CB.cb_delete_dialog_delete'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -245,7 +246,7 @@ class HandleCB extends React.Component {
       <Grid>
         <Grid style={{display: 'flex', alignItems: 'center'}}>
           <Grid>
-            <h3 className={'customhandlecbtitle'}>{HANDLE_CB.cb_saves_title}</h3>
+            <h3 className={'customhandlecbtitle'}>{ReactHtmlParser(this.props.t('HANDLE_CB.cb_saves_title'))}</h3>
           </Grid>
           <Grid className={'customhandlecbaddcb'}>
             <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={this.callAddCreditCard}>
@@ -254,7 +255,7 @@ class HandleCB extends React.Component {
           </Grid>
         </Grid>
         <Grid>
-          <Typography className={'customhandlecbsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{HANDLE_CB.cb_subtitle_paid}</Typography>
+          <Typography className={'customhandlecbsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('HANDLE_CB.cb_subtitle_paid'))}</Typography>
         </Grid>
         <Grid style={{marginTop: '5vh'}}>
           <PaymentCard cards={cards} userName={userName} editable={true}

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -14,22 +15,22 @@ function BannerContact({classes}) {
         <Grid className={classes.blur}>
           <Grid container className={classes.container}>
             <Grid item>
-              <h2 style={{textAlign: 'center', color: 'white'}}>{AVOCOTES.askQuestion}</h2>
+              <h2 style={{textAlign: 'center', color: 'white'}}>{ReactHtmlParser(this.props.t('AVOCOTES.askQuestion'))}</h2>
             </Grid>
             <Grid item>
-              <h2 style={{textAlign: 'center', color: 'white'}}>{AVOCOTES.contactUs}</h2>
+              <h2 style={{textAlign: 'center', color: 'white'}}>{ReactHtmlParser(this.props.t('AVOCOTES.contactUs'))}</h2>
             </Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center'}}>
               <Grid container spacing={2} className={classes.containerFakeButton}>
                 <Grid item>
-                  <Typography style={{fontWeight: 'bold', fontSize: 30}}>{AVOCOTES.phone}</Typography>
+                  <Typography style={{fontWeight: 'bold', fontSize: 30}}>{ReactHtmlParser(this.props.t('AVOCOTES.phone'))}</Typography>
                 </Grid>
                 <Grid item>
                   <Grid>
-                    <Typography>{AVOCOTES.phoneTextFirst}</Typography>
+                    <Typography>{ReactHtmlParser(this.props.t('AVOCOTES.phoneTextFirst'))}</Typography>
                   </Grid>
                   <Grid>
-                    <Typography>{AVOCOTES.phoneTextSecond}</Typography>
+                    <Typography>{ReactHtmlParser(this.props.t('AVOCOTES.phoneTextSecond'))}</Typography>
                   </Grid>
                 </Grid>
               </Grid>

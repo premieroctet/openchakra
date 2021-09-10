@@ -1,11 +1,13 @@
-import {withTranslation} from 'react-i18next'
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
+import '../../static/assets/css/custom.css'
 
 import {Typography} from '@material-ui/core'
-import styles from '../../static/css/components/InfoBar/InfoBar'
+import {withTranslation} from 'react-i18next'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import ReactHtmlParser from 'react-html-parser'
 import withStyles from '@material-ui/core/styles/withStyles'
-import '../../static/assets/css/custom.css'
+
+import styles from '../../static/css/components/InfoBar/InfoBar'
 
 function InfoBar({classes, t}) {
 
@@ -17,7 +19,7 @@ function InfoBar({classes, t}) {
             height={'100%'}/>
         </Grid>
         <Grid>
-          <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{t('INFOBAR_MESSAGE.message')}</Typography>
+          <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{ReactHtmlParser(t('INFOBAR_MESSAGE.message'))}</Typography>
         </Grid>
       </Grid>
     </Grid>

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import '../../static/assets/css/custom.css'
 
 import {withStyles} from '@material-ui/core/styles'
@@ -206,7 +207,7 @@ class Messages extends BasePage {
         <DialogActions classes={{root: classes.dialogActionRoot}}>
           <Grid>
             <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="standard-adornment">{MESSAGES.dialog_title_content}</InputLabel>
+              <InputLabel htmlFor="standard-adornment">{ReactHtmlParser(this.props.t('MESSAGES.dialog_title_content'))}</InputLabel>
               <OutlinedInput
                 id="standard-adornment-password"
                 type={'text'}
@@ -214,7 +215,7 @@ class Messages extends BasePage {
                 value={this.state.message}
                 onChange={this.handleChangeMessage}
                 // onKeyDown={e => {if (e.key === 'Enter') this.handleSubmitMessage(e)}}
-                label={MESSAGES.label}
+                label={ReactHtmlParser(this.props.t('MESSAGES.label'))}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -248,7 +249,7 @@ class Messages extends BasePage {
       <Grid style={{width: '100%'}}>
         <Grid>
           <Grid>
-            <h2 className={'custommessagestitle'}>{MESSAGES.my_messages}</h2>
+            <h2 className={'custommessagestitle'}>{ReactHtmlParser(this.props.t('MESSAGES.my_messages'))}</h2>
           </Grid>
           <Grid>
             <Typography>{msg_descr}</Typography>

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 const {setAxiosAuthentication} = require('../../utils/authentication')
@@ -93,11 +94,11 @@ class ProfileLayout extends CompanyComponent {
                   }}>
                     <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Grid>
-                        {this.isModeCompany() ? <h3>{company ? company.name : ''}</h3> : <h3 className={'customprofilbannertitle'}>{`${LAYOUT_ABOUT.my_name_is} ${user ? user.firstname : ''}`}</h3>
+                        {this.isModeCompany() ? <h3>{company ? company.name : ''}</h3> : <h3 className={'customprofilbannertitle'}>{ReactHtmlParser(this.props.t('LAYOUT_ABOUT.my_name_is'))}</h3> // firstname : user ? user.firstname : ''
                         }
                       </Grid>
                       {this.isModeCompany() ? null : <Grid>
-                        <Typography className={'customprofilbannertext'} style={{color: 'rgba(39,37,37,35%)'}}>{LAYOUT_ABOUT.text}</Typography>
+                        <Typography className={'customprofilbannertext'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('LAYOUT_ABOUT.text'))}</Typography>
                       </Grid>
                       }
 

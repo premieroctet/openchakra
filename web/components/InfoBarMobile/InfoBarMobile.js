@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -29,7 +30,7 @@ class InfoBarMobile extends React.Component {
                   height={'100%'}/>
               </Grid>
               <Grid>
-                <Typography className={classes.infoBarColorText}>{INFOBARMOBILE_MESSAGE.message}</Typography>
+                <Typography className={classes.infoBarColorText}>{ReactHtmlParser(this.props.t('INFOBARMOBILE_MESSAGE.message'))}</Typography>
               </Grid>
             </Grid>
             <Grid style={{

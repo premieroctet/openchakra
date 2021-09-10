@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
@@ -281,7 +282,7 @@ class FilterMenu extends React.Component{
             {statusFilterVisible ?
               <Grid className={classes.filterMenuContainerStatut}>
                 <Grid className={classes.filterMenuFocused} onClick={this.statusFilterToggled}>
-                  <Typography className={classes.filterMenuTextFocused}>{SEARCHBAR.labelStatus}</Typography>
+                  <Typography className={classes.filterMenuTextFocused}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelStatus'))}</Typography>
                 </Grid>
                 <Grid className={classes.filterMenuContentMainStyle}>
                   <Grid className={classes.filTerMenuStatusMainStyleFilter}>
@@ -349,7 +350,7 @@ class FilterMenu extends React.Component{
             {dateFilterVisible ?
               <Grid className={classes.filterMenuDateFocused}>
                 <Grid className={classes.filterMenuFocused} onClick={this.dateFilterToggled}>
-                  <Typography>{SEARCHBAR.labelDate}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.labelDate'))}</Typography>
                 </Grid>
                 <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -391,7 +392,7 @@ class FilterMenu extends React.Component{
                 {radiusFilterVisible ?
                   <Grid className={classes.filterMenuDateFocused}>
                     <Grid className={classes.filterMenuFocused} onClick={this.radiusFilterToggled}>
-                      <Typography >{SEARCHBAR.labelPerimeter}</Typography>
+                      <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelPerimeter'))}</Typography>
                     </Grid>
                     <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                       <Grid>
@@ -421,7 +422,7 @@ class FilterMenu extends React.Component{
                     onClick={this.radiusFilterToggled}
                     className={classes.filterMenuStatusNotFocused}
                     style={{backgroundColor: `${radiusFilterBg}`}}>
-                    <Typography style={{color:  radiusFilterSet ?  'white' : 'black'}}>{SEARCHBAR.labelPerimeter}</Typography>
+                    <Typography style={{color:  radiusFilterSet ?  'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelPerimeter'))}</Typography>
                   </Grid>
                 }
               </Grid>
@@ -432,7 +433,7 @@ class FilterMenu extends React.Component{
             {locationFilterVisible?
               <Grid className={classes.filterMenuDateFocused}>
                 <Grid className={classes.filterMenuFocused} onClick={this.locationFilterToggled}>
-                  <Typography >{SEARCHBAR.labelLocation}</Typography>
+                  <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelLocation'))}</Typography>
                 </Grid>
                 <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -488,7 +489,7 @@ class FilterMenu extends React.Component{
                 onClick={this.locationFilterToggled}
                 className={classes.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${locationFilterBg}`}}>
-                <Typography style={{color:  locationFilterSet ?  'white' : 'black'}}>{SEARCHBAR.labelLocation}</Typography>
+                <Typography style={{color:  locationFilterSet ?  'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelLocation'))}</Typography>
               </Grid>
             }
           </Grid>
@@ -496,7 +497,7 @@ class FilterMenu extends React.Component{
             {categoriesFilterVisible?
               <Grid className={classes.filterMenuDateFocused}>
                 <Grid className={classes.filterMenuFocused} onClick={this.categoriesFilterToggled}>
-                  <Typography >{SEARCHBAR.labelCategory}</Typography>
+                  <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}</Typography>
                 </Grid>
                 <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -525,7 +526,7 @@ class FilterMenu extends React.Component{
                 onClick={this.categoriesFilterToggled}
                 className={classes.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${categoriesFilterBg}`}}>
-                <Typography style={{color:  categoriesFilterSet ?  'white' : 'black'}}>{SEARCHBAR.labelCategory}</Typography>
+                <Typography style={{color:  categoriesFilterSet ?  'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}</Typography>
               </Grid>
             }
           </Grid>
@@ -533,7 +534,7 @@ class FilterMenu extends React.Component{
             {servicesFilterVisible?
               <Grid className={classes.filterMenuDateFocused}>
                 <Grid className={classes.filterMenuFocused} onClick={this.servicesFilterToggled}>
-                  <Typography>{SEARCHBAR.labelService}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}</Typography>
                 </Grid>
                 <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -562,7 +563,7 @@ class FilterMenu extends React.Component{
                 onClick={this.servicesFilterToggled}
                 className={classes.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${servicesFilterBg}`}}>
-                <Typography style={{color:  servicesFilterSet ?  'white' : 'black'}}>{SEARCHBAR.labelService}</Typography>
+                <Typography style={{color:  servicesFilterSet ?  'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}</Typography>
               </Grid>
             }
           </Grid>

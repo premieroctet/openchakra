@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import {TextField} from '@material-ui/core'
 import BusinessIcon from '@material-ui/icons/Business'
@@ -261,7 +262,7 @@ class About extends CompanyComponent {
                     <TextField
                       name={'website'}
                       variant={'outlined'}
-                      label={ABOUT.textfield_website}
+                      label={ReactHtmlParser(this.props.t('ABOUT.textfield_website'))}
                       value={website || ''}
                       style={{width: '100%'}}
                       onChange={this.handleChange}
@@ -306,19 +307,19 @@ class About extends CompanyComponent {
                       isMulti
                       isSearchable
                       closeMenuOnSelect={false}
-                      placeholder={ABOUT.textfield_languages}
+                      placeholder={ReactHtmlParser(this.props.t('ABOUT.textfield_languages'))}
                       noOptionsMessage={() => ABOUT.option_message}
                     /> :
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-outlined-label">{ABOUT.label_size_company}</InputLabel>
+                      <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('ABOUT.label_size_company'))}</InputLabel>
                       <Select
                         labelId="demo-simple-select-outlined-label"
                         id="demo-simple-select-outlined"
                         value={sizeCompany}
                         onChange={this.handleChange}
-                        label={ABOUT.textfield_size_company}
+                        label={ReactHtmlParser(this.props.t('ABOUT.textfield_size_company'))}
                         name={'sizeCompany'}
-                        placeholder={ABOUT.textfield_size_company}
+                        placeholder={ReactHtmlParser(this.props.t('ABOUT.textfield_size_company'))}
                       >
                         {
                           Object.keys(COMPANY_SIZE).map((res, index) => (
@@ -338,19 +339,19 @@ class About extends CompanyComponent {
                       style={{
                         fontWeight: 'bold',
                         textTransform: 'initial',
-                      }}>{ABOUT.b2b_activity}</h3>
+                      }}>{ReactHtmlParser(this.props.t('ABOUT.b2b_activity'))}</h3>
                   </Grid>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-outlined-label">{ABOUT.b2b_activity_label}</InputLabel>
+                      <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('ABOUT.b2b_activity_label'))}</InputLabel>
                       <Select
                         labelId="demo-simple-select-outlined-label"
                         id="demo-simple-select-outlined"
                         value={activityArea}
                         onChange={this.handleChange}
-                        label={ABOUT.b2b_activity_label}
+                        label={ReactHtmlParser(this.props.t('ABOUT.b2b_activity_label'))}
                         name={'activityArea'}
-                        placeholder={ABOUT.b2b_activity_label}
+                        placeholder={ReactHtmlParser(this.props.t('ABOUT.b2b_activity_label'))}
                       >
                         {
                           Object.keys(COMPANY_ACTIVITY).map((res, index) => (
@@ -375,7 +376,7 @@ class About extends CompanyComponent {
                   color={'primary'}
                   disabled={!this.isModeCompany() ? enabledEdition : false}
                 >
-                  {ABOUT.button_update}
+                  {ReactHtmlParser(this.props.t('ABOUT.button_update'))}
                 </Button>
               </Grid>
             </Grid>

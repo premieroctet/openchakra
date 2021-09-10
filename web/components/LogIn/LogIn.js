@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
@@ -109,7 +110,7 @@ class LogIn extends React.Component {
         <Grid style={{width: '100%'}}>
           <Grid className={classes.newContainer}>
             <Grid>
-              <h2 className={classes.titleRegister}>{LOGIN.title}</h2>
+              <h2 className={classes.titleRegister}>{ReactHtmlParser(this.props.t('LOGIN.title'))}</h2>
             </Grid>
             {ENABLE_GF_LOGIN ?
               <Grid className={classes.margin}>
@@ -147,8 +148,8 @@ class LogIn extends React.Component {
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
-                      label={LOGIN.input_label}
-                      placeholder={LOGIN.input_label}
+                      label={ReactHtmlParser(this.props.t('LOGIN.input_label'))}
+                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_label'))}
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
                       name="username"
                       value={username}
@@ -167,8 +168,8 @@ class LogIn extends React.Component {
                   <Grid item className={classes.widthTextField}>
                     <Input
                       id="standard-with-placeholder"
-                      label={LOGIN.input_password}
-                      placeholder={LOGIN.input_password}
+                      label={ReactHtmlParser(this.props.t('LOGIN.input_password'))}
+                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_password'))}
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
                       type={showPassword ? 'text' : 'password'}
                       name="password"
@@ -201,7 +202,7 @@ class LogIn extends React.Component {
                       </Grid>
                       <Grid item className={classes.widthTextField}>
                         <FormControl className={classes.formControl}>
-                          <InputLabel id="demo-simple-select-label">{LOGIN.input_role}</InputLabel>
+                          <InputLabel id="demo-simple-select-label">{ReactHtmlParser(this.props.t('LOGIN.input_role'))}</InputLabel>
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
@@ -224,14 +225,14 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer}>
                   <Button onClick={this.onSubmit} disabled={loginDisabled} variant="contained" color="primary" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>
-                    {LOGIN.button}
+                    {ReactHtmlParser(this.props.t('LOGIN.button'))}
                   </Button>
                 </Grid>
               </Grid>
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer} style={{flexDirection: 'column'}}>
-                  <Link href={'/forgotPassword'}><a color="primary" className={`customloginforgetpassword ${classes.forgetPassword}`}>{LOGIN.FORGOTTEN_PASSWORD}</a></Link>
-                  <a color="primary" onClick={callRegister} className={`customloginredirectionlink ${classes.redirectionSignin}` }>{LOGIN.REGISTER_YET}</a>
+                  <Link href={'/forgotPassword'}><a color="primary" className={`customloginforgetpassword ${classes.forgetPassword}`}>{ReactHtmlParser(this.props.t('LOGIN.FORGOTTEN_PASSWORD'))}</a></Link>
+                  <a color="primary" onClick={callRegister} className={`customloginredirectionlink ${classes.redirectionSignin}` }>{ReactHtmlParser(this.props.t('LOGIN.REGISTER_YET'))}</a>
                 </Grid>
               </Grid>
             </Grid>

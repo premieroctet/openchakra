@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -58,7 +59,7 @@ class BannerPresentation extends React.Component {
               <Button
                 variant={'outlined' }
                 classes={{root: `custombannerbutton ${classes.bannerPresentationButtonB2b}`}}>
-                {BANNER_PRESENTATION.button}
+                {ReactHtmlParser(this.props.t('BANNER_PRESENTATION.button'))}
               </Button>
             </Link>
           </Grid>

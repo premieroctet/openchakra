@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React, {useState, useEffect} from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -162,7 +163,7 @@ function Form({classes, booking_id}) {
     <>
       <Grid container className={classes.mainContainer} spacing={2}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h2 className={classes.title}>{AVOCOTES.titleCordonnates}</h2>
+          <h2 className={classes.title}>{ReactHtmlParser(this.props.t('AVOCOTES.titleCordonnates'))}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <TextField id="standard-basic" label="Email" classes={{root: classes.textField}} value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 || !emailValidator()} helperText={email.length === 0 ? 'Veuillez entrer un e-mail' : !emailValidator() ? 'Veuillez entrer un e-mail valide' : null}/>
@@ -203,7 +204,7 @@ function Form({classes, booking_id}) {
           <TextField id="standard-basic" label="Téléphone" classes={{root: classes.textField}} value={phone} onChange={e => setPhone(e.target.value)} error={phone.length == 0 || !phoneValidator()} helperText={phone.length === 0 ? 'Veuillez entrer un n° téléphone' : !phoneValidator() ? 'Veuillez entrer un n° téléphone valide' : null}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h2 className={classes.title}>{AVOCOTES.titleDetails}</h2>
+          <h2 className={classes.title}>{ReactHtmlParser(this.props.t('AVOCOTES.titleDetails'))}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           { service && service.prestations.map(p => (
@@ -237,7 +238,7 @@ function Form({classes, booking_id}) {
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} className={classes.containerPrice}>
           <Grid item>
-            <Typography>{AVOCOTES.totalText}</Typography>
+            <Typography>{ReactHtmlParser(this.props.t('AVOCOTES.totalText'))}</Typography>
           </Grid>
           <Grid item>
             <Typography>{totalPriceTxt}</Typography>
@@ -245,11 +246,11 @@ function Form({classes, booking_id}) {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Button variant="contained" classes={{root: classes.buttonPaid}} disabled={!payEnabled()} onClick={onSubmit}>
-            {AVOCOTES.paidButton}
+            {ReactHtmlParser(this.props.t('AVOCOTES.paidButton'))}
           </Button>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Typography>{AVOCOTES.helperText}</Typography>
+          <Typography>{ReactHtmlParser(this.props.t('AVOCOTES.helperText'))}</Typography>
         </Grid>
       </Grid>
     </>

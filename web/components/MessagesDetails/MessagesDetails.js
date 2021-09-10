@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
@@ -220,7 +221,7 @@ class MessagesDetails extends React.Component {
                   <Divider/>
                 </Grid>
                 <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop: '3vh'}}>
-                  <Typography>{MESSAGE_DETAIL.new_messages}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('MESSAGE_DETAIL.new_messages'))}</Typography>
                 </Grid>
                 {this.state.messages.map((message, index) => {
                   return (

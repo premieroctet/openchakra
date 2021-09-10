@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -77,11 +78,11 @@ class IntroduceYou extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
-          <h2 className={classes.policySizeTitle}>{SHOP.creation.title}</h2>
+          <h2 className={classes.policySizeTitle}>{ReactHtmlParser(this.props.t('SHOP.creation.title'))}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex'}}>
           <Grid>
-            <h3 style={{color: '#403f3f'}}>{SHOP.creation.subtitle}</h3>
+            <h3 style={{color: '#403f3f'}}>{ReactHtmlParser(this.props.t('SHOP.creation.subtitle'))}</h3>
           </Grid>
           <Grid>
             <IconButton aria-label="info" className={classes.margin} onClick={() => this.setState({notice: true})}>
@@ -104,7 +105,7 @@ class IntroduceYou extends React.Component {
                   checkedIcon={<RadioButtonCheckedIcon/>}
                 />
               }
-              label={<h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.creation.is_particular}</h4>}
+              label={<h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular'))}</h4>}
             />
           </Grid>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
@@ -112,26 +113,26 @@ class IntroduceYou extends React.Component {
               this.state.is_particular ?
                 <Grid container spacing={1} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_description}</Typography>
+                    <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_description'))}</Typography>
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
                       <Grid container spacing={1} style={{width: '100%', margin: 0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Radio color="primary" value={CESU[0]}/>
-                          <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_want_cesu}</Typography>
+                          <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_want_cesu'))}</Typography>
                         </Grid>
                       </Grid>
                       <Grid container spacing={1} style={{width: '100%', margin: 0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Radio color="primary" value={CESU[1]}/>
-                          <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_accept_cesu}</Typography>
+                          <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_accept_cesu'))}</Typography>
                         </Grid>
                       </Grid>
                       <Grid container spacing={1} style={{width: '100%', margin: 0}}>
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Radio color="primary" value={CESU[2]}/>
-                          <Typography className={classes.policySizeContent}>{SHOP.creation.is_particular_decline_cesu}</Typography>
+                          <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_decline_cesu'))}</Typography>
                         </Grid>
                       </Grid>
                       <Information
@@ -159,7 +160,7 @@ class IntroduceYou extends React.Component {
                 />
               }
               label={
-                <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.creation.is_professional}</h4>
+                <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.creation.is_professional'))}</h4>
               }
             />
           </Grid>
@@ -168,7 +169,7 @@ class IntroduceYou extends React.Component {
               :
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_description}</Typography>
+                  <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_professional_description'))}</Typography>
                 </Grid>
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <Siret onChange={this.onCompanyChanged} company={this.state.company}/>
@@ -186,7 +187,7 @@ class IntroduceYou extends React.Component {
                         />
                       }
                       label={
-                        <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_cis}</Typography>
+                        <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_professional_cis'))}</Typography>
                       }
                     />
                   </Grid>
@@ -202,7 +203,7 @@ class IntroduceYou extends React.Component {
                         />
                       }
                       label={
-                        <Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_certif}</Typography>
+                        <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_professional_certif'))}</Typography>
                       }
                     />
                   </Grid>
