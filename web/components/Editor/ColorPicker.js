@@ -22,7 +22,6 @@ class ColorPicker extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      color: this.props.value || '',
       open: false,
     }
   }
@@ -31,7 +30,6 @@ class ColorPicker extends React.Component {
     if (this.props.onChange) {
       this.props.onChange(color.hex)
     }
-    this.setState({color: color.hex})
   }
 
   onColorToggle = () => {
@@ -39,7 +37,8 @@ class ColorPicker extends React.Component {
   }
   render() {
 
-    const {color, open}=this.state
+    const {open}=this.state
+    const color=this.props.value
     return (
       <Grid container spacing={2}>
         <Grid item xl={1}>
@@ -49,7 +48,7 @@ class ColorPicker extends React.Component {
           <Grid item xl={12} style={ popover }>
             <Grid style={ cover } onClick={this.onColorToggle}/>
             <ChromePicker
-              color={this.state.color}
+              color={color}
               onChangeComplete={this.onChangeComplete}
             />
           </Grid>

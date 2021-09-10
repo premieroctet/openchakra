@@ -103,14 +103,22 @@ class UIConfiguration extends React.Component {
     this.setState({page: page})
   }
 
+  /**
+  Update paramètre/attribut.
+  Si value===null (en cas de reset), suppression de l'attribut dans attributes
+  */
   onChange = parameter_id => att_name => value => {
     const {parameters}=this.state
     const p=parameters.find(p => p._id ==parameter_id)
     let attr = p.attributes.find(a => a.name==att_name)
     if (attr) {
+      // Null : remove attribute
+      if (value===null) {
+        p.attributes=p.attributes.filter(a => a.name!=att_name)
+      }
       attr.value=value
     }
-    else {
+    else if (value!==null) {
       p.attributes.push({name: att_name, value: value})
     }
 
@@ -145,7 +153,10 @@ class UIConfiguration extends React.Component {
               pageParameters && Object.keys(pageParameters).map(component_name => (
                 <Accordion defaultExpanded={false} TransitionProps={{unmountOnExit: true}} key={component_name}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <h2>{component_name}</h2>
+                    <div style={{display: 'flex', flexDirection: 'column'}}>
+                      <h2 style={{margin: '5px'}}>{component_name}</h2>
+                      <h4 style={{margin: '0px'}}>id: {pageParameters[component_name][0].classname}</h4>
+                    </div>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
