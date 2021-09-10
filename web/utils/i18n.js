@@ -46,6 +46,12 @@ const INFOBARMOBILE_MESSAGE = {
 
 const SHOWMORE = 'En savoir plus'
 
+const SEARCH = {
+  alfred_avail: ' Alfred disponible(s)',
+  no_one: 'Aucun ',
+  sort: 'Trier par',
+}
+
 const SEARCHBAR = {
   what: 'Quel service ?',
   where: 'Où ?',
@@ -59,6 +65,27 @@ const SEARCHBAR = {
   labelPerimeter: 'Périmètre',
   labelCategory: 'Catégorie(s)',
   labelService: 'Service(s)',
+  searching: 'Recherche en cours',
+  no_results: 'Nous n\'avons pas trouvé de résultat pour votre recherche',
+  professional: 'Pro',
+  particular: 'Particulier',
+  button_cancel: 'Annuler',
+  button_confirm: 'Valider',
+  start_date: 'Début',
+  end_date: 'Fin',
+  button_cancel_date: 'Annuler',
+  button_confirm_date: 'Valider',
+  button_cancel_radius: 'Annuler',
+  button_confirm_radius: 'Valider',
+  button_cancel_remote: 'Annuler',
+  button_confirm_remote: 'Valider',
+  button_cancel_cat: 'Annuler',
+  button_confirm_cat: 'Valider',
+  button_cancel_service: 'Annuler',
+  button_confirm_service: 'Valider',
+  at_home: 'Chez moi',
+  alfred_home: 'Chez l\'Alfred',
+  remote: 'En visio',
 }
 
 const NAVBAR_MENU = {
@@ -992,4 +1019,5 @@ module.exports = {
   REGISTER_FRIST_PAGE,
   REGISTER_SECOND_PAGE,
   REGISTER_THIRD_PAGE,
+  SEARCH,
 }
