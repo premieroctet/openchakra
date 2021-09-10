@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
 import React, {useEffect, useState} from 'react'
 import {withStyles} from '@material-ui/core/styles'
@@ -160,4 +161,4 @@ function AlfredConditions({classes, shop}) {
   )
 }
 
-export default withStyles(styles, {withTheme: true})(AlfredConditions)
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(AlfredConditions))

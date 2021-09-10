@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Banner from '../components/AvoCotes/Banner/Banner'
@@ -29,4 +30,4 @@ function avocotesLandingPage() {
   )
 }
 
-export default avocotesLandingPage
+export default withTranslation('custom', {withRef: true})(avocotesLandingPage)

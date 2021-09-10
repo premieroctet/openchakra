@@ -1,56 +1,55 @@
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Grid from '@material-ui/core/Grid'
 import React from 'react'
-import Grid from "@material-ui/core/Grid";
-import ProfileLayout from '../../hoc/Layout/ProfileLayout'
-import Album from '../../components/Album/Album'
-import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/pages/profile/picture/picture';
-import AskQuestion from "../../components/AskQuestion/AskQuestion";
-import Box from "../../components/Box/Box";
-import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
-const {getLoggedUserId, isEditableUser}=require('../../utils/context');
 
-class ProfilePictures extends React.Component {
+import Album from '../../components/Album/Album'
+import AskQuestion from '../../components/AskQuestion/AskQuestion'
+import BasePage from '../basePage'
+import Box from '../../components/Box/Box'
+import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
+import styles from '../../static/css/pages/profile/picture/picture'
+
+const {getLoggedUserId, isEditableUser}=require('../../utils/context')
+
+class ProfilePictures extends BasePage {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state={}
   }
 
-  static getInitialProps({query: {user}}) {
-    return {user: user};
-  }
-
   getUserId() {
-    return this.props.user || getLoggedUserId()
+    return this.getURLProps().user || getLoggedUserId()
   }
 
   content = (classes, user) => {
-    const editable = isEditableUser(user);
+    const editable = isEditableUser(user)
 
     return(
       <Grid container sapcing={3} className={classes.pictureContainer}>
         <Grid item xs={12} sm={12} md={12} lg={12} xm={12}>
           <Box>
-           <Album user={user}/>
+            <Album user={user}/>
           </Box>
         </Grid>
         {
-          !editable ?
+          !editable &&
             <Grid className={classes.containerAskQuestion} item >
               <Grid style={{width: '70%'}}>
                 <AskQuestion user={user}/>
               </Grid>
             </Grid>
-         : null
         }
       </Grid>
     )
-  };
+  }
 
 
   render() {
-    const {classes}=this.props;
-    const user=this.getUserId();
+    const {classes}=this.props
+    const user=this.getUserId()
 
     if (!user) {
       return null
@@ -74,4 +73,4 @@ class ProfilePictures extends React.Component {
 
 }
 
-export default withStyles(styles)(ProfilePictures)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfilePictures))

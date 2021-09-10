@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
@@ -38,7 +39,7 @@ class OurAlfred extends React.Component {
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnMobile}>
-            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search?search=1')}>{CATEGORY.button}</Button>
+            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search')}>{CATEGORY.button}</Button>
           </Grid>
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
@@ -56,7 +57,7 @@ class OurAlfred extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.containerMobileButton}>
-          <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search?search=1')}>
+          <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search')}>
             {CATEGORY.button}
           </Button>
         </Grid>
@@ -66,4 +67,4 @@ class OurAlfred extends React.Component {
   }
 }
 
-export default withStyles(styles)(OurAlfred)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(OurAlfred))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import styles from '../../../static/css/components/BookingConditions/BookingConditions'
@@ -153,4 +154,4 @@ class BookingConditions extends React.Component {
   }
 }
 
-export default withStyles(styles)(BookingConditions)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingConditions))

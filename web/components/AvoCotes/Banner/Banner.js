@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import styles from '../../../static/css/components/BannerAvocotes/BannerAvocotes'
@@ -13,7 +14,7 @@ function Banner({classes}) {
           <img
             alt={'logo_myAlfred'}
             title={'logo_myAlfred'}
-            src={'../../../static/assets/icon/logoOnDemand.svg'}
+            src={'/static/assets/icon/logoOnDemand.svg'}
             height={64}
           />
         </Grid>
@@ -30,7 +31,7 @@ function Banner({classes}) {
             <img
               alt={'equipement'}
               title={'equipment'}
-              src={'../../../static/assets/img/avocotes/avocote.svg'}
+              src={'/static/assets/img/avocotes/avocote.svg'}
               className={classes.imgEquipment}
             />
           </Grid>
@@ -40,4 +41,4 @@ function Banner({classes}) {
   )
 }
 
-export default withStyles(styles)(Banner)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Banner))

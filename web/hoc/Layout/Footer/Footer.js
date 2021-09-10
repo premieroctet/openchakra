@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -14,18 +15,13 @@ import {isAndroid, isIOS} from '../../../utils/context'
 import Register from '../../../components/Register/Register'
 import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
-import Slide from '@material-ui/core/Slide'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 const {getLoggedUserId, isLoggedUserAlfredPro, isB2BStyle, isApplication} = require('../../../utils/context')
 const {isB2BDisabled} = require('../../../config/config')
 
-const Transition = React.forwardRef((props, ref) => {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
 const DialogTitle = withStyles(styles)(props => {
-  const {children, classes, onClose, ...other} = props
+  const {children, classes, onClose} = props
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
@@ -68,7 +64,6 @@ class Footer extends React.Component {
         className={classes.navbarModal}
         open={setOpenRegister}
         onClose={this.handleCloseRegister}
-        TransitionComponent={Transition}
         disableEscapeKeyDown={true}
       >
         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
@@ -93,6 +88,7 @@ class Footer extends React.Component {
 
   render() {
     const {classes} = this.props
+    const {setOpenRegister} = this.state
 
     return (
       <Grid container spacing={2} style={{width: '100%', margin: 0}}>
@@ -273,7 +269,7 @@ class Footer extends React.Component {
                     <Grid item>
                       <a href={'https://apps.apple.com/us/app/my-alfred/id1544073864'} target={'_blank'}>
                         <img alt={'appleStore'} title={'badge_applestore'} width={126.5} height={40}
-                          src={'../../static/assets/img/footer/ios/ios_black.svg'}/>
+                          src={'/static/assets/img/footer/ios/ios_black.svg'}/>
                       </a>
                     </Grid> : null
                 }
@@ -281,7 +277,7 @@ class Footer extends React.Component {
                   !isIOS ? <Grid item>
                     <a href={'https://play.google.com/store/apps/details?id=com.myalfred'} target={'_blank'}>
                       <img alt={'googlePlay'} title={'badge_android'} width={153}
-                        src={'../../static/assets/img/footer/android/android.png'}/>
+                        src={'/static/assets/img/footer/android/android.png'}/>
                     </a>
                   </Grid> : null
                 }
@@ -344,10 +340,10 @@ class Footer extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {this.dialogRegister(classes)}
+        {setOpenRegister && this.dialogRegister(classes)}
       </Grid>
     )
   }
 }
 
-export default withStyles(styles)(Footer)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Footer))

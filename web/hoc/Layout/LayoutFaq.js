@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -54,4 +55,4 @@ class LayoutFaq extends React.Component {
   }
 }
 
-export default withStyles(styles)(LayoutFaq)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(LayoutFaq))

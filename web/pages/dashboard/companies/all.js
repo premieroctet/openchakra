@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios'
@@ -37,4 +38,4 @@ class all extends DataPage {
 
 }
 
-export default withStyles(styles)(all);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(all))

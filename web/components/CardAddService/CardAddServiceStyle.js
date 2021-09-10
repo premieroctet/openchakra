@@ -17,7 +17,7 @@ export default theme => ({
   },
   cardMedia: {
     paddingTop: '56.25%', // 16:9
-    backgroundImage: 'url(' + '../../static/assets/img/skillsAlfred/bgCardAddService.svg' + ')',
+    backgroundImage: 'url(/static/assets/img/skillsAlfred/bgCardAddService.svg)',
     display: 'block',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right',

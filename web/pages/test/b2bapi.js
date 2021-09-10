@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import axios from 'axios';
@@ -353,4 +354,4 @@ class B2BApiTest extends React.Component {
  }
 }
 
-export default B2BApiTest
+export default withTranslation('custom', {withRef: true})(B2BApiTest)

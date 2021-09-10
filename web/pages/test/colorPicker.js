@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import ColorPicker from '../../components/Editor/ColorPicker'
 
@@ -57,4 +58,4 @@ class ColorPickerTest extends React.Component {
 
 }
 
-export default ColorPickerTest
+export default withTranslation('custom', {withRef: true})(ColorPickerTest)

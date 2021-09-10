@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
@@ -40,7 +41,7 @@ class CategoryTopic extends React.Component {
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnXs}>
-            <Button variant={'outlined'} className={'customcatbutton'} classes={{root: `${classes.categoryButton}`}} onClick={() => Router.push('/search?search=1')}>
+            <Button variant={'outlined'} className={'customcatbutton'} classes={{root: `${classes.categoryButton}`}} onClick={() => Router.push('/search')}>
               {CATEGORY.button}
             </Button>
           </Grid>
@@ -60,7 +61,7 @@ class CategoryTopic extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.buttonDiscoverMobile}>
-          <Button variant={'outlined'} className={'customcatbutton'} classes={{root: `customcatbutton ${classes.categoryButton}`}} onClick={() => Router.push('/search?search=1')}>
+          <Button variant={'outlined'} className={'customcatbutton'} classes={{root: `customcatbutton ${classes.categoryButton}`}} onClick={() => Router.push('/search')}>
             {CATEGORY.button}
           </Button>
         </Grid>
@@ -69,4 +70,4 @@ class CategoryTopic extends React.Component {
   }
 }
 
-export default withStyles(styles)(CategoryTopic)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(CategoryTopic))

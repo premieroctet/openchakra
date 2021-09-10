@@ -1,7 +1,8 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Asset from '../../components/Asset/Asset'
 
-export default class assetImg extends React.Component {
+class AssetImg extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -14,3 +15,5 @@ export default class assetImg extends React.Component {
     )
   }
 }
+
+export default withTranslation('custom', {withRef: true})(AssetImg)

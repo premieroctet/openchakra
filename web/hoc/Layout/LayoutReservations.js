@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import styles from '../../static/css/components/Layout/LayoutReserations/LayoutReservations'
@@ -61,4 +62,4 @@ class LayoutReservations extends React.Component {
   }
 }
 
-export default withStyles(styles)(LayoutReservations)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(LayoutReservations))

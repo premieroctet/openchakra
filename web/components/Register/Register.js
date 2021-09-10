@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import CguContent from '../CguContent/CguContent'
 import {REGISTER} from '../../utils/i18n'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
@@ -261,7 +262,7 @@ class Register extends React.Component {
             Router.push('/creaShop/creaShop')
           }
           else if (getRole() == EMPLOYEE) {
-            Router.push('/search?search=1')
+            Router.push('/search')
           }
         }
         else {
@@ -559,4 +560,4 @@ class Register extends React.Component {
 
 }
 
-export default withStyles(styles)(Register)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Register))

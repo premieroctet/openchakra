@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
@@ -168,4 +169,4 @@ class NewsLetter extends React.Component {
   }
 }
 
-export default withStyles(styles)(NewsLetter)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(NewsLetter))

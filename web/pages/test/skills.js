@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import axios from 'axios'
@@ -67,4 +68,4 @@ class SkillsTest extends React.Component{
 
 }
 
-export default SkillsTest
+export default withTranslation('custom', {withRef: true})(SkillsTest)

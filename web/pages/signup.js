@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import {Component} from 'react';
 import Router from 'next/router';
 
@@ -12,4 +13,4 @@ class signup extends Component {
   }
 }
 
-export default signup;
+export default withTranslation('custom', {withRef: true})(signup)

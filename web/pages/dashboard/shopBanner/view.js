@@ -1,19 +1,20 @@
-import {snackBarSuccess} from '../../../utils/notifications'
-
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
-import {Typography} from '@material-ui/core'
-import TextField from '@material-ui/core/TextField'
-import {withStyles} from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-
-
-import Layout from '../../../hoc/Layout/Layout'
-import axios from 'axios'
-import Router from 'next/router'
 import Link from 'next/link'
+import React from 'react'
+import Router from 'next/router'
+import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
+
+import {snackBarSuccess} from '../../../utils/notifications'
+import BasePage from '../../basePage'
+import Layout from '../../../hoc/Layout/Layout'
+
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
 
 const styles = theme => ({
@@ -41,7 +42,7 @@ const styles = theme => ({
   },
 })
 
-class view extends React.Component {
+class View extends BasePage {
 
   constructor(props) {
     super(props)
@@ -49,21 +50,13 @@ class view extends React.Component {
     this.state = {
       shopBanner: {},
       label: '',
-
-
     }
-
     this.handleClick = this.handleClick.bind(this)
-  }
-
-  static getInitialProps({query: {id}}) {
-    return {banner_id: id}
-
   }
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.props.banner_id
+    const id = this.getURLProps().id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/shopBanner/all/${id}`)
       .then(response => {
@@ -92,7 +85,7 @@ class view extends React.Component {
     e.preventDefault()
 
     const {label} = this.state.shopBanner
-    const id = this.props.banner_id
+    const id = this.getURLProps().id
     axios.put(`/myAlfred/api/admin/shopBanner/all/${id}`, {label})
       .then(() => {
         snackBarSuccess('Image modifiée avec succès')
@@ -104,7 +97,7 @@ class view extends React.Component {
   };
 
   handleClick() {
-    const id = this.props.banner_id
+    const id = this.getURLProps.id
     axios.delete(`/myAlfred/api/admin/shopBanner/all/${id}`)
       .then(() => {
         snackBarSuccess('Image supprimée avec succès')
@@ -154,7 +147,7 @@ class view extends React.Component {
                   </Button>
                 </Grid>
               </form>
-              <Link href={`editPicture?id=${this.props.banner_id}`}>
+              <Link href={`editPicture?id=${this.getURLProps().id}`}>
                 <Button type="button" variant="contained" color="primary" style={{width: '100%'}}>
                   Modifier la photo
                 </Button>
@@ -168,4 +161,4 @@ class view extends React.Component {
 }
 
 
-export default withStyles(styles)(view)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))

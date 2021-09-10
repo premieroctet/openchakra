@@ -16,20 +16,7 @@ import '../static/cssdashboard.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import '../static/style1.css'
 import {I18nextProvider} from 'react-i18next'
-import i18next from 'i18next'
-import customfr from '../translations/fr/common.json'
-
-i18next.init({
-  languages: ['fr'],
-  defaultLanguage: 'fr',
-  lng: 'fr',
-  resources: {
-    fr: {
-      custom: customfr,
-    },
-  },
-  debug: true,
-})
+import i18n from '../utils/i18n_init'
 
 class MyApp extends App {
   constructor() {
@@ -55,7 +42,7 @@ class MyApp extends App {
   render() {
     const {Component, pageProps} = this.props
     return (
-      <I18nextProvider i18n={i18next}>
+      <I18nextProvider i18n={i18n}>
         <Container>
           <Head>
             <title>My Alfred</title>

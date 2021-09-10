@@ -1,71 +1,75 @@
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Button from '@material-ui/core/Button'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import PropTypes from 'prop-types'
+import React from 'react'
+import Router from 'next/router'
+import axios from 'axios'
+
+import {snackBarSuccess} from '../../../utils/notifications'
+import styles from './EditPictureStyle'
+
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
-import Router from 'next/router';
-import axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import {Typography} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import {withStyles} from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import styles from './EditPictureStyle';
 
 
 class EditPicture extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       result: {},
       picture: null,
       id: null,
-    };
+    }
   }
 
   static getInitialProps({query: {id}}) {
-    return {prestation_id: id};
+    return {prestation_id: id}
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/${this.props.type}/all/${this.props.id}`)
       .then(response => {
-        console.log(response, ' response');
-        let result = response.data;
-        this.setState({result: result});
+        console.log(response, ' response')
+        let result = response.data
+        this.setState({result: result})
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
-      });
+      })
   }
 
   onChange = e => {
-    this.setState({picture: e.target.files[0]});
-  };
+    this.setState({picture: e.target.files[0]})
+  }
 
   onSubmit = e => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('picture', this.state.picture);
+    e.preventDefault()
+    const formData = new FormData()
+    formData.append('picture', this.state.picture)
     axios.post(`/myAlfred/api/admin/${this.props.type}/editPicture/${this.props.id}`, formData)
-      .then(res => {
-        alert('Photo modifiée avec succès');
-        Router.push({pathname: `/dashboard/${this.props.type}` + `s/all`});
+      .then(() => {
+        snackBarSuccess('Photo modifiée avec succès')
+        Router.push({pathname: `/dashboard/${this.props.type}s/all`})
       })
       .catch(err => {
-        console.error(err);
-      });
-  };
+        console.error(err)
+      })
+  }
 
   render() {
-    const {classes} = this.props;
-    const {result} = this.state;
+    const {classes} = this.props
+    const {result} = this.state
 
     return (
       <Grid container className={classes.loginContainer}>
@@ -91,13 +95,13 @@ class EditPicture extends React.Component {
           </Grid>
         </Card>
       </Grid>
-    );
-  };
+    )
+  }
 }
 
 EditPicture.propTypes = {
   classes: PropTypes.object.isRequired,
-};
+}
 
 
-export default withStyles(styles, {withTheme: true})(EditPicture);
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(EditPicture))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -262,4 +263,4 @@ class SelectService extends React.Component {
   }
 }
 
-export default withStyles(styles)(SelectService)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(SelectService))

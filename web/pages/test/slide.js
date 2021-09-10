@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withSlide from '../../hoc/Slide/SlideShow';
 import styles from '../../static/css/pages/homePage/index';
@@ -31,4 +32,4 @@ class SlideTest extends React.Component{
 
 }
 
-export default withStyles(styles, {withTheme: true})(SlideTest);
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(SlideTest))

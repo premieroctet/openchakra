@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Grid from '@material-ui/core/Grid'
@@ -25,7 +26,7 @@ class RegisterThirdPage extends React.Component {
               </Grid>
               <Grid item className={classes.responsiveButton}>
                 <Grid item style={{marginRight: '1%'}}>
-                  <Link href={'/search?search=1'}>
+                  <Link href={'/search'}>
                     <a style={{textDecoration: 'none'}}>
                       <Button
                         variant={'contained'}
@@ -76,4 +77,4 @@ class RegisterThirdPage extends React.Component {
 
 }
 
-export default withStyles(styles)(RegisterThirdPage)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(RegisterThirdPage))

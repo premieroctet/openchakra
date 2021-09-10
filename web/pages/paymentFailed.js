@@ -1,25 +1,25 @@
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
-import React, {Fragment} from 'react';
-import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Router from 'next/router';
-import LayoutPayment from "../hoc/Layout/LayoutPayment";
-import Typography from "@material-ui/core/Typography";
-import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import Router from 'next/router'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
 
-class PaymentFailed extends React.Component {
+import BasePage from './basePage'
+import LayoutPayment from '../hoc/Layout/LayoutPayment'
+import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
+
+const {setAxiosAuthentication}=require('../utils/authentication')
+
+class PaymentFailed extends BasePage {
   constructor(props) {
     super(props)
     this.state = {
       user: {},
       booking: null,
     }
-  }
-
-  static getInitialProps({query: {booking_id}}) {
-    return {booking_id: booking_id}
   }
 
   componentDidMount() {
@@ -33,7 +33,7 @@ class PaymentFailed extends React.Component {
       .catch(err => {
         console.error(err)
       })
-    axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
+    axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
       .then(res => {
         this.setState({booking: res.data})
       })
@@ -89,4 +89,4 @@ class PaymentFailed extends React.Component {
 }
 
 
-export default withStyles(styles)(PaymentFailed)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(PaymentFailed))

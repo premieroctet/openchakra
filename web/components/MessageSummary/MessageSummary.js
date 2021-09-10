@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
@@ -70,4 +71,4 @@ class MessageSummary extends React.Component {
   }
 }
 
-export default withStyles(styles)(MessageSummary)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(MessageSummary))

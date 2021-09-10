@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import Layout from '../../hoc/Layout/Layout'
@@ -26,14 +27,14 @@ const styles = () => ({
   },
 })
 
-class UIParameters extends React.Component {
+class UIConfiguration extends React.Component {
 
   constructor(props) {
     super(props)
     this.state={
       parameters: [],
       page: null,
-      accordions: [],
+      saving: false,
     }
   }
 
@@ -63,6 +64,7 @@ class UIParameters extends React.Component {
   }
 
   onSubmit = () => {
+    this.setState({saving: true})
     setAxiosAuthentication()
     const allPromises=this.state.parameters.map(p => axios.put(`/myAlfred/api/admin/uiConfiguration/${p._id}`, p))
     Promise.all(allPromises)
@@ -76,8 +78,10 @@ class UIParameters extends React.Component {
       })
       .then(() => {
         snackBarSuccess('Configuration enregistrée')
+        this.setState({saving: false})
       })
       .catch(err => {
+        this.setState({saving: false})
         console.error(err)
         snackBarError(`Erreur à l'enregistrement:${err}`)
       })
@@ -93,6 +97,10 @@ class UIParameters extends React.Component {
           this.setState({page: parameters[0].page})
         }
       })
+  }
+
+  onChangePage = page => {
+    this.setState({page: page})
   }
 
   onChange = parameter_id => att_name => value => {
@@ -111,36 +119,38 @@ class UIParameters extends React.Component {
 
   render = () => {
     const {classes}=this.props
-    const {parameters, page}=this.state
+    const {parameters, page, saving}=this.state
     const groupedParameters= _.groupBy(parameters, 'page')
     const pageParameters=_.groupBy(groupedParameters[page], 'component')
     const selectedTab = Object.keys(groupedParameters).findIndex(p => p==page)
 
+    const saveTitle=saving ? 'Génération en cours...': 'Enregistrer & générer'
+
     return (
       <Layout>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
-          <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+          <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
             <Typography style={{fontSize: 30}}>{this.getTitle()}</Typography>
-            <Button onClick={this.onSubmit}>Enregistrer</Button>
+            <Button variant='outlined' onClick={this.onSubmit} disabled={saving}>{saveTitle}</Button>
           </Grid>
           <Paper style={{width: '100%'}}>
             <Tabs value={selectedTab==-1 ? false:selectedTab}>
               {
                 Object.keys(groupedParameters).map(page =>
-                  <Tab label={page} onClick={() => this.setState({page: page})} />,
+                  <Tab key={page} label={page} onClick={() => this.onChangePage(page)} />,
                 )
               }
             </Tabs>
             {
               pageParameters && Object.keys(pageParameters).map(component_name => (
-                <Accordion defaultExpanded={false}>
+                <Accordion defaultExpanded={false} TransitionProps={{unmountOnExit: true}} key={component_name}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <h2>{component_name}</h2>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
                       { pageParameters[component_name].map(parameter => (
-                        <UIParameter title={parameter.label} parameter={parameter} onChange={this.onChange(parameter._id)}/>
+                        <UIParameter key={parameter._id} title={parameter.label} parameter={parameter} onChange={this.onChange(parameter._id)}/>
                       ))
                       }
                     </Grid>
@@ -156,4 +166,4 @@ class UIParameters extends React.Component {
 
 }
 
-export default withStyles(styles)(UIParameters)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(UIConfiguration))

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
@@ -56,4 +57,4 @@ class Hashtags extends React.Component {
 
 }
 
-export default withStyles(styles, {withTheme: true})(Hashtags)
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(Hashtags))

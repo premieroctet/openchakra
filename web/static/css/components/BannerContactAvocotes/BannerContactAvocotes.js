@@ -1,6 +1,6 @@
 export default theme => ({
   mainContainer: {
-    backgroundImage: 'url(../../../static/assets/img/avocotes/banner.jpeg)',
+    backgroundImage: 'url(/static/assets/img/avocotes/banner.jpeg)',
     width: '100%',
     height: 500,
     backgroundRepeat: 'no-repeat',

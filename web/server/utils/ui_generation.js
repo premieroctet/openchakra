@@ -1,14 +1,15 @@
 const fs=require('fs').promises
 const validateCss = require('css-validator')
-
+const _=require('lodash')
 /**
   Creates CSS from configurations
   config : {classname, attributes:{name,value}}
 */
-createUIConfiguration = configuration => {
+createCSSConfiguration = items => {
+  console.log(`Generating ${items.length} CSS items`)
   let cssClasses={}
   // Transklate classes : menu, search bar, etc...
-  configuration.forEach(config => {
+  items.forEach(config => {
     config.attributes.forEach(attribute => {
       let className=config.classname
       let name=attribute.name
@@ -63,7 +64,10 @@ createUIConfiguration = configuration => {
   validateCss(output, (err, data) => {
     const error = err || !data.validity
     if (error) {
-      console.error(`CSS generation error, output in /tmp/custom.css\nError:${JSON.stringify(data, null, 2)}`)
+      console.error(`CSS generation error, output in /tmp/custom.css\nError:${error}`)
+    }
+    else {
+      console.log('CSS generation OK, output in static/assets/css/custom.css')
     }
     fs.writeFile(error ? '/tmp/custom.css' : 'static/assets/css/custom.css', output)
       .then(() => {
@@ -73,6 +77,34 @@ createUIConfiguration = configuration => {
         console.error(`CSS write error:${err}`)
       })
   })
+}
+
+createI18NConfiguration = items => {
+  console.log(`Generating ${items.length} I18N items`)
+  items = items.filter(i => i.attributes && i.attributes.length)
+  const formattedItems=items.map(it => `\t"${it.classname}": "${it.attributes[0].value.replace(/"/g, '\\"')}"`).join(',\n')
+  const output=`{\n${formattedItems}\n}`
+  Promise.resolve(output)
+    .then(JSON.parse)
+    .then(() => {
+      console.log('JSON I18N is ok, saving')
+      fs.writeFile('translations/fr/custom.json', output)
+        .then(() => console.log('I18N saved'))
+        .catch(err => (`I18N save error:${err}`))
+    })
+    .catch(err => {
+      console.error(`JSON error:${err}\nSaving to tmp`)
+      fs.writeFile('/tmp/custom.json', output)
+        .then(() => console.log('I18N saved'))
+        .catch(err => (`I18N save error:${err}`))
+    })
+}
+
+createUIConfiguration = items => {
+  console.log(`Generating ${items.length} custom items`)
+  const i18n_grouped=_.groupBy(items, it => (it.type=='content' ? 'I18N': 'CSS'))
+  createCSSConfiguration(i18n_grouped.CSS || [])
+  createI18NConfiguration(i18n_grouped.I18N || [])
 }
 
 module.exports = {

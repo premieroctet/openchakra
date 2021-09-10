@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import io from 'socket.io-client'
@@ -246,4 +247,4 @@ class MessagesDetails extends React.Component {
   }
 }
 
-export default withStyles(styles)(MessagesDetails)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(MessagesDetails))

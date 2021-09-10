@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import HtmlEditor from '../../components/Editor/HtmlEditor'
 
@@ -30,4 +31,4 @@ class HtmlEditorTest extends React.Component {
 
 }
 
-export default HtmlEditorTest
+export default withTranslation('custom', {withRef: true})(HtmlEditorTest)

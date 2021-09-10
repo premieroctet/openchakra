@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
@@ -21,4 +22,4 @@ Link.propTypes = {
   children: PropTypes.node,
 }
 
-export default Link
+export default withTranslation('custom', {withRef: true})(Link)

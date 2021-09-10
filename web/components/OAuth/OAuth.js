@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
@@ -60,4 +61,4 @@ OAuth.propTypes = {
   login: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(OAuth);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(OAuth))

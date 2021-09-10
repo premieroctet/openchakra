@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
@@ -32,4 +33,4 @@ class IntegerEditor extends React.Component {
 
 }
 
-export default IntegerEditor
+export default withTranslation('custom', {withRef: true})(IntegerEditor)

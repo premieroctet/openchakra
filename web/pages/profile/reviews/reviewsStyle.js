@@ -8,13 +8,11 @@ export default theme => ({
     [theme.breakpoints.down('sm')]: {
       display: 'none',
     },
-  }
-
-  , hidelg: {
+  },
+  hidelg: {
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
-
   },
   trigger: {
     [theme.breakpoints.down('sm')]: {
@@ -23,28 +21,23 @@ export default theme => ({
       marginLeft: '0px',
       height: '30px',
       backgroundColor: '#2FBCD3',
-
       display: 'block',
       transition: 'display 0.7s',
       borderRadius: '5px',
       '&:focus': {
         display: 'none',
         transition: 'display 0.7s',
-
       },
     },
-
   },
   toggle: {
     [theme.breakpoints.down('sm')]: {
       marginLeft: '-75px',
       transition: 'margin-left 0.7s',
-
       '&:hover': {
         marginLeft: '0px',
         transition: 'margin-left 0.7s',
         boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
       },
     },
   },
@@ -81,7 +74,6 @@ export default theme => ({
       top: 60,
     },
   },
-
   trait1: {
     width: '100%',
     height: 4,

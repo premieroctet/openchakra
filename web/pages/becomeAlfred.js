@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {Component} from 'react';
 import Layout from '../hoc/Layout/Layout';
 import {Helmet} from 'react-helmet';
@@ -18,4 +19,4 @@ class BecomeAlfred extends Component {
   }
 }
 
-export default BecomeAlfred;
+export default withTranslation('custom', {withRef: true})(BecomeAlfred)

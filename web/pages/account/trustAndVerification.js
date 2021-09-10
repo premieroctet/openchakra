@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 const {snackBarSuccess} = require('../../utils/notifications')
 import React from 'react'
@@ -615,4 +616,4 @@ class trustAndVerification extends React.Component {
   }
 }
 
-export default withStyles(styles)(trustAndVerification)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(trustAndVerification))

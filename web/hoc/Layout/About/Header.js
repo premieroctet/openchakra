@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {NAVBAR_MENU} from '../../../utils/i18n'
@@ -100,7 +101,7 @@ class Header extends React.Component {
     return (
       <Grid>
         <Grid className={'customlayoutfaqheaderbanner'} style={{
-          backgroundImage: "url('../../../static/assets/img/footer/footerBanner.svg')",
+          backgroundImage: "url('/static/assets/img/footer/footerBanner.svg')",
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           width: '100%',
@@ -157,4 +158,4 @@ class Header extends React.Component {
 }
 
 
-export default withStyles(styles)(Header)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Header))

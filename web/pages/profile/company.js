@@ -1,39 +1,39 @@
-import SnackBar from "../../components/SnackBar/SnackBar";
+import {withTranslation} from 'react-i18next'
+import SnackBar from '../../components/SnackBar/SnackBar'
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
-import Grid from "@material-ui/core/Grid";
+import Grid from '@material-ui/core/Grid'
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import About from '../../components/About/About'
 import Presentation from '../../components/Presentation/Presentation'
 import Skills from '../../components/Skills/Skills'
 import Badges from '../../components/Badges/Badges'
-import Hashtags from '../../components/Hashtags/Hashtags'
-import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/pages/profile/about/about';
-import AskQuestion from "../../components/AskQuestion/AskQuestion";
-import Box from "../../components/Box/Box";
-import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
-import axios from "axios";
-import Typography from "@material-ui/core/Typography";
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import IconButton from "@material-ui/core/IconButton";
-import CreateIcon from "@material-ui/icons/Create";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import Topic from "../../hoc/Topic/Topic";
-import MultipleSelect from "react-select";
-import {LANGUAGES} from "../../utils/consts";
-import Divider from "@material-ui/core/Divider";
-import Button from "@material-ui/core/Button";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import CloseIcon from "@material-ui/icons/Close";
-import {isEditableUser} from '../../utils/context';
+import {withStyles} from '@material-ui/core/styles'
+import styles from '../../static/css/pages/profile/about/about'
+import AskQuestion from '../../components/AskQuestion/AskQuestion'
+import Box from '../../components/Box/Box'
+import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
+import axios from 'axios'
+import Typography from '@material-ui/core/Typography'
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
+import IconButton from '@material-ui/core/IconButton'
+import CreateIcon from '@material-ui/icons/Create'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import Topic from '../../hoc/Topic/Topic'
+import MultipleSelect from 'react-select'
+import {LANGUAGES} from '../../utils/consts'
+import Divider from '@material-ui/core/Divider'
+import Button from '@material-ui/core/Button'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import CloseIcon from '@material-ui/icons/Close'
+import {isEditableUser} from '../../utils/context'
 
-const moment = require('moment');
-moment.locale('fr');
+const moment = require('moment')
+moment.locale('fr')
 
-const DialogTitle = withStyles(styles)((props) => {
-  const {children, classes, onClose, ...other} = props;
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography {...other} className={classes.root}>
       <Typography variant="h6">{children}</Typography>
@@ -43,14 +43,14 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
 class Company extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      user: props.user,
+      user: this.getURLProps().user,
       company: null,
       showEdition: false,
       enabledEdition: true,
@@ -59,81 +59,83 @@ class Company extends React.Component {
       newAddress: null,
       userLanguages: [],
       newLanguages: null,
-      open: false
+      open: false,
     }
   }
 
   componentDidMount() {
-    this.loadUser();
+    this.loadUser()
   }
 
   openEdition = () => {
-    const {company} = this.state;
+    const {company} = this.state
     this.setState({
       showEdition: true,
       languages: company.languages.map(l => ({value: l, label: l})),
-      newAddress: company.billing_address
+      newAddress: company.billing_address,
     }, () => this.objectsEqual())
   }
 
   loadUser = () => {
-    this.setState({showEdition: false});
-    setAxiosAuthentication();
-    axios.get(`/myAlfred/api/users/${this.props.user}`)
+    this.setState({showEdition: false})
+    setAxiosAuthentication()
+    axios.get(`/myAlfred/api/users/${this.getURLProps().user}`)
       .then(res => {
-        const user = res.data;
+        const user = res.data
         this.setState({
           company: user,
           userLanguages: user.languages.map(l => ({value: l, label: l})),
-          billing_address: user.billing_address
+          billing_address: user.billing_address,
         })
       })
       .catch(err => console.error(err))
-  };
+  }
 
   closeEditDialog = () => {
     this.setState({showEdition: false, newLanguages: null, newAddress: null})
-  };
+  }
 
   objectsEqual = () => {
-    let o1 = this.state.languages;
-    let o2 = this.state.userLanguages;
-    let o3 = this.state.newAddress ? this.state.newAddress.gps : null;
-    let o4 = this.state.billing_address.gps;
+    let o1 = this.state.languages
+    let o2 = this.state.userLanguages
+    let o3 = this.state.newAddress ? this.state.newAddress.gps : null
+    let o4 = this.state.billing_address.gps
 
     if (o1 && o1.length !== 0 && o3 !== null) {
       if (o1.join('') === o2.join('') && o3.lat === o4.lat && o3.lng === o4.lng) {
         this.setState({enabledEdition: true})
-      } else if (o1.join('') !== o2.join('') || o3.lat !== o4.lat && o3.lng !== o4.lng) {
-        this.setState({enabledEdition: false})
-      } else {
+      }
+      else if (o1.join('') !== o2.join('') || o3.lat !== o4.lat && o3.lng !== o4.lng) {
         this.setState({enabledEdition: false})
       }
-    } else {
+      else {
+        this.setState({enabledEdition: false})
+      }
+    }
+    else {
       this.setState({enabledEdition: true})
     }
-  };
+  }
   save = () => {
-    const {newAddress, languages} = this.state;
-    setAxiosAuthentication();
-    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(res => {
-        axios.put('/myAlfred/api/users/profile/languages',
-          {languages: languages.map(l => l.value)}).then(res => {
+    const {newAddress, languages} = this.state
+    setAxiosAuthentication()
+    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress)
+      .then(() => {
+        axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)})
+          .then(() => {
             this.setState({open: true}, () => setTimeout(this.loadUser, 1000))
-          }
-        ).catch(err => {
-          console.error(err)
-        })
-      }
-    ).catch(err => {
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      })
+      .catch(err => {
         console.error(err)
-      }
-    );
-  };
+      })
+  }
 
-  modalEditDialog = (classes) => {
-    const {newAddress, showEdition, enabledEdition, languages} = this.state;
-    const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse';
+  modalEditDialog = classes => {
+    const {showEdition, enabledEdition, languages} = this.state
 
     return (
       <Dialog
@@ -146,8 +148,8 @@ class Company extends React.Component {
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}/>
         <DialogContent>
           <Topic titleTopic={'Modifiez les informations de votre entreprise'}
-                 titleSummary={'Ici, vous pouvez modifier les informations de votre entreprise'}
-                 underline={true}/>
+            titleSummary={'Ici, vous pouvez modifier les informations de votre entreprise'}
+            underline={true}/>
           <Grid container>
             <Grid container>
               <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
@@ -183,7 +185,7 @@ class Company extends React.Component {
               <Grid style={{marginTop: '2vh', width: '100%'}}>
                 <Button
                   onClick={() => {
-                    this.save();
+                    this.save()
                   }}
                   variant="contained"
                   color={'primary'}
@@ -196,18 +198,14 @@ class Company extends React.Component {
             </Grid>
           </Grid>
         </DialogContent>
-        <SnackBar severity={"success"} message={'Profil mis à jour.'} open={this.state.open}
-                  closeSnackBar={() => this.setState({open: false})}/>
+        <SnackBar severity={'success'} message={'Profil mis à jour.'} open={this.state.open}
+          closeSnackBar={() => this.setState({open: false})}/>
       </Dialog>
     )
-  };
-
-  static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index: indexAccount}
   }
 
   content = (classes, user, company) => {
-    const editable = isEditableUser(user);
+    const editable = isEditableUser(user)
     return (
       <Grid container spacing={3} style={{marginBottom: '12vh'}}>
         <Grid className={classes.profileLayoutContainer} item xl={5} lg={5} md={6} sm={12} xs={12}>
@@ -232,7 +230,7 @@ class Company extends React.Component {
             <Grid style={{margin: 3}}/>
             <Grid>
               <Typography
-                style={{color: 'black'}}>{company ? company.billing_address.city + ", " + company.billing_address.country : null}</Typography>
+                style={{color: 'black'}}>{company ? `${company.billing_address.city }, ${ company.billing_address.country}` : null}</Typography>
             </Grid>
           </Grid>
           <Grid style={{display: 'flex', flexDirection: 'row', marginTop: '4vh'}}>
@@ -277,23 +275,13 @@ class Company extends React.Component {
             <Badges user={user}/>
           </Box>
         </Grid>
-        {false ?
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.aboutHastagsContainer}>
-            <Box>
-              <Hashtags user={user}/>
-            </Box>
-          </Grid>
-          :
-          null
-        }
         {
-          !editable ?
+          !editable &&
             <Grid className={classes.containerAskQuestion} item>
               <Grid style={{width: '70%'}}>
                 <AskQuestion user={user}/>
               </Grid>
             </Grid>
-          : null
         }
 
       </Grid>
@@ -301,8 +289,10 @@ class Company extends React.Component {
   }
 
   render() {
-    const {classes, index, user} = this.props;
-    const {company} = this.state;
+    const {classes} = this.props
+    const user=this.getURLProps().user
+    const index=this.getURLProps().indexAccount
+    const {company} = this.state
     if (!user && company) {
       return null
     }
@@ -324,4 +314,4 @@ class Company extends React.Component {
   }
 }
 
-export default withStyles(styles)(Company)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Company))
