@@ -20,7 +20,7 @@ class CreaShopPresentation extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} sm={12} md={12} xs={12} className={classes.titleContainer}>
-          <h2 className={classes.policySizeTitle}>{ReactHtmlParser(this.props.t('SHOP.bienvenue.titre'))}</h2> // TODO I18N firstname: user.firstname
+          <h2 className={classes.policySizeTitle}>{ReactHtmlParser(this.props.t('SHOP.bienvenue.titre', {firstname: user.firstname}))}</h2> 
         </Grid>
         <Grid container spacing={3} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>

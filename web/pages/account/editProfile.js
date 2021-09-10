@@ -305,7 +305,7 @@ class editProfile extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}
             style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
-            <Typography className={'customeditprofillimit'}>{ReactHtmlParser(this.props.t('EDIT_PROFIL.char_max'))}</Typography> // TODO I18N charmax: MAX_DESCRIPTION_LENGTH
+            <Typography className={'customeditprofillimit'}>{ReactHtmlParser(this.props.t('EDIT_PROFIL.char_max', {maxchars: MAX_DESCRIPTION_LENGTH}))}</Typography>
           </Grid>
         </Grid>
         <Grid>
