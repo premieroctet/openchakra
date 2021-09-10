@@ -32,9 +32,7 @@ class DBUiGeneration(object):
     def get_mongo(self, page, component, label, classname, type_):
       return  self.REQUEST.format(page, component, label.replace("'", "\\'"), classname, type_)
           
-    def export(self, output_dir):
-      if not os.path.isdir(output_dir):
-        print('Unknown folder {}'.format(output_dir), file=sys.stderr)
+    def export(self):
 
       for name in self.wb.sheetnames:
         try:
@@ -81,10 +79,7 @@ class DBUiGeneration(object):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Generation script SQL d'import de la configuration UI")
     parser.add_argument('xl_input', default=None, help='fichier Excel de définition des atrtributs')
-    parser.add_argument('output',
-                       help='dossier destination')
-
     args = parser.parse_args()
     
     exp=DBUiGeneration(args.xl_input)
-    exp.export(args.output)
+    exp.export()
