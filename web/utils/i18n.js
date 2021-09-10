@@ -244,7 +244,35 @@ const REGISTER_FRIST_PAGE = {
   textfield_create_password_placeholder: 'Créer un mot de passe',
   textfield_confirm_password: 'Confirmer mot de passe',
   textfield_confirm_password_placeholder: 'Confirmer mot de passe',
+}
 
+const REGISTER_SECOND_PAGE = {
+  dialog_cgu_close: 'Fermer',
+  address_title: 'Adresse postale',
+  address_subtitle: 'Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous proposer ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.',
+  algolia_placeholder: 'Recherchez votre adresse',
+  birthdate_title: 'Date de naissance',
+  minimum_age_start: 'Pour vous inscrire, vous devez être âgé d’au moins ',
+  minimum_age_end: ' ans. Les autres utilisateurs ne verront pas votre date de naissance.',
+  textfield_day: 'Jour',
+  textfield_day_placeholder: 'Jour',
+  textfield_month: 'Mois',
+  textfield_month_placeholder: 'Mois',
+  textfield_year: 'Année',
+  textfield_year_placeholder: 'Année',
+  textfield_phone: 'Numéro de téléphone',
+  textfield_phone_placeholder: 'Numéro de téléphone',
+  phone_title: 'Téléphone',
+  phone_subtitle: 'L\'ajout de votre numéro de téléphone permet aux membres My-Alfred de disposer d\'un moyen pour vous contacter.',
+  button_cgu: 'J’accepte les conditions générales d’utilisation de My-Alfred.',
+}
+
+const REGISTER_THIRD_PAGE = {
+  title: 'Inscription terminée',
+  subtitle: 'Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My Alfred',
+  button_explore: 'Commencez à explorer',
+  button_shop: 'Proposer mes services',
+  link_help: 'Besoin d\'aide pour proposer vos services ? Prenez rendez-vous avec l\'équipe My Alfred ici !',
 }
 
 const HANDLE_CB = {
@@ -962,4 +990,6 @@ module.exports = {
   MESSAGE_SUMMARY,
   REGISTER,
   REGISTER_FRIST_PAGE,
+  REGISTER_SECOND_PAGE,
+  REGISTER_THIRD_PAGE,
 }

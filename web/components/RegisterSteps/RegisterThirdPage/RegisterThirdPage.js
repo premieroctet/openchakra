@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Button from '@material-ui/core/Button'
 import styles from '../../../static/css/components/RegisterSteps/RegisterThirdPage/RegisterThirdPage'
 import '../../../static/assets/css/custom.css'
+import {REGISTER_THIRD_PAGE} from '../../../utils/i18n'
 
 class RegisterThirdPage extends React.Component {
   render() {
@@ -16,12 +17,11 @@ class RegisterThirdPage extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid>
-              <h2 className={`customregistertitleend ${classes.titleRegister}`}>Inscription terminée</h2>
+              <h2 className={`customregistertitleend ${classes.titleRegister}`}>{REGISTER_THIRD_PAGE.title}</h2>
             </Grid>
             <Grid className={classes.newContainer}>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 20, textAlign: 'center'}}>
-                <Typography className={'customregistersuccesstext'}>Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My
-                  Alfred</Typography>
+                <Typography className={'customregistersuccesstext'}>{REGISTER_THIRD_PAGE.subtitle}</Typography>
               </Grid>
               <Grid item className={classes.responsiveButton}>
                 <Grid item style={{marginRight: '1%'}}>
@@ -32,7 +32,7 @@ class RegisterThirdPage extends React.Component {
                         color={'primary'}
                         classes={{root: 'customregisterexplorebutton'}}
                         style={{color: 'white', textTransform: 'initial'}}>
-                        Commencez à explorer
+                        {REGISTER_THIRD_PAGE.button_explore}
                       </Button>
                     </a>
                   </Link>
@@ -44,7 +44,7 @@ class RegisterThirdPage extends React.Component {
                         variant={'contained'}
                         classes={{root: `customregisterservicesbutton ${classes.cancelButton}`}}
                         style={{color: 'white', textTransform: 'initial'}}>
-                        Proposer mes services
+                        {REGISTER_THIRD_PAGE.button_shop}
                       </Button>
                     </a>
                   </Link>
@@ -61,7 +61,7 @@ class RegisterThirdPage extends React.Component {
                       justifyContent: 'center',
                       textDecoration: 'none',
                     }}>
-                      Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred ici !
+                      {REGISTER_THIRD_PAGE.link_help}
                     </a>
                   </Link>
                 </Grid>

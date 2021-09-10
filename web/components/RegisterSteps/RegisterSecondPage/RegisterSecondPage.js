@@ -17,6 +17,7 @@ import CguContent from '../../CguContent/CguContent'
 import DialogActions from '@material-ui/core/DialogActions'
 const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
 import '../../../static/assets/css/custom.css'
+import {REGISTER_SECOND_PAGE} from '../../../utils/i18n'
 
 
 function NumberFormatCustom(props) {
@@ -40,15 +41,14 @@ function NumberFormatCustom(props) {
 }
 
 NumberFormatCustom.propTypes = {
-  // inputRef: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 }
 
 class RegisterSecondPage extends React.Component {
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state={
       open: false,
     }
@@ -68,7 +68,7 @@ class RegisterSecondPage extends React.Component {
           <CguContent/>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} classes={{root: classes.cancelButton}}>Fermer</Button>
+          <Button onClick={handleClose} classes={{root: classes.cancelButton}}>{REGISTER_SECOND_PAGE.dialog_cgu_close}</Button>
         </DialogActions>
       </Dialog>
     )
@@ -86,13 +86,10 @@ class RegisterSecondPage extends React.Component {
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <h3 className={`customregisteradresstitle ${classes.subtitle}`}>Adresse postale</h3>
+              <h3 className={`customregisteradresstitle ${classes.subtitle}`}>{REGISTER_SECOND_PAGE.address_title}</h3>
             </Grid>
             <Grid item className={classes.textStyle}>
-              <Typography className={'customregisteradresssubtitle'}><em>Votre adresse ne sera pas visible, mais nous l’utiliserons
-                pour vous
-                proposer
-                ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</em></Typography>
+              <Typography className={'customregisteradresssubtitle'}><em>{REGISTER_SECOND_PAGE.address_subtitle}</em></Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -102,7 +99,7 @@ class RegisterSecondPage extends React.Component {
               <form>
                 <AlgoliaPlaces
                   className={classes.textFieldAlgo}
-                  placeholder='Recherchez votre adresse'
+                  placeholder={REGISTER_SECOND_PAGE.algolia_placeholder}
                   options={{
                     appId: 'plKATRG826CP',
                     apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -122,20 +119,19 @@ class RegisterSecondPage extends React.Component {
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <h3 className={`customregisterbirthdate ${classes.subtitle}`}>Date de naissance</h3>
+              <h3 className={`customregisterbirthdate ${classes.subtitle}`}>{REGISTER_SECOND_PAGE.birthdate_title}</h3>
             </Grid>
             <Grid item>
               <Typography className={`customregisterbirthdatesub ${classes.textStyle}`}><em>
-                {`Pour vous inscrire, vous devez être âgé d’au moins ${ACCOUNT_MIN_AGE} ans.
-                  Les autres utilisateurs ne verront pas votre date de naissance.`}</em>
+                {REGISTER_SECOND_PAGE.minimum_age_start + ACCOUNT_MIN_AGE + REGISTER_SECOND_PAGE.minimum_age_end}</em>
               </Typography>
             </Grid>
             <Grid item className={classes.datenaissance} style={{display: 'flex', alignItems: 'center'}}>
               <Grid container style={{justifyContent: 'space-between', flexWrap: 'nowrap'}}>
                 <Grid item style={{width: '30%'}}>
                   <TextField
-                    label="Jour"
-                    placeholder="Jour"
+                    label={REGISTER_SECOND_PAGE.textfield_day}
+                    placeholder={REGISTER_SECOND_PAGE.textfield_day_placeholder}
                     onChange={e => this.props.onChangeBirthdayDate(e)}
                     inputProps={{
                       maxLength: 2,
@@ -149,8 +145,8 @@ class RegisterSecondPage extends React.Component {
                 </Grid>
                 <Grid item style={{width: '30%'}}>
                   <TextField
-                    label="Mois"
-                    placeholder="Mois"
+                    label={REGISTER_SECOND_PAGE.textfield_month}
+                    placeholder={REGISTER_SECOND_PAGE.textfield_month_placeholder}
                     onChange={e => this.props.onChangeBirthdayMonth(e)}
                     inputProps={{
                       maxLength: 2,
@@ -163,8 +159,8 @@ class RegisterSecondPage extends React.Component {
                 </Grid>
                 <Grid item style={{width: '30%'}}>
                   <TextField
-                    label="Année"
-                    placeholder="Année"
+                    label={REGISTER_SECOND_PAGE.textfield_year}
+                    placeholder={REGISTER_SECOND_PAGE.textfield_year_placeholder}
                     onChange={e => this.props.onChangeBirthdayYear(e)}
                     inputProps={{
                       maxLength: 4,
@@ -182,13 +178,10 @@ class RegisterSecondPage extends React.Component {
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <h3 className={`customregisterphone ${classes.subtitle}`}>Téléphone</h3>
+              <h3 className={`customregisterphone ${classes.subtitle}`}>{REGISTER_SECOND_PAGE.phone_title}</h3>
             </Grid>
             <Grid item>
-              <Typography className={`customregisterphonesubtitle ${classes.textStyle}`}><em>L'ajout de votre numéro de téléphone permet aux membres
-                My-Alfred
-                de disposer d'un moyen pour vous contacter.</em>
-              </Typography>
+              <Typography className={`customregisterphonesubtitle ${classes.textStyle}`}><em>{REGISTER_SECOND_PAGE.phone_subtitle}</em></Typography>
             </Grid>
             <Grid item container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
               <Grid item>
@@ -197,8 +190,8 @@ class RegisterSecondPage extends React.Component {
               <Grid item style={{width: '70%'}}>
                 <TextField
                   id="standard-with-placeholder"
-                  label="Numéro de téléphone"
-                  placeholder="Numéro de téléphone"
+                  label={REGISTER_SECOND_PAGE.textfield_phone}
+                  placeholder={REGISTER_SECOND_PAGE.textfield_phone_placeholder}
                   style={{width: '100%'}}
                   type={'number'}
                   name="phone"
@@ -222,9 +215,7 @@ class RegisterSecondPage extends React.Component {
                   />
                 </Grid>
                 <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-                  <Button onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>J’accepte les
-                    conditions
-                    générales d’utilisation de My-Alfred.</Button>
+                  <Button onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>{REGISTER_SECOND_PAGE.button_cgu}</Button>
                   {this.dialogCgu()}
                 </Grid>
               </Grid>
