@@ -110,6 +110,26 @@ const USERSERVICEPREVIEW = {
   exclamation: ' !',
 }
 
+const DRAWER_BOOKING = {
+  euro: ' €',
+  interrogation: ' ?',
+  eligible: 'Eligible au CESU',
+  warning_perimiter: 'Cet Alfred se trouve trop loin de chez vous pour être réservé!',
+  warning_budget: 'Le montant dépasse le budget disponible pour votre département',
+  warning_self: 'Vous ne pouvez pas vous réserver vous-même',
+  hours: 'Heure',
+  presta_choice: 'Choix de la presta',
+  presta_place: 'Lieu de la prestation',
+  presta_option: 'Option(s) de la prestation',
+  deplacement_cost: 'Frais de déplacement',
+  delivery: 'Retrait & livraison',
+  display_details: 'Afficher les détails',
+  resa_avc: 'Réservation AvoCotés pour ',
+  resa_button: 'Réserver',
+  next_step_paiment: 'Choix du paiement à l’étape suivante',
+  button_info: 'Demande d’informations',
+}
+
 const SEARCHBAR = {
   what: 'Quel service ?',
   where: 'Où ?',
@@ -1080,4 +1100,5 @@ module.exports = {
   SEARCH,
   CARD_SERVICE,
   USERSERVICEPREVIEW,
+  DRAWER_BOOKING,
 }
