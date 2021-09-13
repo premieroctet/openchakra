@@ -23,7 +23,7 @@ function BannerContact({classes}) {
             <Grid item style={{display: 'flex', justifyContent: 'center'}}>
               <Grid container spacing={2} className={classes.containerFakeButton}>
                 <Grid item>
-                  <Typography style={{fontWeight: 'bold', fontSize: 30}}>{ReactHtmlParser(this.props.t('AVOCOTES.phone'))}</Typography>
+                  <Typography style={{fontWeight: 'bold', fontSize: 30}}>{ReactHtmlParser(this.props.t('AVOCOTES.phoneNumber'))}</Typography>
                 </Grid>
                 <Grid item>
                   <Grid>

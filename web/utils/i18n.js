@@ -657,7 +657,7 @@ const AVOCOTES = {
   askQuestion: 'Une question sur votre installation ?',
   contactUs: 'Contactez nous',
   // phone: '02 35 00 00 00',
-  phone: '06 87 37 73 63',
+  phoneNumber: '06 87 37 73 63',
   phoneTextFirst: 'Appel gratuit depuis la',
   phoneTextSecond: 'France metropolitaine',
   ourCompanyTitleFirst: 'Pourquoi faire confiance à Alfred pour',

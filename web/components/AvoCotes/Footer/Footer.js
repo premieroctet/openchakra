@@ -48,7 +48,7 @@ function Footer({classes}) {
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
                 <Grid style={{backgroundColor: 'white', borderRadius: 30, paddingLeft: 26, paddingRight: 26, paddingTop: 12, paddingBottom: 12, width: 'max-content'}}>
-                  <Typography style={{color: 'black', fontWeight: 'bold', textAlign: 'center'}}>{ReactHtmlParser(this.props.t('AVOCOTES.phone'))}</Typography>
+                  <Typography style={{color: 'black', fontWeight: 'bold', textAlign: 'center'}}>{ReactHtmlParser(this.props.t('AVOCOTES.phoneNumber'))}</Typography>
                 </Grid>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
