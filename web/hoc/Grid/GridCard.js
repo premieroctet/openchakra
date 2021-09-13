@@ -25,7 +25,7 @@ function withGrid(WrappedComponent) {
             return(
               <Grid key={index} item xl={colSize} lg={colSize} md={colSize} sm={colSize} xs={colSize}>
                 {
-                  item!=undefined && <WrappedComponent {...this.props} item={item} key={[page, col, row]}/>
+                  item!==undefined && <WrappedComponent {...this.props} item={item} key={[page, col, row]}/>
                 }
               </Grid>
             )
