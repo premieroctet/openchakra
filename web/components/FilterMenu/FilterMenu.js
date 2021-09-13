@@ -108,7 +108,7 @@ class FilterMenu extends React.Component {
 
   statusFilterToggled = () => {
     this.setState({statusFilterVisible: !this.state.statusFilterVisible})
-  }
+  };
 
   statusFilterChanged = event => {
     this.setState({[event.target.name]: event.target.checked})
@@ -116,45 +116,45 @@ class FilterMenu extends React.Component {
 
   cancelStatusFilter = () => {
     this.setState({statusFilterSet: false, statusFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   validateStatusFilter = () => {
     this.setState({statusFilterSet: true, statusFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   dateFilterToggled = () => {
     this.setState({dateFilterVisible: !this.state.dateFilterVisible})
-  }
+  };
 
   // Radius filter
   radiusFilterToggled = () => {
     this.setState({radiusFilterVisible: !this.state.radiusFilterVisible})
-  }
+  };
 
   cancelRadiusFilter = () => {
     this.setState({radiusFilterSet: false, radiusFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   validateRadiusFilter = () => {
     this.setState({radiusFilterSet: true, radiusFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   onRadiusFilterChanged = (event, value) => {
     this.setState({radius: value})
-  }
+  };
 
   // Location filter
   locationFilterToggled = () => {
     this.setState({locationFilterVisible: !this.state.locationFilterVisible})
-  }
+  };
 
   cancelLocationFilter = () => {
     this.setState({locationFilterSet: false, locationFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   validateLocationFilter = () => {
     this.setState({locationFilterSet: true, locationFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   onLocationFilterChanged = event => {
     const {name, checked} = event.target
@@ -182,11 +182,11 @@ class FilterMenu extends React.Component {
 
   cancelDateFilter = () => {
     this.setState({dateFilterSet: false, dateFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   validateDateFilter = () => {
     this.setState({dateFilterSet: true, dateFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   isStatusFilterSet = () => {
     return this.state.proSelected || this.state.individualSelected
@@ -200,15 +200,15 @@ class FilterMenu extends React.Component {
   // Categories filter
   categoriesFilterToggled = () => {
     this.setState({categoriesFilterVisible: !this.state.categoriesFilterVisible})
-  }
+  };
 
   cancelCategoriesFilter = () => {
     this.setState({categoriesFilterSet: false, categoriesFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   validateCategoriesFilter = () => {
     this.setState({categoriesFilterSet: true, categoriesFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   onCategoriesFilterChanged = categories => {
     categories = categories || []
@@ -219,25 +219,25 @@ class FilterMenu extends React.Component {
       return filteredServices.map(fs => fs.value).includes(s._id)
     })
     this.setState({categories: categories, filteredServices: filteredServices, services: services})
-  }
+  };
 
   // Services filter
   servicesFilterToggled = () => {
     this.setState({servicesFilterVisible: !this.state.servicesFilterVisible})
-  }
+  };
 
   cancelServicesFilter = () => {
     this.setState({servicesFilterSet: false, servicesFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   validateServicesFilter = () => {
     this.setState({servicesFilterSet: true, servicesFilterVisible: false}, () => this.fireFilter())
-  }
+  };
 
   onServicesFilterChanged = services => {
     services = services || []
     this.setState({services: services || []})
-  }
+  };
 
   render() {
     const{classes, mounting, searching, serviceUsers} = this.props
@@ -263,10 +263,10 @@ class FilterMenu extends React.Component {
       resultMessage = ''
     }
     else if (searching) {
-      resultMessage = 'Recherche en cours'
+      resultMessage = SEARCHBAR.searching
     }
     else if (serviceUsers.length === 0) {
-      resultMessage = "Nous n'avons pas trouvé de résultat pour votre recherche"
+      resultMessage = SEARCHBAR.no_results
     }
 
 
@@ -300,7 +300,7 @@ class FilterMenu extends React.Component {
                                   name={'proSelected'}
                                 />
                               }
-                              label="Pro"
+                              label={SEARCHBAR.professional}
                             />
                           </Grid>
                         }
@@ -319,7 +319,7 @@ class FilterMenu extends React.Component {
                                   name={'individualSelected'}
                                 />
                               }
-                              label="Particulier"
+                              label={SEARCHBAR.particular}
                             />
                           </Grid>
                         }
@@ -328,10 +328,10 @@ class FilterMenu extends React.Component {
                   </Grid>
                   <Grid className={classes.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={this.cancelStatusFilter}>Annuler</Button>
+                      <Button onClick={this.cancelStatusFilter}>{SEARCHBAR.button_cancel}</Button>
                     </Grid>
                     <Grid>
-                      <Button onClick={this.validateStatusFilter}>Valider</Button>
+                      <Button onClick={this.validateStatusFilter}>{SEARCHBAR.button_confirm}</Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -342,7 +342,7 @@ class FilterMenu extends React.Component {
                 onClick={this.statusFilterToggled}
                 className={classes.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${statusFilterBg}`}}>
-                <Typography style={{color: statusFilterSet ? 'white': 'black'}}>Statut</Typography>
+                <Typography style={{color: statusFilterSet ? 'white': 'black'}}>{SEARCHBAR.labelStatus}</Typography>
               </Grid>
             }
           </Grid>
@@ -356,8 +356,8 @@ class FilterMenu extends React.Component {
                   <Grid>
                     <DateRangePicker
                       startDate={startDate} // momentPropTypes.momentObj or null,
-                      startDatePlaceholderText={'Début'}
-                      endDatePlaceholderText={'Fin'}
+                      startDatePlaceholderText={SEARCHBAR.start_date}
+                      endDatePlaceholderText={SEARCHBAR.end_date}
                       startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
                       endDate={endDate} // momentPropTypes.momentObj or null,
                       endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
@@ -370,10 +370,10 @@ class FilterMenu extends React.Component {
                   </Grid>
                   <Grid className={classes.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={this.cancelDateFilter}>Annuler</Button>
+                      <Button onClick={this.cancelDateFilter}>{SEARCHBAR.button_cancel_date}</Button>
                     </Grid>
                     <Grid>
-                      <Button onClick={this.validateDateFilter}>Valider</Button>
+                      <Button onClick={this.validateDateFilter}>{SEARCHBAR.button_confirm_date}</Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -383,7 +383,7 @@ class FilterMenu extends React.Component {
                 onClick={this.dateFilterToggled}
                 className={classes.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${dateFilterBg}`}}>
-                <Typography style={{color: dateFilterSet ? 'white' : 'black'}}>Date(s)</Typography>
+                <Typography style={{color: dateFilterSet ? 'white' : 'black'}}>{SEARCHBAR.labelDate}</Typography>
               </Grid>
             }
           </Grid>
@@ -392,7 +392,7 @@ class FilterMenu extends React.Component {
               {radiusFilterVisible ?
                 <Grid className={classes.filterMenuDateFocused}>
                   <Grid className={classes.filterMenuFocused} onClick={this.radiusFilterToggled}>
-                    <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelPerimeter'))}</Typography>
+                    <Typography >{SEARCHBAR.labelPerimeter}</Typography>
                   </Grid>
                   <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                     <Grid>
@@ -409,10 +409,10 @@ class FilterMenu extends React.Component {
                     </Grid>
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <Button onClick={this.cancelRadiusFilter}>Annuler</Button>
+                        <Button onClick={this.cancelRadiusFilter}>{SEARCHBAR.button_cancel_radius}</Button>
                       </Grid>
                       <Grid>
-                        <Button onClick={this.validateRadiusFilter}>Valider</Button>
+                        <Button onClick={this.validateRadiusFilter}>{SEARCHBAR.button_confirm_radius}</Button>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -422,7 +422,7 @@ class FilterMenu extends React.Component {
                   onClick={this.radiusFilterToggled}
                   className={classes.filterMenuStatusNotFocused}
                   style={{backgroundColor: `${radiusFilterBg}`}}>
-                  <Typography style={{color: radiusFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelPerimeter'))}</Typography>
+                  <Typography style={{color: radiusFilterSet ? 'white' : 'black'}}>{SEARCHBAR.labelPerimeter}</Typography>
                 </Grid>
               }
             </Grid>
@@ -447,7 +447,7 @@ class FilterMenu extends React.Component {
                           name={'client'}
                         />
                       }
-                      label="Chez moi"
+                      label={SEARCHBAR.at_home}
                     />
                     <FormControlLabel
                       classes={{root: classes.filterMenuControlLabel}}
@@ -459,7 +459,7 @@ class FilterMenu extends React.Component {
                           name={'alfred'}
                         />
                       }
-                      label="Chez l'Alfred"
+                      label={SEARCHBAR.alfred_home}
                     />
                     <FormControlLabel
                       classes={{root: classes.filterMenuControlLabel}}
@@ -471,15 +471,15 @@ class FilterMenu extends React.Component {
                           name={'visio'}
                         />
                       }
-                      label="En visio"
+                      label={SEARCHBAR.remote}
                     />
                   </Grid>
                   <Grid className={classes.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={this.cancelLocationFilter}>Annuler</Button>
+                      <Button onClick={this.cancelLocationFilter}>{SEARCHBAR.button_cancel_remote}</Button>
                     </Grid>
                     <Grid>
-                      <Button onClick={this.validateLocationFilter}>Valider</Button>
+                      <Button onClick={this.validateLocationFilter}>{SEARCHBAR.button_confirm_remote}</Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -489,7 +489,7 @@ class FilterMenu extends React.Component {
                 onClick={this.locationFilterToggled}
                 className={classes.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${locationFilterBg}`}}>
-                <Typography style={{color: locationFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelLocation'))}</Typography>
+                <Typography style={{color: locationFilterSet ? 'white' : 'black'}}>{SEARCHBAR.labelLocation}</Typography>
               </Grid>
             }
           </Grid>
@@ -512,10 +512,10 @@ class FilterMenu extends React.Component {
                     />
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <Button onClick={this.cancelCategoriesFilter}>Annuler</Button>
+                        <Button onClick={this.cancelCategoriesFilter}>{SEARCHBAR.button_cancel_cat}</Button>
                       </Grid>
                       <Grid>
-                        <Button onClick={this.validateCategoriesFilter}>Valider</Button>
+                        <Button onClick={this.validateCategoriesFilter}>{SEARCHBAR.button_confirm_cat}</Button>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -526,7 +526,7 @@ class FilterMenu extends React.Component {
                 onClick={this.categoriesFilterToggled}
                 className={classes.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${categoriesFilterBg}`}}>
-                <Typography style={{color: categoriesFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}</Typography>
+                <Typography style={{color: categoriesFilterSet ? 'white' : 'black'}}>{SEARCHBAR.labelCategory}</Typography>
               </Grid>
             }
           </Grid>
@@ -549,10 +549,10 @@ class FilterMenu extends React.Component {
                     />
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <Button onClick={this.cancelServicesFilter}>Annuler</Button>
+                        <Button onClick={this.cancelServicesFilter}>{SEARCHBAR.button_cancel_service}</Button>
                       </Grid>
                       <Grid>
-                        <Button onClick={this.validateServicesFilter}>Valider</Button>
+                        <Button onClick={this.validateServicesFilter}>{SEARCHBAR.button_confirm_service}</Button>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -563,7 +563,7 @@ class FilterMenu extends React.Component {
                 onClick={this.servicesFilterToggled}
                 className={classes.filterMenuStatusNotFocused}
                 style={{backgroundColor: `${servicesFilterBg}`}}>
-                <Typography style={{color: servicesFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}</Typography>
+                <Typography style={{color: servicesFilterSet ? 'white' : 'black'}}>{SEARCHBAR.labelService}</Typography>
               </Grid>
             }
           </Grid>

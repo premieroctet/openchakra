@@ -1,6 +1,4 @@
 import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../utils/authentication')
-const BasePage=require('./basePage')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
@@ -20,16 +18,19 @@ import withSlide from '../hoc/Slide/SlideShow'
 import withGrid from '../hoc/Grid/GridCard'
 import LayoutMobileSearch from '../hoc/Layout/LayoutMobileSearch'
 import Typography from '@material-ui/core/Typography'
-const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
-const {computeDistanceKm}=require('../utils/functions')
 import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Hidden from '@material-ui/core/Hidden'
+import '../static/assets/css/custom.css'
+import {SEARCH} from '../utils/i18n'
+const {setAxiosAuthentication}=require('../utils/authentication')
+const BasePage=require('./basePage')
+const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
+const {computeDistanceKm}=require('../utils/functions')
 const SearchResults=withSlide(withGrid(CardService))
 const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
 const {emptyPromise}=require('../utils/promise')
-import '../static/assets/css/custom.css'
 
 
 moment.locale('fr')
@@ -219,24 +220,21 @@ class SearchPage extends BasePage {
       const locations_filter = criterion.locations
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
         const su_locations = Object.keys(su.location).filter(k => Boolean(su.location[ k ]))
-        const ok = _.intersection(su_locations, locations_filter).length>0
-        return ok
+        return _.intersection(su_locations, locations_filter).length > 0
       })
     }
 
     if (data && criterion.categories) {
       const categories = criterion.categories
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
-        const ok = categories.includes(su.service.category._id)
-        return ok
+        return categories.includes(su.service.category._id)
       })
     }
 
     if (data && criterion.services) {
       const services = criterion.services
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
-        const ok = services.includes(su.service._id)
-        return ok
+        return services.includes(su.service._id)
       })
     }
 
@@ -281,7 +279,6 @@ class SearchPage extends BasePage {
     this.setState({searching: true})
 
     const url_props = this.getURLProps()
-    console.log(`Searching keyowrd:${this.state.keyword}`)
     let filters = {}
 
     // GPS
@@ -372,12 +369,12 @@ class SearchPage extends BasePage {
               <Grid className={classes.searchSecondFilterContainer}>
                 <Grid className={classes.searchSecondFilterContainerLeft}>
                   {
-                    this.state.searching || this.state.mounting ? null : <Typography>{serviceUsers.length || 'Aucun'} Alfred disponible(s)</Typography>
+                    this.state.searching || this.state.mounting ? null : <Typography>{serviceUsers.length || SEARCH.no_one} {SEARCH.alfred_avail}</Typography>
                   }
                 </Grid>
                 { gps ? <Grid className={classes.searchFilterRightContainer}>
                   <Grid className={classes.searchFilterRightLabel}>
-                    <p>Trier par</p>
+                    <p>{SEARCH.sort}</p>
                   </Grid>
                   <Grid>
                     <FormControl className={classes.formControl}>
@@ -408,7 +405,7 @@ class SearchPage extends BasePage {
             <Grid className={classes.searchContainerDisplayResult}>
               <Grid className={classes.displayNbAvailable}>
                 {
-                  this.state.searching || this.state.mounting ? null : <Typography>{serviceUsers.length || 'Aucun'} Alfred disponible(s)</Typography>
+                  this.state.searching || this.state.mounting ? null : <Typography>{serviceUsers.length || SEARCH.no_one} {SEARCH.alfred_avail}</Typography>
                 }
               </Grid>
               <Grid container >
@@ -422,7 +419,6 @@ class SearchPage extends BasePage {
 
                       ))
                     }
-
                   </Grid> : serviceUsers.length===0 ? null : <Grid container className={classes.searchMainContainer} spacing={3}>
                     <Grid item className={classes.hideOnMobile}>
                       <SearchResults

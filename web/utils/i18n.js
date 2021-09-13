@@ -45,6 +45,90 @@ const INFOBARMOBILE_MESSAGE = {
 
 const SHOWMORE = 'En savoir plus'
 
+const SEARCH = {
+  alfred_avail: ' Alfred disponible(s)',
+  no_one: 'Aucun ',
+  sort: 'Trier par',
+}
+
+const CARD_SERVICE = {
+  card_help_title: 'Besoin d\'aide ?',
+  card_help_chat: 'Utilisez notre chat en direct !',
+  dialog_delete_title: 'Supprimer un service',
+  dialog_delete_content: 'Voulez-vous vraiment supprimer ce service ?',
+  dialog_delete_cancel: 'Annuler',
+  dialog_delete_confirm: 'Supprimer',
+  no_description: 'Cet alfred est peut être trop timide pour parler de lui !',
+  button_show_profil: 'Voir',
+}
+
+const USERSERVICEPREVIEW = {
+  snackbar_no_booking: 'Pas de booking trouvé',
+  snackbar_error_avc: 'Impossible de réserver cet Alfred pour avocôtés, prestations manquantes: ',
+  error_presta: 'Sélectionnez au moins une prestation',
+  error_minimum_presta: 'Commande minimum des prestation de ',
+  error_minimum_presta_end: ' € requise',
+  error_select_date: 'Sélectionnez une date',
+  error_select_hour: 'Sélectionnez une heure',
+  error_not_available: ' n\'est pas disponible à cette date/heure',
+  error_delay_prevenance: 'Le délai de prévenance n\'est pas respecté',
+  error_resa_now: 'Réservation impossible avant maintenant',
+  error_place: 'Sélectionnez un lieu de prestation',
+  error_amount_too_high: 'Le montant dépasse le budget disponible pour votre département',
+  error_resa_myself: 'Vous ne pouvez pas vous réserver vous-même',
+  error_place_far_away: 'Cet Alfred se trouve trop loin de chez vous pour être réservé!',
+  at_home: 'A mon adresse principale',
+  at_remote: 'En visio',
+  snackbar_error_resa: 'Réservation en cours de traitement',
+  button_show_profil: 'Voir le profil',
+  topic_description: 'Description',
+  topic_description_summary: 'Cet utilisateur n\'a pas encore de description.',
+  topic_list_label: 'Délai de prévenance',
+  topic_list_summary: ' a besoin de ',
+  topic_list_summary_end: ' pour préparer son service',
+  topic_list_condition_label: 'Conditions d’annulation',
+  topic_list_condition_summary: ' vous permet d’annuler votre réservation jusqu’à ',
+  one_day: ' 1 jour ',
+  five_days: ' 5 jours ',
+  ten_days: ' 10 jours ',
+  before_end_date: ' avant la date prévue',
+  minimum_basket: 'Panier minimum',
+  minimum_basket_of: 'Le panier minimum de ',
+  is: ' est de ',
+  euro: ' €',
+  topic_title_date: 'Sélectionnez vos dates',
+  topic_title_date_summary: 'Choisissez vos dates selon les disponibilités de ',
+  topic_title_stuff: 'Matériel',
+  topic_title_stuff_summary: 'Le matériel de ',
+  topic_place: 'Lieu de la prestation',
+  topic_zone_intervention: 'La zone dans laquelle ',
+  topic_zone_intervention_end: ' peut intervenir',
+  button_show_services: 'Voir les services',
+  topic_commentary: 'Commentaires',
+  topic_commentary_summary: 'Ici, vous pouvez laisser des commentaires à ',
+  exclamation: ' !',
+}
+
+const DRAWER_BOOKING = {
+  euro: ' €',
+  interrogation: ' ?',
+  eligible: 'Eligible au CESU',
+  warning_perimiter: 'Cet Alfred se trouve trop loin de chez vous pour être réservé!',
+  warning_budget: 'Le montant dépasse le budget disponible pour votre département',
+  warning_self: 'Vous ne pouvez pas vous réserver vous-même',
+  hours: 'Heure',
+  presta_choice: 'Choix de la presta',
+  presta_place: 'Lieu de la prestation',
+  presta_option: 'Option(s) de la prestation',
+  deplacement_cost: 'Frais de déplacement',
+  delivery: 'Retrait & livraison',
+  display_details: 'Afficher les détails',
+  resa_avc: 'Réservation AvoCotés pour ',
+  resa_button: 'Réserver',
+  next_step_paiment: 'Choix du paiement à l’étape suivante',
+  button_info: 'Demande d’informations',
+}
+
 const SEARCHBAR = {
   what: 'Quel service ?',
   where: 'Où ?',
@@ -58,6 +142,27 @@ const SEARCHBAR = {
   labelPerimeter: 'Périmètre',
   labelCategory: 'Catégorie(s)',
   labelService: 'Service(s)',
+  searching: 'Recherche en cours',
+  no_results: 'Nous n\'avons pas trouvé de résultat pour votre recherche',
+  professional: 'Pro',
+  particular: 'Particulier',
+  button_cancel: 'Annuler',
+  button_confirm: 'Valider',
+  start_date: 'Début',
+  end_date: 'Fin',
+  button_cancel_date: 'Annuler',
+  button_confirm_date: 'Valider',
+  button_cancel_radius: 'Annuler',
+  button_confirm_radius: 'Valider',
+  button_cancel_remote: 'Annuler',
+  button_confirm_remote: 'Valider',
+  button_cancel_cat: 'Annuler',
+  button_confirm_cat: 'Valider',
+  button_cancel_service: 'Annuler',
+  button_confirm_service: 'Valider',
+  at_home: 'Chez moi',
+  alfred_home: 'Chez l\'Alfred',
+  remote: 'En visio',
 }
 
 const NAVBAR_MENU = {
@@ -244,7 +349,35 @@ const REGISTER_FIRST_PAGE = {
   textfield_create_password_placeholder: 'Créer un mot de passe',
   textfield_confirm_password: 'Confirmer mot de passe',
   textfield_confirm_password_placeholder: 'Confirmer mot de passe',
+}
 
+const REGISTER_SECOND_PAGE = {
+  dialog_cgu_close: 'Fermer',
+  address_title: 'Adresse postale',
+  address_subtitle: 'Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous proposer ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.',
+  algolia_placeholder: 'Recherchez votre adresse',
+  birthdate_title: 'Date de naissance',
+  minimum_age_start: 'Pour vous inscrire, vous devez être âgé d’au moins ',
+  minimum_age_end: ' ans. Les autres utilisateurs ne verront pas votre date de naissance.',
+  textfield_day: 'Jour',
+  textfield_day_placeholder: 'Jour',
+  textfield_month: 'Mois',
+  textfield_month_placeholder: 'Mois',
+  textfield_year: 'Année',
+  textfield_year_placeholder: 'Année',
+  textfield_phone: 'Numéro de téléphone',
+  textfield_phone_placeholder: 'Numéro de téléphone',
+  phone_title: 'Téléphone',
+  phone_subtitle: 'L\'ajout de votre numéro de téléphone permet aux membres My-Alfred de disposer d\'un moyen pour vous contacter.',
+  button_cgu: 'J’accepte les conditions générales d’utilisation de My-Alfred.',
+}
+
+const REGISTER_THIRD_PAGE = {
+  title: 'Inscription terminée',
+  subtitle: 'Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My Alfred',
+  button_explore: 'Commencez à explorer',
+  button_shop: 'Proposer mes services',
+  link_help: 'Besoin d\'aide pour proposer vos services ? Prenez rendez-vous avec l\'équipe My Alfred ici !',
 }
 
 const HANDLE_CB = {
@@ -761,4 +894,10 @@ module.exports = {
   MESSAGE_SUMMARY,
   REGISTER,
   REGISTER_FIRST_PAGE,
+  REGISTER_SECOND_PAGE,
+  REGISTER_THIRD_PAGE,
+  SEARCH,
+  CARD_SERVICE,
+  USERSERVICEPREVIEW,
+  DRAWER_BOOKING,
 }

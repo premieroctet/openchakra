@@ -23,6 +23,7 @@ import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
 import SchoolIcon from '@material-ui/icons/School'
 import {Skeleton} from '@material-ui/lab'
+import {CARD_SERVICE} from '../../../utils/i18n'
 const {isEditableUser}=require('../../../utils/context')
 import '../../../static/assets/css/custom.css'
 
@@ -38,10 +39,10 @@ class CardServiceInfo extends React.Component {
         <Paper elevation={1} className={`customcardinfopaper ${classes.cardServiceInfoPaper}`}>
           <Grid className={classes.cardServiceInfoContent}>
             <Grid>
-              <h2 className={`customcardinfotitle ${classes.cardServiceInfoTitle}`}>Besoin d'aide ?</h2>
+              <h2 className={`customcardinfotitle ${classes.cardServiceInfoTitle}`}>{CARD_SERVICE.card_help_title}</h2>
             </Grid>
             <Grid>
-              <p className={`customcardinfosubtitle ${classes.cardServiceInfoText}`}>Utilisez notre chat en direct !</p>
+              <p className={`customcardinfosubtitle ${classes.cardServiceInfoText}`}>{CARD_SERVICE.card_help_chat}</p>
             </Grid>
           </Grid>
         </Paper>
@@ -105,18 +106,18 @@ class CardService extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{'Supprimer un service'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{CARD_SERVICE.dialog_delete_title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Voulez-vous vraiment supprimer ce service ?
+            {CARD_SERVICE.dialog_delete_content}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose()} color="primary">
-            Annuler
+            {CARD_SERVICE.dialog_delete_cancel}
           </Button>
           <Button onClick={() => this.deleteService(this.state.id_service)} className={classes.colorError}>
-            Supprimer
+            {CARD_SERVICE.dialog_delete_confirm}
           </Button>
         </DialogActions>
       </Dialog>
@@ -168,7 +169,6 @@ class CardService extends React.Component {
                 <Skeleton animation="wave" width={80} height={50} style={{borderRadius: 24, padding: '5px 30px'}}/>
               </Grid>
             </Grid>
-
           </Paper>
         </Grid>
       )
@@ -194,8 +194,6 @@ class CardService extends React.Component {
         }
       </>
     )
-
-
 
     return(
       loading ?
@@ -265,7 +263,7 @@ class CardService extends React.Component {
                   profileMode ? null :
                     <>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
-                        <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : 'Cet alfred est peut être trop timide pour parler de lui !'}</Typography>
+                        <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : CARD_SERVICE.no_description}</Typography>
                       </Grid>
                       <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceScoreAndButtonContainer}>
                         <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceRatingContainer}>
@@ -303,7 +301,7 @@ class CardService extends React.Component {
                             variant={'contained'}
                             classes={{root: classes.buttonShowProfil}}
                           >
-                              Voir
+                            {CARD_SERVICE.button_show_profil}
                           </Button>
                         </Grid>
                       </Grid>

@@ -1,7 +1,5 @@
 import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
-const BasePage = require('./basePage')
 import {withStyles} from '@material-ui/core/styles'
 import Layout from '../hoc/Layout/Layout'
 import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
@@ -27,6 +25,11 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import SummaryCommentary from '../components/SummaryCommentary/SummaryCommentary'
 import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
+import {USERSERVICEPREVIEW} from '../utils/i18n'
+import '../static/assets/css/custom.css'
+
+const {setAxiosAuthentication}=require('../utils/authentication')
+const BasePage = require('./basePage')
 const {BOOK_STATUS, COMM_CLIENT, MANAGER}=require('../utils/consts')
 const isEmpty = require('../server/validation/is-empty')
 const {isDateAvailable} = require('../utils/dateutils')
@@ -36,7 +39,6 @@ const {computeDistanceKm, roundCurrency} = require('../utils/functions')
 const {computeBookingReference} = require('../utils/text')
 const {snackBarError}=require('../utils/notifications')
 const _=require('lodash')
-import '../static/assets/css/custom.css'
 
 const moment = require('moment')
 const {isB2BAdmin, isB2BManager, getRole, isModeCompany, isLoggedUserAdmin}=require('../utils/context')
@@ -116,7 +118,6 @@ class UserServicesPreview extends BasePage {
       localStorage.removeItem('bookingObj')
     }
 
-    let st={}
     axios.get('/myAlfred/api/booking/avocotes')
       .then(res => {
         this.setState({all_avocotes: res.data})
@@ -300,13 +301,13 @@ class UserServicesPreview extends BasePage {
     const {all_avocotes, serviceUser}=this.state
     const avocotes_booking=all_avocotes.find(a => a._id==value)
     if (!avocotes_booking) {
-      return snackBarError('Pas de booking trouvé')
+      return snackBarError(USERSERVICEPREVIEW.snackbar_no_booking)
     }
     const suPrestaNames=serviceUser.prestations.map(p => p.prestation.label)
     const avocotesPrestaNames=avocotes_booking.prestations.map(p => p.name)
     const diff=_.difference(avocotesPrestaNames, suPrestaNames)
     if (diff.length>0) {
-      return snackBarError(`Impossible de réserver cet Alfred pour avocôtés, prestations manquantes: ${diff.join(',')}`)
+      return snackBarError(USERSERVICEPREVIEW.snackbar_error_avc + diff.join(','))
     }
     let count={}
     avocotes_booking.prestations.forEach(p => {
@@ -320,46 +321,46 @@ class UserServicesPreview extends BasePage {
   checkBook = () => {
     let errors = {}
     if (Object.values(this.state.count).every(v => !v)) {
-      errors.prestations = 'Sélectionnez au moins une prestation'
+      errors.prestations = USERSERVICEPREVIEW.error_presta
     }
     else if (this.state.totalPrestations < this.state.serviceUser.minimum_basket) {
-      errors.prestations = `Commande minimum des prestation de ${this.state.serviceUser.minimum_basket}€ requise`
+      errors.prestations = USERSERVICEPREVIEW.error_minimum_presta + this.state.serviceUser.minimum_basket + USERSERVICEPREVIEW.error_minimum_presta_end
     }
 
     if (!errors.datetime && this.state.date == null) {
-      errors.datetime = 'Sélectionnez une date'
+      errors.datetime = USERSERVICEPREVIEW.error_select_date
     }
 
     if (!errors.datetime && this.state.time == null) {
-      errors.datetime = 'Sélectionnez une heure'
+      errors.datetime = USERSERVICEPREVIEW.error_select_hour
     }
 
     const reservationDate = this.computeReservationDate()
     if (!errors.datetime && reservationDate.isValid() && !isMomentAvailable(reservationDate, this.state.availabilities)) {
-      errors.datetime = `${this.state.alfred.firstname} n'est pas disponible à cette date/heure`
+      errors.datetime = this.state.alfred.firstname + USERSERVICEPREVIEW.error_not_available
     }
 
     const minBookingDate = getDeadLine(this.state.serviceUser.deadline_before_booking)
     if (!errors.datetime && reservationDate.isBefore(minBookingDate)) {
-      errors.datetime = 'Le délai de prévenance n\'est pas respecté'
+      errors.datetime = USERSERVICEPREVIEW.error_delay_prevenance
     }
 
     if (reservationDate && reservationDate.isBefore(moment())) {
-      errors.datetime = 'Réservation impossible avant maintenant'
+      errors.datetime = USERSERVICEPREVIEW.error_resa_now
     }
 
     if (!this.state.location) {
-      errors.location = 'Sélectionnez un lieu de prestation'
+      errors.location = USERSERVICEPREVIEW.error_place
     }
 
     if (this.hasWarningBudget()) {
-      errors.total = 'Le montant dépasse le budget disponible pour votre département'
+      errors.total = USERSERVICEPREVIEW.error_amount_too_high
     }
     if (this.hasWarningSelf()) {
-      errors.user = 'Vous ne pouvez pas vous réserver vous-même'
+      errors.user = USERSERVICEPREVIEW.error_resa_myself
     }
     if (this.hasWarningPerimeter()) {
-      errors.alfred = 'Cet Alfred se trouve trop loin de chez vous pour être réservé!'
+      errors.alfred = USERSERVICEPREVIEW.error_place_far_away
     }
 
     this.setState({errors: errors})
@@ -422,7 +423,7 @@ class UserServicesPreview extends BasePage {
     this.onChange({target: {name: 'location', value: checked ? id : null}})
   }
 
-  onQtyChanged = (state, id) => event => {
+  onQtyChanged = (state, id) => () => {
     let value = this.state.count[id]
     if (!value) {
       value = null
@@ -513,8 +514,7 @@ class UserServicesPreview extends BasePage {
       return null
     }
     const coordUser = this.getClientAddress().gps
-    const dist = computeDistanceKm(coordSU, coordUser)
-    return dist
+    return computeDistanceKm(coordSU, coordUser)
   }
 
   isInPerimeter = () => {
@@ -522,8 +522,7 @@ class UserServicesPreview extends BasePage {
       return false
     }
     const dist = this.computeDistance()
-    const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter)
-    return inPerimeter
+    return parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter)
   }
 
   hasWarningPerimeter = () => {
@@ -571,7 +570,7 @@ class UserServicesPreview extends BasePage {
   getClientAddressLabel = () => {
     const {location, user, allAddresses}=this.state
     if (['client', 'main'].includes(location)) {
-      return 'A mon adresse principale'
+      return USERSERVICEPREVIEW.at_home
     }
     return user ? (allAddresses[location] || {label: ''}).label : ''
   }
@@ -581,7 +580,7 @@ class UserServicesPreview extends BasePage {
       'client': this.getClientAddressLabel(),
       'main': this.getClientAddressLabel(),
       'alfred': `Chez ${this.state.alfred.firstname}`,
-      'visio': 'En visio',
+      'visio': USERSERVICEPREVIEW.at_remote,
     }
     if (!this.state.location) {
       return ''
@@ -590,17 +589,12 @@ class UserServicesPreview extends BasePage {
 
   }
 
-  onPickTaxChanged = (id, checked) => {
-    this.setState({isChecked: !this.state.isChecked})
-    this.onChange({target: {name: 'pick_tax', value: checked ? this.state.serviceUser.pick_tax : null}})
-  }
-
   book = actual => { // actual : true=> book, false=>infos request
 
-    const {count, user, serviceUser, pending, avocotes} = this.state
+    const {count, user, pending} = this.state
 
     if (pending) {
-      snackBarError('Réservation en cours de traitement')
+      snackBarError(USERSERVICEPREVIEW.snackbar_error_resa)
       return
     }
 
@@ -614,13 +608,13 @@ class UserServicesPreview extends BasePage {
     let place
     if (user) {
       switch (this.state.location) {
-      case 'alfred':
-        place = this.state.serviceUser.service_address
-        break
-      case 'visio':
-        break
-      default:
-        place = this.getClientAddress()
+        case 'alfred':
+          place = this.state.serviceUser.service_address
+          break
+        case 'visio':
+          break
+        default:
+          place = this.getClientAddress()
       }
     }
 
@@ -671,7 +665,7 @@ class UserServicesPreview extends BasePage {
 
       if (!this.state.user) {
         localStorage.setItem('path', Router.asPath)
-        Router.push('/?login=true')
+        Router.push('/')
         return
       }
 
@@ -703,8 +697,7 @@ class UserServicesPreview extends BasePage {
     if (!dl) {
       return dl
     }
-    dl = dl.replace('jours', 'jour(s)').replace('semaines', 'semaine(s)').replace('heures', 'heure(s)')
-    return dl
+    return dl.replace('jours', 'jour(s)').replace('semaines', 'semaine(s)').replace('heures', 'heure(s)')
   }
 
   computePricedPrestations = () => {
@@ -782,7 +775,7 @@ class UserServicesPreview extends BasePage {
                           query: {user: this.state.alfred._id},
                         }}
                       >
-                        <Button variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
+                        <Button variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>{USERSERVICEPREVIEW.button_show_profil}</Button>
                       </Link>
                     </Grid>
                   </Grid>
@@ -790,8 +783,8 @@ class UserServicesPreview extends BasePage {
                 <Grid className={'custompreviewboxdescription'} style={{marginTop: '10%'}}>
                   <Grid className={classes.overrideCssChild}>
                     <Topic
-                      titleTopic={'Description'}
-                      titleSummary={this.state.serviceUser.description ? this.state.serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
+                      titleTopic={USERSERVICEPREVIEW.topic_description}
+                      titleSummary={this.state.serviceUser.description ? this.state.serviceUser.description : USERSERVICEPREVIEW.topic_description_summary}
                       needBackground={true}
                       underline={true}
                     >
@@ -800,18 +793,19 @@ class UserServicesPreview extends BasePage {
                         wrapperComponentProps={
                           [
                             {
-                              label: this.state.alfred.firstname ? 'Délai de prévenance' : '',
-                              summary: this.state.alfred.firstname ? `${this.state.alfred.firstname} a besoin de ${this.formatDeadline(this.state.serviceUser.deadline_before_booking)} pour préparer son service` : '',
+                              label: this.state.alfred.firstname ? USERSERVICEPREVIEW.topic_list_label : '',
+                              summary: this.state.alfred.firstname ? this.state.alfred.firstname + USERSERVICEPREVIEW.topic_list_summary + this.formatDeadline(this.state.serviceUser.deadline_before_booking) + USERSERVICEPREVIEW.topic_list_summary_end : '',
                               IconName: this.state. alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : '',
                             },
                             {
-                              label: this.state.alfred.firstname ? 'Conditions d’annulation' : '',
-                              summary: this.state.alfred.firstname ? `${this.state.alfred.firstname} vous permet d’annuler votre réservation jusqu’à ${this.state.flexible ? '1 jour' : this.state.moderate ? '5 jours' : '10 jours'} avant la date prévue` : '',
+                              label: this.state.alfred.firstname ? USERSERVICEPREVIEW.topic_list_condition_label : '',
+                              summary: this.state.alfred.firstname ? this.state.alfred.firstname + USERSERVICEPREVIEW.topic_list_condition_summary + this.state.flexible ? USERSERVICEPREVIEW.one_day : this.state.moderate ? '' +
+                                USERSERVICEPREVIEW.five_days : USERSERVICEPREVIEW.ten_days + USERSERVICEPREVIEW.before_end_date : '',
                               IconName: this.state.alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : '',
                             },
                             {
-                              label: this.state.alfred.firstname ? 'Panier minimum' : '',
-                              summary: this.state.alfred.firstname ? `Le panier minimum de ${this.state.alfred.firstname} est de ${this.state.serviceUser.minimum_basket}€` : '',
+                              label: this.state.alfred.firstname ? USERSERVICEPREVIEW.minimum_basket : '',
+                              summary: this.state.alfred.firstname ? USERSERVICEPREVIEW.minimum_basket_of + this.state.alfred.firstname + USERSERVICEPREVIEW.is + this.state.serviceUser.minimum_basket + USERSERVICEPREVIEW.euro : '',
                               IconName: this.state.alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : '',
                             },
                           ]
@@ -823,8 +817,8 @@ class UserServicesPreview extends BasePage {
                 <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>
                   <Topic
                     underline={true}
-                    titleTopic={'Sélectionnez vos dates'}
-                    titleSummary={this.state.alfred.firstname ? `Choisissez vos dates selon les disponibilités de ${this.state.alfred.firstname}` : ''}
+                    titleTopic={USERSERVICEPREVIEW.topic_title_date}
+                    titleSummary={this.state.alfred.firstname ? USERSERVICEPREVIEW.topic_title_date_summary + this.state.alfred.firstname : ''}
                   >
                     <Schedule
                       availabilities={this.state.availabilities}
@@ -844,10 +838,10 @@ class UserServicesPreview extends BasePage {
                 {this.state.allDetailEquipments.length !== 0 ?
                   <Grid className={classes.equipmentsContainer}>
                     <Topic
-                      titleTopic={'Matériel'}
+                      titleTopic={USERSERVICEPREVIEW.topic_title_stuff}
                       needBackground={true}
                       underline={true}
-                      titleSummary={this.state.alfred.firstname ? `Le matériel de ${this.state.alfred.firstname}` : ''}
+                      titleSummary={this.state.alfred.firstname ? USERSERVICEPREVIEW.topic_title_stuff_summary + this.state.alfred.firstname : ''}
                     >
                       <ListAlfredConditions
                         columnsXl={6}
@@ -867,8 +861,8 @@ class UserServicesPreview extends BasePage {
                       <Grid style={{width: '100%'}}>
                         <Topic
                           underline={true}
-                          titleTopic={'Lieu de la prestation'}
-                          titleSummary={this.state.alfred.firstname ? `La zone dans laquelle ${this.state.alfred.firstname} peut intervenir` : ''}
+                          titleTopic={USERSERVICEPREVIEW.topic_place}
+                          titleSummary={this.state.alfred.firstname ? USERSERVICEPREVIEW.topic_zone_intervention + this.state.alfred.firstname + USERSERVICEPREVIEW.topic_zone_intervention_end : ''}
                         >
                           <MapComponent
                             position={[this.state.serviceUser.service_address.gps.lat, this.state.serviceUser.service_address.gps.lng]}
@@ -887,7 +881,7 @@ class UserServicesPreview extends BasePage {
                       classes={{root: classes.buttonReservation}}
                       onClick={this.toggleDrawer('bottom', true)}
                     >
-                      Voir les services
+                      {USERSERVICEPREVIEW.button_show_services}
                     </Button>
                   </Grid>
                   <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
@@ -953,8 +947,8 @@ class UserServicesPreview extends BasePage {
                   <Grid style={{marginTop: '5%'}}>
                     <Topic
                       underline={true}
-                      titleTopic={'Commentaires'}
-                      titleSummary={this.state.alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${this.state.alfred.firstname} !` : ''}
+                      titleTopic={USERSERVICEPREVIEW.topic_commentary}
+                      titleSummary={this.state.alfred.firstname ? USERSERVICEPREVIEW.topic_commentary_summary + this.state.alfred.firstname + USERSERVICEPREVIEW.exclamation : ''}
                     >
                       <SummaryCommentary user={this.state.alfred._id} serviceUser={this.getURLProps().id}/>
                     </Topic>
