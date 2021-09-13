@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -27,7 +28,7 @@ import {CARD_SERVICE} from '../../../utils/i18n'
 const {isEditableUser}=require('../../../utils/context')
 import '../../../static/assets/css/custom.css'
 
-class CardServiceInfo extends React.Component {
+class RawCardServiceInfo extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -39,18 +40,19 @@ class CardServiceInfo extends React.Component {
         <Paper elevation={1} className={`customcardinfopaper ${classes.cardServiceInfoPaper}`}>
           <Grid className={classes.cardServiceInfoContent}>
             <Grid>
-              <h2 className={`customcardinfotitle ${classes.cardServiceInfoTitle}`}>{CARD_SERVICE.card_help_title}</h2>
+              <h2 className={`customcardinfotitle ${classes.cardServiceInfoTitle}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_title'))}</h2>
             </Grid>
             <Grid>
-              <p className={`customcardinfosubtitle ${classes.cardServiceInfoText}`}>{CARD_SERVICE.card_help_chat}</p>
+              <p className={`customcardinfosubtitle ${classes.cardServiceInfoText}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_chat'))}</p>
             </Grid>
           </Grid>
         </Paper>
       </Grid>
-
     )
   }
 }
+
+const CardServiceInfo=withTranslation('custom', {withRef: true})(withStyles(styles)(RawCardServiceInfo))
 
 class CardService extends React.Component {
   constructor(props) {
@@ -106,18 +108,18 @@ class CardService extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{CARD_SERVICE.dialog_delete_title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{ReactHtmlParser(this.props.t('CARD_SERVICE.dialog_delete_title'))}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {CARD_SERVICE.dialog_delete_content}
+            {ReactHtmlParser(this.props.t('CARD_SERVICE.dialog_delete_content'))}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose()} color="primary">
-            {CARD_SERVICE.dialog_delete_cancel}
+            {ReactHtmlParser(this.props.t('CARD_SERVICE.dialog_delete_cancel'))}
           </Button>
           <Button onClick={() => this.deleteService(this.state.id_service)} className={classes.colorError}>
-            {CARD_SERVICE.dialog_delete_confirm}
+            {ReactHtmlParser(this.props.t('CARD_SERVICE.dialog_delete_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -263,7 +265,7 @@ class CardService extends React.Component {
                   profileMode ? null :
                     <>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
-                        <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : CARD_SERVICE.no_description}</Typography>
+                        <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : ReactHtmlParser(this.props.t('CARD_SERVICE.no_description'))}</Typography>
                       </Grid>
                       <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceScoreAndButtonContainer}>
                         <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceRatingContainer}>
@@ -301,7 +303,7 @@ class CardService extends React.Component {
                             variant={'contained'}
                             classes={{root: classes.buttonShowProfil}}
                           >
-                            {CARD_SERVICE.button_show_profil}
+                            {ReactHtmlParser(this.props.t('CARD_SERVICE.button_show_profil'))}
                           </Button>
                         </Grid>
                       </Grid>

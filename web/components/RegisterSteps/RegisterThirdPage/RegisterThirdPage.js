@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -18,11 +19,11 @@ class RegisterThirdPage extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid>
-              <h2 className={`customregistertitleend ${classes.titleRegister}`}>{REGISTER_THIRD_PAGE.title}</h2>
+              <h2 className={`customregistertitleend ${classes.titleRegister}`}>{ReactHtmlParser(this.props.t('REGISTER_THIRD_PAGE.title'))}</h2>
             </Grid>
             <Grid className={classes.newContainer}>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 20, textAlign: 'center'}}>
-                <Typography className={'customregistersuccesstext'}>{REGISTER_THIRD_PAGE.subtitle}</Typography>
+                <Typography className={'customregistersuccesstext'}>{ReactHtmlParser(this.props.t('REGISTER_THIRD_PAGE.subtitle'))}</Typography>
               </Grid>
               <Grid item className={classes.responsiveButton}>
                 <Grid item style={{marginRight: '1%'}}>
@@ -33,7 +34,7 @@ class RegisterThirdPage extends React.Component {
                         color={'primary'}
                         classes={{root: 'customregisterexplorebutton'}}
                         style={{color: 'white', textTransform: 'initial'}}>
-                        {REGISTER_THIRD_PAGE.button_explore}
+                        {ReactHtmlParser(this.props.t('REGISTER_THIRD_PAGE.button_explore'))}
                       </Button>
                     </a>
                   </Link>
@@ -45,7 +46,7 @@ class RegisterThirdPage extends React.Component {
                         variant={'contained'}
                         classes={{root: `customregisterservicesbutton ${classes.cancelButton}`}}
                         style={{color: 'white', textTransform: 'initial'}}>
-                        {REGISTER_THIRD_PAGE.button_shop}
+                        {ReactHtmlParser(this.props.t('REGISTER_THIRD_PAGE.button_shop'))}
                       </Button>
                     </a>
                   </Link>
@@ -62,7 +63,7 @@ class RegisterThirdPage extends React.Component {
                       justifyContent: 'center',
                       textDecoration: 'none',
                     }}>
-                      {REGISTER_THIRD_PAGE.link_help}
+                      {ReactHtmlParser(this.props.t('REGISTER_THIRD_PAGE.link_help'))}
                     </a>
                   </Link>
                 </Grid>

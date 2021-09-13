@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -69,7 +70,7 @@ class RegisterSecondPage extends React.Component {
           <CguContent/>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} classes={{root: classes.cancelButton}}>{REGISTER_SECOND_PAGE.dialog_cgu_close}</Button>
+          <Button onClick={handleClose} classes={{root: classes.cancelButton}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.dialog_cgu_close'))}</Button>
         </DialogActions>
       </Dialog>
     )
@@ -87,10 +88,10 @@ class RegisterSecondPage extends React.Component {
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <h3 className={`customregisteradresstitle ${classes.subtitle}`}>{REGISTER_SECOND_PAGE.address_title}</h3>
+              <h3 className={`customregisteradresstitle ${classes.subtitle}`}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.address_title'))}</h3>
             </Grid>
             <Grid item className={classes.textStyle}>
-              <Typography className={'customregisteradresssubtitle'}><em>{REGISTER_SECOND_PAGE.address_subtitle}</em></Typography>
+              <Typography className={'customregisteradresssubtitle'}><em>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.address_subtitle'))}</em></Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -100,7 +101,7 @@ class RegisterSecondPage extends React.Component {
               <form>
                 <AlgoliaPlaces
                   className={classes.textFieldAlgo}
-                  placeholder={REGISTER_SECOND_PAGE.algolia_placeholder}
+                  placeholder={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.algolia_placeholder'))}
                   options={{
                     appId: 'plKATRG826CP',
                     apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -120,19 +121,19 @@ class RegisterSecondPage extends React.Component {
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <h3 className={`customregisterbirthdate ${classes.subtitle}`}>{REGISTER_SECOND_PAGE.birthdate_title}</h3>
+              <h3 className={`customregisterbirthdate ${classes.subtitle}`}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.birthdate_title'))}</h3>
             </Grid>
             <Grid item>
               <Typography className={`customregisterbirthdatesub ${classes.textStyle}`}><em>
-                {REGISTER_SECOND_PAGE.minimum_age_start + ACCOUNT_MIN_AGE + REGISTER_SECOND_PAGE.minimum_age_end}</em>
+                {ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.minimum_age_start')) + ACCOUNT_MIN_AGE + ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.minimum_age_end'))}</em>
               </Typography>
             </Grid>
             <Grid item className={classes.datenaissance} style={{display: 'flex', alignItems: 'center'}}>
               <Grid container style={{justifyContent: 'space-between', flexWrap: 'nowrap'}}>
                 <Grid item style={{width: '30%'}}>
                   <TextField
-                    label={REGISTER_SECOND_PAGE.textfield_day}
-                    placeholder={REGISTER_SECOND_PAGE.textfield_day_placeholder}
+                    label={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_day'))}
+                    placeholder={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_day_placeholder'))}
                     onChange={e => this.props.onChangeBirthdayDate(e)}
                     inputProps={{
                       maxLength: 2,
@@ -146,8 +147,8 @@ class RegisterSecondPage extends React.Component {
                 </Grid>
                 <Grid item style={{width: '30%'}}>
                   <TextField
-                    label={REGISTER_SECOND_PAGE.textfield_month}
-                    placeholder={REGISTER_SECOND_PAGE.textfield_month_placeholder}
+                    label={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_month'))}
+                    placeholder={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_month_placeholder'))}
                     onChange={e => this.props.onChangeBirthdayMonth(e)}
                     inputProps={{
                       maxLength: 2,
@@ -160,8 +161,8 @@ class RegisterSecondPage extends React.Component {
                 </Grid>
                 <Grid item style={{width: '30%'}}>
                   <TextField
-                    label={REGISTER_SECOND_PAGE.textfield_year}
-                    placeholder={REGISTER_SECOND_PAGE.textfield_year_placeholder}
+                    label={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_year'))}
+                    placeholder={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_year_placeholder'))}
                     onChange={e => this.props.onChangeBirthdayYear(e)}
                     inputProps={{
                       maxLength: 4,
@@ -179,10 +180,10 @@ class RegisterSecondPage extends React.Component {
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <h3 className={`customregisterphone ${classes.subtitle}`}>{REGISTER_SECOND_PAGE.phone_title}</h3>
+              <h3 className={`customregisterphone ${classes.subtitle}`}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.phone_title'))}</h3>
             </Grid>
             <Grid item>
-              <Typography className={`customregisterphonesubtitle ${classes.textStyle}`}><em>{REGISTER_SECOND_PAGE.phone_subtitle}</em></Typography>
+              <Typography className={`customregisterphonesubtitle ${classes.textStyle}`}><em>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.phone_subtitle'))}</em></Typography>
             </Grid>
             <Grid item container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
               <Grid item>
@@ -191,8 +192,8 @@ class RegisterSecondPage extends React.Component {
               <Grid item style={{width: '70%'}}>
                 <TextField
                   id="standard-with-placeholder"
-                  label={REGISTER_SECOND_PAGE.textfield_phone}
-                  placeholder={REGISTER_SECOND_PAGE.textfield_phone_placeholder}
+                  label={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_phone'))}
+                  placeholder={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_phone_placeholder'))}
                   style={{width: '100%'}}
                   type={'number'}
                   name="phone"
@@ -216,7 +217,7 @@ class RegisterSecondPage extends React.Component {
                   />
                 </Grid>
                 <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-                  <Button onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>{REGISTER_SECOND_PAGE.button_cgu}</Button>
+                  <Button onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}</Button>
                   {this.dialogCgu()}
                 </Grid>
               </Grid>

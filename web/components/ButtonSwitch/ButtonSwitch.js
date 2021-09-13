@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
@@ -96,15 +97,15 @@ class ButtonSwitch extends React.Component {
             <span>
               {isEditable ?
                 <CssTextField
-                  label={BUTTON_SWITCH.textfield_label}
-                  placeholder={BUTTON_SWITCH.textfield_placeholder}
+                  label={ReactHtmlParser(this.props.t('BUTTON_SWITCH.textfield_label'))}
+                  placeholder={ReactHtmlParser(this.props.t('BUTTON_SWITCH.textfield_placeholder'))}
                   value={this.label}
                   onChange={this.onChangeLabel}
                   error={!this.label}
-                  helperText={this.label ? null : BUTTON_SWITCH.helpertext}
+                  helperText={this.label ? null : ReactHtmlParser(this.props.t('BUTTON_SWITCH.helpertext'))}
                 />
                 :
-                <p>{label === undefined ? BUTTON_SWITCH.error_label : label}</p>
+                <p>{label === undefined ? ReactHtmlParser(this.props.t('BUTTON_SWITCH.error_label')) : label}</p>
               }
             </span>
           </Grid>
@@ -115,7 +116,7 @@ class ButtonSwitch extends React.Component {
               <Grid style={{display: 'flex'}}>
                 <CssTextField
                   value={this.price}
-                  label={<Typography style={{color: '#696767'}}>{BUTTON_SWITCH.price}</Typography>}
+                  label={<Typography style={{color: '#696767'}}>{ReactHtmlParser(this.props.t('BUTTON_SWITCH.price'))}</Typography>}
                   type="number"
                   classes={{root: `custombuttonswitchplaceholder ${classes.textField}`}}
                   disabled={!checked || priceDisabled}
@@ -124,10 +125,10 @@ class ButtonSwitch extends React.Component {
                     inputProps: {
                       min: 0,
                     },
-                    endAdornment: <InputAdornment position="start">{BUTTON_SWITCH.euro}</InputAdornment>,
+                    endAdornment: <InputAdornment position="start">{ReactHtmlParser(this.props.t('BUTTON_SWITCH.euro'))}</InputAdornment>,
                   }}
                   error={!this.price}
-                  helperText={this.price ? null : BUTTON_SWITCH.helpertext}
+                  helperText={this.price ? null : ReactHtmlParser(this.props.t('BUTTON_SWITCH.helpertext'))}
                 />
                 {isOption ?
                   <Select
