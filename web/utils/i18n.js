@@ -81,7 +81,7 @@ const BANNER_PRESENTATION = {
   button: 'Découvrir',
 }
 
-const B2B_BANNER_PRESENTATION = {
+const BANNER_B2B_PRESENTATION = {
   title: 'Des milliers de talents',
   subTitle: 'Au service de votre entreprise',
   text: 'Trouvez le prestataire idéal pour répondre aux besoins ponctuels de votre entreprise & de vos collaborateurs. Des milliers de profils vérifiés et qualifiés au service de vos projets, votre stratégie, vos collaborateurs et vos locaux ! Un service simple et sécurisant !',
@@ -289,7 +289,7 @@ const HANDLE_RIB = {
   dialog_delete_rib_cancel: 'Annuler',
   dialog_delete_rib_button: 'Supprimer',
   title: 'RIB enregistrés',
-  subtitle_b2b: 'Renseignez un rib pour permettre à vos collaborateurs le paiement par prélèvement bancaire.',
+  b2b_subtitle: 'Renseignez un rib pour permettre à vos collaborateurs le paiement par prélèvement bancaire.',
   subtitle: 'Choisissez le versement directement sur votre compte bancaire.',
   no_rib: 'Aucun RIB enregistré',
   info_data: 'Toutes les données de paiement sur My Alfred sont chiffrées.',
@@ -300,7 +300,7 @@ const MY_ADDRESSES = {
   title: 'Mes adresses',
   title_b2b: 'Mes sites',
   subtitle: 'Ici, vous pouvez gérer vos adresses',
-  subtitle_b2b: 'Ici, vous pouvez gérer les sites de',
+  b2b_subtitle: 'Ici, vous pouvez gérer les sites de',
 }
 
 const HANDLE_ADDRESSES = {
@@ -462,13 +462,13 @@ const SHOP = {
   bienvenue: {
     titre: 'Bienvenue {{firstname}}',
     subtitle: 'Nous allons vous aider à créer votre service et devenir Alfred en quelques minutes !',
-    step1: 'Etape 1',
+    step1_main_title: 'Etape 1',
     step1_subtitle: 'Choisissez votre premier super talent ! ',
     step1_text: 'Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appelle un autre, vous pourrez ajouter autant de services que vous voulez.',
-    step2: 'Etape 2',
+    step2_main_title: 'Etape 2',
     step2_subtitle: 'Vous êtes chez vous ! Fixez vos règles et vos conditions…',
     step2_text: 'Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation.',
-    step3: 'Etape 3',
+    step3_main_title: 'Etape 3',
     step3_subtitle: 'Présentez-vous !',
     step3_text: 'Renseignez votre profil Alfred, partagez vos réalisations, et décrivez-vous !',
   },
@@ -512,7 +512,7 @@ const SHOP = {
     descriptionIsPro: 'My Alfred travaille en étroite collaboration avec de nombreuses entreprises partenaires en recherche d’entrepreneurs qualifiés pour l’installation, la livraison, le montage ou encore des services de conciergerie. Si vous souhaitez proposer vos services aux entreprises partenaires de My Alfred, il vous suffit de compléter les prestations ci-dessous. Ces prestations ne seront pas visibles de la plateforme grand public, et seront réservées aux entreprises partenaires. Un de nos experts prendra contact avec vous dans les plus brefs délais pour plus d’information. ',
   },
   settingService: {
-    title: 'Paramétrage',
+    main_title: 'Paramétrage',
     subtitle: 'Indiquez votre périmètre d’intervention ainsi que les options qui s’offrent à votre client quant à votre service.',
     title_perimeter: 'Quel est votre périmètre d’intervention ?',
     unity_perimeter: 'Km',
@@ -723,7 +723,7 @@ module.exports = {
   SHOWMORE,
   SEARCHBAR,
   BANNER_PRESENTATION,
-  B2B_BANNER_PRESENTATION,
+  BANNER_B2B_PRESENTATION,
   CATEGORY,
   BECOME_ALFRED,
   RESA_SERVICE,

@@ -30,7 +30,7 @@ class RegisterFirstPage extends React.Component {
             <Grid item className={classes.widthTextField}>
               <TextField
                 id="input-with-icon-grid"
-                label={REGISTER_FIRST_PAGE.textfield_email}
+                label={REGISTER_FIRST_PAGE.textfield_email_title}
                 placeholder={REGISTER_FIRST_PAGE.textfield_email_placeholder}
                 style={{width: '100%'}}
                 type="email"
