@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import InputAdornment from '@material-ui/core/InputAdornment'
 const {setAxiosAuthentication} = require('../../../utils/authentication')
@@ -92,20 +93,20 @@ class SettingService extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
-          <h2 className={classes.policySizeTitle}>{SHOP.settingService.title}</h2>
+          <h2 className={classes.policySizeTitle}>{ReactHtmlParser(this.props.t('SHOP.settingService.title'))}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 style={{color: '#403f3f'}} className={'customsettingservicesubtitle'}>{SHOP.settingService.subtitle}</h3>
+          <h3 style={{color: '#403f3f'}} className={'customsettingservicesubtitle'}>{ReactHtmlParser(this.props.t('SHOP.settingService.subtitle'))}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsettingserviceperimetercontainer'}>
-          <h4 className={`customsettingserviceperimeter ${classes.policySizeSubtitle}`} style={{margin: 0}}>{SHOP.settingService.title_perimeter}</h4>
+          <h4 className={`customsettingserviceperimeter ${classes.policySizeSubtitle}`} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.settingService.title_perimeter'))}</h4>
         </Grid>
         <Grid item xl={3} lg={3} md={3} sm={3} xs={12} className={'customsettingserviceperimetercontainer'}>
           <TextField
             id="standard-start-adornment"
             variant={'outlined'}
             InputProps={{
-              endAdornment: <InputAdornment position="start">{SHOP.settingService.unity_perimeter}</InputAdornment>,
+              endAdornment: <InputAdornment position="start">{ReactHtmlParser(this.props.t('SHOP.settingService.unity_perimeter'))}</InputAdornment>,
             }}
             value={perimeter}
             classes={{root: 'customsettingservicetextfieldperimeter'}}
@@ -117,13 +118,13 @@ class SettingService extends React.Component {
         <Grid container spacing={1} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsettingserviceplacecontainer'}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <h4 className={`customsettingserviceplacetitle ${classes.policySizeSubtitle}`}
-              style={{margin: 0}}>{SHOP.settingService.title_place_service}</h4>
+              style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.settingService.title_place_service'))}</h4>
           </Grid>
           {'client' in this.state.location ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
                 checked={location.client === true}
-                label={SHOP.settingService.service_at_userHome}
+                label={ReactHtmlParser(this.props.t('SHOP.settingService.service_at_userHome'))}
                 id='client'
                 onChange={this.onLocationChange}
               />
@@ -133,7 +134,7 @@ class SettingService extends React.Component {
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
                 checked={location.alfred === true}
-                label={SHOP.settingService.service_at_myHome}
+                label={ReactHtmlParser(this.props.t('SHOP.settingService.service_at_myHome'))}
                 id='alfred'
                 onChange={this.onLocationChange}
               />
@@ -143,7 +144,7 @@ class SettingService extends React.Component {
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <ButtonSwitch
                 checked={location.visio === true}
-                label={SHOP.settingService.service_withVisio}
+                label={ReactHtmlParser(this.props.t('SHOP.settingService.service_withVisio'))}
                 id='visio'
                 onChange={this.onLocationChange}
               />
@@ -154,7 +155,7 @@ class SettingService extends React.Component {
           {(service && service.travel_tax || service && service.pick_tax) ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <h4 className={`customsettingserviceoption ${classes.policySizeSubtitle}`}
-                style={{margin: 0}}>{SHOP.settingService.section_option_title}</h4>
+                style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.settingService.section_option_title'))}</h4>
             </Grid> : null
           }
           {service && service.travel_tax && location.client &&
@@ -168,7 +169,7 @@ class SettingService extends React.Component {
                 checked={!!pick_tax}
                 price={pick_tax}
                 id='pick_tax'
-                label={SHOP.settingService.propose_delivery}
+                label={ReactHtmlParser(this.props.t('SHOP.settingService.propose_delivery'))}
                 isPrice={true}
                 onChange={this.onOptionChanged}
               />

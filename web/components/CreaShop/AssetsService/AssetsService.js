@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -100,19 +101,19 @@ class AssetsService extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={`customassetcontainerexpertise ${classes.titleContainer}`}>
-          <h2 className={`customassetitle ${classes.policySizeTitle}`}>{SHOP.assets.title}</h2>
+          <h2 className={`customassetitle ${classes.policySizeTitle}`}>{ReactHtmlParser(this.props.t('SHOP.assets.title'))}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customassetcontainerexpertise'}>
-          <h3 className={`customassetsubtitle ${classes.policySizeSubtitle}`}>{SHOP.assets.subtitle}</h3>
+          <h3 className={`customassetsubtitle ${classes.policySizeSubtitle}`}>{ReactHtmlParser(this.props.t('SHOP.assets.subtitle'))}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customassetcontainerexpertise'}>
-          <h4 className={`customassetexpertise ${classes.policySizeSubtitle}`}>{SHOP.assets.expertise_title}</h4>
+          <h4 className={`customassetexpertise ${classes.policySizeSubtitle}`}>{ReactHtmlParser(this.props.t('SHOP.assets.expertise_title'))}</h4>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customassetcontainerexpertise'}>
           <TextField
             id="outlined-basic"
             classes={{root: `customassetmultiline ${classes.textfieldMultiline}`}}
-            label={SHOP.assets.expertise_label}
+            label={ReactHtmlParser(this.props.t('SHOP.assets.expertise_label'))}
             variant="outlined"
             value={this.state.description}
             name='description'
@@ -125,19 +126,19 @@ class AssetsService extends React.Component {
           <Divider/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={`customassetexptitle ${classes.policySizeSubtitle}`}>{SHOP.assets.experience_title}</h4>
+          <h4 className={`customassetexptitle ${classes.policySizeSubtitle}`}>{ReactHtmlParser(this.props.t('SHOP.assets.experience_title'))}</h4>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
           <Grid item xl={6} lg={6} md={6} sm={6} xs={12} className={'customassetcontexpyear'}>
             <FormControl variant="outlined" style={{width: '100%'}}>
-              <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.experience_label}</InputLabel>
+              <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('SHOP.assets.experience_label'))}</InputLabel>
               <Select
                 value={this.state.level}
                 style={{root: `customassetfieldexpyear ${classes.widthField}`}}
                 variant="outlined"
                 name="level"
                 onChange={this.handleChange}
-                label={SHOP.assets.experience_label}
+                label={ReactHtmlParser(this.props.t('SHOP.assets.experience_label'))}
               >
                 {
                   Object.keys(YEARS_RANGE).map((res, index) => (
@@ -161,7 +162,7 @@ class AssetsService extends React.Component {
             <TextField
               id="outlined-basic"
               classes={{root: `customassetexpfielddescription ${classes.expDescription}`}}
-              label={SHOP.assets.experience_label_description}
+              label={ReactHtmlParser(this.props.t('SHOP.assets.experience_label_description'))}
               variant="outlined"
               value={this.state.experience_description}
               name='experience_description'
@@ -174,7 +175,7 @@ class AssetsService extends React.Component {
             <TextField
               id="outlined-basic"
               classes={{root: `customassetexpcompfield ${classes.expCompetence}`}}
-              label={SHOP.assets.obtain_competence}
+              label={ReactHtmlParser(this.props.t('SHOP.assets.obtain_competence'))}
               variant="outlined"
               value={this.state.newExperienceSkill}
               name='newExperienceSkill'
@@ -206,19 +207,19 @@ class AssetsService extends React.Component {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid>
-            <h4 className={`customassetdiplomatitle ${classes.policySizeSubtitle}`}>{SHOP.assets.diploma_title}</h4>
+            <h4 className={`customassetdiplomatitle ${classes.policySizeSubtitle}`}>{ReactHtmlParser(this.props.t('SHOP.assets.diploma_title'))}</h4>
           </Grid>
           <Grid>
-            <Typography style={{color: '#696767'}} className={'customassetdiplomasubtitle'}><em>{SHOP.assets.diploma_subtitle}</em></Typography>
+            <Typography style={{color: '#696767'}} className={'customassetdiplomasubtitle'}><em>{ReactHtmlParser(this.props.t('SHOP.assets.diploma_subtitle'))}</em></Typography>
           </Grid>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
           <Grid item xl={6} lg={2} md={6} sm={6} xs={12} className={'customassetdiplomayearcont'}>
             <FormControl variant={'outlined'} style={{width: '100%'}}>
-              <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.year_obtain}</InputLabel>
+              <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('SHOP.assets.year_obtain'))}</InputLabel>
               <Select
                 value={this.state.diplomaYear}
-                label={SHOP.assets.year_obtain}
+                label={ReactHtmlParser(this.props.t('SHOP.assets.year_obtain'))}
                 name='diplomaYear'
                 onChange={this.handleChange}
                 style={{width: '100%'}}
@@ -253,7 +254,7 @@ class AssetsService extends React.Component {
               id="outlined-basic"
               style={{width: '100%'}}
               classes={{root: 'customassetskillfield'}}
-              label={SHOP.assets.obtain_competence}
+              label={ReactHtmlParser(this.props.t('SHOP.assets.obtain_competence'))}
               variant="outlined"
               value={this.state.newDiplomaSkill}
               name='newDiplomaSkill'
@@ -292,7 +293,7 @@ class AssetsService extends React.Component {
               />
               <label htmlFor="diploma-file">
                 <Button variant="contained" color="primary" component="span" classes={{root: `customassetskillbutton ${classes.buttonUpload}`}}>
-                  {SHOP.assets.button_joinDiploma}
+                  {ReactHtmlParser(this.props.t('SHOP.assets.button_joinDiploma'))}
                 </Button>
               </label>
             </Grid>
@@ -314,19 +315,19 @@ class AssetsService extends React.Component {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid>
-            <h4 className={`customassetcertiftitle ${classes.policySizeSubtitle}`}>{SHOP.assets.certification_title}</h4>
+            <h4 className={`customassetcertiftitle ${classes.policySizeSubtitle}`}>{ReactHtmlParser(this.props.t('SHOP.assets.certification_title'))}</h4>
           </Grid>
           <Grid>
-            <Typography style={{color: '#696767'}} className={'customassetcertifsubtitle'}><em>{SHOP.assets.certification_subtitle}</em></Typography>
+            <Typography style={{color: '#696767'}} className={'customassetcertifsubtitle'}><em>{ReactHtmlParser(this.props.t('SHOP.assets.certification_subtitle'))}</em></Typography>
           </Grid>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
           <Grid item xl={6} lg={2} md={6} sm={6} xs={12} className={'customassetcertifyearcont'}>
             <FormControl variant={'outlined'} style={{width: '100%'}}>
-              <InputLabel id="demo-simple-select-outlined-label">{SHOP.assets.year_obtain}</InputLabel>
+              <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('SHOP.assets.year_obtain'))}</InputLabel>
               <Select
                 value={this.state.certificationYear}
-                label={SHOP.assets.year_obtain}
+                label={ReactHtmlParser(this.props.t('SHOP.assets.year_obtain'))}
                 name={'certificationYear'}
                 onChange={this.handleChange}
                 style={{width: '100%'}}
@@ -342,7 +343,7 @@ class AssetsService extends React.Component {
           <Grid item xl={6} lg={10} md={6} sm={6} xs={12} className={'customassetcertifnamecont'}>
             <TextField
               value={this.state.certificationName}
-              label={SHOP.assets.certification_name}
+              label={ReactHtmlParser(this.props.t('SHOP.assets.certification_name'))}
               variant="outlined"
               style={{width: '100%'}}
               classes={{root: 'customassetcertifnamefield'}}
@@ -355,7 +356,7 @@ class AssetsService extends React.Component {
               id="outlined-basic"
               style={{width: '100%'}}
               classes={{root: 'customassetskillfield'}}
-              label={SHOP.assets.obtain_competence}
+              label={ReactHtmlParser(this.props.t('SHOP.assets.obtain_competence'))}
               variant="outlined"
               value={this.state.newCertificationSkill}
               name='newCertificationSkill'
@@ -394,7 +395,7 @@ class AssetsService extends React.Component {
               />
               <label htmlFor="certification-file">
                 <Button variant="contained" color="primary" component="span" classes={{root: `customassetcertifjoinbutton ${classes.buttonUpload}`}}>
-                  {SHOP.assets.button_joinCertification}
+                  {ReactHtmlParser(this.props.t('SHOP.assets.button_joinCertification'))}
                 </Button>
               </label>
             </Grid>

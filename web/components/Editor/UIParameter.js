@@ -7,6 +7,9 @@ import IntegerEditor from './IntegerEditor'
 import GroupEditor from './GroupEditor'
 import PictureEditor from './PictureEditor'
 import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+
+const RESET_BUTTON_ENABLED=false
 
 const ATT_TYPES={
   'color': 'color',
@@ -52,6 +55,10 @@ class UIParameter extends React.Component {
     super(props)
   }
 
+  onResetClicked = type => {
+    this.props.onChange(type)(null)
+  }
+
   render = () => {
     const {parameter, title, onChange}=this.props
 
@@ -62,8 +69,9 @@ class UIParameter extends React.Component {
 
     return (
       <Grid container spacing={2}>
-        <Grid item xl={12}>
-          <h3 style={{color: 'black'}}>{title}</h3>
+        <Grid item xl={12} style={{display: 'flex'}}>
+          { RESET_BUTTON_ENABLED && <Button onClick={() => this.onResetClicked(parameter.type)}>Reset</Button> }
+          <h3 style={{color: 'black'}}>{title}</h3><h4>({parameter.type})</h4>
         </Grid>
 
         {
@@ -75,8 +83,9 @@ class UIParameter extends React.Component {
             let pAtt=parameter.attributes.find(a => a.name==att_name)
             pAtt = pAtt || {value: ''}
             const props={key: att_name, title: getTitle(att_name), value: pAtt.value, onChange: onChange(att_name)}
+
             switch (att_type) {
-              case 'color': return <Grid item xl={12}><ColorPicker {...props} /></Grid>
+              case 'color': return <Grid key={props} item xl={12}><ColorPicker {...props} /></Grid>
               case 'text': return <Grid item xl={12}><HtmlEditor {...props} /></Grid>
               case 'visibility': return <Grid item xl={12}><Visibility {...props} name={title}/></Grid>
               case 'integer': return <Grid item xl={12}><IntegerEditor {...props} /></Grid>

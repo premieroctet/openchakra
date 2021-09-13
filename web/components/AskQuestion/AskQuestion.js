@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from "react"
 import Grid from "@material-ui/core/Grid"
@@ -29,10 +30,10 @@ class AskQuestion extends React.Component {
     return(
       <Grid style={{textAlign: 'center'}}>
         <Grid>
-          <h2>{ASK_QUESTION.title + user.firstname + ASK_QUESTION.question}</h2>
+          <h2>{ReactHtmlParser(this.props.t('ASK_QUESTION.title')) + user.firstname + ReactHtmlParser(this.props.t('ASK_QUESTION.question'))}</h2>
         </Grid>
         <Grid>
-          <Typography>{ASK_QUESTION.info + user.firstname + ASK_QUESTION.exclamation}</Typography>
+          <Typography>{ReactHtmlParser(this.props.t('ASK_QUESTION.info')) + user.firstname + ReactHtmlParser(this.props.t('ASK_QUESTION.exclamation'))}</Typography>
         </Grid>
 
       </Grid>

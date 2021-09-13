@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -67,13 +68,13 @@ class BookingPreference extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
-          <h2 className={classes.policySizeTitle}>{SHOP.preference.title}</h2>
+          <h2 className={classes.policySizeTitle}>{ReactHtmlParser(this.props.t('SHOP.preference.title'))}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 style={{color: '#403f3f'}} className={'custombookprefesubtitle'}>{SHOP.preference.subtitle}</h3>
+          <h3 style={{color: '#403f3f'}} className={'custombookprefesubtitle'}>{ReactHtmlParser(this.props.t('SHOP.preference.subtitle'))}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h4 className={`custombookprefedelay ${classes.policySizeSubtitle}`} style={{margin: 0}}>{SHOP.preference.title_delay_prevenance} </h4>
+          <h4 className={`custombookprefedelay ${classes.policySizeSubtitle}`} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.preference.title_delay_prevenance'))} </h4>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <p className={`custombookprefexempledelay ${classes.policySizeContent}`}>{SHOP.exemple_delay}</p>
@@ -98,23 +99,23 @@ class BookingPreference extends React.Component {
                 name={'deadline_unit'}
                 select
                 variant="outlined"
-                label={SHOP.preference.units_dalay_prevenance}
+                label={ReactHtmlParser(this.props.t('SHOP.preference.units_dalay_prevenance'))}
                 onChange={this.handleChange}
                 style={{width: '100%'}}
                 classes={{root: 'custombookprefperiod'}}
               >
-                <MenuItem value="heures">{SHOP.preference.hours}</MenuItem>
-                <MenuItem value="jours">{SHOP.preference.days}</MenuItem>
-                <MenuItem value="semaines">{SHOP.preference.weeks}</MenuItem>
+                <MenuItem value="heures">{ReactHtmlParser(this.props.t('SHOP.preference.hours'))}</MenuItem>
+                <MenuItem value="jours">{ReactHtmlParser(this.props.t('SHOP.preference.days'))}</MenuItem>
+                <MenuItem value="semaines">{ReactHtmlParser(this.props.t('SHOP.preference.weeks'))}</MenuItem>
               </TextField>
             </Grid>
           </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'custombookprefbasketcontainer'}>
-          <h4 className={`custombookprefbaskettitle ${classes.policySizeSubtitle}`} style={{margin: 0}}>{SHOP.preference.title_minimum_basket}</h4>
+          <h4 className={`custombookprefbaskettitle ${classes.policySizeSubtitle}`} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.preference.title_minimum_basket'))}</h4>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'custombookprefbasketcontainer'}>
-          <p className={`custombookprefbasketsubtilte ${classes.policySizeContent}`}>{SHOP.preference.subtitle_minimum_basket}</p>
+          <p className={`custombookprefbasketsubtilte ${classes.policySizeContent}`}>{ReactHtmlParser(this.props.t('SHOP.preference.subtitle_minimum_basket'))}</p>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}} className={'custombookprefbasketcontainer'}>
           <Grid item xl={2} lg={2} md={6} sm={12} xs={12}>
@@ -124,21 +125,21 @@ class BookingPreference extends React.Component {
               style={{width: '100%'}}
               value={this.state.minimum_basket}
               classes={{root: 'custombookpreffieldbasket'}}
-              label={SHOP.preference.textfield_minimum_basket}
+              label={ReactHtmlParser(this.props.t('SHOP.preference.textfield_minimum_basket'))}
               variant="outlined"
               onChange={this.handleChange}
               InputProps={{
                 inputProps: {
                   min: 0,
                 },
-                endAdornment: <InputAdornment position="start">{SHOP.preference.unit_minimum_basket}</InputAdornment>,
+                endAdornment: <InputAdornment position="start">{ReactHtmlParser(this.props.t('SHOP.preference.unit_minimum_basket'))}</InputAdornment>,
               }}
             />
           </Grid>
         </Grid>
         {service && service.equipments.length > 0 ? <>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{SHOP.preference.title_equipments}</h4>
+            <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.preference.title_equipments'))}</h4>
           </Grid>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
             <Grid container xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>

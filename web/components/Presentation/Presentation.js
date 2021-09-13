@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import {snackBarError, snackBarSuccess} from "../../utils/notifications";
 const {setAxiosAuthentication} = require('../../utils/authentication')
@@ -131,7 +132,7 @@ class Presentation extends CompanyComponent {
   modalEditDialog = (classes) => {
     const {user, showEdition, newDescription} = this.state;
     const enabled = newDescription;
-    const placeholder = newDescription || CMP_PRESENTATION.placeholder;
+    const placeholder = newDescription || ReactHtmlParser(this.props.t('CMP_PRESENTATION.placeholder'));
 
     return (
       <Dialog
@@ -159,7 +160,7 @@ class Presentation extends CompanyComponent {
               flexDirection: 'column'
             }}>
               <Grid>
-                <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('EDIT_PROFIL.char_max', {maxchars: MAX_DESCRIPTION_LENGTH}))}</Typography>
               </Grid>
               <Grid style={{width: '100%'}}>
                 <Button

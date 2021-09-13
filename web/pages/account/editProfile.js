@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
@@ -147,10 +148,10 @@ class editProfile extends React.Component {
   sendEmail = () => {
     axios.get('/myAlfred/api/users/sendMailVerification')
       .then(() => {
-        snackBarSuccess(EDIT_PROFIL.email_send)
+        snackBarSuccess(ReactHtmlParser(this.props.t('EDIT_PROFIL.email_send')))
       })
       .catch(() => {
-        snackBarError(EDIT_PROFIL.error_email)
+        snackBarError(ReactHtmlParser(this.props.t('EDIT_PROFIL.error_email')))
       })
   };
 
@@ -159,7 +160,7 @@ class editProfile extends React.Component {
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
         this.setState({smsCodeOpen: true}, () => this.onSubmit())
-        let txt = is_production() ? EDIT_PROFIL.sms_send : `Dev : le code est ${res.data.sms_code}`
+        let txt = is_production() ? ReactHtmlParser(this.props.t('EDIT_PROFIL.sms_send')) : `Dev : le code est ${res.data.sms_code}`
         snackBarSuccess(txt)
       })
       .catch(err => {
@@ -168,7 +169,7 @@ class editProfile extends React.Component {
           smsCodeOpen: true,
           serverError: true,
         })
-        snackBarError(EDIT_PROFIL.sms_error)
+        snackBarError(ReactHtmlParser(this.props.t('EDIT_PROFIL.sms_error')))
       })
   };
 
@@ -181,30 +182,30 @@ class editProfile extends React.Component {
             smsCodeOpen: false,
             phoneConfirmed: true,
           }, () => this.onSubmit())
-          snackBarSuccess(EDIT_PROFIL.validate_phone)
+          snackBarSuccess(ReactHtmlParser(this.props.t('EDIT_PROFIL.validate_phone')))
         }
         else {
-          snackBarError(EDIT_PROFIL.incorrect_code)
+          snackBarError(ReactHtmlParser(this.props.t('EDIT_PROFIL.incorrect_code')))
         }
       })
       .catch(() =>
-        snackBarError(EDIT_PROFIL.error_verif_code),
+        snackBarError(ReactHtmlParser(this.props.t('EDIT_PROFIL.error_verif_code'))),
       )
   };
 
   dialogConfirmPhone = () => {
     return (
       <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">{EDIT_PROFIL.dialog_title_phone}</DialogTitle>
+        <DialogTitle id="form-dialog-title">{ReactHtmlParser(this.props.t('EDIT_PROFIL.dialog_title_phone'))}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{EDIT_PROFIL.dialog_text_phone}</DialogContentText>
+          <DialogContentText>{ReactHtmlParser(this.props.t('EDIT_PROFIL.dialog_text_phone'))}</DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
             label="Code"
             type="number"
-            placeholder={EDIT_PROFIL.dialog_textfield_placeholder}
+            placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.dialog_textfield_placeholder'))}
             maxLength="4"
             value={this.state.smsCode}
             onChange={e => {
@@ -216,13 +217,13 @@ class editProfile extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({smsCodeOpen: false}, () => this.onSubmit())} color="primary">
-            {EDIT_PROFIL.dialog_button_confirm_later}
+            {ReactHtmlParser(this.props.t('EDIT_PROFIL.dialog_button_confirm_later'))}
           </Button>
           <Button
             disabled={this.state.smsCode.length !== 4}
             onClick={() => this.checkSmsCode()}
             color="primary">
-            {EDIT_PROFIL.dialog_button_confirm}
+            {ReactHtmlParser(this.props.t('EDIT_PROFIL.dialog_button_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -259,7 +260,7 @@ class editProfile extends React.Component {
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2>{EDIT_PROFIL.title}</h2>
+            <h2>{ReactHtmlParser(this.props.t('EDIT_PROFIL.title'))}</h2>
           </Grid>
         </Grid>
         <Grid>
@@ -272,9 +273,9 @@ class editProfile extends React.Component {
               value={user.firstname || ''}
               onChange={this.onChangeName}
               name={'firstname'}
-              placeholder={EDIT_PROFIL.textfield_firstname}
+              placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_firstname'))}
               variant={'outlined'}
-              label={EDIT_PROFIL.textfield_firstname}
+              label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_firstname'))}
               error={!!(errors && errors.firstname)}
             />
           </Grid>
@@ -284,9 +285,9 @@ class editProfile extends React.Component {
               value={user.name || ''}
               onChange={this.onChangeName}
               name={'name'}
-              placeholder={EDIT_PROFIL.textfield_name}
+              placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_name'))}
               variant={'outlined'}
-              label={EDIT_PROFIL.textfield_name}
+              label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_name'))}
               error={!!(errors && errors.name)}
             />
           </Grid>
@@ -299,12 +300,12 @@ class editProfile extends React.Component {
               variant={'outlined'}
               onChange={this.onChange}
               name={'description'}
-              label={EDIT_PROFIL.textfield_about_me}
+              label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_about_me'))}
             />
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}
             style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
-            <Typography className={'customeditprofillimit'}>{`${MAX_DESCRIPTION_LENGTH} ${EDIT_PROFIL.char_max}`}</Typography>
+            <Typography className={'customeditprofillimit'}>{ReactHtmlParser(this.props.t('EDIT_PROFIL.char_max', {maxchars: MAX_DESCRIPTION_LENGTH}))}</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -312,7 +313,7 @@ class editProfile extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h2 className={'custometiprofiltitleinfo'} style={{whiteSpace: 'nowrap'}}>{EDIT_PROFIL.personnal_info}</h2>
+            <h2 className={'custometiprofiltitleinfo'} style={{whiteSpace: 'nowrap'}}>{ReactHtmlParser(this.props.t('EDIT_PROFIL.personnal_info'))}</h2>
           </Grid>
           <Grid container spacing={3} style={{marginTop: '10vh'}}>
             <Grid item xl={6} lg={6} xs={12} sm={12} md={12}>
@@ -323,8 +324,8 @@ class editProfile extends React.Component {
                 variant={'outlined'}
                 onChange={this.onChange}
                 name={'gender'}
-                placeholder={EDIT_PROFIL.gender}
-                label={EDIT_PROFIL.gender}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.gender'))}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.gender'))}
               >
                 <MenuItem value={'Homme'}>
                   Homme
@@ -351,9 +352,9 @@ class editProfile extends React.Component {
                 value={user.email || ''}
                 onChange={this.onChange}
                 name={'email'}
-                placeholder={EDIT_PROFIL.textfield_email_placeholder}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_email_placeholder'))}
                 variant={'outlined'}
-                label={EDIT_PROFIL.textfield_email_label}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_email_label'))}
                 error={!!(errors && errors.email)}
                 InputProps={{
                   endAdornment: userEmail === user.email && user.is_confirmed === true ? <CheckCircleOutlineIcon /> : null,
@@ -368,7 +369,7 @@ class editProfile extends React.Component {
                 disabled={user.email ? !!(userEmail === user.email && user.is_confirmed) : true}
                 classes={{root: `customeditprofilcheckemail ${classes.buttonCheckPhone}`}}
               >
-                {userEmail === user.email && user.is_confirmed === true ? EDIT_PROFIL.user_email_check : userEmail !== user.email ? EDIT_PROFIL.user_newemail_check : EDIT_PROFIL.check_your_email}
+                {userEmail === user.email && user.is_confirmed === true ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_email_check')) : userEmail !== user.email ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_newemail_check')) : ReactHtmlParser(this.props.t('EDIT_PROFIL.check_your_email'))}
               </Button>
             </Grid>
             <Grid item xs={12} lg={6} md={12} sm={12} xl={6}>
@@ -377,9 +378,9 @@ class editProfile extends React.Component {
                 value={this.state.phone || ''}
                 onChange={this.onChangePhone}
                 name={'phone'}
-                placeholder={EDIT_PROFIL.textfield_phone}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_phone'))}
                 variant={'outlined'}
-                label={EDIT_PROFIL.textfield_phone}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_phone'))}
                 InputProps={{
                   endAdornment: phone === user.phone && user.phone_confirmed === true ? <CheckCircleOutlineIcon /> : null,
                 }}
@@ -393,7 +394,7 @@ class editProfile extends React.Component {
                 disabled={user.phone ? !!(phone === user.phone && user.phone_confirmed || user.phone.length !== 11) : true}
                 classes={{root: `customeditprofilcheckphone ${classes.buttonCheckPhone}`}}
               >
-                {phone === user.phone && user.phone_confirmed === true ? EDIT_PROFIL.user_phone_check : phone !== user.phone ? EDIT_PROFIL.user_newphone_check : EDIT_PROFIL.check_your_phone}
+                {phone === user.phone && user.phone_confirmed === true ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_phone_check')) : phone !== user.phone ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_newphone_check')) : ReactHtmlParser(this.props.t('EDIT_PROFIL.check_your_phone'))}
               </Button>
             </Grid>
           </Grid>
@@ -403,7 +404,7 @@ class editProfile extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h2 className={'customeditprofillasttitle'}>{EDIT_PROFIL.user_info_options}</h2>
+            <h2 className={'customeditprofillasttitle'}>{ReactHtmlParser(this.props.t('EDIT_PROFIL.user_info_options'))}</h2>
           </Grid>
           <Grid container style={{marginTop: '10vh'}} spacing={3}>
             <Grid item xs={12} lg={12} md={12} sm={12} className={'customeditprofildiploma'}>
@@ -412,9 +413,9 @@ class editProfile extends React.Component {
                 value={user.diplomes || ''}
                 onChange={this.onChangeName}
                 name={'diplomes'}
-                placeholder={EDIT_PROFIL.textfield_user_diploma}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_user_diploma'))}
                 variant={'outlined'}
-                label={EDIT_PROFIL.textfield_user_diploma}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_user_diploma'))}
               />
             </Grid>
             <Grid item xs={12} lg={12} md={12} sm={12} className={'customeditprofilschool'}>
@@ -423,9 +424,9 @@ class editProfile extends React.Component {
                 value={user.school || ''}
                 onChange={this.onChangeName}
                 name={'school'}
-                placeholder={EDIT_PROFIL.textfield_user_school}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_user_school'))}
                 variant={'outlined'}
-                label={EDIT_PROFIL.textfield_user_school}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_user_school'))}
               />
             </Grid>
             <Grid item xs={12} lg={12} md={12} sm={12} className={'customeditprofiljob'}>
@@ -434,9 +435,9 @@ class editProfile extends React.Component {
                 value={user.job || ''}
                 onChange={this.onChangeName}
                 name={'job'}
-                placeholder={EDIT_PROFIL.textfield_user_job}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_user_job'))}
                 variant={'outlined'}
-                label={EDIT_PROFIL.textfield_user_job}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_user_job'))}
               />
             </Grid>
           </Grid>
@@ -452,7 +453,7 @@ class editProfile extends React.Component {
               color="primary"
               classes={{root: `customeditprofilsave ${classes.button}`}}
             >
-              {EDIT_PROFIL.save_button}
+              {ReactHtmlParser(this.props.t('EDIT_PROFIL.save_button'))}
             </Button>
           </Grid>
         </Grid>

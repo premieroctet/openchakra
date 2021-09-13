@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
@@ -113,7 +114,7 @@ class notifications extends React.Component {
 
     axios.put('/myAlfred/api/users/account/notifications', data)
       .then(() => {
-        snackBarSuccess(NOTIFICATIONS.snackbar_account_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('NOTIFICATIONS.snackbar_account_update')))
       })
       .catch(err => console.error(err))
   };
@@ -123,10 +124,10 @@ class notifications extends React.Component {
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'customtitlenotif'}>{NOTIFICATIONS.my_notif}</h2>
+            <h2 className={'customtitlenotif'}>{ReactHtmlParser(this.props.t('NOTIFICATIONS.my_notif'))}</h2>
           </Grid>
           <Grid>
-            <Typography className={'customsubtitlenotif'}>{NOTIFICATIONS.subtitle}</Typography>
+            <Typography className={'customsubtitlenotif'}>{ReactHtmlParser(this.props.t('NOTIFICATIONS.subtitle'))}</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -135,14 +136,14 @@ class notifications extends React.Component {
         <Grid>
           <Grid>
             <Grid>
-              <h2 className={'customnotifmessage'}>{NOTIFICATIONS.messages_title}</h2>
+              <h2 className={'customnotifmessage'}>{ReactHtmlParser(this.props.t('NOTIFICATIONS.messages_title'))}</h2>
             </Grid>
             <Grid>
-              <Typography className={'customnotifmessagesubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{NOTIFICATIONS.receive_messages}</Typography>
+              <Typography className={'customnotifmessagesubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('NOTIFICATIONS.receive_messages'))}</Typography>
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.email}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.email'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -164,7 +165,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.push_notif}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.push_notif'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -187,7 +188,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.sms_notif}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.sms_notif'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -214,16 +215,16 @@ class notifications extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <h2 className={'customnotifraptitle'}>{NOTIFICATIONS.rappel_notif}</h2>
+              <h2 className={'customnotifraptitle'}>{ReactHtmlParser(this.props.t('NOTIFICATIONS.rappel_notif'))}</h2>
             </Grid>
             <Grid>
               <Typography className={'customnotifrapsubtitle'}>
-                {NOTIFICATIONS.rappel_notif_tarif}
+                {ReactHtmlParser(this.props.t('NOTIFICATIONS.rappel_notif_tarif'))}
               </Typography>
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.email}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.email'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -246,7 +247,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.push_notif}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.push_notif'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -269,7 +270,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.sms_notif}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.sms_notif'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -296,16 +297,16 @@ class notifications extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <h2 className={'customnotifpromtitle'}>{NOTIFICATIONS.promo_title}</h2>
+              <h2 className={'customnotifpromtitle'}>{ReactHtmlParser(this.props.t('NOTIFICATIONS.promo_title'))}</h2>
             </Grid>
             <Grid>
               <Typography className={'customnotifpromsubtitle'}>
-                {NOTIFICATIONS.coupon_title}
+                {ReactHtmlParser(this.props.t('NOTIFICATIONS.coupon_title'))}
               </Typography>
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.email}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.email'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -328,7 +329,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.push_notif}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.push_notif'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -351,7 +352,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.sms_notif}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.sms_notif'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -374,7 +375,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.phone}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.phone'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -401,16 +402,16 @@ class notifications extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <h2 className={'customnotifcommutitle'}>{NOTIFICATIONS.commu_title}</h2>
+              <h2 className={'customnotifcommutitle'}>{ReactHtmlParser(this.props.t('NOTIFICATIONS.commu_title'))}</h2>
             </Grid>
             <Grid>
               <Typography className={'customnotifcommusubtitle'}>
-                {NOTIFICATIONS.presta_service}
+                {ReactHtmlParser(this.props.t('NOTIFICATIONS.presta_service'))}
               </Typography>
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.email}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.email'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -433,7 +434,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.push_notif}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.push_notif'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -456,7 +457,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.sms_notif}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.sms_notif'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -483,16 +484,16 @@ class notifications extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <h2 className={'customnotifassisttitle'}>{NOTIFICATIONS.assistance_account} </h2>
+              <h2 className={'customnotifassisttitle'}>{ReactHtmlParser(this.props.t('NOTIFICATIONS.assistance_account'))} </h2>
             </Grid>
             <Grid>
               <Typography className={'customnotifassistsubtitle'}>
-                {NOTIFICATIONS.security_conf}
+                {ReactHtmlParser(this.props.t('NOTIFICATIONS.security_conf'))}
               </Typography>
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.email}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.email'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -515,7 +516,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.push_notif}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.push_notif'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -538,7 +539,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{NOTIFICATIONS.sms_notif}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.sms_notif'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch

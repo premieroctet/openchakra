@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import '../../static/assets/css/custom.css'
 
 import {withStyles} from '@material-ui/core/styles'
@@ -185,7 +186,7 @@ class Messages extends BasePage {
               </Grid>
               <Grid>
                 <Typography style={{textAlign: 'center', whiteSpace: 'nowrap'}}>
-                  {this.state.lastMessageDate ? MESSAGES.last_message + moment(this.state.lastMessageDate).calendar() : MESSAGES.no_message}
+                  {this.state.lastMessageDate ? ReactHtmlParser(this.props.t('MESSAGES.last_message')) + moment(this.state.lastMessageDate).calendar() : ReactHtmlParser(this.props.t('MESSAGES.no_message'))}
                 </Typography>
               </Grid>
             </Grid>
@@ -206,7 +207,7 @@ class Messages extends BasePage {
         <DialogActions classes={{root: classes.dialogActionRoot}}>
           <Grid>
             <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="standard-adornment">{MESSAGES.dialog_title_content}</InputLabel>
+              <InputLabel htmlFor="standard-adornment">{ReactHtmlParser(this.props.t('MESSAGES.dialog_title_content'))}</InputLabel>
               <OutlinedInput
                 id="standard-adornment-password"
                 type={'text'}
@@ -214,7 +215,7 @@ class Messages extends BasePage {
                 value={this.state.message}
                 onChange={this.handleChangeMessage}
                 // onKeyDown={e => {if (e.key === 'Enter') this.handleSubmitMessage(e)}}
-                label={MESSAGES.label}
+                label={ReactHtmlParser(this.props.t('MESSAGES.label'))}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -242,13 +243,13 @@ class Messages extends BasePage {
     const relatives = this.getRelatives()
     const countChats=relatives.length
 
-    const msg_descr = countChats===0 ? MESSAGES.no_conversation : countChats === 1 ? MESSAGES.one_conversation : MESSAGES.you_got + countChats + MESSAGES.conversation
+    const msg_descr = countChats===0 ? ReactHtmlParser(this.props.t('MESSAGES.no_conversation')) : countChats === 1 ? ReactHtmlParser(this.props.t('MESSAGES.one_conversation')) : ReactHtmlParser(this.props.t('MESSAGES.you_got')) + countChats + MESSAGES.conversation
 
     return(
       <Grid style={{width: '100%'}}>
         <Grid>
           <Grid>
-            <h2 className={'custommessagestitle'}>{MESSAGES.my_messages}</h2>
+            <h2 className={'custommessagestitle'}>{ReactHtmlParser(this.props.t('MESSAGES.my_messages'))}</h2>
           </Grid>
           <Grid>
             <Typography>{msg_descr}</Typography>

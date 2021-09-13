@@ -14,6 +14,7 @@ createCSSConfiguration = items => {
       let className=config.classname
       let name=attribute.name
       let value=attribute.value
+      let extra_attr=null
       console.log(`Generating ${className} ${name} ${value}`)
       if (name=='content') {
         if (config.type=='logo') {
@@ -32,6 +33,10 @@ createCSSConfiguration = items => {
       if (name=='magnify-background-color') {
         className=`${className}Magnify`
         name='background-color'
+      }
+      if (name=='background-image') {
+        value=`url("/${value}")`
+        extra_attr={name: 'background-repeat', value: 'no-repeat'}
       }
       if (name=='info-color') {
         className=`${className} label`
@@ -53,6 +58,9 @@ createCSSConfiguration = items => {
       }
       if (!(name=='display' && value=='block')) {
         cssClasses[className][name]= value
+        if (extra_attr) {
+          cssClasses[className][extra_attr.name]=extra_attr.value
+        }
       }
     })
   })

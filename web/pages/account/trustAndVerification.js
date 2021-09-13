@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 const {snackBarSuccess} = require('../../utils/notifications')
@@ -226,7 +227,7 @@ class trustAndVerification extends React.Component {
     }
     axios.post('/myAlfred/api/users/profile/idCard', formData, config)
       .then(() => {
-        snackBarSuccess(TRUST_VERIFICATION.snackbar_id_add)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_id_add')))
         this.componentDidMount()
       })
       .catch(err => {
@@ -244,7 +245,7 @@ class trustAndVerification extends React.Component {
     }
     axios.post('/myAlfred/api/users/profile/idCard/addVerso', formData, config)
       .then(() => {
-        snackBarSuccess(TRUST_VERIFICATION.snackbar_card_add)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_card_add')))
         this.componentDidMount()
       }).catch()
   }
@@ -263,7 +264,7 @@ class trustAndVerification extends React.Component {
     }
     axios.put('/myAlfred/api/shop/editStatus', newStatus)
       .then(() => {
-        snackBarSuccess(TRUST_VERIFICATION.snackbar_status_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_status_update')))
         const data = {status: this.state.professional ? 'Pro' : 'Particulier'}
         return axios.put('/myAlfred/api/serviceUser/editStatus', data)
       })
@@ -274,7 +275,7 @@ class trustAndVerification extends React.Component {
           const config = {headers: {'content-type': 'multipart/form-data'}}
           axios.post('/myAlfred/api/users/profile/registrationProof/add', formData, config)
             .then(() => {
-              snackBarSuccess(TRUST_VERIFICATION.snackbar_doc_add)
+              snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_doc_add')))
               this.componentDidMount()
             })
             .catch(err => console.error(err))
@@ -287,13 +288,13 @@ class trustAndVerification extends React.Component {
       this.setState({
         open: true,
         deleteCb: () => this.deleteRecto(true),
-        deleteConfirmMessage: I18N.ID_CARD_CONFIRM_DELETION,
+        deleteConfirmMessage: I18N.ReactHtmlParser(this.props.t('ID_CARD_CONFIRM_DELETION')),
       })
     }
     else {
       axios.delete('/myAlfred/api/users/profile/idCard/recto')
         .then(() => {
-          snackBarSuccess(TRUST_VERIFICATION.snackbar_id_delete)
+          snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_id_delete')))
           this.componentDidMount()
         })
         .catch(err => {
@@ -307,13 +308,13 @@ class trustAndVerification extends React.Component {
       this.setState({
         open: true,
         deleteCb: () => this.deleteRegistrationProof(true),
-        deleteConfirmMessage: I18N.REGISTRATION_PROOF_CONFIRM_DELETION,
+        deleteConfirmMessage: I18N.ReactHtmlParser(this.props.t('REGISTRATION_PROOF_CONFIRM_DELETION')),
       })
     }
     else {
       axios.delete('/myAlfred/api/users/profile/registrationProof')
         .then(() => {
-          snackBarSuccess(TRUST_VERIFICATION.snackbar_doc_delete)
+          snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_doc_delete')))
           this.componentDidMount()
         })
         .catch(err => {
@@ -350,7 +351,7 @@ class trustAndVerification extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{TRUST_VERIFICATION.dialog_delete_title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.dialog_delete_title'))}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {this.state.deleteConfirmMessage}
@@ -358,10 +359,10 @@ class trustAndVerification extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">
-            {TRUST_VERIFICATION.dialog_delete_cancel}
+            {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.dialog_delete_cancel'))}
           </Button>
           <Button onClick={this.handleDelete} classes={{root: classes.cancelButton}}>
-            {TRUST_VERIFICATION.dialog_delete_confirm}
+            {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.dialog_delete_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -374,10 +375,10 @@ class trustAndVerification extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'customtrustandveriftitle'}>{TRUST_VERIFICATION.title}</h2>
+            <h2 className={'customtrustandveriftitle'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.title'))}</h2>
           </Grid>
           <Grid>
-            <Typography className={'customtrustandverifsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{TRUST_VERIFICATION.subtitle}</Typography>
+            <Typography className={'customtrustandverifsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.subtitle'))}</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -385,16 +386,16 @@ class trustAndVerification extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h3 className={'customtrustandverifidtitle'}>{TRUST_VERIFICATION.identity_title}</h3>
+            <h3 className={'customtrustandverifidtitle'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.identity_title'))}</h3>
           </Grid>
           <Grid>
-            <Typography className={'customtrustandverifidsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{TRUST_VERIFICATION.identity_add_title}</Typography>
+            <Typography className={'customtrustandverifidsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.identity_add_title'))}</Typography>
           </Grid>
         </Grid>
         <Grid>
           <Grid className={classes.searchFilterRightContainer}>
             <Grid className={classes.searchFilterRightLabel}>
-              <h3 className={'customtrustandverifdocumenttitle'}>{TRUST_VERIFICATION.document_type}</h3>
+              <h3 className={'customtrustandverifdocumenttitle'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.document_type'))}</h3>
             </Grid>
             <Grid>
               <FormControl>
@@ -412,10 +413,10 @@ class trustAndVerification extends React.Component {
                   classes={{select: classes.searchSelectPadding}}
                 >
                   <MenuItem value={'passeport'}>
-                    {TRUST_VERIFICATION.passport}
+                    {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.passport'))}
                   </MenuItem>
                   <MenuItem value={'identite'}>
-                    {TRUST_VERIFICATION.id_card}
+                    {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.id_card'))}
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -432,7 +433,7 @@ class trustAndVerification extends React.Component {
                 onChange={this.onRectoChange}
                 onDelete={() => this.deleteRecto(false)}
                 disabled={!this.state.type}
-                title={TRUST_VERIFICATION.download_recto}
+                title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_recto'))}
               />
               :
               null
@@ -448,7 +449,7 @@ class trustAndVerification extends React.Component {
                   onChange={this.onVersoChange}
                   onDelete={() => this.deleteRecto(false)}
                   disabled={this.state.type !== 'identite'}
-                  title={TRUST_VERIFICATION.download_verso}
+                  title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_verso'))}
                 />
                 :
                 null
@@ -456,13 +457,13 @@ class trustAndVerification extends React.Component {
             {this.state.id_recto === null && this.state.id_verso !== null ?
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
                 <Button onClick={() => this.addVerso()} variant="contained" className={`customtrustandverifsaveverso ${classes.buttonSave}`}>
-                  {TRUST_VERIFICATION.save_verso}
+                  {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.save_verso'))}
                 </Button>
               </Grid>
               :
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
                 <Button onClick={this.onSubmit} variant="contained" className={`customtrustandverifsavedoc ${classes.buttonSave}`}>
-                  {TRUST_VERIFICATION.save_button}
+                  {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.save_button'))}
                 </Button>
               </Grid>
             }
@@ -475,7 +476,7 @@ class trustAndVerification extends React.Component {
           {this.state.alfred ?
             <Grid style={{marginBottom: '12vh'}}>
               <Grid>
-                <h3 className={'customtrustandverifstatustitle'}>{TRUST_VERIFICATION.your_status}</h3>
+                <h3 className={'customtrustandverifstatustitle'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.your_status'))}</h3>
               </Grid>
               <Grid>
                 <Grid>
@@ -492,7 +493,7 @@ class trustAndVerification extends React.Component {
                         color="primary"
                       />
                     }
-                    label={TRUST_VERIFICATION.particular}
+                    label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.particular'))}
                   />
                 </Grid>
                 {!this.state.professional ?
@@ -500,15 +501,15 @@ class trustAndVerification extends React.Component {
                     <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[0]}/>
-                        <Typography className={'customtrustandverifcesu'}>{TRUST_VERIFICATION.declare_cesu}</Typography>
+                        <Typography className={'customtrustandverifcesu'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.declare_cesu'))}</Typography>
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[1]}/>
-                        <Typography className={'customtrustandverifces'}>{TRUST_VERIFICATION.declare_ces}</Typography>
+                        <Typography className={'customtrustandverifces'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.declare_ces'))}</Typography>
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[2]}/>
-                        <Typography className={'customtrustandverifnocesu'}>{TRUST_VERIFICATION.no_cesu}</Typography>
+                        <Typography className={'customtrustandverifnocesu'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.no_cesu'))}</Typography>
                       </Grid>
                     </RadioGroup>
                   </Grid>
@@ -528,7 +529,7 @@ class trustAndVerification extends React.Component {
                         color="primary"
                       />
                     }
-                    label={TRUST_VERIFICATION.professional}
+                    label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.professional'))}
                   />
                 </Grid>
               </Grid>
@@ -536,7 +537,7 @@ class trustAndVerification extends React.Component {
                 <Grid container style={{marginTop: '5vh'}}>
                   <Grid item xs={12} className={'customtrustandverifcis'}>
                     <ButtonSwitch
-                      label={TRUST_VERIFICATION.eligible_credit}
+                      label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.eligible_credit'))}
                       onChange={this.onCISChange}
                       checked={this.state.cis}
                     />
@@ -549,13 +550,13 @@ class trustAndVerification extends React.Component {
                   </Grid>
                   <Grid>
                     <Grid style={{marginTop: '10vh'}}>
-                      <h3 className={'customtrustandverifdocimma'}>{TRUST_VERIFICATION.document_title}</h3>
+                      <h3 className={'customtrustandverifdocimma'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.document_title'))}</h3>
                     </Grid>
                     <Typography className={'customtrustandverifpdf'} style={{color: 'rgba(39,37,37,35%)'}}>
-                      {TRUST_VERIFICATION.insert_document}<br/>
-                      {TRUST_VERIFICATION.pdf_info}
+                      {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insert_document'))}<br/>
+                      {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.pdf_info'))}
                       <a className={'customtrustandveriflink'} color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
-                      >{TRUST_VERIFICATION.insee_link}</a>
+                      >{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insee_link'))}</a>
                     </Typography>
                   </Grid>
                   <DocumentEditor
@@ -565,7 +566,7 @@ class trustAndVerification extends React.Component {
                     uploaded_file={this.state.registration_proof_file}
                     onChange={this.onRegistrationProofChanged}
                     onDelete={() => this.deleteRegistrationProof(false)}
-                    title={TRUST_VERIFICATION.download_document_imma}
+                    title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_document_imma'))}
                   />
                 </Grid>
                 :
@@ -574,7 +575,7 @@ class trustAndVerification extends React.Component {
               <Grid style={{marginTop: '10vh'}}>
                 <Button variant="contained" className={`customtrustandverifsavebutton ${classes.buttonSave}`}
                   onClick={this.editSiret} disabled={!this.statusSaveEnabled()}>
-                  {TRUST_VERIFICATION.save_document_imma}
+                  {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.save_document_imma'))}
                 </Button>
               </Grid>
             </Grid>

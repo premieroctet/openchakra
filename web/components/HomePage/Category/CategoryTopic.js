@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -33,16 +34,16 @@ class CategoryTopic extends React.Component {
             </Grid>
             <Grid className={classes.categoryTextContainer}>
               <Grid>
-                <p className={`customslideh1 ${classes.categoryTitle}`}>{CATEGORY.title}</p>
+                <p className={`customslideh1 ${classes.categoryTitle}`}>{ReactHtmlParser(this.props.t('CATEGORY.title'))}</p>
               </Grid>
               <Grid>
-                <p className={`customslidetext ${classes.categoryText}`}>{CATEGORY.text}</p>
+                <p className={`customslidetext ${classes.categoryText}`}>{ReactHtmlParser(this.props.t('CATEGORY.text'))}</p>
               </Grid>
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnXs}>
             <Button variant={'outlined'} className={'customcatbutton'} classes={{root: `${classes.categoryButton}`}} onClick={() => Router.push('/search')}>
-              {CATEGORY.button}
+              {ReactHtmlParser(this.props.t('CATEGORY.button'))}
             </Button>
           </Grid>
         </Grid>
@@ -62,7 +63,7 @@ class CategoryTopic extends React.Component {
         </Grid>
         <Grid className={classes.buttonDiscoverMobile}>
           <Button variant={'outlined'} className={'customcatbutton'} classes={{root: `customcatbutton ${classes.categoryButton}`}} onClick={() => Router.push('/search')}>
-            {CATEGORY.button}
+            {ReactHtmlParser(this.props.t('CATEGORY.button'))}
           </Button>
         </Grid>
       </Grid>

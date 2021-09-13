@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
@@ -337,7 +338,7 @@ class MobileNavbar extends React.Component{
                       xs={12}
                       classes={{root: classes.modalMobileSearchBartTextFieldWhereP}}
                       value={this.state.city}
-                      label={SEARCHBAR.where}
+                      label={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
                       variant={'outlined'}
                       InputProps={{
                         inputComponent: (inputref) => {

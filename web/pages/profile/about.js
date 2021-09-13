@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
 const {snackBarSuccess} = require('../../utils/notifications')
@@ -195,7 +196,7 @@ class ProfileAbout extends CompanyComponent {
   modalEditDialog = classes => {
     const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, website} = this.state
     const address = newAddress || (user ? user.billing_address : null)
-    const placeholder = address ? `${address.city}, ${address.country}` : ABOUT.address_placeholder
+    const placeholder = address ? `${address.city}, ${address.country}` : ReactHtmlParser(this.props.t('ABOUT.address_placeholder'))
 
     return (
       <Dialog
@@ -208,8 +209,8 @@ class ProfileAbout extends CompanyComponent {
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}/>
         <DialogContent>
           <Topic
-            titleTopic={this.isModeCompany() ? ABOUT.b2b_title_topic : ABOUT.title_topic}
-            titleSummary={this.isModeCompany() ? ABOUT.b2b_titlesummary_topic : ABOUT.titlesummary_topic}
+            titleTopic={this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.b2b_title_topic')) : ReactHtmlParser(this.props.t('ABOUT.title_topic'))}
+            titleSummary={this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.b2b_titlesummary_topic')) : ReactHtmlParser(this.props.t('ABOUT.titlesummary_topic'))}
             underline={true}/>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -218,7 +219,7 @@ class ProfileAbout extends CompanyComponent {
                   fontWeight: 'bold',
                   textTransform: 'initial',
                 }}>
-                  {this.isModeCompany() ? ABOUT.website : ABOUT.label_address}
+                  {this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.website')) : ReactHtmlParser(this.props.t('ABOUT.label_address'))}
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -227,7 +228,7 @@ class ProfileAbout extends CompanyComponent {
                     <TextField
                       name={'website'}
                       variant={'outlined'}
-                      label={ABOUT.textfield_website}
+                      label={ReactHtmlParser(this.props.t('ABOUT.textfield_website'))}
                       value={website || ''}
                       style={{width: '100%'}}
                       onChange={this.handleChange}
@@ -256,7 +257,7 @@ class ProfileAbout extends CompanyComponent {
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial',
-                  }}>{this.isModeCompany() ? ABOUT.size_company : ABOUT.spoken_languages}</h3>
+                  }}>{this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.size_company')) : ReactHtmlParser(this.props.t('ABOUT.spoken_languages'))}</h3>
               </Grid>
               <Grid item xs={12}>
                 {
@@ -272,19 +273,19 @@ class ProfileAbout extends CompanyComponent {
                       isMulti
                       isSearchable
                       closeMenuOnSelect={false}
-                      placeholder={ABOUT.textfield_languages}
-                      noOptionsMessage={() => ABOUT.option_message}
+                      placeholder={ReactHtmlParser(this.props.t('ABOUT.textfield_languages'))}
+                      noOptionsMessage={() => ReactHtmlParser(this.props.t('ABOUT.option_message'))}
                     /> :
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-outlined-label">{ABOUT.label_size_company}</InputLabel>
+                      <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('ABOUT.label_size_company'))}</InputLabel>
                       <Select
                         labelId="demo-simple-select-outlined-label"
                         id="demo-simple-select-outlined"
                         value={sizeCompany}
                         onChange={this.handleChange}
-                        label={ABOUT.textfield_size_company}
+                        label={ReactHtmlParser(this.props.t('ABOUT.textfield_size_company'))}
                         name={'sizeCompany'}
-                        placeholder={ABOUT.textfield_size_company}
+                        placeholder={ReactHtmlParser(this.props.t('ABOUT.textfield_size_company'))}
                       >
                         {
                           Object.keys(COMPANY_SIZE).map((res, index) => (
@@ -304,19 +305,19 @@ class ProfileAbout extends CompanyComponent {
                       style={{
                         fontWeight: 'bold',
                         textTransform: 'initial',
-                      }}>{ABOUT.b2b_activity}</h3>
+                      }}>{ReactHtmlParser(this.props.t('ABOUT.b2b_activity'))}</h3>
                   </Grid>
                   <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-outlined-label">{ABOUT.b2b_activity_label}</InputLabel>
+                      <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('ABOUT.b2b_activity_label'))}</InputLabel>
                       <Select
                         labelId="demo-simple-select-outlined-label"
                         id="demo-simple-select-outlined"
                         value={activityArea}
                         onChange={this.handleChange}
-                        label={ABOUT.b2b_activity_label}
+                        label={ReactHtmlParser(this.props.t('ABOUT.b2b_activity_label'))}
                         name={'activityArea'}
-                        placeholder={ABOUT.b2b_activity_label}
+                        placeholder={ReactHtmlParser(this.props.t('ABOUT.b2b_activity_label'))}
                       >
                         {
                           Object.keys(COMPANY_ACTIVITY).map((res, index) => (
@@ -341,7 +342,7 @@ class ProfileAbout extends CompanyComponent {
                   color={'primary'}
                   disabled={!this.isModeCompany() ? enabledEdition : false}
                 >
-                  {ABOUT.button_update}
+                  {ReactHtmlParser(this.props.t('ABOUT.button_update'))}
                 </Button>
               </Grid>
             </Grid>
@@ -431,7 +432,7 @@ class ProfileAbout extends CompanyComponent {
                   </Grid>
                   <Grid style={{margin: 3}}/>
                   <Grid>
-                    <Typography style={{color: 'black'}}>{ABOUT.alfred_certifed}</Typography>
+                    <Typography style={{color: 'black'}}>{ReactHtmlParser(this.props.t('ABOUT.alfred_certifed'))}</Typography>
                   </Grid>
                   <Grid>
                     <CheckCircleOutlineIcon/>

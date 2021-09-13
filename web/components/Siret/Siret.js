@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
@@ -169,7 +170,7 @@ class Siret extends React.Component {
           <Grid container spacing={3}>
             <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
               <ButtonSwitch
-                label={<Typography className={classes.policySizeContent}>{SHOP.creation.is_professional_vat_subject}</Typography>}
+                label={<Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_professional_vat_subject'))}</Typography>}
                 onChange={this.onVatSubjectChanged}
                 name={'vat_subject'}
                 checked={this.state.vat_subject}/>
@@ -179,7 +180,7 @@ class Siret extends React.Component {
                 <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                   <TextField
                     id="outlined-basic"
-                    label={SHOP.creation.textfield_ntva}
+                    label={ReactHtmlParser(this.props.t('SHOP.creation.textfield_ntva'))}
                     variant="outlined"
                     onChange={this.onChange}
                     name={'vat_number'}

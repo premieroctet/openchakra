@@ -1,4 +1,6 @@
+const {getKeys}=require('../../../../utils/i18n_extraction')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
@@ -15,7 +17,6 @@ const validateCategoryInput = require('../../../validation/category')
 const validateServiceInput = require('../../../validation/service')
 const {addIdIfRequired} = require('../../../utils/mangopay')
 const multer = require('multer')
-const path = require('path')
 const {normalizePhone, bufferToString, normalize, isMobilePhone} = require('../../../../utils/text')
 const {counterArray} = require('../../../../utils/converters')
 const {ADMIN} = require('../../../../utils/consts')
@@ -3011,6 +3012,12 @@ router.put('/uiConfiguration/:id', passport.authenticate('admin', {session: fals
       console.error(err)
       res.status(500).json(err)
     })
+})
+
+router.get('/i18n_keys', (req, res) => {
+  console.log(getKeys())
+  let keys=getKeys()
+  res.send(keys.join('\n'))
 })
 
 module.exports = router

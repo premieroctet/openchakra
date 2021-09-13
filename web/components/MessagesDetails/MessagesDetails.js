@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
@@ -162,7 +163,7 @@ class MessagesDetails extends React.Component {
 
   grantNotificationPermission = () => {
     if (!('Notification' in window)) {
-      alert(MESSAGE_DETAIL.browser_compatibility)
+      alert(ReactHtmlParser(this.props.t('MESSAGE_DETAIL.browser_compatibility')))
     }
 
     if (
@@ -172,7 +173,7 @@ class MessagesDetails extends React.Component {
       try {
         Notification.requestPermission().then(result => {
           if (result === 'granted') {
-            new Notification(MESSAGE_DETAIL.notif)
+            new Notification(ReactHtmlParser(this.props.t('MESSAGE_DETAIL.notif')))
           }
         })
       }
@@ -180,7 +181,7 @@ class MessagesDetails extends React.Component {
         if (err instanceof TypeError) {
           Notification.requestPermission().then(result => {
             if (result === 'granted') {
-              new Notification(MESSAGE_DETAIL.notif)
+              new Notification(ReactHtmlParser(this.props.t('MESSAGE_DETAIL.notif')))
             }
           })
         }
@@ -220,7 +221,7 @@ class MessagesDetails extends React.Component {
                   <Divider/>
                 </Grid>
                 <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop: '3vh'}}>
-                  <Typography>{MESSAGE_DETAIL.new_messages}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('MESSAGE_DETAIL.new_messages'))}</Typography>
                 </Grid>
                 {this.state.messages.map((message, index) => {
                   return (

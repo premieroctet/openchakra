@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import moment from 'moment'
@@ -103,8 +104,8 @@ const SCHEDULE = {
   is_valid: parent => !(parent.scheduleDrawer.current && parent.scheduleDrawer.current.isDirty()),
   component: parent => <DrawerAndSchedule
     availabilities={parent.state.availabilities}
-    title={I18N.SCHEDULE_TITLE}
-    subtitle={I18N.SCHEDULE_SUBTITLE}
+    title={I18N.ReactHtmlParser(this.props.t('SCHEDULE_TITLE'))}
+    subtitle={I18N.ReactHtmlParser(this.props.t('SCHEDULE_SUBTITLE'))}
     nbSchedule={3}
     availabilityUpdate={parent.availabilityUpdate}
     availabilityCreated={parent.availabilityCreated}

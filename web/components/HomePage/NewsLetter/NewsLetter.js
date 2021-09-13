@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -128,10 +129,10 @@ class NewsLetter extends React.Component {
         <Grid className={classes.newsLetterMainContainer}>
           <Grid className={classes.newsLetterLeftContainer}>
             <Grid>
-              <h2 className={`customnewsletterh2 ${classes.newsLetterTitle}`}>{NEWS_LETTER.title}</h2>
+              <h2 className={`customnewsletterh2 ${classes.newsLetterTitle}`}>{ReactHtmlParser(this.props.t('NEWS_LETTER.title'))}</h2>
             </Grid>
             <Grid>
-              <p className={`customnewslettertext ${classes.newsLetterSubTitle}`}>{NEWS_LETTER.text}</p>
+              <p className={`customnewslettertext ${classes.newsLetterSubTitle}`}>{ReactHtmlParser(this.props.t('NEWS_LETTER.text'))}</p>
             </Grid>
           </Grid>
           <Grid className={classes.newsLetterRightContainer}>
@@ -157,7 +158,7 @@ class NewsLetter extends React.Component {
             </Grid>
             <Grid className={classes.newsLetterContainer}>
               <Grid>
-                <Button style={{width: '100%'}} variant={'outlined'} classes={{root: `customnewsletterbutton ${classes.newsLetterButton}`}} onClick={this.handleSubmit}>{NEWS_LETTER.button}</Button>
+                <Button style={{width: '100%'}} variant={'outlined'} classes={{root: `customnewsletterbutton ${classes.newsLetterButton}`}} onClick={this.handleSubmit}>{ReactHtmlParser(this.props.t('NEWS_LETTER.button'))}</Button>
               </Grid>
             </Grid>
           </Grid>

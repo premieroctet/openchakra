@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react'
@@ -126,10 +127,10 @@ class SelectPrestation extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
-          <h2 className={`customselectprestatitle ${classes.policySizeTitle}`}>{SHOP.parameter.title}</h2>
+          <h2 className={`customselectprestatitle ${classes.policySizeTitle}`}>{ReactHtmlParser(this.props.t('SHOP.parameter.title'))}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3 className={'customsselectprestasubtitle'} style={{color: '#403f3f'}}>{SHOP.parameter.subtitle}</h3>
+          <h3 className={'customsselectprestasubtitle'} style={{color: '#403f3f'}}>{ReactHtmlParser(this.props.t('SHOP.parameter.subtitle'))}</h3>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -142,7 +143,7 @@ class SelectPrestation extends React.Component {
                 className={classes.margin}
               >
                 <AddIcon className={classes.extendedIcon}/>
-                <Typography className={'customsettingservicecustombutton'} style={{textTransform: 'initial', color: 'white'}}>{SHOP.parameter.presta_perso}</Typography>
+                <Typography className={'customsettingservicecustombutton'} style={{textTransform: 'initial', color: 'white'}}>{ReactHtmlParser(this.props.t('SHOP.parameter.presta_perso'))}</Typography>
               </Fab>
             </Grid>
             {Object.keys(this.state.grouped).map((fltr, i) => {
@@ -194,10 +195,10 @@ class SelectPrestation extends React.Component {
             <Divider/>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <h3 style={{color: '#696767'}}>{SHOP.parameter.titleIsPro}</h3>
+            <h3 style={{color: '#696767'}}>{ReactHtmlParser(this.props.t('SHOP.parameter.titleIsPro'))}</h3>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Typography>{SHOP.parameter.descriptionIsPro} <a href='/static/assets/avocotes/guide_boutique.pdf' target='_blank'>Cliquez ici pour consulter la notice d'installation.</a></Typography>
+            <Typography>{ReactHtmlParser(this.props.t('SHOP.parameter.descriptionIsPro'))} <a href='/static/assets/avocotes/guide_boutique.pdf' target='_blank'>Cliquez ici pour consulter la notice d'installation.</a></Typography>
           </Grid>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
             {_.sortBy(this.state.grouped[ COMPANY_PRIVATE_FLTR ], 'order').map(res => {

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -18,12 +19,12 @@ class HowItWorks extends React.Component {
       <Grid className={classes.howItWorksMainStyle}>
         <Grid className={classes.howItWorksMainContainer}>
           <Grid className={classes.howItWorksLeftContainer}>
-            <Typography className={`customhowitworksleft ${classes.howItWorksLeftText}`}>{HOW_IT_WORKS.leftText}</Typography>
+            <Typography className={`customhowitworksleft ${classes.howItWorksLeftText}`}>{ReactHtmlParser(this.props.t('HOW_IT_WORKS.leftText'))}</Typography>
           </Grid>
           <Grid className={classes.howItWorksRightContainer}>
             <Grid>
               <Typography className={`customhowitworksright ${classes.howItWorksRightText}`}>
-                {HOW_IT_WORKS.rightText}
+                {ReactHtmlParser(this.props.t('HOW_IT_WORKS.rightText'))}
               </Typography>
             </Grid>
           </Grid>

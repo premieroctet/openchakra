@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -111,7 +112,7 @@ class FilterMenu extends React.Component {
 
   statusFilterChanged = event => {
     this.setState({[event.target.name]: event.target.checked})
-  };
+  }
 
   cancelStatusFilter = () => {
     this.setState({statusFilterSet: false, statusFilterVisible: false}, () => this.fireFilter())
@@ -165,7 +166,7 @@ class FilterMenu extends React.Component {
       locations = locations.filter(l => l!=name)
     }
     this.setState({locations: locations})
-  };
+  }
 
   onChangeInterval(startDate, endDate) {
     if (startDate) {
@@ -189,7 +190,12 @@ class FilterMenu extends React.Component {
 
   isStatusFilterSet = () => {
     return this.state.proSelected || this.state.individualSelected
-  };
+  }
+
+
+  isDateFilterSet = () => {
+    return this.state.startDate != null || this.state.endDate != null
+  }
 
   // Categories filter
   categoriesFilterToggled = () => {
@@ -276,7 +282,7 @@ class FilterMenu extends React.Component {
             {statusFilterVisible ?
               <Grid className={classes.filterMenuContainerStatut}>
                 <Grid className={classes.filterMenuFocused} onClick={this.statusFilterToggled}>
-                  <Typography className={classes.filterMenuTextFocused}>{SEARCHBAR.labelStatus}</Typography>
+                  <Typography className={classes.filterMenuTextFocused}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelStatus'))}</Typography>
                 </Grid>
                 <Grid className={classes.filterMenuContentMainStyle}>
                   <Grid className={classes.filTerMenuStatusMainStyleFilter}>
@@ -344,7 +350,7 @@ class FilterMenu extends React.Component {
             {dateFilterVisible ?
               <Grid className={classes.filterMenuDateFocused}>
                 <Grid className={classes.filterMenuFocused} onClick={this.dateFilterToggled}>
-                  <Typography>{SEARCHBAR.labelDate}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.labelDate'))}</Typography>
                 </Grid>
                 <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -427,7 +433,7 @@ class FilterMenu extends React.Component {
             {locationFilterVisible?
               <Grid className={classes.filterMenuDateFocused}>
                 <Grid className={classes.filterMenuFocused} onClick={this.locationFilterToggled}>
-                  <Typography >{SEARCHBAR.labelLocation}</Typography>
+                  <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelLocation'))}</Typography>
                 </Grid>
                 <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -491,7 +497,7 @@ class FilterMenu extends React.Component {
             {categoriesFilterVisible?
               <Grid className={classes.filterMenuDateFocused}>
                 <Grid className={classes.filterMenuFocused} onClick={this.categoriesFilterToggled}>
-                  <Typography >{SEARCHBAR.labelCategory}</Typography>
+                  <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}</Typography>
                 </Grid>
                 <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                   <Grid>
@@ -528,7 +534,7 @@ class FilterMenu extends React.Component {
             {servicesFilterVisible?
               <Grid className={classes.filterMenuDateFocused}>
                 <Grid className={classes.filterMenuFocused} onClick={this.servicesFilterToggled}>
-                  <Typography>{SEARCHBAR.labelService}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}</Typography>
                 </Grid>
                 <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                   <Grid>

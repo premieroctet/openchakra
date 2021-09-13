@@ -7,7 +7,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {FAQ} from '../utils/i18n'
+import {FAQ} from '../utils/i18n_faq'
 import styles from '../static/css/pages/faq';
 import LayoutFaq from "../hoc/Layout/LayoutFaq";
 import NeedMoreFaq from "../hoc/Layout/Faq/NeedMoreFaq";

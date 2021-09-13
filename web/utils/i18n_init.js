@@ -1,5 +1,7 @@
-import i18n from 'i18next'
 import {initReactI18next} from 'react-i18next'
+import i18n from 'i18next'
+
+import {is_development} from '../config/config';
 import customfr from '../translations/fr/custom.json'
 
 
@@ -16,7 +18,7 @@ i18n
     },
     ns: ['custom'],
     defaultNS: 'custom',
-    debug: true,
+    debug: is_development(),
     react: {
       useSuspense: false,
     },

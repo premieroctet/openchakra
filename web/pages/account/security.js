@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication')
 import React, {Fragment} from 'react'
@@ -109,7 +110,7 @@ class security extends React.Component {
     const data = {index_google: !this.state.index_google}
     axios.put('/myAlfred/api/users/account/indexGoogle', data)
       .then(() => {
-        snackBarSuccess(SECURITY.snackbar_account_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('SECURITY.snackbar_account_update')))
       })
       .catch(err => { console.error(err) })
   };
@@ -163,7 +164,7 @@ class security extends React.Component {
     else {
       axios.put('/myAlfred/api/users/current/delete')
         .then(() => {
-          snackBarSuccess(SECURITY.snackbar_account_desactivate)
+          snackBarSuccess(ReactHtmlParser(this.props.t('SECURITY.snackbar_account_desactivate')))
           this.setState({open2: false})
           clearAuthenticationToken()
           Router.push('/')
@@ -185,7 +186,7 @@ class security extends React.Component {
     axios
       .put('/myAlfred/api/users/profile/editPassword', data)
       .then(() => {
-        snackBarSuccess(SECURITY.snackbar_mdp_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('SECURITY.snackbar_mdp_update')))
         setTimeout(this.loadData, 1000)
       })
       .catch(err => {
@@ -220,18 +221,18 @@ class security extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{SECURITY.dialog_delete_account_title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{ReactHtmlParser(this.props.t('SECURITY.dialog_delete_account_title'))}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {SECURITY.dialog_delete_account_content}
+            {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_account_content'))}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose2()} color="primary">
-            {SECURITY.dialog_delete_account_cancel}
+            {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_account_cancel'))}
           </Button>
           <Button onClick={() => this.deleteAccount()} classes={{root: classes.cancelButton}} autoFocus>
-            {SECURITY.dialog_delete_account_confirm}
+            {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_account_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -246,18 +247,18 @@ class security extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{SECURITY.dialog_delete_shop_title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{ReactHtmlParser(this.props.t('SECURITY.dialog_delete_shop_title'))}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {SECURITY.dialog_delete_shop_content}
+            {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_shop_content'))}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose()} color="primary">
-            {SECURITY.dialog_delete_shop_cancel}
+            {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_shop_cancel'))}
           </Button>
           <Button onClick={() => this.deleteShop()} classes={{root: classes.cancelButton}}>
-            {SECURITY.dialog_delete_shop_confirm}
+            {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_shop_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -272,10 +273,10 @@ class security extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}} >
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'customsecuritytitle'}>{SECURITY.title}</h2>
+            <h2 className={'customsecuritytitle'}>{ReactHtmlParser(this.props.t('SECURITY.title'))}</h2>
           </Grid>
           <Grid>
-            <Typography className={'customsecuritysubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{SECURITY.subtitle}</Typography>
+            <Typography className={'customsecuritysubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('SECURITY.subtitle'))}</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -283,10 +284,10 @@ class security extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h3 className={'customsecuritypasswordtitle'}>{SECURITY.password}</h3>
+            <h3 className={'customsecuritypasswordtitle'}>{ReactHtmlParser(this.props.t('SECURITY.password'))}</h3>
           </Grid>
           <Grid>
-            <Typography className={'customsecuritypasswordsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{SECURITY.update_password}</Typography>
+            <Typography className={'customsecuritypasswordsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('SECURITY.update_password'))}</Typography>
           </Grid>
         </Grid>
         <Grid style={{marginTop: '10vh'}}>
@@ -298,7 +299,7 @@ class security extends React.Component {
                     !this.state.isAdmin ?
                       <Grid item xs={12} md={4} xl={12}>
                         <Input
-                          placeholder={this.state.wrongPassword ? SECURITY.placeholder_password_error : SECURITY.placeholder_password_actual}
+                          placeholder={this.state.wrongPassword ? ReactHtmlParser(this.props.t('SECURITY.placeholder_password_error')) : ReactHtmlParser(this.props.t('SECURITY.placeholder_password_actual'))}
                           type={ showCurrentPassword ? 'text' : 'password'}
                           name="password"
                           value={this.state.password}
@@ -318,12 +319,12 @@ class security extends React.Component {
                             </InputAdornment>
                           }
                         />
-                        <em className={`custumsecurityerrorpass ${classes.cancelButton}`}>{this.state.wrongPassword ? SECURITY.placeholder_password_error : ''}</em>
+                        <em className={`custumsecurityerrorpass ${classes.cancelButton}`}>{this.state.wrongPassword ? ReactHtmlParser(this.props.t('SECURITY.placeholder_password_error')) : ''}</em>
                       </Grid> : null
                   }
                   <Grid item xs={12} md={4} xl={12}>
                     <Input
-                      placeholder={SECURITY.placeholder_newpassword}
+                      placeholder={ReactHtmlParser(this.props.t('SECURITY.placeholder_newpassword'))}
                       type= {showNewPassword ? 'text' : 'password' }
                       name="newPassword"
                       value={this.state.newPassword}
@@ -347,7 +348,7 @@ class security extends React.Component {
                   </Grid>
                   <Grid item xs={12} md={4} xl={12}>
                     <Input
-                      placeholder={SECURITY.placeholder_repeat_password}
+                      placeholder={ReactHtmlParser(this.props.t('SECURITY.placeholder_repeat_password'))}
                       type={showConfirmPassword ? 'text' : 'password' }
                       name="newPassword2"
                       value={this.state.newPassword2}
@@ -372,7 +373,7 @@ class security extends React.Component {
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'left', marginTop: 30}}>
                   <Button disabled={!checkButtonValidate} type="submit" className={`customsecurityconfirmpass ${classes.buttonSave}`} variant="contained">
-                    {SECURITY.validate_button_password}
+                    {ReactHtmlParser(this.props.t('SECURITY.validate_button_password'))}
                   </Button>
                 </Grid>
               </form>
@@ -384,16 +385,16 @@ class security extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h3 className={'customsecurityaccounttitle'}>{SECURITY.my_account}</h3>
+            <h3 className={'customsecurityaccounttitle'}>{ReactHtmlParser(this.props.t('SECURITY.my_account'))}</h3>
           </Grid>
           <Grid>
-            <Typography className={'customsecurityaccountsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{SECURITY.handle_my_account}</Typography>
+            <Typography className={'customsecurityaccountsubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('SECURITY.handle_my_account'))}</Typography>
           </Grid>
         </Grid>
         <Grid style={{marginTop: '10vh'}}>
           <Grid container style={{alignItems: 'center'}} spacing={3}>
             <Grid item xl={8} xs={6}>
-              <h4 className={'customsecurityaccounth4'}>{SECURITY.index_my_account}</h4>
+              <h4 className={'customsecurityaccounth4'}>{ReactHtmlParser(this.props.t('SECURITY.index_my_account'))}</h4>
             </Grid>
             <Grid item xl={4} xs={6} style={{flexDirection: 'row-reverse', display: 'flex'}}>
               <Switch
@@ -418,7 +419,7 @@ class security extends React.Component {
             {this.state.user.is_alfred ?
               <Grid container spacing={3} style={{alignItems: 'center'}}>
                 <Grid item xl={8}>
-                  <h4 className={'customsecurityaccountdelete'}>{SECURITY.delete_my_account}</h4>
+                  <h4 className={'customsecurityaccountdelete'}>{ReactHtmlParser(this.props.t('SECURITY.delete_my_account'))}</h4>
                 </Grid>
                 <Grid item xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
                   <Button
@@ -426,7 +427,7 @@ class security extends React.Component {
                     variant="contained"
                     classes={{root: `customsecuritybuttondelete ${classes.buttonSave}`}}
                   >
-                    {SECURITY.delete_my_account_button}
+                    {ReactHtmlParser(this.props.t('SECURITY.delete_my_account_button'))}
                   </Button>
                 </Grid>
               </Grid>
@@ -437,11 +438,11 @@ class security extends React.Component {
             <Grid container style={{alignItems: 'center'}} spacing={3}>
               <Grid item xl={8} style={{display: 'flex', flexDirection: 'column'}}>
                 <Grid>
-                  <h4 className={'customsecurityaccountdesactivate'}>{SECURITY.desactivate_my_account}</h4>
+                  <h4 className={'customsecurityaccountdesactivate'}>{ReactHtmlParser(this.props.t('SECURITY.desactivate_my_account'))}</h4>
                 </Grid>
                 <Grid>
                   <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                    {SECURITY.caution_desactivate_my_account}
+                    {ReactHtmlParser(this.props.t('SECURITY.caution_desactivate_my_account'))}
                   </Typography>
                 </Grid>
               </Grid>
@@ -451,7 +452,7 @@ class security extends React.Component {
                   variant="contained"
                   classes={{root: `customsecuritybuttondesactivate ${classes.buttonSave}`}}
                 >
-                  {SECURITY.button_desactivate_my_account}
+                  {ReactHtmlParser(this.props.t('SECURITY.button_desactivate_my_account'))}
                 </Button>
               </Grid>
             </Grid>

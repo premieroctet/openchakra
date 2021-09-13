@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
@@ -80,8 +81,8 @@ class scheduleTest extends React.Component {
         <DrawerAndSchedule
           availabilityUpdate={this.availabilityUpdate}
           availabilityCreated={this.availabilityCreated}
-          title={I18N.SCHEDULE_TITLE}
-          SUBTITLE={I18N.SCHEDULE_SUBTITLE}
+          title={I18N.ReactHtmlParser(this.props.t('SCHEDULE_TITLE'))}
+          SUBTITLE={I18N.ReactHtmlParser(this.props.t('SCHEDULE_SUBTITLE'))}
           availabilities={availabilities}
           selectable={true}
         />

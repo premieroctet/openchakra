@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -41,10 +42,10 @@ class ResaService extends React.Component {
       <Grid className={classes.ResaServiceMainContainer}>
         <Grid className={classes.becomeAlfredContainer}>
           <Grid>
-            <h2 className={`customresaserviceh2 ${classes.becomeAlfredTitle}`}>{RESA_SERVICE.title}</h2>
+            <h2 className={`customresaserviceh2 ${classes.becomeAlfredTitle}`}>{ReactHtmlParser(this.props.t('RESA_SERVICE.title'))}</h2>
           </Grid>
           <Grid>
-            <p className={`customresaservicetext ${classes.becomeAlfredText}`}>{RESA_SERVICE.text}</p>
+            <p className={`customresaservicetext ${classes.becomeAlfredText}`}>{ReactHtmlParser(this.props.t('RESA_SERVICE.text'))}</p>
           </Grid>
           <Grid>
             <Button
@@ -54,7 +55,7 @@ class ResaService extends React.Component {
               style={{
                 color: homePage ? 'rgba(178,204,251,1)' : '#F8CF61',
               }}
-            >{RESA_SERVICE.button}</Button>
+            >{ReactHtmlParser(this.props.t('RESA_SERVICE.button'))}</Button>
           </Grid>
         </Grid>
         <Grid/>

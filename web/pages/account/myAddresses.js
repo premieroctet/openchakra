@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import HandleAddresses from '../../components/HandleAddresses/HandleAddresses'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
@@ -68,10 +69,10 @@ class myAddresses extends React.Component {
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'customadressestitle'}>{ pro_mode ? MY_ADDRESSES.title_b2b : MY_ADDRESSES.title}</h2>
+            <h2 className={'customadressestitle'}>{ pro_mode ? ReactHtmlParser(this.props.t('MY_ADDRESSES.title_b2b')) : ReactHtmlParser(this.props.t('MY_ADDRESSES.title'))}</h2>
           </Grid>
           <Grid>
-            <Typography className={'customadressessubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{pro_mode ? MY_ADDRESSES.subtitle_b2b + {company_name} : MY_ADDRESSES.subtitle}.</Typography>
+            <Typography className={'customadressessubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{pro_mode ? MY_ADDRESSES.subtitle_b2b + {company_name} : ReactHtmlParser(this.props.t('MY_ADDRESSES.subtitle'))}.</Typography>
           </Grid>
         </Grid>
         <Grid>

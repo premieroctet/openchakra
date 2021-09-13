@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -32,9 +33,9 @@ class BannerPresentation extends React.Component {
     const {classes} = this.props
     const {user} = this.state
 
-    const title = isB2BStyle(user) ? B2B_BANNER_PRESENTATION.title : BANNER_PRESENTATION.title
-    const subTitle = isB2BStyle(user) ? B2B_BANNER_PRESENTATION.subTitle : BANNER_PRESENTATION.subTitle
-    const text = isB2BStyle(user) ? B2B_BANNER_PRESENTATION.text : BANNER_PRESENTATION.text
+    const title = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.title')) : BANNER_PRESENTATION.title
+    const subTitle = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.subTitle')) : BANNER_PRESENTATION.subTitle
+    const text = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.text')) : BANNER_PRESENTATION.text
 
 
     return (
@@ -58,7 +59,7 @@ class BannerPresentation extends React.Component {
               <Button
                 variant={'outlined' }
                 classes={{root: `custombannerbutton ${classes.bannerPresentationButtonB2b}`}}>
-                {BANNER_PRESENTATION.button}
+                {ReactHtmlParser(this.props.t('BANNER_PRESENTATION.button'))}
               </Button>
             </Link>
           </Grid>

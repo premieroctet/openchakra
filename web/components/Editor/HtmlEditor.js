@@ -28,6 +28,7 @@ class HtmlEditor extends React.Component {
     // We do not add Aref Ruqaa since it is the default
     Font.whitelist = ['Roboto', 'Raleway', 'Montserrat', 'Lato', 'Rubik']
     ReactQuill.Quill.register(Font, true)
+
     return (
       <Grid>
         <span>{this.props.title}</span>
