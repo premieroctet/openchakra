@@ -227,7 +227,7 @@ class trustAndVerification extends React.Component {
     }
     axios.post('/myAlfred/api/users/profile/idCard', formData, config)
       .then(() => {
-        snackBarSuccess(TRUST_VERIFICATION.snackbar_id_add)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_id_add')))
         this.componentDidMount()
       })
       .catch(err => {
@@ -245,7 +245,7 @@ class trustAndVerification extends React.Component {
     }
     axios.post('/myAlfred/api/users/profile/idCard/addVerso', formData, config)
       .then(() => {
-        snackBarSuccess(TRUST_VERIFICATION.snackbar_card_add)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_card_add')))
         this.componentDidMount()
       }).catch()
   }
@@ -264,7 +264,7 @@ class trustAndVerification extends React.Component {
     }
     axios.put('/myAlfred/api/shop/editStatus', newStatus)
       .then(() => {
-        snackBarSuccess(TRUST_VERIFICATION.snackbar_status_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_status_update')))
         const data = {status: this.state.professional ? 'Pro' : 'Particulier'}
         return axios.put('/myAlfred/api/serviceUser/editStatus', data)
       })
@@ -275,7 +275,7 @@ class trustAndVerification extends React.Component {
           const config = {headers: {'content-type': 'multipart/form-data'}}
           axios.post('/myAlfred/api/users/profile/registrationProof/add', formData, config)
             .then(() => {
-              snackBarSuccess(TRUST_VERIFICATION.snackbar_doc_add)
+              snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_doc_add')))
               this.componentDidMount()
             })
             .catch(err => console.error(err))
@@ -288,13 +288,13 @@ class trustAndVerification extends React.Component {
       this.setState({
         open: true,
         deleteCb: () => this.deleteRecto(true),
-        deleteConfirmMessage: I18N.ID_CARD_CONFIRM_DELETION,
+        deleteConfirmMessage: I18N.ReactHtmlParser(this.props.t('ID_CARD_CONFIRM_DELETION')),
       })
     }
     else {
       axios.delete('/myAlfred/api/users/profile/idCard/recto')
         .then(() => {
-          snackBarSuccess(TRUST_VERIFICATION.snackbar_id_delete)
+          snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_id_delete')))
           this.componentDidMount()
         })
         .catch(err => {
@@ -308,13 +308,13 @@ class trustAndVerification extends React.Component {
       this.setState({
         open: true,
         deleteCb: () => this.deleteRegistrationProof(true),
-        deleteConfirmMessage: I18N.REGISTRATION_PROOF_CONFIRM_DELETION,
+        deleteConfirmMessage: I18N.ReactHtmlParser(this.props.t('REGISTRATION_PROOF_CONFIRM_DELETION')),
       })
     }
     else {
       axios.delete('/myAlfred/api/users/profile/registrationProof')
         .then(() => {
-          snackBarSuccess(TRUST_VERIFICATION.snackbar_doc_delete)
+          snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_doc_delete')))
           this.componentDidMount()
         })
         .catch(err => {

@@ -163,7 +163,7 @@ class MessagesDetails extends React.Component {
 
   grantNotificationPermission = () => {
     if (!('Notification' in window)) {
-      alert(MESSAGE_DETAIL.browser_compatibility)
+      alert(ReactHtmlParser(this.props.t('MESSAGE_DETAIL.browser_compatibility')))
     }
 
     if (
@@ -173,7 +173,7 @@ class MessagesDetails extends React.Component {
       try {
         Notification.requestPermission().then(result => {
           if (result === 'granted') {
-            new Notification(MESSAGE_DETAIL.notif)
+            new Notification(ReactHtmlParser(this.props.t('MESSAGE_DETAIL.notif')))
           }
         })
       }
@@ -181,7 +181,7 @@ class MessagesDetails extends React.Component {
         if (err instanceof TypeError) {
           Notification.requestPermission().then(result => {
             if (result === 'granted') {
-              new Notification(MESSAGE_DETAIL.notif)
+              new Notification(ReactHtmlParser(this.props.t('MESSAGE_DETAIL.notif')))
             }
           })
         }

@@ -52,7 +52,7 @@ function Footer({classes}) {
                 </Grid>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{textAlign: 'center'}}>{`${AVOCOTES.phoneTextFirst } ${ AVOCOTES.phoneTextSecond}`}</Typography>
+                <Typography style={{textAlign: 'center'}}>{`${ReactHtmlParser(this.props.t('AVOCOTES.phoneTextFirst')) } ${ ReactHtmlParser(this.props.t('AVOCOTES.phoneTextSecond'))}`}</Typography>
               </Grid>
             </Grid>
           </Grid>

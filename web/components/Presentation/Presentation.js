@@ -132,7 +132,7 @@ class Presentation extends CompanyComponent {
   modalEditDialog = (classes) => {
     const {user, showEdition, newDescription} = this.state;
     const enabled = newDescription;
-    const placeholder = newDescription || CMP_PRESENTATION.placeholder;
+    const placeholder = newDescription || ReactHtmlParser(this.props.t('CMP_PRESENTATION.placeholder'));
 
     return (
       <Dialog

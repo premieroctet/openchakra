@@ -89,12 +89,12 @@ class HandleRIB extends React.Component {
   deleteAccount(account_id) {
     axios.delete(`/myAlfred/api/payment/account/${account_id}`)
       .then(() => {
-        snackBarSuccess(HANDLE_RIB.snackbar_rib_delete)
+        snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_RIB.snackbar_rib_delete')))
         this.handleClose()
         this.componentDidMount()
       })
       .catch(() => {
-        snackBarError(HANDLE_RIB.snackbar_rib_error_delete)
+        snackBarError(ReactHtmlParser(this.props.t('HANDLE_RIB.snackbar_rib_error_delete')))
         this.handleClose()
       })
 
@@ -215,7 +215,7 @@ class HandleRIB extends React.Component {
     this.setState({errors: {}})
     axios.post('/myAlfred/api/payment/bankAccount', data)
       .then(() => {
-        snackBarSuccess(HANDLE_RIB.snackbar_rib_add)
+        snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_RIB.snackbar_rib_add')))
         this.handleCloseModalAddRib()
         this.setState({showAddRib: false})
         axios.get('/myAlfred/api/payment/activeAccount')
@@ -227,7 +227,7 @@ class HandleRIB extends React.Component {
 
       })
       .catch(err => {
-        snackBarError(HANDLE_RIB.snackbar_error_rib_add)
+        snackBarError(ReactHtmlParser(this.props.t('HANDLE_RIB.snackbar_error_rib_add')))
         try {
           this.setState({errors: err.response.data.errors})
         }
@@ -257,7 +257,7 @@ class HandleRIB extends React.Component {
         <Grid>
           <Typography
             className={'customhandleribsubtitle'}
-            style={{color: 'rgba(39,37,37,35%)'}}>{is_pro ? HANDLE_RIB.subtitle_b2b : HANDLE_RIB.subtitle}</Typography>
+            style={{color: 'rgba(39,37,37,35%)'}}>{is_pro ? HANDLE_RIB.subtitle_b2b : ReactHtmlParser(this.props.t('HANDLE_RIB.subtitle'))}</Typography>
         </Grid>
         {accounts.length>0 ?
           <Grid container style={{marginTop: '10vh', display: 'flex', alignItems: 'center'}}>

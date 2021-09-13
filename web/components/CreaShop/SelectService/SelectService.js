@@ -167,13 +167,13 @@ class SelectService extends React.Component {
 
     let services_title = null
     if (particular_professional_access) {
-      services_title=SHOP.service.content_particular_professional
+      services_title=ReactHtmlParser(this.props.t('SHOP.service.content_particular_professional'))
     }
     else if (professional_access) {
-      services_title=SHOP.service.content_professional
+      services_title=ReactHtmlParser(this.props.t('SHOP.service.content_professional'))
     }
     else {
-      services_title=SHOP.service.content_particular
+      services_title=ReactHtmlParser(this.props.t('SHOP.service.content_particular'))
     }
     if (isB2BDisabled()) {
       services_title=null
@@ -187,7 +187,7 @@ class SelectService extends React.Component {
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
             <h3 className={'customselectservicesubtitle'} style={{color: '#403f3f'}}>{
-              mode == CREASHOP_MODE.SERVICE_UPDATE ? SHOP.service.subtitle_update : SHOP.service.subtitle
+              mode == CREASHOP_MODE.SERVICE_UPDATE ? ReactHtmlParser(this.props.t('SHOP.service.subtitle_update')) : SHOP.service.subtitle
             }</h3>
             { CREASHOP_MODE.SERVICE_UPDATE ? null : <h3>{ReactHtmlParser(this.props.t('SHOP.service.explanation'))}</h3>}
           </Grid>

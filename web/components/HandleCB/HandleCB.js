@@ -99,7 +99,7 @@ class HandleCB extends React.Component {
 
     axios.post('/myAlfred/api/payment/createCard', obj)
       .then(() => {
-        snackBarSuccess(HANDLE_CB.snackbar_add)
+        snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_CB.snackbar_add')))
         this.setState({error: null, showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -111,7 +111,7 @@ class HandleCB extends React.Component {
   deleteCard = () => {
     const obj = {id_card: this.state.Idtempo}
     axios.put('/myAlfred/api/payment/cards', obj).then(() => {
-      snackBarSuccess(HANDLE_CB.snackbar_delete)
+      snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_CB.snackbar_delete')))
       this.setState({showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount())
     }).catch(err => {
       snackBarError(err.response.data.error)

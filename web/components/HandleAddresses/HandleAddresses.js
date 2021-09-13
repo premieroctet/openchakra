@@ -160,7 +160,7 @@ class HandleAddresses extends React.Component {
     axios
       .put(this.main_address_put_url, address)
       .then(() => {
-        snackBarSuccess(HANDLE_ADDRESSES.snackbar_addresses_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.snackbar_addresses_update')))
         this.loadData()
       })
       .catch(err => {
@@ -183,7 +183,7 @@ class HandleAddresses extends React.Component {
     }
     axios.put(this.service_address_put_url, newAddress)
       .then(() => {
-        snackBarSuccess(HANDLE_ADDRESSES.snackbar_addresses_add)
+        snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.snackbar_addresses_add')))
         this.setState({addNewMode: false}, () => this.loadData())
       })
       .catch(err => {
@@ -223,7 +223,7 @@ class HandleAddresses extends React.Component {
 
     axios.put(this.service_address_edit_url + id, editAddress)
       .then(() => {
-        snackBarSuccess(HANDLE_ADDRESSES.snackbar_addresses_update_success)
+        snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.snackbar_addresses_update_success')))
         this.setState({selected_address: null}, () => this.loadData())
       })
       .catch(err => {
@@ -236,7 +236,7 @@ class HandleAddresses extends React.Component {
   deleteAddress = id => {
     axios.delete(this.service_address_delete_url + id)
       .then(() => {
-        snackBarSuccess(HANDLE_ADDRESSES.snackbar_addresses_delete)
+        snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.snackbar_addresses_delete')))
         this.setState({selected_address: null, open: false, delete_address_id: ''}, () => this.loadData())
       })
       .catch(err => {
@@ -282,7 +282,7 @@ class HandleAddresses extends React.Component {
             <Grid>
               <Grid>
                 <Grid>
-                  <h3 className={'customhandleaddressestitle'}>{ pro_mode ? HANDLE_ADDRESSES.title_b2b : HANDLE_ADDRESSES.title}</h3>
+                  <h3 className={'customhandleaddressestitle'}>{ pro_mode ? ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.title_b2b')) : ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.title'))}</h3>
                 </Grid>
                 {this.addressLabel(billing_address)}
               </Grid>
@@ -318,7 +318,7 @@ class HandleAddresses extends React.Component {
         <Grid>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3 className={'customhandleaddressesbooktitle'}>{ pro_mode ? HANDLE_ADDRESSES.book_title_b2b : HANDLE_ADDRESSES.book_title}</h3>
+              <h3 className={'customhandleaddressesbooktitle'}>{ pro_mode ? ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.book_title_b2b')) : ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.book_title'))}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.setState({addNewMode: !this.state.addNewMode, selected_address: null})}>
@@ -328,7 +328,7 @@ class HandleAddresses extends React.Component {
           </Grid>
           <Grid>
             <Typography className={'customhandleaddressessubtitlebook'} style={{color: 'rgba(39,37,37,35%)'}}>
-              {isB2BAdmin(user) ? HANDLE_ADDRESSES.b2b_title_add_sites : HANDLE_ADDRESSES.title_add_sites}
+              {isB2BAdmin(user) ? ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.b2b_title_add_sites')) : ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.title_add_sites'))}
             </Typography>
           </Grid>
         </Grid>
@@ -412,7 +412,7 @@ class HandleAddresses extends React.Component {
                 name={'new_label'}
                 placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.textfield_name_placeholder_add_sites'))}
                 variant={'outlined'}
-                label={ pro_mode ? HANDLE_ADDRESSES.textfield_name_site : HANDLE_ADDRESSES.textfield_name_addresses}
+                label={ pro_mode ? ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.textfield_name_site')) : ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.textfield_name_addresses'))}
                 className={`customhandleaddressesaddnewname ${classes.textField}`}
               />
             </Grid>

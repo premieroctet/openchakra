@@ -113,7 +113,7 @@ class SummaryCommentary extends React.Component {
           <Grid>
             <Grid style={{display: 'flex', alignItems: 'center', marginTop: '5vh'}}>
               <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>
-                { showCommentary ? SUMMARY_COMMENTARY.button_hide_commentary : SUMMARY_COMMENTARY.button_show_commentary}
+                { showCommentary ? ReactHtmlParser(this.props.t('SUMMARY_COMMENTARY.button_hide_commentary')) : ReactHtmlParser(this.props.t('SUMMARY_COMMENTARY.button_show_commentary'))}
               </Button>
             </Grid>
           </Grid> : null

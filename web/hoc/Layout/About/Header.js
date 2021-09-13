@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -28,15 +29,15 @@ class Header extends React.Component {
       classNameMenu: '',
       items: [
         {
-          label: NAVBAR_MENU.aboutUs,
+          label: ReactHtmlParser(this.props.t('NAVBAR_MENU.aboutUs')),
           url: '/footer/apropos',
         },
         {
-          label: NAVBAR_MENU.ourCom,
+          label: ReactHtmlParser(this.props.t('NAVBAR_MENU.ourCom')),
           url: '/footer/ourCommunity',
         },
         {
-          label: NAVBAR_MENU.ourTeam,
+          label: ReactHtmlParser(this.props.t('NAVBAR_MENU.ourTeam')),
           url: '/footer/ourTeam',
         },
       ],

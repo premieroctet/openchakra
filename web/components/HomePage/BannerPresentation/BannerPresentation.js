@@ -33,9 +33,9 @@ class BannerPresentation extends React.Component {
     const {classes} = this.props
     const {user} = this.state
 
-    const title = isB2BStyle(user) ? BANNER_B2B_PRESENTATION.title : BANNER_PRESENTATION.title
-    const subTitle = isB2BStyle(user) ? BANNER_B2B_PRESENTATION.subTitle : BANNER_PRESENTATION.subTitle
-    const text = isB2BStyle(user) ? BANNER_B2B_PRESENTATION.text : BANNER_PRESENTATION.text
+    const title = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.title')) : BANNER_PRESENTATION.title
+    const subTitle = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.subTitle')) : BANNER_PRESENTATION.subTitle
+    const text = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.text')) : BANNER_PRESENTATION.text
 
 
     return (

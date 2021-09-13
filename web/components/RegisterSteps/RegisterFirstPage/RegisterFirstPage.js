@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -30,8 +31,8 @@ class RegisterFirstPage extends React.Component {
             <Grid item className={classes.widthTextField}>
               <TextField
                 id="input-with-icon-grid"
-                label={REGISTER_FIRST_PAGE.textfield_email_title}
-                placeholder={REGISTER_FIRST_PAGE.textfield_email_placeholder}
+                label={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_email_title'))}
+                placeholder={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_email_placeholder'))}
                 style={{width: '100%'}}
                 type="email"
                 value={state.email}
@@ -50,8 +51,8 @@ class RegisterFirstPage extends React.Component {
             <Grid item className={classes.widthTextField}>
               <TextField
                 id="standard-with-placeholder"
-                label={REGISTER_FIRST_PAGE.textfield_firstname}
-                placeholder={REGISTER_FIRST_PAGE.textfield_firstname_placeholder}
+                label={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_firstname'))}
+                placeholder={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_firstname_placeholder'))}
                 style={{width: '100%'}}
                 type="text"
                 name="firstname"
@@ -70,8 +71,8 @@ class RegisterFirstPage extends React.Component {
             </Grid>
             <Grid item className={classes.widthTextField}>
               <TextField
-                label={REGISTER_FIRST_PAGE.textfield_name}
-                placeholder={REGISTER_FIRST_PAGE.textfield_name_placeholder}
+                label={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_name'))}
+                placeholder={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_name_placeholder'))}
                 style={{width: '100%'}}
                 type="text"
                 name="name"
@@ -92,8 +93,8 @@ class RegisterFirstPage extends React.Component {
                 </Grid>
                 <Grid item className={classes.widthTextField}>
                   <TextField
-                    label={REGISTER_FIRST_PAGE.textfield_create_password}
-                    placeholder={REGISTER_FIRST_PAGE.textfield_create_password_placeholder}
+                    label={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_create_password'))}
+                    placeholder={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_create_password_placeholder'))}
                     style={{width: '100%'}}
                     type={state.showPassword ? 'text' : 'password'}
                     name="password"
@@ -127,8 +128,8 @@ class RegisterFirstPage extends React.Component {
                 </Grid>
                 <Grid item className={classes.widthTextField}>
                   <TextField
-                    label={REGISTER_FIRST_PAGE.textfield_confirm_password}
-                    placeholder={REGISTER_FIRST_PAGE.textfield_confirm_password_placeholder}
+                    label={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_confirm_password'))}
+                    placeholder={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_confirm_password_placeholder'))}
                     style={{width: '100%'}}
                     type={state.showPassword2 ? 'text' : 'password'}
                     name="password2"

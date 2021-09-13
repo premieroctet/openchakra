@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -56,7 +57,7 @@ class MessageSummary extends React.Component {
                 <Typography><strong>{relative.firstname}</strong></Typography>
               </Grid>
               <Grid>
-                <Typography style={{textOverflow: 'ellipsis'}}>{last ? last.content : MESSAGE_SUMMARY.no_message}</Typography>
+                <Typography style={{textOverflow: 'ellipsis'}}>{last ? last.content : ReactHtmlParser(this.props.t('MESSAGE_SUMMARY.no_message'))}</Typography>
               </Grid>
             </Grid>
           </Grid>

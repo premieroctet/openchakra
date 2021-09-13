@@ -37,9 +37,9 @@ class AddService extends React.Component {
         </Grid>
         <Button classes={{root: `customaddservicesbutton ${classes.buttonAddService}`}} onClick={this.clickService} startIcon={<AddCircleOutlineIcon />}>
           { isLoggedUserAlfred() ?
-            SHOP.addService
+            ReactHtmlParser(this.props.t('SHOP.addService'))
             :
-            SHOP.createShop
+            ReactHtmlParser(this.props.t('SHOP.createShop'))
           }
         </Button>
         <Typography className={`customaddservicessubtitle ${classes.descriptionAddService}`}>{ReactHtmlParser(this.props.t('ADD_SERVICES.add_service'))}</Typography>

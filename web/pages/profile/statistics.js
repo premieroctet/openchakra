@@ -217,7 +217,7 @@ class ProfileStatistics extends BasePage {
                   </Grid>
                   <Grid container className={classes.statResultData}>
                     <Grid item xl={12} lg={12} md={12} sm={9} xs={9} className={classes.statResultLabel}>
-                      <Typography className={'customstatincomeswillyeartotal'}><strong>{STATISTICS.incomes_previ + this.state.year}</strong></Typography>
+                      <Typography className={'customstatincomeswillyeartotal'}><strong>{ReactHtmlParser(this.props.t('STATISTICS.incomes_previ')) + this.state.year}</strong></Typography>
                     </Grid>
                     <Grid item xl={12} lg={12} md={12} sm={3} xs={3} className={classes.statData}>
                       <Typography><strong>{`${this.state.totalYear}€`}</strong></Typography>

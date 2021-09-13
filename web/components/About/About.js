@@ -227,7 +227,7 @@ class About extends CompanyComponent {
   modalEditDialog = classes => {
     const {newAddress, showEdition, languages, enabledEdition, user, activityArea, sizeCompany, website} = this.state
     const address = newAddress || (user ? user.billing_address : null)
-    const placeholder = address ? `${address.city}, ${address.country}` : ABOUT.address_placeholder
+    const placeholder = address ? `${address.city}, ${address.country}` : ReactHtmlParser(this.props.t('ABOUT.address_placeholder'))
 
     return (
       <Dialog
@@ -243,8 +243,8 @@ class About extends CompanyComponent {
         />
         <DialogContent>
           <Topic
-            titleTopic={this.isModeCompany() ? ABOUT.b2b_title_topic : ABOUT.title_topic}
-            titleSummary={this.isModeCompany() ? ABOUT.b2b_titlesummary_topic : ABOUT.titlesummary_topic}
+            titleTopic={this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.b2b_title_topic')) : ReactHtmlParser(this.props.t('ABOUT.title_topic'))}
+            titleSummary={this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.b2b_titlesummary_topic')) : ReactHtmlParser(this.props.t('ABOUT.titlesummary_topic'))}
             underline={true}/>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -253,7 +253,7 @@ class About extends CompanyComponent {
                   fontWeight: 'bold',
                   textTransform: 'initial',
                 }}>
-                  {this.isModeCompany() ? ABOUT.website : ABOUT.label_address}
+                  {this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.website')) : ReactHtmlParser(this.props.t('ABOUT.label_address'))}
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -291,7 +291,7 @@ class About extends CompanyComponent {
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial',
-                  }}>{this.isModeCompany() ? ABOUT.size_company : ABOUT.spoken_languages}</h3>
+                  }}>{this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.size_company')) : ReactHtmlParser(this.props.t('ABOUT.spoken_languages'))}</h3>
               </Grid>
               <Grid item xs={12}>
                 {
@@ -308,7 +308,7 @@ class About extends CompanyComponent {
                       isSearchable
                       closeMenuOnSelect={false}
                       placeholder={ReactHtmlParser(this.props.t('ABOUT.textfield_languages'))}
-                      noOptionsMessage={() => ABOUT.option_message}
+                      noOptionsMessage={() => ReactHtmlParser(this.props.t('ABOUT.option_message'))}
                     /> :
                     <FormControl variant="outlined" className={classes.formControl}>
                       <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('ABOUT.label_size_company'))}</InputLabel>
@@ -391,43 +391,43 @@ class About extends CompanyComponent {
     const {displayTitlePicture, classes} = this.props
     const {user, company, showEdition} = this.state
 
-    let place = this.isModeCompany() ? company ? company.billing_address.city : PROFIL.noaddresses : user ? user.billing_address.city : PROFIL.noaddresses
+    let place = this.isModeCompany() ? company ? company.billing_address.city : ReactHtmlParser(this.props.t('PROFIL.noaddresses')) : user ? user.billing_address.city : PROFIL.noaddresses
 
     const editable = isEditableUser(user)
 
     const wrapperComponentProps = !this.isModeCompany()?
       [
         {
-          label: PROFIL.place,
+          label: ReactHtmlParser(this.props.t('PROFIL.place')),
           summary: place,
-          IconName: user ? <RoomIcon fontSize="large"/> : PROFIL.nothing,
+          IconName: user ? <RoomIcon fontSize="large"/> : ReactHtmlParser(this.props.t('PROFIL.nothing')),
         },
         {
-          label: PROFIL.languages,
-          summary: user ? user.languages ? user.languages.join(', ') || null : PROFIL.nothing : '',
+          label: ReactHtmlParser(this.props.t('PROFIL.languages')),
+          summary: user ? user.languages ? user.languages.join(', ') || null : ReactHtmlParser(this.props.t('PROFIL.nothing')) : '',
           IconName: user ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : '',
         },
         {
-          label: PROFIL.verification,
-          summary: user ? user.is_confirmed ? PROFIL.confirmed : PROFIL.nothing : PROFIL.unconfirmed,
+          label: ReactHtmlParser(this.props.t('PROFIL.verification')),
+          summary: user ? user.is_confirmed ? ReactHtmlParser(this.props.t('PROFIL.confirmed')) : ReactHtmlParser(this.props.t('PROFIL.nothing')) : ReactHtmlParser(this.props.t('PROFIL.unconfirmed')),
           IconName: user ? user.is_confirmed ? <CheckCircleOutlineIcon fontSize="large"/> : <HighlightOffIcon fontSize={'large'}/> : '',
         },
       ]
       :
       [
         {
-          label: PROFIL.website,
-          summary: company.website ? company.website : PROFIL.nothing,
+          label: ReactHtmlParser(this.props.t('PROFIL.website')),
+          summary: company.website ? company.website : ReactHtmlParser(this.props.t('PROFIL.nothing')),
           IconName: <LanguageIcon fontSize="large"/>,
         },
         {
-          label: PROFIL.companysize,
-          summary: company.size !== '' ? Object.keys(COMPANY_SIZE).map(res => { if(res === company.size) { return COMPANY_SIZE[res] } }): PROFIL.nothing,
+          label: ReactHtmlParser(this.props.t('PROFIL.companysize')),
+          summary: company.size !== '' ? Object.keys(COMPANY_SIZE).map(res => { if(res === company.size) { return COMPANY_SIZE[res] } }): ReactHtmlParser(this.props.t('PROFIL.nothing')),
           IconName: <BusinessIcon fontSize="large"/>,
         },
         {
-          label: PROFIL.activity,
-          summary: company.activity !== '' ? Object.keys(COMPANY_ACTIVITY).map(res => { if(res === company.activity) { return COMPANY_ACTIVITY[res] } }) : PROFIL.nothing,
+          label: ReactHtmlParser(this.props.t('PROFIL.activity')),
+          summary: company.activity !== '' ? Object.keys(COMPANY_ACTIVITY).map(res => { if(res === company.activity) { return COMPANY_ACTIVITY[res] } }) : ReactHtmlParser(this.props.t('PROFIL.nothing')),
           IconName: <WorkOutlineIcon fontSize="large"/>,
         },
       ]

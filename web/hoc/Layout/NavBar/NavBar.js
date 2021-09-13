@@ -937,7 +937,7 @@ class NavBar extends Component {
                   value={this.state.keyword}
                   onChange={this.onChange}
                   name={'keyword'}
-                  label={ifHomePage ? SEARCHBAR.labelWhat : ''}
+                  label={ifHomePage ? ReactHtmlParser(this.props.t('SEARCHBAR.labelWhat')) : ''}
                   onKeyPress={e => {
                     if (e.key === 'Enter') {
                       e.preventDefault()
@@ -1033,7 +1033,7 @@ class NavBar extends Component {
                   </Grid>
                   <Grid item xl={11} lg={11} sm={11} md={11} xs={11}>
                     <TextField
-                      label={this.state.ifHomePage ? SEARCHBAR.labelWhen : false}
+                      label={this.state.ifHomePage ? ReactHtmlParser(this.props.t('SEARCHBAR.labelWhen')) : false}
                       InputLabelProps={{
                         shrink: true,
                       }}

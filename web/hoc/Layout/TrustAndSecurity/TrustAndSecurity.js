@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -16,18 +17,18 @@ class TrustAndSecurity extends React.Component {
     this.state={
       items: [
         {
-          title: TRUST_SECURITY.first_item.title,
-          text: TRUST_SECURITY.first_item.text,
+          title: ReactHtmlParser(this.props.t('TRUST_SECURITY.first_item.title')),
+          text: ReactHtmlParser(this.props.t('TRUST_SECURITY.first_item.text')),
           icon: <AlarmOnIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
         },
         {
-          title: TRUST_SECURITY.second_item.title,
-          text: TRUST_SECURITY.second_item.text,
+          title: ReactHtmlParser(this.props.t('TRUST_SECURITY.second_item.title')),
+          text: ReactHtmlParser(this.props.t('TRUST_SECURITY.second_item.text')),
           icon: <VerifiedUserIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
         },
         {
-          title: TRUST_SECURITY.third_item.title,
-          text: TRUST_SECURITY.third_item.text,
+          title: ReactHtmlParser(this.props.t('TRUST_SECURITY.third_item.title')),
+          text: ReactHtmlParser(this.props.t('TRUST_SECURITY.third_item.text')),
           icon: <TextsmsIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
         },
       ],

@@ -110,7 +110,7 @@ class security extends React.Component {
     const data = {index_google: !this.state.index_google}
     axios.put('/myAlfred/api/users/account/indexGoogle', data)
       .then(() => {
-        snackBarSuccess(SECURITY.snackbar_account_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('SECURITY.snackbar_account_update')))
       })
       .catch(err => { console.error(err) })
   };
@@ -164,7 +164,7 @@ class security extends React.Component {
     else {
       axios.put('/myAlfred/api/users/current/delete')
         .then(() => {
-          snackBarSuccess(SECURITY.snackbar_account_desactivate)
+          snackBarSuccess(ReactHtmlParser(this.props.t('SECURITY.snackbar_account_desactivate')))
           this.setState({open2: false})
           clearAuthenticationToken()
           Router.push('/')
@@ -186,7 +186,7 @@ class security extends React.Component {
     axios
       .put('/myAlfred/api/users/profile/editPassword', data)
       .then(() => {
-        snackBarSuccess(SECURITY.snackbar_mdp_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('SECURITY.snackbar_mdp_update')))
         setTimeout(this.loadData, 1000)
       })
       .catch(err => {
@@ -299,7 +299,7 @@ class security extends React.Component {
                     !this.state.isAdmin ?
                       <Grid item xs={12} md={4} xl={12}>
                         <Input
-                          placeholder={this.state.wrongPassword ? SECURITY.placeholder_password_error : SECURITY.placeholder_password_actual}
+                          placeholder={this.state.wrongPassword ? ReactHtmlParser(this.props.t('SECURITY.placeholder_password_error')) : ReactHtmlParser(this.props.t('SECURITY.placeholder_password_actual'))}
                           type={ showCurrentPassword ? 'text' : 'password'}
                           name="password"
                           value={this.state.password}
@@ -319,7 +319,7 @@ class security extends React.Component {
                             </InputAdornment>
                           }
                         />
-                        <em className={`custumsecurityerrorpass ${classes.cancelButton}`}>{this.state.wrongPassword ? SECURITY.placeholder_password_error : ''}</em>
+                        <em className={`custumsecurityerrorpass ${classes.cancelButton}`}>{this.state.wrongPassword ? ReactHtmlParser(this.props.t('SECURITY.placeholder_password_error')) : ''}</em>
                       </Grid> : null
                   }
                   <Grid item xs={12} md={4} xl={12}>

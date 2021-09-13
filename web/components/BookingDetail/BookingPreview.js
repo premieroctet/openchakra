@@ -214,19 +214,19 @@ class BookingPreview extends React.Component {
     const status = bookingObj.status
     const paymentTitle =
       amIAlfred ?
-        status === BOOK_STATUS.REFUSED ? BOOKING.payment_no_finish
-          : [BOOK_STATUS.FINISHED, BOOK_STATUS.CONFIRMED].includes(status) ? BOOKING.versement : BOOKING.potential_incomes
+        status === BOOK_STATUS.REFUSED ? ReactHtmlParser(this.props.t('BOOKING.payment_no_finish'))
+          : [BOOK_STATUS.FINISHED, BOOK_STATUS.CONFIRMED].includes(status) ? ReactHtmlParser(this.props.t('BOOKING.versement')) : BOOKING.potential_incomes
         :
         [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED].includes(status) ?
-          BOOKING.payment_no_finish
+          ReactHtmlParser(this.props.t('BOOKING.payment_no_finish'))
           :
           status === BOOK_STATUS.FINISHED ?
-            BOOKING.payment_title
+            ReactHtmlParser(this.props.t('BOOKING.payment_title'))
             :
             [BOOK_STATUS.CONFIRMED, BOOK_STATUS.PREAPPROVED, BOOK_STATUS.INFO, BOOK_STATUS.TO_CONFIRM].includes(status) ?
-              BOOKING.payment_if_accept
+              ReactHtmlParser(this.props.t('BOOKING.payment_if_accept'))
               :
-              BOOKING.potential_incomes
+              ReactHtmlParser(this.props.t('BOOKING.potential_incomes'))
 
     const momentTitle = [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
       `du ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}
@@ -235,7 +235,7 @@ class BookingPreview extends React.Component {
       `le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`
 
     const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone
-    const customer_booking_title = bookingObj.customer_booking && BOOKING.avocotes_resa + bookingObj.customer_booking.user.full_name
+    const customer_booking_title = bookingObj.customer_booking && ReactHtmlParser(this.props.t('BOOKING.avocotes_resa')) + bookingObj.customer_booking.user.full_name
 
     return (
       <Grid>
@@ -265,7 +265,7 @@ class BookingPreview extends React.Component {
                         <Grid>
                           <h2>
                             {status === BOOK_STATUS.PREAPPROVED ?
-                              amIAlfred ? BOOKING.pre_approved : BOOKING.invit_checking
+                              amIAlfred ? ReactHtmlParser(this.props.t('BOOKING.pre_approved')) : BOOKING.invit_checking
                               :
                               status
                             }
@@ -366,7 +366,7 @@ class BookingPreview extends React.Component {
                         ) : null}
                     <Grid container className={classes.mainContainerAboutResa}>
                       <Grid item xs={12} className={classes.containerTitleSectionAbout}>
-                        <Typography className={classes.fontSizeTitleSectionAbout}>{BOOKING.about + displayUser.firstname}</Typography>
+                        <Typography className={classes.fontSizeTitleSectionAbout}>{ReactHtmlParser(this.props.t('BOOKING.about')) + displayUser.firstname}</Typography>
                       </Grid>
                       <Grid container className={classes.reservationContainer}>
                         <Grid item xl={6}>
@@ -379,7 +379,7 @@ class BookingPreview extends React.Component {
                                   null
                                 }
                                 <Typography>
-                                  {BOOKING.member_since + moment(displayUser.creation_date).format('MMMM YYYY')}
+                                  {ReactHtmlParser(this.props.t('BOOKING.member_since')) + moment(displayUser.creation_date).format('MMMM YYYY')}
                                 </Typography>
                               </Grid>
                             </Grid>
@@ -446,10 +446,10 @@ class BookingPreview extends React.Component {
                               <Grid item>
                                 <Typography>
                                   {bookingObj.address ?
-                                    `au ${bookingObj.address.address}, ${bookingObj.address.zip_code} ${bookingObj.address.city}` : BOOKING.visio}
+                                    `au ${bookingObj.address.address}, ${bookingObj.address.zip_code} ${bookingObj.address.city}` : ReactHtmlParser(this.props.t('BOOKING.visio'))}
                                 </Typography>
                                 <Typography>
-                                  {BOOKING.created_date + moment(bookingObj.date).format('DD/MM/YYYY')} à ${moment(bookingObj.date).format('HH:mm')}
+                                  {ReactHtmlParser(this.props.t('BOOKING.created_date')) + moment(bookingObj.date).format('DD/MM/YYYY')} à ${moment(bookingObj.date).format('HH:mm')}
                                 </Typography>
                               </Grid>
                             </Grid>
@@ -492,9 +492,9 @@ class BookingPreview extends React.Component {
                                 <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                   <Grid className={classes.labelReservation}>
                                     <Typography>
-                                      {BOOKING.info_end_resa + moment(bookingObj.date)
+                                      {ReactHtmlParser(this.props.t('BOOKING.info_end_resa')) + moment(bookingObj.date)
                                         .add(1, 'd')
-                                        .format('DD/MM/YYYY') + BOOKING.a + moment(bookingObj.date).format('HH:mm')}
+                                        .format('DD/MM/YYYY') + ReactHtmlParser(this.props.t('BOOKING.a')) + moment(bookingObj.date).format('HH:mm')}
                                     </Typography>
                                   </Grid>
                                   <Grid className={classes.buttonConfirmResa}>

@@ -114,7 +114,7 @@ class notifications extends React.Component {
 
     axios.put('/myAlfred/api/users/account/notifications', data)
       .then(() => {
-        snackBarSuccess(NOTIFICATIONS.snackbar_account_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('NOTIFICATIONS.snackbar_account_update')))
       })
       .catch(err => console.error(err))
   };

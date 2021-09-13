@@ -89,7 +89,7 @@ class Register extends React.Component {
 
   componentDidMount() {
     if (getLoggedUserId() && isLoggedUserRegistered()) {
-      snackBarError(REGISTER.snackbar_already_logged)
+      snackBarError(ReactHtmlParser(this.props.t('REGISTER.snackbar_already_logged')))
       window.location = '/'
     }
 
@@ -204,7 +204,7 @@ class Register extends React.Component {
       this.setState({emailValidator: true, emailError: ''})
     }
     else {
-      this.setState({emailValidator: false, emailError: REGISTER.textfield_email_error})
+      this.setState({emailValidator: false, emailError: ReactHtmlParser(this.props.t('REGISTER.textfield_email_error'))})
     }
     this.setState({email: event.target.value}, () => this.validatorFirstStep())
   }
@@ -241,12 +241,12 @@ class Register extends React.Component {
     setAxiosAuthentication()
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
-        let txt = is_production() ? REGISTER.snackbar_sms_send : `Dev : le code est ${res.data.sms_code}`
+        let txt = is_production() ? ReactHtmlParser(this.props.t('REGISTER.snackbar_sms_send')) : `Dev : le code est ${res.data.sms_code}`
         snackBarSuccess(txt)
         this.setState({smsCodeOpen: true})
       })
       .catch(() => {
-        snackBarError(REGISTER.snackbar_sms_error)
+        snackBarError(ReactHtmlParser(this.props.t('REGISTER.snackbar_sms_error')))
         this.setState({serverError: true})
       })
   };
@@ -256,7 +256,7 @@ class Register extends React.Component {
     axios.post('/myAlfred/api/users/checkSMSVerification', {sms_code: this.state.smsCode})
       .then(res => {
         if (res.data.sms_code_ok) {
-          snackBarSuccess(REGISTER.snackbar_phone_valid)
+          snackBarSuccess(ReactHtmlParser(this.props.t('REGISTER.snackbar_phone_valid')))
           this.setState({smsCodeOpen: false, phoneConfirmed: true})
           if(hasStatusRegister()) {
             removeStatusRegister()
@@ -267,11 +267,11 @@ class Register extends React.Component {
           }
         }
         else {
-          snackBarError(REGISTER.snackbar_error_code_phone)
+          snackBarError(ReactHtmlParser(this.props.t('REGISTER.snackbar_error_code_phone')))
         }
       })
       .catch(() => {
-        snackBarError(REGISTER.snackbar_error_check_phone)
+        snackBarError(ReactHtmlParser(this.props.t('REGISTER.snackbar_error_check_phone')))
       })
   };
 
@@ -379,7 +379,7 @@ class Register extends React.Component {
     axios
       .put('/myAlfred/api/users/profile/phone', newPhone)
       .then(() => {
-        snackBarSuccess(REGISTER.snackbar_phone_add)
+        snackBarSuccess(ReactHtmlParser(this.props.t('REGISTER.snackbar_phone_add')))
       })
       .catch(err =>
         console.error(err),
@@ -533,7 +533,7 @@ class Register extends React.Component {
                       nextButton={
                         <Button size="small" onClick={() => this.handleNext(activeStep)}
                           disabled={activeStep === 0 ? firstPageValidator : secondPageValidator || pending} classes={{root: 'customregisternavnext'}}>
-                          {activeStep === 0 ? REGISTER.next_button : REGISTER.finish_button}
+                          {activeStep === 0 ? ReactHtmlParser(this.props.t('REGISTER.next_button')) : ReactHtmlParser(this.props.t('REGISTER.finish_button'))}
                           <KeyboardArrowRight/>
                         </Button>
                       }

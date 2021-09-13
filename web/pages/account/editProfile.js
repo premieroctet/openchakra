@@ -148,10 +148,10 @@ class editProfile extends React.Component {
   sendEmail = () => {
     axios.get('/myAlfred/api/users/sendMailVerification')
       .then(() => {
-        snackBarSuccess(EDIT_PROFIL.email_send)
+        snackBarSuccess(ReactHtmlParser(this.props.t('EDIT_PROFIL.email_send')))
       })
       .catch(() => {
-        snackBarError(EDIT_PROFIL.error_email)
+        snackBarError(ReactHtmlParser(this.props.t('EDIT_PROFIL.error_email')))
       })
   };
 
@@ -160,7 +160,7 @@ class editProfile extends React.Component {
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
         this.setState({smsCodeOpen: true}, () => this.onSubmit())
-        let txt = is_production() ? EDIT_PROFIL.sms_send : `Dev : le code est ${res.data.sms_code}`
+        let txt = is_production() ? ReactHtmlParser(this.props.t('EDIT_PROFIL.sms_send')) : `Dev : le code est ${res.data.sms_code}`
         snackBarSuccess(txt)
       })
       .catch(err => {
@@ -169,7 +169,7 @@ class editProfile extends React.Component {
           smsCodeOpen: true,
           serverError: true,
         })
-        snackBarError(EDIT_PROFIL.sms_error)
+        snackBarError(ReactHtmlParser(this.props.t('EDIT_PROFIL.sms_error')))
       })
   };
 
@@ -182,14 +182,14 @@ class editProfile extends React.Component {
             smsCodeOpen: false,
             phoneConfirmed: true,
           }, () => this.onSubmit())
-          snackBarSuccess(EDIT_PROFIL.validate_phone)
+          snackBarSuccess(ReactHtmlParser(this.props.t('EDIT_PROFIL.validate_phone')))
         }
         else {
-          snackBarError(EDIT_PROFIL.incorrect_code)
+          snackBarError(ReactHtmlParser(this.props.t('EDIT_PROFIL.incorrect_code')))
         }
       })
       .catch(() =>
-        snackBarError(EDIT_PROFIL.error_verif_code),
+        snackBarError(ReactHtmlParser(this.props.t('EDIT_PROFIL.error_verif_code'))),
       )
   };
 
@@ -369,7 +369,7 @@ class editProfile extends React.Component {
                 disabled={user.email ? !!(userEmail === user.email && user.is_confirmed) : true}
                 classes={{root: `customeditprofilcheckemail ${classes.buttonCheckPhone}`}}
               >
-                {userEmail === user.email && user.is_confirmed === true ? EDIT_PROFIL.user_email_check : userEmail !== user.email ? EDIT_PROFIL.user_newemail_check : EDIT_PROFIL.check_your_email}
+                {userEmail === user.email && user.is_confirmed === true ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_email_check')) : userEmail !== user.email ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_newemail_check')) : ReactHtmlParser(this.props.t('EDIT_PROFIL.check_your_email'))}
               </Button>
             </Grid>
             <Grid item xs={12} lg={6} md={12} sm={12} xl={6}>
@@ -394,7 +394,7 @@ class editProfile extends React.Component {
                 disabled={user.phone ? !!(phone === user.phone && user.phone_confirmed || user.phone.length !== 11) : true}
                 classes={{root: `customeditprofilcheckphone ${classes.buttonCheckPhone}`}}
               >
-                {phone === user.phone && user.phone_confirmed === true ? EDIT_PROFIL.user_phone_check : phone !== user.phone ? EDIT_PROFIL.user_newphone_check : EDIT_PROFIL.check_your_phone}
+                {phone === user.phone && user.phone_confirmed === true ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_phone_check')) : phone !== user.phone ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_newphone_check')) : ReactHtmlParser(this.props.t('EDIT_PROFIL.check_your_phone'))}
               </Button>
             </Grid>
           </Grid>
