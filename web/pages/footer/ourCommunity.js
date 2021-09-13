@@ -5,6 +5,7 @@ import {withStyles} from '@material-ui/core/styles'
 import styles from '../../static/css/pages/footer/ourCommunity/ourCommunity'
 import LayoutFaq from '../../hoc/Layout/LayoutFaq'
 import Typography from '@material-ui/core/Typography'
+import {FAQ_OUR_COMMUNITY} from '../../utils/i18n'
 
 class OurCommunity extends React.Component {
   constructor(props) {
@@ -19,17 +20,10 @@ class OurCommunity extends React.Component {
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
             <Grid className={classes.containerWidth}>
               <Grid>
-                <h2 className={'customcommunitytitle'} style={{textAlign: 'center'}}>Un monde où il fait bon vivre</h2>
+                <h2 className={'customcommunitytitle'} style={{textAlign: 'center'}}>{FAQ_OUR_COMMUNITY.title}</h2>
               </Grid>
               <Grid>
-                <Typography className={'customcommunitytext'} style={{textAlign: 'justify'}}>Chez My Alfred, notre communauté est au coeur de nos préoccupations. Notre priorité est de
-                créer un espace où il fait bon vivre dans lequel chacun puisse trouver sa place. Ici, le
-                racisme, l’homophobie, le sexisme ou toute autre forme de discrimination n’est pas toléré.<br/>
-                  Nous croyons que le silence n’est pas une option et que nous devons faire front. Ensemble,
-                  nous pouvons nous éduquer et apprendre. Nous pouvons amplifier les voix de ceux qui
-                  subissent ces injustices et provoquer un vrai changement.<br/>
-                  My Alfred soutient les femmes, les personnes de couleur et la communauté LGBTQ+.
-                </Typography>
+                <Typography className={'customcommunitytext'} style={{textAlign: 'justify'}}>{FAQ_OUR_COMMUNITY.content}</Typography>
               </Grid>
             </Grid>
           </Grid>

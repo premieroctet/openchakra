@@ -149,6 +149,97 @@ const BUTTON_SWITCH = {
   euro: ' €',
 }
 
+const FAQ_ABOUT = {
+  title_birth: 'Fondé en 2019',
+  content_birth: 'My Alfred est né de l’envie de nous simplifier la vie. Nous voulions répondre à une uestion simple : Comment gagner du temps ? Aujourd’hui, nous sommes heureux de répondre à une multitude de problématiques. En créant une plateforme d’économie collaborative, nous voulons simplifiez votre quotidien mais nous espérons aussi rapprocher les générations, développer l’entrepreunariat, contribuer au développement des compétences de chacun et créer une communauté où il fait bon vivre.',
+  title_we_are: 'Nous sommes My Alfred',
+  content_we_are: 'Nous sommes persuadés que l’économie collaborative favorise le développement de nouvelles formes d’emploi pour des entrepreneurs qui ont soif de liberté, de créativité et d’activité multiples. Nous mettons en relation des particuliers, des entrepreneurs pour que chacun puisse proposer ou disposer de tous les services. Nous apportons de la visibilité, de l’équité, de la transparence, un espace communautaire où chacun participe au développement d’une économie responsable. Nous avons à cœur de faire prendre conscience à chacun d’entre nous que seul on sait faire peu de choses, ensemble on peut tout faire.',
+  title_is_what: 'My Alfred, qu\'est-ce que c\'est ?',
+  content_is_what: 'My Alfred crée des liens entre les personnes en leur donnant la possibilité de réserver des services partout en France. Les Alfred constituent le moteur de la communauté et fournissent à notre communauté des services de qualités, comme s’ils le faisaient pour eux même. Plus de 20 000 prestations sont recensées sur My Alfred, portées par plusieurs milliers d’Alfred compétents, talentueux et bienveillants.',
+  title_service: 'Qu\'est-ce que les services d’Alfred ?',
+  content_service: 'Si vous disposez d’un talent, d’une passion ou tout simplement de temps, vous pouvez gagner de l\'argent en les mettant à la disposition de notre communauté. En quelques minutes, vous proposez vos services, fixez vos conditions et créez votre profil d’Alfred, vous permettant de bénéficier d’une grande visibilité, une interface personnalisée propre à vos services, à votre personnalité.',
+  title_mission: 'Notre mission',
+  content_mission: 'Notre mission est de créer un lieu de rencontres et d’opportunités, où trouver la bonne personne n’est plus un problème.',
+  title_vision: 'Notre vision',
+  content_vision: 'Nous aimerions que My Alfred puisse vous accompagner au quotidien. Notre communauté est au coeur de ce que nous faisons et nous souhaitons créez un espace où règne la confiance et la simplicité.',
+}
+
+const FAQ_BECOME_ALFRED = {
+  one: '1',
+  one_title: 'Proposez vos services',
+  one_content: 'Vous n\'avez aucun frais à payer pour proposer vos services. Indiquez simplement vos prestations en vous appuyant sur une liste de plus de 2000 services proposées sur My-Alfred. Un service n\'apparaît pas ? Soumettez-le à nos équipes !',
+  two: '2',
+  two_title: 'Fixez vos conditions',
+  two_content: 'Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Si vous avez besoin d\'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences ! ',
+  three: '3',
+  three_title: 'Choisissez votre Alfred et réservez !',
+  three_content: 'Choisissez le profil et la prestation qui vous intéresse puis sélectionnez vos dates et vos options. Cliquez sur le bouton réservez et suivez la procédure de paiement',
+  why_become_alfred: 'Pourquoi devenir Alfred ?',
+  why_become_alfred_content: 'My-Alfred vous permet, de manière simple et sécurisée, de mettre vos services à disposition de tout un chacun. Un talent pour la décoration ? Une passion pour la cuisine ? Ou tout simplement du temps : proposez vos services et complétez vos revenus. Vous avez un contrôle total sur vos disponibilités, vos prix et le détail de vos prestations.',
+  who_become_alfred: 'Qui peut devenir Alfred ?',
+  who_become_alfred_content: 'Nous sommes tous des Alfred dès l\'âge de ',
+  who_become_alfred_content_end: ' ans. Chacun d\'entre nous doit pouvoir partager ses savoir faire, ses compétences, ses passions... Tantôt consommateur d\'Alfred, tantôt Alfred, rejoignez la communauté Alfred en quelques clics !',
+  create_shop: 'Créez votre boutique à votre façon',
+  propose_service: 'Vous proposez vos services',
+  propose_service_content: 'A travers la création de votre boutique, vous proposez vos services en décrivant l\'ensemble de vos prestations. Vous pouvez à tout moment revenir sur votre boutique, ajouter ou supprimer des services. Les différentes étapes de création de votre boutique sont extrêmement simples. À vous de jouer !',
+  availibility: 'Vous affichez vos disponibilités',
+  aivailibility_content: 'Vous indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestations. Vous pouvez synchroniser votre calendrier My-Alfred avec vos autres calendriers et éviter de manquer un rendez-vous. Tous vos calendriers sont mis à jour automatiquement',
+  your_price: 'Vous fixez vos prix',
+  your_price_content: 'C\'est à vous de fixer les prix de vos services : nos outils de tarifications sont là pour vous aider à proposer le meilleur prix. Vous pouvez facilement ajouter des éléments personnalisés, notamment des tarifs de week-end, de nuit, des packages de services...',
+  your_rules: 'Vous déterminez vos règles',
+  your_rules_content: 'Pour que les utilisateurs de My-Alfred puissent facilement comprendre vos services, vous définissez vos règles avant qu\'ils puissent réserver. S\'ils enfreignent les règles après avoir réservé, vous pourrez annuler leur réservation sans aucune pénalité.',
+}
+
+const ADD_SERVICE = {
+  one: '1',
+  register_title: 'Inscrivez-vous & détaillez vos informations',
+  register_phone: 'Commencez par vous inscrire en précisant votre adresse et votre numéro de téléphone',
+  two: '2',
+  begin_your_research: 'Commencez votre recherche',
+  begin_your_research_content: 'Indiquez le type de service que vous recherchez dans de recherche et parcourez les différentes catégorie de service',
+  three: '3',
+  three_title: 'Choisissez votre Alfred et réservez !',
+  three_content: 'Choisissez le profil et la prestation qui vous intéresse puis sélectionnez vos dates et vos options. Cliquez sur le bouton réservez et suivez la procédure de paiement',
+}
+
+const FAQ_NEED_MORE = {
+  link: 'Et si vous souhaitez en savoir plus',
+  you_can: 'Vous pouvez ',
+  contact_us: 'nous contacter',
+}
+
+const FAQ_OUR_COMMUNITY = {
+  title: 'Un monde où il fait bon vivre',
+  content: 'Chez My Alfred, notre communauté est au coeur de nos préoccupations. Notre priorité est de créer un espace où il fait bon vivre dans lequel chacun puisse trouver sa place. Ici, le racisme, l’homophobie, le sexisme ou toute autre forme de discrimination n’est pas toléré.<br/> Nous croyons que le silence n’est pas une option et que nous devons faire front. Ensemble, nous pouvons nous éduquer et apprendre. Nous pouvons amplifier les voix de ceux qui subissent ces injustices et provoquer un vrai changement.<br/>My Alfred soutient les femmes, les personnes de couleur et la communauté LGBTQ+.',
+}
+
+const LEGAL_NOTICE = {
+  mention_legal: 'Mentions légales',
+  editor: 'Editeur',
+  social: 'Raison sociale : MY-ALFRED',
+  rcs: 'RCS : 850 148 867',
+  capital: 'Société par Actions Simplifiée au capital social de 40.000€',
+  tva: 'N° TVA intracommunautaire : FR5850148867',
+  address: 'Adresse du siège social',
+  address_begin: '42 Rampe Bouvreuil',
+  postal: '76000 Rouen',
+  country: 'France',
+  ceo: 'Directeur de la publication',
+  ceo_sv: 'Solène Vanuxem, Directrice Général',
+  host: 'Hébergement',
+  aws: 'Amazon Web Services',
+  aws_address: 'Adresse : Amazon Web Services EMEA SARL, Succursale Française',
+  aws_postal: '31 Place des Corolles, Tour Carpe Diem, 92400 Courbevoie',
+  aws_contact: 'Contact : https://aws.amazon.com/fr/contact-us/',
+  aws_phone: 'Tél : 01.46.17.10.00',
+  email: 'Mail',
+  email_hello: 'hello@my-alfred.io',
+  phone: 'Téléphone',
+  phone_number: '02 35 76 47 52'
+
+
+}
+
 const SEARCHBAR = {
   what: 'Quel service ?',
   where: 'Où ?',
@@ -922,4 +1013,10 @@ module.exports = {
   DRAWER_BOOKING,
   BOOKING_DETAIL,
   BUTTON_SWITCH,
+  FAQ_ABOUT,
+  FAQ_BECOME_ALFRED,
+  ADD_SERVICE,
+  FAQ_NEED_MORE,
+  FAQ_OUR_COMMUNITY,
+  LEGAL_NOTICE,
 }

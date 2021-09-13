@@ -1,8 +1,8 @@
 import {withTranslation} from 'react-i18next'
-import React, {Fragment} from 'react';
-import Layout from '../../hoc/Layout/Layout';
-import Grid from '@material-ui/core/Grid';
-import {withStyles} from '@material-ui/core/styles';
+import React, {Fragment} from 'react'
+import Layout from '../../hoc/Layout/Layout'
+import Grid from '@material-ui/core/Grid'
+import {withStyles} from '@material-ui/core/styles'
 
 const styles = theme => ({
   bigContainer: {
@@ -56,8 +56,8 @@ const styles = theme => ({
       width: '148%!important',
       marginTop: '6%',
     },
-  }
-  , toggle: {
+  },
+  toggle: {
     height: '950px',
     [theme.breakpoints.down('sm')]: {
       marginLeft: '-200px',
@@ -79,12 +79,12 @@ const styles = theme => ({
 
     },
   },
-});
+})
 
 
 class Privacypolicy extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       click: true,
       click1: false,
@@ -96,7 +96,7 @@ class Privacypolicy extends React.Component {
       click7: false,
       click8: false,
       click9: false,
-    };
+    }
   }
 
   componentDidMount() {
@@ -107,85 +107,85 @@ class Privacypolicy extends React.Component {
     this.setState({
       click: true, click1: false, click2: false, click3: false, click4: false,
       click5: false, click6: false, click7: false, click8: false, click9: false,
-    });
+    })
   };
 
   handleClick1 = () => {
     this.setState({
       click: false, click1: true, click2: false, click3: false, click4: false,
       click5: false, click6: false, click7: false, click8: false, click9: false,
-    });
+    })
   };
 
   handleClick2 = () => {
     this.setState({
       click: false, click1: false, click2: true, click3: false, click4: false,
       click5: false, click6: false, click7: false, click8: false, click9: false,
-    });
+    })
   };
 
   handleClick3 = () => {
     this.setState({
       click: false, click1: false, click2: false, click3: true, click4: false,
       click5: false, click6: false, click7: false, click8: false, click9: false,
-    });
+    })
   };
 
   handleClick4 = () => {
     this.setState({
       click: false, click1: false, click2: false, click3: false, click4: true,
       click5: false, click6: false, click7: false, click8: false, click9: false,
-    });
+    })
   };
 
   handleClick5 = () => {
     this.setState({
       click: false, click1: false, click2: false, click3: false, click4: false,
       click5: true, click6: false, click7: false, click8: false, click9: false,
-    });
+    })
   };
 
   handleClick6 = () => {
     this.setState({
       click: false, click1: false, click2: false, click3: false, click4: false,
       click5: false, click6: true, click7: false, click8: false, click9: false,
-    });
+    })
   };
 
   handleClick7 = () => {
     this.setState({
       click: false, click1: false, click2: false, click3: false, click4: false,
       click5: false, click6: false, click7: true, click8: false, click9: false,
-    });
+    })
   };
 
   handleClick8 = () => {
     this.setState({
       click: false, click1: false, click2: false, click3: false, click4: false,
       click5: false, click6: false, click7: false, click8: true, click9: false,
-    });
+    })
   };
 
   handleClick9 = () => {
     this.setState({
       click: false, click1: false, click2: false, click3: false, click4: false,
       click5: false, click6: false, click7: false, click8: false, click9: true,
-    });
+    })
   };
 
 
   render() {
-    const {classes} = this.props;
-    const {click} = this.state;
-    const {click1} = this.state;
-    const {click2} = this.state;
-    const {click3} = this.state;
-    const {click4} = this.state;
-    const {click5} = this.state;
-    const {click6} = this.state;
-    const {click7} = this.state;
-    const {click8} = this.state;
-    const {click9} = this.state;
+    const {classes} = this.props
+    const {click} = this.state
+    const {click1} = this.state
+    const {click2} = this.state
+    const {click3} = this.state
+    const {click4} = this.state
+    const {click5} = this.state
+    const {click6} = this.state
+    const {click7} = this.state
+    const {click8} = this.state
+    const {click9} = this.state
 
     return (
       <Fragment>
@@ -196,7 +196,7 @@ class Privacypolicy extends React.Component {
                 <div className={classes.trigger1}/>
                 {click ?
                   <Grid onClick={this.handleClick} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '1002', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '1002', backgroundColor: 'white'}}>
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
@@ -206,7 +206,7 @@ class Privacypolicy extends React.Component {
                   </Grid>
                   :
                   <Grid onClick={this.handleClick} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
@@ -218,7 +218,7 @@ class Privacypolicy extends React.Component {
 
                 {click1 ?
                   <Grid onClick={this.handleClick1} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
@@ -228,7 +228,7 @@ class Privacypolicy extends React.Component {
                   </Grid>
                   :
                   <Grid onClick={this.handleClick1} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
@@ -240,13 +240,13 @@ class Privacypolicy extends React.Component {
 
                 {click2 ?
                   <Grid onClick={this.handleClick2} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#84A5E0', fontSize: '1.1rem'}}>Les
                       données & informations collectées</a>
                   </Grid>
                   :
                   <Grid onClick={this.handleClick2} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#585858', fontSize: '1.1rem'}}>Les
                       données & informations collectées</a>
                   </Grid>
@@ -254,13 +254,13 @@ class Privacypolicy extends React.Component {
 
                 {click3 ?
                   <Grid onClick={this.handleClick3} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#84A5E0', fontSize: '1.1rem'}}>Paiements
                       & versements</a>
                   </Grid>
                   :
                   <Grid onClick={this.handleClick3} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#585858', fontSize: '1.1rem'}}>Paiements
                       & versements</a>
                   </Grid>
@@ -268,13 +268,13 @@ class Privacypolicy extends React.Component {
 
                 {click4 ?
                   <Grid onClick={this.handleClick4} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#84A5E0', fontSize: '1.1rem'}}>Utilisation
                       des données</a>
                   </Grid>
                   :
                   <Grid onClick={this.handleClick4} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#585858', fontSize: '1.1rem'}}>Utilisation
                       des données</a>
                   </Grid>
@@ -282,7 +282,7 @@ class Privacypolicy extends React.Component {
 
                 {click5 ?
                   <Grid onClick={this.handleClick5} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
@@ -292,7 +292,7 @@ class Privacypolicy extends React.Component {
                   </Grid>
                   :
                   <Grid onClick={this.handleClick5} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
@@ -304,13 +304,13 @@ class Privacypolicy extends React.Component {
 
                 {click6 ?
                   <Grid onClick={this.handleClick6} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#84A5E0', fontSize: '1.1rem'}}>Droits
                       relatifs aux données à caractère personnel</a>
                   </Grid>
                   :
                   <Grid onClick={this.handleClick6} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#585858', fontSize: '1.1rem'}}>Droits
                       relatifs aux données à caractère personnel</a>
                   </Grid>
@@ -318,7 +318,7 @@ class Privacypolicy extends React.Component {
 
                 {click7 ?
                   <Grid onClick={this.handleClick7} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
@@ -328,7 +328,7 @@ class Privacypolicy extends React.Component {
                   </Grid>
                   :
                   <Grid onClick={this.handleClick7} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
@@ -340,7 +340,7 @@ class Privacypolicy extends React.Component {
 
                 {click8 ?
                   <Grid onClick={this.handleClick8} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
@@ -350,7 +350,7 @@ class Privacypolicy extends React.Component {
                   </Grid>
                   :
                   <Grid onClick={this.handleClick8} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
@@ -362,13 +362,13 @@ class Privacypolicy extends React.Component {
 
                 {click9 ?
                   <Grid onClick={this.handleClick9} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#84A5E0', fontSize: '1.1rem'}}>Politique
                       de gestion des cookies</a>
                   </Grid>
                   :
                   <Grid onClick={this.handleClick9} item xs={12}
-                        style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
+                    style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
                     <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#585858', fontSize: '1.1rem'}}>Politique
                       de gestion des cookies</a>
                   </Grid>
@@ -416,8 +416,8 @@ class Privacypolicy extends React.Component {
 
 
       </Fragment>
-    );
-  };
+    )
+  }
 }
 
 

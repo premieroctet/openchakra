@@ -1,32 +1,32 @@
 import {withTranslation} from 'react-i18next'
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import BookingDetail from "../../BookingDetail/BookingDetail";
-import Accordion from "@material-ui/core/Accordion";
-import Button from "@material-ui/core/Button";
-import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBookingRecap';
-import withStyles from "@material-ui/core/styles/withStyles";
-import moment from 'moment';
-import Divider from "@material-ui/core/Divider";
-moment.locale('fr');
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import BookingDetail from '../../BookingDetail/BookingDetail'
+import Accordion from '@material-ui/core/Accordion'
+import Button from '@material-ui/core/Button'
+import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBookingRecap'
+import withStyles from '@material-ui/core/styles/withStyles'
+import moment from 'moment'
+import Divider from '@material-ui/core/Divider'
+moment.locale('fr')
 
-const {booking_datetime_str} = require('../../../utils/dateutils');
+const {booking_datetime_str} = require('../../../utils/dateutils')
 
-class DrawerBookingRecap extends React.Component{
+class DrawerBookingRecap extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
-  handlePay = () =>{
+  handlePay = () => {
     this.props.handlePay()
   };
 
   render() {
 
-    const{pricedPrestations, countPrestations, grandTotal, fees, travel_tax, classes, pick_tax, cesu_total, mode, prestations, bookingObj, user, id_card, activeStep, pending} = this.props;
+    const{pricedPrestations, countPrestations, grandTotal, fees, travel_tax, classes, pick_tax, cesu_total, mode, prestations, bookingObj, user, id_card, activeStep, pending} = this.props
 
     return(
       <Grid>
@@ -70,7 +70,7 @@ class DrawerBookingRecap extends React.Component{
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
-                      marginBottom: 20
+                      marginBottom: 20,
                     }}>
                       {prestations.map((prestation, index) => (
                         <Grid container style={{
@@ -78,7 +78,7 @@ class DrawerBookingRecap extends React.Component{
                           alignItems: 'center',
                           width: '100%',
                           marginBottom: '5%',
-                          justifyContent: 'space-between'
+                          justifyContent: 'space-between',
                         }} key={index}>
                           <Grid item xs={6}>
                             <Grid>
@@ -93,7 +93,7 @@ class DrawerBookingRecap extends React.Component{
                         </Grid>
                       ))}
                       {travel_tax?
-                        <Grid style={{ display: 'flex',
+                        <Grid style={{display: 'flex',
                           alignItems: 'center',
                           width: '100%',
                           marginBottom: '5%',
@@ -112,23 +112,6 @@ class DrawerBookingRecap extends React.Component{
                     </Grid>
                   </AccordionDetails>
                 </Accordion>
-                {/*TODO CODE PROMO
-            <Grid>
-              <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                  style={{padding: 0}}
-                >
-                  <Typography>Utiliser un code promo</Typography>
-                </AccordionSummary>
-                <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                  <Typography>MY CONTENT</Typography>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-            */}
               </Grid>
           }
           <Grid style={{marginTop: '3vh'}}>
@@ -143,7 +126,7 @@ class DrawerBookingRecap extends React.Component{
               mode={mode}
             />
           </Grid>
-          </Grid>
+        </Grid>
 
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '3vh'}}>
           <Grid style={{width: '100%'}}>
@@ -152,7 +135,7 @@ class DrawerBookingRecap extends React.Component{
               variant="contained"
               color="primary"
               aria-label="add"
-              onClick={() => activeStep === 0 ? this.props.handleStep() : this.props.handlePayDirect()}
+              onClick={() => (activeStep === 0 ? this.props.handleStep() : this.props.handlePayDirect())}
               disabled={activeStep === 1 ? id_card === '' || pending : false}
             >
               <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? 'Payer' : 'Valider'}</Typography>
@@ -163,13 +146,13 @@ class DrawerBookingRecap extends React.Component{
           mode === 'short' ? null :
             <Grid style={{display: 'flex', justifyContent: 'center', marginTop: '2vh'}}>
               <Grid>
-                <Typography style={{color:'rgba(39,37,37,35%)'}}>Choix du mode de paiement l'étape suivante</Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Choix du mode de paiement l'étape suivante</Typography>
               </Grid>
             </Grid>
         }
       </Grid>
-    );
+    )
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles (styles) (DrawerBookingRecap))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(DrawerBookingRecap))

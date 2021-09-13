@@ -7,6 +7,7 @@ import NeedMoreFaq from '../../hoc/Layout/Faq/NeedMoreFaq'
 import styles from '../../static/css/pages/footer/addService/addService'
 import Typography from '@material-ui/core/Typography'
 import '../../static/assets/css/custom.css'
+import {ADD_SERVICE} from '../../utils/i18n'
 
 class AddService extends React.Component {
   constructor(props) {
@@ -24,42 +25,36 @@ class AddService extends React.Component {
             </Grid>
             <Grid style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
-                <h3 className={`customaddserviceonetitle ${classes.titleRub}`}>Inscrivez-vous & détaillez vos informations</h3>
+                <h3 className={`customaddserviceonetitle ${classes.titleRub}`}>{ADD_SERVICE.register_title}</h3>
               </Grid>
               <Grid>
-                <Typography style={{marginTop: '5px'}} className={'customaddserviceonetext'}>Commencez par vous inscrire en précisant votre adresse et
-                  votre numéro de téléphone</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid style={{display: 'flex'}}>
-            <Grid className={classes.hideOnMobile}>
-              <h1 style={{marginRight: '25px', color: '#84A5E0'}} className={'customaddservicetwo'}>2</h1>
-            </Grid>
-            <Grid style={{display: 'flex', flexDirection: 'column'}}>
-              <Grid>
-                <h3 className={`customaddservicetwotitle ${classes.titleRub}`}>Commencez votre recherche</h3>
-              </Grid>
-              <Grid>
-                <Typography style={{marginTop: '5px'}} className={'customaddservicetwotext'}>Indiquez le type de service que vous recherchez dans de
-                  recherche
-                  et parcourez les différentes catégorie de service</Typography>
+                <Typography style={{marginTop: '5px'}} className={'customaddserviceonetext'}>{ADD_SERVICE.register_phone}</Typography>
               </Grid>
             </Grid>
           </Grid>
           <Grid style={{display: 'flex'}}>
             <Grid className={classes.hideOnMobile}>
-              <h1 style={{marginRight: '25px', color: '#F36B7F'}} className={'customaddservicethree'}>3</h1>
+              <h1 style={{marginRight: '25px', color: '#84A5E0'}} className={'customaddservicetwo'}>{ADD_SERVICE.two}</h1>
             </Grid>
             <Grid style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
-                <h3 className={`customaddservicethreetitle ${classes.titleRub}`}>Choisissez votre Alfred et réservez !</h3>
+                <h3 className={`customaddservicetwotitle ${classes.titleRub}`}>{ADD_SERVICE.begin_your_research}</h3>
               </Grid>
               <Grid>
-                <Typography style={{marginTop: '5px'}} className={'customaddservicethreetext'}>Choisissez le profil et la prestation qui vous intéresse puis
-                  sélectionnez vos dates et
-                  vos options.
-                  Cliquez sur le bouton réservez et suivez la procédure de paiement</Typography>
+                <Typography style={{marginTop: '5px'}} className={'customaddservicetwotext'}>{ADD_SERVICE.begin_your_research_content}</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid style={{display: 'flex'}}>
+            <Grid className={classes.hideOnMobile}>
+              <h1 style={{marginRight: '25px', color: '#F36B7F'}} className={'customaddservicethree'}>{ADD_SERVICE.three}</h1>
+            </Grid>
+            <Grid style={{display: 'flex', flexDirection: 'column'}}>
+              <Grid>
+                <h3 className={`customaddservicethreetitle ${classes.titleRub}`}>{ADD_SERVICE.three_title}</h3>
+              </Grid>
+              <Grid>
+                <Typography style={{marginTop: '5px'}} className={'customaddservicethreetext'}>{ADD_SERVICE.three_content}</Typography>
               </Grid>
             </Grid>
           </Grid>

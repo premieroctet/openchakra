@@ -7,6 +7,7 @@ import {withStyles} from '@material-ui/core/styles'
 import styles from '../../static/css/pages/footer/becomeAlfred/becomeAlfred'
 import Typography from '@material-ui/core/Typography'
 const {ACCOUNT_MIN_AGE}=require('../../utils/consts')
+import {FAQ_BECOME_ALFRED} from '../../utils/i18n'
 
 class BecomeAlfred extends React.Component {
   constructor(props) {
@@ -21,49 +22,40 @@ class BecomeAlfred extends React.Component {
           <Grid container style={{margin: '0 10%', padding: '5% 10%'}} spacing={3}>
             <Grid item xl={4} lg={4} md={4} sm={12} xs={12} className={'custombecomealfredonecont'} style={{display: 'flex', flexDirection: 'row'}}>
               <Grid className={classes.hiddenXs}>
-                <Typography className={'custombecomealfredone'} style={{marginRight: '25px', color: '#F8CF61', fontSize: 34, fontWeight: 'bold'}}>1</Typography>
+                <Typography className={'custombecomealfredone'} style={{marginRight: '25px', color: '#F8CF61', fontSize: 34, fontWeight: 'bold'}}>{FAQ_BECOME_ALFRED.one}</Typography>
               </Grid>
               <Grid style={{display: 'flex', flexDirection: 'column'}}>
                 <Grid>
-                  <h3 className={'custombecomealfredtitleone'}>Proposez vos services</h3>
+                  <h3 className={'custombecomealfredtitleone'}>{FAQ_BECOME_ALFRED.one_title}</h3>
                 </Grid>
                 <Grid>
-                  <Typography className={'custombecomealfredtextone'} style={{marginTop: '5px', textAlign: 'justify'}}>Vous n'avez aucun frais à payer pour proposer vos services.
-                    Indiquez simplement vos prestations en vous appuyant sur une liste de plus de 2000
-                    services proposées sur My-Alfred. Un service n'apparaît pas ? Soumettez-le à nos équipes
-                    !</Typography>
+                  <Typography className={'custombecomealfredtextone'} style={{marginTop: '5px', textAlign: 'justify'}}>{FAQ_BECOME_ALFRED.one_content}</Typography>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xl={4} lg={4} md={4} sm={12} xs={12} className={'custombecomealfredtwocont'} style={{display: 'flex', flexDirection: 'row'}}>
               <Grid className={classes.hiddenXs}>
-                <Typography className={'custombecomealfredtwo'} style={{marginRight: '25px', color: '#84A5E0', fontSize: 34, fontWeight: 'bold'}}>2</Typography>
+                <Typography className={'custombecomealfredtwo'} style={{marginRight: '25px', color: '#84A5E0', fontSize: 34, fontWeight: 'bold'}}>{FAQ_BECOME_ALFRED.two}</Typography>
               </Grid>
               <Grid style={{display: 'flex', flexDirection: 'column'}}>
                 <Grid>
-                  <h3 className={'custombecomealfredtitletwo'}>Fixez vos conditions</h3>
+                  <h3 className={'custombecomealfredtitletwo'}>{FAQ_BECOME_ALFRED.two_title}</h3>
                 </Grid>
                 <Grid>
-                  <Typography className={'custombecomealfredtexttwo'} style={{marginTop: '5px', textAlign: 'justify'}}>Indiquez vos disponibilités (jours, heures...) ainsi que vos
-                    tarifs et tous les critères pour définir votre prestation. Si vous avez besoin d'aide,
-                    nous sommes là pour vous accompagner dans la création de votre boutique de compétences
-                    ! </Typography>
+                  <Typography className={'custombecomealfredtexttwo'} style={{marginTop: '5px', textAlign: 'justify'}}>{FAQ_BECOME_ALFRED.two_content}</Typography>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xl={4} lg={4} md={4} sm={12} xs={12} className={'custombecomealfredthreecont'} style={{display: 'flex', flexDirection: 'row'}}>
               <Grid className={classes.hiddenXs}>
-                <Typography className={'custombecomealfredthree'} style={{marginRight: '25px', color: '#F36B7F', fontSize: 34, fontWeight: 'bold'}}>3</Typography>
+                <Typography className={'custombecomealfredthree'} style={{marginRight: '25px', color: '#F36B7F', fontSize: 34, fontWeight: 'bold'}}>{FAQ_BECOME_ALFRED.three}</Typography>
               </Grid>
               <Grid style={{display: 'flex', flexDirection: 'column'}}>
                 <Grid>
-                  <h3 className={'custombecomealfredtitlethree'}>Choisissez votre Alfred et réservez !</h3>
+                  <h3 className={'custombecomealfredtitlethree'}>{FAQ_BECOME_ALFRED.three_title}</h3>
                 </Grid>
                 <Grid>
-                  <Typography className={'custombecomealfredtextthree'} style={{marginTop: '5px', textAlign: 'justify'}}>Choisissez le profil et la prestation qui vous intéresse puis
-                    sélectionnez vos dates et
-                    vos options.
-                    Cliquez sur le bouton réservez et suivez la procédure de paiement</Typography>
+                  <Typography className={'custombecomealfredtextthree'} style={{marginTop: '5px', textAlign: 'justify'}}>{FAQ_BECOME_ALFRED.three_content}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -76,75 +68,59 @@ class BecomeAlfred extends React.Component {
           <Grid container style={{margin: '0 10%', padding: '5% 10%'}} spacing={3}>
             <Grid item xl={6} lg={6} md={6} sm={12} xs={12} className={'custombecomealfredwhycont'}>
               <Grid>
-                <h2 style={{textAlign: 'center'}} className={'custombecomealfredwhytitle'}>Pourquoi devenir Alfred ?</h2>
+                <h2 style={{textAlign: 'center'}} className={'custombecomealfredwhytitle'}>{FAQ_BECOME_ALFRED.why_become_alfred}</h2>
               </Grid>
               <Grid>
-                <Typography style={{textAlign: 'justify'}} className={'custombecomealfredwhytext'}>My-Alfred vous permet, de manière simple et sécurisée, de mettre vos services à disposition
-                de tout un chacun. Un talent pour la décoration ? Une passion pour la cuisine ? Ou tout
-                simplement du temps : proposez vos services et complétez vos revenus. Vous avez un contrôle
-                total sur vos disponibilités, vos prix et le détail de vos prestations.</Typography>
+                <Typography style={{textAlign: 'justify'}} className={'custombecomealfredwhytext'}>{FAQ_BECOME_ALFRED.why_become_alfred_content}</Typography>
               </Grid>
             </Grid>
             <Grid item xl={6} lg={6} md={6} sm={12} xs={12} className={'custombecomealfredwhocont'}>
               <Grid>
-                <h2 style={{textAlign: 'center'}} className={'custombecomealfredwhotitle'}>Qui peut devenir Alfred ?</h2>
+                <h2 style={{textAlign: 'center'}} className={'custombecomealfredwhotitle'}>{FAQ_BECOME_ALFRED.who_become_alfred}</h2>
               </Grid>
               <Grid>
                 <Typography style={{textAlign: 'justify'}} className={'custombecomealfredwhotext'}>
-                  {`Nous sommes tous des Alfred dès l'âge de ${ACCOUNT_MIN_AGE} ans. Chacun d'entre nous doit pouvoir partager
-                ses savoir faire, ses compétences, ses passions... Tantôt consommateur d'Alfred, tantôt
-                Alfred, rejoignez la communauté Alfred en quelques clics !`}`</Typography>
+                  {FAQ_BECOME_ALFRED.who_become_alfred_content + ACCOUNT_MIN_AGE + FAQ_BECOME_ALFRED.who_become_alfred_content_end }</Typography>
               </Grid>
             </Grid>
           </Grid>
           <Grid container style={{margin: '0 10%', padding: '0 10%'}} spacing={3}>
             <Grid style={{width: '100%'}}>
-              <h1 style={{textAlign: 'center'}} className={'custombecomealfredh1'}>Créez votre boutique à votre façon</h1>
+              <h1 style={{textAlign: 'center'}} className={'custombecomealfredh1'}>{FAQ_BECOME_ALFRED.create_shop}</h1>
             </Grid>
             <Grid container spacing={3} style={{marginTop: '5vh'}}>
               <Grid item xl={6} lg={6} md={6} sm={12} xs={12} className={'custombecomealfredservicescont'}>
                 <Grid>
-                  <h2 style={{textAlign: 'center'}} className={'custombecomealfredservicesh2'}>Vous proposez vos services</h2>
+                  <h2 style={{textAlign: 'center'}} className={'custombecomealfredservicesh2'}>{FAQ_BECOME_ALFRED.propose_service}</h2>
                 </Grid>
                 <Grid>
-                  <Typography style={{textAlign: 'justify'}} className={'custombecomealfredservicestext'}>A travers la création de votre boutique, vous proposez vos services en décrivant
-                  l'ensemble de vos prestations. Vous pouvez à tout moment revenir sur votre boutique,
-                  ajouter ou supprimer des services. Les différentes étapes de création de votre boutique
-                  sont extrêmement simples. À vous de jouer !</Typography>
+                  <Typography style={{textAlign: 'justify'}} className={'custombecomealfredservicestext'}>{FAQ_BECOME_ALFRED.propose_service_content}</Typography>
                 </Grid>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={12} xs={12} className={'custombecomealfredavailcont'}>
                 <Grid>
-                  <h2 style={{textAlign: 'center'}} className={'custombecomealfredavailtitle'}>Vous affichez vos disponibilités</h2>
+                  <h2 style={{textAlign: 'center'}} className={'custombecomealfredavailtitle'}>{FAQ_BECOME_ALFRED.availibility}</h2>
                 </Grid>
                 <Grid>
-                  <Typography style={{textAlign: 'justify'}} className={'custombecomealfredavailtext'}>Vous indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les
-                  critères pour définir votre prestations. Vous pouvez synchroniser votre calendrier
-                  My-Alfred avec vos autres calendriers et éviter de manquer un rendez-vous. Tous vos
-                  calendriers sont mis à jour automatiquement</Typography>
+                  <Typography style={{textAlign: 'justify'}} className={'custombecomealfredavailtext'}>{FAQ_BECOME_ALFRED.aivailibility_content}</Typography>
                 </Grid>
               </Grid>
             </Grid>
             <Grid container spacing={3}>
               <Grid item xl={6} lg={6} md={6} sm={12} xs={12} className={'custombecomealfredpricecont'}>
                 <Grid>
-                  <h2 style={{textAlign: 'center'}} className={'custombecomealfredpricetitle'}>Vous fixez vos prix</h2>
+                  <h2 style={{textAlign: 'center'}} className={'custombecomealfredpricetitle'}>{FAQ_BECOME_ALFRED.your_price}</h2>
                 </Grid>
                 <Grid>
-                  <Typography style={{textAlign: 'justify'}} className={'custombecomealfredpricetext'}>C'est à vous de fixer les prix de vos services : nos outils de tarifications sont là pour
-                  vous aider à proposer le meilleur prix. Vous pouvez facilement ajouter des éléments
-                  personnalisés, notamment des tarifs de week-end, de nuit, des packages de
-                  services...</Typography>
+                  <Typography style={{textAlign: 'justify'}} className={'custombecomealfredpricetext'}>{FAQ_BECOME_ALFRED.your_price_content}</Typography>
                 </Grid>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={12} xs={12} className={'customebecomealfredrulescont'}>
                 <Grid>
-                  <h2 style={{textAlign: 'center'}} className={'custombecomealfredrulestitle'}>Vous déterminez vos règles</h2>
+                  <h2 style={{textAlign: 'center'}} className={'custombecomealfredrulestitle'}>{FAQ_BECOME_ALFRED.your_rules}</h2>
                 </Grid>
                 <Grid>
-                  <Typography style={{textAlign: 'justify'}} className={'custombecomealfredrulestext'}>Pour que les utilisateurs de My-Alfred puissent facilement comprendre vos services, vous
-                  définissez vos règles avant qu'ils puissent réserver. S'ils enfreignent les règles après
-                  avoir réservé, vous pourrez annuler leur réservation sans aucune pénalité.</Typography>
+                  <Typography style={{textAlign: 'justify'}} className={'custombecomealfredrulestext'}>{FAQ_BECOME_ALFRED.your_rules_content}</Typography>
                 </Grid>
               </Grid>
             </Grid>

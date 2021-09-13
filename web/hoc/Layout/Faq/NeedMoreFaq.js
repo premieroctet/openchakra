@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import Link from '../../../components/Link/Link'
 import {withStyles} from '@material-ui/core/styles'
 import '../../../static/assets/css/custom.css'
+import {FAQ_NEED_MORE} from '../../../utils/i18n'
 
 const styles = () => ({
   link: {
@@ -28,9 +29,9 @@ class NeedMoreFaq extends React.Component {
         display: ' flex', flexDirection: 'column', justifyContent: 'center',
       }}>
         <Grid style={{margin: '0 auto'}}>
-          <h3 style={{fontWeight: 'bold'}} className={'customaddservicewantmore'}>Et si vous souhaitez en savoir plus</h3>
-          <p>Vous pouvez <Link href={'/contact'}>
-            <span className={classes.link}>nous contacter</span>
+          <h3 style={{fontWeight: 'bold'}} className={'customaddservicewantmore'}>{FAQ_NEED_MORE.link}</h3>
+          <p>{FAQ_NEED_MORE.you_can}<Link href={'/contact'}>
+            <span className={classes.link}>{FAQ_NEED_MORE.contact_us}</span>
           </Link>
           </p>
         </Grid>
