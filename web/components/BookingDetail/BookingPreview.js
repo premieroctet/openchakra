@@ -221,7 +221,7 @@ class BookingPreview extends React.Component {
           BOOKING.payment_no_finish
           :
           status === BOOK_STATUS.FINISHED ?
-            BOOKING.payment
+            BOOKING.payment_title
             :
             [BOOK_STATUS.CONFIRMED, BOOK_STATUS.PREAPPROVED, BOOK_STATUS.INFO, BOOK_STATUS.TO_CONFIRM].includes(status) ?
               BOOKING.payment_if_accept

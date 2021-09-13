@@ -234,7 +234,7 @@ const REGISTER = {
 }
 
 const REGISTER_FIRST_PAGE = {
-  textfield_email: 'Email',
+  textfield_email_title: 'Email',
   textfield_email_placeholder: 'Email',
   textfield_firstname: 'Prénom',
   textfield_firstname_placeholder: 'Prénom',
@@ -673,7 +673,7 @@ const AVOCOTES = {
 const BOOKING = {
   MSG_EVALUATE: 'Vous avez 15 jours pour évaluer votre client. Une fois que votre client aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !',
   payment_no_finish: 'Paiement non réalisé',
-  payment: 'Paiement',
+  payment_title: 'Paiement',
   payment_if_accept: 'Paiement si acceptation',
   potential_incomes: 'Revenus potentiels',
   avocotes_resa: 'Réservation AvoCotés pour le compte de ',
