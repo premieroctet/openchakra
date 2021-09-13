@@ -52,6 +52,17 @@ const SEARCH = {
   sort: 'Trier par',
 }
 
+const CARD_SERVICE = {
+  card_help_title: 'Besoin d\'aide ?',
+  card_help_chat: 'Utilisez notre chat en direct !',
+  dialog_delete_title: 'Supprimer un service',
+  dialog_delete_content: 'Voulez-vous vraiment supprimer ce service ?',
+  dialog_delete_cancel: 'Annuler',
+  dialog_delete_confirm: 'Supprimer',
+  no_description: 'Cet alfred est peut être trop timide pour parler de lui !',
+  button_show_profil: 'Voir',
+}
+
 const SEARCHBAR = {
   what: 'Quel service ?',
   where: 'Où ?',
@@ -1020,4 +1031,5 @@ module.exports = {
   REGISTER_SECOND_PAGE,
   REGISTER_THIRD_PAGE,
   SEARCH,
+  CARD_SERVICE
 }

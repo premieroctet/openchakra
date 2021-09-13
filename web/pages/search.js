@@ -419,7 +419,6 @@ class SearchPage extends BasePage {
 
                       ))
                     }
-
                   </Grid> : serviceUsers.length===0 ? null : <Grid container className={classes.searchMainContainer} spacing={3}>
                     <Grid item className={classes.hideOnMobile}>
                       <SearchResults
