@@ -36,7 +36,7 @@ const TITLES={
 
 const ATTRIBUTES_TYPES={
   'component': [['display', 'visibility'], ['color', 'color'], ['background-color', 'color'], ['content', 'text']],
-  'button': [['display', 'visibility'], ['color', 'color'], ['background-color', 'color'], ['border-color', 'color'], ['border-radius', 'integer'], ['content', 'text']],
+  'button': [['display', 'visibility'], ['color', 'color'], ['background-color', 'color'], ['border-color', 'color'], ['border-radius', 'integer']],
   'menuitem': [['display', 'visibility']],
   'logo': [['background-color', 'color'], ['content', 'picture']],
   'searchbar': [['background-color', 'color'], ['magnify-background-color', 'color'], ['info-color', 'color'], ['example-color', 'color'], ['input-color', 'color']],
