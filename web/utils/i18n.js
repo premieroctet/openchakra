@@ -235,9 +235,11 @@ const LEGAL_NOTICE = {
   email: 'Mail',
   email_hello: 'hello@my-alfred.io',
   phone: 'Téléphone',
-  phone_number: '02 35 76 47 52'
+  phone_number: '02 35 76 47 52',
+}
 
-
+const CONFIRM_PAYMENT = {
+  snackbar_error_payment: 'Paiement en cours de traitement',
 }
 
 const SEARCHBAR = {
@@ -1019,4 +1021,5 @@ module.exports = {
   FAQ_NEED_MORE,
   FAQ_OUR_COMMUNITY,
   LEGAL_NOTICE,
+  CONFIRM_PAYMENT,
 }

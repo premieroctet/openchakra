@@ -5,7 +5,7 @@ import React from 'react'
 import Router from 'next/router'
 import axios from 'axios'
 import moment from 'moment'
-
+import {CONFIRM_PAYMENT} from '../utils/i18n'
 import AddressAndFacturation from '../components/Payment/AddressAndFacturation/AddressAndFacturation'
 import BasePage from './basePage'
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
@@ -106,7 +106,7 @@ class ConfirmPayment extends BasePage {
   payDirect = () => {
     const {pending}=this.state
     if (pending) {
-      return snackBarError('Paiement en cours de traitement')
+      return snackBarError(CONFIRM_PAYMENT.snackbar_error_payment)
     }
     const booking_id=this.getURLProps().booking_id
     const total = parseFloat(this.state.grandTotal)
