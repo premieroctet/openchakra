@@ -10,6 +10,7 @@ import TextField from '@material-ui/core/TextField'
 import styles from './ButtonSwitchStyle'
 import Typography from '@material-ui/core/Typography'
 import '../../static/assets/css/custom.css'
+import {BUTTON_SWITCH} from '../../utils/i18n'
 
 const CssTextField = withStyles({
   root: {
@@ -95,15 +96,15 @@ class ButtonSwitch extends React.Component {
             <span>
               {isEditable ?
                 <CssTextField
-                  label={'Intitulé'}
-                  placeholder={'Saisissez un intitulé'}
+                  label={BUTTON_SWITCH.textfield_label}
+                  placeholder={BUTTON_SWITCH.textfield_placeholder}
                   value={this.label}
                   onChange={this.onChangeLabel}
                   error={!this.label}
-                  helperText={this.label ? null : 'Obligatoire'}
+                  helperText={this.label ? null : BUTTON_SWITCH.helpertext}
                 />
                 :
-                <p>{label === undefined ? 'label introuvable' : label}</p>
+                <p>{label === undefined ? BUTTON_SWITCH.error_label : label}</p>
               }
             </span>
           </Grid>
@@ -114,7 +115,7 @@ class ButtonSwitch extends React.Component {
               <Grid style={{display: 'flex'}}>
                 <CssTextField
                   value={this.price}
-                  label={<Typography style={{color: '#696767'}}>Tarif</Typography>}
+                  label={<Typography style={{color: '#696767'}}>{BUTTON_SWITCH.price}</Typography>}
                   type="number"
                   classes={{root: `custombuttonswitchplaceholder ${classes.textField}`}}
                   disabled={!checked || priceDisabled}
@@ -123,10 +124,10 @@ class ButtonSwitch extends React.Component {
                     inputProps: {
                       min: 0,
                     },
-                    endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                    endAdornment: <InputAdornment position="start">{BUTTON_SWITCH.euro}</InputAdornment>,
                   }}
                   error={!this.price}
-                  helperText={this.price ? null : 'Obligatoire'}
+                  helperText={this.price ? null : BUTTON_SWITCH.helpertext}
                 />
                 {isOption ?
                   <Select

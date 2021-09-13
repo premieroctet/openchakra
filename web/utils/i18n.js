@@ -130,6 +130,26 @@ const DRAWER_BOOKING = {
   button_info: 'Demande d’informations',
 }
 
+const BOOKING_DETAIL = {
+  euro: ' €',
+  move_cost: 'Frais de déplacement',
+  delivery_cost: 'Frais de livraison/enlèvement',
+  service_cost: 'Frais de service',
+  total: ' Total',
+  will_total: ' Total à percevoir',
+  cesu: 'dont CESU',
+  company: 'dont participation entreprise',
+}
+
+const BUTTON_SWITCH = {
+  textfield_label: 'Intitulé',
+  textfield_placeholder: 'Saisissez un intitulé',
+  helpertext: 'Obligatoire',
+  error_label: 'label introuvable',
+  price: 'Tarif',
+  euro: ' €',
+}
+
 const SEARCHBAR = {
   what: 'Quel service ?',
   where: 'Où ?',
@@ -1101,4 +1121,6 @@ module.exports = {
   CARD_SERVICE,
   USERSERVICEPREVIEW,
   DRAWER_BOOKING,
+  BOOKING_DETAIL,
+  BUTTON_SWITCH,
 }

@@ -3,6 +3,7 @@ import React from 'react'
 import styles from './BookingDetailStyle'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
+import {BOOKING_DETAIL} from '../../utils/i18n'
 const {EMPLOYEE}=require('../../utils/consts')
 
 class BookingDetail extends React.Component {
@@ -27,7 +28,7 @@ class BookingDetail extends React.Component {
                       <p>{k}</p>
                     </Grid>
                     <Grid className={classes.priceContent}>
-                      <p>{prestations[k].toFixed(2)}€</p>
+                      <p>{prestations[k].toFixed(2) + BOOKING_DETAIL.euro}</p>
                     </Grid>
                   </Grid>
                 )
@@ -38,10 +39,10 @@ class BookingDetail extends React.Component {
           {travel_tax && !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
-                <p>Frais de déplacement</p>
+                <p>{BOOKING_DETAIL.move_cost}</p>
               </Grid>
               <Grid>
-                <p>{travel_tax.toFixed(2)}€</p>
+                <p>{travel_tax.toFixed(2) + BOOKING_DETAIL.euro}</p>
               </Grid>
             </Grid> : null
           }
@@ -51,10 +52,10 @@ class BookingDetail extends React.Component {
           {pick_tax && !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
-                <p>Frais de livraison/enlèvement</p>
+                <p>{BOOKING_DETAIL.delivery_cost}</p>
               </Grid>
               <Grid className={classes.priceContent}>
-                <p>{pick_tax.toFixed(2)}€</p>
+                <p>{pick_tax.toFixed(2) + BOOKING_DETAIL.euro}</p>
               </Grid>
             </Grid> : null}
           { /* End pick tax */}
@@ -62,20 +63,20 @@ class BookingDetail extends React.Component {
           {client_fee && client_fee !== 0 && !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
-                <p>Frais de service</p>
+                <p>{BOOKING_DETAIL.service_cost}</p>
               </Grid>
               <Grid className={classes.priceContent}>
-                <p>{client_fee.toFixed(2)}€</p>
+                <p>{client_fee.toFixed(2) + BOOKING_DETAIL.euro}</p>
               </Grid>
             </Grid> : null
           }
           {alfred_fee && !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
-                <p>Frais de service</p>
+                <p>{BOOKING_DETAIL.service_cost}</p>
               </Grid>
               <Grid className={classes.priceContent}>
-                <p>-{alfred_fee.toFixed(2)}€</p>
+                <p>-{alfred_fee.toFixed(2) + BOOKING_DETAIL.euro}</p>
               </Grid>
             </Grid> : null
           }
@@ -85,10 +86,10 @@ class BookingDetail extends React.Component {
             total ?
               <Grid className={classes.flexContent} style={{fontWeight: 'bold'}}>
                 <Grid>
-                  <p>{client_fee !== 0 ? 'Total' : 'Total à percevoir'}</p>
+                  <p>{client_fee !== 0 ? BOOKING_DETAIL.total : BOOKING_DETAIL.will_total}</p>
                 </Grid>
                 <Grid>
-                  <p>{total.toFixed(2)}€</p>
+                  <p>{total.toFixed(2) + BOOKING_DETAIL.euro}</p>
                 </Grid>
               </Grid> : null
           }
@@ -98,10 +99,10 @@ class BookingDetail extends React.Component {
           {client_fee && cesu_total && !mode ?
             <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
               <Grid>
-                <p>{'dont CESU'}</p>
+                <p>{BOOKING_DETAIL.cesu}</p>
               </Grid>
               <Grid>
-                <p>{cesu_total.toFixed(2)}€</p>
+                <p>{cesu_total.toFixed(2) + BOOKING_DETAIL.euro}</p>
               </Grid>
             </Grid>
             :
@@ -110,10 +111,10 @@ class BookingDetail extends React.Component {
           {role==EMPLOYEE ?
             <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
               <Grid>
-                <p>{'dont participation entreprise'}</p>
+                <p>{BOOKING_DETAIL.company}</p>
               </Grid>
               <Grid>
-                <p>{company_amount.toFixed(2)}€</p>
+                <p>{company_amount.toFixed(2) + BOOKING_DETAIL.euro}</p>
               </Grid>
             </Grid>
             :
