@@ -145,7 +145,7 @@ router.put('/addMessage/:id', (req, res) => {
         })
         .catch(err => {
           console.error(err)
-          return res.ststuas(400).json(err)
+          return res.status(400).json(err)
         })
       return res.json()
     })
