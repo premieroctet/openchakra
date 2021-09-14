@@ -16,6 +16,7 @@ import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
 
 import {is_development} from '../../config/config'
 
@@ -38,8 +39,10 @@ class UIConfiguration extends React.Component {
     super(props)
     this.state={
       parameters: [],
+      filtered_parameters: [],
       page: null,
       saving: false,
+      filter: '',
     }
   }
 
@@ -66,6 +69,27 @@ class UIConfiguration extends React.Component {
       })
     })
     return Promise.all(promises)
+  }
+
+  onFilterChanged = ev => {
+    const {name, value}=ev.target
+    this.setState({[name]: value})
+  }
+
+  onFilterClicked = () => {
+    this.filterParameters()
+  }
+
+  filterParameters = () => {
+    let params=this.state.parameters
+    const re=new RegExp(this.state.filter, 'i')
+    params=params.filter(p => p.page.match(re)||p.component.match(re)||p.label.match(re))
+    console.log(`After:${params.length}`)
+    this.setState({filtered_parameters: params})
+  }
+
+  updateFilteredParameters = () => {
+    this.setState({filtered_parameters: this.filterParameters(this.state.parameters)})
   }
 
   onSubmit = () => {
@@ -97,7 +121,7 @@ class UIConfiguration extends React.Component {
     axios.get('/myAlfred/api/admin/uiConfiguration')
       .then(response => {
         let parameters=_.sortBy(response.data, 'page')
-        this.setState({parameters: parameters})
+        this.setState({parameters: parameters, filtered_parameters: parameters})
         if (parameters.length>0) {
           this.setState({page: parameters[0].page})
         }
@@ -127,13 +151,13 @@ class UIConfiguration extends React.Component {
       p.attributes.push({name: att_name, value: value})
     }
 
-    this.setState({parameters: parameters})
+    this.setState({parameters: parameters}, () => this.filterParameters())
   }
 
   render = () => {
     const {classes}=this.props
-    const {parameters, page, saving}=this.state
-    const groupedParameters= _.groupBy(parameters, 'page')
+    const {filtered_parameters, page, saving, filter}=this.state
+    const groupedParameters= _.groupBy(filtered_parameters, 'page')
     const pageParameters=_.groupBy(groupedParameters[page], 'component')
     const selectedTab = Object.keys(groupedParameters).findIndex(p => p==page)
 
@@ -145,6 +169,10 @@ class UIConfiguration extends React.Component {
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
             <Typography style={{fontSize: 30}}>{this.getTitle()}</Typography>
             <Button variant='outlined' onClick={this.onSubmit} disabled={saving}>{saveTitle}</Button>
+          </Grid>
+          <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
+            <TextField name={'filter'} value={filter} onChange={this.onFilterChanged}/>
+            <Button variant='outlined' onClick={this.onFilterClicked} >Filtrer</Button>
           </Grid>
           <Paper style={{width: '100%'}}>
             <Tabs value={selectedTab==-1 ? false:selectedTab} variant="scrollable">
