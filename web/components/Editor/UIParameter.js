@@ -9,6 +9,8 @@ import PictureEditor from './PictureEditor'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 
+import {is_development} from '../../config/config'
+
 const RESET_BUTTON_ENABLED=false
 
 const ATT_TYPES={
@@ -71,7 +73,8 @@ class UIParameter extends React.Component {
       <Grid container spacing={2}>
         <Grid item xl={12} style={{display: 'flex'}}>
           { RESET_BUTTON_ENABLED && <Button onClick={() => this.onResetClicked(parameter.type)}>Reset</Button> }
-          <h3 style={{color: 'black'}}>{title}</h3><h4>({parameter.type})</h4>
+          <h3 style={{color: 'black'}}>{title}</h3>
+          {is_development() && <h4>({parameter.type})</h4>}
         </Grid>
 
         {

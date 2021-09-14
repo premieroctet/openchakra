@@ -16,6 +16,9 @@ import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import Button from '@material-ui/core/Button'
+
+import {is_development} from '../../config/config'
+
 const {snackBarSuccess, snackBarError}=require('../../utils/notifications')
 
 const styles = () => ({
@@ -155,7 +158,7 @@ class UIConfiguration extends React.Component {
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <div style={{display: 'flex', flexDirection: 'column'}}>
                       <h2 style={{margin: '5px'}}>{component_name}</h2>
-                      <h4 style={{margin: '0px'}}>id: {pageParameters[component_name][0].classname}</h4>
+                      {is_development() && <h4 style={{margin: '0px'}}>id: {pageParameters[component_name][0].classname}</h4>}
                     </div>
                   </AccordionSummary>
                   <AccordionDetails>
