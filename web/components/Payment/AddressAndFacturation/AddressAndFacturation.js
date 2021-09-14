@@ -11,7 +11,6 @@ import ListAlfredConditions from '../../ListAlfredConditions/ListAlfredCondition
 import styles from '../../../static/css/components/AddressAndFacturation/AddressAndFacturation'
 import withStyles from '@material-ui/core/styles/withStyles'
 import {ADDRESS_FACTURATION} from '../../../utils/i18n'
-import {ADDRESS_FACTURATION} from '../../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
 
 class AddressAndFacturation extends React.Component {
