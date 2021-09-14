@@ -91,7 +91,7 @@ class UIConfiguration extends React.Component {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/admin/uiConfiguration')
       .then(response => {
-        let parameters=response.data
+        let parameters=_.sortBy(response.data, 'page')
         this.setState({parameters: parameters})
         if (parameters.length>0) {
           this.setState({page: parameters[0].page})
