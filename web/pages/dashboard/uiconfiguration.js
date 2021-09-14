@@ -83,7 +83,7 @@ class UIConfiguration extends React.Component {
   filterParameters = () => {
     let params=this.state.parameters
     const re=new RegExp(this.state.filter, 'i')
-    params=params.filter(p => p.page.match(re)||p.component.match(re)||p.label.match(re))
+    params=params.filter(p => p.page.match(re)||p.classname.match(re)||p.component.match(re)||p.label.match(re))
     console.log(`After:${params.length}`)
     this.setState({filtered_parameters: params})
   }
