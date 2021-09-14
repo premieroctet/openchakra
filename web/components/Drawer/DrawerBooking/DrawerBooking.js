@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -54,18 +55,18 @@ class DrawerBooking extends React.Component {
             </Grid>
             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : DRAWER_BOOKING.interrogation}{DRAWER_BOOKING.DRAWER_BOOKING.euro}</Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : ReactHtmlParser(this.props.t('DRAWER_BOOKING.interrogation'))}{DRAWER_BOOKING.ReactHtmlParser(this.props.t('DRAWER_BOOKING.euro'))}</Typography>
               </Grid>
               <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
                 <Typography style={{color: 'rgba(39,37,37,35%)'}}>/</Typography>
               </Grid>
               <Grid style={{whiteSpace: 'nowrap'}}>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : DRAWER_BOOKING.interrogation}</Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : ReactHtmlParser(this.props.t('DRAWER_BOOKING.interrogation'))}</Typography>
               </Grid>
             </Grid>
             {p.prestation.cesu_eligible && this.props.use_cesu ?
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}><em>{DRAWER_BOOKING.eligible}</em></Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}><em>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.eligible'))}</em></Typography>
               </Grid>
               : null
             }
@@ -140,9 +141,9 @@ class DrawerBooking extends React.Component {
                 <CancelIcon classes={{root: classes.cancelButton}}/>
               </Grid>
               <Grid>
-                { warningPerimeter ? <Typography>{DRAWER_BOOKING.warning_perimiter}</Typography> : null }
-                { warningBudget ? <Typography>{DRAWER_BOOKING.warning_budget}</Typography> : null }
-                { warningSelf ? <Typography>{DRAWER_BOOKING.warning_self}</Typography> : null }
+                { warningPerimeter ? <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.warning_perimiter'))}</Typography> : null }
+                { warningBudget ? <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.warning_budget'))}</Typography> : null }
+                { warningSelf ? <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.warning_self'))}</Typography> : null }
               </Grid>
             </Grid> : null
         }
@@ -201,7 +202,7 @@ class DrawerBooking extends React.Component {
                               showTimeSelectOnly
                               timeIntervals={30}
                               timeCaption='Heure'
-                              placeholderText={DRAWER_BOOKING.hours}
+                              placeholderText={ReactHtmlParser(this.props.t('DRAWER_BOOKING.hours'))}
                               dateFormat='HH:mm'
                               locale='fr'
                               className={classes.datePickerStyle}
@@ -226,7 +227,7 @@ class DrawerBooking extends React.Component {
                   aria-controls='panel1a-content'
                   id='panel1a-header'
                 >
-                  <Typography>{DRAWER_BOOKING.presta_choice}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_choice'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails classes={{root: classes.userServicePreviewAccordionDetails}}>
                   {
@@ -257,7 +258,7 @@ class DrawerBooking extends React.Component {
                   aria-controls='panel1a-content'
                   id='panel1a-header'
                 >
-                  <Typography style={{color: '#505050'}}>{DRAWER_BOOKING.presta_place}</Typography>
+                  <Typography style={{color: '#505050'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_place'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
                   { serviceUser.location && serviceUser.location.client && this.props.isInPerimeter() ?
@@ -318,13 +319,13 @@ class DrawerBooking extends React.Component {
                     aria-controls='panel1a-content'
                     id='panel1a-header'
                   >
-                    <Typography>{DRAWER_BOOKING.presta_option}</Typography>
+                    <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_option'))}</Typography>
                   </AccordionSummary>
                   <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
                     {this.props.computeTravelTax() ?
                       <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Grid>{DRAWER_BOOKING.deplacement_cost}</Grid>
-                        <Grid>{this.props.computeTravelTax() + DRAWER_BOOKING.euro}</Grid>
+                        <Grid>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.deplacement_cost'))}</Grid>
+                        <Grid>{this.props.computeTravelTax() + ReactHtmlParser(this.props.t('DRAWER_BOOKING.euro'))}</Grid>
                       </Grid>
                       : null
                     }
@@ -333,13 +334,13 @@ class DrawerBooking extends React.Component {
                         <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                           <Grid style={{display: 'flex', alignItems: 'center'}}>
                             <Grid>
-                              <label>{DRAWER_BOOKING.delivery}</label>
+                              <label>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.delivery'))}</label>
                             </Grid>
                           </Grid>
                           {
                             isChecked ?
                               <Grid>
-                                {serviceUser.pick_tax.toFixed(2) + DRAWER_BOOKING.euro}
+                                {serviceUser.pick_tax.toFixed(2) + ReactHtmlParser(this.props.t('DRAWER_BOOKING.euro'))}
                               </Grid> : null
                           }
                         </Grid>
@@ -358,7 +359,7 @@ class DrawerBooking extends React.Component {
                   aria-controls='panel1a-content'
                   id='panel1a-header'
                 >
-                  <Typography>{DRAWER_BOOKING.display_details}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.display_details'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20}}>
@@ -388,7 +389,7 @@ class DrawerBooking extends React.Component {
             <Grid>
               { all_avocotes.length>0 &&
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 20}}>
-                <Typography>{DRAWER_BOOKING.resa_avc}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.resa_avc'))}</Typography>
                 <Select value={avocotes} name='avocotes' multi={false} onChange={this.props.onAvocotesChanged}>
                   {all_avocotes.map(avocotes =>
                     <MenuItem value={avocotes._id}>{`${avocotes.user.full_name} pour ${avocotes.prestations.map(p => p.name).join(',')}`}</MenuItem>,
@@ -408,11 +409,11 @@ class DrawerBooking extends React.Component {
                     disabled={getLoggedUserId() && !isEmpty(errors)}
                     onClick={() => this.props.book(true)}
                   >
-                    <Typography>{DRAWER_BOOKING.resa_button}</Typography>
+                    <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.resa_button'))}</Typography>
                   </Button>
                 </Grid>
                 <Grid style={{marginTop: 15, marginBottom: 15}}>
-                  <Typography className={'custombookinginfoprice'} style={{color: 'rgba(39, 37, 37, 0.35)'}}>{DRAWER_BOOKING.next_step_paiment}</Typography>
+                  <Typography className={'custombookinginfoprice'} style={{color: 'rgba(39, 37, 37, 0.35)'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.next_step_paiment'))}</Typography>
                 </Grid>
                 <Grid>
                   <Button
@@ -420,7 +421,7 @@ class DrawerBooking extends React.Component {
                     disabled={!isEmpty(errors)}
                     onClick={() => this.props.book(false)}
                   >
-                    <Typography style={{textDecoration: 'underline', textTransform: 'initial'}} className={'custombookingaskinfo'}>{DRAWER_BOOKING.button_info}</Typography>
+                    <Typography style={{textDecoration: 'underline', textTransform: 'initial'}} className={'custombookingaskinfo'}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.button_info'))}</Typography>
                   </Button>
                 </Grid>
               </Grid>

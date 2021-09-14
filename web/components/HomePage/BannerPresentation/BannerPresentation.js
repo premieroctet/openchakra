@@ -3,7 +3,7 @@ import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
-import {BANNER_PRESENTATION, B2B_BANNER_PRESENTATION} from '../../../utils/i18n'
+import {BANNER_PRESENTATION, BANNER_B2B_PRESENTATION} from '../../../utils/i18n'
 import Link from 'next/link'
 import styles from '../../../static/css/components/BannerPresentation/BannerPresentation'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -33,9 +33,9 @@ class BannerPresentation extends React.Component {
     const {classes} = this.props
     const {user} = this.state
 
-    const title = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.title')) : BANNER_PRESENTATION.title
-    const subTitle = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.subTitle')) : BANNER_PRESENTATION.subTitle
-    const text = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.text')) : BANNER_PRESENTATION.text
+    const title = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.title')) : ReactHtmlParser(this.props.t('BANNER_PRESENTATION.title'))
+    const subTitle = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.subTitle')) : ReactHtmlParser(this.props.t('BANNER_PRESENTATION.subTitle'))
+    const text = isB2BStyle(user) ? ReactHtmlParser(this.props.t('BANNER_B2B_PRESENTATION.text')) : ReactHtmlParser(this.props.t('BANNER_PRESENTATION.text'))
 
 
     return (

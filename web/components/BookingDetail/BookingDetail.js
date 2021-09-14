@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import styles from './BookingDetailStyle'
@@ -28,7 +29,7 @@ class BookingDetail extends React.Component {
                       <p>{k}</p>
                     </Grid>
                     <Grid className={classes.priceContent}>
-                      <p>{prestations[k].toFixed(2) + BOOKING_DETAIL.euro}</p>
+                      <p>{prestations[k].toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
                     </Grid>
                   </Grid>
                 )
@@ -39,10 +40,10 @@ class BookingDetail extends React.Component {
           {travel_tax && !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
-                <p>{BOOKING_DETAIL.move_cost}</p>
+                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.move_cost'))}</p>
               </Grid>
               <Grid>
-                <p>{travel_tax.toFixed(2) + BOOKING_DETAIL.euro}</p>
+                <p>{travel_tax.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
               </Grid>
             </Grid> : null
           }
@@ -52,10 +53,10 @@ class BookingDetail extends React.Component {
           {pick_tax && !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
-                <p>{BOOKING_DETAIL.delivery_cost}</p>
+                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.delivery_cost'))}</p>
               </Grid>
               <Grid className={classes.priceContent}>
-                <p>{pick_tax.toFixed(2) + BOOKING_DETAIL.euro}</p>
+                <p>{pick_tax.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
               </Grid>
             </Grid> : null}
           { /* End pick tax */}
@@ -63,20 +64,20 @@ class BookingDetail extends React.Component {
           {client_fee && client_fee !== 0 && !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
-                <p>{BOOKING_DETAIL.service_cost}</p>
+                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
               </Grid>
               <Grid className={classes.priceContent}>
-                <p>{client_fee.toFixed(2) + BOOKING_DETAIL.euro}</p>
+                <p>{client_fee.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
               </Grid>
             </Grid> : null
           }
           {alfred_fee && !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
-                <p>{BOOKING_DETAIL.service_cost}</p>
+                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
               </Grid>
               <Grid className={classes.priceContent}>
-                <p>-{alfred_fee.toFixed(2) + BOOKING_DETAIL.euro}</p>
+                <p>-{alfred_fee.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
               </Grid>
             </Grid> : null
           }
@@ -86,10 +87,10 @@ class BookingDetail extends React.Component {
             total ?
               <Grid className={classes.flexContent} style={{fontWeight: 'bold'}}>
                 <Grid>
-                  <p>{client_fee !== 0 ? BOOKING_DETAIL.total : BOOKING_DETAIL.will_total}</p>
+                  <p>{client_fee !== 0 ? ReactHtmlParser(this.props.t('BOOKING_DETAIL.total')) : ReactHtmlParser(this.props.t('BOOKING_DETAIL.will_total'))}</p>
                 </Grid>
                 <Grid>
-                  <p>{total.toFixed(2) + BOOKING_DETAIL.euro}</p>
+                  <p>{total.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
                 </Grid>
               </Grid> : null
           }
@@ -99,10 +100,10 @@ class BookingDetail extends React.Component {
           {client_fee && cesu_total && !mode ?
             <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
               <Grid>
-                <p>{BOOKING_DETAIL.cesu}</p>
+                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.cesu'))}</p>
               </Grid>
               <Grid>
-                <p>{cesu_total.toFixed(2) + BOOKING_DETAIL.euro}</p>
+                <p>{cesu_total.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
               </Grid>
             </Grid>
             :
@@ -111,10 +112,10 @@ class BookingDetail extends React.Component {
           {role==EMPLOYEE ?
             <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
               <Grid>
-                <p>{BOOKING_DETAIL.company}</p>
+                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.company'))}</p>
               </Grid>
               <Grid>
-                <p>{company_amount.toFixed(2) + BOOKING_DETAIL.euro}</p>
+                <p>{company_amount.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
               </Grid>
             </Grid>
             :

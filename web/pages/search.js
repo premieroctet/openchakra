@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -369,12 +370,13 @@ class SearchPage extends BasePage {
               <Grid className={classes.searchSecondFilterContainer}>
                 <Grid className={classes.searchSecondFilterContainerLeft}>
                   {
-                    this.state.searching || this.state.mounting ? null : <Typography>{serviceUsers.length || SEARCH.no_one} {SEARCH.alfred_avail}</Typography>
+                    !(this.state.searching || this.state.mounting) &&
+                      <Typography>{ReactHtmlParser(this.props.t('SEARCH.alfred_avail', {count: serviceUsers.length || ReactHtmlParser(this.props.t('SEARCH.no_one'))}))}</Typography>
                   }
                 </Grid>
                 { gps ? <Grid className={classes.searchFilterRightContainer}>
                   <Grid className={classes.searchFilterRightLabel}>
-                    <p>{SEARCH.sort}</p>
+                    <p>{ReactHtmlParser(this.props.t('SEARCH.sort'))}</p>
                   </Grid>
                   <Grid>
                     <FormControl className={classes.formControl}>
@@ -405,7 +407,7 @@ class SearchPage extends BasePage {
             <Grid className={classes.searchContainerDisplayResult}>
               <Grid className={classes.displayNbAvailable}>
                 {
-                  this.state.searching || this.state.mounting ? null : <Typography>{serviceUsers.length || SEARCH.no_one} {SEARCH.alfred_avail}</Typography>
+                  this.state.searching || this.state.mounting ? null : <Typography>{serviceUsers.length || ReactHtmlParser(this.props.t('SEARCH.no_one'))} {ReactHtmlParser(this.props.t('SEARCH.alfred_avail'))}</Typography>
                 }
               </Grid>
               <Grid container >

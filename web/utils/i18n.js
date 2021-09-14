@@ -16,7 +16,6 @@ const SCHEDULE_SUBTITLE = 'Votre calendrier vous permet d’ajouter vos disponib
 
 const SHOP_CREATION_SUCCESSFUL = 'Vos services sont maintenant disponibles dans my Alfred'
 
-const ID_CARD_CONFIRM_DELETION = "Supprimer votre pièce d'identité ?"
 const REGISTRATION_PROOF_CONFIRM_DELETION = "Supprimer votre document d'immatriculation ?"
 
 const MANGOPAY_MESSAGES = {
@@ -618,6 +617,8 @@ const TRUST_VERIFICATION = {
   insee_link: 'sur le site de l\'INSEE',
   download_document_imma: 'Télécharger document d\'immatriculation',
   save_document_imma: 'Enregistrer',
+  id_card_confirm_deletion: "Supprimer votre pièce d'identité ?",
+
 }
 
 const SECURITY = {
@@ -972,7 +973,6 @@ module.exports = {
   SCHEDULE_SUBTITLE,
   getMangopayMessage,
   SHOP_CREATION_SUCCESSFUL,
-  ID_CARD_CONFIRM_DELETION,
   REGISTRATION_PROOF_CONFIRM_DELETION,
   INFOBAR_MESSAGE,
   SHOWMORE,

@@ -142,7 +142,7 @@ class UIConfiguration extends React.Component {
             <Button variant='outlined' onClick={this.onSubmit} disabled={saving}>{saveTitle}</Button>
           </Grid>
           <Paper style={{width: '100%'}}>
-            <Tabs value={selectedTab==-1 ? false:selectedTab}>
+            <Tabs value={selectedTab==-1 ? false:selectedTab} variant="scrollable">
               {
                 Object.keys(groupedParameters).map(page =>
                   <Tab key={page} label={page} onClick={() => this.onChangePage(page)} />,
