@@ -10,6 +10,7 @@ import Profile from '../../Profile/Profile'
 import ListAlfredConditions from '../../ListAlfredConditions/ListAlfredConditions'
 import styles from '../../../static/css/components/AddressAndFacturation/AddressAndFacturation'
 import withStyles from '@material-ui/core/styles/withStyles'
+import {ADDRESS_FACTURATION} from '../../../utils/i18n'
 
 class AddressAndFacturation extends React.Component {
 
@@ -30,7 +31,7 @@ class AddressAndFacturation extends React.Component {
           <Grid className={classes.addressAndFactuMainContainer}>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%'}}>
               <Topic
-                titleTopic={'Adresse du service'}
+                titleTopic={ADDRESS_FACTURATION.topic_service}
                 titleSummary={false}
                 underline={false}
               >
@@ -41,7 +42,7 @@ class AddressAndFacturation extends React.Component {
             </Grid>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
               <Topic
-                titleTopic={`A propos de ${user.firstname}`}
+                titleTopic={ADDRESS_FACTURATION.topic_about + user.firstname}
                 titleSummary={false}
                 underline={false}
               >

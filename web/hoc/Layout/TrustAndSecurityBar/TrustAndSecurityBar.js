@@ -1,12 +1,12 @@
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser'
 
-class TrustAndSecurityBar extends React.Component{
+class TrustAndSecurityBar extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
@@ -16,7 +16,7 @@ class TrustAndSecurityBar extends React.Component{
           <Grid>
             <VerifiedUserIcon/>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection:'column'}}>
+          <Grid style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
               <Typography>Paiement</Typography>
             </Grid>
@@ -26,7 +26,7 @@ class TrustAndSecurityBar extends React.Component{
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 

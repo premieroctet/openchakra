@@ -242,6 +242,15 @@ const CONFIRM_PAYMENT = {
   snackbar_error_payment: 'Paiement en cours de traitement',
 }
 
+const ADDRESS_FACTURATION = {
+  topic_service: 'Adresse du service',
+  topic_about: 'A propos de ',
+}
+
+const ADDRESS_SERVICE = {
+
+}
+
 const SEARCHBAR = {
   what: 'Quel service ?',
   where: 'Où ?',
@@ -1022,4 +1031,6 @@ module.exports = {
   FAQ_OUR_COMMUNITY,
   LEGAL_NOTICE,
   CONFIRM_PAYMENT,
+  ADDRESS_FACTURATION,
+  ADDRESS_SERVICE,
 }

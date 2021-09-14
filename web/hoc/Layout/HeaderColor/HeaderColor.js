@@ -1,28 +1,28 @@
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import Grid from "@material-ui/core/Grid";
-import Router from 'next/router';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Router from 'next/router'
 
 
-class HeaderColor extends React.Component{
+class HeaderColor extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
-      bgColor: 'rgba(178,204,251,1)'
+      bgColor: 'rgba(178,204,251,1)',
     }
   }
 
   componentDidMount() {
-    if(Router.pathname === '/paymentSuccess'){
+    if(Router.pathname === '/paymentSuccess') {
       this.setState({bgColor: 'rgba(248,207,97,1)'})
     }
   }
 
   render() {
-    const {bgColor} = this.state;
+    const {bgColor} = this.state
     return(
-        <Grid style={{height: '2vh', backgroundColor: bgColor}}/>
-    );
+      <Grid style={{height: '2vh', backgroundColor: bgColor}}/>
+    )
   }
 }
 

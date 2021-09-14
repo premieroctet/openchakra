@@ -1,14 +1,14 @@
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 
 class AddressService extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   render() {
-    const {bookingObj, currentUser, user} = this.props;
+    const {bookingObj} = this.props
 
     if (!bookingObj) {
       return null
@@ -27,19 +27,11 @@ class AddressService extends React.Component {
               </Grid>
             </>
             :
-            "En visio"
+            'En visio'
           }
-          {/*TODO UPDATE ADDRESS + CHECK ADDRESS FACTURE
-          <Grid style={{marginTop: '2vh'}}>
-            <Typography style={{color:'rgba(39,37,37,35%)'}}>L'adresse de facturation est identique</Typography>
-          </Grid>
-          <Grid style={{marginTop: '2vh'}}>
-            <Button>Modifier</Button>
-          </Grid>
-          */}
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
