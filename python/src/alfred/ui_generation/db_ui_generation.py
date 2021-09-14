@@ -36,7 +36,7 @@ class DBUiGeneration(object):
 
       for name in self.wb.sheetnames:
         try:
-          print('// Handling page {}'.format(name))
+          print('// Handling page {}'.format(name), file=sys.stderr)
           sheet=self.wb[name]
           name=name.replace('Page ', '')
           classnameIdx=self.get_column(sheet, 'classname')
@@ -59,6 +59,9 @@ class DBUiGeneration(object):
               compType=row[compTypeIdx].value if compTypeIdx!=None else ''
               if classname and classname.lower().replace(' ', '')=='pasducss':
                 classname=''
+              if compType and not classname:
+                raise Exception('Type sans classname')
+
               if classname:
                 if compType:
                   componentType=compType
