@@ -10,7 +10,8 @@ import ButtonSwitch from '../ButtonSwitch/ButtonSwitch'
 import moment from 'moment'
 import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts'
 
-function AlfredConditions({classes, shop}) {
+function AlfredConditions({classes, shop, t}) {
+
   const[idCard, setIdCard] = useState(shop.identity_card)
   const[myAlfredConditions, setMyAlfredConditions] = useState(shop.my_alfred_conditions)
   const[profilePicture, setProfilePicture] = useState(shop.profile_picture)
@@ -55,18 +56,18 @@ function AlfredConditions({classes, shop}) {
   return (
     <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
       <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
-        <h2 className={classes.policySizeTitle}>{ReactHtmlParser(this.props.t('SHOP.bookingCondition.title'))}</h2>
+        <h2 className={classes.policySizeTitle}>{ReactHtmlParser(t('SHOP.bookingCondition.title'))}</h2>
       </Grid>
       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
         <h4 className={classes.policySizeSubtitle}
-          style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.bookingCondition.title_secondSection'))}</h4>
+          style={{margin: 0}}>{ReactHtmlParser(t('SHOP.bookingCondition.title_secondSection'))}</h4>
       </Grid>
       <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <ButtonSwitch
             key={moment()}
             id={ALF_CONDS.BASIC}
-            label={ReactHtmlParser(this.props.t('SHOP.bookingCondition.conditions_bacsic'))}
+            label={ReactHtmlParser(t('SHOP.bookingCondition.conditions_bacsic'))}
             onChange={null}
             checked={myAlfredConditions}
           />
@@ -75,7 +76,7 @@ function AlfredConditions({classes, shop}) {
           <ButtonSwitch
             key={moment()}
             id={ALF_CONDS.PICTURE}
-            label={ReactHtmlParser(this.props.t('SHOP.bookingCondition.conditions_picture'))}
+            label={ReactHtmlParser(t('SHOP.bookingCondition.conditions_picture'))}
             onChange={() => {
               setProfilePicture(!profilePicture)
               setIdCard(false)
@@ -88,7 +89,7 @@ function AlfredConditions({classes, shop}) {
           <ButtonSwitch
             key={moment()}
             id={ALF_CONDS.ID_CARD}
-            label={ReactHtmlParser(this.props.t('SHOP.bookingCondition.conditions_idCard'))}
+            label={ReactHtmlParser(t('SHOP.bookingCondition.conditions_idCard'))}
             onChange={() => {
               setIdCard(!idCard)
               setMyAlfredConditions(true)
@@ -102,7 +103,7 @@ function AlfredConditions({classes, shop}) {
           <ButtonSwitch
             key={moment()}
             id={ALF_CONDS.RECOMMEND}
-            label={ReactHtmlParser(this.props.t('SHOP.bookingCondition.conditions_recommend'))}
+            label={ReactHtmlParser(t('SHOP.bookingCondition.conditions_recommend'))}
             onChange={() => {
               setAlfredRecommandations(!alfredRecommandations)
               setMyAlfredConditions(true)
@@ -115,7 +116,7 @@ function AlfredConditions({classes, shop}) {
         </Grid>
       </Grid>
       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-        <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.bookingCondition.title_thirdSection'))}</h4>
+        <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{ReactHtmlParser(t('SHOP.bookingCondition.title_thirdSection'))}</h4>
       </Grid>
       <Grid container spacing={1} style={{margin: 0, width: '100%'}} item xl={12} lg={12} md={12} sm={12} xs={12}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -123,7 +124,7 @@ function AlfredConditions({classes, shop}) {
             key={moment()}
             id={CANCEL_MODE.FLEXIBLE}
             checked={isFlexible}
-            label={ReactHtmlParser(this.props.t('SHOP.bookingCondition.condition_flexible'))}
+            label={ReactHtmlParser(t('SHOP.bookingCondition.condition_flexible'))}
             onChange={() => {
               setFlexible(!isFlexible)
               setModerate(false)
@@ -136,7 +137,7 @@ function AlfredConditions({classes, shop}) {
             key={moment()}
             id={CANCEL_MODE.MODERATE}
             checked={isModerate}
-            label={ReactHtmlParser(this.props.t('SHOP.bookingCondition.condition_moderate'))}
+            label={ReactHtmlParser(t('SHOP.bookingCondition.condition_moderate'))}
             onChange={() => {
               setModerate(!isModerate)
               setFlexible(false)
@@ -149,7 +150,7 @@ function AlfredConditions({classes, shop}) {
             key={moment()}
             id={CANCEL_MODE.STRICT}
             checked={isStrict}
-            label={ReactHtmlParser(this.props.t('SHOP.bookingCondition.condition_strict'))}
+            label={ReactHtmlParser(t('SHOP.bookingCondition.condition_strict'))}
             onChange={() => {
               setModerate(false)
               setFlexible(false)
