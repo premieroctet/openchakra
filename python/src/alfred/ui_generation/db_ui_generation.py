@@ -29,8 +29,11 @@ class DBUiGeneration(object):
           raise e
         return None
     
+    def escape(self, txt):
+      return txt.replace("'", "\\'").replace("&", "\\&")
+    
     def get_mongo(self, page, component, label, classname, type_):
-      return  self.REQUEST.format(page, component, label.replace("'", "\\'"), classname, type_)
+      return  self.REQUEST.format(*map(self.escape, [page, component, label, classname, type_]))
           
     def export(self):
 
@@ -46,8 +49,10 @@ class DBUiGeneration(object):
           label=''
           for idx, row in enumerate(list(sheet.iter_rows())[1:]):
             try:
-              row=list(row)
-              col0=row[0].value
+              row=[r.value for r in row]
+              if ('text' in str(row[0]).lower()) and not [v for v in row if 'content' in str(v).lower()]:
+                raise Exception('Pas de content pour I18N')
+              col0=row[0]
               if col0:
                 if col0.lower().startswith('composant '):
                   comp=col0[len('composant '):]
@@ -55,8 +60,8 @@ class DBUiGeneration(object):
                 elif col0.lower()!='actions':
                   label=col0
                   
-              classname=row[classnameIdx].value
-              compType=row[compTypeIdx].value if compTypeIdx!=None else ''
+              classname=row[classnameIdx]
+              compType=row[compTypeIdx] if compTypeIdx!=None else ''
               if classname and classname.lower().replace(' ', '')=='pasducss':
                 classname=''
               if compType and not classname:
@@ -65,7 +70,6 @@ class DBUiGeneration(object):
               if classname:
                 if compType:
                   componentType=compType
-                  print('Trouvé composant {} {}'.format(classname, componentType, file=sys.stderr))
                 else:
                   classname, componentType=classname.split('.')
               if classname:
