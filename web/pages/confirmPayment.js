@@ -219,7 +219,7 @@ class ConfirmPayment extends BasePage {
               <Grid className={classes.contentStepper}>
                 <Stepper
                   activeStep={activeStep}
-                  steps={['ADRESSE & FACTURATION', 'PAIEMENT']}
+                  steps={[ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.address_billing_title')), ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.payment_title'))]}
                   orientation={'horizontal'}/>
               </Grid>
               <Grid className={classes.mainContainer}>

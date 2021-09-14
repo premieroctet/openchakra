@@ -35,7 +35,7 @@ class PaymentChoice extends React.Component{
           <Grid className={classes.paymenChoiceMainContainer}>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingRight: '10%', paddingTop: '5%', paddingBottom: '5%', position: 'relative'}}>
               <Topic
-                titleTopic={'Mode de paiment'}
+                titleTopic={'Mode de paiement'}
                 titleSummary={false}
                 underline={false}
               >

@@ -87,7 +87,7 @@ class BookingPreference extends React.Component {
                 variant={'outlined'}
                 name={'deadline_value'}
                 value={this.state.deadline_value}
-                label={'Délai'}
+                label={ReactHtmlParser(this.props.t('SHOP.preference.label_delay_prevenance'))}
                 style={{width: '100%'}}
                 onChange={this.handleChange}
                 classes={{root: 'custombookprefdelayfield'}}

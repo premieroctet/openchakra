@@ -296,7 +296,7 @@ class MobileNavbar extends React.Component{
                     value={this.state.keyword}
                     onChange={this.onChange}
                     name={'keyword'}
-                    label={'Ménage, jardinage, ...'}
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.what_placeholder'))}
                     onKeyPress={(e) => {
                       e.key === 'Enter' && e.preventDefault();
                     }}
