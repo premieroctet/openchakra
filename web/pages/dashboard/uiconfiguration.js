@@ -17,6 +17,8 @@ import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import Button from '@material-ui/core/Button'
 const {snackBarSuccess, snackBarError}=require('../../utils/notifications')
+import SaveIcon from '@material-ui/icons/Save'
+import Fab from '@material-ui/core/Fab'
 
 const styles = () => ({
   signupContainer: {
@@ -170,6 +172,11 @@ class UIConfiguration extends React.Component {
               ))
             }
           </Paper>
+        </Grid>
+        <Grid style={{position: 'fixed', bottom: '10px', right: '100px'}}>
+          <Fab color="primary" aria-label="CheckIcon" disabled={saving} onClick={this.onSubmit}>
+            <SaveIcon />
+          </Fab>
         </Grid>
       </Layout>
     )

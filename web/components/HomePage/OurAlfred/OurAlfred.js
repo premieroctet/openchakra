@@ -58,7 +58,7 @@ class OurAlfred extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.containerMobileButton}>
-          <Button variant={'outlined'} classes={{root: classes.categoryButton}} onClick={() => Router.push('/search')}>
+          <Button variant={'outlined'} className={'customouralfredbutton'} classes={{root: `customouralfredbutton ${classes.categoryButton}`}} onClick={() => Router.push('/search')}>
             {ReactHtmlParser(this.props.t('CATEGORY.button'))}
           </Button>
         </Grid>
