@@ -244,10 +244,17 @@ const CONFIRM_PAYMENT = {
 const ADDRESS_FACTURATION = {
   topic_service: 'Adresse du service',
   topic_about: 'A propos de ',
+
 }
 
 const ADDRESS_SERVICE = {
+  remote: 'En visio',
+}
 
+const PROFILE = {
+  id_card: 'Carte d\'identité ',
+  checked: 'vérifié',
+  no_checked: 'non-vérifié',
 }
 
 const SEARCHBAR = {
@@ -1033,4 +1040,5 @@ module.exports = {
   CONFIRM_PAYMENT,
   ADDRESS_FACTURATION,
   ADDRESS_SERVICE,
+  PROFILE
 }

@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import UserAvatar from '../Avatar/UserAvatar'
 import styles from '../../static/css/components/Profile/Profile'
 import withStyles from '@material-ui/core/styles/withStyles'
+import {PROFILE} from '../../utils/i18n'
 import moment from 'moment'
 moment.locale('fr')
 
@@ -14,7 +15,7 @@ class Profile extends React.Component {
   }
 
   render() {
-    const {user, classes} = this.props
+    const {user} = this.props
     return(
       <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
         <Grid>
@@ -25,7 +26,7 @@ class Profile extends React.Component {
             <Typography><strong>{moment(user.creation_date).format('MMMM YYYY')}</strong></Typography>
           </Grid>
           <Grid>
-            <Typography>Carte d'identité <strong>{user.id_confirmed ? 'vérifié' : 'non-vérifié'}</strong></Typography>
+            <Typography>{PROFILE.id_card}<strong>{user.id_confirmed ? PROFILE.id_card : PROFILE.no_checked}</strong></Typography>
           </Grid>
         </Grid>
       </Grid>
