@@ -32,7 +32,7 @@ class OurAlfred extends React.Component {
             </Grid>
             <Grid className={classes.ourAlfredTextContainer}>
               <Grid>
-                <Typography className={`custumouralfredh1 ${classes.ourAlfredTitle}`}>{ReactHtmlParser(this.props.t('OUR_ALFRED.title'))}</Typography>
+                <Typography className={`customouralfredh1 ${classes.ourAlfredTitle}`}>{ReactHtmlParser(this.props.t('OUR_ALFRED.title'))}</Typography>
               </Grid>
               <Grid>
                 <Typography className={`customouralfredtext ${classes.ourAlfredSubtitle}`}>{ReactHtmlParser(this.props.t('OUR_ALFRED.text'))}</Typography>
