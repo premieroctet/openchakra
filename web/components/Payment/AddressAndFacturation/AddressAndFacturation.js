@@ -32,7 +32,7 @@ class AddressAndFacturation extends React.Component {
           <Grid className={classes.addressAndFactuMainContainer}>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%'}}>
               <Topic
-                titleTopic={ADDRESS_FACTURATION.topic_service}
+                titleTopic={ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.topic_service'))}
                 titleSummary={false}
                 underline={false}
               >

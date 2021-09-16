@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -32,7 +33,7 @@ class PaymentMode extends React.Component {
               <HttpsIcon/>
             </Grid>
             <Grid style={{marginLeft: '2vh'}}>
-              <Typography>{PAYMENT_MODE.title}</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('PAYMENT_MODE.title'))}</Typography>
             </Grid>
           </Grid>
           <Grid className={classes.paymentPicsContainer}>

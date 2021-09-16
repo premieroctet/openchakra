@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -72,7 +73,7 @@ class IndexDashboard extends React.Component {
       .then(() => {
         axios.put('/myAlfred/api/companies/representative', {representative_id: representative})
           .then(() => {
-            snackBarSuccess(INDEX_DASHBOARD.snackbar_update_admin)
+            snackBarSuccess(ReactHtmlParser(this.props.t('INDEX_DASHBOARD.snackbar_update_admin')))
             this.componentDidMount()
           })
           .catch(err => {
@@ -94,13 +95,13 @@ class IndexDashboard extends React.Component {
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%', margin: 0}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3>{INDEX_DASHBOARD.title}</h3>
+          <h3>{ReactHtmlParser(this.props.t('INDEX_DASHBOARD.title'))}</h3>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
             <Grid container item spacing={2} xl={12} lg={12} md={12} sm={12} xs={12} style={{width: '100%', margin: 0}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} >
-                <h3>{INDEX_DASHBOARD.title_admin}</h3>
+                <h3>{ReactHtmlParser(this.props.t('INDEX_DASHBOARD.title_admin'))}</h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} >
                 <Select
@@ -124,12 +125,12 @@ class IndexDashboard extends React.Component {
                       <DateField
                         classes={{root: classes.textFieldDatePicker}}
                         variant="outlined"
-                        label={INDEX_DASHBOARD.birthdate}
+                        label={ReactHtmlParser(this.props.t('INDEX_DASHBOARD.birthdate'))}
                         name={'birthday'}
                         value={birthday}
                         onChange={this.onChange}
                         error={selected_admin && !selected_admin.birthday && this.saveDisabled()}
-                        helperText={INDEX_DASHBOARD.birthdate_helper}
+                        helperText={ReactHtmlParser(this.props.t('INDEX_DASHBOARD.birthdate_helper'))}
                       />
                     </Grid>
                   </Grid>
@@ -139,7 +140,7 @@ class IndexDashboard extends React.Component {
               }
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Button onClick={this.onSave} disabled={this.saveDisabled()} variant={'contained'} color={'primary'} style={{textTransform: 'initial', color: 'white'}}>
-                  {INDEX_DASHBOARD.save_button}
+                  {ReactHtmlParser(this.props.t('INDEX_DASHBOARD.save_button'))}
                 </Button>
               </Grid>
             </Grid>

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -164,7 +165,7 @@ class ServicesCompany extends React.Component {
   removeService = () => {
     const{selectedService, selectedGroup} = this.state
     axios.delete(`/myAlfred/api/groups/${selectedGroup._id}/allowedServices/${selectedService._id}`).then(() => {
-      snackBarSuccess(SERVICES_COMPANY.snackbar_remove_service)
+      snackBarSuccess(ReactHtmlParser(this.props.t('SERVICES_COMPANY.snackbar_remove_service')))
       this.setState({dialogRemove: false}, () => this.componentDidMount())
     }).catch(err => {
       console.error(err)
@@ -191,7 +192,7 @@ class ServicesCompany extends React.Component {
         <DialogContent>
           <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3>{SERVICES_COMPANY.dialog_config_content_title}</h3>
+              <h3>{ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_config_content_title'))}</h3>
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid container>
@@ -204,24 +205,24 @@ class ServicesCompany extends React.Component {
                       variant={'outlined'}
                       onChange={this.handleOnchange}
                       InputProps={{
-                        endAdornment: <InputAdornment position="end">{SERVICES_COMPANY.euro}</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">{ReactHtmlParser(this.props.t('SERVICES_COMPANY.euro'))}</InputAdornment>,
                       }}
                     />
                   </FormControl>
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
                   <FormControl variant={'outlined'} className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">{SERVICES_COMPANY.input_month_year}</InputLabel>
+                    <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('SERVICES_COMPANY.input_month_year'))}</InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
                       value={timeTakeInCharge}
                       name={'timeTakeInCharge'}
                       onChange={this.handleOnchange}
-                      label={SERVICES_COMPANY.input_month_year}
+                      label={ReactHtmlParser(this.props.t('SERVICES_COMPANY.input_month_year'))}
                     >
-                      <MenuItem value={10}>{SERVICES_COMPANY.month}</MenuItem>
-                      <MenuItem value={20}>{SERVICES_COMPANY.year}</MenuItem>
+                      <MenuItem value={10}>{ReactHtmlParser(this.props.t('SERVICES_COMPANY.month'))}</MenuItem>
+                      <MenuItem value={20}>{ReactHtmlParser(this.props.t('SERVICES_COMPANY.year'))}</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -231,10 +232,10 @@ class ServicesCompany extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogConfigService: false})} classes={{root: classes.cancelButton}}>
-            {SERVICES_COMPANY.button_cancel}
+            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_cancel'))}
           </Button>
           <Button onClick={this.addService} color="primary">
-            {SERVICES_COMPANY.button_confirm}
+            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -251,15 +252,15 @@ class ServicesCompany extends React.Component {
 
     return(
       <Dialog open={dialogAddService} onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})} aria-labelledby="form-dialog-title" classes={{paper: classes.configService}}>
-        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})}>{mode === CARETAKER_MODE ? SERVICES_COMPANY.classification_title : SERVICES_COMPANY.department_title} {selectedService.name}</DialogTitle>
+        <DialogTitle id="form-dialog-title" onClose={() => this.setState({dialogAddService: false, servicesToAdd: []})}>{mode === CARETAKER_MODE ? ReactHtmlParser(this.props.t('SERVICES_COMPANY.classification_title')) : ReactHtmlParser(this.props.t('SERVICES_COMPANY.department_title'))} {selectedService.name}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3> {SERVICES_COMPANY.select_service + mode === CARETAKER_MODE ? SERVICES_COMPANY.this_classification : SERVICES_COMPANY.this_department}</h3>
+              <h3> {ReactHtmlParser(this.props.t('SERVICES_COMPANY.select_service')) + mode === CARETAKER_MODE ? ReactHtmlParser(this.props.t('SERVICES_COMPANY.this_classification')) : ReactHtmlParser(this.props.t('SERVICES_COMPANY.this_department'))}</h3>
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                <InputLabel id="demo-mutiple-chip-label">{SERVICES_COMPANY.services_title}</InputLabel>
+                <InputLabel id="demo-mutiple-chip-label">{ReactHtmlParser(this.props.t('SERVICES_COMPANY.services_title'))}</InputLabel>
                 <Select
                   labelId="demo-mutiple-chip-label"
                   id="demo-mutiple-chip"
@@ -290,7 +291,7 @@ class ServicesCompany extends React.Component {
               mode === CARETAKER_MODE ?
                 <Grid item container xl={12} lg={12} md={12} sm={12} xs={12}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <h3>{SERVICES_COMPANY.take_care_level}</h3>
+                    <h3>{ReactHtmlParser(this.props.t('SERVICES_COMPANY.take_care_level'))}</h3>
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <TextField
@@ -301,7 +302,7 @@ class ServicesCompany extends React.Component {
                       classes={{root: classes.textField}}
                       onChange={this.handleChange}
                       InputProps={{
-                        endAdornment: <InputAdornment position="end">{SERVICES_COMPANY.modulo}</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">{ReactHtmlParser(this.props.t('SERVICES_COMPANY.modulo'))}</InputAdornment>,
                         inputProps: {min: 0, max: 100},
                       }}
                     />
@@ -312,10 +313,10 @@ class ServicesCompany extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogAddService: false, servicesToAdd: []})} classes={{root: classes.cancelButton}}>
-            {SERVICES_COMPANY.button_cancel}
+            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_cancel'))}
           </Button>
           <Button onClick={this.addService} color="primary">
-            {SERVICES_COMPANY.button_confirm_dialog}
+            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_confirm_dialog'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -332,18 +333,18 @@ class ServicesCompany extends React.Component {
         aria-describedby="alert-dialog-description"
         classes={{paper: classes.dialogPaper}}
       >
-        <DialogTitle id="alert-dialog-title" onClose={() => this.setState({dialogRemove: false})}>{SERVICES_COMPANY.dialog_remove_title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title" onClose={() => this.setState({dialogRemove: false})}>{ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_remove_title'))}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {`${SERVICES_COMPANY.dialog_remove_text + selectedService.label + SERVICES_COMPANY.dialog_remove_off + selectedGroup.name }?`}
+            {`${ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_remove_text')) + selectedService.label + ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_remove_off')) + selectedGroup.name }?`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogRemove: false})} color="primary">
-            {SERVICES_COMPANY.button_cancel}
+            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_cancel'))}
           </Button>
           <Button onClick={this.removeService} color="primary">
-            {SERVICES_COMPANY.button_delete}
+            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_delete'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -358,7 +359,7 @@ class ServicesCompany extends React.Component {
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%', margin: 0}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
           <Grid>
-            <h3>{SERVICES_COMPANY.title}</h3>
+            <h3>{ReactHtmlParser(this.props.t('SERVICES_COMPANY.title'))}</h3>
           </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -373,7 +374,7 @@ class ServicesCompany extends React.Component {
                         aria-controls="panel1a-content"
                         id={index}
                       >
-                        <Typography className={classes.heading}>{SERVICES_COMPANY.services_available_for + mode === CARETAKER_MODE ? SERVICES_COMPANY.classification : SERVICES_COMPANY.department} <strong>{groupe.name}</strong></Typography>
+                        <Typography className={classes.heading}>{ReactHtmlParser(this.props.t('SERVICES_COMPANY.services_available_for')) + mode === CARETAKER_MODE ? ReactHtmlParser(this.props.t('SERVICES_COMPANY.classification')) : ReactHtmlParser(this.props.t('SERVICES_COMPANY.department'))} <strong>{groupe.name}</strong></Typography>
                       </AccordionSummary>
                       {
                         groupe.allowed_services.length > 0 ?
@@ -385,7 +386,7 @@ class ServicesCompany extends React.Component {
                                     <ListItem key={j}>
                                       <ListItemText
                                         primary={service.service.label}
-                                        secondary={groupe.budget ? `${groupe.budget}€ / ${BUDGET_PERIOD[groupe.budget_period]}` : SERVICES_COMPANY.no_budget}
+                                        secondary={groupe.budget ? `${groupe.budget}€ / ${BUDGET_PERIOD[groupe.budget_period]}` : ReactHtmlParser(this.props.t('SERVICES_COMPANY.no_budget'))}
                                       />
                                       <ListItemSecondaryAction>
                                         <IconButton edge="end" aria-label="SettingsIcon" onClick={() => this.handleClickOpen('dialogConfigService', service.service.label)}>

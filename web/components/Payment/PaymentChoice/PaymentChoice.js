@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Typography from '@material-ui/core/Typography'
@@ -36,7 +37,7 @@ class PaymentChoice extends React.Component {
           <Grid className={classes.paymenChoiceMainContainer}>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingRight: '10%', paddingTop: '5%', paddingBottom: '5%', position: 'relative'}}>
               <Topic
-                titleTopic={PAYMENT_CHOICE.topic_payment_mode}
+                titleTopic={ReactHtmlParser(this.props.t('PAYMENT_CHOICE.topic_payment_mode'))}
                 titleSummary={false}
                 underline={false}
               >
@@ -86,7 +87,7 @@ class PaymentChoice extends React.Component {
           </Grid>
           <Grid style={{paddingRight: '5%', paddingLeft: '5%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
-              <Typography>{PAYMENT_CHOICE.info_payment}<strong>{PAYMENT_CHOICE.cgv}</strong>{PAYMENT_CHOICE.next_part}<strong>{PAYMENT_CHOICE.policy}</strong></Typography>
+              <Typography>{ReactHtmlParser(this.props.t('PAYMENT_CHOICE.info_payment'))}<strong>{ReactHtmlParser(this.props.t('PAYMENT_CHOICE.cgv'))}</strong>{ReactHtmlParser(this.props.t('PAYMENT_CHOICE.next_part'))}<strong>{ReactHtmlParser(this.props.t('PAYMENT_CHOICE.policy'))}</strong></Typography>
             </Grid>
           </Grid>
         </Grid>
