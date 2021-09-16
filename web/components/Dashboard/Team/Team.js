@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -183,7 +184,7 @@ class Team extends React.Component {
         member_id: user._id,
       }
       axios.put(`/myAlfred/api/groups/${value}/managers`, data).then(() => {
-        snackBarSuccess(TEAM.snackbar_add_member)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TEAM.snackbar_add_member')))
         this.componentDidMount()
       }).catch(err => {
         snackBarError(err.response.error)
@@ -372,7 +373,7 @@ class Team extends React.Component {
 
     axios.delete(`/myAlfred/api/companies/admin/${selected._id}`)
       .then(() => {
-        snackBarSuccess(selected.name + TEAM.snackbar_remove_admin)
+        snackBarSuccess(selected.name + ReactHtmlParser(this.props.t('TEAM.snackbar_remove_admin')))
         this.setState({dialogRemove: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -385,7 +386,7 @@ class Team extends React.Component {
     setAxiosAuthentication()
     axios.delete(`/myAlfred/api/groups/${groupeIdSelected}/managers/${selected._id}`)
       .then(() => {
-        snackBarSuccess(TEAM.snackbar_remove_manager)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TEAM.snackbar_remove_manager')))
         this.setState({dialogRemove: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -407,7 +408,7 @@ class Team extends React.Component {
 
     axios.post('/myAlfred/api/groups', data)
       .then(() => {
-        snackBarSuccess(TEAM.snackbar_create_groupe + nameGroupe + TEAM.snackbar_create_name_groupe)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TEAM.snackbar_create_groupe')) + nameGroupe + ReactHtmlParser(this.props.t('TEAM.snackbar_create_name_groupe')))
         this.setState({dialogGroupe: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -427,7 +428,7 @@ class Team extends React.Component {
 
     axios.put(`/myAlfred/api/groups/${selected._id}`, data)
       .then(() => {
-        snackBarSuccess(selected.name + TEAM.snackbar_update_groupe)
+        snackBarSuccess(selected.name + ReactHtmlParser(this.props.t('TEAM.snackbar_update_groupe')))
         this.setState({dialogGroupe: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -439,7 +440,7 @@ class Team extends React.Component {
     const{selected} = this.state
     axios.delete(`/myAlfred/api/groups/${selected._id}`)
       .then(() => {
-        snackBarSuccess(TEAM.snackbar_create_groupe + selected.name + TEAM.snackbar_delete)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TEAM.snackbar_create_groupe')) + selected.name + ReactHtmlParser(this.props.t('TEAM.snackbar_delete')))
         this.setState({dialogRemoveGroupe: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -458,14 +459,16 @@ class Team extends React.Component {
 
     return(
       <Dialog open={dialogAdd} onClose={() => this.setState({dialogAdd: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{mode === MICROSERVICE_MODE ? TEAM.dialog_add_manager : TEAM.dialog_add_employe}</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>
+          {ReactHtmlParser(this.props.t(mode === MICROSERVICE_MODE ? 'TEAM.dialog_add_manager' : 'TEAM.dialog_add_employe'))}
+        </DialogTitle>
         <DialogContent dividers>
           {mode === MICROSERVICE_MODE ?
             userEmploye.length === 0 ? null :
               <Grid style={{paddingBottom: 20}}>
                 <Grid container spacing={2} style={{width: '100%', margin: 0, paddingBottom: 40}}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <h3>{TEAM.existing_account}</h3>
+                    <h3>{ReactHtmlParser(this.props.t('TEAM.existing_account'))}</h3>
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>

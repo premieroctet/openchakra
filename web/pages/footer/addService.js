@@ -22,7 +22,7 @@ class AddService extends React.Component {
         <Grid className={classes.mainContainerAddService}>
           <Grid style={{display: 'flex'}}>
             <Grid className={classes.hideOnMobile}>
-              <h1 style={{marginRight: '25px', color: '#F8CF61'}} className={'customaddserviceone'}>1</h1>
+              <h1 style={{marginRight: '25px', color: '#F8CF61'}} className={'customaddserviceone'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.one'))}</h1>
             </Grid>
             <Grid style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>

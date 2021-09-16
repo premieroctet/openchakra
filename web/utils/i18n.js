@@ -106,7 +106,6 @@ const USERSERVICEPREVIEW = {
 }
 
 const DRAWER_BOOKING = {
-  interrogation: ' ?',
   eligible: 'Eligible au CESU',
   warning_perimiter: 'Cet Alfred se trouve trop loin de chez vous pour être réservé!',
   warning_budget: 'Le montant dépasse le budget disponible pour votre département',
@@ -289,7 +288,7 @@ const SEARCHBAR = {
   when: 'Quand ?',
   labelWhere: "L'adresse",
   labelWhat: 'Le service',
-  what_placeholer: 'Ménage, jardinage, ...',
+  what_placeholder: 'Ménage, jardinage, ...',
   labelWhen: 'Les dates',
   labelStatus: 'Statut',
   labelDate: 'Date(s)',
