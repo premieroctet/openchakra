@@ -19,7 +19,7 @@ function InfoBar({classes, t}) {
             height={'100%'}/>
         </Grid>
         <Grid>
-          <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{ReactHtmlParser(t('INFOBAR_MESSAGE.message'))}</Typography>
+          <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{ReactHtmlParser(t('INFOBAR.message'))}</Typography>
         </Grid>
       </Grid>
     </Grid>

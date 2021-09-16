@@ -11,6 +11,7 @@ import ListAlfredConditions from '../../ListAlfredConditions/ListAlfredCondition
 import styles from '../../../static/css/components/AddressAndFacturation/AddressAndFacturation'
 import withStyles from '@material-ui/core/styles/withStyles'
 import {ADDRESS_FACTURATION} from '../../../utils/i18n'
+import ReactHtmlParser from 'react-html-parser'
 
 class AddressAndFacturation extends React.Component {
 
@@ -42,7 +43,7 @@ class AddressAndFacturation extends React.Component {
             </Grid>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
               <Topic
-                titleTopic={ADDRESS_FACTURATION.topic_about + user.firstname}
+                titleTopic={ReactHtmlParser(this.props.t('PROFIL.about', {firstname: user.firstname}))}
                 titleSummary={false}
                 underline={false}
               >
@@ -54,8 +55,8 @@ class AddressAndFacturation extends React.Component {
                 <Divider style={{height: 2, borderRadius: 10, width: '50%', backgroundColor: 'rgba(210, 210, 210, 0.5)'}}/>
               </Grid>
               <Topic
-                titleTopic={ADDRESS_FACTURATION.topic_stuff}
-                titleSummary={equipments.length === 0 ? ADDRESS_FACTURATION.topic_no_stuff : false}
+                titleTopic={ReactHtmlParser(this.props.t('BOOKING.stuff'))}
+                titleSummary={equipments.length === 0 ? ReactHtmlParser(this.props.t('BOOKING.no_stuff')) : false}
                 underline={false}
               >
                 <ListAlfredConditions

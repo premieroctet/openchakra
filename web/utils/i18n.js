@@ -34,11 +34,11 @@ const MANGOPAY_MESSAGES = {
   [ KycDocumentStatus.Refused ]: "Pièce d'identité refusée, merci d'en fournir une valide",
 }
 
-const INFOBAR_MESSAGE = {
+const INFOBAR = {
   message: 'Vous ne trouvez pas votre service ? L’équipe Alfred se mobilise pour trouver le meilleur Alfred près de chez vous',
 }
 
-const INFOBARMOBILE_MESSAGE = {
+const INFOBARMOBILE = {
   message: "L'application MyAlfred est disponible au téléchargement sur :",
 }
 
@@ -243,10 +243,8 @@ const CONFIRM_PAYMENT = {
 
 const ADDRESS_FACTURATION = {
   topic_service: 'Adresse du service',
-  topic_about: 'A propos de ',
-  topic_stuff: 'Matériel fourni',
-  topic_no_stuff: 'Aucun matériel fourni',
-
+  address_billing_title: 'ADRESSE & FACTURATION',
+  payment_title: 'PAIEMENT',
 }
 
 const DRAWER_BOOKING_RECAP = {
@@ -280,8 +278,6 @@ const PAYMENT_MODE = {
   title: 'Paiement sécurisé',
   link_paid_another_card: 'Payer avec une autre carte',
   topic_postal_service: 'Adresse du service',
-
-
 }
 
 const ADDRESS_SERVICE = {
@@ -300,6 +296,7 @@ const SEARCHBAR = {
   when: 'Quand ?',
   labelWhere: "L'adresse",
   labelWhat: 'Le service',
+  what_placeholer: 'Ménage, jardinage, ...',
   labelWhen: 'Les dates',
   labelStatus: 'Statut',
   labelDate: 'Date(s)',
@@ -522,7 +519,7 @@ const EDIT_PROFIL = {
   title: 'Modifier votre profil',
   textfield_firstname: 'Prénom',
   textfield_name: 'Nom',
-  textfield_about_me: 'A propos de moi',
+  textfield_about_me: 'À propos de moi',
   char_max: '{{maxchars}} caractères max',
   personnal_info: 'Informations personnelles',
   gender: 'Sexe',
@@ -783,13 +780,13 @@ const NOTIFICATIONS = {
 
 }
 
-const NEWS_LETTER = {
-  title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
+const NEWSLETTER = {
+  title: 'Profitez des bons plans de la communauté avec la Newsletter des Alfred',
   text: 'Inscrivez-vous gratuitement à notre super Newsletter pour recevoir les informations et les bons plans de la communauté.',
-  google: 'S\'inscrire avec Google',
+  google: "S'inscrire avec Google",
   where: 'ou',
   email: 'Email',
-  button: 'Je m\'inscris !',
+  button: "Je m'inscris !",
 }
 
 const CMP_PRESENTATION = {
@@ -820,6 +817,7 @@ const PROFIL = {
   nothing: 'Non renseigné',
   confirmed: 'Profil confirmé',
   unconfirmed: 'Profil non confirmé',
+  about: 'À propos de {{firstname}}',
 }
 
 const SHOP = {
@@ -839,7 +837,7 @@ const SHOP = {
     step3_text: 'Renseignez votre profil Alfred, partagez vos réalisations, et décrivez-vous !',
   },
   creation: {
-    title: 'A propos de vous',
+    title: 'À propos de vous',
     subtitle: 'Choisissez votre statut. Les particuliers peuvent proposer leurs services aux particuliers, mais seuls les professionnels peuvent proposer leurs services aux clients particuliers et entreprises.',
     is_particular: 'Je suis un particulier',
     is_particular_description: 'En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés.',
@@ -897,7 +895,7 @@ const SHOP = {
     title_delay_prevenance: 'De quel délai souhaitez-vous disposer entre la réservation et la réalisation du services ?',
     exemple_delay: 'Par exemple, si vous indiquez un délai de 24 heures, un client devra réserver votre service au moins 24 heures avant votre intervention.',
     units_dalay_prevenance: 'Heures/jours/semaines',
-    label_delay_prevenance: '',
+    label_delay_prevenance: 'Délai',
     hours: 'heure(s)',
     days: 'jour(s)',
     weeks: 'semaine(s)',
@@ -914,7 +912,7 @@ const SHOP = {
     expertise_label: 'Votre expertise',
     experience_title: 'Votre expérience',
     experience_label: 'Experience',
-    experience_label_description: 'Décrivrez votre expérience',
+    experience_label_description: 'Décrivez votre expérience',
     obtain_competence: 'Compétences',
     diploma_title: 'Votre diplôme',
     diploma_subtitle: 'En téléchargeant votre diplôme, celui-ci aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ces derniers.',
@@ -1014,7 +1012,7 @@ const MESSAGE_SUMMARY = {
 const AVOCOTES = {
   title: "Besoin d'un coup de pouce pour installer votre pack AvoCotés protection ?",
   subtitle: "Confiez l'installation de votre Pack SECURITE AvoCotés Protection à un entrepeneur local & qualifé",
-  titleSection: "A propos de l'installateur",
+  titleSection: "À propos de l'installateur",
   description: "Alfred on-demand est partenaire d'AvoCotés pour toutes les demandes d'installation de matériel de télésurveillance. Nos entrepreneurs sont des indépendants locaux, qualifiés et vérifiés par nos équipes. Chaque entrepreneur est formé à l'installation du matériel AvoCotés par nos soins.",
   descriptionSecond: "Notre équipe vous contacte par téléphone afin de fixer avec vous un créneau qui s'intégre à vos impératifs. Pour toute question relative à votre installation, n'hésitez pas à nous contacter au 06 87 37 73 63.",
   titleEquipment: 'Matériel apporté et fourni par votre installateur :',
@@ -1055,13 +1053,12 @@ const BOOKING = {
   button_evaluate_client: 'Evaluer mon client',
   info_commentary: 'Vous avez 15 jours pour évaluer votre Alfred. Une fois que votre Alfred aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !',
   evaluate_alfred_button: 'Evaluer mon Alfred',
-  about: 'A propos de ',
   id_checked: "Pièce d'identité vérifiée",
   member_since: 'Membre depuis ',
   button_send_message: 'Envoyer un message',
   button_call: 'Appeler',
   phone_number: 'Numéro de téléphone :',
-  about_resa: 'A propos de votre réservation',
+  about_resa: 'À propos de votre réservation',
   visio: 'en visio',
   created_date: 'créée le ',
   end_date: 'Date de fin: ',
@@ -1072,7 +1069,7 @@ const BOOKING = {
   pre_approved_button: 'Pré-approuver',
   paid_button: 'Payer ma réservation',
   stuff: 'Matériel fourni',
-  no_stuff: 'Aucun équipement fourni',
+  no_stuff: 'Aucun matériel fourni',
   cancel_resa: 'Annuler la réservation',
   warning_behavior: 'Signaler l’utilisateur',
   reclamation: 'Réclamation',
@@ -1087,7 +1084,7 @@ module.exports = {
   getMangopayMessage,
   SHOP_CREATION_SUCCESSFUL,
   REGISTRATION_PROOF_CONFIRM_DELETION,
-  INFOBAR_MESSAGE,
+  INFOBAR,
   SHOWMORE,
   SEARCHBAR,
   BANNER_PRESENTATION,
@@ -1096,12 +1093,12 @@ module.exports = {
   BECOME_ALFRED,
   RESA_SERVICE,
   HOW_IT_WORKS,
-  NEWS_LETTER,
+  NEWSLETTER,
   NAVBAR_MENU,
   SHOP,
   CMP_PRESENTATION,
   BOOKING,
-  INFOBARMOBILE_MESSAGE,
+  INFOBARMOBILE,
   AVOCOTES,
   PROFIL,
   OUR_ALFRED,

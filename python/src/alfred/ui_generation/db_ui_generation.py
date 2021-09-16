@@ -50,8 +50,6 @@ class DBUiGeneration(object):
           for idx, row in enumerate(list(sheet.iter_rows())[1:]):
             try:
               row=[r.value for r in row]
-              if ('text' in str(row[0]).lower()) and not [v for v in row if 'content' in str(v).lower()]:
-                raise Exception('Pas de content pour I18N')
               col0=row[0]
               if col0:
                 if col0.lower().startswith('composant '):
@@ -77,6 +75,8 @@ class DBUiGeneration(object):
                   raise Exception('Classname sans composant')
                 req=self.get_mongo(name.capitalize(), comp.capitalize(), label, classname, componentType)
                 print(req)
+                if ('text' in str(row[0]).lower()) and not [v for v in row if 'content' in str(v).lower()]:
+                  raise Exception('Pas de content pour I18N')
             except BaseException as ex:
               print('****** Page {}, ligne {}:{}'.format(name, idx+2, ex), file=sys.stderr)
         except BaseException as ex:
