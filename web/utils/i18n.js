@@ -1013,6 +1013,7 @@ const TEAM = {
   snackbar_delete: ' supprimé',
   dialog_add_manager: 'Ajouter un Manager',
   dialog_add_employe: 'Ajouter un Employé',
+  existing_account: 'Comptes existants',
 }
 
 const MESSAGE_SUMMARY = {

@@ -465,7 +465,7 @@ class Team extends React.Component {
               <Grid style={{paddingBottom: 20}}>
                 <Grid container spacing={2} style={{width: '100%', margin: 0, paddingBottom: 40}}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <h3>Comptes existants</h3>
+                    <h3>{TEAM.existing_account}</h3>
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
