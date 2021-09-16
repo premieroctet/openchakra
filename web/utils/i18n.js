@@ -1014,6 +1014,17 @@ const TEAM = {
   dialog_add_manager: 'Ajouter un Manager',
   dialog_add_employe: 'Ajouter un Employé',
   existing_account: 'Comptes existants',
+  user_title: 'Utilisateurs',
+  rib: 'RIB',
+  choose_department: 'Choisir le département',
+  departement: 'Département',
+  departements: 'Departements',
+  create_new_account: 'Créer un nouveau compte',
+  firstname: 'Prénom',
+  name: 'Nom',
+  email: 'Email',
+  button_cancel: 'Annuler',
+  button_confirm: 'Confirmer',
 }
 
 const MESSAGE_SUMMARY = {
