@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -26,7 +27,7 @@ class Profile extends React.Component {
             <Typography><strong>{moment(user.creation_date).format('MMMM YYYY')}</strong></Typography>
           </Grid>
           <Grid>
-            <Typography>{PROFILE.id_card}<strong>{user.id_confirmed ? PROFILE.id_card : PROFILE.no_checked}</strong></Typography>
+            <Typography>{ReactHtmlParser(this.props.t('PROFILE.id_card'))}<strong>{ReactHtmlParser(this.props.t(user.id_confirmed ? 'PROFILE.checked':'PROFILE.no_checked'))}</strong></Typography>
           </Grid>
         </Grid>
       </Grid>

@@ -159,7 +159,7 @@ class About extends CompanyComponent {
         vat_subject: this.state.vat_subject,
       },
       ).then(() => {
-        snackBarSuccess(ABOUT.snackbar_profil_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('ABOUT.snackbar_profil_update')))
         this.componentDidMount()
       }).catch(err => {
         snackBarError(err.response.data)
@@ -168,7 +168,7 @@ class About extends CompanyComponent {
     else{
       axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(() => {
         axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(() => {
-          snackBarSuccess(ABOUT.snackbar_profil_update)
+          snackBarSuccess(ReactHtmlParser(this.props.t('ABOUT.snackbar_profil_update')))
           setTimeout(this.loadUser, 1000)
         },
         ).catch(err => {

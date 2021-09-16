@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
@@ -106,7 +107,7 @@ class ConfirmPayment extends BasePage {
   payDirect = () => {
     const {pending}=this.state
     if (pending) {
-      return snackBarError(CONFIRM_PAYMENT.snackbar_error_payment)
+      return snackBarError(ReactHtmlParser(this.props.t('CONFIRM_PAYMENT.snackbar_error_payment')))
     }
     const booking_id=this.getURLProps().booking_id
     const total = parseFloat(this.state.grandTotal)

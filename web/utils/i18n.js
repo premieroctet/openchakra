@@ -65,8 +65,7 @@ const USERSERVICEPREVIEW = {
   snackbar_no_booking: 'Pas de booking trouvé',
   snackbar_error_avc: 'Impossible de réserver cet Alfred pour avocôtés, prestations manquantes: ',
   error_presta: 'Sélectionnez au moins une prestation',
-  error_minimum_presta: 'Commande minimum des prestation de ',
-  error_minimum_presta_end: ' € requise',
+  error_minimum_basket: 'Commande minimum des prestation de {{minimum_basket}}€ requise',
   error_select_date: 'Sélectionnez une date',
   error_select_hour: 'Sélectionnez une heure',
   error_not_available: ' n\'est pas disponible à cette date/heure',
@@ -92,9 +91,7 @@ const USERSERVICEPREVIEW = {
   ten_days: ' 10 jours ',
   before_end_date: ' avant la date prévue',
   minimum_basket: 'Panier minimum',
-  minimum_basket_of: 'Le panier minimum de ',
-  is: ' est de ',
-  euro: ' €',
+  minimum_basket_of: 'Le panier minimum de {{firstname}} est de {{minimum_basket}} €',
   topic_title_date: 'Sélectionnez vos dates',
   topic_title_date_summary: 'Choisissez vos dates selon les disponibilités de ',
   topic_title_stuff: 'Matériel',
@@ -109,7 +106,6 @@ const USERSERVICEPREVIEW = {
 }
 
 const DRAWER_BOOKING = {
-  euro: ' €',
   interrogation: ' ?',
   eligible: 'Eligible au CESU',
   warning_perimiter: 'Cet Alfred se trouve trop loin de chez vous pour être réservé!',
@@ -129,7 +125,6 @@ const DRAWER_BOOKING = {
 }
 
 const BOOKING_DETAIL = {
-  euro: ' €',
   move_cost: 'Frais de déplacement',
   delivery_cost: 'Frais de livraison/enlèvement',
   service_cost: 'Frais de service',
@@ -145,7 +140,6 @@ const BUTTON_SWITCH = {
   helpertext: 'Obligatoire',
   error_label: 'label introuvable',
   price: 'Tarif',
-  euro: ' €',
 }
 
 const FAQ_ABOUT = {
@@ -249,7 +243,6 @@ const ADDRESS_FACTURATION = {
 
 const DRAWER_BOOKING_RECAP = {
   title: 'Récapitulatif',
-  euro: ' €',
   moving_cost: 'Frais de déplacement',
   button_pay: 'Payer',
   button_validate: 'Valider',
@@ -441,7 +434,6 @@ const INDEX_DASHBOARD = {
 const SERVICES_COMPANY = {
   snackbar_remove_service: 'Service retiré',
   dialog_config_content_title: 'Prise en charge',
-  euro: ' €',
   input_month_year: 'Mois/An',
   month: 'Mois',
   year: 'An',
@@ -902,7 +894,6 @@ const SHOP = {
     title_minimum_basket: 'Quel est le montant minimal pour réserver votre service ?',
     subtitle_minimum_basket: ' Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service. Si vous indiquez un montant de 10€, les clients ne pourront pas réserver vos services si la somme des prestations n’atteint pas ce montant',
     textfield_minimum_basket: 'Panier minimum',
-    unit_minimum_basket: '€',
     title_equipments: 'Les équipements que vous fournissez pour ce service:',
   },
   assets: {

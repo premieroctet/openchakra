@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -34,7 +35,7 @@ class DrawerBookingRecap extends React.Component {
       <Grid>
         <Grid>
           <Grid>
-            <h3>{DRAWER_BOOKING_RECAP.title}</h3>
+            <h3>{ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.title'))}</h3>
           </Grid>
           <Grid>
             <Grid>
@@ -89,7 +90,7 @@ class DrawerBookingRecap extends React.Component {
                           </Grid>
                           <Grid item xs={6} className={classes.drawerBookingRecapPrice}>
                             <Grid>
-                              <Typography><strong>{prestation.price ? prestation.price.toFixed(2) : `?${ DRAWER_BOOKING_RECAP.euro}`}</strong></Typography>
+                              <Typography><strong>{prestation.price ? prestation.price.toFixed(2) : '?'}€</strong></Typography>
                             </Grid>
                           </Grid>
                         </Grid>
@@ -102,12 +103,12 @@ class DrawerBookingRecap extends React.Component {
                           justifyContent: 'space-between'}}>
                           <Grid>
                             <Grid>
-                              <Typography>{DRAWER_BOOKING_RECAP.moving_cost}</Typography>
+                              <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.moving_cost'))}</Typography>
                             </Grid>
                           </Grid>
                           <Grid>
                             <Grid>
-                              <Typography>{travel_tax.toFixed(2) + DRAWER_BOOKING_RECAP.euro}</Typography>
+                              <Typography>{travel_tax.toFixed(2)}€</Typography>
                             </Grid>
                           </Grid>
                         </Grid> : null}
@@ -140,7 +141,7 @@ class DrawerBookingRecap extends React.Component {
               onClick={() => (activeStep === 0 ? this.props.handleStep() : this.props.handlePayDirect())}
               disabled={activeStep === 1 ? id_card === '' || pending : false}
             >
-              <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? DRAWER_BOOKING_RECAP.button_pay : DRAWER_BOOKING_RECAP.button_validate}</Typography>
+              <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.button_pay')) : ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.button_validate'))}</Typography>
             </Button>
           </Grid>
         </Grid>
@@ -148,7 +149,7 @@ class DrawerBookingRecap extends React.Component {
           mode === 'short' ? null :
             <Grid style={{display: 'flex', justifyContent: 'center', marginTop: '2vh'}}>
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{DRAWER_BOOKING_RECAP.method_payment}</Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.method_payment'))}</Typography>
               </Grid>
             </Grid>
         }

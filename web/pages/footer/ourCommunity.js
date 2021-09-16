@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -20,10 +21,10 @@ class OurCommunity extends React.Component {
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
             <Grid className={classes.containerWidth}>
               <Grid>
-                <h2 className={'customcommunitytitle'} style={{textAlign: 'center'}}>{FAQ_OUR_COMMUNITY.title}</h2>
+                <h2 className={'customcommunitytitle'} style={{textAlign: 'center'}}>{ReactHtmlParser(this.props.t('FAQ_OUR_COMMUNITY.title'))}</h2>
               </Grid>
               <Grid>
-                <Typography className={'customcommunitytext'} style={{textAlign: 'justify'}}>{FAQ_OUR_COMMUNITY.content}</Typography>
+                <Typography className={'customcommunitytext'} style={{textAlign: 'justify'}}>{ReactHtmlParser(this.props.t('FAQ_OUR_COMMUNITY.content'))}</Typography>
               </Grid>
             </Grid>
           </Grid>

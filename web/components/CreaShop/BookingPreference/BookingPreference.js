@@ -132,7 +132,7 @@ class BookingPreference extends React.Component {
                 inputProps: {
                   min: 0,
                 },
-                endAdornment: <InputAdornment position="start">{ReactHtmlParser(this.props.t('SHOP.preference.unit_minimum_basket'))}</InputAdornment>,
+                endAdornment: <InputAdornment position="start">€</InputAdornment>,
               }}
             />
           </Grid>

@@ -29,7 +29,7 @@ class BookingDetail extends React.Component {
                       <p>{k}</p>
                     </Grid>
                     <Grid className={classes.priceContent}>
-                      <p>{prestations[k].toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
+                      <p>{prestations[k].toFixed(2)}€</p>
                     </Grid>
                   </Grid>
                 )
@@ -43,7 +43,7 @@ class BookingDetail extends React.Component {
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.move_cost'))}</p>
               </Grid>
               <Grid>
-                <p>{travel_tax.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
+                <p>{travel_tax.toFixed(2)}€</p>
               </Grid>
             </Grid> : null
           }
@@ -56,7 +56,7 @@ class BookingDetail extends React.Component {
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.delivery_cost'))}</p>
               </Grid>
               <Grid className={classes.priceContent}>
-                <p>{pick_tax.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
+                <p>{pick_tax.toFixed(2)}€</p>
               </Grid>
             </Grid> : null}
           { /* End pick tax */}
@@ -67,7 +67,7 @@ class BookingDetail extends React.Component {
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
               </Grid>
               <Grid className={classes.priceContent}>
-                <p>{client_fee.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
+                <p>{client_fee.toFixed(2)}€</p>
               </Grid>
             </Grid> : null
           }
@@ -77,7 +77,7 @@ class BookingDetail extends React.Component {
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
               </Grid>
               <Grid className={classes.priceContent}>
-                <p>-{alfred_fee.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
+                <p>-{alfred_fee.toFixed(2)}€</p>
               </Grid>
             </Grid> : null
           }
@@ -90,7 +90,7 @@ class BookingDetail extends React.Component {
                   <p>{client_fee !== 0 ? ReactHtmlParser(this.props.t('BOOKING_DETAIL.total')) : ReactHtmlParser(this.props.t('BOOKING_DETAIL.will_total'))}</p>
                 </Grid>
                 <Grid>
-                  <p>{total.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
+                  <p>{total.toFixed(2)}€</p>
                 </Grid>
               </Grid> : null
           }
@@ -103,7 +103,7 @@ class BookingDetail extends React.Component {
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.cesu'))}</p>
               </Grid>
               <Grid>
-                <p>{cesu_total.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
+                <p>{cesu_total.toFixed(2)}€</p>
               </Grid>
             </Grid>
             :
@@ -115,7 +115,7 @@ class BookingDetail extends React.Component {
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.company'))}</p>
               </Grid>
               <Grid>
-                <p>{company_amount.toFixed(2) + ReactHtmlParser(this.props.t('BOOKING_DETAIL.euro'))}</p>
+                <p>{company_amount.toFixed(2)}€</p>
               </Grid>
             </Grid>
             :

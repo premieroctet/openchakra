@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Layout from '../../hoc/Layout/Layout'
@@ -34,40 +35,40 @@ class Privacypolicy extends React.Component {
       <Layout>
         <Grid container className={classes.hideed}>
           <Grid item xs={12} style={{textAlign: 'center', marginBottom: 30}}>
-            <h2>{LEGAL_NOTICE.mention_legal}</h2>
+            <h2>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.mention_legal'))}</h2>
           </Grid>
           <Grid item xs={12}>
-            <h3 style={{color: '#84A5E0'}}>{LEGAL_NOTICE.editor}</h3>
-            <p>{LEGAL_NOTICE.social}</p>
-            <p>{LEGAL_NOTICE.rcs}</p>
-            <p>{LEGAL_NOTICE.capital}</p>
-            <p>{LEGAL_NOTICE.tva}</p>
+            <h3 style={{color: '#84A5E0'}}>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.editor'))}</h3>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.social'))}</p>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.rcs'))}</p>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.capital'))}</p>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.tva'))}</p>
           </Grid>
           <Grid item xs={12}>
-            <h3 style={{color: '#84A5E0'}}>{LEGAL_NOTICE.address}</h3>
-            <p>{LEGAL_NOTICE.address_begin}</p>
-            <p>{LEGAL_NOTICE.postal}</p>
-            <p>{LEGAL_NOTICE.country}</p>
+            <h3 style={{color: '#84A5E0'}}>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.address'))}</h3>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.address_begin'))}</p>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.postal'))}</p>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.country'))}</p>
           </Grid>
           <Grid item xs={12}>
-            <h3 style={{color: '#84A5E0'}}>{LEGAL_NOTICE.ceo}</h3>
-            <p>{LEGAL_NOTICE.ceo_sv}</p>
+            <h3 style={{color: '#84A5E0'}}>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.ceo'))}</h3>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.ceo_sv'))}</p>
           </Grid>
           <Grid item xs={12}>
-            <h3 style={{color: '#84A5E0'}}>{LEGAL_NOTICE.host}</h3>
-            <p>{LEGAL_NOTICE.aws}</p>
-            <p>{LEGAL_NOTICE.aws_address}</p>
-            <p>{LEGAL_NOTICE.aws_postal}</p>
-            <p>{LEGAL_NOTICE.aws_contact}</p>
-            <p>{LEGAL_NOTICE.aws_phone}</p>
+            <h3 style={{color: '#84A5E0'}}>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.host'))}</h3>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.aws'))}</p>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.aws_address'))}</p>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.aws_postal'))}</p>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.aws_contact'))}</p>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.aws_phone'))}</p>
           </Grid>
           <Grid item xs={12}>
-            <h3 style={{color: '#84A5E0'}}>{LEGAL_NOTICE.email}</h3>
-            <p>{LEGAL_NOTICE.email_hello}</p>
+            <h3 style={{color: '#84A5E0'}}>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.email'))}</h3>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.email_hello'))}</p>
           </Grid>
           <Grid item xs={12}>
-            <h3 style={{color: '#84A5E0'}}>{LEGAL_NOTICE.phone}</h3>
-            <p>{LEGAL_NOTICE.phone_number}</p>
+            <h3 style={{color: '#84A5E0'}}>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.phone'))}</h3>
+            <p>{ReactHtmlParser(this.props.t('LEGAL_NOTICE.phone_number'))}</p>
           </Grid>
         </Grid>
         {/* <Footer/>*/}
