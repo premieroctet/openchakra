@@ -94,7 +94,7 @@ class ProfileLayout extends CompanyComponent {
                   }}>
                     <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Grid>
-                        {this.isModeCompany() ? <h3>{company ? company.name : ''}</h3> : <h3 className={'customprofilbannertitle'}>{ReactHtmlParser(this.props.t('LAYOUT_ABOUT.my_name_is'))}</h3> // firstname : user ? user.firstname : ''
+                        {this.isModeCompany() ? <h3>{company ? company.name : ''}</h3> : <h3 className={'customprofilbannertitle'}>{ReactHtmlParser(this.props.t('LAYOUT_ABOUT.my_name_is', {firstname: user ?user.firstname : ''}))}</h3>
                         }
                       </Grid>
                       {this.isModeCompany() ? null : <Grid>
