@@ -1,5 +1,5 @@
 import {Typography} from '@material-ui/core'
-import {toast} from 'react-toastify'
+import {snackBarError, snackBarSuccess} from '../utils/notifications'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Button from '@material-ui/core/Button'
@@ -8,7 +8,6 @@ import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import Router from 'next/router'
 import axios from 'axios'
-
 import BasePage from './basePage'
 import Layout from '../hoc/Layout/Layout'
 
@@ -50,12 +49,12 @@ class validateAccount extends BasePage {
     axios
       .post('/myAlfred/api/users/validateAccount', user)
       .then(() => {
-        toast.info('Compte validé')
+        snackBarSuccess('Compte validé')
         Router.push('/')
       })
       .catch(err => {
-        toast.error(err)
         console.error(err)
+        snackBarError(err)
       })
   }
 

@@ -8,75 +8,68 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import PropTypes from 'prop-types';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 import axios from 'axios';
-
-import {toast} from 'react-toastify';
+import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 const I18N = require('../../utils/i18n');
-
 
 
 class scheduleTest extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      availabilities: []
-    };
+      availabilities: [],
+    }
   }
 
-  componentDidMount(){
-    this.loadAvailabilities();
+  componentDidMount() {
+    this.loadAvailabilities()
   }
 
   loadAvailabilities = () => {
     axios.get('/myAlfred/api/availability/currentAlfred')
       .then(res => {
-        this.setState({availabilities: res.data});
+        this.setState({availabilities: res.data})
       })
-      .catch(err => console.error(err));
-  };
+      .catch(err => console.error(err))
+  }
 
-  availabilityCreated = (avail) => {
+  availabilityCreated = avail => {
 
     if (avail._id.length == GID_LEN) {
-      avail._id = null;
+      avail._id = null
     }
     setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/add', avail)
-      .then(res => {
-        toast.info('Disponibilité ajoutée avec succès !');
+      .then(() => {
+        snackBarSuccess('Disponibilité ajoutée avec succès !')
         axios.get('/myAlfred/api/availability/currentAlfred')
           .then(res => {
-            this.setState({availabilities: res.data});
+            this.setState({availabilities: res.data})
           })
-          .catch(err => console.error(err));
+          .catch(err => console.error(err))
       })
       .catch(err => {
-        console.error(err);
-        toast.error(err);
-      });
-  };
+        console.error(err)
+        snackBarError(err)
+      })
+  }
 
-  availabilityUpdate = (avail) => {
+  availabilityUpdate = avail => {
     setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/update', avail)
-      .then(res => {
-
-
+      .then(() => {
         axios.get('/myAlfred/api/availability/currentAlfred')
           .then(res => {
-            this.setState({availabilities: res.data});
+            this.setState({availabilities: res.data})
           })
-          .catch(err => console.error(err));
-      });
-  };
-
+          .catch(err => console.error(err))
+      })
+  }
 
 
   render() {
-    const {availabilities} = this.state;
-    const {classes} = this.props;
+    const {availabilities} = this.state
 
     return (
-
       <Grid>
         <DrawerAndSchedule
           availabilityUpdate={this.availabilityUpdate}
@@ -87,7 +80,7 @@ class scheduleTest extends React.Component {
           selectable={true}
         />
       </Grid>
-    );
+    )
   }
 
 }
@@ -95,6 +88,6 @@ class scheduleTest extends React.Component {
 scheduleTest.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-};
+}
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(scheduleTest))
+export default withStyles(styles, {withTheme: true})(scheduleTest)
