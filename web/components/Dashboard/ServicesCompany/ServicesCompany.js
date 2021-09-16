@@ -205,7 +205,7 @@ class ServicesCompany extends React.Component {
                       variant={'outlined'}
                       onChange={this.handleOnchange}
                       InputProps={{
-                        endAdornment: <InputAdornment position="end">{ReactHtmlParser(this.props.t('SERVICES_COMPANY.euro'))}</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">€</InputAdornment>,
                       }}
                     />
                   </FormControl>

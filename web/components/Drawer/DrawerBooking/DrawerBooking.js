@@ -55,13 +55,15 @@ class DrawerBooking extends React.Component {
             </Grid>
             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : ReactHtmlParser(this.props.t('DRAWER_BOOKING.interrogation'))}{DRAWER_BOOKING.ReactHtmlParser(this.props.t('DRAWER_BOOKING.euro'))}</Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                  {p.price ? p.price.toFixed(2) : '?'}€
+                </Typography>
               </Grid>
               <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
                 <Typography style={{color: 'rgba(39,37,37,35%)'}}>/</Typography>
               </Grid>
               <Grid style={{whiteSpace: 'nowrap'}}>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : ReactHtmlParser(this.props.t('DRAWER_BOOKING.interrogation'))}</Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
               </Grid>
             </Grid>
             {p.prestation.cesu_eligible && this.props.use_cesu ?
@@ -325,7 +327,7 @@ class DrawerBooking extends React.Component {
                     {this.props.computeTravelTax() ?
                       <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                         <Grid>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.deplacement_cost'))}</Grid>
-                        <Grid>{this.props.computeTravelTax() + ReactHtmlParser(this.props.t('DRAWER_BOOKING.euro'))}</Grid>
+                        <Grid>{this.props.computeTravelTax()}€</Grid>
                       </Grid>
                       : null
                     }
@@ -340,7 +342,7 @@ class DrawerBooking extends React.Component {
                           {
                             isChecked ?
                               <Grid>
-                                {serviceUser.pick_tax.toFixed(2) + ReactHtmlParser(this.props.t('DRAWER_BOOKING.euro'))}
+                                {serviceUser.pick_tax.toFixed(2)}€
                               </Grid> : null
                           }
                         </Grid>

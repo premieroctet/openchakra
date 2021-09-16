@@ -90,7 +90,7 @@ class DrawerBookingRecap extends React.Component {
                           </Grid>
                           <Grid item xs={6} className={classes.drawerBookingRecapPrice}>
                             <Grid>
-                              <Typography><strong>{prestation.price ? prestation.price.toFixed(2) : `?${ ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.euro'))}`}</strong></Typography>
+                              <Typography><strong>{prestation.price ? prestation.price.toFixed(2) : '?'}€</strong></Typography>
                             </Grid>
                           </Grid>
                         </Grid>
@@ -108,7 +108,7 @@ class DrawerBookingRecap extends React.Component {
                           </Grid>
                           <Grid>
                             <Grid>
-                              <Typography>{travel_tax.toFixed(2) + ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.euro'))}</Typography>
+                              <Typography>{travel_tax.toFixed(2)}€</Typography>
                             </Grid>
                           </Grid>
                         </Grid> : null}
