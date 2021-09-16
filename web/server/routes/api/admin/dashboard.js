@@ -1,4 +1,4 @@
-const {getKeys}=require('../../../../utils/i18n_extraction')
+const {getKeys, getIdentifiers}=require('../../../../utils/i18n_extraction')
 const express = require('express')
 
 const router = express.Router()
@@ -3019,10 +3019,14 @@ router.put('/uiConfiguration', passport.authenticate('admin', {session: false}),
     })
 })
 
-router.get('/i18n_keys', (req, res) => {
-  console.log(getKeys())
+router.get('/i18n-keys', (req, res) => {
   let keys=getKeys()
   res.send(keys.join('\n'))
+})
+
+router.get('/i18n-items', (req, res) => {
+  let ids=getIdentifiers()
+  res.send(ids.join('\n'))
 })
 
 module.exports = router
