@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -29,9 +30,13 @@ class NeedMoreFaq extends React.Component {
         display: ' flex', flexDirection: 'column', justifyContent: 'center',
       }}>
         <Grid style={{margin: '0 auto'}}>
-          <h3 style={{fontWeight: 'bold'}} className={'customaddservicewantmore'}>{FAQ_NEED_MORE.link}</h3>
-          <p>{FAQ_NEED_MORE.you_can}<Link href={'/contact'}>
-            <span className={classes.link}>{FAQ_NEED_MORE.contact_us}</span>
+          <h3 style={{fontWeight: 'bold'}} className={'customaddservicewantmore'}>
+            {ReactHtmlParser(this.props.t('FAQ_NEED_MORE.link'))}
+          </h3>
+          <p>{ReactHtmlParser(this.props.t('FAQ_NEED_MORE.you_can'))}<Link href={'/contact'}>
+            <span className={classes.link}>
+              {ReactHtmlParser(this.props.t('FAQ_NEED_MORE.contact_us'))}
+            </span>
           </Link>
           </p>
         </Grid>
