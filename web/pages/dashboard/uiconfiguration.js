@@ -73,11 +73,7 @@ class UIConfiguration extends React.Component {
 
   onFilterChanged = ev => {
     const {name, value}=ev.target
-    this.setState({[name]: value})
-  }
-
-  onFilterClicked = () => {
-    this.filterParameters()
+    this.setState({[name]: value}, this.filterParameters)
   }
 
   filterParameters = () => {
@@ -167,7 +163,6 @@ class UIConfiguration extends React.Component {
           </Grid>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
             <TextField name={'filter'} value={filter} onChange={this.onFilterChanged}/>
-            <Button variant='outlined' onClick={this.onFilterClicked} >Filtrer</Button>
           </Grid>
           <Paper style={{width: '100%'}}>
             <Tabs value={selectedTab==-1 ? false:selectedTab} variant="scrollable">

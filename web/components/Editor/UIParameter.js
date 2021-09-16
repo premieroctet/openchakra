@@ -29,7 +29,7 @@ const TITLES={
   'border-color': 'Couleur de bordure',
   'border-radius': 'Rayon de bordure',
   'display': 'Afficher',
-  'content': 'Contenu',
+  'content': '',
   'magnify-background-color': 'Couleur de loupe',
   'info-color': "Couleur du texte d'information",
   'example-color': "Couleur du texte d'exemple",
@@ -74,7 +74,7 @@ class UIParameter extends React.Component {
         <Grid item xl={12} style={{display: 'flex'}}>
           { RESET_BUTTON_ENABLED && <Button onClick={() => this.onResetClicked(parameter.type)}>Reset</Button> }
           <h3 style={{color: 'black'}}>{title}</h3>
-          {is_development() && <h4>({parameter.type})</h4>}
+          {is_development() && <h4>({parameter.type_label})</h4>}
         </Grid>
 
         {

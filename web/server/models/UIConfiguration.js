@@ -21,7 +21,7 @@ const UIConfigurationSchema = new Schema({
   type: {
     type: String,
     required: true,
-    //enum: ['attribute', 'component', 'button', 'menu', 'group', 'logo', 'searchbar'],
+    // enum: ['attribute', 'component', 'button', 'menu', 'group', 'logo', 'searchbar'],
   },
   // In case of type "group"
   componentType: {
@@ -39,5 +39,9 @@ const UIConfigurationSchema = new Schema({
     id: String,
   }],
 }, {toJSON: {virtuals: true, getters: true}})
+
+UIConfigurationSchema.virtual('type_label').get(function() {
+  return this.type=='content' ? `${this.classname}.${this.type}` : this.classname
+})
 
 module.exports = UIConfigurationSchema
