@@ -366,7 +366,7 @@ class BookingPreview extends React.Component {
                         ) : null}
                     <Grid container className={classes.mainContainerAboutResa}>
                       <Grid item xs={12} className={classes.containerTitleSectionAbout}>
-                        <Typography className={classes.fontSizeTitleSectionAbout}>{ReactHtmlParser(this.props.t('BOOKING.about')) + displayUser.firstname}</Typography>
+                        <Typography className={classes.fontSizeTitleSectionAbout}>{ReactHtmlParser(this.props.t('PROFIL.about', {firstname: displayUser.firstname}))}</Typography>
                       </Grid>
                       <Grid container className={classes.reservationContainer}>
                         <Grid item xl={6}>

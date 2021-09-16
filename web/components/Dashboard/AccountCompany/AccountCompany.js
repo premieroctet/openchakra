@@ -99,7 +99,7 @@ class AccountCompany extends React.Component {
           <Box>
             <Grid container item spacing={2} xl={12} lg={12} md={12} sm={12} xs={12} style={{width: '100%', margin: 0}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <h3>A propos de mon entreprise</h3>
+                <h3>À propos de mon entreprise</h3>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                 <TextField readonly variant={'outlined'} InputLabelProps={{shrink: true}} label={'Nom'} value={companyName} classes={{root: classes.textField}}/>

@@ -43,7 +43,7 @@ class AddressAndFacturation extends React.Component {
             </Grid>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
               <Topic
-                titleTopic={ADDRESS_FACTURATION.topic_about + user.firstname}
+                titleTopic={ReactHtmlParser(this.props.t('PROFIL.about', {firstname: user.firstname}))}
                 titleSummary={false}
                 underline={false}
               >

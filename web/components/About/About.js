@@ -445,7 +445,7 @@ class About extends CompanyComponent {
         }
         <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
           {displayTitlePicture ?
-            <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3>
+            <h3>{ReactHtmlParser(this.props.t('PROFIL.about', {firstname: user ? user.firstname : ''}))}</h3>
             : null
           }
 

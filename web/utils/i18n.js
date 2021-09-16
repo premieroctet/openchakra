@@ -243,7 +243,6 @@ const CONFIRM_PAYMENT = {
 
 const ADDRESS_FACTURATION = {
   topic_service: 'Adresse du service',
-  topic_about: 'A propos de ',
   address_billing_title: 'ADRESSE & FACTURATION',
   payment_title: 'PAIEMENT',
 }
@@ -415,7 +414,7 @@ const EDIT_PROFIL = {
   title: 'Modifier votre profil',
   textfield_firstname: 'Prénom',
   textfield_name: 'Nom',
-  textfield_about_me: 'A propos de moi',
+  textfield_about_me: 'À propos de moi',
   char_max: '{{maxchars}} caractères max',
   personnal_info: 'Informations personnelles',
   gender: 'Sexe',
@@ -713,6 +712,7 @@ const PROFIL = {
   nothing: 'Non renseigné',
   confirmed: 'Profil confirmé',
   unconfirmed: 'Profil non confirmé',
+  about: 'À propos de {{firstname}}',
 }
 
 const SHOP = {
@@ -732,7 +732,7 @@ const SHOP = {
     step3_text: 'Renseignez votre profil Alfred, partagez vos réalisations, et décrivez-vous !',
   },
   creation: {
-    title: 'A propos de vous',
+    title: 'À propos de vous',
     subtitle: 'Choisissez votre statut. Les particuliers peuvent proposer leurs services aux particuliers, mais seuls les professionnels peuvent proposer leurs services aux clients particuliers et entreprises.',
     is_particular: 'Je suis un particulier',
     is_particular_description: 'En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés.',
@@ -904,7 +904,7 @@ const MESSAGE_SUMMARY = {
 const AVOCOTES = {
   title: "Besoin d'un coup de pouce pour installer votre pack AvoCotés protection ?",
   subtitle: "Confiez l'installation de votre Pack SECURITE AvoCotés Protection à un entrepeneur local & qualifé",
-  titleSection: "A propos de l'installateur",
+  titleSection: "À propos de l'installateur",
   description: "Alfred on-demand est partenaire d'AvoCotés pour toutes les demandes d'installation de matériel de télésurveillance. Nos entrepreneurs sont des indépendants locaux, qualifiés et vérifiés par nos équipes. Chaque entrepreneur est formé à l'installation du matériel AvoCotés par nos soins.",
   descriptionSecond: "Notre équipe vous contacte par téléphone afin de fixer avec vous un créneau qui s'intégre à vos impératifs. Pour toute question relative à votre installation, n'hésitez pas à nous contacter au 06 87 37 73 63.",
   titleEquipment: 'Matériel apporté et fourni par votre installateur :',
@@ -945,13 +945,12 @@ const BOOKING = {
   button_evaluate_client: 'Evaluer mon client',
   info_commentary: 'Vous avez 15 jours pour évaluer votre Alfred. Une fois que votre Alfred aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !',
   evaluate_alfred_button: 'Evaluer mon Alfred',
-  about: 'A propos de ',
   id_checked: "Pièce d'identité vérifiée",
   member_since: 'Membre depuis ',
   button_send_message: 'Envoyer un message',
   button_call: 'Appeler',
   phone_number: 'Numéro de téléphone :',
-  about_resa: 'A propos de votre réservation',
+  about_resa: 'À propos de votre réservation',
   visio: 'en visio',
   created_date: 'créée le ',
   end_date: 'Date de fin: ',
