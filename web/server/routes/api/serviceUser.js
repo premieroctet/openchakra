@@ -154,8 +154,9 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
 
       // FIX : créer les prestations custom avant
       let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN)
-      let newPrestaModels = newPrestations.map(p => Prestation({
-        ...p,
+      console.log(`New prestations:${JSON.stringify(newPrestations)}`)
+      let newPrestaModels = newPrestations.map(p => req.context.getModel('Prestation')({
+        label: p.label,
         s_label: normalize(p.label),
         service: req.body.service,
         billing: [p.billing],
@@ -166,12 +167,12 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
       }))
 
       const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : emptyPromise({insertedIds: []})
-      r.catch(error => console.log(`Error insert many${ JSON.stringify(error, null, 2)}`))
+      r
         .then(result => {
-          let newIds = result.insertedIds
+          let insertedPrestations=result
           // Update news prestations ids
           newPrestations.forEach((p, idx) => {
-            p._id = newIds[idx]
+            p._id = insertedPrestations[idx]._id
             console.log(`Presta sauvegardée : ${ JSON.stringify(p)}`)
           })
           su.prestations=[]
@@ -202,8 +203,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
               res.status(400).json(error)
             })
         })
-
-
+        .catch(error => console.log(`Error insertMany:${error}`))
     })
     .catch(error => {
       console.error(error)

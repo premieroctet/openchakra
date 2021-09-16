@@ -448,7 +448,7 @@ class SearchPage extends React.Component {
                         address={selectedAddress}
                       />
                     </Grid>
-                    <Hidden only={['xl', 'lg', 'md', 'sm']}>
+                    <Hidden only={['xl', 'lg', 'md', 'sm']} >
                       <InfiniteScroll
                         dataLength={scroll_count}
                         next={() => this.setState({scroll_count: this.state.scroll_count+this.SCROLL_DELTA}) }
