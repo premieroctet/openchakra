@@ -12,6 +12,8 @@ import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBook
 import withStyles from '@material-ui/core/styles/withStyles'
 import moment from 'moment'
 import Divider from '@material-ui/core/Divider'
+import {DRAWER_BOOKING_RECAP} from '../../../utils/i18n'
+
 moment.locale('fr')
 
 const {booking_datetime_str} = require('../../../utils/dateutils')
@@ -32,7 +34,7 @@ class DrawerBookingRecap extends React.Component {
       <Grid>
         <Grid>
           <Grid>
-            <h3>Récapitulatif</h3>
+            <h3>{DRAWER_BOOKING_RECAP.title}</h3>
           </Grid>
           <Grid>
             <Grid>
@@ -87,7 +89,7 @@ class DrawerBookingRecap extends React.Component {
                           </Grid>
                           <Grid item xs={6} className={classes.drawerBookingRecapPrice}>
                             <Grid>
-                              <Typography><strong>{prestation.price ? prestation.price.toFixed(2) : '?'}€</strong></Typography>
+                              <Typography><strong>{prestation.price ? prestation.price.toFixed(2) : `?${ DRAWER_BOOKING_RECAP.euro}`}</strong></Typography>
                             </Grid>
                           </Grid>
                         </Grid>
@@ -100,12 +102,12 @@ class DrawerBookingRecap extends React.Component {
                           justifyContent: 'space-between'}}>
                           <Grid>
                             <Grid>
-                              <Typography>Frais de déplacement</Typography>
+                              <Typography>{DRAWER_BOOKING_RECAP.moving_cost}</Typography>
                             </Grid>
                           </Grid>
                           <Grid>
                             <Grid>
-                              <Typography>{travel_tax.toFixed(2)}€</Typography>
+                              <Typography>{travel_tax.toFixed(2) + DRAWER_BOOKING_RECAP.euro}</Typography>
                             </Grid>
                           </Grid>
                         </Grid> : null}
@@ -138,7 +140,7 @@ class DrawerBookingRecap extends React.Component {
               onClick={() => (activeStep === 0 ? this.props.handleStep() : this.props.handlePayDirect())}
               disabled={activeStep === 1 ? id_card === '' || pending : false}
             >
-              <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? 'Payer' : 'Valider'}</Typography>
+              <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? DRAWER_BOOKING_RECAP.button_pay : DRAWER_BOOKING_RECAP.button_validate}</Typography>
             </Button>
           </Grid>
         </Grid>
@@ -146,7 +148,7 @@ class DrawerBookingRecap extends React.Component {
           mode === 'short' ? null :
             <Grid style={{display: 'flex', justifyContent: 'center', marginTop: '2vh'}}>
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Choix du mode de paiement l'étape suivante</Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{DRAWER_BOOKING_RECAP.method_payment}</Typography>
               </Grid>
             </Grid>
         }

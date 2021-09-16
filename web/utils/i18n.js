@@ -244,6 +244,43 @@ const CONFIRM_PAYMENT = {
 const ADDRESS_FACTURATION = {
   topic_service: 'Adresse du service',
   topic_about: 'A propos de ',
+  topic_stuff: 'Matériel fourni',
+  topic_no_stuff: 'Aucun matériel fourni',
+
+}
+
+const DRAWER_BOOKING_RECAP = {
+  title: 'Récapitulatif',
+  euro: ' €',
+  moving_cost: 'Frais de déplacement',
+  button_pay: 'Payer',
+  button_validate: 'Valider',
+  method_payment: 'Choix du mode de paiement l\'étape suivante',
+}
+
+const PAYMENT_PICS = {
+  pics_cb_name: 'cb',
+  pics_visa_name: 'visa',
+  pics_mastercard_name: 'mastercard',
+  pics_american_url: 'amex',
+  pics_american_name: 'AmericanExpress',
+  pics_msi_url: 'msi',
+  pics_maestro_url: 'maestro',
+}
+
+const PAYMENT_CHOICE = {
+  topic_payment_mode: 'Mode de paiment',
+  info_payment: 'En validant votre paiement, vous acceptez nos ',
+  cgv: ' CGV ',
+  next_part: ' ainsi que notre ',
+  policy: ' politique de protection des données personnelles.',
+}
+
+const PAYMENT_MODE = {
+  title: 'Paiement sécurisé',
+  link_paid_another_card: 'Payer avec une autre carte',
+  topic_postal_service: 'Adresse du service',
+
 
 }
 
@@ -1040,5 +1077,9 @@ module.exports = {
   CONFIRM_PAYMENT,
   ADDRESS_FACTURATION,
   ADDRESS_SERVICE,
-  PROFILE
+  PROFILE,
+  DRAWER_BOOKING_RECAP,
+  PAYMENT_PICS,
+  PAYMENT_CHOICE,
+  PAYMENT_MODE,
 }

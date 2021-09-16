@@ -1,41 +1,42 @@
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import DrawerBookingRecap from "../../Drawer/DrawerBookingRecap/DrawerBookingRecap";
-import Topic from "../../../hoc/Topic/Topic";
-import AddressService from "../../AddressService/AddressService";
-import PaymentMode from "../PaymentMode/PaymentMode";
-import styles from '../../../static/css/components/PaymentChoice/PaymentChoice';
-import withStyles from "@material-ui/core/styles/withStyles";
+import React from 'react'
+import Typography from '@material-ui/core/Typography'
+import Grid from '@material-ui/core/Grid'
+import DrawerBookingRecap from '../../Drawer/DrawerBookingRecap/DrawerBookingRecap'
+import Topic from '../../../hoc/Topic/Topic'
+import AddressService from '../../AddressService/AddressService'
+import PaymentMode from '../PaymentMode/PaymentMode'
+import styles from '../../../static/css/components/PaymentChoice/PaymentChoice'
+import withStyles from '@material-ui/core/styles/withStyles'
+import {PAYMENT_CHOICE} from '../../../utils/i18n'
 
-class PaymentChoice extends React.Component{
+class PaymentChoice extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
-  callPay = () =>{
+  callPay = () => {
     this.props.pay()
   };
 
-  callHandlepayDirect = () =>{
+  callHandlepayDirect = () => {
     this.props.payDirect()
   };
 
-  handleCardSelected = (e) =>{
+  handleCardSelected = e => {
     this.props.handleCardSelected(e)
   };
 
   render() {
-    const{pricedPrestations, countPrestations, bookingObj, user, currentUser, classes} = this.props;
+    const{pricedPrestations, countPrestations, bookingObj, classes} = this.props
 
     return(
-      <Grid container style={{width: '90%',  marginBottom: '10vh'}}>
+      <Grid container style={{width: '90%', marginBottom: '10vh'}}>
         <Grid item xl={7} lg={7} md={7} xs={12} sm={12}>
           <Grid className={classes.paymenChoiceMainContainer}>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingRight: '10%', paddingTop: '5%', paddingBottom: '5%', position: 'relative'}}>
               <Topic
-                titleTopic={'Mode de paiment'}
+                titleTopic={PAYMENT_CHOICE.topic_payment_mode}
                 titleSummary={false}
                 underline={false}
               >
@@ -44,34 +45,34 @@ class PaymentChoice extends React.Component{
                   {...this.props}
                 />
               </Topic>
-              <Grid style={{position: 'absolute', bottom: '5%', right:  '10%'}} onClick={this.callPay}>
-                <a href={'#'}>Payer avec une autre carte</a>
+              <Grid style={{position: 'absolute', bottom: '5%', right: '10%'}} onClick={this.callPay}>
+                <a href={'#'}>{PAYMENT_CHOICE.link_paid_another_card}</a>
               </Grid>
             </Grid>
-            <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)',paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
+            <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
               <Topic
-                titleTopic={'Adresse du service'}
+                titleTopic={PAYMENT_CHOICE.topic_postal_service}
                 underline={false}
               >
-              { bookingObj.address ?
-                <AddressService
-                  {...this.props}
-                />
-                :
-                "En visio"
-              }
+                { bookingObj.address ?
+                  <AddressService
+                    {...this.props}
+                  />
+                  :
+                  'En visio'
+                }
               </Topic>
             </Grid>
           </Grid>
         </Grid>
         <Grid item xl={5} lg={5} md={5} xs={12} sm={12} className={classes.paymentChoiceSecondContainer}>
-          <Grid  style={{
+          <Grid style={{
             display: 'flex',
             flexDirection: 'column',
             border: '1px solid rgba(210, 210, 210, 0.5)',
             borderRadius: 30,
             justifyContent: 'center',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
           }}>
             <Grid style={{paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', paddingRight: '10%'}}>
               <DrawerBookingRecap
@@ -83,15 +84,15 @@ class PaymentChoice extends React.Component{
               />
             </Grid>
           </Grid>
-          <Grid style={{ paddingRight: '5%', paddingLeft: '5%'}}>
+          <Grid style={{paddingRight: '5%', paddingLeft: '5%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
-              <Typography>En validant votre paiement, vous acceptez nos <strong>CGV</strong> ainsi que notre <strong>politique de protection des données personnelles</strong>.</Typography>
+              <Typography>{PAYMENT_CHOICE.info_payment}<strong>{PAYMENT_CHOICE.cgv}</strong>{PAYMENT_CHOICE.next_part}<strong>{PAYMENT_CHOICE.policy}</strong></Typography>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles) (PaymentChoice))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(PaymentChoice))
