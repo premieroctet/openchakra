@@ -406,6 +406,71 @@ const LOGIN = {
   REGISTER_YET: 'Pas encore inscrit ? Inscrivez-vous !',
 }
 
+const CARD_ADD_SERVICE ={
+  add: 'Ajouter un service',
+}
+
+const COMPANY_DASHBOARD = {
+  conciergerie: 'Conciergerie',
+  microservice: 'Microservice',
+}
+
+const ACCOUNT_COMPANY = {
+  account: 'Mon Compte',
+  about_company: 'A propos de mon entreprise',
+  name: 'Nom',
+  siret: 'siret',
+  postal: 'adresse',
+  invoice_postal: 'Adresse de facturation',
+  activity: 'Secteur d\'activité',
+  size_company: 'Taille de l’entreprise',
+  tva: 'tva',
+}
+
+const EDIT_PICTURE = {
+  snackbar_update_photo: 'Photo modifiée avec succès',
+  button_update: 'Modifier',
+}
+
+const INDEX_DASHBOARD = {
+  snackbar_update_admin: 'Représentant légal mis à jour',
+  title: 'Tableau de bord',
+  title_admin: 'Représentant légal (doit être un administrateur)',
+  birthdate: 'Date de naissance',
+  birthdate_helper: 'La date de naissance de l\'administrateur est requise',
+  save_button: 'Enregistrer',
+}
+
+const SERVICES_COMPANY = {
+  snackbar_remove_service: 'Service retiré',
+  dialog_config_content_title: 'Prise en charge',
+  euro: ' €',
+  input_month_year: 'Mois/An',
+  month: 'Mois',
+  year: 'An',
+  button_cancel: 'Annuler',
+  button_confirm: 'Modifier',
+  classification_title: 'Classification',
+  classification: 'la classification ',
+  this_classification: ' cette classification',
+  department_title: 'Département',
+  department: 'le département ',
+  this_department: 'ce département',
+  select_service: 'Sélectionnez les services autorisés pour ',
+  services_title: 'Services',
+  take_care_level: 'Niveau de prise en charge',
+  modulo: ' %',
+  button_confirm_dialog: 'Confirmer',
+  dialog_remove_title: 'Supprimer',
+  dialog_remove_text: 'Voulez vous supprimer ',
+  dialog_remove_off: ' de ',
+  button_delete: 'Supprimer',
+  title: 'Mes services',
+  services_available_for: 'Services disponibles pour ',
+  no_budget: 'Pas de budget défini',
+}
+
+
 const ABOUT = {
   address_placeholder: 'Entrez votre adresse',
   b2b_title_topic: 'Modifiez les informations de votre entreprises',
@@ -425,6 +490,7 @@ const ABOUT = {
   b2b_activity_label: 'Secteur d’activité',
   button_update: 'Modifier',
   alfred_certifed: 'à un profil vérifié',
+  snackbar_profil_update: 'Profil modifié avec succès',
 }
 
 const LAYOUT_ABOUT = {
@@ -935,6 +1001,9 @@ const MESSAGE_DETAIL = {
   browser_compatibility: 'Votre navigateur ne supporte pas les notifications',
   notif: 'Vous recevrez des notifications pour cette conversation',
   new_messages: 'Nouveaux Messages',
+}
+
+const TEAM = {
 
 }
 
@@ -1082,4 +1151,11 @@ module.exports = {
   PAYMENT_PICS,
   PAYMENT_CHOICE,
   PAYMENT_MODE,
+  COMPANY_DASHBOARD,
+  CARD_ADD_SERVICE,
+  ACCOUNT_COMPANY,
+  EDIT_PICTURE,
+  INDEX_DASHBOARD,
+  SERVICES_COMPANY,
+  TEAM,
 }

@@ -181,7 +181,7 @@ class Team extends React.Component {
       const data ={
         member_id: user._id,
       }
-      axios.put(`/myAlfred/api/groups/${value}/managers`, data).then(res => {
+      axios.put(`/myAlfred/api/groups/${value}/managers`, data).then(() => {
         snackBarSuccess('Membre ajouté au groupe')
         this.componentDidMount()
       }).catch(err => {

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import Router from 'next/router'
 import axios from 'axios'
-
+import {EDIT_PICTURE} from '../../../utils/i18n'
 import {snackBarSuccess} from '../../../utils/notifications'
 import styles from './EditPictureStyle'
 
@@ -36,7 +36,6 @@ class EditPicture extends React.Component {
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/${this.props.type}/all/${this.props.id}`)
       .then(response => {
-        console.log(response, ' response')
         let result = response.data
         this.setState({result: result})
       })
@@ -44,7 +43,7 @@ class EditPicture extends React.Component {
         console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'})
+          Router.push({pathname: '/'})
         }
       })
   }
@@ -59,7 +58,7 @@ class EditPicture extends React.Component {
     formData.append('picture', this.state.picture)
     axios.post(`/myAlfred/api/admin/${this.props.type}/editPicture/${this.props.id}`, formData)
       .then(() => {
-        snackBarSuccess('Photo modifiée avec succès')
+        snackBarSuccess(EDIT_PICTURE.snackbar_update_photo)
         Router.push({pathname: `/dashboard/${this.props.type}s/all`})
       })
       .catch(err => {
@@ -88,7 +87,7 @@ class EditPicture extends React.Component {
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                 <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
-                  Modifier
+                  {EDIT_PICTURE.button_update}
                 </Button>
               </Grid>
             </form>

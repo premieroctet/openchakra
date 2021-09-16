@@ -18,6 +18,7 @@ import axios from 'axios'
 import Router from 'next/router'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import {COMPANY_DASHBOARD} from '../../utils/i18n'
 const {setAxiosAuthentication} = require('../../utils/authentication')
 const {STEPS}=require('../../utils/dashboardSteps')
 const {isB2BAdmin} = require('../../utils/context')
@@ -107,8 +108,8 @@ class CompanyDashboard extends React.Component {
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.rootTabs}>
               <Tabs value={index} onChange={() => this.modeDashboardChange(index)} classes={{indicator: classes.scrollIndicator}} aria-label="simple tabs example">
-                <Tab label="Conciergerie" {...this.a11yProps(0)} style={{color: 'white'}}/>
-                <Tab label="Microservice" {...this.a11yProps(1)} style={{color: 'white'}} />
+                <Tab label={COMPANY_DASHBOARD.conciergerie} {...this.a11yProps(0)} style={{color: 'white'}}/>
+                <Tab label={COMPANY_DASHBOARD.microservice} {...this.a11yProps(1)} style={{color: 'white'}} />
               </Tabs>
             </Grid>
           </Grid>

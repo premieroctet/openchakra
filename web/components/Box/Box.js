@@ -1,13 +1,13 @@
 import {withTranslation} from 'react-i18next'
 import React from 'react'
-import styles from './BoxStyle';
-import withStyles from "@material-ui/core/styles/withStyles";
-import Grid from "@material-ui/core/Grid";
+import styles from './BoxStyle'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Grid from '@material-ui/core/Grid'
 
 class Box extends React.Component {
 
   render() {
-    const {classes, children, overWritteCSS}=this.props;
+    const {classes, children, overWritteCSS}=this.props
 
     return (
       <Grid className={classes.borderBox} style={{minHeight: overWritteCSS ? '95vh': ''}}>

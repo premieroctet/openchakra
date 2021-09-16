@@ -1,21 +1,19 @@
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import axios from 'axios'
-import {withStyles} from '@material-ui/core/styles';
-import styles from './BadgesStyle';
+import React from 'react'
+import {withStyles} from '@material-ui/core/styles'
+import styles from './BadgesStyle'
 
-import Topic from "../../hoc/Topic/Topic"
-import Box from '../Box/Box'
+import Topic from '../../hoc/Topic/Topic'
 
 class Badges extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
 
     return (
-        <Topic titleTopic={'Badges'}/>
+      <Topic titleTopic={'Badges'}/>
     )
   }
 }
