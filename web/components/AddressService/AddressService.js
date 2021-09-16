@@ -3,6 +3,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import {ADDRESS_SERVICE} from '../../utils/i18n'
+import ReactHtmlParser from 'react-html-parser'
 
 class AddressService extends React.Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class AddressService extends React.Component {
               </Grid>
             </>
             :
-            ADDRESS_SERVICE.remote
+            ReactHtmlParser(this.props.t('ADDRESS_SERVICE.remote'))
           }
         </Grid>
       </Grid>

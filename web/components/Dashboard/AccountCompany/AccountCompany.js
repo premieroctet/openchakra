@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -86,32 +87,32 @@ class AccountCompany extends React.Component {
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%', margin: 0}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
           <Grid>
-            <h3>{ACCOUNT_COMPANY.account}</h3>
+            <h3>{ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.account'))}</h3>
           </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
             <Grid container item spacing={2} xl={12} lg={12} md={12} sm={12} xs={12} style={{width: '100%', margin: 0}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <h3>{ACCOUNT_COMPANY.about_company}</h3>
+                <h3>{ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.about_company'))}</h3>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                <TextField readonly variant={'outlined'} InputLabelProps={{shrink: true}} label={ACCOUNT_COMPANY.name} value={companyName} classes={{root: classes.textField}}/>
+                <TextField readonly variant={'outlined'} InputLabelProps={{shrink: true}} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.name'))} value={companyName} classes={{root: classes.textField}}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                <TextField variant={'outlined'} InputLabelProps={{shrink: true}} label={ACCOUNT_COMPANY.siret} value={siret} readonly classes={{root: classes.textField}}/>
+                <TextField variant={'outlined'} InputLabelProps={{shrink: true}} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.siret'))} value={siret} readonly classes={{root: classes.textField}}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.containerAlgolia}>
-                <TextField readonly InputLabelProps={{shrink: true}} label={ACCOUNT_COMPANY.postal} variant={'outlined'} classes={{root: classes.textField}} value={billing_address ? `${billing_address.address}, ${billing_address.zip_code}, ${billing_address.country}` : ACCOUNT_COMPANY.invoice_postal}/>
+                <TextField readonly InputLabelProps={{shrink: true}} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.postal'))} variant={'outlined'} classes={{root: classes.textField}} value={billing_address ? `${billing_address.address}, ${billing_address.zip_code}, ${billing_address.country}` : ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.invoice_postal'))}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                <TextField readonly InputLabelProps={{shrink: true}} classes={{root: classes.textField}} value={COMPANY_SIZE[sizeCompany]} label={ACCOUNT_COMPANY.activity} variant={'outlined'}/>
+                <TextField readonly InputLabelProps={{shrink: true}} classes={{root: classes.textField}} value={COMPANY_SIZE[sizeCompany]} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.activity'))} variant={'outlined'}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                <TextField readonly InputLabelProps={{shrink: true}} classes={{root: classes.textField}} value={COMPANY_ACTIVITY[activityArea]} label={ACCOUNT_COMPANY.size_company} variant={'outlined'}/>
+                <TextField readonly InputLabelProps={{shrink: true}} classes={{root: classes.textField}} value={COMPANY_ACTIVITY[activityArea]} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size_company'))} variant={'outlined'}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                <TextField readonly variant={'outlined'} value={tva} InputLabelProps={{shrink: true}} label={ACCOUNT_COMPANY.tva} classes={{root: classes.textField}}/>
+                <TextField readonly variant={'outlined'} value={tva} InputLabelProps={{shrink: true}} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.tva'))} classes={{root: classes.textField}}/>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <HandleAddresses/>

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -25,36 +26,36 @@ class AddService extends React.Component {
             </Grid>
             <Grid style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
-                <h3 className={`customaddserviceonetitle ${classes.titleRub}`}>{ADD_SERVICE.register_title}</h3>
+                <h3 className={`customaddserviceonetitle ${classes.titleRub}`}>{ReactHtmlParser(this.props.t('ADD_SERVICE.register_title'))}</h3>
               </Grid>
               <Grid>
-                <Typography style={{marginTop: '5px'}} className={'customaddserviceonetext'}>{ADD_SERVICE.register_phone}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid style={{display: 'flex'}}>
-            <Grid className={classes.hideOnMobile}>
-              <h1 style={{marginRight: '25px', color: '#84A5E0'}} className={'customaddservicetwo'}>{ADD_SERVICE.two}</h1>
-            </Grid>
-            <Grid style={{display: 'flex', flexDirection: 'column'}}>
-              <Grid>
-                <h3 className={`customaddservicetwotitle ${classes.titleRub}`}>{ADD_SERVICE.begin_your_research}</h3>
-              </Grid>
-              <Grid>
-                <Typography style={{marginTop: '5px'}} className={'customaddservicetwotext'}>{ADD_SERVICE.begin_your_research_content}</Typography>
+                <Typography style={{marginTop: '5px'}} className={'customaddserviceonetext'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.register_phone'))}</Typography>
               </Grid>
             </Grid>
           </Grid>
           <Grid style={{display: 'flex'}}>
             <Grid className={classes.hideOnMobile}>
-              <h1 style={{marginRight: '25px', color: '#F36B7F'}} className={'customaddservicethree'}>{ADD_SERVICE.three}</h1>
+              <h1 style={{marginRight: '25px', color: '#84A5E0'}} className={'customaddservicetwo'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.two'))}</h1>
             </Grid>
             <Grid style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
-                <h3 className={`customaddservicethreetitle ${classes.titleRub}`}>{ADD_SERVICE.three_title}</h3>
+                <h3 className={`customaddservicetwotitle ${classes.titleRub}`}>{ReactHtmlParser(this.props.t('ADD_SERVICE.begin_your_research'))}</h3>
               </Grid>
               <Grid>
-                <Typography style={{marginTop: '5px'}} className={'customaddservicethreetext'}>{ADD_SERVICE.three_content}</Typography>
+                <Typography style={{marginTop: '5px'}} className={'customaddservicetwotext'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.begin_your_research_content'))}</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid style={{display: 'flex'}}>
+            <Grid className={classes.hideOnMobile}>
+              <h1 style={{marginRight: '25px', color: '#F36B7F'}} className={'customaddservicethree'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.three'))}</h1>
+            </Grid>
+            <Grid style={{display: 'flex', flexDirection: 'column'}}>
+              <Grid>
+                <h3 className={`customaddservicethreetitle ${classes.titleRub}`}>{ReactHtmlParser(this.props.t('ADD_SERVICE.three_title'))}</h3>
+              </Grid>
+              <Grid>
+                <Typography style={{marginTop: '5px'}} className={'customaddservicethreetext'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.three_content'))}</Typography>
               </Grid>
             </Grid>
           </Grid>

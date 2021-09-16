@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
@@ -58,7 +59,7 @@ class EditPicture extends React.Component {
     formData.append('picture', this.state.picture)
     axios.post(`/myAlfred/api/admin/${this.props.type}/editPicture/${this.props.id}`, formData)
       .then(() => {
-        snackBarSuccess(EDIT_PICTURE.snackbar_update_photo)
+        snackBarSuccess(ReactHtmlParser(this.props.t('EDIT_PICTURE.snackbar_update_photo')))
         Router.push({pathname: `/dashboard/${this.props.type}s/all`})
       })
       .catch(err => {
@@ -87,7 +88,7 @@ class EditPicture extends React.Component {
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                 <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
-                  {EDIT_PICTURE.button_update}
+                  {ReactHtmlParser(this.props.t('EDIT_PICTURE.button_update'))}
                 </Button>
               </Grid>
             </form>

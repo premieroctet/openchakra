@@ -125,7 +125,7 @@ class ButtonSwitch extends React.Component {
                     inputProps: {
                       min: 0,
                     },
-                    endAdornment: <InputAdornment position="start">{ReactHtmlParser(this.props.t('BUTTON_SWITCH.euro'))}</InputAdornment>,
+                    endAdornment: <InputAdornment position="start">€</InputAdornment>,
                   }}
                   error={!this.price}
                   helperText={this.price ? null : ReactHtmlParser(this.props.t('BUTTON_SWITCH.helpertext'))}

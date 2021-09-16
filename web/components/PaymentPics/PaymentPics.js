@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -9,23 +10,23 @@ class PaymentPics extends React.Component {
     this.state={
       pics: [
         {
-          urlName: PAYMENT_PICS.pics_cb_name,
+          urlName: ReactHtmlParser(this.props.t('PAYMENT_PICS.pics_cb_name')),
         },
         {
-          urlName: PAYMENT_PICS.pics_visa_name,
-          name: PAYMENT_PICS.pics_visa_name,
+          urlName: ReactHtmlParser(this.props.t('PAYMENT_PICS.pics_visa_name')),
+          name: ReactHtmlParser(this.props.t('PAYMENT_PICS.pics_visa_name')),
         },
         {
-          urlName: PAYMENT_PICS.pics_mastercard_name,
-          name: PAYMENT_PICS.pics_mastercard_name,
+          urlName: ReactHtmlParser(this.props.t('PAYMENT_PICS.pics_mastercard_name')),
+          name: ReactHtmlParser(this.props.t('PAYMENT_PICS.pics_mastercard_name')),
         },
         {
-          urlName: PAYMENT_PICS.pics_american_url,
-          name: PAYMENT_PICS.pics_american_name,
+          urlName: ReactHtmlParser(this.props.t('PAYMENT_PICS.pics_american_url')),
+          name: ReactHtmlParser(this.props.t('PAYMENT_PICS.pics_american_name')),
         },
         {
-          urlName: PAYMENT_PICS.pics_msi_url,
-          name: PAYMENT_PICS.pics_maestro_url,
+          urlName: ReactHtmlParser(this.props.t('PAYMENT_PICS.pics_msi_url')),
+          name: ReactHtmlParser(this.props.t('PAYMENT_PICS.pics_maestro_url')),
         },
       ],
     }

@@ -325,7 +325,7 @@ class UserServicesPreview extends BasePage {
       errors.prestations = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_presta'))
     }
     else if (this.state.totalPrestations < this.state.serviceUser.minimum_basket) {
-      errors.prestations = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_minimum_presta')) + this.state.serviceUser.minimum_basket + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_minimum_presta_end'))
+      errors.prestations = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_minimum_basket', {minimum_basket: this.state.serviceUser.minimum_basket}))
     }
 
     if (!errors.datetime && this.state.date == null) {
@@ -806,7 +806,7 @@ class UserServicesPreview extends BasePage {
                             },
                             {
                               label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket')) : '',
-                              summary: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket_of')) + this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.is')) + this.state.serviceUser.minimum_basket + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.euro')) : '',
+                              summary: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket_of', {firstname: this.state.alfred.firstname, minimum_basket: this.state.serviceUser.minimum_basket})) : '',
                               IconName: this.state.alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : '',
                             },
                           ]

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -34,7 +35,7 @@ class CardAddService extends React.Component {
               </Grid>
               <CardContent className={classes.textPosition}>
                 <Typography className={classes.textStyle}>
-                  {CARD_ADD_SERVICE.add}
+                  {ReactHtmlParser(this.props.t('CARD_ADD_SERVICE.add'))}
                 </Typography>
               </CardContent>
             </CardActionArea>

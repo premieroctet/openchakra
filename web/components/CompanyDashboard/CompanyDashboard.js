@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -108,8 +109,8 @@ class CompanyDashboard extends React.Component {
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.rootTabs}>
               <Tabs value={index} onChange={() => this.modeDashboardChange(index)} classes={{indicator: classes.scrollIndicator}} aria-label="simple tabs example">
-                <Tab label={COMPANY_DASHBOARD.conciergerie} {...this.a11yProps(0)} style={{color: 'white'}}/>
-                <Tab label={COMPANY_DASHBOARD.microservice} {...this.a11yProps(1)} style={{color: 'white'}} />
+                <Tab label={ReactHtmlParser(this.props.t('COMPANY_DASHBOARD.conciergerie'))} {...this.a11yProps(0)} style={{color: 'white'}}/>
+                <Tab label={ReactHtmlParser(this.props.t('COMPANY_DASHBOARD.microservice'))} {...this.a11yProps(1)} style={{color: 'white'}} />
               </Tabs>
             </Grid>
           </Grid>
