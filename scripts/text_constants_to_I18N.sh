@@ -7,7 +7,7 @@ then
 # Remplacement dans les sources
 for key in $KEYS
 do
- echo "Recherche de $key sans guillemet"
+ echo "Recherche de $key"
  files=`ack -l "[^']${key}[^_]" pages/ components/ hoc/`
  for f in $files
  do
