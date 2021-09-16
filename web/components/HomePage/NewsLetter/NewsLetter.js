@@ -4,7 +4,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
-import {NEWS_LETTER} from '../../../utils/i18n'
+import {NEWSLETTER} from '../../../utils/i18n'
 import EmailIcon from '@material-ui/icons/Email'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import styles from '../../../static/css/components/NewsLetter/NewsLetter'
@@ -129,10 +129,10 @@ class NewsLetter extends React.Component {
         <Grid className={classes.newsLetterMainContainer}>
           <Grid className={classes.newsLetterLeftContainer}>
             <Grid>
-              <h2 className={`customnewsletterh2 ${classes.newsLetterTitle}`}>{ReactHtmlParser(this.props.t('NEWS_LETTER.title'))}</h2>
+              <h2 className={`customnewsletterh2 ${classes.newsLetterTitle}`}>{ReactHtmlParser(this.props.t('NEWSLETTER.title'))}</h2>
             </Grid>
             <Grid>
-              <p className={`customnewslettertext ${classes.newsLetterSubTitle}`}>{ReactHtmlParser(this.props.t('NEWS_LETTER.text'))}</p>
+              <p className={`customnewslettertext ${classes.newsLetterSubTitle}`}>{ReactHtmlParser(this.props.t('NEWSLETTER.text'))}</p>
             </Grid>
           </Grid>
           <Grid className={classes.newsLetterRightContainer}>
@@ -158,7 +158,7 @@ class NewsLetter extends React.Component {
             </Grid>
             <Grid className={classes.newsLetterContainer}>
               <Grid>
-                <Button style={{width: '100%'}} variant={'outlined'} classes={{root: `customnewsletterbutton ${classes.newsLetterButton}`}} onClick={this.handleSubmit}>{ReactHtmlParser(this.props.t('NEWS_LETTER.button'))}</Button>
+                <Button style={{width: '100%'}} variant={'outlined'} classes={{root: `customnewsletterbutton ${classes.newsLetterButton}`}} onClick={this.handleSubmit}>{ReactHtmlParser(this.props.t('NEWSLETTER.button'))}</Button>
               </Grid>
             </Grid>
           </Grid>

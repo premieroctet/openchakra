@@ -16,7 +16,7 @@ import '../static/cssdashboard.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import '../static/style1.css'
 import {I18nextProvider} from 'react-i18next'
-import i18n from '../utils/i18n_init'
+import i18n from '../server/utils/i18n_init'
 
 class MyApp extends App {
   constructor() {

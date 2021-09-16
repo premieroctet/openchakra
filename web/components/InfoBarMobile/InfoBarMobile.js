@@ -30,7 +30,7 @@ class InfoBarMobile extends React.Component {
                   height={'100%'}/>
               </Grid>
               <Grid>
-                <Typography className={classes.infoBarColorText}>{ReactHtmlParser(this.props.t('INFOBARMOBILE_MESSAGE.message'))}</Typography>
+                <Typography className={classes.infoBarColorText}>{ReactHtmlParser(this.props.t('INFOBARMOBILE.message'))}</Typography>
               </Grid>
             </Grid>
             <Grid style={{

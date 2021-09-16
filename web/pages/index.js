@@ -220,7 +220,7 @@ class Home extends React.Component {
           <Grid>
             <Divider/>
           </Grid>
-          <Grid className={`custumtrustandsecurity ${classes.hideAndShowTrustAndSecurity}`}>
+          <Grid className={`customtrustandsecurity ${classes.hideAndShowTrustAndSecurity}`}>
             <Grid className={classes.trustAndSecurityContainer}>
               <Grid className={classes.trustAndSecurityComponent}>
                 <TrustAndSecurity/>

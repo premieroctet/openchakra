@@ -305,7 +305,7 @@ class security extends React.Component {
                           value={this.state.password}
                           onChange={this.onChangePassword}
                           variant={'outlined'}
-                          classes={{root: `custumsecurityinputpassadmin ${classes.textfield}`}}
+                          classes={{root: `customsecurityinputpassadmin ${classes.textfield}`}}
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
@@ -319,7 +319,7 @@ class security extends React.Component {
                             </InputAdornment>
                           }
                         />
-                        <em className={`custumsecurityerrorpass ${classes.cancelButton}`}>{this.state.wrongPassword ? ReactHtmlParser(this.props.t('SECURITY.placeholder_password_error')) : ''}</em>
+                        <em className={`customsecurityerrorpass ${classes.cancelButton}`}>{this.state.wrongPassword ? ReactHtmlParser(this.props.t('SECURITY.placeholder_password_error')) : ''}</em>
                       </Grid> : null
                   }
                   <Grid item xs={12} md={4} xl={12}>
@@ -331,7 +331,7 @@ class security extends React.Component {
                       onChange={this.onChange}
                       variant={'outlined'}
                       onKeyUp={this.onClick1}
-                      classes={{root: `custumsecurityrepeatpass ${classes.textfield}`}}
+                      classes={{root: `customsecurityrepeatpass ${classes.textfield}`}}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
@@ -344,7 +344,7 @@ class security extends React.Component {
                         </InputAdornment>
                       }
                     />
-                    <em className={`custumsecurityrepeatnewpass ${classes.cancelButton}`}>{checkPass1(this.state.newPassword).error}</em>
+                    <em className={`customsecurityrepeatnewpass ${classes.cancelButton}`}>{checkPass1(this.state.newPassword).error}</em>
                   </Grid>
                   <Grid item xs={12} md={4} xl={12}>
                     <Input

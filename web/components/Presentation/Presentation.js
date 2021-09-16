@@ -187,10 +187,11 @@ class Presentation extends CompanyComponent {
   };
 
   render() {
-    const {classes} = this.props;
-    const {user, company} = this.state;
-    const editable = isEditableUser(user);
-    const title = this.isModeCompany() ? company ? `À propos de ${company.name}` : null : frenchFormat(`À propos de ${user ? user.firstname : ''}`);
+    const {classes} = this.props
+    const {user, company} = this.state
+    const editable = isEditableUser(user)
+    const displayName=this.isModeCompany() ? company ? company.name : '' : user ? user.firstname : ''
+    const title = ReactHtmlParser(this.props.t('PROFIL.about', {firstname: displayName}))
 
     return (
       <>

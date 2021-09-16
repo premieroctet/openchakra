@@ -960,7 +960,7 @@ class NavBar extends Component {
                   <FormControl className={classes.navbarFormControlAddress}>
                     {this.state.ifHomePage ?
                       <InputLabel shrink id="demo-simple-select-placeholder-label-label">
-                        L'adresse
+                        {ReactHtmlParser(this.props.t('SEARCHBAR.labelWhere'))}
                       </InputLabel> : null
                     }
                     <Select
