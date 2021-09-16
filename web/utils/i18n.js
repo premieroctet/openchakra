@@ -1004,7 +1004,17 @@ const MESSAGE_DETAIL = {
 }
 
 const TEAM = {
-
+  alpha_filter: 'Ordre alphabétique',
+  test_filter: 'Test',
+  snackbar_add_member: 'Membre ajouté au groupe',
+  snackbar_remove_admin: ' a été supprimé des administrateurs',
+  snackbar_remove_manager: 'Manager supprimé',
+  snackbar_create_groupe: 'Groupe ',
+  snackbar_create_name_groupe: 'créé',
+  snackbar_update_groupe: 'modifé',
+  snackbar_delete: ' supprimé',
+  dialog_add_manager: 'Ajouter un Manager',
+  dialog_add_employe: 'Ajouter un Employé',
 }
 
 const MESSAGE_SUMMARY = {

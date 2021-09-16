@@ -36,6 +36,7 @@ import {MICROSERVICE_MODE} from '../../../utils/consts'
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications')
 const {ADMIN, BUDGET_PERIOD, MANAGER, EMPLOYEE} = require('../../../utils/consts')
 import EmployeeImportDialog from '../../Employee/EmployeeImportDialog'
+import {TEAM} from '../../../utils/i18n'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, onClick, ...other} = props
@@ -76,8 +77,8 @@ const MenuProps = {
   },
 }
 
-const FILTER_ALPHA='Ordre alphabétique'
-const FILTER_TEST='Test'
+const FILTER_ALPHA= TEAM.alpha_filter
+const FILTER_TEST= TEAM.test_filter
 
 class Team extends React.Component {
   constructor(props) {
@@ -182,7 +183,7 @@ class Team extends React.Component {
         member_id: user._id,
       }
       axios.put(`/myAlfred/api/groups/${value}/managers`, data).then(() => {
-        snackBarSuccess('Membre ajouté au groupe')
+        snackBarSuccess(TEAM.snackbar_add_member)
         this.componentDidMount()
       }).catch(err => {
         snackBarError(err.response.error)
@@ -215,7 +216,7 @@ class Team extends React.Component {
     }
   };
 
-  removeLine = (name, index, event) => {
+  removeLine = (name, index) => {
     if(name === 'nbAdmin') {
       let admins = [...this.state.newAdmins]
       admins.splice(index, 1)
@@ -250,7 +251,7 @@ class Team extends React.Component {
     if(canUpgrade.length > 0) {
       canUpgrade.forEach(res => {
         axios.put('/myAlfred/api/companies/admin', {admin_id: res})
-          .then(res => {
+          .then(() => {
             this.setState({dialogAdd: false}, () => this.componentDidMount())
           })
           .catch(err => {
@@ -275,7 +276,7 @@ class Team extends React.Component {
               new_account: true,
             }
             axios.put('/myAlfred/api/companies/admin', data_id)
-              .then(res => {
+              .then(() => {
                 this.setState({dialogAdd: false, newAdmins: [{nameAdmin: '', firstNameAdmin: '', emailAdmin: ''}]}, () => this.componentDidMount())
               })
               .catch(err => {
@@ -296,7 +297,7 @@ class Team extends React.Component {
     if(canUpgrade.length > 0) {
       canUpgrade.map(res => {
         axios.put(`/myAlfred/api/groups/${selectedGroup}/managers`, {member_id: res._id})
-          .then(res => {
+          .then(() => {
             this.setState({dialogAdd: false}, () => this.componentDidMount())
           })
           .catch(err => {
@@ -320,7 +321,7 @@ class Team extends React.Component {
               member_id: data._id,
               new_account: true,
             }
-            axios.put(`/myAlfred/api/groups/${res.groupSelected}/managers`, member_id).then(res => {
+            axios.put(`/myAlfred/api/groups/${res.groupSelected}/managers`, member_id).then(() => {
               this.setState({dialogAdd: false, newManagers: [{nameManager: '', firstNameManager: '', emailManager: '', groupSelected: ''}]}, () => this.componentDidMount())
             }).catch(err => snackBarError(err.response.data.error))
           })
@@ -370,8 +371,8 @@ class Team extends React.Component {
     setAxiosAuthentication()
 
     axios.delete(`/myAlfred/api/companies/admin/${selected._id}`)
-      .then(res => {
-        snackBarSuccess(`${selected.name} a été supprimé des administrateurs`)
+      .then(() => {
+        snackBarSuccess(selected.name + TEAM.snackbar_remove_admin)
         this.setState({dialogRemove: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -383,8 +384,8 @@ class Team extends React.Component {
     const{selected, groupeIdSelected} = this.state
     setAxiosAuthentication()
     axios.delete(`/myAlfred/api/groups/${groupeIdSelected}/managers/${selected._id}`)
-      .then(res => {
-        snackBarSuccess('Manager supprimé')
+      .then(() => {
+        snackBarSuccess(TEAM.snackbar_remove_manager)
         this.setState({dialogRemove: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -405,8 +406,8 @@ class Team extends React.Component {
     }
 
     axios.post('/myAlfred/api/groups', data)
-      .then(res => {
-        snackBarSuccess(`Groupe ${nameGroupe} créé`)
+      .then(() => {
+        snackBarSuccess(TEAM.snackbar_create_groupe + nameGroupe + TEAM.snackbar_create_name_groupe)
         this.setState({dialogGroupe: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -425,8 +426,8 @@ class Team extends React.Component {
     }
 
     axios.put(`/myAlfred/api/groups/${selected._id}`, data)
-      .then(res => {
-        snackBarSuccess(`${selected.name} modifé`)
+      .then(() => {
+        snackBarSuccess(selected.name + TEAM.snackbar_update_groupe)
         this.setState({dialogGroupe: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -437,8 +438,8 @@ class Team extends React.Component {
   removeGroupe = () => {
     const{selected} = this.state
     axios.delete(`/myAlfred/api/groups/${selected._id}`)
-      .then(res => {
-        snackBarSuccess(`Groupe ${selected.name} supprimé`)
+      .then(() => {
+        snackBarSuccess(TEAM.snackbar_create_groupe + selected.name + TEAM.snackbar_delete)
         this.setState({dialogRemoveGroupe: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -457,7 +458,7 @@ class Team extends React.Component {
 
     return(
       <Dialog open={dialogAdd} onClose={() => this.setState({dialogAdd: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{mode === MICROSERVICE_MODE ? 'Ajouter un Manager' : 'Ajouter un Employé'}</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{mode === MICROSERVICE_MODE ? TEAM.dialog_add_manager : TEAM.dialog_add_employe}</DialogTitle>
         <DialogContent dividers>
           {mode === MICROSERVICE_MODE ?
             userEmploye.length === 0 ? null :
