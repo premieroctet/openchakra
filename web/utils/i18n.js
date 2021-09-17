@@ -1017,6 +1017,14 @@ const TEAM = {
   button_cancel: 'Annuler',
   button_confirm: 'Confirmer',
   dialog_remove_title: 'Supprimer',
+  dialog_remove_question: 'Voulez vous supprimer ',
+  button_delete: 'Supprimer',
+  dialog_group_add: 'Ajouter un département',
+  dialog_group_add_b2b: 'Ajouter une classification',
+  dialog_groupe_title: 'Configuration département',
+  dialog_groupe_title_b2b: 'Configuration classification',
+  dialog_groupe_name: 'Nom',
+  dialog_groupe_plafond: 'Plafond',
 }
 
 const MESSAGE_SUMMARY = {

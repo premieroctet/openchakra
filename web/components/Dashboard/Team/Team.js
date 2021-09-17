@@ -634,15 +634,15 @@ class Team extends React.Component {
         <MuiDialogTitle id="alert-dialog-title">{TEAM.dialog_remove_title}</MuiDialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Voulez vous supprimer {selected.email} ?
+            {TEAM.dialog_remove_question + selected.email} ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogRemove: false})} color="primary">
-            Annuler
+            {TEAM.button_cancel}
           </Button>
           <Button onClick={modeDialog === 'admin' ? this.removeAdmin : this.removeManager} color="primary">
-            Supprimer
+            {TEAM.button_delete}
           </Button>
         </DialogActions>
       </Dialog>
@@ -659,16 +659,16 @@ class Team extends React.Component {
 
     return(
       <Dialog open={dialogGroupe} onClose={() => this.setState({dialogGroupe: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogGroupe: false})} >{mode === MICROSERVICE_MODE ? 'Ajouter un département': 'Ajouter une classification'}</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogGroupe: false})} >{mode === MICROSERVICE_MODE ? TEAM.dialog_group_add : TEAM.dialog_group_add_b2b}</DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3>{mode === MICROSERVICE_MODE ? 'Configuration département' : 'Configuration classification'}</h3>
+              <h3>{mode === MICROSERVICE_MODE ? TEAM.dialog_groupe_title : TEAM.dialog_groupe_title_b2b}</h3>
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container spacing={2} style={{width: '100%', margin: 0}}>
               <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
                 <TextField
-                  label="Nom"
+                  label={TEAM.dialog_groupe_name}
                   name={'nameGroupe'}
                   value={nameGroupe}
                   variant={'outlined'}
@@ -678,7 +678,7 @@ class Team extends React.Component {
               </Grid>
               <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
                 <TextField
-                  label="Plafond"
+                  label={TEAM.dialog_groupe_plafond}
                   name={'plafondGroupe'}
                   value={plafondGroupe}
                   type={'number'}
