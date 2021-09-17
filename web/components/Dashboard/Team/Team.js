@@ -631,7 +631,7 @@ class Team extends React.Component {
         aria-describedby="alert-dialog-description"
         classes={{paper: classes.dialogPaper}}
       >
-        <MuiDialogTitle id="alert-dialog-title">{'Supprimer'}</MuiDialogTitle>
+        <MuiDialogTitle id="alert-dialog-title">{TEAM.dialog_remove_title}</MuiDialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Voulez vous supprimer {selected.email} ?

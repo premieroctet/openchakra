@@ -1016,6 +1016,7 @@ const TEAM = {
   email: 'Email',
   button_cancel: 'Annuler',
   button_confirm: 'Confirmer',
+  dialog_remove_title: 'Supprimer',
 }
 
 const MESSAGE_SUMMARY = {
