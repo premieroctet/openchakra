@@ -37,6 +37,7 @@ import {MICROSERVICE_MODE} from '../../../utils/consts'
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications')
 const {ADMIN, BUDGET_PERIOD, MANAGER, EMPLOYEE} = require('../../../utils/consts')
 import EmployeeImportDialog from '../../Employee/EmployeeImportDialog'
+import {TEAM} from '../../../utils/i18n'
 
 
 const DialogTitle = withStyles(styles)(props => {
@@ -815,7 +816,7 @@ class Team extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>Administrateurs</h3>
+              <h3>{TEAM.title}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogAdd', null, 'admin')}>
@@ -849,7 +850,7 @@ class Team extends React.Component {
                   </List>
                 </Grid> :
                 <Grid>
-                  <Typography>Aucun administrateur n'est défini</Typography>
+                  <Typography>{TEAM.no_admin}</Typography>
                 </Grid>
             }
           </Box>
@@ -857,7 +858,7 @@ class Team extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>{mode === MICROSERVICE_MODE ? 'Départements' : 'Classification'}</h3>
+              <h3>{mode === MICROSERVICE_MODE ? TEAM.micro_mode : TEAM.no_micro_mode}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogGroupe')}>
@@ -877,10 +878,10 @@ class Team extends React.Component {
                         <ListItem key={index}>
                           <ListItemText
                             primary={res.name}
-                            secondary={res.budget ? `${res.budget}€ / ${BUDGET_PERIOD[res.budget_period]}` : 'Pas de budget défini'}
+                            secondary={res.budget ? `${res.budget}€ / ${BUDGET_PERIOD[res.budget_period]}` : TEAM.no_budget}
                           />
                           { consumed_budgets[res._id] ?
-                            <ListItemText secondary={`${consumed_budgets[res._id]}€ disponibles`} />
+                            <ListItemText secondary={`${consumed_budgets[res._id]}€${TEAM.available}`} />
                             :
                             null
                           }
@@ -899,7 +900,7 @@ class Team extends React.Component {
                 </List>
                 :
                 <Grid>
-                  <Typography>Aucun département n'est défini</Typography>
+                  <Typography>{TEAM.no_department}</Typography>
                 </Grid>
               }
             </Grid>
@@ -911,7 +912,7 @@ class Team extends React.Component {
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
                   <Grid>
-                    <h3>{mode === MICROSERVICE_MODE ? 'Managers' : 'Collaborateurs'}</h3>
+                    <h3>{mode === MICROSERVICE_MODE ? TEAM.manager : TEAM.collaborateur}</h3>
                   </Grid>
                   <Grid container style={{marginLeft: '1vh'}}>
                     <Grid>
@@ -928,7 +929,7 @@ class Team extends React.Component {
                 </Grid>
                 <Grid className={classes.searchFilterRightContainer}>
                   <Grid className={classes.searchFilterRightLabel}>
-                    <Typography>Trier par</Typography>
+                    <Typography>{TEAM.filter}</Typography>
                   </Grid>
                   <Grid>
                     <FormControl>
@@ -969,7 +970,7 @@ class Team extends React.Component {
                                       {
                                         !groups.length > 0 ? null :
                                           <FormControl className={classes.formControl}>
-                                            <InputLabel id="demo-simple-select-label">Département</InputLabel>
+                                            <InputLabel id="demo-simple-select-label">{TEAM.departement}</InputLabel>
                                             <Select
                                               labelId="demo-simple-select-label"
                                               id="demo-simple-select"

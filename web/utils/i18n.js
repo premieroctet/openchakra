@@ -953,6 +953,16 @@ const TEAM = {
   dialog_groupe_title_b2b: 'Configuration classification',
   dialog_groupe_name: 'Nom',
   dialog_groupe_plafond: 'Plafond',
+  title: 'Administrateurs',
+  no_admin: 'Aucun administrateur n\'est défini',
+  micro_mode: 'Départements',
+  no_micro_mode: 'Classification',
+  no_budget: 'Pas de budget défini',
+  available: ' disponibles',
+  no_department: 'Aucun département n\'est défini',
+  manager: 'Managers',
+  collaborateur: 'Collaborateurs',
+  filter: 'Trier par',
 }
 
 const MESSAGE_SUMMARY = {
