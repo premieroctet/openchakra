@@ -930,8 +930,6 @@ const MESSAGE_DETAIL = {
 }
 
 const TEAM = {
-  alpha_filter: 'Ordre alphabétique',
-  test_filter: 'Test',
   snackbar_add_member: 'Membre ajouté au groupe',
   snackbar_remove_admin: ' a été supprimé des administrateurs',
   snackbar_remove_manager: 'Manager supprimé',

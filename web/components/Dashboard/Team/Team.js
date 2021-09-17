@@ -37,7 +37,7 @@ import {MICROSERVICE_MODE} from '../../../utils/consts'
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications')
 const {ADMIN, BUDGET_PERIOD, MANAGER, EMPLOYEE} = require('../../../utils/consts')
 import EmployeeImportDialog from '../../Employee/EmployeeImportDialog'
-import {TEAM} from '../../../utils/i18n'
+
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, onClick, ...other} = props
@@ -78,8 +78,7 @@ const MenuProps = {
   },
 }
 
-const FILTER_ALPHA= TEAM.alpha_filter
-const FILTER_TEST= TEAM.test_filter
+const FILTER_ALPHA= 'Ordre alphabétique'
 
 class Team extends React.Component {
   constructor(props) {
@@ -945,7 +944,6 @@ class Team extends React.Component {
                         classes={{select: classes.searchSelectPadding}}
                       >
                         <MenuItem value={FILTER_ALPHA}><strong>{FILTER_ALPHA}</strong></MenuItem>
-                        <MenuItem value={FILTER_TEST}><strong>{FILTER_TEST}</strong></MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
