@@ -81,7 +81,7 @@ class BecomeAlfred extends React.Component {
               </Grid>
               <Grid>
                 <Typography style={{textAlign: 'justify'}} className={'custombecomealfredwhotext'}>
-                  {ReactHtmlParser(this.props.t('FAQ_BECOME_ALFRED.who_become_alfred_content')) + ACCOUNT_MIN_AGE + ReactHtmlParser(this.props.t('FAQ_BECOME_ALFRED.who_become_alfred_content_end')) }</Typography>
+                  {ReactHtmlParser(this.props.t('FAQ_BECOME_ALFRED.who_become_alfred_content', {age: ACCOUNT_MIN_AGE}))}</Typography>
               </Grid>
             </Grid>
           </Grid>

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -36,7 +37,7 @@ import {MICROSERVICE_MODE} from '../../../utils/consts'
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications')
 const {ADMIN, BUDGET_PERIOD, MANAGER, EMPLOYEE} = require('../../../utils/consts')
 import EmployeeImportDialog from '../../Employee/EmployeeImportDialog'
-import {TEAM} from '../../../utils/i18n'
+
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, onClick, ...other} = props
@@ -77,8 +78,7 @@ const MenuProps = {
   },
 }
 
-const FILTER_ALPHA= TEAM.alpha_filter
-const FILTER_TEST= TEAM.test_filter
+const FILTER_ALPHA= 'Ordre alphabétique'
 
 class Team extends React.Component {
   constructor(props) {
@@ -183,7 +183,7 @@ class Team extends React.Component {
         member_id: user._id,
       }
       axios.put(`/myAlfred/api/groups/${value}/managers`, data).then(() => {
-        snackBarSuccess(TEAM.snackbar_add_member)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TEAM.snackbar_add_member')))
         this.componentDidMount()
       }).catch(err => {
         snackBarError(err.response.error)
@@ -372,7 +372,7 @@ class Team extends React.Component {
 
     axios.delete(`/myAlfred/api/companies/admin/${selected._id}`)
       .then(() => {
-        snackBarSuccess(selected.name + TEAM.snackbar_remove_admin)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TEAM.snackbar_remove_admin', {firstname: selected.name})))
         this.setState({dialogRemove: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -385,7 +385,7 @@ class Team extends React.Component {
     setAxiosAuthentication()
     axios.delete(`/myAlfred/api/groups/${groupeIdSelected}/managers/${selected._id}`)
       .then(() => {
-        snackBarSuccess(TEAM.snackbar_remove_manager)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TEAM.snackbar_remove_manager')))
         this.setState({dialogRemove: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -407,7 +407,7 @@ class Team extends React.Component {
 
     axios.post('/myAlfred/api/groups', data)
       .then(() => {
-        snackBarSuccess(TEAM.snackbar_create_groupe + nameGroupe + TEAM.snackbar_create_name_groupe)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TEAM.snackbar_create_groupe')) + nameGroupe + ReactHtmlParser(this.props.t('TEAM.snackbar_create_name_groupe')))
         this.setState({dialogGroupe: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -427,7 +427,7 @@ class Team extends React.Component {
 
     axios.put(`/myAlfred/api/groups/${selected._id}`, data)
       .then(() => {
-        snackBarSuccess(selected.name + TEAM.snackbar_update_groupe)
+        snackBarSuccess(selected.name + ReactHtmlParser(this.props.t('TEAM.snackbar_update_groupe')))
         this.setState({dialogGroupe: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -439,7 +439,7 @@ class Team extends React.Component {
     const{selected} = this.state
     axios.delete(`/myAlfred/api/groups/${selected._id}`)
       .then(() => {
-        snackBarSuccess(TEAM.snackbar_create_groupe + selected.name + TEAM.snackbar_delete)
+        snackBarSuccess(ReactHtmlParser(this.props.t('TEAM.snackbar_create_groupe')) + selected.name + ReactHtmlParser(this.props.t('TEAM.snackbar_delete')))
         this.setState({dialogRemoveGroupe: false}, () => this.componentDidMount())
       })
       .catch(err => {
@@ -458,18 +458,20 @@ class Team extends React.Component {
 
     return(
       <Dialog open={dialogAdd} onClose={() => this.setState({dialogAdd: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>{mode === MICROSERVICE_MODE ? TEAM.dialog_add_manager : TEAM.dialog_add_employe}</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdd: false})}>
+          {ReactHtmlParser(this.props.t(mode === MICROSERVICE_MODE ? 'TEAM.dialog_add_manager' : 'TEAM.dialog_add_employe'))}
+        </DialogTitle>
         <DialogContent dividers>
           {mode === MICROSERVICE_MODE ?
             userEmploye.length === 0 ? null :
               <Grid style={{paddingBottom: 20}}>
                 <Grid container spacing={2} style={{width: '100%', margin: 0, paddingBottom: 40}}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <h3>{TEAM.existing_account}</h3>
+                    <h3>{ReactHtmlParser(this.props.t('TEAM.existing_account'))}</h3>
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                      <InputLabel id="demo-mutiple-chip-label">{TEAM.user_title}</InputLabel>
+                      <InputLabel id="demo-mutiple-chip-label">{ReactHtmlParser(this.props.t('TEAM.user_title'))}</InputLabel>
                       <Select
                         labelId="demo-mutiple-chip-label"
                         id="demo-mutiple-chip"
@@ -477,7 +479,7 @@ class Team extends React.Component {
                         onChange={e => this.handleChange(e)}
                         name={'canUpgrade'}
                         value={canUpgrade}
-                        input={<OutlinedInput label={TEAM.rib} id="select-multiple-chip" />}
+                        input={<OutlinedInput label={ReactHtmlParser(this.props.t('TEAM.rib'))} id="select-multiple-chip" />}
                         renderValue={selected => (
                           <div className={classes.chips}>
                             {selected.map(user => (
@@ -499,17 +501,17 @@ class Team extends React.Component {
                   { canUpgrade.length > 0 ?
                     <>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <h3>{TEAM.choose_department}</h3>
+                        <h3>{ReactHtmlParser(this.props.t('TEAM.choose_department'))}</h3>
                       </Grid>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                         <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                          <InputLabel id="demo-simple-select-outlined-label">{TEAM.departement}</InputLabel>
+                          <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('TEAM.departement'))}</InputLabel>
                           <Select
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             name={'selectedGroup'}
                             onChange={this.handleChange}
-                            label={TEAM.departement}
+                            label={ReactHtmlParser(this.props.t('TEAM.departement'))}
                             value={selectedGroup}
                           >
                             {
@@ -530,7 +532,7 @@ class Team extends React.Component {
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid style={{display: 'flex', alignItems: 'center'}}>
                 <Grid>
-                  <h3>{TEAM.create_new_account}</h3>
+                  <h3>{ReactHtmlParser(this.props.t('TEAM.create_new_account'))}</h3>
                 </Grid>
                 <Grid>
                   <IconButton onClick={() => this.addNewLine(modeDialog === 'admin' ? 'nbAdmin' : 'nbManager')}>
@@ -547,7 +549,7 @@ class Team extends React.Component {
                   <Grid item xl={11} lg={11} sm={11} md={11} xs={11} container spacing={2} style={{width: '100%', margin: 0}}>
                     <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
                       <TextField
-                        label={TEAM.firstname}
+                        label={ReactHtmlParser(this.props.t('TEAM.firstname'))}
                         value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
                         name={modeDialog === 'admin' ? 'firstNameAdmin' : 'firstNameManager'}
                         onChange={e => this.handleChange(e, index)}
@@ -557,7 +559,7 @@ class Team extends React.Component {
                     </Grid>
                     <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
                       <TextField
-                        label={TEAM.name}
+                        label={ReactHtmlParser(this.props.t('COMMON.lbl_name'))}
                         name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
                         value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
                         onChange={e => this.handleChange(e, index)}
@@ -567,7 +569,7 @@ class Team extends React.Component {
                     </Grid>
                     <Grid item xl={modeDialog === 'manager' ? 6 : 12} lg={modeDialog === 'manager' ? 6 : 12} sm={modeDialog === 'manager' ? 6 : 12} md={modeDialog === 'manager' ? 6 : 12} xs={modeDialog === 'manager' ? 6 : 12}>
                       <TextField
-                        label={TEAM.email}
+                        label={ReactHtmlParser(this.props.t('COMMON.lbl_email'))}
                         name={modeDialog === 'admin' ? 'emailAdmin' : 'emailManager'}
                         value={modeDialog === 'admin' ? res.emailAdmin || '' : res.emailManager || ''}
                         onChange={e => this.handleChange(e, index)}
@@ -578,13 +580,13 @@ class Team extends React.Component {
                     { modeDialog === 'manager' ?
                       <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                         <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                          <InputLabel id="demo-simple-select-outlined-label">{TEAM.departements}</InputLabel>
+                          <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('TEAM.departements'))}</InputLabel>
                           <Select
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             name={'groupSelected'}
                             onChange={e => this.handleChange(e, index)}
-                            label={TEAM.departements}
+                            label={ReactHtmlParser(this.props.t('TEAM.departements'))}
                             value={res.groupSelected || ''}
                           >
                             {
@@ -610,10 +612,10 @@ class Team extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogAdd: false})} classes={{root: classes.cancelButton}}>
-            {TEAM.button_cancel}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </Button>
           <Button onClick={modeDialog === 'admin' ? this.addAdmin : mode === MICROSERVICE_MODE ? this.addManager : this.addEmploye} color="primary">
-            {TEAM.button_confirm}
+            {ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -639,10 +641,10 @@ class Team extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogRemove: false})} color="primary">
-            {TEAM.button_cancel}
+            {COMMON.btn_cancel}
           </Button>
           <Button onClick={modeDialog === 'admin' ? this.removeAdmin : this.removeManager} color="primary">
-            {TEAM.button_delete}
+            {COMMON.btn_delete}
           </Button>
         </DialogActions>
       </Dialog>
@@ -941,7 +943,6 @@ class Team extends React.Component {
                         classes={{select: classes.searchSelectPadding}}
                       >
                         <MenuItem value={FILTER_ALPHA}><strong>{FILTER_ALPHA}</strong></MenuItem>
-                        <MenuItem value={FILTER_TEST}><strong>{FILTER_TEST}</strong></MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>

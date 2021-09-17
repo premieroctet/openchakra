@@ -148,8 +148,8 @@ class LogIn extends React.Component {
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
-                      label={ReactHtmlParser(this.props.t('LOGIN.input_label'))}
-                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_label'))}
+                      label={ReactHtmlParser(this.props.t('COMMON.lbl_email'))}
+                      placeholder={ReactHtmlParser(this.props.t('COMMON.lbl_email'))}
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
                       name="username"
                       value={username}

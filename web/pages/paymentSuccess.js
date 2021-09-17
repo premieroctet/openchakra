@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
@@ -7,6 +8,7 @@ import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import io from 'socket.io-client'
 
+import {BOOKING} from '../utils/i18n'
 import BasePage from './basePage'
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
@@ -95,8 +97,7 @@ class paymentSuccess extends BasePage {
                 <Grid>
                   { booking.user.company_customer ?
                     <Grid>
-                      <Typography>Nous allons maintenant chercher pour vous l'Alfred qui répondra à votre service.
-                      Vous serez informé sous peu de la date de prestation.</Typography>
+                      <Typography>{ReactHtmlParser(this.props.t('BOOKING.search_presta'))}</Typography>
                     </Grid>
                     :
                     <>

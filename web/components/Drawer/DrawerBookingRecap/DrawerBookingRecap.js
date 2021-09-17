@@ -141,7 +141,7 @@ class DrawerBookingRecap extends React.Component {
               onClick={() => (activeStep === 0 ? this.props.handleStep() : this.props.handlePayDirect())}
               disabled={activeStep === 1 ? id_card === '' || pending : false}
             >
-              <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.button_pay')) : ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.button_validate'))}</Typography>
+              <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.button_pay')) : ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Typography>
             </Button>
           </Grid>
         </Grid>

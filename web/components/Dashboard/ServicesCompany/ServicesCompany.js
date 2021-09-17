@@ -232,10 +232,10 @@ class ServicesCompany extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogConfigService: false})} classes={{root: classes.cancelButton}}>
-            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_cancel'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </Button>
           <Button onClick={this.addService} color="primary">
-            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_confirm'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_modify'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -256,7 +256,13 @@ class ServicesCompany extends React.Component {
         <DialogContent>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3> {ReactHtmlParser(this.props.t('SERVICES_COMPANY.select_service')) + mode === CARETAKER_MODE ? ReactHtmlParser(this.props.t('SERVICES_COMPANY.this_classification')) : ReactHtmlParser(this.props.t('SERVICES_COMPANY.this_department'))}</h3>
+              <h3>
+                {
+                  ReactHtmlParser(this.props.t('SERVICES_COMPANY.select_service', {
+                    entity: ReactHtmlParser(this.props.t(mode === CARETAKER_MODE ? 'SERVICES_COMPANY.this_classification': 'SERVICES_COMPANY.this_department')),
+                  }))
+                }
+              </h3>
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
@@ -302,7 +308,7 @@ class ServicesCompany extends React.Component {
                       classes={{root: classes.textField}}
                       onChange={this.handleChange}
                       InputProps={{
-                        endAdornment: <InputAdornment position="end">{ReactHtmlParser(this.props.t('SERVICES_COMPANY.modulo'))}</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
                         inputProps: {min: 0, max: 100},
                       }}
                     />
@@ -313,10 +319,10 @@ class ServicesCompany extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogAddService: false, servicesToAdd: []})} classes={{root: classes.cancelButton}}>
-            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_cancel'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </Button>
           <Button onClick={this.addService} color="primary">
-            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_confirm_dialog'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_modify'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -333,18 +339,18 @@ class ServicesCompany extends React.Component {
         aria-describedby="alert-dialog-description"
         classes={{paper: classes.dialogPaper}}
       >
-        <DialogTitle id="alert-dialog-title" onClose={() => this.setState({dialogRemove: false})}>{ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_remove_title'))}</DialogTitle>
+        <DialogTitle id="alert-dialog-title" onClose={() => this.setState({dialogRemove: false})}>{ReactHtmlParser(this.props.t('COMMON.btn_delete'))}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {`${ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_remove_text')) + selectedService.label + ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_remove_off')) + selectedGroup.name }?`}
+            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_remove_text', {service: selectedService.label, group: selectedGroup.name}))}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogRemove: false})} color="primary">
-            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_cancel'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </Button>
           <Button onClick={this.removeService} color="primary">
-            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.button_delete'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -374,7 +380,14 @@ class ServicesCompany extends React.Component {
                         aria-controls="panel1a-content"
                         id={index}
                       >
-                        <Typography className={classes.heading}>{ReactHtmlParser(this.props.t('SERVICES_COMPANY.services_available_for')) + mode === CARETAKER_MODE ? ReactHtmlParser(this.props.t('SERVICES_COMPANY.classification')) : ReactHtmlParser(this.props.t('SERVICES_COMPANY.department'))} <strong>{groupe.name}</strong></Typography>
+                        <Typography className={classes.heading}>
+                          {ReactHtmlParser(this.props.t('SERVICES_COMPANY.services_available_for', {
+                            entity_type: ReactHtmlParser(this.props.t(CARETAKER_MODE ? 'SERVICES_COMPANY.classification' : 'SERVICES_COMPANY.department')),
+                            entity_name: groupe.name,
+                          }))
+                          }
+                          <strong>{groupe.name}</strong>
+                        </Typography>
                       </AccordionSummary>
                       {
                         groupe.allowed_services.length > 0 ?

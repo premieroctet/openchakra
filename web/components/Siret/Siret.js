@@ -1,82 +1,81 @@
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import {withStyles} from '@material-ui/core/styles';
-import axios from 'axios';
-import styles from '../../static/css/components/Siret/Siret';
-import ButtonSwitch from '../ButtonSwitch/ButtonSwitch';
-import {SHOP} from '../../utils/i18n';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
+import {withStyles} from '@material-ui/core/styles'
+import axios from 'axios'
+import styles from '../../static/css/components/Siret/Siret'
+import ButtonSwitch from '../ButtonSwitch/ButtonSwitch'
+import {SHOP} from '../../utils/i18n'
 
-const moment = require('moment');
-const {SIRET} = require('../../config/config');
-const {ENTITES} = require('../../utils/consts');
+const moment = require('moment')
+const {SIRET} = require('../../config/config')
 const {compact, compute_vat_number, isSiretSirenLength}=require('../../utils/text')
-moment.locale('fr');
+moment.locale('fr')
 
-const DATE_COUPURE_INSEE = moment('2020-06-09');
+const DATE_COUPURE_INSEE = moment('2020-06-09')
 
 class Siret extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       siret: '',
       name: '',
       vat_subject: false,
       vat_number: null,
-    };
+    }
     if (this.props.company) {
       console.log(`Got company:${JSON.stringify(this.props.company)}`)
-      this.state = this.props.company;
+      this.state = this.props.company
     }
-    this.onChange = this.onChange.bind(this);
-    this.setCompanyData = this.setCompanyData.bind(this);
+    this.onChange = this.onChange.bind(this)
+    this.setCompanyData = this.setCompanyData.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.company) {
-      this.setState(nextProps.company);
+      this.setState(nextProps.company)
     }
   }
 
   onChange = e => {
-    let {name, value} = e.target;
-    var st={}
+    let {name, value} = e.target
+    let st={}
     if (name === 'siret') {
       value = compact(value)
       if (this.state.vat_subject) {
-        st['vat_number'] = compute_vat_number(value)
+        st.vat_number = compute_vat_number(value)
       }
     }
     if (name === 'creation_date') {
-      value = moment(value).format('DD/MM/YYYY');
+      value = moment(value).format('DD/MM/YYYY')
     }
     st[name]=value
     this.setState(st,
       () => {
-        this.props.onChange(this.state);
+        this.props.onChange(this.state)
         if (name === 'siret') {
-          this.onSubmit();
+          this.onSubmit()
         }
-      });
-  };
+      })
+  }
 
-  onVatSubjectChanged = (id, checked) =>{
-    var vat_number = checked ? this.state.vat_number : null
+  onVatSubjectChanged = (id, checked) => {
+    let vat_number = checked ? this.state.vat_number : null
     if (checked && !vat_number) {
       vat_number = compute_vat_number(this.state.siret)
     }
     this.setState({vat_subject: checked, vat_number: vat_number},
-      () => this.props.onChange(this.state));
-  };
+      () => this.props.onChange(this.state))
+  }
 
 
-  onSubmit = e => {
-    const code = this.state.siret;
+  onSubmit = () => {
+    const code = this.state.siret
 
     if (!isSiretSirenLength(code)) {
       return
@@ -84,37 +83,37 @@ class Siret extends React.Component {
 
     const config = {
       headers: {Authorization: `Bearer ${SIRET.token}`},
-    };
+    }
 
     axios.get(`${SIRET.siretUrl}/${code}`, config)
       .then(res => {
-        this.setCompanyData(res.data.etablissement);
+        this.setCompanyData(res.data.etablissement)
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         axios.get(`${SIRET.sirenUrl}/${code}`, config)
           .then(res => {
-            this.setCompanyData(res.data);
+            this.setCompanyData(res.data)
           })
           .catch(err => {
             console.error(err)
-          });
-      });
-  };
+          })
+      })
+  }
 
   setCompanyData(data) {
-    const uniteLegale = data.uniteLegale.periodesUniteLegale ? data.uniteLegale.periodesUniteLegale[0] : data.uniteLegale;
+    const uniteLegale = data.uniteLegale.periodesUniteLegale ? data.uniteLegale.periodesUniteLegale[0] : data.uniteLegale
     this.setState({
-        name: uniteLegale.denominationUniteLegale || `${data.uniteLegale.prenomUsuelUniteLegale || uniteLegale.prenomUsuelUniteLegale} ${uniteLegale.nomUniteLegale}`,
-        errors: null,
-      }, () => this.props.onChange(this.state),
-    );
+      name: uniteLegale.denominationUniteLegale || `${data.uniteLegale.prenomUsuelUniteLegale || uniteLegale.prenomUsuelUniteLegale} ${uniteLegale.nomUniteLegale}`,
+      errors: null,
+    }, () => this.props.onChange(this.state),
+    )
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
 
-    const coupureToday = DATE_COUPURE_INSEE.format('DD/MM/YY') === moment().format('DD/MM/YY');
+    const coupureToday = DATE_COUPURE_INSEE.format('DD/MM/YY') === moment().format('DD/MM/YY')
 
     return (
       <Grid>
@@ -191,8 +190,8 @@ class Siret extends React.Component {
           </Grid>
         </Grid>
       </Grid>
-    );
-  };
+    )
+  }
 }
 
 

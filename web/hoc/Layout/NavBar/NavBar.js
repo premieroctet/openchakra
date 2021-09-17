@@ -454,7 +454,7 @@ class NavBar extends Component {
                     value={this.state.keyword}
                     onChange={this.onChange}
                     name={'keyword'}
-                    label={'Ménage, jardinage, ...'}
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.what_placeholder'))}
                     onKeyPress={e => {
                       e.key === 'Enter' && e.preventDefault()
                     }}
@@ -932,7 +932,7 @@ class NavBar extends Component {
             >
               <Grid item xl={11} lg={11} sm={11} md={11} xs={11} style={{display: 'flex', alignItems: 'center'}}>
                 <TextField
-                  placeholder={'Ménage, Jardinage, ...'}
+                  placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.what_placeholder'))}
                   style={{width: '100%'}}
                   value={this.state.keyword}
                   onChange={this.onChange}

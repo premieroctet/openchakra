@@ -328,10 +328,10 @@ class FilterMenu extends React.Component {
                   </Grid>
                   <Grid className={classes.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={this.cancelStatusFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_cancel'))}</Button>
+                      <Button onClick={this.cancelStatusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
                     </Grid>
                     <Grid>
-                      <Button onClick={this.validateStatusFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_confirm'))}</Button>
+                      <Button onClick={this.validateStatusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -370,10 +370,10 @@ class FilterMenu extends React.Component {
                   </Grid>
                   <Grid className={classes.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={this.cancelDateFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_cancel_date'))}</Button>
+                      <Button onClick={this.cancelDateFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
                     </Grid>
                     <Grid>
-                      <Button onClick={this.validateDateFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_confirm_date'))}</Button>
+                      <Button onClick={this.validateDateFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -409,10 +409,10 @@ class FilterMenu extends React.Component {
                     </Grid>
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <Button onClick={this.cancelRadiusFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_cancel_radius'))}</Button>
+                        <Button onClick={this.cancelRadiusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
                       </Grid>
                       <Grid>
-                        <Button onClick={this.validateRadiusFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_confirm_radius'))}</Button>
+                        <Button onClick={this.validateRadiusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -476,10 +476,10 @@ class FilterMenu extends React.Component {
                   </Grid>
                   <Grid className={classes.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={this.cancelLocationFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_cancel_remote'))}</Button>
+                      <Button onClick={this.cancelLocationFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
                     </Grid>
                     <Grid>
-                      <Button onClick={this.validateLocationFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_confirm_remote'))}</Button>
+                      <Button onClick={this.validateLocationFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -512,10 +512,10 @@ class FilterMenu extends React.Component {
                     />
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <Button onClick={this.cancelCategoriesFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_cancel_cat'))}</Button>
+                        <Button onClick={this.cancelCategoriesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
                       </Grid>
                       <Grid>
-                        <Button onClick={this.validateCategoriesFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_confirm_cat'))}</Button>
+                        <Button onClick={this.validateCategoriesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -549,10 +549,10 @@ class FilterMenu extends React.Component {
                     />
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <Button onClick={this.cancelServicesFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_cancel_service'))}</Button>
+                        <Button onClick={this.cancelServicesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
                       </Grid>
                       <Grid>
-                        <Button onClick={this.validateServicesFilter}>{ReactHtmlParser(this.props.t('SEARCHBAR.button_confirm_service'))}</Button>
+                        <Button onClick={this.validateServicesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
                       </Grid>
                     </Grid>
                   </Grid>

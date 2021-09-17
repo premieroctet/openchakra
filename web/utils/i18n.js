@@ -1,5 +1,4 @@
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
-const {ACCOUNT_MIN_AGE} = require('./consts')
 const {MANGOPAY_ERRORS}=require('./mangopay_messages')
 
 const CESU_NOTICE = "Quel que soit votre statut, My Alfred est tenu de déclarer aux \
@@ -51,12 +50,10 @@ const SEARCH = {
 }
 
 const CARD_SERVICE = {
-  card_help_title: 'Besoin d\'aide ?',
+  card_help_title: "Besoin d'aide ?",
   card_help_chat: 'Utilisez notre chat en direct !',
   dialog_delete_title: 'Supprimer un service',
   dialog_delete_content: 'Voulez-vous vraiment supprimer ce service ?',
-  dialog_delete_cancel: 'Annuler',
-  dialog_delete_confirm: 'Supprimer',
   no_description: 'Cet alfred est peut être trop timide pour parler de lui !',
   button_show_profil: 'Voir',
 }
@@ -68,8 +65,8 @@ const USERSERVICEPREVIEW = {
   error_minimum_basket: 'Commande minimum des prestation de {{minimum_basket}}€ requise',
   error_select_date: 'Sélectionnez une date',
   error_select_hour: 'Sélectionnez une heure',
-  error_not_available: ' n\'est pas disponible à cette date/heure',
-  error_delay_prevenance: 'Le délai de prévenance n\'est pas respecté',
+  error_not_available: "{{firstname}} n'est pas disponible à cette date/heure",
+  error_delay_prevenance: "Le délai de prévenance n'est pas respecté",
   error_resa_now: 'Réservation impossible avant maintenant',
   error_place: 'Sélectionnez un lieu de prestation',
   error_amount_too_high: 'Le montant dépasse le budget disponible pour votre département',
@@ -80,7 +77,7 @@ const USERSERVICEPREVIEW = {
   snackbar_error_resa: 'Réservation en cours de traitement',
   button_show_profil: 'Voir le profil',
   topic_description: 'Description',
-  topic_description_summary: 'Cet utilisateur n\'a pas encore de description.',
+  topic_description_summary: "Cet utilisateur n'a pas encore de description.",
   topic_list_label: 'Délai de prévenance',
   topic_list_summary: ' a besoin de ',
   topic_list_summary_end: ' pour préparer son service',
@@ -101,12 +98,10 @@ const USERSERVICEPREVIEW = {
   topic_zone_intervention_end: ' peut intervenir',
   button_show_services: 'Voir les services',
   topic_commentary: 'Commentaires',
-  topic_commentary_summary: 'Ici, vous pouvez laisser des commentaires à ',
-  exclamation: ' !',
+  topic_commentary_summary: 'Ici, vous pouvez laisser des commentaires à {{firstname}}!',
 }
 
 const DRAWER_BOOKING = {
-  interrogation: ' ?',
   eligible: 'Eligible au CESU',
   warning_perimiter: 'Cet Alfred se trouve trop loin de chez vous pour être réservé!',
   warning_budget: 'Le montant dépasse le budget disponible pour votre département',
@@ -147,10 +142,10 @@ const FAQ_ABOUT = {
   content_birth: 'My Alfred est né de l’envie de nous simplifier la vie. Nous voulions répondre à une uestion simple : Comment gagner du temps ? Aujourd’hui, nous sommes heureux de répondre à une multitude de problématiques. En créant une plateforme d’économie collaborative, nous voulons simplifiez votre quotidien mais nous espérons aussi rapprocher les générations, développer l’entrepreunariat, contribuer au développement des compétences de chacun et créer une communauté où il fait bon vivre.',
   title_we_are: 'Nous sommes My Alfred',
   content_we_are: 'Nous sommes persuadés que l’économie collaborative favorise le développement de nouvelles formes d’emploi pour des entrepreneurs qui ont soif de liberté, de créativité et d’activité multiples. Nous mettons en relation des particuliers, des entrepreneurs pour que chacun puisse proposer ou disposer de tous les services. Nous apportons de la visibilité, de l’équité, de la transparence, un espace communautaire où chacun participe au développement d’une économie responsable. Nous avons à cœur de faire prendre conscience à chacun d’entre nous que seul on sait faire peu de choses, ensemble on peut tout faire.',
-  title_is_what: 'My Alfred, qu\'est-ce que c\'est ?',
+  title_is_what: "My Alfred, qu'est-ce que c'est ?",
   content_is_what: 'My Alfred crée des liens entre les personnes en leur donnant la possibilité de réserver des services partout en France. Les Alfred constituent le moteur de la communauté et fournissent à notre communauté des services de qualités, comme s’ils le faisaient pour eux même. Plus de 20 000 prestations sont recensées sur My Alfred, portées par plusieurs milliers d’Alfred compétents, talentueux et bienveillants.',
-  title_service: 'Qu\'est-ce que les services d’Alfred ?',
-  content_service: 'Si vous disposez d’un talent, d’une passion ou tout simplement de temps, vous pouvez gagner de l\'argent en les mettant à la disposition de notre communauté. En quelques minutes, vous proposez vos services, fixez vos conditions et créez votre profil d’Alfred, vous permettant de bénéficier d’une grande visibilité, une interface personnalisée propre à vos services, à votre personnalité.',
+  title_service: "Qu'est-ce que les services d’Alfred ?",
+  content_service: "Si vous disposez d’un talent, d’une passion ou tout simplement de temps, vous pouvez gagner de l'argent en les mettant à la disposition de notre communauté. En quelques minutes, vous proposez vos services, fixez vos conditions et créez votre profil d’Alfred, vous permettant de bénéficier d’une grande visibilité, une interface personnalisée propre à vos services, à votre personnalité.",
   title_mission: 'Notre mission',
   content_mission: 'Notre mission est de créer un lieu de rencontres et d’opportunités, où trouver la bonne personne n’est plus un problème.',
   title_vision: 'Notre vision',
@@ -160,27 +155,26 @@ const FAQ_ABOUT = {
 const FAQ_BECOME_ALFRED = {
   one: '1',
   one_title: 'Proposez vos services',
-  one_content: 'Vous n\'avez aucun frais à payer pour proposer vos services. Indiquez simplement vos prestations en vous appuyant sur une liste de plus de 2000 services proposées sur My-Alfred. Un service n\'apparaît pas ? Soumettez-le à nos équipes !',
+  one_content: "Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement vos prestations en vous appuyant sur une liste de plus de 2000 services proposées sur My-Alfred. Un service n'apparaît pas ? Soumettez-le à nos équipes !",
   two: '2',
   two_title: 'Fixez vos conditions',
-  two_content: 'Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Si vous avez besoin d\'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences ! ',
+  two_content: "Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences !",
   three: '3',
   three_title: 'Choisissez votre Alfred et réservez !',
   three_content: 'Choisissez le profil et la prestation qui vous intéresse puis sélectionnez vos dates et vos options. Cliquez sur le bouton réservez et suivez la procédure de paiement',
   why_become_alfred: 'Pourquoi devenir Alfred ?',
   why_become_alfred_content: 'My-Alfred vous permet, de manière simple et sécurisée, de mettre vos services à disposition de tout un chacun. Un talent pour la décoration ? Une passion pour la cuisine ? Ou tout simplement du temps : proposez vos services et complétez vos revenus. Vous avez un contrôle total sur vos disponibilités, vos prix et le détail de vos prestations.',
   who_become_alfred: 'Qui peut devenir Alfred ?',
-  who_become_alfred_content: 'Nous sommes tous des Alfred dès l\'âge de ',
-  who_become_alfred_content_end: ' ans. Chacun d\'entre nous doit pouvoir partager ses savoir faire, ses compétences, ses passions... Tantôt consommateur d\'Alfred, tantôt Alfred, rejoignez la communauté Alfred en quelques clics !',
+  who_become_alfred_content: "Nous sommes tous des Alfred dès l'âge de {{age}} ans. Chacun d'entre nous doit pouvoir partager ses savoir faire, ses compétences, ses passions... Tantôt consommateur d'Alfred, tantôt Alfred, rejoignez la communauté Alfred en quelques clics !",
   create_shop: 'Créez votre boutique à votre façon',
   propose_service: 'Vous proposez vos services',
-  propose_service_content: 'A travers la création de votre boutique, vous proposez vos services en décrivant l\'ensemble de vos prestations. Vous pouvez à tout moment revenir sur votre boutique, ajouter ou supprimer des services. Les différentes étapes de création de votre boutique sont extrêmement simples. À vous de jouer !',
+  propose_service_content: "A travers la création de votre boutique, vous proposez vos services en décrivant l'ensemble de vos prestations. Vous pouvez à tout moment revenir sur votre boutique, ajouter ou supprimer des services. Les différentes étapes de création de votre boutique sont extrêmement simples. À vous de jouer !",
   availibility: 'Vous affichez vos disponibilités',
   aivailibility_content: 'Vous indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestations. Vous pouvez synchroniser votre calendrier My-Alfred avec vos autres calendriers et éviter de manquer un rendez-vous. Tous vos calendriers sont mis à jour automatiquement',
   your_price: 'Vous fixez vos prix',
-  your_price_content: 'C\'est à vous de fixer les prix de vos services : nos outils de tarifications sont là pour vous aider à proposer le meilleur prix. Vous pouvez facilement ajouter des éléments personnalisés, notamment des tarifs de week-end, de nuit, des packages de services...',
+  your_price_content: "C'est à vous de fixer les prix de vos services : nos outils de tarifications sont là pour vous aider à proposer le meilleur prix. Vous pouvez facilement ajouter des éléments personnalisés, notamment des tarifs de week-end, de nuit, des packages de services...",
   your_rules: 'Vous déterminez vos règles',
-  your_rules_content: 'Pour que les utilisateurs de My-Alfred puissent facilement comprendre vos services, vous définissez vos règles avant qu\'ils puissent réserver. S\'ils enfreignent les règles après avoir réservé, vous pourrez annuler leur réservation sans aucune pénalité.',
+  your_rules_content: "Pour que les utilisateurs de My-Alfred puissent facilement comprendre vos services, vous définissez vos règles avant qu'ils puissent réserver. S'ils enfreignent les règles après avoir réservé, vous pourrez annuler leur réservation sans aucune pénalité.",
 }
 
 const ADD_SERVICE = {
@@ -245,8 +239,7 @@ const DRAWER_BOOKING_RECAP = {
   title: 'Récapitulatif',
   moving_cost: 'Frais de déplacement',
   button_pay: 'Payer',
-  button_validate: 'Valider',
-  method_payment: 'Choix du mode de paiement l\'étape suivante',
+  method_payment: "Choix du mode de paiement l'étape suivante",
 }
 
 const PAYMENT_PICS = {
@@ -278,7 +271,7 @@ const ADDRESS_SERVICE = {
 }
 
 const PROFILE = {
-  id_card: 'Carte d\'identité ',
+  id_card: "Carte d'identité ",
   checked: 'vérifié',
   no_checked: 'non-vérifié',
 }
@@ -289,7 +282,7 @@ const SEARCHBAR = {
   when: 'Quand ?',
   labelWhere: "L'adresse",
   labelWhat: 'Le service',
-  what_placeholer: 'Ménage, jardinage, ...',
+  what_placeholder: 'Ménage, jardinage, ...',
   labelWhen: 'Les dates',
   labelStatus: 'Statut',
   labelDate: 'Date(s)',
@@ -298,25 +291,13 @@ const SEARCHBAR = {
   labelCategory: 'Catégorie(s)',
   labelService: 'Service(s)',
   searching: 'Recherche en cours',
-  no_results: 'Nous n\'avons pas trouvé de résultat pour votre recherche',
+  no_results: "Nous n'avons pas trouvé de résultat pour votre recherche",
   professional: 'Pro',
   particular: 'Particulier',
-  button_cancel: 'Annuler',
-  button_confirm: 'Valider',
   start_date: 'Début',
   end_date: 'Fin',
-  button_cancel_date: 'Annuler',
-  button_confirm_date: 'Valider',
-  button_cancel_radius: 'Annuler',
-  button_confirm_radius: 'Valider',
-  button_cancel_remote: 'Annuler',
-  button_confirm_remote: 'Valider',
-  button_cancel_cat: 'Annuler',
-  button_confirm_cat: 'Valider',
-  button_cancel_service: 'Annuler',
-  button_confirm_service: 'Valider',
   at_home: 'Chez moi',
-  alfred_home: 'Chez l\'Alfred',
+  alfred_home: "Chez l'Alfred",
   remote: 'En visio',
 }
 
@@ -388,7 +369,6 @@ const TRUST_SECURITY = {
 
 const LOGIN = {
   title: 'Connexion',
-  input_label: 'Email',
   input_password: 'Mot de passe',
   input_role: 'Rôle',
   button: 'Connexion',
@@ -408,12 +388,11 @@ const COMPANY_DASHBOARD = {
 const ACCOUNT_COMPANY = {
   account: 'Mon Compte',
   about_company: 'A propos de mon entreprise',
-  name: 'Nom',
   siret: 'siret',
   postal: 'adresse',
   invoice_postal: 'Adresse de facturation',
-  activity: 'Secteur d\'activité',
-  size_company: 'Taille de l’entreprise',
+  activity: "Secteur d'activité",
+  size: "Taille de l'entreprise",
   tva: 'tva',
 }
 
@@ -427,8 +406,7 @@ const INDEX_DASHBOARD = {
   title: 'Tableau de bord',
   title_admin: 'Représentant légal (doit être un administrateur)',
   birthdate: 'Date de naissance',
-  birthdate_helper: 'La date de naissance de l\'administrateur est requise',
-  save_button: 'Enregistrer',
+  birthdate_helper: "La date de naissance de l'administrateur est requise",
 }
 
 const SERVICES_COMPANY = {
@@ -437,25 +415,18 @@ const SERVICES_COMPANY = {
   input_month_year: 'Mois/An',
   month: 'Mois',
   year: 'An',
-  button_cancel: 'Annuler',
-  button_confirm: 'Modifier',
   classification_title: 'Classification',
   classification: 'la classification ',
   this_classification: ' cette classification',
   department_title: 'Département',
   department: 'le département ',
   this_department: 'ce département',
-  select_service: 'Sélectionnez les services autorisés pour ',
+  select_service: 'Sélectionnez les services autorisés pour {{entity}}',
   services_title: 'Services',
   take_care_level: 'Niveau de prise en charge',
-  modulo: ' %',
-  button_confirm_dialog: 'Confirmer',
-  dialog_remove_title: 'Supprimer',
-  dialog_remove_text: 'Voulez vous supprimer ',
-  dialog_remove_off: ' de ',
-  button_delete: 'Supprimer',
+  dialog_remove_text: 'Voulez vous supprimer {{service}} de {{group}} ?',
   title: 'Mes services',
-  services_available_for: 'Services disponibles pour ',
+  services_available_for: 'Services disponibles pour {{entity_type}} <strong>{{entity_name}}</strong>',
   no_budget: 'Pas de budget défini',
 }
 
@@ -467,14 +438,11 @@ const ABOUT = {
   b2b_titlesummary_topic: 'Ici, vous pouvez modifier les informations de votre entreprise',
   titlesummary_topic: 'Ici, vous pouvez modifier vos informations',
   website: 'Site Web',
-  label_address: 'Lieu d\'habitation',
+  label_address: "Lieu d'habitation",
   textfield_website: 'Site Web',
-  size_company: 'Taille de l\'entreprise',
-  label_size_company: 'Taille de l’entreprise',
-  textfield_size_company: 'Taille de l’entreprise',
   spoken_languages: 'Langues parlées',
   textfield_languages: 'Sélectionnez vos langues',
-  option_message: 'Plus d\'options disponibles',
+  option_message: "Plus d'options disponibles",
   b2b_activity: 'Secteur d’activité',
   b2b_activity_label: 'Secteur d’activité',
   button_update: 'Modifier',
@@ -483,7 +451,7 @@ const ABOUT = {
 }
 
 const LAYOUT_ABOUT = {
-  my_name_is: "Je m\'appelle {{firstname}}",
+  my_name_is: "Je m'appelle {{firstname}}",
   text: 'et j’ai hâte de vous rencontrer !',
   item_about: 'À propos',
   item_service: 'Services',
@@ -499,7 +467,7 @@ const EDIT_PROFIL = {
   email_send: 'Mail envoyé',
   error_email: 'email non envoyé',
   sms_send: 'Le SMS a été envoyé',
-  sms_error: 'Impossible d\'envoyer le SMS',
+  sms_error: "Impossible d'envoyer le SMS",
   validate_phone: 'Votre numéro de téléphone est validé',
   incorrect_code: 'Le code est incorrect',
   error_verif_code: 'Erreur à la vérification du code',
@@ -507,15 +475,12 @@ const EDIT_PROFIL = {
   dialog_text_phone: 'Saisissez le code reçu par SMS',
   dialog_textfield_placeholder: '0000',
   dialog_button_confirm_later: 'Confirmer plus tard',
-  dialog_button_confirm: 'Confirmer',
   title: 'Modifier votre profil',
   textfield_firstname: 'Prénom',
-  textfield_name: 'Nom',
   textfield_about_me: 'À propos de moi',
   char_max: '{{maxchars}} caractères max',
   personnal_info: 'Informations personnelles',
   gender: 'Sexe',
-  textfield_email_placeholder: 'Email',
   textfield_email_label: 'Adresse email',
   user_email_check: 'Votre email est vérifié',
   user_newemail_check: 'Enregistrer votre nouvel email',
@@ -528,18 +493,17 @@ const EDIT_PROFIL = {
   textfield_user_diploma: 'Diplômes',
   textfield_user_school: 'Ecoles',
   textfield_user_job: 'Emploi',
-  save_button: 'Enregistrer',
 }
 
 const PAYMENT_METHOD = {
   title: 'Modes de paiement',
-  subtitle: 'N\'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.',
+  subtitle: "N'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.",
 }
 
 const REGISTER = {
   snackbar_already_logged: 'Vous êtes déjà inscrit',
   snackbar_sms_send: 'Le SMS a été envoyé',
-  snackbar_sms_error: 'Impossible d\'envoyer le SMS',
+  snackbar_sms_error: "Impossible d'envoyer le SMS",
   snackbar_phone_valid: 'Votre numéro de téléphone est validé',
   snackbar_error_code_phone: 'Le code est incorrect',
   snackbar_error_check_phone: 'Erreur à la vérification du code',
@@ -548,7 +512,6 @@ const REGISTER = {
   dialog_phone_content: 'Saisissez le code reçu par SMS',
   dialog_cgu_close: 'Fermer',
   dialog_phone_confirm_later: 'Confirmer plus tard',
-  dialog_phone_confirm: 'Confirmer',
   textfield_email_error: 'Veuillez entrer une adresse email valide.',
   textfield_code: 'Code',
   title: 'Inscription',
@@ -559,12 +522,8 @@ const REGISTER = {
 }
 
 const REGISTER_FIRST_PAGE = {
-  textfield_email_title: 'Email',
-  textfield_email_placeholder: 'Email',
   textfield_firstname: 'Prénom',
   textfield_firstname_placeholder: 'Prénom',
-  textfield_name: 'Nom',
-  textfield_name_placeholder: 'Nom',
   textfield_create_password: 'Créer un mot de passe',
   textfield_create_password_placeholder: 'Créer un mot de passe',
   textfield_confirm_password: 'Confirmer mot de passe',
@@ -588,7 +547,7 @@ const REGISTER_SECOND_PAGE = {
   textfield_phone: 'Numéro de téléphone',
   textfield_phone_placeholder: 'Numéro de téléphone',
   phone_title: 'Téléphone',
-  phone_subtitle: 'L\'ajout de votre numéro de téléphone permet aux membres My-Alfred de disposer d\'un moyen pour vous contacter.',
+  phone_subtitle: "L'ajout de votre numéro de téléphone permet aux membres My-Alfred de disposer d'un moyen pour vous contacter.",
   button_cgu: 'J’accepte les conditions générales d’utilisation de My-Alfred.',
 }
 
@@ -597,21 +556,19 @@ const REGISTER_THIRD_PAGE = {
   subtitle: 'Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My Alfred',
   button_explore: 'Commencez à explorer',
   button_shop: 'Proposer mes services',
-  link_help: 'Besoin d\'aide pour proposer vos services ? Prenez rendez-vous avec l\'équipe My Alfred ici !',
+  link_help: "Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred ici !",
 }
 
 const HANDLE_CB = {
   cb_saves_title: 'Cartes enregistrées',
   cb_subtitle_paid: 'Payez encore plus rapidement sans communiquer vos informations financières.',
   cb_title_dialog_delete: 'Voulez-vous vraiment supprimer votre carte bancaire ?',
-  cb_content_dialog_delete: 'Si vous supprimez votre carte bancaire vous ne pourrez plus l\'utiliser par la suite avec ce compte.',
-  cb_cancel_dialog_delete: 'Annuler',
-  cb_delete_dialog_delete: 'Supprimer',
+  cb_content_dialog_delete: "Si vous supprimez votre carte bancaire vous ne pourrez plus l'utiliser par la suite avec ce compte.",
   cb_title_dialog_add: 'Enregistrer une carte',
   cb_subtitle_dialog_add: 'Ajouter une carte en toute sécurité',
   cb_dialog_nb_add: 'Numéro de carte',
   cb_dialog_placeholdercb_add: 'Votre carte de crédit',
-  cb_dialog_expdate_add: 'Date d\'expiration',
+  cb_dialog_expdate_add: "Date d'expiration",
   cb_dialog_placeholderexpdate_add: 'MM/YY',
   cb_dialog_cvv_add: 'CVV',
   cb_dialog_savecb_add: 'Enregistrer la carte',
@@ -627,7 +584,7 @@ const PAYMENT_CARD = {
 
 const HANDLE_RIB = {
   snackbar_rib_add: 'RIB ajouté',
-  snackbar_error_rib_add: 'Erreur à l\'ajout du RIB',
+  snackbar_error_rib_add: "Erreur à l'ajout du RIB",
   snackbar_rib_delete: 'Compte bancaire supprimé',
   snackbar_rib_error_delete: 'Un erreur est survenue',
   dialog_add_rib_title: 'Ajouter un RIB',
@@ -638,9 +595,7 @@ const HANDLE_RIB = {
   dialog_add_rib_data: 'Toutes les données de paiement sur My Alfred sont chiffrées.',
   dialog_add_rib_mongo: 'Elles sont gérées par mangopay notre partenaire de confiance.',
   dialog_delete_rib_title: 'Voulez-vous vraiment supprimer votre RIB ?',
-  dialog_delete_rib_content: 'Si vous supprimez votre RIB vous ne pourrez plus l\'utiliser par la suite avec ce compte.',
-  dialog_delete_rib_cancel: 'Annuler',
-  dialog_delete_rib_button: 'Supprimer',
+  dialog_delete_rib_content: "Si vous supprimez votre RIB vous ne pourrez plus l'utiliser par la suite avec ce compte.",
   title: 'RIB enregistrés',
   b2b_subtitle: 'Renseignez un rib pour permettre à vos collaborateurs le paiement par prélèvement bancaire.',
   subtitle: 'Choisissez le versement directement sur votre compte bancaire.',
@@ -663,61 +618,52 @@ const HANDLE_ADDRESSES = {
   snackbar_addresses_delete: 'Adresse supprimée',
   dialog_delete_title: 'Supprimer cette adresse ?',
   dialog_delete_content: 'Voulez-vous vraiment supprimer cette adresse ?',
-  dialog_delete_cancel: 'Annuler',
-  dialog_delete_button: 'Supprimer',
   title_b2b: 'Mon siège social',
   title: 'Mon adresse principale',
   placeholder_algo: 'Modifiez votre adresse',
-  submit_button: 'Valider',
   book_title_b2b: 'Autres sites',
-  book_title: 'Mon carnet d\'adresses',
+  book_title: "Mon carnet d'adresses",
   b2b_title_add_sites: 'Ajoutez vos sites et gagnez du temps',
   title_add_sites: 'Ajoutez plusieurs adresses et gagnez du temps.',
   textfield_name_placeholder_add_sites: 'Ecrire ici',
-  textfield_name_add_sites: 'Nom de l\'adresse',
-  submit_secondary_button: 'Enregistrer',
+  textfield_name_add_sites: "Nom de l'adresse",
   textfield_name_site: 'Nom du site',
-  textfield_name_addresses: 'Intitulé de l\'adresse',
+  textfield_name_addresses: "Intitulé de l'adresse",
   algo_find_your_addresses: 'Recherchez votre adresse',
   button_add_new_adresses: 'Ajouter',
 }
 
 const TRUST_VERIFICATION = {
-  snackbar_id_add: 'Pièce d\'identité ajoutée',
-  snackbar_card_add: 'Carte d\'identité ajoutée',
+  snackbar_id_add: "Pièce d'identité ajoutée",
+  snackbar_card_add: "Carte d'identité ajoutée",
   snackbar_status_update: 'Statut modifié',
-  snackbar_doc_add: 'Document d\'immatriculation ajouté',
-  snackbar_id_delete: 'Pièce d\'identité supprimée',
-  snackbar_doc_delete: 'Document d\immatriculation supprimé',
+  snackbar_doc_add: "Document d'immatriculation ajouté",
+  snackbar_id_delete: "Pièce d'identité supprimée",
+  snackbar_doc_delete: "Document d'immatriculation supprimé",
   dialog_delete_title: 'Confirmation',
-  dialog_delete_cancel: 'Annuler',
-  dialog_delete_confirm: 'Supprimer',
   title: 'Vérification',
   subtitle: 'Vérifiez votre email, votre numéro de téléphone et votre identité.',
-  identity_title: 'Pièce d\'identité',
-  identity_add_title: 'Ajoutez ou modifiez vos documents d\'identité.',
+  identity_title: "Pièce d'identité",
+  identity_add_title: "Ajoutez ou modifiez vos documents d'identité.",
   document_type: 'Type de document',
   passport: 'Passeport',
-  id_card: 'Carte d\'identité',
+  id_card: "Carte d'identité",
   download_recto: 'Télécharger recto',
   download_verso: 'Télécharger verso',
   save_verso: 'Enregistrer verso',
-  save_button: 'Enregistrer',
   your_status: 'Votre statut',
   particular: 'Je suis un particulier',
   declare_cesu: 'Je veux être déclaré(e) en CESU',
-  accept_cesu: 'J\'accepte d\'être déclaré en CES',
-  no_cesu: 'Je n\'accepte pas d\'être déclaré(e) en CESU',
+  accept_cesu: "J'accepte d'être déclaré en CESU",
+  no_cesu: "Je n'accepte pas d'être déclaré(e) en CESU",
   professional: 'Je suis un professionnel',
   eligible_credit: 'Je suis éligible au Crédit Impôt Service',
-  document_title: 'Document d\'immatriculation',
-  insert_document: 'Insérez ici le document d\'immatriculation de votre entreprise (extrait de K-Bis, document d\'immatriculation de micro-entreprise).',
+  document_title: "Document d'immatriculation",
+  insert_document: "Insérez ici le document d'immatriculation de votre entreprise (extrait de K-Bis, document d'immatriculation de micro-entreprise).",
   pdf_info: 'Vous pouvez télécharger ce document en version PDF&nbsp;',
-  insee_link: 'sur le site de l\'INSEE',
-  download_document_imma: 'Télécharger document d\'immatriculation',
-  save_document_imma: 'Enregistrer',
+  insee_link: "sur le site de l'INSEE",
+  download_document_imma: "Télécharger document d'immatriculation",
   id_card_confirm_deletion: "Supprimer votre pièce d'identité ?",
-
 }
 
 const SECURITY = {
@@ -726,12 +672,9 @@ const SECURITY = {
   snackbar_mdp_update: 'Mot de passe modifié',
   dialog_delete_account_title: 'Désactiver votre compte ?',
   dialog_delete_account_content: 'Attention, cette action est irréversible. Si vous souhaitez ne plus être référencé par les moteurs de recherche, vous pouvez désactiver l’indexation par les moteurs de recherche.',
-  dialog_delete_account_cancel: 'Annuler',
   dialog_delete_account_confirm: 'Désactiver',
   dialog_delete_shop_title: 'Supprimer votre boutique ?',
   dialog_delete_shop_content: 'Attention, cette action est irréversible. Si vous souhaitez garder votre boutique sans que les utilisateurs puissent réserver vos services, vous pouvez supprimer vos disponibilités sur votre calendrier.',
-  dialog_delete_shop_cancel: 'Annuler',
-  dialog_delete_shop_confirm: 'Supprimer',
   title: 'Sécurité',
   subtitle: 'Modifiez votre mot de passe et gérez votre compte.',
   password: 'Mot de passe',
@@ -740,12 +683,10 @@ const SECURITY = {
   placeholder_password_actual: 'Mot de passe actuel',
   placeholder_newpassword: 'Nouveau mot de passe',
   placeholder_repeat_password: 'Répéter le mot de passe',
-  validate_button_password: 'Valider',
   my_account: 'Mon compte',
   handle_my_account: 'Gérez votre compte.',
   index_my_account: 'Je souhaite que mon compte apparaisse dans les résultats des moteurs de recherche',
   delete_my_account: 'Je souhaite supprimer ma boutique de services.',
-  delete_my_account_button: 'Supprimer',
   desactivate_my_account: 'Je souhaite désactiver mon compte.',
   caution_desactivate_my_account: 'Attention, cette action est irréversible !',
   button_desactivate_my_account: 'Désactiver',
@@ -757,7 +698,6 @@ const NOTIFICATIONS = {
   subtitle: 'Choisissez les notifications que vous souhaitez recevoir',
   messages_title: 'Messages',
   receive_messages: 'Recevez des messages de la part des Alfred et des utilisateurs y compris les demandes de réservations.',
-  email: 'Email',
   push_notif: 'Notification push',
   sms_notif: 'SMS',
   rappel_notif: 'Rappel',
@@ -777,7 +717,6 @@ const NEWSLETTER = {
   text: 'Inscrivez-vous gratuitement à notre super Newsletter pour recevoir les informations et les bons plans de la communauté.',
   google: "S'inscrire avec Google",
   where: 'ou',
-  email: 'Email',
   button: "Je m'inscris !",
 }
 
@@ -802,9 +741,8 @@ const PROFIL = {
   place: 'Habite à',
   languages: 'Langues',
   verification: 'Vérification',
-  noaddresses: 'Pas d\'adresse',
+  noaddresses: "Pas d'adresse",
   website: 'Site web',
-  companysize: 'Taille de l’entreprise',
   activity: 'Secteur d’activité',
   nothing: 'Non renseigné',
   confirmed: 'Profil confirmé',
@@ -816,8 +754,7 @@ const SHOP = {
   addService: 'Ajoutez des services',
   createShop: 'Proposez votre premier service',
   bienvenue: {
-    titre: 'Bienvenue {{firstname}}',
-    subtitle: 'Nous allons vous aider à créer votre service et devenir Alfred en quelques minutes !',
+    title: 'Bienvenue {{firstname}}',
     step1_main_title: 'Etape 1',
     step1_subtitle: 'Choisissez votre premier super talent ! ',
     step1_text: 'Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appelle un autre, vous pourrez ajouter autant de services que vous voulez.',
@@ -834,9 +771,9 @@ const SHOP = {
     is_particular: 'Je suis un particulier',
     is_particular_description: 'En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés.',
     is_particular_want_cesu: 'Je veux être déclaré(e) en CESU',
-    is_particular_accept_cesu: 'J\'accepte d\'être déclaré en CESU',
-    is_particular_decline_cesu: 'Je n\'accepte pas d\'être déclaré(e) en CESU',
-    is_professional: 'Je suis un professionnel/J\'ai un numéro de SIRET',
+    is_particular_accept_cesu: "J'accepte d'être déclaré en CESU",
+    is_particular_decline_cesu: "Je n'accepte pas d'être déclaré(e) en CESU",
+    is_professional: "Je suis un professionnel/J'ai un numéro de SIRET",
     is_professional_description: 'Un statut professionnel avec un numéro de SIRET est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.',
     is_professional_cis: 'Mon enterprise est éligible au Crédit Impôt Service',
     is_professional_certif: 'Je certifie sur l’honneur qu’il s’agit bien de mon entreprise.',
@@ -873,7 +810,7 @@ const SHOP = {
     title_perimeter: 'Quel est votre périmètre d’intervention ?',
     unity_perimeter: 'Km',
     title_place_service: 'Où acceptez-vous de réaliser votre prestation ?',
-    service_at_userHome: 'A l\' adresse de mon client',
+    service_at_userHome: "A l'adresse de mon client",
     service_at_myHome: 'A mon adresse',
     service_withVisio: 'En visioconférence(la visioconférence ne tient pas compte de votre rayon d’intervention)',
     service_outside: 'En extérieur',
@@ -881,7 +818,7 @@ const SHOP = {
     propose_delivery: 'Proposer un forfait retrait & livraison de',
     section_option_title: 'Options',
   },
-  preference: {
+  preferences: {
     title: 'Préférences',
     subtitle: 'Indiquez vos préférences de réservation. Ces préférences s’appliqueront lorsqu’un client souhaite vous réserver.',
     title_delay_prevenance: 'De quel délai souhaitez-vous disposer entre la réservation et la réalisation du services ?',
@@ -926,9 +863,9 @@ const SHOP = {
     conditions_idCard: 'Avoir déposé une pièce d’identité officielle',
     conditions_recommend: 'Etre recommandé par d’autres Alfred',
     title_thirdSection: 'Quelles sont vos conditions d’annulation ?',
-    condition_flexible: 'Flexibles: Remboursement intégral jusqu\'à 1 jour avant la prestation',
-    condition_moderate: 'Modérées: Remboursement intégral jusqu\'à 5 jours avant la prestation',
-    condition_strict: 'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation',
+    condition_flexible: "Flexibles: Remboursement intégral jusqu'à 1 jour avant la prestation",
+    condition_moderate: "Modérées: Remboursement intégral jusqu'à 5 jours avant la prestation",
+    condition_strict: "Strictes: Remboursement intégral jusqu'à 10 jours avant la prestation",
   },
 }
 
@@ -943,10 +880,8 @@ const SERVICES = {
 }
 
 const ASK_QUESTION = {
-  title: 'Vous souhaitez poser une question à ',
-  question: ' ?',
-  info: 'Rendez-vous sur la page du service qui vous intéresse, cliquez sur « demande d’informations » en dessous du bouton réserver. Vous pourrez alors poser toutes vos questions à  ',
-  exclamation: ' !',
+  title: 'Vous souhaitez poser une question à {{firstname}} ?',
+  info: 'Rendez-vous sur la page du service qui vous intéresse, cliquez sur « demande d’informations » en dessous du bouton réserver. Vous pourrez alors poser toutes vos questions à {{firstname}} !',
 }
 
 const SUMMARY_COMMENTARY = {
@@ -993,10 +928,8 @@ const MESSAGE_DETAIL = {
 }
 
 const TEAM = {
-  alpha_filter: 'Ordre alphabétique',
-  test_filter: 'Test',
   snackbar_add_member: 'Membre ajouté au groupe',
-  snackbar_remove_admin: ' a été supprimé des administrateurs',
+  snackbar_remove_admin: '{{firstname}} a été supprimé des administrateurs',
   snackbar_remove_manager: 'Manager supprimé',
   snackbar_create_groupe: 'Groupe ',
   snackbar_create_name_groupe: 'créé',
@@ -1012,26 +945,14 @@ const TEAM = {
   departements: 'Departements',
   create_new_account: 'Créer un nouveau compte',
   firstname: 'Prénom',
-  name: 'Nom',
-  email: 'Email',
-  button_cancel: 'Annuler',
-  button_confirm: 'Confirmer',
-  button_update: 'Modifier',
   dialog_remove_title: 'Supprimer',
   dialog_remove_question: 'Voulez vous supprimer ',
-  button_delete: 'Supprimer',
   dialog_group_add: 'Ajouter un département',
   dialog_group_add_b2b: 'Ajouter une classification',
   dialog_groupe_title: 'Configuration département',
   dialog_groupe_title_b2b: 'Configuration classification',
   dialog_groupe_name: 'Nom',
   dialog_groupe_plafond: 'Plafond',
-  dialog_groupe_period: 'Période',
-  dialog_groupe_invoice: 'Facturation',
-  dialog_groupe_cb: 'CB',
-  dialog_groupe_link: 'Aucun moyen de paiement enregistré, rendez-vous ici pour en ajouter.',
-  dialog_remove_groupe: 'Supprimer',
-  dialog_remove_groupe_question: 'Voulez vous supprimer ',
 }
 
 const MESSAGE_SUMMARY = {
@@ -1054,8 +975,7 @@ const AVOCOTES = {
   contactUs: 'Contactez nous',
   // phone: '02 35 00 00 00',
   phoneNumber: '06 87 37 73 63',
-  phoneTextFirst: 'Appel gratuit depuis la',
-  phoneTextSecond: 'France metropolitaine',
+  phoneText: 'Appel gratuit depuis la<br/>France metropolitaine',
   ourCompanyTitleFirst: 'Pourquoi faire confiance à Alfred pour',
   ourCompanyTitleSecond: "l'installation de mon pack AvosCotés protection ?",
   ourCompanyDescriptionFirst: "Grâce à notre communauté d'entrepreneurs indépendants, quel que soit votre besoin en matière de services, Alfred on-demand y répond et vous accompagne dans votre démarche.",
@@ -1093,7 +1013,6 @@ const BOOKING = {
   end_date: 'Date de fin: ',
   info_end_resa: 'Votre réservation doit être confirmée avant le ',
   a: ' à ',
-  button_confirm: 'Confirmer',
   button_cancel: 'Refuser',
   pre_approved_button: 'Pré-approuver',
   paid_button: 'Payer ma réservation',
@@ -1103,6 +1022,18 @@ const BOOKING = {
   warning_behavior: 'Signaler l’utilisateur',
   reclamation: 'Réclamation',
   versement: 'Versement',
+  search_presta: "Nous allons maintenant chercher pour vous l'Alfred qui répondra à votre service.Vous serez informé sous peu de la date de prestation.",
+}
+
+const COMMON = {
+  btn_validate: 'Valider',
+  btn_modify: 'Modifier',
+  btn_confirm: 'Confirmer',
+  btn_cancel: 'Annuler',
+  btn_delete: 'Supprimer',
+  btn_save: 'Enregistrer',
+  lbl_email: 'Email',
+  lbl_name: 'Nom',
 }
 
 module.exports = {
@@ -1184,4 +1115,5 @@ module.exports = {
   INDEX_DASHBOARD,
   SERVICES_COMPANY,
   TEAM,
+  COMMON,
 }

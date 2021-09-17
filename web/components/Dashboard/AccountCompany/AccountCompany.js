@@ -97,7 +97,7 @@ class AccountCompany extends React.Component {
                 <h3>{ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.about_company'))}</h3>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                <TextField readonly variant={'outlined'} InputLabelProps={{shrink: true}} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.name'))} value={companyName} classes={{root: classes.textField}}/>
+                <TextField readonly variant={'outlined'} InputLabelProps={{shrink: true}} label={ReactHtmlParser(this.props.t('COMMON.lbl_name'))} value={companyName} classes={{root: classes.textField}}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                 <TextField variant={'outlined'} InputLabelProps={{shrink: true}} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.siret'))} value={siret} readonly classes={{root: classes.textField}}/>
@@ -109,7 +109,7 @@ class AccountCompany extends React.Component {
                 <TextField readonly InputLabelProps={{shrink: true}} classes={{root: classes.textField}} value={COMPANY_SIZE[sizeCompany]} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.activity'))} variant={'outlined'}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                <TextField readonly InputLabelProps={{shrink: true}} classes={{root: classes.textField}} value={COMPANY_ACTIVITY[activityArea]} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size_company'))} variant={'outlined'}/>
+                <TextField readonly InputLabelProps={{shrink: true}} classes={{root: classes.textField}} value={COMPANY_ACTIVITY[activityArea]} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size'))} variant={'outlined'}/>
               </Grid>
               <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                 <TextField readonly variant={'outlined'} value={tva} InputLabelProps={{shrink: true}} label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.tva'))} classes={{root: classes.textField}}/>

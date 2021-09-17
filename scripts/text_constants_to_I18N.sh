@@ -1,13 +1,13 @@
 IMPORT="import ReactHtmlParser from 'react-html-parser'"
 
-KEYS=`wget --no-check-certificate -O - https://localhost/myAlfred/api/admin/i18n-keys`
+KEYS=`wget -q --no-check-certificate -O - https://localhost/myAlfred/api/admin/i18n-keys`
 
 if true # Passer à false Pour lancer uniquement le test des motifs non remplacés
 then
 # Remplacement dans les sources
 for key in $KEYS
 do
- echo "Recherche de $key sans guillemet"
+ echo "Recherche de $key"
  files=`ack -l "[^']${key}[^_]" pages/ components/ hoc/`
  for f in $files
  do

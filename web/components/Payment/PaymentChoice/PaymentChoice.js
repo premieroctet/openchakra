@@ -9,7 +9,7 @@ import AddressService from '../../AddressService/AddressService'
 import PaymentMode from '../PaymentMode/PaymentMode'
 import styles from '../../../static/css/components/PaymentChoice/PaymentChoice'
 import withStyles from '@material-ui/core/styles/withStyles'
-import {PAYMENT_CHOICE} from '../../../utils/i18n'
+import {PAYMENT_CHOICE, PAYMENT_MODE} from '../../../utils/i18n'
 
 class PaymentChoice extends React.Component {
   constructor(props) {
@@ -17,6 +17,7 @@ class PaymentChoice extends React.Component {
   }
 
   callPay = () => {
+    console.log('Pay')
     this.props.pay()
   };
 
@@ -47,12 +48,12 @@ class PaymentChoice extends React.Component {
                 />
               </Topic>
               <Grid style={{position: 'absolute', bottom: '5%', right: '10%'}} onClick={this.callPay}>
-                <a href={'#'}>{PAYMENT_CHOICE.link_paid_another_card}</a>
+                <a href={'#'}>{ReactHtmlParser(this.props.t('PAYMENT_MODE.link_paid_another_card'))}</a>
               </Grid>
             </Grid>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
               <Topic
-                titleTopic={PAYMENT_CHOICE.topic_postal_service}
+                titleTopic={ReactHtmlParser(this.props.t('PAYMENT_MODE.topic_postal_service'))}
                 underline={false}
               >
                 { bookingObj.address ?

@@ -371,7 +371,7 @@ class SearchPage extends BasePage {
                 <Grid className={classes.searchSecondFilterContainerLeft}>
                   {
                     !(this.state.searching || this.state.mounting) &&
-                      <Typography>{ReactHtmlParser(this.props.t('SEARCH.alfred_avail', {count: serviceUsers.length || ReactHtmlParser(this.props.t('SEARCH.no_one'))}))}</Typography>
+                      <Typography>{ReactHtmlParser(this.props.t(serviceUsers.length ? 'SEARCH.alfred_avail':'SEARCH.no_one', {count: serviceUsers.length}))}</Typography>
                   }
                 </Grid>
                 { gps ? <Grid className={classes.searchFilterRightContainer}>
@@ -432,7 +432,7 @@ class SearchPage extends BasePage {
                         address={selectedAddress}
                       />
                     </Grid>
-                    <Hidden only={['xl', 'lg', 'md', 'sm']}>
+                    <Hidden only={['xl', 'lg', 'md', 'sm']} >
                       <InfiniteScroll
                         dataLength={scroll_count}
                         next={() => this.setState({scroll_count: this.state.scroll_count+this.SCROLL_DELTA}) }

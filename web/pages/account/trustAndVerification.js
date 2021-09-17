@@ -359,10 +359,10 @@ class trustAndVerification extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">
-            {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.dialog_delete_cancel'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </Button>
           <Button onClick={this.handleDelete} classes={{root: classes.cancelButton}}>
-            {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.dialog_delete_confirm'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -463,7 +463,7 @@ class trustAndVerification extends React.Component {
               :
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
                 <Button onClick={this.onSubmit} variant="contained" className={`customtrustandverifsavedoc ${classes.buttonSave}`}>
-                  {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.save_button'))}
+                  {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
                 </Button>
               </Grid>
             }
@@ -575,7 +575,7 @@ class trustAndVerification extends React.Component {
               <Grid style={{marginTop: '10vh'}}>
                 <Button variant="contained" className={`customtrustandverifsavebutton ${classes.buttonSave}`}
                   onClick={this.editSiret} disabled={!this.statusSaveEnabled()}>
-                  {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.save_document_imma'))}
+                  {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
                 </Button>
               </Grid>
             </Grid>

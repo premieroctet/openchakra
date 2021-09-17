@@ -338,7 +338,7 @@ class UserServicesPreview extends BasePage {
 
     const reservationDate = this.computeReservationDate()
     if (!errors.datetime && reservationDate.isValid() && !isMomentAvailable(reservationDate, this.state.availabilities)) {
-      errors.datetime = this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_not_available'))
+      errors.datetime = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_not_available', {firstname: this.state.alfred.firstname}))
     }
 
     const minBookingDate = getDeadLine(this.state.serviceUser.deadline_before_booking)
@@ -949,7 +949,10 @@ class UserServicesPreview extends BasePage {
                     <Topic
                       underline={true}
                       titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary'))}
-                      titleSummary={this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary_summary')) + this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.exclamation')) : ''}
+                      titleSummary={this.state.alfred.firstname ?
+                        ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary_summary', {firstname: this.state.alfred.firstname}))
+                        :
+                        ''}
                     >
                       <SummaryCommentary user={this.state.alfred._id} serviceUser={this.getURLProps().id}/>
                     </Topic>

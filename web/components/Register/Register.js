@@ -491,7 +491,7 @@ class Register extends React.Component {
             disabled={this.state.smsCode.length !== 4}
             onClick={() => this.checkSmsCode()}
             color="primary">
-            {ReactHtmlParser(this.props.t('REGISTER.dialog_phone_confirm'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>

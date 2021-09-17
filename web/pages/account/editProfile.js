@@ -223,7 +223,7 @@ class editProfile extends React.Component {
             disabled={this.state.smsCode.length !== 4}
             onClick={() => this.checkSmsCode()}
             color="primary">
-            {ReactHtmlParser(this.props.t('EDIT_PROFIL.dialog_button_confirm'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -285,9 +285,9 @@ class editProfile extends React.Component {
               value={user.name || ''}
               onChange={this.onChangeName}
               name={'name'}
-              placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_name'))}
+              placeholder={ReactHtmlParser(this.props.t('COMMON.lbl_name'))}
               variant={'outlined'}
-              label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_name'))}
+              label={ReactHtmlParser(this.props.t('COMMON.lbl_name'))}
               error={!!(errors && errors.name)}
             />
           </Grid>
@@ -352,7 +352,7 @@ class editProfile extends React.Component {
                 value={user.email || ''}
                 onChange={this.onChange}
                 name={'email'}
-                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_email_placeholder'))}
+                placeholder={ReactHtmlParser(this.props.t('COMMON.lbl_email'))}
                 variant={'outlined'}
                 label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_email_label'))}
                 error={!!(errors && errors.email)}
@@ -453,7 +453,7 @@ class editProfile extends React.Component {
               color="primary"
               classes={{root: `customeditprofilsave ${classes.button}`}}
             >
-              {ReactHtmlParser(this.props.t('EDIT_PROFIL.save_button'))}
+              {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
             </Button>
           </Grid>
         </Grid>
