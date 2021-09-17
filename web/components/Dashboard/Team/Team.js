@@ -693,13 +693,13 @@ class Team extends React.Component {
               </Grid>
               <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
                 <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                  <InputLabel id="demo-simple-select-outlined-label">Période</InputLabel>
+                  <InputLabel id="demo-simple-select-outlined-label">{TEAM.dialog_groupe_period}</InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={budget_period}
                     name={'budget_period'}
-                    label={'Période'}
+                    label={TEAM.dialog_groupe_period}
                     onChange={this.handleChange}
                   >
                     {
@@ -713,14 +713,14 @@ class Team extends React.Component {
             </Grid>
             <Grid item spacing={2} style={{width: '100%', margin: 0}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <h3>Facturation</h3>
+                <h3>{TEAM.dialog_groupe_invoice}</h3>
               </Grid>
               <Grid item container spacing={3} style={{width: '100%', margin: 0}}>
                 <Grid item xl={12} lg={12}>
                   {
                     cards.length > 0 ?
                       <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                        <InputLabel id="demo-mutiple-chip-label">CBs</InputLabel>
+                        <InputLabel id="demo-mutiple-chip-label">{TEAM.dialog_groupe_cb}</InputLabel>
                         <Select
                           labelId="demo-mutiple-chip-label"
                           id="demo-mutiple-chip"
@@ -728,12 +728,12 @@ class Team extends React.Component {
                           onChange={e => this.handleChange(e)}
                           name={'paymentMethod'}
                           value={paymentMethod}
-                          input={<OutlinedInput label={'CB'} id="select-multiple-chip" />}
+                          input={<OutlinedInput label={TEAM.dialog_groupe_cb} id="select-multiple-chip" />}
                           renderValue={card_ids => {
                             return(
                               <div className={classes.chips}>
                                 {card_ids.map(card_id => (
-                                  <Chip key={card_id}label={this.getCardById(card_id).Alias} className={classes.chip} />
+                                  <Chip key={card_id} label={this.getCardById(card_id).Alias} className={classes.chip} />
                                 ))}
                               </div>
                             )
@@ -747,9 +747,8 @@ class Team extends React.Component {
                           ))}
                         </Select>
                       </FormControl> :
-                      <a href={'/account/paymentMethod'} target="_blank">Aucun moyen de paiement enregistré, rendez-vous ici pour en ajouter.</a>
+                      <a href={'/account/paymentMethod'} target="_blank">{TEAM.dialog_groupe_link}</a>
                   }
-
                 </Grid>
               </Grid>
             </Grid>
@@ -757,10 +756,10 @@ class Team extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogGroupe: false})} classes={{root: classes.cancelButton}}>
-            Annuler
+            {TEAM.button_cancel}
           </Button>
           <Button onClick={selected === '' ? this.addGroupe : this.updateGroupe} color="primary">
-            {selected === '' ? 'Confirmer' : 'Modifier'}
+            {selected === '' ? TEAM.button_confirm : TEAM.button_update}
           </Button>
         </DialogActions>
       </Dialog>
@@ -778,18 +777,18 @@ class Team extends React.Component {
         aria-describedby="alert-dialog-description"
         classes={{paper: classes.dialogPaper}}
       >
-        <MuiDialogTitle id="alert-dialog-title">{'Supprimer'}</MuiDialogTitle>
+        <MuiDialogTitle id="alert-dialog-title">{TEAM.dialog_remove_groupe}</MuiDialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Voulez vous supprimer {selected.name} ?
+            {`${TEAM.dialog_remove_groupe_question + selected.name }?`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogRemoveGroupe: false})} color="primary">
-            Annuler
+            {TEAM.button_cancel}
           </Button>
           <Button onClick={this.removeGroupe} color="primary">
-            Supprimer
+            {TEAM.button_delete}
           </Button>
         </DialogActions>
       </Dialog>

@@ -1016,6 +1016,7 @@ const TEAM = {
   email: 'Email',
   button_cancel: 'Annuler',
   button_confirm: 'Confirmer',
+  button_update: 'Modifier',
   dialog_remove_title: 'Supprimer',
   dialog_remove_question: 'Voulez vous supprimer ',
   button_delete: 'Supprimer',
@@ -1025,6 +1026,12 @@ const TEAM = {
   dialog_groupe_title_b2b: 'Configuration classification',
   dialog_groupe_name: 'Nom',
   dialog_groupe_plafond: 'Plafond',
+  dialog_groupe_period: 'Période',
+  dialog_groupe_invoice: 'Facturation',
+  dialog_groupe_cb: 'CB',
+  dialog_groupe_link: 'Aucun moyen de paiement enregistré, rendez-vous ici pour en ajouter.',
+  dialog_remove_groupe: 'Supprimer',
+  dialog_remove_groupe_question: 'Voulez vous supprimer ',
 }
 
 const MESSAGE_SUMMARY = {
