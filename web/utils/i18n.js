@@ -965,6 +965,15 @@ const TEAM = {
   filter: 'Trier par',
 }
 
+const DRAWER_EDITING_SCHEDULE = {
+  title: 'Modifier vos disponibilités',
+  avilable_question: 'Êtes-vous disponible ?',
+  day_off: 'Indisponible pour la journée',
+  hours_available: 'Disponible sur ces horaires : ',
+  working_hours: 'Vos horaires travaillés',
+  save_button: 'Enregistrer',
+}
+
 const MESSAGE_SUMMARY = {
   no_message: 'Aucun message',
 }
@@ -1126,4 +1135,5 @@ module.exports = {
   SERVICES_COMPANY,
   TEAM,
   COMMON,
+  DRAWER_EDITING_SCHEDULE,
 }
