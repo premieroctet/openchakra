@@ -195,10 +195,10 @@ class HandleRIB extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose()} color="primary">
-            {ReactHtmlParser(this.props.t('HANDLE_RIB.dialog_delete_rib_cancel'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </Button>
           <Button onClick={() => this.deleteAccount(id)} classes={{root: classes.buttonCancel}}>
-            {ReactHtmlParser(this.props.t('HANDLE_RIB.dialog_delete_rib_button'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
           </Button>
         </DialogActions>
       </Dialog>

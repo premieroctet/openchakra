@@ -472,7 +472,7 @@ class Team extends React.Component {
                   </Grid>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                      <InputLabel id="demo-mutiple-chip-label">{TEAM.user_title}</InputLabel>
+                      <InputLabel id="demo-mutiple-chip-label">{ReactHtmlParser(this.props.t('TEAM.user_title'))}</InputLabel>
                       <Select
                         labelId="demo-mutiple-chip-label"
                         id="demo-mutiple-chip"
@@ -480,7 +480,7 @@ class Team extends React.Component {
                         onChange={e => this.handleChange(e)}
                         name={'canUpgrade'}
                         value={canUpgrade}
-                        input={<OutlinedInput label={TEAM.rib} id="select-multiple-chip" />}
+                        input={<OutlinedInput label={ReactHtmlParser(this.props.t('TEAM.rib'))} id="select-multiple-chip" />}
                         renderValue={selected => (
                           <div className={classes.chips}>
                             {selected.map(user => (
@@ -502,17 +502,17 @@ class Team extends React.Component {
                   { canUpgrade.length > 0 ?
                     <>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <h3>{TEAM.choose_department}</h3>
+                        <h3>{ReactHtmlParser(this.props.t('TEAM.choose_department'))}</h3>
                       </Grid>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                         <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                          <InputLabel id="demo-simple-select-outlined-label">{TEAM.departement}</InputLabel>
+                          <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('TEAM.departement'))}</InputLabel>
                           <Select
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             name={'selectedGroup'}
                             onChange={this.handleChange}
-                            label={TEAM.departement}
+                            label={ReactHtmlParser(this.props.t('TEAM.departement'))}
                             value={selectedGroup}
                           >
                             {
@@ -533,7 +533,7 @@ class Team extends React.Component {
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid style={{display: 'flex', alignItems: 'center'}}>
                 <Grid>
-                  <h3>{TEAM.create_new_account}</h3>
+                  <h3>{ReactHtmlParser(this.props.t('TEAM.create_new_account'))}</h3>
                 </Grid>
                 <Grid>
                   <IconButton onClick={() => this.addNewLine(modeDialog === 'admin' ? 'nbAdmin' : 'nbManager')}>
@@ -550,7 +550,7 @@ class Team extends React.Component {
                   <Grid item xl={11} lg={11} sm={11} md={11} xs={11} container spacing={2} style={{width: '100%', margin: 0}}>
                     <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
                       <TextField
-                        label={TEAM.firstname}
+                        label={ReactHtmlParser(this.props.t('TEAM.firstname'))}
                         value={modeDialog === 'admin' ? res.firstNameAdmin || '' : res.firstNameManager || ''}
                         name={modeDialog === 'admin' ? 'firstNameAdmin' : 'firstNameManager'}
                         onChange={e => this.handleChange(e, index)}
@@ -560,7 +560,7 @@ class Team extends React.Component {
                     </Grid>
                     <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
                       <TextField
-                        label={TEAM.name}
+                        label={ReactHtmlParser(this.props.t('COMMON.lbl_name'))}
                         name={modeDialog === 'admin' ? 'nameAdmin' : 'nameManager'}
                         value={modeDialog === 'admin' ? res.nameAdmin || '' : res.nameManager || ''}
                         onChange={e => this.handleChange(e, index)}
@@ -570,7 +570,7 @@ class Team extends React.Component {
                     </Grid>
                     <Grid item xl={modeDialog === 'manager' ? 6 : 12} lg={modeDialog === 'manager' ? 6 : 12} sm={modeDialog === 'manager' ? 6 : 12} md={modeDialog === 'manager' ? 6 : 12} xs={modeDialog === 'manager' ? 6 : 12}>
                       <TextField
-                        label={TEAM.email}
+                        label={ReactHtmlParser(this.props.t('COMMON.lbl_email'))}
                         name={modeDialog === 'admin' ? 'emailAdmin' : 'emailManager'}
                         value={modeDialog === 'admin' ? res.emailAdmin || '' : res.emailManager || ''}
                         onChange={e => this.handleChange(e, index)}
@@ -581,13 +581,13 @@ class Team extends React.Component {
                     { modeDialog === 'manager' ?
                       <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                         <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                          <InputLabel id="demo-simple-select-outlined-label">{TEAM.departements}</InputLabel>
+                          <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('TEAM.departements'))}</InputLabel>
                           <Select
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             name={'groupSelected'}
                             onChange={e => this.handleChange(e, index)}
-                            label={TEAM.departements}
+                            label={ReactHtmlParser(this.props.t('TEAM.departements'))}
                             value={res.groupSelected || ''}
                           >
                             {
@@ -613,10 +613,10 @@ class Team extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogAdd: false})} classes={{root: classes.cancelButton}}>
-            {TEAM.button_cancel}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </Button>
           <Button onClick={modeDialog === 'admin' ? this.addAdmin : mode === MICROSERVICE_MODE ? this.addManager : this.addEmploye} color="primary">
-            {TEAM.button_confirm}
+            {ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}
           </Button>
         </DialogActions>
       </Dialog>

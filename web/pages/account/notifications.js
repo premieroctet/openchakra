@@ -143,7 +143,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.email'))}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('COMMON.lbl_email'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -224,7 +224,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.email'))}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('COMMON.lbl_email'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -306,7 +306,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.email'))}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('COMMON.lbl_email'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -411,7 +411,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.email'))}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('COMMON.lbl_email'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch
@@ -493,7 +493,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection: 'row', marginTop: '5vh'}}>
               <Grid item xl={3} xs={6}>
-                <Typography>{ReactHtmlParser(this.props.t('NOTIFICATIONS.email'))}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('COMMON.lbl_email'))}</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <Switch

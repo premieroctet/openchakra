@@ -291,7 +291,7 @@ class About extends CompanyComponent {
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial',
-                  }}>{this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.size_company')) : ReactHtmlParser(this.props.t('ABOUT.spoken_languages'))}</h3>
+                  }}>{this.isModeCompany() ? ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size')) : ReactHtmlParser(this.props.t('ABOUT.spoken_languages'))}</h3>
               </Grid>
               <Grid item xs={12}>
                 {
@@ -311,15 +311,15 @@ class About extends CompanyComponent {
                       noOptionsMessage={() => ReactHtmlParser(this.props.t('ABOUT.option_message'))}
                     /> :
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('ABOUT.label_size_company'))}</InputLabel>
+                      <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size'))}</InputLabel>
                       <Select
                         labelId="demo-simple-select-outlined-label"
                         id="demo-simple-select-outlined"
                         value={sizeCompany}
                         onChange={this.handleChange}
-                        label={ReactHtmlParser(this.props.t('ABOUT.textfield_size_company'))}
+                        label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size'))}
                         name={'sizeCompany'}
-                        placeholder={ReactHtmlParser(this.props.t('ABOUT.textfield_size_company'))}
+                        placeholder={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size'))}
                       >
                         {
                           Object.keys(COMPANY_SIZE).map((res, index) => (
@@ -421,7 +421,7 @@ class About extends CompanyComponent {
           IconName: <LanguageIcon fontSize="large"/>,
         },
         {
-          label: ReactHtmlParser(this.props.t('PROFIL.companysize')),
+          label: ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size')),
           summary: company.size !== '' ? Object.keys(COMPANY_SIZE).map(res => { if(res === company.size) { return COMPANY_SIZE[res] } }): ReactHtmlParser(this.props.t('PROFIL.nothing')),
           IconName: <BusinessIcon fontSize="large"/>,
         },

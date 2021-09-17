@@ -140,7 +140,7 @@ class IndexDashboard extends React.Component {
               }
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Button onClick={this.onSave} disabled={this.saveDisabled()} variant={'contained'} color={'primary'} style={{textTransform: 'initial', color: 'white'}}>
-                  {ReactHtmlParser(this.props.t('INDEX_DASHBOARD.save_button'))}
+                  {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
                 </Button>
               </Grid>
             </Grid>

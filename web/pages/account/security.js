@@ -255,10 +255,10 @@ class security extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose()} color="primary">
-            {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_shop_cancel'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </Button>
           <Button onClick={() => this.deleteShop()} classes={{root: classes.cancelButton}}>
-            {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_shop_confirm'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
           </Button>
         </DialogActions>
       </Dialog>
@@ -373,7 +373,7 @@ class security extends React.Component {
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'left', marginTop: 30}}>
                   <Button disabled={!checkButtonValidate} type="submit" className={`customsecurityconfirmpass ${classes.buttonSave}`} variant="contained">
-                    {ReactHtmlParser(this.props.t('SECURITY.validate_button_password'))}
+                    {ReactHtmlParser(this.props.t('COMMON.btn_validate'))}
                   </Button>
                 </Grid>
               </form>
@@ -427,7 +427,7 @@ class security extends React.Component {
                     variant="contained"
                     classes={{root: `customsecuritybuttondelete ${classes.buttonSave}`}}
                   >
-                    {ReactHtmlParser(this.props.t('SECURITY.delete_my_account_button'))}
+                    {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
                   </Button>
                 </Grid>
               </Grid>

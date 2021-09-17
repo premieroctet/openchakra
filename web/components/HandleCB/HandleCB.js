@@ -228,10 +228,10 @@ class HandleCB extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleCloseDial} color="primary">
-            {ReactHtmlParser(this.props.t('HANDLE_CB.cb_cancel_dialog_delete'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </Button>
           <Button onClick={this.deleteCard} classes={{root: classes.buttonCancel}}>
-            {ReactHtmlParser(this.props.t('HANDLE_CB.cb_delete_dialog_delete'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
           </Button>
         </DialogActions>
       </Dialog>

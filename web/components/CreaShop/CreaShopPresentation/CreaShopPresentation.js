@@ -20,12 +20,12 @@ class CreaShopPresentation extends React.Component {
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} sm={12} md={12} xs={12} className={classes.titleContainer}>
-          <h2 className={classes.policySizeTitle}>{ReactHtmlParser(this.props.t('SHOP.bienvenue.titre', {firstname: user.firstname}))}</h2> 
+          <h2 className={classes.policySizeTitle}>{ReactHtmlParser(this.props.t('SHOP.bienvenue.title', {firstname: user.firstname}))}</h2>
         </Grid>
         <Grid container spacing={3} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <Grid>
-              <h3 style={{color: '#403f3f'}}>{ReactHtmlParser(this.props.t('SHOP.bienvenue.step1'))}</h3>
+              <h3 style={{color: '#403f3f'}}>{ReactHtmlParser(this.props.t('SHOP.bienvenue.step1_main_title'))}</h3>
             </Grid>
             <Grid>
               <Divider/>
@@ -41,7 +41,7 @@ class CreaShopPresentation extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <Grid>
-              <h3 style={{color: '#403f3f'}}>{ReactHtmlParser(this.props.t('SHOP.bienvenue.step2'))}</h3>
+              <h3 style={{color: '#403f3f'}}>{ReactHtmlParser(this.props.t('SHOP.bienvenue.step2_main_title'))}</h3>
             </Grid>
             <Grid>
               <Divider/>
@@ -57,7 +57,7 @@ class CreaShopPresentation extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <Grid>
-              <h3 style={{color: '#403f3f'}}>{ReactHtmlParser(this.props.t('SHOP.bienvenue.step3'))}</h3>
+              <h3 style={{color: '#403f3f'}}>{ReactHtmlParser(this.props.t('SHOP.bienvenue.step3_main_title'))}</h3>
             </Grid>
             <Grid>
               <Divider/>

@@ -9,7 +9,7 @@ import AddressService from '../../AddressService/AddressService'
 import PaymentMode from '../PaymentMode/PaymentMode'
 import styles from '../../../static/css/components/PaymentChoice/PaymentChoice'
 import withStyles from '@material-ui/core/styles/withStyles'
-import {PAYMENT_CHOICE, PAYMENT_MODE} from '../../../utils/i18n';
+import {PAYMENT_CHOICE, PAYMENT_MODE} from '../../../utils/i18n'
 
 class PaymentChoice extends React.Component {
   constructor(props) {

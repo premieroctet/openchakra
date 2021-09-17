@@ -30,10 +30,10 @@ class AskQuestion extends React.Component {
     return(
       <Grid style={{textAlign: 'center'}}>
         <Grid>
-          <h2>{ReactHtmlParser(this.props.t('ASK_QUESTION.title')) + user.firstname + ReactHtmlParser(this.props.t('ASK_QUESTION.question'))}</h2>
+          <h2>{ReactHtmlParser(this.props.t('ASK_QUESTION.title', {firstname: user.firstname}))}</h2>
         </Grid>
         <Grid>
-          <Typography>{ReactHtmlParser(this.props.t('ASK_QUESTION.info')) + user.firstname + ReactHtmlParser(this.props.t('ASK_QUESTION.exclamation'))}</Typography>
+          <Typography>{ReactHtmlParser(this.props.t('ASK_QUESTION.info', {firstname: user.firstname}))}</Typography>
         </Grid>
 
       </Grid>

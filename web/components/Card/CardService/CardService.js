@@ -116,10 +116,10 @@ class CardService extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose()} color="primary">
-            {ReactHtmlParser(this.props.t('CARD_SERVICE.dialog_delete_cancel'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </Button>
           <Button onClick={() => this.deleteService(this.state.id_service)} className={classes.colorError}>
-            {ReactHtmlParser(this.props.t('CARD_SERVICE.dialog_delete_confirm'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
           </Button>
         </DialogActions>
       </Dialog>

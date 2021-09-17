@@ -31,8 +31,8 @@ class RegisterFirstPage extends React.Component {
             <Grid item className={classes.widthTextField}>
               <TextField
                 id="input-with-icon-grid"
-                label={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_email_title'))}
-                placeholder={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_email_placeholder'))}
+                label={ReactHtmlParser(this.props.t('COMMON.lbl_email'))}
+                placeholder={ReactHtmlParser(this.props.t('COMMON.lbl_email'))}
                 style={{width: '100%'}}
                 type="email"
                 value={state.email}
@@ -71,8 +71,8 @@ class RegisterFirstPage extends React.Component {
             </Grid>
             <Grid item className={classes.widthTextField}>
               <TextField
-                label={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_name'))}
-                placeholder={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_name_placeholder'))}
+                label={ReactHtmlParser(this.props.t('COMMON.lbl_name'))}
+                placeholder={ReactHtmlParser(this.props.t('COMMON.lbl_name'))}
                 style={{width: '100%'}}
                 type="text"
                 name="name"
