@@ -148,8 +148,8 @@ class LogIn extends React.Component {
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
-                      label={ReactHtmlParser(this.props.t('COMMON.lbl_email'))}
-                      placeholder={ReactHtmlParser(this.props.t('COMMON.lbl_email'))}
+                      label={ReactHtmlParser(this.props.t('LOGIN.input_label'))}
+                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_label'))}
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
                       name="username"
                       value={username}
@@ -231,8 +231,8 @@ class LogIn extends React.Component {
               </Grid>
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer} style={{flexDirection: 'column'}}>
-                  <Link href={'/forgotPassword'}><a color="primary" className={`customloginforgetpassword ${classes.forgetPassword}`}>{ReactHtmlParser(this.props.t('LOGIN.FORGOTTEN_PASSWORD'))}</a></Link>
-                  <a color="primary" onClick={callRegister} className={`customloginredirectionlink ${classes.redirectionSignin}` }>{ReactHtmlParser(this.props.t('LOGIN.REGISTER_YET'))}</a>
+                  <Link href={'/forgotPassword'}><a color="primary" className={`customloginforgetpassword ${classes.forgetPassword}`}>{ReactHtmlParser(this.props.t('LOGIN.forgotten_password'))}</a></Link>
+                  <a color="primary" onClick={callRegister} className={`customloginredirectionlink ${classes.redirectionSignin}` }>{ReactHtmlParser(this.props.t('LOGIN.register_yet'))}</a>
                 </Grid>
               </Grid>
             </Grid>

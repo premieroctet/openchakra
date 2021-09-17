@@ -13,8 +13,8 @@ import sys
 class DBUiGeneration(object):
     
     REQUEST="db.uiconfigurations.update("\
-        "{{page: '{}', component: '{}', label: '{}'}},"\
-        "{{$set : {{classname: '{}', type:'{}'}}}},"\
+        "{{classname: '{}', type:'{}'}},"\
+        "{{$set : {{page: '{}', component: '{}', label: '{}'}}}},"\
         "{{upsert: true}}"\
         ")"
     def __init__(self, xl_path):
@@ -33,7 +33,7 @@ class DBUiGeneration(object):
       return txt.replace("'", "\\'").replace("&", "\\&")
     
     def get_mongo(self, page, component, label, classname, type_):
-      return  self.REQUEST.format(*map(self.escape, [page, component, label, classname, type_]))
+      return  self.REQUEST.format(*map(self.escape, [classname, type_, page, component, label]))
           
     def export(self):
 

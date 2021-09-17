@@ -77,7 +77,7 @@ class BookingPreference extends React.Component {
           <h4 className={`custombookprefedelay ${classes.policySizeSubtitle}`} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.preferences.title_delay_prevenance'))} </h4>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <p className={`custombookprefexempledelay ${classes.policySizeContent}`}>{ReactHtmlParser(this.props.t('SHOP.preferences.exemple_delay'))}</p>
+          <p className={`custombookprefexempledelay ${classes.policySizeContent}`}>{ReactHtmlParser(this.props.t('SHOP.preferences.example_delay'))}</p>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}} className={'custombookprefdelaycontainer'}>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>

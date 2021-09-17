@@ -1,4 +1,4 @@
-const {getKeys, getIdentifiers}=require('../../../../utils/i18n_extraction')
+const {getIdentifiers, getKeys, getQueries}=require('../../../utils/i18n_extraction')
 const express = require('express')
 
 const router = express.Router()
@@ -3026,6 +3026,12 @@ router.get('/i18n-keys', (req, res) => {
 
 router.get('/i18n-items', (req, res) => {
   let ids=getIdentifiers()
+  res.send(ids.join('\n'))
+})
+
+router.get('/i18n-queries', (req, res) => {
+  let ids=getQueries()
+  console.log(ids[0])
   res.send(ids.join('\n'))
 })
 
