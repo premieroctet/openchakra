@@ -372,7 +372,7 @@ class Team extends React.Component {
 
     axios.delete(`/myAlfred/api/companies/admin/${selected._id}`)
       .then(() => {
-        snackBarSuccess(selected.name + ReactHtmlParser(this.props.t('TEAM.snackbar_remove_admin')))
+        snackBarSuccess(ReactHtmlParser(this.props.t('TEAM.snackbar_remove_admin', {firstname: selected.name})))
         this.setState({dialogRemove: false}, () => this.componentDidMount())
       })
       .catch(err => {

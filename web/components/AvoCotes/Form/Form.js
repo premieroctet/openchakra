@@ -23,7 +23,7 @@ const moment = require('moment')
 moment.locale('fr')
 
 
-function Form({classes, booking_id}) {
+function Form({classes, booking_id, t}) {
   const [email, setEmail] = useState('')
   const [firstname, setFirstname] = useState('')
   const [name, setName] = useState('')
@@ -163,7 +163,7 @@ function Form({classes, booking_id}) {
     <>
       <Grid container className={classes.mainContainer} spacing={2}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h2 className={classes.title}>{ReactHtmlParser(this.props.t('AVOCOTES.titleCordonnates'))}</h2>
+          <h2 className={classes.title}>{ReactHtmlParser(t('AVOCOTES.titleCordonnates'))}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <TextField id="standard-basic" label="Email" classes={{root: classes.textField}} value={email} onChange={e => setEmail(e.target.value)} error={email.length === 0 || !emailValidator()} helperText={email.length === 0 ? 'Veuillez entrer un e-mail' : !emailValidator() ? 'Veuillez entrer un e-mail valide' : null}/>
@@ -204,7 +204,7 @@ function Form({classes, booking_id}) {
           <TextField id="standard-basic" label="Téléphone" classes={{root: classes.textField}} value={phone} onChange={e => setPhone(e.target.value)} error={phone.length == 0 || !phoneValidator()} helperText={phone.length === 0 ? 'Veuillez entrer un n° téléphone' : !phoneValidator() ? 'Veuillez entrer un n° téléphone valide' : null}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h2 className={classes.title}>{ReactHtmlParser(this.props.t('AVOCOTES.titleDetails'))}</h2>
+          <h2 className={classes.title}>{ReactHtmlParser(t('AVOCOTES.titleDetails'))}</h2>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           { service && service.prestations.map(p => (
@@ -238,7 +238,7 @@ function Form({classes, booking_id}) {
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} className={classes.containerPrice}>
           <Grid item>
-            <Typography>{ReactHtmlParser(this.props.t('AVOCOTES.totalText'))}</Typography>
+            <Typography>{ReactHtmlParser(t('AVOCOTES.totalText'))}</Typography>
           </Grid>
           <Grid item>
             <Typography>{totalPriceTxt}</Typography>
@@ -246,11 +246,11 @@ function Form({classes, booking_id}) {
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Button variant="contained" classes={{root: classes.buttonPaid}} disabled={!payEnabled()} onClick={onSubmit}>
-            {ReactHtmlParser(this.props.t('AVOCOTES.paidButton'))}
+            {ReactHtmlParser(t('AVOCOTES.paidButton'))}
           </Button>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Typography>{ReactHtmlParser(this.props.t('AVOCOTES.helperText'))}</Typography>
+          <Typography>{ReactHtmlParser(t('AVOCOTES.helperText'))}</Typography>
         </Grid>
       </Grid>
     </>

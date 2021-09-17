@@ -13,7 +13,7 @@ import ListAlfredConditions from '../../ListAlfredConditions/ListAlfredCondition
 import axios from 'axios'
 
 
-function MainSection({classes}) {
+function MainSection({classes, t}) {
 
   const [equipments, setEquipments]=useState(null)
 
@@ -36,16 +36,16 @@ function MainSection({classes}) {
       <Grid container spacing={3} className={classes.mainContainer}>
         <Grid container spacing={3} item xl={5} lg={5} md={5} sm={12} xs={12} className={classes.containerText}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <h2 className={classes.titleSection}>{ReactHtmlParser(this.props.t('AVOCOTES.titleSection'))}</h2>
+            <h2 className={classes.titleSection}>{ReactHtmlParser(t('AVOCOTES.titleSection'))}</h2>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Typography>{ReactHtmlParser(this.props.t('AVOCOTES.description'))}</Typography>
+            <Typography>{ReactHtmlParser(t('AVOCOTES.description'))}</Typography>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Typography className={classes.secondText}>{ReactHtmlParser(this.props.t('AVOCOTES.descriptionSecond'))}</Typography>
+            <Typography className={classes.secondText}>{ReactHtmlParser(t('AVOCOTES.descriptionSecond'))}</Typography>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <h2 className={classes.titleSection}>{ReactHtmlParser(this.props.t('AVOCOTES.titleEquipment'))}</h2>
+            <h2 className={classes.titleSection}>{ReactHtmlParser(t('AVOCOTES.titleEquipment'))}</h2>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <Typography>Les équipements</Typography>

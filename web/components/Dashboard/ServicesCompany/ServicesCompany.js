@@ -256,7 +256,13 @@ class ServicesCompany extends React.Component {
         <DialogContent>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <h3> {ReactHtmlParser(this.props.t('SERVICES_COMPANY.select_service')) + mode === CARETAKER_MODE ? ReactHtmlParser(this.props.t('SERVICES_COMPANY.this_classification')) : ReactHtmlParser(this.props.t('SERVICES_COMPANY.this_department'))}</h3>
+              <h3>
+                {
+                  ReactHtmlParser(this.props.t('SERVICES_COMPANY.select_service', {
+                    entity: ReactHtmlParser(this.props.t(mode === CARETAKER_MODE ? 'SERVICES_COMPANY.this_classification': 'SERVICES_COMPANY.this_department')),
+                  }))
+                }
+              </h3>
             </Grid>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
@@ -302,7 +308,7 @@ class ServicesCompany extends React.Component {
                       classes={{root: classes.textField}}
                       onChange={this.handleChange}
                       InputProps={{
-                        endAdornment: <InputAdornment position="end">{ReactHtmlParser(this.props.t('SERVICES_COMPANY.modulo'))}</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
                         inputProps: {min: 0, max: 100},
                       }}
                     />
@@ -336,7 +342,7 @@ class ServicesCompany extends React.Component {
         <DialogTitle id="alert-dialog-title" onClose={() => this.setState({dialogRemove: false})}>{ReactHtmlParser(this.props.t('COMMON.btn_delete'))}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {`${ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_remove_text')) + selectedService.label + ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_remove_off')) + selectedGroup.name }?`}
+            {ReactHtmlParser(this.props.t('SERVICES_COMPANY.dialog_remove_text', {service: selectedService.label, group: selectedGroup.name}))}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

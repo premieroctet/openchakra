@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import styles from '../static/css/pages/errorPage/errorPage'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-function Custom404({classes}) {
+function Custom404({classes, t}) {
 
   return (
     <Grid style={{display: 'flex', backgroundColor: 'rgba(249,249,249, 1)', width: '100%', justifyContent: 'center', padding: '10%', minHeight: '100vh'}}>
