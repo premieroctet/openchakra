@@ -2997,19 +2997,14 @@ router.put('/uiConfiguration/:id/:att/picture', uploadCustom.single('picture'), 
     })
 })
 
-router.put('/uiConfiguration', passport.authenticate('admin', {session: false}), (req, res) => {
+router.put('/uiConfiguration/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   // Hide "file" attributes
-  console.log('Saving UI configuration')
-  req.body.forEach(parameter => {
-    parameter.attributes.forEach(a => {
-      if (typeof a.value == 'object') {
-        a.value=null
-      }
-    })
+  req.body.attributes.forEach(a => {
+    if (typeof a.value == 'object') {
+      a.value=null
+    }
   })
-  const uiconfigModel=req.context.getModel('UIConfiguration')
-  const promises=req.body.map(p => uiconfigModel.findByIdAndUpdate({_id: p._id}, p))
-  Promise.all(promises)
+  req.context.getModel('UIConfiguration').findByIdAndUpdate({_id: req.params.id}, req.body)
     .then(result => {
       res.json(result)
     })

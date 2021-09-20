@@ -87,7 +87,8 @@ class UIConfiguration extends React.Component {
   onSubmit = () => {
     this.setState({saving: true})
     setAxiosAuthentication()
-    axios.put('/myAlfred/api/admin/uiConfiguration', this.state.parameters)
+    const allPromises=this.state.parameters.map(p => axios.put(`/myAlfred/api/admin/uiConfiguration/${p._id}`, p))
+    Promise.all(allPromises)
       .then(() => {
         console.log('Saved')
         // Sauvegarde images
