@@ -13,6 +13,7 @@ import axios from 'axios'
 import Button from '@material-ui/core/Button'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import '../../static/assets/css/custom.css'
+import {DRAWER_SCHEDULE} from '../../utils/i18n'
 
 class DrawerSchedule extends React.Component {
   constructor(props) {
@@ -108,7 +109,7 @@ class DrawerSchedule extends React.Component {
               color={'primary'}
               classe={{root: classes.buttonAction}}
             >
-              { this.state.eventsSelected.size > 0 ? 'Modifier vos disponibilités' : 'Paramétrez vos disponibilités'}
+              { this.state.eventsSelected.size > 0 ? DRAWER_SCHEDULE.button_update : DRAWER_SCHEDULE.setting_update}
             </Button>
           </Grid>
           <Grid className={classes.containerFab}>

@@ -986,6 +986,17 @@ const DRAWER_SETTING_SCHEDULE = {
   add_period: 'Ajouter une période',
 }
 
+const DRAWER_SCHEDULE = {
+  button_update: 'Modifier vos disponibilités',
+  setting_update: 'Paramétrez vos disponibilités',
+}
+
+const EMPLOYEE_DIALOG = {
+  title: 'Import de collaborateurs',
+  subtitle: 'Importez la liste des collaborateurs à partir d\'un fichier csv séparé par des points-virgules.<br/>Les colonnes nom, prénom et email sont requises.',
+  button: 'Importer',
+}
+
 const MESSAGE_SUMMARY = {
   no_message: 'Aucun message',
 }
@@ -1149,4 +1160,6 @@ module.exports = {
   COMMON,
   DRAWER_EDITING_SCHEDULE,
   DRAWER_SETTING_SCHEDULE,
+  DRAWER_SCHEDULE,
+  EMPLOYEE_DIALOG,
 }
