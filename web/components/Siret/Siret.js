@@ -128,7 +128,7 @@ class Siret extends React.Component {
             <Grid item xl={12} xs={12}>
               <TextField
                 id="filled-with-placeholder"
-                label="Siret/Siren"
+                label={SHOP.creation.siret}
                 variant="outlined"
                 name={'siret'}
                 value={this.state.siret}
@@ -149,7 +149,7 @@ class Siret extends React.Component {
             <Grid item xl={6} xs={12}>
               <TextField
                 id="filled-with-placeholder"
-                label="Nom"
+                label={SHOP.creation.name}
                 variant="outlined"
                 type="text"
                 name={'name'}

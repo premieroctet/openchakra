@@ -262,7 +262,7 @@ class NavBar extends Component {
   };
 
   onCategoriesFilterChanged = pcategories => {
-    categories = pcategories || []
+    let categories = pcategories || []
     const filteredServices=this.state.allServices.filter(s => {
       return categories.map(c => c.value).includes(s.category)
     })
@@ -273,7 +273,7 @@ class NavBar extends Component {
   };
 
   onServicesFilterChanged = pservices => {
-    services = pservices || []
+    let services = pservices || []
     this.setState({services: services || []})
   };
 
@@ -401,7 +401,7 @@ class NavBar extends Component {
               </IconButton>
             </Grid>
             <Grid item xs={10} style={{display: 'flex', alignItems: 'center'}}>
-              <Typography style={{marginLeft: '2vh'}}>Commencez votre recherche</Typography>
+              <Typography style={{marginLeft: '2vh'}}>{SEARCHBAR.begin_search}</Typography>
             </Grid>
           </Grid>
         </Paper>
@@ -443,7 +443,7 @@ class NavBar extends Component {
             </Grid>
             <Grid>
               <h3
-                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? 'Quel service recherchez-vous ?' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
+                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? SEARCHBAR.what_service : this.state.mobileStepSearch === 1 ? SEARCHBAR.where_place : SEARCHBAR.dates}</h3>
             </Grid>
           </Grid>
           <Grid item container spacing={3} style={{margin: 0, width: '100%'}}>
@@ -477,15 +477,15 @@ class NavBar extends Component {
                       >
                         {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                           <MenuItem value={_id} key={index}>
-                            { _id=='main' ? 'Adresse principale' : `${value.label }, `} {formatAddress(value)}
+                            { _id=='main' ? SEARCHBAR.main_adress : `${value.label }, `} {formatAddress(value)}
                           </MenuItem>
                         ))}
                         <MenuItem value={'all'}>
-                          Partout, Rechercher des Alfred partout
+                          {SEARCHBAR.find_everywhere}
                         </MenuItem>
                         <MenuItem value={'addAddress'}>
                           <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                            Ajouter une adresse
+                            {SEARCHBAR.find_everywhere}
                           </Typography>
                         </MenuItem>
                       </Select>
@@ -513,7 +513,7 @@ class NavBar extends Component {
               <Button
                 onClick={() => (this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService())}
                 color={'primary'} classes={{root: classes.buttonNextRoot}}
-                variant={'contained'}>{this.state.mobileStepSearch === 0 ? 'Suivant' : 'Rechercher'}
+                variant={'contained'}>{this.state.mobileStepSearch === 0 ? SEARCHBAR.next_button : SEARCHBAR.find_button}
               </Button>
             </Grid>
           </Grid>
@@ -538,7 +538,7 @@ class NavBar extends Component {
               </IconButton>
             </Grid>
             <Grid item xs={8} onClick={this.handleModalSearchBarInput} style={{cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
-              <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '2vh'}}>Commencez votre recherche</Typography>
+              <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '2vh'}}>{SEARCHBAR.begin_search}</Typography>
             </Grid>
             <Grid container item xs={2} style={{margin: 0, width: '100%'}}>
               <Grid item xs={1}>
@@ -566,7 +566,7 @@ class NavBar extends Component {
           classes={{paper: classes.dialogNavbarMobileFilter}}
         >
           <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
-          Filtres
+            {SEARCHBAR.filter}
           </DialogTitle>
           <DialogContent dividers>
             <Grid>
@@ -584,7 +584,7 @@ class NavBar extends Component {
                         name={'proSelected'}
                       />
                     }
-                    label="Pro"
+                    label={SEARCHBAR.professional}
                   />
                 </Grid>
                 <Grid>
@@ -598,7 +598,7 @@ class NavBar extends Component {
                         name={'individualSelected'}
                       />
                     }
-                    label="Particulier"
+                    label={SEARCHBAR.particular}
                   />
                 </Grid>
               </Grid>
@@ -608,9 +608,9 @@ class NavBar extends Component {
               <Grid>
                 <DateRangePicker
                   startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                  startDatePlaceholderText={'Début'}
+                  startDatePlaceholderText={SEARCHBAR.start_date}
                   startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                  endDatePlaceholderText={'Fin'}
+                  endDatePlaceholderText={SEARCHBAR.end_date}
                   endDate={this.state.endDate} // momentPropTypes.momentObj or null,
                   endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
                   onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
@@ -643,7 +643,7 @@ class NavBar extends Component {
                       name={'client'}
                     />
                   }
-                  label="Chez moi"
+                  label={SEARCHBAR.at_home}
                 />
                 <FormControlLabel
                   classes={{root: classes.filterMenuControlLabel}}
@@ -655,7 +655,7 @@ class NavBar extends Component {
                       name={'alfred'}
                     />
                   }
-                  label="Chez l'Alfred"
+                  label={SEARCHBAR.alfred_home}
                 />
                 <FormControlLabel
                   classes={{root: classes.filterMenuControlLabel}}
@@ -667,7 +667,7 @@ class NavBar extends Component {
                       name={'visio'}
                     />
                   }
-                  label="En visio"
+                  label={SEARCHBAR.remote}
                 />
               </Grid>
             </Grid>
@@ -705,7 +705,7 @@ class NavBar extends Component {
               }}
               color="primary"
             >
-            Afficher les résultats
+              {SEARCHBAR.display}
             </Button>
           </DialogActions>
         </Dialog>
@@ -748,28 +748,28 @@ class NavBar extends Component {
         >
           {user ?
             <Grid>
-              <MenuItem>Bonjour {user.firstname} !</MenuItem>
-              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>Mon profil</MenuItem>
-              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>Mes paramètres</MenuItem>
+              <MenuItem>{SEARCHBAR.hello + user.firstname} !</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>{SEARCHBAR.my_profil}</MenuItem>
+              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>{SEARCHBAR.my_settings}</MenuItem>
               {
                 !user.is_employee ?
                   user.is_alfred ?
-                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>Mes services</MenuItem>
+                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>{SEARCHBAR.my_services}</MenuItem>
                     :
-                    <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>Proposer mes services</MenuItem>
+                    <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{SEARCHBAR.create_shop}</MenuItem>
                   : null
               }
-              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>Mes messages</MenuItem>
-              <MenuItem onClick={() => Router.push('/reservations/reservations')}>Mes réservations</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{SEARCHBAR.my_messages}</MenuItem>
+              <MenuItem onClick={() => Router.push('/reservations/reservations')}>{SEARCHBAR.my_resa}</MenuItem>
               {user.is_admin ?
-                <MenuItem onClick={() => Router.push('/dashboard/home')}>Dashboard My Alfred</MenuItem>
+                <MenuItem onClick={() => Router.push('/dashboard/home')}>{SEARCHBAR.dashboard_alfred}</MenuItem>
                 : null
               }
               {isB2BAdmin(user) ?
-                <MenuItem onClick={() => Router.push('/company/dashboard/companyDashboard')}>Dashboard</MenuItem>
+                <MenuItem onClick={() => Router.push('/company/dashboard/companyDashboard')}>{SEARCHBAR.dashboard}</MenuItem>
                 : null
               }
-              <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
+              <MenuItem onClick={this.logout}>{SEARCHBAR.log_out}</MenuItem>
             </Grid>
             :
             null

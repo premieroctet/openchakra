@@ -299,6 +299,36 @@ const SEARCHBAR = {
   at_home: 'Chez moi',
   alfred_home: "Chez l'Alfred",
   remote: 'En visio',
+  looking_for_service: 'Quel service recherchez-vous ?',
+  dates: 'Dates',
+  main_adress: 'Adresse principale',
+  find_everywhere: 'Partout, Rechercher des Alfred partout',
+  add_adresses: 'Ajouter une adresse',
+  next_button: 'Suivant',
+  find_button: 'Rechercher',
+  label_mobile_home: 'Accueil',
+  label_explore: 'Explorer',
+  label_resa: 'Réservations',
+  label_message: 'Messages',
+  label_profil: 'Profil',
+  label_log: 'Connexion',
+  label_signin: 'Inscription',
+  label_presta: 'Prestataire',
+  begin_search: 'Commencez votre recherche',
+  what_service: 'Quel service recherchez-vous ?',
+  where_place: 'Où',
+  filter: 'Filtres',
+  display: 'Afficher les résultats',
+  hello: 'Bonjour',
+  my_profil: 'Mon profil',
+  my_settings: 'Mes paramètres',
+  my_services: 'Mes services',
+  create_shop: 'Proposer mes services',
+  my_messages: 'Mes messages',
+  my_resa: 'Mes réservations',
+  dashboard_alfred: 'Dashboard My Alfred',
+  dashboard: 'Dashboard',
+  log_out: 'Déconnexion',
 }
 
 const NAVBAR_MENU = {
@@ -814,6 +844,8 @@ const SHOP = {
     textfield_company_and_particular: 'Aux particuliers et aux entreprises',
     insee_info_begin: 'En raison de l\'arrêt des serveurs de l\'INSEE ce ',
     insee_info_end: ' nous ne pouvons renseigner automatiquement vos informations à partir de votre numéro Siret\ <br/>Merci de saisir tous les champs manuellement',
+    siret: 'Siret/Siren',
+    name: 'Nom',
   },
   service: {
     title: 'Votre service',
@@ -898,6 +930,66 @@ const SHOP = {
     condition_moderate: "Modérées: Remboursement intégral jusqu'à 5 jours avant la prestation",
     condition_strict: "Strictes: Remboursement intégral jusqu'à 10 jours avant la prestation",
   },
+}
+
+const SKILL = {
+  topic_title: 'Compliments',
+}
+
+const TRAVEL_TAX = {
+  no_moving_tax: 'Pas de frais de déplacement',
+  kilometer: '€/km à partir du kilomètre',
+}
+
+const FOOTER = {
+  about_us: 'À propos de nous',
+  cgu: 'Informations légales',
+  about: 'À propos',
+  myalfred: 'My Alfred',
+  presse: 'Presse',
+  blog: 'Blog',
+  cgv: 'CGU/CGV',
+  faq: 'FAQ',
+  info: 'Informations légales',
+  particular: 'Espace particulier',
+  team: 'Notre équipe',
+  contact_us: 'Nous contacter',
+  professional: 'Espace entreprise',
+  company: 'Entreprises',
+  community: 'Communauté',
+  our_community: 'Notre communauté',
+  price: 'Offre et tarifs',
+  service_company: 'Services aux entreprises',
+  service_collab: 'Services aux collaborateurs',
+  alfred: 'Alfred',
+  become_alfred: 'Devenir Alfred',
+  crea_shop: 'Je propose mes services',
+  charte: 'Charte',
+  help: 'Assistance',
+  resa_service: 'Réserver un service',
+  tawlk_human: 'Parler à un humain',
+  mobile: 'Mobiles',
+  security: '© 2021 My Alfred,Inc.',
+  cgu_bis: 'Conditions générales d\'utilisation',
+}
+
+const HEADER = {
+  title_our_values: 'Nos valeurs',
+  content_our_values: 'd\'entreprise mais surtout d\'humain',
+  title_our_community: 'Notre Communauté',
+  content_our_community: 'Qui nous fait vivre',
+  title_team: 'Notre Équipe',
+  content_title_team: 'Qui nous fait vivre',
+  title_resa: 'Réserver un service',
+  content_resa: 'Les bases',
+  title_faq: 'FAQ',
+  content_faq: 'Pour trouver vos réponses',
+  title_become: 'Devenir un Alfred',
+  content_become: 'Les bases',
+  contact_title: 'Contact',
+  contact_content: 'Posez-nous toutes vos questions',
+  button_back_home: 'Retour sur My Alfred',
+  placeholder_search: 'Chercher dans la FAQ',
 }
 
 const ADD_SERVICES = {
@@ -1203,4 +1295,8 @@ module.exports = {
   SHOW_CERTIFICATION,
   SHOW_DIPLOMA,
   SHOW_EXPERIENCE,
+  SKILL,
+  TRAVEL_TAX,
+  FOOTER,
+  HEADER,
 }

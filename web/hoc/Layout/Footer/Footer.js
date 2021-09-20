@@ -17,6 +17,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
+import {FOOTER} from '../../../utils/i18n'
 const {getLoggedUserId, isLoggedUserAlfredPro, isB2BStyle, isApplication} = require('../../../utils/context')
 const {isB2BDisabled} = require('../../../config/config')
 
@@ -95,11 +96,11 @@ class Footer extends React.Component {
         <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
           lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
-            <h3>À propos</h3>
+            <h3>{FOOTER.about}</h3>
           </Grid>
           <Grid item>
             <Link href={'/footer/apropos'}>
-              <Typography>My Alfred</Typography>
+              <Typography>{FOOTER.myalfred}</Typography>
             </Link>
           </Grid>
           {
@@ -107,32 +108,32 @@ class Footer extends React.Component {
               <>
                 <Grid item>
                   <Link href={'/footer/apropos'}>
-                    <Typography>Presse</Typography>
+                    <Typography>{FOOTER.presse}</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/footer/apropos'}>
-                    <Typography>Blog</Typography>
+                    <Typography>{FOOTER.blog}</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/footer/apropos'}>
-                    <Typography>CGU/CGV</Typography>
+                    <Typography>{FOOTER.cgv}</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/footer/apropos'}>
-                    <Typography>FAQ</Typography>
+                    <Typography>{FOOTER.faq}</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/footer/apropos'}>
-                    <Typography>Informations légales</Typography>
+                    <Typography>{FOOTER.info}</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/particular'}>
-                    <Typography>Espace particulier</Typography>
+                    <Typography>{FOOTER.particular}</Typography>
                   </Link>
                 </Grid>
               </>
@@ -143,18 +144,18 @@ class Footer extends React.Component {
               <>
                 <Grid item>
                   <Link href={'/footer/ourTeam'}>
-                    <Typography>Notre équipe</Typography>
+                    <Typography>{FOOTER.team}</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/contact'}>
-                    <Typography>Nous contacter</Typography>
+                    <Typography>{FOOTER.contact_us}</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   { isB2BDisabled() ? null:
                     <Link href={'/professional'}>
-                      <Typography>Espace entreprise</Typography>
+                      <Typography>{FOOTER.professional}</Typography>
                     </Link>
                   }
                 </Grid>
@@ -165,30 +166,30 @@ class Footer extends React.Component {
         <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
           lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
-            <h3>{isB2BStyle() ? 'Entreprises' : 'Communauté'}</h3>
+            <h3>{isB2BStyle() ? FOOTER.company : FOOTER.community}</h3>
           </Grid>
           {
             !isB2BStyle() ?
               <Grid item>
                 <Link href={'/footer/ourCommunity'}>
-                  <Typography>Notre communauté</Typography>
+                  <Typography>{FOOTER.our_community}</Typography>
                 </Link>
               </Grid>
               :
               <>
                 <Grid item>
                   <Link href={'/blog/tarifs'}>
-                    <Typography>Offre et tarifs</Typography>
+                    <Typography>{FOOTER.price}</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/blog/elementor-211/'}>
-                    <Typography>Services aux entreprises</Typography>
+                    <Typography>{FOOTER.service_company}</Typography>
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href={'/blog/services-aux-collaborateurs/'}>
-                    <Typography>Services aux collaborateurs</Typography>
+                    <Typography>{FOOTER.service_collab}</Typography>
                   </Link>
                 </Grid>
               </>
@@ -197,13 +198,13 @@ class Footer extends React.Component {
         <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
           lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
           <Grid item>
-            <h3>Alfred</h3>
+            <h3>{FOOTER.alfred}</h3>
           </Grid>
           {
             isB2BStyle() ? null :
               <Grid item>
                 <Link href={'/footer/becomeAlfred'}>
-                  <Typography>Devenir Alfred</Typography>
+                  <Typography>{FOOTER.become_alfred}</Typography>
                 </Link>
               </Grid>
           }
@@ -213,13 +214,13 @@ class Footer extends React.Component {
                 isLoggedUserAlfredPro() ?
                   <Grid item>
                     <Link href={'/creaShop/creaShop'}>
-                      <Typography>Je propose mes services</Typography>
+                      <Typography>{FOOTER.crea_shop}</Typography>
                     </Link>
                   </Grid>
 
                   :
                   <Grid item onClick={this.handleOpenRegister} style={{cursor: 'pointer'}}>
-                    <Typography>Je propose mes services</Typography>
+                    <Typography>{FOOTER.crea_shop}</Typography>
                   </Grid>
                 : null
           }
@@ -227,7 +228,7 @@ class Footer extends React.Component {
             isB2BStyle() ?
               <Grid item>
                 <Link href={'/footer/becomeAlfred'}>
-                  <Typography>Charte</Typography>
+                  <Typography>{FOOTER.charte}</Typography>
                 </Link>
               </Grid>
               : null
@@ -238,19 +239,19 @@ class Footer extends React.Component {
             <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3} lg={3} md={3} sm={6}
               xs={6}>
               <Grid item>
-                <h3>Assistance</h3>
+                <h3>{FOOTER.help}</h3>
               </Grid>
               <Grid item>
                 <Link href={'/footer/addService'}>
-                  <Typography>Réserver un service</Typography>
+                  <Typography>{FOOTER.resa_service}</Typography>
                 </Link>
               </Grid>
               <Grid item onClick={() => Tawk_API.maximize()} className={classes.hiddenOnMobile}>
-                <Typography>Parler à un humain</Typography>
+                <Typography>{FOOTER.tawlk_human}</Typography>
               </Grid>
               <Grid item>
                 <Link href={'/faq'}>
-                  <Typography>FAQ</Typography>
+                  <Typography>{FOOTER.faq}</Typography>
                 </Link>
               </Grid>
             </Grid>
@@ -260,7 +261,7 @@ class Footer extends React.Component {
 
             <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.containerSectionFooter}>
               <Grid>
-                <h3>Mobiles</h3>
+                <h3>{FOOTER.mobile}</h3>
               </Grid>
               <Grid container className={classes.storeContainer}>
                 {
@@ -290,14 +291,14 @@ class Footer extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.socialAndLegalContainer}>
           <Grid container item xl={6} lg={8} md={9} sm={12} xs={12} spacing={1} className={classes.legalContainer}>
             <Grid item>
-              <Typography>© 2021 My Alfred,Inc.</Typography>
+              <Typography>{FOOTER.security}</Typography>
             </Grid>
             <Grid item>
               <span>·</span>
             </Grid>
             <Grid item>
               <Link href={'/footer/legalNotice'}>
-                <Typography>Informations légales</Typography>
+                <Typography>{FOOTER.info}</Typography>
               </Link>
             </Grid>
             <Grid item>
@@ -305,7 +306,7 @@ class Footer extends React.Component {
             </Grid>
             <Grid item>
               <Link href={'/cgu'}>
-                <Typography>Conditions générales d'utilisation</Typography>
+                <Typography>{FOOTER.cgu_bis}</Typography>
               </Link>
             </Grid>
           </Grid>
