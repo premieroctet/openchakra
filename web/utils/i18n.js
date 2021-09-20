@@ -974,6 +974,18 @@ const DRAWER_EDITING_SCHEDULE = {
   save_button: 'Enregistrer',
 }
 
+const DRAWER_SETTING_SCHEDULE = {
+  title: 'Paramétrez vos disponibilités',
+  period: 'Période :',
+  begin_date: 'Date de début',
+  end_date: 'Date de fin',
+  day_work: 'Jours travaillés :',
+  hour_work: 'Horaires travaillés :',
+  save_button: 'Enregistrer',
+  delete_button: 'Supprimer',
+  add_period: 'Ajouter une période',
+}
+
 const MESSAGE_SUMMARY = {
   no_message: 'Aucun message',
 }
@@ -1136,4 +1148,5 @@ module.exports = {
   TEAM,
   COMMON,
   DRAWER_EDITING_SCHEDULE,
+  DRAWER_SETTING_SCHEDULE,
 }
