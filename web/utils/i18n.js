@@ -722,6 +722,35 @@ const NEWSLETTER = {
 
 const CMP_PRESENTATION = {
   placeholder: 'Ici, parlez-nous de vous, de votre personnalité, de vos passions ou encore de votre parcours. Soyez vous-même et montrez-nous votre personnalité !',
+  snackbar_update_profil: 'Profil modifié avec succès',
+  edit_dialog_title: 'Modifiez votre description',
+  edit_dialog_subtitle: 'Ajoutez ou modifiez votre "À propos" ',
+  update_button: 'Modifier',
+  member: 'membre depuis ',
+}
+
+const SHOW_CERTIFICATION = {
+  title: 'Certifications',
+  certif_obtain: 'Certification obtenue en ',
+  year_obtain: 'Date d\'obtention non renseigné - ',
+  document_join: 'Certification jointe',
+  no_document: 'Certification non jointe',
+}
+
+const SHOW_DIPLOMA = {
+  title: 'Diplômes',
+  diploma_year: 'Diplôme obtenu en : ',
+  no_diploma_year: 'Date d\'obtention non renseigné',
+  document_join: 'Diplôme joint',
+  no_document: 'Diplôme non joint',
+}
+
+const SHOW_EXPERIENCE = {
+  title: 'Expérience',
+  description: 'Description: ',
+  no_description: 'Description: non renseignée',
+  exp_year: 'Expérience :',
+  no_exp_year: 'Expérience: non renseignée',
 }
 
 const getMangopayMessage = msg_id => {
@@ -783,6 +812,8 @@ const SHOP = {
     textfield_particular: 'Aux particuliers',
     textfield_company: 'Aux entreprises',
     textfield_company_and_particular: 'Aux particuliers et aux entreprises',
+    insee_info_begin: 'En raison de l\'arrêt des serveurs de l\'INSEE ce ',
+    insee_info_end: ' nous ne pouvons renseigner automatiquement vos informations à partir de votre numéro Siret\ <br/>Merci de saisir tous les champs manuellement',
   },
   service: {
     title: 'Votre service',
@@ -997,6 +1028,12 @@ const EMPLOYEE_DIALOG = {
   button: 'Importer',
 }
 
+const INFORMATION = {
+  button: 'Ok',
+  title_error: 'Oups !',
+  title: 'Information',
+}
+
 const MESSAGE_SUMMARY = {
   no_message: 'Aucun message',
 }
@@ -1162,4 +1199,8 @@ module.exports = {
   DRAWER_SETTING_SCHEDULE,
   DRAWER_SCHEDULE,
   EMPLOYEE_DIALOG,
+  INFORMATION,
+  SHOW_CERTIFICATION,
+  SHOW_DIPLOMA,
+  SHOW_EXPERIENCE,
 }

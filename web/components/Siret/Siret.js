@@ -29,7 +29,6 @@ class Siret extends React.Component {
       vat_number: null,
     }
     if (this.props.company) {
-      console.log(`Got company:${JSON.stringify(this.props.company)}`)
       this.state = this.props.company
     }
     this.onChange = this.onChange.bind(this)
@@ -119,9 +118,7 @@ class Siret extends React.Component {
       <Grid>
         {coupureToday ?
           <Typography style={{color: 'red'}}>
-            En raison de l'arrêt des serveurs de l'INSEE ce {`${DATE_COUPURE_INSEE.format('DD/MM/YY')}`},
-            nous ne pouvons renseigner automatiquement vos informations à partir de votre numéro Siret
-            <br/>Merci de saisir tous les champs manuellement
+            {SHOP.creation.insee_info_begin + DATE_COUPURE_INSEE.format('DD/MM/YY') + SHOP.creation.insee_info_end}
           </Typography>
           :
           null
