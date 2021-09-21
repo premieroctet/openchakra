@@ -15,7 +15,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import '../static/cssdashboard.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import '../static/style1.css'
-
+import CookieConsent from 'react-cookie-consent'
 
 class MyApp extends App {
   constructor() {
@@ -63,6 +63,14 @@ class MyApp extends App {
           <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
+        <CookieConsent
+          buttonText="J'autorise"
+          enableDeclineButton
+          declineButtonText="Je refuse"
+          location="top"
+        >
+           Autorisez-vous les cookies?
+        </CookieConsent>
 
         <JssProvider
           registry={this.pageContext.sheetsRegistry}

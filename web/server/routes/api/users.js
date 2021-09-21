@@ -538,6 +538,7 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
 
 // @Route POST /myAlfred/api/users/login
 // Login
+// TODO 934169 Gérer si cookies non autorisés (pas de login)
 router.post('/login', (req, res) => {
 
   const {errors, isValid} = validateLoginInput(req.body);
