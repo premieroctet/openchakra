@@ -851,25 +851,25 @@ class NavBar extends Component {
             transformOrigin={{vertical: 'top', horizontal: 'center'}}
           >
             <MenuItem onClick={() => Router.push('/blog/elementor-211/')}>
-              <Typography>Services aux entreprises</Typography>
+              <Typography>{SEARCHBAR.service_company}</Typography>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/blog/services-aux-collaborateurs/')}>
-              <Typography>Services aux collaboratuers</Typography>
+              <Typography>{SEARCHBAR.service_collab}</Typography>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/blog/tarifs')}>
-              <Typography>Tarifs</Typography>
+              <Typography>{SEARCHBAR.price}</Typography>
             </MenuItem>
             <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
               <Divider/>
             </Grid>
             <MenuItem onClick={this.checkAndOpenRegister}>
-              <Button variant="outlined" classes={{root: classes.buttonService}}>Je propose mes services</Button>
+              <Button variant="outlined" classes={{root: classes.buttonService}}>{SEARCHBAR.crea_service}</Button>
             </MenuItem>
             <MenuItem onClick={this.handleOpenLogin}>
-              <Button variant="outlined" classes={{root: classes.buttonLoginB2b}} >Connexion</Button>
+              <Button variant="outlined" classes={{root: classes.buttonLoginB2b}}>{SEARCHBAR.log_in}</Button>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/search')}>
-              <Button variant="outlined" classes={{root: classes.buttonRegisterB2b}}>Inscription</Button>
+              <Button variant="outlined" classes={{root: classes.buttonRegisterB2b}}>{SEARCHBAR.sign_in}</Button>
             </MenuItem>
           </Menu>
         </Grid>
@@ -887,7 +887,7 @@ class NavBar extends Component {
               classes={{root: classes.navbarSignInB2B}}
               style={{whiteSpace: 'nowrap'}}
               onClick={this.checkAndOpenRegister}>
-              {'Je propose mes services'}
+              {SEARCHBAR.crea_service}
             </Button>
           </Grid>
           <Grid >
@@ -975,15 +975,15 @@ class NavBar extends Component {
                     >
                       {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                         <MenuItem value={_id} key={index}>
-                          { _id=='main' ? 'Adresse principale' : `${value.label }, `} {formatAddress(value)}
+                          { _id=='main' ? SEARCHBAR.main_adress : `${value.label }, `} {formatAddress(value)}
                         </MenuItem>
                       ))}
                       <MenuItem value={'all'}>
-                        Partout, Rechercher des Alfred partout
+                        {SEARCHBAR.find_everywhere}
                       </MenuItem>
                       <MenuItem value={'addAddress'}>
                         <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                          Ajouter une adresse
+                          {SEARCHBAR.add_adresses}
                         </Typography>
                       </MenuItem>
                     </Select>
@@ -1122,20 +1122,17 @@ class NavBar extends Component {
                 <>
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    className={classes.customNavbar}
-                    label={'Services aux entreprises'}
+                    label={SEARCHBAR.service_company}
                     onClick={() => Router.push('/blog/elementor-211/')}
                   />
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    className={classes.customNavbar}
-                    label={'Services aux collaborateurs'}
+                    label={SEARCHBAR.service_collab}
                     onClick={() => Router.push('/blog/services-aux-collaborateurs/')}
                   />
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    className={classes.customNavbar}
-                    label={'Tarifs'}
+                    label={SEARCHBAR.price}
                     onClick={() => Router.push('/blog/tarifs')}
                   />
                 </>
@@ -1143,7 +1140,6 @@ class NavBar extends Component {
                 <>
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    className={classes.customNavbar}
                     label={ReactHtmlParser(this.props.t('NAVBAR_MENU.ourServices'))}
                     onClick={() => Router.push('/search')}
                   />
@@ -1151,14 +1147,12 @@ class NavBar extends Component {
                     user.is_alfred ?
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                        className={classes.customNavbar}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.myServices'))}
                         onClick={() => Router.push(`/profile/services?user=${user._id}`)}
                       />
                       :
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                        className={classes.customNavbar}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
                         onClick={() => Router.push('/creaShop/creaShop')}
                       />
@@ -1166,7 +1160,6 @@ class NavBar extends Component {
                     <>
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                        className={classes.customNavbar}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
                         onClick={this.handleOpenRegister}
                       />

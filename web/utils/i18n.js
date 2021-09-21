@@ -329,6 +329,12 @@ const SEARCHBAR = {
   dashboard_alfred: 'Dashboard My Alfred',
   dashboard: 'Dashboard',
   log_out: 'Déconnexion',
+  service_company: 'Services aux entreprises',
+  service_collab: 'Services aux collaboratuers',
+  price: 'Tarifs',
+  crea_service: 'Je propose mes services',
+  log_in: 'Connexion',
+  sign_in: 'Inscription',
 }
 
 const NAVBAR_MENU = {
