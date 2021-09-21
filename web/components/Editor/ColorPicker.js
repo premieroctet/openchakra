@@ -1,6 +1,6 @@
 import {withTranslation} from 'react-i18next'
 import React from 'react'
-import {ChromePicker} from 'react-color'
+import {SketchPicker} from 'react-color'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import Divider from '@material-ui/core/Divider'
@@ -35,21 +35,23 @@ class ColorPicker extends React.Component {
   onColorToggle = () => {
     this.setState({open: !this.state.open})
   }
-  render() {
 
+  render() {
     const {open}=this.state
-    const color=this.props.value
+    const {colors, value}=this.props
+
     return (
       <Grid container spacing={2}>
         <Grid item xl={1}>
-          <Button variant={'contained'} style={{backgroundColor: color, height: 40, borderRadius: 20}} onClick={this.onColorToggle}/>
+          <Button variant={'contained'} style={{backgroundColor: value, height: 40, borderRadius: 20}} onClick={this.onColorToggle}/>
         </Grid>
         { open &&
           <Grid item xl={12} style={ popover }>
             <Grid style={ cover } onClick={this.onColorToggle}/>
-            <ChromePicker
-              color={color}
+            <SketchPicker
+              color={value}
               onChangeComplete={this.onChangeComplete}
+              presetColors={colors}
             />
           </Grid>
         }

@@ -1,4 +1,4 @@
-const i18n = require('./i18n')
+const i18n = require('../../utils/i18n')
 
 const getIdentifiersInner = (prefix, data) => {
   if (typeof data=='string') {
@@ -10,14 +10,15 @@ const getIdentifiersInner = (prefix, data) => {
 }
 
 const getQueries = () => {
+  console.log('get queries')
   const ids=getIdentifiersInner('', i18n).flat(6)
   const queries=ids.filter(i => i).map(obj => {
     let [k, v]=Object.entries(obj)[0]
     const compName=k.split('.')[0]
     v=v.replace(/['’]/g, "\\'")
-    return `db.uiconfigurations.update(
-      {page: 'textes', component: '${compName}', label: '${v}'},
-      {$set : {classname: '${k}', type:'content', attributes: [{name:'content', value: '${v}'}]}},
+    return `db.uiconfigurations.update(\
+      {classname: '${k}', type:'content'},\
+      {$set : {page: 'textes', component: '${compName}', label: '${v}', attributes: [{name:'content', value: '${v}'}]}},\
       {upsert: true})`
   })
   return queries

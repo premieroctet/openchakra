@@ -443,11 +443,12 @@ const LAYOUT_RESA = {
 
 const LOGIN = {
   title: 'Connexion',
+  input_label: 'Email',
   input_password: 'Mot de passe',
   input_role: 'Rôle',
   button: 'Connexion',
-  FORGOTTEN_PASSWORD: 'Mot de passe oublié ?',
-  REGISTER_YET: 'Pas encore inscrit ? Inscrivez-vous !',
+  forgotten_password: 'Mot de passe oublié ?',
+  register_yet: 'Pas encore inscrit ? Inscrivez-vous !',
 }
 
 const CARD_ADD_SERVICE ={
@@ -620,6 +621,8 @@ const REGISTER = {
 }
 
 const REGISTER_FIRST_PAGE = {
+  textfield_email_title: 'Email',
+  textfield_email_placeholder: 'Email',
   textfield_firstname: 'Prénom',
   textfield_firstname_placeholder: 'Prénom',
   textfield_create_password: 'Créer un mot de passe',
@@ -953,7 +956,7 @@ const SHOP = {
     title: 'Préférences',
     subtitle: 'Indiquez vos préférences de réservation. Ces préférences s’appliqueront lorsqu’un client souhaite vous réserver.',
     title_delay_prevenance: 'De quel délai souhaitez-vous disposer entre la réservation et la réalisation du services ?',
-    exemple_delay: 'Par exemple, si vous indiquez un délai de 24 heures, un client devra réserver votre service au moins 24 heures avant votre intervention.',
+    example_delay: 'Par exemple, si vous indiquez un délai de 24 heures, un client devra réserver votre service au moins 24 heures avant votre intervention.',
     units_dalay_prevenance: 'Heures/jours/semaines',
     label_delay_prevenance: 'Délai',
     hours: 'heure(s)',

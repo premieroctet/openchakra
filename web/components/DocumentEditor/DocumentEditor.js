@@ -7,6 +7,7 @@ import styles from './DocumentEditorStyle'
 import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
+import {IMAGE_EXTENSIONS} from '../../utils/consts'
 
 class DocumentEditor extends React.Component {
   constructor(props) {
@@ -47,7 +48,7 @@ class DocumentEditor extends React.Component {
                     name="myCardR"
                     type="file"
                     onChange={onChange}
-                    accept=".jpg,.jpeg,.png,.pdf"
+                    accept={IMAGE_EXTENSIONS.join(',')}
                   />
                   <label htmlFor="icon-button-file">
                     <IconButton aria-label="update" component="span">
@@ -84,7 +85,8 @@ class DocumentEditor extends React.Component {
             <input disabled={disabled} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}}
               name="myCardR" type="file"
               onChange={onChange}
-              className="form-control" accept=".jpg,.jpeg,.png,.pdf"
+              className="form-control"
+              accept={IMAGE_EXTENSIONS.join(',')}
             />
           </label>
         </Grid>

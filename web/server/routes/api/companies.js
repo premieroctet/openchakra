@@ -35,11 +35,10 @@ const storageIdPicture = multer.diskStorage({
 const uploadIdPicture = multer({
   storage: storageIdPicture,
   fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname).toLowerCase();
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-      return callback(new Error('Only images are allowed'));
+    if (!isImageFile(file.originalname)) {
+      return callback(new Error('Only images are allowed'))
     }
-    callback(null, true);
+    callback(null, true)
   },
 });
 

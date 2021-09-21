@@ -1,3 +1,4 @@
+const {IMAGE_EXTENSIONS, TEXT_EXTENSIONS} = require('../../utils/consts')
 const fs = require('fs')
 const path = require('path')
 
@@ -9,9 +10,6 @@ const ensureDirectoryExists = dirName => {
     fs.mkdirSync(fullDirName, {recursive: true})
   }
 }
-
-const IMAGE_EXTENSIONS='.png .jpg .gif .jpeg .pdf'.toLowerCase().split(' ')
-const TEXT_EXTENSIONS='.csv .txt'.toLowerCase().split(' ')
 
 const isImageFile = filename => {
   const ext = path.extname(filename).toLowerCase()

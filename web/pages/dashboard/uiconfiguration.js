@@ -43,6 +43,10 @@ class UIConfiguration extends React.Component {
       page: null,
       saving: false,
       filter: '',
+      // Modified parameters ids
+      modified_parameters: {},
+      // Known colors sorted by occurrences for HTML & Color editors
+      used_colors: [],
     }
   }
 
@@ -71,6 +75,13 @@ class UIConfiguration extends React.Component {
     return Promise.all(promises)
   }
 
+  sortColors = () => {
+    const {parameters}=this.state
+    const colors=_.flatten(parameters.map(p => p.attributes.filter(att => att.value.startsWith('#')).map(a => a.value)))
+    const sorted=_.chain(colors).countBy().toPairs().sortBy(1).reverse().map(0).value()
+    this.setState({used_colors: sorted})
+  }
+
   onFilterChanged = ev => {
     const {name, value}=ev.target
     this.setState({[name]: value}, this.filterParameters)
@@ -80,17 +91,15 @@ class UIConfiguration extends React.Component {
     let params=this.state.parameters
     const re=new RegExp(this.state.filter, 'i')
     params=params.filter(p => p.page.match(re)||p.classname.match(re)||p.component.match(re)||p.label.match(re))
-    console.log(`After:${params.length}`)
     this.setState({filtered_parameters: params})
   }
 
   onSubmit = () => {
     this.setState({saving: true})
     setAxiosAuthentication()
-    axios.put('/myAlfred/api/admin/uiConfiguration', this.state.parameters)
+    const allPromises=Object.values(this.state.modified_parameters).map(p => axios.put(`/myAlfred/api/admin/uiConfiguration/${p._id}`, p))
+    Promise.all(allPromises)
       .then(() => {
-        console.log('Saved')
-        // Sauvegarde images
         return this.saveImages()
       })
       .then(() => {
@@ -98,7 +107,7 @@ class UIConfiguration extends React.Component {
       })
       .then(() => {
         snackBarSuccess('Configuration enregistrée')
-        this.setState({saving: false})
+        this.setState({saving: false, modified_parameters: {}})
       })
       .catch(err => {
         this.setState({saving: false})
@@ -114,7 +123,7 @@ class UIConfiguration extends React.Component {
         let parameters=_.sortBy(response.data, 'page')
         this.setState({parameters: parameters, filtered_parameters: parameters})
         if (parameters.length>0) {
-          this.setState({page: parameters[0].page})
+          this.setState({page: parameters[0].page}, () => this.sortColors())
         }
       })
   }
@@ -128,7 +137,7 @@ class UIConfiguration extends React.Component {
   Si value===null (en cas de reset), suppression de l'attribut dans attributes
   */
   onChange = parameter_id => att_name => value => {
-    const {parameters}=this.state
+    const {parameters, modified_parameters}=this.state
     const p=parameters.find(p => p._id ==parameter_id)
     let attr = p.attributes.find(a => a.name==att_name)
     if (attr) {
@@ -141,25 +150,26 @@ class UIConfiguration extends React.Component {
     else if (value!==null) {
       p.attributes.push({name: att_name, value: value})
     }
-
-    this.setState({parameters: parameters}, () => this.filterParameters())
+    modified_parameters[p._id]=p
+    this.setState({parameters: parameters, modified_parameters: modified_parameters},
+      () => { this.filterParameters(); this.sortColors() })
   }
 
   render = () => {
     const {classes}=this.props
-    const {filtered_parameters, page, saving, filter}=this.state
+    const {filtered_parameters, page, saving, filter, modified_parameters, used_colors}=this.state
     const groupedParameters= _.groupBy(filtered_parameters, 'page')
     const pageParameters=_.groupBy(groupedParameters[page], 'component')
     const selectedTab = Object.keys(groupedParameters).findIndex(p => p==page)
 
     const saveTitle=saving ? 'Génération en cours...': 'Enregistrer & générer'
-
+    const canSave = !saving && Object.keys(modified_parameters).length>0
     return (
       <Layout>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
             <Typography style={{fontSize: 30}}>{this.getTitle()}</Typography>
-            <Button variant='outlined' onClick={this.onSubmit} disabled={saving}>{saveTitle}</Button>
+            <Button variant='outlined' onClick={this.onSubmit} disabled={!canSave}>{saveTitle}</Button>
           </Grid>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
             <TextField name={'filter'} value={filter} onChange={this.onFilterChanged}/>
@@ -184,7 +194,12 @@ class UIConfiguration extends React.Component {
                   <AccordionDetails>
                     <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
                       { pageParameters[component_name].map(parameter => (
-                        <UIParameter key={parameter._id} title={parameter.label} parameter={parameter} onChange={this.onChange(parameter._id)}/>
+                        <UIParameter
+                          key={parameter._id}
+                          title={parameter.label}
+                          parameter={parameter}
+                          onChange={this.onChange(parameter._id)}
+                          colors={used_colors} />
                       ))
                       }
                     </Grid>
@@ -195,7 +210,7 @@ class UIConfiguration extends React.Component {
           </Paper>
         </Grid>
         <Grid style={{position: 'fixed', bottom: '10px', right: '100px'}}>
-          <Fab color="primary" aria-label="CheckIcon" disabled={saving} onClick={this.onSubmit}>
+          <Fab color="primary" aria-label="CheckIcon" disabled={!canSave} onClick={this.onSubmit}>
             <SaveIcon />
           </Fab>
         </Grid>

@@ -1,4 +1,4 @@
-const {getKeys}=require('./utils/i18n_extraction')
+const {getKeys}=require('./server/utils/i18n_extraction')
 
 const keys=getKeys()
 keys.sort()
