@@ -70,13 +70,13 @@ class UIParameter extends React.Component {
     const attributes=ATTRIBUTES_TYPES[parameter.type] || [[parameter.type, ATT_TYPES[parameter.type]]]
 
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={2} style={{display: 'flex', flexDirection: 'column'}}>
         <Grid item xl={12} style={{display: 'flex'}}>
           { RESET_BUTTON_ENABLED && <Button onClick={() => this.onResetClicked(parameter.type)}>Reset</Button> }
           <h3 style={{color: 'black'}}>{title}</h3>
           {is_development() && <h4>({parameter.type_label})</h4>}
         </Grid>
-
+        <Grid>
         {
           attributes.map(att => {
             let [att_name, att_type] = att
@@ -97,6 +97,8 @@ class UIParameter extends React.Component {
             }
           })
         }
+        </Grid>
+
       </Grid>
     )
   }
