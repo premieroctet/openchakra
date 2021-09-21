@@ -9,7 +9,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
-import {LAYOUT_ABOUT} from '../../utils/i18n'
+import {LAYOUT_PROFIL} from '../../utils/i18n'
 import MobileNavbar from './NavBar/MobileNavbar'
 import styles from '../../static/css/components/Layout/LayoutMobileProfile/LayoutMobileProfile'
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
@@ -28,24 +28,24 @@ class LayoutMobileProfile extends React.Component {
       company: null,
     }
     this.nonlogged_items= [
-      {label: 'À propos', url: '/about'},
-      {label: 'Services', url: '/services'},
+      {label: LAYOUT_PROFIL.about, url: '/about'},
+      {label: LAYOUT_PROFIL.services, url: '/services'},
       // {label: 'Photos', url: '/pictures' }, TODO : Albums 899538 899547
-      {label: 'Avis', url: '/reviews'},
+      {label: LAYOUT_PROFIL.review, url: '/reviews'},
     ]
     this.logged_items= [
-      {label: 'À propos', url: '/about'},
-      {label: 'Mes services', url: '/services'},
+      {label: LAYOUT_PROFIL.about, url: '/about'},
+      {label: LAYOUT_PROFIL.services, url: '/services'},
       // {label: 'Mes photos', url: '/pictures'}, TODO : Albums 899538 899547
-      {label: 'Mes avis', url: '/reviews'},
+      {label: LAYOUT_PROFIL.review, url: '/reviews'},
     ]
     this.logged_alfred_items = [
-      {label: 'À propos', url: '/about'},
-      {label: 'Mes services', url: '/services'},
+      {label: LAYOUT_PROFIL.about, url: '/about'},
+      {label: LAYOUT_PROFIL.services, url: '/services'},
       // {label: 'Mes photos', url: '/pictures'}, TODO : Albums 899538 899547
-      {label: 'Mes avis', url: '/reviews'},
-      {label: 'Mon calendrier', url: '/calendar'},
-      {label: 'Mes statistiques', url: '/statistics'},
+      {label: LAYOUT_PROFIL.review, url: '/reviews'},
+      {label: LAYOUT_PROFIL.schedule, url: '/calendar'},
+      {label: LAYOUT_PROFIL.stats, url: '/statistics'},
     ]
   }
 
@@ -96,7 +96,7 @@ class LayoutMobileProfile extends React.Component {
                 {isModeCompany(user) ?
                   <h3>{company ? company.name : ''}</h3>
                   :
-                  <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
+                  <h3>{user ? LAYOUT_PROFIL.name + user.firstname : ''}</h3>
                 }
               </Grid>
               {isModeCompany(user) ? null :

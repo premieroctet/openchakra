@@ -10,6 +10,7 @@ import Divider from '@material-ui/core/Divider'
 import MobileNavbar from './NavBar/MobileNavbar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import {LAYOUT_MESSAGES} from '../../utils/i18n'
 
 class LayoutMobileMessages extends React.Component {
 
@@ -38,7 +39,7 @@ class LayoutMobileMessages extends React.Component {
             </Grid>
           </Grid>
           <Grid style={{marginLeft: '8vh'}}>
-            <h2>Mes Messages</h2>
+            <h2>{LAYOUT_MESSAGES.title}</h2>
           </Grid>
           <Grid>
             <Tabs
@@ -49,11 +50,11 @@ class LayoutMobileMessages extends React.Component {
             >
               {
                 user && user.is_alfred ?
-                  <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTab} />
+                  <Tab label={LAYOUT_MESSAGES.messages_alfred} className={classes.scrollMenuTab} />
                   :null
 
               }
-              <Tab label={"Mes messages d'utilisateur"} className={classes.scrollMenuTab} />
+              <Tab label={LAYOUT_MESSAGES.messages_user} className={classes.scrollMenuTab} />
             </Tabs>
           </Grid>
         </Grid>

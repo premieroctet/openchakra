@@ -401,6 +401,44 @@ const TRUST_SECURITY = {
     title: 'Notre équipe',
     text: 'Toujours à votre écoute',
   },
+  payment: 'Paiement',
+  security: '100% sécurisé',
+}
+
+const LAYOUT_ACCOUNT = {
+  my_informations: 'Mes Informations',
+  payment_method: 'Modes de paiement',
+  my_sites: 'Mes sites',
+  my_adresses: 'Mes adresses',
+  verification: 'Vérification',
+  security: 'Sécurité',
+  notification: 'Notifications',
+  my_settings: 'Mes paramètres',
+}
+
+const LAYOUT_EVALUATE = {
+  title: 'Evaluation & commentaires',
+}
+
+const LAYOUT_MESSAGES = {
+  title: 'Mes Messages',
+  messages_alfred: 'Mes messages Alfred',
+  messages_user: 'Mes messages d\'utilisateur',
+}
+
+const LAYOUT_PROFIL = {
+  about: 'À propos',
+  services: 'Services',
+  review: 'Mes avis',
+  schedule: 'Mon calendrier',
+  stats: 'Mes statistiques',
+  name: 'Je m\'appelle ',
+}
+
+const LAYOUT_RESA = {
+  title: 'Mes Reservations',
+  messages_alfred: 'Mes messages Alfred',
+  messages_user: 'Mes messages d\'utilisateur',
 }
 
 const LOGIN = {
@@ -1305,4 +1343,9 @@ module.exports = {
   TRAVEL_TAX,
   FOOTER,
   HEADER,
+  LAYOUT_ACCOUNT,
+  LAYOUT_MESSAGES,
+  LAYOUT_EVALUATE,
+  LAYOUT_PROFIL,
+  LAYOUT_RESA,
 }

@@ -3,6 +3,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser'
+import {TRUST_SECURITY} from '../../../utils/i18n'
 
 class TrustAndSecurityBar extends React.Component {
   constructor(props) {
@@ -18,10 +19,10 @@ class TrustAndSecurityBar extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
-              <Typography>Paiement</Typography>
+              <Typography>{TRUST_SECURITY.payment}</Typography>
             </Grid>
             <Grid>
-              <Typography>100% sécurisé</Typography>
+              <Typography>{TRUST_SECURITY.security}</Typography>
             </Grid>
           </Grid>
         </Grid>
