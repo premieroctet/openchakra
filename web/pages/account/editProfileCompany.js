@@ -18,7 +18,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import withStyles from '@material-ui/core/styles/withStyles'
-
+import {EDIT_PROFIL} from '../../utils/i18n'
 import {
   COMPANY_ACTIVITY,
   COMPANY_SIZE,
@@ -29,6 +29,7 @@ import DateField from '../../components/DateField/DateField'
 import LayoutAccount from '../../hoc/Layout/LayoutAccount'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import styles from '../../static/css/pages/profile/editProfileCompany/editProfileCompany'
+import ReactHtmlParser from 'react-html-parser'
 
 const moment=require('moment')
 
@@ -160,7 +161,7 @@ class editProfileCompany extends BasePage {
       website: this.state.website,
     })
       .then(() => {
-        snackBarSuccess('Profil modifié avec succès')
+        snackBarSuccess(EDIT_PROFIL.snackbar_profil_update)
         this.loadUser()
       })
       .catch(err => {
@@ -184,7 +185,7 @@ class editProfileCompany extends BasePage {
 
     axios.put('/myAlfred/api/users/profile/editProProfile', postData)
       .then(() => {
-        snackBarSuccess('Profil modifié avec succès')
+        snackBarSuccess(EDIT_PROFIL.snackbar_profil_update)
         this.loadUser()
       })
       .catch(err => {
@@ -198,10 +199,10 @@ class editProfileCompany extends BasePage {
   sendEmail = () => {
     axios.get('/myAlfred/api/users/sendMailVerification')
       .then(() => {
-        snackBarSuccess('Mail envoyé')
+        snackBarSuccess(EDIT_PROFIL.snackbar_send_email)
       })
       .catch(err => {
-        snackBarError(`Mail non envoyé:${err}`)
+        snackBarError(EDIT_PROFIL.snackbar_error_email + err)
       })
   }
 
@@ -213,23 +214,23 @@ class editProfileCompany extends BasePage {
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2>Mes informations</h2>
+            <h2>{EDIT_PROFIL.information}</h2>
           </Grid>
         </Grid>
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
-          <h2 style={{whiteSpace: 'nowrap'}}>Votre profil entreprise</h2>
+          <h2 style={{whiteSpace: 'nowrap'}}>{EDIT_PROFIL.company_profil}</h2>
         </Grid>
         <Grid container spacing={3} style={{marginTop: '5vh'}}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
               value={companyName}
               name={'companyName'}
-              placeholder={'Nom de l’entreprise'}
+              placeholder={EDIT_PROFIL.textfield_company}
               variant={'outlined'}
-              label={'Nom de l’entreprise'}
+              label={EDIT_PROFIL.textfield_company}
               classes={{root: classes.textField}}
               onChange={this.handleChange}
             />
@@ -237,7 +238,7 @@ class editProfileCompany extends BasePage {
           <Grid item lg={6} md={12} sm={12} xs={12} className={classes.containerAlgolia}>
             <AlgoliaPlaces
               key={moment()}
-              placeholder={billing_address ? `${billing_address.address}, ${billing_address.zip_code}, ${billing_address.country}` : 'Adresse de facturation'}
+              placeholder={billing_address ? `${billing_address.address}, ${billing_address.zip_code}, ${billing_address.country}` : EDIT_PROFIL.invoice_company}
               options={{
                 appId: 'plKATRG826CP',
                 apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -253,9 +254,9 @@ class editProfileCompany extends BasePage {
             <TextField
               value={siret}
               name={'siret'}
-              placeholder={'Siret'}
+              placeholder={EDIT_PROFIL.siret_placeholder}
               variant={'outlined'}
-              label={'Siret'}
+              label={EDIT_PROFIL.siret_placeholder}
               classes={{root: classes.textField}}
               onChange={this.handleChange}
 
@@ -265,9 +266,9 @@ class editProfileCompany extends BasePage {
             <TextField
               value={tva}
               name={'tva'}
-              placeholder={'N° TVA'}
+              placeholder={EDIT_PROFIL.company_tva}
               variant={'outlined'}
-              label={'N° TVA'}
+              label={EDIT_PROFIL.company_tva}
               classes={{root: classes.textField}}
               onChange={this.handleChange}
               disabled={!vat_subject}
@@ -283,22 +284,22 @@ class editProfileCompany extends BasePage {
                       color='primary'
                     />
                   }
-                  label='Assujetti à la TVA'
+                  label={EDIT_PROFIL.company_assujeti}
                 />
               </FormHelperText>
             </Grid>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <FormControl variant='outlined' className={classes.formControl}>
-              <InputLabel id='demo-simple-select-outlined-label'>Taille de l’entreprise</InputLabel>
+              <InputLabel id='demo-simple-select-outlined-label'>{EDIT_PROFIL.size_company}</InputLabel>
               <Select
                 labelId='demo-simple-select-outlined-label'
                 id='demo-simple-select-outlined'
                 value={sizeCompany}
                 onChange={this.handleChange}
-                label={'Taille de l’entreprise'}
+                label={EDIT_PROFIL.size_company}
                 name={'sizeCompany'}
-                placeholder={'Taille de l’entreprise'}
+                placeholder={EDIT_PROFIL.size_company}
               >
                 {
                   Object.keys(COMPANY_SIZE).map(res => (
@@ -310,15 +311,15 @@ class editProfileCompany extends BasePage {
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <FormControl variant='outlined' className={classes.formControl}>
-              <InputLabel id='demo-simple-select-outlined-label'>Secteur d’activité</InputLabel>
+              <InputLabel id='demo-simple-select-outlined-label'>{EDIT_PROFIL.activity_sector}</InputLabel>
               <Select
                 labelId='demo-simple-select-outlined-label'
                 id='demo-simple-select-outlined'
                 value={activityArea}
                 onChange={this.handleChange}
-                label={'Secteur d’activité'}
+                label={EDIT_PROFIL.activity_sector}
                 name={'activityArea'}
-                placeholder={'Secteur d’activité'}
+                placeholder={EDIT_PROFIL.activity_sector}
               >
                 {
                   Object.keys(COMPANY_ACTIVITY).map(res => (
@@ -335,15 +336,15 @@ class editProfileCompany extends BasePage {
               rows={5}
               variant={'outlined'}
               name={'descriptionCompany'}
-              placeholder={'A propos'}
-              label={'A propos'}
+              placeholder={EDIT_PROFIL.about_company}
+              label={EDIT_PROFIL.about_company}
               classes={{root: classes.textField}}
               onChange={this.handleChange}
             />
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}
             style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
-            <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
+            <Typography>{ReactHtmlParser(this.props.t('EDIT_PROFIL.char_max', {maxchars: MAX_DESCRIPTION_LENGTH}))}</Typography>
           </Grid>
         </Grid>
         <Grid style={{marginBottom: '12vh'}}>
@@ -354,7 +355,7 @@ class editProfileCompany extends BasePage {
               color='primary'
               classes={{root: classes.button}}
             >
-              Enregistrer
+              {EDIT_PROFIL.save_button}
             </Button>
           </Grid>
         </Grid>
@@ -363,8 +364,8 @@ class editProfileCompany extends BasePage {
         </Grid>
         <Grid>
           <Grid>
-            <h2 style={{whiteSpace: 'nowrap'}}>À propos de vous
-              { this.is_legal_representative() ? ' - vous êtes le représentant légal' : null }
+            <h2 style={{whiteSpace: 'nowrap'}}>
+              {EDIT_PROFIL.about_you + this.is_legal_representative() ? EDIT_PROFIL.admin : null }
             </h2>
           </Grid>
           <Grid container spacing={3} style={{marginTop: '5vh'}}>
@@ -372,9 +373,9 @@ class editProfileCompany extends BasePage {
               <TextField
                 value={name}
                 name={'name'}
-                placeholder={'Nom'}
+                placeholder={EDIT_PROFIL.name_company}
                 variant={'outlined'}
-                label={'Nom'}
+                label={EDIT_PROFIL.name_company}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
 
@@ -384,9 +385,9 @@ class editProfileCompany extends BasePage {
               <TextField
                 value={firstName}
                 name={'firstName'}
-                placeholder={'Prénom'}
+                placeholder={EDIT_PROFIL.firstname_company}
                 variant={'outlined'}
-                label={'Prénom'}
+                label={EDIT_PROFIL.firstname_company}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
 
@@ -396,9 +397,9 @@ class editProfileCompany extends BasePage {
               <TextField
                 value={email}
                 name={'email'}
-                placeholder={'Email'}
+                placeholder={EDIT_PROFIL.email_company}
                 variant={'outlined'}
-                label={'Adresse email'}
+                label={EDIT_PROFIL.email_company}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
                 InputProps={{
@@ -414,16 +415,16 @@ class editProfileCompany extends BasePage {
                 disabled={user.email ? !!(email === user.email && user.is_confirmed) : true}
                 classes={{root: classes.buttonCheckPhone}}
               >
-                {email === user.email && user.is_confirmed === true ? 'Votre email est vérifié' : email !== user.email ? 'Enregistrer votre nouvel email' : 'Vérifier votre email'}
+                {email === user.email && user.is_confirmed === true ? EDIT_PROFIL.email_checked : email !== user.email ? EDIT_PROFIL.new_email : EDIT_PROFIL.check_new_email}
               </Button>
             </Grid>
             <Grid item xs={position_width} lg={position_width} md={position_width} sm={position_width} xl={position_width}>
               <TextField
                 value={position}
                 name={'position'}
-                placeholder={'Fonction'}
+                placeholder={EDIT_PROFIL.fonction_company}
                 variant={'outlined'}
-                label={'Fonction'}
+                label={EDIT_PROFIL.fonction_company}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
               />
@@ -433,7 +434,7 @@ class editProfileCompany extends BasePage {
                 <DateField
                   classes={{root: classes.textFieldDatePicker}}
                   variant='outlined'
-                  label={'Date de naissance'}
+                  label={EDIT_PROFIL.birthdate_admin}
                   name={'birthday'}
                   value={birthday}
                   onChange={this.handleChange}
@@ -452,7 +453,7 @@ class editProfileCompany extends BasePage {
               color='primary'
               classes={{root: classes.button}}
             >
-              Enregistrer
+              {EDIT_PROFIL.save_button}
             </Button>
           </Grid>
         </Grid>
