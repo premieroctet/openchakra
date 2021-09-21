@@ -1,25 +1,29 @@
 import {withTranslation} from 'react-i18next'
 import React from 'react'
+import dynamic from 'next/dynamic'
 import 'suneditor/dist/css/suneditor.min.css'
 import Grid from '@material-ui/core/Grid'
-import SunEditor, {buttonList} from 'suneditor-react'
 
-/**
-TODO : chargement dynamique buttonList
 const SunEditor = dynamic(() => import('suneditor-react'), {
   ssr: false,
 })
-*/
 
 class HtmlEditor extends React.Component {
   constructor(props) {
     super(props)
     this.options={
-      colorList: [
-        ['#ccc', '#dedede', 'OrangeRed', 'Orange', 'RoyalBlue', 'SaddleBrown'],
-        ['SlateGray', 'BurlyWood', 'DeepPink', 'FireBrick', 'Gold', 'SeaGreen'],
+      colorList: [this.props.colors],
+      buttonList: [
+        ['undo', 'redo'],
+        ['font', 'fontSize', 'formatBlock'],
+        ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
+        ['removeFormat'], '/',
+        ['fontColor', 'hiliteColor'],
+        ['outdent', 'indent'],
+        ['align', 'horizontalRule', 'list', 'table'],
+        ['link'],
+        ['fullScreen'],
       ],
-      buttonList: buttonList.complex,
     }
   }
 

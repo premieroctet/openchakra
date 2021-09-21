@@ -45,6 +45,8 @@ class UIConfiguration extends React.Component {
       filter: '',
       // Modified parameters ids
       modified_parameters: {},
+      // Known colors sorted by occurrences for HTML & Color editors
+      used_colors: [],
     }
   }
 
@@ -71,6 +73,13 @@ class UIConfiguration extends React.Component {
       })
     })
     return Promise.all(promises)
+  }
+
+  sortColors = () => {
+    const {parameters}=this.state
+    const colors=_.flatten(parameters.map(p => p.attributes.filter(att => att.value.startsWith('#')).map(a => a.value)))
+    const sorted=_.chain(colors).countBy().toPairs().sortBy(1).reverse().map(0).value()
+    this.setState({used_colors: sorted})
   }
 
   onFilterChanged = ev => {
@@ -117,7 +126,7 @@ class UIConfiguration extends React.Component {
         let parameters=_.sortBy(response.data, 'page')
         this.setState({parameters: parameters, filtered_parameters: parameters})
         if (parameters.length>0) {
-          this.setState({page: parameters[0].page})
+          this.setState({page: parameters[0].page}, () => this.sortColors())
         }
       })
   }
@@ -146,13 +155,12 @@ class UIConfiguration extends React.Component {
     }
     modified_parameters[p._id]=p
     this.setState({parameters: parameters, modified_parameters: modified_parameters},
-      () => this.filterParameters())
+      () => { this.filterParameters(); this.sortColors() })
   }
 
   render = () => {
-    console.log(this.state.modified_ids)
     const {classes}=this.props
-    const {filtered_parameters, page, saving, filter, modified_parameters}=this.state
+    const {filtered_parameters, page, saving, filter, modified_parameters, used_colors}=this.state
     const groupedParameters= _.groupBy(filtered_parameters, 'page')
     const pageParameters=_.groupBy(groupedParameters[page], 'component')
     const selectedTab = Object.keys(groupedParameters).findIndex(p => p==page)
@@ -189,7 +197,12 @@ class UIConfiguration extends React.Component {
                   <AccordionDetails>
                     <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
                       { pageParameters[component_name].map(parameter => (
-                        <UIParameter key={parameter._id} title={parameter.label} parameter={parameter} onChange={this.onChange(parameter._id)}/>
+                        <UIParameter
+                          key={parameter._id}
+                          title={parameter.label}
+                          parameter={parameter}
+                          onChange={this.onChange(parameter._id)}
+                          colors={used_colors} />
                       ))
                       }
                     </Grid>

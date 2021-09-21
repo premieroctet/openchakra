@@ -85,7 +85,7 @@ class UIParameter extends React.Component {
             }
             let pAtt=parameter.attributes.find(a => a.name==att_name)
             pAtt = pAtt || {value: ''}
-            const props={key: att_name, title: getTitle(att_name), value: pAtt.value, onChange: onChange(att_name)}
+            const props={key: att_name, title: getTitle(att_name), value: pAtt.value, onChange: onChange(att_name), colors: this.props.colors}
 
             switch (att_type) {
               case 'color': return <Grid key={props} item xl={12}><ColorPicker {...props} /></Grid>
