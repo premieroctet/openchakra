@@ -91,7 +91,6 @@ class UIConfiguration extends React.Component {
     let params=this.state.parameters
     const re=new RegExp(this.state.filter, 'i')
     params=params.filter(p => p.page.match(re)||p.classname.match(re)||p.component.match(re)||p.label.match(re))
-    console.log(`After:${params.length}`)
     this.setState({filtered_parameters: params})
   }
 
@@ -101,8 +100,6 @@ class UIConfiguration extends React.Component {
     const allPromises=Object.values(this.state.modified_parameters).map(p => axios.put(`/myAlfred/api/admin/uiConfiguration/${p._id}`, p))
     Promise.all(allPromises)
       .then(() => {
-        console.log('Saved')
-        // Sauvegarde images
         return this.saveImages()
       })
       .then(() => {
