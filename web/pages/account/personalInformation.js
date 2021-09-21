@@ -9,6 +9,7 @@ import List from "@material-ui/core/List";
 import Grid from "@material-ui/core/Grid";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Router from "next/router";
+import {PERSONAL_INFORMATION} from '../../utils/i18n'
 
 class personalInformation extends React.Component{
   constructor(props) {
@@ -20,27 +21,27 @@ class personalInformation extends React.Component{
         <LayoutMobile currentIndex={4}>
           <Grid>
             <Grid>
-              <h2 style={{whiteSpace: 'nowrap'}}>Informations personnelles</h2>
+              <h2 style={{whiteSpace: 'nowrap'}}>{PERSONAL_INFORMATION.title}</h2>
             </Grid>
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
             <List component="nav" aria-label="main mailbox folders">
               <ListItem button onClick={() => Router.push('/account/editProfile')}>
-                <ListItemText primary="Mes informations" secondary={'Nom, date de naissance, e-mail'}/>
+                <ListItemText primary={PERSONAL_INFORMATION.my_information} secondary={PERSONAL_INFORMATION.secondary_information}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
               </ListItem>
               <Divider />
               <ListItem button onClick={() => Router.push('/account/myAddresses')}>
-                <ListItemText primary="Mes adresses" secondary={'Gérez vos adresses'}/>
+                <ListItemText primary={PERSONAL_INFORMATION.my_adresses} secondary={PERSONAL_INFORMATION.secondary_adresses}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
               </ListItem>
               <Divider />
               <ListItem button onClick={() => Router.push('/account/trustAndVerification')}>
-                <ListItemText primary="Vérification" secondary={'Faites vérifier votre pièce d’identité et votre numéro de téléphone'} />
+                <ListItemText primary={PERSONAL_INFORMATION.verification} secondary={PERSONAL_INFORMATION.secondary_verification} />
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>

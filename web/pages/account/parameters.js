@@ -6,13 +6,10 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
-import DraftsIcon from '@material-ui/icons/Drafts';
-import InboxIcon from '@material-ui/icons/Inbox';
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import IconButton from "@material-ui/core/IconButton";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Router from "next/router";
+import {PARAMATER} from '../../utils/i18n'
 
 class parameters extends React.Component{
   constructor(props) {
@@ -24,27 +21,27 @@ class parameters extends React.Component{
         <LayoutMobile>
           <Grid>
             <Grid>
-              <h2>Mes Paramètres</h2>
+              <h2>{PARAMATER.title}</h2>
             </Grid>
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
             <List component="nav" aria-label="main mailbox folders">
               <ListItem button onClick={() => Router.push('/account/notifications')}>
-                <ListItemText primary="Mes notifications" secondary={'Messages, rappels'}/>
+                <ListItemText primary={PARAMATER.my_notification} secondary={PARAMATER.secondary_notification}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
               </ListItem>
               <Divider />
               <ListItem button onClick={() => Router.push('/account/paymentResponsive')}>
-                <ListItemText primary="Mes modes de paiement" secondary={'Cartes de crédits, RIB'}/>
+                <ListItemText primary={PARAMATER.payment_method} secondary={PARAMATER.secondary_payment}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
               </ListItem>
               <Divider />
               <ListItem button onClick={() => Router.push('/account/security')}>
-                <ListItemText primary="Sécurité" secondary={'Vos mot de passe, votre compte'} />
+                <ListItemText primary={PARAMATER.security} secondary={PARAMATER.security_secondary} />
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>

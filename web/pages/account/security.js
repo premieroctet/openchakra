@@ -147,7 +147,7 @@ class security extends React.Component {
             .then(() => {
               axios.put('/myAlfred/api/users/current/delete')
                 .then(() => {
-                  snackBarSuccess('Compte désactivé')
+                  snackBarSuccess(SECURITY.snackbar_account_desactivate)
                   this.setState({open2: false})
                   clearAuthenticationToken()
                   Router.push('/')

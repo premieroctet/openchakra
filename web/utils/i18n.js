@@ -594,6 +594,25 @@ const EDIT_PROFIL = {
   birthdate_admin: 'Date de naissance',
 }
 
+const MY_PROFIL = {
+  hello: 'Hello ',
+  show_my_profil: 'Voir mon profil',
+  my_services: 'Mes Services',
+  propose_service: 'Proposer mes services',
+  dashboard: 'Dashboard',
+  my_informations: 'Mes informations',
+  my_settings: 'Mes paramètres',
+  dashboard_alfred: 'Dashboard My Alfred',
+  how_it_work: 'Comment ça marche ?',
+  get_help: 'Obtenir de l’aide',
+  contact_us: 'Nous contacter',
+  all_rights: '© 2020 My Alfred, Tous droits réservés',
+  security: 'Sécurité - Informations légales - Confidentialité',
+  log_out: 'Se deconnecter',
+}
+
+
+
 const PAYMENT_METHOD = {
   title: 'Modes de paiement',
   subtitle: "N'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.",
@@ -878,6 +897,33 @@ const PROFIL = {
   confirmed: 'Profil confirmé',
   unconfirmed: 'Profil non confirmé',
   about: 'À propos de {{firstname}}',
+}
+
+const PARAMATER = {
+  title: 'Mes Paramètres',
+  my_notification: 'Mes notifications',
+  secondary_notification: 'Messages, rappels',
+  payment_method: 'Mes modes de paiement',
+  secondary_payment: 'Cartes de crédits, RIB',
+  security: 'Sécurité',
+  security_secondary: 'Vos mot de passe, votre compte',
+}
+
+const PAYMENT_RESPONSIVE = {
+  title: 'Mes modes de paiement',
+  my_payment: 'Mes cartes de crédit et mes RIB',
+  secondary_payment: 'Ajoutez vos cartes de crédit et RIB',
+}
+
+const PERSONAL_INFORMATION ={
+  title: 'Informations personnelles',
+  my_information: 'Mes informations',
+  secondary_information: 'Nom, date de naissance, e-mail',
+  my_adresses: 'Mes adresses',
+  secondary_adresses: 'Gérez vos adresses',
+  verification: 'Vérification',
+  secondary_verification: 'Faites vérifier votre pièce d’identité et votre numéro de téléphone',
+
 }
 
 const SHOP = {
@@ -1375,4 +1421,8 @@ module.exports = {
   LAYOUT_EVALUATE,
   LAYOUT_PROFIL,
   LAYOUT_RESA,
+  MY_PROFIL,
+  PARAMATER,
+  PAYMENT_RESPONSIVE,
+  PERSONAL_INFORMATION,
 }
