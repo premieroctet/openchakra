@@ -1,4 +1,7 @@
+const {ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
+
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -125,6 +128,12 @@ router.get('/test', (req, res) => res.json({msg: 'Users Works!'}))
 // @Route POST /myAlfred/api/users/register
 // Register
 router.post('/register', (req, res) => {
+
+  const accept_cookie = req.cookies[ACCEPT_COOKIE_NAME]
+  if (accept_cookie !== 'true') {
+    return res.status(403).json({security: 'Vous devez accepter les cookies pour vous inscrire'})
+  }
+
   const {errors, isValid} = validateSimpleRegisterInput(req.body)
 
   if (!isValid) {
@@ -540,6 +549,11 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
 // Login
 // TODO 934169 Gérer si cookies non autorisés (pas de login)
 router.post('/login', (req, res) => {
+
+  const accept_cookie = req.cookies[ACCEPT_COOKIE_NAME]
+  if (accept_cookie !== 'true') {
+    return res.status(403).json({security: 'Vous devez accepter les cookies pour vous connecter'})
+  }
 
   const {errors, isValid} = validateLoginInput(req.body);
 

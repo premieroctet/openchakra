@@ -46,7 +46,8 @@ import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BSty
 const {emptyPromise} = require('../../../utils/promise.js')
 const {formatAddress} = require('../../../utils/text.js')
 import Slider from '@material-ui/core/Slider'
-const {PRO, PART, EMPLOYEE}=require('../../../utils/consts')
+const {PRO, PART, EMPLOYEE, ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
+import {getCookieConsentValue, resetCookieConsentValue} from 'react-cookie-consent'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -179,6 +180,13 @@ class NavBar extends Component {
   };
 
   handleOpenLogin = () => {
+    if (getCookieConsentValue(ACCEPT_COOKIE_NAME) !== 'true') {
+      if (getCookieConsentValue(ACCEPT_COOKIE_NAME)==='false') {
+        resetCookieConsentValue(ACCEPT_COOKIE_NAME)
+        window.location.reload()
+      }
+      return
+    }
     this.handleMenuClose()
     removeStatusRegister()
     this.setState({setOpenLogin: true, setOpenRegister: null})
@@ -190,6 +198,13 @@ class NavBar extends Component {
   };
 
   handleOpenRegister = user_id => {
+    if (getCookieConsentValue(ACCEPT_COOKIE_NAME) !== 'true') {
+      if (getCookieConsentValue(ACCEPT_COOKIE_NAME)==='false') {
+        resetCookieConsentValue(ACCEPT_COOKIE_NAME)
+        window.location.reload()
+      }
+      return
+    }
     this.handleMenuClose()
     this.setState({setOpenRegister: user_id, setOpenLogin: false})
   };

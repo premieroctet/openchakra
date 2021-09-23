@@ -16,6 +16,9 @@ import '../static/cssdashboard.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import '../static/style1.css'
 import CookieConsent from 'react-cookie-consent'
+import {ACCEPT_COOKIE_NAME} from '../utils/consts'
+import {getLoggedUser} from '../utils/context'
+import Router from 'next/router'
 
 class MyApp extends App {
   constructor() {
@@ -36,6 +39,13 @@ class MyApp extends App {
 
   componentDidMount() {
     this.loadTawlkto()
+  }
+
+  onDeclineCookies = () => {
+    if (getLoggedUser()) {
+      snackBarError('Vous allez être déconnecté')
+      Router.push('/logout')
+    }
   }
 
   render() {
@@ -64,12 +74,19 @@ class MyApp extends App {
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
         <CookieConsent
-          buttonText="J'autorise"
+          buttonText="J'accepte"
           enableDeclineButton
           declineButtonText="Je refuse"
           location="top"
+          cookieName={ACCEPT_COOKIE_NAME}
+          onDecline={this.onDeclineCookies}
+          buttonClasses='cookies_accept'
+          declineButtonClasses='cookies_decline'
+          containerClasses='cookies_container'
+          contentClasses='cookies_content'
         >
-           Autorisez-vous les cookies?
+          Les cookies sont requis pour vous connecter ou vous inscrire (
+          <a onClick={() => Router.push('/cgu#privacy')} style={{cursor: 'pointer'}} >plus d'informations</a>)
         </CookieConsent>
 
         <JssProvider
