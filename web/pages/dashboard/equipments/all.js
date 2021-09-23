@@ -20,7 +20,7 @@ class all extends DataPage {
   loadData = () => {
     axios.get('/myAlfred/api/admin/equipment/all')
       .then((response) => {
-        let equipments = response.data;
+        let equipments = response.data
         equipments.forEach ( e => {
           e.picture=`/static/equipments/${e.logo}`
         })
@@ -38,4 +38,4 @@ class all extends DataPage {
 
 }
 
-export default withStyles(styles)(all);
+export default withStyles(styles)(all)

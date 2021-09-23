@@ -1,17 +1,17 @@
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react';
+import React from 'react'
 
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
-import Router from 'next/router';
-import Layout from '../../hoc/Layout/Layout';
-import Link from 'next/link';
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Router from 'next/router'
+import Layout from '../../hoc/Layout/Layout'
+import Link from 'next/link'
 
 const {isLoggedUserAdmin}=require('../../utils/context')
 
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 const styles = theme => ({
   signupContainer: {
     alignItems: 'center',
@@ -33,36 +33,36 @@ const styles = theme => ({
     fontSize: 12,
     lineHeight: 4.15,
   },
-});
+})
 
 class home extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       is_admin: '',
       shopsData: [],
-    };
+    }
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     if (!isLoggedUserAdmin()) {
-      Router.push('/login');
+      Router.push('/login')
     } else {
-      this.setState({is_admin: true});
+      this.setState({is_admin: true})
     }
     setAxiosAuthentication()
     /**
     TODO : générer boutiques si nécessaire seulement
     axios.get('/myAlfred/api/admin/shops/extract')
       .then(res => this.setState({shopsData: res.data}))
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
     */
   }
 
   render() {
-    const {classes} = this.props;
-    const admin = this.state.is_admin;
+    const {classes} = this.props
+    const admin = this.state.is_admin
 
     return (
       <Layout>
@@ -111,8 +111,8 @@ class home extends React.Component {
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(home);
+export default withStyles(styles)(home)

@@ -1,18 +1,18 @@
-import axios from 'axios';
+import axios from 'axios'
 const {setAxiosAuthentication, clearAuthenticationToken}=require('../../utils/authentication')
 
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
-import Layout from '../../hoc/Layout/Layout';
-import Link from 'next/link';
-import Router from 'next/router';
-import Paper from '@material-ui/core/Paper';
-import HomeIcon from '@material-ui/icons/Home';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import React from 'react'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Layout from '../../hoc/Layout/Layout'
+import Link from 'next/link'
+import Router from 'next/router'
+import Paper from '@material-ui/core/Paper'
+import HomeIcon from '@material-ui/icons/Home'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 const {BigList}=require('../../components/BigList/BigList')
 const models = require('../../components/BigList/models')
 
@@ -36,7 +36,7 @@ const styles = theme => ({
     fontSize: 12,
     lineHeight: 4.15,
   },
-});
+})
 
 const actionsStyles = theme => ({
   root: {
@@ -44,11 +44,11 @@ const actionsStyles = theme => ({
     color: theme.palette.text.secondary,
     marginLeft: theme.spacing(2.5),
   },
-});
+})
 
 class all extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       prospects: [],
       page: 0,
@@ -63,10 +63,10 @@ class all extends React.Component {
       url: '',
       lbc_message: [],
       lbc_error: [],
-    };
-    this.handleChangePage = this.handleChangePage.bind(this);
-    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-    this.load = this.load.bind(this);
+    }
+    this.handleChangePage = this.handleChangePage.bind(this)
+    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this)
+    this.load = this.load.bind(this)
     this.fileRef = React.createRef()
 
     this.columnDefs=[
@@ -80,7 +80,7 @@ class all extends React.Component {
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios.get('/myAlfred/api/admin/prospect/fields')
       .then( response => {
@@ -90,7 +90,7 @@ class all extends React.Component {
       .catch (err => {
         console.error(err)
       })
-    this.load();
+    this.load()
   }
 
   load() {
@@ -103,23 +103,23 @@ class all extends React.Component {
             text: `Liste ${p.category}`
           }
         })
-        this.setState({prospects: prospects});
+        this.setState({prospects: prospects})
       })
     .catch((error) => {
-      console.log(error);
+      console.log(error)
       if (error.response.status === 401 || error.response.status === 403) {
         clearAuthenticationToken()
-        Router.push({pathname: '/login'});
+        Router.push({pathname: '/login'})
       }
-    });
+    })
   }
 
   handleChangePage(event, page) {
-    this.setState({page});
+    this.setState({page})
   }
 
   handleChangeRowsPerPage(event) {
-    this.setState({page: 0, rowsPerPage: event.target.value});
+    this.setState({page: 0, rowsPerPage: event.target.value})
   }
 
   onChange = event => {
@@ -165,8 +165,8 @@ class all extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
-    const {prospects, export_data, comments, errors, category, url, lbc_message, lbc_error} = this.state;
+    const {classes} = this.props
+    const {prospects, export_data, comments, errors, category, url, lbc_message, lbc_error} = this.state
 
     return (
       <Layout>
@@ -250,8 +250,8 @@ class all extends React.Component {
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(all);
+export default withStyles(styles)(all)

@@ -1,29 +1,29 @@
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+import React from 'react'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked'
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked'
 
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from 'next/link';
+import Layout from '../../../hoc/Layout/Layout'
+import axios from 'axios'
+import Router from 'next/router'
+import Select from '@material-ui/core/Select'
+import Input from '@material-ui/core/Input'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import Link from 'next/link'
 const util=require('util')
 const {Siret}=require('../../../components/Siret/Siret')
-import IconButton from "@material-ui/core/IconButton";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import AlgoliaPlaces from 'algolia-places-react';
+import IconButton from "@material-ui/core/IconButton"
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
+import AlgoliaPlaces from 'algolia-places-react'
 
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
 const {COMPANY_SIZE, COMPANY_ACTIVITY, ADMIN, MANAGER, EMPLOYEE}=require('../../../utils/consts')
@@ -57,19 +57,19 @@ const styles = theme => ({
   chip: {
     margin: 2,
   },
-});
+})
 
 class view extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       company: null,
       suggestion_address : null,
       errors:{},
-    };
-    this.onChange = this.onChange.bind(this);
+    }
+    this.onChange = this.onChange.bind(this)
     this.SIZE_OPTIONS= Object.keys(COMPANY_SIZE).map( key => (
       <MenuItem value={key}>{COMPANY_SIZE[key]}</MenuItem>
     ))
@@ -79,12 +79,12 @@ class view extends React.Component {
   }
 
   static getInitialProps({query: {id}}) {
-    return {company_id: id};
+    return {company_id: id}
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    const id = this.props.company_id;
+    localStorage.setItem('path', Router.pathname)
+    const id = this.props.company_id
     if (!id) {
       this.setState({company: {}})
       return
@@ -92,16 +92,16 @@ class view extends React.Component {
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/companies/${id}`)
       .then(response => {
-        let company = response.data;
-        this.setState({ company: company });
+        let company = response.data
+        this.setState({ company: company })
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
-      });
+      })
   }
 
   checkSiret = siret => {
@@ -110,7 +110,7 @@ class view extends React.Component {
     }
     const config = {
       headers: {Authorization: `Bearer ${SIRET.token}`},
-    };
+    }
     Promise.any([SIRET.siretUrl, SIRET.sirenUrl].map(u => axios.get(`${u}/${siret}`, config)))
       .then( res => {
         snackBarSuccess("Numéro SIRET/SIREN reconnu")
@@ -119,32 +119,32 @@ class view extends React.Component {
   }
 
   onChange = e => {
-    const {company} = this.state;
+    const {company} = this.state
     var {name, value} = e.target
     if (name=='siret') {
       value = value.replaceAll(' ', '')
       this.checkSiret(value)
     }
-    company[name] = value;
-    this.setState({company: company});
-  };
+    company[name] = value
+    this.setState({company: company})
+  }
 
   onCheck = e => {
-    const state = this.state.company;
-    const {checked}=e.target;
-    state.vat_subject = checked;
+    const state = this.state.company
+    const {checked}=e.target
+    state.vat_subject = checked
     if (!checked) {
       state.vat_number=null
     }
-    this.setState({company: state});
-  };
+    this.setState({company: state})
+  }
 
   onAddressChange = suggestion => {
     this.setState({suggestion_address : suggestion ? suggestion.suggestion : null})
   }
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
     var {company, suggestion_address}=this.state
     const address = suggestion_address ? {
       address: suggestion_address.name,
@@ -180,11 +180,11 @@ class view extends React.Component {
         snackBarError(err.response.data)
         this.setState({errors: err.response.data})
       })
-  };
+  }
 
   render() {
-    const {classes} = this.props;
-    const {company, errors, suggestion_address} = this.state;
+    const {classes} = this.props
+    const {company, errors, suggestion_address} = this.state
 
     const placeholder = formatAddress(company ? company.billing_address : null) || "Modifiez votre adresse"
     if (!company) {
@@ -354,9 +354,9 @@ class view extends React.Component {
             </Grid>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(view);
+export default withStyles(styles)(view)

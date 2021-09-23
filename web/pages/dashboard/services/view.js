@@ -1,25 +1,25 @@
-import {Typography} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import Checkbox from '@material-ui/core/Checkbox';
-import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
-import Link from 'next/link';
-import MenuItem from '@material-ui/core/MenuItem';
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
-import React from 'react';
-import Router from 'next/router';
-import Select from '@material-ui/core/Select';
-import Select2 from 'react-select';
-import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Card from '@material-ui/core/Card'
+import Checkbox from '@material-ui/core/Checkbox'
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Grid from '@material-ui/core/Grid'
+import Input from '@material-ui/core/Input'
+import Link from 'next/link'
+import MenuItem from '@material-ui/core/MenuItem'
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked'
+import React from 'react'
+import Router from 'next/router'
+import Select from '@material-ui/core/Select'
+import Select2 from 'react-select'
+import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
 
-import {snackBarSuccess} from '../../../utils/notifications';
-import Layout from '../../../hoc/Layout/Layout';
+import {snackBarSuccess} from '../../../utils/notifications'
+import Layout from '../../../hoc/Layout/Layout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
@@ -50,12 +50,12 @@ const styles = {
   chip: {
     margin: 2,
   },
-};
+}
 
 class view extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       service: {},
@@ -73,27 +73,27 @@ class view extends React.Component {
       selectedOption: null,
       selectedTags: null,
       errors:{}
-    };
+    }
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChangeSelect = this.handleChangeSelect.bind(this);
-    this.handleChangeTags = this.handleChangeTags.bind(this);
-    this.onChangeLocation = this.onChangeLocation.bind(this);
-    this.onTaxChange = this.onTaxChange.bind(this);
+    this.handleClick = this.handleClick.bind(this)
+    this.handleChangeSelect = this.handleChangeSelect.bind(this)
+    this.handleChangeTags = this.handleChangeTags.bind(this)
+    this.onChangeLocation = this.onChangeLocation.bind(this)
+    this.onTaxChange = this.onTaxChange.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
-    return {service_id: id};
+    return {service_id: id}
 
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    const id = this.props.service_id;
+    localStorage.setItem('path', Router.pathname)
+    const id = this.props.service_id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/service/all/${id}`)
       .then(response => {
-        let service = response.data;
+        let service = response.data
         this.setState({
           service: service,
           current_tags: service.tags,
@@ -101,192 +101,192 @@ class view extends React.Component {
           current_category: service.category,
           category: service.category._id,
           location: service.location,
-        });
+        })
 
         this.setState({
           selectedOption: this.state.current_equipments.map(a => ({
             label: a.label,
             value: a._id,
           })),
-        });
+        })
 
         this.setState({
           selectedTags: this.state.current_tags.map(b => ({
             label: b.label,
             value: b._id,
           })),
-        });
+        })
 
 
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
-      });
+      })
 
     axios.get('/myAlfred/api/admin/category/all')
       .then((response) => {
-        let category = response.data;
-        this.setState({all_category: category});
+        let category = response.data
+        this.setState({all_category: category})
       }).catch((error) => {
-      console.error(error);
-    });
+      console.error(error)
+    })
 
     axios.get('/myAlfred/api/admin/tags/all')
       .then((response) => {
-        let tags = response.data;
-        this.setState({all_tags: tags});
+        let tags = response.data
+        this.setState({all_tags: tags})
       }).catch((error) => {
-      console.error(error);
-    });
+      console.error(error)
+    })
 
     axios.get('/myAlfred/api/admin/equipment/all')
       .then((response) => {
-        let equipments = response.data;
-        this.setState({all_equipments: equipments});
+        let equipments = response.data
+        this.setState({all_equipments: equipments})
       }).catch((error) => {
-      console.log(error);
-    });
+      console.log(error)
+    })
 
   }
 
   onChange = e => {
-    const state = this.state.service;
-    state[e.target.name] = e.target.value;
-    this.setState({service: state});
-  };
+    const state = this.state.service
+    state[e.target.name] = e.target.value
+    this.setState({service: state})
+  }
 
   onChangeBool = e => {
-    const state = this.state.service;
-    const {name, checked} = e.target;
+    const state = this.state.service
+    const {name, checked} = e.target
     state[name]=checked
-    this.setState({service: state});
-  };
+    this.setState({service: state})
+  }
 
   onChangeLocation = e => {
-    const service = this.state.service;
-    service.location[e.target.name] = e.target.checked;
-    this.setState({service: service});
-  };
+    const service = this.state.service
+    service.location[e.target.name] = e.target.checked
+    this.setState({service: service})
+  }
 
   onChange2 = e => {
-    this.setState({category: e.target.value});
-  };
+    this.setState({category: e.target.value})
+  }
 
   handleChange = e => {
-    this.setState({tags: e.target.value});
+    this.setState({tags: e.target.value})
 
 
-  };
+  }
 
   handleChange2 = e => {
-    this.setState({equipments: e.target.value});
-  };
+    this.setState({equipments: e.target.value})
+  }
 
   handleChangeSelect = selectedOption => {
-    this.setState({selectedOption});
+    this.setState({selectedOption})
 
-  };
+  }
 
   handleChangeTags = selectedTags => {
-    this.setState({selectedTags});
-  };
+    this.setState({selectedTags})
+  }
 
   onTaxChange = e => {
-    let service = this.state.service;
-    service[e.target.name] = e.target.checked;
-    this.setState({service: service});
-  };
+    let service = this.state.service
+    service[e.target.name] = e.target.checked
+    this.setState({service: service})
+  }
 
 
   onSubmit = e => {
-    e.preventDefault();
-    let arrayEquipments = [];
+    e.preventDefault()
+    let arrayEquipments = []
     if (this.state.selectedOption != null) {
       this.state.selectedOption.forEach(c => {
-        arrayEquipments.push(c.value);
-      });
+        arrayEquipments.push(c.value)
+      })
     }
 
-    let tags = [];
+    let tags = []
     if (this.state.selectedTags != null) {
       this.state.selectedTags.forEach(w => {
-        tags.push(w.value);
-      });
+        tags.push(w.value)
+      })
     }
 
-    const category = this.state.category;
-    const equipments = arrayEquipments;
-    const id = this.props.service_id;
-    const service = this.state.service;
-    const {label, description, location} = service;
-    const {travel_tax, pick_tax, professional_access, particular_access} = service;
+    const category = this.state.category
+    const equipments = arrayEquipments
+    const id = this.props.service_id
+    const service = this.state.service
+    const {label, description, location} = service
+    const {travel_tax, pick_tax, professional_access, particular_access} = service
 
     axios.put(`/myAlfred/api/admin/service/all/${id}`,
       {label, description, tags, category, equipments, location, travel_tax, pick_tax,
       professional_access, particular_access})
       .then(res => {
-        snackBarSuccess('Service modifié avec succès');
+        snackBarSuccess('Service modifié avec succès')
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
         else {
           this.setState({errors: err.response.data})
         }
-      });
-  };
+      })
+  }
 
   handleClick() {
-    const id = this.props.service_id;
+    const id = this.props.service_id
     axios.delete(`/myAlfred/api/admin/service/all/${id}`)
       .then(res => {
 
-        snackBarSuccess('Service supprimé avec succès');
-        Router.push({pathname: '/dashboard/services/all'});
+        snackBarSuccess('Service supprimé avec succès')
+        Router.push({pathname: '/dashboard/services/all'})
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
-      });
+      })
 
 
-  };
+  }
 
 
   render() {
-    const {classes} = this.props;
-    const {service} = this.state;
-    const {current_tags} = this.state;
-    const {current_equipments} = this.state;
-    const {current_category} = this.state;
-    const {all_category} = this.state;
-    const {all_tags} = this.state;
-    const {all_equipments} = this.state;
-    const {isChecked} = this.state;
+    const {classes} = this.props
+    const {service} = this.state
+    const {current_tags} = this.state
+    const {current_equipments} = this.state
+    const {current_category} = this.state
+    const {all_category} = this.state
+    const {all_tags} = this.state
+    const {all_equipments} = this.state
+    const {isChecked} = this.state
 
     const categories = all_category.map(e => (
       <MenuItem value={e._id}>{`${e.particular_label}/${e.professional_label}`}</MenuItem>
-    ));
+    ))
 
     const options = all_equipments.map(equipment => ({
       label: equipment.label,
       value: equipment._id,
-    }));
+    }))
 
     const optionsTags = all_tags.map(tag => ({
       label: tag.label,
       value: tag._id,
-    }));
+    }))
 
 
     return (
@@ -464,9 +464,9 @@ class view extends React.Component {
             </Grid>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(view);
+export default withStyles(styles)(view)

@@ -1,5 +1,5 @@
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles'
 import axios from 'axios'
 const models=require('../../../components/BigList/models')
 const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../../utils/consts')
@@ -22,8 +22,8 @@ class all extends DataPage {
   loadData = () => {
     axios.get('/myAlfred/api/admin/companies/all')
       .then((response) => {
-        let companies = response.data;
-        this.setState({data: companies});
+        let companies = response.data
+        this.setState({data: companies})
       })
   }
 
@@ -37,4 +37,4 @@ class all extends DataPage {
 
 }
 
-export default withStyles(styles)(all);
+export default withStyles(styles)(all)

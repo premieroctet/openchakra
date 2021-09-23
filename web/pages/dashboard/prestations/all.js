@@ -1,6 +1,6 @@
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 const models=require('../../../components/BigList/models')
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles'
 import axios from 'axios'
 
 class all extends DataPage {
@@ -26,17 +26,17 @@ class all extends DataPage {
   loadData = () => {
     axios.get('/myAlfred/api/admin/prestation/all')
       .then((response) => {
-        let prestation = response.data;
+        let prestation = response.data
         prestation=prestation.map( p => {
           const cat = p.service ? p.service.category: null
           p.category_label = cat ?
               [cat.particular_label, cat.professional_label].join('/')
               :
-              '';
+              ''
           p.alfred = p.private_alfred ? p.private_alfred.full_name : ''
           return p
         })
-        this.setState({data: prestation});
+        this.setState({data: prestation})
       })
   }
 
@@ -57,4 +57,4 @@ class all extends DataPage {
 
 }
 
-export default withStyles(styles)(all);
+export default withStyles(styles)(all)

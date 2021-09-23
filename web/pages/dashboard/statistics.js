@@ -1,16 +1,16 @@
 const {setAxiosAuthentication, clearAuthenticationToken}=require('../../utils/authentication')
-import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
-import Router from 'next/router';
-import axios from 'axios';
-import Link from 'next/link';
-import HomeIcon from '@material-ui/icons/Home';
+import React from 'react'
+import {withStyles} from '@material-ui/core/styles'
+import Router from 'next/router'
+import axios from 'axios'
+import Link from 'next/link'
+import HomeIcon from '@material-ui/icons/Home'
 
 const moment = require('moment')
 import {Card, Grid, Typography, Checkbox, Avatar} from '@material-ui/core'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 const {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineSeries, RadialChart}=require('react-vis')
-import Layout from '../../hoc/Layout/Layout';
+import Layout from '../../hoc/Layout/Layout'
 const {isLoggedUserAdmin}=require('../../utils/context')
 
 const styles = theme => ({
@@ -50,17 +50,17 @@ const styles = theme => ({
     fontSize: 70,
   },
 
-});
+})
 
 class statistics extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       registrations: null,
       ages: null,
       alfred_ages: false,
-    };
-    this.getCounts = this.getCounts.bind(this);
+    }
+    this.getCounts = this.getCounts.bind(this)
   }
 
   getCounts() {
@@ -69,39 +69,39 @@ class statistics extends React.Component {
 
     axios.get('/myAlfred/api/admin/statistics')
       .then((response) => {
-        this.setState(response.data);
+        this.setState(response.data)
       })
       .catch((error) => {
-        console.error(error);
+        console.error(error)
         if (error.response.status === 401 || error.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
-      });
+      })
     axios.get('/myAlfred/api/admin/registrations')
       .then((response) => {
         var registrations=response.data
         registrations.unshift({x:parseInt(registrations[0].x)-100, y:0})
         registrations.push({x:parseInt(registrations.slice(-1)[0].x)+100, y:0})
-        this.setState( {registrations: registrations} );
+        this.setState( {registrations: registrations} )
       })
       .catch(error => console.error(error))
     axios.get(`/myAlfred/api/admin/ages?alfred=${this.state.alfred_ages}`)
       .then((response) => {
-        this.setState( {ages: response.data} );
+        this.setState( {ages: response.data} )
       })
       .catch(error => console.error(error))
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     if (!isLoggedUserAdmin()) {
-      Router.push('/login');
+      Router.push('/login')
     } else {
-      this.setState({is_admin: true});
+      this.setState({is_admin: true})
     }
-    this.getCounts();
-    setInterval(() => this.getCounts(), 30000);
+    this.getCounts()
+    setInterval(() => this.getCounts(), 30000)
   }
 
   handleChange = event => {
@@ -109,7 +109,7 @@ class statistics extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
     const {alfred_ages} = this.state
     const list =
     <>
@@ -172,7 +172,7 @@ class statistics extends React.Component {
     </>
     const refused = <Grid item style={{display: 'flex', justifyContent: 'center'}}>
       <Typography style={{fontSize: 30}}>Accès refusé</Typography>
-    </Grid>;
+    </Grid>
 
     return (
       <Layout>
@@ -188,8 +188,8 @@ class statistics extends React.Component {
         </Grid>
       </Layout>
 
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(statistics);
+export default withStyles(styles)(statistics)

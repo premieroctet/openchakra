@@ -1,15 +1,15 @@
-import {Typography} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import React from 'react';
-import Router from 'next/router';
-import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import Router from 'next/router'
+import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
 
-import {snackBarSuccess} from '../../../utils/notifications';
-import Layout from '../../../hoc/Layout/Layout';
+import {snackBarSuccess} from '../../../utils/notifications'
+import Layout from '../../../hoc/Layout/Layout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
@@ -36,61 +36,61 @@ const styles = theme => ({
     fontSize: 12,
     lineHeight: 4.15,
   },
-});
+})
 
 class add extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       label: '',
       picture: null,
       errors: {},
-    };
+    }
 
-    this.onChangeFile = this.onChangeFile.bind(this);
+    this.onChangeFile = this.onChangeFile.bind(this)
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
   }
 
   onChange = e => {
-    this.setState({[e.target.name]: e.target.value});
-  };
+    this.setState({[e.target.name]: e.target.value})
+  }
 
   onChangeFile(e) {
-    this.setState({picture: e.target.files[0]});
+    this.setState({picture: e.target.files[0]})
   }
 
   onSubmit = e => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('label', this.state.label);
-    formData.append('picture', this.state.picture);
+    e.preventDefault()
+    const formData = new FormData()
+    formData.append('label', this.state.label)
+    formData.append('picture', this.state.picture)
 
     setAxiosAuthentication()
     axios
       .post('/myAlfred/api/admin/shopBanner/all', formData)
       .then(res => {
-        snackBarSuccess('Bannière ajoutée');
-        Router.push({pathname: '/dashboard/shopBanner/all'});
+        snackBarSuccess('Bannière ajoutée')
+        Router.push({pathname: '/dashboard/shopBanner/all'})
       })
       .catch(err => {
-          console.error(err);
-          this.setState({errors: err.response.data});
+          console.error(err)
+          this.setState({errors: err.response.data})
           if (err.response.status === 401 || err.response.status === 403) {
             clearAuthenticationToken()
-            Router.push({pathname: '/login'});
+            Router.push({pathname: '/login'})
           }
         },
-      );
+      )
 
 
-  };
+  }
 
   render() {
-    const {classes} = this.props;
-    const {errors} = this.state;
+    const {classes} = this.props
+    const {errors} = this.state
 
 
     return (
@@ -130,8 +130,8 @@ class add extends React.Component {
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(add);
+export default withStyles(styles)(add)
