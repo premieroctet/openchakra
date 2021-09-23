@@ -1,15 +1,18 @@
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Card from '@material-ui/core/Card';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
+import Router from 'next/router';
+import axios from 'axios';
+
+import {snackBarSuccess} from '../../../utils/notifications';
+import Layout from '../../../hoc/Layout/Layout';
+
+const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
 
 
 const styles = {
@@ -91,7 +94,7 @@ class view extends React.Component {
     const id = this.props.user_id;
     axios.put(`/myAlfred/api/admin/users/users/${id}`, data)
       .then(res => {
-        alert('Utilisateur modifié avec succès');
+        snackBarSuccess('Utilisateur modifié avec succès');
         Router.push({pathname: '/dashboard/users/all'});
       })
       .catch(err => {
@@ -103,8 +106,7 @@ class view extends React.Component {
     const id = this.props.user_id;
     axios.delete(`/myAlfred/api/admin/users/users/${id}`)
       .then(res => {
-
-        alert('Utilisateur supprimé avec succès');
+        snackBarSuccess('Utilisateur supprimé avec succès');
         Router.push({pathname: '/dashboard/users/all'});
       })
       .catch(err => {

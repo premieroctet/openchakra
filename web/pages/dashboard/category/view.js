@@ -1,21 +1,23 @@
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
-import Link from 'next/link';
 import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
+import Link from 'next/link';
+import React from 'react';
 import Router from 'next/router';
 import Select2 from 'react-select';
+import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
+
+import {snackBarSuccess, snackBarError} from '../../../utils/notifications';
 import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
+import Layout from '../../../hoc/Layout/Layout';
+
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
 const styles = {
   loginContainer: {
@@ -227,7 +229,7 @@ class view extends React.Component {
     const id = this.props.category_id;
     axios.delete(`/myAlfred/api/admin/category/all/${id}`)
       .then(res => {
-        alert('Categorie supprimée avec succès');
+        snackBarSuccess('Categorie supprimée avec succès');
         Router.push({pathname: '/dashboard/category/all'});
       })
       .catch(err => {

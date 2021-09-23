@@ -1,14 +1,17 @@
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
 import Router from 'next/router';
+import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
+
+import {snackBarSuccess} from '../../../utils/notifications';
+import Layout from '../../../hoc/Layout/Layout';
+
+const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
 
 
 const styles = {
@@ -86,8 +89,7 @@ class view extends React.Component {
     const id = this.props.tags_id;
     axios.put(`/myAlfred/api/admin/tags/all/${id}`, {label, title, description})
       .then(res => {
-
-        alert('Tag modifié avec succès');
+        snackBarSuccess('Tag modifié avec succès');
         Router.push({pathname: '/dashboard/tags/all'});
       })
       .catch(err => {
@@ -101,8 +103,7 @@ class view extends React.Component {
     const id = this.props.tags_id;
     axios.delete(`/myAlfred/api/admin/tags/all/${id}`)
       .then(res => {
-
-        alert('Tag supprimé avec succès');
+        snackBarSuccess('Tag supprimé avec succès');
         Router.push({pathname: '/dashboard/tags/all'});
       })
       .catch(err => {

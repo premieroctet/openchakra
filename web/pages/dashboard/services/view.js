@@ -1,25 +1,27 @@
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Select2 from 'react-select';
+import Card from '@material-ui/core/Card';
+import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
-
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import Grid from '@material-ui/core/Grid';
+import Input from '@material-ui/core/Input';
 import Link from 'next/link';
+import MenuItem from '@material-ui/core/MenuItem';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+import React from 'react';
+import Router from 'next/router';
+import Select from '@material-ui/core/Select';
+import Select2 from 'react-select';
+import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
+
+import {snackBarSuccess} from '../../../utils/notifications';
+import Layout from '../../../hoc/Layout/Layout';
+
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
 
 const styles = {
@@ -227,8 +229,7 @@ class view extends React.Component {
       {label, description, tags, category, equipments, location, travel_tax, pick_tax,
       professional_access, particular_access})
       .then(res => {
-
-        alert('Service modifié avec succès');
+        snackBarSuccess('Service modifié avec succès');
       })
       .catch(err => {
         console.error(err);
@@ -247,7 +248,7 @@ class view extends React.Component {
     axios.delete(`/myAlfred/api/admin/service/all/${id}`)
       .then(res => {
 
-        alert('Service supprimé avec succès');
+        snackBarSuccess('Service supprimé avec succès');
         Router.push({pathname: '/dashboard/services/all'});
       })
       .catch(err => {
