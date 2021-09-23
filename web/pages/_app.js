@@ -18,6 +18,7 @@ import '../static/style1.css'
 import CookieConsent from 'react-cookie-consent'
 import {ACCEPT_COOKIE_NAME} from '../utils/consts'
 import {getLoggedUser} from '../utils/context'
+import {COOKIE_CONSENT} from '../utils/i18n'
 import Router from 'next/router'
 
 class MyApp extends App {
@@ -74,19 +75,18 @@ class MyApp extends App {
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
         <CookieConsent
-          buttonText="J'accepte"
+          buttonText={COOKIE_CONSENT.accept}
           enableDeclineButton
-          declineButtonText="Je refuse"
+          declineButtonText={COOKIE_CONSENT.decline}
           location="top"
           cookieName={ACCEPT_COOKIE_NAME}
           onDecline={this.onDeclineCookies}
-          buttonClasses='cookies_accept'
-          declineButtonClasses='cookies_decline'
-          containerClasses='cookies_container'
-          contentClasses='cookies_content'
+          buttonClasses={'customCookiesAccept'}
+          declineButtonClasses={'customCookiesDecline'}
+          containerClasses={'customCookiesContainer'}
+          contentClasses={'customCookiesContent'}
         >
-          Les cookies sont requis pour vous connecter ou vous inscrire (
-          <a onClick={() => Router.push('/cgu#privacy')} style={{cursor: 'pointer'}} >plus d'informations</a>)
+          {COOKIE_CONSENT.message}
         </CookieConsent>
 
         <JssProvider
