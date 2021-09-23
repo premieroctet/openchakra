@@ -1,5 +1,5 @@
 const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles'
 import axios from 'axios'
 const models=require('../../../components/BigList/models')
 

@@ -1,29 +1,29 @@
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
+import React from 'react'
 
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Router from 'next/router';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select2 from 'react-select';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Router from 'next/router'
+import Layout from '../../../hoc/Layout/Layout'
+import axios from 'axios'
+import InputLabel from '@material-ui/core/InputLabel'
+import Select from '@material-ui/core/Select'
+import Input from '@material-ui/core/Input'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import FormControl from '@material-ui/core/FormControl'
+import Select2 from 'react-select'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import InputAdornment from '@material-ui/core/InputAdornment'
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
 
-import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox'
 
-const styles = theme => ({
+const styles = () => ({
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',
@@ -50,21 +50,11 @@ const styles = theme => ({
   chip: {
     margin: 2,
   },
-});
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+})
 
 class add extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       label: '',
       price: '',
@@ -98,47 +88,47 @@ class add extends React.Component {
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
 
     axios.get('/myAlfred/api/admin/service/all')
-      .then((response) => {
-        let service = response.data;
-        this.setState({all_service: service});
+      .then(response => {
+        let service = response.data
+        this.setState({all_service: service})
       })
       .catch(error => {
-        console.error(error);
-      });
+        console.error(error)
+      })
 
     axios.get('/myAlfred/api/admin/billing/all')
-      .then((response) => {
-        let billing = response.data;
-        this.setState({all_billing: billing});
+      .then(response => {
+        let billing = response.data
+        this.setState({all_billing: billing})
       })
       .catch(error => {
-        console.error(error);
-      });
+        console.error(error)
+      })
 
     axios.get('/myAlfred/api/admin/job/all')
-      .then((response) => {
-        let job = response.data;
-        this.setState({all_job: job});
+      .then(response => {
+        let job = response.data
+        this.setState({all_job: job})
       })
       .catch(error => {
-        console.error(error);
-      });
+        console.error(error)
+      })
 
     axios.get('/myAlfred/api/admin/filterPresentation/all')
-      .then((response) => {
-        let filter_presentation = response.data;
-        let filter_aucun = filter_presentation.find(f => f.label == 'Aucun')._id;
+      .then(response => {
+        let filter_presentation = response.data
+        let filter_aucun = filter_presentation.find(f => f.label == 'Aucun')._id
         this.setState({
           all_filter_presentation: filter_presentation,
           filter_presentation: filter_aucun,
-        });
-      }).catch((error) => {
-      console.log(error);
-    });
+        })
+      }).catch(error => {
+        console.log(error)
+      })
 
     axios.get('/myAlfred/api/admin/tags/all')
       .then(response => {
@@ -161,69 +151,65 @@ class add extends React.Component {
   }
 
   onChange = e => {
-    this.setState({[e.target.name]: e.target.value});
-    let {name, value} = e.target;
-    console.log('onChange:' + name, value);
+    this.setState({[e.target.name]: e.target.value})
+    let {name, value} = e.target
+    console.log(`onChange:${ name}`, value)
     if (name == 'service' && value != '') {
-      let service = this.state.all_service.find(s => s._id == value);
-      console.log(service);
+      let service = this.state.all_service.find(s => s._id == value)
+      console.log(service)
     }
-  };
+  }
 
   onAccessChange = e => {
     const {name, checked}=e.target
-    this.setState({[name]:checked})
+    this.setState({[name]: checked})
   }
 
   onCesuChange = e => {
-    const checked = e.target.checked;
-    this.setState({cesu_eligible: checked});
-  };
+    const checked = e.target.checked
+    this.setState({cesu_eligible: checked})
+  }
 
   onChangeCompany = e => {
     const {value} = e.target
-    const {prestation}=this.state
     this.setState({private_company: value})
     if (value) {
       this.setState({
-        professional_access:true,
-        particular_access:false,
+        professional_access: true,
+        particular_access: false,
       })
     }
   }
 
   handleChangeTags = selectedTags => {
-    this.setState({selectedTags});
-
-  };
+    this.setState({selectedTags})
+  }
 
   handleChangeBilling = selectedBilling => {
-    this.setState({selectedBilling});
-
-  };
+    this.setState({selectedBilling})
+  }
 
   onChangeFile(e) {
-    this.setState({picture: e.target.files[0]});
+    this.setState({picture: e.target.files[0]})
   }
 
   onSubmit = e => {
-    let arrayFilter = [];
-    let arrayTags = [];
-    let arrayBilling = [];
+    let arrayTags = []
+    let arrayBilling = []
     if (this.state.selectedTags != null) {
       this.state.selectedTags.forEach(w => {
 
-        arrayTags.push(w.value);
+        arrayTags.push(w.value)
 
-      });
+      })
     }
 
     if (this.state.selectedBilling != null) {
       this.state.selectedBilling.forEach(t => {
-        arrayBilling.push(t.value);
-      });
+        arrayBilling.push(t.value)
+      })
     }
-    e.preventDefault();
+    e.preventDefault()
     let body={}
     body.label=this.state.label
     body.price=this.state.price
@@ -244,24 +230,21 @@ class add extends React.Component {
 
     axios
       .post('/myAlfred/api/admin/prestation/all', body)
-      .then(res => {
-        snackBarSuccess('Prestation ajoutée');
-        Router.push({pathname: '/dashboard/prestations/all'});
+      .then(() => {
+        snackBarSuccess('Prestation ajoutée')
+        Router.push({pathname: '/dashboard/prestations/all'})
       })
       .catch(err => {
-          console.error(err)
-          snackBarError(Object.values(err.response.data))
-          this.setState({errors: err.response.data});
+        console.error(err)
+        snackBarError(Object.values(err.response.data))
+        this.setState({errors: err.response.data})
 
-          if (err.response.status === 401 || err.response.status === 403) {
-            clearAuthenticationToken()
-            Router.push({pathname: '/login'});
-          }
-        },
-      );
-
-
-  };
+        if (err.response.status === 401 || err.response.status === 403) {
+          clearAuthenticationToken()
+          Router.push({pathname: '/login'})
+        }
+      })
+  }
 
   render() {
     const {classes} = this.props
@@ -304,7 +287,7 @@ class add extends React.Component {
                 </Grid>
                 <Grid item style={{marginTop: 20, display: 'flex', 'align-items': 'center'}}>
                   <Checkbox
-                    name={`cesu_eligible`}
+                    name={'cesu_eligible'}
                     checked={this.state.cesu_eligible}
                     onChange={this.onCesuChange}
                   />
@@ -454,29 +437,29 @@ class add extends React.Component {
                 <Typography style={{fontSize: 20}}>
                   Prestation proposée
                 </Typography>
-                <em style={{ color: 'red'}}>{this.state.errors.access}</em><br/>
+                <em style={{color: 'red'}}>{this.state.errors.access}</em><br/>
                 <FormControlLabel
                   control={
                     <Checkbox color="primary"
-                              checked={particular_access ? 'checked' : ''}
-                              name="particular_access" onChange={this.onAccessChange}
-                              />
+                      checked={particular_access ? 'checked' : ''}
+                      name="particular_access" onChange={this.onAccessChange}
+                    />
                   }
                   label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux particuliers</p></React.Fragment>}
                 />
                 <FormControlLabel
                   control={
                     <Checkbox color="primary"
-                              checked={professional_access ? 'checked' : ''}
-                              name="professional_access" onChange={this.onAccessChange}
-                              />
+                      checked={professional_access ? 'checked' : ''}
+                      name="professional_access" onChange={this.onAccessChange}
+                    />
                   }
                   label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux professionels</p>
                   </React.Fragment>}
                 />
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
-                  <Typography style={{fontSize: 20}}>Restreindre à la compagnie</Typography>
+                    <Typography style={{fontSize: 20}}>Restreindre à la compagnie</Typography>
                     <Select
                       input={<Input name="job" id="genre-label-placeholder"/>}
                       displayEmpty
@@ -497,7 +480,7 @@ class add extends React.Component {
                     </Select>
                   </FormControl>
                 </Grid>
-              { private_company &&
+                { private_company &&
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
                     <Typography style={{fontSize: 20}}>Tarif partenaire</Typography>
@@ -516,7 +499,7 @@ class add extends React.Component {
                     />
                   </FormControl>
                 </Grid>
-              }
+                }
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <Typography style={{fontSize: 17}}>Tags</Typography>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
@@ -543,8 +526,8 @@ class add extends React.Component {
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(add);
+export default withStyles(styles)(add)

@@ -1,20 +1,20 @@
-import React from 'react';
-import Layout from '../../../hoc/Layout/Layout';
-import EditPicture from '../../../components/Dashboard/EditPicture/EditPicture';
+import React from 'react'
+import Layout from '../../../hoc/Layout/Layout'
+import EditPicture from '../../../components/Dashboard/EditPicture/EditPicture'
 
 class editPicture extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       id: null,
       type: 'prestation',
-    };
+    }
   }
 
   static getInitialProps({query: {id}}) {
-    return {prestation_id: id};
+    return {prestation_id: id}
   }
 
   render() {
@@ -23,9 +23,9 @@ class editPicture extends React.Component {
       <Layout>
         <EditPicture type={this.state.type} id={this.props.prestation_id}/>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
 
-export default editPicture;
+export default editPicture
