@@ -11,7 +11,8 @@ import Link from 'next/link'
 
 const {isLoggedUserAdmin}=require('../../utils/context')
 
-const styles = () => ({
+const jwt = require('jsonwebtoken')
+const styles = theme => ({
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',
@@ -47,8 +48,7 @@ class home extends React.Component {
     localStorage.setItem('path', Router.pathname)
     if (!isLoggedUserAdmin()) {
       Router.push('/login')
-    }
-    else {
+    } else {
       this.setState({is_admin: true})
     }
     setAxiosAuthentication()

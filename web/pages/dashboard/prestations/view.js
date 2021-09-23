@@ -1,5 +1,6 @@
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react'
+import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
@@ -11,6 +12,7 @@ import Select2 from 'react-select'
 import Layout from '../../../hoc/Layout/Layout'
 import axios from 'axios'
 import Router from 'next/router'
+import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
 import Input from '@material-ui/core/Input'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -138,44 +140,44 @@ class view extends React.Component {
       })
 
     axios.get('/myAlfred/api/admin/category/all')
-      .then(response => {
+      .then((response) => {
         let category = response.data
         this.setState({all_category: category})
-      }).catch(error => {
-        console.log(error)
-      })
+      }).catch((error) => {
+      console.log(error)
+    })
 
     axios.get('/myAlfred/api/admin/service/all')
-      .then(response => {
+      .then((response) => {
         let service = response.data
         this.setState({all_service: service})
-      }).catch(error => {
-        console.log(error)
-      })
+      }).catch((error) => {
+      console.log(error)
+    })
 
     axios.get('/myAlfred/api/admin/billing/all')
-      .then(response => {
+      .then((response) => {
         let billing = response.data
         this.setState({all_billing: billing})
-      }).catch(error => {
-        console.log(error)
-      })
+      }).catch((error) => {
+      console.log(error)
+    })
 
     axios.get('/myAlfred/api/admin/job/all')
-      .then(response => {
+      .then((response) => {
         let job = response.data
         this.setState({all_job: job})
-      }).catch(error => {
-        console.log(error)
-      })
+      }).catch((error) => {
+      console.log(error)
+    })
 
     axios.get('/myAlfred/api/admin/filterPresentation/all')
-      .then(response => {
+      .then((response) => {
         let filter_presentation = response.data
         this.setState({all_filter_presentation: filter_presentation})
-      }).catch(error => {
-        console.log(error)
-      })
+      }).catch((error) => {
+      console.log(error)
+    })
 
     axios.get('/myAlfred/api/admin/tags/all')
       .then(response => {
@@ -311,19 +313,38 @@ class view extends React.Component {
   handleClick() {
     const id = this.props.prestation_id
     axios.delete(`/myAlfred/api/admin/prestation/all/${id}`)
-      .then(() => {
+      .then(res => {
         snackBarSuccess('Prestation supprimée avec succès')
         Router.push({pathname: '/dashboard/prestations/all'})
       })
       .catch(err => {
         console.error(err)
       })
+
+
   }
 
 
   render() {
     const {classes} = this.props
-    const {prestation, all_service, all_billing, all_filter_presentation, all_job, all_tags, companies} = this.state
+    const {prestation} = this.state
+    const {current_service} = this.state
+    const {current_billing} = this.state
+    const {current_category} = this.state
+    const {current_filter_presentation} = this.state
+    const {current_job} = this.state
+    const {current_tags} = this.state
+    const {all_category} = this.state
+    const {all_service} = this.state
+    const {all_billing} = this.state
+    const {all_filter_presentation} = this.state
+    const {all_job} = this.state
+    const {all_tags} = this.state
+    const {companies} = this.state
+
+    const categories = all_category.map(e => (
+      <MenuItem value={e._id}>{e.label}</MenuItem>
+    ))
 
     const optionsTags = all_tags.map(tag => ({
       label: tag.label,
@@ -358,7 +379,7 @@ class view extends React.Component {
               </Grid>
               <Grid item style={{marginTop: 20, display: 'flex', 'align-items': 'center'}}>
                 <Checkbox
-                  name={'cesu_eligible'}
+                  name={`cesu_eligible`}
                   checked={this.state.cesu_eligible}
                   onChange={this.onCesuChange}
                 />

@@ -16,7 +16,7 @@ import Button from '@material-ui/core/Button'
 const {BigList}=require('../../components/BigList/BigList')
 const models = require('../../components/BigList/models')
 
-const styles = () => ({
+const styles = theme => ({
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',
@@ -35,6 +35,14 @@ const styles = () => ({
     color: 'black',
     fontSize: 12,
     lineHeight: 4.15,
+  },
+})
+
+const actionsStyles = theme => ({
+  root: {
+    flexShrink: 0,
+    color: theme.palette.text.secondary,
+    marginLeft: theme.spacing(2.5),
   },
 })
 
@@ -62,12 +70,12 @@ class all extends React.Component {
     this.fileRef = React.createRef()
 
     this.columnDefs=[
-      {headerName: '_id', field: '_id', width: 0},
-      models.textColumn({headerName: 'Catégorie', field: 'category'}),
-      {headerName: '#prospects', field: 'count'},
-      {headerName: '#contactés', field: 'contacted'},
-      {headerName: '#non contactés', field: 'not_contacted'},
-      {headerName: 'A contacter', field: 'download', cellRenderer: 'linkRenderer'},
+      {headerName: "_id", field: "_id", width: 0},
+      models.textColumn({headerName: "Catégorie", field: "category"}),
+      {headerName: "#prospects", field: "count"},
+      {headerName: "#contactés", field: "contacted"},
+      {headerName: "#non contactés", field: "not_contacted"},
+      {headerName: "A contacter", field: "download", cellRenderer: 'linkRenderer'},
     ]
   }
 
@@ -75,11 +83,11 @@ class all extends React.Component {
     localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios.get('/myAlfred/api/admin/prospect/fields')
-      .then(response => {
+      .then( response => {
         const fields=response.data
         this.setState(fields)
       })
-      .catch(err => {
+      .catch (err => {
         console.error(err)
       })
     this.load()
@@ -87,23 +95,23 @@ class all extends React.Component {
 
   load() {
     axios.get('/myAlfred/api/admin/prospect/all')
-      .then(response => {
+      .then((response) => {
         const prospects=response.data
         prospects.forEach(p => {
           p.download={
             link: `/myAlfred/api/admin/prospect/tocontact/${p.category}`,
-            text: `Liste ${p.category}`,
+            text: `Liste ${p.category}`
           }
         })
         this.setState({prospects: prospects})
       })
-      .catch(error => {
-        console.log(error)
-        if (error.response.status === 401 || error.response.status === 403) {
-          clearAuthenticationToken()
-          Router.push({pathname: '/login'})
-        }
-      })
+    .catch((error) => {
+      console.log(error)
+      if (error.response.status === 401 || error.response.status === 403) {
+        clearAuthenticationToken()
+        Router.push({pathname: '/login'})
+      }
+    })
   }
 
   handleChangePage(event, page) {
@@ -124,31 +132,31 @@ class all extends React.Component {
   }
 
   onClickHandler = () => {
-    this.setState({comments: null, errors: null})
+    this.setState({comments: null, errors:null})
     const data = new FormData()
     data.append('prospects', this.state.selectedFile)
     axios.post('/myAlfred/api/admin/prospect/add', data)
-      .then(response => {
+      .then( response => {
         this.setState({comments: response.data})
         this.load()
       })
-      .catch(err => {
+      .catch( err => {
         this.setState({errors: err.response.data.errors})
         this.load()
       })
     // Clear input file to avoid ERR_UPLOAD_FILE_CHANGED
     this.fileRef.current.value=''
-    this.setState({selectedFile: null})
+    this.setState({selectedFile:null})
   }
 
   startSearch = () => {
     const {url, category} = this.state
-    this.setState({lbc_message: ['Scan en cours...'], lbc_error: []})
+    this.setState({lbc_message: ['Scan en cours...'], lbc_error:[]})
     setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/prospect/search', {url, category})
       .then(res => {
         const msg=res.data
-        this.setState({lbc_message: msg, lbc_error: []})
+        this.setState({lbc_message: msg, lbc_error:[]})
       })
       .catch(err => {
         console.error(err)
@@ -158,85 +166,85 @@ class all extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {prospects, comments, errors, category, url, lbc_message, lbc_error} = this.state
+    const {prospects, export_data, comments, errors, category, url, lbc_message, lbc_error} = this.state
 
     return (
       <Layout>
-        <Grid container className={classes.signupContainer} style={{width: '100%'}}>
+        <Grid container className={classes.signupContainer} style={{width:'100%'}}>
           <Link href={'/dashboard/home'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
           </Link>
         </Grid>
-        <Grid style={{width: '100%'}}>
+          <Grid style={{width: '100%'}}>
           <Card className={classes.card}>
             <Grid>
               <Card className={classes.card}>
-                <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-                  <Typography style={{fontSize: 30}}>Scan le bon coin</Typography>
-                  <Typography>Catégorie:</Typography>
-                  <TextField
-                    name='category'
-                    value={category}
-                    onChange={this.onChange}
-                  />
-                  <Typography>URL le bon coin:</Typography>
-                  <TextField
-                    style={{width: '100%'}}
-                    name='url'
-                    value={url}
-                    onChange={this.onChange}
-                  />
-                  { (lbc_message||[]).map(part => {
+              <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+                <Typography style={{fontSize: 30}}>Scan le bon coin</Typography>
+                <Typography>Catégorie:</Typography>
+                <TextField
+                  name='category'
+                  value={category}
+                  onChange={this.onChange}
+                />
+                <Typography>URL le bon coin:</Typography>
+                <TextField
+                  style={{width:'100%'}}
+                  name='url'
+                  value={url}
+                  onChange={this.onChange}
+                />
+                { (lbc_message||[]).map( part => {
                     return (
                       <div>{part}</div>
                     )
                   })
-                  }
-                  { (lbc_error||[]).map(part => {
+                }
+                { (lbc_error||[]).map( part => {
                     return (
-                      <em style={{color: 'red'}}>{part}</em>
+                      <em style={{color:'red'}}>{part}</em>
                     )
                   })
-                  }
-                  <Button disabled={!category || !url} onClick={this.startSearch}>
+                }
+                <Button disabled={!category || !url} onClick={this.startSearch}>
                   Lancer la recherche
-                  </Button>
-                </Grid>
+                </Button>
+              </Grid>
               </Card>
               <Card className={classes.card}>
-                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <Typography style={{fontSize: 30}}>Import Excel</Typography>
-                </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                <Typography style={{fontSize: 30}}>Import Excel</Typography>
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
               Sélectionnez un fichier .csv ou .txt, séparateur point-virgule
-                </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <ul>
-                    <li>Colonnes possibles : {this.state.fields.join(',')}</li>
-                    <li>Colonnes obligatoires : {this.state.mandatory.join(',')}</li>
-                  </ul>
-                </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
-                  <input ref={this.fileRef} type="file" name="file" id="file" onChange={this.onChangeHandler}/>
-                </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
-                  {comments}
-                  <em style={{color: 'red'}}>{errors}</em>
-                </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
-                  <Button disabled={!this.state.selectedFile} onClick={this.onClickHandler}>Importer</Button>
-                </Grid>
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+              <ul>
+                <li>Colonnes possibles : {this.state.fields.join(',')}</li>
+                <li>Colonnes obligatoires : {this.state.mandatory.join(',')}</li>
+              </ul>
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+                <input ref={this.fileRef} type="file" name="file" id="file" onChange={this.onChangeHandler}/>
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+                {comments}
+                <em style={{color: 'red'}}>{errors}</em>
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
+                <Button disabled={!this.state.selectedFile} onClick={this.onClickHandler}>Importer</Button>
+              </Grid>
               </Card>
               <Card className={classes.card}>
-                <Paper style={{width: '100%'}}>
-            		  <BigList
-                    data={prospects}
-                    columnDefs={this.columnDefs}
-                    classes={classes}
-                    title={'Prospection'}
-                    paginationPageSize='300'
-                  />
-                </Paper>
+              <Paper style={{width: '100%'}}>
+            		<BigList
+            			data={prospects}
+            			columnDefs={this.columnDefs}
+            			classes={classes}
+            			title={'Prospection'}
+				          paginationPageSize='300'
+            		/>
+              </Paper>
               </Card>
             </Grid>
           </Card>

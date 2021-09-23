@@ -93,7 +93,7 @@ class editPicture extends React.Component {
     formData.append('picture', this.state.picture)
     const id = this.props.banner_id
     axios.post(`/myAlfred/api/admin/shopBanner/editPicture/${id}`, formData)
-      .then(() => {
+      .then(res => {
         snackBarSuccess('Photo modifiée avec succès')
         Router.push({pathname: '/dashboard/shopBanner/all'})
       })

@@ -14,7 +14,7 @@ import Layout from '../../../hoc/Layout/Layout'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
 
-const styles = () => ({
+const styles = theme => ({
   signupContainer: {
     alignItems: 'center',
     height: '170vh',
@@ -71,18 +71,21 @@ class add extends React.Component {
     setAxiosAuthentication()
     axios
       .post('/myAlfred/api/admin/tags/all', newBilling)
-      .then(() => {
+      .then(res => {
         snackBarSuccess('Tag ajouté')
         Router.push({pathname: '/dashboard/tags/all'})
       })
       .catch(err => {
-        console.error(err)
-        this.setState({errors: err.response.data})
-        if (err.response.status === 401 || err.response.status === 403) {
-          clearAuthenticationToken()
-          Router.push({pathname: '/login'})
-        }
-      })
+          console.error(err)
+          this.setState({errors: err.response.data})
+          if (err.response.status === 401 || err.response.status === 403) {
+            clearAuthenticationToken()
+            Router.push({pathname: '/login'})
+          }
+        },
+      )
+
+
   }
 
   render() {

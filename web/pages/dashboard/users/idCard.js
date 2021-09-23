@@ -101,7 +101,7 @@ class idCard extends React.Component {
 
   validateCard() {
     const id = this.props.user_id
-    axios.put(`/myAlfred/api/admin/users/users/idCard/${id}`)
+    axios.put('/myAlfred/api/admin/users/users/idCard/' + id)
       .then(() => {
         snackBarSuccess('Carte d\'identité validée')
         Router.push({pathname: '/dashboard/users/all'})
@@ -111,7 +111,7 @@ class idCard extends React.Component {
 
   deleteCard() {
     const id = this.props.user_id
-    axios.put(`/myAlfred/api/admin/users/users/idCard/delete/${id}`)
+    axios.put('/myAlfred/api/admin/users/users/idCard/delete/' + id)
       .then(() => {
         snackBarSuccess('Validation supprimée')
         Router.push({pathname: '/dashboard/users/all'})
@@ -178,10 +178,10 @@ class idCard extends React.Component {
                   <Grid item xs={12}>
                     {user.id_confirmed ?
                       <Button onClick={() => this.deleteCard()} variant={'contained'} color={'secondary'}
-                        style={{color: 'white'}}>Supprimer la confirmation</Button>
+                              style={{color: 'white'}}>Supprimer la confirmation</Button>
                       :
                       <Button onClick={() => this.validateCard()} variant={'contained'} color={'primary'}
-                        style={{color: 'white'}}>Valider la carte d'ientité</Button>
+                              style={{color: 'white'}}>Valider la carte d'ientité</Button>
                     }
 
                   </Grid>

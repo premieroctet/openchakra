@@ -19,9 +19,9 @@ class all extends DataPage {
 
   loadData = () => {
     axios.get('/myAlfred/api/admin/equipment/all')
-      .then(response => {
+      .then((response) => {
         let equipments = response.data
-        equipments.forEach(e => {
+        equipments.forEach ( e => {
           e.picture=`/static/equipments/${e.logo}`
         })
         this.setState({data: equipments})

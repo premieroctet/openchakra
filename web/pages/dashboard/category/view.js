@@ -2,8 +2,11 @@ import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
+import Checkbox from '@material-ui/core/Checkbox'
 import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Grid from '@material-ui/core/Grid'
+import Link from 'next/link'
 import React from 'react'
 import Router from 'next/router'
 import Select2 from 'react-select'
@@ -41,6 +44,17 @@ const styles = {
   },
   chip: {
     margin: 2,
+  },
+}
+
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
   },
 }
 
@@ -110,12 +124,12 @@ class view extends React.Component {
       })
 
     axios.get('/myAlfred/api/admin/tags/all')
-      .then(response => {
+      .then((response) => {
         let tags = response.data
         this.setState({all_tags: tags})
-      }).catch(error => {
-        console.error(error)
-      })
+      }).catch((error) => {
+      console.error(error)
+    })
 
   }
 
@@ -141,15 +155,15 @@ class view extends React.Component {
     this.setState({
       particular_id: e.target.files[0],
       particular_file: URL.createObjectURL(e.target.files[0]),
-      particular_ext: e.target.files[0].name.split('.').pop(),
+      particular_ext: e.target.files[0].name.split('.').pop()
     })
   }
 
   onProfessionalImageChange = e => {
     this.setState({
-      professional_id: e.target.files[0],
+      professional_id : e.target.files[0],
       professional_file: URL.createObjectURL(e.target.files[0]),
-      professional_ext: e.target.files[0].name.split('.').pop(),
+      professional_ext: e.target.files[0].name.split('.').pop()
     })
   }
 
@@ -197,7 +211,7 @@ class view extends React.Component {
             formData.append('professional_picture', professional_id)
           }
           axios.put(`/myAlfred/api/admin/category/editPicture/${newCategory._id}`, formData)
-            .then(() => {
+            .then (res => {
               snackBarSuccess('Illustrations mises à jour')
               Router.push(`/dashboard/category/view?id=${newCategory._id}`)
             })
@@ -214,7 +228,7 @@ class view extends React.Component {
   handleClick() {
     const id = this.props.category_id
     axios.delete(`/myAlfred/api/admin/category/all/${id}`)
-      .then(() => {
+      .then(res => {
         snackBarSuccess('Categorie supprimée avec succès')
         Router.push({pathname: '/dashboard/category/all'})
       })
@@ -225,7 +239,7 @@ class view extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {category, all_tags} = this.state
+    const {category, all_tags, current_tags} = this.state
     const optionsTags = all_tags.map(tag => ({
       label: tag.label,
       value: tag._id,
