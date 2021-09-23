@@ -98,9 +98,9 @@ class View extends BasePage {
   handleClick() {
     const id = this.getURLProps().id
     axios.delete(`/myAlfred/api/admin/job/all/${id}`)
-      .then(() => {
-        snackBarSuccess('Métier supprimé avec succès')
-        Router.push({pathname: '/dashboard/job/all'})
+      .then(res => {
+        snackBarSuccess('Métier supprimé avec succès');
+        Router.push({pathname: '/dashboard/job/all'});
       })
       .catch(err => {
         console.error(err)

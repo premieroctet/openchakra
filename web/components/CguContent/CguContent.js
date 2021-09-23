@@ -956,7 +956,7 @@ class CguContent extends React.Component {
             Alfred impacté(s) par cette annulation - des frais d’annulation. </p>
         </Grid>
         <Grid item xs={12}>
-          <h3 style={{color: '#84A5E0'}}>16 – Données personnelles et respect de la vie privée</h3>
+          <h3 style={{color: '#84A5E0'}} id='privacy'>16 – Données personnelles et respect de la vie privée</h3>
           <p>16.1 Tous les Membres peuvent choisir ce qu’ils souhaitent rendre public sur la Place de
             marché
             My-Alfred, à l’exception du mot de passe qui restera confidentiel en toutes circonstances et
