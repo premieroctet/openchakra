@@ -1,3 +1,5 @@
+const cookieParser=require('cookie-parser')
+
 require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]')
 
 const {is_production, is_validation, is_development, is_development_nossl, displayConfig} = require('../config/config')
@@ -61,6 +63,7 @@ nextApp.prepare().then(() => {
   // Passport middleware
   app.use(passport.initialize())
 
+  app.use(cookieParser())
   // Passport config
   /* eslint-disable global-require */
   require('./config/passport')

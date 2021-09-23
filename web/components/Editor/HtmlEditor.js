@@ -1,7 +1,9 @@
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import dynamic from 'next/dynamic'
-import 'suneditor/dist/css/suneditor.min.css'
+// TODO : fix loading SunEditor dist css
+// import 'suneditor/dist/css/suneditor.min.css'
+import 'suneditor/src/assets/css/suneditor.css'
 import Grid from '@material-ui/core/Grid'
 
 const SunEditor = dynamic(() => import('suneditor-react'), {
@@ -39,6 +41,7 @@ class HtmlEditor extends React.Component {
       <Grid>
         <span>{this.props.title}</span>
         <SunEditor
+          lang='fr'
           setOptions={this.options}
           onChange={this.onChange}
           defaultValue={this.props.value}
