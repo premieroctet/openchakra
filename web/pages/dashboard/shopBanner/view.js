@@ -1,17 +1,18 @@
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import Link from 'next/link'
+import React from 'react'
+import Router from 'next/router'
+import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
+
+import {snackBarSuccess} from '../../../utils/notifications'
+import Layout from '../../../hoc/Layout/Layout'
+
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-
-
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
-import Link from 'next/link';
 
 
 const styles = {
@@ -33,93 +34,87 @@ const styles = {
     color: 'black',
     fontSize: 12,
   },
-};
+}
 
 class view extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       shopBanner: {},
       label: '',
 
 
-    };
+    }
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClick = this.handleClick.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
-    return {banner_id: id};
+    return {banner_id: id}
 
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    const id = this.props.banner_id;
+    localStorage.setItem('path', Router.pathname)
+    const id = this.props.banner_id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/shopBanner/all/${id}`)
       .then(response => {
-        let shopBanner = response.data;
-        this.setState({shopBanner: shopBanner});
+        let shopBanner = response.data
+        this.setState({shopBanner: shopBanner})
 
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
-      });
+      })
 
   }
 
   onChange = e => {
 
-    const state = this.state.shopBanner;
-    state[e.target.name] = e.target.value;
-    this.setState({shopBanner: state});
-  };
+    const state = this.state.shopBanner
+    state[e.target.name] = e.target.value
+    this.setState({shopBanner: state})
+  }
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const {label} = this.state.shopBanner;
-    const id = this.props.banner_id;
+    const {label} = this.state.shopBanner
+    const id = this.props.banner_id
     axios.put(`/myAlfred/api/admin/shopBanner/all/${id}`, {label})
-      .then(res => {
-
-        alert('Image modifiée avec succès');
-        Router.push({pathname: '/dashboard/shopBanner/all'});
+      .then(() => {
+        snackBarSuccess('Image modifiée avec succès')
+        Router.push({pathname: '/dashboard/shopBanner/all'})
       })
       .catch(err => {
-        console.error(err);
-      });
+        console.error(err)
+      })
 
 
-  };
+  }
 
   handleClick() {
-    const id = this.props.banner_id;
+    const id = this.props.banner_id
     axios.delete(`/myAlfred/api/admin/shopBanner/all/${id}`)
-      .then(res => {
-
-        alert('Image supprimée avec succès');
-        Router.push({pathname: '/dashboard/shopBanner/all'});
+      .then(() => {
+        snackBarSuccess('Image supprimée avec succès')
+        Router.push({pathname: '/dashboard/shopBanner/all'})
       })
       .catch(err => {
-        console.error(err);
-      });
-
-
-  };
-
+        console.error(err)
+      })
+  }
 
   render() {
-    const {classes} = this.props;
-    const {shopBanner} = this.state;
-
+    const {classes} = this.props
+    const {shopBanner} = this.state
 
     return (
       <Layout>
@@ -147,7 +142,7 @@ class view extends React.Component {
                     Modifier
                   </Button>
                   <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
+                    onClick={this.handleClick}>
                     Supprimer
                   </Button>
                 </Grid>
@@ -161,9 +156,9 @@ class view extends React.Component {
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(view);
+export default withStyles(styles)(view)

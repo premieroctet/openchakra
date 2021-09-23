@@ -1,19 +1,19 @@
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react';
-import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
-import Router from 'next/router';
-import Layout from '../../hoc/Layout/Layout';
-import axios from 'axios';
-import MapComponent from '../../components/map';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import React from 'react'
+import Checkbox from '@material-ui/core/Checkbox'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Router from 'next/router'
+import Layout from '../../hoc/Layout/Layout'
+import axios from 'axios'
+import MapComponent from '../../components/map'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
 const {getLoggedUserId}=require('../../utils/context')
-import AlgoliaPlaces from 'algolia-places-react';
+import AlgoliaPlaces from 'algolia-places-react'
 
-const styles = theme => ({
+const styles = () => ({
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',
@@ -47,11 +47,11 @@ const styles = theme => ({
     fontSize: 100,
   },
 
-});
+})
 
 class ServicesMap extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       allServices: [],
       selectedService: 'none',
@@ -62,21 +62,22 @@ class ServicesMap extends React.Component {
       displayUsers: false,
       centerLat: 47.5,
       centerLon: 1.71,
-    };
-    this.onChange = this.onChange.bind(this);
+    }
+    this.onChange = this.onChange.bind(this)
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     if (!getLoggedUserId()) {
-      Router.push('/login');
-    } else {
+      Router.push('/login')
+    }
+    else {
       setAxiosAuthentication()
       axios.get('/myAlfred/api/service/allCount')
         .then(response => {
-          this.setState({allServices: response.data});
+          this.setState({allServices: response.data})
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
       // Services
       axios.get('/myAlfred/api/admin/serviceUsersMap')
         .then(response => {
@@ -85,13 +86,13 @@ class ServicesMap extends React.Component {
             label: `${s.user.firstname}-${s.service.label}`,
             link: `/userServicePreview?id=${s._id}`,
             service: s.service._id,
-          }));
+          }))
           this.setState({
             services: response.data,
             allServiceCircles: serviceCircles,
-          });
+          })
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
 
       // Users
       axios.get('/myAlfred/api/admin/users/users')
@@ -100,44 +101,42 @@ class ServicesMap extends React.Component {
             coordinates: user.billing_address.gps,
             label: `${user.firstname}`,
             link: `/viewProfile?id=${user._id}`,
-          }));
+          }))
           this.setState({
             userCircles: userCircles,
-          });
+          })
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
     }
   }
 
   onChangeCity = suggestion => {
-    const lat = suggestion.suggestion.latlng.lat;
-    const lon = suggestion.suggestion.latlng.lng;
-    this.setState({centerLat: lat, centerLon: lon});
-  };
+    const lat = suggestion.suggestion.latlng.lat
+    const lon = suggestion.suggestion.latlng.lng
+    this.setState({centerLat: lat, centerLon: lon})
+  }
 
   onChange = ev => {
-    const {name, value} = ev.target;
+    const {name, value} = ev.target
     if (name == 'selectedService') {
-      const displayedServiceCircles = value == 'all' ? this.state.allServiceCircles : value == 'none' ? [] : this.state.allServiceCircles.filter(s => s.service == value);
+      const displayedServiceCircles = value == 'all' ? this.state.allServiceCircles : value == 'none' ? [] : this.state.allServiceCircles.filter(s => s.service == value)
       this.setState({
         selectedService: value,
         displayedServiceCircles: displayedServiceCircles,
-      });
+      })
     }
     if (name == 'displayUsers') {
-      this.setState({[name]: ev.target.checked});
+      this.setState({[name]: ev.target.checked})
     }
-  };
+  }
 
   render() {
-    const {classes} = this.props;
-    const {displayedServiceCircles, userCircles, allServices, selectedService, displayUsers, centerLat, centerLon} = this.state;
+    const {displayedServiceCircles, userCircles, allServices, selectedService, displayUsers, centerLat, centerLon} = this.state
+    const allCircles = displayUsers ? userCircles.concat(displayedServiceCircles) : displayedServiceCircles
 
-    const allCircles = displayUsers ? userCircles.concat(displayedServiceCircles) : displayedServiceCircles;
     return (
       <Layout>
         <Grid style={{width: '100%', height: 700}}>
-          { /* <MapComponent position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]} perimeter={serviceUser.perimeter*1000} alfred={alfred.firstname}/> */}
           <MapComponent position={[centerLat, centerLon]} zoom={6} circles={allCircles}/>
         </Grid>
         <Grid style={{width: '100%'}}>
@@ -151,13 +150,13 @@ class ServicesMap extends React.Component {
               countries: ['fr'],
               type: 'city',
             }}
-            onChange={(suggestion) => this.onChangeCity(suggestion)}
+            onChange={suggestion => this.onChangeCity(suggestion)}
             onClear={() => this.setState({city: '', gps: null})}
           /></Grid>
           <Grid style={{display: 'flex', 'align-items': 'center'}}>
             <Select
-              renderValue={selected => selected == 'all' ? 'Tous' : selected == 'none' ? 'Aucun' : allServices.filter(s => s._id === selected)[0].label}
-              name={`selectedService`}
+              renderValue={selected => (selected == 'all' ? 'Tous' : selected == 'none' ? 'Aucun' : allServices.filter(s => s._id === selected)[0].label)}
+              name={'selectedService'}
               value={selectedService}
               onChange={this.onChange}
             >
@@ -171,13 +170,13 @@ class ServicesMap extends React.Component {
             <Typography>{displayedServiceCircles.length} services</Typography>
           </Grid>
           <Grid style={{display: 'flex', 'align-items': 'center'}}>
-            <Checkbox name={`displayUsers`} checked={this.state.displayUsers} onChange={this.onChange}/>
+            <Checkbox name={'displayUsers'} checked={this.state.displayUsers} onChange={this.onChange}/>
             <Typography>Afficher les non-Alfred</Typography>
           </Grid>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(ServicesMap);
+export default withStyles(styles)(ServicesMap)

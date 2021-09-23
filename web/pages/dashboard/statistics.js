@@ -1,19 +1,19 @@
 const {setAxiosAuthentication, clearAuthenticationToken}=require('../../utils/authentication')
-import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
-import Router from 'next/router';
-import axios from 'axios';
-import Link from 'next/link';
-import HomeIcon from '@material-ui/icons/Home';
+import React from 'react'
+import {withStyles} from '@material-ui/core/styles'
+import Router from 'next/router'
+import axios from 'axios'
+import Link from 'next/link'
+import HomeIcon from '@material-ui/icons/Home'
 
 const moment = require('moment')
 import {Card, Grid, Typography, Checkbox, Avatar} from '@material-ui/core'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 const {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineSeries, RadialChart}=require('react-vis')
-import Layout from '../../hoc/Layout/Layout';
+import Layout from '../../hoc/Layout/Layout'
 const {isLoggedUserAdmin}=require('../../utils/context')
 
-const styles = theme => ({
+const styles = () => ({
 
   signupContainer: {
     width: '100%',
@@ -50,17 +50,17 @@ const styles = theme => ({
     fontSize: 70,
   },
 
-});
+})
 
 class statistics extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       registrations: null,
       ages: null,
       alfred_ages: false,
-    };
-    this.getCounts = this.getCounts.bind(this);
+    }
+    this.getCounts = this.getCounts.bind(this)
   }
 
   getCounts() {
@@ -68,48 +68,47 @@ class statistics extends React.Component {
     setAxiosAuthentication()
 
     axios.get('/myAlfred/api/admin/statistics')
-      .then((response) => {
-        this.setState(response.data);
+      .then(response => {
+        this.setState(response.data)
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(error => {
+        console.error(error)
         if (error.response.status === 401 || error.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/login'})
         }
-      });
+      })
     axios.get('/myAlfred/api/admin/registrations')
-      .then((response) => {
-        var registrations=response.data
-        registrations.unshift({x:parseInt(registrations[0].x)-100, y:0})
-        registrations.push({x:parseInt(registrations.slice(-1)[0].x)+100, y:0})
-        this.setState( {registrations: registrations} );
+      .then(response => {
+        let registrations=response.data
+        registrations.unshift({x: parseInt(registrations[0].x)-100, y: 0})
+        registrations.push({x: parseInt(registrations.slice(-1)[0].x)+100, y: 0})
+        this.setState({registrations: registrations})
       })
       .catch(error => console.error(error))
     axios.get(`/myAlfred/api/admin/ages?alfred=${this.state.alfred_ages}`)
-      .then((response) => {
-        this.setState( {ages: response.data} );
+      .then(response => {
+        this.setState({ages: response.data})
       })
       .catch(error => console.error(error))
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+    localStorage.setItem('path', Router.pathname)
     if (!isLoggedUserAdmin()) {
-      Router.push('/login');
-    } else {
-      this.setState({is_admin: true});
+      return Router.push('/login')
     }
-    this.getCounts();
-    setInterval(() => this.getCounts(), 30000);
+    this.setState({is_admin: true})
+    this.getCounts()
+    setInterval(() => this.getCounts(), 30000)
   }
 
   handleChange = event => {
-    this.setState({ alfred_ages : event.target.checked }, () => this.getCounts())
+    this.setState({alfred_ages: event.target.checked}, () => this.getCounts())
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
     const {alfred_ages} = this.state
     const list =
     <>
@@ -130,8 +129,8 @@ class statistics extends React.Component {
           <Typography style={{fontSize: 30}}>Prestations</Typography>
           <Avatar className={classes.mediumAvatar}>{this.state.prestations}</Avatar>
         </Grid>
-        </Grid>
-        <Grid container className={classes.signupContainer}>
+      </Grid>
+      <Grid container className={classes.signupContainer}>
         { this.state.registrations ?
           <Grid item>
             <Typography style={{fontSize: 30}}>Inscriptions</Typography>
@@ -153,17 +152,17 @@ class statistics extends React.Component {
         { this.state.ages ?
           <Grid item>
             <Typography style={{fontSize: 30}}>Tranches d'âges</Typography>
-              <FormControlLabel
-                control={<Checkbox checked={alfred_ages} label='Alfred seulement' onChange={this.handleChange}/>}
-                label={'Alfred seulement'}
-              />
+            <FormControlLabel
+              control={<Checkbox checked={alfred_ages} label='Alfred seulement' onChange={this.handleChange}/>}
+              label={'Alfred seulement'}
+            />
             <RadialChart
               width={400}
               height={250}
               key={2}
               data={this.state.ages} showLabels={true}
-              labelsStyle={{ fontWeight: 'bold'}}
-              />
+              labelsStyle={{fontWeight: 'bold'}}
+            />
           </Grid>
           :
           null
@@ -172,24 +171,24 @@ class statistics extends React.Component {
     </>
     const refused = <Grid item style={{display: 'flex', justifyContent: 'center'}}>
       <Typography style={{fontSize: 30}}>Accès refusé</Typography>
-    </Grid>;
+    </Grid>
 
     return (
       <Layout>
-        <Grid container style={{marginTop: 20, width:'90%'}}>
+        <Grid container style={{marginTop: 20, width: '90%'}}>
           <Link href={'/dashboard/home'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
           </Link>
         </Grid>
         <Grid container className={classes.signupContainer}>
-          <Card className={classes.card} style={{width:'80%'}}>
+          <Card className={classes.card} style={{width: '80%'}}>
             {this.state.is_admin ? list : refused}
           </Card>
         </Grid>
       </Layout>
 
-    );
-  };
+    )
+  }
 }
 
-export default withStyles(styles)(statistics);
+export default withStyles(styles)(statistics)

@@ -1,17 +1,19 @@
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
-import React from 'react';
-import io from 'socket.io-client';
-import axios from 'axios';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import moment from 'moment';
 import {withStyles} from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
+import Router from 'next/router';
+import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
+import io from 'socket.io-client';
+import moment from 'moment';
+
+import {snackBarError} from '../../utils/notifications';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import styles from '../../static/css/components/MessagesDetails/MessagesDetails';
 
-import Router from 'next/router';
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 const {hideIllegal} = require('../../utils/text');
-import Divider from '@material-ui/core/Divider';
 
 moment.locale('fr');
 
@@ -176,7 +178,7 @@ class MessagesDetails extends React.Component {
 
   grantNotificationPermission = () => {
     if (!('Notification' in window)) {
-      alert('Votre navigateur ne supporte pas les notifications');
+      snackBarError('Votre navigateur ne supporte pas les notifications');
       return;
     }
 
