@@ -1,14 +1,17 @@
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
+import {Typography} from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import PropTypes from 'prop-types';
 import React from 'react';
 import Router from 'next/router';
 import axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import {Typography} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import {withStyles} from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
+
+import {snackBarSuccess} from '../../../utils/notifications';
 import styles from './EditPictureStyle';
+
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
 
 class EditPicture extends React.Component {
@@ -55,7 +58,7 @@ class EditPicture extends React.Component {
     formData.append('picture', this.state.picture);
     axios.post(`/myAlfred/api/admin/${this.props.type}/editPicture/${this.props.id}`, formData)
       .then(res => {
-        alert('Photo modifiée avec succès');
+        snackBarSuccess('Photo modifiée avec succès');
         Router.push({pathname: `/dashboard/${this.props.type}` + `s/all`});
       })
       .catch(err => {

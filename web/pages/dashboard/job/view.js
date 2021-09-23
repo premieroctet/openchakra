@@ -1,15 +1,17 @@
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
 import Router from 'next/router';
-const {snackBarSuccess} = require('../../../utils/notifications')
+import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
+
+import {snackBarSuccess} from '../../../utils/notifications';
+import Layout from '../../../hoc/Layout/Layout';
+
+const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
 
 const styles = {
   loginContainer: {
@@ -103,8 +105,7 @@ class view extends React.Component {
     const id = this.props.job_id;
     axios.delete(`/myAlfred/api/admin/job/all/${id}`)
       .then(res => {
-
-        alert('Métier supprimé avec succès');
+        snackBarSuccess('Métier supprimé avec succès');
         Router.push({pathname: '/dashboard/job/all'});
       })
       .catch(err => {

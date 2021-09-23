@@ -1,15 +1,17 @@
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
-
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
 import Router from 'next/router';
-import Layout from '../../../hoc/Layout/Layout';
+import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
+
+import {snackBarSuccess} from '../../../utils/notifications';
+import Layout from '../../../hoc/Layout/Layout';
+
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
 
 const styles = theme => ({
@@ -66,7 +68,7 @@ class add extends React.Component {
     axios
       .post('/myAlfred/api/admin/filterPresentation/all', newBilling)
       .then(res => {
-        alert('Filtre ajouté');
+        snackBarSuccess('Filtre ajouté');
         Router.push({pathname: '/dashboard/filterPresentation/all'});
       })
       .catch(err => {
