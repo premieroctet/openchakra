@@ -1,21 +1,21 @@
-import {Typography} from '@material-ui/core'
-import {withStyles} from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Card from '@material-ui/core/Card'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Grid from '@material-ui/core/Grid'
-import Link from 'next/link'
-import React from 'react'
-import Router from 'next/router'
-import Select2 from 'react-select'
-import TextField from '@material-ui/core/TextField'
-import axios from 'axios'
+import {Typography} from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
+import Link from 'next/link';
+import React from 'react';
+import Router from 'next/router';
+import Select2 from 'react-select';
+import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
 
-import {snackBarSuccess, snackBarError} from '../../../utils/notifications'
-import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor'
-import Layout from '../../../hoc/Layout/Layout'
+import {snackBarSuccess, snackBarError} from '../../../utils/notifications';
+import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor';
+import Layout from '../../../hoc/Layout/Layout';
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
@@ -45,10 +45,10 @@ const styles = {
   chip: {
     margin: 2,
   },
-}
+};
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
     style: {
@@ -56,12 +56,12 @@ const MenuProps = {
       width: 250,
     },
   },
-}
+};
 
 class view extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       category: {particular_label: '', professional_label: ''},
@@ -77,22 +77,22 @@ class view extends React.Component {
       professional_id: null,
       professional_file: null,
       professional_ext: null,
-    }
+    };
 
-    this.handleClick = this.handleClick.bind(this)
-    this.handleChangeTags = this.handleChangeTags.bind(this)
+    this.handleClick = this.handleClick.bind(this);
+    this.handleChangeTags = this.handleChangeTags.bind(this);
     this.onParticularImageChange=this.onParticularImageChange.bind(this)
     this.onProfessionalImageChange=this.onProfessionalImageChange.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
-    return {category_id: id}
+    return {category_id: id};
 
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname)
-    const id = this.props.category_id
+    localStorage.setItem('path', Router.pathname);
+    const id = this.props.category_id;
     this.setState({
       particular_id: null,
       particular_file: null,
@@ -105,51 +105,51 @@ class view extends React.Component {
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/category/all/${id}`)
       .then(response => {
-        let category = response.data
-        this.setState({category: category, current_tags: category.tags})
+        let category = response.data;
+        this.setState({category: category, current_tags: category.tags});
         this.setState({
           selectedTags: this.state.current_tags.map(b => ({
             label: b.label,
             value: b._id,
           })),
-        })
+        });
 
       })
       .catch(err => {
-        console.error(err)
+        console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'})
+          Router.push({pathname: '/login'});
         }
-      })
+      });
 
     axios.get('/myAlfred/api/admin/tags/all')
       .then((response) => {
-        let tags = response.data
-        this.setState({all_tags: tags})
+        let tags = response.data;
+        this.setState({all_tags: tags});
       }).catch((error) => {
-      console.error(error)
-    })
+      console.error(error);
+    });
 
   }
 
   onChange = e => {
-    const state = this.state.category
-    state[e.target.name] = e.target.value
-    this.setState({category: state})
-  }
+    const state = this.state.category;
+    state[e.target.name] = e.target.value;
+    this.setState({category: state});
+  };
 
   onChangeBool = event => {
     const {name, checked}=event.target
     const state = this.state.category
     state[name]=checked
-    this.setState({category: state})
+    this.setState({category: state});
   }
 
   handleChangeTags = selectedTags => {
-    this.setState({selectedTags})
+    this.setState({selectedTags});
 
-  }
+  };
 
   onParticularImageChange = e => {
     this.setState({
@@ -168,8 +168,8 @@ class view extends React.Component {
   }
 
   onSubmit = e => {
-    e.preventDefault()
-    const {description, particular_label, professional_label} = this.state.category
+    e.preventDefault();
+    const {description, particular_label, professional_label} = this.state.category;
     const {category, particular_id, professional_id} = this.state
 
     if (!category.particular_label) {
@@ -182,15 +182,15 @@ class view extends React.Component {
       return
     }
 
-    let arrayTags = []
+    let arrayTags = [];
     if (this.state.selectedTags != null) {
       this.state.selectedTags.forEach(w => {
-        arrayTags.push(w.value)
-      })
+        arrayTags.push(w.value);
+      });
     }
 
-    const tags = arrayTags
-    const id = this.props.category_id
+    const tags = arrayTags;
+    const id = this.props.category_id;
     const data={
       'particular_label': particular_label,
       'professional_label': professional_label,
@@ -201,9 +201,9 @@ class view extends React.Component {
     axios.put(`/myAlfred/api/admin/category/all/${id || ''}`, data)
       .then(res => {
         const newCategory = res.data
-        snackBarSuccess(`Catégorie ${id ? 'modifiée' : 'ajoutée' } avec succès`)
+        snackBarSuccess(`Catégorie ${id ? 'modifiée' : 'ajoutée' } avec succès`);
         if (particular_id || professional_id) {
-          const formData = new FormData()
+          const formData = new FormData();
           if (particular_id) {
             formData.append('particular_picture', particular_id)
           }
@@ -212,7 +212,7 @@ class view extends React.Component {
           }
           axios.put(`/myAlfred/api/admin/category/editPicture/${newCategory._id}`, formData)
             .then (res => {
-              snackBarSuccess('Illustrations mises à jour')
+              snackBarSuccess('Illustrations mises à jour');
               Router.push(`/dashboard/category/view?id=${newCategory._id}`)
             })
         }
@@ -221,29 +221,29 @@ class view extends React.Component {
         }
       })
       .catch(err => {
-        console.error(err)
-      })
-  }
+        console.error(err);
+      });
+  };
 
   handleClick() {
-    const id = this.props.category_id
+    const id = this.props.category_id;
     axios.delete(`/myAlfred/api/admin/category/all/${id}`)
       .then(res => {
-        snackBarSuccess('Categorie supprimée avec succès')
-        Router.push({pathname: '/dashboard/category/all'})
+        snackBarSuccess('Categorie supprimée avec succès');
+        Router.push({pathname: '/dashboard/category/all'});
       })
       .catch(err => {
-        console.error(err)
-      })
-  }
+        console.error(err);
+      });
+  };
 
   render() {
-    const {classes} = this.props
-    const {category, all_tags, current_tags} = this.state
+    const {classes} = this.props;
+    const {category, all_tags, current_tags} = this.state;
     const optionsTags = all_tags.map(tag => ({
       label: tag.label,
       value: tag._id,
-    }))
+    }));
 
     return (
       <Layout>
@@ -340,9 +340,9 @@ class view extends React.Component {
           </Card>
         </Grid>
       </Layout>
-    )
-  }
+    );
+  };
 }
 
 
-export default withStyles(styles)(view)
+export default withStyles(styles)(view);

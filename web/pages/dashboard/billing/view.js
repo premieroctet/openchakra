@@ -1,15 +1,15 @@
-import {Typography} from '@material-ui/core'
-import {withStyles} from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Card from '@material-ui/core/Card'
-import Grid from '@material-ui/core/Grid'
-import React from 'react'
-import Router from 'next/router'
-import TextField from '@material-ui/core/TextField'
-import axios from 'axios'
+import {Typography} from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
+import Router from 'next/router';
+import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
 
-import {snackBarSuccess} from '../../../utils/notifications'
-import Layout from '../../../hoc/Layout/Layout'
+import {snackBarSuccess} from '../../../utils/notifications';
+import Layout from '../../../hoc/Layout/Layout';
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
@@ -33,91 +33,91 @@ const styles = {
     color: 'black',
     fontSize: 12,
   },
-}
+};
 
 class view extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       billing: {},
       label: '',
 
-    }
+    };
 
-    this.handleClick = this.handleClick.bind(this)
+    this.handleClick = this.handleClick.bind(this);
   }
 
   static getInitialProps({query: {id}}) {
-    return {billing_id: id}
+    return {billing_id: id};
 
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname)
-    const id = this.props.billing_id
+    localStorage.setItem('path', Router.pathname);
+    const id = this.props.billing_id;
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/billing/all/${id}`)
       .then(response => {
-        let billing = response.data
-        this.setState({billing: billing})
+        let billing = response.data;
+        this.setState({billing: billing});
 
       })
       .catch(err => {
-        console.error(err)
+        console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'})
+          Router.push({pathname: '/login'});
         }
-      })
+      });
 
   }
 
   onChange = e => {
-    const state = this.state.billing
-    state[e.target.name] = e.target.value
-    this.setState({billing: state})
-  }
+    const state = this.state.billing;
+    state[e.target.name] = e.target.value;
+    this.setState({billing: state});
+  };
 
   onSubmit = e => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const {label} = this.state.billing
-    const id = this.props.billing_id
+    const {label} = this.state.billing;
+    const id = this.props.billing_id;
     axios.put(`/myAlfred/api/admin/billing/all/${id}`, {label})
       .then(res => {
-        snackBarSuccess('Méthode de facturation modifié avec succès')
-        Router.push({pathname: '/dashboard/billing/all'})
+        snackBarSuccess('Méthode de facturation modifié avec succès');
+        Router.push({pathname: '/dashboard/billing/all'});
       })
       .catch(err => {
-        console.error(err)
+        console.error(err);
 
-      })
+      });
 
 
-  }
+  };
 
   handleClick() {
-    const id = this.props.billing_id
+    const id = this.props.billing_id;
     axios.delete(`/myAlfred/api/admin/billing/all/${id}`)
       .then(res => {
-        snackBarSuccess('Méthode de facturation supprimée avec succès')
-        Router.push({pathname: '/dashboard/billing/all'})
+        snackBarSuccess('Méthode de facturation supprimée avec succès');
+        Router.push({pathname: '/dashboard/billing/all'});
       })
       .catch(err => {
-        console.error(err)
+        console.error(err);
         clearAuthenticationToken()
-        Router.push({pathname: '/login'})
-      })
+        Router.push({pathname: '/login'});
+      });
 
 
-  }
+  };
 
 
   render() {
-    const {classes} = this.props
-    const {billing} = this.state
+    const {classes} = this.props;
+    const {billing} = this.state;
 
 
     return (
@@ -155,9 +155,9 @@ class view extends React.Component {
           </Card>
         </Grid>
       </Layout>
-    )
-  }
+    );
+  };
 }
 
 
-export default withStyles(styles)(view)
+export default withStyles(styles)(view);

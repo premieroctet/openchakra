@@ -1,5 +1,5 @@
 const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
-import {withStyles} from '@material-ui/core/styles'
+import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios'
 const models=require('../../../components/BigList/models')
 const {MANGOPAY_CONFIG}=require('../../../config/config')
@@ -35,7 +35,7 @@ class all extends DataPage {
   loadData = () => {
     axios.get('/myAlfred/api/admin/users/all')
       .then((response) => {
-        let users = response.data
+        let users = response.data;
         users=users.map( u => {
           u.status={'alfred':u.is_alfred, 'admin': u.is_admin}
           u.birthday_moment = moment(u.birthday)
@@ -48,7 +48,7 @@ class all extends DataPage {
           }
           return u
         })
-        this.setState({data:users})
+        this.setState({data:users});
       })
   }
 
@@ -74,4 +74,4 @@ class all extends DataPage {
 
 }
 
-export default withStyles(styles)(all)
+export default withStyles(styles)(all);
