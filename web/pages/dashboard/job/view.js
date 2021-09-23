@@ -42,15 +42,12 @@ class view extends React.Component {
     this.state = {
       job: {},
       label: '',
-
     }
-
     this.handleClick = this.handleClick.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
     return {job_id: id}
-
   }
 
   componentDidMount() {
@@ -61,7 +58,6 @@ class view extends React.Component {
       .then(response => {
         let job = response.data
         this.setState({job: job})
-
       })
       .catch(err => {
         console.error(err)
@@ -70,7 +66,6 @@ class view extends React.Component {
           Router.push({pathname: '/login'})
         }
       })
-
   }
 
   onChange = e => {
@@ -86,7 +81,6 @@ class view extends React.Component {
     const id = this.props.job_id
     axios.put(`/myAlfred/api/admin/job/all/${id}`, {label})
       .then(() => {
-
         snackBarSuccess('Métier modifié avec succès')
         Router.push({pathname: '/dashboard/job/all'})
       })
@@ -97,14 +91,12 @@ class view extends React.Component {
           Router.push({pathname: '/login'})
         }
       })
-
-
   }
 
   handleClick() {
     const id = this.props.job_id
     axios.delete(`/myAlfred/api/admin/job/all/${id}`)
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Métier supprimé avec succès')
         Router.push({pathname: '/dashboard/job/all'})
       })
@@ -115,15 +107,11 @@ class view extends React.Component {
           Router.push({pathname: '/login'})
         }
       })
-
-
   }
-
 
   render() {
     const {classes} = this.props
     const {job} = this.state
-
 
     return (
       <Layout>
@@ -151,7 +139,7 @@ class view extends React.Component {
                     Modifier
                   </Button>
                   <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
+                    onClick={this.handleClick}>
                     Supprimer
                   </Button>
                 </Grid>
@@ -163,6 +151,5 @@ class view extends React.Component {
     )
   }
 }
-
 
 export default withStyles(styles)(view)

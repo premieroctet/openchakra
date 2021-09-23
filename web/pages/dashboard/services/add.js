@@ -26,8 +26,7 @@ import Layout from '../../../hoc/Layout/Layout'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
 
-
-const styles = theme => ({
+const styles = () => ({
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',
@@ -55,16 +54,6 @@ const styles = theme => ({
     margin: 2,
   },
 })
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-}
 
 class add extends React.Component {
   constructor(props) {
@@ -104,28 +93,31 @@ class add extends React.Component {
     setAxiosAuthentication()
 
     axios.get('/myAlfred/api/admin/category/all')
-      .then((response) => {
+      .then(response => {
         let category = response.data
         this.setState({all_category: category})
-      }).catch((error) => {
-      console.log(error)
-    })
+      })
+      .catch(error => {
+        console.log(error)
+      })
 
     axios.get('/myAlfred/api/admin/tags/all')
-      .then((response) => {
+      .then(response => {
         let tags = response.data
         this.setState({all_tags: tags})
-      }).catch((error) => {
-      console.log(error)
-    })
+      })
+      .catch(error => {
+        console.log(error)
+      })
 
     axios.get('/myAlfred/api/admin/equipment/all')
-      .then((response) => {
+      .then(response => {
         let equipments = response.data
         this.setState({all_equipments: equipments})
-      }).catch((error) => {
-      console.log(error)
-    })
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   onChange = e => {
@@ -141,23 +133,18 @@ class add extends React.Component {
 
   handleChange = e => {
     this.setState({tags: e.target.value})
-
-
   }
 
   handleChange2 = e => {
     this.setState({equipments: e.target.value})
-
-
   }
+
   handleChangeSelect = selectedOption => {
     this.setState({selectedOption})
-
   }
 
   handleChangeTags = selectedTags => {
     this.setState({selectedTags})
-
   }
 
   onChangeFile(e) {
@@ -219,8 +206,8 @@ class add extends React.Component {
     formData.append('travel_tax', this.state.travel_tax)
     formData.append('pick_tax', this.state.pick_tax)
 
-    for (var [k, v] of Object.entries(this.state.location)) {
-      formData.append('location.' + k, v)
+    for (let [k, v] of Object.entries(this.state.location)) {
+      formData.append(`location.${k}`, v)
     }
 
     console.log('POSTing')
@@ -231,16 +218,13 @@ class add extends React.Component {
         Router.push(`/dashboard/services/view?id=${res.data._id}`)
       })
       .catch(err => {
-          toast.error(JSON.stringify(err.response.data, null, 2))
-          this.setState({errors: err.response.data})
-          if (err.response.status === 401 || err.response.status === 403) {
-            clearAuthenticationToken()
-            Router.push({pathname: '/login'})
-          }
-        },
-      )
-
-
+        toast.error(JSON.stringify(err.response.data, null, 2))
+        this.setState({errors: err.response.data})
+        if (err.response.status === 401 || err.response.status === 403) {
+          clearAuthenticationToken()
+          Router.push({pathname: '/login'})
+        }
+      })
   }
 
   render() {
@@ -355,24 +339,27 @@ class add extends React.Component {
                   <FormControlLabel
                     control={
                       <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
-                                checked={this.state.location.alfred} value={this.state.location.alfred} name="alfred"
-                                onChange={this.onChangeLocation}/>
+                        checked={this.state.location.alfred} value={this.state.location.alfred} name="alfred"
+                        onChange={this.onChangeLocation}
+                      />
                     }
                     label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>Chez l'Alfred</p></React.Fragment>}
                   />
                   <FormControlLabel
                     control={
                       <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
-                                checked={this.state.location.client} value={this.state.location.client} name="client"
-                                onChange={this.onChangeLocation}/>
+                        checked={this.state.location.client} value={this.state.location.client} name="client"
+                        onChange={this.onChangeLocation}
+                      />
                     }
                     label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>Chez le client</p></React.Fragment>}
                   />
                   <FormControlLabel
                     control={
                       <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
-                                checked={this.state.location.visio} value={this.state.location.visio} name="visio"
-                                onChange={this.onChangeLocation}/>
+                        checked={this.state.location.visio} value={this.state.location.visio} name="visio"
+                        onChange={this.onChangeLocation}
+                      />
                     }
                     label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>En visioconférence</p></React.Fragment>}
                   />
@@ -380,8 +367,9 @@ class add extends React.Component {
                   <FormControlLabel
                     control={
                       <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
-                                checked={this.state.travel_tax ? 'checked' : ''} value={this.state.travel_tax}
-                                name="travel_tax" onChange={this.onTaxChange}/>
+                        checked={this.state.travel_tax ? 'checked' : ''} value={this.state.travel_tax}
+                        name="travel_tax" onChange={this.onTaxChange}
+                      />
                     }
                     label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>Frais de déplacement</p>
                     </React.Fragment>}
@@ -389,8 +377,9 @@ class add extends React.Component {
                   <FormControlLabel
                     control={
                       <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
-                                checked={this.state.pick_tax ? 'checked' : ''} value={this.state.pick_tax}
-                                name="pick_tax" onChange={this.onTaxChange}/>
+                        checked={this.state.pick_tax ? 'checked' : ''} value={this.state.pick_tax}
+                        name="pick_tax" onChange={this.onTaxChange}
+                      />
                     }
                     label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>Frais de retrait&livraison</p>
                     </React.Fragment>}

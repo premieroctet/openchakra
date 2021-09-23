@@ -45,7 +45,6 @@ class view extends React.Component {
       label: '',
       title: '',
       description: '',
-
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -53,7 +52,6 @@ class view extends React.Component {
 
   static getInitialProps({query: {id}}) {
     return {tags_id: id}
-
   }
 
   componentDidMount() {
@@ -73,7 +71,6 @@ class view extends React.Component {
           Router.push({pathname: '/login'})
         }
       })
-
   }
 
   onChange = e => {
@@ -88,36 +85,30 @@ class view extends React.Component {
     const {label, title, description} = this.state.tags
     const id = this.props.tags_id
     axios.put(`/myAlfred/api/admin/tags/all/${id}`, {label, title, description})
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Tag modifié avec succès')
         Router.push({pathname: '/dashboard/tags/all'})
       })
       .catch(err => {
         console.error(err)
       })
-
-
   }
 
   handleClick() {
     const id = this.props.tags_id
     axios.delete(`/myAlfred/api/admin/tags/all/${id}`)
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Tag supprimé avec succès')
         Router.push({pathname: '/dashboard/tags/all'})
       })
       .catch(err => {
         console.error(err)
       })
-
-
   }
-
 
   render() {
     const {classes} = this.props
     const {tags} = this.state
-
 
     return (
       <Layout>
@@ -171,7 +162,7 @@ class view extends React.Component {
                     Modifier
                   </Button>
                   <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
+                    onClick={this.handleClick}>
                     Supprimer
                   </Button>
                 </Grid>

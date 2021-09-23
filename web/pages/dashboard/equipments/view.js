@@ -13,8 +13,7 @@ import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor'
 const {snackBarSuccess}=require('../../../utils/notifications')
 import axios from 'axios'
 
-
-const styles = theme => ({
+const styles = () => ({
   signupContainer: {
     alignItems: 'center',
     height: '170vh',

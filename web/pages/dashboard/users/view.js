@@ -44,17 +44,13 @@ class view extends React.Component {
     this.state = {
       user: {},
       active: false,
-
-
     }
-
     this.handleClick = this.handleClick.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
     return {user_id: id}
-
   }
 
   componentDidMount() {
@@ -74,7 +70,6 @@ class view extends React.Component {
           Router.push({pathname: '/login'})
         }
       })
-
   }
 
   handleInputChange(event) {
@@ -93,7 +88,7 @@ class view extends React.Component {
     const data = {active: this.state.active}
     const id = this.props.user_id
     axios.put(`/myAlfred/api/admin/users/users/${id}`, data)
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Utilisateur modifié avec succès')
         Router.push({pathname: '/dashboard/users/all'})
       })
@@ -105,22 +100,18 @@ class view extends React.Component {
   handleClick() {
     const id = this.props.user_id
     axios.delete(`/myAlfred/api/admin/users/users/${id}`)
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Utilisateur supprimé avec succès')
         Router.push({pathname: '/dashboard/users/all'})
       })
       .catch(err => {
         console.error(err)
       })
-
-
   }
-
 
   render() {
     const {classes} = this.props
     const {user} = this.state
-
 
     return (
       <Layout>
@@ -144,14 +135,13 @@ class view extends React.Component {
                     }
                     label="Actif ?"
                   />
-
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                   <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Modifier
                   </Button>
                   <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
+                    onClick={this.handleClick}>
                     Supprimer
                   </Button>
                 </Grid>
@@ -163,6 +153,5 @@ class view extends React.Component {
     )
   }
 }
-
 
 export default withStyles(styles)(view)

@@ -13,7 +13,6 @@ import Layout from '../../../hoc/Layout/Layout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
-
 const styles = {
   loginContainer: {
     alignItems: 'center',
@@ -43,15 +42,12 @@ class view extends React.Component {
     this.state = {
       billing: {},
       label: '',
-
     }
-
     this.handleClick = this.handleClick.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
     return {billing_id: id}
-
   }
 
   componentDidMount() {
@@ -62,7 +58,6 @@ class view extends React.Component {
       .then(response => {
         let billing = response.data
         this.setState({billing: billing})
-
       })
       .catch(err => {
         console.error(err)
@@ -71,7 +66,6 @@ class view extends React.Component {
           Router.push({pathname: '/login'})
         }
       })
-
   }
 
   onChange = e => {
@@ -86,22 +80,19 @@ class view extends React.Component {
     const {label} = this.state.billing
     const id = this.props.billing_id
     axios.put(`/myAlfred/api/admin/billing/all/${id}`, {label})
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Méthode de facturation modifié avec succès')
         Router.push({pathname: '/dashboard/billing/all'})
       })
       .catch(err => {
         console.error(err)
-
       })
-
-
   }
 
   handleClick() {
     const id = this.props.billing_id
     axios.delete(`/myAlfred/api/admin/billing/all/${id}`)
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Méthode de facturation supprimée avec succès')
         Router.push({pathname: '/dashboard/billing/all'})
       })
@@ -110,15 +101,11 @@ class view extends React.Component {
         clearAuthenticationToken()
         Router.push({pathname: '/login'})
       })
-
-
   }
-
 
   render() {
     const {classes} = this.props
     const {billing} = this.state
-
 
     return (
       <Layout>
@@ -146,7 +133,7 @@ class view extends React.Component {
                     Modifier
                   </Button>
                   <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
+                    onClick={this.handleClick}>
                     Supprimer
                   </Button>
                 </Grid>

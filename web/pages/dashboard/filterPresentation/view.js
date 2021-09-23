@@ -86,32 +86,26 @@ class view extends React.Component {
     const {label} = this.state.filterPresentation
     const id = this.props.filterPresentation_id
     axios.put(`/myAlfred/api/admin/filterPresentation/all/${id}`, {label})
-      .then(res => {
-
+      .then(() => {
         snackBarSuccess('Filtre modifié avec succès')
         Router.push({pathname: '/dashboard/filterPresentation/all'})
       })
       .catch(err => {
         console.error(err)
       })
-
-
   }
 
   handleClick() {
     const id = this.props.filterPresentation_id
     axios.delete(`/myAlfred/api/admin/filterPresentation/all/${id}`)
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Filtre supprimé avec succès')
         Router.push({pathname: '/dashboard/filterPresentation/all'})
       })
       .catch(err => {
         console.error(err)
       })
-
-
   }
-
 
   render() {
     const {classes} = this.props
@@ -144,7 +138,7 @@ class view extends React.Component {
                     Modifier
                   </Button>
                   <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
+                    onClick={this.handleClick}>
                     Supprimer
                   </Button>
                 </Grid>

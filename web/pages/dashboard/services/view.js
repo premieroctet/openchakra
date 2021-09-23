@@ -1,16 +1,13 @@
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import Card from '@material-ui/core/Card'
 import Checkbox from '@material-ui/core/Checkbox'
-import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked'
 import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Grid from '@material-ui/core/Grid'
 import Input from '@material-ui/core/Input'
 import Link from 'next/link'
 import MenuItem from '@material-ui/core/MenuItem'
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked'
 import React from 'react'
 import Router from 'next/router'
 import Select from '@material-ui/core/Select'
@@ -72,7 +69,7 @@ class view extends React.Component {
       isChecked: false,
       selectedOption: null,
       selectedTags: null,
-      errors:{}
+      errors: {},
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -128,28 +125,31 @@ class view extends React.Component {
       })
 
     axios.get('/myAlfred/api/admin/category/all')
-      .then((response) => {
+      .then(response => {
         let category = response.data
         this.setState({all_category: category})
-      }).catch((error) => {
-      console.error(error)
-    })
+      })
+      .catch(error => {
+        console.error(error)
+      })
 
     axios.get('/myAlfred/api/admin/tags/all')
-      .then((response) => {
+      .then(response => {
         let tags = response.data
         this.setState({all_tags: tags})
-      }).catch((error) => {
-      console.error(error)
-    })
+      })
+      .catch(error => {
+        console.error(error)
+      })
 
     axios.get('/myAlfred/api/admin/equipment/all')
-      .then((response) => {
+      .then(response => {
         let equipments = response.data
         this.setState({all_equipments: equipments})
-      }).catch((error) => {
-      console.log(error)
-    })
+      })
+      .catch(error => {
+        console.log(error)
+      })
 
   }
 
@@ -227,8 +227,8 @@ class view extends React.Component {
 
     axios.put(`/myAlfred/api/admin/service/all/${id}`,
       {label, description, tags, category, equipments, location, travel_tax, pick_tax,
-      professional_access, particular_access})
-      .then(res => {
+        professional_access, particular_access})
+      .then(() => {
         snackBarSuccess('Service modifié avec succès')
       })
       .catch(err => {
@@ -246,8 +246,7 @@ class view extends React.Component {
   handleClick() {
     const id = this.props.service_id
     axios.delete(`/myAlfred/api/admin/service/all/${id}`)
-      .then(res => {
-
+      .then(() => {
         snackBarSuccess('Service supprimé avec succès')
         Router.push({pathname: '/dashboard/services/all'})
       })
@@ -265,14 +264,7 @@ class view extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {service} = this.state
-    const {current_tags} = this.state
-    const {current_equipments} = this.state
-    const {current_category} = this.state
-    const {all_category} = this.state
-    const {all_tags} = this.state
-    const {all_equipments} = this.state
-    const {isChecked} = this.state
+    const {service, all_category, all_tags, all_equipments} = this.state
 
     const categories = all_category.map(e => (
       <MenuItem value={e._id}>{`${e.particular_label}/${e.professional_label}`}</MenuItem>
@@ -292,176 +284,181 @@ class view extends React.Component {
     return (
       <Layout>
         <Grid container className={classes.loginContainer}>
-            <Grid>
-              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>{service.label}</Typography>
-              </Grid>
-              <form onSubmit={this.onSubmit}>
-                <Grid item>
-                  <TextField
-                    id="standard-with-placeholder"
-                    margin="normal"
-                    style={{width: '100%'}}
-                    type="text"
-                    name="label"
-                    value={service.label}
-                    onChange={this.onChange}
-
-                  />
-                </Grid>
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Catégorie</Typography>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <Select
-                      input={<Input name="category" id="genre-label-placeholder"/>}
-                      displayEmpty
-                      name="category"
-                      value={this.state.category}
-                      onChange={this.onChange2}
-                      className={classes.selectEmpty}
-                    >
-                      <MenuItem value="">
-                        <em>...</em>
-                      </MenuItem>
-                      {categories}
-                    </Select>
-                  </FormControl>
-
-                </Grid>
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Tags</Typography>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <Select2
-                      value={this.state.selectedTags}
-                      onChange={this.handleChangeTags}
-                      options={optionsTags}
-                      isMulti
-                      isSearchable
-                      closeMenuOnSelect={false}
-
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Equipements</Typography>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <Select2
-                      value={this.state.selectedOption}
-                      onChange={this.handleChangeSelect}
-                      options={options}
-                      isMulti
-                      isSearchable
-                      closeMenuOnSelect={false}
-
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item style={{marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Lieu du service</Typography>
-                  <em style={{ color: 'red'}}>{this.state.errors.location}</em><br/>
-                  <FormControlLabel
-                    control={
-                      <Checkbox color="primary"
-                                checked={service.location ? service.location.alfred : false}
-                                value={service.location ? service.location.alfred : false} name="alfred"
-                                onChange={this.onChangeLocation}/>
-                    }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>chez l'Alfred</p></React.Fragment>}
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox color="primary"
-                                checked={service.location ? service.location.client : false}
-                                value={service.location ? service.location.client : false} name="client"
-                                onChange={this.onChangeLocation}/>
-                    }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>chez le client</p></React.Fragment>}
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox color="primary"
-                                checked={service.location ? service.location.visio : false}
-                                value={service.location ? service.location.visio : false} name="visio"
-                                onChange={this.onChangeLocation}/>
-                    }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>en visioconférence</p></React.Fragment>}
-                  />
-                  <Typography style={{fontSize: 20}}>Frais possibles</Typography>
-                  <FormControlLabel
-                    control={
-                      <Checkbox color="primary"
-                                checked={service.travel_tax ? 'checked' : ''} value={service.travel_tax}
-                                name="travel_tax" onChange={this.onTaxChange}/>
-                    }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>frais de déplacement</p>
-                    </React.Fragment>}
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox color="primary"
-                                checked={service.pick_tax ? 'checked' : ''} value={service.pick_tax} name="pick_tax"
-                                onChange={this.onTaxChange}/>
-                    }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>frais de retrait&livraison</p>
-                    </React.Fragment>}
-                  />
-                  <Typography style={{fontSize: 20}}>
-                    Service proposé
-                  </Typography>
-                  <em style={{ color: 'red'}}>{this.state.errors.access}</em><br/>
-                  <FormControlLabel
-                    control={
-                      <Checkbox color="primary"
-                                checked={service.particular_access ? 'checked' : ''}
-                                name="particular_access" onChange={this.onChangeBool}
-                                />
-                    }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux particuliers</p>
-                    </React.Fragment>}
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox color="primary"
-                                checked={service.professional_access ? 'checked' : ''}
-                                name="professional_access" onChange={this.onChangeBool}
-                                />
-                    }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux professionels</p>
-                    </React.Fragment>}
-                  />
-                </Grid>
-
-                <Grid item style={{marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Description</Typography>
-                  <TextField
-                    id="standard-with-placeholder"
-                    margin="normal"
-                    style={{width: '100%'}}
-                    type="text"
-                    name="description"
-                    value={service.description}
-                    onChange={this.onChange}
-                    multiline
-                    rows={4}
-
-                  />
-                </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
-                    Modifier
-                  </Button>
-                  <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
-                    Supprimer
-                  </Button>
-                </Grid>
-              </form>
-              <Link href={`editPicture?id=${this.props.service_id}`}>
-                <Button type="button" variant="contained" color="primary" style={{width: '100%'}}>
-                  Modifier la photo
-                </Button>
-              </Link>
+          <Grid>
+            <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+              <Typography style={{fontSize: 30}}>{service.label}</Typography>
             </Grid>
+            <form onSubmit={this.onSubmit}>
+              <Grid item>
+                <TextField
+                  id="standard-with-placeholder"
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="label"
+                  value={service.label}
+                  onChange={this.onChange}
+
+                />
+              </Grid>
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Catégorie</Typography>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Select
+                    input={<Input name="category" id="genre-label-placeholder"/>}
+                    displayEmpty
+                    name="category"
+                    value={this.state.category}
+                    onChange={this.onChange2}
+                    className={classes.selectEmpty}
+                  >
+                    <MenuItem value="">
+                      <em>...</em>
+                    </MenuItem>
+                    {categories}
+                  </Select>
+                </FormControl>
+
+              </Grid>
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Tags</Typography>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Select2
+                    value={this.state.selectedTags}
+                    onChange={this.handleChangeTags}
+                    options={optionsTags}
+                    isMulti
+                    isSearchable
+                    closeMenuOnSelect={false}
+
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Equipements</Typography>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Select2
+                    value={this.state.selectedOption}
+                    onChange={this.handleChangeSelect}
+                    options={options}
+                    isMulti
+                    isSearchable
+                    closeMenuOnSelect={false}
+
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item style={{marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Lieu du service</Typography>
+                <em style={{color: 'red'}}>{this.state.errors.location}</em><br/>
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                      checked={service.location ? service.location.alfred : false}
+                      value={service.location ? service.location.alfred : false} name="alfred"
+                      onChange={this.onChangeLocation}
+                    />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>chez l'Alfred</p></React.Fragment>}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                      checked={service.location ? service.location.client : false}
+                      value={service.location ? service.location.client : false} name="client"
+                      onChange={this.onChangeLocation}
+                    />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>chez le client</p></React.Fragment>}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                      checked={service.location ? service.location.visio : false}
+                      value={service.location ? service.location.visio : false} name="visio"
+                      onChange={this.onChangeLocation}
+                    />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>en visioconférence</p></React.Fragment>}
+                />
+                <Typography style={{fontSize: 20}}>Frais possibles</Typography>
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                      checked={service.travel_tax ? 'checked' : ''} value={service.travel_tax}
+                      name="travel_tax" onChange={this.onTaxChange}
+                    />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>frais de déplacement</p>
+                  </React.Fragment>}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                      checked={service.pick_tax ? 'checked' : ''} value={service.pick_tax} name="pick_tax"
+                      onChange={this.onTaxChange}
+                    />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>frais de retrait&livraison</p>
+                  </React.Fragment>}
+                />
+                <Typography style={{fontSize: 20}}>
+                  Service proposé
+                </Typography>
+                <em style={{color: 'red'}}>{this.state.errors.access}</em><br/>
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                      checked={service.particular_access ? 'checked' : ''}
+                      name="particular_access" onChange={this.onChangeBool}
+                    />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux particuliers</p>
+                  </React.Fragment>}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                      checked={service.professional_access ? 'checked' : ''}
+                      name="professional_access" onChange={this.onChangeBool}
+                    />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux professionels</p>
+                  </React.Fragment>}
+                />
+              </Grid>
+
+              <Grid item style={{marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Description</Typography>
+                <TextField
+                  id="standard-with-placeholder"
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="description"
+                  value={service.description}
+                  onChange={this.onChange}
+                  multiline
+                  rows={4}
+
+                />
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
+                <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                  Modifier
+                </Button>
+                <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
+                  onClick={this.handleClick}>
+                  Supprimer
+                </Button>
+              </Grid>
+            </form>
+            <Link href={`editPicture?id=${this.props.service_id}`}>
+              <Button type="button" variant="contained" color="primary" style={{width: '100%'}}>
+                Modifier la photo
+              </Button>
+            </Link>
+          </Grid>
         </Grid>
       </Layout>
     )

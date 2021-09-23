@@ -89,7 +89,7 @@ class view extends React.Component {
     const {label} = this.state.shopBanner
     const id = this.props.banner_id
     axios.put(`/myAlfred/api/admin/shopBanner/all/${id}`, {label})
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Image modifiée avec succès')
         Router.push({pathname: '/dashboard/shopBanner/all'})
       })
@@ -103,22 +103,18 @@ class view extends React.Component {
   handleClick() {
     const id = this.props.banner_id
     axios.delete(`/myAlfred/api/admin/shopBanner/all/${id}`)
-      .then(res => {
+      .then(() => {
         snackBarSuccess('Image supprimée avec succès')
         Router.push({pathname: '/dashboard/shopBanner/all'})
       })
       .catch(err => {
         console.error(err)
       })
-
-
   }
-
 
   render() {
     const {classes} = this.props
     const {shopBanner} = this.state
-
 
     return (
       <Layout>
@@ -146,7 +142,7 @@ class view extends React.Component {
                     Modifier
                   </Button>
                   <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
+                    onClick={this.handleClick}>
                     Supprimer
                   </Button>
                 </Grid>
