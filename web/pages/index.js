@@ -28,7 +28,7 @@ const {PRO, PART} = require('../utils/consts')
 const {getLoggedUserId} = require('../utils/context')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
-
+import {INDEX} from '../utils/i18n'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -102,21 +102,19 @@ class Home extends React.Component {
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({open: false})}>
           <Grid style={{display: 'flex'}}>
             <img style={{marginRight: '7vh'}} src="/static/assets/icon/iconBlueDeep20@3x-2.png" alt="icone application myAlfred"/>
-            <Grid>
-              Application My&nbsp;Alfred
-            </Grid>
+            <Grid>{INDEX.dialog_store}</Grid>
           </Grid>
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Notre application est disponible sur {isAndroid ? 'Google play' : 'Apple store'}
+            {INDEX.store_avialable + isAndroid ? 'Google play' : 'Apple store'}
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={() => Router.push(isAndroid ? 'https://play.google.com/store/apps/details?id=com.myalfred' : 'https://apps.apple.com/us/app/my-alfred/id1544073864')}
             color="primary">
-            Télécharger
+            {INDEX.download_button}
           </Button>
         </DialogActions>
       </Dialog>

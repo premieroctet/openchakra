@@ -58,6 +58,51 @@ const CARD_SERVICE = {
   button_show_profil: 'Voir',
 }
 
+const ERROR_404 = {
+  title: '404',
+  subtitle: 'Oups cette page n\'existe pas !',
+  link: 'Retour a la page d\'accueil ici',
+}
+
+const CONTACT = {
+  tile: 'Service client - Nos heures d\'ouverture',
+  day_range: 'Du Lundi au Vendredi 10H - 18H',
+  email_title: 'Nous contacter',
+  email: 'hello@my-alfred.io',
+  message_title: 'Nous envoyer un message',
+}
+
+const DEFINE_PASSWORD = {
+  snackbar_password_update: 'Mot de passe modifié avec succès',
+  title: 'Bienvenue !',
+  subtitle: 'L\'administrateur My Alfred de votre entreprise vous invite à vous inscrire sur My Alfred.',
+  signin_message: 'Pour finaliser votre inscription, veuillez définir votre mot de passe :',
+  new_password: 'Nouveau mot de passe',
+  new_password_placeholder: 'Mot de passe',
+  repeat_password: 'Répéter le mot de passe',
+  button_confirm: 'Valider',
+}
+
+const EVALUATE = {
+  title: 'Qu’avez-vous pensé de la prestation de votre Alfred ?',
+  qualiting: 'Qualité de la prestation',
+  quality_price: 'Qualité - Prix',
+  relation: 'Relationnel',
+  your_commentary: 'Votre commentaire',
+  back_button: 'Retour',
+  confirm_button: 'Terminé',
+}
+
+const EVALUATE_CLIENT = {
+  title: 'Qu’avez-vous pensé de votre client ?',
+  home: 'Accueil',
+  asking_precision: 'Précision de la demande',
+  relation: 'Relationnel',
+  your_commentary: 'Votre commentaire',
+  back_button: 'Retour',
+  confirm_button: 'Terminé',
+}
+
 const USERSERVICEPREVIEW = {
   snackbar_no_booking: 'Pas de booking trouvé',
   snackbar_error_avc: 'Impossible de réserver cet Alfred pour avocôtés, prestations manquantes: ',
@@ -1109,6 +1154,20 @@ const HEADER = {
   placeholder_search: 'Chercher dans la FAQ',
 }
 
+const FORGOT_PASSWORD = {
+  snackbar_send_email: 'Un email de récupération a été envoyé à l\'adresse ',
+  title: 'Mot de passe oublié',
+  textfield_email: 'Email',
+  placeholder_email: 'Email',
+  button_confirm: 'Valider',
+}
+
+const INDEX = {
+  dialog_store: 'Application MyAlfred',
+  store_avialable: 'Notre application est disponible sur ',
+  download_button: 'Télécharger',
+}
+
 const ADD_SERVICES = {
   title: 'Mes services',
   add_service: 'Développez votre boutique et ajoutez de nouveaux services !',
@@ -1425,4 +1484,11 @@ module.exports = {
   PARAMATER,
   PAYMENT_RESPONSIVE,
   PERSONAL_INFORMATION,
+  ERROR_404,
+  CONTACT,
+  DEFINE_PASSWORD,
+  EVALUATE,
+  EVALUATE_CLIENT,
+  FORGOT_PASSWORD,
+  INDEX,
 }
