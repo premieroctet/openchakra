@@ -3,89 +3,28 @@ import React, {Fragment} from 'react'
 import Layout from '../../hoc/Layout/Layout'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
-
-const styles = theme => ({
-  bigContainer: {
-    marginTop: 80,
-  },
-  trigger1: {
-    [theme.breakpoints.down('sm')]: {
-      position: 'absolute',
-      top: '7.5%',
-      left: '-91%',
-      width: '100%',
-      height: '30px',
-      backgroundColor: '#2FBCD3',
-      zIndex: '1000',
-      borderRadius: '5px',
-      '&:focus': {
-        display: 'none',
-
-      },
-    },
-  },
-  trigger: {
-    [theme.breakpoints.down('sm')]: {
-
-
-      width: '400px',
-      marginLeft: '0px',
-      height: '25px',
-      backgroundColor: '#2FBCD3',
-      zIndex: '999',
-
-      display: 'block',
-      transition: 'display 0.7s',
-      borderRadius: '5px',
-      '&:focus': {
-        display: 'none',
-        transition: 'display 0.7s',
-
-      },
-    },
-  },
-  responsiveContainer: {
-    [theme.breakpoints.down('sm')]: {
-      width: '148%!important',
-      marginTop: '6%',
-    },
-  },
-
-  responsiveContainer2: {
-    [theme.breakpoints.down('sm')]: {
-      width: '148%!important',
-      marginTop: '6%',
-    },
-  },
-  toggle: {
-    height: '950px',
-    [theme.breakpoints.down('sm')]: {
-      marginLeft: '-200px',
-      transition: 'margin-left 0.7s',
-      marginTop: '20%',
-
-      '&:hover': {
-        marginLeft: '0px',
-        transition: 'margin-left 0.7s',
-        boxShadow: '11px 6px 23px -24px rgba(0,0,0,1)',
-        width: '300px',
-      },
-    },
-  },
-  leborder: {
-    backgroundColor: 'white',
-    [theme.breakpoints.up('md')]: {
-      borderRight: '2px solid rgb(206, 206, 206)',
-
-    },
-  },
-})
-
+import List from "@material-ui/core/List";
+import {STEPS} from "../../utils/privacypolicySteps";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import ReactHtmlParser from "react-html-parser";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import Drawer from "@material-ui/core/Drawer";
+import NavBar from "../../hoc/Layout/NavBar/NavBar";
+import MobileNavbar from "../../hoc/Layout/NavBar/MobileNavbar";
+import PropTypes from "prop-types";
+import styles from '../../static/css/pages/privacypolicy/privacypolicy'
 
 class Privacypolicy extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      stepIndex: 0,
       click: true,
       click1: false,
       click2: false,
@@ -102,6 +41,38 @@ class Privacypolicy extends React.Component {
   componentDidMount() {
 
   }
+
+  handleStep = (index) => {
+    this.setState({stepIndex: index})
+  }
+
+  drawer = classes => {
+    const{mode} = this.props
+    const {activeStep} = this.state
+
+    return (
+        <Grid style={{height: '100%'}}>
+          <Grid className={classes.appBarContainer}>
+            <List classes={{root: classes.paddingList}}>
+              {
+                STEPS.map((item, index) => (
+                    <Grid key={index} className={classes.hoverButton}>
+                      <ListItem button key={item.menu} onClick={() => this.handleStep(index)} classes={{root: activeStep === index ? classes.activeButton : classes.standartButton}}>
+                        <ListItemText primary={item.menu} classes={{root: classes.listItemText}}/>
+                      </ListItem>
+                    </Grid>
+                ))
+              }
+            </List>
+          </Grid>
+        </Grid>
+    )
+  };
+
+  renderSwitch(stepIndex){
+    return STEPS[stepIndex]
+  }
+
 
   handleClick = () => {
     this.setState({
@@ -175,7 +146,10 @@ class Privacypolicy extends React.Component {
 
 
   render() {
-    const {classes} = this.props
+    const{classes, window} = this.props
+    const {mobileOpen, activeStep} = this.state
+
+    const container = window !== undefined ? () => window().document.body : undefined
     const {click} = this.state
     const {click1} = this.state
     const {click2} = this.state
@@ -190,7 +164,7 @@ class Privacypolicy extends React.Component {
     return (
       <Fragment>
         <Layout>
-          <Grid container style={{marginTop: '4%'}}>
+          {/*<Grid container style={{marginTop: '4%'}}>
             <Grid item xs={3} className={classes.leborder}>
               <Grid container className={classes.toggle} style={{padding: '2%'}}>
                 <div className={classes.trigger1}/>
@@ -410,6 +384,56 @@ class Privacypolicy extends React.Component {
                   : null}
               </Grid>
             </Grid>
+          </Grid>*/}
+          <Grid className={classes.root}>
+            <CssBaseline />
+            <Grid>
+              <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  edge="start"
+                  onClick={this.handleDrawerToggle}
+                  className={classes.menuButton}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Grid>
+            <nav className={classes.drawer} aria-label="mailbox folders">
+              {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+              <Grid className={classes.drawerContainer}>
+                <Drawer
+                    container={container}
+                    variant="temporary"
+                    anchor={'left'}
+                    open={mobileOpen}
+                    onClose={this.handleDrawerToggle}
+                    classes={{
+                      paper: classes.drawerPaper,
+                    }}
+                    ModalProps={{
+                      keepMounted: true, // Better open performance on mobile.
+                    }}
+                >
+                  {this.drawer(classes)}
+                </Drawer>
+              </Grid>
+              <Grid className={classes.drawerMobile}>
+                <Drawer
+                    classes={{
+                      paper: classes.drawerPaper,
+                    }}
+                    variant="permanent"
+                    open
+                >
+                  {this.drawer(classes)}
+                </Drawer>
+              </Grid>
+            </nav>
+            <main className={classes.content}>
+              <Grid>
+                {this.renderSwitch(activeStep)}
+              </Grid>
+            </main>
           </Grid>
         </Layout>
         {/* <Footer/>*/}
@@ -418,6 +442,14 @@ class Privacypolicy extends React.Component {
       </Fragment>
     )
   }
+}
+
+Privacypolicy.propTypes = {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  window: PropTypes.func,
 }
 
 
