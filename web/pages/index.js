@@ -107,7 +107,7 @@ class Home extends React.Component {
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            {INDEX.store_avialable + isAndroid ? 'Google play' : 'Apple store'}
+            {INDEX.store_available + isAndroid ? 'Google play' : 'Apple store'}
           </Typography>
         </DialogContent>
         <DialogActions>

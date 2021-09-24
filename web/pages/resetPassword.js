@@ -1,4 +1,3 @@
-import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Button from '@material-ui/core/Button'
@@ -8,7 +7,7 @@ import React from 'react'
 import Router from 'next/router'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
-
+import {RESET_PASSWORD} from '../utils/i18n'
 import {checkPass1, checkPass2} from '../utils/passwords'
 import {isB2BStyle} from '../utils/context'
 import BasePage from './basePage'
@@ -68,7 +67,7 @@ class resetPassword extends BasePage {
     axios.post('/myAlfred/api/users/resetPassword', data)
       .then(res => {
         const user = res.data
-        snackBarSuccess('Mot de passe modifié avec succès')
+        snackBarSuccess(RESET_PASSWORD.password_update)
         // Rediriger vers /particular ou /professional suivant les rôles
         if (_.intersection(user.roles, [ADMIN, MANAGER]).length>0) {
           localStorage.setItem('b2b', 'true')
@@ -96,14 +95,14 @@ class resetPassword extends BasePage {
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-              <h2>Réinitialisation du mot de passe</h2>
+              <h2>{RESET_PASSWORD.title}</h2>
             </Grid>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <TextField
                   id="standard-with-placeholder"
-                  label="Nouveau mot de passe"
-                  placeholder="Mot de passe"
+                  label={RESET_PASSWORD.new_pass}
+                  placeholder={RESET_PASSWORD.password}
                   style={{width: '100%'}}
                   type="password"
                   name="password"
@@ -118,8 +117,8 @@ class resetPassword extends BasePage {
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <TextField
                   id="standard-with-placeholder"
-                  label="Répéter le mot de passe"
-                  placeholder="Mot de passe"
+                  label={RESET_PASSWORD.repeat_password}
+                  placeholder={RESET_PASSWORD.password}
                   variant={'outlined'}
                   style={{width: '100%'}}
                   type="password"
@@ -140,7 +139,9 @@ class resetPassword extends BasePage {
                 disabled={!(this.state.status1.check && this.state.status2.check)}
                 classes={{root: classes.buttonSubmit}}
               >
-                  Valider
+                {
+                  RESET_PASSWORD.button_confirm
+                }
               </Button>
             </Grid>
           </Card>

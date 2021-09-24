@@ -26,7 +26,6 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import SummaryCommentary from '../components/SummaryCommentary/SummaryCommentary'
 import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
-import {USERSERVICEPREVIEW} from '../utils/i18n'
 import '../static/assets/css/custom.css'
 
 const {setAxiosAuthentication}=require('../utils/authentication')

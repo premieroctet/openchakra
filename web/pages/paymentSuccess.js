@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import io from 'socket.io-client'
 
-import {BOOKING} from '../utils/i18n'
+import {PAYMENT_SUCCESS} from '../utils/i18n'
 import BasePage from './basePage'
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
@@ -88,10 +88,10 @@ class paymentSuccess extends BasePage {
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                 <Grid style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid>
-                    <h2>Votre service a été réservé avec succès !</h2>
+                    <h2>{PAYMENT_SUCCESS.title}</h2>
                   </Grid>
                   <Grid>
-                    <Typography>Merci de nous faire confiance.</Typography>
+                    <Typography>{PAYMENT_SUCCESS.subtitle}</Typography>
                   </Grid>
                 </Grid>
                 <Grid>
@@ -102,10 +102,10 @@ class paymentSuccess extends BasePage {
                     :
                     <>
                       <Grid>
-                        <Typography>Vous allez être redirigé vers votre page Mes Réservations.</Typography>
+                        <Typography>{PAYMENT_SUCCESS.message}</Typography>
                       </Grid>
                       <Grid>
-                        <Typography>Si la redirection ne fonctionne pas <a href={'/reservations/reservations'}>cliquez ici</a></Typography>
+                        <Typography>{PAYMENT_SUCCESS.not_working}<a href={'/reservations/reservations'}>{PAYMENT_SUCCESS.link}</a></Typography>
                       </Grid>
                     </>
                   }

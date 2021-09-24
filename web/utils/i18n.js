@@ -1164,8 +1164,32 @@ const FORGOT_PASSWORD = {
 
 const INDEX = {
   dialog_store: 'Application MyAlfred',
-  store_avialable: 'Notre application est disponible sur ',
+  store_available: 'Notre application est disponible sur ',
   download_button: 'Télécharger',
+}
+
+const PAYMENT_FAILED = {
+  title: 'Oups !',
+  subtile: 'Une erreur est survenue lors du paiement.',
+  back_resa: 'Retour aux réservations',
+  back_home: 'Retour à l\'accueil',
+}
+
+const PAYMENT_SUCCESS = {
+  title: 'Votre service a été réservé avec succès !',
+  subtitle: 'Merci de nous faire confiance.',
+  message: 'Vous allez être redirigé vers votre page Mes Réservations.',
+  not_working: 'Si la redirection ne fonctionne pas ',
+  link: ' cliquez ici',
+}
+
+const RESET_PASSWORD = {
+  password_update: 'Mot de passe modifié avec succès',
+  title: 'Réinitialisation du mot de passe',
+  new_pass: 'Nouveau mot de passe',
+  password: 'Mot de passe',
+  repeat_password: 'Répéter le mot de passe',
+  button_confirm: 'Valider',
 }
 
 const ADD_SERVICES = {
@@ -1491,4 +1515,7 @@ module.exports = {
   EVALUATE_CLIENT,
   FORGOT_PASSWORD,
   INDEX,
+  PAYMENT_FAILED,
+  PAYMENT_SUCCESS,
+  RESET_PASSWORD,
 }
