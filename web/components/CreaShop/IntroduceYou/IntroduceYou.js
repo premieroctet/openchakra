@@ -138,7 +138,7 @@ class IntroduceYou extends React.Component {
                       <Information
                         open={this.state.notice}
                         onClose={() => this.setState({notice: false})}
-                        text={I18N.ReactHtmlParser(this.props.t('CESU_NOTICE'))}
+                        text={ReactHtmlParser(this.props.t('CESU_NOTICE'))}
                       />
                     </RadioGroup>
                   </Grid>
@@ -215,7 +215,7 @@ class IntroduceYou extends React.Component {
         <Information
           open={this.state.notice}
           onClose={() => this.setState({notice: false})}
-          text={I18N.ReactHtmlParser(this.props.t('CESU_NOTICE'))}
+          text={ReactHtmlParser(this.props.t('CESU_NOTICE'))}
         />
       </Grid>
     )

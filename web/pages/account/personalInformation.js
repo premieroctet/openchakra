@@ -1,20 +1,20 @@
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Divider from "@material-ui/core/Divider";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import List from "@material-ui/core/List";
-import Grid from "@material-ui/core/Grid";
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import Router from "next/router";
+import React from 'react'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import Divider from '@material-ui/core/Divider'
+import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+import List from '@material-ui/core/List'
+import Grid from '@material-ui/core/Grid'
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
+import Router from 'next/router'
 import {PERSONAL_INFORMATION} from '../../utils/i18n'
 
-class personalInformation extends React.Component{
+class personalInformation extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   render() {
     return(
@@ -22,7 +22,7 @@ class personalInformation extends React.Component{
         <LayoutMobile currentIndex={4}>
           <Grid>
             <Grid>
-              <h2 style={{whiteSpace: 'nowrap'}}>{PERSONAL_ReactHtmlParser(this.props.t('INFORMATION.title'))}</h2>
+              <h2 style={{whiteSpace: 'nowrap'}}>{ReactHtmlParser(this.props.t('PERSONAL_INFORMATION.title'))}</h2>
             </Grid>
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
@@ -51,7 +51,7 @@ class personalInformation extends React.Component{
           </Grid>
         </LayoutMobile>
       </React.Fragment>
-    );
+    )
   }
 }
 

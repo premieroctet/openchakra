@@ -288,7 +288,7 @@ class trustAndVerification extends React.Component {
       this.setState({
         open: true,
         deleteCb: () => this.deleteRecto(true),
-        deleteConfirmMessage: I18N.ReactHtmlParser(this.props.t('TRUST_VERIFICATION.id_card_confirm_deletion')),
+        deleteConfirmMessage: ReactHtmlParser(this.props.t('TRUST_VERIFICATION.id_card_confirm_deletion')),
       })
     }
     else {
@@ -308,7 +308,7 @@ class trustAndVerification extends React.Component {
       this.setState({
         open: true,
         deleteCb: () => this.deleteRegistrationProof(true),
-        deleteConfirmMessage: I18N.ReactHtmlParser(this.props.t('REGISTRATION_PROOF_CONFIRM_DELETION')),
+        deleteConfirmMessage: ReactHtmlParser(this.props.t('REGISTRATION_PROOF_CONFIRM_DELETION')),
       })
     }
     else {

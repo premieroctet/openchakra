@@ -14,7 +14,6 @@ import AssetsService from '../../components/CreaShop/AssetsService/AssetsService
 import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions'
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou'
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
-const I18N = require('../../utils/i18n')
 /**
 import { assetsService,
     creaShopPresentation,
@@ -104,8 +103,8 @@ const SCHEDULE = {
   is_valid: parent => !(parent.scheduleDrawer.current && parent.scheduleDrawer.current.isDirty()),
   component: parent => <DrawerAndSchedule
     availabilities={parent.state.availabilities}
-    title={I18N.ReactHtmlParser(this.props.t('SCHEDULE_TITLE'))}
-    subtitle={I18N.ReactHtmlParser(this.props.t('SCHEDULE_SUBTITLE'))}
+    title={ReactHtmlParser(parent.props.t('SCHEDULE_TITLE'))}
+    subtitle={ReactHtmlParser(parent.props.t('SCHEDULE_SUBTITLE'))}
     nbSchedule={3}
     availabilityUpdate={parent.availabilityUpdate}
     availabilityCreated={parent.availabilityCreated}

@@ -28,19 +28,19 @@ class LayoutMobileProfile extends React.Component {
       company: null,
     }
     this.nonlogged_items= [
-      {label: ReactHtmlParser(this.props.t('LAYOUT_ReactHtmlParser(this.props.t('PROFIL.about'))')), url: '/about'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.about')), url: '/about'},
       {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.services')), url: '/services'},
       // {label: 'Photos', url: '/pictures' }, TODO : Albums 899538 899547
       {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.review')), url: '/reviews'},
     ]
     this.logged_items= [
-      {label: ReactHtmlParser(this.props.t('LAYOUT_ReactHtmlParser(this.props.t('PROFIL.about'))')), url: '/about'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.about')), url: '/about'},
       {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.services')), url: '/services'},
       // {label: 'Mes photos', url: '/pictures'}, TODO : Albums 899538 899547
       {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.review')), url: '/reviews'},
     ]
     this.logged_alfred_items = [
-      {label: ReactHtmlParser(this.props.t('LAYOUT_ReactHtmlParser(this.props.t('PROFIL.about'))')), url: '/about'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.about')), url: '/about'},
       {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.services')), url: '/services'},
       // {label: 'Mes photos', url: '/pictures'}, TODO : Albums 899538 899547
       {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.review')), url: '/reviews'},

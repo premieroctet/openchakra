@@ -74,8 +74,8 @@ class scheduleTest extends React.Component {
         <DrawerAndSchedule
           availabilityUpdate={this.availabilityUpdate}
           availabilityCreated={this.availabilityCreated}
-          title={I18N.ReactHtmlParser(this.props.t('SCHEDULE_TITLE'))}
-          SUBTITLE={I18N.ReactHtmlParser(this.props.t('SCHEDULE_SUBTITLE'))}
+          title={ReactHtmlParser(this.props.t('SCHEDULE_TITLE'))}
+          SUBTITLE={ReactHtmlParser(this.props.t('SCHEDULE_SUBTITLE'))}
           availabilities={availabilities}
           selectable={true}
         />

@@ -10,7 +10,7 @@ import Divider from "@material-ui/core/Divider";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Router from "next/router";
-import {PARAMATER} from '../../utils/i18n'
+import {PARAMETER} from '../../utils/i18n'
 
 class parameters extends React.Component{
   constructor(props) {
@@ -22,27 +22,27 @@ class parameters extends React.Component{
         <LayoutMobile>
           <Grid>
             <Grid>
-              <h2>{ReactHtmlParser(this.props.t('PARAMATER.title'))}</h2>
+              <h2>{ReactHtmlParser(this.props.t('PARAMETER.title'))}</h2>
             </Grid>
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
             <List component="nav" aria-label="main mailbox folders">
               <ListItem button onClick={() => Router.push('/account/notifications')}>
-                <ListItemText primary={ReactHtmlParser(this.props.t('PARAMATER.my_notification'))} secondary={ReactHtmlParser(this.props.t('PARAMATER.secondary_notification'))}/>
+                <ListItemText primary={ReactHtmlParser(this.props.t('PARAMETER.my_notification'))} secondary={ReactHtmlParser(this.props.t('PARAMETER.secondary_notification'))}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
               </ListItem>
               <Divider />
               <ListItem button onClick={() => Router.push('/account/paymentResponsive')}>
-                <ListItemText primary={ReactHtmlParser(this.props.t('PARAMATER.payment_method'))} secondary={ReactHtmlParser(this.props.t('PARAMATER.secondary_payment'))}/>
+                <ListItemText primary={ReactHtmlParser(this.props.t('PARAMETER.payment_method'))} secondary={ReactHtmlParser(this.props.t('PARAMETER.secondary_payment'))}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
               </ListItem>
               <Divider />
               <ListItem button onClick={() => Router.push('/account/security')}>
-                <ListItemText primary={ReactHtmlParser(this.props.t('PARAMATER.security'))} secondary={ReactHtmlParser(this.props.t('PARAMATER.security_secondary'))} />
+                <ListItemText primary={ReactHtmlParser(this.props.t('PARAMETER.security'))} secondary={ReactHtmlParser(this.props.t('PARAMETER.security_secondary'))} />
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>

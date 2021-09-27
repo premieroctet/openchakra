@@ -944,7 +944,7 @@ const PROFIL = {
   about: 'À propos de {{firstname}}',
 }
 
-const PARAMATER = {
+const PARAMETER = {
   title: 'Mes Paramètres',
   my_notification: 'Mes notifications',
   secondary_notification: 'Messages, rappels',
@@ -1505,7 +1505,7 @@ module.exports = {
   LAYOUT_PROFIL,
   LAYOUT_RESA,
   MY_PROFIL,
-  PARAMATER,
+  PARAMETER,
   PAYMENT_RESPONSIVE,
   PERSONAL_INFORMATION,
   ERROR_404,

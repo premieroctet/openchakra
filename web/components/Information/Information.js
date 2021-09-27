@@ -34,4 +34,4 @@ class Information extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Information))
+export default withTranslation('custom', {withRef: true})(Information)
