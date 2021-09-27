@@ -15,7 +15,6 @@ createCSSConfiguration = items => {
       let name=attribute.name
       let value=attribute.value
       let extra_attr=null
-      console.log(`Generating ${className} ${name} ${value}`)
       if (name=='content') {
         if (config.type=='logo') {
           if (!value.startsWith('/')) { value=`/${value}` }
@@ -110,7 +109,7 @@ createI18NConfiguration = items => {
 
 createUIConfiguration = items => {
   console.log(`Generating ${items.length} custom items`)
-  const i18n_grouped=_.groupBy(items, it => (it.type=='content' ? 'I18N': 'CSS'))
+  const i18n_grouped=_.groupBy(items, it => (['content', 'text'].includes(it.type) ? 'I18N': 'CSS'))
   createCSSConfiguration(i18n_grouped.CSS || [])
   createI18NConfiguration(i18n_grouped.I18N || [])
 }

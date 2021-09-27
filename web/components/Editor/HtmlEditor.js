@@ -14,6 +14,7 @@ class HtmlEditor extends React.Component {
   constructor(props) {
     super(props)
     this.options={
+      defaultTag: 'div',
       colorList: [this.props.colors],
       buttonList: [
         ['undo', 'redo'],

@@ -8,6 +8,7 @@ import GroupEditor from './GroupEditor'
 import PictureEditor from './PictureEditor'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
+import TextEditor from './TextEditor'
 
 import {is_development} from '../../config/config'
 
@@ -19,9 +20,9 @@ const ATT_TYPES={
   'background-color': 'color',
   'background-image': 'picture',
   'border': 'color',
-  'content': 'text',
-  'font': 'text',
-
+  'content': 'richtext',
+  'font': 'richtext',
+  'text': 'text',
 }
 const TITLES={
   'background-color': 'Couleur de fond',
@@ -95,7 +96,8 @@ class UIParameter extends React.Component {
 
             switch (att_type) {
               case 'color': return <Grid key={props} item xl={12}><ColorPicker {...props} /></Grid>
-              case 'text': return <Grid item xl={12}><HtmlEditor {...props} /></Grid>
+              case 'richtext': return <Grid item xl={12}><HtmlEditor {...props} /></Grid>
+              case 'text': return <Grid item xl={12}><TextEditor {...props} /></Grid>
               case 'visibility': return <Grid item xl={12}><Visibility {...props} name={title}/></Grid>
               case 'integer': return <Grid item xl={12}><IntegerEditor {...props} /></Grid>
               case 'picture': return <Grid item xl={12}><PictureEditor {...props} /></Grid>
