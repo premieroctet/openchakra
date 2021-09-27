@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -203,7 +204,7 @@ class DrawerSettingSchedule extends React.Component {
         <Grid>
           <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
             <Grid>
-              <h2 className={'customschedulesettingtitle'}>{DRAWER_SETTING_SCHEDULE.title}</h2>
+              <h2 className={'customschedulesettingtitle'}>{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.title'))}</h2>
             </Grid>
             <Grid>
               <IconButton aria-label="CLOSE">
@@ -230,7 +231,7 @@ class DrawerSettingSchedule extends React.Component {
                     <AccordionDetails>
                       <Grid style={{width: '100%'}}>
                         <Grid className={'customsettingscheduledelaycont'}>
-                          <h3>{DRAWER_SETTING_SCHEDULE.period}</h3>
+                          <h3>{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.period'))}</h3>
                         </Grid>
                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} className={'customsettingscheduledelaycont'}>
                           <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
@@ -241,7 +242,7 @@ class DrawerSettingSchedule extends React.Component {
                                   variant="inline"
                                   format="dd/MM/yyyy"
                                   id="date-picker-inline"
-                                  label={DRAWER_SETTING_SCHEDULE.begin_date}
+                                  label={ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.begin_date'))}
                                   className={classes.formSchedule}
                                   value={availResult.startDate}
                                   onChange={this.handleDateStart(availIdx)}
@@ -262,7 +263,7 @@ class DrawerSettingSchedule extends React.Component {
                                   variant="inline"
                                   format="dd/MM/yyyy"
                                   id="date-picker-inline"
-                                  label={DRAWER_SETTING_SCHEDULE.end_date}
+                                  label={ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.end_date'))}
                                   className={classes.formSchedule}
                                   value={availResult.endDate}
                                   onChange={this.handleDateEnd(availIdx)}
@@ -279,7 +280,7 @@ class DrawerSettingSchedule extends React.Component {
                           </Grid>
                         </MuiPickersUtilsProvider>
                         <Grid>
-                          <h3 className={'customsettingscheduledaytitle'}>{DRAWER_SETTING_SCHEDULE.day_work}</h3>
+                          <h3 className={'customsettingscheduledaytitle'}>{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.day_work'))}</h3>
                         </Grid>
                         <Grid container className={classes.panelFormDays}>
                           {DAYS.map((res, index) => {
@@ -300,7 +301,7 @@ class DrawerSettingSchedule extends React.Component {
                         <em style={{color: 'red'}}>{ error.days}</em>
                         <Grid>
                           <Grid>
-                            <h3 className={'customsettingschedulehourstitle'}>{DRAWER_SETTING_SCHEDULE.hour_work}</h3>
+                            <h3 className={'customsettingschedulehourstitle'}>{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.hour_work'))}</h3>
                             <em style={{color: 'red'}}>{ error.timelapses}</em>
                           </Grid>
                           <Grid container>
@@ -326,8 +327,8 @@ class DrawerSettingSchedule extends React.Component {
                         </Grid>
                         <Grid style={{marginTop: 20}}>
                           <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                            <Button classes={{root: 'customschedulesaveperiod'}} disabled={!this.saveEnabled(availIdx)} variant={'contained'} color={'primary'} style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}} onClick={ ev => this.save(availIdx, ev) }>{DRAWER_SETTING_SCHEDULE.save_button}</Button>
-                            <Button classes={{root: `customscheduledeletebutton ${classes.cancelButton}`}} style={{marginRight: 10, textTransform: 'initial', fontWeight: 'bold'}} onClick={() => this.removeAvailability(availIdx)}>{DRAWER_SETTING_SCHEDULE.delete_button}</Button>
+                            <Button classes={{root: 'customschedulesaveperiod'}} disabled={!this.saveEnabled(availIdx)} variant={'contained'} color={'primary'} style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}} onClick={ ev => this.save(availIdx, ev) }>{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.save_button'))}</Button>
+                            <Button classes={{root: `customscheduledeletebutton ${classes.cancelButton}`}} style={{marginRight: 10, textTransform: 'initial', fontWeight: 'bold'}} onClick={() => this.removeAvailability(availIdx)}>{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.delete_button'))}</Button>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -347,7 +348,7 @@ class DrawerSettingSchedule extends React.Component {
                 classes={{root: 'customscheduleaddperiod'}}
                 style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}}
                 onClick={ this.addAvailability}
-              >{DRAWER_SETTING_SCHEDULE.add_period}
+              >{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.add_period'))}
               </Button>
             </Grid>
           </Grid>

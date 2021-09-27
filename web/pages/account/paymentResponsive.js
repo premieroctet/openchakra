@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from "react";
 import Grid from "@material-ui/core/Grid";
@@ -28,7 +29,7 @@ class PaymentResponsive extends React.Component{
           <Grid style={{marginTop: '5vh'}}>
             <List component="nav" aria-label="main mailbox folders">
               <ListItem button onClick={() => Router.push('/account/paymentMethod')}>
-                <ListItemText primary={PAYMENT_RESPONSIVE.my_payment} secondary={PAYMENT_RESPONSIVE.secondary_payment}/>
+                <ListItemText primary={ReactHtmlParser(this.props.t('PAYMENT_RESPONSIVE.my_payment'))} secondary={ReactHtmlParser(this.props.t('PAYMENT_RESPONSIVE.secondary_payment'))}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>

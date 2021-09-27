@@ -88,10 +88,10 @@ class paymentSuccess extends BasePage {
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                 <Grid style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid>
-                    <h2>{PAYMENT_SUCCESS.title}</h2>
+                    <h2>{ReactHtmlParser(this.props.t('PAYMENT_SUCCESS.title'))}</h2>
                   </Grid>
                   <Grid>
-                    <Typography>{PAYMENT_SUCCESS.subtitle}</Typography>
+                    <Typography>{ReactHtmlParser(this.props.t('PAYMENT_SUCCESS.subtitle'))}</Typography>
                   </Grid>
                 </Grid>
                 <Grid>
@@ -102,10 +102,10 @@ class paymentSuccess extends BasePage {
                     :
                     <>
                       <Grid>
-                        <Typography>{PAYMENT_SUCCESS.message}</Typography>
+                        <Typography>{ReactHtmlParser(this.props.t('PAYMENT_SUCCESS.message'))}</Typography>
                       </Grid>
                       <Grid>
-                        <Typography>{PAYMENT_SUCCESS.not_working}<a href={'/reservations/reservations'}>{PAYMENT_SUCCESS.link}</a></Typography>
+                        <Typography>{ReactHtmlParser(this.props.t('PAYMENT_SUCCESS.not_working'))}<a href={'/reservations/reservations'}>{ReactHtmlParser(this.props.t('PAYMENT_SUCCESS.link'))}</a></Typography>
                       </Grid>
                     </>
                   }

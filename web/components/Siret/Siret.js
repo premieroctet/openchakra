@@ -118,7 +118,7 @@ class Siret extends React.Component {
       <Grid>
         {coupureToday ?
           <Typography style={{color: 'red'}}>
-            {SHOP.creation.insee_info_begin + DATE_COUPURE_INSEE.format('DD/MM/YY') + SHOP.creation.insee_info_end}
+            {ReactHtmlParser(this.props.t('SHOP.creation.insee_info_begin')) + DATE_COUPURE_INSEE.format('DD/MM/YY') + ReactHtmlParser(this.props.t('SHOP.creation.insee_info_end'))}
           </Typography>
           :
           null
@@ -128,7 +128,7 @@ class Siret extends React.Component {
             <Grid item xl={12} xs={12}>
               <TextField
                 id="filled-with-placeholder"
-                label={SHOP.creation.siret}
+                label={ReactHtmlParser(this.props.t('SHOP.creation.siret'))}
                 variant="outlined"
                 name={'siret'}
                 value={this.state.siret}
@@ -149,7 +149,7 @@ class Siret extends React.Component {
             <Grid item xl={6} xs={12}>
               <TextField
                 id="filled-with-placeholder"
-                label={SHOP.creation.name}
+                label={ReactHtmlParser(this.props.t('SHOP.creation.name'))}
                 variant="outlined"
                 type="text"
                 name={'name'}

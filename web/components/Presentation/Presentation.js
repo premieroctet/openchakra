@@ -103,7 +103,7 @@ class Presentation extends CompanyComponent {
         vat_subject: this.state.vat_subject,
       },
       ).then(() => {
-        snackBarSuccess(CMP_PRESENTATION.snackbar_update_profil)
+        snackBarSuccess(ReactHtmlParser(this.props.t('CMP_PRESENTATION.snackbar_update_profil')))
         this.setState({showEdition: false}, () => this.componentDidMount())
       }).catch(err => {
         snackBarError(err.response.data)
@@ -144,8 +144,8 @@ class Presentation extends CompanyComponent {
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}
           style={{position: 'absolute', right: 0}}/>
         <DialogContent>
-          <Topic titleTopic={CMP_PRESENTATION.edit_dialog_title}
-            titleSummary={CMP_PRESENTATION.edit_dialog_subtitle} underline={true}/>
+          <Topic titleTopic={ReactHtmlParser(this.props.t('CMP_PRESENTATION.edit_dialog_title'))}
+            titleSummary={ReactHtmlParser(this.props.t('CMP_PRESENTATION.edit_dialog_subtitle'))} underline={true}/>
           <Grid container>
             <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
               <TextField multiline classes={{root: classes.textField}} rowsMax={15} rows={2}
@@ -171,7 +171,7 @@ class Presentation extends CompanyComponent {
                   classes={{root: classes.button}}
                   color={'primary'}
                 >
-                  {CMP_PRESENTATION.update_button}
+                  {ReactHtmlParser(this.props.t('CMP_PRESENTATION.update_button'))}
                 </Button>
               </Grid>
             </Grid>
@@ -205,7 +205,7 @@ class Presentation extends CompanyComponent {
         }
         <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
           <Topic titleTopic={title}
-            titleSummary={user ? CMP_PRESENTATION.member + moment(user.creation_date).format('MMMM YYYY') : ''}>
+            titleSummary={user ? ReactHtmlParser(this.props.t('CMP_PRESENTATION.member')) + moment(user.creation_date).format('MMMM YYYY') : ''}>
             {user && !this.isModeCompany()?
               <Typography style={{wordWrap: 'break-word'}}>{user.description}</Typography>
               :

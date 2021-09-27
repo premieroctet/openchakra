@@ -45,10 +45,11 @@ const ATTRIBUTES_TYPES={
 }
 
 const getTitle = att_name => {
-  if (att_name.includes('.')) {
-    att_name=att_name.split('.')[1]
+  let key=att_name
+  if (key.includes('.')) {
+    key=key.split('.')[1]
   }
-  return TITLES[att_name]
+  return TITLES[key]
 }
 
 class UIParameter extends React.Component {
@@ -80,6 +81,11 @@ class UIParameter extends React.Component {
         {
           attributes.map(att => {
             let [att_name, att_type] = att
+
+            console.log(`att_name:${att_name}, att_type:${att_type}`)
+            if (att_name.endsWith('_placeholder')) {
+              att_type='text'
+            }
             if (this.props.prefix) {
               att_name=`${this.props.prefix}.${att_name}`
             }

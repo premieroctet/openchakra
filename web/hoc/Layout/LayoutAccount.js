@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -27,27 +28,27 @@ class LayoutAccount extends React.Component {
         this.setState({
           items: [
             {
-              label: LAYOUT_ACCOUNT.my_informations,
+              label: ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.my_informations')),
               url: isB2BAdmin(user) ? '/editProfileCompany' : '/editProfile',
             },
             {
-              label: LAYOUT_ACCOUNT.payment_method,
+              label: ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.payment_method')),
               url: '/paymentMethod',
             },
             {
-              label: isB2BAdmin(user) ? LAYOUT_ACCOUNT.my_sites : LAYOUT_ACCOUNT.my_adresses,
+              label: isB2BAdmin(user) ? ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.my_sites')) : ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.my_adresses')),
               url: '/myAddresses',
             },
             {
-              label: LAYOUT_ACCOUNT.verification,
+              label: ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.verification')),
               url: '/trustAndVerification',
             },
             {
-              label: LAYOUT_ACCOUNT.security,
+              label: ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.security')),
               url: '/security',
             },
             {
-              label: LAYOUT_ACCOUNT.notification,
+              label: ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.notification')),
               url: '/notifications',
             },
           ],
@@ -73,7 +74,7 @@ class LayoutAccount extends React.Component {
             width: '100%',
           }}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
-              <h2>{LAYOUT_ACCOUNT.my_settings}</h2>
+              <h2>{ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.my_settings'))}</h2>
             </Grid>
             <Grid>
               <ScrollMenu categories={items} mode={'account'}/>

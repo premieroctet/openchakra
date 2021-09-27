@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -50,7 +51,7 @@ class ShowDiploma extends React.Component {
             <SchoolIcon classes={{root: classes.diplomaIcon}}/>
           </Grid>
           <Grid style={{marginLeft: 10}}>
-            <h3>{SHOW_DIPLOMA.title}</h3>
+            <h3>{ReactHtmlParser(this.props.t('SHOW_DIPLOMA.title'))}</h3>
           </Grid>
         </Grid>
         <Grid container spacing={2} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
@@ -64,12 +65,12 @@ class ShowDiploma extends React.Component {
                         <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{res.name.charAt(0).toUpperCase() + res.name.slice(1)}</Typography>
                       </Grid>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>{res.year ? SHOW_DIPLOMA.diploma_year + res.year : SHOW_DIPLOMA.no_diploma_year} -</em></Typography>
+                        <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>{res.year ? ReactHtmlParser(this.props.t('SHOW_DIPLOMA.diploma_year')) + res.year : ReactHtmlParser(this.props.t('SHOW_DIPLOMA.no_diploma_year'))} -</em></Typography>
                         {
                           res.file ?
                             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                               <Grid style={{marginLeft: '3px'}}>
-                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{SHOW_DIPLOMA.document_join}</em></Typography>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{ReactHtmlParser(this.props.t('SHOW_DIPLOMA.document_join'))}</em></Typography>
                               </Grid>
                               <Grid style={{marginLeft: '5px'}}>
                                 <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudDoneOutlinedIcon/></em></Typography>
@@ -78,7 +79,7 @@ class ShowDiploma extends React.Component {
                             :
                             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                               <Grid style={{marginLeft: '3px'}}>
-                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{SHOW_DIPLOMA.no_document}</em></Typography>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{ReactHtmlParser(this.props.t('SHOW_DIPLOMA.no_document'))}</em></Typography>
                               </Grid>
                               <Grid style={{marginLeft: '5px'}}>
                                 <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudOffOutlinedIcon/></em></Typography>

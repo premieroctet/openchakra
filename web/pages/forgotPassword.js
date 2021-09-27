@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Card from '@material-ui/core/Card';
@@ -48,7 +49,7 @@ class forgotPassword extends React.Component {
     axios.post('/myAlfred/api/users/forgotPassword', user)
       .then(res => {
         const user= res.data
-        snackBarSuccess(FORGOT_PASSWORD.snackbar_send_email + email);
+        snackBarSuccess(ReactHtmlParser(this.props.t('FORGOT_PASSWORD.snackbar_send_email')) + email);
         // Rediriger vers /particular ou /professional suivant les rôles
         const redirect_url=_.intersection(user.roles, [ADMIN, MANAGER]).length>0 ? '/professional': '/particular'
         setTimeout( () =>  Router.push({pathname: redirect_url}), 2000)
@@ -68,13 +69,13 @@ class forgotPassword extends React.Component {
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-              <h2>{FORGOT_PASSWORD.title}</h2>
+              <h2>{ReactHtmlParser(this.props.t('FORGOT_PASSWORD.title'))}</h2>
             </Grid>
             <Grid item>
               <TextField
                 id="standard-with-placeholder"
-                label={FORGOT_PASSWORD.textfield_email}
-                placeholder={FORGOT_PASSWORD.placeholder_email}
+                label={ReactHtmlParser(this.props.t('FORGOT_PASSWORD.textfield_email'))}
+                placeholder={ReactHtmlParser(this.props.t('FORGOT_PASSWORD.placeholder_email'))}
                 style={{width: '100%'}}
                 type="email"
                 name="email"
@@ -85,7 +86,7 @@ class forgotPassword extends React.Component {
             </Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
               <Button variant="contained" classes={{root: classes.buttonSubmit}}  style={{backgroundColor: isB2BStyle(user) ? '#353A51' : 'rgba(178,204,251,1)'}} onClick={this.onSubmit}>
-                {FORGOT_PASSWORD.button_confirm}
+                {ReactHtmlParser(this.props.t('FORGOT_PASSWORD.button_confirm'))}
               </Button>
             </Grid>
           </Card>

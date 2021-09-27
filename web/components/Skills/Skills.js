@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
@@ -67,7 +68,7 @@ class Skills extends React.Component {
 
 
     return (
-      <Topic titleTopic={SKILL.topic_title}>
+      <Topic titleTopic={ReactHtmlParser(this.props.t('SKILL.topic_title'))}>
         <Grid container className={classes.skillsContainer} spacing={3}>
           { Object.keys(SKILLS).map((skill, index) => {
             const name = SKILLS[skill].entrieName

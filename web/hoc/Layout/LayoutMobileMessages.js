@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -39,7 +40,7 @@ class LayoutMobileMessages extends React.Component {
             </Grid>
           </Grid>
           <Grid style={{marginLeft: '8vh'}}>
-            <h2>{LAYOUT_MESSAGES.title}</h2>
+            <h2>{ReactHtmlParser(this.props.t('LAYOUT_MESSAGES.title'))}</h2>
           </Grid>
           <Grid>
             <Tabs
@@ -50,11 +51,11 @@ class LayoutMobileMessages extends React.Component {
             >
               {
                 user && user.is_alfred ?
-                  <Tab label={LAYOUT_MESSAGES.messages_alfred} className={classes.scrollMenuTab} />
+                  <Tab label={ReactHtmlParser(this.props.t('LAYOUT_MESSAGES.messages_alfred'))} className={classes.scrollMenuTab} />
                   :null
 
               }
-              <Tab label={LAYOUT_MESSAGES.messages_user} className={classes.scrollMenuTab} />
+              <Tab label={ReactHtmlParser(this.props.t('LAYOUT_MESSAGES.messages_user'))} className={classes.scrollMenuTab} />
             </Tabs>
           </Grid>
         </Grid>

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -14,14 +15,14 @@ function Custom404({classes}) {
         <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
           <Grid style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
-              <h1>{ERROR_404.title}</h1>
+              <h1>{ReactHtmlParser(this.props.t('ERROR_404.title'))}</h1>
             </Grid>
             <Grid>
-              <Typography>{ERROR_404.subtitle}</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('ERROR_404.subtitle'))}</Typography>
             </Grid>
           </Grid>
           <Grid>
-            <a href={'/'}><Typography>{ERROR_404.link}</Typography></a>
+            <a href={'/'}><Typography>{ReactHtmlParser(this.props.t('ERROR_404.link'))}</Typography></a>
           </Grid>
         </Grid>
       </Grid>

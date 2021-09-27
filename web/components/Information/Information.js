@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Dialog from '@material-ui/core/Dialog'
@@ -19,13 +20,13 @@ class Information extends React.Component {
     }
     return (
       <Dialog aria-labelledby="simple-dialog-title" open={this.props.open} onClose={this.props.onClose}>
-        <DialogTitle id="alert-dialog-title">{this.props.type ? INFORMATION.title_error : INFORMATION.title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{this.props.type ? ReactHtmlParser(this.props.t('INFORMATION.title_error')) : ReactHtmlParser(this.props.t('INFORMATION.title'))}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description" dangerouslySetInnerHTML={{__html: this.props.text}}/>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.onClose} color="primary">
-            {INFORMATION.button}
+            {ReactHtmlParser(this.props.t('INFORMATION.button'))}
           </Button>
         </DialogActions>
       </Dialog>

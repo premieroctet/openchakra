@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Button from '@material-ui/core/Button'
@@ -128,12 +129,12 @@ class Evaluate extends BasePage {
         <Grid style={{width: '100%'}}>
           <Grid style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
             <Grid item>
-              <h3>{EVALUATE.title}</h3>
+              <h3>{ReactHtmlParser(this.props.t('EVALUATE.title'))}</h3>
             </Grid>
             <Grid container style={{marginTop: '5vh'}} spacing={3}>
               <Grid item container xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex'}}>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                  <Typography>{EVALUATE.qualiting}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('EVALUATE.qualiting'))}</Typography>
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                   <StarRatings
@@ -150,7 +151,7 @@ class Evaluate extends BasePage {
               </Grid>
               <Grid item container xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                  <Typography>{EVALUATE.quality_price}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('EVALUATE.quality_price'))}</Typography>
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                   <StarRatings
@@ -167,7 +168,7 @@ class Evaluate extends BasePage {
               </Grid>
               <Grid item container xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                  <Typography>{EVALUATE.relation}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('EVALUATE.relation'))}</Typography>
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6} >
                   <StarRatings
@@ -196,7 +197,7 @@ class Evaluate extends BasePage {
         </Grid>
         <Grid style={{marginTop: '10vh'}}>
           <Grid>
-            <h3>{EVALUATE.your_commentary}</h3>
+            <h3>{ReactHtmlParser(this.props.t('EVALUATE.your_commentary'))}</h3>
           </Grid>
           <Grid>
             <TextField
@@ -216,7 +217,7 @@ class Evaluate extends BasePage {
               variant={'outlined'}
               classes={{root: classes.buttonBack}}
             >
-              {EVALUATE.back_button}
+              {ReactHtmlParser(this.props.t('EVALUATE.back_button'))}
             </Button>
           </Grid>
           <Grid>
@@ -227,7 +228,7 @@ class Evaluate extends BasePage {
               classes={{root: classes.buttonSend}}
               color={'primary'}
             >
-              {EVALUATE.confirm_button}
+              {ReactHtmlParser(this.props.t('EVALUATE.confirm_button'))}
             </Button>
           </Grid>
         </Grid>

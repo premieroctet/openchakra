@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import axios from 'axios'
 import React from 'react'
@@ -102,19 +103,19 @@ class Home extends React.Component {
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({open: false})}>
           <Grid style={{display: 'flex'}}>
             <img style={{marginRight: '7vh'}} src="/static/assets/icon/iconBlueDeep20@3x-2.png" alt="icone application myAlfred"/>
-            <Grid>{INDEX.dialog_store}</Grid>
+            <Grid>{ReactHtmlParser(this.props.t('INDEX.dialog_store'))}</Grid>
           </Grid>
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            {INDEX.store_available + isAndroid ? 'Google play' : 'Apple store'}
+            {ReactHtmlParser(this.props.t('INDEX.store_available')) + isAndroid ? 'Google play' : 'Apple store'}
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={() => Router.push(isAndroid ? 'https://play.google.com/store/apps/details?id=com.myalfred' : 'https://apps.apple.com/us/app/my-alfred/id1544073864')}
             color="primary">
-            {INDEX.download_button}
+            {ReactHtmlParser(this.props.t('INDEX.download_button'))}
           </Button>
         </DialogActions>
       </Dialog>

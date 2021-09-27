@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Button from '@material-ui/core/Button'
@@ -116,12 +117,12 @@ class EvaluateClient extends BasePage {
         <Grid style={{width: '100%'}}>
           <Grid style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
             <Grid item>
-              <h3>{EVALUATE_CLIENT.title}</h3>
+              <h3>{ReactHtmlParser(this.props.t('EVALUATE_CLIENT.title'))}</h3>
             </Grid>
             <Grid container style={{marginTop: '5vh'}} spacing={3}>
               <Grid item container xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex'}}>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                  <Typography>{EVALUATE_CLIENT.home}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('EVALUATE_CLIENT.home'))}</Typography>
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                   <StarRatings
@@ -138,7 +139,7 @@ class EvaluateClient extends BasePage {
               </Grid>
               <Grid item container xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                  <Typography>{EVALUATE_CLIENT.asking_precision}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('EVALUATE_CLIENT.asking_precision'))}</Typography>
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                   <StarRatings
@@ -155,7 +156,7 @@ class EvaluateClient extends BasePage {
               </Grid>
               <Grid item container xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                  <Typography>{EVALUATE_CLIENT.relation}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('EVALUATE_CLIENT.relation'))}</Typography>
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6} >
                   <StarRatings
@@ -175,7 +176,7 @@ class EvaluateClient extends BasePage {
         </Grid>
         <Grid style={{marginTop: '10vh'}}>
           <Grid>
-            <h3>{EVALUATE_CLIENT.your_commentary}</h3>
+            <h3>{ReactHtmlParser(this.props.t('EVALUATE_CLIENT.your_commentary'))}</h3>
           </Grid>
           <Grid>
             <TextField
@@ -195,7 +196,7 @@ class EvaluateClient extends BasePage {
               variant={'outlined'}
               classes={{root: classes.buttonBack}}
             >
-              {EVALUATE_CLIENT.back_button}
+              {ReactHtmlParser(this.props.t('EVALUATE_CLIENT.back_button'))}
             </Button>
           </Grid>
           <Grid>
@@ -206,7 +207,7 @@ class EvaluateClient extends BasePage {
               classes={{root: classes.buttonSend}}
               color={'primary'}
             >
-              {EVALUATE_CLIENT.confirm_button}
+              {ReactHtmlParser(this.props.t('EVALUATE_CLIENT.confirm_button'))}
             </Button>
           </Grid>
         </Grid>

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Dialog from '@material-ui/core/Dialog'
@@ -72,11 +73,11 @@ class EmployeeImportDialog extends React.Component {
         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseModalAddRib}>
           <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Grid>
-              <h4>{EMPLOYEE_DIALOG.title}</h4>
+              <h4>{ReactHtmlParser(this.props.t('EMPLOYEE_DIALOG.title'))}</h4>
             </Grid>
             <Grid>
               <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                {EMPLOYEE_DIALOG.subtitle}
+                {ReactHtmlParser(this.props.t('EMPLOYEE_DIALOG.subtitle'))}
               </Typography>
               {comments}
               <pre style={{color: 'red', fontSize: 'small'}}>{errors}</pre>
@@ -94,7 +95,7 @@ class EmployeeImportDialog extends React.Component {
               classes={{root: classes.buttonSave}}
               disabled={!selectedFile}
             >
-              {EMPLOYEE_DIALOG.button}
+              {ReactHtmlParser(this.props.t('EMPLOYEE_DIALOG.button'))}
             </Button>
           </Grid>
         </DialogContent>

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import { withTranslation } from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
@@ -113,7 +114,7 @@ class DrawerEditingSchedule extends React.Component {
       <Grid>
         <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
           <Grid>
-            <h2>{DRAWER_EDITING_SCHEDULE.title}</h2>
+            <h2>{ReactHtmlParser(this.props.t('DRAWER_EDITING_SCHEDULE.title'))}</h2>
           </Grid>
           <Grid>
             <IconButton aria-label="CLOSE">
@@ -126,7 +127,7 @@ class DrawerEditingSchedule extends React.Component {
           <Grid style={{width: '100%'}}>
             <Grid>
               <Grid>
-                <h3>{DRAWER_EDITING_SCHEDULE.avilable_question}</h3>
+                <h3>{ReactHtmlParser(this.props.t('DRAWER_EDITING_SCHEDULE.avilable_question'))}</h3>
                 <em className={classes.cancelButton}>{errors.available}</em>
               </Grid>
               <Grid container>
@@ -142,14 +143,14 @@ class DrawerEditingSchedule extends React.Component {
                       checked={!this.state.available}
                       value="notavailabilities"
                       control={<Radio color="primary"/>}
-                      label={DRAWER_EDITING_SCHEDULE.day_off}
+                      label={ReactHtmlParser(this.props.t('DRAWER_EDITING_SCHEDULE.day_off'))}
                     />
                     <FormControlLabel
                       onChange={this.toggleAvailability}
                       checked={this.state.available}
                       value="availabilities"
                       control={<Radio color="primary"/>}
-                      label={DRAWER_EDITING_SCHEDULE.hours_available}
+                      label={ReactHtmlParser(this.props.t('DRAWER_EDITING_SCHEDULE.hours_available'))}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -158,7 +159,7 @@ class DrawerEditingSchedule extends React.Component {
             {available ?
               <Grid>
                 <Grid>
-	                <h3>{DRAWER_EDITING_SCHEDULE.working_hours}</h3>
+	                <h3>{ReactHtmlParser(this.props.t('DRAWER_EDITING_SCHEDULE.working_hours'))}</h3>
                   <em className={classes.cancelButton}>{errors.timelapses}</em>
                 </Grid>
                 <Grid container>
@@ -194,7 +195,7 @@ class DrawerEditingSchedule extends React.Component {
                   color={'primary'}
                   style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}}
                   onClick={() => this.save()}>
-                  {DRAWER_EDITING_SCHEDULE.save_button}
+                  {ReactHtmlParser(this.props.t('DRAWER_EDITING_SCHEDULE.save_button'))}
                 </Button>
               </Grid>
             </Grid>

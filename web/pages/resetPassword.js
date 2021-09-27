@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Button from '@material-ui/core/Button'
@@ -67,7 +68,7 @@ class resetPassword extends BasePage {
     axios.post('/myAlfred/api/users/resetPassword', data)
       .then(res => {
         const user = res.data
-        snackBarSuccess(RESET_PASSWORD.password_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('RESET_PASSWORD.password_update')))
         // Rediriger vers /particular ou /professional suivant les rôles
         if (_.intersection(user.roles, [ADMIN, MANAGER]).length>0) {
           localStorage.setItem('b2b', 'true')
@@ -95,14 +96,14 @@ class resetPassword extends BasePage {
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-              <h2>{RESET_PASSWORD.title}</h2>
+              <h2>{ReactHtmlParser(this.props.t('RESET_PASSWORD.title'))}</h2>
             </Grid>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <TextField
                   id="standard-with-placeholder"
-                  label={RESET_PASSWORD.new_pass}
-                  placeholder={RESET_PASSWORD.password}
+                  label={ReactHtmlParser(this.props.t('RESET_PASSWORD.new_pass'))}
+                  placeholder={ReactHtmlParser(this.props.t('RESET_PASSWORD.password'))}
                   style={{width: '100%'}}
                   type="password"
                   name="password"
@@ -117,8 +118,8 @@ class resetPassword extends BasePage {
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <TextField
                   id="standard-with-placeholder"
-                  label={RESET_PASSWORD.repeat_password}
-                  placeholder={RESET_PASSWORD.password}
+                  label={ReactHtmlParser(this.props.t('RESET_PASSWORD.repeat_password'))}
+                  placeholder={ReactHtmlParser(this.props.t('RESET_PASSWORD.password'))}
                   variant={'outlined'}
                   style={{width: '100%'}}
                   type="password"
@@ -140,7 +141,7 @@ class resetPassword extends BasePage {
                 classes={{root: classes.buttonSubmit}}
               >
                 {
-                  RESET_PASSWORD.button_confirm
+                  ReactHtmlParser(this.props.t('RESET_PASSWORD.button_confirm'))
                 }
               </Button>
             </Grid>

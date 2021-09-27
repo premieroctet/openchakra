@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
@@ -84,7 +85,7 @@ class myProfile extends CompanyComponent {
               <UserAvatar alt={!this.isModeCompany() ? user.firstname : company ? company.name : ''} user={!this.isModeCompany() ? user : company ? company : ''} fireRefresh={() => this.componentDidMount()}/>
             </Grid>
             <Grid style={{marginLeft: '5vh'}}>
-              <h2>{MY_PROFIL.hello + user.firstname}</h2>
+              <h2>{ReactHtmlParser(this.props.t('MY_PROFIL.hello')) + user.firstname}</h2>
             </Grid>
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
@@ -94,7 +95,7 @@ class myProfile extends CompanyComponent {
                 startIcon={<PersonOutlineIcon />}
                 onClick={() => Router.push(`/profile/about?user=${user._id}`)}
               >
-                {MY_PROFIL.show_my_profil}
+                {ReactHtmlParser(this.props.t('MY_PROFIL.show_my_profil'))}
               </Button>
             </Grid>
             { user && !getRole() ?
@@ -104,7 +105,7 @@ class myProfile extends CompanyComponent {
                   startIcon={<ViewComfyIcon />}
                   onClick={() => (user.is_alfred ? Router.push(`/profile/services?user=${user._id}`) : Router.push('/creaShop/creaShop'))}
                 >
-                  {user.is_alfred ? MY_PROFIL.my_services : MY_PROFIL.propose_service}
+                  {user.is_alfred ? ReactHtmlParser(this.props.t('MY_PROFIL.my_services')) : ReactHtmlParser(this.props.t('MY_PROFIL.propose_service'))}
                 </Button>
               </Grid>
               :
@@ -117,7 +118,7 @@ class myProfile extends CompanyComponent {
                   startIcon={<SettingsIcon />}
                   onClick={() => Router.push('/company/dashboard/companyDashboard')}
                 >
-                  {MY_PROFIL.dashboard}
+                  {ReactHtmlParser(this.props.t('MY_PROFIL.dashboard'))}
                 </Button>
               </Grid>
               :
@@ -128,7 +129,7 @@ class myProfile extends CompanyComponent {
                     startIcon={<ContactMailIcon />}
                     onClick={() => Router.push('/account/personalInformation')}
                   >
-                    {MY_PROFIL.my_informations}
+                    {ReactHtmlParser(this.props.t('MY_PROFIL.my_informations'))}
                   </Button>
                 </Grid>
                 <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
@@ -137,7 +138,7 @@ class myProfile extends CompanyComponent {
                     startIcon={<SettingsIcon />}
                     onClick={() => Router.push('/account/parameters')}
                   >
-                    {MY_PROFIL.my_settings}
+                    {ReactHtmlParser(this.props.t('MY_PROFIL.my_settings'))}
                   </Button>
                 </Grid>
               </>
@@ -150,7 +151,7 @@ class myProfile extends CompanyComponent {
                 startIcon={<SettingsIcon />}
                 onClick={() => Router.push('/dashboard/home')}
               >
-                {MY_PROFIL.dashboard_alfred}
+                {ReactHtmlParser(this.props.t('MY_PROFIL.dashboard_alfred'))}
               </Button>
             </Grid>
             :
@@ -164,7 +165,7 @@ class myProfile extends CompanyComponent {
                 startIcon={<InfoIcon />}
                 onClick={() => Router.push('/footer/addService')}
               >
-                {MY_PROFIL.how_it_work}
+                {ReactHtmlParser(this.props.t('MY_PROFIL.how_it_work'))}
               </Button>
             </Grid>
             <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
@@ -173,7 +174,7 @@ class myProfile extends CompanyComponent {
                 startIcon={<InfoIcon />}
                 onClick={() => Router.push('/faq')}
               >
-                {MY_PROFIL.get_help}
+                {ReactHtmlParser(this.props.t('MY_PROFIL.get_help'))}
               </Button>
             </Grid>
             <Grid>
@@ -182,24 +183,24 @@ class myProfile extends CompanyComponent {
                 startIcon={<InfoIcon />}
                 onClick={() => Router.push('/contact')}
               >
-                {MY_PROFIL.contact_us}
+                {ReactHtmlParser(this.props.t('MY_PROFIL.contact_us'))}
               </Button>
             </Grid>
           </Grid>
           <Divider style={{marginTop: '5vh', marginBottom: '5vh'}}/>
           <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginBottom: '12vh'}}>
             <Grid style={{textAlign: 'center'}}>
-              <Typography>{MY_PROFIL.all_rights}</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('MY_PROFIL.all_rights'))}</Typography>
             </Grid>
             <Grid style={{textAlign: 'center'}}>
-              <Typography>{MY_PROFIL.security}</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('MY_PROFIL.security'))}</Typography>
             </Grid>
             <Grid style={{marginTop: '5vh'}}>
               <Button
                 variant={'outlined'}
                 onClick={this.logout2}
               >
-                {MY_PROFIL.log_out}
+                {ReactHtmlParser(this.props.t('MY_PROFIL.log_out'))}
               </Button>
             </Grid>
 

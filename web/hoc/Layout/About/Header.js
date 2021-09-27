@@ -66,36 +66,36 @@ class Header extends React.Component {
 
     if (process.browser) {
       if (window.location.pathname === '/footer/apropos') {
-        title = HEADER.title_our_values
-        content = HEADER.content_our_values
+        title = ReactHtmlParser(this.props.t('HEADER.title_our_values'))
+        content = ReactHtmlParser(this.props.t('HEADER.content_our_values'))
         aboutMenu = true
       }
       else if (window.location.pathname === '/footer/ourCommunity') {
-        title = HEADER.title_our_community
-        content = HEADER.content_our_community
+        title = ReactHtmlParser(this.props.t('HEADER.title_our_community'))
+        content = ReactHtmlParser(this.props.t('HEADER.content_our_community'))
         aboutMenu = true
       }
       else if (window.location.pathname === '/footer/ourTeam') {
-        title = HEADER.title_team
-        content = HEADER.content_title_team
+        title = ReactHtmlParser(this.props.t('HEADER.title_team'))
+        content = ReactHtmlParser(this.props.t('HEADER.content_title_team'))
         aboutMenu = true
       }
       else if (window.location.pathname === '/footer/addService') {
-        title = HEADER.title_resa
-        content = HEADER.content_resa
+        title = ReactHtmlParser(this.props.t('HEADER.title_resa'))
+        content = ReactHtmlParser(this.props.t('HEADER.content_resa'))
 
       }
       else if (window.location.pathname === '/faq') {
-        title = HEADER.title_faq
-        content = HEADER.content_faq
+        title = ReactHtmlParser(this.props.t('HEADER.title_faq'))
+        content = ReactHtmlParser(this.props.t('HEADER.content_faq'))
       }
       else if (window.location.pathname === '/footer/becomeAlfred') {
-        title = HEADER.title_become
-        content = HEADER.content_become
+        title = ReactHtmlParser(this.props.t('HEADER.title_become'))
+        content = ReactHtmlParser(this.props.t('HEADER.content_become'))
       }
       else if (window.location.pathname === '/contact') {
-        title = HEADER.contact_title
-        content = HEADER.contact_content
+        title = ReactHtmlParser(this.props.t('HEADER.contact_title'))
+        content = ReactHtmlParser(this.props.t('HEADER.contact_content'))
       }
     }
 
@@ -113,7 +113,7 @@ class Header extends React.Component {
               startIcon={<ArrowBackIcon style={{color: 'white'}}/>}
               onClick={() => Router.push('/')}
             >
-              {HEADER.button_back_home}
+              {ReactHtmlParser(this.props.t('HEADER.button_back_home'))}
             </Button>
           </Grid>
           <Grid className={classes.containerTitleAndSubtitle}>
@@ -129,8 +129,8 @@ class Header extends React.Component {
                   <Paper classes={{root: classes.navbarSearch}}>
                     <InputBase
                       className={classes.input}
-                      placeholder={HEADER.placeholder_search}
-                      inputProps={{'aria-label': HEADER.placeholder_search}}
+                      placeholder={ReactHtmlParser(this.props.t('HEADER.placeholder_search'))}
+                      inputProps={{'aria-label': ReactHtmlParser(this.props.t('HEADER.placeholder_search'))}}
                       onChange={this.onSearchChange}
                       value={search}
                     />

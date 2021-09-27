@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import styles from '../../static/css/components/ShowExperience/ShowExperience'
@@ -44,7 +45,7 @@ class ShowExperience extends React.Component {
             <WorkIcon classes={{root: classes.workIcon}}/>
           </Grid>
           <Grid style={{marginLeft: 10}}>
-            <h3>{SHOW_EXPERIENCE.title}</h3>
+            <h3>{ReactHtmlParser(this.props.t('SHOW_EXPERIENCE.title'))}</h3>
           </Grid>
         </Grid>
         <Grid container item spacing={2} xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
@@ -64,14 +65,14 @@ class ShowExperience extends React.Component {
                         {
                           res.experience_description ?
                             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                              <Typography>{SHOW_EXPERIENCE.description + res.experience_description}</Typography>
+                              <Typography>{ReactHtmlParser(this.props.t('SHOW_EXPERIENCE.description')) + res.experience_description}</Typography>
                             </Grid> :
                             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{SHOW_EXPERIENCE.no_description}</em></Typography>
+                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{ReactHtmlParser(this.props.t('SHOW_EXPERIENCE.no_description'))}</em></Typography>
                             </Grid>
                         }
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                          <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{res.level && res.level !== '' ? SHOW_EXPERIENCE.exp_year + YEARS_RANGE[res.level] : SHOW_EXPERIENCE.no_exp_year}</em></Typography>
+                          <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{res.level && res.level !== '' ? ReactHtmlParser(this.props.t('SHOW_EXPERIENCE.exp_year')) + YEARS_RANGE[res.level] : ReactHtmlParser(this.props.t('SHOW_EXPERIENCE.no_exp_year'))}</em></Typography>
                         </Grid>
                         {
                           res.experience_skills && res.experience_skills.length > 0 ?

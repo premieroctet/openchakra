@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
@@ -105,7 +106,7 @@ class TravelTax extends React.Component {
           checked={noDep}
           name={'none'}
           onChange={this.onToggle}
-        /><span>{TRAVEL_TAX.no_moving_tax}</span>
+        /><span>{ReactHtmlParser(this.props.t('TRAVEL_TAX.no_moving_tax'))}</span>
       </Grid>
       <Grid>
         <IOSSwitch
@@ -130,7 +131,7 @@ class TravelTax extends React.Component {
           }}
           error={!noDep && !tax.rate}
         />
-        {TRAVEL_TAX.kilometer}
+        {ReactHtmlParser(this.props.t('TRAVEL_TAX.kilometer'))}
         <TextField
           value={tax && tax.from}
           type="number"

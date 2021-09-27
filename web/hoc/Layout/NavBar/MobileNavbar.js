@@ -286,7 +286,7 @@ class MobileNavbar extends React.Component {
               </IconButton>
             </Grid>
             <Grid>
-              <h3 style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? SEARCHBAR.looking_for_service : this.state.mobileStepSearch === 1 ? SEARCHBAR.where : SEARCHBAR.dates}</h3>
+              <h3 style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.looking_for_service')) : this.state.mobileStepSearch === 1 ? ReactHtmlParser(this.props.t('SEARCHBAR.where')) : ReactHtmlParser(this.props.t('SEARCHBAR.dates'))}</h3>
             </Grid>
           </Grid>
           <Grid item container spacing={3} style={{margin: 0}}>
@@ -319,15 +319,15 @@ class MobileNavbar extends React.Component {
                         >
                           {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                             <MenuItem value={_id} key={index}>
-                              { _id=='main' ? SEARCHBAR.main_adress : `${value.label},${formatAddress(value)}`}
+                              { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label},${formatAddress(value)}`}
                             </MenuItem>
                           ))}                          ))}
                           <MenuItem value={'all'}>
-                            {SEARCHBAR.find_everywhere}
+                            {ReactHtmlParser(this.props.t('SEARCHBAR.find_everywhere'))}
                           </MenuItem>
                           <MenuItem value={'addAddress'}>
                             <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                              {SEARCHBAR.add_adresses}
+                              {ReactHtmlParser(this.props.t('SEARCHBAR.add_adresses'))}
                             </Typography>
                           </MenuItem>
                         </Select>
@@ -371,7 +371,7 @@ class MobileNavbar extends React.Component {
               <Button
                 onClick={() => (this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService())}
                 color={'primary'} classes={{root: classes.buttonNextRoot}}
-                variant={'contained'}>{this.state.mobileStepSearch === 0 ? SEARCHBAR.next_button : SEARCHBAR.find_button}
+                variant={'contained'}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.next_button')) : ReactHtmlParser(this.props.t('SEARCHBAR.find_button'))}
               </Button>
             </Grid>
           </Grid>
@@ -390,25 +390,25 @@ class MobileNavbar extends React.Component {
         showLabels
         classes={{root: classes.navigationRoot}}
       >
-        <BottomNavigationAction onClick={() => Router.push('/')} label={SEARCHBAR.label_mobile_home} classes={{root: classes.navigationActionRoot, label: classes.label}} value={0} icon={<HomeIcon/>}/>
-        <BottomNavigationAction onClick={() => this.setState({modalMobileSearchBarInput: true})} label={SEARCHBAR.label_explore} classes={{root: classes.navigationActionRoot, label: classes.label}} value={1} icon={<SearchIcon/>}/>
+        <BottomNavigationAction onClick={() => Router.push('/')} label={ReactHtmlParser(this.props.t('SEARCHBAR.label_mobile_home'))} classes={{root: classes.navigationActionRoot, label: classes.label}} value={0} icon={<HomeIcon/>}/>
+        <BottomNavigationAction onClick={() => this.setState({modalMobileSearchBarInput: true})} label={ReactHtmlParser(this.props.t('SEARCHBAR.label_explore'))} classes={{root: classes.navigationActionRoot, label: classes.label}} value={1} icon={<SearchIcon/>}/>
         {
           logged ?
-            <BottomNavigationAction onClick={() => Router.push('/reservations/reservations')} label={SEARCHBAR.label_resa} classes={{root: classes.navigationActionRoot, label: classes.label}} value={2} icon={<CalendarTodayIcon/>}/> : null
+            <BottomNavigationAction onClick={() => Router.push('/reservations/reservations')} label={ReactHtmlParser(this.props.t('SEARCHBAR.label_resa'))} classes={{root: classes.navigationActionRoot, label: classes.label}} value={2} icon={<CalendarTodayIcon/>}/> : null
         }
         {
           logged ?
-            <BottomNavigationAction onClick={() => Router.push(`/profile/messages?user=${this.state.user._id}`)} label={SEARCHBAR.label_message} classes={{root: classes.navigationActionRoot, label: classes.label}} value={3} icon={<MailOutlineIcon/>}/> : null
+            <BottomNavigationAction onClick={() => Router.push(`/profile/messages?user=${this.state.user._id}`)} label={ReactHtmlParser(this.props.t('SEARCHBAR.label_message'))} classes={{root: classes.navigationActionRoot, label: classes.label}} value={3} icon={<MailOutlineIcon/>}/> : null
 
         }
-        <BottomNavigationAction onClick={logged ? () => Router.push('/account/myProfile') : this.handleOpenLogin} label={logged ? SEARCHBAR.label_profil : SEARCHBAR.label_log} classes={{root: classes.navigationActionRoot, label: classes.label}} value={4} icon={ <PersonIcon/>}/>
+        <BottomNavigationAction onClick={logged ? () => Router.push('/account/myProfile') : this.handleOpenLogin} label={logged ? ReactHtmlParser(this.props.t('SEARCHBAR.label_profil')) : ReactHtmlParser(this.props.t('SEARCHBAR.label_log'))} classes={{root: classes.navigationActionRoot, label: classes.label}} value={4} icon={ <PersonIcon/>}/>
         {
           !logged ?
-            <BottomNavigationAction onClick={this.handleOpenRegister} label={SEARCHBAR.label_signin} classes={{root: classes.navigationActionRoot, label: classes.label}} value={5} icon={ <GroupAddIcon/>}/> : null
+            <BottomNavigationAction onClick={this.handleOpenRegister} label={ReactHtmlParser(this.props.t('SEARCHBAR.label_signin'))} classes={{root: classes.navigationActionRoot, label: classes.label}} value={5} icon={ <GroupAddIcon/>}/> : null
         }
         {
           !logged && isB2BStyle() ?
-            <BottomNavigationAction onClick={this.handleOpenRegister} label={SEARCHBAR.label_presta} classes={{root: classes.navigationActionRoot, label: classes.label}} value={6} icon={<BusinessIcon/>}/> : null
+            <BottomNavigationAction onClick={this.handleOpenRegister} label={ReactHtmlParser(this.props.t('SEARCHBAR.label_presta'))} classes={{root: classes.navigationActionRoot, label: classes.label}} value={6} icon={<BusinessIcon/>}/> : null
         }
         {setOpenLogin ? this.modalLogin(classes) : null}
         {setOpenRegister ? this.modalRegister(classes) : null}

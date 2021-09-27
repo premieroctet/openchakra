@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
@@ -109,7 +110,7 @@ class DrawerSchedule extends React.Component {
               color={'primary'}
               classe={{root: classes.buttonAction}}
             >
-              { this.state.eventsSelected.size > 0 ? DRAWER_SCHEDULE.button_update : DRAWER_SCHEDULE.setting_update}
+              { this.state.eventsSelected.size > 0 ? ReactHtmlParser(this.props.t('DRAWER_SCHEDULE.button_update')) : ReactHtmlParser(this.props.t('DRAWER_SCHEDULE.setting_update'))}
             </Button>
           </Grid>
           <Grid className={classes.containerFab}>

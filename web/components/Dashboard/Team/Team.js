@@ -816,7 +816,7 @@ class Team extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>{TEAM.title}</h3>
+              <h3>{ReactHtmlParser(this.props.t('TEAM.title'))}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogAdd', null, 'admin')}>
@@ -850,7 +850,7 @@ class Team extends React.Component {
                   </List>
                 </Grid> :
                 <Grid>
-                  <Typography>{TEAM.no_admin}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('TEAM.no_admin'))}</Typography>
                 </Grid>
             }
           </Box>
@@ -858,7 +858,7 @@ class Team extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>{mode === MICROSERVICE_MODE ? TEAM.micro_mode : TEAM.no_micro_mode}</h3>
+              <h3>{mode === MICROSERVICE_MODE ? ReactHtmlParser(this.props.t('TEAM.micro_mode')) : ReactHtmlParser(this.props.t('TEAM.no_micro_mode'))}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogGroupe')}>
@@ -878,10 +878,10 @@ class Team extends React.Component {
                         <ListItem key={index}>
                           <ListItemText
                             primary={res.name}
-                            secondary={res.budget ? `${res.budget}€ / ${BUDGET_PERIOD[res.budget_period]}` : TEAM.no_budget}
+                            secondary={res.budget ? `${res.budget}€ / ${BUDGET_PERIOD[res.budget_period]}` : ReactHtmlParser(this.props.t('TEAM.no_budget'))}
                           />
                           { consumed_budgets[res._id] ?
-                            <ListItemText secondary={`${consumed_budgets[res._id]}€${TEAM.available}`} />
+                            <ListItemText secondary={`${consumed_budgets[res._id]}€${ReactHtmlParser(this.props.t('TEAM.available'))}`} />
                             :
                             null
                           }
@@ -900,7 +900,7 @@ class Team extends React.Component {
                 </List>
                 :
                 <Grid>
-                  <Typography>{TEAM.no_department}</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('TEAM.no_department'))}</Typography>
                 </Grid>
               }
             </Grid>
@@ -912,7 +912,7 @@ class Team extends React.Component {
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
                   <Grid>
-                    <h3>{mode === MICROSERVICE_MODE ? TEAM.manager : TEAM.collaborateur}</h3>
+                    <h3>{mode === MICROSERVICE_MODE ? ReactHtmlParser(this.props.t('TEAM.manager')) : ReactHtmlParser(this.props.t('TEAM.collaborateur'))}</h3>
                   </Grid>
                   <Grid container style={{marginLeft: '1vh'}}>
                     <Grid>
@@ -929,7 +929,7 @@ class Team extends React.Component {
                 </Grid>
                 <Grid className={classes.searchFilterRightContainer}>
                   <Grid className={classes.searchFilterRightLabel}>
-                    <Typography>{TEAM.filter}</Typography>
+                    <Typography>{ReactHtmlParser(this.props.t('TEAM.filter'))}</Typography>
                   </Grid>
                   <Grid>
                     <FormControl>
@@ -970,7 +970,7 @@ class Team extends React.Component {
                                       {
                                         !groups.length > 0 ? null :
                                           <FormControl className={classes.formControl}>
-                                            <InputLabel id="demo-simple-select-label">{TEAM.departement}</InputLabel>
+                                            <InputLabel id="demo-simple-select-label">{ReactHtmlParser(this.props.t('TEAM.departement'))}</InputLabel>
                                             <Select
                                               labelId="demo-simple-select-label"
                                               id="demo-simple-select"

@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -19,13 +20,13 @@ class Footer extends React.Component {
         <Grid className={classes.mainContainerWidth}>
           <Grid item>
             <Link href={'/footer/apropos'}>
-              <Typography>{FOOTER.about_us}</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('FOOTER.about_us'))}</Typography>
             </Link>
           </Grid>
           <Grid item className={classes.rightMainContainerFooter}>
             <Grid item className={classes.marginLink}>
               <Link href={'/cgu'}>
-                <Typography>{FOOTER.cgu}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('FOOTER.cgu'))}</Typography>
               </Link>
             </Grid>
           </Grid>

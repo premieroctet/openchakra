@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Button from '@material-ui/core/Button'
@@ -61,20 +62,20 @@ class PaymentFailed extends BasePage {
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                 <Grid style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid>
-                    <h2>{PAYMENT_FAILED.title}</h2>
+                    <h2>{ReactHtmlParser(this.props.t('PAYMENT_FAILED.title'))}</h2>
                   </Grid>
                   <Grid>
-                    <Typography>{PAYMENT_FAILED.subtile}</Typography>
+                    <Typography>{ReactHtmlParser(this.props.t('PAYMENT_FAILED.subtile'))}</Typography>
                   </Grid>
                 </Grid>
                 <Grid style={{marginTop: '5vh'}}>
                   <Grid>
                     <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push(booking_link)}>
-                      {PAYMENT_FAILED.back_resa}
+                      {ReactHtmlParser(this.props.t('PAYMENT_FAILED.back_resa'))}
                     </Button>
                     { !avocotes_mode &&
                       <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push('/')}>
-                        {PAYMENT_FAILED.back_home}
+                        {ReactHtmlParser(this.props.t('PAYMENT_FAILED.back_home'))}
                       </Button>
                     }
                   </Grid>

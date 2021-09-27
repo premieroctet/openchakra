@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
@@ -34,7 +35,7 @@ class LayoutMessages extends React.Component {
         <Grid style={{display: 'flex', justifyContent: 'center'}}>
           <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', width: '100%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
-              <h2 className={'customlayoutmessagetitle'}>{LAYOUT_MESSAGES.title}</h2>
+              <h2 className={'customlayoutmessagetitle'}>{ReactHtmlParser(this.props.t('LAYOUT_MESSAGES.title'))}</h2>
             </Grid>
             <Grid>
               <Tabs
@@ -45,11 +46,11 @@ class LayoutMessages extends React.Component {
               >
                 {
                   user && user.is_alfred ?
-                    <Tab label={LAYOUT_MESSAGES.messages_alfred} className={classes.scrollMenuTabLayoutMessage} />
+                    <Tab label={ReactHtmlParser(this.props.t('LAYOUT_MESSAGES.messages_alfred'))} className={classes.scrollMenuTabLayoutMessage} />
                     :null
 
                 }
-                <Tab label={LAYOUT_MESSAGES.messages_user} className={classes.scrollMenuTabLayoutMessage} />
+                <Tab label={ReactHtmlParser(this.props.t('LAYOUT_MESSAGES.messages_user'))} className={classes.scrollMenuTabLayoutMessage} />
               </Tabs>
             </Grid>
             <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>

@@ -416,7 +416,7 @@ class NavBar extends Component {
               </IconButton>
             </Grid>
             <Grid item xs={10} style={{display: 'flex', alignItems: 'center'}}>
-              <Typography style={{marginLeft: '2vh'}}>{SEARCHBAR.begin_search}</Typography>
+              <Typography style={{marginLeft: '2vh'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.begin_search'))}</Typography>
             </Grid>
           </Grid>
         </Paper>
@@ -458,7 +458,7 @@ class NavBar extends Component {
             </Grid>
             <Grid>
               <h3
-                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? SEARCHBAR.what_service : this.state.mobileStepSearch === 1 ? SEARCHBAR.where_place : SEARCHBAR.dates}</h3>
+                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.what_service')) : this.state.mobileStepSearch === 1 ? ReactHtmlParser(this.props.t('SEARCHBAR.where_place')) : ReactHtmlParser(this.props.t('SEARCHBAR.dates'))}</h3>
             </Grid>
           </Grid>
           <Grid item container spacing={3} style={{margin: 0, width: '100%'}}>
@@ -492,15 +492,15 @@ class NavBar extends Component {
                       >
                         {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                           <MenuItem value={_id} key={index}>
-                            { _id=='main' ? SEARCHBAR.main_adress : `${value.label }, `} {formatAddress(value)}
+                            { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
                           </MenuItem>
                         ))}
                         <MenuItem value={'all'}>
-                          {SEARCHBAR.find_everywhere}
+                          {ReactHtmlParser(this.props.t('SEARCHBAR.find_everywhere'))}
                         </MenuItem>
                         <MenuItem value={'addAddress'}>
                           <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                            {SEARCHBAR.find_everywhere}
+                            {ReactHtmlParser(this.props.t('SEARCHBAR.find_everywhere'))}
                           </Typography>
                         </MenuItem>
                       </Select>
@@ -528,7 +528,7 @@ class NavBar extends Component {
               <Button
                 onClick={() => (this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService())}
                 color={'primary'} classes={{root: classes.buttonNextRoot}}
-                variant={'contained'}>{this.state.mobileStepSearch === 0 ? SEARCHBAR.next_button : SEARCHBAR.find_button}
+                variant={'contained'}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.next_button')) : ReactHtmlParser(this.props.t('SEARCHBAR.find_button'))}
               </Button>
             </Grid>
           </Grid>
@@ -553,7 +553,7 @@ class NavBar extends Component {
               </IconButton>
             </Grid>
             <Grid item xs={8} onClick={this.handleModalSearchBarInput} style={{cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
-              <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '2vh'}}>{SEARCHBAR.begin_search}</Typography>
+              <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '2vh'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.begin_search'))}</Typography>
             </Grid>
             <Grid container item xs={2} style={{margin: 0, width: '100%'}}>
               <Grid item xs={1}>
@@ -581,7 +581,7 @@ class NavBar extends Component {
           classes={{paper: classes.dialogNavbarMobileFilter}}
         >
           <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
-            {SEARCHBAR.filter}
+            {ReactHtmlParser(this.props.t('SEARCHBAR.filter'))}
           </DialogTitle>
           <DialogContent dividers>
             <Grid>
@@ -599,7 +599,7 @@ class NavBar extends Component {
                         name={'proSelected'}
                       />
                     }
-                    label={SEARCHBAR.professional}
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.professional'))}
                   />
                 </Grid>
                 <Grid>
@@ -613,7 +613,7 @@ class NavBar extends Component {
                         name={'individualSelected'}
                       />
                     }
-                    label={SEARCHBAR.particular}
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.particular'))}
                   />
                 </Grid>
               </Grid>
@@ -623,9 +623,9 @@ class NavBar extends Component {
               <Grid>
                 <DateRangePicker
                   startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                  startDatePlaceholderText={SEARCHBAR.start_date}
+                  startDatePlaceholderText={ReactHtmlParser(this.props.t('SEARCHBAR.start_date'))}
                   startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                  endDatePlaceholderText={SEARCHBAR.end_date}
+                  endDatePlaceholderText={ReactHtmlParser(this.props.t('SEARCHBAR.end_date'))}
                   endDate={this.state.endDate} // momentPropTypes.momentObj or null,
                   endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
                   onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
@@ -658,7 +658,7 @@ class NavBar extends Component {
                       name={'client'}
                     />
                   }
-                  label={SEARCHBAR.at_home}
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.at_home'))}
                 />
                 <FormControlLabel
                   classes={{root: classes.filterMenuControlLabel}}
@@ -670,7 +670,7 @@ class NavBar extends Component {
                       name={'alfred'}
                     />
                   }
-                  label={SEARCHBAR.alfred_home}
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.alfred_home'))}
                 />
                 <FormControlLabel
                   classes={{root: classes.filterMenuControlLabel}}
@@ -682,7 +682,7 @@ class NavBar extends Component {
                       name={'visio'}
                     />
                   }
-                  label={SEARCHBAR.remote}
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.remote'))}
                 />
               </Grid>
             </Grid>
@@ -720,7 +720,7 @@ class NavBar extends Component {
               }}
               color="primary"
             >
-              {SEARCHBAR.display}
+              {ReactHtmlParser(this.props.t('SEARCHBAR.display'))}
             </Button>
           </DialogActions>
         </Dialog>
@@ -763,28 +763,28 @@ class NavBar extends Component {
         >
           {user ?
             <Grid>
-              <MenuItem>{SEARCHBAR.hello + user.firstname} !</MenuItem>
-              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>{SEARCHBAR.my_profil}</MenuItem>
-              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>{SEARCHBAR.my_settings}</MenuItem>
+              <MenuItem>{ReactHtmlParser(this.props.t('SEARCHBAR.hello')) + user.firstname} !</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_profil'))}</MenuItem>
+              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_settings'))}</MenuItem>
               {
                 !user.is_employee ?
                   user.is_alfred ?
-                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>{SEARCHBAR.my_services}</MenuItem>
+                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_services'))}</MenuItem>
                     :
-                    <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{SEARCHBAR.create_shop}</MenuItem>
+                    <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
                   : null
               }
-              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{SEARCHBAR.my_messages}</MenuItem>
-              <MenuItem onClick={() => Router.push('/reservations/reservations')}>{SEARCHBAR.my_resa}</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_messages'))}</MenuItem>
+              <MenuItem onClick={() => Router.push('/reservations/reservations')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_resa'))}</MenuItem>
               {user.is_admin ?
-                <MenuItem onClick={() => Router.push('/dashboard/home')}>{SEARCHBAR.dashboard_alfred}</MenuItem>
+                <MenuItem onClick={() => Router.push('/dashboard/home')}>{ReactHtmlParser(this.props.t('SEARCHBAR.dashboard_alfred'))}</MenuItem>
                 : null
               }
               {isB2BAdmin(user) ?
-                <MenuItem onClick={() => Router.push('/company/dashboard/companyDashboard')}>{SEARCHBAR.dashboard}</MenuItem>
+                <MenuItem onClick={() => Router.push('/company/dashboard/companyDashboard')}>{ReactHtmlParser(this.props.t('SEARCHBAR.dashboard'))}</MenuItem>
                 : null
               }
-              <MenuItem onClick={this.logout}>{SEARCHBAR.log_out}</MenuItem>
+              <MenuItem onClick={this.logout}>{ReactHtmlParser(this.props.t('SEARCHBAR.log_out'))}</MenuItem>
             </Grid>
             :
             null
@@ -866,25 +866,25 @@ class NavBar extends Component {
             transformOrigin={{vertical: 'top', horizontal: 'center'}}
           >
             <MenuItem onClick={() => Router.push('/blog/elementor-211/')}>
-              <Typography>{SEARCHBAR.service_company}</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.service_company'))}</Typography>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/blog/services-aux-collaborateurs/')}>
-              <Typography>{SEARCHBAR.service_collab}</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.service_collab'))}</Typography>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/blog/tarifs')}>
-              <Typography>{SEARCHBAR.price}</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.price'))}</Typography>
             </MenuItem>
             <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
               <Divider/>
             </Grid>
             <MenuItem onClick={this.checkAndOpenRegister}>
-              <Button variant="outlined" classes={{root: classes.buttonService}}>{SEARCHBAR.crea_service}</Button>
+              <Button variant="outlined" classes={{root: classes.buttonService}}>{ReactHtmlParser(this.props.t('SEARCHBAR.crea_service'))}</Button>
             </MenuItem>
             <MenuItem onClick={this.handleOpenLogin}>
-              <Button variant="outlined" classes={{root: classes.buttonLoginB2b}}>{SEARCHBAR.log_in}</Button>
+              <Button variant="outlined" classes={{root: classes.buttonLoginB2b}}>{ReactHtmlParser(this.props.t('SEARCHBAR.log_in'))}</Button>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/search')}>
-              <Button variant="outlined" classes={{root: classes.buttonRegisterB2b}}>{SEARCHBAR.sign_in}</Button>
+              <Button variant="outlined" classes={{root: classes.buttonRegisterB2b}}>{ReactHtmlParser(this.props.t('SEARCHBAR.sign_in'))}</Button>
             </MenuItem>
           </Menu>
         </Grid>
@@ -902,7 +902,7 @@ class NavBar extends Component {
               classes={{root: classes.navbarSignInB2B}}
               style={{whiteSpace: 'nowrap'}}
               onClick={this.checkAndOpenRegister}>
-              {SEARCHBAR.crea_service}
+              {ReactHtmlParser(this.props.t('SEARCHBAR.crea_service'))}
             </Button>
           </Grid>
           <Grid >
@@ -990,15 +990,15 @@ class NavBar extends Component {
                     >
                       {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                         <MenuItem value={_id} key={index}>
-                          { _id=='main' ? SEARCHBAR.main_adress : `${value.label }, `} {formatAddress(value)}
+                          { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
                         </MenuItem>
                       ))}
                       <MenuItem value={'all'}>
-                        {SEARCHBAR.find_everywhere}
+                        {ReactHtmlParser(this.props.t('SEARCHBAR.find_everywhere'))}
                       </MenuItem>
                       <MenuItem value={'addAddress'}>
                         <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                          {SEARCHBAR.add_adresses}
+                          {ReactHtmlParser(this.props.t('SEARCHBAR.add_adresses'))}
                         </Typography>
                       </MenuItem>
                     </Select>
@@ -1137,17 +1137,17 @@ class NavBar extends Component {
                 <>
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    label={SEARCHBAR.service_company}
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.service_company'))}
                     onClick={() => Router.push('/blog/elementor-211/')}
                   />
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    label={SEARCHBAR.service_collab}
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.service_collab'))}
                     onClick={() => Router.push('/blog/services-aux-collaborateurs/')}
                   />
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    label={SEARCHBAR.price}
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.price'))}
                     onClick={() => Router.push('/blog/tarifs')}
                   />
                 </>

@@ -28,24 +28,24 @@ class LayoutMobileProfile extends React.Component {
       company: null,
     }
     this.nonlogged_items= [
-      {label: LAYOUT_PROFIL.about, url: '/about'},
-      {label: LAYOUT_PROFIL.services, url: '/services'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_ReactHtmlParser(this.props.t('PROFIL.about'))')), url: '/about'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.services')), url: '/services'},
       // {label: 'Photos', url: '/pictures' }, TODO : Albums 899538 899547
-      {label: LAYOUT_PROFIL.review, url: '/reviews'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.review')), url: '/reviews'},
     ]
     this.logged_items= [
-      {label: LAYOUT_PROFIL.about, url: '/about'},
-      {label: LAYOUT_PROFIL.services, url: '/services'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_ReactHtmlParser(this.props.t('PROFIL.about'))')), url: '/about'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.services')), url: '/services'},
       // {label: 'Mes photos', url: '/pictures'}, TODO : Albums 899538 899547
-      {label: LAYOUT_PROFIL.review, url: '/reviews'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.review')), url: '/reviews'},
     ]
     this.logged_alfred_items = [
-      {label: LAYOUT_PROFIL.about, url: '/about'},
-      {label: LAYOUT_PROFIL.services, url: '/services'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_ReactHtmlParser(this.props.t('PROFIL.about'))')), url: '/about'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.services')), url: '/services'},
       // {label: 'Mes photos', url: '/pictures'}, TODO : Albums 899538 899547
-      {label: LAYOUT_PROFIL.review, url: '/reviews'},
-      {label: LAYOUT_PROFIL.schedule, url: '/calendar'},
-      {label: LAYOUT_PROFIL.stats, url: '/statistics'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.review')), url: '/reviews'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.schedule')), url: '/calendar'},
+      {label: ReactHtmlParser(this.props.t('LAYOUT_PROFIL.stats')), url: '/statistics'},
     ]
   }
 
@@ -96,7 +96,7 @@ class LayoutMobileProfile extends React.Component {
                 {isModeCompany(user) ?
                   <h3>{company ? company.name : ''}</h3>
                   :
-                  <h3>{user ? LAYOUT_PROFIL.name + user.firstname : ''}</h3>
+                  <h3>{user ? ReactHtmlParser(this.props.t('LAYOUT_PROFIL.name')) + user.firstname : ''}</h3>
                 }
               </Grid>
               {isModeCompany(user) ? null :

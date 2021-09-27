@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -19,10 +20,10 @@ class TrustAndSecurityBar extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
-              <Typography>{TRUST_SECURITY.payment}</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('TRUST_SECURITY.payment'))}</Typography>
             </Grid>
             <Grid>
-              <Typography>{TRUST_SECURITY.security}</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('TRUST_SECURITY.security'))}</Typography>
             </Grid>
           </Grid>
         </Grid>

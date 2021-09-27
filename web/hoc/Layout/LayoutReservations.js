@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
@@ -33,7 +34,7 @@ class LayoutReservations extends React.Component {
         <Grid style={{display: 'flex', justifyContent: 'center'}}>
           <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', width: '100%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
-              <h2 className={'customlayoutresatitle'}>{LAYOUT_RESA.title}</h2>
+              <h2 className={'customlayoutresatitle'}>{ReactHtmlParser(this.props.t('LAYOUT_RESA.title'))}</h2>
             </Grid>
             <Grid>
               <Tabs
@@ -45,10 +46,10 @@ class LayoutReservations extends React.Component {
               >
                 {
                   userInfo && userInfo.is_alfred ?
-                    <Tab label={LAYOUT_RESA.messages_alfred} className={classes.scrollMenuTab} />
+                    <Tab label={ReactHtmlParser(this.props.t('LAYOUT_RESA.messages_alfred'))} className={classes.scrollMenuTab} />
                     : null
                 }
-                <Tab label={LAYOUT_RESA.messages_user} className={classes.scrollMenuTab} />
+                <Tab label={ReactHtmlParser(this.props.t('LAYOUT_RESA.messages_user'))} className={classes.scrollMenuTab} />
               </Tabs>
             </Grid>
             <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>

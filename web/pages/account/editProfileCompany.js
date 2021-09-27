@@ -161,7 +161,7 @@ class editProfileCompany extends BasePage {
       website: this.state.website,
     })
       .then(() => {
-        snackBarSuccess(EDIT_PROFIL.snackbar_profil_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('EDIT_PROFIL.snackbar_profil_update')))
         this.loadUser()
       })
       .catch(err => {
@@ -185,7 +185,7 @@ class editProfileCompany extends BasePage {
 
     axios.put('/myAlfred/api/users/profile/editProProfile', postData)
       .then(() => {
-        snackBarSuccess(EDIT_PROFIL.snackbar_profil_update)
+        snackBarSuccess(ReactHtmlParser(this.props.t('EDIT_PROFIL.snackbar_profil_update')))
         this.loadUser()
       })
       .catch(err => {
@@ -199,10 +199,10 @@ class editProfileCompany extends BasePage {
   sendEmail = () => {
     axios.get('/myAlfred/api/users/sendMailVerification')
       .then(() => {
-        snackBarSuccess(EDIT_PROFIL.snackbar_send_email)
+        snackBarSuccess(ReactHtmlParser(this.props.t('EDIT_PROFIL.snackbar_send_email')))
       })
       .catch(err => {
-        snackBarError(EDIT_PROFIL.snackbar_error_email + err)
+        snackBarError(ReactHtmlParser(this.props.t('EDIT_PROFIL.snackbar_error_email')) + err)
       })
   }
 
@@ -214,23 +214,23 @@ class editProfileCompany extends BasePage {
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2>{EDIT_PROFIL.information}</h2>
+            <h2>{ReactHtmlParser(this.props.t('EDIT_PROFIL.information'))}</h2>
           </Grid>
         </Grid>
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
-          <h2 style={{whiteSpace: 'nowrap'}}>{EDIT_PROFIL.company_profil}</h2>
+          <h2 style={{whiteSpace: 'nowrap'}}>{ReactHtmlParser(this.props.t('EDIT_PROFIL.company_profil'))}</h2>
         </Grid>
         <Grid container spacing={3} style={{marginTop: '5vh'}}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
               value={companyName}
               name={'companyName'}
-              placeholder={EDIT_PROFIL.textfield_company}
+              placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_company'))}
               variant={'outlined'}
-              label={EDIT_PROFIL.textfield_company}
+              label={ReactHtmlParser(this.props.t('EDIT_PROFIL.textfield_company'))}
               classes={{root: classes.textField}}
               onChange={this.handleChange}
             />
@@ -238,7 +238,7 @@ class editProfileCompany extends BasePage {
           <Grid item lg={6} md={12} sm={12} xs={12} className={classes.containerAlgolia}>
             <AlgoliaPlaces
               key={moment()}
-              placeholder={billing_address ? `${billing_address.address}, ${billing_address.zip_code}, ${billing_address.country}` : EDIT_PROFIL.invoice_company}
+              placeholder={billing_address ? `${billing_address.address}, ${billing_address.zip_code}, ${billing_address.country}` : ReactHtmlParser(this.props.t('EDIT_PROFIL.invoice_company'))}
               options={{
                 appId: 'plKATRG826CP',
                 apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -254,9 +254,9 @@ class editProfileCompany extends BasePage {
             <TextField
               value={siret}
               name={'siret'}
-              placeholder={EDIT_PROFIL.siret_placeholder}
+              placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.siret_placeholder'))}
               variant={'outlined'}
-              label={EDIT_PROFIL.siret_placeholder}
+              label={ReactHtmlParser(this.props.t('EDIT_PROFIL.siret_placeholder'))}
               classes={{root: classes.textField}}
               onChange={this.handleChange}
 
@@ -266,9 +266,9 @@ class editProfileCompany extends BasePage {
             <TextField
               value={tva}
               name={'tva'}
-              placeholder={EDIT_PROFIL.company_tva}
+              placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.company_tva'))}
               variant={'outlined'}
-              label={EDIT_PROFIL.company_tva}
+              label={ReactHtmlParser(this.props.t('EDIT_PROFIL.company_tva'))}
               classes={{root: classes.textField}}
               onChange={this.handleChange}
               disabled={!vat_subject}
@@ -284,22 +284,22 @@ class editProfileCompany extends BasePage {
                       color='primary'
                     />
                   }
-                  label={EDIT_PROFIL.company_assujeti}
+                  label={ReactHtmlParser(this.props.t('EDIT_PROFIL.company_assujeti'))}
                 />
               </FormHelperText>
             </Grid>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <FormControl variant='outlined' className={classes.formControl}>
-              <InputLabel id='demo-simple-select-outlined-label'>{EDIT_PROFIL.size_company}</InputLabel>
+              <InputLabel id='demo-simple-select-outlined-label'>{ReactHtmlParser(this.props.t('EDIT_PROFIL.size_company'))}</InputLabel>
               <Select
                 labelId='demo-simple-select-outlined-label'
                 id='demo-simple-select-outlined'
                 value={sizeCompany}
                 onChange={this.handleChange}
-                label={EDIT_PROFIL.size_company}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.size_company'))}
                 name={'sizeCompany'}
-                placeholder={EDIT_PROFIL.size_company}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.size_company'))}
               >
                 {
                   Object.keys(COMPANY_SIZE).map(res => (
@@ -311,15 +311,15 @@ class editProfileCompany extends BasePage {
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <FormControl variant='outlined' className={classes.formControl}>
-              <InputLabel id='demo-simple-select-outlined-label'>{EDIT_PROFIL.activity_sector}</InputLabel>
+              <InputLabel id='demo-simple-select-outlined-label'>{ReactHtmlParser(this.props.t('EDIT_PROFIL.activity_sector'))}</InputLabel>
               <Select
                 labelId='demo-simple-select-outlined-label'
                 id='demo-simple-select-outlined'
                 value={activityArea}
                 onChange={this.handleChange}
-                label={EDIT_PROFIL.activity_sector}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.activity_sector'))}
                 name={'activityArea'}
-                placeholder={EDIT_PROFIL.activity_sector}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.activity_sector'))}
               >
                 {
                   Object.keys(COMPANY_ACTIVITY).map(res => (
@@ -336,8 +336,8 @@ class editProfileCompany extends BasePage {
               rows={5}
               variant={'outlined'}
               name={'descriptionCompany'}
-              placeholder={EDIT_PROFIL.about_company}
-              label={EDIT_PROFIL.about_company}
+              placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.about_company'))}
+              label={ReactHtmlParser(this.props.t('EDIT_PROFIL.about_company'))}
               classes={{root: classes.textField}}
               onChange={this.handleChange}
             />
@@ -355,7 +355,7 @@ class editProfileCompany extends BasePage {
               color='primary'
               classes={{root: classes.button}}
             >
-              {EDIT_PROFIL.save_button}
+              {ReactHtmlParser(this.props.t('EDIT_PROFIL.save_button'))}
             </Button>
           </Grid>
         </Grid>
@@ -365,7 +365,7 @@ class editProfileCompany extends BasePage {
         <Grid>
           <Grid>
             <h2 style={{whiteSpace: 'nowrap'}}>
-              {EDIT_PROFIL.about_you + this.is_legal_representative() ? EDIT_PROFIL.admin : null }
+              {ReactHtmlParser(this.props.t('EDIT_PROFIL.about_you')) + this.is_legal_representative() ? ReactHtmlParser(this.props.t('EDIT_PROFIL.admin')) : null }
             </h2>
           </Grid>
           <Grid container spacing={3} style={{marginTop: '5vh'}}>
@@ -373,9 +373,9 @@ class editProfileCompany extends BasePage {
               <TextField
                 value={name}
                 name={'name'}
-                placeholder={EDIT_PROFIL.name_company}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.name_company'))}
                 variant={'outlined'}
-                label={EDIT_PROFIL.name_company}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.name_company'))}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
 
@@ -385,9 +385,9 @@ class editProfileCompany extends BasePage {
               <TextField
                 value={firstName}
                 name={'firstName'}
-                placeholder={EDIT_PROFIL.firstname_company}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.firstname_company'))}
                 variant={'outlined'}
-                label={EDIT_PROFIL.firstname_company}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.firstname_company'))}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
 
@@ -397,9 +397,9 @@ class editProfileCompany extends BasePage {
               <TextField
                 value={email}
                 name={'email'}
-                placeholder={EDIT_PROFIL.email_company}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.email_company'))}
                 variant={'outlined'}
-                label={EDIT_PROFIL.email_company}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.email_company'))}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
                 InputProps={{
@@ -415,16 +415,16 @@ class editProfileCompany extends BasePage {
                 disabled={user.email ? !!(email === user.email && user.is_confirmed) : true}
                 classes={{root: classes.buttonCheckPhone}}
               >
-                {email === user.email && user.is_confirmed === true ? EDIT_PROFIL.email_checked : email !== user.email ? EDIT_PROFIL.new_email : EDIT_PROFIL.check_new_email}
+                {email === user.email && user.is_confirmed === true ? ReactHtmlParser(this.props.t('EDIT_PROFIL.email_checked')) : email !== user.email ? ReactHtmlParser(this.props.t('EDIT_PROFIL.new_email')) : ReactHtmlParser(this.props.t('EDIT_PROFIL.check_new_email'))}
               </Button>
             </Grid>
             <Grid item xs={position_width} lg={position_width} md={position_width} sm={position_width} xl={position_width}>
               <TextField
                 value={position}
                 name={'position'}
-                placeholder={EDIT_PROFIL.fonction_company}
+                placeholder={ReactHtmlParser(this.props.t('EDIT_PROFIL.fonction_company'))}
                 variant={'outlined'}
-                label={EDIT_PROFIL.fonction_company}
+                label={ReactHtmlParser(this.props.t('EDIT_PROFIL.fonction_company'))}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
               />
@@ -434,7 +434,7 @@ class editProfileCompany extends BasePage {
                 <DateField
                   classes={{root: classes.textFieldDatePicker}}
                   variant='outlined'
-                  label={EDIT_PROFIL.birthdate_admin}
+                  label={ReactHtmlParser(this.props.t('EDIT_PROFIL.birthdate_admin'))}
                   name={'birthday'}
                   value={birthday}
                   onChange={this.handleChange}
@@ -453,7 +453,7 @@ class editProfileCompany extends BasePage {
               color='primary'
               classes={{root: classes.button}}
             >
-              {EDIT_PROFIL.save_button}
+              {ReactHtmlParser(this.props.t('EDIT_PROFIL.save_button'))}
             </Button>
           </Grid>
         </Grid>

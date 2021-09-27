@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -48,7 +49,7 @@ class ShowCertification extends React.Component {
             <img title={'certification_icon'} alt={'certification_icon'} height={24} width={24} src={'/static/assets/icon/pro_icon.svg'}/>
           </Grid>
           <Grid style={{marginLeft: 10}}>
-            <h3>{SHOW_CERTIFICATION.title}</h3>
+            <h3>{ReactHtmlParser(this.props.t('SHOW_CERTIFICATION.title'))}</h3>
           </Grid>
         </Grid>
         <Grid container spacing={2} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
@@ -62,12 +63,12 @@ class ShowCertification extends React.Component {
                         <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{x.name.charAt(0).toUpperCase() + x.name.slice(1)}</Typography>
                       </Grid>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>{x.year ? `${SHOW_CERTIFICATION.certif_obtain + x.year} -` : SHOW_CERTIFICATION.year_obtain } </em></Typography>
+                        <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>{x.year ? `${ReactHtmlParser(this.props.t('SHOW_CERTIFICATION.certif_obtain')) + x.year} -` : ReactHtmlParser(this.props.t('SHOW_CERTIFICATION.year_obtain')) } </em></Typography>
                         {
                           x.file ?
                             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                               <Grid style={{marginLeft: '3px'}}>
-                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{SHOW_CERTIFICATION.document_join}</em></Typography>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{ReactHtmlParser(this.props.t('SHOW_CERTIFICATION.document_join'))}</em></Typography>
                               </Grid>
                               <Grid style={{marginLeft: '5px'}}>
                                 <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudDoneOutlinedIcon/></em></Typography>
@@ -76,7 +77,7 @@ class ShowCertification extends React.Component {
                             :
                             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                               <Grid style={{marginLeft: '3px'}}>
-                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{SHOW_CERTIFICATION.no_document}</em></Typography>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{ReactHtmlParser(this.props.t('SHOW_CERTIFICATION.no_document'))}</em></Typography>
                               </Grid>
                               <Grid style={{marginLeft: '5px'}}>
                                 <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudOffOutlinedIcon/></em></Typography>
