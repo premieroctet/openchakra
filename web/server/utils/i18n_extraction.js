@@ -18,7 +18,10 @@ const getQueries = () => {
     v=v.replace(/['’]/g, "\\'")
     return `db.uiconfigurations.update(\
       {classname: '${k}', type:'content'},\
-      {$set : {page: 'textes', component: '${compName}', label: '${v}', attributes: [{name:'content', value: '${v}'}]}},\
+      {$set :
+        {page: 'textes', component: '${compName}', label: '${v}',
+        }
+      },\
       {upsert: true})`
   })
   return queries
