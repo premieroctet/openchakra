@@ -3,12 +3,12 @@ import {withTranslation} from 'react-i18next'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/PrivacyPolicy/Preamble/Preamble'
 
-function Preamble() {
+function Communication() {
   return(
     <div>
-      <h1>Bonjour</h1>
+      <h1>Communication</h1>
     </div>
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Preamble))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Communication))
