@@ -16,7 +16,7 @@ function Asset(props) {
 
   return(
     <>
-      <img src={url} alt={'coucou'} title={'coucou'}/>
+      <img src={url} alt={props.alt} title={props.title}/>
     </>
   )
 }
