@@ -2,14 +2,13 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-input-range/lib/css/index.css'
 import 'react-tabs/style/react-tabs.css'
-
 import '../static/cssdashboard.css'
 import '../static/form.css'
 import '../static/forminputs.css'
 import '../static/inputRange.css'
 import '../static/style1.css'
 import '../static/stylesfonts.css'
-
+import ReactHtmlParser from 'react-html-parser'
 import {MuiThemeProvider} from '@material-ui/core/styles'
 import App, {Container} from 'next/app'
 import CookieConsent from 'react-cookie-consent'
@@ -18,13 +17,12 @@ import Head from 'next/head'
 import JssProvider from 'react-jss/lib/JssProvider'
 import React from 'react'
 import Router from 'next/router'
-
 import {ACCEPT_COOKIE_NAME} from '../utils/consts'
 import {COOKIE_CONSENT} from '../utils/i18n'
 import {getLoggedUser} from '../utils/context'
 import {snackBarError} from '../utils/notifications'
 import getPageContext from '../lib/getPageContext'
-import {I18nextProvider} from 'react-i18next'
+import {I18nextProvider, withTranslation} from 'react-i18next'
 import i18n from '../server/utils/i18n_init'
 
 
@@ -83,9 +81,9 @@ class MyApp extends App {
           </Head>
           {/* Wrap every page in Jss and Theme providers */}
           <CookieConsent
-            buttonText={COOKIE_CONSENT.accept}
+            buttonText={ReactHtmlParser(this.props.t('COOKIE_CONSENT.accept'))}
             enableDeclineButton
-            declineButtonText={COOKIE_CONSENT.decline}
+            declineButtonText={ReactHtmlParser(this.props.t('COOKIE_CONSENT.decline'))}
             location="top"
             cookieName={ACCEPT_COOKIE_NAME}
             onDecline={this.onDeclineCookies}
@@ -94,7 +92,7 @@ class MyApp extends App {
             buttonClasses={'customCookiesAccept'}
             declineButtonClasses={'customCookiesDecline'}
           >
-            {COOKIE_CONSENT.message}
+            {ReactHtmlParser(this.props.t('COOKIE_CONSENT.message'))}
           </CookieConsent>
 
           <JssProvider
@@ -120,4 +118,4 @@ class MyApp extends App {
   }
 }
 
-export default MyApp
+export default withTranslation('custom', {withRef: true})(MyApp)
