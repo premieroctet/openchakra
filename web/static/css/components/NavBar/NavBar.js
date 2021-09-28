@@ -204,8 +204,11 @@ export default theme => ({
 
   logoMyAlfred: {
     height: 64,
-
+    backgroundImage: 'url(static/assets/icon/logo.svg)',
+    filter: 'invert(1)',
+    backgroundRepeat: 'no-repeat',
   },
+
   hiddenOnlyXs: {
     display: 'flex',
     flexDirection: 'column',

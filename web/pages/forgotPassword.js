@@ -2,7 +2,6 @@ import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -14,6 +13,7 @@ const {snackBarSuccess, snackBarError} = require('../utils/notifications');
 const {ADMIN, MANAGER} = require('../utils/consts')
 const _ = require('lodash')
 import {isB2BStyle} from "../utils/context";
+import {FORGOT_PASSWORD} from '../utils/i18n'
 
 
 class forgotPassword extends React.Component {
@@ -48,7 +48,7 @@ class forgotPassword extends React.Component {
     axios.post('/myAlfred/api/users/forgotPassword', user)
       .then(res => {
         const user= res.data
-        snackBarSuccess(`Un email de récupération a été envoyé à l\'adresse ${email}`);
+        snackBarSuccess(FORGOT_PASSWORD.snackbar_send_email + email);
         // Rediriger vers /particular ou /professional suivant les rôles
         const redirect_url=_.intersection(user.roles, [ADMIN, MANAGER]).length>0 ? '/professional': '/particular'
         setTimeout( () =>  Router.push({pathname: redirect_url}), 2000)
@@ -68,13 +68,13 @@ class forgotPassword extends React.Component {
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-              <h2>Mot de passe oublié</h2>
+              <h2>{FORGOT_PASSWORD.title}</h2>
             </Grid>
             <Grid item>
               <TextField
                 id="standard-with-placeholder"
-                label="Email"
-                placeholder="Email"
+                label={FORGOT_PASSWORD.textfield_email}
+                placeholder={FORGOT_PASSWORD.placeholder_email}
                 style={{width: '100%'}}
                 type="email"
                 name="email"
@@ -85,7 +85,7 @@ class forgotPassword extends React.Component {
             </Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
               <Button variant="contained" classes={{root: classes.buttonSubmit}}  style={{backgroundColor: isB2BStyle(user) ? '#353A51' : 'rgba(178,204,251,1)'}} onClick={this.onSubmit}>
-                Valider
+                {FORGOT_PASSWORD.button_confirm}
               </Button>
             </Grid>
           </Card>

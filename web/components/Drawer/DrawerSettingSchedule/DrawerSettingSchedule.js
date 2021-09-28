@@ -17,6 +17,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import styles from './DrawerSettingScheduleStyle'
 import axios from 'axios'
 import '../../../static/assets/css/custom.css'
+import {DRAWER_SETTING_SCHEDULE} from '../../../utils/i18n'
 
 const {timelapsesSetToArray} = require('../../../utils/dateutils')
 
@@ -202,7 +203,7 @@ class DrawerSettingSchedule extends React.Component {
         <Grid>
           <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
             <Grid>
-              <h2 className={'customschedulesettingtitle'}>Paramétrez vos disponibilités</h2>
+              <h2 className={'customschedulesettingtitle'}>{DRAWER_SETTING_SCHEDULE.title}</h2>
             </Grid>
             <Grid>
               <IconButton aria-label="CLOSE">
@@ -229,7 +230,7 @@ class DrawerSettingSchedule extends React.Component {
                     <AccordionDetails>
                       <Grid style={{width: '100%'}}>
                         <Grid className={'customsettingscheduledelaycont'}>
-                          <h3>Période :</h3>
+                          <h3>{DRAWER_SETTING_SCHEDULE.period}</h3>
                         </Grid>
                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} className={'customsettingscheduledelaycont'}>
                           <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
@@ -240,7 +241,7 @@ class DrawerSettingSchedule extends React.Component {
                                   variant="inline"
                                   format="dd/MM/yyyy"
                                   id="date-picker-inline"
-                                  label="Date de début"
+                                  label={DRAWER_SETTING_SCHEDULE.begin_date}
                                   className={classes.formSchedule}
                                   value={availResult.startDate}
                                   onChange={this.handleDateStart(availIdx)}
@@ -261,7 +262,7 @@ class DrawerSettingSchedule extends React.Component {
                                   variant="inline"
                                   format="dd/MM/yyyy"
                                   id="date-picker-inline"
-                                  label="Date de fin"
+                                  label={DRAWER_SETTING_SCHEDULE.end_date}
                                   className={classes.formSchedule}
                                   value={availResult.endDate}
                                   onChange={this.handleDateEnd(availIdx)}
@@ -278,7 +279,7 @@ class DrawerSettingSchedule extends React.Component {
                           </Grid>
                         </MuiPickersUtilsProvider>
                         <Grid>
-                          <h3 className={'customsettingscheduledaytitle'}>Jours travaillés :</h3>
+                          <h3 className={'customsettingscheduledaytitle'}>{DRAWER_SETTING_SCHEDULE.day_work}</h3>
                         </Grid>
                         <Grid container className={classes.panelFormDays}>
                           {DAYS.map((res, index) => {
@@ -288,8 +289,8 @@ class DrawerSettingSchedule extends React.Component {
                                 clickable
                                 label={res.charAt(0)}
                                 style={{backgroundColor: availabilities[availIdx].recurrDays.has(index) ? '#4fbdd7' : '#c4c4c4'}}
-                                //TODO Problematique pour le custom
-                                //className={availabilities[availIdx].recurrDays.has(index) ? classes.textFieldChipsActive : classes.textFieldChips}
+                                // TODO Problematique pour le custom
+                                // className={availabilities[availIdx].recurrDays.has(index) ? classes.textFieldChipsActive : classes.textFieldChips}
                                 className={classes.textFieldChips}
                                 onClick={() => this.toggleRecurrDay(index, availIdx)}
                               />
@@ -299,7 +300,7 @@ class DrawerSettingSchedule extends React.Component {
                         <em style={{color: 'red'}}>{ error.days}</em>
                         <Grid>
                           <Grid>
-                            <h3 className={'customsettingschedulehourstitle'}>Horaires travaillés :</h3>
+                            <h3 className={'customsettingschedulehourstitle'}>{DRAWER_SETTING_SCHEDULE.hour_work}</h3>
                             <em style={{color: 'red'}}>{ error.timelapses}</em>
                           </Grid>
                           <Grid container>
@@ -325,8 +326,8 @@ class DrawerSettingSchedule extends React.Component {
                         </Grid>
                         <Grid style={{marginTop: 20}}>
                           <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                            <Button classes={{root: `customschedulesaveperiod`}} disabled={!this.saveEnabled(availIdx)} variant={'contained'} color={'primary'} style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}} onClick={ ev => this.save(availIdx, ev) }>Enregistrer</Button>
-                            <Button classes={{root: `customscheduledeletebutton ${classes.cancelButton}`}} style={{marginRight: 10, textTransform: 'initial', fontWeight: 'bold'}} onClick={() => this.removeAvailability(availIdx)}>Supprimer</Button>
+                            <Button classes={{root: 'customschedulesaveperiod'}} disabled={!this.saveEnabled(availIdx)} variant={'contained'} color={'primary'} style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}} onClick={ ev => this.save(availIdx, ev) }>{DRAWER_SETTING_SCHEDULE.save_button}</Button>
+                            <Button classes={{root: `customscheduledeletebutton ${classes.cancelButton}`}} style={{marginRight: 10, textTransform: 'initial', fontWeight: 'bold'}} onClick={() => this.removeAvailability(availIdx)}>{DRAWER_SETTING_SCHEDULE.delete_button}</Button>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -346,7 +347,7 @@ class DrawerSettingSchedule extends React.Component {
                 classes={{root: 'customscheduleaddperiod'}}
                 style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}}
                 onClick={ this.addAvailability}
-              >Ajouter une période
+              >{DRAWER_SETTING_SCHEDULE.add_period}
               </Button>
             </Grid>
           </Grid>

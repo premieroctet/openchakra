@@ -1,29 +1,29 @@
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
-const {CLOSE_NOTIFICATION_DELAY}=require('../../utils/consts');
+import React from 'react'
+import Snackbar from '@material-ui/core/Snackbar'
+import MuiAlert from '@material-ui/lab/Alert'
+const {CLOSE_NOTIFICATION_DELAY}=require('../../utils/consts')
 
 
 function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} variant="filled" {...props} />
 }
 
-class SnackBar extends React.Component{
+class SnackBar extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
       open: true,
     }
   }
 
-  handleClose = (event, reason) =>{
+  handleClose = (event, reason) => {
     if (reason === 'clickaway') {
-      return;
+      return
     }
-    let body = document.getElementById('__next');
-    let el = document.getElementById('id_snackbar');
-    if(typeof el === 'object' && el){
+    let body = document.getElementById('__next')
+    let el = document.getElementById('id_snackbar')
+    if(typeof el === 'object' && el) {
       body.removeChild(el)
 
     }
@@ -31,17 +31,17 @@ class SnackBar extends React.Component{
   };
 
   render() {
-    const {message, severity, id} = this.props;
-    const {open} = this.state;
-    const is_snackbar = document.getElementById('id_snackbar');
-    var newMargin = 0;
+    const {message, severity, id} = this.props
+    const {open} = this.state
+    const is_snackbar = document.getElementById('id_snackbar')
+    let newMargin = 0
 
 
-    if(is_snackbar){
-      let allSnackbar =  document.querySelectorAll('#snackbar');
+    if(is_snackbar) {
+      let allSnackbar = document.querySelectorAll('#snackbar')
       allSnackbar.forEach(query => {
-        newMargin = parseFloat(query.style.marginBottom) + 80;
-      });
+        newMargin = parseFloat(query.style.marginBottom) + 80
+      })
     }
 
     return(
@@ -57,7 +57,7 @@ class SnackBar extends React.Component{
           {message}
         </Alert>
       </Snackbar>
-    );
+    )
   }
 }
 

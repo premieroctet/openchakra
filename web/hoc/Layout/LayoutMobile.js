@@ -1,33 +1,32 @@
 import {withTranslation} from 'react-i18next'
-import React from "react";
-import MobileNavbar from "./NavBar/MobileNavbar";
-import Grid from "@material-ui/core/Grid";
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import IconButton from "@material-ui/core/IconButton";
+import React from 'react'
+import MobileNavbar from './NavBar/MobileNavbar'
+import Grid from '@material-ui/core/Grid'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+import IconButton from '@material-ui/core/IconButton'
 import Router from 'next/router'
 
-class LayoutMobile extends React.Component{
+class LayoutMobile extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
-      currentUrlIndex : '',
+      currentUrlIndex: '',
       myProfilUrl: false,
-      hideMobileNavbar: false
+      hideMobileNavbar: false,
     }
 
   }
 
   componentDidMount() {
-    if(Router.pathname === '/userServicePreview'){
+    if(Router.pathname === '/userServicePreview') {
       this.setState({hideMobileNavbar: true})
     }
   }
 
   render() {
-    const{children, currentIndex} = this.props;
-    const{myProfilUrl, hideMobileNavbar} = this.state;
-
+    const{children, currentIndex} = this.props
+    const{myProfilUrl, hideMobileNavbar} = this.state
 
 
     return(
@@ -52,7 +51,7 @@ class LayoutMobile extends React.Component{
         }
 
       </Grid>
-    );
+    )
   }
 }
 

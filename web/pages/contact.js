@@ -6,6 +6,7 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../static/css/pages/footer/contact/contact'
 import LayoutFaq from '../hoc/Layout/LayoutFaq'
+import {CONTACT} from '../utils/i18n'
 
 class Contact extends React.Component {
 
@@ -21,17 +22,17 @@ class Contact extends React.Component {
         <Grid container spacing={10} style={{margin: 0, width: '100%'}}>
           <Grid item xl={6} lg={6} md={6} sm={12} xs={12} className={classes.contactContainer}>
             <Grid>
-              <h3>Service client - Nos heures d'ouverture</h3>
+              <h3>{CONTACT.tile}</h3>
             </Grid>
             <Grid style={{display: 'flex'}}>
               <Grid>
-                <Typography>Du Lundi au Vendredi 10H - 18H</Typography>
+                <Typography>{CONTACT.day_range}</Typography>
               </Grid>
             </Grid>
           </Grid>
           <Grid item xl={6} lg={6} md={6} sm={12} xs={12} className={classes.contactContainer}>
             <Grid>
-              <h3>Nous contacter</h3>
+              <h3>{CONTACT.email_title}</h3>
             </Grid>
             <Grid style={{display: 'flex'}}>
               <MailOutlineIcon style={{paddingRight: '5px'}}/>
@@ -39,13 +40,13 @@ class Contact extends React.Component {
                 color: 'black',
                 borderBottom: '1 px solid black',
               }} href={'mailto:hello@my-alfred.io'}>
-                <Typography>hello@my-alfred.io</Typography>
+                <Typography>{CONTACT.email}</Typography>
               </a>
             </Grid>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.contactContainer}>
             <Grid>
-              <h3>Nous envoyer un message</h3>
+              <h3>{CONTACT.message_title}</h3>
             </Grid>
             <Grid style={{display: 'flex', width: '100%'}}>
               <iframe

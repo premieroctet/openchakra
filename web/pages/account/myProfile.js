@@ -16,7 +16,7 @@ import Divider from '@material-ui/core/Divider'
 import InfoIcon from '@material-ui/icons/Info'
 import ViewComfyIcon from '@material-ui/icons/ViewComfy'
 import UserAvatar from '../../components/Avatar/UserAvatar'
-
+import {MY_PROFIL} from '../../utils/i18n'
 const {isB2BAdmin, getRole}=require('../../utils/context')
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 
@@ -75,7 +75,7 @@ class myProfile extends CompanyComponent {
     if (!user) {
       return null
     }
-    
+
     return(
       <React.Fragment>
         <LayoutMobile currentIndex={4}>
@@ -84,7 +84,7 @@ class myProfile extends CompanyComponent {
               <UserAvatar alt={!this.isModeCompany() ? user.firstname : company ? company.name : ''} user={!this.isModeCompany() ? user : company ? company : ''} fireRefresh={() => this.componentDidMount()}/>
             </Grid>
             <Grid style={{marginLeft: '5vh'}}>
-              <h2>Hello {user.firstname}</h2>
+              <h2>{MY_PROFIL.hello + user.firstname}</h2>
             </Grid>
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
@@ -94,7 +94,7 @@ class myProfile extends CompanyComponent {
                 startIcon={<PersonOutlineIcon />}
                 onClick={() => Router.push(`/profile/about?user=${user._id}`)}
               >
-                Voir mon profil
+                {MY_PROFIL.show_my_profil}
               </Button>
             </Grid>
             { user && !getRole() ?
@@ -103,9 +103,8 @@ class myProfile extends CompanyComponent {
                   className={classes.button}
                   startIcon={<ViewComfyIcon />}
                   onClick={() => (user.is_alfred ? Router.push(`/profile/services?user=${user._id}`) : Router.push('/creaShop/creaShop'))}
-
                 >
-                  {user.is_alfred ? 'Mes Services' : 'Proposer mes services'}
+                  {user.is_alfred ? MY_PROFIL.my_services : MY_PROFIL.propose_service}
                 </Button>
               </Grid>
               :
@@ -118,7 +117,7 @@ class myProfile extends CompanyComponent {
                   startIcon={<SettingsIcon />}
                   onClick={() => Router.push('/company/dashboard/companyDashboard')}
                 >
-                  Dashboard
+                  {MY_PROFIL.dashboard}
                 </Button>
               </Grid>
               :
@@ -129,7 +128,7 @@ class myProfile extends CompanyComponent {
                     startIcon={<ContactMailIcon />}
                     onClick={() => Router.push('/account/personalInformation')}
                   >
-                  Mes informations
+                    {MY_PROFIL.my_informations}
                   </Button>
                 </Grid>
                 <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
@@ -138,7 +137,7 @@ class myProfile extends CompanyComponent {
                     startIcon={<SettingsIcon />}
                     onClick={() => Router.push('/account/parameters')}
                   >
-                  Mes paramètres
+                    {MY_PROFIL.my_settings}
                   </Button>
                 </Grid>
               </>
@@ -151,7 +150,7 @@ class myProfile extends CompanyComponent {
                 startIcon={<SettingsIcon />}
                 onClick={() => Router.push('/dashboard/home')}
               >
-                Dashboard My Alfred
+                {MY_PROFIL.dashboard_alfred}
               </Button>
             </Grid>
             :
@@ -165,7 +164,7 @@ class myProfile extends CompanyComponent {
                 startIcon={<InfoIcon />}
                 onClick={() => Router.push('/footer/addService')}
               >
-                Comment ça marche ?
+                {MY_PROFIL.how_it_work}
               </Button>
             </Grid>
             <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
@@ -174,7 +173,7 @@ class myProfile extends CompanyComponent {
                 startIcon={<InfoIcon />}
                 onClick={() => Router.push('/faq')}
               >
-                Obtenir de l’aide
+                {MY_PROFIL.get_help}
               </Button>
             </Grid>
             <Grid>
@@ -183,24 +182,24 @@ class myProfile extends CompanyComponent {
                 startIcon={<InfoIcon />}
                 onClick={() => Router.push('/contact')}
               >
-                Nous contacter
+                {MY_PROFIL.contact_us}
               </Button>
             </Grid>
           </Grid>
           <Divider style={{marginTop: '5vh', marginBottom: '5vh'}}/>
           <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginBottom: '12vh'}}>
             <Grid style={{textAlign: 'center'}}>
-              <Typography>© 2020 My Alfred, Tous droits réservés</Typography>
+              <Typography>{MY_PROFIL.all_rights}</Typography>
             </Grid>
             <Grid style={{textAlign: 'center'}}>
-              <Typography>Sécurité - Informations légales - Confidentialité</Typography>
+              <Typography>{MY_PROFIL.security}</Typography>
             </Grid>
             <Grid style={{marginTop: '5vh'}}>
               <Button
                 variant={'outlined'}
                 onClick={this.logout2}
               >
-                Se deconnecter
+                {MY_PROFIL.log_out}
               </Button>
             </Grid>
 

@@ -244,7 +244,7 @@ class editProfile extends React.Component {
       email, name, firstname, birthday, description, gender, phone, job, diplomes, school,
     })
       .then(() => {
-        snackBarSuccess('Profil modifié avec succès')
+        snackBarSuccess(EDIT_PROFIL.snackbar_profil_update)
         this.setState({errors: {}}, () => this.loadUser())
       })
       .catch(err => {

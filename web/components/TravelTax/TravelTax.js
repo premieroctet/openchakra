@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField'
 import styles from './../ButtonSwitch/ButtonSwitchStyle'
 import Grid from '@material-ui/core/Grid'
 import InputAdornment from '@material-ui/core/InputAdornment'
+import {TRAVEL_TAX} from '../../utils/i18n'
 const {roundCurrency}=require('../../utils/functions')
 
 const IOSSwitch = withStyles(theme => ({
@@ -81,7 +82,6 @@ class TravelTax extends React.Component {
 
   onChangeValue = event => {
     const {name, value}=event.target
-    console.log(`Value:${typeof value}`)
     const tax=this.state.tax
     if (name=='rate') {
       tax[name]=roundCurrency(value)
@@ -96,7 +96,6 @@ class TravelTax extends React.Component {
     const {classes}=this.props
     const {tax} = this.state
 
-    console.log(`Tax:${JSON.stringify(tax)}`)
     const noDep = !tax
     return (
       <><Grid>
@@ -106,7 +105,7 @@ class TravelTax extends React.Component {
           checked={noDep}
           name={'none'}
           onChange={this.onToggle}
-        /><span>Pas de frais de déplacement</span>
+        /><span>{TRAVEL_TAX.no_moving_tax}</span>
       </Grid>
       <Grid>
         <IOSSwitch
@@ -131,7 +130,7 @@ class TravelTax extends React.Component {
           }}
           error={!noDep && !tax.rate}
         />
-        €/km à partir du kilomètre
+        {TRAVEL_TAX.kilometer}
         <TextField
           value={tax && tax.from}
           type="number"

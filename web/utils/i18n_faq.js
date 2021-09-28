@@ -198,6 +198,8 @@ const FAQ_CLIENT = {
 const FAQ = {
   'alfred': FAQ_ALFRED,
   'client': FAQ_CLIENT,
+  client_title: 'Je suis client',
+  alfred_title: 'Je suis Alfred',
 }
 module.exports = {
   FAQ,

@@ -10,6 +10,7 @@ import Divider from '@material-ui/core/Divider'
 import WorkIcon from '@material-ui/icons/Work'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import {YEARS_RANGE} from '../../utils/consts'
+import {SHOW_EXPERIENCE} from '../../utils/i18n'
 
 
 class ShowExperience extends React.Component {
@@ -43,7 +44,7 @@ class ShowExperience extends React.Component {
             <WorkIcon classes={{root: classes.workIcon}}/>
           </Grid>
           <Grid style={{marginLeft: 10}}>
-            <h3>Experience</h3>
+            <h3>{SHOW_EXPERIENCE.title}</h3>
           </Grid>
         </Grid>
         <Grid container item spacing={2} xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
@@ -63,14 +64,14 @@ class ShowExperience extends React.Component {
                         {
                           res.experience_description ?
                             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                              <Typography>Description: {res.experience_description}</Typography>
+                              <Typography>{SHOW_EXPERIENCE.description + res.experience_description}</Typography>
                             </Grid> :
                             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Description: non renseignée</em></Typography>
+                              <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{SHOW_EXPERIENCE.no_description}</em></Typography>
                             </Grid>
                         }
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                          <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{res.level && res.level !== '' ? `Expérience : ${YEARS_RANGE[res.level]}` : 'Expérience: non renseignée'}</em></Typography>
+                          <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{res.level && res.level !== '' ? SHOW_EXPERIENCE.exp_year + YEARS_RANGE[res.level] : SHOW_EXPERIENCE.no_exp_year}</em></Typography>
                         </Grid>
                         {
                           res.experience_skills && res.experience_skills.length > 0 ?

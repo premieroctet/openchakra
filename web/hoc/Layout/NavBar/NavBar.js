@@ -51,6 +51,7 @@ import Slider from '@material-ui/core/Slider'
 import '../../../static/assets/css/custom.css'
 const {PRO, PART, EMPLOYEE, ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
 import {getCookieConsentValue, resetCookieConsentValue} from 'react-cookie-consent'
+import Logo from '../../../components/Logo/Logo'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -277,7 +278,7 @@ class NavBar extends Component {
   };
 
   onCategoriesFilterChanged = pcategories => {
-    categories = pcategories || []
+    let categories = pcategories || []
     const filteredServices=this.state.allServices.filter(s => {
       return categories.map(c => c.value).includes(s.category)
     })
@@ -288,7 +289,7 @@ class NavBar extends Component {
   };
 
   onServicesFilterChanged = pservices => {
-    services = pservices || []
+    let services = pservices || []
     this.setState({services: services || []})
   };
 
@@ -416,7 +417,7 @@ class NavBar extends Component {
               </IconButton>
             </Grid>
             <Grid item xs={10} style={{display: 'flex', alignItems: 'center'}}>
-              <Typography style={{marginLeft: '2vh'}}>Commencez votre recherche</Typography>
+              <Typography style={{marginLeft: '2vh'}}>{SEARCHBAR.begin_search}</Typography>
             </Grid>
           </Grid>
         </Paper>
@@ -458,7 +459,7 @@ class NavBar extends Component {
             </Grid>
             <Grid>
               <h3
-                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? 'Quel service recherchez-vous ?' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
+                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? SEARCHBAR.what_service : this.state.mobileStepSearch === 1 ? SEARCHBAR.where_place : SEARCHBAR.dates}</h3>
             </Grid>
           </Grid>
           <Grid item container spacing={3} style={{margin: 0, width: '100%'}}>
@@ -492,15 +493,15 @@ class NavBar extends Component {
                       >
                         {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                           <MenuItem value={_id} key={index}>
-                            { _id=='main' ? 'Adresse principale' : `${value.label }, `} {formatAddress(value)}
+                            { _id=='main' ? SEARCHBAR.main_adress : `${value.label }, `} {formatAddress(value)}
                           </MenuItem>
                         ))}
                         <MenuItem value={'all'}>
-                          Partout, Rechercher des Alfred partout
+                          {SEARCHBAR.find_everywhere}
                         </MenuItem>
                         <MenuItem value={'addAddress'}>
                           <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                            Ajouter une adresse
+                            {SEARCHBAR.find_everywhere}
                           </Typography>
                         </MenuItem>
                       </Select>
@@ -528,7 +529,7 @@ class NavBar extends Component {
               <Button
                 onClick={() => (this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService())}
                 color={'primary'} classes={{root: classes.buttonNextRoot}}
-                variant={'contained'}>{this.state.mobileStepSearch === 0 ? 'Suivant' : 'Rechercher'}
+                variant={'contained'}>{this.state.mobileStepSearch === 0 ? SEARCHBAR.next_button : SEARCHBAR.find_button}
               </Button>
             </Grid>
           </Grid>
@@ -553,7 +554,7 @@ class NavBar extends Component {
               </IconButton>
             </Grid>
             <Grid item xs={8} onClick={this.handleModalSearchBarInput} style={{cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
-              <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '2vh'}}>Commencez votre recherche</Typography>
+              <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '2vh'}}>{SEARCHBAR.begin_search}</Typography>
             </Grid>
             <Grid container item xs={2} style={{margin: 0, width: '100%'}}>
               <Grid item xs={1}>
@@ -581,7 +582,7 @@ class NavBar extends Component {
           classes={{paper: classes.dialogNavbarMobileFilter}}
         >
           <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
-          Filtres
+            {SEARCHBAR.filter}
           </DialogTitle>
           <DialogContent dividers>
             <Grid>
@@ -599,7 +600,7 @@ class NavBar extends Component {
                         name={'proSelected'}
                       />
                     }
-                    label="Pro"
+                    label={SEARCHBAR.professional}
                   />
                 </Grid>
                 <Grid>
@@ -613,7 +614,7 @@ class NavBar extends Component {
                         name={'individualSelected'}
                       />
                     }
-                    label="Particulier"
+                    label={SEARCHBAR.particular}
                   />
                 </Grid>
               </Grid>
@@ -623,9 +624,9 @@ class NavBar extends Component {
               <Grid>
                 <DateRangePicker
                   startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                  startDatePlaceholderText={'Début'}
+                  startDatePlaceholderText={SEARCHBAR.start_date}
                   startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                  endDatePlaceholderText={'Fin'}
+                  endDatePlaceholderText={SEARCHBAR.end_date}
                   endDate={this.state.endDate} // momentPropTypes.momentObj or null,
                   endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
                   onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
@@ -658,7 +659,7 @@ class NavBar extends Component {
                       name={'client'}
                     />
                   }
-                  label="Chez moi"
+                  label={SEARCHBAR.at_home}
                 />
                 <FormControlLabel
                   classes={{root: classes.filterMenuControlLabel}}
@@ -670,7 +671,7 @@ class NavBar extends Component {
                       name={'alfred'}
                     />
                   }
-                  label="Chez l'Alfred"
+                  label={SEARCHBAR.alfred_home}
                 />
                 <FormControlLabel
                   classes={{root: classes.filterMenuControlLabel}}
@@ -682,7 +683,7 @@ class NavBar extends Component {
                       name={'visio'}
                     />
                   }
-                  label="En visio"
+                  label={SEARCHBAR.remote}
                 />
               </Grid>
             </Grid>
@@ -720,7 +721,7 @@ class NavBar extends Component {
               }}
               color="primary"
             >
-            Afficher les résultats
+              {SEARCHBAR.display}
             </Button>
           </DialogActions>
         </Dialog>
@@ -763,28 +764,28 @@ class NavBar extends Component {
         >
           {user ?
             <Grid>
-              <MenuItem>Bonjour {user.firstname} !</MenuItem>
-              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>Mon profil</MenuItem>
-              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>Mes paramètres</MenuItem>
+              <MenuItem>{SEARCHBAR.hello + user.firstname} !</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>{SEARCHBAR.my_profil}</MenuItem>
+              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>{SEARCHBAR.my_settings}</MenuItem>
               {
                 !user.is_employee ?
                   user.is_alfred ?
-                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>Mes services</MenuItem>
+                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>{SEARCHBAR.my_services}</MenuItem>
                     :
-                    <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>Proposer mes services</MenuItem>
+                    <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{SEARCHBAR.create_shop}</MenuItem>
                   : null
               }
-              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>Mes messages</MenuItem>
-              <MenuItem onClick={() => Router.push('/reservations/reservations')}>Mes réservations</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{SEARCHBAR.my_messages}</MenuItem>
+              <MenuItem onClick={() => Router.push('/reservations/reservations')}>{SEARCHBAR.my_resa}</MenuItem>
               {user.is_admin ?
-                <MenuItem onClick={() => Router.push('/dashboard/home')}>Dashboard My Alfred</MenuItem>
+                <MenuItem onClick={() => Router.push('/dashboard/home')}>{SEARCHBAR.dashboard_alfred}</MenuItem>
                 : null
               }
               {isB2BAdmin(user) ?
-                <MenuItem onClick={() => Router.push('/company/dashboard/companyDashboard')}>Dashboard</MenuItem>
+                <MenuItem onClick={() => Router.push('/company/dashboard/companyDashboard')}>{SEARCHBAR.dashboard}</MenuItem>
                 : null
               }
-              <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
+              <MenuItem onClick={this.logout}>{SEARCHBAR.log_out}</MenuItem>
             </Grid>
             :
             null
@@ -866,25 +867,25 @@ class NavBar extends Component {
             transformOrigin={{vertical: 'top', horizontal: 'center'}}
           >
             <MenuItem onClick={() => Router.push('/blog/elementor-211/')}>
-              <Typography>Services aux entreprises</Typography>
+              <Typography>{SEARCHBAR.service_company}</Typography>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/blog/services-aux-collaborateurs/')}>
-              <Typography>Services aux collaboratuers</Typography>
+              <Typography>{SEARCHBAR.service_collab}</Typography>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/blog/tarifs')}>
-              <Typography>Tarifs</Typography>
+              <Typography>{SEARCHBAR.price}</Typography>
             </MenuItem>
             <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
               <Divider/>
             </Grid>
             <MenuItem onClick={this.checkAndOpenRegister}>
-              <Button variant="outlined" classes={{root: classes.buttonService}}>Je propose mes services</Button>
+              <Button variant="outlined" classes={{root: classes.buttonService}}>{SEARCHBAR.crea_service}</Button>
             </MenuItem>
             <MenuItem onClick={this.handleOpenLogin}>
-              <Button variant="outlined" classes={{root: classes.buttonLoginB2b}} >Connexion</Button>
+              <Button variant="outlined" classes={{root: classes.buttonLoginB2b}}>{SEARCHBAR.log_in}</Button>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/search')}>
-              <Button variant="outlined" classes={{root: classes.buttonRegisterB2b}}>Inscription</Button>
+              <Button variant="outlined" classes={{root: classes.buttonRegisterB2b}}>{SEARCHBAR.sign_in}</Button>
             </MenuItem>
           </Menu>
         </Grid>
@@ -902,7 +903,7 @@ class NavBar extends Component {
               classes={{root: classes.navbarSignInB2B}}
               style={{whiteSpace: 'nowrap'}}
               onClick={this.checkAndOpenRegister}>
-              {'Je propose mes services'}
+              {SEARCHBAR.crea_service}
             </Button>
           </Grid>
           <Grid >
@@ -990,15 +991,15 @@ class NavBar extends Component {
                     >
                       {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                         <MenuItem value={_id} key={index}>
-                          { _id=='main' ? 'Adresse principale' : `${value.label }, `} {formatAddress(value)}
+                          { _id=='main' ? SEARCHBAR.main_adress : `${value.label }, `} {formatAddress(value)}
                         </MenuItem>
                       ))}
                       <MenuItem value={'all'}>
-                        Partout, Rechercher des Alfred partout
+                        {SEARCHBAR.find_everywhere}
                       </MenuItem>
                       <MenuItem value={'addAddress'}>
                         <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                          Ajouter une adresse
+                          {SEARCHBAR.add_adresses}
                         </Typography>
                       </MenuItem>
                     </Select>
@@ -1112,8 +1113,7 @@ class NavBar extends Component {
         sm={1}
         onClick={() => Router.push('/')}
       >
-        <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'/static/assets/icon/logo.svg'}
-          className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
+        <Logo className={`${classes.logoMyAlfred} customNavbarLogo`}/>
       </Grid>
     )
   };
@@ -1137,20 +1137,17 @@ class NavBar extends Component {
                 <>
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    className={classes.customNavbar}
-                    label={'Services aux entreprises'}
+                    label={SEARCHBAR.service_company}
                     onClick={() => Router.push('/blog/elementor-211/')}
                   />
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    className={classes.customNavbar}
-                    label={'Services aux collaborateurs'}
+                    label={SEARCHBAR.service_collab}
                     onClick={() => Router.push('/blog/services-aux-collaborateurs/')}
                   />
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    className={classes.customNavbar}
-                    label={'Tarifs'}
+                    label={SEARCHBAR.price}
                     onClick={() => Router.push('/blog/tarifs')}
                   />
                 </>
@@ -1158,7 +1155,6 @@ class NavBar extends Component {
                 <>
                   <Tab
                     classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    className={classes.customNavbar}
                     label={ReactHtmlParser(this.props.t('NAVBAR_MENU.ourServices'))}
                     onClick={() => Router.push('/search')}
                   />
@@ -1166,14 +1162,12 @@ class NavBar extends Component {
                     user.is_alfred ?
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                        className={classes.customNavbar}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.myServices'))}
                         onClick={() => Router.push(`/profile/services?user=${user._id}`)}
                       />
                       :
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                        className={classes.customNavbar}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
                         onClick={() => Router.push('/creaShop/creaShop')}
                       />
@@ -1181,7 +1175,6 @@ class NavBar extends Component {
                     <>
                       <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                        className={classes.customNavbar}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
                         onClick={this.handleOpenRegister}
                       />

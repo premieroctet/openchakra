@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import withStyles from '@material-ui/core/styles/withStyles'
-
 import styles from '../../static/css/components/InfoBar/InfoBar'
 
 function InfoBar({classes, t}) {
@@ -15,8 +14,7 @@ function InfoBar({classes, t}) {
     <Grid container className={`${classes.infoBarMainStyle} customHeaderinfobar`}>
       <Grid item className={classes.infoBarLinkContainer}>
         <Grid className={classes.infoBarPicsContainer}>
-          <img src={'/static/assets/img/warning.svg'} alt={'warning'} title={'warning'} width={'100%'}
-            height={'100%'}/>
+          <Grid className={`${classes.icon} customInfoBarIcon`}/>
         </Grid>
         <Grid>
           <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{ReactHtmlParser(t('INFOBAR.message'))}</Typography>

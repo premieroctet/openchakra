@@ -9,6 +9,7 @@ import {isB2BAdmin} from '../../utils/context'
 import styles from '../../static/css/components/LayoutAccount/LayoutAccount'
 import '../../static/assets/css/custom.css'
 import {withStyles} from '@material-ui/core/styles'
+import {LAYOUT_ACCOUNT} from '../../utils/i18n'
 
 class LayoutAccount extends React.Component {
   constructor(props) {
@@ -26,27 +27,27 @@ class LayoutAccount extends React.Component {
         this.setState({
           items: [
             {
-              label: 'Mes Informations',
+              label: LAYOUT_ACCOUNT.my_informations,
               url: isB2BAdmin(user) ? '/editProfileCompany' : '/editProfile',
             },
             {
-              label: 'Modes de paiement',
+              label: LAYOUT_ACCOUNT.payment_method,
               url: '/paymentMethod',
             },
             {
-              label: isB2BAdmin(user) ? 'Mes sites' : 'Mes adresses',
+              label: isB2BAdmin(user) ? LAYOUT_ACCOUNT.my_sites : LAYOUT_ACCOUNT.my_adresses,
               url: '/myAddresses',
             },
             {
-              label: 'Vérification',
+              label: LAYOUT_ACCOUNT.verification,
               url: '/trustAndVerification',
             },
             {
-              label: 'Sécurité',
+              label: LAYOUT_ACCOUNT.security,
               url: '/security',
             },
             {
-              label: 'Notifications',
+              label: LAYOUT_ACCOUNT.notification,
               url: '/notifications',
             },
           ],
@@ -72,7 +73,7 @@ class LayoutAccount extends React.Component {
             width: '100%',
           }}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
-              <h2>Mes paramètres</h2>
+              <h2>{LAYOUT_ACCOUNT.my_settings}</h2>
             </Grid>
             <Grid>
               <ScrollMenu categories={items} mode={'account'}/>

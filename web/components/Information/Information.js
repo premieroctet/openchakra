@@ -1,44 +1,35 @@
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import styles from './InformationStyle';
-import withStyles from '@material-ui/core/styles/withStyles';
+import React from 'react'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Button from '@material-ui/core/Button'
+import withStyles from '@material-ui/core/styles/withStyles'
+import {INFORMATION} from '../../utils/i18n'
 
 class Information extends React.Component {
 
-  /**
-   props:
-   - open : true/false
-   - onClose : callback when closing
-   - text : text or html
-   - type : 'info' or 'warning'
-   */
   render() {
-    const {classes, open} = this.props;
-    const type = this.props.type ? this.props.type : 'info';
+    const {open} = this.props
 
     if (!open) {
-      return null;
+      return null
     }
     return (
       <Dialog aria-labelledby="simple-dialog-title" open={this.props.open} onClose={this.props.onClose}>
-        <DialogTitle id="alert-dialog-title">{this.props.type ? 'Oups !' : 'Information'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{this.props.type ? INFORMATION.title_error : INFORMATION.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description" className={classes.textContentDialog}
-                             dangerouslySetInnerHTML={{__html: this.props.text}}/>
+          <DialogContentText id="alert-dialog-description" dangerouslySetInnerHTML={{__html: this.props.text}}/>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.onClose} color="primary">
-            Ok
+            {INFORMATION.button}
           </Button>
         </DialogActions>
       </Dialog>
-    );
+    )
   }
 }
 

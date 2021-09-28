@@ -8,7 +8,7 @@ import StarRatings from 'react-star-ratings'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
-
+import {EVALUATE_CLIENT} from '../utils/i18n'
 import BasePage from './basePage'
 import LayoutEvaluate from '../hoc/Layout/LayoutEvaluate'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
@@ -116,12 +116,12 @@ class EvaluateClient extends BasePage {
         <Grid style={{width: '100%'}}>
           <Grid style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
             <Grid item>
-              <h3>Qu’avez-vous pensé de votre client ?</h3>
+              <h3>{EVALUATE_CLIENT.title}</h3>
             </Grid>
             <Grid container style={{marginTop: '5vh'}} spacing={3}>
               <Grid item container xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex'}}>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                  <Typography>Accueil</Typography>
+                  <Typography>{EVALUATE_CLIENT.home}</Typography>
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                   <StarRatings
@@ -138,7 +138,7 @@ class EvaluateClient extends BasePage {
               </Grid>
               <Grid item container xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                  <Typography>Précision de la demande</Typography>
+                  <Typography>{EVALUATE_CLIENT.asking_precision}</Typography>
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                   <StarRatings
@@ -155,7 +155,7 @@ class EvaluateClient extends BasePage {
               </Grid>
               <Grid item container xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-                  <Typography>Relationnel</Typography>
+                  <Typography>{EVALUATE_CLIENT.relation}</Typography>
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6} >
                   <StarRatings
@@ -175,7 +175,7 @@ class EvaluateClient extends BasePage {
         </Grid>
         <Grid style={{marginTop: '10vh'}}>
           <Grid>
-            <h3>Votre commentaire</h3>
+            <h3>{EVALUATE_CLIENT.your_commentary}</h3>
           </Grid>
           <Grid>
             <TextField
@@ -195,7 +195,7 @@ class EvaluateClient extends BasePage {
               variant={'outlined'}
               classes={{root: classes.buttonBack}}
             >
-              Retour
+              {EVALUATE_CLIENT.back_button}
             </Button>
           </Grid>
           <Grid>
@@ -206,7 +206,7 @@ class EvaluateClient extends BasePage {
               classes={{root: classes.buttonSend}}
               color={'primary'}
             >
-              Terminé
+              {EVALUATE_CLIENT.confirm_button}
             </Button>
           </Grid>
         </Grid>

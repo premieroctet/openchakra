@@ -10,6 +10,7 @@ import Divider from '@material-ui/core/Divider'
 import SchoolIcon from '@material-ui/icons/School'
 import CloudDoneOutlinedIcon from '@material-ui/icons/CloudDoneOutlined'
 import CloudOffOutlinedIcon from '@material-ui/icons/CloudOffOutlined'
+import {SHOW_DIPLOMA} from '../../utils/i18n'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
 
@@ -49,7 +50,7 @@ class ShowDiploma extends React.Component {
             <SchoolIcon classes={{root: classes.diplomaIcon}}/>
           </Grid>
           <Grid style={{marginLeft: 10}}>
-            <h3>Diplômes</h3>
+            <h3>{SHOW_DIPLOMA.title}</h3>
           </Grid>
         </Grid>
         <Grid container spacing={2} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
@@ -63,12 +64,12 @@ class ShowDiploma extends React.Component {
                         <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{res.name.charAt(0).toUpperCase() + res.name.slice(1)}</Typography>
                       </Grid>
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>{res.year ? `Diplôme obtenu en : ${res.year}` : 'Date d\'obtention non renseigné'} -</em></Typography>
+                        <Typography style={{fontSize: '13px', opacity: '0.5', marginLeft: '3px'}}><em>{res.year ? SHOW_DIPLOMA.diploma_year + res.year : SHOW_DIPLOMA.no_diploma_year} -</em></Typography>
                         {
                           res.file ?
                             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                               <Grid style={{marginLeft: '3px'}}>
-                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Diplôme joint</em></Typography>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{SHOW_DIPLOMA.document_join}</em></Typography>
                               </Grid>
                               <Grid style={{marginLeft: '5px'}}>
                                 <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudDoneOutlinedIcon/></em></Typography>
@@ -77,7 +78,7 @@ class ShowDiploma extends React.Component {
                             :
                             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                               <Grid style={{marginLeft: '3px'}}>
-                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>Diplôme non joint</em></Typography>
+                                <Typography style={{fontSize: '13px', opacity: '0.5'}}><em>{SHOW_DIPLOMA.no_document}</em></Typography>
                               </Grid>
                               <Grid style={{marginLeft: '5px'}}>
                                 <Typography style={{fontSize: '13px', opacity: '0.5'}}><em><CloudOffOutlinedIcon/></em></Typography>

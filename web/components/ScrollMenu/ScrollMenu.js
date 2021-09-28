@@ -47,7 +47,6 @@ class ScrollMenu extends React.Component {
       console.error(`ScrollMenu:Mode ${mode} inconnu`)
     }
 
-    const {t}=this.props
     return(
       <Grid style={{maxWidth: '100%'}}>
         <Grid>

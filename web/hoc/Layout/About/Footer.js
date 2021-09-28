@@ -6,6 +6,7 @@ import {withStyles} from '@material-ui/core/styles'
 import styles from '../../../static/css/components/Layout/About/Footer/Footer'
 import Typography from '@material-ui/core/Typography'
 import '../../../static/assets/css/custom.css'
+import {FOOTER} from '../../../utils/i18n'
 
 class Footer extends React.Component {
   constructor(props) {
@@ -18,13 +19,13 @@ class Footer extends React.Component {
         <Grid className={classes.mainContainerWidth}>
           <Grid item>
             <Link href={'/footer/apropos'}>
-              <Typography>&Agrave; propos de nous</Typography>
+              <Typography>{FOOTER.about_us}</Typography>
             </Link>
           </Grid>
           <Grid item className={classes.rightMainContainerFooter}>
             <Grid item className={classes.marginLink}>
               <Link href={'/cgu'}>
-                <Typography>Informations légales</Typography>
+                <Typography>{FOOTER.cgu}</Typography>
               </Link>
             </Grid>
           </Grid>

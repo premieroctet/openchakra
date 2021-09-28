@@ -36,4 +36,10 @@ export default theme => ({
     fontFamily: theme.typography.infoBar.fontFamily,
     fontWeight: theme.typography.infoBar.fontWeight,
   },
+  icon: {
+    width: '100%',
+    height: '100%',
+    backgroundSize: 'contain',
+    backgroundImage: 'url(static/assets/img/warning.svg)',
+  },
 })

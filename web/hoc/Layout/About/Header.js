@@ -2,7 +2,6 @@ import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import {NAVBAR_MENU} from '../../../utils/i18n'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../../../static/css/components/Layout/About/Header/Header'
@@ -13,6 +12,7 @@ import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import InputBase from '@material-ui/core/InputBase'
 import CloseIcon from '@material-ui/icons/Close'
+import {HEADER} from '../../../utils/i18n'
 
 
 class Header extends React.Component {
@@ -66,36 +66,36 @@ class Header extends React.Component {
 
     if (process.browser) {
       if (window.location.pathname === '/footer/apropos') {
-        title = 'Nos valeurs'
-        content = 'd\'entreprise mais surtout d\'humain'
+        title = HEADER.title_our_values
+        content = HEADER.content_our_values
         aboutMenu = true
       }
       else if (window.location.pathname === '/footer/ourCommunity') {
-        title = 'Notre Communauté'
-        content = 'Qui nous fait vivre'
+        title = HEADER.title_our_community
+        content = HEADER.content_our_community
         aboutMenu = true
       }
       else if (window.location.pathname === '/footer/ourTeam') {
-        title = 'Notre Équipe'
-        content = 'Qui nous fait vivre'
+        title = HEADER.title_team
+        content = HEADER.content_title_team
         aboutMenu = true
       }
       else if (window.location.pathname === '/footer/addService') {
-        title = 'Réserver un service'
-        content = 'Les bases'
+        title = HEADER.title_resa
+        content = HEADER.content_resa
 
       }
       else if (window.location.pathname === '/faq') {
-        title = 'FAQ'
-        content = 'Pour trouver vos réponses'
+        title = HEADER.title_faq
+        content = HEADER.content_faq
       }
       else if (window.location.pathname === '/footer/becomeAlfred') {
-        title = 'Devenir un Alfred'
-        content = 'Les bases'
+        title = HEADER.title_become
+        content = HEADER.content_become
       }
       else if (window.location.pathname === '/contact') {
-        title = 'Contact'
-        content = 'Posez-nous toutes vos questions'
+        title = HEADER.contact_title
+        content = HEADER.contact_content
       }
     }
 
@@ -113,7 +113,7 @@ class Header extends React.Component {
               startIcon={<ArrowBackIcon style={{color: 'white'}}/>}
               onClick={() => Router.push('/')}
             >
-              Retour sur My Alfred
+              {HEADER.button_back_home}
             </Button>
           </Grid>
           <Grid className={classes.containerTitleAndSubtitle}>
@@ -129,8 +129,8 @@ class Header extends React.Component {
                   <Paper classes={{root: classes.navbarSearch}}>
                     <InputBase
                       className={classes.input}
-                      placeholder="Chercher dans la FAQ"
-                      inputProps={{'aria-label': 'Chercher dans la FAQ'}}
+                      placeholder={HEADER.placeholder_search}
+                      inputProps={{'aria-label': HEADER.placeholder_search}}
                       onChange={this.onSearchChange}
                       value={search}
                     />

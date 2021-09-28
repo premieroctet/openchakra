@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import axios from 'axios'
-
+import {DEFINE_PASSWORD} from '../utils/i18n'
 import {checkPass1, checkPass2} from '../utils/passwords'
 import BasePage from './basePage'
 import styles from '../static/css/pages/definePassword/definePassword'
@@ -57,7 +57,7 @@ class DefinePassword extends BasePage {
     axios.post('/myAlfred/api/users/resetPassword', data)
       .then(res => {
         const user = res.data
-        snackBarSuccess('Mot de passe modifié avec succès')
+        snackBarSuccess(DEFINE_PASSWORD.snackbar_password_update)
         // Rediriger vers /particular ou /professional suivant les rôles
         if (_.intersection(user.roles, [ADMIN, MANAGER]).length > 0) {
           localStorage.setItem('b2b', 'true')
@@ -98,20 +98,20 @@ class DefinePassword extends BasePage {
             <Card className={classes.card}>
               <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <h2 style={{color: '#353A51'}}>Bienvenue !</h2>
+                  <h2 style={{color: '#353A51'}}>{DEFINE_PASSWORD.title}</h2>
                 </Grid>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <h3 style={{color: '#353A51'}}>L'administrateur My Alfred de votre entreprise vous invite à vous inscrire sur My Alfred.</h3>
+                  <h3 style={{color: '#353A51'}}>{DEFINE_PASSWORD.subtitle}</h3>
                 </Grid>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <h4 style={{color: '#353A51'}}>Pour finaliser votre inscription, veuillez définir votre mot de passe :</h4>
+                  <h4 style={{color: '#353A51'}}>{DEFINE_PASSWORD.signin_message}</h4>
                 </Grid>
                 <Grid container spacing={4} style={{margin: 0, width: '100%'}}>
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <TextField
                       id="standard-with-placeholder"
-                      label="Nouveau mot de passe"
-                      placeholder="Mot de passe"
+                      label={DEFINE_PASSWORD.new_password}
+                      placeholder={DEFINE_PASSWORD.new_password_placeholder}
                       style={{width: '100%'}}
                       type="password"
                       name="password"
@@ -125,8 +125,8 @@ class DefinePassword extends BasePage {
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <TextField
                       id="standard-with-placeholder"
-                      label="Répéter le mot de passe"
-                      placeholder="Mot de passe"
+                      label={DEFINE_PASSWORD.repeat_password}
+                      placeholder={DEFINE_PASSWORD.new_password_placeholder}
                       style={{width: '100%'}}
                       type={showPassword ? 'text' : 'password'}
                       name="password2"
@@ -158,7 +158,7 @@ class DefinePassword extends BasePage {
                       classes={{root: classes.saveButton}}
                       disabled={!(this.state.status1.check && this.state.status2.check)}
                     >
-                      Valider
+                      {DEFINE_PASSWORD.button_confirm}
                     </Button>
                   </Grid>
                 </Grid>

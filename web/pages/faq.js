@@ -95,7 +95,7 @@ class Home extends React.Component {
                       <img title={'star'} alt={'star'} width={50} height={50} src="/static/assets/faq/star.svg" />
                     </Grid>
                     <Grid>
-                      <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'normal' :'bold'}}>Je suis client</Typography>
+                      <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'normal' :'bold'}}>{FAQ.client_title}</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -105,7 +105,7 @@ class Home extends React.Component {
                       <img title={'ampoulelogo'} alt={'ampoulelogo'} width={50} height={50} src="/static/assets/faq/amp.svg" />
                     </Grid>
                     <Grid>
-                      <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'bold' :'normal'}}>Je suis Alfred</Typography>
+                      <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'bold' :'normal'}}>{FAQ.alfred_title}</Typography>
                     </Grid>
                   </Grid>
                 </Grid>

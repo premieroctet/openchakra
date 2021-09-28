@@ -37,6 +37,7 @@ import {MICROSERVICE_MODE} from '../../../utils/consts'
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications')
 const {ADMIN, BUDGET_PERIOD, MANAGER, EMPLOYEE} = require('../../../utils/consts')
 import EmployeeImportDialog from '../../Employee/EmployeeImportDialog'
+import {TEAM} from '../../../utils/i18n'
 
 
 const DialogTitle = withStyles(styles)(props => {
@@ -695,13 +696,13 @@ class Team extends React.Component {
               </Grid>
               <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
                 <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                  <InputLabel id="demo-simple-select-outlined-label">Période</InputLabel>
+                  <InputLabel id="demo-simple-select-outlined-label">{TEAM.dialog_groupe_period}</InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={budget_period}
                     name={'budget_period'}
-                    label={'Période'}
+                    label={TEAM.dialog_groupe_period}
                     onChange={this.handleChange}
                   >
                     {
@@ -715,14 +716,14 @@ class Team extends React.Component {
             </Grid>
             <Grid item spacing={2} style={{width: '100%', margin: 0}}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <h3>Facturation</h3>
+                <h3>{TEAM.dialog_groupe_invoice}</h3>
               </Grid>
               <Grid item container spacing={3} style={{width: '100%', margin: 0}}>
                 <Grid item xl={12} lg={12}>
                   {
                     cards.length > 0 ?
                       <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
-                        <InputLabel id="demo-mutiple-chip-label">CBs</InputLabel>
+                        <InputLabel id="demo-mutiple-chip-label">{TEAM.dialog_groupe_cb}</InputLabel>
                         <Select
                           labelId="demo-mutiple-chip-label"
                           id="demo-mutiple-chip"
@@ -730,12 +731,12 @@ class Team extends React.Component {
                           onChange={e => this.handleChange(e)}
                           name={'paymentMethod'}
                           value={paymentMethod}
-                          input={<OutlinedInput label={'CB'} id="select-multiple-chip" />}
+                          input={<OutlinedInput label={TEAM.dialog_groupe_cb} id="select-multiple-chip" />}
                           renderValue={card_ids => {
                             return(
                               <div className={classes.chips}>
                                 {card_ids.map(card_id => (
-                                  <Chip key={card_id}label={this.getCardById(card_id).Alias} className={classes.chip} />
+                                  <Chip key={card_id} label={this.getCardById(card_id).Alias} className={classes.chip} />
                                 ))}
                               </div>
                             )
@@ -749,9 +750,8 @@ class Team extends React.Component {
                           ))}
                         </Select>
                       </FormControl> :
-                      <a href={'/account/paymentMethod'} target="_blank">Aucun moyen de paiement enregistré, rendez-vous ici pour en ajouter.</a>
+                      <a href={'/account/paymentMethod'} target="_blank">{TEAM.dialog_groupe_link}</a>
                   }
-
                 </Grid>
               </Grid>
             </Grid>
@@ -759,10 +759,10 @@ class Team extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogGroupe: false})} classes={{root: classes.cancelButton}}>
-            Annuler
+            {TEAM.button_cancel}
           </Button>
           <Button onClick={selected === '' ? this.addGroupe : this.updateGroupe} color="primary">
-            {selected === '' ? 'Confirmer' : 'Modifier'}
+            {selected === '' ? TEAM.button_confirm : TEAM.button_update}
           </Button>
         </DialogActions>
       </Dialog>
@@ -780,18 +780,18 @@ class Team extends React.Component {
         aria-describedby="alert-dialog-description"
         classes={{paper: classes.dialogPaper}}
       >
-        <MuiDialogTitle id="alert-dialog-title">{'Supprimer'}</MuiDialogTitle>
+        <MuiDialogTitle id="alert-dialog-title">{TEAM.dialog_remove_groupe}</MuiDialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Voulez vous supprimer {selected.name} ?
+            {`${TEAM.dialog_remove_groupe_question + selected.name }?`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({dialogRemoveGroupe: false})} color="primary">
-            Annuler
+            {TEAM.button_cancel}
           </Button>
           <Button onClick={this.removeGroupe} color="primary">
-            Supprimer
+            {TEAM.button_delete}
           </Button>
         </DialogActions>
       </Dialog>
@@ -816,7 +816,7 @@ class Team extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>Administrateurs</h3>
+              <h3>{TEAM.title}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogAdd', null, 'admin')}>
@@ -850,7 +850,7 @@ class Team extends React.Component {
                   </List>
                 </Grid> :
                 <Grid>
-                  <Typography>Aucun administrateur n'est défini</Typography>
+                  <Typography>{TEAM.no_admin}</Typography>
                 </Grid>
             }
           </Box>
@@ -858,7 +858,7 @@ class Team extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>{mode === MICROSERVICE_MODE ? 'Départements' : 'Classification'}</h3>
+              <h3>{mode === MICROSERVICE_MODE ? TEAM.micro_mode : TEAM.no_micro_mode}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogGroupe')}>
@@ -878,10 +878,10 @@ class Team extends React.Component {
                         <ListItem key={index}>
                           <ListItemText
                             primary={res.name}
-                            secondary={res.budget ? `${res.budget}€ / ${BUDGET_PERIOD[res.budget_period]}` : 'Pas de budget défini'}
+                            secondary={res.budget ? `${res.budget}€ / ${BUDGET_PERIOD[res.budget_period]}` : TEAM.no_budget}
                           />
                           { consumed_budgets[res._id] ?
-                            <ListItemText secondary={`${consumed_budgets[res._id]}€ disponibles`} />
+                            <ListItemText secondary={`${consumed_budgets[res._id]}€${TEAM.available}`} />
                             :
                             null
                           }
@@ -900,7 +900,7 @@ class Team extends React.Component {
                 </List>
                 :
                 <Grid>
-                  <Typography>Aucun département n'est défini</Typography>
+                  <Typography>{TEAM.no_department}</Typography>
                 </Grid>
               }
             </Grid>
@@ -912,7 +912,7 @@ class Team extends React.Component {
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
                   <Grid>
-                    <h3>{mode === MICROSERVICE_MODE ? 'Managers' : 'Collaborateurs'}</h3>
+                    <h3>{mode === MICROSERVICE_MODE ? TEAM.manager : TEAM.collaborateur}</h3>
                   </Grid>
                   <Grid container style={{marginLeft: '1vh'}}>
                     <Grid>
@@ -929,7 +929,7 @@ class Team extends React.Component {
                 </Grid>
                 <Grid className={classes.searchFilterRightContainer}>
                   <Grid className={classes.searchFilterRightLabel}>
-                    <Typography>Trier par</Typography>
+                    <Typography>{TEAM.filter}</Typography>
                   </Grid>
                   <Grid>
                     <FormControl>
@@ -970,7 +970,7 @@ class Team extends React.Component {
                                       {
                                         !groups.length > 0 ? null :
                                           <FormControl className={classes.formControl}>
-                                            <InputLabel id="demo-simple-select-label">Département</InputLabel>
+                                            <InputLabel id="demo-simple-select-label">{TEAM.departement}</InputLabel>
                                             <Select
                                               labelId="demo-simple-select-label"
                                               id="demo-simple-select"

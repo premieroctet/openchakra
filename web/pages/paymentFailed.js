@@ -6,7 +6,7 @@ import React from 'react'
 import Router from 'next/router'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
-
+import {PAYMENT_FAILED} from '../utils/i18n'
 import BasePage from './basePage'
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
@@ -61,20 +61,20 @@ class PaymentFailed extends BasePage {
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                 <Grid style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid>
-                    <h2>Oups !</h2>
+                    <h2>{PAYMENT_FAILED.title}</h2>
                   </Grid>
                   <Grid>
-                    <Typography>Une erreur est survenue lors du paiement.</Typography>
+                    <Typography>{PAYMENT_FAILED.subtile}</Typography>
                   </Grid>
                 </Grid>
                 <Grid style={{marginTop: '5vh'}}>
                   <Grid>
                     <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push(booking_link)}>
-                      Retour aux réservations
+                      {PAYMENT_FAILED.back_resa}
                     </Button>
                     { !avocotes_mode &&
                       <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push('/')}>
-                        Retour à l'accueil
+                        {PAYMENT_FAILED.back_home}
                       </Button>
                     }
                   </Grid>
