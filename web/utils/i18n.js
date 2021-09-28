@@ -1407,6 +1407,12 @@ const COMMON = {
   lbl_name: 'Nom',
 }
 
+const COOKIE_CONSENT={
+  accept: "J'accepte",
+  decline: 'Je refuse',
+  message: "Les cookies sont requis pour vous connecter ou vous inscrire (plus d'informations)",
+}
+
 module.exports = {
   CESU_NOTICE,
   OUTSIDE_PERIMETER,
@@ -1518,4 +1524,5 @@ module.exports = {
   PAYMENT_FAILED,
   PAYMENT_SUCCESS,
   RESET_PASSWORD,
+  COOKIE_CONSENT,
 }
