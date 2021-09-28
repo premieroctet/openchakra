@@ -60,11 +60,17 @@ export default theme => ({
     justifyContent: 'center',
     marginTop: '2%',
     backgroundColor: theme.palette.primary.main,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
   },
   howItWorksComponent: {
     justifyContent: 'center',
     marginTop: '2%',
     backgroundColor: theme.palette.secondary.main,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
   },
   howItWorksComponentB2b: {
     justifyContent: 'center',

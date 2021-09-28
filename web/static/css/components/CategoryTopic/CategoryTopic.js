@@ -107,4 +107,10 @@ export default theme => ({
       display: 'none',
     },
   },
+  iconStar: {
+    backgroundImage: 'url(static/assets/faq/star.svg)',
+    backgroundRepeat: 'no-repeat',
+    width: 70,
+    height: 70,
+  },
 })

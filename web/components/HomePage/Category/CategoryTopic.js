@@ -30,7 +30,7 @@ class CategoryTopic extends React.Component {
         <Grid className={classes.categoryContainer}>
           <Grid className={classes.categoryLeftContainer}>
             <Grid className={`customslidelogo ${classes.categoryImgContainer}`}>
-              <img src={'/static/assets/faq/star.svg'} alt={'iconStar'} title={'iconStar'} />
+              <div className={`${classes.iconStar} customIconStar`}/>
             </Grid>
             <Grid className={classes.categoryTextContainer}>
               <Grid>

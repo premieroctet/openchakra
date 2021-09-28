@@ -1,36 +1,36 @@
 export default theme => ({
-  howItWorksMainStyle:{
-    padding: theme.padding.homePage.section.padding
+  howItWorksMainStyle: {
+    padding: theme.padding.homePage.section.padding,
   },
-  howItWorksMainContainer:{
+  howItWorksMainContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
-  howItWorksLeftContainer:{
+  howItWorksLeftContainer: {
     width: '30%',
-    [theme.breakpoints.down('sm')]:{
-      width: '100%'
-    }
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
-  howItWorksLeftText:{
+  howItWorksLeftText: {
     color: theme.palette.white.main,
     fontSize: theme.typography.subTitle.fontSize,
     fontWeight: theme.typography.subTitle.fontWeight,
     fontFamily: theme.typography.subTitle.fontFamily,
   },
-  howItWorksRightContainer:{
+  howItWorksRightContainer: {
     display: 'flex',
     flexDirection: 'column',
     width: '30%',
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
-    }
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
+    },
   },
-  howItWorksRightText:{
+  howItWorksRightText: {
     color: theme.palette.white.main,
     fontSize: theme.typography.text.fontSize,
     fontWeight: theme.typography.text.fontWeight,
