@@ -51,6 +51,7 @@ import Slider from '@material-ui/core/Slider'
 import '../../../static/assets/css/custom.css'
 const {PRO, PART, EMPLOYEE, ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
 import {getCookieConsentValue, resetCookieConsentValue} from 'react-cookie-consent'
+import Logo from '../../../components/Logo/Logo'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -1112,8 +1113,7 @@ class NavBar extends Component {
         sm={1}
         onClick={() => Router.push('/')}
       >
-        <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'/static/assets/icon/logo.svg'}
-          className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
+        <Logo className={`${classes.logoMyAlfred} customNavbarLogo`}/>
       </Grid>
     )
   };
