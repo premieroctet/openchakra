@@ -47,6 +47,21 @@ const validateSimpleRegisterInput = data => {
     errors.address = 'Veuillez saisir une adresse'
   }
 
+  if (data.company) {
+    if (Validator.isEmpty(data.company.name)) {
+      console.warn('Missing company name')
+      errors.siret="Entrez un nom d'entreprise"
+    }
+    if (Validator.isEmpty(data.company.siret)) {
+      console.warn('Missing company name')
+      errors.siret='Entrez un numéro de SIRET'
+    }
+    if (data.company.vat_subject && Validator.isEmpty(data.company.vat_number)) {
+      console.warn('Missing VAT number')
+      errors.siret='Entrez un numéro de TVA'
+    }
+  }
+
   // On ne valide plus que l'adresse
   /**
   if (Validator.isEmpty(data.zip_code)) {

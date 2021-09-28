@@ -44,7 +44,7 @@ import {DateRangePicker} from 'react-dates'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ClearIcon from '@material-ui/icons/Clear'
 import {isB2BDisabled} from '../../../config/config'
-import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeStatusRegister, setStatusRegister, getRole} from '../../../utils/context'
+import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
 const {emptyPromise} = require('../../../utils/promise.js')
 const {formatAddress} = require('../../../utils/text.js')
 import Slider from '@material-ui/core/Slider'
@@ -172,7 +172,7 @@ class NavBar extends Component {
   logout = () => {
     clearAuthenticationToken()
     localStorage.removeItem('path')
-    removeStatusRegister()
+    removeAlfredRegistering()
     if (this.state.ifHomePage) {
       window.location.reload(false)
     }
@@ -194,7 +194,7 @@ class NavBar extends Component {
       return
     }
     this.handleMenuClose()
-    removeStatusRegister()
+    removeAlfredRegistering()
     this.setState({setOpenLogin: true, setOpenRegister: null})
   };
 
@@ -218,11 +218,11 @@ class NavBar extends Component {
   handleCloseRegister = (event, reason) => {
     if (reason=='backdropClick') { return }
     if (this.state.activeStep === 2) {
-      removeStatusRegister()
+      removeAlfredRegistering()
       this.setState({setOpenRegister: null}, () => Router.push('/search'))
     }
     else {
-      removeStatusRegister()
+      removeAlfredRegistering()
       this.setState({setOpenRegister: null})
     }
   };
@@ -831,7 +831,7 @@ class NavBar extends Component {
   }
 
   checkAndOpenRegister = () => {
-    setStatusRegister()
+    setAlfredRegistering()
     this.handleOpenRegister(true)
   };
 

@@ -10,6 +10,7 @@ const FIRSTPAGE = {
     onChangeEmail={parent.onChangeEmail}
     onChange={parent.onChange}
     onChangePassword={parent.onChangePassword}
+    onCompanyChange={parent.onCompanyChange}
     handleClickShowPassword={parent.handleClickShowPassword}
     handleClickShowPassword2={parent.handleClickShowPassword2}
     handleMouseDownPassword={parent.handleMouseDownPassword}

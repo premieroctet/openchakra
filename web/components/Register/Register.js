@@ -24,7 +24,7 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import TextField from '@material-ui/core/TextField'
 import DialogActions from '@material-ui/core/DialogActions'
 let parse = require('url-parse')
-import {hasStatusRegister, removeStatusRegister, getRole} from '../../utils/context'
+import {isAlfredRegistering, removeAlfredRegistering, getRole} from '../../utils/context'
 import {isEmailOk} from '../../utils/sms'
 const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms')
@@ -82,6 +82,8 @@ class Register extends React.Component {
       open: false,
       showPassword: false,
       showPassword2: false,
+      company: null,
+      professional: false,
     }
     this.handleChecked = this.handleChecked.bind(this)
     this.onChangeAddress = this.onChangeAddress.bind(this)
@@ -150,7 +152,7 @@ class Register extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps, prevState) {
     if (this.state.activeStep !== prevState.activeStep) {
       this.props.sendParentData(this.state.activeStep)
     }
@@ -174,6 +176,10 @@ class Register extends React.Component {
   onChange = e => {
     this.setState({[e.target.name]: e.target.value}, () => this.validatorFirstStep())
   };
+
+  onCompanyChange = company => {
+    this.setState({company: company}, () => this.validatorFirstStep())
+  }
 
   onChangePhone = e => {
     let {name, value} = e.target
@@ -258,8 +264,8 @@ class Register extends React.Component {
         if (res.data.sms_code_ok) {
           snackBarSuccess(ReactHtmlParser(this.props.t('REGISTER.snackbar_phone_valid')))
           this.setState({smsCodeOpen: false, phoneConfirmed: true})
-          if(hasStatusRegister()) {
-            removeStatusRegister()
+          if(isAlfredRegistering()) {
+            removeAlfredRegistering()
             Router.push('/creaShop/creaShop')
           }
           else if (getRole() == EMPLOYEE) {
@@ -294,6 +300,7 @@ class Register extends React.Component {
       lat: this.state.lat,
       lng: this.state.lng,
       user_id: this.props.user_id,
+      company: this.state.company,
     }
 
     const username = this.state.email
@@ -316,7 +323,7 @@ class Register extends React.Component {
             console.error(err)
           })
           .then(() => {
-            if(hasStatusRegister()) {
+            if(isAlfredRegistering()) {
               this.submitPhone()
             }
             else{
@@ -330,7 +337,7 @@ class Register extends React.Component {
             },
           )
           .then(() => {
-            if(!hasStatusRegister()) {
+            if(!isAlfredRegistering()) {
               this.submitPhone()
             }
           },
@@ -358,7 +365,7 @@ class Register extends React.Component {
 
   submitPhone = () => {
 
-    if(!this.state.phone && hasStatusRegister()) {
+    if(!this.state.phone && isAlfredRegistering()) {
       Router.push('/creaShop/creaShop')
     }
 
@@ -403,18 +410,35 @@ class Register extends React.Component {
 
   confirmLater = () => {
     this.setState({smsCodeOpen: false})
-    if(hasStatusRegister()) {
-      removeStatusRegister()
+    if(isAlfredRegistering()) {
+      removeAlfredRegistering()
       Router.push('/creaShop/creaShop')
     }
   };
 
   validatorFirstStep = () => {
-    if (this.state.errorEmailType === '' && this.state.email !== '' && this.state.emailValidator && this.state.firstname !== '' && this.state.name !== '' && this.state.status1.check && this.state.status2.check) {
-      this.setState({firstPageValidator: false})
+    const {errorEmailType, email, emailValidator, firstname, name, status1, status2,
+      professional, company, errors}=this.state
+    if (errorEmailType === '' && email !== ''
+      && emailValidator && firstname !== '' && name !== ''
+      && status1.check && status2.check
+      && (!professional || (company && company.siret && company.name))
+    ) {
+      this.setState({firstPageValidator: false, errors: {}})
     }
     else {
-      this.setState({firstPageValidator: true})
+      errors.siret=null
+      errors.email=null
+      if (professional && (!company || !company.name)) {
+        errors.siret="Entrez un nom d'entreprise"
+      }
+      if (professional && (!company || !company.siret)) {
+        errors.siret='Entrez un numéro de SIRET'
+      }
+      if (!isEmailOk(email)) {
+        errors.email=ReactHtmlParser(this.props.t('REGISTER.textfield_email_error'))
+      }
+      this.setState({firstPageValidator: true, errors: errors})
     }
   };
 
@@ -441,7 +465,7 @@ class Register extends React.Component {
 
   renderSwitch = stepIndex => {
     let mode = 'fullRegister'
-    if(hasStatusRegister()) {
+    if(isAlfredRegistering()) {
       mode = 'setAlfredRegister'
     }
     return STEPS[mode][stepIndex].component(this)

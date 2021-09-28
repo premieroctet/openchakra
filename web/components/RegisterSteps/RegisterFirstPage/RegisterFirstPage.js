@@ -1,3 +1,8 @@
+import { Switch } from '@material-ui/core';
+
+import '../../../static/assets/css/custom.css'
+import { Checkbox } from 'material-ui';
+import { FormControlLabel } from '@material-ui/core';
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -8,19 +13,37 @@ import TextField from '@material-ui/core/TextField'
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline'
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import styles from '../../../static/css/components/RegisterSteps/RegisterFirstPage/RegisterFirstPage'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
-import '../../../static/assets/css/custom.css'
+import Siret from '../../Siret/Siret';
+import styles from '../../../static/css/components/RegisterSteps/RegisterFirstPage/RegisterFirstPage'
 import {REGISTER_FIRST_PAGE} from '../../../utils/i18n'
 
 class RegisterFirstPage extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.state={
+      professional: false,
+    }
+  }
+
+  onProfessionalChange = event => {
+    const {checked} = event.target
+    this.setState({professional: checked})
+    this.props.onChange({target: {name: 'professional', value: checked}})
+    if (!checked) {
+      this.props.onCompanyChange(null)
+    }
+  }
+
   render() {
     const{classes, state} = this.props
+    const {professional} = this.state
 
+    console.log(JSON.stringify(state, null, 2))
     return(
       <Grid container>
         <Grid className={`customregistercontemail ${classes.margin}`}>
@@ -82,6 +105,25 @@ class RegisterFirstPage extends React.Component {
               />
             </Grid>
             <em style={{color: 'red'}}>{state.errors.name}</em>
+          </Grid>
+        </Grid>
+        <Grid className={`customregistercontname ${classes.margin}`}>
+          <Grid container spacing={1} className={classes.genericContainer}>
+            <Grid item className={classes.widthTextField}>
+              <FormControlLabel
+                control={<Switch
+                  checked={professional}
+                  onChange={this.onProfessionalChange}
+                />}
+                label="Je suis un professionel"
+              />
+              { professional &&
+                <Siret
+                  onChange={this.props.onCompanyChange}
+                />
+              }
+              <em style={{color: 'red'}}>{state.errors.siret}</em>
+            </Grid>
           </Grid>
         </Grid>
         <Grid className={`customregistercontmdp ${classes.margin}`}>
