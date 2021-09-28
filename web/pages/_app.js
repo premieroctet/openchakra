@@ -85,10 +85,10 @@ class MyApp extends App {
           location="top"
           cookieName={ACCEPT_COOKIE_NAME}
           onDecline={this.onDeclineCookies}
-          buttonClasses={'customCookiesAccept'}
-          declineButtonClasses={'customCookiesDecline'}
           containerClasses={'customCookiesContainer'}
           contentClasses={'customCookiesContent'}
+          buttonClasses={'customCookiesAccept'}
+          declineButtonClasses={'customCookiesDecline'}
         >
           {COOKIE_CONSENT.message}
         </CookieConsent>
