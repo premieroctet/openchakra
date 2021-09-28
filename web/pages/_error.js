@@ -7,7 +7,7 @@ import styles from '../static/css/pages/errorPage/errorPage'
 import withStyles from '@material-ui/core/styles/withStyles'
 import {ERROR_404} from '../utils/i18n'
 
-function Custom404({classes}) {
+function Custom404({classes, t}) {
 
   return (
     <Grid style={{display: 'flex', backgroundColor: 'rgba(249,249,249, 1)', width: '100%', justifyContent: 'center', padding: '10%', minHeight: '100vh'}}>
@@ -15,14 +15,14 @@ function Custom404({classes}) {
         <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
           <Grid style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
-              <h1>{ReactHtmlParser(this.props.t('ERROR_404.title'))}</h1>
+              <h1>{ReactHtmlParser(t('ERROR_404.title'))}</h1>
             </Grid>
             <Grid>
-              <Typography>{ReactHtmlParser(this.props.t('ERROR_404.subtitle'))}</Typography>
+              <Typography>{ReactHtmlParser(t('ERROR_404.subtitle'))}</Typography>
             </Grid>
           </Grid>
           <Grid>
-            <a href={'/'}><Typography>{ReactHtmlParser(this.props.t('ERROR_404.link'))}</Typography></a>
+            <a href={'/'}><Typography>{ReactHtmlParser(t('ERROR_404.link'))}</Typography></a>
           </Grid>
         </Grid>
       </Grid>
