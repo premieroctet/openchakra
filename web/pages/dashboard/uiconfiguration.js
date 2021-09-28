@@ -77,7 +77,7 @@ class UIConfiguration extends React.Component {
 
   sortColors = () => {
     const {parameters}=this.state
-    const colors=_.flatten(parameters.map(p => p.attributes.filter(att => att.value.startsWith('#')).map(a => a.value)))
+    const colors=_.flatten(parameters.map(p => p.attributes.filter(att => att.value.startsWith && att.value.startsWith('#')).map(a => a.value)))
     const sorted=_.chain(colors).countBy().toPairs().sortBy(1).reverse().map(0).value()
     this.setState({used_colors: sorted})
   }
