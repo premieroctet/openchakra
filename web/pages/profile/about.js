@@ -178,7 +178,7 @@ class ProfileAbout extends CompanyComponent {
     setAxiosAuthentication()
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(() => {
       axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(() => {
-        snackBarSuccess('Profil modifié avec succès')
+        snackBarSuccess(ABOUT.snackbar_profil_update)
         setTimeout(this.loadUser, 1000)
       },
       ).catch(err => {
@@ -397,7 +397,7 @@ class ProfileAbout extends CompanyComponent {
           }
           <Grid item xs={12}>
             <Grid>
-              <h3>Habite à </h3>
+              <h3>{ABOUT.leave_at}</h3>
             </Grid>
             <Grid style={{margin: 3}}/>
             {
@@ -415,7 +415,7 @@ class ProfileAbout extends CompanyComponent {
             company_mode ? null :
               <Grid item xs={12}>
                 <Grid>
-                  <h3>Parle </h3>
+                  <h3>{ABOUT.speak}</h3>
                 </Grid>
                 <Grid style={{margin: 3}}/>
                 <Grid>

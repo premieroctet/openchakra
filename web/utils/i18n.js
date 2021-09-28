@@ -568,6 +568,8 @@ const ABOUT = {
   button_update: 'Modifier',
   alfred_certifed: 'à un profil vérifié',
   snackbar_profil_update: 'Profil modifié avec succès',
+  leave_at: 'Habite à ',
+  speak: 'Parle',
 }
 
 const LAYOUT_ABOUT = {
@@ -655,7 +657,6 @@ const MY_PROFIL = {
   security: 'Sécurité - Informations légales - Confidentialité',
   log_out: 'Se deconnecter',
 }
-
 
 
 const PAYMENT_METHOD = {
