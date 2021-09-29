@@ -1536,7 +1536,7 @@ router.put('/category/all/:id?', passport.authenticate('admin', {session: false}
   const promise=req.params.id ?
     req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
     :
-    new Category(attributes).save()
+    req.context.getModel('Category').create(attributes)
   promise
     .then(category => {
       res.json(category)
