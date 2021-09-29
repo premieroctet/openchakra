@@ -1,3 +1,4 @@
+const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../../utils/filesystem')
 const {getIdentifiers, getKeys, getQueries}=require('../../../utils/i18n_extraction')
 const express = require('express')
 
@@ -16,7 +17,6 @@ const validateRegisterAdminInput = require('../../../validation/registerAdmin')
 const validateCategoryInput = require('../../../validation/category')
 const validateServiceInput = require('../../../validation/service')
 const {addIdIfRequired} = require('../../../utils/mangopay')
-const multer = require('multer')
 const {normalizePhone, bufferToString, normalize, isMobilePhone} = require('../../../../utils/text')
 const {counterArray} = require('../../../../utils/converters')
 const {ADMIN} = require('../../../../utils/consts')
@@ -26,7 +26,6 @@ const _ = require('lodash')
 const {computeUrl}=require('../../../../config/config')
 const {delayedPromise}=require('../../../../utils/promise')
 const {get_token, send_cookie}=require('../../../utils/serverContext')
-const {ensureDirectoryExists, isTxtFile} = require('../../../utils/filesystem')
 const {createUIConfiguration} = require('../../../utils/ui_generation')
 
 // For Node < 12.0
@@ -47,6 +46,23 @@ if (!Promise.allSettled) {
       ),
     )
 }
+
+// Upload multers
+// CATEGORY
+const uploadCat = createDiskMulter('static/category/', IMAGE_FILTER)
+// PROSPECT
+const uploadProspect = createMemoryMulter(TEXT_FILTER)
+// EQUIPMENT
+const uploadEquipment = createDiskMulter('static/equipments/', IMAGE_FILTER)
+// SERVICE
+const uploadService = createDiskMulter('static/service/', IMAGE_FILTER)
+// PRESTATION
+const uploadPrestation = createDiskMulter('static/prestation/', IMAGE_FILTER)
+// SHOP BANNER
+const uploadBanner = createDiskMulter('static/shopBanner/', IMAGE_FILTER)
+// UI CUSTOM
+const uploadCustom = createDiskMulter('static/custom/', IMAGE_FILTER)
+
 
 // @Route POST /myAlfred/api/admin/billing/all
 // Add billing for prestation
@@ -1359,31 +1375,6 @@ router.put('/tags/all/:id', passport.authenticate('admin', {session: false}), (r
 
 })
 
-// CATEGORY
-
-ensureDirectoryExists('static/category/')
-const storageCat = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'static/category/')
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.originalname)
-  },
-})
-const uploadCat = multer({storage: storageCat})
-
-const storageProspect = multer.memoryStorage()
-
-const uploadProspect = multer({
-  storage: storageProspect,
-  fileFilter: function(req, file, callback) {
-    if (!isTxtFile(file.originalName)) {
-      return callback(new Error('Fichier csv attendu (.csv ou .txt)'))
-    }
-    callback(null, true)
-  },
-})
-
 // @Route POST /myAlfred/api/admin/category/all
 // Add category for prestation
 // @Access private
@@ -1547,19 +1538,6 @@ router.put('/category/all/:id?', passport.authenticate('admin', {session: false}
     })
 })
 
-// EQUIPMENTS
-ensureDirectoryExists('static/equipments/')
-const storageEquipment = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'static/equipments/')
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.originalname)
-  },
-})
-
-const uploadEquipment = multer({storage: storageEquipment})
-
 // @Route POST /myAlfred/api/admin/equipment/all
 // Add equipment for service
 // @Access private
@@ -1657,19 +1635,6 @@ router.delete('/equipment/all/:id', passport.authenticate('admin', {session: fal
       res.status(404).json({equipmentnotfound: 'No equipment found'})
     })
 })
-
-// SERVICE
-ensureDirectoryExists('static/service/')
-const storageService = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'static/service/')
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.originalname)
-  },
-})
-const uploadService = multer({storage: storageService})
-
 
 // @Route POST /myAlfred/api/admin/service/all
 // Add service for prestation
@@ -1851,18 +1816,6 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
 
 })
 
-
-// PRESTATION
-ensureDirectoryExists('static/prestation/')
-const storagePrestation = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'static/prestation/')
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.originalname)
-  },
-})
-const uploadPrestation = multer({storage: storagePrestation})
 
 // @Route POST /myAlfred/api/admin/prestation/all
 // Add a prestation
@@ -2080,18 +2033,6 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
 
 })
 
-// SHOP BANNER
-ensureDirectoryExists('static/shopBanner/')
-const storageBanner = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'static/shopBanner/')
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.originalname)
-  },
-})
-const uploadBanner = multer({storage: storageBanner})
-
 // @Route POST /myAlfred/api/admin/shopBanner/all
 // Add picture for shop banner
 // @Access private
@@ -2248,7 +2189,7 @@ router.post('/options/all', passport.authenticate('admin', {session: false}), (r
 
   if (admin) {
 
-    Options.findOne({label: req.body.label})
+    req.context.getModel('Options').findOne({label: req.body.label})
       .then(options => {
         if (options) {
           return res.status(400).json({msg: 'Cette option existe déjà'})
@@ -2277,7 +2218,7 @@ router.get('/options/all', passport.authenticate('admin', {session: false}), (re
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Options.find()
+    req.context.getModel('Options').find()
       .then(options => {
         if (!options) {
           return res.status(400).json({msg: 'No options found'})
@@ -2301,7 +2242,7 @@ router.get('/options/all/:id', passport.authenticate('admin', {session: false}),
   const decode = jwt.decode(token)
   const admin = decode.is_admin
   if (admin) {
-    Options.findById(req.params.id)
+    req.context.getModel('Options').findById(req.params.id)
       .then(options => {
         if (!options) {
           return res.status(400).json({msg: 'No options found'})
@@ -2324,7 +2265,7 @@ router.delete('/options/all/:id', passport.authenticate('admin', {session: false
   const token = req.headers.authorization.split(' ')[1]
   const decode = jwt.decode(token)
   const admin = decode.is_admin
-  Options.findById(req.params.id)
+  req.context.getModel('Options').findById(req.params.id)
     .then(options => {
       if (!admin) {
         return res.status(401).json({notauthorized: 'User not authorized'})
@@ -2345,7 +2286,7 @@ router.put('/options/all/:id', passport.authenticate('admin', {session: false}),
   const admin = decode.is_admin
 
   if (admin) {
-    Options.findOneAndUpdate({_id: req.params.id}, {
+    req.context.getModel('Options').findOneAndUpdate({_id: req.params.id}, {
       $set: {
         label: req.body.label,
         description: req.body.description,
@@ -2722,7 +2663,7 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
   let req_result=[`Pages demandées:${pages_count}\n`]
   Promise.allSettled(promises)
     .then(results => {
-      var all_ads = []
+      let all_ads = []
       let error_reason = null
       results.forEach(result => {
         if (result.status=='fulfilled') {
@@ -2742,7 +2683,7 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
         return res.status(400).json(req_result)
       }
 
-      var all_ads = [].concat(requests_ok.map(r => r.value.data.ads))
+      all_ads = [].concat(requests_ok.map(r => r.value.data.ads))
       req_result.push(`Annonces reçues:${all_ads.length}`)
       all_ads = all_ads.filter(a => a && a.status=='active' && a.has_phone)
       req_result.push(`Annonces actives avec téléphone:${all_ads.length}`)
@@ -2811,7 +2752,8 @@ router.post('/prospect/add', passport.authenticate('admin', {session: false}), (
     }
     else {
       req.context.getModel('Prospect').find({}, 'phone')
-        .then(phones => {
+        .then(result => {
+          let phones = result
           const contents = bufferToString(req.file.buffer)
           let records = csv_parse(contents, {columns: true, delimiter: ';'})
 
@@ -2836,7 +2778,7 @@ router.post('/prospect/add', passport.authenticate('admin', {session: false}), (
           // Normalize phones
           records = records.map(r => { r.phone=normalizePhone(r.phone); return r })
           // Remove duplicates
-          var phones = phones.map(p => p.phone)
+          phones = phones.map(p => p.phone)
           records = records.filter(r => {
             const known = phones.includes(r.phone)
             phones.push(r.phone)
@@ -2850,7 +2792,7 @@ router.post('/prospect/add', passport.authenticate('admin', {session: false}), (
             throw new Error(`Champs obligatoires vides dans ${JSON.stringify(invalid_records)}`)
           }
 
-          const counts=records.reduce((json, prospect) => ({...json, [prospect.phone]: (json[prospect.phone] | 0) + 1}), {})
+          const counts=records.reduce((json, prospect) => ({...json, [prospect.phone]: (json[prospect.phone] || 0) + 1}), {})
           const duplicates = Object.keys(counts).filter(k => counts[k]>1)
           if (duplicates.length>0) {
             throw new Error(`Pas d'import, numéros dupliqués dans le fichier:${duplicates.join('\n')}`)
@@ -2888,7 +2830,7 @@ router.get('/prospect/tocontact/:category', passport.authenticate('admin', {sess
         {$and: [{category: req.params.category}, {$or: [{contacted: false}, {contacted: null}]}]},
         {contacted: true},
       )
-        .then(dummy => {
+        .then(() => {
           prospects.forEach(p => {
             data = []
             data.push(`="${p.phone.replace(/^0/, '+33')}"`)
@@ -2959,18 +2901,6 @@ router.post('/uiConfiguration/generate', passport.authenticate('admin', {session
       res.status(400).json(err)
     })
 })
-
-ensureDirectoryExists('static/custom/')
-const customCat = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'static/custom/')
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.originalname)
-  },
-})
-
-const uploadCustom = multer({storage: customCat})
 
 router.put('/uiConfiguration/:id/:att/picture', uploadCustom.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('UIConfiguration').findById(req.params.id)

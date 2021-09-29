@@ -197,6 +197,10 @@ class View extends BasePage {
               snackBarSuccess('Illustrations mises à jour')
               Router.push(`/dashboard/category/view?id=${newCategory._id}`)
             })
+            .catch(err => {
+              snackBarError(err.response.data)
+              Router.push(`/dashboard/category/view?id=${newCategory._id}`)
+            })
         }
         else {
           Router.push(`/dashboard/category/view?id=${newCategory._id}`)
@@ -204,6 +208,7 @@ class View extends BasePage {
       })
       .catch(err => {
         console.error(err)
+        snackBarError(err.response.data)
       })
   }
 
@@ -240,7 +245,7 @@ class View extends BasePage {
                 <Grid item>
                   <Typography style={{fontSize: 20}}>Label particuliers</Typography>
                   <TextField
-                    id="standard-with-placeholder"
+                    id="particular_label"
                     margin="normal"
                     style={{width: '100%'}}
                     type="text"
@@ -252,7 +257,7 @@ class View extends BasePage {
                 <Grid item>
                   <Typography style={{fontSize: 20}}>Label pro</Typography>
                   <TextField
-                    id="standard-with-placeholder"
+                    id="professional_label"
                     margin="normal"
                     style={{width: '100%'}}
                     type="text"
@@ -278,7 +283,7 @@ class View extends BasePage {
                 <Grid item style={{marginTop: 20}}>
                   <Typography style={{fontSize: 20}}>Description</Typography>
                   <TextField
-                    id="standard-with-placeholder"
+                    id="description"
                     margin="normal"
                     style={{width: '100%'}}
                     type="text"
