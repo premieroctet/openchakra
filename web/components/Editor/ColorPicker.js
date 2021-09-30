@@ -28,7 +28,7 @@ class ColorPicker extends React.Component {
 
   onChangeComplete = color => {
     function colorToHexAlpha(color) {
-      const a2hex=parseInt(color.rgb.a*256).toString(16).padStart(2, '0')
+      const a2hex=parseInt(color.rgb.a*255).toString(16).padStart(2, '0')
       const hex=`${color.hex}${a2hex}`
       return hex
     }
