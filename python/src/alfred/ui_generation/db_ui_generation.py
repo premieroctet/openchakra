@@ -69,7 +69,8 @@ class DBUiGeneration(object):
                 if compType:
                   componentType=compType
                 else:
-                  classname, componentType=classname.split('.')
+                  componentType = classname.split('.')[-1]
+                  classname='.'.join(classname.split('.')[:-1])
               if classname:
                 if not comp:
                   raise Exception('Classname sans composant')
