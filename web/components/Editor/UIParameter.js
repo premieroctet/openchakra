@@ -83,7 +83,6 @@ class UIParameter extends React.Component {
           attributes.map(att => {
             let [att_name, att_type] = att
 
-            console.log(`att_name:${att_name}, att_type:${att_type}`)
             if (att_name.endsWith('_placeholder')) {
               att_type='text'
             }
