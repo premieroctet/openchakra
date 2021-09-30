@@ -1,3 +1,4 @@
+import {is_production} from '../../config/config'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import ColorPicker from './ColorPicker'
@@ -9,8 +10,6 @@ import PictureEditor from './PictureEditor'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import TextEditor from './TextEditor'
-
-import {is_development} from '../../config/config'
 
 const RESET_BUTTON_ENABLED=false
 
@@ -76,14 +75,13 @@ class UIParameter extends React.Component {
         <Grid item xl={12} style={{display: 'flex'}}>
           { RESET_BUTTON_ENABLED && <Button onClick={() => this.onResetClicked(parameter.type)}>Reset</Button> }
           <h3 style={{color: 'black'}}>{title}</h3>
-          {is_development() && <h4>({parameter.type_label})</h4>}
+          {!(is_production()) && <h4>({parameter.type_label})</h4>}
         </Grid>
         <Grid>
         {
           attributes.map(att => {
             let [att_name, att_type] = att
 
-            console.log(`att_name:${att_name}, att_type:${att_type}`)
             if (att_name.endsWith('_placeholder')) {
               att_type='text'
             }
