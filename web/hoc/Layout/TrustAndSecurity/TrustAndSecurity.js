@@ -8,19 +8,14 @@ import TextsmsIcon from '@material-ui/icons/Textsms'
 import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/TrustAndSecurity/TrustAndSecurity'
-import coucou from '../../../static/assets/css/custom.css'
-import {TRUST_SECURITY} from '../../../utils/i18n'
-
-const myOtherIcon = () => {
-  return <div className={'customtrustsecu'}/>
-}
 
 function TrustAndSecurity({t, classes}) {
-  const [items] = useState([
+  const [customCss, setCustomCss]= useState('')
+  const [items, setItems] = useState([
     {
       title: ReactHtmlParser(t('TRUST_SECURITY.first_item.title')),
       text: ReactHtmlParser(t('TRUST_SECURITY.first_item.text')),
-      icon: <AlarmOnIcon component={coucou.customtrustsecu ? myOtherIcon : () => null} className={'customtrustandsecurityicon'} fontSize="large"/>,
+      icon: <AlarmOnIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
     },
     {
       title: ReactHtmlParser(t('TRUST_SECURITY.second_item.title')),
@@ -34,10 +29,32 @@ function TrustAndSecurity({t, classes}) {
     },
   ])
 
-  useEffect(() => {
 
+  useEffect(() => {
+    const xhttp = new XMLHttpRequest()
+    xhttp.onload = function() {
+      setCustomCss(this.responseText)
+    }
+    xhttp.open('GET', '../../../static/assets/css/custom.css')
+    xhttp.send()
   })
-      
+  
+  useEffect(() => {
+    let newArr = [...items]
+    if(customCss.includes('customTrustAlarm')) {
+      newArr[0].icon = <div className={'customTrustAlarm'}/>
+      setItems(newArr)
+    }
+    else if(customCss.includes('customTrustShield')) {
+      newArr[1].icon = <div className={'customTrustShield'}/>
+      setItems(newArr)
+    }
+    else if(customCss.includes('customTrustMessage')) {
+      newArr[2].icon = <div className={'customTrustMessage'}/>
+      setItems(newArr)
+    }
+  }, [customCss])
+
   return(
     <Grid container spacing={2} style={{margin: 0, width: '100%'}} className={classes.trustAndSecurityMainContainer} >
       {

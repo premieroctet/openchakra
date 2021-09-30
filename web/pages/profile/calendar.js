@@ -3,7 +3,7 @@ import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import axios from 'axios'
-
+import {CALENDAR} from '../../utils/i18n'
 import {getLoggedUserId} from '../../utils/context'
 import BasePage from '../basePage'
 import Box from '../../components/Box/Box'
@@ -50,8 +50,8 @@ class ProfileCalendar extends BasePage {
         <Grid item xs={12} xl={12}>
           <Box>
             <Topic
-              titleTopic={'Ajoutez vos disponiblités '}
-              titleSummary={'Votre calendrier vous permet d’ajouter vos disponibilités en précisant les tranches horaires. '}
+              titleTopic={CALENDAR.title}
+              titleSummary={CALENDAR.subtitle}
               needBackground={false}
               underline={true}
             >

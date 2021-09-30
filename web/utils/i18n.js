@@ -572,6 +572,11 @@ const ABOUT = {
   speak: 'Parle',
 }
 
+const CALENDAR = {
+  title: 'Ajoutez vos disponiblités',
+  subtitle: 'Votre calendrier vous permet d’ajouter vos disponibilités en précisant les tranches horaires. ',
+}
+
 const LAYOUT_ABOUT = {
   my_name_is: "Je m'appelle {{firstname}}",
   text: 'et j’ai hâte de vous rencontrer !',
@@ -1526,4 +1531,5 @@ module.exports = {
   PAYMENT_SUCCESS,
   RESET_PASSWORD,
   COOKIE_CONSENT,
+  CALENDAR,
 }
