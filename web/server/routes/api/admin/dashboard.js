@@ -312,6 +312,7 @@ router.put('/users/users/idCard/delete/:id', passport.authenticate('admin', {ses
 // Delete one user
 // @Access private
 router.delete('/users/users/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+  return res.status(400).json('Ne peut supprimer un utilisateur')
   req.context.getModel('User').findById(req.params.id)
     .then(user => {
       user.remove().then(() => res.json({success: true}))
@@ -490,6 +491,7 @@ router.put('/users/admin/:id', passport.authenticate('admin', {session: false}),
 // Delete one admin
 // @Access private
 router.delete('/users/admin/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+  return res.status(400).json('Ne peut supprimer un administrateur')
   req.context.getModel('User').findById(req.params.id)
     .then(user => {
       user.remove().then(() => res.json({success: true}))
@@ -638,11 +640,15 @@ router.get('/filterPresentation/all/:id', passport.authenticate('admin', {sessio
 // Delete one filterPresentation
 // @Access private
 router.delete('/filterPresentation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('FilterPresentation').findById(req.params.id)
-    .then(filterPresentation => {
-      filterPresentation.remove().then(() => res.json({success: true}))
+  Promise.all(['Prestation.filter_presentation'].map(f => hasRefs(req, f, req.params.id)))
+    .then(refs => {
+      if (refs.some(t => t)) {
+        return res.status(400).json('Ce filtre de présentation est utilisé')
+      }
+      req.context.getModel('FilterPresentation').findByIdAndRemove(req.params.id)
+        .then(() => res.json({success: true}))
+        .catch(() => res.status(404).json({filterPresentation: 'No filterPresentation found'}))
     })
-    .catch(() => res.status(404).json({filterPresentation: 'No filterPresentation found'}))
 })
 
 // @Route PUT /myAlfred/api/admin/filterPresentation/all/:id
@@ -718,11 +724,15 @@ router.get('/job/all/:id', passport.authenticate('admin', {session: false}), (re
 // Delete one job
 // @Access private
 router.delete('/job/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Job').findById(req.params.id)
-    .then(job => {
-      job.remove().then(() => res.json({success: true}))
+  Promise.all(['Prestation.job'].map(f => hasRefs(req, f, req.params.id)))
+    .then(refs => {
+      if (refs.some(t => t)) {
+        return res.status(400).json('Ce métier est utilisé')
+      }
+      req.context.getModel('Job').findByIdAndRemove(req.params.id)
+        .then(() => res.json({success: true}))
+        .catch(() => res.status(404).json({job: 'No job found'}))
     })
-    .catch(() => res.status(404).json({job: 'No job found'}))
 })
 
 // @Route PUT /myAlfred/api/admin/job/all/:id
@@ -880,11 +890,15 @@ router.get('/tags/all/:id', passport.authenticate('admin', {session: false}), (r
 // Delete one tag
 // @Access private
 router.delete('/tags/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Tag').findById(req.params.id)
-    .then(tags => {
-      tags.remove().then(() => res.json({success: true}))
+  Promise.all(['Category.tags', 'Prestation.tags', 'Service.tags'].map(f => hasRefs(req, f, req.params.id)))
+    .then(refs => {
+      if (refs.some(t => t)) {
+        return res.status(400).json('Ce tag est utilisé')
+      }
+      req.context.getModel('Tag').findByIdAndRemove(req.params.id)
+        .then(() => res.json({success: true}))
+        .catch(() => res.status(404).json({tagsnotfound: 'No tags found'}))
     })
-    .catch(() => res.status(404).json({tagsnotfound: 'No tags found'}))
 })
 
 // @Route PUT /myAlfred/api/admin/tags/all/:id
@@ -1123,13 +1137,17 @@ router.get('/equipment/all/:id', passport.authenticate('admin', {session: false}
 // Delete one equipment system
 // @Access private
 router.delete('/equipment/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Equipment').findById(req.params.id)
-    .then(equipment => {
-      equipment.remove().then(() => res.json({success: true}))
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(404).json({equipmentnotfound: 'No equipment found'})
+  Promise.all(['Booking.equipments', 'Service.equipments', 'ServiceUser.equipments'].map(f => hasRefs(req, f, req.params.id)))
+    .then(refs => {
+      if (refs.some(t => t)) {
+        return res.status(400).json('Cet équipement est utilisé')
+      }
+      req.context.getModel('Equipment').findByIdAndRemove(req.params.id)
+        .then(() => res.json({success: true}))
+        .catch(err => {
+          console.error(err)
+          res.status(404).json({equipmentnotfound: 'No equipment found'})
+        })
     })
 })
 
@@ -1234,7 +1252,7 @@ router.get('/service/all/:id', passport.authenticate('admin', {session: false}),
 // Delete one service
 // @Access private
 router.delete('/service/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  Promise.all(['Prestation.service', 'ServiceUSer.service'].map(f => hasRefs(req, f, req.params.id)))
+  Promise.all(['Prestation.service', 'ServiceUser.service'].map(f => hasRefs(req, f, req.params.id)))
     .then(refs => {
       if (refs.some(t => t)) {
         return res.status(400).json('Ce service est utilisé')
@@ -1397,11 +1415,15 @@ router.get('/prestation/all/:id', passport.authenticate('admin', {session: false
 // Delete one prestation
 // @Access private
 router.delete('/prestation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Prestation').findById(req.params.id)
-    .then(prestation => {
-      prestation.remove().then(() => res.json({success: true}))
+  Promise.all(['ServiceUser.prestations.prestation'].map(f => hasRefs(req, f, req.params.id)))
+    .then(refs => {
+      if (refs.some(t => t)) {
+        return res.status(400).json('Cette prestation est utilisée')
+      }
+      req.context.getModel('Prestation').findByIdAndRemove(req.params.id)
+        .then(() => res.json({success: true}))
+        .catch(() => res.status(404).json({prestationnotfound: 'No prestation found'}))
     })
-    .catch(() => res.status(404).json({prestationnotfound: 'No prestation found'}))
 })
 
 // @Route PUT /myAlfred/api/admin/prestation/all/:id
