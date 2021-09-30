@@ -1,8 +1,6 @@
-import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {AgGridReact} from 'ag-grid-react'
 import {Typography} from '@material-ui/core'
-import HomeIcon from '@material-ui/icons/Home'
 import Paper from '@material-ui/core/Paper'
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded'
 import IconButton from '@material-ui/core/IconButton'
@@ -10,12 +8,9 @@ import GetAppIcon from '@material-ui/icons/GetApp'
 
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-balham.css'
-
-import Link from 'next/link'
 import Grid from '@material-ui/core/Grid'
 const moment=require('moment')
 const models=require('./models')
-const util=require('util')
 
 class BigList extends React.Component {
 
@@ -91,6 +86,7 @@ class BigList extends React.Component {
       'currencyRenderer': models.CurrencyRenderer,
       'colorRenderer': models.ColorRenderer,
       'fontRenderer': models.FontRenderer,
+      'deleteRenderer': models.DeleteRenderer,
     }
 
     const defaultColDef={

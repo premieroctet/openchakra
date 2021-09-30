@@ -1,3 +1,4 @@
+const {hasRefs}=require('../../../utils/database')
 const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../../utils/filesystem')
 const {getIdentifiers, getKeys, getQueries}=require('../../../utils/i18n_extraction')
 const express = require('express')
@@ -147,19 +148,15 @@ router.get('/billing/all/:id', passport.authenticate('admin', {session: false}),
 // Delete one billing system
 // @Access private
 router.delete('/billing/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-  req.context.getModel('Billing').findById(req.params.id)
-    .then(billing => {
-      if (!admin) {
-        return res.status(401).json({notauthorized: 'User not authorized'})
-
-
+  Promise.all(['Prestation.billing', 'ServiceUser.billing'].map(f => hasRefs(req, f, req.params.id)))
+    .then(refs => {
+      if (refs.some(t => t)) {
+        return res.status(400).json('Cette méthode de facturation est utilisée')
       }
-      billing.remove().then(() => res.json({success: true}))
+      req.context.getModel('Billing').findByIdAndRemove(req.params.id)
+        .then(() => res.json({success: true}))
+        .catch(() => res.status(404).json({billingnotfound: 'No billing found'}))
     })
-    .catch(() => res.status(404).json({billingnotfound: 'No billing found'}))
 })
 
 // @Route PUT /myAlfred/api/admin/billing/all/:id
@@ -1496,19 +1493,15 @@ router.get('/category/all/:id', passport.authenticate('admin', {session: false})
 // Delete one category
 // @Access private
 router.delete('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-  req.context.getModel('Category').findById(req.params.id)
-    .then(category => {
-      if (!admin) {
-        return res.status(401).json({notauthorized: 'User not authorized'})
-
-
+  Promise.all(['Service.category', 'Prestation.category'].map(f => hasRefs(req, f, req.params.id)))
+    .then(refs => {
+      if (refs.some(t => t)) {
+        return res.status(400).json('Cette catégorie est utilisée')
       }
-      category.remove().then(() => res.json({success: true}))
+      req.context.getModel('Category').findByIdAndRemove(req.params.id)
+        .then(() => res.json())
+        .catch(err => res.status(404).json({category: 'No category found'}))
     })
-    .catch(err => res.status(404).json({category: 'No category found'}))
 })
 
 // @Route PUT /myAlfred/api/admin/category/all/:id
@@ -1747,19 +1740,15 @@ router.get('/service/all/:id', passport.authenticate('admin', {session: false}),
 // Delete one service
 // @Access private
 router.delete('/service/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]
-  const decode = jwt.decode(token)
-  const admin = decode.is_admin
-  req.context.getModel('Service').findById(req.params.id)
-    .then(service => {
-      if (!admin) {
-        return res.status(401).json({notauthorized: 'User not authorized'})
-
-
+  Promise.all(['Prestation.service', 'ServiceUSer.service'].map(f => hasRefs(req, f, req.params.id)))
+    .then(refs => {
+      if (refs.some(t => t)) {
+        return res.status(400).json('Ce service est utilisé')
       }
-      service.remove().then(() => res.json({success: true}))
+      req.context.getModel('Service').findByIdAndRemove(req.params.id)
+        .then(() => res.json({success: true}))
+        .catch(err => res.status(404).json({service: 'No service found'}))
     })
-    .catch(err => res.status(404).json({service: 'No service found'}))
 })
 
 // @Route PUT /myAlfred/api/admin/service/all/:id
@@ -2689,8 +2678,8 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
       req_result.push(`Annonces actives avec téléphone:${all_ads.length}`)
 
       req.context.getModel('Prospect').find({list_id: {$exists: true}}, 'ad_id')
-        .then(prospects => {
-          prospects = prospects.map(p => p.list_id)
+        .then(result => {
+          prospects = result.map(p => p.list_id)
           // Retirer les prospects connus en BD par leur ad_id
           all_ads = all_ads.filter(ad => !prospects.includes(ad.list_id))
           req_result.push(`Annonces nouvelles:${all_ads.length}`)
@@ -2699,9 +2688,9 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
           const phonePromises = phoneUrls.map((url, index) => delayedPromise(DELAY*index, () => axios.get(url, {timeout: TIMEOUT})))
           req_result.push(`N°s tel demandés:${phonePromises.length}`)
           Promise.allSettled(phonePromises)
-            .then(phone_results => {
+            .then(result => {
               // Keep
-              phone_results = phone_results.map(p => (p.status=='fulfilled' && p.value.data.utils.status=='OK' ? p.value.data.utils.phonenumber : null))
+              phone_results = result.map(p => (p.status=='fulfilled' && p.value.data.utils.status=='OK' ? p.value.data.utils.phonenumber : null))
               const mobile_count = phone_results.filter(p => isMobilePhone(p))
               req_result.push(`N°s tel mobiles reçus:${mobile_count.length}`)
               let db_promises = []

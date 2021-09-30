@@ -60,4 +60,10 @@ class ConnectionPool {
 
 const connectionPool = new ConnectionPool()
 
-module.exports={connectionPool}
+// Utilities
+const hasRefs= (req, field, id) => {
+  const [model, attribute]=field.split('.')
+  return req.context.getModel(model).exists({[attribute]: id})
+}
+
+module.exports={connectionPool, hasRefs}
