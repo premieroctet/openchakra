@@ -218,7 +218,7 @@ class RegisterSecondPage extends React.Component {
                 </Grid>
                 <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
                   <Button onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}</Button>
-                  {this.dialogCgu()}
+                  {this.dialogCgu(classes)}
                 </Grid>
               </Grid>
             </Grid>
