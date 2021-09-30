@@ -25,7 +25,7 @@ const ATT_TYPES={
 }
 const TITLES={
   'background-color': 'Couleur de fond',
-  'color': 'Couleur du texte',
+  'color': 'Couleur',
   'border-color': 'Couleur de bordure',
   'border-radius': 'Rayon de bordure',
   'display': 'Afficher',
