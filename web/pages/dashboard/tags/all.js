@@ -32,6 +32,10 @@ const styles = () => ({
 
 class All extends DataPage {
 
+  getDataType = () => {
+    return 'tags'
+  }
+
   getColumnDefs = () => {
     return [
       {headerName: '_id', field: '_id', width: 0},

@@ -1,10 +1,10 @@
+import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import DatePicker, {registerLocale} from 'react-datepicker'
@@ -36,10 +36,10 @@ const styles = theme => ({
 })
 
 const Input2 = ({value, onClick}) => (
-  <Button value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"
+  <CustomButton value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"
     onClick={onClick}>
     {value}
-  </Button>
+  </CustomButton>
 
 )
 
@@ -381,7 +381,7 @@ class BookingConfirm extends React.Component {
 
                   <Grid style={{float: 'right'}} item xs={12}>
                     {' '}
-                    <Button
+                    <CustomButton
                       classes={{root: classes.errorButton}}
                       variant={'contained'}
                       style={{
@@ -400,7 +400,7 @@ class BookingConfirm extends React.Component {
                       }
                     >
                           Confirmer
-                    </Button>
+                    </CustomButton>
                   </Grid>
 
                 </Grid>

@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -6,7 +7,6 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Button from '@material-ui/core/Button'
 import withStyles from '@material-ui/core/styles/withStyles'
 import {INFORMATION} from '../../utils/i18n'
 
@@ -25,9 +25,9 @@ class Information extends React.Component {
           <DialogContentText id="alert-dialog-description" dangerouslySetInnerHTML={{__html: this.props.text}}/>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.onClose} color="primary">
+          <CustomButton onClick={this.props.onClose} color="primary">
             {ReactHtmlParser(this.props.t('INFORMATION.button'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )

@@ -1,3 +1,4 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import { withTranslation } from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
@@ -5,7 +6,6 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import Divider from '@material-ui/core/Divider'
 import SelectSlotTimer from '../../SelectSlotTimer/SelectSlotTimer'
-import { Button } from '@material-ui/core'
 import React from 'react'
 import styles from './DrawerEditingScheduleStyle'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -189,14 +189,14 @@ class DrawerEditingSchedule extends React.Component {
             }
             <Grid className={classes.marginSaveButton}>
               <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                <Button
+                <CustomButton
                   disabled={!this.saveEnabled()}
                   variant={'contained'}
                   color={'primary'}
                   style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}}
                   onClick={() => this.save()}>
                   {ReactHtmlParser(this.props.t('DRAWER_EDITING_SCHEDULE.save_button'))}
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
           </Grid>

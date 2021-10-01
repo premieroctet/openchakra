@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import { classnames } from '@material-ui/data-grid'
 
@@ -5,7 +6,6 @@ const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import axios from 'axios'
 import moment from 'moment'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import io from 'socket.io-client'
@@ -101,7 +101,7 @@ class Cancel extends React.Component {
                   </Grid>
                   <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                     <Grid>
-                      <Button
+                      <CustomButton
                         color={'primary'}
                         variant={'contained'}
                         style={{
@@ -111,10 +111,10 @@ class Cancel extends React.Component {
                         onClick={() => this.props.onMaintain(this.props.booking_id)}
                       >
                         Retour
-                      </Button>
+                      </CustomButton>
                     </Grid>
                     <Grid>
-                      <Button
+                      <CustomButton
                         classes={{root: classes.buttonCancel}}
                         variant={'contained'}
                         style={{
@@ -126,7 +126,7 @@ class Cancel extends React.Component {
                         }}
                       >
                         Confirmer l'annulation
-                      </Button>
+                      </CustomButton>
                     </Grid>
                   </Grid>
                 </Grid>

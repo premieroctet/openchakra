@@ -6,6 +6,10 @@ const {textColumn}=require('../../../components/BigList/models')
 
 class all extends DataPage {
 
+  getDataType = () => {
+    return 'job'
+  }
+
   getColumnDefs = () => {
     return [
       {headerName: '_id', field: '_id', width: 0},

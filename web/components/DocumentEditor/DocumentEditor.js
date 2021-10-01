@@ -43,14 +43,14 @@ class DocumentEditor extends React.Component {
                 </Grid>
                 <Grid item className={classes.contentIcones}>
                   <input
-                    id="icon-button-file"
+                    id={title}
                     style={{display: 'none'}}
                     name="myCardR"
                     type="file"
                     onChange={onChange}
                     accept={IMAGE_EXTENSIONS.join(',')}
                   />
-                  <label htmlFor="icon-button-file">
+                  <label htmlFor={title}>
                     <IconButton aria-label="update" component="span">
                       <EditIcon/>
                     </IconButton>
@@ -82,7 +82,7 @@ class DocumentEditor extends React.Component {
         <Grid item xs={12} className={classes.containerRecto}>
           <label style={{display: 'inline-block', marginTop: 15, textAlign: 'center', width: '100%'}} className="forminputs">
             <p style={{cursor: 'pointer', color: 'darkgrey', fontSize: '0.9rem'}}>{title}</p>
-            <input disabled={disabled} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}}
+            <input disabled={disabled} style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}}
               name="myCardR" type="file"
               onChange={onChange}
               className="form-control"

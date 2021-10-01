@@ -1,3 +1,4 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -5,7 +6,7 @@ import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import Divider from '@material-ui/core/Divider'
-import {Accordion, AccordionDetails, AccordionSummary, Button} from '@material-ui/core'
+import {Accordion, AccordionDetails, AccordionSummary} from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers'
@@ -327,8 +328,8 @@ class DrawerSettingSchedule extends React.Component {
                         </Grid>
                         <Grid style={{marginTop: 20}}>
                           <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                            <Button classes={{root: 'customschedulesaveperiod'}} disabled={!this.saveEnabled(availIdx)} variant={'contained'} color={'primary'} style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}} onClick={ ev => this.save(availIdx, ev) }>{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.save_button'))}</Button>
-                            <Button classes={{root: `customscheduledeletebutton ${classes.cancelButton}`}} style={{marginRight: 10, textTransform: 'initial', fontWeight: 'bold'}} onClick={() => this.removeAvailability(availIdx)}>{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.delete_button'))}</Button>
+                            <CustomButton classes={{root: 'customschedulesaveperiod'}} disabled={!this.saveEnabled(availIdx)} variant={'contained'} color={'primary'} style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}} onClick={ ev => this.save(availIdx, ev) }>{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.save_button'))}</CustomButton>
+                            <CustomButton classes={{root: `customscheduledeletebutton ${classes.cancelButton}`}} style={{marginRight: 10, textTransform: 'initial', fontWeight: 'bold'}} onClick={() => this.removeAvailability(availIdx)}>{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.delete_button'))}</CustomButton>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -341,7 +342,7 @@ class DrawerSettingSchedule extends React.Component {
           <Divider/>
           <Grid className={classes.marginSaveButton}>
             <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-              <Button
+              <CustomButton
                 disabled={!this.addPeriodEnabled()}
                 variant={'contained'}
                 color={'primary'}
@@ -349,7 +350,7 @@ class DrawerSettingSchedule extends React.Component {
                 style={{color: 'white', textTransform: 'initial', fontWeight: 'bold'}}
                 onClick={ this.addAvailability}
               >{ReactHtmlParser(this.props.t('DRAWER_SETTING_SCHEDULE.add_period'))}
-              </Button>
+              </CustomButton>
             </Grid>
           </Grid>
         </Grid>

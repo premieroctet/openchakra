@@ -1,10 +1,9 @@
+const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
-const path = require('path')
-const multer = require('multer')
-const crypto = require('crypto')
 const geolib = require('geolib')
 const _ = require('lodash')
 const moment = require('moment')
@@ -15,31 +14,12 @@ const {GID_LEN, PRO, MANAGER, MICROSERVICE_MODE} = require('../../../utils/const
 const {normalize} = require('../../../utils/text')
 const parse = require('url-parse')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
-const {ensureDirectoryExists} = require('../../utils/filesystem')
 
 moment.locale('fr')
 
-ensureDirectoryExists('static/profile/diploma/')
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'static/profile/diploma/')
-  },
-  filename: function(req, file, cb) {
-    let datetimestamp = Date.now()
-    let key = crypto.randomBytes(5).toString('hex')
-    cb(null, `${datetimestamp}_${key}_${file.originalname}`)
-  },
-})
-const upload = multer({
-  storage: storage,
-  fileFilter: function(req, file, callback) {
-    let ext = path.extname(file.originalname).toLowerCase()
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
-      return callback(new Error('Error extension'))
-    }
-    callback(null, true)
-  },
-})
+// Upload multers
+// Diploma
+const upload = createDiskMulter('static/profile/diploma/', IMAGE_FILTER)
 
 // @Route POST /myAlfred/api/serviceUser/add
 // Connect an alfred to a service

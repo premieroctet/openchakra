@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
@@ -11,7 +12,6 @@ import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditing
 import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule'
 import Drawer from '@material-ui/core/Drawer'
 import axios from 'axios'
-import Button from '@material-ui/core/Button'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import '../../static/assets/css/custom.css'
 import {DRAWER_SCHEDULE} from '../../utils/i18n'
@@ -104,14 +104,14 @@ class DrawerSchedule extends React.Component {
         </Drawer>
         <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
           <Grid className={classes.buttonShowContainer}>
-            <Button
+            <CustomButton
               startIcon={this.state.eventsSelected.size > 0 ? <SettingsIcon classes={{root: 'customscheduleseticon'}}/> : <AddCircleOutlineIcon classes={{root: 'customscheduleaddicon'}}/>}
               onClick={this.handleDrawerToggle}
               color={'primary'}
               classe={{root: classes.buttonAction}}
             >
               { this.state.eventsSelected.size > 0 ? ReactHtmlParser(this.props.t('DRAWER_SCHEDULE.button_update')) : ReactHtmlParser(this.props.t('DRAWER_SCHEDULE.setting_update'))}
-            </Button>
+            </CustomButton>
           </Grid>
           <Grid className={classes.containerFab}>
             <Fab

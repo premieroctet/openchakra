@@ -1,3 +1,4 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -12,7 +13,6 @@ import Divider from '@material-ui/core/Divider'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
 import BookingDetail from '../../BookingDetail/BookingDetail'
-import Button from '@material-ui/core/Button'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
@@ -28,6 +28,7 @@ const {getLoggedUserId} = require('../../../utils/context')
 const {isMomentAvailable} = require('../../../utils/dateutils')
 const moment = require('moment')
 const _=require('lodash')
+
 moment.locale('fr')
 import '../../../static/assets/css/custom.css'
 import {DRAWER_BOOKING} from '../../../utils/i18n'
@@ -403,7 +404,7 @@ class DrawerBooking extends React.Component {
             <Grid>
               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <Grid style={{width: '100%'}}>
-                  <Button
+                  <CustomButton
                     classes={{root: `custombookinresabutton ${classes.userServicePButtonResa}`}}
                     variant='contained'
                     color='primary'
@@ -412,19 +413,19 @@ class DrawerBooking extends React.Component {
                     onClick={() => this.props.book(true)}
                   >
                     <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.resa_button'))}</Typography>
-                  </Button>
+                  </CustomButton>
                 </Grid>
                 <Grid style={{marginTop: 15, marginBottom: 15}}>
                   <Typography className={'custombookinginfoprice'} style={{color: 'rgba(39, 37, 37, 0.35)'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.next_step_paiment'))}</Typography>
                 </Grid>
                 <Grid>
-                  <Button
+                  <CustomButton
                     startIcon={<HelpOutlineIcon />}
                     disabled={!isEmpty(errors)}
                     onClick={() => this.props.book(false)}
                   >
                     <Typography style={{textDecoration: 'underline', textTransform: 'initial'}} className={'custombookingaskinfo'}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.button_info'))}</Typography>
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </Grid>
             </Grid>

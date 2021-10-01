@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import {TextField} from '@material-ui/core'
@@ -20,7 +21,6 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 import Topic from '../../hoc/Topic/Topic'
 import AlgoliaPlaces from 'algolia-places-react'
 import MultipleSelect from 'react-select'
@@ -40,6 +40,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 
 const {frenchFormat} = require('../../utils/text')
 const moment = require('moment')
+
 moment.locale('fr')
 
 const DialogTitle = withStyles(styles)(props => {
@@ -367,7 +368,7 @@ class About extends CompanyComponent {
             <Grid style={{marginTop: '2vh', width: '100%'}}>
               <Divider/>
               <Grid style={{marginTop: '2vh', width: '100%'}}>
-                <Button
+                <CustomButton
                   onClick={() => {
                     this.save()
                   }}
@@ -377,7 +378,7 @@ class About extends CompanyComponent {
                   disabled={!this.isModeCompany() ? enabledEdition : false}
                 >
                   {ReactHtmlParser(this.props.t('ABOUT.button_update'))}
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
           </Grid>

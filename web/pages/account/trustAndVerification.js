@@ -1,3 +1,4 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
@@ -5,7 +6,6 @@ const {snackBarSuccess} = require('../../utils/notifications')
 import React from 'react'
 import axios from 'axios'
 import moment from 'moment'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
@@ -32,6 +32,7 @@ import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import '../../static/assets/css/custom.css'
 import {TRUST_VERIFICATION} from '../../utils/i18n'
 const {CESU} = require('../../utils/consts')
+
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 const I18N = require('../../utils/i18n')
 moment.locale('fr')
@@ -358,12 +359,12 @@ class trustAndVerification extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
+          <CustomButton onClick={this.handleClose} color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
-          </Button>
-          <Button onClick={this.handleDelete} classes={{root: classes.cancelButton}}>
+          </CustomButton>
+          <CustomButton onClick={this.handleDelete} classes={{root: classes.cancelButton}}>
             {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -456,15 +457,15 @@ class trustAndVerification extends React.Component {
             }
             {this.state.id_recto === null && this.state.id_verso !== null ?
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
-                <Button onClick={() => this.addVerso()} variant="contained" className={`customtrustandverifsaveverso ${classes.buttonSave}`}>
+                <CustomButton onClick={() => this.addVerso()} variant="contained" className={`customtrustandverifsaveverso ${classes.buttonSave}`}>
                   {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.save_verso'))}
-                </Button>
+                </CustomButton>
               </Grid>
               :
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
-                <Button onClick={this.onSubmit} variant="contained" className={`customtrustandverifsavedoc ${classes.buttonSave}`}>
+                <CustomButton onClick={this.onSubmit} variant="contained" className={`customtrustandverifsavedoc ${classes.buttonSave}`}>
                   {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
-                </Button>
+                </CustomButton>
               </Grid>
             }
           </Grid>
@@ -573,10 +574,10 @@ class trustAndVerification extends React.Component {
                 null
               }
               <Grid style={{marginTop: '10vh'}}>
-                <Button variant="contained" className={`customtrustandverifsavebutton ${classes.buttonSave}`}
+                <CustomButton variant="contained" className={`customtrustandverifsavebutton ${classes.buttonSave}`}
                   onClick={this.editSiret} disabled={!this.statusSaveEnabled()}>
                   {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
             : null

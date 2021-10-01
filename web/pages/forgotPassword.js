@@ -1,3 +1,4 @@
+import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react';
@@ -5,7 +6,6 @@ import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import styles from '../static/css/pages/forgotPassword/forgotPassword'
@@ -85,9 +85,9 @@ class forgotPassword extends React.Component {
               />
             </Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-              <Button variant="contained" classes={{root: classes.buttonSubmit}}  style={{backgroundColor: isB2BStyle(user) ? '#353A51' : 'rgba(178,204,251,1)'}} onClick={this.onSubmit}>
+              <CustomButton variant="contained" classes={{root: classes.buttonSubmit}}  style={{backgroundColor: isB2BStyle(user) ? '#353A51' : 'rgba(178,204,251,1)'}} onClick={this.onSubmit}>
                 {ReactHtmlParser(this.props.t('FORGOT_PASSWORD.button_confirm'))}
-              </Button>
+              </CustomButton>
             </Grid>
           </Card>
         </Grid>

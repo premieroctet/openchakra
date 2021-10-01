@@ -1,14 +1,12 @@
+const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../utils/filesystem')
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
-const path = require('path')
-const tough = require('tough-cookie')
 const {computeUrl}=require('../../../config/config')
 const {validateCompanyProfile, validateCompanyMember} = require('../../validation/simpleRegister')
 const moment = require('moment')
 moment.locale('fr')
 const crypto = require('crypto')
-const multer = require('multer')
 const axios = require('axios')
 const {ADMIN, MANAGER, EMPLOYEE, ROLES, MICROSERVICE_MODE, CARETAKER_MODE, BOOK_STATUS} = require('../../../utils/consts')
 const _ = require('lodash')
@@ -17,55 +15,17 @@ const {getPeriodStart}=require('../../../utils/dateutils')
 const {bufferToString, normalize} = require('../../../utils/text')
 const csv_parse = require('csv-parse/lib/sync')
 const {sendB2BRegistration}=require('../../utils/mailing')
-const {ensureDirectoryExists, isTxtFile} = require('../../utils/filesystem')
 
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true
 
-ensureDirectoryExists('static/profile/')
-const storageIdPicture = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'static/profile/');
-  },
-  filename: function (req, file, cb) {
-    let datetimestamp = Date.now();
-    let key = crypto.randomBytes(5).toString('hex');
-    cb(null, datetimestamp + '_' + key + '_' + file.originalname);
-  },
-});
-const uploadIdPicture = multer({
-  storage: storageIdPicture,
-  fileFilter: function (req, file, callback) {
-    if (!isImageFile(file.originalname)) {
-      return callback(new Error('Only images are allowed'))
-    }
-    callback(null, true)
-  },
-});
-
+// Upload multers
+// Profile id card
+const uploadIdPicture = createDiskMulter('static/profile/', IMAGE_FILTER)
 // Registration proof storage
-ensureDirectoryExists('static/profile/registrationProof/')
-const storageRegProof = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'static/profile/registrationProof/');
-  },
-  filename: function (req, file, cb) {
-    let datetimestamp = Date.now();
-    let key = crypto.randomBytes(5).toString('hex');
-    let key2 = crypto.randomBytes(10).toString('hex');
-    cb(null, datetimestamp + '_' + key + '_' + key2 + path.extname(file.originalname));
+const uploadRegProof = createDiskMulter('static/profile/registrationProof/', IMAGE_FILTER)
+// B2B Employees
+const uploadEmployees = createMemoryMulter(TEXT_FILTER)
 
-  },
-});
-const uploadRegProof = multer({
-  storage: storageRegProof,
-  fileFilter: function (req, file, callback) {
-    let ext = path.extname(file.originalname).toLowerCase();
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
-      return callback(new Error('Error extension'));
-    }
-    callback(null, true);
-  },
-});
 
 // @Route PUT /myAlfred/api/companies/profile/billingAddress
 // Set the main address in the profile
@@ -74,17 +34,17 @@ router.put('/profile/billingAddress', passport.authenticate('b2badmin', {session
 
   req.context.getModel('Company').findById(req.user.company)
     .then(company => {
-      company.billing_address = {};
-      company.billing_address.address = req.body.address;
-      company.billing_address.zip_code = req.body.zip_code;
-      company.billing_address.city = req.body.city;
-      company.billing_address.country = req.body.country;
-      company.billing_address.gps.lat = req.body.gps.lat;
-      company.billing_address.gps.lng = req.body.gps.lng;
-      company.save().then(company => res.json(company)).catch(err => console.error(err));
+      company.billing_address = {}
+      company.billing_address.address = req.body.address
+      company.billing_address.zip_code = req.body.zip_code
+      company.billing_address.city = req.body.city
+      company.billing_address.country = req.body.country
+      company.billing_address.gps.lat = req.body.gps.lat
+      company.billing_address.gps.lng = req.body.gps.lng
+      company.save().then(company => res.json(company)).catch(err => console.error(err))
 
-    });
-});
+    })
+})
 
 // @Route PUT /myAlfred/api/companies/profile/serviceAddress
 // Add an other address in the profile
@@ -103,15 +63,15 @@ router.put('/profile/serviceAddress', passport.authenticate('b2badmin', {session
         floor: req.body.floor,
         note: req.body.note,
         phone_address: req.body.phone,
-      };
-      company.service_address.push(address);
+      }
+      company.service_address.push(address)
 
 
-      company.save().then(company => res.json(company)).catch(err => console.error(err));
+      company.save().then(company => res.json(company)).catch(err => console.error(err))
 
 
-    });
-});
+    })
+})
 
 // @Route GET /myAlfred/api/companies/profile/address/:id
 // Get service address by id
@@ -119,15 +79,15 @@ router.put('/profile/serviceAddress', passport.authenticate('b2badmin', {session
 router.get('/profile/address/:id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   req.context.getModel('Company').findById(req.user.company)
     .then(company => {
-      const index = req.params.id;
-      const address = company.service_address;
+      const index = req.params.id
+      const address = company.service_address
       const selected = address.map(item => item.id)
-        .indexOf(index);
-      const obj = address[selected];
-      res.json(obj);
+        .indexOf(index)
+      const obj = address[selected]
+      res.json(obj)
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route PUT /myAlfred/api/companies/profile/address/:id
 // Edit service address by id
@@ -137,21 +97,21 @@ router.put('/profile/address/:id', passport.authenticate('b2badmin', {session: f
     .then(company => {
       const index = company.service_address
         .map(item => item.id)
-        .indexOf(req.params.id);
-      company.service_address[index].label = req.body.label;
-      company.service_address[index].address = req.body.address;
-      company.service_address[index].zip_code = req.body.zip_code;
-      company.service_address[index].city = req.body.city;
-      company.service_address[index].floor = req.body.floor;
-      company.service_address[index].note = req.body.note;
-      company.service_address[index].phone_address = req.body.phone;
-      company.service_address[index].lat = req.body.lat;
-      company.service_address[index].lng = req.body.lng;
+        .indexOf(req.params.id)
+      company.service_address[index].label = req.body.label
+      company.service_address[index].address = req.body.address
+      company.service_address[index].zip_code = req.body.zip_code
+      company.service_address[index].city = req.body.city
+      company.service_address[index].floor = req.body.floor
+      company.service_address[index].note = req.body.note
+      company.service_address[index].phone_address = req.body.phone
+      company.service_address[index].lat = req.body.lat
+      company.service_address[index].lng = req.body.lng
 
-      company.save().then(address => res.json(address)).catch(err => console.error(err));
+      company.save().then(address => res.json(address)).catch(err => console.error(err))
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route DELETE /myAlfred/api/companies/profile/address/:id
 // Delete service address by id
@@ -161,13 +121,13 @@ router.delete('/profile/address/:id', passport.authenticate('b2badmin', {session
     .then(company => {
       const index = company.service_address
         .map(item => item.id)
-        .indexOf(req.params.id);
-      company.service_address.splice(index, 1);
+        .indexOf(req.params.id)
+      company.service_address.splice(index, 1)
 
-      company.save().then(address => res.json(address)).catch(err => console.error(err));
+      company.save().then(address => res.json(address)).catch(err => console.error(err))
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route PUT /myAlfred/api/companies/profile/picture
 // Add a picture profile
@@ -177,12 +137,12 @@ router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.auth
     picture: req.file ? req.file.path : '',
   }, {new: true})
     .then(company => {
-      res.json(company);
+      res.json(company)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 // @Route PUT /myAlfred/api/companies/profile/pictureLater
 // Add a picture profile
@@ -190,10 +150,10 @@ router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.auth
 router.put('/profile/pictureLater', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   req.context.getModel('Company').findByIdAndUpdate(req.company.id, {picture: req.body.picture}, {new: true})
     .then(company => {
-      res.json(company);
+      res.json(company)
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route POST /myAlfred/api/companies/profile/registrationProof/add
 // Add a registration proof
@@ -201,17 +161,17 @@ router.put('/profile/pictureLater', passport.authenticate('b2badmin', {session: 
 router.post('/profile/registrationProof/add', uploadRegProof.single('registrationProof'), passport.authenticate('b2badmin', {session: false}), (req, res) => {
   req.context.getModel('Company').findById(req.company.id)
     .then(company => {
-      company.registration_proof = req.file.path;
-      return company.save();
+      company.registration_proof = req.file.path
+      return company.save()
     })
     .then(company => {
-      addRegistrationProof(company);
-      res.json(company);
+      addRegistrationProof(company)
+      res.json(company)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 // @Route DELETE /myAlfred/api/companies/profile/registrationProof
 // Deletes a registration proof
@@ -219,16 +179,16 @@ router.post('/profile/registrationProof/add', uploadRegProof.single('registratio
 router.delete('/profile/registrationProof', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   req.context.getModel('Company').findById(req.company.id)
     .then(company => {
-      company.registration_proof = null;
-      return company.save();
+      company.registration_proof = null
+      return company.save()
     })
     .then(company => {
-      res.json(company);
+      res.json(company)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 // @Route GET /myAlfred/api/companies/current
 // Get the company for the current logged user
@@ -259,13 +219,13 @@ router.get('/companies/:id', (req, res) => {
   req.context.getModel('Company').findById(req.params.id)
     .then(company => {
       if (!company) {
-        return res.status(400).json({msg: 'No company found'});
+        return res.status(400).json({msg: 'No company found'})
       }
-      res.json(company);
+      res.json(company)
 
     })
-    .catch(err => res.status(404).json({company: 'No company found'}));
-});
+    .catch(err => res.status(404).json({company: 'No company found'}))
+})
 
 // @Route PUT /myAlfred/api/companies/alfredViews/:id
 // Update number of views for an alfred
@@ -273,54 +233,55 @@ router.put('/alfredViews/:id', (req, res) => {
   req.context.getModel('Company').findByIdAndUpdate(req.params.id, {$inc: {number_of_views: 1}}, {new: true})
     .then(company => {
       if (!company) {
-        return res.status(400).json({msg: 'No company found'});
+        return res.status(400).json({msg: 'No company found'})
       }
-      res.json(company);
+      res.json(company)
 
     })
-    .catch(err => res.status(404).json({company: 'No company found'}));
-});
+    .catch(err => res.status(404).json({company: 'No company found'}))
+})
 
 // @Route PUT /myAlfred/api/companies/profile/editProfile
 // Edit email, job and phone
 // @Access private
 router.put('/profile/editProfile', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  const {errors, isValid} = validateCompanyProfile(req.body);
-  const companyId = req.user.company;
+  const {errors, isValid} = validateCompanyProfile(req.body)
+  const companyId = req.user.company
 
   req.context.getModel('Company').findOne({name: req.body.name})
     .then(company => {
       if (company && JSON.stringify(company._id) !== JSON.stringify(companyId)) {
-        return res.status(400).json({name: 'Une société de ce nom existe déjà'});
+        return res.status(400).json({name: 'Une société de ce nom existe déjà'})
       }
-      else if(!isValid){
-        return res.status(400).json(errors);
+      else if(!isValid) {
+        return res.status(400).json(errors)
       }
-      else {
-        req.context.getModel('Company').findByIdAndUpdate(companyId, {
-          name: req.body.name,
-          description: req.body.description,
-          website: req.body.website,
-          activity: req.body.activity,
-          size: req.body.size,
-          siret: req.body.siret,
-          vat_number: req.body.vat_number,
-          billing_address: req.body.billing_address,
-          vat_subject : req.body.vat_subject
-        }, {new: true})
-          .then(company => {
-            if(company){
-              res.json({success: 'Entreprise mise à jour !'});
-            }else{
-              res.json({error: 'Entreprise introuvable'});
-            }
-          })
-          .catch(err => console.error(err));
-      }
+
+      req.context.getModel('Company').findByIdAndUpdate(companyId, {
+        name: req.body.name,
+        description: req.body.description,
+        website: req.body.website,
+        activity: req.body.activity,
+        size: req.body.size,
+        siret: req.body.siret,
+        vat_number: req.body.vat_number,
+        billing_address: req.body.billing_address,
+        vat_subject: req.body.vat_subject,
+      }, {new: true})
+        .then(company => {
+          if(company) {
+            res.json({success: 'Entreprise mise à jour !'})
+          }
+          else{
+            res.json({error: 'Entreprise introuvable'})
+          }
+        })
+        .catch(err => console.error(err))
+
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route GET /myAlfred/api/companies/account/rib
 // Get comppany RIBs
@@ -329,19 +290,19 @@ router.get('/account/rib', passport.authenticate('b2badmin', {session: false}), 
 
   req.context.getModel('Company').findById(req.company.id)
     .then(company => {
-      company.account = {};
-      company.account.name = req.body.name;
-      company.account.bank = req.body.bank;
-      company.account.bic = req.body.bic;
-      company.account.iban = req.body.iban;
+      company.account = {}
+      company.account.name = req.body.name
+      company.account.bank = req.body.bank
+      company.account.bic = req.body.bic
+      company.account.iban = req.body.iban
 
 
       company.save()
         .then(result => res.json(result))
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route PUT /myAlfred/api/companies/account/rib
 // Edit rib
@@ -350,34 +311,34 @@ router.put('/account/rib', passport.authenticate('b2badmin', {session: false}), 
 
   req.context.getModel('Company').findById(req.company.id)
     .then(company => {
-      company.account = {};
-      company.account.name = req.body.name;
-      company.account.bank = req.body.bank;
-      company.account.bic = req.body.bic;
-      company.account.iban = req.body.iban;
+      company.account = {}
+      company.account.name = req.body.name
+      company.account.bank = req.body.bank
+      company.account.bic = req.body.bic
+      company.account.iban = req.body.iban
 
 
       company.save()
         .then(result => res.json(result))
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route POST /myAlfred/api/companies/mambers
 // Creates a member in the company
 // @Access private
 router.post('/members', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  const {errors, isValid} = validateCompanyMember(req.body);
+  const {errors, isValid} = validateCompanyMember(req.body)
   if (!isValid) {
-    return res.status(400).json({error: errors});
+    return res.status(400).json({error: errors})
   }
 
   req.context.getModel('User').findOne({email: req.body.email})
     .then(user => {
       if (user) {
-        return res.status(400).json({error: "L'email existe déjà"});
+        return res.status(400).json({error: "L'email existe déjà"})
       }
       const company_id = req.user.company
       const newUser= {
@@ -406,18 +367,6 @@ router.post('/members', passport.authenticate('b2badmin', {session: false}), (re
       console.error(err)
       res.status(500).json({error: err})
     })
-});
-
-const storageEmployees = multer.memoryStorage()
-
-const uploadEmployees = multer({
-  storage: storageEmployees,
-  fileFilter: (req, file, callback) => {
-    if (!isTxtFile(file.originalName)) {
-      return callback('Fichier csv attendu (.csv ou .txt)')
-    }
-    callback(null, true)
-  },
 })
 
 // @Route POST /myAlfred/api/companies/mambers
@@ -489,7 +438,7 @@ router.post('/employees', passport.authenticate('b2badmin', {session: false}), (
               return res.status(400).json(err)
             })
         })
-        .catch (err => {
+        .catch(err => {
           console.error(err)
           return res.status(400).json(`Erreur lors de l'import:${err}`)
         })
@@ -503,33 +452,33 @@ router.post('/employees', passport.authenticate('b2badmin', {session: false}), (
 // @Access private
 router.delete('/members/:member_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  const member_id = req.params.member_id;
+  const member_id = req.params.member_id
 
-  const company_id = req.user.company;
-  req.context.getModel('User').find({company: company_id, roles: { "$in" : [ADMIN]}, _id : { $ne : member_id } })
-    .then( users => {
+  const company_id = req.user.company
+  req.context.getModel('User').find({company: company_id, roles: {'$in': [ADMIN]}, _id: {$ne: member_id}})
+    .then(users => {
       if (users.length==0) {
         return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
       }
-      else {
-        req.context.getModel('User').findByIdAndUpdate(member_id, { roles : [], company : null})
-          .then(user => {
-            if (!user) {
-              return res.status(404).json({error : 'Utilisateur inconnu'})
-            }
-            return res.json(user)
-          })
-          .catch(err => {
-            console.error(err)
-            res.status(500).json({error: err})
-          })
-      }
+
+      req.context.getModel('User').findByIdAndUpdate(member_id, {roles: [], company: null})
+        .then(user => {
+          if (!user) {
+            return res.status(404).json({error: 'Utilisateur inconnu'})
+          }
+          return res.json(user)
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(500).json({error: err})
+        })
+
     })
     .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
     })
-});
+})
 
 // @Route GET /myAlfred/api/companies/members
 // Returns all meembers from current company
@@ -537,11 +486,11 @@ router.delete('/members/:member_id', passport.authenticate('b2badmin', {session:
 router.get('/members', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   const company_id = req.user.company
 
-  req.context.getModel('User').find({company : company_id}, 'firstname name email company roles birthday')
-    .then (users => {
+  req.context.getModel('User').find({company: company_id}, 'firstname name email company roles birthday')
+    .then(users => {
       res.json(users)
     })
-    .catch( err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
     })
@@ -554,9 +503,9 @@ router.put('/representative', passport.authenticate('b2badmin', {session: false}
   const company_id = req.user.company
   const representative_id = req.body.representative_id
 
-  req.context.getModel('Company').findByIdAndUpdate(company_id, {representative : representative_id}, { new : true} )
+  req.context.getModel('Company').findByIdAndUpdate(company_id, {representative: representative_id}, {new: true})
     .populate('representative')
-    .then (company => {
+    .then(company => {
       if (!company.representative.birthday) {
         res.status(400).json("Indiquer la date de naissance de l'administrateur")
         return
@@ -564,7 +513,7 @@ router.put('/representative', passport.authenticate('b2badmin', {session: false}
       createOrUpdateMangoCompany(company)
       res.json(company)
     })
-    .catch( err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
     })
@@ -579,16 +528,16 @@ router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, 
 
   const new_account = req.body.new_account
 
-  req.context.getModel('User').findByIdAndUpdate(admin_id, {company : company_id, $addToSet : {roles : ADMIN}}, { new : true} )
-    .then (user => {
+  req.context.getModel('User').findByIdAndUpdate(admin_id, {company: company_id, $addToSet: {roles: ADMIN}}, {new: true})
+    .then(user => {
       if (new_account) {
-        axios.post(new URL(`/myAlfred/api/users/forgotPassword`, computeUrl(req)).toString(), { email: user.email, role: ADMIN})
+        axios.post(new URL('/myAlfred/api/users/forgotPassword', computeUrl(req)).toString(), {email: user.email, role: ADMIN})
           .then(() => {})
-          .catch (err => {})
+          .catch(err => {})
       }
       res.json(user)
     })
-    .catch( err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
     })
@@ -601,30 +550,30 @@ router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: fa
   const company_id = req.user.company
   const admin_id = req.params.admin_id
 
-  req.context.getModel('User').count({company: company_id, roles: { "$in" : [ADMIN]}, _id : { $ne : admin_id } })
-    .then( remainingAdmins => {
+  req.context.getModel('User').count({company: company_id, roles: {'$in': [ADMIN]}, _id: {$ne: admin_id}})
+    .then(remainingAdmins => {
       if (remainingAdmins==0) {
         return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
       }
-      else {
-        req.context.getModel('User').findByIdAndUpdate(admin_id, { $pull : { roles : ADMIN}}, { new : true })
-          .then(user => {
-            if (!user) {
-              return res.status(404).json({error : 'Utilisateur inconnu'})
-            }
-            return res.json(user)
-          })
-          .catch(err => {
-            console.error(err)
-            res.status(500).json({error: err})
-          })
-      }
+
+      req.context.getModel('User').findByIdAndUpdate(admin_id, {$pull: {roles: ADMIN}}, {new: true})
+        .then(user => {
+          if (!user) {
+            return res.status(404).json({error: 'Utilisateur inconnu'})
+          }
+          return res.json(user)
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(500).json({error: err})
+        })
+
     })
     .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
     })
-});
+})
 
 // @Route GET /myAlfred/api/companies/billings
 // Returns bookings having a billing number for current company
@@ -639,7 +588,7 @@ router.get('/billings', passport.authenticate('b2badmin', {session: false}),
         req.context.getModel('Booking').find({
           user: {$in: user_ids},
           user_role: {$in: [ADMIN, MANAGER]},
-          $where: "this.billing_number && this.billing_number.length>0",
+          $where: 'this.billing_number && this.billing_number.length>0',
         })
           .populate('user')
           .populate('alfred')
@@ -656,7 +605,7 @@ router.get('/billings', passport.authenticate('b2badmin', {session: false}),
         console.error(err)
         res.status(500).json({error: err})
       })
-})
+  })
 
 // @Route GET /myAlfred/api/companies/budget/:role
 // Returns remaining budget for user_id & role in the period
@@ -695,12 +644,12 @@ router.get('/budget/:user_id/:role', passport.authenticate('jwt', {session: fals
           const remaining = Math.max(group.budget-consumed, 0)
           return res.json(remaining)
         })
-        .catch (err => {
+        .catch(err => {
           console.error(err)
           return res.status(400).json(err)
         })
     })
-    .catch( err =>{
+    .catch(err => {
       console.error(err)
       res.status(400).json(err)
     })

@@ -1,3 +1,4 @@
+import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import axios from 'axios'
@@ -21,7 +22,6 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import ResaService from '../components/HomePage/ResaService/ResaService'
 import {isB2BStyle, isApplication, isMobile} from '../utils/context'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 import CloseIcon from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import {isAndroid} from 'react-device-detect'
@@ -112,11 +112,11 @@ class Home extends React.Component {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button
+          <CustomButton
             onClick={() => Router.push(isAndroid ? 'https://play.google.com/store/apps/details?id=com.myalfred' : 'https://apps.apple.com/us/app/my-alfred/id1544073864')}
             color="primary">
             {ReactHtmlParser(this.props.t('INDEX.download_button'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )

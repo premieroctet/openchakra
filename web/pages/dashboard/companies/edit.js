@@ -1,8 +1,8 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import AlgoliaPlaces from 'algolia-places-react'
-import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
@@ -334,9 +334,9 @@ class View extends BasePage {
                 />
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                   Enregistrer
-                </Button>
+                </CustomButton>
               </Grid>
             </form>
           </Grid>

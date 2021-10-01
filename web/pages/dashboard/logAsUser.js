@@ -1,7 +1,7 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import Input from '@material-ui/core/Input'
@@ -170,10 +170,10 @@ class LogAsUser extends BasePage {
                 </Grid>
                 <em style={{color: 'red'}}>{this.state.errors}</em>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}
+                  <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}
                     disabled={!logEnabled}>
                     Connexion
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </form>
             </Grid>

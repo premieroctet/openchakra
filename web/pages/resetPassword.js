@@ -1,7 +1,7 @@
+import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'
@@ -133,7 +133,7 @@ class resetPassword extends BasePage {
               </Grid>
             </Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-              <Button
+              <CustomButton
                 variant="contained"
                 onClick={this.onSubmit}
                 style={{backgroundColor: isB2BStyle(user) ? '#353A51' : 'rgba(178,204,251,1)'}}
@@ -143,7 +143,7 @@ class resetPassword extends BasePage {
                 {
                   ReactHtmlParser(this.props.t('RESET_PASSWORD.button_confirm'))
                 }
-              </Button>
+              </CustomButton>
             </Grid>
           </Card>
         </Grid>

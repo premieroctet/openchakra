@@ -1,8 +1,8 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import '../../static/assets/css/custom.css'
 
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Drawer from '@material-ui/core/Drawer'
 import Grid from '@material-ui/core/Grid'
@@ -600,7 +600,7 @@ class creaShop extends BasePage {
           <Grid container className={classes.positionNavigationContainer}>
             { is_development() && activeStep > 0 ?
               <Grid item container xl={6} lg={6} md={6} sm={6} xs={6}>
-                <Button
+                <CustomButton
                   variant="outlined"
                   classes={{root: classes.backButton}}
                   onClick={this.handlePrev}
@@ -608,20 +608,20 @@ class creaShop extends BasePage {
                   color={'primary'}
                 >
                   Précédent
-                </Button>
+                </CustomButton>
               </Grid>
               :
               null
             }
             <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 11 : is_development() ? 5 : 11} lg={activeStep === 0 ? 11 : is_development() ? 5 : 11} md={activeStep === 0 ? 11 : is_development() ? 5 : 11} sm={activeStep === 0 ? 11 : is_development() ? 5 : 11} xs={activeStep === 0 ? 12 : is_development() ? 6 : 11}>
-              <Button
+              <CustomButton
                 variant="contained"
                 classes={{root: `customcreashopbuttonnext ${classes.nextButton}`}}
                 onClick={this.handleNext}
                 disabled={this.nextDisabled()}
               >
                 {this.isLastStep() ? 'Envoyer' : 'Suivant'}
-              </Button>
+              </CustomButton>
             </Grid>
           </Grid>
         </Grid>

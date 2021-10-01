@@ -1,9 +1,9 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
-import Button from '@material-ui/core/Button'
 import {CATEGORY, OUR_ALFRED} from '../../../utils/i18n'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/OurAlfred/OurAlfred'
@@ -40,7 +40,7 @@ class OurAlfred extends React.Component {
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnMobile}>
-            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search')}>{ReactHtmlParser(this.props.t('CATEGORY.button'))}</Button>
+            <CustomButton classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search')}>{ReactHtmlParser(this.props.t('CATEGORY.button'))}</CustomButton>
           </Grid>
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
@@ -58,9 +58,9 @@ class OurAlfred extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.containerMobileButton}>
-          <Button variant={'outlined'} className={'customouralfredbutton'} classes={{root: `customouralfredbutton ${classes.categoryButton}`}} onClick={() => Router.push('/search')}>
+          <CustomButton variant={'outlined'} className={'customouralfredbutton'} classes={{root: `customouralfredbutton ${classes.categoryButton}`}} onClick={() => Router.push('/search')}>
             {ReactHtmlParser(this.props.t('CATEGORY.button'))}
-          </Button>
+          </CustomButton>
         </Grid>
       </Grid>
 

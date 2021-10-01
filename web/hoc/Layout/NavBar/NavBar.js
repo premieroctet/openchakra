@@ -1,8 +1,8 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React, {Component} from 'react'
-import Button from '@material-ui/core/Button'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
@@ -526,11 +526,11 @@ class NavBar extends Component {
           </Grid>
           <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '90%'}}>
-              <Button
+              <CustomButton
                 onClick={() => (this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService())}
                 color={'primary'} classes={{root: classes.buttonNextRoot}}
                 variant={'contained'}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.next_button')) : ReactHtmlParser(this.props.t('SEARCHBAR.find_button'))}
-              </Button>
+              </CustomButton>
             </Grid>
           </Grid>
         </Grid>
@@ -713,7 +713,7 @@ class NavBar extends Component {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button
+            <CustomButton
               autoFocus
               onClick={() => {
                 this.setState({modalFilters: false})
@@ -722,7 +722,7 @@ class NavBar extends Component {
               color="primary"
             >
               {ReactHtmlParser(this.props.t('SEARCHBAR.display'))}
-            </Button>
+            </CustomButton>
           </DialogActions>
         </Dialog>
       )
@@ -810,21 +810,21 @@ class NavBar extends Component {
         className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
       >
         <Grid>
-          <Button
+          <CustomButton
             variant="outlined"
             classes={{root: isB2BStyle(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
             className={'customButtonSignin'}
             onClick={this.handleOpenRegister}>
             {ReactHtmlParser(this.props.t('NAVBAR_MENU.signIn'))}
-          </Button>
+          </CustomButton>
         </Grid>
         <Grid className={classes.navbarRegisterContainer}>
-          <Button
+          <CustomButton
             classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
             className={'customButtonLogin'}
             onClick={this.handleOpenLogin}>
             {ReactHtmlParser(this.props.t('NAVBAR_MENU.logIn'))}
-          </Button>
+          </CustomButton>
         </Grid>
       </Grid>
     )
@@ -879,13 +879,13 @@ class NavBar extends Component {
               <Divider/>
             </Grid>
             <MenuItem onClick={this.checkAndOpenRegister}>
-              <Button variant="outlined" classes={{root: classes.buttonService}}>{ReactHtmlParser(this.props.t('SEARCHBAR.crea_service'))}</Button>
+              <CustomButton variant="outlined" classes={{root: classes.buttonService}}>{ReactHtmlParser(this.props.t('SEARCHBAR.crea_service'))}</CustomButton>
             </MenuItem>
             <MenuItem onClick={this.handleOpenLogin}>
-              <Button variant="outlined" classes={{root: classes.buttonLoginB2b}}>{ReactHtmlParser(this.props.t('SEARCHBAR.log_in'))}</Button>
+              <CustomButton variant="outlined" classes={{root: classes.buttonLoginB2b}}>{ReactHtmlParser(this.props.t('SEARCHBAR.log_in'))}</CustomButton>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/search')}>
-              <Button variant="outlined" classes={{root: classes.buttonRegisterB2b}}>{ReactHtmlParser(this.props.t('SEARCHBAR.sign_in'))}</Button>
+              <CustomButton variant="outlined" classes={{root: classes.buttonRegisterB2b}}>{ReactHtmlParser(this.props.t('SEARCHBAR.sign_in'))}</CustomButton>
             </MenuItem>
           </Menu>
         </Grid>
@@ -898,28 +898,28 @@ class NavBar extends Component {
           className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerPB2B}
         >
           <Grid className={classes.navbarRegisterContainer}>
-            <Button
+            <CustomButton
               variant="outlined"
               classes={{root: classes.navbarSignInB2B}}
               style={{whiteSpace: 'nowrap'}}
               onClick={this.checkAndOpenRegister}>
               {ReactHtmlParser(this.props.t('SEARCHBAR.crea_service'))}
-            </Button>
+            </CustomButton>
           </Grid>
           <Grid >
-            <Button
+            <CustomButton
               variant="outlined"
               classes={{root: isB2BStyle(user) ? classes.navbarSignInB2BContained : classes.navbarSignIn}}
               onClick={() => Router.push('/blog/inscription-entreprise/')}>
               {ReactHtmlParser(this.props.t('NAVBAR_MENU.signIn'))}
-            </Button>
+            </CustomButton>
           </Grid>
           <Grid>
-            <Button
+            <CustomButton
               classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
               onClick={this.handleOpenLogin}>
               {ReactHtmlParser(this.props.t('NAVBAR_MENU.logIn'))}
-            </Button>
+            </CustomButton>
           </Grid>
         </Grid>
       </>
