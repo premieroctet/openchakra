@@ -50,6 +50,18 @@ class UIConfiguration extends React.Component {
     }
   }
 
+  componentDidMount = () => {
+    setAxiosAuthentication()
+    axios.get('/myAlfred/api/admin/uiConfiguration')
+      .then(response => {
+        let parameters=response.data
+        this.setState({parameters: parameters, filtered_parameters: parameters})
+        if (parameters.length>0) {
+          this.setState({page: parameters[0].page}, () => this.sortColors())
+        }
+      })
+  }
+
   getTitle = () => {
     return 'Paramétrage UI'
   }
@@ -113,18 +125,6 @@ class UIConfiguration extends React.Component {
         this.setState({saving: false})
         console.error(err)
         snackBarError(`Erreur à l'enregistrement:${err}`)
-      })
-  }
-
-  componentDidMount = () => {
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/admin/uiConfiguration')
-      .then(response => {
-        let parameters=_.sortBy(response.data, 'page')
-        this.setState({parameters: parameters, filtered_parameters: parameters})
-        if (parameters.length>0) {
-          this.setState({page: parameters[0].page}, () => this.sortColors())
-        }
       })
   }
 
