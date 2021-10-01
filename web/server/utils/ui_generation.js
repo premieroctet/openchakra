@@ -71,7 +71,7 @@ createCSSConfiguration = items => {
   validateCss(output, (err, data) => {
     const error = err || !data.validity
     if (error) {
-      console.error(`CSS generation error ${err}, output in /tmp/custom.css\nError:${error}`)
+      console.error(`CSS generation error ${error}, output in /tmp/custom.css\nError:${error}`)
     }
     else {
       console.log('CSS generation OK, output in static/assets/css/custom.css')

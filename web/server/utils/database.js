@@ -60,4 +60,16 @@ class ConnectionPool {
 
 const connectionPool = new ConnectionPool()
 
-module.exports={connectionPool}
+// Utilities
+
+/**
+Retourne true si field (model.attribute) contient id
+req fournit le contexte permettant de trouver le modèle dans la bonne BD
+*/
+const hasRefs= (req, field, id) => {
+  const model=field.split('.')[0]
+  const attribute=field.split('.').slice(1).join('.')
+  return req.context.getModel(model).exists({[attribute]: id})
+}
+
+module.exports={connectionPool, hasRefs}
