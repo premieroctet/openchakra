@@ -40,7 +40,7 @@ class UIConfiguration extends React.Component {
     this.state={
       parameters: [],
       filtered_parameters: [],
-      page: null,
+      current_page_name: null,
       saving: false,
       filter: '',
       // Modified parameters ids
@@ -57,7 +57,7 @@ class UIConfiguration extends React.Component {
         let parameters=response.data
         this.setState({parameters: parameters, filtered_parameters: parameters})
         if (parameters.length>0) {
-          this.setState({page: parameters[0].page}, () => this.sortColors())
+          this.setState({current_page_name: parameters[0].page}, () => this.sortColors())
         }
       })
   }
@@ -128,8 +128,8 @@ class UIConfiguration extends React.Component {
       })
   }
 
-  onChangePage = page => {
-    this.setState({page: page})
+  onChangePage = page_name => {
+    this.setState({current_page_name: page_name})
   }
 
   /**
@@ -157,13 +157,16 @@ class UIConfiguration extends React.Component {
 
   render = () => {
     const {classes}=this.props
-    const {filtered_parameters, page, saving, filter, modified_parameters, used_colors}=this.state
-    const groupedParameters= _.groupBy(filtered_parameters, 'page')
-    const pageParameters=_.groupBy(groupedParameters[page], 'component')
-    const selectedTab = Object.keys(groupedParameters).findIndex(p => p==page)
+    const {filtered_parameters, current_page_name, saving, filter, modified_parameters, used_colors}=this.state
+
+    const pages=_.uniqBy(filtered_parameters.map(p => p.page))
+
+    const pageParameters=_.groupBy(filtered_parameters.filter(p => p.page==current_page_name), 'component')
+    const selectedTab = pages.findIndex(p => p==current_page_name)
 
     const saveTitle=saving ? 'Génération en cours...': 'Enregistrer & générer'
     const canSave = !saving && Object.keys(modified_parameters).length>0
+
     return (
       <Layout>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
@@ -177,7 +180,7 @@ class UIConfiguration extends React.Component {
           <Paper style={{width: '100%'}}>
             <Tabs value={selectedTab==-1 ? false:selectedTab} variant="scrollable">
               {
-                Object.keys(groupedParameters).map(page =>
+                pages.map(page =>
                   <Tab key={page} label={page} onClick={() => this.onChangePage(page)} />,
                 )
               }
