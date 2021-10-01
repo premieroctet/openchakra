@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
@@ -9,7 +10,6 @@ const {isEditableUser}=require('../../utils/context');
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Dialog from '@material-ui/core/Dialog';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
 import styles from '../../static/css/components/Album/Album';
@@ -164,7 +164,7 @@ class Album extends React.Component {
             </Grid>
           </Grid>
           <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
-            <Button
+            <CustomButton
               onClick={() => {
                 this.addAlbum();
                 }}
@@ -173,7 +173,7 @@ class Album extends React.Component {
               disabled={!enabled}
             >
               {addAlbum ? "Ajouter l'album" : "Ajouter l'image"}
-            </Button>
+            </CustomButton>
           </Grid>
         </DialogContent>
       </Dialog>
@@ -241,12 +241,12 @@ class Album extends React.Component {
             </Grid>
             {isEditableUser(user) ?
               <Grid style={{display :'flex', alignItems: 'center', flexDirection: 'column'}}>
-                <Button
+                <CustomButton
                   startIcon={<AddCircleOutlineIcon />}
                   onClick={() => this.openAddAlbum()}
                 >
                   <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Créez un album</Typography>
-                </Button>
+                </CustomButton>
                 <Hidden only={['lg', 'xl', 'md']}>
                   <Typography style={{color: 'rgba(39,37,37,35%)', textAlign: 'center'}}>Les photos, c’est plus sympas quand on les partage !</Typography>
                 </Hidden>

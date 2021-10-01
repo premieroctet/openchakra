@@ -1,7 +1,7 @@
+import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import Router from 'next/router'
@@ -212,16 +212,16 @@ class Evaluate extends BasePage {
         </Grid>
         <Grid style={{display: 'flex', justifyContent: 'space-between', marginTop: '10vh'}}>
           <Grid>
-            <Button
+            <CustomButton
               onClick={this.back}
               variant={'outlined'}
               classes={{root: classes.buttonBack}}
             >
               {ReactHtmlParser(this.props.t('EVALUATE.back_button'))}
-            </Button>
+            </CustomButton>
           </Grid>
           <Grid>
-            <Button
+            <CustomButton
               disabled={this.state.prestation === 0 || this.state.price === 0 || this.state.relational === 0 || !this.state.content.trim()}
               onClick={this.evaluate}
               variant={'contained'}
@@ -229,7 +229,7 @@ class Evaluate extends BasePage {
               color={'primary'}
             >
               {ReactHtmlParser(this.props.t('EVALUATE.confirm_button'))}
-            </Button>
+            </CustomButton>
           </Grid>
         </Grid>
       </Grid>

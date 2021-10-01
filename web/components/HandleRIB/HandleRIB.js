@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -17,7 +18,6 @@ import {setAxiosAuthentication} from '../../utils/authentication'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogActions from '@material-ui/core/DialogActions'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
@@ -151,13 +151,13 @@ class HandleRIB extends React.Component {
             />
           </Grid>
           <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
-            <Button
+            <CustomButton
               onClick={this.onSubmit}
               variant="contained"
               classes={{root: `customhandleribsavebuttton ${classes.buttonSave}`}}
             >
               {ReactHtmlParser(this.props.t('HANDLE_RIB.dialog_add_rib_button_save'))}
-            </Button>
+            </CustomButton>
           </Grid>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
@@ -194,12 +194,12 @@ class HandleRIB extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.handleClose()} color="primary">
+          <CustomButton onClick={() => this.handleClose()} color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
-          </Button>
-          <Button onClick={() => this.deleteAccount(id)} classes={{root: classes.buttonCancel}}>
+          </CustomButton>
+          <CustomButton onClick={() => this.deleteAccount(id)} classes={{root: classes.buttonCancel}}>
             {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )

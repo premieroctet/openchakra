@@ -1,9 +1,9 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
 import Commentary from '../Commentary/Commentary'
 import styles from '../../static/css/components/SummaryCommentary'
 import WithStyles from '@material-ui/core/styles/withStyles'
@@ -112,9 +112,9 @@ class SummaryCommentary extends React.Component {
         {userServicesPreview ?
           <Grid>
             <Grid style={{display: 'flex', alignItems: 'center', marginTop: '5vh'}}>
-              <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>
+              <CustomButton variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>
                 { showCommentary ? ReactHtmlParser(this.props.t('SUMMARY_COMMENTARY.button_hide_commentary')) : ReactHtmlParser(this.props.t('SUMMARY_COMMENTARY.button_show_commentary'))}
-              </Button>
+              </CustomButton>
             </Grid>
           </Grid> : null
         }

@@ -1,3 +1,4 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import axios from 'axios';
 const {setAxiosAuthentication, clearAuthenticationToken}=require('../../utils/authentication')
@@ -13,7 +14,6 @@ import Router from 'next/router';
 import Paper from '@material-ui/core/Paper';
 import HomeIcon from '@material-ui/icons/Home';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 const {BigList}=require('../../components/BigList/BigList')
 const models = require('../../components/BigList/models')
 
@@ -207,9 +207,9 @@ class all extends React.Component {
                     )
                   })
                 }
-                <Button disabled={!category || !url} onClick={this.startSearch}>
+                <CustomButton disabled={!category || !url} onClick={this.startSearch}>
                   Lancer la recherche
-                </Button>
+                </CustomButton>
               </Grid>
               </Card>
               <Card className={classes.card}>
@@ -233,7 +233,7 @@ class all extends React.Component {
                 <em style={{color: 'red'}}>{errors}</em>
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
-                <Button disabled={!this.state.selectedFile} onClick={this.onClickHandler}>Importer</Button>
+                <CustomButton disabled={!this.state.selectedFile} onClick={this.onClickHandler}>Importer</CustomButton>
               </Grid>
               </Card>
               <Card className={classes.card}>

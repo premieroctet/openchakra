@@ -1,9 +1,9 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
-import {Button} from '@material-ui/core'
 import axios from 'axios'
 import {computeAverageNotes, computeDistanceKm} from '../../../utils/functions'
 import Box from '@material-ui/core/Box'
@@ -115,12 +115,12 @@ class CardService extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.handleClose()} color="primary">
+          <CustomButton onClick={() => this.handleClose()} color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
-          </Button>
-          <Button onClick={() => this.deleteService(this.state.id_service)} className={classes.colorError}>
+          </CustomButton>
+          <CustomButton onClick={() => this.deleteService(this.state.id_service)} className={classes.colorError}>
             {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -299,12 +299,12 @@ class CardService extends React.Component {
                           </Box>
                         </Grid>
                         <Grid item xl={9} lg={9} md={9} sm={9} xs={9} className={classes.buttonShowProfilContainer}>
-                          <Button
+                          <CustomButton
                             variant={'contained'}
                             classes={{root: classes.buttonShowProfil}}
                           >
                             {ReactHtmlParser(this.props.t('CARD_SERVICE.button_show_profil'))}
-                          </Button>
+                          </CustomButton>
                         </Grid>
                       </Grid>
                     </>

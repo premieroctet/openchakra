@@ -1,3 +1,4 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -8,7 +9,6 @@ import AlgoliaPlaces from 'algolia-places-react'
 import TextField from '@material-ui/core/TextField'
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined'
 import Checkbox from '@material-ui/core/Checkbox'
-import Button from '@material-ui/core/Button'
 import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
 import styles from '../../../static/css/components/RegisterSteps/RegisterSecondPage/RegisterSecondPage'
@@ -70,7 +70,7 @@ class RegisterSecondPage extends React.Component {
           <CguContent/>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} classes={{root: classes.cancelButton}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.dialog_cgu_close'))}</Button>
+          <CustomButton onClick={handleClose} classes={{root: classes.cancelButton}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.dialog_cgu_close'))}</CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -217,7 +217,7 @@ class RegisterSecondPage extends React.Component {
                   />
                 </Grid>
                 <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-                  <Button onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}</Button>
+                  <CustomButton onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}</CustomButton>
                   {this.dialogCgu(classes)}
                 </Grid>
               </Grid>

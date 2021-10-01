@@ -1,8 +1,8 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
 import {BANNER_PRESENTATION, BANNER_B2B_PRESENTATION} from '../../../utils/i18n'
 import Link from 'next/link'
 import styles from '../../../static/css/components/BannerPresentation/BannerPresentation'
@@ -56,11 +56,11 @@ class BannerPresentation extends React.Component {
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerLinkDiscrover}>
             <Link href={'/search'}>
-              <Button
+              <CustomButton
                 variant={'outlined' }
                 classes={{root: `custombannerbutton ${classes.bannerPresentationButtonB2b}`}}>
                 {ReactHtmlParser(this.props.t('BANNER_PRESENTATION.button'))}
-              </Button>
+              </CustomButton>
             </Link>
           </Grid>
         </Grid>

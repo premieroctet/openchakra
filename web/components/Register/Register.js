@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import CguContent from '../CguContent/CguContent'
@@ -9,7 +10,6 @@ import {checkPass1, checkPass2} from '../../utils/passwords'
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
 import {registerLocale} from 'react-datepicker'
-import Button from '@material-ui/core/Button'
 import fr from 'date-fns/locale/fr'
 import styles from './RegisterStyle'
 import {withStyles} from '@material-ui/core/styles'
@@ -166,7 +166,7 @@ class Register extends React.Component {
         <DialogTitle onClose={() => this.setState({open: false})}/>
         <DialogContent>
           <CguContent/>
-          <Button style={{float: 'right'}} onClick={handleClose}>{ReactHtmlParser(this.props.t('REGISTER.dialog_cgu_close'))}</Button>
+          <CustomButton style={{float: 'right'}} onClick={handleClose}>{ReactHtmlParser(this.props.t('REGISTER.dialog_cgu_close'))}</CustomButton>
         </DialogContent>
       </Dialog>
     )
@@ -483,16 +483,16 @@ class Register extends React.Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.confirmLater()} color="primary" classes={{root: 'customregisterdialogconfirmlater'}}>
+          <CustomButton onClick={() => this.confirmLater()} color="primary" classes={{root: 'customregisterdialogconfirmlater'}}>
             {ReactHtmlParser(this.props.t('REGISTER.dialog_phone_confirm_later'))}
-          </Button>
-          <Button
+          </CustomButton>
+          <CustomButton
             classes={{root: 'customregisterdialogconfirm'}}
             disabled={this.state.smsCode.length !== 4}
             onClick={() => this.checkSmsCode()}
             color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -531,17 +531,17 @@ class Register extends React.Component {
                         progress: `customregisterprogress ${classes.progress}`,
                       }}
                       nextButton={
-                        <Button size="small" onClick={() => this.handleNext(activeStep)}
+                        <CustomButton size="small" onClick={() => this.handleNext(activeStep)}
                           disabled={activeStep === 0 ? firstPageValidator : secondPageValidator || pending} classes={{root: 'customregisternavnext'}}>
                           {activeStep === 0 ? ReactHtmlParser(this.props.t('REGISTER.next_button')) : ReactHtmlParser(this.props.t('REGISTER.finish_button'))}
                           <KeyboardArrowRight/>
-                        </Button>
+                        </CustomButton>
                       }
                       backButton={
-                        <Button size="small" onClick={this.handleBack} disabled={activeStep === 0} classes={{root: 'customregisternavprev'}}>
+                        <CustomButton size="small" onClick={this.handleBack} disabled={activeStep === 0} classes={{root: 'customregisternavprev'}}>
                           <KeyboardArrowLeft/>
                           {ReactHtmlParser(this.props.t('REGISTER.previous_button'))}
-                        </Button>
+                        </CustomButton>
                       }
                     />
                   </Grid>

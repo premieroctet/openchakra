@@ -1,3 +1,17 @@
+const {
+  clearAuthenticationToken,
+  setAxiosAuthentication
+} = require('../../../utils/authentication');
+const {
+  getLoggedUserId,
+  getRole,
+  isB2BAdmin,
+  isB2BManager,
+  isB2BStyle,
+  isLoggedUserAlfredPro,
+  isLoggedUserRegistered
+} = require('../../../utils/context');
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -30,14 +44,9 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import AlgoliaPlaces from 'algolia-places-react'
-import Button from '@material-ui/core/Button'
 import {SEARCHBAR} from '../../../utils/i18n'
 import BusinessIcon from '@material-ui/icons/Business'
-import {clearAuthenticationToken} from '../../../utils/authentication'
-import {isB2BAdmin, isB2BManager} from '../../../utils/context'
 const {emptyPromise} = require('../../../utils/promise')
-const {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, getRole} = require('../../../utils/context')
-const {setAxiosAuthentication}=require('../../../utils/authentication')
 const {EMPLOYEE}=require('../../../utils/consts')
 const {formatAddress} = require('../../../utils/text.js')
 
@@ -368,11 +377,11 @@ class MobileNavbar extends React.Component {
           </Grid>
           <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '90%'}}>
-              <Button
+              <CustomButton
                 onClick={() => (this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService())}
                 color={'primary'} classes={{root: classes.buttonNextRoot}}
                 variant={'contained'}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.next_button')) : ReactHtmlParser(this.props.t('SEARCHBAR.find_button'))}
-              </Button>
+              </CustomButton>
             </Grid>
           </Grid>
         </Grid>

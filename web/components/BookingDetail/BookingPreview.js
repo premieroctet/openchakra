@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
@@ -11,7 +12,6 @@ import moment from 'moment'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import io from 'socket.io-client'
 import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview'
-import Button from '@material-ui/core/Button'
 import BookingDetail from '../../components/BookingDetail/BookingDetail'
 import Router from 'next/router'
 import DatePicker, {registerLocale} from 'react-datepicker'
@@ -21,14 +21,15 @@ import Hidden from '@material-ui/core/Hidden'
 const {BOOK_STATUS} = require('../../utils/consts')
 
 const {BOOKING} = require('../../utils/i18n')
+
 registerLocale('fr', fr)
 moment.locale('fr')
 
 const Input2 = ({value, onClick}) => (
-  <Button value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"
+  <CustomButton value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"
     onClick={onClick}>
     {value}
-  </Button>
+  </CustomButton>
 
 )
 
@@ -306,7 +307,7 @@ class BookingPreview extends React.Component {
                                     <Grid item md={4} xs={12}>
                                       <Link
                                         href={`/evaluateClient?booking=${bookingObj._id}&id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
-                                        <Button color={'primary'} variant={'contained'} style={{color: 'white'}}>{ReactHtmlParser(this.props.t('BOOKING.button_evaluate_client'))}</Button>
+                                        <CustomButton color={'primary'} variant={'contained'} style={{color: 'white'}}>{ReactHtmlParser(this.props.t('BOOKING.button_evaluate_client'))}</CustomButton>
                                       </Link>
                                     </Grid>
                                   </Grid>}
@@ -388,20 +389,20 @@ class BookingPreview extends React.Component {
                         <Grid item xl={6} className={classes.mainContainerAbout}>
                           <Grid item container className={classes.containerButtonGroup}>
                             <Grid item>
-                              <Button variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage}
-                                style={{textTransform: 'initial', color: 'white'}}>{ReactHtmlParser(this.props.t('BOOKING.button_send_message'))}</Button>
+                              <CustomButton variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage}
+                                style={{textTransform: 'initial', color: 'white'}}>{ReactHtmlParser(this.props.t('BOOKING.button_send_message'))}</CustomButton>
                             </Grid>
                             {bookingObj.status === BOOK_STATUS.CONFIRMED && phone?
                               <Grid item className={classes.containerPhone}>
                                 <Hidden only={['xl', 'lg', 'md', 'sm']}>
-                                  <Button>
+                                  <CustomButton>
                                     <a
                                       href={`tel:${phone}`}
                                       style={{textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}
                                     >
                                       {ReactHtmlParser(this.props.t('BOOKING.button_call'))}
                                     </a>
-                                  </Button>
+                                  </CustomButton>
                                 </Hidden>
                               </Grid> : null
                             }
@@ -498,12 +499,12 @@ class BookingPreview extends React.Component {
                                     </Typography>
                                   </Grid>
                                   <Grid className={classes.buttonConfirmResa}>
-                                    <Button color={'primary'} variant={'contained'} className={classes.buttonConfirm}
-                                      onClick={this.onConfirm}>{ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}</Button>
+                                    <CustomButton color={'primary'} variant={'contained'} className={classes.buttonConfirm}
+                                      onClick={this.onConfirm}>{ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}</CustomButton>
                                   </Grid>
                                   <Grid>
-                                    <Button variant={'outlined'} classes={{root: classes.buttonCancel}}
-                                      onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}>{ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}</Button>
+                                    <CustomButton variant={'outlined'} classes={{root: classes.buttonCancel}}
+                                      onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}>{ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}</CustomButton>
                                   </Grid>
                                 </Grid>
                               )
@@ -514,27 +515,27 @@ class BookingPreview extends React.Component {
                               bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.alfred._id ? (
                                 <Grid container className={classes.groupButtonsContainer} spacing={1}>
                                   <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-                                    <Button onClick={() => this.props.onConfirmPreapproved(booking_id)} color={'primary'}
+                                    <CustomButton onClick={() => this.props.onConfirmPreapproved(booking_id)} color={'primary'}
                                       variant={'contained'}
-                                      style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.pre_approved_button'))}</Button>
+                                      style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.pre_approved_button'))}</CustomButton>
                                   </Grid>
                                   <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-                                    <Button
+                                    <CustomButton
                                       onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}
                                       variant={'outlined'}
                                       style={{textTransform: 'initial'}}
                                       color={'primary'}>
                                       Refuser
-                                    </Button>
+                                    </CustomButton>
                                   </Grid>
                                 </Grid>
                               )
                                 :
                                 bookingObj.status === BOOK_STATUS.TO_PAY && currentUser._id === bookingObj.user._id ? (
                                   <Grid className={classes.groupButtonsContainer}>
-                                    <Button onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
+                                    <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
                                       color={'primary'} variant={'contained'}
-                                      style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</Button>
+                                      style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</CustomButton>
                                   </Grid>
                                 )
                                   :
@@ -543,9 +544,9 @@ class BookingPreview extends React.Component {
                                     :
                                     bookingObj.status === BOOK_STATUS.PREAPPROVED && currentUser._id === bookingObj.user._id ? (
                                       <Grid className={classes.groupButtonsContainer}>
-                                        <Button onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
+                                        <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
                                           color={'primary'} variant={'contained'}
-                                          style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</Button>
+                                          style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</CustomButton>
                                       </Grid>
                                     )
                                       :

@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -5,7 +6,6 @@ import {withStyles} from '@material-ui/core/styles'
 import styles from './LogInStyle'
 import Grid from '@material-ui/core/Grid'
 import Link from 'next/link'
-import Button from '@material-ui/core/Button'
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import axios from 'axios'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
@@ -224,9 +224,9 @@ class LogIn extends React.Component {
               }
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer}>
-                  <Button onClick={this.onSubmit} disabled={loginDisabled} variant="contained" color="primary" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>
+                  <CustomButton onClick={this.onSubmit} disabled={loginDisabled} variant="contained" color="primary" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>
                     {ReactHtmlParser(this.props.t('LOGIN.button'))}
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </Grid>
               <Grid item className={classes.margin}>

@@ -1,3 +1,4 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
@@ -15,7 +16,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
-import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
 import {is_development} from '../../config/config'
@@ -169,7 +169,7 @@ class UIConfiguration extends React.Component {
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
             <Typography style={{fontSize: 30}}>{this.getTitle()}</Typography>
-            <Button variant='outlined' onClick={this.onSubmit} disabled={!canSave}>{saveTitle}</Button>
+            <CustomButton variant='outlined' onClick={this.onSubmit} disabled={!canSave}>{saveTitle}</CustomButton>
           </Grid>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
             <TextField name={'filter'} value={filter} onChange={this.onFilterChanged}/>

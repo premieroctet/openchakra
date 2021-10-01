@@ -1,3 +1,4 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -6,7 +7,6 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../../../static/css/components/Layout/About/Header/Header'
 import ScrollMenu from '../../../components/ScrollMenu/ScrollMenu'
-import Button from '@material-ui/core/Button'
 import Router from 'next/router'
 import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
@@ -108,13 +108,13 @@ class Header extends React.Component {
           width: '100%',
         }}>
           <Grid className={classes.containerArrowBack}>
-            <Button
+            <CustomButton
               classes={{root: `customheaderfaqbackbutton ${classes.button}`}}
               startIcon={<ArrowBackIcon style={{color: 'white'}}/>}
               onClick={() => Router.push('/')}
             >
               {ReactHtmlParser(this.props.t('HEADER.button_back_home'))}
-            </Button>
+            </CustomButton>
           </Grid>
           <Grid className={classes.containerTitleAndSubtitle}>
             <Grid>

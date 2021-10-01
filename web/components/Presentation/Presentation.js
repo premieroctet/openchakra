@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
@@ -12,7 +13,6 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import {CMP_PRESENTATION} from '../../utils/i18n'
 import {MAX_DESCRIPTION_LENGTH} from '../../utils/consts'
@@ -23,6 +23,7 @@ import CloseIcon from '@material-ui/icons/Close'
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 
 const moment = require('moment')
+
 moment.locale('fr')
 
 const DialogTitle = withStyles(styles)(props => {
@@ -162,7 +163,7 @@ class Presentation extends CompanyComponent {
                 <Typography>{ReactHtmlParser(this.props.t('EDIT_PROFIL.char_max', {maxchars: MAX_DESCRIPTION_LENGTH}))}</Typography>
               </Grid>
               <Grid style={{width: '100%'}}>
-                <Button
+                <CustomButton
                   onClick={() => {
                     this.save()
                   }}
@@ -172,7 +173,7 @@ class Presentation extends CompanyComponent {
                   color={'primary'}
                 >
                   {ReactHtmlParser(this.props.t('CMP_PRESENTATION.update_button'))}
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
           </Grid>

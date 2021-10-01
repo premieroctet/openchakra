@@ -1,9 +1,9 @@
+import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import axios from 'axios';
 import moment from 'moment';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import DatePicker, {registerLocale} from 'react-datepicker';
@@ -17,16 +17,17 @@ import BookingDetail from '../../components/BookingDetail/BookingDetail';
 
 import {Divider} from "@material-ui/core";
 const {BOOK_STATUS}=require('../../utils/consts')
+
 registerLocale('fr', fr);
 moment.locale('fr');
 const _ = require('lodash');
 const {frenchFormat} = require('../../utils/text');
 
 const Input2 = ({value, onClick}) => (
-  <Button value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"
+  <CustomButton value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"
           onClick={onClick}>
     {value}
-  </Button>
+  </CustomButton>
 
 );
 
@@ -327,7 +328,7 @@ class BookingPreApprouve extends React.Component {
                     </Grid>
                   </Grid>
                   <Grid item xs={12}>
-                    <Button
+                    <CustomButton
                       color={'primary'}
                       variant={'contained'}
                       onClick={() => {
@@ -341,7 +342,7 @@ class BookingPreApprouve extends React.Component {
                       }}
                     >
                       Pré-approuver
-                    </Button>
+                    </CustomButton>
                   </Grid>
                 </Grid>
               </Grid>

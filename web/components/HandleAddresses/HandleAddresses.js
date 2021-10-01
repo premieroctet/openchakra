@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -7,7 +8,6 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import AlgoliaPlaces from 'algolia-places-react'
-import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
@@ -260,12 +260,12 @@ class HandleAddresses extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.handleClose()} color="primary">
+          <CustomButton onClick={() => this.handleClose()} color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
-          </Button>
-          <Button onClick={() => this.deleteAddress(this.state.delete_address_id)} classes={{root: classes.cancelButton}}>
+          </CustomButton>
+          <CustomButton onClick={() => this.deleteAddress(this.state.delete_address_id)} classes={{root: classes.cancelButton}}>
             {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -303,10 +303,10 @@ class HandleAddresses extends React.Component {
                     />
                   </Grid>
                   <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
-                    <Button disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained"
+                    <CustomButton disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained"
                       classes={{root: `customhandleaddressessavebutton ${classes.buttonSave}`}} onClick={this.onSubmitMain}>
                       {ReactHtmlParser(this.props.t('COMMON.btn_validate'))}
-                    </Button>
+                    </CustomButton>
                   </Grid>
                 </Grid>
               </Grid>
@@ -391,10 +391,10 @@ class HandleAddresses extends React.Component {
               </Grid>
               {selected_address && selected_address._id == e._id ?
                 <Grid item xs={12}>
-                  <Button variant="contained" className={`customhandleaddressesupdatebuttonsave ${classes.buttonSave}`}
+                  <CustomButton variant="contained" className={`customhandleaddressesupdatebuttonsave ${classes.buttonSave}`}
                     onClick={event => this.onSubmitSecondary(event, this.state.selected_address._id)}>
                     {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
-                  </Button>
+                  </CustomButton>
                 </Grid>
                 :
                 null
@@ -431,10 +431,10 @@ class HandleAddresses extends React.Component {
               />
             </Grid>
             <Grid item xs={12} style={{marginBottom: '12vh'}}>
-              <Button disabled={!(this.state.suggestion_new && this.state.new_label)} variant="contained"
+              <CustomButton disabled={!(this.state.suggestion_new && this.state.new_label)} variant="contained"
                 className={`customhandleaddressesaddnewbutton ${classes.buttonSave}`} onClick={this.onSubmitNew}>
                 {ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.button_add_new_adresses'))}
-              </Button>
+              </CustomButton>
             </Grid>
           </Grid>
           : null}

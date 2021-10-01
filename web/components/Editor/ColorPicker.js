@@ -1,7 +1,7 @@
+import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {SketchPicker} from 'react-color'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import Divider from '@material-ui/core/Divider'
 
@@ -48,7 +48,7 @@ class ColorPicker extends React.Component {
     return (
       <Grid container spacing={2}>
         <Grid item xl={1}>
-          <Button variant={'contained'} style={{backgroundColor: value, height: 40, borderRadius: 20}} onClick={this.onColorToggle}/>
+          <CustomButton variant={'contained'} style={{backgroundColor: value, height: 40, borderRadius: 20}} onClick={this.onColorToggle}/>
         </Grid>
         { open &&
           <Grid item xl={12} style={ popover }>

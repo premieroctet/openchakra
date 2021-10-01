@@ -1,6 +1,6 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -147,13 +147,13 @@ class view extends React.Component {
 
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                  <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Modifier
-                  </Button>
-                  <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
+                  </CustomButton>
+                  <CustomButton type="button" variant="contained" color="secondary" style={{width: '100%'}}
                           onClick={this.handleClick}>
                     Supprimer
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </form>
             </Grid>

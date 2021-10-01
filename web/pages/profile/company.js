@@ -1,3 +1,4 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import SnackBar from '../../components/SnackBar/SnackBar'
 const {setAxiosAuthentication} = require('../../utils/authentication')
@@ -24,12 +25,12 @@ import Topic from '../../hoc/Topic/Topic'
 import MultipleSelect from 'react-select'
 import {LANGUAGES} from '../../utils/consts'
 import Divider from '@material-ui/core/Divider'
-import Button from '@material-ui/core/Button'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import {isEditableUser} from '../../utils/context'
 
 const moment = require('moment')
+
 moment.locale('fr')
 
 const DialogTitle = withStyles(styles)(props => {
@@ -183,7 +184,7 @@ class Company extends React.Component {
             <Grid style={{marginTop: '2vh', width: '100%'}}>
               <Divider/>
               <Grid style={{marginTop: '2vh', width: '100%'}}>
-                <Button
+                <CustomButton
                   onClick={() => {
                     this.save()
                   }}
@@ -193,7 +194,7 @@ class Company extends React.Component {
                   disabled={enabledEdition}
                 >
                   Modifier
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
           </Grid>

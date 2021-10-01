@@ -1,3 +1,4 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -6,7 +7,6 @@ import Box from '../../Box/Box'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
 import IconButton from '@material-ui/core/IconButton'
 import GetAppOutlinedIcon from '@material-ui/icons/GetAppOutlined'
-import Button from '@material-ui/core/Button'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/Dashboard/Team/Team'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -612,12 +612,12 @@ class Team extends React.Component {
           }
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({dialogAdd: false})} classes={{root: classes.cancelButton}}>
+          <CustomButton onClick={() => this.setState({dialogAdd: false})} classes={{root: classes.cancelButton}}>
             {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
-          </Button>
-          <Button onClick={modeDialog === 'admin' ? this.addAdmin : mode === MICROSERVICE_MODE ? this.addManager : this.addEmploye} color="primary">
+          </CustomButton>
+          <CustomButton onClick={modeDialog === 'admin' ? this.addAdmin : mode === MICROSERVICE_MODE ? this.addManager : this.addEmploye} color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -641,12 +641,12 @@ class Team extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({dialogRemove: false})} color="primary">
+          <CustomButton onClick={() => this.setState({dialogRemove: false})} color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
-          </Button>
-          <Button onClick={modeDialog === 'admin' ? this.removeAdmin : this.removeManager} color="primary">
+          </CustomButton>
+          <CustomButton onClick={modeDialog === 'admin' ? this.removeAdmin : this.removeManager} color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -758,12 +758,12 @@ class Team extends React.Component {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({dialogGroupe: false})} classes={{root: classes.cancelButton}}>
+          <CustomButton onClick={() => this.setState({dialogGroupe: false})} classes={{root: classes.cancelButton}}>
             {TEAM.button_cancel}
-          </Button>
-          <Button onClick={selected === '' ? this.addGroupe : this.updateGroupe} color="primary">
+          </CustomButton>
+          <CustomButton onClick={selected === '' ? this.addGroupe : this.updateGroupe} color="primary">
             {selected === '' ? TEAM.button_confirm : TEAM.button_update}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -787,12 +787,12 @@ class Team extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({dialogRemoveGroupe: false})} color="primary">
+          <CustomButton onClick={() => this.setState({dialogRemoveGroupe: false})} color="primary">
             {TEAM.button_cancel}
-          </Button>
-          <Button onClick={this.removeGroupe} color="primary">
+          </CustomButton>
+          <CustomButton onClick={this.removeGroupe} color="primary">
             {TEAM.button_delete}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )

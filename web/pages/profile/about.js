@@ -1,3 +1,4 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
@@ -29,7 +30,6 @@ import AlgoliaPlaces from 'algolia-places-react'
 import MultipleSelect from 'react-select'
 import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
 import Divider from '@material-ui/core/Divider'
-import Button from '@material-ui/core/Button'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import {TextField} from '@material-ui/core'
@@ -44,6 +44,7 @@ const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 import {ABOUT} from '../../utils/i18n'
 
 const moment=require('moment')
+
 moment.locale('fr')
 
 const DialogTitle = withStyles(styles)(props => {
@@ -333,7 +334,7 @@ class ProfileAbout extends CompanyComponent {
             <Grid style={{marginTop: '2vh', width: '100%'}}>
               <Divider/>
               <Grid style={{marginTop: '2vh', width: '100%'}}>
-                <Button
+                <CustomButton
                   onClick={() => {
                     this.save()
                   }}
@@ -343,7 +344,7 @@ class ProfileAbout extends CompanyComponent {
                   disabled={!this.isModeCompany() ? enabledEdition : false}
                 >
                   {ReactHtmlParser(this.props.t('ABOUT.button_update'))}
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
           </Grid>

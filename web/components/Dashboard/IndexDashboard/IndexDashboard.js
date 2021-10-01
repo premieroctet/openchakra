@@ -1,3 +1,4 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -11,7 +12,6 @@ const {ADMIN}=require('../../../utils/consts')
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/pages/profile/editProfileCompany/editProfileCompany'
-import Button from '@material-ui/core/Button'
 const {emptyPromise} = require('../../../utils/promise')
 import DateField from '../../DateField/DateField'
 import {INDEX_DASHBOARD} from '../../../utils/i18n'
@@ -139,9 +139,9 @@ class IndexDashboard extends React.Component {
                 null
               }
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                <Button onClick={this.onSave} disabled={this.saveDisabled()} variant={'contained'} color={'primary'} style={{textTransform: 'initial', color: 'white'}}>
+                <CustomButton onClick={this.onSave} disabled={this.saveDisabled()} variant={'contained'} color={'primary'} style={{textTransform: 'initial', color: 'white'}}>
                   {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
           </Box>

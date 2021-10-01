@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -11,7 +12,6 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import NumberFormat from 'react-number-format'
 import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
 import SecurityIcon from '@material-ui/icons/Security'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -183,13 +183,13 @@ class HandleCB extends React.Component {
             </Grid>
           </Grid>
           <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
-            <Button
+            <CustomButton
               onClick={this.addCard}
               variant="contained"
               classes={{root: `customhandlecbsavebutton ${classes.buttonSave}`}}
             >
               {ReactHtmlParser(this.props.t('HANDLE_CB.cb_dialog_savecb_add'))}
-            </Button>
+            </CustomButton>
           </Grid>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
@@ -227,12 +227,12 @@ class HandleCB extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleCloseDial} color="primary">
+          <CustomButton onClick={this.handleCloseDial} color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
-          </Button>
-          <Button onClick={this.deleteCard} classes={{root: classes.buttonCancel}}>
+          </CustomButton>
+          <CustomButton onClick={this.deleteCard} classes={{root: classes.buttonCancel}}>
             {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )

@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import {is_production} from '../../config/config'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -8,7 +9,6 @@ import IntegerEditor from './IntegerEditor'
 import GroupEditor from './GroupEditor'
 import PictureEditor from './PictureEditor'
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
 import TextEditor from './TextEditor'
 
 const RESET_BUTTON_ENABLED=false
@@ -73,7 +73,7 @@ class UIParameter extends React.Component {
     return (
       <Grid container spacing={2} style={{display: 'flex', flexDirection: 'column'}}>
         <Grid item xl={12} style={{display: 'flex'}}>
-          { RESET_BUTTON_ENABLED && <Button onClick={() => this.onResetClicked(parameter.type)}>Reset</Button> }
+          { RESET_BUTTON_ENABLED && <CustomButton onClick={() => this.onResetClicked(parameter.type)}>Reset</CustomButton> }
           <h3 style={{color: 'black'}}>{title}</h3>
           {!(is_production()) && <h4>({parameter.type_label})</h4>}
         </Grid>
