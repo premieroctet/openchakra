@@ -51,6 +51,19 @@ const computeSumSkills = skills => {
   return res
 }
 
+const checkCssClasses = customClasse => {
+  let cssCustom= ''
+  async function getCss() {
+    const xhttp = new XMLHttpRequest()
+    xhttp.onload = function() {
+      cssCustom = this.responseText
+    }
+    xhttp.open('GET', '../static/assets/css/custom.css')
+    xhttp.send()
+  }
+  return cssCustom.includes(customClasse)
+}
+
 const roundCurrency = amount => {
   if (!amount) {
     return amount
@@ -59,5 +72,5 @@ const roundCurrency = amount => {
 }
 
 module.exports = {
-  computeDistanceKm, computeAverageNotes, computeSumSkills, roundCurrency,
+  computeDistanceKm, computeAverageNotes, computeSumSkills, roundCurrency, checkCssClasses,
 }

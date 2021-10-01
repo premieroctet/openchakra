@@ -26,7 +26,9 @@ import Select from '@material-ui/core/Select'
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
 import {EMPLOYEE} from '../../utils/consts'
 const {isB2BStyle}=require('../../utils/context')
-import '../../static/assets/css/custom.css'
+const {checkCssClasses} = require('../../utils/functions')
+
+import css from '../../static/assets/css/custom.css'
 import {LOGIN} from '../../utils/i18n'
 
 class LogIn extends React.Component {
@@ -144,7 +146,10 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                   <Grid item>
-                    <MailOutlineIcon className={classes.colorIcon}/>
+                    {
+                      checkCssClasses('customTrustAlarm') ? <div className={'customTrustAlarm'}/> : <MailOutlineIcon className={classes.colorIcon}/>
+
+                    }
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
