@@ -1,5 +1,6 @@
 import getDistance from 'geolib/es/getDistance'
 import convertDistance from 'geolib/es/convertDistance'
+
 const isEmpty = require('../server/validation/is-empty')
 
 const computeDistanceKm = (latlon1, latlon2) => {
@@ -52,16 +53,16 @@ const computeSumSkills = skills => {
 }
 
 const checkCssClasses = customClasse => {
-  let cssCustom= ''
-  async function getCss() {
+  return new Promise(resolve => {
     const xhttp = new XMLHttpRequest()
     xhttp.onload = function() {
-      cssCustom = this.responseText
+      resolve(this.responseText)
     }
     xhttp.open('GET', '../static/assets/css/custom.css')
     xhttp.send()
-  }
-  return cssCustom.includes(customClasse)
+  }).then(res => {
+    return res.includes(customClasse)
+  })
 }
 
 const roundCurrency = amount => {
