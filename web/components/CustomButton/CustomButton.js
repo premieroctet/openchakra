@@ -5,7 +5,7 @@ function CustomButton(props) {
   return(
     <Button
       {...props}
-      classes={{root: `${props.className} customButton`}}
+      className={`${props.className} customButton`}
     >
       {props.children}
     </Button>

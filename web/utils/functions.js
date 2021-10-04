@@ -1,5 +1,6 @@
 import getDistance from 'geolib/es/getDistance'
 import convertDistance from 'geolib/es/convertDistance'
+
 const isEmpty = require('../server/validation/is-empty')
 
 const computeDistanceKm = (latlon1, latlon2) => {
@@ -51,6 +52,41 @@ const computeSumSkills = skills => {
   return res
 }
 
+const checkCssClasses = customClasse => {
+  /* return new Promise(resolve => {
+    const xhttp = new XMLHttpRequest()
+    xhttp.onload = function() {
+      resolve(this.responseText)
+    }
+    xhttp.open('GET', '../static/assets/css/custom.css')
+    xhttp.send()
+  }).then(res => {
+    return res.includes(customClasse)
+  })*/
+
+
+  function load() {
+    const xhttp = new XMLHttpRequest()
+    xhttp.onload = function coucou() {
+      return this.responseText
+    }
+    xhttp.open('GET', '../static/assets/css/custom.css')
+    xhttp.send()
+  }
+
+  async function execute() {
+    let result = await load().then(res => console.log(res, 'resexecute'))
+    console.log(result, 'result')
+    return result
+  }
+
+  execute().then(res => {
+    console.log(res, 'res')
+    return res.includes(customClasse)
+  }).catch(e => { console.log(e, 'error') })
+  
+}
+
 const roundCurrency = amount => {
   if (!amount) {
     return amount
@@ -59,5 +95,5 @@ const roundCurrency = amount => {
 }
 
 module.exports = {
-  computeDistanceKm, computeAverageNotes, computeSumSkills, roundCurrency,
+  computeDistanceKm, computeAverageNotes, computeSumSkills, roundCurrency, checkCssClasses,
 }

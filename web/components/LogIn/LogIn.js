@@ -26,8 +26,11 @@ import Select from '@material-ui/core/Select'
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
 import {EMPLOYEE} from '../../utils/consts'
 const {isB2BStyle}=require('../../utils/context')
-import '../../static/assets/css/custom.css'
+const {checkCssClasses} = require('../../utils/functions')
+
+import css from '../../static/assets/css/custom.css'
 import {LOGIN} from '../../utils/i18n'
+import {Icon} from '@material-ui/core'
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -144,7 +147,9 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                   <Grid item>
-                    <MailOutlineIcon className={classes.colorIcon}/>
+                    {
+                      checkCssClasses('customTrustAlarm') ? <div style={{height: 24, width: 24, backgroundSize: 'contain'}} className={'customTrustAlarm'}/> : <MailOutlineIcon className={classes.colorIcon}/>
+                    }
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
@@ -163,7 +168,10 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                   <Grid item>
-                    <LockOpenOutlinedIcon className={classes.colorIcon}/>
+                    {
+                      checkCssClasses('customlogopass') ? <div style={{height: 24, width: 24, backgroundSize: 'contain'}} className={'customlogopass'}/> : <LockOpenOutlinedIcon className={classes.colorIcon}/>
+                    }
+
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
