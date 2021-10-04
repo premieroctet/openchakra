@@ -1,6 +1,6 @@
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import Grid from '@material-ui/core/Grid'
 import AlarmOnIcon from '@material-ui/icons/AlarmOn'
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser'
@@ -8,52 +8,26 @@ import TextsmsIcon from '@material-ui/icons/Textsms'
 import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/TrustAndSecurity/TrustAndSecurity'
+import CustomIcon from '../../../components/CustomIcon/CustomIcon'
 
 function TrustAndSecurity({t, classes}) {
-  const [customCss, setCustomCss]= useState('')
-  const [items, setItems] = useState([
+  const [items] = useState([
     {
       title: ReactHtmlParser(t('TRUST_SECURITY.first_item.title')),
       text: ReactHtmlParser(t('TRUST_SECURITY.first_item.text')),
-      icon: <AlarmOnIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
+      icon: <CustomIcon className={'customtrustalarm'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<AlarmOnIcon fontSize="large"/>}/>,
     },
     {
       title: ReactHtmlParser(t('TRUST_SECURITY.second_item.title')),
       text: ReactHtmlParser(t('TRUST_SECURITY.second_item.text')),
-      icon: <VerifiedUserIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
+      icon: <CustomIcon className={'customtrustshield'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<VerifiedUserIcon fontSize="large"/>}/>,
     },
     {
       title: ReactHtmlParser(t('TRUST_SECURITY.third_item.title')),
       text: ReactHtmlParser(t('TRUST_SECURITY.third_item.text')),
-      icon: <TextsmsIcon className={'customtrustandsecurityicon'} fontSize="large"/>,
+      icon: <CustomIcon className={'customtrustmessage'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<TextsmsIcon fontSize="large"/>}/>,
     },
   ])
-
-
-  useEffect(() => {
-    const xhttp = new XMLHttpRequest()
-    xhttp.onload = function() {
-      setCustomCss(this.responseText)
-    }
-    xhttp.open('GET', '../../../static/assets/css/custom.css')
-    xhttp.send()
-  })
-  
-  useEffect(() => {
-    let newArr = [...items]
-    if(customCss.includes('customTrustAlarm')) {
-      newArr[0].icon = <div className={'customTrustAlarm'}/>
-      setItems(newArr)
-    }
-    else if(customCss.includes('customTrustShield')) {
-      newArr[1].icon = <div className={'customTrustShield'}/>
-      setItems(newArr)
-    }
-    else if(customCss.includes('customTrustMessage')) {
-      newArr[2].icon = <div className={'customTrustMessage'}/>
-      setItems(newArr)
-    }
-  }, [customCss])
 
   return(
     <Grid container spacing={2} style={{margin: 0, width: '100%'}} className={classes.trustAndSecurityMainContainer} >
