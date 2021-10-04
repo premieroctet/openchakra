@@ -89,8 +89,8 @@ class DBUiGeneration(object):
                   raise Exception('Classname sans composant')
                 req=self.get_mongo(name.capitalize(), ".".join(comp).capitalize(), label, classname, componentType)
                 print(req)
-                if ('text' in str(row[0]).lower()) and not [v for v in row if 'content' in str(v).lower()]:
-                  raise Exception('Pas de content pour I18N')
+                if ('i18N' in str(row[1]).lower()) and not [v for v in row if 'content' in str(v).lower()]:
+                  raise Exception('Pas de content pour un label de type "text"')
             except Exception as ex:
               print('****** Page {}, ligne {}:{}'.format(name, idx+2, ex), file=sys.stderr)
               if isinstance(ex, FatalException):
