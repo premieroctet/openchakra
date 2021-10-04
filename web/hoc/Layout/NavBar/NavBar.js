@@ -52,6 +52,7 @@ import '../../../static/assets/css/custom.css'
 const {PRO, PART, EMPLOYEE, ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
 import {getCookieConsentValue, resetCookieConsentValue} from 'react-cookie-consent'
 import Logo from '../../../components/Logo/Logo'
+import CustomIcon from '../../../components/CustomIcon/CustomIcon'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -750,7 +751,7 @@ class NavBar extends Component {
           aria-label="open drawer"
           onClick={this.handleOpenMenuItem}
         >
-          <MenuIcon className={`customBurgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}/>
+          <CustomIcon className={'customburgerlogo'} materialIcon={<MenuIcon classes={{root: `customburgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}}/>}/>
         </IconButton>
         <Menu
           anchorEl={anchorEl}
@@ -760,7 +761,7 @@ class NavBar extends Component {
           getContentAnchorEl={null}
           anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
           transformOrigin={{vertical: 'top', horizontal: 'center'}}
-          classes={{paper: 'customBurger'}}
+          classes={{paper: 'customburger'}}
         >
           {user ?
             <Grid>
