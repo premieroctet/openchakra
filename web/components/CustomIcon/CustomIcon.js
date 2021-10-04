@@ -1,6 +1,5 @@
 import axios from 'axios'
 import {setAxiosAuthentication} from '../../utils/authentication'
-
 import React from 'react'
 
 class CustomIcon extends React.Component {

@@ -227,7 +227,7 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           <Grid container className={classes.mainContainerStyleFooter}>
-            <Grid className={classes.generalWidthFooter}>
+            <Grid className={`customgeneralfooter ${classes.generalWidthFooter}`}>
               <Footer/>
             </Grid>
           </Grid>
