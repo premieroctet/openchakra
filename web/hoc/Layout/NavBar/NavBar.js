@@ -1261,7 +1261,7 @@ class NavBar extends Component {
 
     return (
       <Grid className={this.state.ifHomePage ? isB2BStyle(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={'static'} className={`${ isB2BStyle(user) && companyPage || this.state.ifHomePage ? classes.navbarAppBarNoBg : isB2BStyle(user) && !companyPage ? classes.navbarAppBarWithBg : null}`}>
+        <AppBar position={'static'} className={`customheader ${ isB2BStyle(user) && companyPage || this.state.ifHomePage ? classes.navbarAppBarNoBg : isB2BStyle(user) && !companyPage ? classes.navbarAppBarWithBg : null}`}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Grid className={classes.hiddenOnlyXs}>
               <Grid container style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin: 0}}>
