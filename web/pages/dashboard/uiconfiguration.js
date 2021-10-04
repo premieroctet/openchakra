@@ -40,7 +40,7 @@ class UIConfiguration extends React.Component {
     this.state={
       parameters: [],
       filtered_parameters: [],
-      page: null,
+      current_page_name: null,
       saving: false,
       filter: '',
       // Modified parameters ids
@@ -48,6 +48,18 @@ class UIConfiguration extends React.Component {
       // Known colors sorted by occurrences for HTML & Color editors
       used_colors: [],
     }
+  }
+
+  componentDidMount = () => {
+    setAxiosAuthentication()
+    axios.get('/myAlfred/api/admin/uiConfiguration')
+      .then(response => {
+        let parameters=response.data
+        this.setState({parameters: parameters, filtered_parameters: parameters})
+        if (parameters.length>0) {
+          this.setState({current_page_name: parameters[0].page}, () => this.sortColors())
+        }
+      })
   }
 
   getTitle = () => {
@@ -116,20 +128,8 @@ class UIConfiguration extends React.Component {
       })
   }
 
-  componentDidMount = () => {
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/admin/uiConfiguration')
-      .then(response => {
-        let parameters=_.sortBy(response.data, 'page')
-        this.setState({parameters: parameters, filtered_parameters: parameters})
-        if (parameters.length>0) {
-          this.setState({page: parameters[0].page}, () => this.sortColors())
-        }
-      })
-  }
-
-  onChangePage = page => {
-    this.setState({page: page})
+  onChangePage = page_name => {
+    this.setState({current_page_name: page_name})
   }
 
   /**
@@ -155,15 +155,56 @@ class UIConfiguration extends React.Component {
       () => { this.filterParameters(); this.sortColors() })
   }
 
+  componentsAccordion = (parameters, prefix=[]) => {
+    if (parameters.length==0) {
+      return
+    }
+    const level=prefix.length
+    const prefixName=prefix.join('/')
+    const path = p => {
+      const res=p.component.split('.')
+      return res
+    }
+    // Paramètres dans le composant (path==prefix)
+    const params=parameters.filter(p => _.isEqual(path(p), prefix))
+    // Paramètres enfants du composant dans le composant (path.length>==prefix.length)
+    const subParams=parameters.filter(p => path(p).length>level)
+    const names=_.uniqBy(subParams.map(s => path(s)[level]))
+    return (
+      <Accordion defaultExpanded={false} TransitionProps={{unmountOnExit: true}} key={prefixName}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <h2 style={{margin: '5px'}}>{prefixName || 'Composants'}</h2>
+        </AccordionSummary>
+        <AccordionDetails style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+          <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+            { params.map(parameter => (
+              <UIParameter
+                key={parameter._id}
+                title={parameter.label}
+                parameter={parameter}
+                onChange={this.onChange(parameter._id)}
+                colors={this.state.used_colors} />
+            ))
+            }
+            {names.map(n => this.componentsAccordion(subParams, [...prefix, n]))}
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
+    )
+  }
+
   render = () => {
     const {classes}=this.props
-    const {filtered_parameters, page, saving, filter, modified_parameters, used_colors}=this.state
-    const groupedParameters= _.groupBy(filtered_parameters, 'page')
-    const pageParameters=_.groupBy(groupedParameters[page], 'component')
-    const selectedTab = Object.keys(groupedParameters).findIndex(p => p==page)
+    const {filtered_parameters, current_page_name, saving, filter, modified_parameters, used_colors}=this.state
+
+    const pages=_.uniqBy(filtered_parameters.map(p => p.page))
+
+    const pageParameters=filtered_parameters.filter(p => p.page==current_page_name)
+    const selectedTab = pages.findIndex(p => p==current_page_name)
 
     const saveTitle=saving ? 'Génération en cours...': 'Enregistrer & générer'
     const canSave = !saving && Object.keys(modified_parameters).length>0
+
     return (
       <Layout>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
@@ -177,35 +218,13 @@ class UIConfiguration extends React.Component {
           <Paper style={{width: '100%'}}>
             <Tabs value={selectedTab==-1 ? false:selectedTab} variant="scrollable">
               {
-                Object.keys(groupedParameters).map(page =>
+                pages.map(page =>
                   <Tab key={page} label={page} onClick={() => this.onChangePage(page)} />,
                 )
               }
             </Tabs>
             {
-              pageParameters && Object.keys(pageParameters).map(component_name => (
-                <Accordion defaultExpanded={false} TransitionProps={{unmountOnExit: true}} key={component_name}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <div style={{display: 'flex', flexDirection: 'column'}}>
-                      <h2 style={{margin: '5px'}}>{component_name}</h2>
-                      {is_development() && <h4 style={{margin: '0px'}}>id: {pageParameters[component_name][0].classname}</h4>}
-                    </div>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-                      { pageParameters[component_name].map(parameter => (
-                        <UIParameter
-                          key={parameter._id}
-                          title={parameter.label}
-                          parameter={parameter}
-                          onChange={this.onChange(parameter._id)}
-                          colors={used_colors} />
-                      ))
-                      }
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
-              ))
+              this.componentsAccordion(pageParameters)
             }
           </Paper>
         </Grid>
