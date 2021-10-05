@@ -1,5 +1,5 @@
 const fs=require('fs').promises
-const validateCss = require('css-validator')
+const {validate: validateCss} = require('csstree-validator')
 const _=require('lodash')
 /**
   Creates CSS from configurations
@@ -68,22 +68,21 @@ createCSSConfiguration = items => {
     return `.${k} {\n${atts}\n}`
   }).join('\n')
 
-  validateCss(output, (err, data) => {
-    const error = err || !data.validity
-    if (error) {
-      console.error(`CSS generation error ${error}, output in /tmp/custom.css\nError:${error}`)
-    }
-    else {
-      console.log('CSS generation OK, output in static/assets/css/custom.css')
-    }
-    fs.writeFile(error ? '/tmp/custom.css' : 'static/assets/css/custom.css', output)
-      .then(() => {
-        console.log('CSS saved')
-      })
-      .catch(err => {
-        console.error(`CSS write error:${err}`)
-      })
-  })
+  const result=validateCss(output)
+  const error=result && result.length>0 ? result : null
+  if (error) {
+    console.error(`CSS generation error ${error}, output in /tmp/custom.css\nError:${error}`)
+  }
+  else {
+    console.log('CSS generation OK, output in static/assets/css/custom.css')
+  }
+  fs.writeFile(error ? '/tmp/custom.css' : 'static/assets/css/custom.css', output)
+    .then(() => {
+      console.log('CSS saved')
+    })
+    .catch(err => {
+      console.error(`CSS write error:${err}`)
+    })
 }
 
 createI18NConfiguration = items => {
