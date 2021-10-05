@@ -109,6 +109,9 @@ export default theme => ({
   mainContainerStyleFooter: {
     justifyContent: 'center',
     backgroundColor: 'rgba(228, 228, 228, 8)',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
   },
   root: {
     margin: 0,

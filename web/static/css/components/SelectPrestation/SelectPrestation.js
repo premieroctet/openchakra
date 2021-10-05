@@ -66,4 +66,8 @@ export default theme => ({
       justifyContent: 'center',
     },
   },
+  typofab: {
+    textTransform: 'initial',
+    color: 'white',
+  },
 })

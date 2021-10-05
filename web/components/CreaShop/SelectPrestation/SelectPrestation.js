@@ -140,10 +140,10 @@ class SelectPrestation extends React.Component {
                 color="primary"
                 aria-label="add"
                 onClick={() => this.addCustomPrestation()}
-                className={classes.margin}
+                className={`customsettingservicecustombutton ${classes.margin}`}
               >
                 <AddIcon className={classes.extendedIcon}/>
-                <Typography className={'customsettingservicecustombutton'} style={{textTransform: 'initial', color: 'white'}}>{ReactHtmlParser(this.props.t('SHOP.parameter.presta_perso'))}</Typography>
+                <Typography className={`customsettingservicecustomfab ${classes.typofab}`}>{ReactHtmlParser(this.props.t('SHOP.parameter.presta_perso'))}</Typography>
               </Fab>
             </Grid>
             {Object.keys(this.state.grouped).map((fltr, i) => {

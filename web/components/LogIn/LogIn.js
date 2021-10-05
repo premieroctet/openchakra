@@ -148,7 +148,7 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                   <Grid item>
-                    <CustomIcon className={'customtrustalarm'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<MailOutlineIcon className={classes.colorIcon}/>}/>
+                    <CustomIcon className={'customloginmailicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<MailOutlineIcon className={classes.colorIcon}/>}/>
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
@@ -167,7 +167,7 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                   <Grid item>
-                    <CustomIcon className={'customlogopass'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<LockOpenOutlinedIcon className={classes.colorIcon}/>}/>
+                    <CustomIcon className={'customloginlockicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<LockOpenOutlinedIcon className={classes.colorIcon}/>}/>
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input

@@ -26,6 +26,10 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+
   },
   hiddenOnMobile: {
     width: '100%',
