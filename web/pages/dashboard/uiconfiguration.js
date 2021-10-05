@@ -2,7 +2,7 @@ import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
-import Layout from '../../hoc/Layout/Layout'
+import DashboardLayout from '../../hoc/Layout/DashboardLayout'
 import {Typography} from '@material-ui/core'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
@@ -205,7 +205,7 @@ class UIConfiguration extends React.Component {
     const canSave = !saving && Object.keys(modified_parameters).length>0
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
             <Typography style={{fontSize: 30}}>{this.getTitle()}</Typography>
@@ -232,7 +232,7 @@ class UIConfiguration extends React.Component {
             <SaveIcon />
           </Fab>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 

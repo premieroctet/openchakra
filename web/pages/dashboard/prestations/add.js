@@ -9,7 +9,7 @@ import {Typography} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 import Router from 'next/router';
-import Layout from '../../../hoc/Layout/Layout';
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout';
 import axios from 'axios';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -281,7 +281,7 @@ class add extends React.Component {
     }))
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -543,7 +543,7 @@ class add extends React.Component {
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     );
   };
 }

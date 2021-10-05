@@ -9,7 +9,7 @@ import Router from 'next/router'
 import axios from 'axios'
 
 import BasePage from '../../basePage'
-import Layout from '../../../hoc/Layout/Layout'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
@@ -95,7 +95,7 @@ class EditPicture extends BasePage {
     const {banner} = this.state
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -116,7 +116,7 @@ class EditPicture extends BasePage {
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

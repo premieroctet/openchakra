@@ -3,7 +3,7 @@ import React from 'react'
 
 import BasePage from '../../basePage'
 import EditPicture from '../../../components/Dashboard/EditPicture/EditPicture'
-import Layout from '../../../hoc/Layout/Layout'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 class EditPrestationPicture extends BasePage {
 
@@ -16,9 +16,9 @@ class EditPrestationPicture extends BasePage {
   render() {
 
     return (
-      <Layout>
+      <DashboardLayout>
         <EditPicture type='prestation' id={this.getURLProps().id}/>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }
