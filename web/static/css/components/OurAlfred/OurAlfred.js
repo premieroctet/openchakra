@@ -110,7 +110,7 @@ export default theme => ({
       display: 'none',
     },
   },
-  iconStar: {
+  iconStarOurALfred: {
     backgroundImage: 'url(static/assets/faq/star.svg)',
     backgroundRepeat: 'no-repeat',
     width: 70,

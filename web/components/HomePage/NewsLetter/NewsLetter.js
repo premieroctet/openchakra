@@ -84,11 +84,11 @@ class NewsLetter extends React.Component {
         keepMounted
       >
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalSubscription: false})}>
-          Abonnement à la newsletter de MyAlfred
+          {ReactHtmlParser(this.props.t('NEWSLETTER.dialogTitle'))}
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Vous avez reçu un email contenant un lien de confirmation !
+            {ReactHtmlParser(this.props.t('NEWSLETTER.confirmDialog'))}
           </Typography>
         </DialogContent>
       </Dialog>
@@ -105,14 +105,12 @@ class NewsLetter extends React.Component {
         keepMounted
       >
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalSubscriptionFailed: false})}>
-          Abonnement à la newsletter de MyAlfred
+          {ReactHtmlParser(this.props.t('NEWSLETTER.dialogTitle'))}
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Une erreur est survenue veuillez réessayer ultérieurement, pour plus d'informations contactez-nous via notre chat instantané ou directement par e-mail :
-            <a href={'mailto:hello@my-alfred.io'}>
-            hello@my-alfred.io
-            </a>
+            {ReactHtmlParser(this.props.t('NEWSLETTER.errorMessage'))}
+            <a href={'mailto:hello@my-alfred.io'}>{ReactHtmlParser(this.props.t('NEWSLETTER.email'))}</a>
           </Typography>
         </DialogContent>
       </Dialog>

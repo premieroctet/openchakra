@@ -30,6 +30,7 @@ const {getLoggedUserId} = require('../utils/context')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
 import {INDEX} from '../utils/i18n'
+import CustomBannerOneCol from '../components/HomePage/CustomBannerOneCol/CustomBannerOneCol'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -192,7 +193,8 @@ class Home extends React.Component {
           </Grid>
           <Grid container className={`customhowitworks ${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
             <Grid className={classes.generalWidthContainer}>
-              <HowItWorks/>
+              {/* <HowItWorks/>*/}
+              <CustomBannerOneCol/>
             </Grid>
           </Grid>
           <Grid container className={`customouralfred ${classes.mainContainerStyle}`}>

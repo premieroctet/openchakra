@@ -889,6 +889,10 @@ const NEWSLETTER = {
   google: "S'inscrire avec Google",
   where: 'ou',
   button: "Je m'inscris !",
+  dialogTitle: 'Abonnement à la newsletter de MyAlfred',
+  confirmDialog: 'Vous avez reçu un email contenant un lien de confirmation !',
+  errorMessage: ' Une erreur est survenue veuillez réessayer ultérieurement, pour plus d\'informations contactez-nous via notre chat instantané ou directement par e-mail : ',
+  email: 'hello@my-alfred.io',
 }
 
 const CMP_PRESENTATION = {
