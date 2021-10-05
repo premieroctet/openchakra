@@ -205,35 +205,37 @@ class CardService extends React.Component {
             <Grid container spacing={1} className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
                 <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
-                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}/>
+                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}>
+                    {
+                      profileMode && editable ?
+                        <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
+                          <Grid>
+                            <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
+                              <EditIcon style={{color: 'white'}} />
+                            </IconButton>
+                          </Grid>
+                          <Grid style={{marginLeft: '10px'}}>
+                            <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
+                              <DeleteForeverIcon style={{color: 'white'}} />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                        :
+                        <>
+                          <Grid className={profileMode ? classes.cardServiceCHipNameP : classes.cardServiceChipName}>
+                            <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: `customcardchipname ${classes.cardServiceChip}`}} />
+                          </Grid>
+                          {
+                            cpData.is_professional ?
+                              <Grid className={classes.cardServiceChipPro}>
+                                <Chip label={'Pro'} classes={{root: classes.cardServiceChipBckg}}/>
+                              </Grid> : null
+                          }
+                        </>
+                    }
+                  </Grid>
                 </Grid>
-                {
-                  profileMode && editable ?
-                    <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
-                      <Grid>
-                        <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
-                          <EditIcon style={{color: 'white'}} />
-                        </IconButton>
-                      </Grid>
-                      <Grid style={{marginLeft: '10px'}}>
-                        <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
-                          <DeleteForeverIcon style={{color: 'white'}} />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                    :
-                    <>
-                      <Grid className={classes.cardServiceChipName}>
-                        <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: `customcardchipname ${classes.cardServiceChip}`}} />
-                      </Grid>
-                      {
-                        cpData.is_professional ?
-                          <Grid className={classes.cardServiceChipPro}>
-                            <Chip label={'Pro'} classes={{root: classes.cardServiceChipBckg}}/>
-                          </Grid> : null
-                      }
-                    </>
-                }
+
               </Grid>
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.labelServiceProfil : classes.labelService}>

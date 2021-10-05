@@ -48,7 +48,7 @@ export default theme => ({
     height: '100%',
     paddingTop: 15,
     margin: 0,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '90%',
     },
   },
@@ -62,9 +62,7 @@ export default theme => ({
   },
   cardServicePicsContainer: {
     height: 200,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
+    width: '100%',
   },
 
   profileModecardServicePicsContainer: {
@@ -73,14 +71,10 @@ export default theme => ({
   },
 
   cardServiceBackgroundPics: {
-    width: 250,
     height: 200,
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     borderRadius: 20,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
   },
   cardServiceBackgroundPicsProfil: {
     height: '100%',
@@ -91,16 +85,18 @@ export default theme => ({
   },
   cardServiceChipName: {
     position: 'absolute',
-    bottom: '19px',
+    bottom: 15,
     left: 0,
-    [theme.breakpoints.down('xs')]: {
-      bottom: '18px',
-    },
+  },
+  cardServiceCHipNameP: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
   },
   cardServiceChipPro: {
     position: 'absolute',
-    top: 0,
-    right: 0,
+    top: 5,
+    right: 5,
   },
   cardServiceChip: {
     backgroundColor: theme.palette.white.main,

@@ -381,7 +381,7 @@ class ProfileAbout extends CompanyComponent {
     const company_mode = Boolean(this.state.company)
     return(
       <Grid container spacing={2} style={{marginBottom: '12vh', width: '100%', marginLeft: 0, marginRight: 0}}>
-        <Grid className={classes.aboutContainer} item xl={5} lg={5} md={12} sm={12} xs={12}>
+        <Grid className={`customaboutboxabout ${classes.aboutContainer}`} item xl={5} lg={5} md={12} sm={12} xs={12}>
           <Box>
             <About user={user} />
           </Box>

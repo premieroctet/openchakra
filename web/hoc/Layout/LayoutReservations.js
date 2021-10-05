@@ -42,7 +42,7 @@ class LayoutReservations extends React.Component {
                 onChange={userInfo && !userInfo.is_alfred ? null : this.props.onReservationTypeChanged}
                 aria-label="scrollable force tabs"
                 scrollButtons="on"
-                classes={{indicator: classes.scrollMenuIndicator}}
+                classes={{indicator: `customscrollmenu ${classes.scrollMenuIndicator}`}}
               >
                 {
                   userInfo && userInfo.is_alfred ?
