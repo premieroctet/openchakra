@@ -7,7 +7,7 @@ import Divider from '@material-ui/core/Divider'
 
 const popover = {
   position: 'absolute',
-  zIndex: '2',
+  zIndex: '1000',
 }
 const cover = {
   position: 'fixed',
