@@ -8,7 +8,7 @@ import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
-import Layout from '../../hoc/Layout/Layout';
+import DashboardLayout from '../../hoc/Layout/DashboardLayout';
 import Link from 'next/link';
 import Router from 'next/router';
 import Paper from '@material-ui/core/Paper';
@@ -170,7 +170,7 @@ class all extends React.Component {
     const {prospects, export_data, comments, errors, category, url, lbc_message, lbc_error} = this.state;
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer} style={{width:'100%'}}>
           <Link href={'/dashboard/home'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
@@ -250,7 +250,7 @@ class all extends React.Component {
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     );
   };
 }

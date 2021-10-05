@@ -14,7 +14,7 @@ import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
 import BasePage from '../../basePage'
-import Layout from '../../../hoc/Layout/Layout'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../../utils/consts')
 const {SIRET}=require('../../../config/config')
@@ -180,7 +180,7 @@ class View extends BasePage {
     }
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer}>
           <Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center'}}>
@@ -341,7 +341,7 @@ class View extends BasePage {
             </form>
           </Grid>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

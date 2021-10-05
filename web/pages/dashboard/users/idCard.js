@@ -9,7 +9,7 @@ import Router from 'next/router';
 import axios from 'axios';
 
 import {snackBarSuccess} from '../../../utils/notifications';
-import Layout from '../../../hoc/Layout/Layout';
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout';
 
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
 
@@ -130,7 +130,7 @@ class idCard extends React.Component {
 
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -199,7 +199,7 @@ class idCard extends React.Component {
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     );
   };
 }

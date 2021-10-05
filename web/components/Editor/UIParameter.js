@@ -17,6 +17,7 @@ const ATT_TYPES={
   'color': 'color',
   'display': 'visibility',
   'background-color': 'color',
+  'border-color': 'color',
   'background-image': 'picture',
   'border': 'color',
   'content': 'richtext',
