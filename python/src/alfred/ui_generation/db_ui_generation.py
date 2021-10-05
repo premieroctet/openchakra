@@ -26,7 +26,7 @@ class DBUiGeneration(object):
       self.wb=xl.load_workbook(xl_path)
       
     def get_column(self, sheet, col_name, mandatory=True):
-      first_row=[c.value for c in next(sheet.iter_rows())]
+      first_row=[(c.value or '').lower() for c in next(sheet.iter_rows())]
       try:
         return first_row.index(col_name)
       except Exception as e:
