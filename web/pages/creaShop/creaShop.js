@@ -546,7 +546,7 @@ class creaShop extends BasePage {
             </IconButton>
           </Grid>
           <Grid style={{position: 'absolute', width: '100%', textAlign: 'center'}}>
-            <Logo className={`${classes.logoMyAlfredGreen} customcreashoplogo`} style={{backgroundRepeat: 'no-repeat', height: 64}}/>
+            <Logo className={`customnavbarlogo ${classes.logoMyAlfredGreen}`} style={{backgroundRepeat: 'no-repeat', height: 64}}/>
           </Grid>
         </Grid>
         <nav className={classes.drawer} aria-label="mailbox folders">
