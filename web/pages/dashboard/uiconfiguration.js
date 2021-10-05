@@ -18,8 +18,6 @@ import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import TextField from '@material-ui/core/TextField'
 
-import {is_development} from '../../config/config'
-
 const {snackBarSuccess, snackBarError}=require('../../utils/notifications')
 import SaveIcon from '@material-ui/icons/Save'
 import Fab from '@material-ui/core/Fab'
@@ -169,7 +167,8 @@ class UIConfiguration extends React.Component {
     const params=parameters.filter(p => _.isEqual(path(p), prefix))
     // Paramètres enfants du composant dans le composant (path.length>==prefix.length)
     const subParams=parameters.filter(p => path(p).length>level)
-    const names=_.uniqBy(subParams.map(s => path(s)[level]))
+    // Sous-paramètres groupés par nom du niveau level
+    const names=_.groupBy(subParams, p => path(p)[level])
     return (
       <Accordion defaultExpanded={false} TransitionProps={{unmountOnExit: true}} key={prefixName}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -186,7 +185,7 @@ class UIConfiguration extends React.Component {
                 colors={this.state.used_colors} />
             ))
             }
-            {names.map(n => this.componentsAccordion(subParams, [...prefix, n]))}
+            {Object.keys(names).map(n => this.componentsAccordion(names[n], [...prefix, n]))}
           </Grid>
         </AccordionDetails>
       </Accordion>
@@ -195,7 +194,7 @@ class UIConfiguration extends React.Component {
 
   render = () => {
     const {classes}=this.props
-    const {filtered_parameters, current_page_name, saving, filter, modified_parameters, used_colors}=this.state
+    const {filtered_parameters, current_page_name, saving, filter, modified_parameters}=this.state
 
     const pages=_.uniqBy(filtered_parameters.map(p => p.page))
 
