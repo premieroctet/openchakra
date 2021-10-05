@@ -52,6 +52,7 @@ import '../../../static/assets/css/custom.css'
 const {PRO, PART, EMPLOYEE, ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
 import {getCookieConsentValue, resetCookieConsentValue} from 'react-cookie-consent'
 import Logo from '../../../components/Logo/Logo'
+import CustomIcon from '../../../components/CustomIcon/CustomIcon'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -749,8 +750,9 @@ class NavBar extends Component {
         <IconButton
           aria-label="open drawer"
           onClick={this.handleOpenMenuItem}
+          classes={{root: 'custombgburger'}}
         >
-          <MenuIcon className={`customBurgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}/>
+          <CustomIcon className={'customburgerlogo'} materialIcon={<MenuIcon classes={{root: `customburgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}}/>}/>
         </IconButton>
         <Menu
           anchorEl={anchorEl}
@@ -760,7 +762,7 @@ class NavBar extends Component {
           getContentAnchorEl={null}
           anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
           transformOrigin={{vertical: 'top', horizontal: 'center'}}
-          classes={{paper: 'customBurger'}}
+          classes={{paper: 'customburger'}}
         >
           {user ?
             <Grid>
@@ -1113,7 +1115,7 @@ class NavBar extends Component {
         sm={1}
         onClick={() => Router.push('/')}
       >
-        <Logo className={`${classes.logoMyAlfred} customnavbarlogo`} style={{backgroundRepeat: 'no-repeat'}}/>
+        <Logo className={`${classes.logoMyAlfred} customnavbarlogo`} style={{backgroundRepeat: 'no-repeat', height: 64}}/>
       </Grid>
     )
   };
@@ -1261,7 +1263,7 @@ class NavBar extends Component {
 
     return (
       <Grid className={this.state.ifHomePage ? isB2BStyle(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={'static'} className={`customheader ${ isB2BStyle(user) && companyPage || this.state.ifHomePage ? classes.navbarAppBarNoBg : isB2BStyle(user) && !companyPage ? classes.navbarAppBarWithBg : null}`}>
+        <AppBar position={'static'} className={isB2BStyle(user) && companyPage || this.state.ifHomePage ? `customappbarhomepage ${classes.navbarAppBarNoBg}` : isB2BStyle(user) && !companyPage ? `customappbar ${classes.navbarAppBarWithBg}` : null}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Grid className={classes.hiddenOnlyXs}>
               <Grid container style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin: 0}}>
