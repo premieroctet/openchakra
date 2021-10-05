@@ -85,8 +85,8 @@ class Home extends React.Component {
 
     axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
       .then(res => {
-        let category = res.data
-        this.setState({category: category})
+        let categories = _.shuffle(res.data)
+        this.setState({categories: categories})
       }).catch(err => console.error(err))
 
     axios.get(`/myAlfred/api/serviceUser/home/${isB2BStyle(this.state.user) ? PRO : PART}`)
