@@ -141,7 +141,7 @@ class Home extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {category, alfred, open, user} = this.state
+    const {categories, alfred, open, user} = this.state
     return (
 
       <Grid>
@@ -189,7 +189,7 @@ class Home extends React.Component {
           }
           <Grid container className={`customslidecat ${classes.mainContainerStyle}`}>
             <Grid className={classes.generalWidthContainer}>
-              <CategoryTopic category={category}/>
+              <CategoryTopic categories={categories}/>
             </Grid>
           </Grid>
           <Grid container className={`customhowitworks ${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
