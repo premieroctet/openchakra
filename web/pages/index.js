@@ -151,7 +151,7 @@ class Home extends React.Component {
           />
         </Helmet>
         <Grid>
-          <Grid className={`customHeaderInfobar ${classes.infoBarContainer}`}>
+          <Grid className={`customheaderinfobar ${classes.infoBarContainer}`}>
             <InfoBar/>
           </Grid>
           <Grid container className={classes.navbarAndBannerContainer}>
@@ -164,7 +164,7 @@ class Home extends React.Component {
               xs={12}
               className={`custombanner ${isB2BStyle(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}` }
             >
-              <Grid className={`${classes.navbarComponentPosition} customHeader`}>
+              <Grid className={`customheader ${classes.navbarComponentPosition}`}>
                 <NavBar ref={this.child}/>
               </Grid>
               <Grid className={classes.bannerPresentationContainer}>
@@ -226,8 +226,8 @@ class Home extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container className={classes.mainContainerStyleFooter}>
-            <Grid className={`customgeneralfooter ${classes.generalWidthFooter}`}>
+          <Grid container className={`customgeneralfooter ${classes.mainContainerStyleFooter}`}>
+            <Grid className={classes.generalWidthFooter}>
               <Footer/>
             </Grid>
           </Grid>

@@ -87,10 +87,10 @@ class MyApp extends App {
             location="top"
             cookieName={ACCEPT_COOKIE_NAME}
             onDecline={this.onDeclineCookies}
-            containerClasses={'customCookiesContainer'}
-            contentClasses={'customCookiesContent'}
-            buttonClasses={'customCookiesAccept'}
-            declineButtonClasses={'customCookiesDecline'}
+            containerClasses={'customcookiescontainer'}
+            contentClasses={'customcookiescontent'}
+            buttonClasses={'customcookiesaccept'}
+            declineButtonClasses={'customcookiesdecline'}
           >
             {ReactHtmlParser(this.props.t('COOKIE_CONSENT.message'))}
           </CookieConsent>

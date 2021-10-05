@@ -11,13 +11,13 @@ import styles from '../../static/css/components/InfoBar/InfoBar'
 function InfoBar({classes, t}) {
 
   return (
-    <Grid container className={`${classes.infoBarMainStyle} customHeaderinfobar`}>
+    <Grid container className={`${classes.infoBarMainStyle} customheaderinfobar`}>
       <Grid item className={classes.infoBarLinkContainer}>
         <Grid className={classes.infoBarPicsContainer}>
           <Grid className={`${classes.icon} custominfobaricon`} style={{backgroundSIze: 'contain'}}/>
         </Grid>
         <Grid>
-          <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{ReactHtmlParser(t('INFOBAR.message'))}</Typography>
+          <Typography className={`${classes.infoBarColorText} customheaderinfobar`}>{ReactHtmlParser(t('INFOBAR.message'))}</Typography>
         </Grid>
       </Grid>
     </Grid>

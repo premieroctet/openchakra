@@ -5,7 +5,7 @@ import {withTranslation} from 'react-i18next'
 function Logo({className}) {
 
   return(
-    <Grid className={`${className} customLogo`}/>
+    <Grid className={`${className} customlogo`}/>
   )
 }
 

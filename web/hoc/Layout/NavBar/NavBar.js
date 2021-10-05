@@ -750,6 +750,7 @@ class NavBar extends Component {
         <IconButton
           aria-label="open drawer"
           onClick={this.handleOpenMenuItem}
+          classes={{root: 'custombgburger'}}
         >
           <CustomIcon className={'customburgerlogo'} materialIcon={<MenuIcon classes={{root: `customburgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}}/>}/>
         </IconButton>
@@ -814,7 +815,7 @@ class NavBar extends Component {
           <CustomButton
             variant="outlined"
             classes={{root: isB2BStyle(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
-            className={'customButtonSignin'}
+            className={'custombuttonsignin'}
             onClick={this.handleOpenRegister}>
             {ReactHtmlParser(this.props.t('NAVBAR_MENU.signIn'))}
           </CustomButton>
@@ -822,7 +823,7 @@ class NavBar extends Component {
         <Grid className={classes.navbarRegisterContainer}>
           <CustomButton
             classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
-            className={'customButtonLogin'}
+            className={'custombuttonlogin'}
             onClick={this.handleOpenLogin}>
             {ReactHtmlParser(this.props.t('NAVBAR_MENU.logIn'))}
           </CustomButton>
@@ -1082,7 +1083,7 @@ class NavBar extends Component {
             <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', alignItems: 'center'}}>
               <IconButton
                 classes={{root: classes.iconButton}}
-                className={`customsearchMagnify ${isB2BStyle(this.state.user) ? classes.iconColorB2b : classes.iconColor}`}
+                className={`customsearchmagnify ${isB2BStyle(this.state.user) ? classes.iconColorB2b : classes.iconColor}`}
                 aria-label="search"
                 onClick={() => this.findService()}>
                 <SearchIcon/>
@@ -1262,7 +1263,7 @@ class NavBar extends Component {
 
     return (
       <Grid className={this.state.ifHomePage ? isB2BStyle(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={'static'} className={`customheader ${ isB2BStyle(user) && companyPage || this.state.ifHomePage ? classes.navbarAppBarNoBg : isB2BStyle(user) && !companyPage ? classes.navbarAppBarWithBg : null}`}>
+        <AppBar position={'static'} className={isB2BStyle(user) && companyPage || this.state.ifHomePage ? `customappbarhomepage ${classes.navbarAppBarNoBg}` : isB2BStyle(user) && !companyPage ? `customappbar ${classes.navbarAppBarWithBg}` : null}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Grid className={classes.hiddenOnlyXs}>
               <Grid container style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin: 0}}>
