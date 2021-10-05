@@ -30,6 +30,7 @@ const {getLoggedUserId} = require('../utils/context')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
 import {INDEX} from '../utils/i18n'
+import _ from 'lodash'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -50,7 +51,7 @@ class Home extends React.Component {
     super(props)
     this.child = React.createRef()
     this.state = {
-      category: {},
+      categories: [],
       alfred: {},
       logged: false,
       user: {},
@@ -83,8 +84,8 @@ class Home extends React.Component {
 
     axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
       .then(res => {
-        let category = res.data
-        this.setState({category: category})
+        let categories = _.shuffle(res.data)
+        this.setState({categories: categories})
       }).catch(err => console.error(err))
 
     axios.get(`/myAlfred/api/serviceUser/home/${isB2BStyle(this.state.user) ? PRO : PART}`)
@@ -139,7 +140,7 @@ class Home extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {category, alfred, open, user} = this.state
+    const {categories, alfred, open, user} = this.state
     return (
 
       <Grid>
@@ -187,7 +188,7 @@ class Home extends React.Component {
           }
           <Grid container className={`customslidecat ${classes.mainContainerStyle}`}>
             <Grid className={classes.generalWidthContainer}>
-              <CategoryTopic category={category}/>
+              <CategoryTopic categories={categories}/>
             </Grid>
           </Grid>
           <Grid container className={`customhowitworks ${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
