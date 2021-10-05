@@ -31,6 +31,7 @@ import Router from 'next/router'
 import '../static/assets/css/custom.css'
 import {INDEX} from '../utils/i18n'
 import CustomBannerOneCol from '../components/HomePage/CustomBannerOneCol/CustomBannerOneCol'
+import _ from 'lodash'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props

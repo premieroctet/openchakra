@@ -20,9 +20,9 @@ class CategoryTopic extends React.Component {
     super(props)
   }
   render() {
-    const {classes, category, user} = this.props
+    const {classes, categories, user} = this.props
 
-    if (!category) {
+    if (!categories) {
       return null
     }
 
@@ -50,13 +50,13 @@ class CategoryTopic extends React.Component {
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
           <Grid className={classes.categorySlideContainer}>
-            <CategorySlide model={new SlideGridDataModel(category, 4, 2, true)} style={classes} user={user}/>
+            <CategorySlide model={new SlideGridDataModel(categories, 4, 2, true)} style={classes} user={user}/>
           </Grid>
           <Grid item container spacing={3} className={classes.hideOnBigScreen}>
             {
-              Object.keys(category).map((res, index) => (
+              categories.map((category, index) => (
                 <Grid item key={index}>
-                  <CategoryCard item={category[res]}/>
+                  <CategoryCard item={category}/>
                 </Grid>
               ))
             }
