@@ -303,7 +303,7 @@ class CardService extends React.Component {
                         <Grid item xl={9} lg={9} md={9} sm={9} xs={9} className={classes.buttonShowProfilContainer}>
                           <CustomButton
                             variant={'contained'}
-                            classes={{root: classes.buttonShowProfil}}
+                            classes={{root: `customshoprofil ${classes.buttonShowProfil}`}}
                           >
                             {ReactHtmlParser(this.props.t('CARD_SERVICE.button_show_profil'))}
                           </CustomButton>
