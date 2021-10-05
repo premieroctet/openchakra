@@ -31,6 +31,7 @@ const {checkCssClasses} = require('../../utils/functions')
 import css from '../../static/assets/css/custom.css'
 import {LOGIN} from '../../utils/i18n'
 import {Icon} from '@material-ui/core'
+import CustomIcon from '../CustomIcon/CustomIcon'
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -147,9 +148,7 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                   <Grid item>
-                    {
-                      checkCssClasses('customTrustAlarm') ? <div style={{height: 24, width: 24, backgroundSize: 'contain'}} className={'customTrustAlarm'}/> : <MailOutlineIcon className={classes.colorIcon}/>
-                    }
+                    <CustomIcon className={'customtrustalarm'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<MailOutlineIcon className={classes.colorIcon}/>}/>
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
@@ -168,10 +167,7 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                   <Grid item>
-                    {
-                      checkCssClasses('customlogopass') ? <div style={{height: 24, width: 24, backgroundSize: 'contain'}} className={'customlogopass'}/> : <LockOpenOutlinedIcon className={classes.colorIcon}/>
-                    }
-
+                    <CustomIcon className={'customlogopass'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<LockOpenOutlinedIcon className={classes.colorIcon}/>}/>
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input

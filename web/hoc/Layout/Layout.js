@@ -83,7 +83,7 @@ class Layout extends React.Component {
               <TrustAndSecurity/>
             </Grid>
           </Grid>
-          <Grid className={classes.generalWidthFooter}>
+          <Grid className={`customgeneralfooter ${classes.generalWidthFooter}`}>
             <Grid style={{width: '85%'}}>
               {<Footer/>}
             </Grid>

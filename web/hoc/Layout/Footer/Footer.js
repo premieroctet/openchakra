@@ -96,10 +96,10 @@ class Footer extends React.Component {
       <Grid container spacing={2} style={{width: '100%', margin: 0}}>
         <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
           lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
-          <Grid item>
+          <Grid item className={'customfooterabout'}>
             <h3>{ReactHtmlParser(this.props.t('FOOTER.about'))}</h3>
           </Grid>
-          <Grid item>
+          <Grid item className={'customfootermyalfred'}>
             <Link href={'/footer/apropos'}>
               <Typography>{ReactHtmlParser(this.props.t('FOOTER.myalfred'))}</Typography>
             </Link>

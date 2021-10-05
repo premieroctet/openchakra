@@ -14,7 +14,7 @@ function InfoBar({classes, t}) {
     <Grid container className={`${classes.infoBarMainStyle} customHeaderinfobar`}>
       <Grid item className={classes.infoBarLinkContainer}>
         <Grid className={classes.infoBarPicsContainer}>
-          <Grid className={`${classes.icon} customInfoBarIcon`}/>
+          <Grid className={`${classes.icon} custominfobaricon`} style={{backgroundSIze: 'contain'}}/>
         </Grid>
         <Grid>
           <Typography className={`${classes.infoBarColorText} customHeaderinfobar`}>{ReactHtmlParser(t('INFOBAR.message'))}</Typography>

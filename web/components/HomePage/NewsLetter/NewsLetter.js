@@ -17,6 +17,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import '../../../static/assets/css/custom.css'
+import CustomIcon from '../../CustomIcon/CustomIcon'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -149,7 +150,7 @@ class NewsLetter extends React.Component {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon className={classes.newsLetterEmailIcon}/>
+                        <CustomIcon className={'customnlicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<EmailIcon className={classes.newsLetterEmailIcon}/>}/>
                       </InputAdornment>
                     ),
                   }}

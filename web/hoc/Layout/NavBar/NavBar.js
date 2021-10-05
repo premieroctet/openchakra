@@ -1113,7 +1113,7 @@ class NavBar extends Component {
         sm={1}
         onClick={() => Router.push('/')}
       >
-        <Logo className={`${classes.logoMyAlfred} customNavbarLogo`}/>
+        <Logo className={`${classes.logoMyAlfred} customnavbarlogo`} style={{backgroundRepeat: 'no-repeat'}}/>
       </Grid>
     )
   };
