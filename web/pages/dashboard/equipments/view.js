@@ -11,7 +11,7 @@ import axios from 'axios'
 
 import BasePage from '../../basePage'
 import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor'
-import Layout from '../../../hoc/Layout/Layout'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 const {snackBarSuccess}=require('../../../utils/notifications')
@@ -131,7 +131,7 @@ class View extends BasePage {
 
     const title=`${this.isEdition() ? 'Modifier' : 'Ajouter'} un équipement`
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -174,7 +174,7 @@ class View extends BasePage {
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

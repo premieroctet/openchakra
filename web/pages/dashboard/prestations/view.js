@@ -18,7 +18,7 @@ import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
 import BasePage from '../../basePage';
-import Layout from '../../../hoc/Layout/Layout'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
@@ -337,7 +337,7 @@ class View extends BasePage {
 
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.loginContainer}>
           <Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center'}}>
@@ -585,7 +585,7 @@ class View extends BasePage {
             </Link>
           </Grid>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

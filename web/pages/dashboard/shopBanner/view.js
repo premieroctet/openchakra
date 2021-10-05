@@ -12,7 +12,7 @@ import axios from 'axios'
 
 import {snackBarSuccess} from '../../../utils/notifications'
 import BasePage from '../../basePage'
-import Layout from '../../../hoc/Layout/Layout'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 
@@ -117,7 +117,7 @@ class View extends BasePage {
 
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -155,7 +155,7 @@ class View extends BasePage {
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

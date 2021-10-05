@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import Router from 'next/router';
-import Layout from '../../hoc/Layout/Layout';
+import DashboardLayout from '../../hoc/Layout/DashboardLayout';
 import Link from 'next/link';
 
 const {isLoggedUserAdmin}=require('../../utils/context')
@@ -52,7 +52,7 @@ class home extends React.Component {
     const {classes} = this.props
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -91,7 +91,7 @@ class home extends React.Component {
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

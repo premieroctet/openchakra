@@ -12,7 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 
 import {snackBarSuccess} from '../../../utils/notifications';
-import Layout from '../../../hoc/Layout/Layout';
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout';
 
 
 const styles = theme => ({
@@ -95,7 +95,7 @@ class add extends React.Component {
 
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -159,7 +159,7 @@ class add extends React.Component {
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     );
   };
 }
