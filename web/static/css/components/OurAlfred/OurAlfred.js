@@ -19,7 +19,6 @@ export default theme => ({
   ourAlfredImgContainer: {
     height: '100%',
     marginTop: '-25px',
-    transform: 'rotate(-25deg)',
     [theme.breakpoints.down('xs')]: {
       margin: 0,
     },
