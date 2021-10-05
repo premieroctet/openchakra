@@ -103,6 +103,11 @@ export default theme => ({
       display: 'none',
     },
   },
-
+  logoMyAlfredGreen: {
+    backgroundImage: 'url(static/assets/icon/logoGreen.svg)',
+  },
+  logoMyAlfred: {
+    backgroundImage: 'url(static/assets/icon/logo.svg)',
+  },
 
 })

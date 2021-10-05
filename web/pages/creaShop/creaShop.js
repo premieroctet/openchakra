@@ -20,6 +20,7 @@ import BasePage from '../basePage'
 import Box from '../../components/Box/Box'
 import Stepper from '../../components/Stepper/Stepper'
 import styles from '../../static/css/pages/creaShop/creaShopStyle'
+import Logo from '../../components/Logo/Logo'
 
 const {STEPS}=require('./creaShopSteps')
 const {getDefaultAvailability}=require('../../utils/dateutils')
@@ -397,7 +398,7 @@ class creaShop extends BasePage {
     this.setState({shop: shop})
   }
 
-  assetsChanged = (state) => {
+  assetsChanged = state => {
     this.setState({
       shop: {
         ...this.state.shop,
@@ -511,12 +512,7 @@ class creaShop extends BasePage {
           </List>
           <Grid container style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{height: '100%', display: 'flex', flexDirection: 'column-reverse'}}>
-              <img
-                alt={'logo_myAlfred'}
-                title={'logo_myAlfred'}
-                src={'/static/assets/icon/logo.svg'}
-                height={64}
-                style={{filter: 'invert(1)'}}/>
+              <Logo className={`${classes.logoMyAlfred} customnavbarlogo`} style={{backgroundRepeat: 'no-repeat', height: 64}}/>
             </Grid>
           </Grid>
         </Grid>
@@ -550,12 +546,7 @@ class creaShop extends BasePage {
             </IconButton>
           </Grid>
           <Grid style={{position: 'absolute', width: '100%', textAlign: 'center'}}>
-            <img
-              alt={'logo_myAlfred'}
-              title={'logo_myAlfred'}
-              src={'/static/assets/icon/logoGreen.svg'}
-              height={64}
-            />
+            <Logo className={`${classes.logoMyAlfredGreen} customcreashoplogo`} style={{backgroundRepeat: 'no-repeat', height: 64}}/>
           </Grid>
         </Grid>
         <nav className={classes.drawer} aria-label="mailbox folders">

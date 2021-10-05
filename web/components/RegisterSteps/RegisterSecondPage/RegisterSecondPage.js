@@ -20,6 +20,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
 import '../../../static/assets/css/custom.css'
 import {REGISTER_SECOND_PAGE} from '../../../utils/i18n'
+import CustomIcon from '../../CustomIcon/CustomIcon'
 
 
 function NumberFormatCustom(props) {
@@ -187,7 +188,7 @@ class RegisterSecondPage extends React.Component {
             </Grid>
             <Grid item container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
               <Grid item>
-                <PhoneIphoneOutlinedIcon className={classes.colorIcon}/>
+                <CustomIcon className={'customregisterphoneicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<PhoneIphoneOutlinedIcon className={classes.colorIcon}/>}/>
               </Grid>
               <Grid item style={{width: '70%'}}>
                 <TextField
@@ -217,7 +218,7 @@ class RegisterSecondPage extends React.Component {
                   />
                 </Grid>
                 <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-                  <CustomButton onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}</CustomButton>
+                  <CustomButton onClick={this.handleOpenCgu} classes={{root: `customregigisterbuttoncgu ${classes.buttonCGU}`}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}</CustomButton>
                   {this.dialogCgu(classes)}
                 </Grid>
               </Grid>
