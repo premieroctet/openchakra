@@ -20,7 +20,7 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import {FOOTER} from '../../../utils/i18n'
 const {getLoggedUserId, isLoggedUserAlfredPro, isB2BStyle, isApplication} = require('../../../utils/context')
-const {isB2BDisabled} = require('../../../config/config')
+const {isB2BDisabled, mustDisplayChat} = require('../../../config/config')
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose} = props
@@ -247,9 +247,11 @@ class Footer extends React.Component {
                   <Typography>{ReactHtmlParser(this.props.t('FOOTER.resa_service'))}</Typography>
                 </Link>
               </Grid>
-              <Grid item onClick={() => Tawk_API.maximize()} className={`customfootertawlk ${classes.hiddenOnMobile}`}>
-                <Typography>{ReactHtmlParser(this.props.t('FOOTER.tawlk_human'))}</Typography>
-              </Grid>
+              { mustDisplayChat() &&
+                <Grid item onClick={() => Tawk_API.maximize()} className={`customfootertawlk ${classes.hiddenOnMobile}`}>
+                  <Typography>{ReactHtmlParser(this.props.t('FOOTER.tawlk_human'))}</Typography>
+                </Grid>
+              }
               <Grid item className={'customfooterfaq'}>
                 <Link href={'/faq'}>
                   <Typography>{ReactHtmlParser(this.props.t('FOOTER.faq'))}</Typography>
