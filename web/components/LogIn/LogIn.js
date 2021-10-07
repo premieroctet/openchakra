@@ -153,7 +153,7 @@ class LogIn extends React.Component {
                   <Grid item className={classes.widthTextField}>
                     <Input
                       label={ReactHtmlParser(this.props.t('LOGIN.input_label'))}
-                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_label'))}
+                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_label_placeholder'))}
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
                       name="username"
                       value={username}
@@ -173,7 +173,7 @@ class LogIn extends React.Component {
                     <Input
                       id="standard-with-placeholder"
                       label={ReactHtmlParser(this.props.t('LOGIN.input_password'))}
-                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_password'))}
+                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_password_placeholder'))}
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
                       type={showPassword ? 'text' : 'password'}
                       name="password"
