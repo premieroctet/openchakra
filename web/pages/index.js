@@ -197,12 +197,12 @@ class Home extends React.Component {
               {/* <HowItWorks/>*/}
               <Grid className={classes.howItWorksMainStyle}>
                 <CustomBannerMultiCol
-                  firstContent={<Typography className={'customhowitworksfirsttext'}>{ReactHtmlParser(this.props.t('INDEX.first_content'))}</Typography>}
-                  secondContent={<Typography className={'customhowitworkssecondtext'}>{ReactHtmlParser(this.props.t('INDEX.second_content'))}</Typography>}
-                  thirdContent={<Typography className={'customhowitworksthirdttext'}>{ReactHtmlParser(this.props.t('INDEX.third_content'))}</Typography>}
-                  fourContent={<Typography className={'customhowitworksfourtext'}>{ReactHtmlParser(this.props.t('INDEX.four_content'))}</Typography>}
-                  fiveContent={<Typography className={'customhowitworksfivetext'}>{ReactHtmlParser(this.props.t('INDEX.five_content'))}</Typography>}
-                  sixContent={<Typography className={'customhowitworkssixtext'}>{ReactHtmlParser(this.props.t('INDEX.six_content'))}</Typography>}
+                  firstContent={<div className={'custombannerimgfirst'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfirsttext'}>{ReactHtmlParser(this.props.t('INDEX.first_content'))}</Typography></div>}
+                  secondContent={<div className={'custombannerimgtwo'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworkssecondtext'}>{ReactHtmlParser(this.props.t('INDEX.second_content'))}</Typography></div>}
+                  thirdContent={<div className={'custombannerimgthree'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksthirdttext'}>{ReactHtmlParser(this.props.t('INDEX.third_content'))}</Typography></div>}
+                  fourContent={<div className={'custombannerimgfour'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfourtext'}>{ReactHtmlParser(this.props.t('INDEX.four_content'))}</Typography></div>}
+                  fiveContent={<div className={'custombannerimgfive'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfivetext'}>{ReactHtmlParser(this.props.t('INDEX.five_content'))}</Typography></div>}
+                  sixContent={<div className={'custombannerimgsix'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworkssixtext'}>{ReactHtmlParser(this.props.t('INDEX.six_content'))}</Typography></div>}
                 />
               </Grid>
             </Grid>

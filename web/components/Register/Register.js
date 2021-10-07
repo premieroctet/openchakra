@@ -57,7 +57,7 @@ class Register extends React.Component {
       errors: {},
       lat: '',
       lng: '',
-      activeStep: 0,
+      activeStep: 1,
       file: null,
       picture: '',
       // Avatar link coming from Google or Facebook

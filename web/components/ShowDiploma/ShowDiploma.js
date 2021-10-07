@@ -12,6 +12,7 @@ import SchoolIcon from '@material-ui/icons/School'
 import CloudDoneOutlinedIcon from '@material-ui/icons/CloudDoneOutlined'
 import CloudOffOutlinedIcon from '@material-ui/icons/CloudOffOutlined'
 import {SHOW_DIPLOMA} from '../../utils/i18n'
+import CustomIcon from '../CustomIcon/CustomIcon'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
 
@@ -48,7 +49,7 @@ class ShowDiploma extends React.Component {
       <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
           <Grid>
-            <SchoolIcon classes={{root: classes.diplomaIcon}}/>
+            <CustomIcon className={'customdiplomaschoolicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<SchoolIcon classes={{root: classes.diplomaIcon}}/>}/>
           </Grid>
           <Grid style={{marginLeft: 10}}>
             <h3>{ReactHtmlParser(this.props.t('SHOW_DIPLOMA.title'))}</h3>
@@ -94,7 +95,7 @@ class ShowDiploma extends React.Component {
                               res.skills.map(s => {
                                 return(
                                   <Chip
-                                    classes={{root: classes.chip}}
+                                    classes={{root: `customchipdiploma ${classes.chip}`}}
                                     label={`#${s}`}
                                   />
                                 )
