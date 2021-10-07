@@ -717,32 +717,22 @@ router.get('/home/:partpro', (req, res) => {
     gps=JSON.parse(query.gps)
   }
 
-  const shuffleArray = array => {
-    let i = array.length - 1
-    for (; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      const temp = array[i]
-      array[i] = array[j]
-      array[j] = temp
-    }
-    return array
-  }
-
   const filter= req.params.partpro==PRO ? {'professional_access': true} : {'particular_access': true}
   req.context.getModel('ServiceUser').find(filter, 'user service service_address')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
     .populate('user', 'picture firstname score billing_address')
     .populate('service', 'label picture')
-    .then(services => {
+    .then(result => {
+      let services=result
       if (typeof services !== 'undefined' && services.length > 0) {
         if (gps) {
           services.sort(serviceFilters.distanceComparator(gps))
           services = _.uniqBy(services, su => su.user)
         }
         else {
-          services = shuffleArray(services)
+          services = _.shuffle(services)
         }
-        res.json(services.slice(0, 6))
+        res.json(services.slice(0, 24))
       }
       else {
         return res.status(400).json({
