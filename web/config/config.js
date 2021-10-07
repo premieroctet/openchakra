@@ -1,6 +1,14 @@
 const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
-const {MODE}=require('../mode')
+const {MODE, TAWKTO_URL}=require('../mode')
 const source = require('./client_id.json')
+
+const getChatURL = () => {
+  return TAWKTO_URL
+}
+
+const mustDisplayChat = () => {
+  return Boolean(TAWKTO_URL)
+}
 
 const get_mode = () => {
   if (!Object.values(MODES).includes(MODE)) {
@@ -121,6 +129,7 @@ const displayConfig = () => {
   \tServer prod:${SERVER_PROD}\n\
   \tServer port:${SERVER_PROD ? '80/443':'3122'}\n\
   \tHost URL:${get_host_url()}\n\
+  \tDisplay chat:${mustDisplayChat()} ${getChatURL()}\n\
   \tSendInBlue actif:${ENABLE_MAILING}\n\
   \tMangopay clientId:${MANGOPAY_CONFIG.clientId}\
   `)
@@ -139,4 +148,5 @@ module.exports = {
   is_production, is_validation, is_development, is_development_nossl, SERVER_PROD,
   get_host_url, MANGOPAY_CONFIG, displayConfig,
   ENABLE_MAILING, isB2BDisabled,
+  mustDisplayChat, getChatURL
 }
