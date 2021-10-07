@@ -22,7 +22,6 @@ class OurAlfred extends React.Component {
   render() {
     const{classes, alfred} = this.props
 
-
     return(
       <Grid className={classes.ourAlfredMainStyle}>
         <Grid className={classes.ourAlfredMainContainer}>
@@ -45,7 +44,7 @@ class OurAlfred extends React.Component {
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
           <Grid item className={classes.alfredSlideContainer}>
-            <AlfredSlide model={new SlideGridDataModel(alfred, 3, 1, true)} style={classes} />
+            <AlfredSlide model={new SlideGridDataModel(alfred, 3, 2, true)} style={classes} />
           </Grid>
           <Grid item container spacing={3} className={classes.containerCardPreviewMobile}>
             {

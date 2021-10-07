@@ -20,9 +20,9 @@ const ATT_TYPES={
   'border-color': 'color',
   'background-image': 'picture',
   'border': 'color',
-  'content': 'richtext',
+  'text': 'richtext',
   'font': 'richtext',
-  'text': 'text',
+  'sample': 'text',
 }
 const TITLES={
   'background-color': 'Couleur de fond',
@@ -30,7 +30,7 @@ const TITLES={
   'border-color': 'Couleur de bordure',
   'border-radius': 'Rayon de bordure',
   'display': 'Afficher',
-  'content': '',
+  'text': '',
   'magnify-background-color': 'Couleur de loupe',
   'info-color': "Couleur du texte d'information",
   'example-color': "Couleur du texte d'exemple",
@@ -38,7 +38,7 @@ const TITLES={
 }
 
 const ATTRIBUTES_TYPES={
-  'component': [['display', 'visibility'], ['color', 'color'], ['background-color', 'color'], ['content', 'text']],
+  'component': [['display', 'visibility'], ['color', 'color'], ['background-color', 'color'], ['text', 'text']],
   'button': [['display', 'visibility'], ['color', 'color'], ['background-color', 'color'], ['border-color', 'color'], ['border-radius', 'integer']],
   'menuitem': [['display', 'visibility']],
   'logo': [['background-color', 'color'], ['content', 'picture']],
@@ -79,31 +79,28 @@ class UIParameter extends React.Component {
           {!(is_production()) && <h4>({parameter.type_label})</h4>}
         </Grid>
         <Grid>
-        {
-          attributes.map(att => {
-            let [att_name, att_type] = att
+          {
+            attributes.map(att => {
+              let [att_name, att_type] = att
 
-            if (att_name.endsWith('_placeholder')) {
-              att_type='text'
-            }
-            if (this.props.prefix) {
-              att_name=`${this.props.prefix}.${att_name}`
-            }
-            let pAtt=parameter.attributes.find(a => a.name==att_name)
-            pAtt = pAtt || {value: ''}
-            const props={key: att_name, title: getTitle(att_name), value: pAtt.value, onChange: onChange(att_name), colors: this.props.colors}
+              if (this.props.prefix) {
+                att_name=`${this.props.prefix}.${att_name}`
+              }
+              let pAtt=parameter.attributes.find(a => a.name==att_name)
+              pAtt = pAtt || {value: ''}
+              const props={key: att_name, title: getTitle(att_name), value: pAtt.value, onChange: onChange(att_name), colors: this.props.colors}
 
-            switch (att_type) {
-              case 'color': return <Grid key={props} item xl={12}><ColorPicker {...props} /></Grid>
-              case 'richtext': return <Grid item xl={12}><HtmlEditor {...props} /></Grid>
-              case 'text': return <Grid item xl={12}><TextEditor {...props} /></Grid>
-              case 'visibility': return <Grid item xl={12}><Visibility {...props} name={title}/></Grid>
-              case 'integer': return <Grid item xl={12}><IntegerEditor {...props} /></Grid>
-              case 'picture': return <Grid item xl={12}><PictureEditor {...props} /></Grid>
-              default: return null
-            }
-          })
-        }
+              switch (att_type) {
+                case 'color': return <Grid key={props} item xl={12}><ColorPicker {...props} /></Grid>
+                case 'richtext': return <Grid item xl={12}><HtmlEditor {...props} /></Grid>
+                case 'text': return <Grid item xl={12}><TextEditor {...props} /></Grid>
+                case 'visibility': return <Grid item xl={12}><Visibility {...props} name={title}/></Grid>
+                case 'integer': return <Grid item xl={12}><IntegerEditor {...props} /></Grid>
+                case 'picture': return <Grid item xl={12}><PictureEditor {...props} /></Grid>
+                default: return null
+              }
+            })
+          }
         </Grid>
 
       </Grid>

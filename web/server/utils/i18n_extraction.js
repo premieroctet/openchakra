@@ -16,7 +16,7 @@ const getQueries = () => {
     let [k, v]=Object.entries(obj)[0]
     const compName=k.split('.')[0]
     v=v.replace(/['’]/g, "\\'")
-    const type=k.includes('placeholder') ? 'text' : 'content'
+    const type=k.includes('placeholder') ? 'sample' : 'text'
     return `db.uiconfigurations.update(\
       {classname: '${k}', type:'${type}'},\
       {$set :

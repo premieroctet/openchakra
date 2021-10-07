@@ -27,7 +27,7 @@ class CardPreview extends React.Component {
       return null
     }
 
-    const city = item.user && item.user.billing_address && item.user.billing_address.city ? item.user.billing_address.city : ''
+    const city = (item.service_address && item.service_address.city) || ''
 
     return(
       <Grid style={{height: 200, display: 'flex', alignItems: 'center', flexDirection: 'column'}}
