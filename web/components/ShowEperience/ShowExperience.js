@@ -12,6 +12,7 @@ import WorkIcon from '@material-ui/icons/Work'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import {YEARS_RANGE} from '../../utils/consts'
 import {SHOW_EXPERIENCE} from '../../utils/i18n'
+import CustomIcon from '../CustomIcon/CustomIcon'
 
 
 class ShowExperience extends React.Component {
@@ -42,7 +43,8 @@ class ShowExperience extends React.Component {
       <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
           <Grid>
-            <WorkIcon classes={{root: classes.workIcon}}/>
+            <CustomIcon className={'customshowxpicon'} style={{backgroundSize: 'contain', height: 24, width: 24}} materialIcon={<WorkIcon classes={{root: classes.workIcon}}/>}/>
+
           </Grid>
           <Grid style={{marginLeft: 10}}>
             <h3>{ReactHtmlParser(this.props.t('SHOW_EXPERIENCE.title'))}</h3>

@@ -26,11 +26,6 @@ import Select from '@material-ui/core/Select'
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
 import {EMPLOYEE} from '../../utils/consts'
 const {isB2BStyle}=require('../../utils/context')
-const {checkCssClasses} = require('../../utils/functions')
-
-import css from '../../static/assets/css/custom.css'
-import {LOGIN} from '../../utils/i18n'
-import {Icon} from '@material-ui/core'
 import CustomIcon from '../CustomIcon/CustomIcon'
 
 class LogIn extends React.Component {

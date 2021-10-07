@@ -1176,6 +1176,12 @@ const INDEX = {
   dialog_store: 'Application MyAlfred',
   store_available: 'Notre application est disponible sur ',
   download_button: 'Télécharger',
+  first_content: '',
+  second_content: '',
+  third_content: '',
+  four_content: '',
+  five_content: '',
+  six_content: '',
 }
 
 const PAYMENT_FAILED = {

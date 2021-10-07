@@ -413,8 +413,6 @@ class About extends CompanyComponent {
           label: ReactHtmlParser(this.props.t('PROFIL.verification')),
           summary: user ? user.is_confirmed ? ReactHtmlParser(this.props.t('PROFIL.confirmed')) : ReactHtmlParser(this.props.t('PROFIL.nothing')) : ReactHtmlParser(this.props.t('PROFIL.unconfirmed')),
           IconName: user ? user.is_confirmed ? <CustomIcon className={'customaboutcheckcircleicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<CheckCircleOutlineIcon fontSize="large"/>}/> : <CustomIcon className={'customaboutuncheckcircleicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<HighlightOffIcon fontSize={'large'}/>}/> : '',
-
-
         },
       ]
       :

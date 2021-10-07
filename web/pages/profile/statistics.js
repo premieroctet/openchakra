@@ -7,7 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import React from 'react'
 import loadable from 'loadable-components'
 
-import BasePage from '../basePage';
+import BasePage from '../basePage'
 import Topic from '../../hoc/Topic/Topic'
 import styles from '../../static/css/pages/profile/statistics/statistics'
 
@@ -230,7 +230,7 @@ class ProfileStatistics extends BasePage {
         </Grid>
         <Grid item xs={12}>
           <Box>
-            <Topic underline={true} titleTopic={ReactHtmlParser(this.props.t('STATISTICS.my_stat'))} titleSummary={ReactHtmlParser(this.props.t('STATISTICS.my_stat_subtitle'))}>
+            <Topic underline={true} titleTopic={ReactHtmlParser(this.props.t('STATISTICS.my_stat_title'))} titleSummary={ReactHtmlParser(this.props.t('STATISTICS.my_stat_subtitle'))}>
               <Grid item style={{width: '100%'}}>
                 <Grid container style={{width: '100%'}}>
                   <Grid container style={{width: '100%'}}>

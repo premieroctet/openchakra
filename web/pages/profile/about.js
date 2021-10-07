@@ -398,7 +398,7 @@ class ProfileAbout extends CompanyComponent {
           }
           <Grid item xs={12}>
             <Grid>
-              <h3>{ABOUT.leave_at}</h3>
+              <h3>{ReactHtmlParser(this.props.t('PROFIL.place'))}</h3>
             </Grid>
             <Grid style={{margin: 3}}/>
             {
@@ -416,7 +416,7 @@ class ProfileAbout extends CompanyComponent {
             company_mode ? null :
               <Grid item xs={12}>
                 <Grid>
-                  <h3>{ABOUT.speak}</h3>
+                  <h3>{ReactHtmlParser(this.props.t('PROFIL.languages'))}</h3>
                 </Grid>
                 <Grid style={{margin: 3}}/>
                 <Grid>

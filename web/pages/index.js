@@ -30,8 +30,8 @@ const {getLoggedUserId} = require('../utils/context')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
 import {INDEX} from '../utils/i18n'
-import CustomBannerOneCol from '../components/HomePage/CustomBannerOneCol/CustomBannerOneCol'
 import _ from 'lodash'
+import CustomBannerMultiCol from '../components/HomePage/CustomBannerMultiCol/CustomBannerMultiCol'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -193,9 +193,18 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           <Grid container className={`customhowitworks ${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
-            <Grid className={classes.generalWidthContainer}>
+            <Grid style={{width: '100%'}}>
               {/* <HowItWorks/>*/}
-              <CustomBannerOneCol/>
+              <Grid className={classes.howItWorksMainStyle}>
+                <CustomBannerMultiCol
+                  firstContent={<Typography className={'customhowitworksfirsttext'}>{ReactHtmlParser(this.props.t('INDEX.first_content'))}</Typography>}
+                  secondContent={<Typography className={'customhowitworkssecondtext'}>{ReactHtmlParser(this.props.t('INDEX.second_content'))}</Typography>}
+                  thirdContent={<Typography className={'customhowitworksthirdttext'}>{ReactHtmlParser(this.props.t('INDEX.third_content'))}</Typography>}
+                  fourContent={<Typography className={'customhowitworksfourtext'}>{ReactHtmlParser(this.props.t('INDEX.four_content'))}</Typography>}
+                  fiveContent={<Typography className={'customhowitworksfivetext'}>{ReactHtmlParser(this.props.t('INDEX.five_content'))}</Typography>}
+                  sixContent={<Typography className={'customhowitworkssixtext'}>{ReactHtmlParser(this.props.t('INDEX.six_content'))}</Typography>}
+                />
+              </Grid>
             </Grid>
           </Grid>
           <Grid container className={`customouralfred ${classes.mainContainerStyle}`}>

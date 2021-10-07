@@ -174,4 +174,13 @@ export default theme => ({
       display: 'none',
     },
   },
+  howItWorksRightText: {
+    color: theme.palette.white.main,
+    fontSize: theme.typography.text.fontSize,
+    fontWeight: theme.typography.text.fontWeight,
+    fontFamily: theme.typography.text.fontFamily,
+  },
+  howItWorksMainStyle: {
+    padding: '6%',
+  },
 })

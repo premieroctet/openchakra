@@ -790,6 +790,10 @@ class UserServicesPreview extends BasePage {
                     >
                       <ListAlfredConditions
                         columnsXl={12}
+                        columnsLG={12}
+                        columnsMD={12}
+                        columnsSM={12}
+                        columnsXS={12}
                         wrapperComponentProps={
                           [
                             {
@@ -799,8 +803,8 @@ class UserServicesPreview extends BasePage {
                             },
                             {
                               label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_label')) : '',
-                              summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_summary')) + this.state.flexible ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.one_day')) : this.state.moderate ? '' +
-                                ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.five_days')) : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.ten_days')) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.before_end_date')) : '',
+                              summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_summary')) + this.state.flexible ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.one_day')) : this.state.moderate ? `${
+                                ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.five_days'))}` : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.ten_days')) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.before_end_date')) : '',
                               IconName: this.state.alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : '',
                             },
                             {
