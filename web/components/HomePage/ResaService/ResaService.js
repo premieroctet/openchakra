@@ -39,7 +39,7 @@ class ResaService extends React.Component {
     const {homePage} = this.state
 
     return (
-      <Grid className={classes.ResaServiceMainContainer}>
+      <Grid className={classes.ResaServiceMainContainer} id={'anchorService'}>
         <Grid className={classes.becomeAlfredContainer}>
           <Grid>
             <h2 className={`customresaserviceh2 ${classes.becomeAlfredTitle}`}>{ReactHtmlParser(this.props.t('RESA_SERVICE.title'))}</h2>
