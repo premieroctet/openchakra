@@ -53,7 +53,7 @@ class CategoryCard extends React.Component {
               className={classes.categoryCardBackground}
             />
           </Grid>
-          <Grid className={'customcardcat'}>
+          <Grid className={`customcardcat ${classes.textContainer}`}>
             <Typography className={`customtypocardcat ${classes.typocardcat}`}>{isB2BStyle(user) ? item.professional_label : item.particular_label}</Typography>
           </Grid>
         </Grid>

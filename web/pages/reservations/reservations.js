@@ -249,7 +249,7 @@ class AllReservations extends BasePage {
             onChange={this.handleReservationStatusChanged}
             aria-label="scrollable force tabs"
             scrollButtons="on"
-            classes={{indicator: classes.scrollMenuIndicator}}
+            classes={{indicator: `customscrollmenu ${classes.scrollMenuIndicator}`}}
           >
             <Tab label={'Toutes mes réservations'} className={classes.scrollMenuTab} />
             <Tab label={'Mes réservations à venir'} className={classes.scrollMenuTab} />

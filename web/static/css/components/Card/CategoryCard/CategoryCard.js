@@ -16,4 +16,7 @@ export default theme => ({
     marginTop: 5,
     marginBottom: 5,
   },
+  textContainer: {
+    textAlign: 'center',
+  },
 })
