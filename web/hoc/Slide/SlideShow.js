@@ -49,7 +49,7 @@ function withSlide(WrappedComponent) {
           </Carousel>
           { !model.isInfinite() ?
             <Grid style={{display: 'flex', justifyContent: 'center', marginTop: '5vh', marginBottom: '5vh'}}>
-              <Pagination count={pageCount} page={pageIndex+1} onChange={this.onPageChange} classes={{root: style.paginationRoot}}/>
+              <Pagination count={pageCount} page={pageIndex+1} onChange={this.onPageChange} classes={{root: `custompagination ${style.paginationRoot}`}}/>
             </Grid>
             :
             null
