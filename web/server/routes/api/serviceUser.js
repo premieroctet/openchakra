@@ -718,10 +718,10 @@ router.get('/home/:partpro', (req, res) => {
   }
 
   const filter= req.params.partpro==PRO ? {'professional_access': true} : {'particular_access': true}
-  req.context.getModel('ServiceUser').find(filter, 'user service service_address')
+  req.context.getModel('ServiceUser').find(filter, 'user service service_address.city')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
-    .populate('user', 'picture firstname score billing_address')
-    .populate('service', 'label picture')
+    .populate('user', 'picture firstname score')
+    .populate('service', 'label')
     .then(result => {
       let services=result
       if (typeof services !== 'undefined' && services.length > 0) {
