@@ -15,7 +15,7 @@ export default theme => ({
     fontWeight: 'bold',
   },
   certificationLogo: {
-    backgroundImage: 'src(/static/assets/icon/pro_icon.svg)',
+    backgroundImage: 'url(../../../assets/icon/pro_icon.svg)',
     height: 24,
     width: 24,
   },

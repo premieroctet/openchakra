@@ -607,7 +607,8 @@ class creaShop extends BasePage {
             <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 11 : is_development() ? 5 : 11} lg={activeStep === 0 ? 11 : is_development() ? 5 : 11} md={activeStep === 0 ? 11 : is_development() ? 5 : 11} sm={activeStep === 0 ? 11 : is_development() ? 5 : 11} xs={activeStep === 0 ? 12 : is_development() ? 6 : 11}>
               <CustomButton
                 variant="contained"
-                classes={{root: `customcreashopbuttonnext ${classes.nextButton}`, disabled: classes.disabledStyle}}
+                className={`customcreashopbuttonnext ${classes.nextButton}`}
+                classes={{disabled: classes.disabledStyle}}
                 onClick={this.handleNext}
                 disabled={this.nextDisabled()}
               >
