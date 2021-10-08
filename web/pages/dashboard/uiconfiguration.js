@@ -148,6 +148,10 @@ class UIConfiguration extends React.Component {
     else if (value!==null) {
       p.attributes.push({name: att_name, value: value})
     }
+    // TODO : dégueu
+    if (p.type=='button' && value==null) {
+      p.attributes=[]
+    }
     modified_parameters[p._id]=p
     this.setState({parameters: parameters, modified_parameters: modified_parameters},
       () => { this.filterParameters(); this.sortColors() })

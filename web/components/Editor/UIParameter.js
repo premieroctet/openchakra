@@ -10,8 +10,7 @@ import GroupEditor from './GroupEditor'
 import PictureEditor from './PictureEditor'
 import Grid from '@material-ui/core/Grid'
 import TextEditor from './TextEditor'
-
-const RESET_BUTTON_ENABLED=false
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 
 const ATT_TYPES={
   'color': 'color',
@@ -72,12 +71,13 @@ class UIParameter extends React.Component {
     }
     const attributes=ATTRIBUTES_TYPES[parameter.type] || [[parameter.type, ATT_TYPES[parameter.type]]]
 
+    const displayReset = parameter.attributes && parameter.attributes.length>0
     return (
       <Grid container spacing={2} style={{display: 'flex', flexDirection: 'column'}}>
         <Grid item xl={12} style={{display: 'flex'}}>
-          { RESET_BUTTON_ENABLED && <CustomButton onClick={() => this.onResetClicked(parameter.type)}>Reset</CustomButton> }
           <h3 style={{color: 'black'}}>{title}</h3>
           {!(is_production()) && <h4>({parameter.type_label})</h4>}
+          { displayReset && <DeleteForeverIcon onClick={() => this.onResetClicked(parameter.type)}>Reset</DeleteForeverIcon> }
         </Grid>
         <Grid>
           {
@@ -89,7 +89,7 @@ class UIParameter extends React.Component {
               }
               let pAtt=parameter.attributes.find(a => a.name==att_name)
               pAtt = pAtt || {value: ''}
-              const props={key: att_name, title: getTitle(att_name), value: pAtt.value, onChange: onChange(att_name), colors: this.props.colors}
+              const props={key: `${att_name}:${pAtt.value}`, title: getTitle(att_name), value: pAtt.value, onChange: onChange(att_name), colors: this.props.colors}
 
               switch (att_type) {
                 case 'color': return <Grid key={props} item xl={12}><ColorPicker {...props} /></Grid>
