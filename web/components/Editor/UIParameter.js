@@ -10,8 +10,16 @@ import GroupEditor from './GroupEditor'
 import PictureEditor from './PictureEditor'
 import Grid from '@material-ui/core/Grid'
 import TextEditor from './TextEditor'
+<<<<<<< HEAD
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 
+||||||| 8de74cc6
+
+const RESET_BUTTON_ENABLED=false
+
+=======
+
+>>>>>>> 03516954156fd1e3ebcc89227445fa37ab28cc5a
 const ATT_TYPES={
   'color': 'color',
   'display': 'visibility',
