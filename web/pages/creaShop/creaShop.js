@@ -511,8 +511,8 @@ class creaShop extends BasePage {
             />
           </List>
           <Grid container style={{display: 'flex', justifyContent: 'center'}}>
-            <Grid style={{height: '100%', display: 'flex', flexDirection: 'column-reverse'}}>
-              <Logo className={`${classes.logoMyAlfred} customnavbarlogo`} style={{backgroundRepeat: 'no-repeat', height: 64}}/>
+            <Grid style={{height: '100%', width: '100%', display: 'flex', flexDirection: 'column-reverse'}}>
+              <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 64, backgroundPosition: 'center'}}/>
             </Grid>
           </Grid>
         </Grid>
@@ -546,7 +546,7 @@ class creaShop extends BasePage {
             </IconButton>
           </Grid>
           <Grid style={{position: 'absolute', width: '100%', textAlign: 'center'}}>
-            <Logo className={`customnavbarlogo ${classes.logoMyAlfredGreen}`} style={{backgroundRepeat: 'no-repeat', height: 64}}/>
+            <Logo className={`customnavbarlogo ${classes.logoMyAlfredGreen}`} style={{backgroundRepeat: 'no-repeat', height: 64, backgroundPosition: 'center'}}/>
           </Grid>
         </Grid>
         <nav className={classes.drawer} aria-label="mailbox folders">
@@ -607,7 +607,7 @@ class creaShop extends BasePage {
             <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 11 : is_development() ? 5 : 11} lg={activeStep === 0 ? 11 : is_development() ? 5 : 11} md={activeStep === 0 ? 11 : is_development() ? 5 : 11} sm={activeStep === 0 ? 11 : is_development() ? 5 : 11} xs={activeStep === 0 ? 12 : is_development() ? 6 : 11}>
               <CustomButton
                 variant="contained"
-                classes={{root: `customcreashopbuttonnext ${classes.nextButton}`}}
+                classes={{root: `customcreashopbuttonnext ${classes.nextButton}`, disabled: classes.disabledStyle}}
                 onClick={this.handleNext}
                 disabled={this.nextDisabled()}
               >

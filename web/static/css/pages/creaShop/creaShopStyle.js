@@ -1,5 +1,7 @@
 const drawerWidth = 240
 
+import '../../../assets/icon/logo.svg'
+
 export default theme => ({
 
   containerNavigation: {
@@ -104,10 +106,20 @@ export default theme => ({
     },
   },
   logoMyAlfredGreen: {
-    backgroundImage: 'url(static/assets/icon/logoGreen.svg)',
+    backgroundImage: 'url(../../../assets/icon/logoGreen.svg)',
+    height: 64,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
   },
   logoMyAlfred: {
-    backgroundImage: 'url(static/assets/icon/logo.svg)',
+    backgroundImage: 'url(../../../assets/icon/logo.svg)',
+    height: 64,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+  },
+  disabledStyle: {
+    color: 'rgba(0,0,0,0.26)',
+    backgroundColor: 'rgba(0, 0, 0, 0.12)',
   },
 
 })
