@@ -62,6 +62,10 @@ createCSSConfiguration = items => {
       if (name=='border-radius') {
         value = `${value}px`
       }
+      if (config.type=='button') {
+        className=`${className}:enabled`
+      }
+
       if (!(className in cssClasses)) {
         cssClasses[className]={}
       }
