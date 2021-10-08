@@ -23,6 +23,7 @@ const ATT_TYPES={
   'text': 'richtext',
   'font': 'richtext',
   'sample': 'text',
+  'palette': 'color',
 }
 const TITLES={
   'background-color': 'Couleur de fond',
