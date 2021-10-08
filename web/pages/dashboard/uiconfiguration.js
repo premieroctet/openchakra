@@ -52,7 +52,7 @@ class UIConfiguration extends React.Component {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/admin/uiConfiguration')
       .then(response => {
-        let parameters=response.data
+        let parameters=_.sortBy(response.data, 'order')
         this.setState({parameters: parameters, filtered_parameters: parameters})
         if (parameters.length>0) {
           this.setState({current_page_name: parameters[0].page}, () => this.sortColors())

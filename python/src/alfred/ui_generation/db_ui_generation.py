@@ -19,7 +19,7 @@ class DBUiGeneration(object):
     
     REQUEST="db.uiconfigurations.update("\
         "{{classname: '{}', type:'{}'}},"\
-        "{{$set : {{page: '{}', component: '{}', label: '{}'}}}},"\
+        "{{$set : {{page: '{}', component: '{}', label: '{}', order:{} }}}},"\
         "{{upsert: true}}"\
         ")"
     def __init__(self, xl_path):
@@ -35,10 +35,12 @@ class DBUiGeneration(object):
         return None
     
     def escape(self, txt):
-      return txt.replace("'", "\\'").replace("&", "\\&")
+      if isinstance(txt, str):
+        txt=txt.replace("'", "\\'").replace("&", "\\&")
+      return txt
     
-    def get_mongo(self, page, component, label, classname, type_):
-      return  self.REQUEST.format(*map(self.escape, [classname, type_, page, component, label]))
+    def get_mongo(self, page, component, label, classname, type_, order):
+      return  self.REQUEST.format(*map(self.escape, [classname, type_, page, component, label, order]))
     
     def extractComponent(self, comp, label):
       first, compName=label.split(' ',1)
@@ -50,6 +52,7 @@ class DBUiGeneration(object):
       
     def export(self):
 
+      index=1
       for name in self.wb.sheetnames:
         try:
           print('// Handling page {}'.format(name), file=sys.stderr)
@@ -87,8 +90,9 @@ class DBUiGeneration(object):
               if classname:
                 if not comp:
                   raise Exception('Classname sans composant')
-                req=self.get_mongo(name.capitalize(), ".".join(comp).capitalize(), label, classname, componentType)
+                req=self.get_mongo(name.capitalize(), ".".join(comp).capitalize(), label, classname, componentType, index)
                 print(req)
+                index+=1
                 if ('i18N' in str(row[1]).lower()) and not [v for v in row if ('text' in str(v).lower() or 'sample' in str(v).lower())]:
                   raise Exception("Pas de type 'text' pour un label I81N")
             except Exception as ex:
