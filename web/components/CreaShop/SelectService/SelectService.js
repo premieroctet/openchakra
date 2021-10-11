@@ -153,9 +153,7 @@ class SelectService extends React.Component {
     }
 
     const tabbedStyle = {
-      option: st => {
-        return {...st, 'padding-left': '2em'}
-      },
+      classes: classes.fieldCustom,
     }
 
     // Affichage choix part pro seulement si alfred pro et (creation/ajout ou (édition et service dispo pour part et pros))
@@ -254,7 +252,8 @@ class SelectService extends React.Component {
             loadingMessage={() => 'Recherche des services'}
             placeholder={ReactHtmlParser(this.props.t('SHOP.service.placeholder'))}
             value={this.getSelectedOption(options, service)}
-            styles={professional_access && particular_access ? tabbedStyle : ''}
+            styles={tabbedStyle}
+
             classes={{root: 'customseectserviceplaceholder'}}
           />
         </Grid>

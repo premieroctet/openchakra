@@ -25,7 +25,7 @@ import Router from 'next/router'
 import SchoolIcon from '@material-ui/icons/School'
 import {Skeleton} from '@material-ui/lab'
 import {CARD_SERVICE} from '../../../utils/i18n'
-const {isEditableUser}=require('../../../utils/context')
+const {isEditableUser, displayEmptyReview}=require('../../../utils/context')
 import '../../../static/assets/css/custom.css'
 
 class RawCardServiceInfo extends React.Component {
@@ -272,7 +272,7 @@ class CardService extends React.Component {
                       <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceScoreAndButtonContainer}>
                         <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceRatingContainer}>
                           <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
-                            { cpData.reviews && cpData.reviews.length>0 ?
+                            { displayEmptyReview() || cpData.reviews && cpData.reviews.length>0 ?
                               <Rating
                                 name="simple-controlled"
                                 value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
@@ -284,14 +284,14 @@ class CardService extends React.Component {
                             }
                             <Grid className={classes.cardServiceBoxRatingDisplay}>
                               <Grid className={classes.cardServiceRating}>
-                                { notes.global && notes.global >0 ?
+                                { displayEmptyReview() || notes.global && notes.global >0 ?
                                   <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
                                   :
                                   null
                                 }
                               </Grid>
                               <Grid>
-                                { cpData.reviews && cpData.reviews.length >0 ?
+                                { displayEmptyReview() || cpData.reviews && cpData.reviews.length >0 ?
                                   <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
                                   :
                                   null

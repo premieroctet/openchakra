@@ -2,11 +2,10 @@ import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import {HOW_IT_WORKS} from '../../../utils/i18n'
-import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from './CustomBannerMultiColStyle'
 import '../../../static/assets/css/custom.css'
+import {Typography} from '@material-ui/core'
 
 class CustomBannerMultiCol extends React.Component {
   constructor(props) {
@@ -20,22 +19,22 @@ class CustomBannerMultiCol extends React.Component {
       <>
         <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
           <Grid item xl lg md sm xs className={classes.centerContent}>
-            {firstContent}
+            <Typography className={'customtypocolone'}>{firstContent}</Typography>
           </Grid>
           <Grid item xl lg md sm xs className={classes.centerContent}>
-            {secondContent}
+            <Typography className={'customtypocoltwo'}>{secondContent}</Typography>
           </Grid>
           <Grid item xl lg md sm xs className={classes.centerContent}>
-            {thirdContent}
+            <Typography className={'customtypocolthree'}>{thirdContent}</Typography>
           </Grid>
           <Grid item xl lg md sm xs className={classes.centerContent}>
-            {fourContent}
+            <Typography className={'customtypocolfour'}>{fourContent}</Typography>
           </Grid>
           <Grid item xl lg md sm xs className={classes.centerContent}>
-            {fiveContent}
+            <Typography className={'customtypocolfive'}>{fiveContent}</Typography>
           </Grid>
           <Grid item xl lg md sm xs className={classes.centerContent}>
-            {sixContent}
+            <Typography className={'customtypocolsix'}>{sixContent}</Typography>
           </Grid>
         </Grid>
       </>

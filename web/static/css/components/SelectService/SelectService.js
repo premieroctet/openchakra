@@ -17,4 +17,11 @@ export default theme => ({
       justifyContent: 'center',
     },
   },
+  fieldCustom: {
+    backgroundColor: 'green',
+    color: 'orange',
+    '&:hover': {
+      backgroundColor: 'purple',
+    },
+  },
 })
