@@ -1,5 +1,5 @@
 import {isAndroid, isIOS, getUA} from 'react-device-detect'
-import { setAxiosAuthentication } from './authentication'
+import {setAxiosAuthentication} from './authentication'
 const isWebview = require('is-webview')
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
@@ -64,6 +64,10 @@ const isB2BManager = () => {
 
 const isModeCompany = () => {
   return isB2BAdmin() || isB2BManager()
+}
+
+const displayEmptyReview = () => {
+  return true
 }
 
 const isB2BStyle = () => {
@@ -160,5 +164,5 @@ module.exports = {
   getRole, setStatusRegister, removeStatusRegister, hasStatusRegister,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
-  isLoggedUserRegistered, isIOS, isAndroid, getPartner,
+  isLoggedUserRegistered, isIOS, isAndroid, getPartner, displayEmptyReview,
 }
