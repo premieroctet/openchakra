@@ -21,8 +21,8 @@ class SelectSlotTimer extends React.Component {
 
     const anyAvatar = bookings ? Object.keys(bookings).length>0 : false
     for (let i = index; i < index+arrayLength; i++) {
-      const color=this.props.slots[i]==true ? '#4fbdd7' : this.props.slots[i]==false ?'#c4c4c4' : ''
       const pattern = this.props.slots[i]==null ? 'repeating-linear-gradient(45deg, #4fbdd7 48%, #FFFFFF  50%, #4fbdd7 51%)' : ''
+      const classname = this.props.slots[i] ? 'customscheduleactive' : 'customschedule'
       const avatar=bookings[i] ? `/${bookings[i]}` : null
       let avatarProp = avatar ? <Avatar src={avatar} /> : anyAvatar ? <div /> : null
       items.push(
@@ -30,8 +30,8 @@ class SelectSlotTimer extends React.Component {
           <Chip
             clickable
             label={`${(`0${ i}`).slice(-2) }h00 - ${ (`0${ i + 1}`).slice(-2) }h00`}
-            style={{backgroundColor: color, backgroundImage: pattern}}
-            className={classes.textFieldChips}
+            style={{backgroundImage: pattern}}
+            className={`${classname} ${classes.textFieldChips}`}
             avatar={ avatarProp }
             onClick={() => {
               this.toggleTimeSlot(i)

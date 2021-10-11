@@ -285,15 +285,15 @@ class DrawerSettingSchedule extends React.Component {
                         </Grid>
                         <Grid container className={classes.panelFormDays}>
                           {DAYS.map((res, index) => {
+                            const classname = availabilities[availIdx].recurrDays.has(index) ? 'customscheduleactive' : 'customschedulehover'
                             return (
                               <Chip
                                 key={index}
                                 clickable
                                 label={res.charAt(0)}
-                                style={{backgroundColor: availabilities[availIdx].recurrDays.has(index) ? '#4fbdd7' : '#c4c4c4'}}
                                 // TODO Problematique pour le custom
                                 // className={availabilities[availIdx].recurrDays.has(index) ? classes.textFieldChipsActive : classes.textFieldChips}
-                                className={classes.textFieldChips}
+                                className={`${classname} ${classes.textFieldChips}`}
                                 onClick={() => this.toggleRecurrDay(index, availIdx)}
                               />
                             )
