@@ -506,7 +506,7 @@ class trustAndVerification extends React.Component {
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[1]}/>
-                        <Typography className={'customtrustandverifces'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.declare_ces'))}</Typography>
+                        <Typography className={'customtrustandverifces'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.declare_cesu'))}</Typography>
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[2]}/>
