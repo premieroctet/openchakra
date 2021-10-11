@@ -1,10 +1,7 @@
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
 const {MANGOPAY_ERRORS}=require('./mangopay_messages')
 
-const CESU_NOTICE = "Quel que soit votre statut, My Alfred est tenu de déclarer aux \
-finances publiques vos revenus générés <b>si les deux conditions suivantes sont \
-réunies dans l'année civile :</b><ul><li>vos revenus dépassent 3000 euros</li>\
-<li>vous avez réalisé vingt prestations ou plus</li></ul>"
+const CESU_NOTICE = 'Quel que soit votre statut, My Alfred est tenu de déclarer aux finances publiques vos revenus générés si les deux conditions suivantes sont réunies dans l\'année civile : vos revenus dépassent 3000 euros, vous avez réalisé vingt prestations ou plus'
 
 const OUTSIDE_PERIMETER = 'Ce service est hors de votre périmètre.'
 
