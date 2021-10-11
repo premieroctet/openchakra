@@ -57,6 +57,7 @@ class Home extends React.Component {
       logged: false,
       user: {},
       open: false,
+      mounted: false,
     }
   }
 
@@ -94,6 +95,8 @@ class Home extends React.Component {
         let alfred = response.data
         this.setState({alfred: alfred})
       }).catch(err => console.error(err))
+
+    this.setState({mounted: true})
   }
 
   dialogStore = () => {
@@ -141,7 +144,10 @@ class Home extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {categories, alfred, open, user} = this.state
+    const {mounted, categories, alfred, open, user} = this.state
+    if (!mounted) {
+      return null
+    }
     return (
 
       <Grid>
