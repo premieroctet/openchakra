@@ -28,7 +28,6 @@ class SelectService extends React.Component {
       particular_access: Boolean(this.props.particular_access && !part_pro),
       professional_access: Boolean(this.props.professional_access && !part_pro),
       particular_professional_access: Boolean(part_pro),
-
       loading: true,
     }
   }

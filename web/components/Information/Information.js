@@ -22,7 +22,7 @@ class Information extends React.Component {
       <Dialog aria-labelledby="simple-dialog-title" open={this.props.open} onClose={this.props.onClose}>
         <DialogTitle id="alert-dialog-title">{this.props.type ? ReactHtmlParser(this.props.t('INFORMATION.title_error')) : ReactHtmlParser(this.props.t('INFORMATION.title'))}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description" dangerouslySetInnerHTML={{__html: this.props.text}}/>
+          <DialogContentText id="alert-dialog-description">{this.props.text}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <CustomButton onClick={this.props.onClose} color="primary">

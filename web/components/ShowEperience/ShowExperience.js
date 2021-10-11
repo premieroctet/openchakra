@@ -44,7 +44,6 @@ class ShowExperience extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
           <Grid>
             <CustomIcon className={'customshowxpicon'} style={{backgroundSize: 'contain', height: 24, width: 24}} materialIcon={<WorkIcon classes={{root: classes.workIcon}}/>}/>
-
           </Grid>
           <Grid style={{marginLeft: 10}}>
             <h3>{ReactHtmlParser(this.props.t('SHOW_EXPERIENCE.title'))}</h3>
