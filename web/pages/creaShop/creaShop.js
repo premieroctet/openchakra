@@ -1,6 +1,5 @@
 import CustomButton from '../../components/CustomButton/CustomButton'
 import '../../static/assets/css/custom.css'
-
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -14,14 +13,12 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import Router from 'next/router'
 import axios from 'axios'
-
 import {ALF_CONDS, CANCEL_MODE, GID_LEN, CREASHOP_MODE} from '../../utils/consts.js'
 import BasePage from '../basePage'
 import Box from '../../components/Box/Box'
 import Stepper from '../../components/Stepper/Stepper'
 import styles from '../../static/css/pages/creaShop/creaShopStyle'
 import Logo from '../../components/Logo/Logo'
-
 const {STEPS}=require('./creaShopSteps')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 const {getLoggedUserId, isB2BStyle}=require('../../utils/context')
@@ -512,7 +509,9 @@ class creaShop extends BasePage {
           </List>
           <Grid container style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{height: '100%', width: '100%', display: 'flex', flexDirection: 'column-reverse'}}>
-              <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 64, backgroundPosition: 'center'}}/>
+              <a href='/'>
+                <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 64, backgroundPosition: 'center'}}/>
+              </a>
             </Grid>
           </Grid>
         </Grid>
@@ -546,7 +545,9 @@ class creaShop extends BasePage {
             </IconButton>
           </Grid>
           <Grid style={{position: 'absolute', width: '100%', textAlign: 'center'}}>
-            <Logo className={`customnavbarlogo ${classes.logoMyAlfredGreen}`} style={{backgroundRepeat: 'no-repeat', height: 64, backgroundPosition: 'center'}}/>
+            <a href='/'>
+              <Logo className={`customnavbarlogo ${classes.logoMyAlfredGreen}`} style={{backgroundRepeat: 'no-repeat', height: 64, backgroundPosition: 'center'}}/>
+            </a>
           </Grid>
         </Grid>
         <nav className={classes.drawer} aria-label="mailbox folders">
