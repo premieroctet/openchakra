@@ -1,3 +1,4 @@
+import { canAlfredSelfRegister, isB2BDisabled } from '../../../config/config';
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -43,7 +44,6 @@ import Switch from '@material-ui/core/Switch'
 import {DateRangePicker} from 'react-dates'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ClearIcon from '@material-ui/icons/Clear'
-import {isB2BDisabled} from '../../../config/config'
 import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeStatusRegister, setStatusRegister, getRole} from '../../../utils/context'
 const {emptyPromise} = require('../../../utils/promise.js')
 const {formatAddress} = require('../../../utils/text.js')
@@ -774,7 +774,7 @@ class NavBar extends Component {
                   user.is_alfred ?
                     <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_services'))}</MenuItem>
                     :
-                    <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
+                    canAlfredSelfRegister() && <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
                   : null
               }
               <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_messages'))}</MenuItem>
@@ -1168,18 +1168,19 @@ class NavBar extends Component {
                         onClick={() => Router.push(`/profile/services?user=${user._id}`)}
                       />
                       :
-                      <Tab
+                      canAlfredSelfRegister() && <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
                         onClick={() => Router.push('/creaShop/creaShop')}
                       />
                     :
                     <>
-                      <Tab
+                      {canAlfredSelfRegister() && <Tab
                         classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
                         onClick={this.handleOpenRegister}
                       />
+                      }
                       <Tab
                         classes={{root: classes.navbarTabRoot}}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.contactUs'))}
