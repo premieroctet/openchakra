@@ -1,3 +1,10 @@
+const {
+  getLoggedUserId,
+  isApplication,
+  isB2BStyle,
+  isMobile,
+} = require('../utils/context')
+import {canAlfredSelfRegister} from '../config/config'
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -20,13 +27,11 @@ import TrustAndSecurity from '../hoc/Layout/TrustAndSecurity/TrustAndSecurity'
 import {Dialog, DialogActions, DialogContent, Divider} from '@material-ui/core'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import ResaService from '../components/HomePage/ResaService/ResaService'
-import {isB2BStyle, isApplication, isMobile} from '../utils/context'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import {isAndroid} from 'react-device-detect'
 const {PRO, PART} = require('../utils/consts')
-const {getLoggedUserId} = require('../utils/context')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
 import {INDEX} from '../utils/i18n'
@@ -148,6 +153,7 @@ class Home extends React.Component {
     if (!mounted) {
       return null
     }
+
     return (
 
       <Grid>
@@ -219,11 +225,12 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           {
-            isB2BStyle(user) ? null : <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
-              <Grid className={classes.generalWidthContainer}>
-                <ResaService triggerLogin={this.callLogin}/>
+            isB2BStyle(user) ? null :
+              canAlfredSelfRegister() && <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
+                <Grid className={classes.generalWidthContainer}>
+                  <ResaService triggerLogin={this.callLogin}/>
+                </Grid>
               </Grid>
-            </Grid>
           }
           <Grid className={`customnewsletter ${classes.newsLetterContainer}`}>
             {

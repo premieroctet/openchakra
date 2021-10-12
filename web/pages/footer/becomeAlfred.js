@@ -1,3 +1,4 @@
+import { canAlfredSelfRegister } from '../../config/config';
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -61,11 +62,14 @@ class BecomeAlfred extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container className={`custombecomealfredservicebanner ${classes.howItWorksComponent}`}>
-            <Grid className={classes.generalWidthContainer}>
-              <ResaService/>
+          {
+            true &&
+            <Grid container className={`custombecomealfredservicebanner ${classes.howItWorksComponent}`}>
+              <Grid className={classes.generalWidthContainer}>
+                <ResaService/>
+              </Grid>
             </Grid>
-          </Grid>
+          }
           <Grid container style={{margin: '0 10%', padding: '5% 10%'}} spacing={3}>
             <Grid item xl={6} lg={6} md={6} sm={12} xs={12} className={'custombecomealfredwhycont'}>
               <Grid>

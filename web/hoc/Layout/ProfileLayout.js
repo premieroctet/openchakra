@@ -1,3 +1,4 @@
+import { canAlfredSelfRegister } from '../../config/config';
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -28,12 +29,18 @@ class ProfileLayout extends CompanyComponent {
       // { label: 'Photos', url: '/pictures' }, TODO : Albums 899538 899547
       {label: ReactHtmlParser(this.props.t('LAYOUT_ABOUT.item_review')), url: '/reviews'},
     ]
+
     this.logged_items = [
       {label: ReactHtmlParser(this.props.t('LAYOUT_ABOUT.item_about')), url: '/about'},
-      {label: ReactHtmlParser(this.props.t('LAYOUT_ABOUT.item_my_services')), url: '/services'},
-      // { label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
-      {label: ReactHtmlParser(this.props.t('LAYOUT_ABOUT.item_my_reviews')), url: '/reviews'},
     ]
+    if (canAlfredSelfRegister()) {
+      this.logged_items.push({label: ReactHtmlParser(this.props.t('LAYOUT_ABOUT.item_my_services')), url: '/services'})
+    }
+    // { label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
+    this.logged_items.push(
+      {label: ReactHtmlParser(this.props.t('LAYOUT_ABOUT.item_my_reviews')), url: '/reviews'},
+    )
+
     this.logged_alfred_items = [
       {label: ReactHtmlParser(this.props.t('LAYOUT_ABOUT.item_about')), url: '/about'},
       {label: ReactHtmlParser(this.props.t('LAYOUT_ABOUT.item_my_services')), url: '/services'},
