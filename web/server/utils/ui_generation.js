@@ -23,7 +23,7 @@ CONST_CSS = {
 createCSSConfiguration = items => {
   console.log(`Generating ${items.length} CSS items`)
   // Couleur trait de lien <a>
-  let cssClasses={...CONST_CSS}
+  let cssClasses={}
   // Transklate classes : menu, search bar, etc...
   items.forEach(config => {
     config.attributes.forEach(attribute => {
@@ -83,10 +83,16 @@ createCSSConfiguration = items => {
       }
     })
   })
-  const output=Object.entries(cssClasses).map(([k, v]) => {
+  let output=Object.entries(cssClasses).map(([k, v]) => {
     const atts=Object.entries(v).map(([k, v]) => `\t${k}: ${v} !important;`).join('\n')
     return `.${k} {\n${atts}\n}`
-  }).join('\n')
+  })
+
+  output.push(Object.entries(CONST_CSS).map(([k, v]) => {
+    const atts=Object.entries(v).map(([k, v]) => `\t${k}: ${v} !important;`).join('\n')
+    return `${k} {\n${atts}\n}`
+  }))
+  output=output.join('\n')
 
   const result=validateCss(output)
   const error=result && result.length>0 ? result : null
