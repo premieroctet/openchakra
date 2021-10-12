@@ -407,7 +407,7 @@ class security extends React.Component {
                 disableRipple
                 classes={{
                   root: classes.root,
-                  switchBase: `customiosswitch  ${classes.switchBase}`,
+                  switchBase: `custombuttonswitch  ${classes.switchBase}`,
                   thumb: classes.thumb,
                   track: classes.track,
                   checked: classes.checked,

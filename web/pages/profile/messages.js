@@ -243,7 +243,7 @@ class Messages extends BasePage {
     const relatives = this.getRelatives()
     const countChats=relatives.length
 
-    const msg_descr = countChats===0 ? ReactHtmlParser(this.props.t('MESSAGES.no_conversation')) : countChats === 1 ? ReactHtmlParser(this.props.t('MESSAGES.one_conversation')) : ReactHtmlParser(this.props.t('MESSAGES.you_got')) + countChats + MESSAGES.conversation
+    const msg_descr = countChats===0 ? ReactHtmlParser(this.props.t('MESSAGES.no_conversation')) : countChats === 1 ? ReactHtmlParser(this.props.t('MESSAGES.one_conversation')) : `${ReactHtmlParser(this.props.t('MESSAGES.you_got')) } ${ countChats }${MESSAGES.conversation}`
 
     return(
       <Grid style={{width: '100%'}}>
