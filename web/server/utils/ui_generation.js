@@ -17,7 +17,8 @@ const THEME_PATH_ERR='/tmp/theme.json'
 */
 createCSSConfiguration = items => {
   console.log(`Generating ${items.length} CSS items`)
-  let cssClasses={}
+  // Couleur trait de lien <a>
+  let cssClasses={a: {name: 'color', value: 'inherit'}}
   // Transklate classes : menu, search bar, etc...
   items.forEach(config => {
     config.attributes.forEach(attribute => {
