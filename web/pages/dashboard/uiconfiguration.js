@@ -3,15 +3,12 @@ import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import DashboardLayout from '../../hoc/Layout/DashboardLayout'
-import {Typography} from '@material-ui/core'
-import Paper from '@material-ui/core/Paper'
+import {Typography, List, ListItem, ListItemIcon, ListItemText, Paper} from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import axios from 'axios'
 import _ from 'lodash'
 import UIParameter from '../../components/Editor/UIParameter'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
@@ -22,12 +19,19 @@ const {snackBarSuccess, snackBarError}=require('../../utils/notifications')
 import SaveIcon from '@material-ui/icons/Save'
 import Fab from '@material-ui/core/Fab'
 
-const styles = () => ({
+import dashboardstyles from '../../static/css/components/CompanyDashboard/CompanyDashboard'
+import custom from '../../static/assets/css/custom.css'
+
+const styles = theme => ({
+  ...dashboardstyles(theme),
+  ...custom,
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',
     flexDirection: 'column',
-
+  },
+  'example::-webkit-scrollbar': {
+    display: 'none',
   },
 })
 
@@ -46,9 +50,11 @@ class UIConfiguration extends React.Component {
       // Known colors sorted by occurrences for HTML & Color editors
       used_colors: [],
     }
+    this.container=undefined
   }
 
   componentDidMount = () => {
+    this.container = () => window.document.body
     setAxiosAuthentication()
     axios.get('/myAlfred/api/admin/uiConfiguration')
       .then(response => {
@@ -98,10 +104,13 @@ class UIConfiguration extends React.Component {
   }
 
   filterParameters = () => {
-    let params=this.state.parameters
+    let {parameters, current_page_name} = this.state
     const re=new RegExp(this.state.filter, 'i')
-    params=params.filter(p => p.page.match(re)||p.classname.match(re)||p.component.match(re)||p.label.match(re))
-    this.setState({filtered_parameters: params})
+    parameters=parameters.filter(p => p.page.match(re)||p.classname.match(re)||p.component.match(re)||p.label.match(re))
+    if (parameters.length>0 && !_.uniqBy(parameters.map(p => p.page)).includes(current_page_name)) {
+      this.setState({current_page_name: _.uniqBy(parameters.map(p => p.page))[0]})
+    }
+    this.setState({filtered_parameters: parameters})
   }
 
   onSubmit = () => {
@@ -173,8 +182,15 @@ class UIConfiguration extends React.Component {
     const subParams=parameters.filter(p => path(p).length>level)
     // Sous-paramètres groupés par nom du niveau level
     const names=_.groupBy(subParams, p => path(p)[level])
+    if (level==0) {
+      return (
+        <Grid>
+          {Object.keys(names).map(n => this.componentsAccordion(names[n], [...prefix, n]))}
+        </Grid>
+      )
+    }
     return (
-      <Accordion defaultExpanded={false} TransitionProps={{unmountOnExit: true}} key={prefixName}>
+      <Accordion defaultExpanded={false} TransitionProps={{unmountOnExit: true}} key={prefixName} style={{boxShadow: 'none'}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <h2 style={{margin: '5px'}}>{prefixName || 'Composants'}</h2>
         </AccordionSummary>
@@ -203,7 +219,6 @@ class UIConfiguration extends React.Component {
     const pages=_.uniqBy(filtered_parameters.map(p => p.page))
 
     const pageParameters=filtered_parameters.filter(p => p.page==current_page_name)
-    const selectedTab = pages.findIndex(p => p==current_page_name)
 
     const saveTitle=saving ? 'Génération en cours...': 'Enregistrer & générer'
     const canSave = !saving && Object.keys(modified_parameters).length>0
@@ -218,18 +233,24 @@ class UIConfiguration extends React.Component {
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
             <TextField name={'filter'} value={filter} onChange={this.onFilterChanged}/>
           </Grid>
-          <Paper style={{width: '100%'}}>
-            <Tabs value={selectedTab==-1 ? false:selectedTab} variant="scrollable">
+          <Grid container style={{display: 'flex', flexDirection: 'row'}}>
+            <List className={'customappbar'} classes={{root: classes.paddingList}} style={{height: '100vh'}}>
               {
-                pages.map(page =>
-                  <Tab key={page} label={page} onClick={() => this.onChangePage(page)} />,
-                )
+                pages.map((item, index) => (
+                  <Grid key={index} className={classes.hoverButton}>
+                    <ListItem button key={item} onClick={() => this.onChangePage(item)} classes={{root: current_page_name == item ? classes.activeButton : classes.standartButton}}>
+                      <ListItemIcon style={{color: 'white'}}>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item} classes={{root: classes.listItemText}}/>
+                    </ListItem>
+                  </Grid>
+                ))
               }
-            </Tabs>
-            {
-              this.componentsAccordion(pageParameters)
-            }
-          </Paper>
+            </List>
+            <Grid style={{width: '80%'}}>
+              {this.componentsAccordion(pageParameters)}
+            </Grid>
+          </Grid>
+
         </Grid>
         <Grid style={{position: 'fixed', bottom: '10px', right: '100px'}}>
           <Fab color="primary" aria-label="CheckIcon" disabled={!canSave} onClick={this.onSubmit}>

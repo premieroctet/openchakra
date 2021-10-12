@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 // import 'suneditor/dist/css/suneditor.min.css'
 import 'suneditor/src/assets/css/suneditor.css'
 import Grid from '@material-ui/core/Grid'
+import '../../static/css/components/Editors/HtmlEditor.css'
 
 const SunEditor = dynamic(() => import('suneditor-react'), {
   ssr: false,

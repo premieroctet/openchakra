@@ -11,12 +11,18 @@ const I18N_PATH_ERR='/tmp/custom.json'
 const THEME_PATH='lib/theme.json'
 const THEME_PATH_ERR='/tmp/theme.json'
 
+CONST_CSS = {
+  'a': {
+    color: 'inherit',
+  },
+}
 /**
   Creates CSS from configurations
   config : {classname, attributes:{name,value}}
 */
 createCSSConfiguration = items => {
   console.log(`Generating ${items.length} CSS items`)
+  // Couleur trait de lien <a>
   let cssClasses={}
   // Transklate classes : menu, search bar, etc...
   items.forEach(config => {
@@ -77,10 +83,16 @@ createCSSConfiguration = items => {
       }
     })
   })
-  const output=Object.entries(cssClasses).map(([k, v]) => {
+  let output=Object.entries(cssClasses).map(([k, v]) => {
     const atts=Object.entries(v).map(([k, v]) => `\t${k}: ${v} !important;`).join('\n')
     return `.${k} {\n${atts}\n}`
-  }).join('\n')
+  })
+
+  output.push(Object.entries(CONST_CSS).map(([k, v]) => {
+    const atts=Object.entries(v).map(([k, v]) => `\t${k}: ${v} !important;`).join('\n')
+    return `${k} {\n${atts}\n}`
+  }))
+  output=output.join('\n')
 
   const result=validateCss(output)
   const error=result && result.length>0 ? result : null
