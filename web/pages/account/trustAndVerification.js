@@ -1,3 +1,4 @@
+import { canAlfredParticularRegister } from '../../config/config';
 import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -480,23 +481,25 @@ class trustAndVerification extends React.Component {
                 <h3 className={'customtrustandverifstatustitle'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.your_status'))}</h3>
               </Grid>
               <Grid>
-                <Grid>
-                  <FormControlLabel
-                    control={
-                      <Radio
-                        className={'customtrustandverifparticular'}
-                        checked={!this.state.professional}
-                        onChange={e => {
-                          this.onChangePartPro(e)
-                        }}
-                        value={!this.state.professional}
-                        name="particular"
-                        color="primary"
-                      />
-                    }
-                    label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.particular'))}
-                  />
-                </Grid>
+                { canAlfredParticularRegister() &&
+                  <Grid>
+                    <FormControlLabel
+                      control={
+                        <Radio
+                          className={'customtrustandverifparticular'}
+                          checked={!this.state.professional}
+                          onChange={e => {
+                            this.onChangePartPro(e)
+                          }}
+                          value={!this.state.professional}
+                          name="particular"
+                          color="primary"
+                        />
+                      }
+                      label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.particular'))}
+                    />
+                  </Grid>
+                }
                 {!this.state.professional ?
                   <Grid>
                     <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
