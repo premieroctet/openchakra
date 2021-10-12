@@ -19,7 +19,7 @@ class Layout extends React.Component {
 
     return (
       <Grid>
-        <NavBar />
+        <NavBar excludeSearch={true}/>
         <DashboardHeader/>
         <Grid className={classes.filterMenuDivierContainer}>
           <Divider className={classes.filterMenuDividerStyle}/>

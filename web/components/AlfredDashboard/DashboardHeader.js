@@ -3,7 +3,7 @@ import React from 'react'
 class DashboardHeader extends React.Component {
 
   render() {
-    return <h1>Dashboard</h1>
+    return <a href="/dashboard/home"><h1>Dashboard</h1></a>
   }
 }
 
