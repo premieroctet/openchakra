@@ -193,14 +193,14 @@ class Schedule extends React.Component {
       else if (isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
         return (
           <Grid className={classes.schedule_today_style_avail}>
-            <Grid className={classes.schedule_today_style}/>
+            <Grid className={`customscheduletoday ${classes.schedule_today_style}`}/>
           </Grid>
         )
       }
       else if (!isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
         return (
           <Grid className={classes.style_today_style_off}>
-            <Grid className={classes.schedule_today_style}/>
+            <Grid className={`customscheduletoday ${classes.schedule_today_style}`}/>
           </Grid>
         )
       }
@@ -210,7 +210,7 @@ class Schedule extends React.Component {
         )
       }
       return (
-        <Grid className={classes.schedule_non_available_style}/>
+        <Grid className={`customscheduleunavaibleday ${classes.schedule_non_available_style}`}/>
       )
 
     }
@@ -268,7 +268,7 @@ class Schedule extends React.Component {
         }
         if (!isAvailable) {
           return (
-            <Grid className={classes.schedule_non_available_style}/>
+            <Grid className={`customscheduleunavaibleday ${classes.schedule_non_available_style}`}/>
           )
         }
       }

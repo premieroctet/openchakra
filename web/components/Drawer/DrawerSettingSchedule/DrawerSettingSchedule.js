@@ -219,7 +219,7 @@ class DrawerSettingSchedule extends React.Component {
               availabilities.map((availResult, availIdx) => {
                 const error = errors[availIdx] || {}
                 return(
-                  <Accordion key={availIdx} expanded={expanded[availIdx]} onChange={this.onAccordionChange(availIdx)}>
+                  <Accordion key={availIdx} expanded={expanded[availIdx]} onChange={this.onAccordionChange(availIdx)} className={'customdrawersettingaccordion'}>
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
                       aria-controls="panel1a-content"
