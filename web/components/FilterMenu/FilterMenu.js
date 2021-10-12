@@ -1,3 +1,4 @@
+import { canAlfredParticularRegister } from '../../config/config';
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -278,7 +279,7 @@ class FilterMenu extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.filterMenuChipContainer}>
-          <Grid className={classes.filTerMenuStatusMainStyleFilter}>
+          {canAlfredParticularRegister() && <Grid className={classes.filTerMenuStatusMainStyleFilter}>
             {statusFilterVisible ?
               <Grid className={classes.filterMenuContainerStatut}>
                 <Grid className={classes.filterMenuFocused} onClick={this.statusFilterToggled}>
@@ -346,6 +347,7 @@ class FilterMenu extends React.Component {
               </Grid>
             }
           </Grid>
+          }
           <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
             {dateFilterVisible ?
               <Grid className={classes.filterMenuDateFocused}>
