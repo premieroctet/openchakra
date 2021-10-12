@@ -1,3 +1,5 @@
+import I18N, {SHOP} from '../../../utils/i18n'
+import {canAlfredParticularRegister} from '../../../config/config'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
@@ -14,9 +16,7 @@ import {Radio, RadioGroup} from '@material-ui/core'
 import Information from '../../Information/Information'
 import IconButton from '@material-ui/core/IconButton'
 const {CESU} = require('../../../utils/consts')
-const I18N = require('../../../utils/i18n')
 import InfoIcon from '@material-ui/icons/Info'
-import {SHOP} from '../../../utils/i18n'
 
 // TODO : fix l'update ne se fait pas après appel à l'api Sirene
 class IntroduceYou extends React.Component {
@@ -91,60 +91,64 @@ class IntroduceYou extends React.Component {
           </Grid>
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  id='particular'
-                  checked={this.state.is_particular}
-                  name={'isParticular'}
-                  color="primary"
-                  value={this.state.is_particular}
-                  onChange={this.onStatusChanged}
-                  icon={<CircleUnchecked/>}
-                  checkedIcon={<RadioButtonCheckedIcon/>}
+          {canAlfredParticularRegister() &&
+            <>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      id='particular'
+                      checked={this.state.is_particular}
+                      name={'isParticular'}
+                      color="primary"
+                      value={this.state.is_particular}
+                      onChange={this.onStatusChanged}
+                      icon={<CircleUnchecked/>}
+                      checkedIcon={<RadioButtonCheckedIcon/>}
+                    />
+                  }
+                  label={<h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular'))}</h4>}
                 />
-              }
-              label={<h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular'))}</h4>}
-            />
-          </Grid>
-          <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
-            {
-              this.state.is_particular ?
-                <Grid container spacing={1} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_description'))}</Typography>
-                  </Grid>
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
-                      <Grid container spacing={1} style={{width: '100%', margin: 0}}>
-                        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
-                          <Radio color="primary" value={CESU[0]}/>
-                          <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_want_cesu'))}</Typography>
-                        </Grid>
+              </Grid>
+              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={3} style={{margin: 0, width: '100%'}}>
+                {
+                  this.state.is_particular ?
+                    <Grid container spacing={1} item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%'}}>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                        <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_description'))}</Typography>
                       </Grid>
-                      <Grid container spacing={1} style={{width: '100%', margin: 0}}>
-                        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
-                          <Radio color="primary" value={CESU[1]}/>
-                          <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_accept_cesu'))}</Typography>
-                        </Grid>
+                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                        <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
+                          <Grid container spacing={1} style={{width: '100%', margin: 0}}>
+                            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
+                              <Radio color="primary" value={CESU[0]}/>
+                              <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_want_cesu'))}</Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid container spacing={1} style={{width: '100%', margin: 0}}>
+                            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
+                              <Radio color="primary" value={CESU[1]}/>
+                              <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_accept_cesu'))}</Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid container spacing={1} style={{width: '100%', margin: 0}}>
+                            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
+                              <Radio color="primary" value={CESU[2]}/>
+                              <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_decline_cesu'))}</Typography>
+                            </Grid>
+                          </Grid>
+                          <Information
+                            open={this.state.notice}
+                            onClose={() => this.setState({notice: false})}
+                            text={ReactHtmlParser(this.props.t('CESU_NOTICE'))}
+                          />
+                        </RadioGroup>
                       </Grid>
-                      <Grid container spacing={1} style={{width: '100%', margin: 0}}>
-                        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', alignItems: 'center'}}>
-                          <Radio color="primary" value={CESU[2]}/>
-                          <Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_particular_decline_cesu'))}</Typography>
-                        </Grid>
-                      </Grid>
-                      <Information
-                        open={this.state.notice}
-                        onClose={() => this.setState({notice: false})}
-                        text={ReactHtmlParser(this.props.t('CESU_NOTICE'))}
-                      />
-                    </RadioGroup>
-                  </Grid>
-                </Grid> : null
-            }
-          </Grid>
+                    </Grid> : null
+                }
+              </Grid>
+            </>
+          }
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <FormControlLabel
               control={

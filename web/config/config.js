@@ -1,5 +1,5 @@
 const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
-const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER}=require('../mode')
+const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER}=require('../mode')
 const source = require('./client_id.json')
 
 const getChatURL = () => {
@@ -139,6 +139,10 @@ const canAlfredSelfRegister = () => {
   return !DISABLE_ALFRED_SELF_REGISTER
 }
 
+const canAlfredParticularRegister = () => {
+  return !DISABLE_ALFRED_PARTICULAR_REGISTER
+}
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -153,5 +157,5 @@ module.exports = {
   get_host_url, MANGOPAY_CONFIG, displayConfig,
   ENABLE_MAILING, isB2BDisabled,
   mustDisplayChat, getChatURL,
-  canAlfredSelfRegister,
+  canAlfredSelfRegister, canAlfredParticularRegister
 }
