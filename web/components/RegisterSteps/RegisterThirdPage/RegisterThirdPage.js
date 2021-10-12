@@ -1,3 +1,4 @@
+import { canAlfredSelfRegister } from '../../../config/config';
 import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -13,6 +14,8 @@ import {REGISTER_THIRD_PAGE} from '../../../utils/i18n'
 class RegisterThirdPage extends React.Component {
   render() {
     const{classes} = this.props
+
+    const displayCreaShop = canAlfredSelfRegister()
 
     return(
       <Grid container>
@@ -39,18 +42,20 @@ class RegisterThirdPage extends React.Component {
                     </a>
                   </Link>
                 </Grid>
-                <Grid item className={classes.responsiveSecondaryButton}>
-                  <Link href={'/creaShop/creaShop'}>
-                    <a style={{textDecoration: 'none'}}>
-                      <CustomButton
-                        variant={'contained'}
-                        classes={{root: `customregisterservicesbutton ${classes.cancelButton}`}}
-                        style={{color: 'white', textTransform: 'initial'}}>
-                        {ReactHtmlParser(this.props.t('REGISTER_THIRD_PAGE.button_shop'))}
-                      </CustomButton>
-                    </a>
-                  </Link>
-                </Grid>
+                { displayCreaShop &&
+                  <Grid item className={classes.responsiveSecondaryButton}>
+                    <Link href={'/creaShop/creaShop'}>
+                      <a style={{textDecoration: 'none'}}>
+                        <CustomButton
+                          variant={'contained'}
+                          classes={{root: `customregisterservicesbutton ${classes.cancelButton}`}}
+                          style={{color: 'white', textTransform: 'initial'}}>
+                          {ReactHtmlParser(this.props.t('REGISTER_THIRD_PAGE.button_shop'))}
+                        </CustomButton>
+                      </a>
+                    </Link>
+                  </Grid>
+                }
               </Grid>
               <Grid style={{marginTop: 20}}>
                 <hr className={'customregisterdividerend'}/>
