@@ -931,8 +931,11 @@ class NavBar extends Component {
   searchBarInput = classes => {
     const logged = this.state.user != null
     const {ifHomePage, user} = this.state
+    const {excludeSearch} = this.props
 
-
+    if (excludeSearch) {
+      return null
+    }
     return (
       <Grid className={ifHomePage ? isB2BStyle(user) ? classes.navbarSearchContainerB2B : classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
         <Paper classes={{root: `customsearch ${classes.navbarSearch}`}}>
