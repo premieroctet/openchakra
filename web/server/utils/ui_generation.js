@@ -11,6 +11,11 @@ const I18N_PATH_ERR='/tmp/custom.json'
 const THEME_PATH='lib/theme.json'
 const THEME_PATH_ERR='/tmp/theme.json'
 
+CONST_CSS = {
+  'a': {
+    color: 'inherit',
+  },
+}
 /**
   Creates CSS from configurations
   config : {classname, attributes:{name,value}}
@@ -18,7 +23,7 @@ const THEME_PATH_ERR='/tmp/theme.json'
 createCSSConfiguration = items => {
   console.log(`Generating ${items.length} CSS items`)
   // Couleur trait de lien <a>
-  let cssClasses={a: {name: 'color', value: 'inherit'}}
+  let cssClasses={...CONST_CSS}
   // Transklate classes : menu, search bar, etc...
   items.forEach(config => {
     config.attributes.forEach(attribute => {
