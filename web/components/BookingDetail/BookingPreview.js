@@ -450,7 +450,7 @@ class BookingPreview extends React.Component {
                                     `au ${bookingObj.address.address}, ${bookingObj.address.zip_code} ${bookingObj.address.city}` : ReactHtmlParser(this.props.t('BOOKING.visio'))}
                                 </Typography>
                                 <Typography>
-                                  {ReactHtmlParser(this.props.t('BOOKING.created_date')) + moment(bookingObj.date).format('DD/MM/YYYY')} à ${moment(bookingObj.date).format('HH:mm')}
+                                  {ReactHtmlParser(this.props.t('BOOKING.created_date')) + moment(bookingObj.date).format('DD/MM/YYYY')} à {moment(bookingObj.date).format('HH:mm')}
                                 </Typography>
                               </Grid>
                             </Grid>
