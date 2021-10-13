@@ -1,3 +1,4 @@
+import { canAlfredSelfRegister } from '../../../config/config';
 import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -47,7 +48,7 @@ class ResaService extends React.Component {
           <Grid>
             <p className={`customresaservicetext ${classes.becomeAlfredText}`}>{ReactHtmlParser(this.props.t('RESA_SERVICE.text'))}</p>
           </Grid>
-          <Grid>
+          {canAlfredSelfRegister() && <Grid>
             <CustomButton
               variant={'contained'}
               className={`customresaservicebutton ${classes.resaServiceButton}`}
@@ -57,6 +58,7 @@ class ResaService extends React.Component {
               }}
             >{ReactHtmlParser(this.props.t('RESA_SERVICE.button'))}</CustomButton>
           </Grid>
+          }
         </Grid>
         <Grid/>
       </Grid>

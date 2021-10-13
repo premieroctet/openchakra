@@ -226,7 +226,7 @@ class Home extends React.Component {
           </Grid>
           {
             isB2BStyle(user) ? null :
-              canAlfredSelfRegister() && <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
+              <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
                 <Grid className={classes.generalWidthContainer}>
                   <ResaService triggerLogin={this.callLogin}/>
                 </Grid>
