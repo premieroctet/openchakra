@@ -229,7 +229,7 @@ class security extends React.Component {
         </DialogContent>
         <DialogActions>
           <CustomButton onClick={() => this.handleClose2()} color="primary">
-            {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_account_cancel'))}
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
           </CustomButton>
           <CustomButton onClick={() => this.deleteAccount()} classes={{root: classes.cancelButton}} autoFocus>
             {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_account_confirm'))}
