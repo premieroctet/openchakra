@@ -112,9 +112,9 @@ class AllInclusiveImport(object):
       sheet=wb['BDD All Inclusive']
       for row in list(sheet.iter_rows())[1:]:
         row=[r.value for r in row]
+        print(row)
         if row[0]:
           (_category, service, prestation) = self.get_prestation(row[0], row[1], row[2], None if row[5]=='Aucun' else row[5], *row[13:15])
-          print(prestation)
           self.set_billing(prestation, row[3])
           self.set_cesu(prestation, row[4])
           self.set_equipments(service, row[6])

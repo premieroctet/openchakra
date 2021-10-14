@@ -13,7 +13,8 @@ class all extends DataPage {
   getColumnDefs = () => {
     return [
       {headerName: '_id', field: '_id', width: 0},
-      models.textColumn({headerName: 'Privée', field: 'alfred', cellRenderer: 'privateRenderer'}),
+      // models.textColumn({headerName: 'Privée', field: 'alfred', cellRenderer: 'privateRenderer'}),
+      models.textColumn({headerName: 'Privée', field: 'alfred'}),
       models.textColumn({headerName: 'Label', field: 'label'}),
       {headerName: 'Ordre', field: 'order'},
       models.textColumn({headerName: 'Catégorie', field: 'category_label'}),
