@@ -32,6 +32,9 @@ const MANGOPAY_MESSAGES = {
 
 const INFOBAR = {
   message: 'Vous ne trouvez pas votre service ? L’équipe Alfred se mobilise pour trouver le meilleur Alfred près de chez vous',
+  randomTextA: '',
+  randomTextB: '',
+  randomTextC: '',
 }
 
 const INFOBARMOBILE = {

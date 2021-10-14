@@ -1,33 +1,20 @@
 import '../../static/assets/css/custom.css'
-
-import {Typography} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../static/css/components/InfoBar/InfoBar'
+import RandomDisplay from '../RandomDisplay/RandomDisplay'
+import {INFOBAR} from '../../utils/i18n'
 
-function InfoBar({classes, t}) {
-  const [text, setText] = useState('')
+function InfoBar({classes}) {
 
-
-  function displayRandomly() {
-    setInterval(() => {
-      let r_text = []
-      r_text[0] = 'All the leaves are brown'
-      r_text[1] = 'And the sky is grey'
-      r_text[2] = "I've been for a walk"
-      let random = Math.floor(3*Math.random())
-      setText(r_text[random])
-    }, 4000)
-  }
-
-
-  useEffect(() => {
-    displayRandomly()
-  }, [])
-
-
+  const [arrayText] = useState([
+    INFOBAR.randomTextA,
+    INFOBAR.randomTextB,
+    INFOBAR.randomTextC,
+  ])
+  
   return (
     <Grid container className={`${classes.infoBarMainStyle} customheaderinfobar`}>
       <Grid item className={classes.infoBarLinkContainer}>
@@ -35,7 +22,7 @@ function InfoBar({classes, t}) {
           <Grid className={`${classes.icon} custominfobaricon`} style={{backgroundSIze: 'contain'}}/>
         </Grid>
         <Grid>
-          <Typography className={`${classes.infoBarColorText} customheaderinfobar`}>{text}</Typography>
+          <RandomDisplay arrayText={arrayText} loop={true}/>
         </Grid>
       </Grid>
     </Grid>
