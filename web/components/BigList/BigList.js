@@ -95,6 +95,7 @@ class BigList extends React.Component {
       resizable: true,
       filterParams: {
         buttons: ['reset', 'apply'],
+        newRowsAction: 'keep',
       },
     }
 
