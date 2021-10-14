@@ -37,6 +37,8 @@ const INFOBAR = {
   randomTextC: '',
 }
 
+
+
 const INFOBARMOBILE = {
   message: "L'application MyAlfred est disponible au téléchargement sur :",
 }
@@ -688,6 +690,9 @@ const REGISTER = {
   previous_button: 'Précédent',
   link_already_account: 'Vous avez déjà un compte My Alfred ?',
   finish_button: 'Terminer',
+  particular: 'Je suis particulier',
+  company: 'Je suis une entreprise',
+  or: 'Ou',
 }
 
 const REGISTER_FIRST_PAGE = {

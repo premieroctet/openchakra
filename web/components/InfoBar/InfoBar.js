@@ -22,7 +22,7 @@ function InfoBar({classes}) {
           <Grid className={`${classes.icon} custominfobaricon`} style={{backgroundSIze: 'contain'}}/>
         </Grid>
         <Grid>
-          <RandomDisplay arrayText={arrayText} loop={true}/>
+          <RandomDisplay arrayText={arrayText} loop={false}/>
         </Grid>
       </Grid>
     </Grid>
