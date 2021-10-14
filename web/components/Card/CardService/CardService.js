@@ -27,6 +27,8 @@ import {Skeleton} from '@material-ui/lab'
 import {CARD_SERVICE} from '../../../utils/i18n'
 const {isEditableUser, displayEmptyReview}=require('../../../utils/context')
 import '../../../static/assets/css/custom.css'
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser'
+import ListIconsSkills from "../../ListIconsSkills/ListIconsSkills";
 
 class RawCardServiceInfo extends React.Component {
   constructor(props) {
@@ -180,23 +182,6 @@ class CardService extends React.Component {
 
     const editable = isEditableUser(alfred)
 
-    const Icons = () => (
-      <>
-        {
-          cpData.is_certified ?
-            <Grid style={{margin: 5}}>
-              <img title={'certification_icon'} alt={'certification_icon'} height={20} width={20} src={'/static/assets/icon/pro_icon.svg'} className={classes.colorIconExtension} />
-            </Grid> : null
-        }
-        {
-          cpData.graduated ?
-            <Grid style={{margin: 5}}>
-              <SchoolIcon classes={{root: classes.colorIconSchool}}/>
-            </Grid> : null
-        }
-      </>
-    )
-
     return(
       loading ?
         cardServiceLoading() :
@@ -223,7 +208,7 @@ class CardService extends React.Component {
                         :
                         <>
                           <Grid className={profileMode ? classes.cardServiceCHipNameP : classes.cardServiceChipName}>
-                            <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: `customcardchipname ${classes.cardServiceChip}`}} />
+                            <Chip label={alfred.firstname} avatar={<ListIconsSkills data={cpData} />} classes={{root: `customcardchipname ${classes.cardServiceChip}`}} />
                           </Grid>
                           {
                             cpData.is_professional ?
