@@ -35,7 +35,6 @@ class all extends DataPage {
         this.setState({
           data: service.map(s => {
             s.warning=[]
-            s.picture=`/${s.picture}`
             s.category_label = [s.category.particular_label, s.category.professional_label].join('/')
             if (s.professional_access && !s.prestations.find(p => p.professional_access)) {
               s.warning.push('aucune prestation pro')

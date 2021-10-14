@@ -114,10 +114,14 @@ class PictureRenderer extends React.Component {
 
   render = () => {
     const rowHeight = this.props.node.rowHeight
-    if (this.props.value) {
+    let pictureUrl = this.props.value
+    if (pictureUrl) {
+      if (!pictureUrl.startsWith('/')) {
+        pictureUrl = `/${pictureUrl}`
+      }
       return (
         <div>
-          <img style={{width: 'auto', height: rowHeight}} src={`${this.props.value}`}/>
+          <img style={{width: 'auto', height: rowHeight}} src={pictureUrl}/>
         </div>
       )
     }

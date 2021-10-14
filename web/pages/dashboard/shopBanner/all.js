@@ -25,8 +25,8 @@ class all extends DataPage {
   loadData = () => {
     axios.get('/myAlfred/api/admin/shopBanner/all')
       .then(response => {
-        let shopBanner = response.data.map(sb => { sb.picture=`/${sb.picture}`; return sb })
-        this.setState({data: shopBanner})
+        let shopBanners = response.data
+        this.setState({data: shopBanners})
       })
   }
 
