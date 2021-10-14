@@ -1,15 +1,20 @@
 import '../../static/assets/css/custom.css'
-
-import {Typography} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
-import React from 'react'
-import ReactHtmlParser from 'react-html-parser'
+import React, {useState} from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../static/css/components/InfoBar/InfoBar'
+import RandomDisplay from '../RandomDisplay/RandomDisplay'
+import {INFOBAR} from '../../utils/i18n'
 
-function InfoBar({classes, t}) {
+function InfoBar({classes}) {
 
+  const [arrayText] = useState([
+    INFOBAR.randomTextA,
+    INFOBAR.randomTextB,
+    INFOBAR.randomTextC,
+  ])
+  
   return (
     <Grid container className={`${classes.infoBarMainStyle} customheaderinfobar`}>
       <Grid item className={classes.infoBarLinkContainer}>
@@ -17,7 +22,7 @@ function InfoBar({classes, t}) {
           <Grid className={`${classes.icon} custominfobaricon`} style={{backgroundSIze: 'contain'}}/>
         </Grid>
         <Grid>
-          <Typography className={`${classes.infoBarColorText} customheaderinfobar`}>{ReactHtmlParser(t('INFOBAR.message'))}</Typography>
+          <RandomDisplay arrayText={arrayText} loop={true}/>
         </Grid>
       </Grid>
     </Grid>
