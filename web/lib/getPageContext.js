@@ -1,23 +1,25 @@
 import {SheetsRegistry} from 'jss'
 import {createGenerateClassName, createTheme} from '@material-ui/core/styles'
+import palette from './theme.json'
 
+console.log(`Got custom palette:${JSON.stringify(palette)}`)
 
-const PRIMARY = 'rgba(178,204,251,1)'
-const SECONDARY = 'rgba(248, 207, 97, 1)'
-const ERRORCOLOR = '#B26879'
+const DEFAULT_PRIMARY = 'rgba(178,204,251,1)'
+const DEFAULT_SECONDARY = 'rgba(248, 207, 97, 1)'
+const DEFAULT_ERRORCOLOR = '#B26879'
 
 // A theme with custom primary and secondary color.
 // It's optional.
 const theme = createTheme({
   palette: {
     primary: {
-      main: PRIMARY,
+      main: palette.primary || DEFAULT_PRIMARY,
     },
     secondary: {
-      main: SECONDARY,
+      main: palette.secondary || DEFAULT_SECONDARY,
     },
     error: {
-      main: ERRORCOLOR,
+      main: palette.error || DEFAULT_ERRORCOLOR,
     },
     b2b: {
       main: '#353A51',
@@ -164,6 +166,24 @@ const theme = createTheme({
     },
   },
 })
+
+if (palette.warning) {
+  theme.warning= {
+    main: palette.warning,
+  }
+}
+
+if (palette.info) {
+  theme.info= {
+    main: palette.info,
+  }
+}
+
+if (palette.success) {
+  theme.success= {
+    main: palette.success,
+  }
+}
 
 function createPageContext() {
   return {

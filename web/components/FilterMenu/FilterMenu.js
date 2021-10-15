@@ -1,9 +1,10 @@
+import { canAlfredParticularRegister } from '../../config/config';
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 import moment from 'moment'
@@ -278,7 +279,7 @@ class FilterMenu extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.filterMenuChipContainer}>
-          <Grid className={classes.filTerMenuStatusMainStyleFilter}>
+          {canAlfredParticularRegister() && <Grid className={classes.filTerMenuStatusMainStyleFilter}>
             {statusFilterVisible ?
               <Grid className={classes.filterMenuContainerStatut}>
                 <Grid className={classes.filterMenuFocused} onClick={this.statusFilterToggled}>
@@ -328,10 +329,10 @@ class FilterMenu extends React.Component {
                   </Grid>
                   <Grid className={classes.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={this.cancelStatusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
+                      <CustomButton onClick={this.cancelStatusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
                     </Grid>
                     <Grid>
-                      <Button onClick={this.validateStatusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
+                      <CustomButton onClick={this.validateStatusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -346,6 +347,7 @@ class FilterMenu extends React.Component {
               </Grid>
             }
           </Grid>
+          }
           <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
             {dateFilterVisible ?
               <Grid className={classes.filterMenuDateFocused}>
@@ -370,10 +372,10 @@ class FilterMenu extends React.Component {
                   </Grid>
                   <Grid className={classes.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={this.cancelDateFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
+                      <CustomButton onClick={this.cancelDateFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
                     </Grid>
                     <Grid>
-                      <Button onClick={this.validateDateFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
+                      <CustomButton onClick={this.validateDateFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -409,10 +411,10 @@ class FilterMenu extends React.Component {
                     </Grid>
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <Button onClick={this.cancelRadiusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
+                        <CustomButton onClick={this.cancelRadiusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
                       </Grid>
                       <Grid>
-                        <Button onClick={this.validateRadiusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
+                        <CustomButton onClick={this.validateRadiusFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -476,10 +478,10 @@ class FilterMenu extends React.Component {
                   </Grid>
                   <Grid className={classes.filterMenuDateFilterButtonContainer}>
                     <Grid>
-                      <Button onClick={this.cancelLocationFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
+                      <CustomButton onClick={this.cancelLocationFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
                     </Grid>
                     <Grid>
-                      <Button onClick={this.validateLocationFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
+                      <CustomButton onClick={this.validateLocationFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -512,10 +514,10 @@ class FilterMenu extends React.Component {
                     />
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <Button onClick={this.cancelCategoriesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
+                        <CustomButton onClick={this.cancelCategoriesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
                       </Grid>
                       <Grid>
-                        <Button onClick={this.validateCategoriesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
+                        <CustomButton onClick={this.validateCategoriesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -549,10 +551,10 @@ class FilterMenu extends React.Component {
                     />
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <Button onClick={this.cancelServicesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</Button>
+                        <CustomButton onClick={this.cancelServicesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
                       </Grid>
                       <Grid>
-                        <Button onClick={this.validateServicesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Button>
+                        <CustomButton onClick={this.validateServicesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
                       </Grid>
                     </Grid>
                   </Grid>

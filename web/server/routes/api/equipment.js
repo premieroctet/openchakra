@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 
-router.get('/test', (req, res) => res.json({msg: 'Equipment Works!'}));
+router.get('/test', (req, res) => res.json({msg: 'Equipment Works!'}))
 
 
 // @Route GET /myAlfred/api/equipment/all
@@ -11,16 +11,17 @@ router.get('/all', (req, res) => {
   req.context.getModel('Equipment').find()
     .then(equipment => {
       if (typeof equipment !== 'undefined' && equipment.length > 0) {
-        res.json(equipment);
-      } else {
-        return res.status(400).json({msg: 'No equipment found'});
+        res.json(equipment)
+      }
+      else {
+        return res.status(400).json({msg: 'No equipment found'})
       }
 
     })
-    .catch(err => res.status(404).json({equipment: 'No equipment found'}));
+    .catch(err => res.status(404).json({equipment: 'No equipment found'}))
 
 
-});
+})
 
 // @Route GET /myAlfred/api/equipment/:id
 // View one equipment

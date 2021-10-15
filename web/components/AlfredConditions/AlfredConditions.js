@@ -99,7 +99,7 @@ function AlfredConditions({classes, shop, t}) {
             checked={idCard}
           />
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customconditionbereco'}>
           <ButtonSwitch
             key={moment()}
             id={ALF_CONDS.RECOMMEND}

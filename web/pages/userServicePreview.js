@@ -1,3 +1,4 @@
+import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -10,7 +11,6 @@ import axios from 'axios'
 import UserAvatar from '../components/Avatar/UserAvatar'
 import Typography from '@material-ui/core/Typography'
 import Schedule from '../components/Schedule/Schedule'
-import Button from '@material-ui/core/Button'
 import Drawer from '@material-ui/core/Drawer'
 import Hidden from '@material-ui/core/Hidden'
 import MapComponent from '../components/map'
@@ -775,7 +775,7 @@ class UserServicesPreview extends BasePage {
                           query: {user: this.state.alfred._id},
                         }}
                       >
-                        <Button variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>{ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}</Button>
+                        <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>{ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}</CustomButton>
                       </Link>
                     </Grid>
                   </Grid>
@@ -790,6 +790,10 @@ class UserServicesPreview extends BasePage {
                     >
                       <ListAlfredConditions
                         columnsXl={12}
+                        columnsLG={12}
+                        columnsMD={12}
+                        columnsSM={12}
+                        columnsXS={12}
                         wrapperComponentProps={
                           [
                             {
@@ -799,8 +803,8 @@ class UserServicesPreview extends BasePage {
                             },
                             {
                               label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_label')) : '',
-                              summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_summary')) + this.state.flexible ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.one_day')) : this.state.moderate ? '' +
-                                ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.five_days')) : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.ten_days')) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.before_end_date')) : '',
+                              summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_summary')) + this.state.flexible ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.one_day')) : this.state.moderate ? `${
+                                ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.five_days'))}` : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.ten_days')) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.before_end_date')) : '',
                               IconName: this.state.alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : '',
                             },
                             {
@@ -874,7 +878,7 @@ class UserServicesPreview extends BasePage {
                 </Grid>
                 <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
                   <Grid className={classes.showReservation}>
-                    <Button
+                    <CustomButton
                       variant="contained"
                       color="primary"
                       aria-label="add"
@@ -882,7 +886,7 @@ class UserServicesPreview extends BasePage {
                       onClick={this.toggleDrawer('bottom', true)}
                     >
                       {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_services'))}
-                    </Button>
+                    </CustomButton>
                   </Grid>
                   <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
                     <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)} classes={{root: 'custompreviewdrawer'}}>

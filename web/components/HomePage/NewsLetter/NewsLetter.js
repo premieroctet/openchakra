@@ -1,8 +1,8 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import {NEWSLETTER} from '../../../utils/i18n'
 import EmailIcon from '@material-ui/icons/Email'
@@ -17,6 +17,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import '../../../static/assets/css/custom.css'
+import CustomIcon from '../../CustomIcon/CustomIcon'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -83,11 +84,11 @@ class NewsLetter extends React.Component {
         keepMounted
       >
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalSubscription: false})}>
-          Abonnement à la newsletter de MyAlfred
+          {ReactHtmlParser(this.props.t('NEWSLETTER.dialogTitle'))}
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Vous avez reçu un email contenant un lien de confirmation !
+            {ReactHtmlParser(this.props.t('NEWSLETTER.confirmDialog'))}
           </Typography>
         </DialogContent>
       </Dialog>
@@ -104,14 +105,12 @@ class NewsLetter extends React.Component {
         keepMounted
       >
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalSubscriptionFailed: false})}>
-          Abonnement à la newsletter de MyAlfred
+          {ReactHtmlParser(this.props.t('NEWSLETTER.dialogTitle'))}
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Une erreur est survenue veuillez réessayer ultérieurement, pour plus d'informations contactez-nous via notre chat instantané ou directement par e-mail :
-            <a href={'mailto:hello@my-alfred.io'}>
-            hello@my-alfred.io
-            </a>
+            {ReactHtmlParser(this.props.t('NEWSLETTER.errorMessage'))}
+            <a href={'mailto:hello@my-alfred.io'}>{ReactHtmlParser(this.props.t('NEWSLETTER.email'))}</a>
           </Typography>
         </DialogContent>
       </Dialog>
@@ -149,7 +148,7 @@ class NewsLetter extends React.Component {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon className={classes.newsLetterEmailIcon}/>
+                        <CustomIcon className={'customnlicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<EmailIcon className={classes.newsLetterEmailIcon}/>}/>
                       </InputAdornment>
                     ),
                   }}
@@ -158,7 +157,7 @@ class NewsLetter extends React.Component {
             </Grid>
             <Grid className={classes.newsLetterContainer}>
               <Grid>
-                <Button style={{width: '100%'}} variant={'outlined'} classes={{root: `customnewsletterbutton ${classes.newsLetterButton}`}} onClick={this.handleSubmit}>{ReactHtmlParser(this.props.t('NEWSLETTER.button'))}</Button>
+                <CustomButton style={{width: '100%'}} variant={'outlined'} classes={{root: `customnewsletterbutton ${classes.newsLetterButton}`}} onClick={this.handleSubmit}>{ReactHtmlParser(this.props.t('NEWSLETTER.button'))}</CustomButton>
               </Grid>
             </Grid>
           </Grid>

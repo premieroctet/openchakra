@@ -20,7 +20,7 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import {FOOTER} from '../../../utils/i18n'
 const {getLoggedUserId, isLoggedUserAlfredPro, isB2BStyle, isApplication} = require('../../../utils/context')
-const {isB2BDisabled} = require('../../../config/config')
+const {isB2BDisabled, mustDisplayChat} = require('../../../config/config')
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose} = props
@@ -96,10 +96,10 @@ class Footer extends React.Component {
       <Grid container spacing={2} style={{width: '100%', margin: 0}}>
         <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
           lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
-          <Grid item>
+          <Grid item className={'customfooterabout'}>
             <h3>{ReactHtmlParser(this.props.t('FOOTER.about'))}</h3>
           </Grid>
-          <Grid item>
+          <Grid item className={'customfootermyalfred'}>
             <Link href={'/footer/apropos'}>
               <Typography>{ReactHtmlParser(this.props.t('FOOTER.myalfred'))}</Typography>
             </Link>
@@ -143,12 +143,12 @@ class Footer extends React.Component {
           {
             !isB2BStyle() ?
               <>
-                <Grid item>
+                <Grid item className={'customfooterteam'}>
                   <Link href={'/footer/ourTeam'}>
                     <Typography>{ReactHtmlParser(this.props.t('FOOTER.team'))}</Typography>
                   </Link>
                 </Grid>
-                <Grid item>
+                <Grid item className={'customfootercontact'}>
                   <Link href={'/contact'}>
                     <Typography>{ReactHtmlParser(this.props.t('FOOTER.contact_us'))}</Typography>
                   </Link>
@@ -166,12 +166,12 @@ class Footer extends React.Component {
         </Grid>
         <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
           lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
-          <Grid item>
+          <Grid item className={'customfootercommunity'}>
             <h3>{isB2BStyle() ? ReactHtmlParser(this.props.t('FOOTER.company')) : ReactHtmlParser(this.props.t('FOOTER.community'))}</h3>
           </Grid>
           {
             !isB2BStyle() ?
-              <Grid item>
+              <Grid item className={'customfooterourcommunity'}>
                 <Link href={'/footer/ourCommunity'}>
                   <Typography>{ReactHtmlParser(this.props.t('FOOTER.our_community'))}</Typography>
                 </Link>
@@ -198,12 +198,12 @@ class Footer extends React.Component {
         </Grid>
         <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
           lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
-          <Grid item>
+          <Grid item className={'customfooteralfred'}>
             <h3>{ReactHtmlParser(this.props.t('FOOTER.alfred'))}</h3>
           </Grid>
           {
             isB2BStyle() ? null :
-              <Grid item>
+              <Grid item className={'customfooterbecome'}>
                 <Link href={'/footer/becomeAlfred'}>
                   <Typography>{ReactHtmlParser(this.props.t('FOOTER.become_alfred'))}</Typography>
                 </Link>
@@ -239,18 +239,20 @@ class Footer extends React.Component {
           isB2BStyle() ? null :
             <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3} lg={3} md={3} sm={6}
               xs={6}>
-              <Grid item>
+              <Grid item className={'customfooterhelp'}>
                 <h3>{ReactHtmlParser(this.props.t('FOOTER.help'))}</h3>
               </Grid>
-              <Grid item>
+              <Grid item className={'customfooterresa'}>
                 <Link href={'/footer/addService'}>
                   <Typography>{ReactHtmlParser(this.props.t('FOOTER.resa_service'))}</Typography>
                 </Link>
               </Grid>
-              <Grid item onClick={() => Tawk_API.maximize()} className={classes.hiddenOnMobile}>
-                <Typography>{ReactHtmlParser(this.props.t('FOOTER.tawlk_human'))}</Typography>
-              </Grid>
-              <Grid item>
+              { mustDisplayChat() &&
+                <Grid item onClick={() => Tawk_API.maximize()} className={`customfootertawlk ${classes.hiddenOnMobile}`}>
+                  <Typography>{ReactHtmlParser(this.props.t('FOOTER.tawlk_human'))}</Typography>
+                </Grid>
+              }
+              <Grid item className={'customfooterfaq'}>
                 <Link href={'/faq'}>
                   <Typography>{ReactHtmlParser(this.props.t('FOOTER.faq'))}</Typography>
                 </Link>
@@ -261,14 +263,13 @@ class Footer extends React.Component {
           !isApplication() ?
 
             <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.containerSectionFooter}>
-              <Grid>
+              <Grid className={'customfootermobile'}>
                 <h3>{ReactHtmlParser(this.props.t('FOOTER.mobile'))}</h3>
               </Grid>
               <Grid container className={classes.storeContainer}>
                 {
                   !isAndroid ?
-
-                    <Grid item>
+                    <Grid item className={'customfooterapple'}>
                       <a href={'https://apps.apple.com/us/app/my-alfred/id1544073864'} target={'_blank'}>
                         <img alt={'appleStore'} title={'badge_applestore'} width={126.5} height={40}
                           src={'/static/assets/img/footer/ios/ios_black.svg'}/>
@@ -276,7 +277,7 @@ class Footer extends React.Component {
                     </Grid> : null
                 }
                 {
-                  !isIOS ? <Grid item>
+                  !isIOS ? <Grid item className={'customfooterandroid'}>
                     <a href={'https://play.google.com/store/apps/details?id=com.myalfred'} target={'_blank'}>
                       <img alt={'googlePlay'} title={'badge_android'} width={153}
                         src={'/static/assets/img/footer/android/android.png'}/>
@@ -287,7 +288,7 @@ class Footer extends React.Component {
             </Grid> : null
         }
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Divider/>
+          <Divider classes={{root: 'customfooterdivider'}}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.socialAndLegalContainer}>
           <Grid container item xl={6} lg={8} md={9} sm={12} xs={12} spacing={1} className={classes.legalContainer}>
@@ -312,28 +313,28 @@ class Footer extends React.Component {
             </Grid>
           </Grid>
           <Grid container item xl={6} lg={4} md={3} sm={12} xs={12} spacing={1} className={classes.socialContainer}>
-            <Grid item>
+            <Grid item className={'customfooterfacebook'}>
               <a href={'https://www.facebook.com/myalfred1/'} target={'_blank'}>
                 <IconButton aria-label="FacebookIcon">
                   <FacebookIcon/>
                 </IconButton>
               </a>
             </Grid>
-            <Grid item>
+            <Grid item className={'customfooterinsta'}>
               <a href={'https://www.instagram.com/my_alfred_/'} target={'_blank'}>
                 <IconButton aria-label="InstagramIcon">
                   <InstagramIcon/>
                 </IconButton>
               </a>
             </Grid>
-            <Grid item>
+            <Grid item className={'customfooterlinkedin'}>
               <a href={'https://www.linkedin.com/company/my-alfred/'} target={'_blank'}>
                 <IconButton aria-label="LinkedInIcon">
                   <LinkedInIcon/>
                 </IconButton>
               </a>
             </Grid>
-            <Grid item>
+            <Grid item className={'customfootertwitter'}>
               <a href={'https://twitter.com/MyAlfred2'} target={'_blank'}>
                 <IconButton aria-label="TwitterIcon">
                   <TwitterIcon/>

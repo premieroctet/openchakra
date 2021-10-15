@@ -1,10 +1,10 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import axios from 'axios'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
@@ -29,6 +29,7 @@ const {isPhoneOk} = require('../../utils/sms')
 const moment = require('moment')
 import '../../static/assets/css/custom.css'
 import {EDIT_PROFIL} from '../../utils/i18n'
+
 moment.locale('fr')
 
 class editProfile extends React.Component {
@@ -216,15 +217,15 @@ class editProfile extends React.Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({smsCodeOpen: false}, () => this.onSubmit())} color="primary">
+          <CustomButton onClick={() => this.setState({smsCodeOpen: false}, () => this.onSubmit())} color="primary">
             {ReactHtmlParser(this.props.t('EDIT_PROFIL.dialog_button_confirm_later'))}
-          </Button>
-          <Button
+          </CustomButton>
+          <CustomButton
             disabled={this.state.smsCode.length !== 4}
             onClick={() => this.checkSmsCode()}
             color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -362,7 +363,7 @@ class editProfile extends React.Component {
               />
             </Grid>
             <Grid item xs={12} lg={6} md={12} sm={12} xl={6} style={{display: 'flex'}}>
-              <Button
+              <CustomButton
                 variant="contained"
                 color={'primary'}
                 onClick={() => (user.is_confirmed ? this.onSubmit() : this.sendEmail())}
@@ -370,7 +371,7 @@ class editProfile extends React.Component {
                 classes={{root: `customeditprofilcheckemail ${classes.buttonCheckPhone}`}}
               >
                 {userEmail === user.email && user.is_confirmed === true ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_email_check')) : userEmail !== user.email ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_newemail_check')) : ReactHtmlParser(this.props.t('EDIT_PROFIL.check_your_email'))}
-              </Button>
+              </CustomButton>
             </Grid>
             <Grid item xs={12} lg={6} md={12} sm={12} xl={6}>
               <TextField
@@ -387,7 +388,7 @@ class editProfile extends React.Component {
               />
             </Grid>
             <Grid item xs={12} lg={6} md={12} sm={12} xl={6} style={{display: 'flex'}}>
-              <Button
+              <CustomButton
                 variant="contained"
                 color={'primary'}
                 onClick={this.submitPhone}
@@ -395,7 +396,7 @@ class editProfile extends React.Component {
                 classes={{root: `customeditprofilcheckphone ${classes.buttonCheckPhone}`}}
               >
                 {phone === user.phone && user.phone_confirmed === true ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_phone_check')) : phone !== user.phone ? ReactHtmlParser(this.props.t('EDIT_PROFIL.user_newphone_check')) : ReactHtmlParser(this.props.t('EDIT_PROFIL.check_your_phone'))}
-              </Button>
+              </CustomButton>
             </Grid>
           </Grid>
         </Grid>
@@ -447,14 +448,14 @@ class editProfile extends React.Component {
         </Grid>
         <Grid style={{marginBottom: '12vh'}}>
           <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>
-            <Button
+            <CustomButton
               onClick={this.onSubmit}
               variant="contained"
               color="primary"
               classes={{root: `customeditprofilsave ${classes.button}`}}
             >
               {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
-            </Button>
+            </CustomButton>
           </Grid>
         </Grid>
       </Grid>

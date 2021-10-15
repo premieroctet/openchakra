@@ -10,58 +10,6 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import {TRAVEL_TAX} from '../../utils/i18n'
 const {roundCurrency}=require('../../utils/functions')
 
-const IOSSwitch = withStyles(theme => ({
-  root: {
-    width: 42,
-    height: 26,
-    padding: 0,
-    margin: theme.spacing(1),
-  },
-  switchBase: {
-    padding: 1,
-    '&$checked': {
-      transform: 'translateX(16px)',
-      color: '#C7D4EE',
-      '& + $track': {
-        backgroundColor: 'white',
-
-      },
-    },
-    '&$focusVisible $thumb': {
-      color: 'white',
-      border: '6px solid #fff',
-    },
-  },
-  thumb: {
-    width: 24,
-    height: 24,
-  },
-  track: {
-    borderRadius: 26 / 2,
-    border: `1px solid ${theme.palette.grey[400]}`,
-    backgroundColor: theme.palette.grey[50],
-    opacity: 1,
-    transition: theme.transitions.create(['background-color', 'border']),
-  },
-  checked: {},
-  focusVisible: {},
-}))(({classes, ...props}) => {
-  return (
-    <Switch
-      focusVisibleClassName={classes.focusVisible}
-      disableRipple
-      classes={{
-        root: classes.root,
-        switchBase: classes.switchBase,
-        thumb: classes.thumb,
-        track: classes.track,
-        checked: classes.checked,
-      }}
-      {...props}
-    />
-  )
-})
-
 class TravelTax extends React.Component {
 
   constructor(props) {
@@ -73,7 +21,6 @@ class TravelTax extends React.Component {
 
   onToggle = event => {
     const {name}=event.target
-    console.log(`onToggle:${event.target.name}`)
     let tax=null
     if (name!='none') {
       tax = {rate: 0, from: 0}
@@ -99,53 +46,73 @@ class TravelTax extends React.Component {
 
     const noDep = !tax
     return (
-      <><Grid>
-        <IOSSwitch
-          color="primary"
-          type="checkbox"
-          checked={noDep}
-          name={'none'}
-          onChange={this.onToggle}
-        /><span>{ReactHtmlParser(this.props.t('TRAVEL_TAX.no_moving_tax'))}</span>
-      </Grid>
-      <Grid>
-        <IOSSwitch
-          color="primary"
-          type="checkbox"
-          checked={!noDep}
-          name={'tax'}
-          onChange={this.onToggle}
-        />
-        <TextField
-          value={tax && tax.rate}
-          type="number"
-          name='rate'
-          className={classes.textField}
-          disabled={noDep}
-          onChange={this.onChangeValue}
-          InputProps={{
-            inputProps: {
-              min: 0,
-            },
-            endAdornment: <InputAdornment position="start">€</InputAdornment>,
-          }}
-          error={!noDep && !tax.rate}
-        />
-        {ReactHtmlParser(this.props.t('TRAVEL_TAX.kilometer'))}
-        <TextField
-          value={tax && tax.from}
-          type="number"
-          name='from'
-          className={classes.textField}
-          disabled={noDep}
-          onChange={this.onChangeValue}
-          InputProps={{
-            inputProps: {
-              min: 0,
-            },
-          }}
-        />
-      </Grid>
+      <>
+        <Grid>
+
+          <Switch
+            focusVisibleClassName={classes.focusVisible}
+            disableRipple
+            classes={{
+              root: classes.root,
+              switchBase: `custombuttonswitch ${classes.switchBase}`,
+              thumb: classes.thumb,
+              track: classes.track,
+              checked: classes.checked,
+            }}
+            color="primary"
+            type="checkbox"
+            checked={noDep}
+            name={'none'}
+            onChange={this.onToggle}
+          /><span>{ReactHtmlParser(this.props.t('TRAVEL_TAX.no_moving_tax'))}</span>
+        </Grid>
+        <Grid>
+          <Switch
+            focusVisibleClassName={classes.focusVisible}
+            disableRipple
+            classes={{
+              root: classes.root,
+              switchBase: `custombuttonswitch ${classes.switchBase}`,
+              thumb: classes.thumb,
+              track: classes.track,
+              checked: classes.checked,
+            }}
+            color="primary"
+            type="checkbox"
+            checked={!noDep}
+            name={'tax'}
+            onChange={this.onToggle}
+          />
+          <TextField
+            value={tax && tax.rate}
+            type="number"
+            name='rate'
+            className={classes.textField}
+            disabled={noDep}
+            onChange={this.onChangeValue}
+            InputProps={{
+              inputProps: {
+                min: 0,
+              },
+              endAdornment: <InputAdornment position="start">€</InputAdornment>,
+            }}
+            error={!noDep && !tax.rate}
+          />
+          {ReactHtmlParser(this.props.t('TRAVEL_TAX.kilometer'))}
+          <TextField
+            value={tax && tax.from}
+            type="number"
+            name='from'
+            className={classes.textField}
+            disabled={noDep}
+            onChange={this.onChangeValue}
+            InputProps={{
+              inputProps: {
+                min: 0,
+              },
+            }}
+          />
+        </Grid>
       </>
     )
   }

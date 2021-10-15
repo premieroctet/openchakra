@@ -8,15 +8,33 @@ import Typography from '@material-ui/core/Typography'
 import styles from '../../../static/css/components/SelectService/SelectService'
 import axios from 'axios'
 import Select from 'react-select'
-
 const {matches, normalize} = require('../../../utils/text')
 import {SHOP} from '../../../utils/i18n'
-
 const {PART, PRO, CREASHOP_MODE} = require('../../../utils/consts')
 import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch'
 import moment from 'moment'
 import _ from 'lodash'
 const {isB2BDisabled}=require('../../../config/config')
+
+
+/** TODO trouver un moyen d'utiliser CUSTOM **/
+
+const customStyles = {
+  control: styles => ({...styles, backgroundColor: 'white'}),
+  option: (styles, {data, isDisabled, isFocused, isSelected}) => {
+    return {
+      ...styles,
+      backgroundColor: isFocused ? '#1D294E' : 'white',
+      color: isFocused ? 'white' : undefined,
+      ':hover': {
+        ...styles[':hover'],
+        backgroundColor: '#1D294E',
+        color: 'white',
+      },
+    }
+  },
+}
+
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -28,7 +46,6 @@ class SelectService extends React.Component {
       particular_access: Boolean(this.props.particular_access && !part_pro),
       professional_access: Boolean(this.props.professional_access && !part_pro),
       particular_professional_access: Boolean(part_pro),
-
       loading: true,
     }
   }
@@ -153,12 +170,6 @@ class SelectService extends React.Component {
       options = professional_access ? services[PRO] : services[PART]
     }
 
-    const tabbedStyle = {
-      option: st => {
-        return {...st, 'padding-left': '2em'}
-      },
-    }
-
     // Affichage choix part pro seulement si alfred pro et (creation/ajout ou (édition et service dispo pour part et pros))
     let displayAccess = !is_particular && (mode != CREASHOP_MODE.SERVICE_UPDATE || this.getSelectedServiceAccess().length == 2)
     if (isB2BDisabled()) {
@@ -255,8 +266,7 @@ class SelectService extends React.Component {
             loadingMessage={() => 'Recherche des services'}
             placeholder={ReactHtmlParser(this.props.t('SHOP.service.placeholder'))}
             value={this.getSelectedOption(options, service)}
-            styles={professional_access && particular_access ? tabbedStyle : ''}
-            classes={{root: 'customseectserviceplaceholder'}}
+            styles={customStyles}
           />
         </Grid>
       </Grid>

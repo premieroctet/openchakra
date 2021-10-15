@@ -1,3 +1,4 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
@@ -29,7 +30,6 @@ import AlgoliaPlaces from 'algolia-places-react'
 import MultipleSelect from 'react-select'
 import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
 import Divider from '@material-ui/core/Divider'
-import Button from '@material-ui/core/Button'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import {TextField} from '@material-ui/core'
@@ -44,6 +44,7 @@ const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 import {ABOUT} from '../../utils/i18n'
 
 const moment=require('moment')
+
 moment.locale('fr')
 
 const DialogTitle = withStyles(styles)(props => {
@@ -178,7 +179,7 @@ class ProfileAbout extends CompanyComponent {
     setAxiosAuthentication()
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(() => {
       axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(() => {
-        snackBarSuccess('Profil modifié avec succès')
+        snackBarSuccess(ABOUT.snackbar_profil_update)
         setTimeout(this.loadUser, 1000)
       },
       ).catch(err => {
@@ -333,7 +334,7 @@ class ProfileAbout extends CompanyComponent {
             <Grid style={{marginTop: '2vh', width: '100%'}}>
               <Divider/>
               <Grid style={{marginTop: '2vh', width: '100%'}}>
-                <Button
+                <CustomButton
                   onClick={() => {
                     this.save()
                   }}
@@ -343,7 +344,7 @@ class ProfileAbout extends CompanyComponent {
                   disabled={!this.isModeCompany() ? enabledEdition : false}
                 >
                   {ReactHtmlParser(this.props.t('ABOUT.button_update'))}
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
           </Grid>
@@ -380,7 +381,7 @@ class ProfileAbout extends CompanyComponent {
     const company_mode = Boolean(this.state.company)
     return(
       <Grid container spacing={2} style={{marginBottom: '12vh', width: '100%', marginLeft: 0, marginRight: 0}}>
-        <Grid className={classes.aboutContainer} item xl={5} lg={5} md={12} sm={12} xs={12}>
+        <Grid className={`customaboutboxabout ${classes.aboutContainer}`} item xl={5} lg={5} md={12} sm={12} xs={12}>
           <Box>
             <About user={user} />
           </Box>
@@ -397,7 +398,7 @@ class ProfileAbout extends CompanyComponent {
           }
           <Grid item xs={12}>
             <Grid>
-              <h3>Habite à </h3>
+              <h3>{ReactHtmlParser(this.props.t('PROFIL.place'))}</h3>
             </Grid>
             <Grid style={{margin: 3}}/>
             {
@@ -415,7 +416,7 @@ class ProfileAbout extends CompanyComponent {
             company_mode ? null :
               <Grid item xs={12}>
                 <Grid>
-                  <h3>Parle </h3>
+                  <h3>{ReactHtmlParser(this.props.t('PROFIL.languages'))}</h3>
                 </Grid>
                 <Grid style={{margin: 3}}/>
                 <Grid>

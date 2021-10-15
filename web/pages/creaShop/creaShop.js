@@ -1,8 +1,7 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import '../../static/assets/css/custom.css'
-
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Drawer from '@material-ui/core/Drawer'
 import Grid from '@material-ui/core/Grid'
@@ -14,17 +13,16 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import Router from 'next/router'
 import axios from 'axios'
-
 import {ALF_CONDS, CANCEL_MODE, GID_LEN, CREASHOP_MODE} from '../../utils/consts.js'
 import BasePage from '../basePage'
 import Box from '../../components/Box/Box'
 import Stepper from '../../components/Stepper/Stepper'
 import styles from '../../static/css/pages/creaShop/creaShopStyle'
-
+import Logo from '../../components/Logo/Logo'
 const {STEPS}=require('./creaShopSteps')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 const {getLoggedUserId, isB2BStyle}=require('../../utils/context')
-const {is_development, isB2BDisabled}=require('../../config/config')
+const {is_development, isB2BDisabled, canAlfredParticularRegister}=require('../../config/config')
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 const {snackBarSuccess}=require('../../utils/notifications')
 
@@ -46,7 +44,7 @@ class creaShop extends BasePage {
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: 'Merci pour votre réservation!',
         cancel_mode: CANCEL_MODE.FLEXIBLE, // FLEXIBLE/MODERATE/STRICT
-        is_particular: !isB2BStyle(), // true/false : particulier.pro
+        is_particular: !isB2BStyle() && canAlfredParticularRegister(), // true/false : particulier.pro
         company: {name: null, siret: null, vat_subject: false, vat_number: null},
         cesu: null,
         cis: false,
@@ -397,7 +395,7 @@ class creaShop extends BasePage {
     this.setState({shop: shop})
   }
 
-  assetsChanged = (state) => {
+  assetsChanged = state => {
     this.setState({
       shop: {
         ...this.state.shop,
@@ -510,13 +508,10 @@ class creaShop extends BasePage {
             />
           </List>
           <Grid container style={{display: 'flex', justifyContent: 'center'}}>
-            <Grid style={{height: '100%', display: 'flex', flexDirection: 'column-reverse'}}>
-              <img
-                alt={'logo_myAlfred'}
-                title={'logo_myAlfred'}
-                src={'/static/assets/icon/logo.svg'}
-                height={64}
-                style={{filter: 'invert(1)'}}/>
+            <Grid style={{height: '100%', width: '100%', display: 'flex', flexDirection: 'column-reverse'}}>
+              <a href='/'>
+                <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 64, backgroundPosition: 'center'}}/>
+              </a>
             </Grid>
           </Grid>
         </Grid>
@@ -550,12 +545,9 @@ class creaShop extends BasePage {
             </IconButton>
           </Grid>
           <Grid style={{position: 'absolute', width: '100%', textAlign: 'center'}}>
-            <img
-              alt={'logo_myAlfred'}
-              title={'logo_myAlfred'}
-              src={'/static/assets/icon/logoGreen.svg'}
-              height={64}
-            />
+            <a href='/'>
+              <Logo className={`customnavbarlogo ${classes.logoMyAlfredGreen}`} style={{backgroundRepeat: 'no-repeat', height: 64, backgroundPosition: 'center'}}/>
+            </a>
           </Grid>
         </Grid>
         <nav className={classes.drawer} aria-label="mailbox folders">
@@ -600,7 +592,7 @@ class creaShop extends BasePage {
           <Grid container className={classes.positionNavigationContainer}>
             { is_development() && activeStep > 0 ?
               <Grid item container xl={6} lg={6} md={6} sm={6} xs={6}>
-                <Button
+                <CustomButton
                   variant="outlined"
                   classes={{root: classes.backButton}}
                   onClick={this.handlePrev}
@@ -608,20 +600,21 @@ class creaShop extends BasePage {
                   color={'primary'}
                 >
                   Précédent
-                </Button>
+                </CustomButton>
               </Grid>
               :
               null
             }
             <Grid item container className={classes.containerNextButton} xl={activeStep === 0 ? 11 : is_development() ? 5 : 11} lg={activeStep === 0 ? 11 : is_development() ? 5 : 11} md={activeStep === 0 ? 11 : is_development() ? 5 : 11} sm={activeStep === 0 ? 11 : is_development() ? 5 : 11} xs={activeStep === 0 ? 12 : is_development() ? 6 : 11}>
-              <Button
+              <CustomButton
                 variant="contained"
-                classes={{root: `customcreashopbuttonnext ${classes.nextButton}`}}
+                className={`customcreashopbuttonnext ${classes.nextButton}`}
+                classes={{disabled: classes.disabledStyle}}
                 onClick={this.handleNext}
                 disabled={this.nextDisabled()}
               >
                 {this.isLastStep() ? 'Envoyer' : 'Suivant'}
-              </Button>
+              </CustomButton>
             </Grid>
           </Grid>
         </Grid>

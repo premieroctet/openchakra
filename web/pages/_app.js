@@ -1,3 +1,4 @@
+import {getChatURL, mustDisplayChat} from '../config/config'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-input-range/lib/css/index.css'
@@ -32,19 +33,21 @@ class MyApp extends App {
     this.pageContext = getPageContext()
   }
 
-  loadTawlkto() {
-    (function() {
-      let s1 = document.createElement('script'), s0 = document.getElementsByTagName('script')[0]
-      s1.async = true
-      s1.src='https://embed.tawk.to/5de4db8c43be710e1d201adc/default'
-      s1.charset = 'UTF-8'
-      s1.setAttribute('crossorigin', '*')
-      s0.parentNode.insertBefore(s1, s0)
-    })()
+  loadTawkto() {
+    if (mustDisplayChat()) {
+      (function() {
+        let s1 = document.createElement('script'), s0 = document.getElementsByTagName('script')[0]
+        s1.async = true
+        s1.src=getChatURL()
+        s1.charset = 'UTF-8'
+        s1.setAttribute('crossorigin', '*')
+        s0.parentNode.insertBefore(s1, s0)
+      })()
+    }
   }
 
   componentDidMount() {
-    this.loadTawlkto()
+    this.loadTawkto()
   }
 
   onDeclineCookies = () => {
@@ -87,10 +90,10 @@ class MyApp extends App {
             location="top"
             cookieName={ACCEPT_COOKIE_NAME}
             onDecline={this.onDeclineCookies}
-            containerClasses={'customCookiesContainer'}
-            contentClasses={'customCookiesContent'}
-            buttonClasses={'customCookiesAccept'}
-            declineButtonClasses={'customCookiesDecline'}
+            containerClasses={'customcookiescontainer'}
+            contentClasses={'customcookiescontent'}
+            buttonClasses={'customcookiesaccept'}
+            declineButtonClasses={'customcookiesdecline'}
           >
             {ReactHtmlParser(this.props.t('COOKIE_CONSENT.message'))}
           </CookieConsent>

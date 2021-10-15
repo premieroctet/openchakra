@@ -1,6 +1,6 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -10,7 +10,7 @@ import Router from 'next/router';
 import axios from 'axios';
 
 import {snackBarSuccess} from '../../../utils/notifications';
-import Layout from '../../../hoc/Layout/Layout';
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout';
 
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
 
@@ -123,7 +123,7 @@ class view extends React.Component {
 
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -147,19 +147,19 @@ class view extends React.Component {
 
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                  <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Modifier
-                  </Button>
-                  <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
+                  </CustomButton>
+                  <CustomButton type="button" variant="contained" color="secondary" style={{width: '100%'}}
                           onClick={this.handleClick}>
                     Supprimer
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </form>
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     );
   };
 }

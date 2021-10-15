@@ -1,3 +1,4 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -8,7 +9,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import BookingDetail from '../../BookingDetail/BookingDetail'
 import Accordion from '@material-ui/core/Accordion'
-import Button from '@material-ui/core/Button'
 import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBookingRecap'
 import withStyles from '@material-ui/core/styles/withStyles'
 import moment from 'moment'
@@ -133,7 +133,7 @@ class DrawerBookingRecap extends React.Component {
 
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '3vh'}}>
           <Grid style={{width: '100%'}}>
-            <Button
+            <CustomButton
               classes={{root: classes.userServicePButtonResa}}
               variant="contained"
               color="primary"
@@ -142,7 +142,7 @@ class DrawerBookingRecap extends React.Component {
               disabled={activeStep === 1 ? id_card === '' || pending : false}
             >
               <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? ReactHtmlParser(this.props.t('DRAWER_BOOKING_RECAP.button_pay')) : ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</Typography>
-            </Button>
+            </CustomButton>
           </Grid>
         </Grid>
         {

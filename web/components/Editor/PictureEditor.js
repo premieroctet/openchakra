@@ -28,6 +28,7 @@ class PictureEditor extends React.Component {
       <Grid style={{display: 'flex'}}>
         <h2>{title}</h2>
         <DocumentEditor
+          title={'Illustration'}
           db_document={value || null}
           uploaded_file={uploaded && URL.createObjectURL(uploaded)}
           onChange={this.onChange}

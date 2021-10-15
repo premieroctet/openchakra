@@ -1,10 +1,10 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication')
 import React, {Fragment} from 'react'
 import axios from 'axios'
 import moment from 'moment'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
@@ -228,12 +228,12 @@ class security extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.handleClose2()} color="primary">
-            {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_account_cancel'))}
-          </Button>
-          <Button onClick={() => this.deleteAccount()} classes={{root: classes.cancelButton}} autoFocus>
+          <CustomButton onClick={() => this.handleClose2()} color="primary">
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
+          </CustomButton>
+          <CustomButton onClick={() => this.deleteAccount()} classes={{root: classes.cancelButton}} autoFocus>
             {ReactHtmlParser(this.props.t('SECURITY.dialog_delete_account_confirm'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -254,12 +254,12 @@ class security extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.handleClose()} color="primary">
+          <CustomButton onClick={() => this.handleClose()} color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
-          </Button>
-          <Button onClick={() => this.deleteShop()} classes={{root: classes.cancelButton}}>
+          </CustomButton>
+          <CustomButton onClick={() => this.deleteShop()} classes={{root: classes.cancelButton}}>
             {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -372,9 +372,9 @@ class security extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'left', marginTop: 30}}>
-                  <Button disabled={!checkButtonValidate} type="submit" className={`customsecurityconfirmpass ${classes.buttonSave}`} variant="contained">
+                  <CustomButton disabled={!checkButtonValidate} type="submit" className={`customsecurityconfirmpass ${classes.buttonSave}`} variant="contained">
                     {ReactHtmlParser(this.props.t('COMMON.btn_validate'))}
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </form>
             </Grid>
@@ -407,7 +407,7 @@ class security extends React.Component {
                 disableRipple
                 classes={{
                   root: classes.root,
-                  switchBase: `customiosswitch  ${classes.switchBase}`,
+                  switchBase: `custombuttonswitch  ${classes.switchBase}`,
                   thumb: classes.thumb,
                   track: classes.track,
                   checked: classes.checked,
@@ -422,13 +422,13 @@ class security extends React.Component {
                   <h4 className={'customsecurityaccountdelete'}>{ReactHtmlParser(this.props.t('SECURITY.delete_my_account'))}</h4>
                 </Grid>
                 <Grid item xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
-                  <Button
+                  <CustomButton
                     onClick={() => this.handleClickOpen()}
                     variant="contained"
                     classes={{root: `customsecuritybuttondelete ${classes.buttonSave}`}}
                   >
                     {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </Grid>
               : null
@@ -447,13 +447,13 @@ class security extends React.Component {
                 </Grid>
               </Grid>
               <Grid item xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
-                <Button
+                <CustomButton
                   onClick={() => this.handleClickOpen2()}
                   variant="contained"
                   classes={{root: `customsecuritybuttondesactivate ${classes.buttonSave}`}}
                 >
                   {ReactHtmlParser(this.props.t('SECURITY.button_desactivate_my_account'))}
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
           </Grid>

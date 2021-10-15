@@ -1,9 +1,9 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
-import Button from '@material-ui/core/Button'
 import {CATEGORY, OUR_ALFRED} from '../../../utils/i18n'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/OurAlfred/OurAlfred'
@@ -22,13 +22,12 @@ class OurAlfred extends React.Component {
   render() {
     const{classes, alfred} = this.props
 
-
     return(
       <Grid className={classes.ourAlfredMainStyle}>
         <Grid className={classes.ourAlfredMainContainer}>
           <Grid className={classes.ourAlfredMainHeader}>
             <Grid className={`customouralfredicon ${classes.ourAlfredImgContainer}`}>
-              <img src={'/static/assets/faq/star.svg'} alt={'iconStar'} title={'iconStar'}/>
+              <div className={`customiconstarouralfred ${classes.iconStarOurALfred}`}/>
             </Grid>
             <Grid className={classes.ourAlfredTextContainer}>
               <Grid>
@@ -40,12 +39,12 @@ class OurAlfred extends React.Component {
             </Grid>
           </Grid>
           <Grid className={classes.hiddenOnMobile}>
-            <Button classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search')}>{ReactHtmlParser(this.props.t('CATEGORY.button'))}</Button>
+            <CustomButton classes={{root: `customouralfredbutton ${classes.ourAlfredButton}`}} onClick={() => Router.push('/search')}>{ReactHtmlParser(this.props.t('CATEGORY.button'))}</CustomButton>
           </Grid>
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
           <Grid item className={classes.alfredSlideContainer}>
-            <AlfredSlide model={new SlideGridDataModel(alfred, 3, 1, true)} style={classes} />
+            <AlfredSlide model={new SlideGridDataModel(alfred, 3, 2, true)} style={classes} />
           </Grid>
           <Grid item container spacing={3} className={classes.containerCardPreviewMobile}>
             {
@@ -58,9 +57,9 @@ class OurAlfred extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.containerMobileButton}>
-          <Button variant={'outlined'} className={'customouralfredbutton'} classes={{root: `customouralfredbutton ${classes.categoryButton}`}} onClick={() => Router.push('/search')}>
+          <CustomButton variant={'outlined'} className={'customouralfredbutton'} classes={{root: `customouralfredbutton ${classes.categoryButton}`}} onClick={() => Router.push('/search')}>
             {ReactHtmlParser(this.props.t('CATEGORY.button'))}
-          </Button>
+          </CustomButton>
         </Grid>
       </Grid>
 

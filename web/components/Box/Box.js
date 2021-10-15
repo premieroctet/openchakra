@@ -10,7 +10,7 @@ class Box extends React.Component {
     const {classes, children, overWritteCSS}=this.props
 
     return (
-      <Grid className={classes.borderBox} style={{minHeight: overWritteCSS ? '95vh': ''}}>
+      <Grid className={`custombox ${classes.borderBox}`} style={{minHeight: overWritteCSS ? '95vh': ''}}>
         {children}
       </Grid>
     )

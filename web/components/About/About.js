@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import {TextField} from '@material-ui/core'
@@ -20,7 +21,6 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 import Topic from '../../hoc/Topic/Topic'
 import AlgoliaPlaces from 'algolia-places-react'
 import MultipleSelect from 'react-select'
@@ -37,9 +37,11 @@ import FormControl from '@material-ui/core/FormControl'
 import {PROFIL, ABOUT} from '../../utils/i18n'
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
+import CustomIcon from '../CustomIcon/CustomIcon'
 
 const {frenchFormat} = require('../../utils/text')
 const moment = require('moment')
+
 moment.locale('fr')
 
 const DialogTitle = withStyles(styles)(props => {
@@ -367,7 +369,7 @@ class About extends CompanyComponent {
             <Grid style={{marginTop: '2vh', width: '100%'}}>
               <Divider/>
               <Grid style={{marginTop: '2vh', width: '100%'}}>
-                <Button
+                <CustomButton
                   onClick={() => {
                     this.save()
                   }}
@@ -377,7 +379,7 @@ class About extends CompanyComponent {
                   disabled={!this.isModeCompany() ? enabledEdition : false}
                 >
                   {ReactHtmlParser(this.props.t('ABOUT.button_update'))}
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
           </Grid>
@@ -400,17 +402,17 @@ class About extends CompanyComponent {
         {
           label: ReactHtmlParser(this.props.t('PROFIL.place')),
           summary: place,
-          IconName: user ? <RoomIcon fontSize="large"/> : ReactHtmlParser(this.props.t('PROFIL.nothing')),
+          IconName: user ? <CustomIcon className={'customaboutplaceicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<RoomIcon fontSize="large"/>}/> : ReactHtmlParser(this.props.t('PROFIL.nothing')),
         },
         {
           label: ReactHtmlParser(this.props.t('PROFIL.languages')),
           summary: user ? user.languages ? user.languages.join(', ') || null : ReactHtmlParser(this.props.t('PROFIL.nothing')) : '',
-          IconName: user ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : '',
+          IconName: user ? <CustomIcon className={'customaboutchaticon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<ChatBubbleOutlineOutlinedIcon fontSize="large"/>}/> : '',
         },
         {
           label: ReactHtmlParser(this.props.t('PROFIL.verification')),
           summary: user ? user.is_confirmed ? ReactHtmlParser(this.props.t('PROFIL.confirmed')) : ReactHtmlParser(this.props.t('PROFIL.nothing')) : ReactHtmlParser(this.props.t('PROFIL.unconfirmed')),
-          IconName: user ? user.is_confirmed ? <CheckCircleOutlineIcon fontSize="large"/> : <HighlightOffIcon fontSize={'large'}/> : '',
+          IconName: user ? user.is_confirmed ? <CustomIcon className={'customaboutcheckcircleicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<CheckCircleOutlineIcon fontSize="large"/>}/> : <CustomIcon className={'customaboutuncheckcircleicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<HighlightOffIcon fontSize={'large'}/>}/> : '',
         },
       ]
       :

@@ -1,8 +1,8 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import AlgoliaPlaces from 'algolia-places-react'
-import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
@@ -14,7 +14,7 @@ import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
 import BasePage from '../../basePage'
-import Layout from '../../../hoc/Layout/Layout'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../../utils/consts')
 const {SIRET}=require('../../../config/config')
@@ -180,7 +180,7 @@ class View extends BasePage {
     }
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer}>
           <Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center'}}>
@@ -334,14 +334,14 @@ class View extends BasePage {
                 />
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                   Enregistrer
-                </Button>
+                </CustomButton>
               </Grid>
             </form>
           </Grid>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

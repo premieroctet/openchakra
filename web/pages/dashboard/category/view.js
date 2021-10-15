@@ -1,7 +1,7 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
@@ -13,7 +13,7 @@ import axios from 'axios'
 
 import BasePage from '../../basePage'
 import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor'
-import Layout from '../../../hoc/Layout/Layout'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 const {snackBarSuccess, snackBarError} = require('../../../utils/notifications')
@@ -197,6 +197,10 @@ class View extends BasePage {
               snackBarSuccess('Illustrations mises à jour')
               Router.push(`/dashboard/category/view?id=${newCategory._id}`)
             })
+            .catch(err => {
+              snackBarError(err.response.data)
+              Router.push(`/dashboard/category/view?id=${newCategory._id}`)
+            })
         }
         else {
           Router.push(`/dashboard/category/view?id=${newCategory._id}`)
@@ -204,6 +208,7 @@ class View extends BasePage {
       })
       .catch(err => {
         console.error(err)
+        snackBarError(err.response.data)
       })
   }
 
@@ -229,7 +234,7 @@ class View extends BasePage {
     }))
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -240,7 +245,7 @@ class View extends BasePage {
                 <Grid item>
                   <Typography style={{fontSize: 20}}>Label particuliers</Typography>
                   <TextField
-                    id="standard-with-placeholder"
+                    id="particular_label"
                     margin="normal"
                     style={{width: '100%'}}
                     type="text"
@@ -252,7 +257,7 @@ class View extends BasePage {
                 <Grid item>
                   <Typography style={{fontSize: 20}}>Label pro</Typography>
                   <TextField
-                    id="standard-with-placeholder"
+                    id="professional_label"
                     margin="normal"
                     style={{width: '100%'}}
                     type="text"
@@ -278,7 +283,7 @@ class View extends BasePage {
                 <Grid item style={{marginTop: 20}}>
                   <Typography style={{fontSize: 20}}>Description</Typography>
                   <TextField
-                    id="standard-with-placeholder"
+                    id="description"
                     margin="normal"
                     style={{width: '100%'}}
                     type="text"
@@ -316,15 +321,15 @@ class View extends BasePage {
                   </Grid>
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                  <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Enregistrer
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </form>
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

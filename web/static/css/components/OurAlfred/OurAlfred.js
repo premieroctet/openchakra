@@ -19,7 +19,6 @@ export default theme => ({
   ourAlfredImgContainer: {
     height: '100%',
     marginTop: '-25px',
-    transform: 'rotate(-25deg)',
     [theme.breakpoints.down('xs')]: {
       margin: 0,
     },
@@ -110,5 +109,11 @@ export default theme => ({
     [theme.breakpoints.only('sm')]: {
       display: 'none',
     },
+  },
+  iconStarOurALfred: {
+    backgroundImage: 'url(static/assets/faq/star.svg)',
+    backgroundRepeat: 'no-repeat',
+    width: 70,
+    height: 70,
   },
 })

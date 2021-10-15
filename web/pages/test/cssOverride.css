@@ -1,0 +1,14 @@
+.basic {
+  color: black;
+  background-color: yellow;
+}
+
+.override {
+  color: red;
+  background-color: orange;
+}
+
+.superoverride {
+  color: green;
+  background-color: purple;
+}

@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
@@ -35,13 +36,13 @@ class AddService extends React.Component {
         <Grid className={classes.containerTitle}>
           <h3 className={'customaddservicestitle'}>{ReactHtmlParser(this.props.t('ADD_SERVICES.title'))}</h3>
         </Grid>
-        <Button classes={{root: `customaddservicesbutton ${classes.buttonAddService}`}} onClick={this.clickService} startIcon={<AddCircleOutlineIcon />}>
+        <CustomButton classes={{root: `customaddservicesbutton ${classes.buttonAddService}`}} onClick={this.clickService} startIcon={<AddCircleOutlineIcon />}>
           { isLoggedUserAlfred() ?
             ReactHtmlParser(this.props.t('SHOP.addService'))
             :
             ReactHtmlParser(this.props.t('SHOP.createShop'))
           }
-        </Button>
+        </CustomButton>
         <Typography className={`customaddservicessubtitle ${classes.descriptionAddService}`}>{ReactHtmlParser(this.props.t('ADD_SERVICES.add_service'))}</Typography>
       </Grid>
     )

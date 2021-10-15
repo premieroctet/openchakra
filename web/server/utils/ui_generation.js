@@ -1,12 +1,28 @@
 const fs=require('fs').promises
-const validateCss = require('css-validator')
+const {validate: validateCss} = require('csstree-validator')
 const _=require('lodash')
+
+const CSS_PATH='static/assets/css/custom.css'
+const CSS_PATH_ERR='/tmp/custom.css'
+
+const I18N_PATH='translations/fr/custom.json'
+const I18N_PATH_ERR='/tmp/custom.json'
+
+const THEME_PATH='lib/theme.json'
+const THEME_PATH_ERR='/tmp/theme.json'
+
+CONST_CSS = {
+  'a': {
+    color: 'inherit',
+  },
+}
 /**
   Creates CSS from configurations
   config : {classname, attributes:{name,value}}
 */
 createCSSConfiguration = items => {
   console.log(`Generating ${items.length} CSS items`)
+  // Couleur trait de lien <a>
   let cssClasses={}
   // Transklate classes : menu, search bar, etc...
   items.forEach(config => {
@@ -52,6 +68,10 @@ createCSSConfiguration = items => {
       if (name=='border-radius') {
         value = `${value}px`
       }
+      if (config.type=='button') {
+        className=`${className}:enabled`
+      }
+
       if (!(className in cssClasses)) {
         cssClasses[className]={}
       }
@@ -63,27 +83,32 @@ createCSSConfiguration = items => {
       }
     })
   })
-  const output=Object.entries(cssClasses).map(([k, v]) => {
+  let output=Object.entries(cssClasses).map(([k, v]) => {
     const atts=Object.entries(v).map(([k, v]) => `\t${k}: ${v} !important;`).join('\n')
     return `.${k} {\n${atts}\n}`
-  }).join('\n')
-
-  validateCss(output, (err, data) => {
-    const error = err || !data.validity
-    if (error) {
-      console.error(`CSS generation error ${err}, output in /tmp/custom.css\nError:${error}`)
-    }
-    else {
-      console.log('CSS generation OK, output in static/assets/css/custom.css')
-    }
-    fs.writeFile(error ? '/tmp/custom.css' : 'static/assets/css/custom.css', output)
-      .then(() => {
-        console.log('CSS saved')
-      })
-      .catch(err => {
-        console.error(`CSS write error:${err}`)
-      })
   })
+
+  output.push(Object.entries(CONST_CSS).map(([k, v]) => {
+    const atts=Object.entries(v).map(([k, v]) => `\t${k}: ${v} !important;`).join('\n')
+    return `${k} {\n${atts}\n}`
+  }))
+  output=output.join('\n')
+
+  const result=validateCss(output)
+  const error=result && result.length>0 ? result : null
+  if (error) {
+    console.error(`CSS generation error, output in ${CSS_PATH_ERR}\nError:${error}`)
+  }
+  else {
+    console.log(`CSS generation OK, output in ${CSS_PATH}`)
+  }
+  fs.writeFile(error ? CSS_PATH_ERR : CSS_PATH, output)
+    .then(() => {
+      console.log('CSS saved')
+    })
+    .catch(err => {
+      console.error(`CSS write error:${err}`)
+    })
 }
 
 createI18NConfiguration = items => {
@@ -95,23 +120,33 @@ createI18NConfiguration = items => {
     .then(JSON.parse)
     .then(() => {
       console.log('JSON I18N is ok, saving')
-      fs.writeFile('translations/fr/custom.json', output)
+      fs.writeFile(I18N_PATH, output)
         .then(() => console.log('I18N saved'))
         .catch(err => (`I18N save error:${err}`))
     })
     .catch(err => {
-      console.error(`JSON error:${err}\nSaving to tmp`)
-      fs.writeFile('/tmp/custom.json', output)
+      console.error(`JSON error:${err}\nSaving to ${I18N_PATH_ERR}`)
+      fs.writeFile(I18N_PATH_ERR, output)
         .then(() => console.log('I18N saved'))
         .catch(err => (`I18N save error:${err}`))
     })
 }
 
+createThemeConfiguration = items => {
+  console.log(`Generating ${items.length} THEME items`)
+  items = items.filter(i => i.attributes && i.attributes.length)
+  items = Object.fromEntries(items.map(i => [i.classname, i.attributes[0].value]))
+  fs.writeFile(THEME_PATH, JSON.stringify(items, null, 2))
+    .then(() => console.log(`THEME saved under ${THEME_PATH}`))
+    .catch(err => (`I18N save error:${err}`))
+}
+
 createUIConfiguration = items => {
   console.log(`Generating ${items.length} custom items`)
-  const i18n_grouped=_.groupBy(items, it => (['content', 'text'].includes(it.type) ? 'I18N': 'CSS'))
+  const i18n_grouped=_.groupBy(items, it => (['text', 'sample'].includes(it.type) ? 'I18N': it.type=='palette' ? 'THEME' : 'CSS'))
   createCSSConfiguration(i18n_grouped.CSS || [])
   createI18NConfiguration(i18n_grouped.I18N || [])
+  createThemeConfiguration(i18n_grouped.THEME || [])
 }
 
 module.exports = {

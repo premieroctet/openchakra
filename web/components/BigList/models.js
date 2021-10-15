@@ -1,11 +1,12 @@
-import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
 import Link from 'next/link'
 const moment = require('moment')
+
 moment.locale('fr')
 import LockIcon from '@material-ui/icons/Lock'
 import CheckIcon from '@material-ui/icons/Check'
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 const {insensitiveComparator, normalize} = require('../../utils/text')
 
 class StatusRenderer extends React.Component {
@@ -113,16 +114,18 @@ class PictureRenderer extends React.Component {
 
   render = () => {
     const rowHeight = this.props.node.rowHeight
-    if (this.props.value) {
+    let pictureUrl = this.props.value
+    if (pictureUrl) {
+      if (!pictureUrl.startsWith('/')) {
+        pictureUrl = `/${pictureUrl}`
+      }
       return (
         <div>
-          <img style={{width: 'auto', height: rowHeight}} src={`${this.props.value}`}/>
+          <img style={{width: 'auto', height: rowHeight}} src={pictureUrl}/>
         </div>
       )
     }
-
     return null
-
   }
 }
 
@@ -206,6 +209,14 @@ class FontRenderer extends React.Component {
   }
 }
 
+class DeleteRenderer extends React.Component {
+  render = () => {
+    return (
+      <DeleteForeverIcon />
+    )
+  }
+}
+
 const textColumn = obj => {
   let base={
     comparator: insensitiveComparator,
@@ -268,10 +279,18 @@ const fontColumn = obj => {
   return Object.assign(base, obj)
 }
 
+const deleteColumn = () => {
+  let base={
+    headerName: 'Supprimer',
+    cellRenderer: 'deleteRenderer',
+  }
+  return base
+}
+
 module.exports= {
   StatusRenderer, DateRenderer, DateTimeRenderer, CurrencyRenderer,
   StatusFilter, PictureRenderer, PrivateRenderer, BooleanRenderer, LocationRenderer, WarningRenderer,
-  EnumRenderer, LinkRenderer, ColorRenderer, FontRenderer,
+  EnumRenderer, LinkRenderer, ColorRenderer, FontRenderer, DeleteRenderer,
   textColumn, booleanColumn, dateColumn, dateTimeColumn, currencyColumn, pictureColumn,
-  colorColumn, fontColumn,
+  colorColumn, fontColumn, deleteColumn,
 }

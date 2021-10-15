@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import Router from 'next/router';
-import Layout from '../../hoc/Layout/Layout';
+import DashboardLayout from '../../hoc/Layout/DashboardLayout';
 import axios from 'axios';
 import MapComponent from '../../components/map';
 import Select from '@material-ui/core/Select';
@@ -136,7 +136,7 @@ class ServicesMap extends React.Component {
 
     const allCircles = displayUsers ? userCircles.concat(displayedServiceCircles) : displayedServiceCircles;
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid style={{width: '100%', height: 700}}>
           { /* <MapComponent position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]} perimeter={serviceUser.perimeter*1000} alfred={alfred.firstname}/> */}
           <MapComponent position={[centerLat, centerLon]} zoom={6} circles={allCircles}/>
@@ -176,7 +176,7 @@ class ServicesMap extends React.Component {
             <Typography>Afficher les non-Alfred</Typography>
           </Grid>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     );
   };
 }

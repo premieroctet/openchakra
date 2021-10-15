@@ -1,7 +1,7 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'
@@ -11,7 +11,7 @@ import axios from 'axios'
 
 import BasePage from '../../basePage'
 import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor'
-import Layout from '../../../hoc/Layout/Layout'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 const {snackBarSuccess}=require('../../../utils/notifications')
@@ -131,7 +131,7 @@ class View extends BasePage {
 
     const title=`${this.isEdition() ? 'Modifier' : 'Ajouter'} un équipement`
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -166,15 +166,15 @@ class View extends BasePage {
                   />
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                  <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Enregistrer
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </form>
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

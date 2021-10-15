@@ -11,7 +11,7 @@ const moment = require('moment')
 import {Card, Grid, Typography, Checkbox, Avatar} from '@material-ui/core'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 const {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineSeries, RadialChart}=require('react-vis')
-import Layout from '../../hoc/Layout/Layout';
+import DashboardLayout from '../../hoc/Layout/DashboardLayout';
 const {isLoggedUserAdmin}=require('../../utils/context')
 
 const styles = theme => ({
@@ -176,7 +176,7 @@ class statistics extends React.Component {
     </Grid>;
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container style={{marginTop: 20, width:'90%'}}>
           <Link href={'/dashboard/home'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
@@ -187,7 +187,7 @@ class statistics extends React.Component {
             {this.state.is_admin ? list : refused}
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
 
     );
   };

@@ -1,3 +1,4 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -17,7 +18,6 @@ import InputLabel from '@material-ui/core/InputLabel'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import Chip from '@material-ui/core/Chip'
 import Divider from '@material-ui/core/Divider'
-import Button from '@material-ui/core/Button'
 import _ from 'lodash'
 import '../../../static/assets/css/custom.css'
 import {YEARS_RANGE} from '../../../utils/consts'
@@ -292,9 +292,9 @@ class AssetsService extends React.Component {
                 onChange={this.handlePicture}
               />
               <label htmlFor="diploma-file">
-                <Button variant="contained" color="primary" component="span" classes={{root: `customassetskillbutton ${classes.buttonUpload}`}}>
+                <CustomButton variant="contained" color="primary" component="span" classes={{root: `customassetskillbutton ${classes.buttonUpload}`}}>
                   {ReactHtmlParser(this.props.t('SHOP.assets.button_joinDiploma'))}
-                </Button>
+                </CustomButton>
               </label>
             </Grid>
           </Grid>
@@ -394,9 +394,9 @@ class AssetsService extends React.Component {
                 onChange={this.handlePicture}
               />
               <label htmlFor="certification-file">
-                <Button variant="contained" color="primary" component="span" classes={{root: `customassetcertifjoinbutton ${classes.buttonUpload}`}}>
+                <CustomButton variant="contained" color="primary" component="span" classes={{root: `customassetcertifjoinbutton ${classes.buttonUpload}`}}>
                   {ReactHtmlParser(this.props.t('SHOP.assets.button_joinCertification'))}
-                </Button>
+                </CustomButton>
               </label>
             </Grid>
           </Grid>

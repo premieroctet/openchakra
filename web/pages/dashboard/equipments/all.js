@@ -6,6 +6,10 @@ const models = require('../../../components/BigList/models')
 
 class all extends DataPage {
 
+  getDataType = () => {
+    return 'equipment'
+  }
+
   getColumnDefs = () => {
     return [
       {headerName: '_id', field: '_id', width: 0},
@@ -20,9 +24,9 @@ class all extends DataPage {
 
   loadData = () => {
     axios.get('/myAlfred/api/admin/equipment/all')
-      .then((response) => {
-        let equipments = response.data;
-        equipments.forEach ( e => {
+      .then(response => {
+        let equipments = response.data
+        equipments.forEach(e => {
           e.picture=`/static/equipments/${e.logo}`
         })
         this.setState({data: equipments})

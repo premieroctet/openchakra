@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -5,7 +6,6 @@ import {withStyles} from '@material-ui/core/styles'
 import styles from './LogInStyle'
 import Grid from '@material-ui/core/Grid'
 import Link from 'next/link'
-import Button from '@material-ui/core/Button'
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import axios from 'axios'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
@@ -26,8 +26,7 @@ import Select from '@material-ui/core/Select'
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
 import {EMPLOYEE} from '../../utils/consts'
 const {isB2BStyle}=require('../../utils/context')
-import '../../static/assets/css/custom.css'
-import {LOGIN} from '../../utils/i18n'
+import CustomIcon from '../CustomIcon/CustomIcon'
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -144,12 +143,12 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                   <Grid item>
-                    <MailOutlineIcon className={classes.colorIcon}/>
+                    <CustomIcon className={'customloginmailicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<MailOutlineIcon className={classes.colorIcon}/>}/>
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
                       label={ReactHtmlParser(this.props.t('LOGIN.input_label'))}
-                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_label'))}
+                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_label_placeholder'))}
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
                       name="username"
                       value={username}
@@ -163,13 +162,13 @@ class LogIn extends React.Component {
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                   <Grid item>
-                    <LockOpenOutlinedIcon className={classes.colorIcon}/>
+                    <CustomIcon className={'customloginlockicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<LockOpenOutlinedIcon className={classes.colorIcon}/>}/>
                   </Grid>
                   <Grid item className={classes.widthTextField}>
                     <Input
                       id="standard-with-placeholder"
                       label={ReactHtmlParser(this.props.t('LOGIN.input_password'))}
-                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_password'))}
+                      placeholder={ReactHtmlParser(this.props.t('LOGIN.input_password_placeholder'))}
                       style={{width: '100%', marginTop: 16, marginBottom: 8}}
                       type={showPassword ? 'text' : 'password'}
                       name="password"
@@ -224,9 +223,9 @@ class LogIn extends React.Component {
               }
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer}>
-                  <Button onClick={this.onSubmit} disabled={loginDisabled} variant="contained" color="primary" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>
+                  <CustomButton onClick={this.onSubmit} disabled={loginDisabled} variant="contained" color="primary" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>
                     {ReactHtmlParser(this.props.t('LOGIN.button'))}
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </Grid>
               <Grid item className={classes.margin}>

@@ -1,9 +1,9 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
-import {Button} from '@material-ui/core'
 import axios from 'axios'
 import {computeAverageNotes, computeDistanceKm} from '../../../utils/functions'
 import Box from '@material-ui/core/Box'
@@ -25,7 +25,7 @@ import Router from 'next/router'
 import SchoolIcon from '@material-ui/icons/School'
 import {Skeleton} from '@material-ui/lab'
 import {CARD_SERVICE} from '../../../utils/i18n'
-const {isEditableUser}=require('../../../utils/context')
+const {isEditableUser, displayEmptyReview}=require('../../../utils/context')
 import '../../../static/assets/css/custom.css'
 
 class RawCardServiceInfo extends React.Component {
@@ -115,12 +115,12 @@ class CardService extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.handleClose()} color="primary">
+          <CustomButton onClick={() => this.handleClose()} color="primary">
             {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
-          </Button>
-          <Button onClick={() => this.deleteService(this.state.id_service)} className={classes.colorError}>
+          </CustomButton>
+          <CustomButton onClick={() => this.deleteService(this.state.id_service)} className={classes.colorError}>
             {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -205,35 +205,37 @@ class CardService extends React.Component {
             <Grid container spacing={1} className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
                 <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
-                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}/>
+                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}>
+                    {
+                      profileMode && editable ?
+                        <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
+                          <Grid>
+                            <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
+                              <EditIcon style={{color: 'white'}} />
+                            </IconButton>
+                          </Grid>
+                          <Grid style={{marginLeft: '10px'}}>
+                            <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
+                              <DeleteForeverIcon style={{color: 'white'}} />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                        :
+                        <>
+                          <Grid className={profileMode ? classes.cardServiceCHipNameP : classes.cardServiceChipName}>
+                            <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: `customcardchipname ${classes.cardServiceChip}`}} />
+                          </Grid>
+                          {
+                            cpData.is_professional ?
+                              <Grid className={classes.cardServiceChipPro}>
+                                <Chip label={'Pro'} classes={{root: classes.cardServiceChipBckg}}/>
+                              </Grid> : null
+                          }
+                        </>
+                    }
+                  </Grid>
                 </Grid>
-                {
-                  profileMode && editable ?
-                    <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
-                      <Grid>
-                        <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
-                          <EditIcon style={{color: 'white'}} />
-                        </IconButton>
-                      </Grid>
-                      <Grid style={{marginLeft: '10px'}}>
-                        <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
-                          <DeleteForeverIcon style={{color: 'white'}} />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                    :
-                    <>
-                      <Grid className={classes.cardServiceChipName}>
-                        <Chip label={alfred.firstname} avatar={<Icons />} classes={{root: `customcardchipname ${classes.cardServiceChip}`}} />
-                      </Grid>
-                      {
-                        cpData.is_professional ?
-                          <Grid className={classes.cardServiceChipPro}>
-                            <Chip label={'Pro'} classes={{root: classes.cardServiceChipBckg}}/>
-                          </Grid> : null
-                      }
-                    </>
-                }
+
               </Grid>
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.labelServiceProfil : classes.labelService}>
@@ -270,7 +272,7 @@ class CardService extends React.Component {
                       <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceScoreAndButtonContainer}>
                         <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceRatingContainer}>
                           <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
-                            { cpData.reviews && cpData.reviews.length>0 ?
+                            { displayEmptyReview() || cpData.reviews && cpData.reviews.length>0 ?
                               <Rating
                                 name="simple-controlled"
                                 value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
@@ -282,14 +284,14 @@ class CardService extends React.Component {
                             }
                             <Grid className={classes.cardServiceBoxRatingDisplay}>
                               <Grid className={classes.cardServiceRating}>
-                                { notes.global && notes.global >0 ?
+                                { displayEmptyReview() || notes.global && notes.global >0 ?
                                   <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
                                   :
                                   null
                                 }
                               </Grid>
                               <Grid>
-                                { cpData.reviews && cpData.reviews.length >0 ?
+                                { displayEmptyReview() || cpData.reviews && cpData.reviews.length >0 ?
                                   <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
                                   :
                                   null
@@ -299,12 +301,12 @@ class CardService extends React.Component {
                           </Box>
                         </Grid>
                         <Grid item xl={9} lg={9} md={9} sm={9} xs={9} className={classes.buttonShowProfilContainer}>
-                          <Button
+                          <CustomButton
                             variant={'contained'}
-                            classes={{root: classes.buttonShowProfil}}
+                            classes={{root: `customshoprofil ${classes.buttonShowProfil}`}}
                           >
                             {ReactHtmlParser(this.props.t('CARD_SERVICE.button_show_profil'))}
-                          </Button>
+                          </CustomButton>
                         </Grid>
                       </Grid>
                     </>

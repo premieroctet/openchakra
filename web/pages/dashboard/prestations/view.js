@@ -1,7 +1,7 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -18,7 +18,7 @@ import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
 import BasePage from '../../basePage';
-import Layout from '../../../hoc/Layout/Layout'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
@@ -337,7 +337,7 @@ class View extends BasePage {
 
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.loginContainer}>
           <Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center'}}>
@@ -569,23 +569,23 @@ class View extends BasePage {
 
 
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                   Modifier
-                </Button>
-                <Button type="button" variant="contained" classes={{root: classes.cancelButton}} style={{width: '100%'}}
+                </CustomButton>
+                <CustomButton type="button" variant="contained" classes={{root: classes.cancelButton}} style={{width: '100%'}}
                   onClick={this.handleClick}>
                   Supprimer
-                </Button>
+                </CustomButton>
               </Grid>
             </form>
             <Link href={`editPicture?id=${this.getURLProps().id}`}>
-              <Button type="button" variant="contained" color="primary" style={{width: '100%'}}>
+              <CustomButton type="button" variant="contained" color="primary" style={{width: '100%'}}>
                 Modifier la photo
-              </Button>
+              </CustomButton>
             </Link>
           </Grid>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

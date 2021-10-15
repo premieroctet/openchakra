@@ -1,27 +1,32 @@
 import {withTranslation} from 'react-i18next'
-const  {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
-import {withStyles} from '@material-ui/core/styles';
+const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
+import {withStyles} from '@material-ui/core/styles'
 import axios from 'axios'
 const models=require('../../../components/BigList/models')
 
 class all extends DataPage {
+
+  getDataType = () => {
+    return 'shopBanner'
+  }
+
   getColumnDefs = () => {
     return [
-      {headerName: "_id", field: "_id", width: 0},
-      models.textColumn({headerName: "Label", field: "label"}),
-      models.pictureColumn({headerName: "Illustration", field: "picture"}),
+      {headerName: '_id', field: '_id', width: 0},
+      models.textColumn({headerName: 'Label', field: 'label'}),
+      models.pictureColumn({headerName: 'Illustration', field: 'picture'}),
     ]
   }
 
   getTitle = () => {
-    return "Bannières"
+    return 'Bannières'
   }
 
   loadData = () => {
     axios.get('/myAlfred/api/admin/shopBanner/all')
-      .then((response) => {
-        let shopBanner = response.data.map(sb => { sb.picture=`/${sb.picture}`; return sb});
-        this.setState({data: shopBanner});
+      .then(response => {
+        let shopBanners = response.data
+        this.setState({data: shopBanners})
       })
   }
 
@@ -30,7 +35,7 @@ class all extends DataPage {
   }
 
   onAddClicked = () => {
-    window.open(`/dashboard/shopBanner/add`, '_blank')
+    window.open('/dashboard/shopBanner/add', '_blank')
   }
 
 

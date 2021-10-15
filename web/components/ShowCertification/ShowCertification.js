@@ -46,7 +46,7 @@ class ShowCertification extends React.Component {
       <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
           <Grid style={{display: 'flex'}}>
-            <img title={'certification_icon'} alt={'certification_icon'} height={24} width={24} src={'/static/assets/icon/pro_icon.svg'}/>
+            <div className={`customcertiflogo ${classes.certificationLogo}`}/>
           </Grid>
           <Grid style={{marginLeft: 10}}>
             <h3>{ReactHtmlParser(this.props.t('SHOW_CERTIFICATION.title'))}</h3>
@@ -92,7 +92,7 @@ class ShowCertification extends React.Component {
                               x.skills.map(s => {
                                 return(
                                   <Chip
-                                    classes={{root: classes.chip}}
+                                    classes={{root: `customcertifchip ${classes.chip}`}}
                                     label={`#${s}`}
                                   />
                                 )

@@ -1,3 +1,11 @@
+const {
+  getLoggedUserId,
+  isApplication,
+  isB2BStyle,
+  isMobile,
+} = require('../utils/context')
+import {canAlfredSelfRegister} from '../config/config'
+import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import axios from 'axios'
@@ -19,17 +27,16 @@ import TrustAndSecurity from '../hoc/Layout/TrustAndSecurity/TrustAndSecurity'
 import {Dialog, DialogActions, DialogContent, Divider} from '@material-ui/core'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import ResaService from '../components/HomePage/ResaService/ResaService'
-import {isB2BStyle, isApplication, isMobile} from '../utils/context'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 import CloseIcon from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import {isAndroid} from 'react-device-detect'
 const {PRO, PART} = require('../utils/consts')
-const {getLoggedUserId} = require('../utils/context')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
 import {INDEX} from '../utils/i18n'
+import _ from 'lodash'
+import CustomBannerMultiCol from '../components/HomePage/CustomBannerMultiCol/CustomBannerMultiCol'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -55,6 +62,7 @@ class Home extends React.Component {
       logged: false,
       user: {},
       open: false,
+      mounted: false,
     }
   }
 
@@ -83,8 +91,8 @@ class Home extends React.Component {
 
     axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
       .then(res => {
-        let category = res.data
-        this.setState({category: category})
+        let categories = _.shuffle(res.data)
+        this.setState({categories: categories})
       }).catch(err => console.error(err))
 
     axios.get(`/myAlfred/api/serviceUser/home/${isB2BStyle(this.state.user) ? PRO : PART}`)
@@ -92,6 +100,8 @@ class Home extends React.Component {
         let alfred = response.data
         this.setState({alfred: alfred})
       }).catch(err => console.error(err))
+
+    this.setState({mounted: true})
   }
 
   dialogStore = () => {
@@ -112,11 +122,11 @@ class Home extends React.Component {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button
+          <CustomButton
             onClick={() => Router.push(isAndroid ? 'https://play.google.com/store/apps/details?id=com.myalfred' : 'https://apps.apple.com/us/app/my-alfred/id1544073864')}
             color="primary">
             {ReactHtmlParser(this.props.t('INDEX.download_button'))}
-          </Button>
+          </CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -139,7 +149,11 @@ class Home extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {category, alfred, open, user} = this.state
+    const {mounted, categories, alfred, open, user} = this.state
+    if (!mounted) {
+      return null
+    }
+
     return (
 
       <Grid>
@@ -151,7 +165,7 @@ class Home extends React.Component {
           />
         </Helmet>
         <Grid>
-          <Grid className={`customHeaderInfobar ${classes.infoBarContainer}`}>
+          <Grid className={`customheaderinfobar ${classes.infoBarContainer}`}>
             <InfoBar/>
           </Grid>
           <Grid container className={classes.navbarAndBannerContainer}>
@@ -164,7 +178,7 @@ class Home extends React.Component {
               xs={12}
               className={`custombanner ${isB2BStyle(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}` }
             >
-              <Grid className={`${classes.navbarComponentPosition} customHeader`}>
+              <Grid className={`customheader ${classes.navbarComponentPosition}`}>
                 <NavBar ref={this.child}/>
               </Grid>
               <Grid className={classes.bannerPresentationContainer}>
@@ -187,12 +201,22 @@ class Home extends React.Component {
           }
           <Grid container className={`customslidecat ${classes.mainContainerStyle}`}>
             <Grid className={classes.generalWidthContainer}>
-              <CategoryTopic category={category}/>
+              <CategoryTopic categories={categories}/>
             </Grid>
           </Grid>
           <Grid container className={`customhowitworks ${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
-            <Grid className={classes.generalWidthContainer}>
-              <HowItWorks/>
+            <Grid style={{width: '100%'}}>
+              {/* <HowItWorks/>*/}
+              <Grid className={classes.howItWorksMainStyle}>
+                <CustomBannerMultiCol
+                  firstContent={<div className={'custombannerimgfirst'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfirsttext'}>{ReactHtmlParser(this.props.t('INDEX.first_content'))}</Typography></div>}
+                  secondContent={<div className={'custombannerimgtwo'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworkssecondtext'}>{ReactHtmlParser(this.props.t('INDEX.second_content'))}</Typography></div>}
+                  thirdContent={<div className={'custombannerimgthree'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksthirdttext'}>{ReactHtmlParser(this.props.t('INDEX.third_content'))}</Typography></div>}
+                  fourContent={<div className={'custombannerimgfour'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfourtext'}>{ReactHtmlParser(this.props.t('INDEX.four_content'))}</Typography></div>}
+                  fiveContent={<div className={'custombannerimgfive'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfivetext'}>{ReactHtmlParser(this.props.t('INDEX.five_content'))}</Typography></div>}
+                  sixContent={<div className={'custombannerimgsix'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworkssixtext'}>{ReactHtmlParser(this.props.t('INDEX.six_content'))}</Typography></div>}
+                />
+              </Grid>
             </Grid>
           </Grid>
           <Grid container className={`customouralfred ${classes.mainContainerStyle}`}>
@@ -201,11 +225,12 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           {
-            isB2BStyle(user) ? null : <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
-              <Grid className={classes.generalWidthContainer}>
-                <ResaService triggerLogin={this.callLogin}/>
+            isB2BStyle(user) ? null :
+              <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
+                <Grid className={classes.generalWidthContainer}>
+                  <ResaService triggerLogin={this.callLogin}/>
+                </Grid>
               </Grid>
-            </Grid>
           }
           <Grid className={`customnewsletter ${classes.newsLetterContainer}`}>
             {
@@ -226,7 +251,7 @@ class Home extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container className={classes.mainContainerStyleFooter}>
+          <Grid container className={`customgeneralfooter ${classes.mainContainerStyleFooter}`}>
             <Grid className={classes.generalWidthFooter}>
               <Footer/>
             </Grid>

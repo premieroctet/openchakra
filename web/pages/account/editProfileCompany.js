@@ -1,7 +1,7 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import {Helmet} from 'react-helmet'
 import {withTranslation} from 'react-i18next'
 import AlgoliaPlaces from 'algolia-places-react'
-import Button from '@material-ui/core/Button'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import Checkbox from '@material-ui/core/Checkbox'
 import Divider from '@material-ui/core/Divider'
@@ -349,14 +349,14 @@ class editProfileCompany extends BasePage {
         </Grid>
         <Grid style={{marginBottom: '12vh'}}>
           <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>
-            <Button
+            <CustomButton
               onClick={this.onSubmitProfilCompany}
               variant='contained'
               color='primary'
               classes={{root: classes.button}}
             >
               {ReactHtmlParser(this.props.t('EDIT_PROFIL.save_button'))}
-            </Button>
+            </CustomButton>
           </Grid>
         </Grid>
         <Grid>
@@ -408,7 +408,7 @@ class editProfileCompany extends BasePage {
               />
             </Grid>
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
-              <Button
+              <CustomButton
                 variant='contained'
                 color={'primary'}
                 onClick={() => (user.is_confirmed ? this.onSubmitAbout() : this.sendEmail())}
@@ -416,7 +416,7 @@ class editProfileCompany extends BasePage {
                 classes={{root: classes.buttonCheckPhone}}
               >
                 {email === user.email && user.is_confirmed === true ? ReactHtmlParser(this.props.t('EDIT_PROFIL.email_checked')) : email !== user.email ? ReactHtmlParser(this.props.t('EDIT_PROFIL.new_email')) : ReactHtmlParser(this.props.t('EDIT_PROFIL.check_new_email'))}
-              </Button>
+              </CustomButton>
             </Grid>
             <Grid item xs={position_width} lg={position_width} md={position_width} sm={position_width} xl={position_width}>
               <TextField
@@ -447,14 +447,14 @@ class editProfileCompany extends BasePage {
         </Grid>
         <Grid style={{marginBottom: '12vh'}}>
           <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>
-            <Button
+            <CustomButton
               onClick={this.onSubmitAbout}
               variant='contained'
               color='primary'
               classes={{root: classes.button}}
             >
               {ReactHtmlParser(this.props.t('EDIT_PROFIL.save_button'))}
-            </Button>
+            </CustomButton>
           </Grid>
         </Grid>
       </Grid>

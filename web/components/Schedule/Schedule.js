@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {Calendar, momentLocalizer, Views} from 'react-big-calendar'
@@ -6,7 +7,6 @@ import moment from 'moment'
 import Grid from '@material-ui/core/Grid'
 import {bookings2events} from '../../utils/converters'
 import {Typography} from '@material-ui/core'
-import Button from '@material-ui/core/Button'
 import styles from '../../static/css/components/Schedule/Schedule'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Hidden from '@material-ui/core/Hidden'
@@ -15,6 +15,7 @@ import Router from 'next/router'
 import '../../static/assets/css/custom.css'
 
 const {isDateAvailable, isMomentAvailable} = require('../../utils/dateutils')
+
 moment.locale('fr')
 
 const localizer = momentLocalizer(moment)
@@ -122,7 +123,7 @@ class Schedule extends React.Component {
             {
               this.props.nbSchedule === 1 ?
                 <Grid item>
-                  <Button onClick={goToBack} variant={'contained'}>&#8249;</Button>
+                  <CustomButton onClick={goToBack} variant={'contained'}>&#8249;</CustomButton>
                 </Grid> : null
             }
             <Grid item>
@@ -131,7 +132,7 @@ class Schedule extends React.Component {
             {
               this.props.nbSchedule === 1 ?
                 <Grid item>
-                  <Button onClick={goToNext} variant={'contained'}>&#8250;</Button>
+                  <CustomButton onClick={goToNext} variant={'contained'}>&#8250;</CustomButton>
                 </Grid> : null
             }
           </Grid>
@@ -192,14 +193,14 @@ class Schedule extends React.Component {
       else if (isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
         return (
           <Grid className={classes.schedule_today_style_avail}>
-            <Grid className={classes.schedule_today_style}/>
+            <Grid className={`customscheduletoday ${classes.schedule_today_style}`}/>
           </Grid>
         )
       }
       else if (!isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
         return (
           <Grid className={classes.style_today_style_off}>
-            <Grid className={classes.schedule_today_style}/>
+            <Grid className={`customscheduletoday ${classes.schedule_today_style}`}/>
           </Grid>
         )
       }
@@ -209,7 +210,7 @@ class Schedule extends React.Component {
         )
       }
       return (
-        <Grid className={classes.schedule_non_available_style}/>
+        <Grid className={`customscheduleunavaibleday ${classes.schedule_non_available_style}`}/>
       )
 
     }
@@ -267,7 +268,7 @@ class Schedule extends React.Component {
         }
         if (!isAvailable) {
           return (
-            <Grid className={classes.schedule_non_available_style}/>
+            <Grid className={`customscheduleunavaibleday ${classes.schedule_non_available_style}`}/>
           )
         }
       }
@@ -300,10 +301,10 @@ class Schedule extends React.Component {
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container
             style={{justifyContent: 'space-between', margin: 0, width: '100%'}} spacing={3}>
             <Grid>
-              <Button onClick={this.previousMonth} variant={'contained'} classes={{root: 'customscheduleprevbutton'}}>&#8249;</Button>
+              <CustomButton onClick={this.previousMonth} variant={'contained'} classes={{root: 'customscheduleprevbutton'}}>&#8249;</CustomButton>
             </Grid>
             <Grid>
-              <Button onClick={this.nextMonth} variant={'contained'} classes={{root: 'customschedulenextbutton'}}>&#8250;</Button>
+              <CustomButton onClick={this.nextMonth} variant={'contained'} classes={{root: 'customschedulenextbutton'}}>&#8250;</CustomButton>
             </Grid>
           </Grid>
           :

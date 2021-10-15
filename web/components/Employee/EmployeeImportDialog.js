@@ -1,3 +1,4 @@
+import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -5,7 +6,6 @@ import Dialog from '@material-ui/core/Dialog'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import DialogContent from '@material-ui/core/DialogContent'
-import Button from '@material-ui/core/Button'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../../static/css/pages/paymentMethod/paymentMethod'
@@ -89,14 +89,14 @@ class EmployeeImportDialog extends React.Component {
             <input ref={this.fileRef} type="file" name="file" id="file" onChange={this.onFileSelected}/>
           </Grid>
           <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
-            <Button
+            <CustomButton
               onClick={this.onImport}
               variant="contained"
               classes={{root: classes.buttonSave}}
               disabled={!selectedFile}
             >
               {ReactHtmlParser(this.props.t('EMPLOYEE_DIALOG.button'))}
-            </Button>
+            </CustomButton>
           </Grid>
         </DialogContent>
       </Dialog>

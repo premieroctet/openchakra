@@ -17,6 +17,10 @@ const UIConfigurationSchema = new Schema({
     type: String,
     required: true,
   },
+  order: {
+    type: Number,
+    required: false,
+  },
   // Parameter type (color, font, text, picture)
   type: {
     type: String,

@@ -1,7 +1,7 @@
+import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import Router from 'next/router'
@@ -70,13 +70,13 @@ class PaymentFailed extends BasePage {
                 </Grid>
                 <Grid style={{marginTop: '5vh'}}>
                   <Grid>
-                    <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push(booking_link)}>
+                    <CustomButton variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push(booking_link)}>
                       {ReactHtmlParser(this.props.t('PAYMENT_FAILED.back_resa'))}
-                    </Button>
+                    </CustomButton>
                     { !avocotes_mode &&
-                      <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push('/')}>
+                      <CustomButton variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push('/')}>
                         {ReactHtmlParser(this.props.t('PAYMENT_FAILED.back_home'))}
-                      </Button>
+                      </CustomButton>
                     }
                   </Grid>
                 </Grid>

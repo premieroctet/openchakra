@@ -60,11 +60,17 @@ export default theme => ({
     justifyContent: 'center',
     marginTop: '2%',
     backgroundColor: theme.palette.primary.main,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
   },
   howItWorksComponent: {
     justifyContent: 'center',
     marginTop: '2%',
     backgroundColor: theme.palette.secondary.main,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
   },
   howItWorksComponentB2b: {
     justifyContent: 'center',
@@ -103,6 +109,9 @@ export default theme => ({
   mainContainerStyleFooter: {
     justifyContent: 'center',
     backgroundColor: 'rgba(228, 228, 228, 8)',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
   },
   root: {
     margin: 0,
@@ -164,5 +173,14 @@ export default theme => ({
     [theme.breakpoints.only('lg')]: {
       display: 'none',
     },
+  },
+  howItWorksRightText: {
+    color: theme.palette.white.main,
+    fontSize: theme.typography.text.fontSize,
+    fontWeight: theme.typography.text.fontWeight,
+    fontFamily: theme.typography.text.fontFamily,
+  },
+  howItWorksMainStyle: {
+    padding: '6%',
   },
 })

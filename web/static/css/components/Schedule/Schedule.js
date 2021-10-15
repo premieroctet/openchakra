@@ -63,7 +63,8 @@ export default theme => ({
     borderRadius: 50,
     width: 25,
     height: 25,
-    border: '1px solid black',
+    border: '1px solid',
+    borderColor: 'black',
   },
   style_today_style_off: {
     width: '100%',

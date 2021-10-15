@@ -79,11 +79,11 @@ class Layout extends React.Component {
         <Grid className={classes.mainContainerStyleFooter}>
           <Grid className={classes.hiddenOnMobile}>
             <Divider style={{width: '100%'}}/>
-            <Grid style={{width: '90%', marginTop: '2vh', marginBottom: '2vh'}}>
+            <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
               <TrustAndSecurity/>
             </Grid>
           </Grid>
-          <Grid className={classes.generalWidthFooter}>
+          <Grid className={`customgeneralfooter ${classes.generalWidthFooter}`}>
             <Grid style={{width: '85%'}}>
               {<Footer/>}
             </Grid>

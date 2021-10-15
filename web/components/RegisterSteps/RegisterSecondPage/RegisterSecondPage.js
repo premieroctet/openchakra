@@ -1,3 +1,4 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -8,7 +9,6 @@ import AlgoliaPlaces from 'algolia-places-react'
 import TextField from '@material-ui/core/TextField'
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined'
 import Checkbox from '@material-ui/core/Checkbox'
-import Button from '@material-ui/core/Button'
 import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
 import styles from '../../../static/css/components/RegisterSteps/RegisterSecondPage/RegisterSecondPage'
@@ -20,6 +20,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
 import '../../../static/assets/css/custom.css'
 import {REGISTER_SECOND_PAGE} from '../../../utils/i18n'
+import CustomIcon from '../../CustomIcon/CustomIcon'
 
 
 function NumberFormatCustom(props) {
@@ -70,7 +71,7 @@ class RegisterSecondPage extends React.Component {
           <CguContent/>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} classes={{root: classes.cancelButton}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.dialog_cgu_close'))}</Button>
+          <CustomButton onClick={handleClose} classes={{root: classes.cancelButton}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.dialog_cgu_close'))}</CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -187,7 +188,7 @@ class RegisterSecondPage extends React.Component {
             </Grid>
             <Grid item container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
               <Grid item>
-                <PhoneIphoneOutlinedIcon className={classes.colorIcon}/>
+                <CustomIcon className={'customregisterphoneicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<PhoneIphoneOutlinedIcon className={classes.colorIcon}/>}/>
               </Grid>
               <Grid item style={{width: '70%'}}>
                 <TextField
@@ -217,7 +218,7 @@ class RegisterSecondPage extends React.Component {
                   />
                 </Grid>
                 <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-                  <Button onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}</Button>
+                  <CustomButton onClick={this.handleOpenCgu} classes={{root: `customregigisterbuttoncgu ${classes.buttonCGU}`}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}</CustomButton>
                   {this.dialogCgu(classes)}
                 </Grid>
               </Grid>

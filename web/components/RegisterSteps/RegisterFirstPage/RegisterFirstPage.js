@@ -20,6 +20,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import Siret from '../../Siret/Siret';
 import styles from '../../../static/css/components/RegisterSteps/RegisterFirstPage/RegisterFirstPage'
 import {REGISTER_FIRST_PAGE} from '../../../utils/i18n'
+import CustomIcon from '../../CustomIcon/CustomIcon'
 
 class RegisterFirstPage extends React.Component {
 
@@ -49,7 +50,7 @@ class RegisterFirstPage extends React.Component {
         <Grid className={`customregistercontemail ${classes.margin}`}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <MailOutlineIcon className={classes.colorIcon}/>
+              <CustomIcon className={'customregistericonemail'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<MailOutlineIcon className={classes.colorIcon}/>}/>
             </Grid>
             <Grid item className={classes.widthTextField}>
               <TextField
@@ -69,7 +70,7 @@ class RegisterFirstPage extends React.Component {
         <Grid className={`customregistercontfirstname ${classes.margin}`}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <PersonOutlineIcon className={classes.colorIcon}/>
+              <CustomIcon className={'customregistericonperson'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<PersonOutlineIcon className={classes.colorIcon}/>}/>
             </Grid>
             <Grid item className={classes.widthTextField}>
               <TextField
@@ -90,7 +91,7 @@ class RegisterFirstPage extends React.Component {
         <Grid className={`customregistercontname ${classes.margin}`}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <PersonOutlineIcon className={classes.colorIcon}/>
+              <CustomIcon className={'customregistericonname'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<PersonOutlineIcon className={classes.colorIcon}/>}/>
             </Grid>
             <Grid item className={classes.widthTextField}>
               <TextField
@@ -131,7 +132,7 @@ class RegisterFirstPage extends React.Component {
             <Grid className={classes.margin}>
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                 <Grid item>
-                  <LockOpenOutlinedIcon className={classes.colorIcon}/>
+                  <CustomIcon className={'customregistericonlockopen'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<LockOpenOutlinedIcon className={classes.colorIcon}/>}/>
                 </Grid>
                 <Grid item className={classes.widthTextField}>
                   <TextField
@@ -166,7 +167,7 @@ class RegisterFirstPage extends React.Component {
             <Grid className={classes.margin}>
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                 <Grid item>
-                  <LockOutlinedIcon className={classes.colorIcon}/>
+                  <CustomIcon className={'customregistericonlock'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<LockOutlinedIcon className={classes.colorIcon}/>}/>
                 </Grid>
                 <Grid item className={classes.widthTextField}>
                   <TextField

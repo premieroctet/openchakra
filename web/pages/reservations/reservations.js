@@ -1,8 +1,8 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
 import '../../static/assets/css/custom.css'
 
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import Button from '@material-ui/core/Button'
 import CloseIcon from '@material-ui/icons/Close'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -249,7 +249,7 @@ class AllReservations extends BasePage {
             onChange={this.handleReservationStatusChanged}
             aria-label="scrollable force tabs"
             scrollButtons="on"
-            classes={{indicator: classes.scrollMenuIndicator}}
+            classes={{indicator: `customscrollmenu ${classes.scrollMenuIndicator}`}}
           >
             <Tab label={'Toutes mes réservations'} className={classes.scrollMenuTab} />
             <Tab label={'Mes réservations à venir'} className={classes.scrollMenuTab} />
@@ -294,24 +294,24 @@ class AllReservations extends BasePage {
                     </Grid>
                     <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer}>
                       <Grid item>
-                        <Button
+                        <CustomButton
                           color={'primary'}
                           variant={'outlined'}
                           classes={{root: classes.buttonDetail}}
                           onClick={() => this.openBookingPreview(booking._id)}>
                           Détail
-                        </Button>
+                        </CustomButton>
                       </Grid>
                       {
                         reservationType === 1 && !booking.customer_booking ?
                           <Grid item>
-                            <Button
+                            <CustomButton
                               variant={'contained'}
                               color={'primary'}
                               classes={{root: classes.buttonResa}}
                               onClick={() => this.newAppointment(booking)}>
                               Réserver de nouveau
-                            </Button>
+                            </CustomButton>
                           </Grid> : null
                       }
 

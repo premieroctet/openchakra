@@ -1,5 +1,6 @@
 import getDistance from 'geolib/es/getDistance'
 import convertDistance from 'geolib/es/convertDistance'
+
 const isEmpty = require('../server/validation/is-empty')
 
 const computeDistanceKm = (latlon1, latlon2) => {

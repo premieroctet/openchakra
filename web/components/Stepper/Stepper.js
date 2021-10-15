@@ -6,9 +6,7 @@ import StepperMaterial from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
-
 import styles from './StepperStyle'
-
 
 const ColorlibConnector = () => {
   return(
@@ -21,7 +19,7 @@ class Stepper extends React.Component {
   render() {
     const {classes, activeStep, orientation, steps} = this.props
 
-    const isVertical = orientation == 'vertical'
+    const isVertical = orientation === 'vertical'
     return (
       <Grid className={classes.root}>
         <StepperMaterial
@@ -36,7 +34,7 @@ class Stepper extends React.Component {
             <Step key={label} classes={{root: isVertical ? classes.stepShop : classes.stepRoot}}>
               <StepLabel
                 classes={{root: `customstepperlabelshop ${orientation === 'vertical' ? classes.stepLabelShop :classes.stepLabelRoot}`}}
-                StepIconProps={{classes: {root: isVertical ? classes.stepIconShop : classes.stepIcon},
+                StepIconProps={{classes: {root: `customsteppericon ${isVertical ? classes.stepIconShop : classes.stepIcon}`},
                 }}>
                 {label}
               </StepLabel>

@@ -48,7 +48,8 @@ class DBAccess():
 
   def insert_document(self, coll_name, document):
     coll = self.database[coll_name]
-    _id = coll.insert_one(document).inserted_id
+    doc = coll.insert_one(document)
+    _id = doc.inserted_id
     return _id
 
   def update_document(self, coll_name, document):
@@ -58,4 +59,8 @@ class DBAccess():
   def remove_document(self, coll_name, doc_id):
     coll = self.database[coll_name]
     coll.delete_one({"_id": doc_id})
+
+  def remove_all_documents(self, coll_name, skip_error=False):
+    coll = self.database[coll_name]
+    coll.delete_many({})
 

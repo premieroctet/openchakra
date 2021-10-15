@@ -8,6 +8,7 @@ import Link from 'next/link'
 import axios from 'axios'
 const {isB2BStyle}=require('../../../utils/context')
 import '../../../static/assets/css/custom.css'
+import Typography from '@material-ui/core/Typography'
 
 class CategoryCard extends React.Component {
 
@@ -52,8 +53,8 @@ class CategoryCard extends React.Component {
               className={classes.categoryCardBackground}
             />
           </Grid>
-          <Grid className={'customcardcat'}>
-            <h6>{isB2BStyle(user) ? item.professional_label : item.particular_label}</h6>
+          <Grid className={`customcardcat ${classes.textContainer}`}>
+            <Typography className={`customtypocardcat ${classes.typocardcat}`}>{isB2BStyle(user) ? item.professional_label : item.particular_label}</Typography>
           </Grid>
         </Grid>
       </Link>

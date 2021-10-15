@@ -1,3 +1,4 @@
+import { canAlfredSelfRegister } from '../../config/config';
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'

@@ -2,7 +2,14 @@ import React from 'react'
 import RegisterFirstPage from '../components/RegisterSteps/RegisterFirstPage/RegisterFirstPage'
 import RegisterSecondPage from '../components/RegisterSteps/RegisterSecondPage/RegisterSecondPage'
 import RegisterThirdPage from '../components/RegisterSteps/RegisterThirdPage/RegisterThirdPage'
+import RegisterMode from '../components/RegisterSteps/RegisterMode/RegisterMode'
 const {REGISTER_MODE}=require('./consts.js')
+
+const MODEREGISTER = {
+  component: parent => <RegisterMode
+    state={parent.state}
+  />,
+}
 
 const FIRSTPAGE = {
   component: parent => <RegisterFirstPage
@@ -15,7 +22,6 @@ const FIRSTPAGE = {
     handleClickShowPassword2={parent.handleClickShowPassword2}
     handleMouseDownPassword={parent.handleMouseDownPassword}
   />,
-
 }
 
 const SECONDEPAGE ={
@@ -39,7 +45,7 @@ const THIRDPAGE ={
 }
 
 const STEPS={
-  [REGISTER_MODE.COMPLETE]: [FIRSTPAGE, SECONDEPAGE, THIRDPAGE],
+  [REGISTER_MODE.COMPLETE]: [MODEREGISTER, FIRSTPAGE, SECONDEPAGE, THIRDPAGE],
   [REGISTER_MODE.INCOMPLETE]: [FIRSTPAGE, SECONDEPAGE],
 }
 

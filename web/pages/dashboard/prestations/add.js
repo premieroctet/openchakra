@@ -1,3 +1,4 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react';
@@ -7,9 +8,8 @@ import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Router from 'next/router';
-import Layout from '../../../hoc/Layout/Layout';
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout';
 import axios from 'axios';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -281,7 +281,7 @@ class add extends React.Component {
     }))
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -535,15 +535,15 @@ class add extends React.Component {
                   <em>{errors.tags}</em>
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                  <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Ajouter
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </form>
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     );
   };
 }

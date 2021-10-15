@@ -1,3 +1,4 @@
+import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React, {useState, useEffect} from 'react'
@@ -11,7 +12,6 @@ import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
 import Divider from '@material-ui/core/Divider'
-import Button from '@material-ui/core/Button'
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
 const {AVOCOTES_COMPANY_NAME}=require('../../../utils/consts')
 import Router from 'next/router'
@@ -20,6 +20,7 @@ import AlgoliaPlaces from 'algolia-places-react'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import {isEmailOk, isPhoneOk} from '../../../utils/sms'
 const moment = require('moment')
+
 moment.locale('fr')
 
 
@@ -245,9 +246,9 @@ function Form({classes, booking_id, t}) {
           </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Button variant="contained" classes={{root: classes.buttonPaid}} disabled={!payEnabled()} onClick={onSubmit}>
+          <CustomButton variant="contained" classes={{root: classes.buttonPaid}} disabled={!payEnabled()} onClick={onSubmit}>
             {ReactHtmlParser(t('AVOCOTES.paidButton'))}
-          </Button>
+          </CustomButton>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Typography>{ReactHtmlParser(t('AVOCOTES.helperText'))}</Typography>

@@ -42,7 +42,7 @@ class LayoutMessages extends React.Component {
                 value={user && !user.is_alfred ? 0 : tabIndex}
                 onChange={user && !user.is_alfred ? null : this.handleChange}
                 aria-label="scrollable force tabs"
-                classes={{indicator: classes.scrollIndicator}}
+                classes={{indicator: `customscrollmenu ${classes.scrollMenuIndicator}`}}
               >
                 {
                   user && user.is_alfred ?

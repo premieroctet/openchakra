@@ -1,10 +1,7 @@
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
 const {MANGOPAY_ERRORS}=require('./mangopay_messages')
 
-const CESU_NOTICE = "Quel que soit votre statut, My Alfred est tenu de déclarer aux \
-finances publiques vos revenus générés <b>si les deux conditions suivantes sont \
-réunies dans l'année civile :</b><ul><li>vos revenus dépassent 3000 euros</li>\
-<li>vous avez réalisé vingt prestations ou plus</li></ul>"
+const CESU_NOTICE = 'Quel que soit votre statut, My Alfred est tenu de déclarer aux finances publiques vos revenus générés si les deux conditions suivantes sont réunies dans l\'année civile : vos revenus dépassent 3000 euros, vous avez réalisé vingt prestations ou plus'
 
 const OUTSIDE_PERIMETER = 'Ce service est hors de votre périmètre.'
 
@@ -35,7 +32,12 @@ const MANGOPAY_MESSAGES = {
 
 const INFOBAR = {
   message: 'Vous ne trouvez pas votre service ? L’équipe Alfred se mobilise pour trouver le meilleur Alfred près de chez vous',
+  randomTextA: '',
+  randomTextB: '',
+  randomTextC: '',
 }
+
+
 
 const INFOBARMOBILE = {
   message: "L'application MyAlfred est disponible au téléchargement sur :",
@@ -568,6 +570,13 @@ const ABOUT = {
   button_update: 'Modifier',
   alfred_certifed: 'à un profil vérifié',
   snackbar_profil_update: 'Profil modifié avec succès',
+  leave_at: 'Habite à ',
+  speak: 'Parle',
+}
+
+const CALENDAR = {
+  title: 'Ajoutez vos disponiblités',
+  subtitle: 'Votre calendrier vous permet d’ajouter vos disponibilités en précisant les tranches horaires. ',
 }
 
 const LAYOUT_ABOUT = {
@@ -657,7 +666,6 @@ const MY_PROFIL = {
 }
 
 
-
 const PAYMENT_METHOD = {
   title: 'Modes de paiement',
   subtitle: "N'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.",
@@ -682,6 +690,9 @@ const REGISTER = {
   previous_button: 'Précédent',
   link_already_account: 'Vous avez déjà un compte My Alfred ?',
   finish_button: 'Terminer',
+  particular: 'Je suis particulier',
+  company: 'Je suis une entreprise',
+  or: 'Ou',
 }
 
 const REGISTER_FIRST_PAGE = {
@@ -883,6 +894,10 @@ const NEWSLETTER = {
   google: "S'inscrire avec Google",
   where: 'ou',
   button: "Je m'inscris !",
+  dialogTitle: 'Abonnement à la newsletter de MyAlfred',
+  confirmDialog: 'Vous avez reçu un email contenant un lien de confirmation !',
+  errorMessage: ' Une erreur est survenue veuillez réessayer ultérieurement, pour plus d\'informations contactez-nous via notre chat instantané ou directement par e-mail : ',
+  email: 'hello@my-alfred.io',
 }
 
 const CMP_PRESENTATION = {
@@ -1166,6 +1181,12 @@ const INDEX = {
   dialog_store: 'Application MyAlfred',
   store_available: 'Notre application est disponible sur ',
   download_button: 'Télécharger',
+  first_content: '',
+  second_content: '',
+  third_content: '',
+  four_content: '',
+  five_content: '',
+  six_content: '',
 }
 
 const PAYMENT_FAILED = {
@@ -1525,4 +1546,5 @@ module.exports = {
   PAYMENT_SUCCESS,
   RESET_PASSWORD,
   COOKIE_CONSENT,
+  CALENDAR,
 }
