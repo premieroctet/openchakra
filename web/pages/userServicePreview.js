@@ -28,10 +28,8 @@ import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
 import '../static/assets/css/custom.css'
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
-import SchoolIcon from '@material-ui/icons/School'
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser'
 import {Divider} from '@material-ui/core'
-
+import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
 const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage = require('./basePage')
 const {BOOK_STATUS, COMM_CLIENT, MANAGER}=require('../utils/consts')
@@ -758,20 +756,6 @@ class UserServicesPreview extends BasePage {
       },
     ]
 
-    const listGrades = [
-      {
-        label: '',
-        summary: this.state.alfred.grade_text ? this.state.grade_text : '',
-        IconName: <SchoolIcon classes={{root: classes.colorIconSchool}}/>,
-      },
-      {
-        label: '',
-        summary: this.state.alfred.insurance_text ? this.state.insurance_text : '',
-        IconName: <VerifiedUserIcon classes={{root: classes.colorIconSchool}}/>,
-      },
-
-    ]
-
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
         <Grid>
@@ -829,14 +813,7 @@ class UserServicesPreview extends BasePage {
                         <Typography style={{color: 'rgba(39,37,37,35%)'}}>{this.state.serviceUser.description ? this.state.serviceUser.description : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description_summary'))}</Typography>
                       </Grid>
                       <Grid>
-                        <ListAlfredConditions
-                          columnsXl={12}
-                          columnsLG={12}
-                          columnsMD={12}
-                          columnsSM={12}
-                          columnsXS={12}
-                          wrapperComponentProps={listGrades}
-                        />
+                        <CustomListGrades data={this.state.alfred}/>
                       </Grid>
                       <Grid style={{marginTop: '2%'}}>
                         <Divider className={`customtopicdivider ${classes.topicDivider}`}/>

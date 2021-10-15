@@ -346,7 +346,5 @@ export default theme => ({
       width: '15vw',
     },
   },
-  colorIconSchool: {
-    color: 'rgba(39,37,37,35%)',
-  },
+
 })
