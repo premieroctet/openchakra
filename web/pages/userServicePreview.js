@@ -27,6 +27,10 @@ import SummaryCommentary from '../components/SummaryCommentary/SummaryCommentary
 import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
 import '../static/assets/css/custom.css'
+import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
+import SchoolIcon from '@material-ui/icons/School'
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser'
+import {Divider} from '@material-ui/core'
 
 const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage = require('./basePage')
@@ -731,29 +735,64 @@ class UserServicesPreview extends BasePage {
 
   content = classes => {
     const serviceAddress = this.state.serviceUser.service_address
-
     const filters = this.extractFilters()
-
     const pricedPrestations = this.computePricedPrestations()
-
     const avocotes_booking=this.getAvocotesBooking()
+
+    const listCondition = [
+      {
+        label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_label')) : '',
+        summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary')) + this.formatDeadline(this.state.serviceUser.deadline_before_booking) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary_end')) : '',
+        IconName: this.state. alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : '',
+      },
+      {
+        label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_label')) : '',
+        summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_summary')) + this.state.flexible ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.one_day')) : this.state.moderate ? `${
+          ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.five_days'))}` : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.ten_days')) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.before_end_date')) : '',
+        IconName: this.state.alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : '',
+      },
+      {
+        label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket')) : '',
+        summary: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket_of', {firstname: this.state.alfred.firstname, minimum_basket: this.state.serviceUser.minimum_basket})) : '',
+        IconName: this.state.alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : '',
+      },
+    ]
+
+    const listGrades = [
+      {
+        label: '',
+        summary: this.state.alfred.grade_text ? this.state.grade_text : '',
+        IconName: <SchoolIcon classes={{root: classes.colorIconSchool}}/>,
+      },
+      {
+        label: '',
+        summary: this.state.alfred.insurance_text ? this.state.insurance_text : '',
+        IconName: <VerifiedUserIcon classes={{root: classes.colorIconSchool}}/>,
+      },
+
+    ]
 
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
         <Grid>
           <Grid className={`custompreviewmain ${classes.mainContainer}`}>
             <Grid container className={classes.widthContainer}>
-              <Grid item xl={6} lg={6} md={12} sm={12} xs={12} className={classes.leftContainer}>
+              <Grid item lg={6} xs={12} className={classes.leftContainer}>
                 <Grid container className={classes.avatarAnDescription}>
-                  <Grid item xl={3} sm={3} className={classes.avatarContainer}>
+                  <Grid item sm={3} className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
                       <UserAvatar user={this.state.alfred}/>
                     </Grid>
                   </Grid>
-                  <Grid item xl={9} sm={9} className={classes.flexContentAvatarAndDescription}>
+                  <Grid item sm={9} className={classes.flexContentAvatarAndDescription}>
                     <Grid className={classes.marginAvatarAndDescriptionContent}>
-                      <Grid>
-                        <Typography variant="h6">{this.state.alfred.firstname} - {this.state.service.label}</Typography>
+                      <Grid container spacing={1} style={{margin: 0, width: '100%'}}>
+                        <Grid item xl={10} lg={10} md={12} sm={12} xs={12}>
+                          <Typography variant="h6">{this.state.alfred.firstname} - {this.state.service.label}</Typography>
+                        </Grid>
+                        <Grid item xl={2} lg={2} md={12} sm={12} xs={12} className={classes.containerListSkills}>
+                          <ListIconsSkills data={this.state.serviceUser}/>
+                        </Grid>
                       </Grid>
                       {
                         serviceAddress &&
@@ -782,40 +821,37 @@ class UserServicesPreview extends BasePage {
                 </Grid>
                 <Grid className={'custompreviewboxdescription'} style={{marginTop: '10%'}}>
                   <Grid className={classes.overrideCssChild}>
-                    <Topic
-                      titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description'))}
-                      titleSummary={this.state.serviceUser.description ? this.state.serviceUser.description : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description_summary'))}
-                      needBackground={true}
-                      underline={true}
-                    >
-                      <ListAlfredConditions
-                        columnsXl={12}
-                        columnsLG={12}
-                        columnsMD={12}
-                        columnsSM={12}
-                        columnsXS={12}
-                        wrapperComponentProps={
-                          [
-                            {
-                              label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_label')) : '',
-                              summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary')) + this.formatDeadline(this.state.serviceUser.deadline_before_booking) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary_end')) : '',
-                              IconName: this.state. alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : '',
-                            },
-                            {
-                              label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_label')) : '',
-                              summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_summary')) + this.state.flexible ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.one_day')) : this.state.moderate ? `${
-                                ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.five_days'))}` : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.ten_days')) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.before_end_date')) : '',
-                              IconName: this.state.alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : '',
-                            },
-                            {
-                              label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket')) : '',
-                              summary: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket_of', {firstname: this.state.alfred.firstname, minimum_basket: this.state.serviceUser.minimum_basket})) : '',
-                              IconName: this.state.alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : '',
-                            },
-                          ]
-                        }
-                      />
-                    </Topic>
+                    <Grid style={{width: '100%'}}>
+                      <Grid>
+                        <h3>{ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description'))}</h3>
+                      </Grid>
+                      <Grid>
+                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>{this.state.serviceUser.description ? this.state.serviceUser.description : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description_summary'))}</Typography>
+                      </Grid>
+                      <Grid>
+                        <ListAlfredConditions
+                          columnsXl={12}
+                          columnsLG={12}
+                          columnsMD={12}
+                          columnsSM={12}
+                          columnsXS={12}
+                          wrapperComponentProps={listGrades}
+                        />
+                      </Grid>
+                      <Grid style={{marginTop: '2%'}}>
+                        <Divider className={`customtopicdivider ${classes.topicDivider}`}/>
+                      </Grid>
+                      <Grid style={{marginTop: '3vh', backgroundColor: 'rgba(229,229,229,1)', borderRadius: 27}}>
+                        <ListAlfredConditions
+                          columnsXl={12}
+                          columnsLG={12}
+                          columnsMD={12}
+                          columnsSM={12}
+                          columnsXS={12}
+                          wrapperComponentProps={listCondition}
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
                 <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>

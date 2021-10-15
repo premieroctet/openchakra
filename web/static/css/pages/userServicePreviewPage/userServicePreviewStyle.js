@@ -5,9 +5,9 @@ export default theme => ({
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: '12vh',
-    [theme.breakpoints.down('xs')]:{
-      marginTop: '5vh'
-    }
+    [theme.breakpoints.down('xs')]: {
+      marginTop: '5vh',
+    },
   },
   itemAvatar: {
     flexDirection: 'column',
@@ -17,7 +17,7 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     position: 'sticky',
-    top: '8%'
+    top: '8%',
   },
   avatarContainer: {
     width: '20%',
@@ -37,24 +37,24 @@ export default theme => ({
     height: 50,
     textTransform: 'initial',
     fontWeight: 'bold',
-    zIndex:10,
-    color:'white',
-    borderRadius: 17
+    zIndex: 10,
+    color: 'white',
+    borderRadius: 17,
   },
-  leftContainer:{
+  leftContainer: {
     paddingLeft: '5%',
     paddingRight: '5%',
-    [theme.breakpoints.down('sm')]:{
-      width: '90%'
-    }
+    [theme.breakpoints.down('sm')]: {
+      width: '90%',
+    },
   },
-  widthContainer:{
+  widthContainer: {
     width: '80%',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       width: '100%',
       display: 'flex',
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   },
   showReservation: {
     display: 'flex',
@@ -105,20 +105,20 @@ export default theme => ({
       alignItems: 'center',
       marginBottom: 100,
     },
-    '& .ListAlfredConditions-mainContainerListAlfred-144':{
-      padding: '5%'
-    }
+    '& .ListAlfredConditions-mainContainerListAlfred-144': {
+      padding: '5%',
+    },
   },
 
-  userServicePreviewButtonProfil:{
+  userServicePreviewButtonProfil: {
     fontWeight: theme.typography.blackButton.fontWeight,
     fontFamily: theme.typography.blackButton.fontFamily,
     borderRadius: theme.border.blackButton.borderRadius,
     textTransform: 'none',
-    padding: '6px 24px'
+    padding: '6px 24px',
   },
 
-  /***Schedule**/
+  /** *Schedule**/
 
   schedule_scheduleMainStyle: {
     '& .rbc-month-view': {
@@ -151,7 +151,7 @@ export default theme => ({
       display: 'none',
     },
     '& .rbc-header': {
-      padding:0,
+      padding: 0,
       [theme.breakpoints.down('xs')]: {
         whiteSpace: 'inherit !important',
       },
@@ -163,12 +163,12 @@ export default theme => ({
       padding: 0,
     },
     '& .rbc-allday-cell': {
-      display : 'none'
+      display: 'none',
     },
     '& .rbc-time-view': {
       borderRadius: 5,
-      zIndex:0
-    }
+      zIndex: 0,
+    },
   },
   schedule_policySizeTitle: {
     margin: 0,
@@ -205,16 +205,16 @@ export default theme => ({
     borderLeft: '1px solid #DDD',
     cursor: 'pointer',
     backgroundColor: 'lightgrey',
-    background: 'repeating-linear-gradient(45deg, lightgrey 48%, #FFFFFF  50%,lightgrey 51%)'
+    background: 'repeating-linear-gradient(45deg, lightgrey 48%, #FFFFFF  50%,lightgrey 51%)',
   },
-  schedule_timeSlotWrapper:{
+  schedule_timeSlotWrapper: {
     textAlign: 'center',
-    width : '100%'
+    width: '100%',
   },
-  schedule_containerTimeSlotWrapper:{
-    flex: '1 0 0'
+  schedule_containerTimeSlotWrapper: {
+    flex: '1 0 0',
   },
-  schedule_myEventWrapperStyle:{
+  schedule_myEventWrapperStyle: {
     borderTop: '25px solid pink',
     borderRight: '25px solid transparent',
     height: 0,
@@ -224,13 +224,13 @@ export default theme => ({
     margin: 0,
     marginLeft: 1,
   },
-  schedule_today_style:{
+  schedule_today_style: {
     borderRadius: 50,
     width: 25,
     height: 25,
     border: '1px solid black',
   },
-  style_today_style_off:{
+  style_today_style_off: {
     width: '100%',
     height: '100%',
     borderLeft: '1px solid #DDD',
@@ -240,7 +240,7 @@ export default theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  schedule_today_style_avail:{
+  schedule_today_style_avail: {
     width: '100%',
     height: '100%',
     borderLeft: '1px solid #DDD',
@@ -250,13 +250,13 @@ export default theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  schedule_day_style:{
+  schedule_day_style: {
     width: '100%',
     height: '100%',
     borderLeft: '1px solid #DDD',
     cursor: 'pointer',
   },
-  schedule_off_range_style:{
+  schedule_off_range_style: {
     width: '100%',
     height: '100%',
     borderLeft: '1px solid #DDD',
@@ -286,11 +286,11 @@ export default theme => ({
       color: 'white',
     },
   },
-  schedule_monthDateHeaderLabel:{
+  schedule_monthDateHeaderLabel: {
     cursor: 'pointer',
-    fontWeight: 'initial'
+    fontWeight: 'initial',
   },
-  schedule_containerLabelSelector:{
+  schedule_containerLabelSelector: {
     width: '100%',
     height: '100%',
     display: 'flex',
@@ -298,35 +298,55 @@ export default theme => ({
     justifyContent: 'center',
     cursor: 'pointer',
   },
-  schedule_height:{
-    height: 450
+  schedule_height: {
+    height: 450,
   },
-  schedule_monthDateHeaderLabelOldDay:{
-    color: '#999999'
+  schedule_monthDateHeaderLabelOldDay: {
+    color: '#999999',
   },
-  schedule_containerToolbar:{
+  schedule_containerToolbar: {
     alignItems: 'center',
   },
 
-  overrideCssChild:{
-    '& .ListAlfredConditions-mainContainerListAlfred-144':{
-      padding: '5%'
-    }
+  overrideCssChild: {
+    '& .ListAlfredConditions-mainContainerListAlfred-144': {
+      padding: '5%',
+    },
   },
-  hidden:{
-    width: '100%'
+  hidden: {
+    width: '100%',
   },
-  contentRightContainer:{
+  contentRightContainer: {
     paddingLeft: '5%',
     paddingRight: '5%',
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('md')]:{
-      display: 'none'
+    [theme.breakpoints.only('md')]: {
+      display: 'none',
     },
-  }
+  },
+  containerListSkills: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'center',
+    },
+  },
+  topicDivider: {
+    height: 6,
+    backgroundColor: 'rgba(178, 204, 251, 100%)',
+    borderRadius: 27,
+    width: '3vw',
+    [theme.breakpoints.down('xs')]: {
+      width: '15vw',
+    },
+  },
+  colorIconSchool: {
+    color: 'rgba(39,37,37,35%)',
+  },
 })

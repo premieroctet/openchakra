@@ -7,6 +7,7 @@ import {withStyles} from '@material-ui/core/styles'
 
 function ListIconsSkills(props) {
   const {data, classes} = props
+
   return(
     <>
       {
@@ -22,7 +23,7 @@ function ListIconsSkills(props) {
           </Grid> : null
       }
       {
-        data.rgbe ?
+        data.insurance ?
           <Grid style={{margin: 5}}>
             <VerifiedUserIcon classes={{root: classes.colorIconSchool}}/>
           </Grid> : null

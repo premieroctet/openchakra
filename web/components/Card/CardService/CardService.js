@@ -22,13 +22,11 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
-import SchoolIcon from '@material-ui/icons/School'
 import {Skeleton} from '@material-ui/lab'
 import {CARD_SERVICE} from '../../../utils/i18n'
 const {isEditableUser, displayEmptyReview}=require('../../../utils/context')
 import '../../../static/assets/css/custom.css'
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser'
-import ListIconsSkills from "../../ListIconsSkills/ListIconsSkills";
+import ListIconsSkills from '../../ListIconsSkills/ListIconsSkills'
 
 class RawCardServiceInfo extends React.Component {
   constructor(props) {
