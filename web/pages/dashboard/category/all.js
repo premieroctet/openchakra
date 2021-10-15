@@ -31,8 +31,6 @@ class all extends DataPage {
       .then(response => {
         let categories = response.data
         categories=categories.map(c => {
-          c.professional_picture=`/${c.professional_picture}`
-          c.particular_picture=`/${c.particular_picture}`
           c.tags=c.tags.map(t => t.title).join(',')
           return c
         })
