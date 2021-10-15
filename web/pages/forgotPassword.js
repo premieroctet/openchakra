@@ -1,68 +1,68 @@
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import {withStyles} from '@material-ui/core/styles';
-import Layout from '../hoc/Layout/Layout';
-import axios from 'axios';
+import React from 'react'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
+import {withStyles} from '@material-ui/core/styles'
+import Layout from '../hoc/Layout/Layout'
+import axios from 'axios'
 import styles from '../static/css/pages/forgotPassword/forgotPassword'
-import Router from 'next/router';
-const {snackBarSuccess, snackBarError} = require('../utils/notifications');
+import Router from 'next/router'
+const {snackBarSuccess, snackBarError} = require('../utils/notifications')
 const {ADMIN, MANAGER} = require('../utils/consts')
 const _ = require('lodash')
-import {isB2BStyle} from "../utils/context";
+import {isB2BStyle} from '../utils/context'
 import {FORGOT_PASSWORD} from '../utils/i18n'
 
 
 class forgotPassword extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       email: '',
-      user:{}
-    };
+      user: {},
+    }
   }
 
   componentDidMount() {
-    axios.get('/myAlfred/api/users/current').then( res =>{
+    axios.get('/myAlfred/api/users/current').then(res => {
       this.setState({user: res.data})
-    }).catch( err => (console.error(err)))
+    }).catch(err => (console.error(err)))
   }
 
   onChange = e => {
-    this.setState({[e.target.name]: e.target.value});
+    this.setState({[e.target.name]: e.target.value})
   };
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
     const {email}=this.state
 
     const user = {
       email: email,
-    };
+    }
 
     axios.post('/myAlfred/api/users/forgotPassword', user)
       .then(res => {
         const user= res.data
-        snackBarSuccess(ReactHtmlParser(this.props.t('FORGOT_PASSWORD.snackbar_send_email')) + email);
+        snackBarSuccess(ReactHtmlParser(this.props.t('FORGOT_PASSWORD.snackbar_send_email')) + email)
         // Rediriger vers /particular ou /professional suivant les rôles
         const redirect_url=_.intersection(user.roles, [ADMIN, MANAGER]).length>0 ? '/professional': '/particular'
-        setTimeout( () =>  Router.push({pathname: redirect_url}), 2000)
+        setTimeout(() => Router.push({pathname: redirect_url}), 2000)
       })
       .catch(err => {
         console.error(err)
         snackBarError(err.response.data.error)
-      });
+      })
   };
 
   render() {
-    const {classes} = this.props;
-    const {user} = this.state;
+    const {classes} = this.props
+    const {user} = this.state
 
     return (
       <Layout>
@@ -85,15 +85,15 @@ class forgotPassword extends React.Component {
               />
             </Grid>
             <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-              <CustomButton variant="contained" classes={{root: classes.buttonSubmit}}  style={{backgroundColor: isB2BStyle(user) ? '#353A51' : 'rgba(178,204,251,1)'}} onClick={this.onSubmit}>
+              <CustomButton variant="contained" color={'primary'} classes={{root: classes.buttonSubmit}} onClick={this.onSubmit}>
                 {ReactHtmlParser(this.props.t('FORGOT_PASSWORD.button_confirm'))}
               </CustomButton>
             </Grid>
           </Card>
         </Grid>
       </Layout>
-    );
-  };
+    )
+  }
 }
 
 

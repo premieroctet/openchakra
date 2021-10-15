@@ -136,7 +136,7 @@ class resetPassword extends BasePage {
               <CustomButton
                 variant="contained"
                 onClick={this.onSubmit}
-                style={{backgroundColor: isB2BStyle(user) ? '#353A51' : 'rgba(178,204,251,1)'}}
+                color={'primary'}
                 disabled={!(this.state.status1.check && this.state.status2.check)}
                 classes={{root: classes.buttonSubmit}}
               >

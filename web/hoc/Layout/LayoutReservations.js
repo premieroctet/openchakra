@@ -46,10 +46,10 @@ class LayoutReservations extends React.Component {
               >
                 {
                   userInfo && userInfo.is_alfred ?
-                    <Tab label={ReactHtmlParser(this.props.t('LAYOUT_RESA.messages_alfred'))} className={classes.scrollMenuTab} />
+                    <Tab label={ReactHtmlParser(this.props.t('LAYOUT_RESA.resa_alfred'))} className={`customlayoutresaalfred ${classes.scrollMenuTab}`} />
                     : null
                 }
-                <Tab label={ReactHtmlParser(this.props.t('LAYOUT_RESA.messages_user'))} className={classes.scrollMenuTab} />
+                <Tab label={ReactHtmlParser(this.props.t('LAYOUT_RESA.resa_user'))} className={`customlayoutresauser ${classes.scrollMenuTab}`} />
               </Tabs>
             </Grid>
             <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>

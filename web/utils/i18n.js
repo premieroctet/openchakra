@@ -148,6 +148,15 @@ const USERSERVICEPREVIEW = {
   topic_commentary_summary: 'Ici, vous pouvez laisser des commentaires à {{firstname}}!',
 }
 
+const RESERVATION = {
+  allresa: 'Toutes mes réservations',
+  commingresa: 'Mes réservations à venir',
+  endingresa: 'Mes réservations terminées',
+  infomessage: 'Vous n\'avez aucune réservation en tant qu\'',
+  alfred: 'Alfred',
+  user: 'utilisateur',
+}
+
 const DRAWER_BOOKING = {
   eligible: 'Eligible au CESU',
   warning_perimiter: 'Cet Alfred se trouve trop loin de chez vous pour être réservé!',
@@ -484,8 +493,8 @@ const LAYOUT_PROFIL = {
 
 const LAYOUT_RESA = {
   title: 'Mes Reservations',
-  messages_alfred: 'Mes messages Alfred',
-  messages_user: 'Mes messages d\'utilisateur',
+  resa_alfred: 'Mes réservations Alfred',
+  resa_user: 'Mes réservations d\'utilisateur',
 }
 
 const LOGIN = {
@@ -1547,4 +1556,5 @@ module.exports = {
   RESET_PASSWORD,
   COOKIE_CONSENT,
   CALENDAR,
+  RESERVATION,
 }

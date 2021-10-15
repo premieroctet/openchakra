@@ -84,7 +84,7 @@ class IntroduceYou extends React.Component {
           <Grid>
             <h3 style={{color: '#403f3f'}}>{ReactHtmlParser(this.props.t('SHOP.creation.subtitle'))}</h3>
           </Grid>
-          <Grid>
+          <Grid className={'customintroduceiconbutton'}>
             <IconButton aria-label="info" className={classes.margin} onClick={() => this.setState({notice: true})}>
               <InfoIcon />
             </IconButton>

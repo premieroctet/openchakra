@@ -1,6 +1,5 @@
 import CustomButton from '../../components/CustomButton/CustomButton'
 import '../../static/assets/css/custom.css'
-
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import CloseIcon from '@material-ui/icons/Close'
@@ -17,7 +16,6 @@ import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
-
 import BasePage from '../basePage'
 import BookingCancel from '../../components/BookingDetail/BookingCancel'
 import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
@@ -27,7 +25,7 @@ import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
 import LayoutReservations from '../../hoc/Layout/LayoutReservations'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import styles from '../../static/css/pages/reservations/reservations'
-
+import {RESERVATION} from '../../utils/i18n'
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
@@ -251,9 +249,9 @@ class AllReservations extends BasePage {
             scrollButtons="on"
             classes={{indicator: `customscrollmenu ${classes.scrollMenuIndicator}`}}
           >
-            <Tab label={'Toutes mes réservations'} className={classes.scrollMenuTab} />
-            <Tab label={'Mes réservations à venir'} className={classes.scrollMenuTab} />
-            <Tab label={'Mes réservations terminées'} className={classes.scrollMenuTab} />
+            <Tab label={RESERVATION.allresa} className={classes.scrollMenuTab} />
+            <Tab label={RESERVATION.commingresa} className={classes.scrollMenuTab} />
+            <Tab label={RESERVATION.endingresa} className={classes.scrollMenuTab} />
           </Tabs>
         </Grid>
         <Grid style={{width: '100%'}}>
@@ -323,7 +321,7 @@ class AllReservations extends BasePage {
                 </Grid>
               )
             })) :
-            <Typography className={'customresanoresamessage'}>{ `Vous n'avez aucune réservation en tant qu'${alfredMode ? 'Alfred' : 'utilisateur'}` }</Typography>
+            <Typography className={'customresanoresamessage'}>{`${RESERVATION.infomessage + alfredMode ? RESERVATION.alfred : RESERVATION.user}` }</Typography>
           }
         </Grid>
       </Grid>
