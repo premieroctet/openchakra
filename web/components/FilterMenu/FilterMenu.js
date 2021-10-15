@@ -1,4 +1,4 @@
-import { canAlfredParticularRegister } from '../../config/config';
+import {canAlfredParticularRegister} from '../../config/config'
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -281,7 +281,7 @@ class FilterMenu extends React.Component {
         <Grid className={classes.filterMenuChipContainer}>
           {canAlfredParticularRegister() && <Grid className={classes.filTerMenuStatusMainStyleFilter}>
             {statusFilterVisible ?
-              <Grid className={classes.filterMenuContainerStatut}>
+              <Grid className={`customfilterbutton ${classes.filterMenuContainerStatut}`}>
                 <Grid className={classes.filterMenuFocused} onClick={this.statusFilterToggled}>
                   <Typography className={classes.filterMenuTextFocused}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelStatus'))}</Typography>
                 </Grid>
@@ -348,9 +348,9 @@ class FilterMenu extends React.Component {
             }
           </Grid>
           }
-          <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
+          <Grid className={` ${classes.filTerMenuStatusMainStyleFilterDate}`}>
             {dateFilterVisible ?
-              <Grid className={classes.filterMenuDateFocused}>
+              <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
                 <Grid className={classes.filterMenuFocused} onClick={this.dateFilterToggled}>
                   <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.labelDate'))}</Typography>
                 </Grid>
@@ -390,10 +390,10 @@ class FilterMenu extends React.Component {
             }
           </Grid>
           { this.props.displayPerimeter ?
-            <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
+            <Grid className={`customfilterbutton ${classes.filTerMenuStatusMainStyleFilterDate}`}>
               {radiusFilterVisible ?
-                <Grid className={classes.filterMenuDateFocused}>
-                  <Grid className={classes.filterMenuFocused} onClick={this.radiusFilterToggled}>
+                <Grid className={`${classes.filterMenuDateFocused}`}>
+                  <Grid className={`customfilterbutton ${classes.filterMenuFocused}`} onClick={this.radiusFilterToggled}>
                     <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelPerimeter'))}</Typography>
                   </Grid>
                   <Grid className={classes.filterMenuContentMainStyleDateFilter}>
