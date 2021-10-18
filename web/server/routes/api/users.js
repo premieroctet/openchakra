@@ -80,7 +80,7 @@ router.post('/register', (req, res) => {
       }
       user.service_address = []
       user.last_login = []
-
+      user.professional = req.body.company
       bcrypt.hash(user.password, 10, (err, hash) => {
         if (err) {
           throw err

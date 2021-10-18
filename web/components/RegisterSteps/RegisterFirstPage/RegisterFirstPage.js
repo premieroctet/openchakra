@@ -1,3 +1,8 @@
+import { Switch } from '@material-ui/core';
+
+import '../../../static/assets/css/custom.css'
+import { Checkbox } from 'material-ui';
+import { FormControlLabel } from '@material-ui/core';
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -8,16 +13,22 @@ import TextField from '@material-ui/core/TextField'
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline'
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import styles from '../../../static/css/components/RegisterSteps/RegisterFirstPage/RegisterFirstPage'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
-import '../../../static/assets/css/custom.css'
+import Siret from '../../Siret/Siret';
+import styles from '../../../static/css/components/RegisterSteps/RegisterFirstPage/RegisterFirstPage'
 import {REGISTER_FIRST_PAGE} from '../../../utils/i18n'
 import CustomIcon from '../../CustomIcon/CustomIcon'
 
 class RegisterFirstPage extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state={
+    }
+  }
 
   render() {
     const{classes, state} = this.props
@@ -36,8 +47,9 @@ class RegisterFirstPage extends React.Component {
                 placeholder={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_email_placeholder'))}
                 style={{width: '100%'}}
                 type="email"
+                name="email"
                 value={state.email}
-                onChange={e => this.props.onChangeEmail(e)}
+                onChange={this.props.onChange}
                 error={state.errors.email}
                 helperText={state.errors.email}
               />
@@ -60,9 +72,9 @@ class RegisterFirstPage extends React.Component {
                 value={state.firstname}
                 onChange={e => this.props.onChange(e)}
                 error={state.errors.firstname}
+                helperText={state.errors.firstname}
               />
             </Grid>
-            <em style={{color: 'red'}}>{state.errors.firstname}</em>
           </Grid>
         </Grid>
         <Grid className={`customregistercontname ${classes.margin}`}>
@@ -80,9 +92,9 @@ class RegisterFirstPage extends React.Component {
                 value={state.name}
                 onChange={e => this.props.onChange(e)}
                 error={state.errors.name}
+                helperText={state.errors.name}
               />
             </Grid>
-            <em style={{color: 'red'}}>{state.errors.name}</em>
           </Grid>
         </Grid>
         <Grid className={`customregistercontmdp ${classes.margin}`}>
@@ -101,9 +113,8 @@ class RegisterFirstPage extends React.Component {
                     name="password"
                     value={state.password}
                     onChange={e => this.props.onChange(e)}
-                    onKeyUp={e => this.props.onChangePassword(e)}
-                    error={state.status1.error}
-                    helperText={state.status1.error}
+                    error={state.errors.password}
+                    helperText={state.errors.password}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -136,9 +147,8 @@ class RegisterFirstPage extends React.Component {
                     name="password2"
                     value={state.password2}
                     onChange={e => this.props.onChange(e)}
-                    onKeyUp={e => this.props.onChangePassword(e)}
-                    error={state.status2.error}
-                    helperText={state.status2.error}
+                    error={state.errors.password2}
+                    helperText={state.errors.password2}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
