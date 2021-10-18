@@ -257,7 +257,7 @@ class HandleRIB extends React.Component {
         <Grid>
           <Typography
             className={'customhandleribsubtitle'}
-            style={{color: 'rgba(39,37,37,35%)'}}>{is_pro ? HANDLE_RIB.subtitle_b2b : ReactHtmlParser(this.props.t('HANDLE_RIB.subtitle'))}</Typography>
+            style={{color: 'rgba(39,37,37,35%)'}}>{is_pro ? ReactHtmlParser(this.props.t('HANDLE_RIB.subtitle_b2b')) : ReactHtmlParser(this.props.t('HANDLE_RIB.subtitle'))}</Typography>
         </Grid>
         {accounts.length>0 ?
           <Grid container style={{marginTop: '10vh', display: 'flex', alignItems: 'center'}}>

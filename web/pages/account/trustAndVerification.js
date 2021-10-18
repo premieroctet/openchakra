@@ -35,7 +35,6 @@ import {TRUST_VERIFICATION} from '../../utils/i18n'
 const {CESU} = require('../../utils/consts')
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
-const I18N = require('../../utils/i18n')
 moment.locale('fr')
 
 // TODO : nettoyer les attributes doublons (ex siret et company.siret)
@@ -509,7 +508,7 @@ class trustAndVerification extends React.Component {
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[1]}/>
-                        <Typography className={'customtrustandverifces'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.declare_cesu'))}</Typography>
+                        <Typography className={'customtrustandverifces'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.accept_cesu'))}</Typography>
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
                         <Radio color="primary" value={CESU[2]}/>
