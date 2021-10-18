@@ -98,7 +98,8 @@ class SettingService extends React.Component {
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h3 style={{color: '#403f3f'}} className={'customsettingservicesubtitle'}>{ReactHtmlParser(this.props.t('SHOP.settingService.subtitle'))}</h3>
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsettingserviceperimetercontainer'}>
+        {location.client &&
+        <><Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsettingserviceperimetercontainer'}>
           <h4 className={`customsettingserviceperimeter ${classes.policySizeSubtitle}`} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.settingService.title_perimeter'))}</h4>
         </Grid>
         <Grid item xl={3} lg={3} md={3} sm={3} xs={12} className={'customsettingserviceperimetercontainer'}>
@@ -115,6 +116,8 @@ class SettingService extends React.Component {
             onChange={this.onChange}
           />
         </Grid>
+        </>
+        }
         <Grid container spacing={1} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsettingserviceplacecontainer'}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <h4 className={`customsettingserviceplacetitle ${classes.policySizeSubtitle}`}
