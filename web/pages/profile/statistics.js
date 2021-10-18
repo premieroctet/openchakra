@@ -6,13 +6,10 @@ import Grid from '@material-ui/core/Grid'
 import MenuItem from '@material-ui/core/MenuItem'
 import React from 'react'
 import loadable from 'loadable-components'
-
 import BasePage from '../basePage'
 import Topic from '../../hoc/Topic/Topic'
 import styles from '../../static/css/pages/profile/statistics/statistics'
-
 const {setAxiosAuthentication}=require('../../utils/authentication')
-
 const Chart = loadable(() => import('react-apexcharts'))
 import Router from 'next/router'
 import axios from 'axios'
@@ -25,27 +22,9 @@ import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
 import {isEditableUser} from '../../utils/context'
 import '../../static/assets/css/custom.css'
-import {STATISTICS} from '../../utils/i18n'
-
+import Hidden from '@material-ui/core/Hidden'
+import {rgbaToHex} from '../../utils/functions'
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
-
-const CHART_OPTIONS= {
-  chart: {
-    toolbar: {
-      show: false,
-    },
-  },
-  theme: {
-    monochrome: {
-      enabled: true,
-      color: '#2FBCD3',
-      shadeIntensity: 0.65,
-    },
-  },
-  xaxis: {
-    categories: MONTHS,
-  },
-}
 
 class ProfileStatistics extends BasePage {
 
@@ -150,8 +129,28 @@ class ProfileStatistics extends BasePage {
       .catch(err => console.error(err))
   }
 
-  content = (classes, user) => {
+  content = (classes, user, theme) => {
     const editable = isEditableUser(user)
+    const primary = theme.palette.primary.main
+    const result = rgbaToHex(primary)
+
+    const CHART_OPTIONS= {
+      chart: {
+        toolbar: {
+          show: false,
+        },
+      },
+      theme: {
+        monochrome: {
+          enabled: true,
+          color: result,
+          shadeIntensity: 0.65,
+        },
+      },
+      xaxis: {
+        categories: MONTHS,
+      },
+    }
 
     return(
       <Grid container stylerr={{width: '100%'}} spacing={3}>
@@ -394,9 +393,8 @@ class ProfileStatistics extends BasePage {
   };
 
   render() {
-    const {classes}=this.props
+    const {classes, theme}=this.props
     const {user}=this.getURLProps()
-
 
     if (!user) {
       return null
@@ -404,19 +402,20 @@ class ProfileStatistics extends BasePage {
 
     return (
       <React.Fragment>
-        <Grid className={classes.profileLayoutContainer}>
+        <Hidden only={['xs']}>
           <ProfileLayout user={user}>
-            {this.content(classes, user)}
+            {this.content(classes, user, theme)}
           </ProfileLayout>
-        </Grid>
-        <Grid className={classes.layoutMobileProfileContainer}>
+        </Hidden>
+        <Hidden only={['xl', 'lg', 'md', 'sm']}>
           <LayoutMobileProfile user={user} currentIndex={4}>
-            {this.content(classes, user)}
+            {this.content(classes, user, theme)}
           </LayoutMobileProfile>
-        </Grid>
+        </Hidden>
       </React.Fragment>
     )
   }
-
 }
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileStatistics))
+
+
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(ProfileStatistics))
