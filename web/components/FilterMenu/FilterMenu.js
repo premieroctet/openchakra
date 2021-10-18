@@ -390,10 +390,10 @@ class FilterMenu extends React.Component {
             }
           </Grid>
           { this.props.displayPerimeter ?
-            <Grid className={`customfilterbutton ${classes.filTerMenuStatusMainStyleFilterDate}`}>
+            <Grid className={`${classes.filTerMenuStatusMainStyleFilterDate}`}>
               {radiusFilterVisible ?
-                <Grid className={`${classes.filterMenuDateFocused}`}>
-                  <Grid className={`customfilterbutton ${classes.filterMenuFocused}`} onClick={this.radiusFilterToggled}>
+                <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
+                  <Grid className={` ${classes.filterMenuFocused}`} onClick={this.radiusFilterToggled}>
                     <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelPerimeter'))}</Typography>
                   </Grid>
                   <Grid className={classes.filterMenuContentMainStyleDateFilter}>
@@ -433,7 +433,7 @@ class FilterMenu extends React.Component {
           }
           <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
             {locationFilterVisible?
-              <Grid className={classes.filterMenuDateFocused}>
+              <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
                 <Grid className={classes.filterMenuFocused} onClick={this.locationFilterToggled}>
                   <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelLocation'))}</Typography>
                 </Grid>
@@ -497,7 +497,7 @@ class FilterMenu extends React.Component {
           </Grid>
           <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
             {categoriesFilterVisible?
-              <Grid className={classes.filterMenuDateFocused}>
+              <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
                 <Grid className={classes.filterMenuFocused} onClick={this.categoriesFilterToggled}>
                   <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}</Typography>
                 </Grid>
@@ -534,7 +534,7 @@ class FilterMenu extends React.Component {
           </Grid>
           <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
             {servicesFilterVisible?
-              <Grid className={classes.filterMenuDateFocused}>
+              <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
                 <Grid className={classes.filterMenuFocused} onClick={this.servicesFilterToggled}>
                   <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}</Typography>
                 </Grid>
