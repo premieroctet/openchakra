@@ -6,6 +6,7 @@ const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
 const {isB2BDisabled} = require('../config/config')
 const jwt = require('jsonwebtoken')
 const {getPartnerFromHostname}=require('./partner')
+const {HIDE_EMPTY_EVALUATIONS}=require('../mode')
 
 const getLoggedUser = () => {
   if (typeof localStorage=='undefined') {
@@ -66,8 +67,8 @@ const isModeCompany = () => {
   return isB2BAdmin() || isB2BManager()
 }
 
-const displayEmptyReview = () => {
-  return true
+const hideEmptyEvaluations = () => {
+  return Boolean(HIDE_EMPTY_EVALUATIONS)
 }
 
 const isB2BStyle = () => {
@@ -166,5 +167,5 @@ module.exports = {
   getRole, setAlfredRegistering, removeAlfredRegistering, isAlfredRegistering,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
-  isLoggedUserRegistered, isIOS, isAndroid, getPartner, displayEmptyReview,
+  isLoggedUserRegistered, isIOS, isAndroid, getPartner, hideEmptyEvaluations,
 }
