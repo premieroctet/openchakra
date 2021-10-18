@@ -1,3 +1,4 @@
+import {isLoggedUserAlfred} from '../../utils/context'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication} = require('../../utils/authentication')
@@ -63,9 +64,11 @@ class paymentMethod extends React.Component {
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
-        <Grid className={'customlayoutaccountrib'}>
-          <HandleRIB/>
-        </Grid>
+        { isLoggedUserAlfred() &&
+          <Grid className={'customlayoutaccountrib'}>
+            <HandleRIB/>
+          </Grid>
+        }
       </Grid>
 
     )
