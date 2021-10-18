@@ -10,7 +10,7 @@ const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
 
 // Templates
-const SIB_IDS=require(getSibTemplates()=='my-alfred' ? './sib_templates/my-alfred.js':'./sib_templates/all-inclusive.js')
+const SIB_IDS=require(`./sib_templates/${getSibTemplates()}.js`)
 
 /**
  21  VERS ALFRED == N'oubliez pas de mettre à jour vos disponibilités 🗓
