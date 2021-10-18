@@ -110,18 +110,20 @@ const isMobile = () => {
   return (isAndroid || isIOS)
 }
 
-const setStatusRegister = () => {
+const ALFRED_REGISTERING = 'alfredRegistring'
+
+const setAlfredRegistering = () => {
   if(getLoggedUser() === null) {
-    return localStorage.setItem('setAlfredRegister', 'true')
+    return localStorage.setItem(ALFRED_REGISTERING, 'true')
   }
 }
 
-const removeStatusRegister = () => {
-  return localStorage.removeItem('setAlfredRegister')
+const removeAlfredRegistering = () => {
+  return localStorage.removeItem(ALFRED_REGISTERING)
 }
 
-const hasStatusRegister = () => {
-  return localStorage.getItem('setAlfredRegister') == 'true'
+const isAlfredRegistering = () => {
+  return localStorage.getItem(ALFRED_REGISTERING) == 'true'
 }
 
 const getLoggedUserId = () => {
@@ -161,7 +163,7 @@ const getPartner = () => {
 
 module.exports = {
   isB2BStyle, isB2BEmployee, isB2BAdmin, isB2BManager, isModeCompany, isApplication, isMobile,
-  getRole, setStatusRegister, removeStatusRegister, hasStatusRegister,
+  getRole, setAlfredRegistering, removeAlfredRegistering, isAlfredRegistering,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
   isLoggedUserRegistered, isIOS, isAndroid, getPartner, displayEmptyReview,

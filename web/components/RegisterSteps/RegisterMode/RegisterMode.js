@@ -1,3 +1,4 @@
+import Siret from '../../Siret/Siret';
 import React, {useState} from 'react'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
@@ -7,13 +8,12 @@ import {Divider} from '@material-ui/core'
 import {REGISTER} from '../../../utils/i18n'
 
 function RegisterMode(props) {
-  const {classes} = props
-  const [activeButton, setActiveButton] = useState(true)
-
+  const {classes, state, onChangeCompany} = props
+  const is_particular = state.company==null
   return(
     <Grid container spacing={1} style={{margin: 0, width: '100%'}}>
       <Grid container item xs={12} justifyContent={'center'}>
-        <Button onClick={() => setActiveButton(true)} variant="outlined" classes={{root: activeButton ? classes.active : classes.inactive}}>{REGISTER.particular}</Button>
+        <Button onClick={() => onChangeCompany(null)} variant="outlined" classes={{root: is_particular ? classes.active : classes.inactive}}>{REGISTER.particular}</Button>
       </Grid>
       <Grid container item xs={12} justifyContent={'center'} alignItems={'center'}>
         <Grid item xs={2}>
@@ -27,7 +27,10 @@ function RegisterMode(props) {
         </Grid>
       </Grid>
       <Grid container item xs={12} justifyContent={'center'}>
-        <Button onClick={() => setActiveButton(false)} variant="outlined" classes={{root: activeButton ? classes.inactive : classes.active}}>{REGISTER.company}</Button>
+        <Button onClick={() => onChangeCompany({})} variant="outlined" classes={{root: is_particular ? classes.inactive : classes.active}}>{REGISTER.company}</Button>
+        { !is_particular &&
+          <Grid><Siret onChange={onChangeCompany} /></Grid>
+        }
       </Grid>
     </Grid>
   )

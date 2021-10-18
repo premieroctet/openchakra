@@ -307,6 +307,7 @@ const UserSchema = new Schema({
   registration_proof_error: {
     type: String,
   },
+  // Pour le B2B, compagnie à laquelle appartient le compte
   company: {
     type: Schema.Types.ObjectId,
     ref: 'Company',
@@ -322,6 +323,29 @@ const UserSchema = new Schema({
   company_customer: {
     type: Schema.Types.ObjectId,
     ref: 'Company',
+  },
+  // Entreprise si le client est un professionel
+  professional: {
+    type: {
+      name: {
+        type: String,
+        required: true,
+      },
+      siret: {
+        type: String,
+        required: true,
+      },
+      vat_subject: {
+        type: Boolean,
+        default: false,
+        required: true,
+      },
+      vat_number: {
+        type: String,
+        required: false,
+      },
+    },
+    require: false,
   },
 }, {toJSON: {virtuals: true, getters: true}})
 

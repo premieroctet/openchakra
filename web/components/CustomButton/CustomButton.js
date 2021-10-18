@@ -6,6 +6,7 @@ function CustomButton(props) {
     <Button
       {...props}
       className={`${props.className} custombutton`}
+      error={props.error}
     >
       {props.children}
     </Button>
