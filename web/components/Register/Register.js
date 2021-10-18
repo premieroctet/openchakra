@@ -1,3 +1,13 @@
+import {is_development, is_production} from '../../config/config'
+const {
+  getLoggedUserId,
+  getRole,
+  isAlfredRegistering,
+  isLoggedUserRegistered,
+  removeAlfredRegistering,
+} = require('../../utils/context')
+const {isEmailOk, isPhoneOk} = require('../../utils/sms')
+import {EMPLOYEE, REGISTER_MODE} from '../../utils/consts'
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -24,14 +34,8 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import TextField from '@material-ui/core/TextField'
 import DialogActions from '@material-ui/core/DialogActions'
 let parse = require('url-parse')
-import {isAlfredRegistering, removeAlfredRegistering, getRole} from '../../utils/context'
-import {isEmailOk} from '../../utils/sms'
 const moment=require('moment')
-const {isPhoneOk} = require('../../utils/sms')
 const {STEPS}=require('../../utils/registerStep')
-const {getLoggedUserId, isLoggedUserRegistered} = require('../../utils/context')
-const {EMPLOYEE} = require('../../utils/consts')
-const {is_production}=require('../../config/config')
 import '../../static/assets/css/custom.css'
 
 registerLocale('fr', fr)
@@ -52,8 +56,6 @@ class Register extends React.Component {
       zip_code: '',
       country: '',
       checked: false,
-      status1: {error: '', check: false},
-      status2: {error: '', check: false},
       errors: {},
       lat: '',
       lng: '',
@@ -73,7 +75,6 @@ class Register extends React.Component {
       serverError: false, // Si erreur serveur pour l''envoi du SMS, continuer quand même
       errorEmailType: '',
       emailValidator: false,
-      firstPageValidator: true,
       secondPageValidator: true,
       errorExistEmail: false,
       birthdayError: '',
@@ -83,7 +84,6 @@ class Register extends React.Component {
       showPassword: false,
       showPassword2: false,
       company: null,
-      professional: false,
     }
     this.handleChecked = this.handleChecked.bind(this)
     this.onChangeAddress = this.onChangeAddress.bind(this)
@@ -102,7 +102,6 @@ class Register extends React.Component {
         email: query.email,
         name: query.lastname,
         firstname: query.firstname,
-        firstPageValidator: false,
         picture: query.picture,
         file: query.picture,
         avatar: query.picture,
@@ -115,7 +114,6 @@ class Register extends React.Component {
         name: query.lastname,
         firstname: query.firstname,
         activeStep: 1,
-        firstPageValidator: false,
         avatar: query.picture,
       })
     }
@@ -150,6 +148,7 @@ class Register extends React.Component {
     if (query.error) {
       this.setState({errorExistEmail: true})
     }
+    setTimeout(this.validate, 500)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -174,12 +173,18 @@ class Register extends React.Component {
     )
   }
 
+  validate = () => {
+    const errors=this.getValidator(this)(this)
+    this.setState({errors: errors})
+  }
+
   onChange = e => {
-    this.setState({[e.target.name]: e.target.value}, () => this.validatorFirstStep())
+    const {name, value}=e.target
+    this.setState({[name]: value}, this.validate)
   };
 
   onCompanyChange = company => {
-    this.setState({company: company}, () => this.validatorFirstStep())
+    this.setState({company: company})
   }
 
   onChangePhone = e => {
@@ -195,34 +200,15 @@ class Register extends React.Component {
   };
 
   onChangePicture = e => {
-    this.setState({picture: e.target.files[0]})
+    this.setState({picture: e.target.files[0]}, this.validate)
   };
 
   handleChange(event) {
     this.setState({
       file:
         event.target.files[0] ? URL.createObjectURL(event.target.files[0]) : null,
-    })
+    }, this.validate)
   }
-
-  onChangeEmail = event => {
-    const regex = isEmailOk(event.target.value)
-    if (regex) {
-      this.setState({emailValidator: true, emailError: ''})
-    }
-    else {
-      this.setState({emailValidator: false, emailError: ReactHtmlParser(this.props.t('REGISTER.textfield_email_error'))})
-    }
-    this.setState({email: event.target.value}, () => this.validatorFirstStep())
-  }
-
-
-  onChangePassword = () => {
-    this.setState({
-      status1: checkPass1(this.state.password),
-      status2: checkPass2(this.state.password, this.state.password2),
-    }, () => this.validatorFirstStep())
-  };
 
   onChangeAddress(result) {
     if (result) {
@@ -230,13 +216,13 @@ class Register extends React.Component {
       this.setState({
         city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode, country: suggestion.country,
         lat: suggestion.latlng.lat, lng: suggestion.latlng.lng,
-      })
+      }, this.validate)
     }
     else {
       this.setState({
         city: null, address: null, zip_code: null, country: null,
         lat: null, lng: null,
-      })
+      }, this.validate)
     }
   }
 
@@ -353,13 +339,13 @@ class Register extends React.Component {
         const errKeys = Object.keys(errors)
         this.setState({errors: err.response.data})
         if (errKeys.includes('email')) {
-          this.setState({activeStep: 0})
+          this.setState({activeStep: this.getEmailStep()})
         }
         if (errKeys.includes('address')) {
-          this.setState({cityError: errors.address, activeStep: 1})
+          this.setState({cityError: errors.address, activeStep: this.getAddressStep()})
         }
         if (errKeys.includes('birthday')) {
-          this.setState({birthdayError: errors.birthday, activeStep: 1})
+          this.setState({birthdayError: errors.birthday, activeStep: this.getBirthdayStep()})
         }
       })
   };
@@ -396,50 +382,28 @@ class Register extends React.Component {
 
   onChangeBirthdayDate = e => {
     let birthday = this.state.birthday.set('date', e.target.value)
-    this.setState({birthday: birthday})
+    this.setState({birthday: birthday}, this.validate)
   };
 
   onChangeBirthdayMonth = e => {
     let birthday = this.state.birthday.set('month', parseInt(e.target.value)-1)
-    this.setState({birthday: birthday})
+    this.setState({birthday: birthday}, this.validate)
   };
 
   onChangeBirthdayYear = e => {
     let birthday = this.state.birthday.set('year', e.target.value)
-    this.setState({birthday: birthday})
+    this.setState({birthday: birthday}, this.validate)
   };
+
+  onChangeCompany = comp => {
+    this.setState({company: comp}, this.validate)
+  }
 
   confirmLater = () => {
     this.setState({smsCodeOpen: false})
     if(isAlfredRegistering()) {
       removeAlfredRegistering()
       Router.push('/creaShop/creaShop')
-    }
-  };
-
-  validatorFirstStep = () => {
-    const {errorEmailType, email, emailValidator, firstname, name, status1, status2,
-      professional, company, errors}=this.state
-    if (errorEmailType === '' && email !== ''
-      && emailValidator && firstname !== '' && name !== ''
-      && status1.check && status2.check
-      && (!professional || (company && company.siret && company.name))
-    ) {
-      this.setState({firstPageValidator: false, errors: {}})
-    }
-    else {
-      errors.siret=null
-      errors.email=null
-      if (professional && (!company || !company.name)) {
-        errors.siret="Entrez un nom d'entreprise"
-      }
-      if (professional && (!company || !company.siret)) {
-        errors.siret='Entrez un numéro de SIRET'
-      }
-      if (!isEmailOk(email)) {
-        errors.email=ReactHtmlParser(this.props.t('REGISTER.textfield_email_error'))
-      }
-      this.setState({firstPageValidator: true, errors: errors})
     }
   };
 
@@ -464,21 +428,58 @@ class Register extends React.Component {
     event.preventDefault()
   };
 
-  renderSwitch = stepIndex => {
-    let mode = 'fullRegister'
-    if(isAlfredRegistering()) {
-      mode = 'setAlfredRegister'
-    }
-    return STEPS[mode][stepIndex].component(this)
+  getSteps = () => {
+    let mode = isAlfredRegistering() ? REGISTER_MODE.INCOMPLETE : REGISTER_MODE.COMPLETE
+    return STEPS[mode]
+  }
 
+  renderSwitch = stepIndex => {
+    return this.getSteps()[stepIndex].component(this)
+  }
+
+  getPagesCount = () => {
+    return this.getSteps().length
+  }
+
+  getValidator = () => {
+    return this.getSteps()[this.state.activeStep].validator
+  }
+
+  getSubmitStep = () => {
+    if (isAlfredRegistering()) {
+      return this.getPagesCount()-1
+    }
+    return this.getPagesCount()-2
+  }
+
+  getEmailStep = () => {
+    if (isAlfredRegistering()) {
+      return 0
+    }
+    return 1
+  }
+
+  getBirthdayStep = () => {
+    if (isAlfredRegistering()) {
+      return 1
+    }
+    return 2
+  }
+
+  showButtons = () => {
+    const {activeStep}=this.state
+    if (isAlfredRegistering()) {
+      return true
+    }
+    return activeStep < this.getPagesCount() -1
   }
 
   handleNext = activeStep => {
-    if (activeStep === 1) {
+    if (activeStep === this.getSubmitStep()) {
       this.onSubmit()
     }
     else {
-      this.setState({activeStep: this.state.activeStep + 1})
+      this.setState({activeStep: this.state.activeStep + 1}, this.validate)
     }
   };
 
@@ -526,8 +527,9 @@ class Register extends React.Component {
 
   render() {
     const {classes, callLogin} = this.props
-    const {smsCodeOpen, activeStep, firstPageValidator, secondPageValidator, pending} = this.state
+    const {smsCodeOpen, activeStep, pending, errors} = this.state
 
+    const enableNext = Object.keys(errors).length==0 && !pending
     return (
       <Grid className={classes.fullContainer}>
         <Grid>
@@ -542,40 +544,41 @@ class Register extends React.Component {
               {this.renderSwitch(activeStep)}
             </Grid>
             {
-              activeStep < 2 ?
-                <Grid style={{marginTop: 10}}>
-                  <hr/>
-                  <Grid>
-                    <MobileStepper
-                      variant="progress"
-                      steps={2}
-                      position="static"
-                      activeStep={activeStep}
-                      className={classes.rootStepper}
-                      classes={{
-                        progress: `customregisterprogress ${classes.progress}`,
-                      }}
-                      nextButton={
-                        <CustomButton size="small" onClick={() => this.handleNext(activeStep)}
-                          disabled={activeStep === 0 ? firstPageValidator : secondPageValidator || pending} classes={{root: 'customregisternavnext'}}>
-                          {activeStep === 0 ? ReactHtmlParser(this.props.t('REGISTER.next_button')) : ReactHtmlParser(this.props.t('REGISTER.finish_button'))}
-                          <KeyboardArrowRight/>
-                        </CustomButton>
-                      }
-                      backButton={
-                        <CustomButton size="small" onClick={this.handleBack} disabled={activeStep === 0} classes={{root: 'customregisternavprev'}}>
-                          <KeyboardArrowLeft/>
-                          {ReactHtmlParser(this.props.t('REGISTER.previous_button'))}
-                        </CustomButton>
-                      }
-                    />
+              this.showButtons() &&
+              <Grid style={{marginTop: 10}}>
+                <hr/>
+                <Grid>
+                  <MobileStepper
+                    variant="progress"
+                    steps={2}
+                    position="static"
+                    activeStep={activeStep}
+                    className={classes.rootStepper}
+                    classes={{
+                      progress: `customregisterprogress ${classes.progress}`,
+                    }}
+                    nextButton={
+                      <CustomButton size="small" onClick={() => this.handleNext(activeStep)}
+                        disabled={!enableNext}
+                        classes={{root: 'customregisternavnext'}}>
+                        {activeStep == this.getSubmitStep() ? ReactHtmlParser(this.props.t('REGISTER.finish_button')) : ReactHtmlParser(this.props.t('REGISTER.next_button'))}
+                        <KeyboardArrowRight/>
+                      </CustomButton>
+                    }
+                    backButton={
+                      <CustomButton size="small" onClick={this.handleBack} disabled={activeStep === 0} classes={{root: 'customregisternavprev'}}>
+                        <KeyboardArrowLeft/>
+                        {ReactHtmlParser(this.props.t('REGISTER.previous_button'))}
+                      </CustomButton>
+                    }
+                  />
+                </Grid>
+                <Grid container className={classes.bottomContainer}>
+                  <Grid item>
+                    <a color={'primary'} onClick={callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}} className={'customregisteralreadyaccount'}>{ReactHtmlParser(this.props.t('REGISTER.link_already_account'))}</a>
                   </Grid>
-                  <Grid container className={classes.bottomContainer}>
-                    <Grid item>
-                      <a color={'primary'} onClick={callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}} className={'customregisteralreadyaccount'}>{ReactHtmlParser(this.props.t('REGISTER.link_already_account'))}</a>
-                    </Grid>
-                  </Grid>
-                </Grid> : null
+                </Grid>
+              </Grid>
             }
           </Grid>
         </Grid>

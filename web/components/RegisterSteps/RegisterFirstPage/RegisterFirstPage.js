@@ -27,24 +27,12 @@ class RegisterFirstPage extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      professional: false,
-    }
-  }
-
-  onProfessionalChange = event => {
-    const {checked} = event.target
-    this.setState({professional: checked})
-    this.props.onChange({target: {name: 'professional', value: checked}})
-    if (!checked) {
-      this.props.onCompanyChange(null)
     }
   }
 
   render() {
     const{classes, state} = this.props
-    const {professional} = this.state
 
-    console.log(JSON.stringify(state, null, 2))
     return(
       <Grid container>
         <Grid className={`customregistercontemail ${classes.margin}`}>
@@ -59,8 +47,9 @@ class RegisterFirstPage extends React.Component {
                 placeholder={ReactHtmlParser(this.props.t('REGISTER_FIRST_PAGE.textfield_email_placeholder'))}
                 style={{width: '100%'}}
                 type="email"
+                name="email"
                 value={state.email}
-                onChange={e => this.props.onChangeEmail(e)}
+                onChange={this.props.onChange}
                 error={state.errors.email}
                 helperText={state.errors.email}
               />
@@ -83,9 +72,9 @@ class RegisterFirstPage extends React.Component {
                 value={state.firstname}
                 onChange={e => this.props.onChange(e)}
                 error={state.errors.firstname}
+                helperText={state.errors.firstname}
               />
             </Grid>
-            <em style={{color: 'red'}}>{state.errors.firstname}</em>
           </Grid>
         </Grid>
         <Grid className={`customregistercontname ${classes.margin}`}>
@@ -103,27 +92,8 @@ class RegisterFirstPage extends React.Component {
                 value={state.name}
                 onChange={e => this.props.onChange(e)}
                 error={state.errors.name}
+                helperText={state.errors.name}
               />
-            </Grid>
-            <em style={{color: 'red'}}>{state.errors.name}</em>
-          </Grid>
-        </Grid>
-        <Grid className={`customregistercontname ${classes.margin}`}>
-          <Grid container spacing={1} className={classes.genericContainer}>
-            <Grid item className={classes.widthTextField}>
-              <FormControlLabel
-                control={<Switch
-                  checked={professional}
-                  onChange={this.onProfessionalChange}
-                />}
-                label="Je suis un professionel"
-              />
-              { professional &&
-                <Siret
-                  onChange={this.props.onCompanyChange}
-                />
-              }
-              <em style={{color: 'red'}}>{state.errors.siret}</em>
             </Grid>
           </Grid>
         </Grid>
@@ -143,9 +113,8 @@ class RegisterFirstPage extends React.Component {
                     name="password"
                     value={state.password}
                     onChange={e => this.props.onChange(e)}
-                    onKeyUp={e => this.props.onChangePassword(e)}
-                    error={state.status1.error}
-                    helperText={state.status1.error}
+                    error={state.errors.password}
+                    helperText={state.errors.password}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -178,9 +147,8 @@ class RegisterFirstPage extends React.Component {
                     name="password2"
                     value={state.password2}
                     onChange={e => this.props.onChange(e)}
-                    onKeyUp={e => this.props.onChangePassword(e)}
-                    error={state.status2.error}
-                    helperText={state.status2.error}
+                    error={state.errors.password2}
+                    helperText={state.errors.password2}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">

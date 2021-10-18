@@ -2,8 +2,6 @@ import {SheetsRegistry} from 'jss'
 import {createGenerateClassName, createTheme} from '@material-ui/core/styles'
 import palette from './theme.json'
 
-console.log(`Got custom palette:${JSON.stringify(palette)}`)
-
 const DEFAULT_PRIMARY = 'rgba(178,204,251,1)'
 const DEFAULT_SECONDARY = 'rgba(248, 207, 97, 1)'
 const DEFAULT_ERRORCOLOR = '#B26879'

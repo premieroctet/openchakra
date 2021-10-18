@@ -1,11 +1,11 @@
-import {setStatusRegister} from '../utils/context'
+import {setAlfredRegistering} from '../utils/context'
 import {Component} from 'react'
 import Router from 'next/router'
 
 class RegisterServices extends Component {
 
   componentDidMount() {
-    setStatusRegister()
+    setAlfredRegistering()
     Router.push('/?register=true')
   }
 

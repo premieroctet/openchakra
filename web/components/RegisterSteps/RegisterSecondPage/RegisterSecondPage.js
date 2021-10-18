@@ -1,3 +1,4 @@
+import { formatAddress } from '../../../utils/text';
 import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -84,6 +85,12 @@ class RegisterSecondPage extends React.Component {
   render() {
     const{classes, state}= this.props
 
+    const day=state.birthday ? state.birthday.date() : ''
+    const month=state.birthday ? state.birthday.month()+1 : ''
+    const year=state.birthday ? state.birthday.year() : ''
+
+    const address_placeholder = (state.city && state.address && state.zip_code) ?
+      formatAddress(state) : ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.algolia_placeholder'))
     return(
       <Grid container>
         <Grid className={classes.margin}>
@@ -102,7 +109,7 @@ class RegisterSecondPage extends React.Component {
               <form>
                 <AlgoliaPlaces
                   className={classes.textFieldAlgo}
-                  placeholder={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.algolia_placeholder'))}
+                  placeholder={address_placeholder}
                   options={{
                     appId: 'plKATRG826CP',
                     apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -115,7 +122,7 @@ class RegisterSecondPage extends React.Component {
                   onClear={() => this.props.onChangeAddress(null)}
                 />
               </form>
-              <em className={classes.cancelButton}>{state.cityError}</em>
+              <em className={classes.cancelButton}>{state.errors.address}</em>
             </Grid>
           </Grid>
         </Grid>
@@ -142,8 +149,10 @@ class RegisterSecondPage extends React.Component {
                     InputProps={{
                       inputComponent: NumberFormatCustom,
                     }}
-                    error={state.birthdayError}
-                    helperText={state.birthdayError}
+                    InputLabelProps={{shrink: true}}
+                    error={state.errors.birthday}
+                    helperText={state.errors.birthday}
+                    value={day}
                   />
                 </Grid>
                 <Grid item style={{width: '30%'}}>
@@ -157,7 +166,9 @@ class RegisterSecondPage extends React.Component {
                     InputProps={{
                       inputComponent: NumberFormatCustom,
                     }}
+                    InputLabelProps={{shrink: true}}
                     error={state.birthdayError}
+                    value={month}
                   />
                 </Grid>
                 <Grid item style={{width: '30%'}}>
@@ -171,7 +182,9 @@ class RegisterSecondPage extends React.Component {
                     InputProps={{
                       inputComponent: NumberFormatCustom,
                     }}
+                    InputLabelProps={{shrink: true}}
                     error={state.birthdayError}
+                    value={year}
                   />
                 </Grid>
               </Grid>
@@ -212,13 +225,17 @@ class RegisterSecondPage extends React.Component {
                 <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
                   <Checkbox
                     checked={state.checked}
-                    onChange={e => this.props.handleChecked(e)}
+                    name={'checked'}
+                    onChange={this.props.onChange}
                     value="checked"
-                    color="primary"
+                    color={state.errors.checked ? 'red' : 'primary'}
+                    error={state.errors.checked}
                   />
                 </Grid>
                 <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-                  <CustomButton onClick={this.handleOpenCgu} classes={{root: `customregigisterbuttoncgu ${classes.buttonCGU}`}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}</CustomButton>
+                  <CustomButton onClick={this.handleOpenCgu} classes={{root: `customregigisterbuttoncgu ${classes.buttonCGU}`}} error={state.errors.checked}>
+                    {ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}
+                  </CustomButton>
                   {this.dialogCgu(classes)}
                 </Grid>
               </Grid>
