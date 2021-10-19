@@ -62,7 +62,7 @@ class BookingDetail extends React.Component {
           { /* End pick tax */}
           { /* Start commission */}
           {client_fee && client_fee !== 0 && !mode ?
-            <Grid className={classes.flexContent}>
+            <Grid className={`customdisplayservicecost ${classes.flexContent}`}>
               <Grid className={classes.labelContent}>
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
               </Grid>
@@ -72,7 +72,7 @@ class BookingDetail extends React.Component {
             </Grid> : null
           }
           {alfred_fee && !mode ?
-            <Grid className={classes.flexContent}>
+            <Grid className={`customdisplayservicecost ${classes.flexContent}`}>
               <Grid className={classes.labelContent}>
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
               </Grid>
@@ -85,7 +85,7 @@ class BookingDetail extends React.Component {
           { /* Start total */}
           {
             total ?
-              <Grid className={classes.flexContent} style={{fontWeight: 'bold'}}>
+              <Grid className={`custombookingtotal ${classes.flexContent}`} style={{fontWeight: 'bold'}}>
                 <Grid>
                   <p>{client_fee !== 0 ? ReactHtmlParser(this.props.t('BOOKING_DETAIL.total')) : ReactHtmlParser(this.props.t('BOOKING_DETAIL.will_total'))}</p>
                 </Grid>

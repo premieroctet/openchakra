@@ -83,7 +83,7 @@ class paymentSuccess extends BasePage {
     return (
       <React.Fragment>
         <LayoutPayment>
-          <Grid style={{display: 'flex', backgroundColor: 'rgba(249,249,249, 1)', width: '100%', justifyContent: 'center', padding: '10%', minHeight: '80vh'}}>
+          <Grid className={`custompaymentfailedcontainer ${classes.mainContainer}`}>
             <Grid className={classes.containerPaymentSuccess}>
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                 <Grid style={{display: 'flex', flexDirection: 'column'}}>

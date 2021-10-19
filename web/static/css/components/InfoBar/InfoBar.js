@@ -20,6 +20,8 @@ export default theme => ({
     lineHeight: theme.typography.infoBar.lineHeight,
     fontFamily: theme.typography.infoBar.fontFamily,
     margin: 0,
+    transition: 'opacity 2s linear',
+    opacity: 1,
   },
   infoBarPicsContainer: {
     width: 15,

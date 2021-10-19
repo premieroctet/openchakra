@@ -749,12 +749,12 @@ class UserServicesPreview extends BasePage {
         label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_label')) : '',
         summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_summary')) + this.state.flexible ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.one_day')) : this.state.moderate ? `${
           ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.five_days'))}` : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.ten_days')) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.before_end_date')) : '',
-        IconName: this.state.alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : '',
+        IconName: this.state.alfred.firstname ? <CustomIcon className={'custompreviewcalendar'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<CalendarTodayIcon fontSize="large"/>}/> : '',
       },
       {
         label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket')) : '',
         summary: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket_of', {firstname: this.state.alfred.firstname, minimum_basket: this.state.serviceUser.minimum_basket})) : '',
-        IconName: this.state.alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : '',
+        IconName: this.state.alfred.firstname ? <CustomIcon className={'custompreviewshopping'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<ShoppingCartIcon fontSize="large"/>}/> : '',
       },
     ]
 

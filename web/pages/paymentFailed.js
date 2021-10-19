@@ -57,7 +57,7 @@ class PaymentFailed extends BasePage {
     return (
       <React.Fragment>
         <LayoutPayment>
-          <Grid style={{display: 'flex', backgroundColor: 'rgba(249,249,249, 1)', width: '100%', justifyContent: 'center', padding: '10%', minHeight: '80vh'}}>
+          <Grid className={`custompaymentfailedcontainer ${classes.mainContainer}`}>
             <Grid className={classes.containerPaymentSuccess}>
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                 <Grid style={{display: 'flex', flexDirection: 'column'}}>
@@ -70,11 +70,11 @@ class PaymentFailed extends BasePage {
                 </Grid>
                 <Grid style={{marginTop: '5vh'}}>
                   <Grid>
-                    <CustomButton variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push(booking_link)}>
+                    <CustomButton variant={'contained'} className={'custompaymentfailedbuttonback'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push(booking_link)}>
                       {ReactHtmlParser(this.props.t('PAYMENT_FAILED.back_resa'))}
                     </CustomButton>
                     { !avocotes_mode &&
-                      <CustomButton variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push('/')}>
+                      <CustomButton variant={'contained'} className={'custompaymentfailedbuttonhome'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push('/')}>
                         {ReactHtmlParser(this.props.t('PAYMENT_FAILED.back_home'))}
                       </CustomButton>
                     }

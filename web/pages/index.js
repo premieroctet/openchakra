@@ -1,3 +1,5 @@
+import RandomDisplay from "../components/RandomDisplay/RandomDisplay";
+
 const {
   getLoggedUserId,
   isApplication,
@@ -9,7 +11,7 @@ import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import axios from 'axios'
-import React from 'react'
+import React, {useState} from 'react'
 import Footer from '../hoc/Layout/Footer/Footer'
 import {Helmet} from 'react-helmet'
 import Grid from '@material-ui/core/Grid'
@@ -34,7 +36,7 @@ import {isAndroid} from 'react-device-detect'
 const {PRO, PART} = require('../utils/consts')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
-import {INDEX} from '../utils/i18n'
+import {INDEX, INFOBAR} from '../utils/i18n'
 import _ from 'lodash'
 import CustomBannerMultiCol from '../components/HomePage/CustomBannerMultiCol/CustomBannerMultiCol'
 
@@ -63,6 +65,11 @@ class Home extends React.Component {
       user: {},
       open: false,
       mounted: false,
+      arrayText: [
+        INFOBAR.randomTextA,
+        INFOBAR.randomTextB,
+        INFOBAR.randomTextC,
+      ],
     }
   }
 
@@ -209,12 +216,11 @@ class Home extends React.Component {
               {/* <HowItWorks/>*/}
               <Grid className={classes.howItWorksMainStyle}>
                 <CustomBannerMultiCol
-                  firstContent={<div className={'custombannerimgfirst'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfirsttext'}>{ReactHtmlParser(this.props.t('INDEX.first_content'))}</Typography></div>}
-                  secondContent={<div className={'custombannerimgtwo'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworkssecondtext'}>{ReactHtmlParser(this.props.t('INDEX.second_content'))}</Typography></div>}
-                  thirdContent={<div className={'custombannerimgthree'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksthirdttext'}>{ReactHtmlParser(this.props.t('INDEX.third_content'))}</Typography></div>}
-                  fourContent={<div className={'custombannerimgfour'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfourtext'}>{ReactHtmlParser(this.props.t('INDEX.four_content'))}</Typography></div>}
-                  fiveContent={<div className={'custombannerimgfive'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfivetext'}>{ReactHtmlParser(this.props.t('INDEX.five_content'))}</Typography></div>}
-                  sixContent={<div className={'custombannerimgsix'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworkssixtext'}>{ReactHtmlParser(this.props.t('INDEX.six_content'))}</Typography></div>}
+                  firstContent={
+                    <div className={'custombannerimgfirst'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}>
+                      <RandomDisplay arrayText={this.state.arrayText} loop={true}/>
+                    </div>
+                  }
                 />
               </Grid>
             </Grid>

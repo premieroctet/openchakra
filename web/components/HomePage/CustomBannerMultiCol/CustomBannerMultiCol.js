@@ -18,24 +18,42 @@ class CustomBannerMultiCol extends React.Component {
     return (
       <>
         <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-          <Grid item xl lg md sm xs className={classes.centerContent}>
-            <Typography className={'customtypocolone'}>{firstContent}</Typography>
-          </Grid>
-          <Grid item xl lg md sm xs className={classes.centerContent}>
-            <Typography className={'customtypocoltwo'}>{secondContent}</Typography>
-          </Grid>
-          <Grid item xl lg md sm xs className={classes.centerContent}>
-            <Typography className={'customtypocolthree'}>{thirdContent}</Typography>
-          </Grid>
-          <Grid item xl lg md sm xs className={classes.centerContent}>
-            <Typography className={'customtypocolfour'}>{fourContent}</Typography>
-          </Grid>
-          <Grid item xl lg md sm xs className={classes.centerContent}>
-            <Typography className={'customtypocolfive'}>{fiveContent}</Typography>
-          </Grid>
-          <Grid item xl lg md sm xs className={classes.centerContent}>
-            <Typography className={'customtypocolsix'}>{sixContent}</Typography>
-          </Grid>
+          {
+            firstContent ?
+              <Grid item xl lg md sm xs className={classes.centerContent}>
+                <Typography className={'customtypocolone'}>{firstContent}</Typography>
+              </Grid> : null
+          }
+          {
+            secondContent ?
+              <Grid item xl lg md sm xs className={classes.centerContent}>
+                <Typography className={'customtypocoltwo'}>{secondContent}</Typography>
+              </Grid> : null
+          }
+          {
+            thirdContent ?
+              <Grid item xl lg md sm xs className={classes.centerContent}>
+                <Typography className={'customtypocolthree'}>{thirdContent}</Typography>
+              </Grid> : null
+          }
+          {
+            fourContent ?
+              <Grid item xl lg md sm xs className={classes.centerContent}>
+                <Typography className={'customtypocolfour'}>{fourContent}</Typography>
+              </Grid> : null
+          }
+          {
+            fiveContent ?
+              <Grid item xl lg md sm xs className={classes.centerContent}>
+                <Typography className={'customtypocolfive'}>{fiveContent}</Typography>
+              </Grid> : null
+          }
+          {
+            sixContent ?
+              <Grid item xl lg md sm xs className={classes.centerContent}>
+                <Typography className={'customtypocolsix'}>{sixContent}</Typography>
+              </Grid> : null
+          }
         </Grid>
       </>
 

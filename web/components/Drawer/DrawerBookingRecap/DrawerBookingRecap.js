@@ -134,7 +134,7 @@ class DrawerBookingRecap extends React.Component {
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '3vh'}}>
           <Grid style={{width: '100%'}}>
             <CustomButton
-              classes={{root: classes.userServicePButtonResa}}
+              classes={{root: `customdrawerbookingrecapbutton ${classes.userServicePButtonResa}`}}
               variant="contained"
               color="primary"
               aria-label="add"

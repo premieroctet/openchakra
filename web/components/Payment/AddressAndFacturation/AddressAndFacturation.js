@@ -30,7 +30,7 @@ class AddressAndFacturation extends React.Component {
       <Grid container className={classes.addressAndFactContainer}>
         <Grid item xl={6} lg={6} md={6} xs={12} sm={12} >
           <Grid className={classes.addressAndFactuMainContainer}>
-            <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%'}}>
+            <Grid className={`customadandfaccontainer ${classes.adandfaccontainer}`}>
               <Topic
                 titleTopic={ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.topic_service'))}
                 titleSummary={false}
@@ -41,7 +41,7 @@ class AddressAndFacturation extends React.Component {
                 />
               </Topic>
             </Grid>
-            <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
+            <Grid className={`customadandfaccontainer ${classes.adandfaccontainer}`} style={{marginTop: '2vh'}}>
               <Topic
                 titleTopic={ReactHtmlParser(this.props.t('PROFIL.about', {firstname: user.firstname}))}
                 titleSummary={false}
@@ -52,7 +52,7 @@ class AddressAndFacturation extends React.Component {
                 />
               </Topic>
               <Grid style={{marginTop: 30, marginBottom: 30}}>
-                <Divider style={{height: 2, borderRadius: 10, width: '50%', backgroundColor: 'rgba(210, 210, 210, 0.5)'}}/>
+                <Divider className={`customadreandfacdivider ${classes.divider}`}/>
               </Grid>
               <Topic
                 titleTopic={ReactHtmlParser(this.props.t('BOOKING.stuff'))}
@@ -72,14 +72,7 @@ class AddressAndFacturation extends React.Component {
           </Grid>
         </Grid>
         <Grid item xl={6} lg={6} md={6} xs={12} sm={12} className={classes.mainContainerAdressFactu}>
-          <Grid style={{
-            display: 'flex',
-            flexDirection: 'column',
-            border: '1px solid rgba(210, 210, 210, 0.5)',
-            borderRadius: 30,
-            justifyContent: 'center',
-            backgroundColor: 'white',
-          }}>
+          <Grid className={`customadandfaccontainer ${classes.adandfaccontainer}`}>
             <Grid style={{paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', paddingRight: '10%'}}>
               <DrawerBookingRecap
                 {...this.props}
