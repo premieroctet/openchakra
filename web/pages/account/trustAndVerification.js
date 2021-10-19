@@ -65,7 +65,6 @@ class trustAndVerification extends React.Component {
       extRegistrationProof: '',
       extRegistrationProof_upload: '',
       professional: false,
-      alfred: false,
       company: {},
       open: false,
       cesu: null,
@@ -75,7 +74,7 @@ class trustAndVerification extends React.Component {
       id_card_error: null,
       deleteConfirmMessage: null,
     }
-    this.editSiret = this.editSiret.bind(this)
+    this.saveStatus = this.saveStatus.bind(this)
     this.callDrawer = this.callDrawer.bind(this)
     this.onSiretChange = this.onSiretChange.bind(this)
     this.statusSaveEnabled = this.statusSaveEnabled.bind(this)
@@ -115,18 +114,23 @@ class trustAndVerification extends React.Component {
         }
         this.setState(st)
         if (user.is_alfred) {
-          this.setState({alfred: true})
           axios.get('/myAlfred/api/shop/currentAlfred')
             .then(response => {
-              let user = response.data
+              let shop = response.data
               this.setState({
-                cis: user.cis,
-                cesu: user.cesu,
-                professional: user.is_professional,
-                company: user.company,
+                cis: shop.cis,
+                cesu: shop.cesu,
+                professional: shop.is_professional,
+                company: shop.company,
               })
 
             })
+        }
+        else {
+          this.setState({
+            professional: Boolean(user.professional),
+            company: user.professional,
+          })
         }
       })
       .catch(err => {
@@ -165,9 +169,13 @@ class trustAndVerification extends React.Component {
 
   onChangePartPro = event => {
     const {name, checked} = event.target
+    const {user}=this.state
 
     const pro = (name == 'professional' && checked) || (name == 'particular' && !checked)
     this.setState({professional: pro})
+    if (!user.is_alfred) {
+      this.setState({company: pro ? {} : null})
+    }
   };
 
   onSiretChange = data => {
@@ -256,7 +264,7 @@ class trustAndVerification extends React.Component {
     this.setState({numPages})
   };
 
-  editSiret() {
+  saveStatus() {
     const newStatus = {
       is_particular: this.state.particular,
       is_professional: this.state.professional,
@@ -264,13 +272,10 @@ class trustAndVerification extends React.Component {
       cesu: this.state.cesu,
       cis: this.state.cis,
     }
-    axios.put('/myAlfred/api/shop/editStatus', newStatus)
+    const url = this.state.user.is_alfred ? '/myAlfred/api/shop/status' : '/myAlfred/api/users/profile/status'
+    axios.put(url, newStatus)
       .then(() => {
         snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_status_update')))
-        const data = {status: this.state.professional ? 'Pro' : 'Particulier'}
-        return axios.put('/myAlfred/api/serviceUser/editStatus', data)
-      })
-      .then(() => {
         const formData = new FormData()
         if (this.state.id_registrationproof) {
           formData.append('registrationProof', this.state.id_registrationproof)
@@ -330,7 +335,7 @@ class trustAndVerification extends React.Component {
   }
 
   statusSaveEnabled = () => {
-    const {professional, cesu, company}=this.state
+    const {user, professional, cesu, company}=this.state
     if (professional) {
       if (!(company && company.siret && company.name)) {
         return false
@@ -339,7 +344,7 @@ class trustAndVerification extends React.Component {
         return false
       }
     }
-    else if (!cesu) {
+    else if (user.is_alfred && !cesu) {
       return false
     }
     return true
@@ -373,6 +378,14 @@ class trustAndVerification extends React.Component {
 
 
   content = classes => {
+    const {user, professional}=this.state
+    if (!user) {
+      return null
+    }
+
+    const displayCesu = user.is_alfred
+    const displayCis = user.is_alfred
+
     return (
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -471,121 +484,122 @@ class trustAndVerification extends React.Component {
             }
           </Grid>
         </Grid>
+        { /** Status part/pro ***/ }
         <Grid>
           <Grid>
-            <Divider style={{height: 2, width: '100%', margin: '10vh 0px'}}/>
+            <Divider style={{height: 2, width: '100%', margin: '0px'}}/>
           </Grid>
-          {this.state.alfred ?
-            <Grid style={{marginBottom: '12vh'}}>
-              <Grid>
-                <h3 className={'customtrustandverifstatustitle'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.your_status'))}</h3>
-              </Grid>
-              <Grid>
-                { canAlfredParticularRegister() &&
-                  <Grid>
-                    <FormControlLabel
-                      control={
-                        <Radio
-                          className={'customtrustandverifparticular'}
-                          checked={!this.state.professional}
-                          onChange={e => {
-                            this.onChangePartPro(e)
-                          }}
-                          value={!this.state.professional}
-                          name="particular"
-                          color="primary"
-                        />
-                      }
-                      label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.particular'))}
-                    />
-                  </Grid>
-                }
-                {!this.state.professional ?
-                  <Grid>
-                    <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
-                      <Grid style={{display: 'flex', alignItems: 'center'}}>
-                        <Radio color="primary" value={CESU[0]}/>
-                        <Typography className={'customtrustandverifcesu'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.declare_cesu'))}</Typography>
-                      </Grid>
-                      <Grid style={{display: 'flex', alignItems: 'center'}}>
-                        <Radio color="primary" value={CESU[1]}/>
-                        <Typography className={'customtrustandverifces'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.declare_cesu'))}</Typography>
-                      </Grid>
-                      <Grid style={{display: 'flex', alignItems: 'center'}}>
-                        <Radio color="primary" value={CESU[2]}/>
-                        <Typography className={'customtrustandverifnocesu'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.no_cesu'))}</Typography>
-                      </Grid>
-                    </RadioGroup>
-                  </Grid>
-                  : null
-                }
+          <Grid style={{marginBottom: '12vh'}}>
+            <Grid>
+              <h3 className={'customtrustandverifstatustitle'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.your_status'))}</h3>
+            </Grid>
+            <Grid>
+              { canAlfredParticularRegister() &&
                 <Grid>
                   <FormControlLabel
                     control={
                       <Radio
-                        className={'customtrustandverifradiopro'}
-                        checked={this.state.professional}
+                        className={'customtrustandverifparticular'}
+                        checked={!professional}
                         onChange={e => {
                           this.onChangePartPro(e)
                         }}
-                        value={this.state.professional}
-                        name="professional"
+                        value={!professional}
+                        name="particular"
                         color="primary"
                       />
                     }
-                    label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.professional'))}
+                    label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.particular'))}
                   />
                 </Grid>
-              </Grid>
-              {this.state.professional ?
-                <Grid container style={{marginTop: '5vh'}}>
-                  <Grid item xs={12} className={'customtrustandverifcis'}>
-                    <ButtonSwitch
-                      label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.eligible_credit'))}
-                      onChange={this.onCISChange}
-                      checked={this.state.cis}
-                    />
-                  </Grid>
-                  <Grid style={{marginTop: '5vh'}}>
-                    <Siret
-                      onChange={this.onSiretChange}
-                      company={this.state.company}
-                    />
-                  </Grid>
-                  <Grid>
-                    <Grid style={{marginTop: '10vh'}}>
-                      <h3 className={'customtrustandverifdocimma'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.document_title'))}</h3>
-                    </Grid>
-                    <Typography className={'customtrustandverifpdf'} style={{color: 'rgba(39,37,37,35%)'}}>
-                      {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insert_document'))}<br/>
-                      {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.pdf_info'))}
-                      <a className={'customtrustandveriflink'} color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
-                      >{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insee_link'))}</a>
-                    </Typography>
-                  </Grid>
-                  <DocumentEditor
-                    ext={this.state.extRegistrationProof}
-                    ext_upload={this.state.extRegistrationProof_upload}
-                    db_document={this.state.registration_proof}
-                    uploaded_file={this.state.registration_proof_file}
-                    onChange={this.onRegistrationProofChanged}
-                    onDelete={() => this.deleteRegistrationProof(false)}
-                    title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_document_imma'))}
-                  />
-                </Grid>
-                :
-                null
               }
-              <Grid style={{marginTop: '10vh'}}>
-                <CustomButton variant="contained" className={`customtrustandverifsavebutton ${classes.buttonSave}`}
-                  onClick={this.editSiret} disabled={!this.statusSaveEnabled()}>
-                  {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
-                </CustomButton>
+              {!professional && displayCesu ?
+                <Grid>
+                  <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
+                    <Grid style={{display: 'flex', alignItems: 'center'}}>
+                      <Radio color="primary" value={CESU[0]}/>
+                      <Typography className={'customtrustandverifcesu'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.declare_cesu'))}</Typography>
+                    </Grid>
+                    <Grid style={{display: 'flex', alignItems: 'center'}}>
+                      <Radio color="primary" value={CESU[1]}/>
+                      <Typography className={'customtrustandverifces'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.declare_cesu'))}</Typography>
+                    </Grid>
+                    <Grid style={{display: 'flex', alignItems: 'center'}}>
+                      <Radio color="primary" value={CESU[2]}/>
+                      <Typography className={'customtrustandverifnocesu'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.no_cesu'))}</Typography>
+                    </Grid>
+                  </RadioGroup>
+                </Grid>
+                : null
+              }
+              <Grid>
+                <FormControlLabel
+                  control={
+                    <Radio
+                      className={'customtrustandverifradiopro'}
+                      checked={this.state.professional}
+                      onChange={e => {
+                        this.onChangePartPro(e)
+                      }}
+                      value={this.state.professional}
+                      name="professional"
+                      color="primary"
+                    />
+                  }
+                  label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.professional'))}
+                />
               </Grid>
             </Grid>
-            : null
-          }
+            {this.state.professional ?
+              <Grid container>
+                { displayCis &&
+                <Grid item xs={12} className={'customtrustandverifcis'}>
+                  <ButtonSwitch
+                    label={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.eligible_credit'))}
+                    onChange={this.onCISChange}
+                    checked={this.state.cis}
+                  />
+                </Grid>
+                }
+                <Grid style={{marginTop: '1vh'}}>
+                  <Siret
+                    onChange={this.onSiretChange}
+                    company={this.state.company}
+                  />
+                </Grid>
+                <Grid>
+                  <Grid style={{marginTop: '1vh'}}>
+                    <h3 className={'customtrustandverifdocimma'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.document_title'))}</h3>
+                  </Grid>
+                  <Typography className={'customtrustandverifpdf'} style={{color: 'rgba(39,37,37,35%)'}}>
+                    {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insert_document'))}<br/>
+                    {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.pdf_info'))}
+                    <a className={'customtrustandveriflink'} color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
+                    >{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insee_link'))}</a>
+                  </Typography>
+                </Grid>
+                <DocumentEditor
+                  ext={this.state.extRegistrationProof}
+                  ext_upload={this.state.extRegistrationProof_upload}
+                  db_document={this.state.registration_proof}
+                  uploaded_file={this.state.registration_proof_file}
+                  onChange={this.onRegistrationProofChanged}
+                  onDelete={() => this.deleteRegistrationProof(false)}
+                  title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_document_imma'))}
+                />
+              </Grid>
+              :
+              null
+            }
+            <Grid style={{marginTop: '1vh'}}>
+              <CustomButton variant="contained" className={`customtrustandverifsavebutton ${classes.buttonSave}`}
+                onClick={this.saveStatus} disabled={!this.statusSaveEnabled()}>
+                {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
+              </CustomButton>
+            </Grid>
+          </Grid>
         </Grid>
+        { /** End Status part/pro ***/ }
       </Grid>
     )
   };

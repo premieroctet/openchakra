@@ -190,17 +190,6 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
     })
 })
 
-// @Route PUT /myAlfred/api/serviceUser/editStatus
-// Update status serviceUser
-// @Access private
-router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('ServiceUser').updateMany({user: req.user.id}, {status: req.body.status})
-    .then(serviceUser => {
-      res.json(serviceUser)
-    })
-    .catch(err => console.error(err))
-})
-
 // @Route PUT /myAlfred/api/serviceUser/editWithCity/:id
 // Update a serviceUser
 // @Access private
