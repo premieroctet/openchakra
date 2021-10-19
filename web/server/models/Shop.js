@@ -110,6 +110,13 @@ const ShopSchema = new Schema({
   id_mangopay: {
     type: String,
   },
+}, {toJSON: {virtuals: true, getters: true}})
+
+ShopSchema.virtual('insurance_text').get(function() {
+  return this.insurances && this.insurances.map(ins => {
+    return INSURANCE_TYPES[ins.kind]
+  }).join(', ')
 })
+
 
 module.exports = ShopSchema

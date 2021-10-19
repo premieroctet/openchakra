@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 
 const {hideIllegal} = require('../../utils/text')
@@ -62,41 +63,41 @@ const ServiceUserSchema = new Schema({
   deadline_before_booking: {
     type: String,
   },
-  graduated: {
-    type: Boolean,
-    default: false,
-  },
   diploma: {
-    name: {
-      type: String,
+    type: {
+      name: {
+        type: String,
+        required: true,
+      },
+      year: {
+        type: String,
+      },
+      file: {
+        type: String,
+      },
+      skills: [{
+        type: String,
+      }],
+      required: false,
     },
-    year: {
-      type: String,
-    },
-    file: {
-      type: String,
-    },
-    skills: [{
-      type: String,
-    }],
-  },
-  is_certified: {
-    type: Boolean,
-    default: false,
   },
   certification: {
-    name: {
-      type: String,
+    type: {
+      name: {
+        type: String,
+        required: true,
+      },
+      year: {
+        type: String,
+      },
+      file: {
+        type: String,
+      },
+      skills: [{
+        type: String,
+      }],
+      required: false,
     },
-    year: {
-      type: String,
-    },
-    file: {
-      type: String,
-    },
-    skills: [{
-      type: String,
-    }],
   },
   option: {
     label: {
@@ -163,7 +164,7 @@ const ServiceUserSchema = new Schema({
         required: true,
       },
     },
-    require: false,
+    required: false,
   },
   // Particulars can book
   particular_access: {
@@ -177,6 +178,27 @@ const ServiceUserSchema = new Schema({
     required: true,
     sparse: true,
   },
+}, {toJSON: {virtuals: true, getters: true}})
+
+ServiceUserSchema.virtual('is_graduated').get(function() {
+  return Boolean(this.diploma)
 })
+
+ServiceUserSchema.virtual('is_certified').get(function() {
+  return Boolean(this.certification)
+})
+
+ServiceUserSchema.virtual('grade_text').get(function() {
+  let grades=[this.diploma, this.certification].filter(x => Boolean(x))
+  let result=grades.map(grade => {
+    let str=grade.name
+    if (grade.year) {
+      str=`${str}(${grade.year})`
+    }
+    return str
+  }).join(', ')
+  return result
+})
+
 
 module.exports = ServiceUserSchema

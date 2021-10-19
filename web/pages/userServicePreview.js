@@ -738,6 +738,7 @@ class UserServicesPreview extends BasePage {
     const filters = this.extractFilters()
     const pricedPrestations = this.computePricedPrestations()
     const avocotes_booking=this.getAvocotesBooking()
+    const {shop, serviceUser}=this.state
 
     const listCondition = [
       {
@@ -777,7 +778,7 @@ class UserServicesPreview extends BasePage {
                           <Typography variant="h6">{this.state.alfred.firstname} - {this.state.service.label}</Typography>
                         </Grid>
                         <Grid item xl={2} lg={2} md={12} sm={12} xs={12} className={classes.containerListSkills}>
-                          <ListIconsSkills data={this.state.serviceUser}/>
+                          <ListIconsSkills data={{insurance_text: shop.insurance_text, grade_text: serviceUser.grade_text}}/>
                         </Grid>
                       </Grid>
                       {
@@ -815,7 +816,7 @@ class UserServicesPreview extends BasePage {
                         <Typography style={{color: 'rgba(39,37,37,35%)'}}>{this.state.serviceUser.description ? this.state.serviceUser.description : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description_summary'))}</Typography>
                       </Grid>
                       <Grid>
-                        <CustomListGrades data={this.state.alfred}/>
+                        <CustomListGrades grade={this.state.serviceUser.grade_text} insurance={this.state.shop.insurance_text}/>
                       </Grid>
                       <Grid style={{marginTop: '2%'}}>
                         <Divider className={`customtopicdivider ${classes.topicDivider}`}/>

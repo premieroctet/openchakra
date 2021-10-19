@@ -10,23 +10,15 @@ function ListIconsSkills(props) {
 
   return(
     <>
-      {
-        data.is_certified ?
-          <Grid style={{margin: 5}}>
-            <img title={'certification_icon'} alt={'certification_icon'} height={20} width={20} src={'/static/assets/icon/pro_icon.svg'} className={classes.colorIconExtension} />
-          </Grid> : null
-      }
-      {
-        data.graduated ?
+      {data.grade_text &&
           <Grid style={{margin: 5}}>
             <SchoolIcon classes={{root: classes.colorIconSchool}}/>
-          </Grid> : null
+          </Grid>
       }
-      {
-        data.insurance ?
+      {data.insurance_text &&
           <Grid style={{margin: 5}}>
             <VerifiedUserIcon classes={{root: classes.colorIconSchool}}/>
-          </Grid> : null
+          </Grid>
       }
     </>
   )
