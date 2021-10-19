@@ -9,32 +9,12 @@ import styles from '../../../static/css/components/SelectService/SelectService'
 import axios from 'axios'
 import Select from 'react-select'
 const {matches, normalize} = require('../../../utils/text')
-import {SHOP} from '../../../utils/i18n'
+import {rgbaToHex} from '../../../utils/functions'
 const {PART, PRO, CREASHOP_MODE} = require('../../../utils/consts')
 import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch'
 import moment from 'moment'
 import _ from 'lodash'
 const {isB2BDisabled}=require('../../../config/config')
-
-
-/** TODO trouver un moyen d'utiliser CUSTOM **/
-
-const customStyles = {
-  control: styles => ({...styles, backgroundColor: 'white'}),
-  option: (styles, {data, isDisabled, isFocused, isSelected}) => {
-    return {
-      ...styles,
-      backgroundColor: isFocused ? '#1D294E' : 'white',
-      color: isFocused ? 'white' : undefined,
-      ':hover': {
-        ...styles[':hover'],
-        backgroundColor: '#1D294E',
-        color: 'white',
-      },
-    }
-  },
-}
-
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -149,8 +129,9 @@ class SelectService extends React.Component {
 
   render() {
 
-    const {classes, is_particular, mode} = this.props
+    const {classes, is_particular, mode, theme} = this.props
     const {services, loading, service, particular_access, professional_access, particular_professional_access} = this.state
+    console.log(theme, 'theme')
 
     if (!services) {
       return null
@@ -198,7 +179,7 @@ class SelectService extends React.Component {
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.titleContainer}>
             <h3 className={'customselectservicesubtitle'} style={{color: '#403f3f'}}>{
-              mode == CREASHOP_MODE.SERVICE_UPDATE ? ReactHtmlParser(this.props.t('SHOP.service.subtitle_update')) : SHOP.service.subtitle
+              mode == CREASHOP_MODE.SERVICE_UPDATE ? ReactHtmlParser(this.props.t('SHOP.service.subtitle_update')) : ReactHtmlParser(this.props.t('SHOP.service.subtitle'))
             }</h3>
             { CREASHOP_MODE.SERVICE_UPDATE ? null : <h3>{ReactHtmlParser(this.props.t('SHOP.service.explanation'))}</h3>}
           </Grid>
@@ -253,7 +234,6 @@ class SelectService extends React.Component {
             null
           }
         </Grid>
-
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Select
             native={true}
@@ -266,7 +246,21 @@ class SelectService extends React.Component {
             loadingMessage={() => 'Recherche des services'}
             placeholder={ReactHtmlParser(this.props.t('SHOP.service.placeholder'))}
             value={this.getSelectedOption(options, service)}
-            styles={customStyles}
+            styles={{
+              control: styles => ({...styles, backgroundColor: 'white'}),
+              option: (styles, {data, isDisabled, isFocused, isSelected}) => {
+                return {
+                  ...styles,
+                  color: isFocused ? 'white' : undefined,
+                  backgroundColor: isFocused ? theme.palette.primary.main : undefined,
+                  ':hover': {
+                    ...styles[':hover'],
+                    backgroundColor: theme.palette.primary.main,
+                    color: 'white',
+                  },
+                }
+              },
+            }}
           />
         </Grid>
       </Grid>
@@ -274,4 +268,4 @@ class SelectService extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(SelectService))
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(SelectService))

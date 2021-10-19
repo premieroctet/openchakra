@@ -72,7 +72,7 @@ class myAddresses extends React.Component {
             <h2 className={'customadressestitle'}>{ pro_mode ? ReactHtmlParser(this.props.t('MY_ADDRESSES.title_b2b')) : ReactHtmlParser(this.props.t('MY_ADDRESSES.title'))}</h2>
           </Grid>
           <Grid>
-            <Typography className={'customadressessubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{pro_mode ? MY_ADDRESSES.subtitle_b2b + {company_name} : ReactHtmlParser(this.props.t('MY_ADDRESSES.subtitle'))}.</Typography>
+            <Typography className={'customadressessubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{pro_mode ? ReactHtmlParser(this.props.t('MY_ADDRESSES.subtitle_b2b')) + {company_name} : ReactHtmlParser(this.props.t('MY_ADDRESSES.subtitle'))}.</Typography>
           </Grid>
         </Grid>
         <Grid>

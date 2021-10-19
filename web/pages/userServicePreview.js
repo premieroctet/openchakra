@@ -30,6 +30,8 @@ import '../static/assets/css/custom.css'
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
 import {Divider} from '@material-ui/core'
 import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
+import AlarmOnIcon from "@material-ui/icons/AlarmOn";
+import CustomIcon from "../components/CustomIcon/CustomIcon";
 const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage = require('./basePage')
 const {BOOK_STATUS, COMM_CLIENT, MANAGER}=require('../utils/consts')
@@ -741,7 +743,7 @@ class UserServicesPreview extends BasePage {
       {
         label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_label')) : '',
         summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary')) + this.formatDeadline(this.state.serviceUser.deadline_before_booking) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary_end')) : '',
-        IconName: this.state. alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : '',
+        IconName: this.state. alfred.firstname ? <CustomIcon className={'custompreviewsmiley'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<InsertEmoticonIcon fontSize="large"/> }/> : '',
       },
       {
         label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_label')) : '',
@@ -818,7 +820,7 @@ class UserServicesPreview extends BasePage {
                       <Grid style={{marginTop: '2%'}}>
                         <Divider className={`customtopicdivider ${classes.topicDivider}`}/>
                       </Grid>
-                      <Grid style={{marginTop: '3vh', backgroundColor: 'rgba(229,229,229,1)', borderRadius: 27}}>
+                      <Grid className={`customuserpreviewboxcustom ${classes.boxCustom}`}>
                         <ListAlfredConditions
                           columnsXl={12}
                           columnsLG={12}

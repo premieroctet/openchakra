@@ -155,6 +155,8 @@ const RESERVATION = {
   infomessage: 'Vous n\'avez aucune réservation en tant qu\'',
   alfred: 'Alfred',
   user: 'utilisateur',
+  detailbutton: 'Détail',
+  saveagain: 'Réserver de nouveau',
 }
 
 const DRAWER_BOOKING = {
@@ -998,6 +1000,8 @@ const PERSONAL_INFORMATION ={
 const SHOP = {
   addService: 'Ajoutez des services',
   createShop: 'Proposez votre premier service',
+  buttonNext: 'Suivant',
+  buttonSend: 'Envoyer',
   bienvenue: {
     title: 'Bienvenue {{firstname}}',
     step1_main_title: 'Etape 1',
@@ -1052,6 +1056,8 @@ const SHOP = {
     presta_perso: 'Ajouter une prestation personnalisée',
     titleIsPro: 'Services proposés aux entreprises partenaires de My Alfred',
     descriptionIsPro: 'My Alfred travaille en étroite collaboration avec de nombreuses entreprises partenaires en recherche d’entrepreneurs qualifiés pour l’installation, la livraison, le montage ou encore des services de conciergerie. Si vous souhaitez proposer vos services aux entreprises partenaires de My Alfred, il vous suffit de compléter les prestations ci-dessous. Ces prestations ne seront pas visibles de la plateforme grand public, et seront réservées aux entreprises partenaires. Un de nos experts prendra contact avec vous dans les plus brefs délais pour plus d’information. ',
+    standard: 'Prestations standard',
+    prestaperso: 'Prestations personnalisées',
   },
   settingService: {
     main_title: 'Paramétrage',

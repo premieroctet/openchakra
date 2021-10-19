@@ -134,7 +134,7 @@ class SelectPrestation extends React.Component {
         </Grid>
         <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'cutomprestafabcontainer'}>
               <Fab
                 variant="extended"
                 color="primary"
@@ -152,7 +152,7 @@ class SelectPrestation extends React.Component {
                 <Grid key={i} className={classes.maxWidth}>
                   {
                     fltr === COMPANY_PRIVATE_FLTR ? null : <Grid className={classes.marginThirty}>
-                      <Typography className={'customselectprestasection'} style={{color: '#403f3f'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? 'Prestations standard' : fltr === 'Prestations personnalisées' && this.state.grouped[ 'Prestations personnalisées' ].length === 0 ? '' : fltr}</Typography>
+                      <Typography className={'customselectprestasection'} style={{color: '#403f3f'}}>{(['Aucun', 'undefined'].includes(fltr) ||!fltr) ? ReactHtmlParser(this.props.t('SHOP.parameter.standard')) : fltr === ReactHtmlParser(this.props.t(SHOP.parameter.prestaperso)) && this.state.grouped[ 'Prestations personnalisées' ].length === 0 ? '' : fltr}</Typography>
                     </Grid>
                   }
                   <Grid container spacing={2} style={{margin: 0, width: '100%'}}>

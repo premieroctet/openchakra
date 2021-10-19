@@ -26,6 +26,7 @@ import LayoutReservations from '../../hoc/Layout/LayoutReservations'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import styles from '../../static/css/pages/reservations/reservations'
 import {RESERVATION} from '../../utils/i18n'
+import ReactHtmlParser from "react-html-parser";
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
@@ -295,9 +296,9 @@ class AllReservations extends BasePage {
                         <CustomButton
                           color={'primary'}
                           variant={'outlined'}
-                          classes={{root: classes.buttonDetail}}
+                          classes={{root: `customreservationdetailbutton ${classes.buttonDetail}`}}
                           onClick={() => this.openBookingPreview(booking._id)}>
-                          Détail
+                          {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
                         </CustomButton>
                       </Grid>
                       {
@@ -306,9 +307,9 @@ class AllReservations extends BasePage {
                             <CustomButton
                               variant={'contained'}
                               color={'primary'}
-                              classes={{root: classes.buttonResa}}
+                              classes={{root: `customresasaveagain ${classes.buttonResa}`}}
                               onClick={() => this.newAppointment(booking)}>
-                              Réserver de nouveau
+                              {ReactHtmlParser(this.props.t('RESERVATION.saveagain'))}
                             </CustomButton>
                           </Grid> : null
                       }
