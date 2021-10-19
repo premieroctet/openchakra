@@ -25,6 +25,8 @@ const {getLoggedUserId, isB2BStyle}=require('../../utils/context')
 const {is_development, isB2BDisabled, canAlfredParticularRegister}=require('../../config/config')
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 const {snackBarSuccess}=require('../../utils/notifications')
+import {SHOP} from '../../utils/i18n'
+import ReactHtmlParser from "react-html-parser";
 
 class creaShop extends BasePage {
 
@@ -613,7 +615,7 @@ class creaShop extends BasePage {
                 onClick={this.handleNext}
                 disabled={this.nextDisabled()}
               >
-                {this.isLastStep() ? 'Envoyer' : 'Suivant'}
+                {this.isLastStep() ? ReactHtmlParser(this.props.t('SHOP.buttonSend')) : ReactHtmlParser(this.props.t('SHOP.buttonNext'))}
               </CustomButton>
             </Grid>
           </Grid>

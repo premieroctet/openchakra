@@ -346,5 +346,9 @@ export default theme => ({
       width: '15vw',
     },
   },
-
+  boxCustom: {
+    marginTop: '3vh',
+    backgroundColor: 'rgba(229,229,229,1)',
+    borderRadius: 27,
+  },
 })

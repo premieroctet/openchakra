@@ -211,7 +211,7 @@ class CardService extends React.Component {
                           {
                             cpData.is_professional ?
                               <Grid className={classes.cardServiceChipPro}>
-                                <Chip label={'Pro'} classes={{root: classes.cardServiceChipBckg}}/>
+                                <Chip label={'Pro'} classes={{root: `customcardchippro ${classes.cardServiceChipBckg}`}}/>
                               </Grid> : null
                           }
                         </>
