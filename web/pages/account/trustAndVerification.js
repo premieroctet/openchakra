@@ -1,4 +1,5 @@
-import { canAlfredParticularRegister } from '../../config/config';
+import Insurance from '../../components/Insurance/Insurance'
+import {canAlfredParticularRegister} from '../../config/config'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -73,6 +74,7 @@ class trustAndVerification extends React.Component {
       id_card_status: null,
       id_card_error: null,
       deleteConfirmMessage: null,
+      insurances: null,
     }
     this.saveStatus = this.saveStatus.bind(this)
     this.callDrawer = this.callDrawer.bind(this)
@@ -122,6 +124,7 @@ class trustAndVerification extends React.Component {
                 cesu: shop.cesu,
                 professional: shop.is_professional,
                 company: shop.company,
+                insurances: shop.insurances,
               })
 
             })
@@ -271,6 +274,7 @@ class trustAndVerification extends React.Component {
       company: this.state.company,
       cesu: this.state.cesu,
       cis: this.state.cis,
+      insurances: this.state.insurances,
     }
     const url = this.state.user.is_alfred ? '/myAlfred/api/shop/status' : '/myAlfred/api/users/profile/status'
     axios.put(url, newStatus)
@@ -335,7 +339,7 @@ class trustAndVerification extends React.Component {
   }
 
   statusSaveEnabled = () => {
-    const {user, professional, cesu, company}=this.state
+    const {user, professional, cesu, company, insurances}=this.state
     if (professional) {
       if (!(company && company.siret && company.name)) {
         return false
@@ -345,6 +349,10 @@ class trustAndVerification extends React.Component {
       }
     }
     else if (user.is_alfred && !cesu) {
+      return false
+    }
+
+    if (insurances && insurances.find(ins => Boolean(ins.company)!=Boolean(ins.contract_number))) {
       return false
     }
     return true
@@ -378,7 +386,7 @@ class trustAndVerification extends React.Component {
 
 
   content = classes => {
-    const {user, professional}=this.state
+    const {user, professional, insurances}=this.state
     if (!user) {
       return null
     }
@@ -494,7 +502,7 @@ class trustAndVerification extends React.Component {
               <h3 className={'customtrustandverifstatustitle'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.your_status'))}</h3>
             </Grid>
             <Grid>
-              { canAlfredParticularRegister() &&
+              { user && (!user.is_alfred || canAlfredParticularRegister()) &&
                 <Grid>
                   <FormControlLabel
                     control={
@@ -568,25 +576,38 @@ class trustAndVerification extends React.Component {
                   />
                 </Grid>
                 <Grid>
-                  <Grid style={{marginTop: '1vh'}}>
-                    <h3 className={'customtrustandverifdocimma'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.document_title'))}</h3>
+                  { user && user.is_alfred && this.state.professional &&
+                  <><Grid style={{marginTop: '1vh'}}>
+                    <h3 className={'customtrustandverifdocimma'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insurances_title'))}</h3>
                   </Grid>
-                  <Typography className={'customtrustandverifpdf'} style={{color: 'rgba(39,37,37,35%)'}}>
-                    {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insert_document'))}<br/>
-                    {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.pdf_info'))}
-                    <a className={'customtrustandveriflink'} color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
-                    >{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insee_link'))}</a>
-                  </Typography>
+                  <Grid>
+                    <Insurance name={'insurances'} items={insurances} onChange={this.onChange}/>
+                  </Grid>
+                  </>
+                  }
                 </Grid>
-                <DocumentEditor
-                  ext={this.state.extRegistrationProof}
-                  ext_upload={this.state.extRegistrationProof_upload}
-                  db_document={this.state.registration_proof}
-                  uploaded_file={this.state.registration_proof_file}
-                  onChange={this.onRegistrationProofChanged}
-                  onDelete={() => this.deleteRegistrationProof(false)}
-                  title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_document_imma'))}
-                />
+                { user && user.is_alfred && <>
+                  <Grid>
+                    <Grid style={{marginTop: '1vh'}}>
+                      <h3 className={'customtrustandverifdocimma'}>{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.document_title'))}</h3>
+                    </Grid>
+                    <Typography className={'customtrustandverifpdf'} style={{color: 'rgba(39,37,37,35%)'}}>
+                      {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insert_document'))}<br/>
+                      {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.pdf_info'))}
+                      <a className={'customtrustandveriflink'} color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
+                      >{ReactHtmlParser(this.props.t('TRUST_VERIFICATION.insee_link'))}</a>
+                    </Typography>
+                  </Grid>
+                  <DocumentEditor
+                    ext={this.state.extRegistrationProof}
+                    ext_upload={this.state.extRegistrationProof_upload}
+                    db_document={this.state.registration_proof}
+                    uploaded_file={this.state.registration_proof_file}
+                    onChange={this.onRegistrationProofChanged}
+                    onDelete={() => this.deleteRegistrationProof(false)}
+                    title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_document_imma'))}
+                  />
+                </>}
               </Grid>
               :
               null

@@ -40,6 +40,9 @@ class CategoryCard extends React.Component {
     const {classes, item} = this.props
     const {gps, user} = this.state
 
+    if (item.particular_label.includes('Ani')) {
+      console.log(`Category:${JSON.stringify(item)}`)
+    }
     if (!item) {
       return null
     }
@@ -49,7 +52,7 @@ class CategoryCard extends React.Component {
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer'}}>
           <Grid className={classes.categoryCardMedia}>
             <Grid
-              style={{backgroundImage: `url('${isB2BStyle(user) ? item.professional_picture : item.particular_picture}')`}}
+              style={{backgroundImage: `url("/${isB2BStyle(user) ? item.professional_picture : item.particular_picture}")`}}
               className={classes.categoryCardBackground}
             />
           </Grid>

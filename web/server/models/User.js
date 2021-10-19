@@ -345,7 +345,7 @@ const UserSchema = new Schema({
         required: false,
       },
     },
-    require: false,
+    required: false,
   },
 }, {toJSON: {virtuals: true, getters: true}})
 

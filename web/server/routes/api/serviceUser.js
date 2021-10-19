@@ -45,38 +45,24 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
       fields.prestations = JSON.parse(req.body.prestations)
       fields.option = JSON.parse(req.body.option)
       fields.experience_years = req.body.experience_years
-      if (req.body.graduated === 'true') {
-        fields.graduated = true
-      }
-      else {
-        fields.graduated = false
-      }
-
-      const diploma = 'diploma'
-      const certification = 'certificatio'
-      if (diploma in req.files) {
+      if (req.files.diploma) {
         fields.diploma = {}
         fields.diploma.name = req.body.diplomaLabel
         fields.diploma.year = req.body.diplomaYear
         fields.diploma.file = req.files.diploma[0].path
       }
       else {
-        console.log('No file uploaded')
+        console.log('No diploma uploaded')
       }
-      if (req.body.is_certified === 'true') {
-        fields.is_certified = true
-      }
-      else {
-        fields.is_certified = false
-      }
-      if (certification in req.files) {
+
+      if (certification in req.files.certification) {
         fields.certification = {}
         fields.certification.name = req.body.certificationLabel
         fields.certification.year = req.body.certificationYear
         fields.certification.file = req.files.certification[0].path
       }
       else {
-        console.log('No file uploaded')
+        console.log('No ceertification uploaded')
       }
       fields.description = req.body.description
       fields.equipments = JSON.parse(req.body.equipments)
@@ -281,7 +267,6 @@ router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authentic
       if (req.file) {
         serviceUser.diploma.file = req.file.path
       }
-      serviceUser.graduated = true
 
       serviceUser.save().then(service => res.json(service)).catch(err => console.error(err))
     })
@@ -523,8 +508,6 @@ router.post('/search', (req, res) => {
       if (kw) {
         sus = serviceFilters.filterServicesKeyword(sus, kw, status)
       }
-      console.log(`Remaining ${sus.length} after keyword filtering`)
-
       sus = serviceFilters.filterPartnerServices(sus, req.context.isAdmin())
       console.log(`Remaining ${sus.length} after keyword filtering`)
 
@@ -573,7 +556,10 @@ router.post('/nearCity', (req, res) => {
     .then(service => {
       res.json(service)
     })
-    .catch(err => res.status(404).json({service: 'No service found'}))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({service: 'No service found'})
+    })
 
 })
 
@@ -582,7 +568,7 @@ router.post('/nearCity', (req, res) => {
 // @Access private
 router.get('/cardPreview/:id', (req, res) => {
   const suId = mongoose.Types.ObjectId(req.params.id)
-  req.context.getModel('ServiceUser').findOne(suId, 'label picture alfred service service_address.city service_address.gps graduated is_certified level description')
+  req.context.getModel('ServiceUser').findOne(suId, 'label picture alfred service service_address.city service_address.gps diploma certification level description')
     .populate({path: 'service', select: 'picture label'})
     .populate({path: 'user', select: 'firstname picture avatar_letters'})
     .catch(err => {
@@ -590,15 +576,16 @@ router.get('/cardPreview/:id', (req, res) => {
       res.status(404).json({error: err})
     })
     .then(su => {
-      req.context.getModel('Shop').findOne({alfred: su.user}, 'is_professional')
+      req.context.getModel('Shop').findOne({alfred: su.user}, 'is_professional insurances')
         .then(shop => {
           req.context.getModel('Review').find({alfred: su.user, note_client: undefined, serviceUser: su._id})
             .then(reviews => {
               const result = {
                 _id: su._id, label: su.service.label, picture: su.service.picture,
-                alfred: su.user, city: su.service_address ? su.service_address.city : '', graduated: su.graduated,
-                is_certified: su.is_certified, level: su.level, is_professional: shop.is_professional,
+                alfred: su.user, city: su.service_address ? su.service_address.city : '',
+                grade_text: su.grade_text, level: su.level, is_professional: shop.is_professional,
                 gps: su.service_address ? su.service_address.gps : null, reviews: reviews, description: su.description,
+                insurance_text: shop.insurance_text,
               }
               res.json(result)
             })
@@ -855,9 +842,10 @@ router.put('/views/:id', (req, res) => {
       res.json(service)
 
     })
-    .catch(err => res.status(404).json({
-      user: 'No service found',
-    }))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({user: 'No service found'})
+    })
 })
 
 // @Route DELETE /myAlfred/api/serviceUser/delete/diploma/:id
@@ -866,17 +854,12 @@ router.put('/views/:id', (req, res) => {
 router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  req.context.getModel('ServiceUser').findById(req.params.id)
-    .then(services => {
-      services.diploma = undefined
-      services.graduated = false
-
-      services.save().then(service => res.json(service)).catch(err => console.error(err))
-
+  req.context.getModel('ServiceUser').findByIdAndUpdate(req.params.id, {diploma: null})
+    .then(service => res.json(service))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({servicenotfound: 'No service found'})
     })
-    .catch(err => res.status(404).json({
-      servicenotfound: 'No service found',
-    }))
 })
 
 // @Route DELETE /myAlfred/api/serviceUser/delete/certification/:id
@@ -885,17 +868,12 @@ router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
 router.delete('/delete/certification/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  req.context.getModel('ServiceUser').findById(req.params.id)
-    .then(services => {
-      services.certification = undefined
-      services.is_certified = false
-
-      services.save().then(service => res.json(service)).catch(err => console.error(err))
-
+  req.context.getModel('ServiceUser').findByIdAndUpdate(req.params.id, {certification: null})
+    .then(service => res.json(service))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({servicenotfound: 'No service found'})
     })
-    .catch(err => res.status(404).json({
-      servicenotfound: 'No service found',
-    }))
 })
 
 // @Route DELETE /myAlfred/api/serviceUser/current/allServices

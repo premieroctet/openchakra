@@ -8,34 +8,35 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
 
   const serviceGPS = serviceUser.service_address.gps
   if (!serviceGPS) {
-    console.warn('Incorect GPS in ' + serviceUser._id + ':' + JSON.stringify(serviceGPS))
+    console.warn(`Incorect GPS in ${ serviceUser._id }:${ JSON.stringify(serviceGPS)}`)
     return false
-  } else {
-    const latAlfred = serviceGPS.lat
-    const lngAlfred = serviceGPS.lng
-    if (isEmpty(latAlfred) || isEmpty(lngAlfred)) {
-      console.warn('Incorrect GPS in ' + serviceUser._id + ':' + JSON.stringify(serviceGPS))
-      return false
-    } else {
-      // FIX : à vérifier
-      /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(serviceUser.perimeter*1000))
+  }
+  const latAlfred = serviceGPS.lat
+  const lngAlfred = serviceGPS.lng
+  if (isEmpty(latAlfred) || isEmpty(lngAlfred)) {
+    console.warn(`Incorrect GPS in ${ serviceUser._id }:${ JSON.stringify(serviceGPS)}`)
+    return false
+  }
+  // FIX : à vérifier
+  /* const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(serviceUser.perimeter*1000))
       if(!isNear) {
       const removeIndex = service.findIndex(i => i._id == serviceUser._id)
       service.splice(removeIndex, 1)
       }*/
-      try {
-        const dist = geolib.getDistance(
-          {latitude: coordinates.lat.toString(), longitude: coordinates.lng.toString()},
-          {latitude: latAlfred.toString(), longitude: lngAlfred.toString()})
-        var distance = geolib.convertDistance(dist, 'km')
-        var in_perimeter = distance < serviceUser.perimeter
-        return in_perimeter
-      } catch (err) {
-        console.error(`Error computing distance between ${JSON.stringify(coordinates)} and ${latAlfred}/${lngAlfred}:${err}`)
-        return false
-      }
-    }
+  try {
+    const dist = geolib.getDistance(
+      {latitude: coordinates.lat.toString(), longitude: coordinates.lng.toString()},
+      {latitude: latAlfred.toString(), longitude: lngAlfred.toString()})
+    let distance = geolib.convertDistance(dist, 'km')
+    let in_perimeter = distance < serviceUser.perimeter
+    return in_perimeter
   }
+  catch (err) {
+    console.error(`Error computing distance between ${JSON.stringify(coordinates)} and ${latAlfred}/${lngAlfred}:${err}`)
+    return false
+  }
+
+
 }
 
 const isServiceAtAlfredOrVisio = su => {
@@ -108,8 +109,8 @@ const filterPartnerServices = (sus, admin) => {
   if (admin) {
     return sus
   }
-  sus = sus.map(su => {
-    su.prestations = su.prestations.filter((p,index) => {
+  const filtered_sus = sus.map(su => {
+    su.prestations = su.prestations.filter((p, index) => {
       // TODO : pourquoi j'ai des prestas à null ?
       if (!p.prestation) {
         console.error(`Missing prestations.prestation for presta #${index} in serviceUser #${su._id}`)
@@ -120,7 +121,7 @@ const filterPartnerServices = (sus, admin) => {
     return su
   })
     .filter(su => su.prestations.length>0)
-  return sus
+  return filtered_sus
 }
 
 module.exports = {

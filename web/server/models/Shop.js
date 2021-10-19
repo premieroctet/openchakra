@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const {CESU} = require('../../utils/consts')
+const {CESU, INSURANCE_TYPES} = require('../../utils/consts')
 const {hideIllegal} = require('../../utils/text')
 
 const ShopSchema = new Schema({
@@ -90,6 +90,18 @@ const ShopSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  // Une seul assurance par type
+  insurances: {
+    type: [{
+      kind: {
+        type: String,
+        enum: Object.keys(INSURANCE_TYPES),
+        required: true,
+      },
+      contract_number: String,
+      company: String,
+    }],
+  },
   creation_date: {
     type: Date,
     default: Date.now,
@@ -98,6 +110,13 @@ const ShopSchema = new Schema({
   id_mangopay: {
     type: String,
   },
+}, {toJSON: {virtuals: true, getters: true}})
+
+ShopSchema.virtual('insurance_text').get(function() {
+  return this.insurances && this.insurances.map(ins => {
+    return INSURANCE_TYPES[ins.kind]
+  }).join(', ')
 })
+
 
 module.exports = ShopSchema

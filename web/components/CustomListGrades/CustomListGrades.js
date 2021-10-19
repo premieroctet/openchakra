@@ -11,23 +11,22 @@ const useStyles = makeStyles(() => ({
 }))
 
 function CustomListGrades(props) {
-  const {data} = props
+  const {grade, insurance} = props
+
   const classes = useStyles()
 
-  const listGrades = [
+  let listGrades = []
+  grade && listGrades.push({
+    summary: grade || '',
+    IconName: <SchoolIcon classes={{root: classes.colorIconSchool}}/>,
+  })
+
+  insurance && listGrades.push(
     {
-      label: '',
-      summary: data.grade_text ? data.grade_text : '',
-      IconName: <SchoolIcon classes={{root: classes.colorIconSchool}}/>,
-    },
-    {
-      label: '',
-      summary: data.insurance_text ? data.insurance_text : '',
+      summary: insurance || '',
       IconName: <VerifiedUserIcon classes={{root: classes.colorIconSchool}}/>,
     },
-  ]
-  
-  const condition = data.insurance ? data.grade_text ? listGrades : listGrades[1] : null
+  )
 
   return(
     <>
@@ -37,7 +36,7 @@ function CustomListGrades(props) {
         columnsMD={12}
         columnsSM={12}
         columnsXS={12}
-        wrapperComponentProps={condition}
+        wrapperComponentProps={listGrades}
       />
     </>
   )
