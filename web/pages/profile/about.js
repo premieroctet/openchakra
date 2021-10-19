@@ -1,3 +1,4 @@
+import {isEditableUser} from '../../utils/context';
 import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -22,7 +23,6 @@ import Typography from '@material-ui/core/Typography'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import IconButton from '@material-ui/core/IconButton'
 import CreateIcon from '@material-ui/icons/Create'
-import {isEditableUser} from '../../utils/context'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import Topic from '../../hoc/Topic/Topic'
@@ -379,6 +379,7 @@ class ProfileAbout extends CompanyComponent {
     const editable = isEditableUser(user)
 
     const company_mode = Boolean(this.state.company)
+
     return(
       <Grid container spacing={2} style={{marginBottom: '12vh', width: '100%', marginLeft: 0, marginRight: 0}}>
         <Grid className={`customaboutboxabout ${classes.aboutContainer}`} item xl={5} lg={5} md={12} sm={12} xs={12}>
@@ -413,7 +414,7 @@ class ProfileAbout extends CompanyComponent {
 
           </Grid>
           {
-            company_mode ? null :
+            !company_mode &&
               <Grid item xs={12}>
                 <Grid>
                   <h3>{ReactHtmlParser(this.props.t('PROFIL.languages'))}</h3>
@@ -425,8 +426,7 @@ class ProfileAbout extends CompanyComponent {
               </Grid>
           }
           {
-            alfred ?
-              alfred.id_confirmed ?
+            alfred && alfred.id_confirmed &&
                 <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '4vh'}}>
                   <Grid>
                     <Typography style={{color: 'rgba(39,37,37,35%)'}}>{alfred ? alfred.firstname : null}</Typography>
@@ -438,7 +438,7 @@ class ProfileAbout extends CompanyComponent {
                   <Grid>
                     <CheckCircleOutlineIcon/>
                   </Grid>
-                </Grid> : null : null
+                </Grid>
           }
         </Grid>
         <Grid item xl={7} lg={7} md={12} sm={12} xs={12}>
@@ -447,7 +447,7 @@ class ProfileAbout extends CompanyComponent {
           </Box>
         </Grid>
         {
-          !company_mode ?
+          !company_mode && alfred && alfred.is_alfred &&
             <>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Box>
@@ -464,7 +464,7 @@ class ProfileAbout extends CompanyComponent {
                   <ShowDiploma user={user}/>
                 </Box>
               </Grid>
-            </>: null
+            </>
         }
 
         {
@@ -477,7 +477,7 @@ class ProfileAbout extends CompanyComponent {
             : null
         }
         {
-          alfred ?
+          alfred && alfred.is_alfred ?
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Box>
                 <Skills alfred={user} />

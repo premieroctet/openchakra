@@ -362,10 +362,10 @@ router.put('/editParameters', passport.authenticate('jwt', {
     })
 })
 
-// @Route PUT /myAlfred/api/shop/editStatus
+// @Route PUT /myAlfred/api/shop/status
 // Edit personal status for a shop
 // @Access private
-router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/status', passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('Shop').findOneAndUpdate({alfred: req.user.id}, {
     is_particular: req.body.is_particular,
     is_professional: req.body.is_professional,
@@ -374,10 +374,18 @@ router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, 
     cis: req.body.cis,
   }, {new: true})
     .then(shop => {
-      res.json(shop)
+      req.context.getModel('ServiceUser').updateMany({user: req.user.id},
+        {status: req.body.is_professional ? 'Pro': 'Particulier'},
+      )
+        .then(() => res.json(shop))
+        .catch(err => {
+          console.error(err)
+          res.status(500).json(err)
+        })
     })
     .catch(err => {
       console.error(err)
+      res.status(500).json(err)
     })
 })
 

@@ -14,17 +14,6 @@ import AssetsService from '../../components/CreaShop/AssetsService/AssetsService
 import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions'
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou'
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
-/**
-import { assetsService,
-    creaShopPresentation,
-  introduceYou,
-  selectPrestation,
-  selectService,
-  settingService,
-  settingShop,
-  bookingPreferences,
-} from '../../utils/validationSteps/validationSteps';
-*/
 const validationSteps=require('../../utils/validationSteps/validationSteps')
 
 const WELCOME = {

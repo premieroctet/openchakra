@@ -1,5 +1,5 @@
 const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
-const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER}=require('../mode')
+const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER, SIB_TEMPLATES}=require('../mode')
 const source = require('./client_id.json')
 
 const getChatURL = () => {
@@ -70,7 +70,7 @@ const MANGOPAY_CONFIG_TEST = {
   clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
   sandbox: true,
   logClass: () => {},
-  errorHandler: (options, err) => {}
+  errorHandler: (options, err) => {},
 }
 
 const MANGOPAY_CONFIG = is_production() ? MANGOPAY_CONFIG_PROD : MANGOPAY_CONFIG_TEST
@@ -122,25 +122,36 @@ const ENABLE_GF_LOGIN = false
 
 const PROVIDERS = ENABLE_GF_LOGIN ? [GOOGLE_PROVIDER, FACEBOOK_PROVIDER] : []
 
-const displayConfig = () => {
-  console.log(`Configuration is:\n\
-  \tMode:${get_mode()}\n\
-  \tDatabase:${databaseName}\n\
-  \tServer prod:${SERVER_PROD}\n\
-  \tServer port:${SERVER_PROD ? '80/443':'3122'}\n\
-  \tHost URL:${get_host_url()}\n\
-  \tDisplay chat:${mustDisplayChat()} ${getChatURL()}\n\
-  \tSendInBlue actif:${ENABLE_MAILING}\n\
-  \tMangopay clientId:${MANGOPAY_CONFIG.clientId}\
-  `)
-}
-
 const canAlfredSelfRegister = () => {
   return !DISABLE_ALFRED_SELF_REGISTER
 }
 
 const canAlfredParticularRegister = () => {
   return !DISABLE_ALFRED_PARTICULAR_REGISTER
+}
+
+const getSibTemplates = () => {
+  return SIB_TEMPLATES || null
+}
+
+const displayConfig = () => {
+
+  if (!getSibTemplates()) {
+    console.error('Undefined SIB_TEMPLATES in mode.js, stopping')
+    process.exit(1)
+  }
+
+  console.log(`Configuration is:\n\
+\tMode:${get_mode()}\n\
+\tDatabase:${databaseName}\n\
+\tServer prod:${SERVER_PROD}\n\
+\tServer port:${SERVER_PROD ? '80/443':'3122'}\n\
+\tHost URL:${get_host_url()}\n\
+\tDisplay chat:${mustDisplayChat()} ${getChatURL()}\n\
+\tSendInBlue actif:${ENABLE_MAILING}\n\
+\tSendInBlue templates:${SIB_TEMPLATES}\n\
+\tMangopay clientId:${MANGOPAY_CONFIG.clientId}\
+`)
 }
 
 // Public API
@@ -157,5 +168,6 @@ module.exports = {
   get_host_url, MANGOPAY_CONFIG, displayConfig,
   ENABLE_MAILING, isB2BDisabled,
   mustDisplayChat, getChatURL,
-  canAlfredSelfRegister, canAlfredParticularRegister
+  canAlfredSelfRegister, canAlfredParticularRegister,
+  getSibTemplates,
 }

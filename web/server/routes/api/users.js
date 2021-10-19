@@ -784,6 +784,15 @@ router.post('/resetPassword', (req, res) => {
     })
 })
 
+router.put('/profile/status', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  req.context.getModel('User').findByIdAndUpdate(req.user.id,
+    {professional: req.body.company},
+  )
+    .then(() => { res.json('ok') })
+    .catch(err => res.status(500).json(err))
+})
+
 // @Route PUT /myAlfred/api/users/profile/editProfile
 // Edit email, job and phone
 // @Access private
