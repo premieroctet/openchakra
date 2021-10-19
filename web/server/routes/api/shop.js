@@ -372,6 +372,7 @@ router.put('/status', passport.authenticate('jwt', {session: false}), (req, res)
     company: req.body.is_particular ? null : req.body.company,
     cesu: req.body.cesu,
     cis: req.body.cis,
+    insurances: req.body.insurances,
   }, {new: true})
     .then(shop => {
       req.context.getModel('ServiceUser').updateMany({user: req.user.id},
