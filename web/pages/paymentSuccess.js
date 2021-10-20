@@ -1,3 +1,4 @@
+import { DISABLE_PAYMENT_CHECK } from '../config/config';
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
@@ -46,7 +47,7 @@ class paymentSuccess extends BasePage {
           .then(result => {
             let transaction = result.data
             console.log(`Transaction:${JSON.stringify(transaction)}`)
-            if (transaction.Status === 'FAILED') {
+            if (transaction.Status === 'FAILED' && !DISABLE_PAYMENT_CHECK) {
               return Router.push(`/paymentFailed?booking_id=${booking_id}`)
             }
             this.setState({success: true})

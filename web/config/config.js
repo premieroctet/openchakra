@@ -154,6 +154,9 @@ const displayConfig = () => {
 `)
 }
 
+// TODO : horrible rustine pour fix erreurs de paiment, à virer TRES VITE !!!
+const DISABLE_PAYMENT_CHECK=true
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -169,5 +172,5 @@ module.exports = {
   ENABLE_MAILING, isB2BDisabled,
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
-  getSibTemplates,
+  getSibTemplates, DISABLE_PAYMENT_CHECK,
 }
