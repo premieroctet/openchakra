@@ -322,7 +322,7 @@ class AllReservations extends BasePage {
                 </Grid>
               )
             })) :
-            <Typography className={'customresanoresamessage'}>{`${RESERVATION.infomessage + alfredMode ? RESERVATION.alfred : RESERVATION.user}` }</Typography>
+            <Typography className={'customresanoresamessage'}>{`${RESERVATION.infomessage + (alfredMode ? RESERVATION.alfred : RESERVATION.user)}` }</Typography>
           }
         </Grid>
       </Grid>
