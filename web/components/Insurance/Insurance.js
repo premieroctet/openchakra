@@ -41,8 +41,8 @@ class Insurance extends React.Component {
     const error = item && (Boolean(item.company)!=Boolean(item.contract_number))
     return (
       <>
-        <Typography>{label}</Typography>
-        <TextField
+        <Typography style={{marginBottom: '10px'}}>{label}</Typography>
+        <TextField style={{marginRight: '20px'}}
           label={'Compagnie'}
           name={'company'}
           value={item.company}
@@ -71,7 +71,7 @@ class Insurance extends React.Component {
     return (
       <div>
         { Object.entries(INSURANCE_TYPES).map(entry => (
-          <div>{this.insurance(entry[0], entry[1])}</div>
+          <div style={{margin: '10px'}}>{this.insurance(entry[0], entry[1])}</div>
         ))}
       </div>
     )

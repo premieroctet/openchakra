@@ -559,7 +559,7 @@ class trustAndVerification extends React.Component {
               </Grid>
             </Grid>
             {this.state.professional ?
-              <Grid container>
+              <Grid container style={{display: 'flex', flexDirection: 'column'}}>
                 { displayCis &&
                 <Grid item xs={12} className={'customtrustandverifcis'}>
                   <ButtonSwitch
