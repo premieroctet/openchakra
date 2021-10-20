@@ -76,9 +76,13 @@ class AllInclusiveImport(object):
       self.db.update_document('services', {'_id': service, 'location': location})
 
     def set_pick_tax(self, service, tax):
+      if not tax in ['O', 'N']:
+        return print('Pas de frais de livraison déclarés')
       self.db.update_document('services', {'_id': service, 'pick_tax': tax=='O'})
 
     def set_travel_tax(self, service, tax):
+      if not tax in ['O', 'N']:
+        return print('Pas de frais de déplacement déclarés')
       self.db.update_document('services', {'_id': service, 'travel_tax': tax=='O'})
 
     def set_cesu(self, prestation, cesu_lbl):
@@ -108,11 +112,12 @@ class AllInclusiveImport(object):
 
     def import_file(self, xl_path):
       self.clear_db()
-      wb = xl.load_workbook(xl_path)
+      wb = xl.load_workbook(xl_path, read_only=True)
       sheet=wb['BDD All Inclusive']
-      for row in list(sheet.iter_rows())[1:]:
+      lines=list(sheet.iter_rows())[1:]
+      for index, row in enumerate(lines):
+        print("{}/{}".format(index, len(lines)), file=sys.stderr)
         row=[r.value for r in row]
-        print(row)
         if row[0]:
           (_category, service, prestation) = self.get_prestation(row[0], row[1], row[2], None if row[5]=='Aucun' else row[5], *row[13:15])
           self.set_billing(prestation, row[3])
