@@ -155,7 +155,7 @@ const displayConfig = () => {
 }
 
 // TODO : horrible rustine pour fix erreurs de paiment, à virer TRES VITE !!!
-const DISABLE_PAYMENT_CHECK=true
+const DISABLE_PAYMENT_CHECK=false
 
 // Public API
 module.exports = {

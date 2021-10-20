@@ -211,8 +211,14 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
   const amount = req.body.amount * 100
   const fees = req.body.fees * 100
   const id_card = req.body.id_card
-  const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
+  const browserInfo = req.body.browserInfo
+  browserInfo.AcceptHeader=req.headers.accept
+  const ipAddress=req.connection.remoteAddress
 
+  console.log(`payInDirect IpAddress:${ipAddress}`)
+  console.log(`payInDirect BrowserInfo:${JSON.stringify(browserInfo, null, 2)}`)
+
+  const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
   promise
     .then(entity => {
       const id_mangopay = entity.id_mangopay
@@ -237,6 +243,8 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
             CardId: id_card,
             Culture: 'FR',
             SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            BrowserInfo: browserInfo,
+            IpAddress: ipAddress,
           })
             .then(payin => {
               console.log(`Created Payin ${JSON.stringify(payin)}`)

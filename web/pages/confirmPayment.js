@@ -117,7 +117,18 @@ class ConfirmPayment extends BasePage {
       id_card: this.state.id_card,
       amount: total,
       fees: fees,
+      browserInfo: {
+        JavaEnabled: navigator.javaEnabled,
+        Language: navigator.language,
+        ColorDepth: screen.colorDepth,
+        ScreenHeight: screen.height,
+        ScreenWidth: screen.width,
+        TimeZoneOffset: new Date().getTimezoneOffset(),
+        UserAgent: navigator.userAgent,
+        JavascriptEnabled: true,
+      },
     }
+
     this.setState({pending: true})
     axios.post('/myAlfred/api/payment/payInDirect', data)
       .then(res => {
