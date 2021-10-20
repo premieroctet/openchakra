@@ -250,9 +250,9 @@ class AllReservations extends BasePage {
             scrollButtons="on"
             classes={{indicator: `customscrollmenu ${classes.scrollMenuIndicator}`}}
           >
-            <Tab label={RESERVATION.allresa} className={classes.scrollMenuTab} />
-            <Tab label={RESERVATION.commingresa} className={classes.scrollMenuTab} />
-            <Tab label={RESERVATION.endingresa} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.allresa'))} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.commingresa'))} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.endingresa'))} className={classes.scrollMenuTab} />
           </Tabs>
         </Grid>
         <Grid style={{width: '100%'}}>
@@ -322,7 +322,7 @@ class AllReservations extends BasePage {
                 </Grid>
               )
             })) :
-            <Typography className={'customresanoresamessage'}>{`${RESERVATION.infomessage + (alfredMode ? RESERVATION.alfred : RESERVATION.user)}` }</Typography>
+            <Typography className={'customresanoresamessage'}>{`${ReactHtmlParser(this.props.t('RESERVATION.infomessage')) + (alfredMode ? ReactHtmlParser(this.props.t('RESERVATION.alfred')) : ReactHtmlParser(this.props.t('RESERVATION.user')))}` }</Typography>
           }
         </Grid>
       </Grid>
