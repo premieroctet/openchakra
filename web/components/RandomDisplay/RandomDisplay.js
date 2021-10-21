@@ -16,6 +16,7 @@ function RandomDisplay(props) {
       autoPlay={loop}
       indicators={false}
       timeout={300}
+      navButtonsAlwaysInvisible={true}
     >
       {
         arrayText.map((item, i) =>

@@ -226,7 +226,7 @@ class MessagesDetails extends React.Component {
                 {this.state.messages.map((message, index) => {
                   return (
                     <Grid className={emitter === message.idsender ? classes.currentUserContainer : classes.senderUserContainer} key={index}>
-                      <Grid className={emitter === message.idsender ? classes.currentUser : classes.senderUser}>
+                      <Grid className={emitter === message.idsender ? `customcurrentusermessage ${classes.currentUser}` : `customusermessage ${classes.senderUser}`}>
                         <Grid>
                           <Typography style={{wordWrap: 'break-word'}}>{message.content}</Typography>
                         </Grid>

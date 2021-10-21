@@ -1118,7 +1118,7 @@ class NavBar extends Component {
         sm={1}
         onClick={() => Router.push('/')}
       >
-        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 64}}/>
+        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90}}/>
       </Grid>
     )
   };
@@ -1141,17 +1141,17 @@ class NavBar extends Component {
               isB2BStyle() ?
                 <>
                   <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
                     label={ReactHtmlParser(this.props.t('SEARCHBAR.service_company'))}
                     onClick={() => Router.push('/blog/elementor-211/')}
                   />
                   <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
                     label={ReactHtmlParser(this.props.t('SEARCHBAR.service_collab'))}
                     onClick={() => Router.push('/blog/services-aux-collaborateurs/')}
                   />
                   <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
                     label={ReactHtmlParser(this.props.t('SEARCHBAR.price'))}
                     onClick={() => Router.push('/blog/tarifs')}
                   />
@@ -1159,33 +1159,33 @@ class NavBar extends Component {
                 :
                 <>
                   <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
                     label={ReactHtmlParser(this.props.t('NAVBAR_MENU.ourServices'))}
                     onClick={() => Router.push('/search')}
                   />
                   {user ?
                     user.is_alfred ?
                       <Tab
-                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.myServices'))}
                         onClick={() => Router.push(`/profile/services?user=${user._id}`)}
                       />
                       :
                       canAlfredSelfRegister() && <Tab
-                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
                         onClick={() => Router.push('/creaShop/creaShop')}
                       />
                     :
                     <>
                       {canAlfredSelfRegister() && <Tab
-                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
                         onClick={this.handleOpenRegister}
                       />
                       }
                       <Tab
-                        classes={{root: classes.navbarTabRoot}}
+                        classes={{root: `customnavbartab ${classes.navbarTabRoot}`}}
                         label={ReactHtmlParser(this.props.t('NAVBAR_MENU.contactUs'))}
                         onClick={() => Router.push('/contact')}
                       />
@@ -1200,7 +1200,7 @@ class NavBar extends Component {
                 null
                 :
                 <Tab
-                  classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
+                  classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
                   label={ReactHtmlParser(this.props.t('NAVBAR_MENU.businessSide'))}
                   onClick={() => Router.push('/professional')}
                 />

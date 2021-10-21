@@ -28,10 +28,13 @@ function RegisterMode(props) {
       </Grid>
       <Grid container item xs={12} justifyContent={'center'}>
         <Button onClick={() => onChangeCompany({})} variant="outlined" classes={{root: is_particular ? classes.inactive : classes.active}}>{REGISTER.company}</Button>
-        { !is_particular &&
-          <Grid><Siret onChange={onChangeCompany} /></Grid>
-        }
+
       </Grid>
+      {!is_particular &&
+      <Grid container item xs={12} justifyContent={'center'}>
+        <Siret onChange={onChangeCompany} xl={12}/>
+      </Grid>
+      }
     </Grid>
   )
 }
