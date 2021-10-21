@@ -122,7 +122,7 @@ export default theme => ({
 
   navbarMainSytle: {
     alignItems: 'center',
-    width: '70%',
+    width: '90%',
     display: 'flex',
     [theme.breakpoints.down('lg')]: {
       width: '95%',

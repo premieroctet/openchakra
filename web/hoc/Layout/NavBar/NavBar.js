@@ -806,7 +806,7 @@ class NavBar extends Component {
       <Grid
         item
         xl={!logged && ifHomePage ? 3 : 4}
-        lg={3}
+        lg={1}
         md={!logged && !ifHomePage ? 3 : 2}
         sm={!ifHomePage ? 4 : 11}
         className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
@@ -1113,7 +1113,7 @@ class NavBar extends Component {
         className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP}
         item
         xl={ifHomePage ? 3 : 4}
-        lg={isB2BStyle(user) && ifHomePage ? 2 : isB2BStyle(user) && !ifHomePage && !logged? 2 : 3}
+        lg={isB2BStyle(user) && ifHomePage ? 2 : 1}
         md={!logged && !ifHomePage ? 3 : 2}
         sm={1}
         onClick={() => Router.push('/')}
@@ -1130,7 +1130,7 @@ class NavBar extends Component {
       <Grid
         item
         xl={6}
-        lg={isB2BStyle(user) ? 7 : 6}
+        lg={isB2BStyle(user) ? 7 : 10}
         md={8}
         sm={11}
         className={isB2BStyle(user) ? classes.navbarHomepageMenuB2B : classes.navabarHomepageMenu}

@@ -321,14 +321,14 @@ class Footer extends React.Component {
               </a>
             </Grid>
             <Grid item className={'customfooterinsta'}>
-              <a href={'https://www.instagram.com/my_alfred_/'} target={'_blank'}>
+              <a href={'https://www.instagram.com/All_upon_a_time/'} target={'_blank'}>
                 <IconButton aria-label="InstagramIcon">
                   <InstagramIcon/>
                 </IconButton>
               </a>
             </Grid>
             <Grid item className={'customfooterlinkedin'}>
-              <a href={'https://www.linkedin.com/company/my-alfred/'} target={'_blank'}>
+              <a href={'https://www.linkedin.com/company/all-inclusive-groupe-semafor/'} target={'_blank'}>
                 <IconButton aria-label="LinkedInIcon">
                   <LinkedInIcon/>
                 </IconButton>
