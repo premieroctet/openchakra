@@ -28,7 +28,7 @@ class PictureEditor extends React.Component {
       <Grid style={{display: 'flex'}}>
         <h2>{title}</h2>
         <DocumentEditor
-          title={moment()}
+          title={moment().unix()}
           db_document={value || null}
           uploaded_file={uploaded && URL.createObjectURL(uploaded)}
           onChange={this.onChange}
