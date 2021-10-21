@@ -113,6 +113,10 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
               console.log(`Created Payin ${JSON.stringify(payin)}`)
               res.json(payin)
             })
+            .catch(err => {
+              console.error(err)
+              return res.status(404).json(err)
+            })
         })
     })
     .catch(error => {

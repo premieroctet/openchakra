@@ -133,15 +133,13 @@ class ConfirmPayment extends BasePage {
     axios.post('/myAlfred/api/payment/payInDirect', data)
       .then(res => {
         const payInResult=res.data
-        if (payInResult.SecureModeNeeded) {
-          Router.push(payInResult.SecureModeRedirectURL)
+        if (payInResult.SecureModeRedirectURL) {
+          return Router.push(payInResult.SecureModeRedirectURL)
         }
-        else if (payInResult.RedirectURL) {
-          Router.push(payInResult.RedirectURL)
+        if (payInResult.RedirectURL) {
+          return Router.push(payInResult.RedirectURL)
         }
-        else {
-          Router.push(`/paymentSuccess?booking_id=${booking_id}`)
-        }
+        Router.push(`/paymentSuccess?booking_id=${booking_id}`)
       })
       .catch(err => {
         this.setState({pending: false})
@@ -162,15 +160,14 @@ class ConfirmPayment extends BasePage {
     axios.post('/myAlfred/api/payment/payIn', data)
       .then(res => {
         const payInResult=res.data
-        if (payInResult.SecureModeNeeded) {
-          Router.push(payInResult.SecureModeRedirectURL)
+        if (payInResult.SecureModeRedirectURL) {
+          return Router.push(payInResult.SecureModeRedirectURL)
         }
-        else if (payInResult.RedirectURL) {
-          Router.push(payInResult.RedirectURL)
+        if (payInResult.RedirectURL) {
+          return Router.push(payInResult.RedirectURL)
         }
-        else {
-          Router.push(`/paymentSuccess?booking_id=${booking_id}`)
-        }
+        return Router.push(`/paymentSuccess?booking_id=${booking_id}`)
+
       })
       .catch(err => {
         console.error(err)
