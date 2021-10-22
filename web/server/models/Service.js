@@ -27,12 +27,6 @@ const ServiceSchema = new Schema({
   majoration: {
     type: String,
   },
-  travel_expense: {
-    type: String,
-  },
-  picking_expense: {
-    type: String,
-  },
   location: {
     // Adresse du client
     client: Boolean,
@@ -43,10 +37,6 @@ const ServiceSchema = new Schema({
   },
   // Frais livraison
   pick_tax: {
-    type: Boolean,
-  },
-  // Frais déplacement
-  travel_tax: {
     type: Boolean,
   },
   s_label: {
@@ -69,6 +59,11 @@ const ServiceSchema = new Schema({
 }, {
   toJSON: {virtuals: true, getters: true},
   toObject: {virtuals: true, getters: true},
+})
+
+// travel_tax available for any service made at customer's place
+ServiceSchema.virtual('travel_tax').get(function() {
+  return this && this.location && this.location.client
 })
 
 ServiceSchema.virtual('prestations', {
