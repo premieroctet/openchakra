@@ -17,6 +17,9 @@ class all extends DataPage {
       models.textColumn({headerName: 'Catégorie', field: 'category_label'}),
       models.booleanColumn({headerName: 'Pros', field: 'professional_access'}),
       models.booleanColumn({headerName: 'Particuliers', field: 'particular_access'}),
+      models.booleanColumn({headerName: 'Frais dep.', field: 'travel_tax'}),
+      models.booleanColumn({headerName: 'Frais liv.', field: 'pick_tax'}),
+      models.textColumn({headerName: 'Lieux', field: 'location_label'}),
       models.pictureColumn({headerName: 'Illustration', field: 'picture'}),
       models.textColumn({headerName: 'Warning', field: 'warning'}),
     ]
@@ -43,6 +46,7 @@ class all extends DataPage {
               s.warning.push('aucune prestation particuliers')
             }
             s.warning=s.warning.join(',')
+            s.location_label = Object.entries(s.location).filter(e => Boolean(e[1])).map(e => e[0].slice(0, 3).toUpperCase()).sort().join('/')
             return s
           }),
         })

@@ -1,3 +1,4 @@
+const {normalize}=require('../utils/text')
 const {connectionPool}=require('../server/utils/database')
 const {serverContextFromPartner}=require('../server/utils/serverContext')
 
@@ -22,6 +23,19 @@ const mep_b2b = () => {
           }
         })
       })
+    const Service=context.getModel('Service')
+    Service.find({})
+      .then(services => {
+        services.forEach(s => {
+          console.log(JSON.stringify(s, null, 2))
+          s.travel_tax = undefined
+          s.s_label = normalize(s.label)
+          console.log(JSON.stringify(s, null, 2))
+          s.save()
+        })
+        console.log('Service.travel_tax supprimé')
+      })
+      .catch(err => console.error(`Service.travel_tax suppression:${err}`))
   })
 }
 
