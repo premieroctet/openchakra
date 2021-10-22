@@ -1,4 +1,3 @@
-import { capitalize } from '../../../utils/text'
 import {withTranslation} from 'react-i18next'
 const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles'
@@ -47,7 +46,7 @@ class all extends DataPage {
               s.warning.push('aucune prestation particuliers')
             }
             s.warning=s.warning.join(',')
-            s.location_label = Object.entries(s.location).filter(e => Boolean(e[1])).map(e => e[0].slice(0,3).toUpperCase()).sort().join('/')
+            s.location_label = Object.entries(s.location).filter(e => Boolean(e[1])).map(e => e[0].slice(0, 3).toUpperCase()).sort().join('/')
             return s
           }),
         })
