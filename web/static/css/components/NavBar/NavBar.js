@@ -218,25 +218,6 @@ export default theme => ({
       display: 'none',
     },
   },
-  hiddenOnMobile: {
-    width: '100%',
-    [theme.breakpoints.only('xl')]: {
-      display: 'none',
-    },
-    [theme.breakpoints.only('lg')]: {
-      display: 'none',
-    },
-    [theme.breakpoints.only('md')]: {
-      display: 'none',
-    },
-    [theme.breakpoints.only('sm')]: {
-      display: 'none',
-    },
-
-
-  },
-
-
   navbarButtonContainer: {
     display: 'flex',
     flexDirection: 'row-reverse',
