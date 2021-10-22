@@ -1,7 +1,6 @@
 import sys
 
 from alfred.database.db_access import DBAccess
-from alfred.misc.utils import get_items
 import openpyxl as xl
 
 
@@ -77,13 +76,8 @@ class AllInclusiveImport(object):
 
     def set_pick_tax(self, service, tax):
       if not tax in ['O', 'N']:
-        return print('Pas de frais de livraison déclarés')
+        return print('Pas de frais de livraison déclarés', file=sys.stderr)
       self.db.update_document('services', {'_id': service, 'pick_tax': tax=='O'})
-
-    def set_travel_tax(self, service, tax):
-      if not tax in ['O', 'N']:
-        return print('Pas de frais de déplacement déclarés')
-      self.db.update_document('services', {'_id': service, 'travel_tax': tax=='O'})
 
     def set_cesu(self, prestation, cesu_lbl):
       if not cesu_lbl:
@@ -126,7 +120,6 @@ class AllInclusiveImport(object):
           self.set_job(prestation, row[10])
           self.set_location(service, *row[7:10])
           self.set_pick_tax(service, row[11])
-          self.set_travel_tax(service, row[12])
       
       
 if __name__ == '__main__':
