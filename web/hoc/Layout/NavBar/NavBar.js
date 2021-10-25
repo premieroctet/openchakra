@@ -819,7 +819,7 @@ class NavBar extends Component {
             classes={{root: isB2BStyle(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
             className={'custombuttonsignin'}
             onClick={this.handleOpenRegister}>
-            {ReactHtmlParser(this.props.t('Inscription'))}
+            {ReactHtmlParser(this.props.t('NAVBAR_MENU.signIn'))}
           </CustomButton>
         </Grid>
         <Grid className={classes.navbarRegisterContainer}>
@@ -827,7 +827,7 @@ class NavBar extends Component {
             classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
             className={'custombuttonlogin'}
             onClick={this.handleOpenLogin}>
-            {ReactHtmlParser(this.props.t('Connexion'))}
+            {ReactHtmlParser(this.props.t('NAVBAR_MENU.logIn'))}
           </CustomButton>
         </Grid>
       </Grid>
