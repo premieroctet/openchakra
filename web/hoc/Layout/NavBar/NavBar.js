@@ -30,8 +30,6 @@ import DatePicker from 'react-datepicker'
 import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
 import axios from 'axios'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/NavBar/NavBar'
@@ -740,14 +738,16 @@ class NavBar extends Component {
   burgerMenuLogged = classes => {
     const{ifHomePage, companyPage, anchorEl, user} = this.state
 
+    const logged = user != null
+
     return(
       <Grid
         className={classes.navbarMenuBurgerContainer}
         item
         xl={ifHomePage ? 3 : 4}
-        lg={3}
-        md={ifHomePage && isB2BStyle(user) ? 10 : 2}
-        sm={ifHomePage ? 11 : 1}
+        lg={ifHomePage && logged ? 1 : 3}
+        md={ifHomePage && !logged ? 10 : ifHomePage && logged ? 2 : 1}
+        sm={1}
       >
         <IconButton
           aria-label="open drawer"
@@ -808,9 +808,9 @@ class NavBar extends Component {
       <Grid
         item
         xl={!logged && ifHomePage ? 3 : 4}
-        lg={3}
-        md={!logged && !ifHomePage ? 3 : 2}
-        sm={!ifHomePage ? 4 : 11}
+        lg={!logged && !ifHomePage ? 3 : 1}
+        md={ifHomePage && !logged ? 2 : !ifHomePage && !logged ? 3 : 10}
+        sm={!ifHomePage ? 4 : 1}
         className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
       >
         <Grid>
@@ -819,7 +819,7 @@ class NavBar extends Component {
             classes={{root: isB2BStyle(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
             className={'custombuttonsignin'}
             onClick={this.handleOpenRegister}>
-            {ReactHtmlParser(this.props.t('NAVBAR_MENU.signIn'))}
+            {ReactHtmlParser(this.props.t('Inscription'))}
           </CustomButton>
         </Grid>
         <Grid className={classes.navbarRegisterContainer}>
@@ -827,7 +827,7 @@ class NavBar extends Component {
             classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
             className={'custombuttonlogin'}
             onClick={this.handleOpenLogin}>
-            {ReactHtmlParser(this.props.t('NAVBAR_MENU.logIn'))}
+            {ReactHtmlParser(this.props.t('Connexion'))}
           </CustomButton>
         </Grid>
       </Grid>
@@ -1115,9 +1115,9 @@ class NavBar extends Component {
         className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP}
         item
         xl={ifHomePage ? 3 : 4}
-        lg={isB2BStyle(user) && ifHomePage ? 2 : isB2BStyle(user) && !ifHomePage && !logged ? 2 : 3}
-        md={!logged && !ifHomePage ? 3 : 2}
-        sm={1}
+        lg={ifHomePage ? 1 : 3}
+        md={ifHomePage ? 10 : 3}
+        sm={11}
         onClick={() => Router.push('/')}
       >
         <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90}}/>
@@ -1125,7 +1125,7 @@ class NavBar extends Component {
     )
   };
 
-  tabBar = () => {
+  tabBar = classes => {
     const modeB2b = [
       {
         label: ReactHtmlParser(this.props.t('SEARCHBAR.service_company')),
@@ -1153,15 +1153,19 @@ class NavBar extends Component {
 
     const modeAlle = [
       {
-        label: 'Nos services',
+        label: 'Leurs prestations',
         url: '/search',
       },
       {
-        label: 'A propos',
+        label: 'Comment ça marche',
         url: '/footer/apropos',
       },
       {
-        label: 'Devenir All entrepreneurs',
+        label: 'Nos entrepreneurs',
+        url: '/footer/becomeAlfred',
+      },
+      {
+        label: 'Devenir Alleur.e.s',
         url: '/footer/becomeAlfred',
       },
       {
@@ -1170,10 +1174,18 @@ class NavBar extends Component {
       },
     ]
 
-    const modeMenu = getLoggedUserId() && !isLoggedUserAlfredPro() ? null : isB2BStyle() ? modeB2b : modeAlle
+    const modeMenu = isB2BStyle() ? modeB2b : modeAlle
 
     return(
-      <CustomTabMenu tabs={modeMenu}/>
+      <Grid
+        xl={6}
+        lg={10}
+        md={8}
+        sm={11}
+        className={classes.navabarHomepageMenu}
+      >
+        <CustomTabMenu tabs={modeMenu}/>
+      </Grid>
     )
   };
 

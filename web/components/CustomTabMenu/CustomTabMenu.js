@@ -19,34 +19,14 @@ const useStyles = makeStyles(theme => ({
       color: 'rgba(255, 255, 142, 1)',
     },
   },
-  navabarHomepageMenu: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    },
-  },
 }))
 
 function CustomTabMenu(props) {
   const {tabs} = props
   const classes = useStyles()
-  const [breakpoints, setBreakpoints] = useState({
-    xl: 6,
-    lg: 6,
-    md: 8,
-    sm: 11,
-  })
-  
+
   return(
-    <Grid
-      xl={breakpoints.xl}
-      lg={breakpoints.lg}
-      md={breakpoints.md}
-      sm={breakpoints.sm}
-      className={classes.navabarHomepageMenu}
-    >
+    <>
       {tabs ?
         <Tabs value={false} aria-label="simple tabs example">
           {
@@ -64,8 +44,7 @@ function CustomTabMenu(props) {
         </Tabs>
         : null
       }
-      
-    </Grid>
+    </>
   )
 }
 
