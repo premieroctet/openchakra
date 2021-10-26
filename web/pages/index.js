@@ -1,17 +1,14 @@
-import RandomDisplay from '../components/RandomDisplay/RandomDisplay'
-
 const {
   getLoggedUserId,
   isApplication,
   isB2BStyle,
   isMobile,
 } = require('../utils/context')
-import {canAlfredSelfRegister} from '../config/config'
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import axios from 'axios'
-import React, {useState} from 'react'
+import React from 'react'
 import Footer from '../hoc/Layout/Footer/Footer'
 import {Helmet} from 'react-helmet'
 import Grid from '@material-ui/core/Grid'
