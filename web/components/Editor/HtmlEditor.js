@@ -28,6 +28,7 @@ class HtmlEditor extends React.Component {
         ['link'],
         ['fullScreen'],
       ],
+      fontSize: Array(32).fill(0).map((i, index) => (index+4)*2),
     }
   }
 
