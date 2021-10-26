@@ -32,9 +32,11 @@ class PictureEditor extends React.Component {
       <Grid style={{display: 'flex'}}>
         <h2>{title}</h2>
         <DocumentEditor
+          title={this.props.id}
           db_document={value || null}
           uploaded_file={uploaded && URL.createObjectURL(uploaded)}
           onChange={this.onChange}
+          display_title={false}
         />
       </Grid>
     )
