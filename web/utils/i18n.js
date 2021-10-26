@@ -407,6 +407,11 @@ const NAVBAR_MENU = {
   ourCom: 'Notre communauté',
   signIn: 'Inscription',
   logIn: 'Connexion',
+  allEPrestation: 'Leurs prestations',
+  allEWork: 'Comment ça marche',
+  allEntrepreneur: 'Nos entrepreneurs',
+  allEBecome: 'Devenir Alleur.e.s',
+  allEContact: 'Nous contacter',
 }
 
 const BANNER_PRESENTATION = {

@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import Grid from '@material-ui/core/Grid'
 import '../../static/assets/css/custom.css'
 import {withTranslation} from 'react-i18next'
 import {makeStyles} from '@material-ui/core/styles'
 import {isB2BStyle} from '../../utils/context'
-import Button from '@material-ui/core/Button'
 
 const useStyles = makeStyles(theme => ({
   navbarTabRoot: {
@@ -31,7 +29,7 @@ function CustomTabMenu(props) {
         <Tabs value={false} aria-label="simple tabs example">
           {
             Object.keys(tabs).map((res, index) => (
-              <a href={tabs[res].url}>
+              <a href={tabs[res].url} style={{textTransform: 'initial'}}>
                 <Tab
                   key={index}
                   classes={{root: `customnavbartab ${classes.navbarTabRoot}`}}

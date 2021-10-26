@@ -1107,8 +1107,7 @@ class NavBar extends Component {
   }
 
   logoContainer = classes => {
-    const{ifHomePage, user} = this.state
-    const logged = user != null
+    const{ifHomePage} = this.state
 
     return(
       <Grid
@@ -1120,7 +1119,7 @@ class NavBar extends Component {
         sm={11}
         onClick={() => Router.push('/')}
       >
-        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90}}/>
+        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90, width: 200}}/>
       </Grid>
     )
   };
@@ -1153,23 +1152,23 @@ class NavBar extends Component {
 
     const modeAlle = [
       {
-        label: 'Leurs prestations',
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEPrestation')),
         url: '/search',
       },
       {
-        label: 'Comment ça marche',
-        url: '/footer/apropos',
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEWork')),
+        url: '/footer/addService',
       },
       {
-        label: 'Nos entrepreneurs',
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEntrepreneur')),
+        url: '/footer/ourCommunity',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEBecome')),
         url: '/footer/becomeAlfred',
       },
       {
-        label: 'Devenir Alleur.e.s',
-        url: '/footer/becomeAlfred',
-      },
-      {
-        label: 'Nous contacter',
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEContact')),
         url: '/contact',
       },
     ]
