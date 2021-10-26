@@ -1,3 +1,4 @@
+import {COMPANY_NAME, INDEX, INFOBAR} from '../utils/i18n'
 const {
   getLoggedUserId,
   isApplication,
@@ -33,7 +34,6 @@ import {isAndroid} from 'react-device-detect'
 const {PRO, PART} = require('../utils/consts')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
-import {INDEX, INFOBAR} from '../utils/i18n'
 import _ from 'lodash'
 import CustomBannerMultiCol from '../components/HomePage/CustomBannerMultiCol/CustomBannerMultiCol'
 
@@ -152,7 +152,7 @@ class Home extends React.Component {
   }
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {mounted, categories, alfred, open, user} = this.state
     if (!mounted) {
       return null
@@ -162,7 +162,7 @@ class Home extends React.Component {
 
       <Grid>
         <Helmet>
-          <title>Services rémunérés entre particuliers - My Alfred </title>
+          <title>{t('COMPANY_NAME')}</title>
           <meta
             property="description"
             content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"

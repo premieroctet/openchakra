@@ -1464,6 +1464,8 @@ const COOKIE_CONSENT={
   message: "Les cookies sont requis pour vous connecter ou vous inscrire (plus d'informations)",
 }
 
+const COMPANY_NAME='My Alfred'
+
 module.exports = {
   CESU_NOTICE,
   OUTSIDE_PERIMETER,
@@ -1578,5 +1580,6 @@ module.exports = {
   COOKIE_CONSENT,
   CALENDAR,
   RESERVATION,
-  BOOKING_CANCEL
+  BOOKING_CANCEL,
+  COMPANY_NAME,
 }

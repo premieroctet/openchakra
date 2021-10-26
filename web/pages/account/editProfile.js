@@ -1,3 +1,4 @@
+import {COMPANY_NAME, EDIT_PROFIL} from '../../utils/i18n'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -28,7 +29,6 @@ const {is_production}=require('../../config/config')
 const {isPhoneOk} = require('../../utils/sms')
 const moment = require('moment')
 import '../../static/assets/css/custom.css'
-import {EDIT_PROFIL} from '../../utils/i18n'
 
 moment.locale('fr')
 
@@ -463,7 +463,7 @@ class editProfile extends React.Component {
   };
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {user, smsCodeOpen} = this.state
 
     if (!user) {
@@ -473,7 +473,7 @@ class editProfile extends React.Component {
     return (
       <React.Fragment>
         <Helmet>
-          <title>Profil - Modifier mon profil - My Alfred </title>
+          <title>Profil-Modifier mon profil-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
         </Helmet>
