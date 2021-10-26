@@ -162,7 +162,7 @@ router.get('/users/all', passport.authenticate('admin', {session: false}), (req,
 // @Route GET /myAlfred/api/admin/serviceusers/all
 // List all serviuceusers
 router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('ServiceUser').find({}, '_id perimeter location service_address.zip_code service_address.city')
+  req.context.getModel('ServiceUser').find({}, '_id perimeter location service_address.zip_code service_address.city travel_tax')
     .populate({path: 'service', select: 'label category picture', populate: {path: 'category', select: 'label'}})
   // .populate('service.category', 'label')
     .populate({path: 'user', select: 'email shop', populate: {path: 'shop', select: 'is_professional'}})
