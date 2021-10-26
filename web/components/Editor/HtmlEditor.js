@@ -28,17 +28,19 @@ class HtmlEditor extends React.Component {
         ['link'],
         ['fullScreen'],
       ],
+      fontSize: Array(32).fill(0).map((i, index) => (index+4)*2),
     }
   }
 
   onChange = html => {
     if (this.props.onChange) {
+      // Remove surrounding DIVs
+      html=html.replace(/^<div>(.*)<\/div>$/, "$1")
       this.props.onChange(html)
     }
   }
 
   render() {
-
     return (
       <Grid>
         <span>{this.props.title}</span>
