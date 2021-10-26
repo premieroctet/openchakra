@@ -158,6 +158,17 @@ const RESERVATION = {
   saveagain: 'Réserver de nouveau',
 }
 
+const BOOKING_CANCEL = {
+  title: 'Annuler la réservation',
+  subtitle: 'Si vous annulez cette réservation, vous ferez l\'objet de pénalités :',
+  stepA: '- Le retrait du statut de super Alfred pendant 1 an',
+  stepB: '- Un commentaire public montrant que vous avez annulé',
+  stepC: '- Le paiement des frais d\'annulation ou le blocage des périodes de la prestation sur votre calendrier',
+  penality: 'Si vous avez accepté la réservation instantanée, vous n\'aurez pas ces pénalités si vous avez annulé moins de 3 prestations dans l\'année',
+  backButton: 'Retour',
+  confirm: 'Confirmer l\'annulation',
+}
+
 const DRAWER_BOOKING = {
   eligible: 'Eligible au CESU',
   warning_perimiter: 'Cet Alfred se trouve trop loin de chez vous pour être réservé!',
@@ -1567,4 +1578,5 @@ module.exports = {
   COOKIE_CONSENT,
   CALENDAR,
   RESERVATION,
+  BOOKING_CANCEL
 }
