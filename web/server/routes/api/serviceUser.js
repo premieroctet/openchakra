@@ -1,3 +1,4 @@
+const {sendAdminsAlert} =require('../../utils/mailing')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
 const express = require('express')
 
@@ -28,7 +29,6 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
   name: 'certification',
   maxCount: 1,
 }]), passport.authenticate('jwt', {session: false}), (req, res) => {
-
 
   req.context.getModel('ServiceUser').findOne({
     user: req.user.id,
@@ -156,6 +156,15 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
 
               req.context.getModel('Shop').update({alfred: req.user.id}, {$push: {services: su}})
                 .then(() => {
+                  req.context.getModel('Service').findOne({_id: req.body.service, picture: null}, {label: 1})
+                    .then(service => {
+                      if (service) {
+                        const subject='Illustration manquante'
+                        const message = `Le service ${service.label}(${service._id}) proposé par ${req.user.full_name} n'a pas d'illustration`
+                        sendAdminsAlert(subject, message, req.context)
+                      }
+                    })
+                    .catch(err => console.error(err))
                   return res.json(su)
                 })
                 .catch(error => {
