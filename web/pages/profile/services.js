@@ -57,7 +57,7 @@ class ProfileServices extends BasePage {
         {
           shop.services ? shop.services.length ? <Grid item xs={12} xl={12}>
             <Box>
-              <Services user={user} shop={shop} onDelete={this.onDelete}/>
+              <Services key={shop.services} user={user} shop={shop} onDelete={this.onDelete}/>
             </Box>
           </Grid> : null : null
         }
