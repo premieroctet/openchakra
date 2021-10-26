@@ -152,9 +152,8 @@ const RESERVATION = {
   allresa: 'Toutes mes réservations',
   commingresa: 'Mes réservations à venir',
   endingresa: 'Mes réservations terminées',
-  infomessage: 'Vous n\'avez aucune réservation en tant qu\'',
-  alfred: 'Alfred',
-  user: 'utilisateur',
+  infomessageAlfred: 'Vous n\'avez aucune réservation en tant qu\'Alfred',
+  infomessageUser: 'Vous n\'avez aucune réservation en tant qu\'utilisateur',
   detailbutton: 'Détail',
   saveagain: 'Réserver de nouveau',
 }
