@@ -13,6 +13,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 
 const ATT_TYPES={
   'color': 'color',
+  'fill': 'color',
   'display': 'visibility',
   'background-color': 'color',
   'border-color': 'color',
