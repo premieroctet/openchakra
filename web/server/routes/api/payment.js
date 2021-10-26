@@ -1,12 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
-const axios = require('axios')
 const moment = require('moment')
 const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay')
 const {maskIban} = require('../../../utils/text')
 const parse = require('url-parse')
-const {inspect} = require('util')
 moment.locale('fr')
 const {isB2BAdmin, isB2BManager, isB2BEmployee, isModeCompany}=require('../../utils/serverContext')
 const {computeUrl} = require('../../../config/config')
@@ -440,40 +438,5 @@ router.delete('/cards/:card_id', passport.authenticate('jwt', {session: false}),
       return res.status(400).json(err)
     })
 })
-
-// GET /myAlfred/api/payment/siret/{no_siret_or_siren}
-// Get document for siret orsiren
-// @access public
-router.get('/siret/:siret_siren', (req, res) => {
-
-  let siren = req.params.siret_siren.substring(0, 9)
-  console.log(`siren:${siren}`)
-  siren = `${siren.substring(0, 3)} ${siren.substring(3, 6)} ${siren.substring(6, 9)}`
-  data = {
-    'form.siren': siren,
-    'form.critere': 'S',
-    'form.nic': '',
-    'form.departement': '',
-    'form.departement_actif': '',
-  }
-
-  const transport = axios.create({withCredentials: true})
-  transport.get('https://avis-situation-sirene.insee.fr/')
-    .catch(err => {
-      console.error(err)
-      return res.status(404).json(err)
-    })
-    .then(() => {
-      transport.post('https://avis-situation-sirene.insee.fr/IdentificationListeSiret.action', data)
-        .catch(err => {
-          return res.status(404).json(err)
-        })
-        .then(resp => {
-          console.log(inspect(resp))
-          res.write(resp.data)
-        })
-    })
-})
-
 
 module.exports = router
