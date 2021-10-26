@@ -1,5 +1,6 @@
 const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER, SIB_TEMPLATES}=require('../mode')
+const {PROVIDER_FEE_RATE, CLIENT_FEE_RATE, PROVIDER_FEE_RECIPIENT, CLIENT_FEE_RECIPIENT}=require('../mode')
 const source = require('./client_id.json')
 
 const getChatURL = () => {
@@ -154,9 +155,28 @@ const displayConfig = () => {
 `)
 }
 
+const getProviderFeeRate = () => {
+  return PROVIDER_FEE_RATE || 0
+}
+
+const getProviderFeeRecipient = () => {
+  return PROVIDER_FEE_RECIPIENT || null
+}
+
+const getClientFeeRate = () => {
+  return CLIENT_FEE_RATE
+}
+
+const getClientFeeRecipient = () => {
+  return CLIENT_FEE_RECIPIENT
+}
+
 // TODO : horrible rustine pour fix erreurs de paiment, à virer TRES VITE !!!
 const DISABLE_PAYMENT_CHECK=true
 
+if (!getClientFeeRate() || !getClientFeeRecipient()) {
+  console.error(`Expected client commision rate and client commission recipient, got ${getClientFeeRate()} ${getClientFeeRecipient()}`)
+}
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -173,4 +193,6 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, DISABLE_PAYMENT_CHECK,
+  getProviderFeeRate, getProviderFeeRecipient,
+  getClientFeeRate, getClientFeeRecipient,
 }

@@ -100,7 +100,10 @@ const BookingSchema = new Schema({
   fileUpload: [{
     type: Schema.Types.Mixed,
   }],
-  fees: {
+  client_fee: {
+    type: Number,
+  },
+  provider_fee: {
     type: Number,
   },
   status: {
@@ -135,20 +138,39 @@ const BookingSchema = new Schema({
     required: true,
     default: 0,
   },
+  // Customer payin id
   mangopay_payin_id: {
     type: String,
   },
-  mangopay_transfer_id: {
-    type: String,
-  },
-  mangopay_payout_id: {
-    type: String,
-  },
+  // Client refund id
   mangopay_refund_id: {
     type: String,
   },
+  // Transfer from customer to provider
+  mangopay_transfer_id: {
+    type: String,
+  },
+  // Payout for provider
+  mangopay_payout_id: {
+    type: String,
+  },
+  // Transfer from customer to provider fee recipient (ex: all-inclusive)
+  provider_fee_transfer_id: {
+    type: String,
+  },
+  // Payout for provider fee recipient (ex: all-inclusive)
+  provider_fee_payout_id: {
+    type: String,
+  },
+  // Transfer from customer to client fee recipient (ex: My Alfred)
+  customer_fee_transfer_id: {
+    type: String,
+  },
+  // Payout for client fee recipient (ex: My Alfred)
+  customer_fee_payout_id: {
+    type: String,
+  },
   cesu_amount: {
-
     type: Number,
     default: 0,
   },
@@ -179,7 +201,7 @@ const BookingSchema = new Schema({
 }, {toJSON: {virtuals: true, getters: true}})
 
 BookingSchema.virtual('alfred_amount').get(function() {
-  return this.amount - this.fees
+  return this.amount - this.client_fee - this.provider_fee
 })
 
 BookingSchema.virtual('date_prestation_moment').get(function() {

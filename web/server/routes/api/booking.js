@@ -1,4 +1,9 @@
+const {
+  getClientFeeRate,
+  getProviderFeeRate
+} =require('../../../config/config')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
@@ -6,7 +11,7 @@ const crypto = require('crypto')
 const moment = require('moment')
 const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
 const {getKeyDate} = require('../../utils/booking')
-const {invoiceFormat} = require('../../../utils/converters')
+const {invoiceFormat, roundCurrency} = require('../../../utils/converters')
 const {payBooking} = require('../../utils/mangopay')
 const CronJob = require('cron').CronJob
 const {
@@ -23,8 +28,9 @@ const {computeBookingReference}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
 const uuidv4 = require('uuid/v4')
-const {inspect} = require('util')
 const {stateMachineFactory} = require('../../../utils/BookingStateMachine')
+const _=require('lodash')
+
 moment.locale('fr')
 
 router.get('/test', (req, res) => res.json({msg: 'Booking Works!'}))
@@ -123,7 +129,8 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.date_prestation = req.body.date_prestation
   bookingFields.time_prestation = moment(req.body.time_prestation)
   bookingFields.prestations = req.body.prestations
-  bookingFields.fees = req.body.fees
+  bookingFields.client_fee = req.body.client_fee
+  bookingFields.provider_fee = req.body.provider_fee
   bookingFields.travel_tax = req.body.travel_tax
   bookingFields.pick_tax = req.body.pick_tax
   bookingFields.status = req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status
@@ -254,6 +261,52 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
     })
 })
 
+router.post('/compute', (req, res) => {
+  const serviceUserId=req.body.serviceUser
+  const prestations=req.body.prestations
+  const location=req.body.location
+  const distance=req.body.distance || 0
+
+  let serviceUser
+  req.context.getModel('ServiceUser').findById(serviceUserId)
+    .populate('prestations.prestation')
+    .then(result => {
+      serviceUser = result
+      return req.context.getModel('Shop').findOne({alfred: serviceUser.user}, {cesu: 1})
+    })
+    .then(shop => {
+      const totalPrestations=_.sum(serviceUser.prestations.map(p => p.price*(prestations[p._id] || 0)))
+      let totalCesu=0
+      if (shop.cesu!='Disabled') {
+        totalCesu = _.sum(serviceUser.prestations
+          .filter(p => p.prestation.cesu_eligible)
+          .map(p => p.price*(prestations[p._id] || 0)))
+      }
+      const pick_tax = location=='alfred' && totalPrestations && serviceUser.pick_tax || 0
+      const travel_tax = ['alfred', 'visio'].includes(location) || !distance || !serviceUser.travel_tax ?
+        0 :
+        totalPrestations && Math.max(roundCurrency((distance-serviceUser.travel_tax.from)*serviceUser.travel_tax.rate), 0)
+
+      const totalPrestationsFrais =totalPrestations+travel_tax+pick_tax
+      const client_fee = roundCurrency(totalPrestationsFrais*getClientFeeRate())
+      const provider_fee = roundCurrency(totalPrestationsFrais*getProviderFeeRate())
+      const total=totalPrestationsFrais+client_fee
+      res.json({
+        total_prestations: totalPrestations,
+        travel_tax: travel_tax,
+        pick_tax: pick_tax,
+        client_fee: client_fee,
+        provider_fee: provider_fee,
+        total_cesu: totalCesu,
+        total: total})
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(JSON.stringify(err))
+    })
+})
+
+
 // @Route GET /myAlfred/booking/:id
 // View one booking
 // @Access public
@@ -280,7 +333,6 @@ router.get('/:id', (req, res) => {
       res.status(500)
     })
 })
-
 
 // @Route DELETE /myAlfred/booking/:id
 // Delete one booking
@@ -415,7 +467,7 @@ router.post('/avocotes', (req, res) => {
     .then(user => {
       let bookData={
         user: user, address: user.billing_address,
-        service: req.body.service._id, amount: req.body.totalPrice, fees: 0,
+        service: req.body.service._id, amount: req.body.totalPrice, client_fees: 0,
         prestations: req.body.prestations, reference: computeBookingReference(user, user),
         company_customer: user.company_customer, status: BOOK_STATUS.TO_PAY,
       }
@@ -430,7 +482,7 @@ router.post('/avocotes', (req, res) => {
     })
 })
 
-new CronJob('0 */15 * * * *', (() => {
+new CronJob('0 */35 * * * *', (() => {
   console.log('Checking terminated bookings')
   const getNextNumber = (context, type, key) => {
     return new Promise((resolve, reject) => {
@@ -490,7 +542,7 @@ new CronJob('0 */15 * * * *', (() => {
 }), null, true, 'Europe/Paris')
 
 // Handle terminated but not paid bookings
-new CronJob('0 */15 * * * *', (() => {
+new CronJob('0 * * * * *', (() => {
   console.log('Checking bookings to pay')
   connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
     context.getModel('Booking').find({status: BOOK_STATUS.FINISHED, paid: false})
@@ -500,7 +552,7 @@ new CronJob('0 */15 * * * *', (() => {
       .then(bookings => {
         bookings.forEach(booking => {
           console.log(`Booking #${booking._id} to pay`)
-          payBooking(booking)
+          payBooking(booking, context)
         })
       }).catch(err => {
         console.error(err)

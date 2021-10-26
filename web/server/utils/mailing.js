@@ -302,7 +302,7 @@ const sendAskingInfo = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
+      total_revenue: parseFloat(booking.alfred_amount).toFixed(2),
       link_requestinformation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
   )
@@ -356,7 +356,7 @@ const sendNewBookingManual = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
+      total_revenue: parseFloat(booking.alfred_amount).toFixed(2),
       link_confirmbooking: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
   )

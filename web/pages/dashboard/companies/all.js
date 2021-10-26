@@ -13,6 +13,7 @@ class all extends DataPage {
 
   getColumnDefs = () => {
     return [
+      {headerName: '_id', field: '_id', width: 0},
       models.textColumn({headerName: 'Nom', field: 'name'}),
       {headerName: 'Taille', field: 'size', cellRenderer: 'enumRenderer', cellRendererParams: {enum: COMPANY_SIZE}},
       models.textColumn({headerName: 'Secteur', field: 'activity', cellRenderer: 'enumRenderer', cellRendererParams: {enum: COMPANY_ACTIVITY}}),

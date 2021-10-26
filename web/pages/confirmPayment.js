@@ -111,12 +111,10 @@ class ConfirmPayment extends BasePage {
     }
     const booking_id=this.getURLProps().booking_id
     const total = parseFloat(this.state.grandTotal)
-    const fees = parseFloat(this.state.fees)
     const data = {
       booking_id: booking_id,
       id_card: this.state.id_card,
       amount: total,
-      fees: fees,
     }
     this.setState({pending: true})
     axios.post('/myAlfred/api/payment/payInDirect', data)
@@ -141,11 +139,9 @@ class ConfirmPayment extends BasePage {
   pay = () => {
     const booking_id=this.getURLProps().booking_id
     const total = parseFloat(this.state.grandTotal)
-    const fees = parseFloat(this.state.fees)
     const data = {
       booking_id: booking_id,
       amount: total,
-      fees: fees,
     }
 
     axios.post('/myAlfred/api/payment/payIn', data)

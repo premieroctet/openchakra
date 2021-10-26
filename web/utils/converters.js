@@ -196,10 +196,18 @@ const invoiceFormat = (num, places) => {
   return String(num).padStart(places, '0')
 }
 
+const roundCurrency = amount => {
+  if (!amount) {
+    return amount
+  }
+  return Math.round(amount*100)/100
+}
+
 
 module.exports = {
   availabilities2events, eventUI2availability, availability2eventUI,
   DAYS, LONG_DAYS,
   bookings2events,
   counterArray, counterObjects, moneyFormat, todayDate, invoiceFormat,
+  roundCurrency,
 }

@@ -314,7 +314,7 @@ class DrawerBooking extends React.Component {
                 </AccordionDetails>
               </Accordion>
             </Grid>
-            {serviceUser.pick_tax || this.props.computeTravelTax() ?
+            {serviceUser.pick_tax || this.props.travel_tax ?
               <Grid style={{marginBottom: 30}}>
                 <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
                   <AccordionSummary
@@ -325,10 +325,10 @@ class DrawerBooking extends React.Component {
                     <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_option'))}</Typography>
                   </AccordionSummary>
                   <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                    {this.props.computeTravelTax() ?
+                    {this.props.travel_tax ?
                       <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                         <Grid>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.deplacement_cost'))}</Grid>
-                        <Grid>{this.props.computeTravelTax()}€</Grid>
+                        <Grid>{this.props.travel_tax}€</Grid>
                       </Grid>
                       : null
                     }
@@ -377,7 +377,7 @@ class DrawerBooking extends React.Component {
                     <BookingDetail
                       prestations={pricedPrestations}
                       count={count}
-                      travel_tax={this.props.computeTravelTax()}
+                      travel_tax={this.props.travel_tax}
                       pick_tax={pick_tax}
                       company_amount={company_amount}
                       total={total}

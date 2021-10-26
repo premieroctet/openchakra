@@ -1,3 +1,9 @@
+const {
+  getDeadLine,
+  isDateAvailable,
+  isMomentAvailable,
+} = require('../utils/dateutils')
+import {snackBarError, snackBarSuccess} from '../utils/notifications'
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -30,18 +36,16 @@ import '../static/assets/css/custom.css'
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
 import {Divider} from '@material-ui/core'
 import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
-import AlarmOnIcon from "@material-ui/icons/AlarmOn";
-import CustomIcon from "../components/CustomIcon/CustomIcon";
+import AlarmOnIcon from '@material-ui/icons/AlarmOn'
+import CustomIcon from '../components/CustomIcon/CustomIcon'
 const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage = require('./basePage')
-const {BOOK_STATUS, COMM_CLIENT, MANAGER}=require('../utils/consts')
+const {BOOK_STATUS, MANAGER}=require('../utils/consts')
 const isEmpty = require('../server/validation/is-empty')
-const {isDateAvailable} = require('../utils/dateutils')
 const {emptyPromise} = require('../utils/promise')
-const {isMomentAvailable, getDeadLine} = require('../utils/dateutils')
-const {computeDistanceKm, roundCurrency} = require('../utils/functions')
+const {computeDistanceKm} = require('../utils/functions')
+const {roundCurrency} = require('../utils/converters')
 const {computeBookingReference} = require('../utils/text')
-const {snackBarError}=require('../utils/notifications')
 const _=require('lodash')
 
 const moment = require('moment')
@@ -72,7 +76,8 @@ class UserServicesPreview extends BasePage {
       bottom: false,
       count: {},
       totalPrestations: 0,
-      commission: 0,
+      client_fee: 0,
+      provider_fee: 0,
       cesu_total: 0,
       total: 0,
       company_amount: 0,
@@ -236,7 +241,8 @@ class UserServicesPreview extends BasePage {
                                       date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
                                       time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
                                       location: bookingObj ? bookingObj.location : null,
-                                      commission: bookingObj ? bookingObj.fees : null,
+                                      client_fee: bookingObj ? bookingObj.client_fee : null,
+                                      provider_fee: bookingObj ? bookingObj.provider_fee : null,
                                       ...st,
                                     }, () => {
                                       this.setDefaultLocation()
@@ -449,32 +455,13 @@ class UserServicesPreview extends BasePage {
     return this.state.location && (!['visio', 'alfred'].includes(this.state.location))
   }
 
-  computeTravelTax = () => {
-    const {travel_tax}=this.state.serviceUser
-    if (!travel_tax || !this.isServiceAtHome()) {
-      return 0
-    }
-    let dist = this.computeDistance()
-    if (dist==null) {
-      return 0
-    }
-    dist = dist-travel_tax.from
-    if (dist<0) {
-      return 0
-    }
-    return roundCurrency(dist*travel_tax.rate)
-  }
-
-  computePickTax = () => {
-    return this.state.isChecked && this.state.location === 'alfred' ? this.state.serviceUser.pick_tax : 0
-  }
-
   computeTotal = () => {
-    const {available_budget, company_percent}=this.state
+
+    /**
+    const {available_budget, company_percent, count, serviceUser}=this.state
 
     let totalPrestations = 0
     let totalCesu = 0
-    let count = this.state.count
     this.state.prestations.forEach(p => {
       if (count[p._id] > 0) {
         totalPrestations += count[p._id] * p.price
@@ -494,22 +481,56 @@ class UserServicesPreview extends BasePage {
       totalCesu += pickTax ? parseFloat(pickTax) : 0
     }
 
-    let commission = totalPrestations * COMM_CLIENT
+    let client_fee = totalPrestations * COMM_CLIENT
     const avocotes=this.getAvocotesBooking()
     if (avocotes) {
-      commission = avocotes.amount-totalPrestations
+      client_fee = avocotes.amount-totalPrestations
     }
     let total = totalPrestations
-    total += commission
+    total += client_fee
 
     const company_amount=Math.min(total*company_percent, available_budget)
     this.setState({
       totalPrestations: roundCurrency(totalPrestations),
-      commission: roundCurrency(commission),
+      client_fee: roundCurrency(client_fee),
       total: roundCurrency(total),
       company_amount: roundCurrency(company_amount),
       cesu_total: roundCurrency(totalCesu),
     }, () => this.checkBook())
+    */
+
+    if (this.getAvocotesBooking()) {
+      snackBarError('ATTENTION: calcul commission avocotes non implémenté')
+    }
+
+    const {available_budget, company_percent, count, serviceUser, location}=this.state
+
+    setAxiosAuthentication()
+    axios.post('/myAlfred/api/booking/compute', {
+      prestations: count,
+      serviceUser: serviceUser._id,
+      distance: this.computeDistance(),
+      location: location,
+    })
+      .then(res => {
+        const company_amount= roundCurrency(Math.min(res.data.total*company_percent, available_budget))
+
+        this.setState({
+          total: res.data.total,
+          totalPrestations: res.data.total_prestations,
+          client_fee: res.data.client_fee,
+          provider_fee: res.data.provider_fee,
+          travel_tax: res.data.travel_tax,
+          pick_tax: res.data.pick_tax,
+          cesu_total: res.data.total_cesu,
+          company_amout: company_amount,
+        },
+        this.checkBook)
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError(err.response)
+      })
   }
 
   computeDistance = () => {
@@ -638,10 +659,11 @@ class UserServicesPreview extends BasePage {
       alfred: this.state.serviceUser.user._id,
       user: user ? user._id : null,
       prestations: prestations,
-      travel_tax: this.computeTravelTax(),
-      pick_tax: this.computePickTax(),
+      travel_tax: this.state.travel_tax,
+      pick_tax: this.state.pick_tax,
       cesu_amount: this.state.cesu_total,
-      fees: this.state.commission,
+      client_fee: this.state.client_fee,
+      provider_fee: this.state.provider_fee,
       status: avocotes_booking ? BOOK_STATUS.TO_CONFIRM : actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
       serviceUserId: this.state.serviceUser._id,
       customer_booking: avocotes_booking ? avocotes_booking._id : null,
@@ -917,7 +939,7 @@ class UserServicesPreview extends BasePage {
                           isInPerimeter={this.isInPerimeter}
                           onQtyChanged={this.onQtyChanged}
                           onLocationChanged={this.onLocationChanged}
-                          computeTravelTax={this.computeTravelTax}
+                          travelTax={this.state.travel_tax}
                           getLocationLabel={this.getLocationLabel}
                           onAvocotesChanged={this.onAvocotesChanged}
                           warningPerimeter={this.hasWarningPerimeter()}
@@ -945,7 +967,7 @@ class UserServicesPreview extends BasePage {
                     onQtyChanged={this.onQtyChanged}
                     isInPerimeter={this.isInPerimeter}
                     onLocationChanged={this.onLocationChanged}
-                    computeTravelTax={this.computeTravelTax}
+                    travelTax={this.state.travel_tax}
                     getLocationLabel={this.getLocationLabel}
                     onAvocotesChanged={this.onAvocotesChanged}
                     warningPerimeter={this.hasWarningPerimeter()}
