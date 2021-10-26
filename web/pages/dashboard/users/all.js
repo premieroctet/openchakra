@@ -25,7 +25,7 @@ class all extends DataPage {
       models.dateTimeColumn({headerName: 'Création boutique', field: 'shop.creation_date'}),
       models.textColumn({headerName: 'Client Mangopay', field: 'id_mangopay'}),
       models.textColumn({headerName: 'Alfred Mangopay', field: 'mangopay_provider_id'}),
-      models.textColumn({headerName: 'Warning', field: 'warning', cellRenderer: 'warningRenderer'}),
+      models.warningColumn({headerName: 'Warning', field: 'warning'}),
     ]
   }
 

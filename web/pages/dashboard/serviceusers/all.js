@@ -18,6 +18,7 @@ class all extends DataPage {
       {headerName: 'Code postal', field: 'service_address.zip_code'},
       models.textColumn({headerName: 'Ville', field: 'service_address.city'}),
       models.textColumn({headerName: 'Frais dep.', field: 'travel_tax'}),
+      models.warningColumn({headerName: 'Warning', field: 'warning'}),
     ]
   }
 
@@ -32,6 +33,7 @@ class all extends DataPage {
         services.forEach(s => {
           try {
             s.user.shop.is_professional = Boolean(s.user.shop[0].is_professional)
+            s.warning = !s.service.picture ? "Pas d'illustration" : null
           }
           catch (error) {
             console.error(`Err on ${s._id}:${error}`)
