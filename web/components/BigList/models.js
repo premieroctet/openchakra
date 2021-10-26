@@ -227,6 +227,13 @@ const textColumn = obj => {
   return Object.assign(base, obj)
 }
 
+const warningColumn = obj => {
+  let base={
+    cellRenderer: 'warningRenderer',
+  }
+  return Object.assign(base, obj)
+}
+
 const booleanColumn = obj => {
   let base={
     cellRenderer: 'booleanRenderer',
@@ -292,5 +299,5 @@ module.exports= {
   StatusFilter, PictureRenderer, PrivateRenderer, BooleanRenderer, LocationRenderer, WarningRenderer,
   EnumRenderer, LinkRenderer, ColorRenderer, FontRenderer, DeleteRenderer,
   textColumn, booleanColumn, dateColumn, dateTimeColumn, currencyColumn, pictureColumn,
-  colorColumn, fontColumn, deleteColumn,
+  colorColumn, fontColumn, deleteColumn, warningColumn,
 }

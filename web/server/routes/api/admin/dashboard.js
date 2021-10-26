@@ -163,7 +163,7 @@ router.get('/users/all', passport.authenticate('admin', {session: false}), (req,
 // List all serviuceusers
 router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('ServiceUser').find({}, '_id perimeter location service_address.zip_code service_address.city')
-    .populate({path: 'service', select: 'label category', populate: {path: 'category', select: 'label'}})
+    .populate({path: 'service', select: 'label category picture', populate: {path: 'category', select: 'label'}})
   // .populate('service.category', 'label')
     .populate({path: 'user', select: 'email shop', populate: {path: 'shop', select: 'is_professional'}})
     .then(services => {
