@@ -33,6 +33,9 @@ const styles = theme => ({
   'example::-webkit-scrollbar': {
     display: 'none',
   },
+  paddingList: {
+    backgroundColor: theme.palette.primary.main,
+  },
 })
 
 class UIConfiguration extends React.Component {
@@ -231,10 +234,10 @@ class UIConfiguration extends React.Component {
             <CustomButton variant='outlined' onClick={this.onSubmit} disabled={!canSave}>{saveTitle}</CustomButton>
           </Grid>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
-            <TextField name={'filter'} value={filter} onChange={this.onFilterChanged}/>
+            <TextField placeholder={'Rercherche'} name={'filter'} value={filter} onChange={this.onFilterChanged}/>
           </Grid>
           <Grid container style={{display: 'flex', flexDirection: 'row'}}>
-            <List className={'customappbar'} classes={{root: classes.paddingList}} style={{height: '100vh'}}>
+            <List className={'customappbar'} classes={{root: classes.paddingList}} style={{minHeight: '100vh'}}>
               {
                 pages.map((item, index) => (
                   <Grid key={index} className={classes.hoverButton}>

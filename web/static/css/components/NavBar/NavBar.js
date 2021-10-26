@@ -206,6 +206,7 @@ export default theme => ({
     height: 64,
     backgroundImage: 'url(/static/assets/icon/logo.svg)',
     backgroundRepeat: 'no-repeat',
+    backgroundSize: 'contain',
   },
 
   hiddenOnlyXs: {

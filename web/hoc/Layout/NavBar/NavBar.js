@@ -1253,7 +1253,7 @@ class NavBar extends Component {
                 {
                   companyPage ? null : ifHomePage ? this.tabBar(classes)
                     :
-                    <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !isB2BStyle(user) ? 8 : 11}>
+                    <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !isB2BStyle(user) ? 8 : 11} style={{display: 'flex', alignItems: 'center'}}>
                       {this.searchBarInput(classes)}
                     </Grid>
                 }
