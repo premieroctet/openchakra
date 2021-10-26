@@ -33,6 +33,9 @@ const styles = theme => ({
   'example::-webkit-scrollbar': {
     display: 'none',
   },
+  paddingList: {
+    backgroundColor: theme.palette.primary.main,
+  },
 })
 
 class UIConfiguration extends React.Component {
