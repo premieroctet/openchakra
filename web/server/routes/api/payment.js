@@ -261,7 +261,10 @@ router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req
   const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
   promise
     .then(entity => {
-      const id_mangopay = entity.id_mangopay
+      const ids_mangopay = [entity.id_mangopay]
+      if (entity.mangopay_provider_id) {
+        ids_mangopay.push(entity.mangopay_provider_id)
+      }
       const billing_address = entity.billing_address
       const address = billing_address.address
       const city = billing_address.city
@@ -281,27 +284,29 @@ router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req
         Type: 'IBAN',
       }
 
-      mangoApi.Users.createBankAccount(id_mangopay, account)
-        .then(newAccount => {
-          console.log(`Mango bank account:${JSON.stringify(newAccount)}`)
-          res.json({msg: 'Compte créé'})
-        })
+      ids_mangopay.forEach(mangopay_id => {
+        mangoApi.Users.createBankAccount(mangopay_id, account)
+          .then(newAccount => {
+            console.log(`Mango bank account:${JSON.stringify(newAccount)}`)
+            res.json({msg: 'Compte créé'})
+          })
+          .catch(err => {
+            console.error(`${JSON.stringify(err)}`)
+            errors = {}
+            if (err.errors.BIC) {
+              errors.bic='Le code BIC est incorrect'
+            }
+            if (err.errors.IBAN) {
+              errors.iban='Le code IBAN est incorrect'
+            }
+            console.error(`Error:${errors}`)
+            res.status(404).json({errors: errors})
+          })
+      })
         .catch(err => {
-          console.error(`${JSON.stringify(err)}`)
-          errors = {}
-          if (err.errors.BIC) {
-            errors.bic='Le code BIC est incorrect'
-          }
-          if (err.errors.IBAN) {
-            errors.iban='Le code IBAN est incorrect'
-          }
-          console.error(`Error:${errors}`)
-          res.status(404).json({errors: errors})
+          console.error(`Error:${err}`)
+          res.status(404).json({errors: 'Utilisateur non reconnu'})
         })
-    })
-    .catch(err => {
-      console.error(`Error:${err}`)
-      res.status(404).json({errors: 'Utilisateur non reconnu'})
     })
 })
 
@@ -368,8 +373,9 @@ router.get('/activeAccount', passport.authenticate('jwt', {session: false}), (re
   promise
     .then(entity => {
       const id_mangopay = entity.id_mangopay
-      mangoApi.Users.getBankAccounts(id_mangopay)
+      mangoApi.Users.getBankAccounts(id_mangopay, {parameters: {per_page: 100}})
         .then(accounts => {
+          console.log(accounts.map(a => a.Id))
           accounts.forEach(a => {
             if (a.Active) {
               a.IBAN = maskIban(a.IBAN)
@@ -378,10 +384,14 @@ router.get('/activeAccount', passport.authenticate('jwt', {session: false}), (re
           })
           res.json(allAccount)
         })
+        .catch(err => {
+          console.error(err)
+          res.json(err)
+        })
     })
     .catch(err => {
       console.error(err)
-      res.json([])
+      res.json(err)
     })
 })
 
@@ -408,15 +418,20 @@ router.delete('/account/:account_id', passport.authenticate('jwt', {session: fal
   const promise = isB2BAdmin(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
   promise
     .then(entity => {
-      const id_mangopay = entity.id_mangopay
-      mangoApi.Users.deactivateBankAccount(id_mangopay, account_id)
-        .then(account => {
-          res.json(account)
-        })
-        .catch(err => {
-          console.error(err)
-          res.status(400).json(err)
-        })
+      const ids_mangopay = [entity.id_mangopay]
+      if (entity.mangopay_provider_id) {
+        ids_mangopay.push(entity.mangopay_provider_id)
+      }
+      ids_mangopay.forEach(mangopay_id => {
+        mangoApi.Users.deactivateBankAccount(mangopay_id, account_id)
+          .then(account => {
+            res.json(account)
+          })
+          .catch(err => {
+            console.error(err)
+            res.status(400).json(err)
+          })
+      })
     })
 })
 
