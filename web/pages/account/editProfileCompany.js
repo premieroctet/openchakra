@@ -1,3 +1,4 @@
+import {COMPANY_NAME, EDIT_PROFIL} from '../../utils/i18n'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import {Helmet} from 'react-helmet'
 import {withTranslation} from 'react-i18next'
@@ -18,7 +19,6 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import withStyles from '@material-ui/core/styles/withStyles'
-import {EDIT_PROFIL} from '../../utils/i18n'
 import {
   COMPANY_ACTIVITY,
   COMPANY_SIZE,
@@ -471,7 +471,7 @@ class editProfileCompany extends BasePage {
   }
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {user} = this.state
     const index=this.getURLProps().indexAccount
 
@@ -482,7 +482,7 @@ class editProfileCompany extends BasePage {
     return (
       <React.Fragment>
         <Helmet>
-          <title>Profil - Modifier mon profil - My Alfred </title>
+          <title>Profil-Modifier mon profil-{t('COMPANY_NAME')}</title>
           <meta property='description'
             content='Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !'/>
         </Helmet>

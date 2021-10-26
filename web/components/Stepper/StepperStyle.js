@@ -41,7 +41,6 @@ export default theme => ({
       fontSize: '1rem',
       lineHeight: 1.5,
       color: '#E2E2E2',
-
     },
     '& .MuiStepLabel-labelContainer': {
       marginTop: 4,

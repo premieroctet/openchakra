@@ -109,6 +109,7 @@ export default theme => ({
   iconStarCat: {
     backgroundImage: 'url(static/assets/faq/star.svg)',
     backgroundRepeat: 'no-repeat',
+    backgroundSize: 'contain',
     width: 70,
     height: 70,
   },

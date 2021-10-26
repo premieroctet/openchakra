@@ -1,4 +1,4 @@
-import { canAlfredSelfRegister, isB2BDisabled } from '../../../config/config';
+import {canAlfredSelfRegister, isB2BDisabled} from '../../../config/config'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -30,8 +30,6 @@ import DatePicker from 'react-datepicker'
 import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
 import axios from 'axios'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/NavBar/NavBar'
@@ -53,6 +51,8 @@ const {PRO, PART, EMPLOYEE, ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
 import {getCookieConsentValue, resetCookieConsentValue} from 'react-cookie-consent'
 import Logo from '../../../components/Logo/Logo'
 import CustomIcon from '../../../components/CustomIcon/CustomIcon'
+import Hidden from '@material-ui/core/Hidden'
+import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -738,14 +738,16 @@ class NavBar extends Component {
   burgerMenuLogged = classes => {
     const{ifHomePage, companyPage, anchorEl, user} = this.state
 
+    const logged = user != null
+
     return(
       <Grid
         className={classes.navbarMenuBurgerContainer}
         item
         xl={ifHomePage ? 3 : 4}
-        lg={3}
-        md={ifHomePage && isB2BStyle(user) ? 10 : 2}
-        sm={ifHomePage ? 11 : 1}
+        lg={ifHomePage && logged ? 1 : 3}
+        md={ifHomePage && !logged ? 10 : ifHomePage && logged ? 2 : 1}
+        sm={1}
       >
         <IconButton
           aria-label="open drawer"
@@ -806,9 +808,9 @@ class NavBar extends Component {
       <Grid
         item
         xl={!logged && ifHomePage ? 3 : 4}
-        lg={1}
-        md={!logged && !ifHomePage ? 3 : 2}
-        sm={!ifHomePage ? 4 : 11}
+        lg={!logged && !ifHomePage ? 3 : 1}
+        md={ifHomePage && !logged ? 2 : !ifHomePage && !logged ? 3 : 10}
+        sm={!ifHomePage ? 4 : 1}
         className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
       >
         <Grid>
@@ -1105,107 +1107,83 @@ class NavBar extends Component {
   }
 
   logoContainer = classes => {
-    const{ifHomePage, user} = this.state
-    const logged = user != null
+    const{ifHomePage} = this.state
 
     return(
       <Grid
         className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP}
         item
         xl={ifHomePage ? 3 : 4}
-        lg={isB2BStyle(user) && ifHomePage ? 2 : 1}
-        md={!logged && !ifHomePage ? 3 : 2}
-        sm={1}
+        lg={ifHomePage ? 1 : 3}
+        md={ifHomePage ? 10 : 3}
+        sm={11}
         onClick={() => Router.push('/')}
       >
-        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90}}/>
+        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90, width: 200}}/>
       </Grid>
     )
   };
 
   tabBar = classes => {
-    const{user}= this.state
+    const modeB2b = [
+      {
+        label: ReactHtmlParser(this.props.t('SEARCHBAR.service_company')),
+        url: '/blog/elementor-211/',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('SEARCHBAR.service_collab')),
+        url: '/blog/services-aux-collaborateurs/',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('SEARCHBAR.price')),
+        url: '/blog/tarifs',
+      },
+    ]
+    const modeAlfred = [
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.ourServices')),
+        url: '/search',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices')),
+        callFunction: this.handleOpenRegister,
+      },
+    ]
+
+    const modeAlle = [
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEPrestation')),
+        url: '/search',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEWork')),
+        url: '/footer/addService',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEntrepreneur')),
+        url: '/footer/ourCommunity',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEBecome')),
+        url: '/footer/becomeAlfred',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEContact')),
+        url: '/contact',
+      },
+    ]
+
+    const modeMenu = isB2BStyle() ? modeB2b : modeAlle
 
     return(
       <Grid
-        item
         xl={6}
-        lg={isB2BStyle(user) ? 7 : 10}
+        lg={10}
         md={8}
         sm={11}
-        className={isB2BStyle(user) ? classes.navbarHomepageMenuB2B : classes.navabarHomepageMenu}
+        className={classes.navabarHomepageMenu}
       >
-        <Tabs value={false} aria-label="simple tabs example">
-          {
-            getLoggedUserId() && !isLoggedUserAlfredPro() ? null:
-              isB2BStyle() ?
-                <>
-                  <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
-                    label={ReactHtmlParser(this.props.t('SEARCHBAR.service_company'))}
-                    onClick={() => Router.push('/blog/elementor-211/')}
-                  />
-                  <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
-                    label={ReactHtmlParser(this.props.t('SEARCHBAR.service_collab'))}
-                    onClick={() => Router.push('/blog/services-aux-collaborateurs/')}
-                  />
-                  <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
-                    label={ReactHtmlParser(this.props.t('SEARCHBAR.price'))}
-                    onClick={() => Router.push('/blog/tarifs')}
-                  />
-                </>
-                :
-                <>
-                  <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
-                    label={ReactHtmlParser(this.props.t('NAVBAR_MENU.ourServices'))}
-                    onClick={() => Router.push('/search')}
-                  />
-                  {user ?
-                    user.is_alfred ?
-                      <Tab
-                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
-                        label={ReactHtmlParser(this.props.t('NAVBAR_MENU.myServices'))}
-                        onClick={() => Router.push(`/profile/services?user=${user._id}`)}
-                      />
-                      :
-                      canAlfredSelfRegister() && <Tab
-                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
-                        label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
-                        onClick={() => Router.push('/creaShop/creaShop')}
-                      />
-                    :
-                    <>
-                      {canAlfredSelfRegister() && <Tab
-                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
-                        label={ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices'))}
-                        onClick={this.handleOpenRegister}
-                      />
-                      }
-                      <Tab
-                        classes={{root: `customnavbartab ${classes.navbarTabRoot}`}}
-                        label={ReactHtmlParser(this.props.t('NAVBAR_MENU.contactUs'))}
-                        onClick={() => Router.push('/contact')}
-                      />
-                    </>
-                  }
-                </>
-          }
-          {
-            // Accès part/pro uniquement si non loggué ou loggué en Alfred pro
-            getLoggedUserId() && !isLoggedUserAlfredPro()? null:
-              isB2BStyle() || isB2BDisabled() ?
-                null
-                :
-                <Tab
-                  classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : `customnavbartab ${classes.navbarTabRoot}`}}
-                  label={ReactHtmlParser(this.props.t('NAVBAR_MENU.businessSide'))}
-                  onClick={() => Router.push('/professional')}
-                />
-          }
-        </Tabs>
+        <CustomTabMenu tabs={modeMenu}/>
       </Grid>
     )
   };
@@ -1269,13 +1247,13 @@ class NavBar extends Component {
       <Grid className={this.state.ifHomePage ? isB2BStyle(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
         <AppBar position={'static'} className={isB2BStyle(user) && companyPage || this.state.ifHomePage ? `customappbarhomepage ${classes.navbarAppBarNoBg}` : isB2BStyle(user) && !companyPage ? `${classes.navbarAppBarWithBg}` : 'customappbar'}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
-            <Grid className={classes.hiddenOnlyXs}>
+            <Hidden only={['xs']}>
               <Grid container style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin: 0}}>
                 {companyPage ? null : this.logoContainer(classes)}
                 {
                   companyPage ? null : ifHomePage ? this.tabBar(classes)
                     :
-                    <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !isB2BStyle(user) ? 8 : 11}>
+                    <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !isB2BStyle(user) ? 8 : 11} style={{display: 'flex', alignItems: 'center'}}>
                       {this.searchBarInput(classes)}
                     </Grid>
                 }
@@ -1284,11 +1262,11 @@ class NavBar extends Component {
               {
                 ifHomePage ? this.searchBarInput(classes) : null
               }
-            </Grid>
-            <Grid className={classes.hiddenOnMobile}>
+            </Hidden>
+            <Hidden only={['xl', 'lg', 'md', 'sm']}>
               {ifHomePage ? this.mobileSearchBarInput(classes) : null}
               {ifSearchPage ? this.mobileSearchBarInputSearchPage(classes) : null}
-            </Grid>
+            </Hidden>
           </Toolbar>
         </AppBar>
         {modalMobileSearchBarInput ? this.modalMobileSearchBarInput(classes) : null}

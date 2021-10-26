@@ -36,7 +36,7 @@ const sendNotification = (notif_index, destinee, params) => {
 
   let enable_mails = ENABLE_MAILING
   // En validation, envoyer les notifications et SMS aux membres de @my-alfred.io
-  if (!enable_mails && is_validation() && (destinee.email||'').toLowerCase().includes('@my-alfred.io')) {
+  if (!enable_mails && is_validation() && (destinee.email||'').match(/@my-alfred.io/i)) {
     console.log('Mailing disabled except for my-alfred.io mails on validation platform')
     enable_mails = true
   }
@@ -374,6 +374,15 @@ const sendAlert = (user, subject, message) => {
   )
 }
 
+const sendAdminsAlert = (subject, message, context) => {
+  context.getModel('User').find({is_admin: true, active: true})
+    .then(admins => {
+      admins.forEach(admin => sendAlert(admin, subject, message))
+    })
+    .catch(err => console.error(err))
+}
+
+
 const sendB2BAccount = (user, email, role, company, token, req) => {
   sendNotification(
     SIB_IDS.B2B_ACCOUNT_CREATED,
@@ -428,4 +437,5 @@ module.exports = {
   sendAlert,
   sendB2BRegistration,
   sendBookingRefusedToAlfred,
+  sendAdminsAlert,
 }

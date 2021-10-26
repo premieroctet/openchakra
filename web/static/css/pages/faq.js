@@ -1,9 +1,9 @@
-export default theme =>({
+export default theme => ({
   menuContainer: {
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   linkBloc: {
     width: '100%',
@@ -14,26 +14,38 @@ export default theme =>({
     boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
     cursor: 'pointer',
     alignItems: 'center',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       padding: 15,
-    }
+    },
   },
-  blockContainer:{
-    [theme.breakpoints.down('xs')]:{
-      margin:10
-    }
+  blockContainer: {
+    [theme.breakpoints.down('xs')]: {
+      margin: 10,
+    },
   },
   linkText: {
-    [theme.breakpoints.down('xs')]:{
-      whiteSpace: 'nowrap'
-    }
+    [theme.breakpoints.down('xs')]: {
+      whiteSpace: 'nowrap',
+    },
   },
   accord: {
-    padding: '0 300px'
+    padding: '0 300px',
   },
-  logoContainer:{
+  logoContainer: {
     display: 'flex',
     width: '100%',
-    justifyContent: 'space-evenly'
-  }
+    justifyContent: 'space-evenly',
+  },
+  iconStar: {
+    backgroundSize: 'contain',
+    backgroundImage: 'url(/static/assets/faq/star.svg)',
+    height: 50,
+    width: 50,
+  },
+  faqampicon: {
+    backgroundImage: '/static/assets/faq/amp.svg',
+    backgroundSize: 'contain',
+    height: 50,
+    width: 50,
+  },
 })

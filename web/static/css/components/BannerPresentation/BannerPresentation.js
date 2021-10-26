@@ -38,7 +38,6 @@ export default theme => ({
   titleSpan: {
     fontSize: '20px',
     fontWeight: 400,
-    textTransform: 'uppercase',
     letterSpacing: '6.5px',
     display: 'block',
   },

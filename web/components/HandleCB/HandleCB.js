@@ -97,7 +97,7 @@ class HandleCB extends React.Component {
       csv: csv,
     }
 
-    axios.post('/myAlfred/api/payment/createCard', obj)
+    axios.post('/myAlfred/api/payment/cards', obj)
       .then(() => {
         snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_CB.snackbar_add')))
         this.setState({error: null, showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount())
@@ -109,13 +109,15 @@ class HandleCB extends React.Component {
   };
 
   deleteCard = () => {
-    const obj = {id_card: this.state.Idtempo}
-    axios.put('/myAlfred/api/payment/cards', obj).then(() => {
-      snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_CB.snackbar_delete')))
-      this.setState({showDeleteCard: false, showAddCreditCard: false}, () => this.componentDidMount())
-    }).catch(err => {
-      snackBarError(err.response.data.error)
-    })
+    const card_id = this.state.Idtempo
+    axios.delete(`/myAlfred/api/payment/cards/${card_id}`)
+      .then(() => {
+        snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_CB.snackbar_delete')))
+        this.setState({showDeleteCard: false, showAddCreditCard: false}, this.componentDidMount)
+      })
+      .catch(err => {
+        snackBarError(err.response.data)
+      })
   };
 
   modalAddCreditCard = classes => {

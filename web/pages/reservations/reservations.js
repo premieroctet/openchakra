@@ -26,7 +26,7 @@ import LayoutReservations from '../../hoc/Layout/LayoutReservations'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import styles from '../../static/css/pages/reservations/reservations'
 import {RESERVATION} from '../../utils/i18n'
-import ReactHtmlParser from "react-html-parser";
+import ReactHtmlParser from 'react-html-parser'
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
@@ -322,7 +322,7 @@ class AllReservations extends BasePage {
                 </Grid>
               )
             })) :
-            <Typography className={'customresanoresamessage'}>{`${ReactHtmlParser(this.props.t('RESERVATION.infomessage')) + (alfredMode ? ReactHtmlParser(this.props.t('RESERVATION.alfred')) : ReactHtmlParser(this.props.t('RESERVATION.user')))}` }</Typography>
+            <Typography className={'customresanoresamessage'}>{alfredMode ? ReactHtmlParser(this.props.t('RESERVATION.infomessageAlfred')) : ReactHtmlParser(this.props.t('RESERVATION.infomessageUser')) }</Typography>
           }
         </Grid>
       </Grid>

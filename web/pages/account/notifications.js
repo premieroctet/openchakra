@@ -1,3 +1,4 @@
+import {COMPANY_NAME, NOTIFICATIONS} from '../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
@@ -16,7 +17,6 @@ import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import '../../static/assets/css/custom.css'
-import {NOTIFICATIONS} from '../../utils/i18n'
 
 
 moment.locale('fr')
@@ -571,7 +571,7 @@ class notifications extends React.Component {
   };
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {user} = this.state
 
     if (!user) {
@@ -581,7 +581,7 @@ class notifications extends React.Component {
     return (
       <React.Fragment>
         <Helmet>
-          <title>Mes paramètres - Notifications - My Alfred </title>
+          <title>Mes paramètres-Notifications-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
