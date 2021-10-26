@@ -33,12 +33,13 @@ class HtmlEditor extends React.Component {
 
   onChange = html => {
     if (this.props.onChange) {
+      // Remove surrounding DIVs
+      html=html.replace(/^<div>(.*)<\/div>$/, "$1")
       this.props.onChange(html)
     }
   }
 
   render() {
-
     return (
       <Grid>
         <span>{this.props.title}</span>
