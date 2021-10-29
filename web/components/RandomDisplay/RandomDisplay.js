@@ -10,8 +10,10 @@ import Grid from '@material-ui/core/Grid'
 
 function RandomDisplay(props) {
   const {classes, arrayText, loop} = props
+  const array = arrayText.map(item => item.text)
 
   return(
+
     <Carousel
       autoPlay={loop}
       indicators={false}
@@ -19,12 +21,14 @@ function RandomDisplay(props) {
       navButtonsAlwaysInvisible={true}
     >
       {
-        arrayText.map((item, i) =>
-          <Grid key={i}>
-            <Typography className={`${classes.infoBarColorText} customheaderinfobar`}>{item}</Typography>
+        array.map((res, index) =>
+          <Grid container key={index}>
+            <Grid item xl={2}>
+              <Typography className={`${classes.infoBarColorText} customheaderinfobar`}>{res}</Typography>
+            </Grid>
           </Grid>,
-        )
-      }
+        )}
+      
     </Carousel>
   )
 }
