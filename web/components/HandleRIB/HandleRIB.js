@@ -59,7 +59,7 @@ class HandleRIB extends React.Component {
     localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
 
-    axios.get('/myAlfred/api/payment/activeAccount')
+    axios.get('/myAlfred/api/payment/bank-accounts')
       .then(response => {
         let accounts = response.data
         this.setState({accounts: accounts})
@@ -87,7 +87,7 @@ class HandleRIB extends React.Component {
   }
 
   deleteAccount(account_id) {
-    axios.delete(`/myAlfred/api/payment/account/${account_id}`)
+    axios.delete(`/myAlfred/api/payment/bank-accounts/${account_id}`)
       .then(() => {
         snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_RIB.snackbar_rib_delete')))
         this.handleClose()
@@ -213,7 +213,7 @@ class HandleRIB extends React.Component {
     }
 
     this.setState({errors: {}})
-    axios.post('/myAlfred/api/payment/bankAccount', data)
+    axios.post('/myAlfred/api/payment/bank-accounts', data)
       .then(() => {
         snackBarSuccess(ReactHtmlParser(this.props.t('HANDLE_RIB.snackbar_rib_add')))
         this.handleCloseModalAddRib()

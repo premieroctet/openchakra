@@ -691,7 +691,7 @@ class UserServicesPreview extends BasePage {
 
       if (!this.state.user) {
         localStorage.setItem('path', Router.asPath)
-        Router.push('/')
+        Router.push('/?login=true')
         return
       }
 

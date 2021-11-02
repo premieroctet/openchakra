@@ -17,7 +17,8 @@ class all extends DataPage {
       {headerName: 'Localisation (Client/Alfred/Visio)', field: 'location', cellRenderer: 'locationRenderer'},
       {headerName: 'Code postal', field: 'service_address.zip_code'},
       models.textColumn({headerName: 'Ville', field: 'service_address.city'}),
-      models.textColumn({headerName: 'Frais dep.', field: 'travel_tax'}),
+      models.textColumn({headerName: 'Frais dep.', field: 'travel_tax_str'}),
+      models.warningColumn({headerName: 'Warning', field: 'warning'}),
     ]
   }
 
@@ -32,6 +33,9 @@ class all extends DataPage {
         services.forEach(s => {
           try {
             s.user.shop.is_professional = Boolean(s.user.shop[0].is_professional)
+            s.warning = !s.service.picture ? "Pas d'illustration" : null
+            s.travel_tax_str = s.travel_tax ?
+              `${s.travel_tax.rate}€/km (>=${s.travel_tax.from}km)`: ''
           }
           catch (error) {
             console.error(`Err on ${s._id}:${error}`)

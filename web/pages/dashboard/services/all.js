@@ -21,7 +21,7 @@ class all extends DataPage {
       models.booleanColumn({headerName: 'Frais liv.', field: 'pick_tax'}),
       models.textColumn({headerName: 'Lieux', field: 'location_label'}),
       models.pictureColumn({headerName: 'Illustration', field: 'picture'}),
-      models.textColumn({headerName: 'Warning', field: 'warning'}),
+      models.warningColumn({headerName: 'Warning', field: 'warning'}),
     ]
     // TODO : ajouter colonne warning si service pro sans prestations pro ou service particulier sans presta particuliers
   }

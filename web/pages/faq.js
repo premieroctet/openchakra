@@ -90,20 +90,16 @@ class Home extends React.Component {
             { searching ? null :
               <Grid className={classes.logoContainer}>
                 <Grid onClick={() => this.setAlfred(false)} className={classes.blockContainer}>
-                  <Grid className={classes.linkBloc}>
-                    <Grid>
-                      <img title={'star'} alt={'star'} width={50} height={50} src="/static/assets/faq/star.svg" />
-                    </Grid>
+                  <Grid className={`customfaqlinkbloc ${classes.linkBloc}`}>
+                    <Grid className={`customfaqstaricon ${classes.iconStar}`}/>
                     <Grid>
                       <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'normal' :'bold'}}>{FAQ.client_title}</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid className={classes.blockContainer}>
-                  <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
-                    <Grid>
-                      <img title={'ampoulelogo'} alt={'ampoulelogo'} width={50} height={50} src="/static/assets/faq/amp.svg" />
-                    </Grid>
+                  <Grid className={`customfaqlinkblocalfred ${classes.linkBloc}`} onClick={() => this.setAlfred(true)}>
+                    <Grid className={`customfaqampicon ${classes.faqampicon}`}/>
                     <Grid>
                       <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'bold' :'normal'}}>{FAQ.alfred_title}</Typography>
                     </Grid>

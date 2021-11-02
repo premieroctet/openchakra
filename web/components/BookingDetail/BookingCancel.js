@@ -1,7 +1,5 @@
 import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
-import { classnames } from '@material-ui/data-grid'
-
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import axios from 'axios'
@@ -10,10 +8,10 @@ import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import io from 'socket.io-client'
 import Typography from '@material-ui/core/Typography'
-
 const {BOOK_STATUS} = require('../../utils/consts')
 import styles from '../../static/css/components/BookingCancel/BookingCancel'
 import Divider from '@material-ui/core/Divider'
+import ReactHtmlParser from 'react-html-parser'
 
 moment.locale('fr')
 
@@ -58,7 +56,7 @@ class Cancel extends React.Component {
   }
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {currUser, bookingObj} = this.state
 
     return (
@@ -69,28 +67,26 @@ class Cancel extends React.Component {
           <Grid>
             <Grid container className={classes.bigContainer}>
               <Grid container>
-                <Grid item lg={12} xl={12} md={12} xs={12}>
+                <Grid item xs={12}>
                   <Grid container>
                     <Grid item xs={12}>
-                      <h2>Annuler la réservation</h2>
+                      <h2>{ReactHtmlParser(t('BOOKING_CANCEL.title'))}</h2>
                     </Grid>
                   </Grid>
                   <Grid>
                     <Grid container style={{width: '100%'}}>
                       <Grid item xs={12} style={{padding: '5%'}}>
                         <Typography>
-                          Si vous annulez cette réservation, vous ferez l'objet de pénalités :
+                          {ReactHtmlParser(t('BOOKING_CANCEL.subtitle'))}
                           <br/>
-                          - Le retrait du statut de super Alfred pendant 1 an
+                          {ReactHtmlParser(t('BOOKING_CANCEL.stepA'))}
                           <br/>
-                          - Un commentaire public montrant que vous avez annulé
+                          {ReactHtmlParser(t('BOOKING_CANCEL.stepB'))}
                           <br/>
-                          - Le paiement des frais d'annulation ou le blocage des périodes de la prestation sur votre
-                          calendrier
+                          {ReactHtmlParser(t('BOOKING_CANCEL.stepC'))}
                           <br/>
                           <br/>
-                          Si vous avez accepté la réservation instantanée, vous n'aurez pas ces pénalités si vous avez
-                          annulé moins de 3 prestations dans l'année
+                          {ReactHtmlParser(t('BOOKING_CANCEL.penality'))}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -110,7 +106,7 @@ class Cancel extends React.Component {
                         }}
                         onClick={() => this.props.onMaintain(this.props.booking_id)}
                       >
-                        Retour
+                        {ReactHtmlParser(t('BOOKING_CANCEL.backButton'))}
                       </CustomButton>
                     </Grid>
                     <Grid>
@@ -125,7 +121,7 @@ class Cancel extends React.Component {
                           this.props.onMaintain(this.props.booking_id)
                         }}
                       >
-                        Confirmer l'annulation
+                        {ReactHtmlParser(t('BOOKING_CANCEL.confirm'))}
                       </CustomButton>
                     </Grid>
                   </Grid>

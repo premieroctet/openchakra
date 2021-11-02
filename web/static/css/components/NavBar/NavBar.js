@@ -149,7 +149,7 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'none',
     },
   },
@@ -206,6 +206,7 @@ export default theme => ({
     height: 64,
     backgroundImage: 'url(/static/assets/icon/logo.svg)',
     backgroundRepeat: 'no-repeat',
+    backgroundSize: 'contain',
   },
 
   hiddenOnlyXs: {
@@ -218,25 +219,6 @@ export default theme => ({
       display: 'none',
     },
   },
-  hiddenOnMobile: {
-    width: '100%',
-    [theme.breakpoints.only('xl')]: {
-      display: 'none',
-    },
-    [theme.breakpoints.only('lg')]: {
-      display: 'none',
-    },
-    [theme.breakpoints.only('md')]: {
-      display: 'none',
-    },
-    [theme.breakpoints.only('sm')]: {
-      display: 'none',
-    },
-
-
-  },
-
-
   navbarButtonContainer: {
     display: 'flex',
     flexDirection: 'row-reverse',

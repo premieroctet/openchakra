@@ -315,28 +315,28 @@ class Footer extends React.Component {
           <Grid container item xl={6} lg={4} md={3} sm={12} xs={12} spacing={1} className={classes.socialContainer}>
             <Grid item className={'customfooterfacebook'}>
               <a href={'https://www.facebook.com/myalfred1/'} target={'_blank'}>
-                <IconButton aria-label="FacebookIcon">
+                <IconButton aria-label="FacebookIcon" classes={{root: 'customsocialfacebook'}}>
                   <FacebookIcon/>
                 </IconButton>
               </a>
             </Grid>
             <Grid item className={'customfooterinsta'}>
               <a href={'https://www.instagram.com/All_upon_a_time/'} target={'_blank'}>
-                <IconButton aria-label="InstagramIcon">
+                <IconButton aria-label="InstagramIcon" classes={{root: 'customsocialinsta'}}>
                   <InstagramIcon/>
                 </IconButton>
               </a>
             </Grid>
             <Grid item className={'customfooterlinkedin'}>
               <a href={'https://www.linkedin.com/company/all-inclusive-groupe-semafor/'} target={'_blank'}>
-                <IconButton aria-label="LinkedInIcon">
+                <IconButton aria-label="LinkedInIcon" classes={{root: 'customsociallinkdin'}}>
                   <LinkedInIcon/>
                 </IconButton>
               </a>
             </Grid>
             <Grid item className={'customfootertwitter'}>
               <a href={'https://twitter.com/MyAlfred2'} target={'_blank'}>
-                <IconButton aria-label="TwitterIcon">
+                <IconButton aria-label="TwitterIcon" classes={{root: 'customsocialtwitter'}}>
                   <TwitterIcon/>
                 </IconButton>
               </a>

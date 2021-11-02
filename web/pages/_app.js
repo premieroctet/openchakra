@@ -19,7 +19,7 @@ import JssProvider from 'react-jss/lib/JssProvider'
 import React from 'react'
 import Router from 'next/router'
 import {ACCEPT_COOKIE_NAME} from '../utils/consts'
-import {COOKIE_CONSENT} from '../utils/i18n'
+import {COOKIE_CONSENT, COMPANY_NAME} from '../utils/i18n'
 import {getLoggedUser} from '../utils/context'
 import {snackBarError} from '../utils/notifications'
 import getPageContext from '../lib/getPageContext'
@@ -58,12 +58,12 @@ class MyApp extends App {
   }
 
   render() {
-    const {Component, pageProps} = this.props
+    const {Component, pageProps, t} = this.props
     return (
       <I18nextProvider i18n={i18n}>
         <Container>
           <Head>
-            <title>My Alfred</title>
+            <title>{t('COMPANY_NAME')}</title>
             <meta property="og:image" content="https://my-alfred.io/static/presentation.jpg"/>
             <meta property="og:description"
               content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous"/>

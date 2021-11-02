@@ -16,7 +16,7 @@ class DocumentEditor extends React.Component {
 
   render() {
 
-    const {db_document, uploaded_file, onChange, onDelete, classes, disabled, ext, ext_upload, confirmed, title} = this.props
+    const {db_document, uploaded_file, onChange, onDelete, classes, disabled, ext, ext_upload, confirmed, title, display_title} = this.props
 
     let doc=uploaded_file ? uploaded_file : db_document ? `${!db_document.startsWith('/') ? '/' : ''}${db_document}` : null
     const extension = uploaded_file ? ext_upload : ext
@@ -81,7 +81,7 @@ class DocumentEditor extends React.Component {
         :
         <Grid item xs={12} className={classes.containerRecto}>
           <label style={{display: 'inline-block', marginTop: 15, textAlign: 'center', width: '100%'}} className="forminputs">
-            <p style={{cursor: 'pointer', color: 'darkgrey', fontSize: '0.9rem'}}>{title}</p>
+            {display_title && <p style={{cursor: 'pointer', color: 'darkgrey', fontSize: '0.9rem'}}>{title}</p>}
             <input disabled={disabled} style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}}
               name="myCardR" type="file"
               onChange={onChange}

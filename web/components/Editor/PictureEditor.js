@@ -21,17 +21,22 @@ class PictureEditor extends React.Component {
   }
 
   render() {
-    const {value, title}=this.props
-    const {uploaded}=this.state
+    let {value, title}=this.props
+    let {uploaded}=this.state
 
+    if (typeof value=='object') {
+      uploaded = value
+      value = null
+    }
     return (
       <Grid style={{display: 'flex'}}>
         <h2>{title}</h2>
         <DocumentEditor
-          title={moment().unix()}
+          title={this.props.id}
           db_document={value || null}
           uploaded_file={uploaded && URL.createObjectURL(uploaded)}
           onChange={this.onChange}
+          display_title={false}
         />
       </Grid>
     )

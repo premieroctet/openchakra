@@ -7,6 +7,9 @@ const getPartnerFromHostname = hostname => {
   if (subdomain=='www') {
     return null
   }
+  if (subdomain=='all-entrepreneurs') {
+    return 'all-inclusive'
+  }
   return subdomain
 }
 

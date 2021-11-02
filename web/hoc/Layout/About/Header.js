@@ -126,16 +126,16 @@ class Header extends React.Component {
             {
               aboutSearch ?
                 <Grid className={classes.navbarSearchContainer}>
-                  <Paper classes={{root: classes.navbarSearch}}>
+                  <Paper classes={{root: `customfaqinputpaper ${classes.navbarSearch}`}}>
                     <InputBase
-                      className={classes.input}
+                      classes={{root: ` ${classes.input}`}}
                       placeholder={ReactHtmlParser(this.props.t('HEADER.placeholder_search'))}
                       inputProps={{'aria-label': ReactHtmlParser(this.props.t('HEADER.placeholder_search'))}}
                       onChange={this.onSearchChange}
                       value={search}
                     />
                     <Grid>
-                      <IconButton classes={{root: classes.iconButton}} aria-label="search"
+                      <IconButton classes={{root: `customfaqiconsearchbar ${classes.iconButton}`}} aria-label="search"
                         onClick={this.callClearFunction}>
                         <CloseIcon/>
                       </IconButton>

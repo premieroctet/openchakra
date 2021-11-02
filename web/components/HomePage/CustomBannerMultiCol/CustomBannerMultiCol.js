@@ -20,37 +20,37 @@ class CustomBannerMultiCol extends React.Component {
         <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
           {
             firstContent ?
-              <Grid item xl lg md sm xs className={classes.centerContent}>
+              <Grid item lg={2} md={12} sm={12} xs={12} className={classes.centerContent}>
                 <Typography className={'customtypocolone'}>{firstContent}</Typography>
               </Grid> : null
           }
           {
             secondContent ?
-              <Grid item xl lg md sm xs className={classes.centerContent}>
+              <Grid item lg={2} md={6} sm={6} xs={12} className={classes.centerContent}>
                 <Typography className={'customtypocoltwo'}>{secondContent}</Typography>
               </Grid> : null
           }
           {
             thirdContent ?
-              <Grid item xl lg md sm xs className={classes.centerContent}>
+              <Grid item lg={2} md={6} sm={6} xs={12} className={classes.centerContent}>
                 <Typography className={'customtypocolthree'}>{thirdContent}</Typography>
               </Grid> : null
           }
           {
             fourContent ?
-              <Grid item xl lg md sm xs className={classes.centerContent}>
+              <Grid item lg={2} md={6} sm={6} xs={12} className={classes.centerContent}>
                 <Typography className={'customtypocolfour'}>{fourContent}</Typography>
               </Grid> : null
           }
           {
             fiveContent ?
-              <Grid item xl lg md sm xs className={classes.centerContent}>
+              <Grid item lg={2} md={6} sm={6} xs={12} className={classes.centerContent}>
                 <Typography className={'customtypocolfive'}>{fiveContent}</Typography>
               </Grid> : null
           }
           {
             sixContent ?
-              <Grid item xl lg md sm xs className={classes.centerContent}>
+              <Grid item lg={2} md={6} sm={6} xs={12} className={classes.centerContent}>
                 <Typography className={'customtypocolsix'}>{sixContent}</Typography>
               </Grid> : null
           }

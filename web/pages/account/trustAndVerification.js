@@ -1,3 +1,4 @@
+import {COMPANY_NAME, TRUST_VERIFICATION} from '../../utils/i18n'
 import Insurance from '../../components/Insurance/Insurance'
 import {canAlfredParticularRegister} from '../../config/config'
 import CustomButton from '../../components/CustomButton/CustomButton'
@@ -32,7 +33,6 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import '../../static/assets/css/custom.css'
-import {TRUST_VERIFICATION} from '../../utils/i18n'
 const {CESU} = require('../../utils/consts')
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
@@ -626,7 +626,7 @@ class trustAndVerification extends React.Component {
   };
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {user} = this.state
 
     if (!user) {
@@ -636,7 +636,7 @@ class trustAndVerification extends React.Component {
     return (
       <React.Fragment>
         <Helmet>
-          <title> Profil - Confiance et vérification - My Alfred </title>
+          <title>Profil-Confiance et vérification-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>

@@ -1,3 +1,4 @@
+import {COMPANY_NAME, SECURITY} from '../../utils/i18n'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -26,7 +27,6 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import Input from '@material-ui/core/Input'
-import {SECURITY} from '../../utils/i18n'
 const {snackBarSuccess} = require('../../utils/notifications')
 import '../../static/assets/css/custom.css'
 
@@ -464,7 +464,7 @@ class security extends React.Component {
 
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {open, open2, user} = this.state
 
     if (!user) {
@@ -474,7 +474,7 @@ class security extends React.Component {
     return (
       <Fragment>
         <Helmet>
-          <title>Compte - Sécurité - My Alfred </title>
+          <title>Compte-Sécurité-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Modifiez votre mot de passe et gérez la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
         </Helmet>

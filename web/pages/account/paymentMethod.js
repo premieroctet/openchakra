@@ -1,3 +1,4 @@
+import {COMPANY_NAME, PAYMENT_METHOD} from '../../utils/i18n'
 import {isLoggedUserAlfred} from '../../utils/context'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -16,7 +17,6 @@ import Divider from '@material-ui/core/Divider'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import HandleCB from '../../components/HandleCB/HandleCB'
 import HandleRIB from '../../components/HandleRIB/HandleRIB'
-import {PAYMENT_METHOD} from '../../utils/i18n'
 
 moment.locale('fr')
 
@@ -75,7 +75,7 @@ class paymentMethod extends React.Component {
   };
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {user} = this.state
 
     if (!user) {
@@ -85,7 +85,7 @@ class paymentMethod extends React.Component {
     return (
       <React.Fragment>
         <Helmet>
-          <title>Compte - Modes de paiement - My Alfred </title>
+          <title>Compte-Modes de paiement-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !"/>
         </Helmet>
