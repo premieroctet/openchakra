@@ -10,6 +10,7 @@ const useStyles = makeStyles(() => ({
   colorText: {
     color: 'white',
   },
+  
 }))
 
 
@@ -23,6 +24,11 @@ function RandomDisplay(props) {
       indicators={true}
       interval={10000}
       navButtonsAlwaysInvisible={true}
+      indicatorContainerProps={{
+        style: {
+          marginTop: 100,
+        },
+      }}
     >
       {
         arrayText.map((res, i) => (
