@@ -1,20 +1,27 @@
 import React from 'react'
 import {Typography} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
-import withStyles from '@material-ui/core/styles/withStyles'
-import styles from '../../static/css/components/InfoBar/InfoBar'
 import '../../static/assets/css/custom.css'
 import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid'
+import {makeStyles} from '@material-ui/core/styles'
+
+const useStyles = makeStyles(() => ({
+  colorText: {
+    color: 'white',
+  },
+}))
+
 
 function RandomDisplay(props) {
-  const {classes, arrayText, loop} = props
+  const {arrayText, loop} = props
+  const classes = useStyles()
 
   return(
     <Carousel
       autoPlay={loop}
       indicators={false}
-      transitionTime={1000}
+      transitionTime={3000}
       navButtonsAlwaysInvisible={true}
     >
       {
@@ -23,7 +30,7 @@ function RandomDisplay(props) {
             {
               res.map((element, index) => (
                 <Grid item md={2} xs={12} key={index}>
-                  <Typography className={`${classes.infoBarColorText} customheaderinfobar`}>{element}</Typography>
+                  <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
                 </Grid>
               ))
             }
@@ -34,4 +41,4 @@ function RandomDisplay(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(RandomDisplay))
+export default withTranslation('custom', {withRef: true})(RandomDisplay)
