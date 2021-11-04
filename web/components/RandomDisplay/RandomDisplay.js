@@ -21,14 +21,8 @@ function RandomDisplay(props) {
   return(
     <Carousel
       autoPlay={loop}
-      indicators={true}
+      indicators={false}
       interval={10000}
-      navButtonsAlwaysInvisible={true}
-      indicatorContainerProps={{
-        style: {
-          marginTop: 100,
-        },
-      }}
     >
       {
         arrayText.map((res, i) => (
