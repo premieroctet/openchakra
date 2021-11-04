@@ -64,9 +64,9 @@ class Home extends React.Component {
       open: false,
       mounted: false,
       arrayText: [
-        ['', INDEX.first_content, INDEX.second_content, INDEX.third_content, INDEX.four_content, INDEX.five_content].map(props.t),
-        ['', INDEX.six_content, INDEX.seven_content, INDEX.eight_content, INDEX.nine_content, INDEX.ten_content].map(props.t),
-        ['', INDEX.eleven_content, INDEX.twelve_content, INDEX.thirteen_content, INDEX.fourteen_content, INDEX.fiveteen_content].map(props.t),
+        ['', 'INDEX.first_content', 'INDEX.second_content', 'INDEX.third_content', 'INDEX.four_content', 'INDEX.five_content'].map(k => ReactHtmlParser(props.t(k))),
+        ['', 'INDEX.six_content', 'INDEX.seven_content', 'INDEX.eight_content', 'INDEX.nine_content', 'INDEX.ten_content'].map(k => ReactHtmlParser(props.t(k))),
+        ['', 'INDEX.eleven_content', 'INDEX.twelve_content', 'INDEX.thirteen_content', 'INDEX.fourteen_content', 'INDEX.fiveteen_content'].map(k => ReactHtmlParser(props.t(k))),
       ],
     }
   }
