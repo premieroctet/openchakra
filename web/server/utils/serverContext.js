@@ -76,10 +76,12 @@ class PartnerServerContext {
   constructor(partner) {
     this.partner=partner
     this.connection=null
+    this.customization=null
     const models='UIConfiguration User Album Availability Billing Booking Calculating Calendar Category ChatRoom Company Count Equipment Favori FilterPresentation Group Job Message Newsletter Option Prestation Prospect ResetToken Review SearchFilter Service ServiceUser ShopBanner Shop Tag User'.split(' ')
     models.forEach(m => {
       this.getModel(m)
     })
+    this.loadCustomization()
   }
 
   getDbName = () => {
@@ -110,6 +112,49 @@ class PartnerServerContext {
     const model=this.getConnection().model(modelName, schema)
     return model
   }
+
+  getProviderFeeRate = () => {
+    return this.customization
+      && this.customization
+      && this.customization.provider_fee
+      && this.customization.provider_fee.rate
+      || 0
+  }
+
+  getProviderFeeRecipient = () => {
+    return this.customization
+      && this.customization
+      && this.customization.provider_fee
+      && this.customization.provider_fee.destinee
+      || 0
+  }
+
+  getClientFeeRate = () => {
+    return this.customization
+      && this.customization
+      && this.customization.customer_fee
+      && this.customization.customer_fee.rate
+      || 0
+  }
+
+  getClientFeeRecipient = () => {
+    return this.customization
+      && this.customization
+      && this.customization.customer_fee
+      && this.customization.customer_fee.destinee
+      || 0
+  }
+
+  loadCustomization = () => {
+    this.getModel('Customization').findOne()
+      .then(res => {
+        this.customization=res
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }
+
 }
 
 class RequestServerContext extends PartnerServerContext {

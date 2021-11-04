@@ -69,10 +69,6 @@ class UIConfiguration extends React.Component {
       })
   }
 
-  getTitle = () => {
-    return 'Paramétrage UI'
-  }
-
   saveImages = () => {
     // get attributes to save
     const FORM_CONFIG = {headers: {'content-type': 'multipart/form-data'}}
@@ -227,10 +223,9 @@ class UIConfiguration extends React.Component {
     const canSave = !saving && Object.keys(modified_parameters).length>0
 
     return (
-      <DashboardLayout>
+      <DashboardLayout title={'Configuration UI'}>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
-            <Typography style={{fontSize: 30}}>{this.getTitle()}</Typography>
             <CustomButton variant='outlined' onClick={this.onSubmit} disabled={!canSave}>{saveTitle}</CustomButton>
           </Grid>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>

@@ -1,7 +1,3 @@
-const {
-  getClientFeeRate,
-  getProviderFeeRate
-} =require('../../../config/config')
 const express = require('express')
 
 const router = express.Router()
@@ -288,8 +284,8 @@ router.post('/compute', (req, res) => {
         totalPrestations && Math.max(roundCurrency((distance-serviceUser.travel_tax.from)*serviceUser.travel_tax.rate), 0)
 
       const totalPrestationsFrais =totalPrestations+travel_tax+pick_tax
-      const client_fee = roundCurrency(totalPrestationsFrais*getClientFeeRate())
-      const provider_fee = roundCurrency(totalPrestationsFrais*getProviderFeeRate())
+      const client_fee = roundCurrency(totalPrestationsFrais*req.context.getClientFeeRate())
+      const provider_fee = roundCurrency(totalPrestationsFrais*req.context.getProviderFeeRate())
       const total=totalPrestationsFrais+client_fee
       res.json({
         total_prestations: totalPrestations,

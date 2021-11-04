@@ -1,7 +1,5 @@
 const {
   MANGOPAY_CONFIG,
-  getClientFeeRecipient,
-  getProviderFeeRecipient,
   get_host_url,
   is_development,
 }=require('../../config/config')
@@ -18,7 +16,6 @@ const {MANGOPAY_ERRORS}=require('../../utils/mangopay_messages')
 const {ADMIN, MANAGER}=require('../../utils/consts')
 const {delayedPromise}=require('../../utils/promise')
 const axios=require('axios')
-
 const util=require('util')
 
 const getWallet = mangopay_id => {
@@ -39,7 +36,7 @@ const getWallet = mangopay_id => {
 const createTransfer = (source_user_id, destination_user_id, debt_amount, fees=0) => {
   console.log(`Creating transfer from ${source_user_id} to ${destination_user_id}, amount ${debt_amount}, fees ${fees}`)
   return new Promise((resolve, reject) => {
-    Promise.all([source_user_id, destination_user_id].map(u => getWallet(u)))
+    Promise.all([source_user_id, destination_user_id].map(getWallet))
       .then(res => {
         const [source_wallet_id, dest_wallet_id]=res
         mangoApi.Transfers.create({
@@ -54,7 +51,7 @@ const createTransfer = (source_user_id, destination_user_id, debt_amount, fees=0
               .then(transfer => {
                 console.log(`Created transfer #${transfer.Id} with status ${transfer.Status}`)
                 if (transfer.Status == 'FAILED') {
-                  return reject(`Transfer #${transfer.Id} failed`)
+                  return reject(`Transfer #${transfer.Id} failed:${transfer.ResultMessage}`)
                 }
                 return resolve(transfer)
               })
@@ -108,7 +105,7 @@ const createPayout = (mangopay_id, amount, fees=0) => {
               PaymentType: 'BANK_WIRE',
             })
               .then(payOut => {
-                delayedPromise(500, () => mangoApi.PayOuts.get(payOut.Id))
+                delayedPromise(1000, () => mangoApi.PayOuts.get(payOut.Id))
                   .then(payOut => {
                     console.log(`Created payout ${payOut.Id} with status ${payOut.Status}`)
                     if (payOut.Status=='FAILED') {
@@ -383,36 +380,29 @@ const addRegistrationProof = user => {
     .catch(err => console.error(err))
 }
 
-const createTransferPayout = (booking, customer_mangopay_id, {recipient_promise, amount, transfer_att, payout_att}) => {
+const createPayment = (booking, mangopay_source_id, mangopay_destination_id, amount, transfer_att, payout_att) => {
 
+  console.log(`Creating payment booking ${booking._id} from ${mangopay_source_id} to ${mangopay_destination_id}`)
   const result={}
-  let recipient_mangopay_id
-  return new Promise((resolve, reject) => {
-    recipient_promise
-      .then(result => {
-        recipient_mangopay_id = result.mangopay_provider_id
-        console.log(`transfer/payout ${amount} for ${recipient_mangopay_id} (${payout_att})`)
-        const transferPromise = booking[transfer_att] ?
-          emptyPromise({Id: booking[transfer_att]})
-          : createTransfer(customer_mangopay_id, recipient_mangopay_id, amount)
-        return transferPromise
-      })
+  return new Promise(resolve => {
+    const transferPromise = booking[transfer_att] ?
+      emptyPromise({Id: booking[transfer_att]})
+      : createTransfer(mangopay_source_id, mangopay_destination_id, amount)
+    transferPromise
       .then(transfer => {
         result[transfer_att] = transfer.Id
-      // return booking.save()
-      })
-      .then(() => {
-        return createPayout(recipient_mangopay_id, amount)
+        const payoutPromise = booking[payout_att] ?
+          emptyPromise({Id: booking[payout_att]})
+          : createPayout(mangopay_destination_id, amount)
+        return payoutPromise
       })
       .then(payout => {
         result[payout_att] = payout.Id
-        result.paid = true
-        result.date_payment = moment()
         resolve(result)
-      // booking.save().then().catch()
       })
       .catch(err => {
-        reject(err)
+        console.error(err)
+        resolve(result)
       })
   })
 }
@@ -423,7 +413,7 @@ const createTransferPayout = (booking, customer_mangopay_id, {recipient_promise,
 * - AvoCotés : transfer booking.amount-booking.fees from customer to Alfred, including fees to My Alfred
 */
 const payBooking = (booking, context) => {
-  console.log(`Starting paying of booking ${booking._id}, amount ${booking.amount}, fees ${booking.fees}`)
+  console.log(`Starting paying of booking ${booking._id}`)
   const role = booking.user_role
 
   let customer_promise = null
@@ -440,29 +430,70 @@ const payBooking = (booking, context) => {
     customer_promise = emptyPromise(booking.user)
   }
 
-  const recipients=[
-    // Alfred
-    {recipient_promise: context.getModel('User').findById(booking.alfred._id), amount: booking.alfred_amount, transfer_att: 'mangopay_transfer_id', payout_att: 'mangopay_payout_id'},
-    // My Alfred
-    {recipient_promise: context.getModel('Company').findById(getClientFeeRecipient()), amount: booking.client_fee, transfer_att: 'customer_fee_transfer_id', payout_att: 'customer_fee_payout_id'},
-    // All inclusive
-    {recipient_promise: context.getModel('Company').findById(getProviderFeeRecipient()), amount: booking.provider_fee, transfer_att: 'provider_fee_transfer_id', payout_att: 'provider_fee_payout_id'},
-  ]
+  const recipients=[]
+
+  // Paiement Alfred
+  if (booking.alfred_amount && !(booking.mangopay_transfer_id && booking.mangopay_payout_id)) {
+    recipients.push(
+      {recipient_promise: context.getModel('User').findById(booking.alfred._id), amount: booking.alfred_amount, transfer_att: 'mangopay_transfer_id', payout_att: 'mangopay_payout_id'},
+    )
+  }
+
+  // Paiement comm. sur l'Alfred
+  if (booking.provider_fee && !(booking.provider_fee_transfer_id && booking.provider_fee_payout_id)) {
+    recipients.push(
+      {recipient_promise: context.getModel('Company').findById(context.getProviderFeeRecipient()), amount: booking.provider_fee, transfer_att: 'provider_fee_transfer_id', payout_att: 'provider_fee_payout_id'},
+    )
+  }
+
+  // Paiement comm. sur le client
+  if (booking.customer_fee && !(booking.customer_fee_transfer_id && booking.customer_fee_payout_id)) {
+    recipients.push(
+      {recipient_promise: context.getModel('Company').findById(context.getClientFeeRecipient()), amount: booking.customer_fee, transfer_att: 'customer_fee_transfer_id', payout_att: 'customer_fee_payout_id'},
+    )
+  }
+
+  console.log(`To pay:${recipients.length} recipients`)
 
   // TODO payBooking pour client Avocotés : alfred_amount pour Alfred, fees pour My Alfred
+  let customer_mangopay_id=null
   customer_promise
     .then(entity => {
-      const customer_mangopay_id=entity.mangopay_id
-      recipients.forEach(recipient => {
-        PROBLEME : createTransferPayout asynchrone ne permet pas de sauver booking en //
-        createTransferPayout(booking, customer_mangopay_id, recipient)
-          .then(res => {
-            console.log(`Transfer payout ok:${JSON.stringify(res)}`)
+      customer_mangopay_id=entity.id_mangopay
+      Promise.allSettled(recipients.map(r => r.recipient_promise))
+        .then(result => {
+          console.log(`recipients:${result.map(r => r.status)}`)
+          const trsfPayPromises = result.map((r, idx) => {
+            const recipient=recipients[idx]
+            const res = r.status=='fulfilled' ?
+              createPayment(
+                booking, customer_mangopay_id, r.value.mangopay_provider_id,
+                recipient.amount, recipient.transfer_att, recipient.payout_att)
+              :
+              null
+            console.log(`Handling recipient ${idx}:${res}`)
+            return res
           })
-          .catch(err => {
-            console.error(`Transfer payout failed:${JSON.stringify(err)}`)
-          })
-      })
+            .filter(data => !!data)
+          Promise.allSettled(trsfPayPromises)
+            .then(result => {
+              result.filter(r => r.status=='fulfilled')
+                .forEach(obj => {
+                  Object.entries(obj.value).forEach(o => {
+                    booking[o[0]]=o[1]
+                  })
+                })
+              if (
+                !!booking.alfred_amount==!!booking.mangopay_payout_id
+                && !!booking.provider_fee==!!booking.provider_fee_payout_id
+                && !!booking.customer_fee==!!booking.customer_fee_payout_id
+              ) {
+                booking.paid=true
+                booking.date_payment=moment()
+              }
+              booking.save()
+            })
+        })
     })
     .catch(err => {
       console.error(err)
