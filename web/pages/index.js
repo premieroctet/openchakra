@@ -52,21 +52,6 @@ const DialogTitle = withStyles(styles)(props => {
   )
 })
 
-
-const fivecol = () => {
-  return(
-    <>
-      <div className={'custombannerimgfirst'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfirsttext'}>{ReactHtmlParser(this.props.t('INDEX.first_content'))}</Typography></div>
-      <div className={'custombannerimgtwo'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworkssecondtext'}>{ReactHtmlParser(this.props.t('INDEX.second_content'))}</Typography></div>
-      <div className={'custombannerimgthree'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksthirdttext'}>{ReactHtmlParser(this.props.t('INDEX.third_content'))}</Typography></div>
-      <div className={'custombannerimgfour'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfourtext'}>{ReactHtmlParser(this.props.t('INDEX.four_content'))}</Typography></div>
-      <div className={'custombannerimgfive'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworksfivetext'}>{ReactHtmlParser(this.props.t('INDEX.five_content'))}</Typography></div>
-      <div className={'custombannerimgsix'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}><Typography className={'customhowitworkssixtext'}>{ReactHtmlParser(this.props.t('INDEX.six_content'))}</Typography></div>
-    </>
-  )
-}
-
-
 class Home extends React.Component {
   constructor(props) {
     super(props)
@@ -79,16 +64,9 @@ class Home extends React.Component {
       open: false,
       mounted: false,
       arrayText: [
-        {
-          text: ['', INDEX.first_content, INDEX.second_content, INDEX.third_content, INDEX.four_content, INDEX.five_content],
-        },
-        {
-          text: ['', INDEX.six_content, INDEX.seven_content, INDEX.eight_content, INDEX.nine_content, INDEX.ten_content],
-        },
-        {
-          text: ['', INDEX.eleven_content, INDEX.twelve_content, INDEX.thirteen_content, INDEX.fourteen_content, INDEX.fiveteen_content],
-        },
-
+        ['', INDEX.first_content, INDEX.second_content, INDEX.third_content, INDEX.four_content, INDEX.five_content].map(props.t),
+        ['', INDEX.six_content, INDEX.seven_content, INDEX.eight_content, INDEX.nine_content, INDEX.ten_content].map(props.t),
+        ['', INDEX.eleven_content, INDEX.twelve_content, INDEX.thirteen_content, INDEX.fourteen_content, INDEX.fiveteen_content].map(props.t),
       ],
     }
   }

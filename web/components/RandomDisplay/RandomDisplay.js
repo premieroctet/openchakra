@@ -7,10 +7,8 @@ import '../../static/assets/css/custom.css'
 import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid'
 
-
 function RandomDisplay(props) {
   const {classes, arrayText, loop} = props
-  const array = arrayText.map(item => item.text)
 
   return(
     <Carousel
@@ -20,7 +18,7 @@ function RandomDisplay(props) {
       navButtonsAlwaysInvisible={true}
     >
       {
-        array.map((res, i) => (
+        arrayText.map((res, i) => (
           <Grid container spacing={2} key={i}>
             {
               res.map((element, index) => (
