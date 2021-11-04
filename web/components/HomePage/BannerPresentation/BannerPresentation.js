@@ -40,21 +40,21 @@ class BannerPresentation extends React.Component {
 
     return (
       <Grid container spacing={2} style={{width: '100%', margin: 0}}>
-        <Grid container spacing={2} style={{width: '100%', margin: 0}} item xl={6} lg={6} md={12} sm={12} xs={12}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'bannerh1'}>
+        <Grid container spacing={2} style={{width: '100%', margin: 0}} item xs={12}>
+          <Grid item xs={12} className={'bannerh1'}>
             <h2 className={classes.bannerPresentationTitle}>
               <span className={`custombannerh1 ${classes.titleSpan}`}>{title}</span>
             </h2>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'bannerh2'}>
+          <Grid item xs={12} className={'bannerh2'}>
             <h2 className={classes.bannerPresentationTitle}>
               <span className={`custombannerh2 ${classes.subtitleSpan}`}>{subTitle}</span>
             </h2>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'bannercontent'}>
+          <Grid item xs={12} className={'bannercontent'}>
             <Typography className={`custombannercontent ${classes.bannerPresentationText}`}>{text}</Typography>
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerLinkDiscrover}>
+          <Grid item xs={12} className={classes.containerLinkDiscrover}>
             <Link href={'/search'}>
               <CustomButton
                 variant={'outlined' }
@@ -66,7 +66,7 @@ class BannerPresentation extends React.Component {
         </Grid>
         {
           isB2BStyle(user) ?
-            <Grid item xl={6} lg={6} md={6} sm={6} xs={6} className={classes.illuContainer}>
+            <Grid item xs={6} className={classes.illuContainer}>
               <img title={'illuB2b'} alt={'illuB2b'} src={`/static/assets/img/homePage/${isB2BStyle(user) ? 'b2bIllu.svg' : 'illuHeader.png'}`} className={classes.illuStyle}/>
             </Grid>
             : null
