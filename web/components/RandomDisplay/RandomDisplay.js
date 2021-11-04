@@ -13,22 +13,25 @@ function RandomDisplay(props) {
   const array = arrayText.map(item => item.text)
 
   return(
-
     <Carousel
       autoPlay={loop}
       indicators={false}
-      timeout={300}
+      transitionTime={1000}
       navButtonsAlwaysInvisible={true}
     >
       {
-        array.map((res, index) =>
-          <Grid container key={index}>
-            <Grid item xl={2}>
-              <Typography className={`${classes.infoBarColorText} customheaderinfobar`}>{res}</Typography>
-            </Grid>
-          </Grid>,
-        )}
-      
+        array.map((res, i) => (
+          <Grid container spacing={2} key={i}>
+            {
+              res.map((element, index) => (
+                <Grid item md={2} xs={12} key={index}>
+                  <Typography className={`${classes.infoBarColorText} customheaderinfobar`}>{element}</Typography>
+                </Grid>
+              ))
+            }
+          </Grid>
+        ))
+      }
     </Carousel>
   )
 }

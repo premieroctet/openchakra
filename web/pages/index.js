@@ -80,11 +80,15 @@ class Home extends React.Component {
       mounted: false,
       arrayText: [
         {
-          text: [INFOBAR.randomTextA, INFOBAR.randomTextB, INFOBAR.randomTextC, INFOBAR.randomTextA, INFOBAR.randomTextB],
+          text: ['', INDEX.first_content, INDEX.second_content, INDEX.third_content, INDEX.four_content, INDEX.five_content],
         },
         {
-          text: [INFOBAR.randomTextB, INFOBAR.randomTextC, INFOBAR.randomTextA, INFOBAR.randomTextB, INFOBAR.randomTextA],
+          text: ['', INDEX.six_content, INDEX.seven_content, INDEX.eight_content, INDEX.nine_content, INDEX.ten_content],
         },
+        {
+          text: ['', INDEX.eleven_content, INDEX.twelve_content, INDEX.thirteen_content, INDEX.fourteen_content, INDEX.fiveteen_content],
+        },
+
       ],
     }
   }
