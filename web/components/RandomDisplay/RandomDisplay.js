@@ -20,8 +20,8 @@ function RandomDisplay(props) {
   return(
     <Carousel
       autoPlay={loop}
-      indicators={false}
-      transitionTime={3000}
+      indicators={true}
+      interval={10000}
       navButtonsAlwaysInvisible={true}
     >
       {
