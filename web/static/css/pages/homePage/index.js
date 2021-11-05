@@ -181,7 +181,4 @@ export default theme => ({
     fontWeight: theme.typography.text.fontWeight,
     fontFamily: theme.typography.text.fontFamily,
   },
-  howItWorksMainStyle: {
-
-  },
 })

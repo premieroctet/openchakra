@@ -41,17 +41,17 @@ class BannerPresentation extends React.Component {
     return (
       <Grid container spacing={2} style={{width: '100%', margin: 0}}>
         <Grid container spacing={2} style={{width: '100%', margin: 0}} item xs={12}>
-          <Grid item xs={12} className={'bannerh1'}>
+          <Grid item xs={12} className={'custombannerh1'}>
             <h2 className={classes.bannerPresentationTitle}>
               <span className={`custombannerh1 ${classes.titleSpan}`}>{title}</span>
             </h2>
           </Grid>
-          <Grid item xs={12} className={'bannerh2'}>
+          <Grid item xs={12} className={'custombannerh2'}>
             <h2 className={classes.bannerPresentationTitle}>
               <span className={`custombannerh2 ${classes.subtitleSpan}`}>{subTitle}</span>
             </h2>
           </Grid>
-          <Grid item xs={12} className={'bannercontent'}>
+          <Grid item xs={12} className={'custombannercontent'}>
             <Typography className={`custombannercontent ${classes.bannerPresentationText}`}>{text}</Typography>
           </Grid>
           <Grid item xs={12} className={classes.containerLinkDiscrover}>
