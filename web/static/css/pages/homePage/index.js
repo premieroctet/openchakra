@@ -71,6 +71,7 @@ export default theme => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
+    minHeight: 300,
   },
   howItWorksComponentB2b: {
     justifyContent: 'center',
@@ -181,6 +182,6 @@ export default theme => ({
     fontFamily: theme.typography.text.fontFamily,
   },
   howItWorksMainStyle: {
-    padding: '6%',
+
   },
 })

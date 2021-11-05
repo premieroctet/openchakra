@@ -10,9 +10,20 @@ const useStyles = makeStyles(() => ({
   colorText: {
     color: 'white',
   },
+  carouselStyle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+  },
+  carouselItem: {
+    height: '100%',
+    '& div:first-child': {
+      height: '100%',
+    },
+  },
   
 }))
-
 
 function RandomDisplay(props) {
   const {arrayText, loop} = props
@@ -22,14 +33,15 @@ function RandomDisplay(props) {
     <Carousel
       autoPlay={loop}
       indicators={false}
-      interval={10000}
+      interval={6000}
+      className={classes.carouselItem}
     >
       {
         arrayText.map((res, i) => (
-          <Grid container spacing={2} key={i}>
+          <Grid container spacing={2} key={i} style={{height: '100%'}}>
             {
               res.map((element, index) => (
-                <Grid item md={2} xs={12} key={index}>
+                <Grid item md={2} xs={12} key={index} className={classes.carouselStyle}>
                   <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
                 </Grid>
               ))

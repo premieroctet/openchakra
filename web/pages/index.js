@@ -71,7 +71,6 @@ class Home extends React.Component {
     }
   }
 
-
   componentDidMount() {
     if (getLoggedUserId()) {
       this.setState({logged: true})
@@ -211,11 +210,9 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           <Grid container className={`customhowitworks ${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
-            <Grid style={{width: '100%'}}>
-              {/* <HowItWorks/>*/}
-              <Grid className={classes.howItWorksMainStyle}>
-                <RandomDisplay arrayText={this.state.arrayText} loop={true}/>
-              </Grid>
+            {/* <HowItWorks/>*/}
+            <Grid item xs={12} className={classes.howItWorksMainStyle}>
+              <RandomDisplay arrayText={this.state.arrayText} loop={true}/>
             </Grid>
           </Grid>
           <Grid container className={`customouralfred ${classes.mainContainerStyle}`}>
