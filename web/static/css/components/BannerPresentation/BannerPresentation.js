@@ -49,6 +49,7 @@ export default theme => ({
   containerLinkDiscrover: {
     display: 'flex',
     marginTop: 20,
+    marginLeft: 100,
   },
   bannerPresentationButton: {
     color: theme.palette.primary.main,
