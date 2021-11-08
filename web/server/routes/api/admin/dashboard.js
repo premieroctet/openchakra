@@ -68,6 +68,7 @@ const uploadCustom = createDiskMulter('static/custom/', IMAGE_FILTER)
 // Add billing for prestation
 // @Access private
 router.post('/billing/all', passport.authenticate('admin', {session: false}), (req, res) => {
+  const {errors, isValid}=validateBillingInput(req.body)
   if (!isValid) {
     return res.status(400).json(errors)
   }
