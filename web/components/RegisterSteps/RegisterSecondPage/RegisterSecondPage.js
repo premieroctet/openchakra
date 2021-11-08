@@ -85,10 +85,6 @@ class RegisterSecondPage extends React.Component {
   render() {
     const{classes, state}= this.props
 
-    const day=state.birthday ? state.birthday.date() : ''
-    const month=state.birthday ? state.birthday.month()+1 : ''
-    const year=state.birthday ? state.birthday.year() : ''
-
     const address_placeholder = (state.city && state.address && state.zip_code) ?
       formatAddress(state) : ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.algolia_placeholder'))
     return(
@@ -152,7 +148,7 @@ class RegisterSecondPage extends React.Component {
                     InputLabelProps={{shrink: true}}
                     error={state.errors.birthday}
                     helperText={state.errors.birthday}
-                    value={day}
+                    value={state.day}
                   />
                 </Grid>
                 <Grid item style={{width: '30%'}}>
@@ -168,7 +164,7 @@ class RegisterSecondPage extends React.Component {
                     }}
                     InputLabelProps={{shrink: true}}
                     error={state.birthdayError}
-                    value={month}
+                    value={state.month}
                   />
                 </Grid>
                 <Grid item style={{width: '30%'}}>
@@ -184,7 +180,7 @@ class RegisterSecondPage extends React.Component {
                     }}
                     InputLabelProps={{shrink: true}}
                     error={state.birthdayError}
-                    value={year}
+                    value={state.year}
                   />
                 </Grid>
               </Grid>

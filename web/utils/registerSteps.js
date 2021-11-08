@@ -52,12 +52,13 @@ const firstPageValidator = parent => {
 }
 
 const secondPageValidator = parent => {
-  const {address, birthday, checked}=parent.state
+  const {address, day, month, year, checked}=parent.state
   let errors={}
   if (!address || Validator.isEmpty(address)) {
     errors.address='Veuillez saisir une adresse'
   }
-  if (!birthday.isValid()) {
+  const birthday=moment().set({date: day, month: month-1, year: year})
+  if (!(day && month && year && birthday.isValid())) {
     errors.birthday='Saisissez une date de naissance valide'
   }
   else if (birthday.isBefore(moment().add(-110, 'years'))) {

@@ -35,7 +35,7 @@ import TextField from '@material-ui/core/TextField'
 import DialogActions from '@material-ui/core/DialogActions'
 let parse = require('url-parse')
 const moment=require('moment')
-const {STEPS}=require('../../utils/registerStep')
+const {STEPS}=require('../../utils/registerSteps')
 import '../../static/assets/css/custom.css'
 
 registerLocale('fr', fr)
@@ -47,7 +47,9 @@ class Register extends React.Component {
     this.state = {
       firstname: '',
       name: '',
-      birthday: moment(),
+      day: '',
+      month: '',
+      year: '',
       email: '',
       password: '',
       password2: '',
@@ -124,7 +126,9 @@ class Register extends React.Component {
           this.setState({
             firstname: user.firstname,
             name: user.name,
-            birthday: moment(user.birthday),
+            day: moment(user.birthday).date,
+            month: moment(user.birthday).month+1,
+            year: moment(user.birthday).year,
             email: user.email,
             phone: user.phone,
             emailValidator: true,
@@ -270,13 +274,14 @@ class Register extends React.Component {
 
   onSubmit = () => {
 
+    const {day, month, year}=this.state
     this.setState({pending: true})
     const newUser = {
       google_id: this.state.google_id,
       facebook_id: this.state.facebook_id,
       firstname: this.state.firstname,
       name: this.state.name,
-      birthday: this.state.birthday,
+      birthday: moment().set({date: day, month: month-1, year: year}),
       email: this.state.email,
       password: this.state.password,
       password2: this.state.password2,
@@ -381,18 +386,15 @@ class Register extends React.Component {
   };
 
   onChangeBirthdayDate = e => {
-    let birthday = this.state.birthday.set('date', e.target.value)
-    this.setState({birthday: birthday}, this.validate)
+    this.setState({day: e.target.value}, this.validate)
   };
 
   onChangeBirthdayMonth = e => {
-    let birthday = this.state.birthday.set('month', parseInt(e.target.value)-1)
-    this.setState({birthday: birthday}, this.validate)
+    this.setState({month: e.target.value}, this.validate)
   };
 
   onChangeBirthdayYear = e => {
-    let birthday = this.state.birthday.set('year', e.target.value)
-    this.setState({birthday: birthday}, this.validate)
+    this.setState({year: e.target.value}, this.validate)
   };
 
   onChangeCompany = comp => {
