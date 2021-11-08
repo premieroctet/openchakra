@@ -179,12 +179,8 @@ router.post('/sendSMSVerification', passport.authenticate('jwt', {session: false
 // @Route PUT /myAlfred/api/users/validateAccount
 // Validate account after register
 router.post('/validateAccount', (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(mongoose.Types.ObjectId(req.body.id), {
-    is_confirmed: true,
-  }, {new: true})
-    .then(user => {
-      res.json(user)
-    })
+  req.context.getModel('User').findByIdAndUpdate(req.body.user_id, {is_confirmed: true})
+    .then(() => res.json())
     .catch(err => {
       console.error(err)
       res.status(400).json(err)

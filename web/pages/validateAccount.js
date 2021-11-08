@@ -45,9 +45,9 @@ class validateAccount extends BasePage {
   onSubmit = e => {
     e.preventDefault()
 
-    const user = this.getURLProps().user
+    const user_id = this.getURLProps().user
     axios
-      .post('/myAlfred/api/users/validateAccount', user)
+      .post('/myAlfred/api/users/validateAccount', {user_id: user_id})
       .then(() => {
         snackBarSuccess('Compte validé')
         Router.push('/')
