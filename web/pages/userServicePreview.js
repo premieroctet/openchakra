@@ -556,17 +556,13 @@ class UserServicesPreview extends BasePage {
   }
 
   hasWarningPerimeter = () => {
-    console.log(`Check warning perimeter`)
     if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user)) {
-      console.log('No SU || no user')
       return false
     }
     if (isEmpty(this.state.location) && !this.getAvocotesBooking()) {
-      console.log(`No location`)
       return true
     }
     if (this.isServiceAtHome() && !this.isInPerimeter()) {
-      console.log(`At home && too far`)
       return true
     }
     return false
