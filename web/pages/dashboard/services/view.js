@@ -255,7 +255,7 @@ class View extends BasePage {
   }
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {service, all_category, all_tags, all_equipments} = this.state
 
     const categories = all_category.map(e => (
@@ -350,7 +350,7 @@ class View extends BasePage {
                       value={service.location ? service.location.alfred : false} name="alfred"
                       onChange={this.onChangeLocation}/>
                   }
-                  label={<React.Fragment><p>chez l'Alfred</p></React.Fragment>}
+                  label={<React.Fragment><p>{`chez l'${t('DASHBOARD.alfred')}`}</p></React.Fragment>}
                 />
                 <FormControlLabel
                   control={

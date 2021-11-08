@@ -14,7 +14,7 @@ class all extends DataPage {
       models.booleanColumn({headerName: 'Pro', field: 'user.shop.is_professional'}),
       models.textColumn({headerName: 'Service', field: 'service.label'}),
       models.textColumn({headerName: 'Catégorie', field: 'service.category.label'}),
-      {headerName: 'Localisation (Client/Alfred/Visio)', field: 'location', cellRenderer: 'locationRenderer'},
+      {headerName: `Localisation (Client/${this.props.t('DASHBOARD.alfred')}/Visio)`, field: 'location', cellRenderer: 'locationRenderer'},
       {headerName: 'Code postal', field: 'service_address.zip_code'},
       models.textColumn({headerName: 'Ville', field: 'service_address.city'}),
       models.textColumn({headerName: 'Frais dep.', field: 'travel_tax_str'}),
@@ -23,7 +23,7 @@ class all extends DataPage {
   }
 
   getTitle = () => {
-    return "Services d'Alfred"
+    return `Services (${this.props.t('DASHBOARD.alfred')})`
   }
 
   loadData = () => {

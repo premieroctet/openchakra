@@ -69,7 +69,7 @@ class home extends React.Component {
               <Grid item xs={6}>
                 <Typography style={{fontSize: 30}}>Base de données</Typography>
                 <Link href="/dashboard/users/all"><a>Comptes</a></Link><br/>
-                <Link href="/dashboard/serviceusers/all"><a>Services des Alfred</a></Link><br/>
+                <Link href="/dashboard/serviceusers/all"><a>Services ({this.props.t('DASHBOARD.alfred')})</a></Link><br/>
                 <Link href="/dashboard/category/all"><a>Catégories</a></Link><br/>
                 <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
                 <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>

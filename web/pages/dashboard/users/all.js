@@ -26,7 +26,7 @@ class all extends DataPage {
       models.dateTimeColumn({headerName: 'Inscrit le', field: 'creation_date', initialSort: 'desc'}),
       models.dateTimeColumn({headerName: 'Création boutique', field: 'shop.creation_date'}),
       models.textColumn({headerName: 'Client Mangopay', field: 'id_mangopay'}),
-      models.textColumn({headerName: 'Alfred Mangopay', field: 'mangopay_provider_id'}),
+      models.textColumn({headerName: `${this.props.t('DASHBOARD.alfred')} Mangopay`, field: 'mangopay_provider_id'}),
       models.warningColumn({headerName: 'Warning', field: 'warning'}),
     ]
   }
