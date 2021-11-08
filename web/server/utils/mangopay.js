@@ -449,7 +449,7 @@ const payBooking = (booking, context) => {
   // Paiement comm. sur le client
   if (booking.customer_fee && !(booking.customer_fee_transfer_id && booking.customer_fee_payout_id)) {
     recipients.push(
-      {recipient_promise: context.getModel('Company').findById(context.getClientFeeRecipient()), amount: booking.customer_fee, transfer_att: 'customer_fee_transfer_id', payout_att: 'customer_fee_payout_id'},
+      {recipient_promise: context.getModel('Company').findById(context.getCustomerFeeRecipient()), amount: booking.customer_fee, transfer_att: 'customer_fee_transfer_id', payout_att: 'customer_fee_payout_id'},
     )
   }
 

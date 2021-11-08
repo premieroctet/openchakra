@@ -125,7 +125,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.date_prestation = req.body.date_prestation
   bookingFields.time_prestation = moment(req.body.time_prestation)
   bookingFields.prestations = req.body.prestations
-  bookingFields.client_fee = req.body.client_fee
+  bookingFields.customer_fee = req.body.customer_fee
   bookingFields.provider_fee = req.body.provider_fee
   bookingFields.travel_tax = req.body.travel_tax
   bookingFields.pick_tax = req.body.pick_tax
@@ -262,6 +262,7 @@ router.post('/compute', (req, res) => {
   const prestations=req.body.prestations
   const location=req.body.location
   const distance=req.body.distance || 0
+  const avocotes_amount = req.body.avocotes_amount || 0
 
   let serviceUser
   req.context.getModel('ServiceUser').findById(serviceUserId)
@@ -284,14 +285,22 @@ router.post('/compute', (req, res) => {
         totalPrestations && Math.max(roundCurrency((distance-serviceUser.travel_tax.from)*serviceUser.travel_tax.rate), 0)
 
       const totalPrestationsFrais =totalPrestations+travel_tax+pick_tax
-      const client_fee = roundCurrency(totalPrestationsFrais*req.context.getClientFeeRate())
-      const provider_fee = roundCurrency(totalPrestationsFrais*req.context.getProviderFeeRate())
-      const total=totalPrestationsFrais+client_fee
+      // Avocotes : commission client = cout avocotes-(prestations+frais)
+      const customer_fee = avocotes_amount ?
+        avocotes_amount-totalPrestationsFrais
+        :
+        roundCurrency(totalPrestationsFrais*req.context.getCustomerFeeRate())
+      // Avocotes : commission alfred = 0
+      const provider_fee = avocotes_amount ?
+        0
+        :
+        roundCurrency(totalPrestationsFrais*req.context.getProviderFeeRate())
+      const total=totalPrestationsFrais+customer_fee
       res.json({
         total_prestations: totalPrestations,
         travel_tax: travel_tax,
         pick_tax: pick_tax,
-        client_fee: client_fee,
+        customer_fee: customer_fee,
         provider_fee: provider_fee,
         total_cesu: totalCesu,
         total: total})
@@ -463,7 +472,7 @@ router.post('/avocotes', (req, res) => {
     .then(user => {
       let bookData={
         user: user, address: user.billing_address,
-        service: req.body.service._id, amount: req.body.totalPrice, client_fees: 0,
+        service: req.body.service._id, amount: req.body.totalPrice, customer_fee: 0,
         prestations: req.body.prestations, reference: computeBookingReference(user, user),
         company_customer: user.company_customer, status: BOOK_STATUS.TO_PAY,
       }

@@ -102,9 +102,11 @@ const BookingSchema = new Schema({
   }],
   customer_fee: {
     type: Number,
+    default: 0,
   },
   provider_fee: {
     type: Number,
+    default: 0,
   },
   status: {
     type: String,

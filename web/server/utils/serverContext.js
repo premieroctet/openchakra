@@ -129,7 +129,7 @@ class PartnerServerContext {
       || 0
   }
 
-  getClientFeeRate = () => {
+  getCustomerFeeRate = () => {
     return this.customization
       && this.customization
       && this.customization.customer_fee
@@ -137,7 +137,7 @@ class PartnerServerContext {
       || 0
   }
 
-  getClientFeeRecipient = () => {
+  getCustomerFeeRecipient = () => {
     return this.customization
       && this.customization
       && this.customization.customer_fee

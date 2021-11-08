@@ -76,7 +76,7 @@ class UserServicesPreview extends BasePage {
       bottom: false,
       count: {},
       totalPrestations: 0,
-      client_fee: 0,
+      customer_fee: 0,
       provider_fee: 0,
       cesu_total: 0,
       total: 0,
@@ -241,7 +241,7 @@ class UserServicesPreview extends BasePage {
                                       date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
                                       time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
                                       location: bookingObj ? bookingObj.location : null,
-                                      client_fee: bookingObj ? bookingObj.client_fee : null,
+                                      customer_fee: bookingObj ? bookingObj.customer_fee : null,
                                       provider_fee: bookingObj ? bookingObj.provider_fee : null,
                                       ...st,
                                     }, () => {
@@ -481,29 +481,28 @@ class UserServicesPreview extends BasePage {
       totalCesu += pickTax ? parseFloat(pickTax) : 0
     }
 
-    let client_fee = totalPrestations * COMM_CLIENT
+    let customer_fee = totalPrestations * COMM_CLIENT
     const avocotes=this.getAvocotesBooking()
     if (avocotes) {
-      client_fee = avocotes.amount-totalPrestations
+      customer_fee = avocotes.amount-totalPrestations
     }
     let total = totalPrestations
-    total += client_fee
+    total += customer_fee
 
     const company_amount=Math.min(total*company_percent, available_budget)
     this.setState({
       totalPrestations: roundCurrency(totalPrestations),
-      client_fee: roundCurrency(client_fee),
+      customer_fee: roundCurrency(customer_fee),
       total: roundCurrency(total),
       company_amount: roundCurrency(company_amount),
       cesu_total: roundCurrency(totalCesu),
     }, () => this.checkBook())
     */
 
-    if (this.getAvocotesBooking()) {
-      snackBarError('ATTENTION: calcul commission avocotes non implémenté')
-    }
-
     const {available_budget, company_percent, count, serviceUser, location}=this.state
+
+    const avocotes=this.getAvocotesBooking()
+    const avocotes_amount = avocotes ? avocotes.amount : null
 
     setAxiosAuthentication()
     axios.post('/myAlfred/api/booking/compute', {
@@ -511,6 +510,7 @@ class UserServicesPreview extends BasePage {
       serviceUser: serviceUser._id,
       distance: this.computeDistance(),
       location: location,
+      avocotes_amount: avocotes_amount,
     })
       .then(res => {
         const company_amount= roundCurrency(Math.min(res.data.total*company_percent, available_budget))
@@ -518,7 +518,7 @@ class UserServicesPreview extends BasePage {
         this.setState({
           total: res.data.total,
           totalPrestations: res.data.total_prestations,
-          client_fee: res.data.client_fee,
+          customer_fee: res.data.customer_fee,
           provider_fee: res.data.provider_fee,
           travel_tax: res.data.travel_tax,
           pick_tax: res.data.pick_tax,
@@ -535,11 +535,16 @@ class UserServicesPreview extends BasePage {
 
   computeDistance = () => {
     const coordSU = this.state.serviceUser.service_address.gps
-    if (!this.getClientAddress()) {
+    const avocotes_booking=this.getAvocotesBooking()
+    if (!this.getClientAddress() && !avocotes_booking) {
       return null
     }
-    const coordUser = this.getClientAddress().gps
-    return computeDistanceKm(coordSU, coordUser)
+    console.log(`Has avocotes:${!!avocotes_booking}`)
+    const coordUser = avocotes_booking ? avocotes_booking.address.gps : this.getClientAddress().gps
+    console.log(`GPS:client ${JSON.stringify(coordUser)} service ${JSON.stringify(coordSU)}`)
+    const distance=computeDistanceKm(coordSU, coordUser)
+    console.log(`Distance:${distance}, autorisé:${this.state.serviceUser.perimeter}`)
+    return distance
   }
 
   isInPerimeter = () => {
@@ -551,13 +556,17 @@ class UserServicesPreview extends BasePage {
   }
 
   hasWarningPerimeter = () => {
+    console.log(`Check warning perimeter`)
     if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user)) {
+      console.log('No SU || no user')
       return false
     }
-    if (isEmpty(this.state.location)) {
+    if (isEmpty(this.state.location) && !this.getAvocotesBooking()) {
+      console.log(`No location`)
       return true
     }
     if (this.isServiceAtHome() && !this.isInPerimeter()) {
+      console.log(`At home && too far`)
       return true
     }
     return false
@@ -593,6 +602,10 @@ class UserServicesPreview extends BasePage {
   }
 
   getClientAddressLabel = () => {
+    const avocotes_booking=this.getAvocotesBooking()
+    if (avocotes_booking) {
+      return `Chez ${avocotes_booking.user.full_name} (${avocotes_booking.user.billing_address.city})`
+    }
     const {location, user, allAddresses}=this.state
     if (['client', 'main'].includes(location)) {
       return ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.at_home'))
@@ -662,7 +675,7 @@ class UserServicesPreview extends BasePage {
       travel_tax: this.state.travel_tax,
       pick_tax: this.state.pick_tax,
       cesu_amount: this.state.cesu_total,
-      client_fee: this.state.client_fee,
+      customer_fee: this.state.customer_fee,
       provider_fee: this.state.provider_fee,
       status: avocotes_booking ? BOOK_STATUS.TO_CONFIRM : actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
       serviceUserId: this.state.serviceUser._id,

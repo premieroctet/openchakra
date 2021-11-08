@@ -129,7 +129,7 @@ class DrawerBooking extends React.Component {
 
     const {expanded} = this.state
     const {warningPerimeter, warningBudget, warningSelf, side, classes, service, alfred, date, time, errors,
-      count, serviceUser, isChecked, location, pick_tax, total, commission,
+      count, serviceUser, isChecked, location, pick_tax, total, customer_fee,
       cesu_total, filters, pricedPrestations, excludedDays, role, company_amount,
       avocotes, all_avocotes} = this.props
 
@@ -382,7 +382,7 @@ class DrawerBooking extends React.Component {
                       company_amount={company_amount}
                       total={total}
                       role={role}
-                      client_fee={commission}
+                      customer_fee={customer_fee}
                       cesu_total={cesu_total}
                     />
                   </Grid>

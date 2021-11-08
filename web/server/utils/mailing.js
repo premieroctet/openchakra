@@ -248,7 +248,7 @@ const sendNewBooking = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
+      total_revenue: parseFloat(booking.alfred_amount).toFixed(2),
       link_showreservation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
 
     },
