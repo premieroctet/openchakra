@@ -25,7 +25,7 @@ const axios = require('axios')
 const _ = require('lodash')
 const {computeUrl}=require('../../../../config/config')
 const {delayedPromise}=require('../../../../utils/promise')
-const {get_token, send_cookie}=require('../../../utils/serverContext')
+const {get_token, send_cookie, get_logged_id}=require('../../../utils/serverContext')
 const {createUIConfiguration} = require('../../../utils/ui_generation')
 
 // For Node < 12.0
@@ -485,6 +485,23 @@ router.put('/users/admin/:id', passport.authenticate('admin', {session: false}),
       res.json(user)
     })
     .catch(() => res.status(404).json({usernotfound: 'No user found'}))
+})
+
+router.put('/users/:user_id/admin/:admin_status', passport.authenticate('admin', {session: false}), (req, res) => {
+  if (!['true', 'false'].includes(req.params.admin_status)) {
+    return res.status(404).json('Statut admin true/false attendu')
+  }
+  if (req.params.user_id==get_logged_id(req)) {
+    return res.status(404).json("Vous ne pouvez pas vous retirer le statut d'administrateur")
+  }
+  const set_admin = req.params.admin_status=='true'
+  req.context.getModel('User').findOneAndUpdate({_id: req.params.user_id}, {is_admin: set_admin})
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
 })
 
 // @Route DELETE /myAlfred/api/admin/users/admin/:id

@@ -57,6 +57,12 @@ class StatusFilter extends React.Component {
     }
   }
 
+  doesFilterPass = p => {
+    const {admin, alfred}=this.state
+    const user=p.data
+    return user && (admin==user.is_admin) && (alfred==user.is_alfred)
+  }
+
   onChange = event => {
     this.setState({[ event.target.name ]: event.target.checked}, () => {
       this.params.filterChangedCallback()
@@ -75,10 +81,10 @@ class StatusFilter extends React.Component {
     return (
       <div>
         <Checkbox name={'alfred'} checked={this.state.alfred} onChange={this.onChange} />
-        <img src="/static/assets/img/userServicePreview/alfred.svg" style={{width: '40px'}} alt='Alfred' title='Alfred' />
+        <img src="/static/assets/img/alfred.svg" style={{width: '40px'}} alt='Alfred' title='Alfred' />
         <br/>
         <Checkbox name={'admin'} checked={this.state.admin} onChange={this.onChange} />
-        <img src="/static/assets/img/userServicePreview/admin.svg" style={{width: '40px'}} alt='Admin' title='Admin' />
+        <img src="/static/assets/img/admin.svg" style={{width: '40px'}} alt='Admin' title='Admin' />
       </div>
     )
   }
