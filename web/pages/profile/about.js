@@ -1,4 +1,4 @@
-import {isEditableUser} from '../../utils/context';
+import {isEditableUser} from '../../utils/context'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'

@@ -163,6 +163,10 @@ const computeBookingReference = (user, alfred) => {
   return reference
 }
 
+const capitalize = text => {
+  return text ? text[0].toUpperCase()+text.slice(1) : text
+}
+
 module.exports = {
   normalize,
   matches,
@@ -181,4 +185,5 @@ module.exports = {
   insensitiveComparator,
   isMobilePhone,
   computeBookingReference,
+  capitalize,
 }

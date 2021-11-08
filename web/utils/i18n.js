@@ -152,11 +152,21 @@ const RESERVATION = {
   allresa: 'Toutes mes réservations',
   commingresa: 'Mes réservations à venir',
   endingresa: 'Mes réservations terminées',
-  infomessage: 'Vous n\'avez aucune réservation en tant qu\'',
-  alfred: 'Alfred',
-  user: 'utilisateur',
+  infomessageAlfred: 'Vous n\'avez aucune réservation en tant qu\'Alfred',
+  infomessageUser: 'Vous n\'avez aucune réservation en tant qu\'utilisateur',
   detailbutton: 'Détail',
   saveagain: 'Réserver de nouveau',
+}
+
+const BOOKING_CANCEL = {
+  title: 'Annuler la réservation',
+  subtitle: 'Si vous annulez cette réservation, vous ferez l\'objet de pénalités :',
+  stepA: '- Le retrait du statut de super Alfred pendant 1 an',
+  stepB: '- Un commentaire public montrant que vous avez annulé',
+  stepC: '- Le paiement des frais d\'annulation ou le blocage des périodes de la prestation sur votre calendrier',
+  penality: 'Si vous avez accepté la réservation instantanée, vous n\'aurez pas ces pénalités si vous avez annulé moins de 3 prestations dans l\'année',
+  backButton: 'Retour',
+  confirm: 'Confirmer l\'annulation',
 }
 
 const DRAWER_BOOKING = {
@@ -407,6 +417,11 @@ const NAVBAR_MENU = {
   ourCom: 'Notre communauté',
   signIn: 'Inscription',
   logIn: 'Connexion',
+  allEPrestation: 'Leurs prestations',
+  allEWork: 'Comment ça marche',
+  allEntrepreneur: 'Nos entrepreneurs',
+  allEBecome: 'Devenir Alleur.e.s',
+  allEContact: 'Nous contacter',
 }
 
 const BANNER_PRESENTATION = {
@@ -1202,6 +1217,15 @@ const INDEX = {
   four_content: '',
   five_content: '',
   six_content: '',
+  seven_content: '',
+  eight_content: '',
+  nine_content: '',
+  ten_content: '',
+  eleven_content: '',
+  twelve_content: '',
+  thirteen_content: '',
+  fourteen_content: '',
+  fiveteen_content: '',
 }
 
 const PAYMENT_FAILED = {
@@ -1449,6 +1473,8 @@ const COOKIE_CONSENT={
   message: "Les cookies sont requis pour vous connecter ou vous inscrire (plus d'informations)",
 }
 
+const COMPANY_NAME='My Alfred'
+
 module.exports = {
   CESU_NOTICE,
   OUTSIDE_PERIMETER,
@@ -1563,4 +1589,6 @@ module.exports = {
   COOKIE_CONSENT,
   CALENDAR,
   RESERVATION,
+  BOOKING_CANCEL,
+  COMPANY_NAME,
 }

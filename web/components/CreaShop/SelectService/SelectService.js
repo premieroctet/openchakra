@@ -131,7 +131,6 @@ class SelectService extends React.Component {
 
     const {classes, is_particular, mode, theme} = this.props
     const {services, loading, service, particular_access, professional_access, particular_professional_access} = this.state
-    console.log(theme, 'theme')
 
     if (!services) {
       return null

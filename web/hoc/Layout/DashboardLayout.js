@@ -1,5 +1,5 @@
-import NavBar from './NavBar/NavBar';
-import { getLoggedUserId } from '../../utils/context';
+import NavBar from './NavBar/NavBar'
+import {getLoggedUserId} from '../../utils/context'
 import DashboardHeader from '../../components/AlfredDashboard/DashboardHeader'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
@@ -20,7 +20,7 @@ class Layout extends React.Component {
     return (
       <Grid>
         <NavBar excludeSearch={true}/>
-        <DashboardHeader/>
+        <DashboardHeader title={this.props.title}/>
         <Grid className={classes.filterMenuDivierContainer}>
           <Divider className={classes.filterMenuDividerStyle}/>
         </Grid>

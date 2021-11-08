@@ -36,7 +36,7 @@ const sendNotification = (notif_index, destinee, params) => {
 
   let enable_mails = ENABLE_MAILING
   // En validation, envoyer les notifications et SMS aux membres de @my-alfred.io
-  if (!enable_mails && is_validation() && (destinee.email||'').toLowerCase().includes('@my-alfred.io')) {
+  if (!enable_mails && is_validation() && (destinee.email||'').match(/@my-alfred.io/i)) {
     console.log('Mailing disabled except for my-alfred.io mails on validation platform')
     enable_mails = true
   }
@@ -248,7 +248,7 @@ const sendNewBooking = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
+      total_revenue: parseFloat(booking.alfred_amount).toFixed(2),
       link_showreservation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
 
     },
@@ -302,7 +302,7 @@ const sendAskingInfo = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
+      total_revenue: parseFloat(booking.alfred_amount).toFixed(2),
       link_requestinformation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
   )
@@ -356,7 +356,7 @@ const sendNewBookingManual = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
+      total_revenue: parseFloat(booking.alfred_amount).toFixed(2),
       link_confirmbooking: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
   )
@@ -373,6 +373,15 @@ const sendAlert = (user, subject, message) => {
     },
   )
 }
+
+const sendAdminsAlert = (subject, message, context) => {
+  context.getModel('User').find({is_admin: true, active: true})
+    .then(admins => {
+      admins.forEach(admin => sendAlert(admin, subject, message))
+    })
+    .catch(err => console.error(err))
+}
+
 
 const sendB2BAccount = (user, email, role, company, token, req) => {
   sendNotification(
@@ -428,4 +437,5 @@ module.exports = {
   sendAlert,
   sendB2BRegistration,
   sendBookingRefusedToAlfred,
+  sendAdminsAlert,
 }

@@ -8,7 +8,7 @@ import styles from './../ButtonSwitch/ButtonSwitchStyle'
 import Grid from '@material-ui/core/Grid'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import {TRAVEL_TAX} from '../../utils/i18n'
-const {roundCurrency}=require('../../utils/functions')
+const {roundCurrency}=require('../../utils/converters')
 
 class TravelTax extends React.Component {
 

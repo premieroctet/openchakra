@@ -1,3 +1,5 @@
+import { snackBarError, snackBarSuccess } from '../../../utils/notifications';
+import { setAxiosAuthentication } from '../../../utils/authentication';
 import {withTranslation} from 'react-i18next'
 const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles'
@@ -24,8 +26,8 @@ class all extends DataPage {
       models.dateTimeColumn({headerName: 'Inscrit le', field: 'creation_date', initialSort: 'desc'}),
       models.dateTimeColumn({headerName: 'Création boutique', field: 'shop.creation_date'}),
       models.textColumn({headerName: 'Client Mangopay', field: 'id_mangopay'}),
-      models.textColumn({headerName: 'Alfred Mangopay', field: 'mangopay_provider_id'}),
-      models.textColumn({headerName: 'Warning', field: 'warning', cellRenderer: 'warningRenderer'}),
+      models.textColumn({headerName: `${this.props.t('DASHBOARD.alfred')} Mangopay`, field: 'mangopay_provider_id'}),
+      models.warningColumn({headerName: 'Warning', field: 'warning'}),
     ]
   }
 
@@ -60,13 +62,25 @@ class all extends DataPage {
       }
       return
     }
-    else if (['id_mangopay', 'mangopay_provider_id'].includes(field)) {
+    if (['id_mangopay', 'mangopay_provider_id'].includes(field)) {
       if (value) {
         const sandbox = MANGOPAY_CONFIG.sandbox
         const mangopay_base_url = sandbox ? 'https://dashboard.sandbox.mangopay.com' : 'https://dashboard.mangopay.com'
         return window.open(`${mangopay_base_url}/User/${value}/Details`)
       }
-      window.open(`/profile/about?user=${data._id}`)
+      return window.open(`/profile/about?user=${data._id}`)
+    }
+    if (field == 'status') {
+      const set_admin=!data.is_admin
+      setAxiosAuthentication()
+      axios.put(`/myAlfred/api/admin/users/${ data._id}/admin/${set_admin}`)
+        .then(() => {
+          snackBarSuccess(`${data.full_name} ${set_admin ? 'est devenu(e)': "n'est plus"} administrateur`)
+          this.componentDidMount()
+        })
+        .catch(err => {
+          snackBarError(err.response.data)
+        })
     }
   }
 

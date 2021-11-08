@@ -1,16 +1,16 @@
+import axios from 'axios';
+import { isLoggedUserAdmin, isUserSuperAdmin } from '../../utils/context';
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
-import Router from 'next/router';
-import DashboardLayout from '../../hoc/Layout/DashboardLayout';
-import Link from 'next/link';
-
-const {isLoggedUserAdmin}=require('../../utils/context')
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Router from 'next/router'
+import DashboardLayout from '../../hoc/Layout/DashboardLayout'
+import Link from 'next/link'
 
 const styles = () => ({
   signupContainer: {
@@ -21,7 +21,7 @@ const styles = () => ({
   },
   card: {
     padding: '1.5rem 3rem',
-    width: 400,
+    width: '90%',
     marginTop: '100px',
   },
   cardContant: {
@@ -38,6 +38,9 @@ const styles = () => ({
 class home extends React.Component {
   constructor(props) {
     super(props)
+    this.state={
+      user: null,
+    }
   }
 
   componentDidMount() {
@@ -46,38 +49,27 @@ class home extends React.Component {
       Router.push('/login')
     }
     setAxiosAuthentication()
+    axios.get('/myAlfred/api/users/current')
+      .then(response => {
+        this.setState({user: response.data})
+      })
   }
 
   render() {
     const {classes} = this.props
+    const {user}=this.state
+
+    const superAdmin = isUserSuperAdmin(user)
 
     return (
       <DashboardLayout>
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
-            <Grid>
-              <Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <Typography style={{fontSize: 30}}>Maintenance</Typography>
-                </Grid>
-                <Link href="/dashboard/logAsUser"><a>Connexion en tant qu'autre utilisateur</a></Link><br/>
-
-                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <Typography style={{fontSize: 30}}>Moniteur</Typography>
-                </Grid>
-                <Link href="/dashboard/statistics"><a>Statistiques</a></Link><br/>
-                <Link href="/dashboard/map"><a>Carte des services</a></Link><br/>
-                <Link href="/dashboard/bookings"><a>Réservations</a></Link><br/>
-                <Link href="/dashboard/prospect"><a>Prospection</a></Link><br/>
-                <Link href="http://my-alfred.io:2000/blog/admin"><a>Administration WordPress</a></Link><br/>
-
-                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <Typography style={{fontSize: 30}}>Base de données</Typography>
-                </Grid>
-                <Link href="/dashboard/uiconfiguration"><a>Configuration UI</a></Link><br/>
+            <Grid container>
+              <Grid item xs={6}>
+                <Typography style={{fontSize: 30}}>Base de données</Typography>
                 <Link href="/dashboard/users/all"><a>Comptes</a></Link><br/>
-                <Link href="/dashboard/serviceusers/all"><a>Services des Alfred</a></Link><br/>
-                <Link href="/dashboard/companies/all"><a>Entreprises</a></Link><br/>
+                <Link href="/dashboard/serviceusers/all"><a>Services ({this.props.t('DASHBOARD.alfred')})</a></Link><br/>
                 <Link href="/dashboard/category/all"><a>Catégories</a></Link><br/>
                 <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
                 <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>
@@ -87,6 +79,24 @@ class home extends React.Component {
                 <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
                 <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                 <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography style={{fontSize: 30}}>Maintenance</Typography>
+                <Link href="/dashboard/logAsUser"><a>Connexion en tant qu'autre utilisateur</a></Link><br/>
+
+                { superAdmin &&
+                  <>
+                    <Typography style={{fontSize: 30}}>Paramétrage</Typography>
+                    <Link href="/dashboard/uiconfiguration"><a>Configuration UI</a></Link><br/>
+                    <Link href="/dashboard/companies/all"><a>Entreprises</a></Link><br/>
+                    <Link href="/dashboard/commissions"><a>Paramétrage des commissions</a></Link><br/>
+                  </>
+                }
+
+                <Typography style={{fontSize: 30}}>Moniteur</Typography>
+                <Link href="/dashboard/statistics"><a>Statistiques</a></Link><br/>
+                <Link href="/dashboard/map"><a>Carte des services</a></Link><br/>
+                <Link href="/dashboard/bookings"><a>Réservations</a></Link><br/>
               </Grid>
             </Grid>
           </Card>

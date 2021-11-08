@@ -33,6 +33,9 @@ const styles = theme => ({
   'example::-webkit-scrollbar': {
     display: 'none',
   },
+  paddingList: {
+    backgroundColor: theme.palette.primary.main,
+  },
 })
 
 class UIConfiguration extends React.Component {
@@ -64,10 +67,6 @@ class UIConfiguration extends React.Component {
           this.setState({current_page_name: parameters[0].page}, () => this.sortColors())
         }
       })
-  }
-
-  getTitle = () => {
-    return 'Paramétrage UI'
   }
 
   saveImages = () => {
@@ -224,17 +223,16 @@ class UIConfiguration extends React.Component {
     const canSave = !saving && Object.keys(modified_parameters).length>0
 
     return (
-      <DashboardLayout>
+      <DashboardLayout title={'Configuration UI'}>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
-            <Typography style={{fontSize: 30}}>{this.getTitle()}</Typography>
             <CustomButton variant='outlined' onClick={this.onSubmit} disabled={!canSave}>{saveTitle}</CustomButton>
           </Grid>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
-            <TextField name={'filter'} value={filter} onChange={this.onFilterChanged}/>
+            <TextField placeholder={'Rercherche'} name={'filter'} value={filter} onChange={this.onFilterChanged}/>
           </Grid>
           <Grid container style={{display: 'flex', flexDirection: 'row'}}>
-            <List className={'customappbar'} classes={{root: classes.paddingList}} style={{height: '100vh'}}>
+            <List className={'customappbar'} classes={{root: classes.paddingList}} style={{minHeight: '100vh'}}>
               {
                 pages.map((item, index) => (
                   <Grid key={index} className={classes.hoverButton}>

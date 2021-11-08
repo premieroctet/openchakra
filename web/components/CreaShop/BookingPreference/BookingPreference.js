@@ -62,7 +62,7 @@ class BookingPreference extends React.Component {
   }
 
   render() {
-    const {classes} = this.props
+    const {classes, theme} = this.props
     const {service} = this.state
 
     return (
@@ -154,7 +154,7 @@ class BookingPreference extends React.Component {
                         width={100}
                         alt={result.label}
                         title={result.label}
-                        style={{backgroundColor: selected ? '#CEDEFC' : null}}
+                        style={{backgroundColor: selected ? theme.palette.primary.main : null}}
                       />
                       <Checkbox
                         style={{display: 'none'}}
@@ -176,4 +176,4 @@ class BookingPreference extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingPreference))
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(BookingPreference))

@@ -29,6 +29,7 @@ import MessageSummary from '../../components/MessageSummary/MessageSummary'
 import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import styles from '../../static/css/pages/profile/messages/messages'
+import Hidden from "@material-ui/core/Hidden";
 
 const moment=require('moment')
 
@@ -284,16 +285,16 @@ class Messages extends BasePage {
 
     return (
       <React.Fragment>
-        <Grid className={classes.layoutMessagesContainer}>
+        <Hidden only={['xs']}>
           <LayoutMessages handleChange={this.handleChangeTab} {...this.state} user={user}>
             {this.content(classes)}
           </LayoutMessages>
-        </Grid>
-        <Grid className={classes.layoutMobileMessageContainer}>
+        </Hidden>
+        <Hidden only={['xl', 'lg', 'md', 'sm']}>
           <LayoutMobileMessages handleChange={this.handleChangeTab} {...this.state} currentIndex={3} user={user}>
             {this.content(classes)}
           </LayoutMobileMessages>
-        </Grid>
+        </Hidden>
         {relativeDetails ? this.messageDetails(classes) : null}
       </React.Fragment>
     )

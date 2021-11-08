@@ -61,7 +61,7 @@ class CardPreview extends React.Component {
                       value={item.user.score}
                       max={1}
                       readOnly
-                      className={'customcardpreviewstar'}
+                      className={'customcardpreviewrating'}
                     />
                     <Typography className={'customcardpreviewrating'}>({item.user.score})</Typography>
                   </Box>

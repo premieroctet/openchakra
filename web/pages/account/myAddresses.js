@@ -1,3 +1,4 @@
+import {COMPANY_NAME, MY_ADDRESSES} from '../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import HandleAddresses from '../../components/HandleAddresses/HandleAddresses'
@@ -16,7 +17,6 @@ import Divider from '@material-ui/core/Divider'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 const {isB2BAdmin}=require('../../utils/context')
 import '../../static/assets/css/custom.css'
-import {MY_ADDRESSES} from '../../utils/i18n'
 
 moment.locale('fr')
 
@@ -86,7 +86,7 @@ class myAddresses extends React.Component {
   };
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {user} = this.state
 
     if (!user) {
@@ -96,7 +96,7 @@ class myAddresses extends React.Component {
     return (
       <React.Fragment>
         <Helmet>
-          <title> Profil - Mes adresses de prestation - My Alfred </title>
+          <title>Profil-Mes adresses de prestation-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…"/>
         </Helmet>

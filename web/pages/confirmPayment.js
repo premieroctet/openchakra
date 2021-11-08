@@ -33,7 +33,7 @@ class ConfirmPayment extends BasePage {
       pick_tax: null,
       travel_tax: null,
       total: 0,
-      fees: null,
+      customer_fee: null,
       grandTotal: null,
       cesu_total: 0,
       checkedOption: false,
@@ -63,7 +63,7 @@ class ConfirmPayment extends BasePage {
           hour: bookingObj.time_prestation,
           travel_tax: bookingObj.travel_tax,
           pick_tax: bookingObj.pick_tax,
-          fees: bookingObj.fees,
+          customer_fee: bookingObj.customer_fee,
           grandTotal: bookingObj.amount,
           cesu_total: bookingObj.cesu_amount,
           alfredId: bookingObj.alfred._id,
@@ -111,12 +111,10 @@ class ConfirmPayment extends BasePage {
     }
     const booking_id=this.getURLProps().booking_id
     const total = parseFloat(this.state.grandTotal)
-    const fees = parseFloat(this.state.fees)
     const data = {
       booking_id: booking_id,
       id_card: this.state.id_card,
       amount: total,
-      fees: fees,
       browserInfo: {
         JavaEnabled: navigator.javaEnabled,
         Language: navigator.language,
@@ -150,11 +148,9 @@ class ConfirmPayment extends BasePage {
   pay = () => {
     const booking_id=this.getURLProps().booking_id
     const total = parseFloat(this.state.grandTotal)
-    const fees = parseFloat(this.state.fees)
     const data = {
       booking_id: booking_id,
       amount: total,
-      fees: fees,
     }
 
     axios.post('/myAlfred/api/payment/payIn', data)

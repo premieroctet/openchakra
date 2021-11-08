@@ -104,7 +104,7 @@ class BookingConditions extends React.Component {
               ref={this.conditions[ALF_CONDS.ID_CARD]}
             />
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customconditionbereco'}>
             <ButtonSwitch
               key={moment()}
               id={ALF_CONDS.RECOMMEND}

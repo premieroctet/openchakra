@@ -110,12 +110,14 @@ export default theme => ({
     height: 64,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
+    backgroundSize: 'contain',
   },
   logoMyAlfred: {
     backgroundImage: 'url(../../../assets/icon/logo.svg)',
     height: 64,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
+    backgroundSize: 'contain',
   },
   disabledStyle: {
     color: 'rgba(0,0,0,0.26)',

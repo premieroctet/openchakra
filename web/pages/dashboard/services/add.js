@@ -232,11 +232,8 @@ class add extends React.Component {
   }
 
   render() {
-    const {classes} = this.props
-    const {all_category} = this.state
-    const {all_tags} = this.state
-    const {all_equipments} = this.state
-    const {errors} = this.state
+    const {classes, t} = this.props
+    const {all_category, all_tags, all_equipments, errors} = this.state
 
     const categories = all_category.map(e => (
 
@@ -346,7 +343,7 @@ class add extends React.Component {
                         checked={this.state.location.alfred} value={this.state.location.alfred} name="alfred"
                         onChange={this.onChangeLocation}/>
                     }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>Chez l'Alfred</p></React.Fragment>}
+                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>{`Chez l'${t('DASHBOARD.alfred')}`}</p></React.Fragment>}
                   />
                   <FormControlLabel
                     control={
@@ -426,7 +423,7 @@ class add extends React.Component {
                         name={'alfred'}
                       />
                     }
-                    label="Alfred"
+                    label={t('DASHBOARD.alfred')}
                   />
 
                 </Grid>

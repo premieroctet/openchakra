@@ -38,7 +38,6 @@ export default theme => ({
   titleSpan: {
     fontSize: '20px',
     fontWeight: 400,
-    textTransform: 'uppercase',
     letterSpacing: '6.5px',
     display: 'block',
   },
@@ -49,8 +48,8 @@ export default theme => ({
   },
   containerLinkDiscrover: {
     display: 'flex',
-    justifyContent: 'center',
-    marginTop: '5vh',
+    marginTop: 20,
+    marginLeft: 100,
   },
   bannerPresentationButton: {
     color: theme.palette.primary.main,

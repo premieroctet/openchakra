@@ -1,17 +1,15 @@
-import RandomDisplay from "../components/RandomDisplay/RandomDisplay";
-
+import {COMPANY_NAME, INDEX, INFOBAR} from '../utils/i18n'
 const {
   getLoggedUserId,
   isApplication,
   isB2BStyle,
   isMobile,
 } = require('../utils/context')
-import {canAlfredSelfRegister} from '../config/config'
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import axios from 'axios'
-import React, {useState} from 'react'
+import React from 'react'
 import Footer from '../hoc/Layout/Footer/Footer'
 import {Helmet} from 'react-helmet'
 import Grid from '@material-ui/core/Grid'
@@ -36,9 +34,9 @@ import {isAndroid} from 'react-device-detect'
 const {PRO, PART} = require('../utils/consts')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
-import {INDEX, INFOBAR} from '../utils/i18n'
 import _ from 'lodash'
 import CustomBannerMultiCol from '../components/HomePage/CustomBannerMultiCol/CustomBannerMultiCol'
+import RandomDisplay from '../components/RandomDisplay/RandomDisplay'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -66,13 +64,12 @@ class Home extends React.Component {
       open: false,
       mounted: false,
       arrayText: [
-        INFOBAR.randomTextA,
-        INFOBAR.randomTextB,
-        INFOBAR.randomTextC,
+        ['', 'INDEX.first_content', 'INDEX.second_content', 'INDEX.third_content', 'INDEX.four_content', 'INDEX.five_content'].map(k => ReactHtmlParser(props.t(k))),
+        ['', 'INDEX.six_content', 'INDEX.seven_content', 'INDEX.eight_content', 'INDEX.nine_content', 'INDEX.ten_content'].map(k => ReactHtmlParser(props.t(k))),
+        ['', 'INDEX.eleven_content', 'INDEX.twelve_content', 'INDEX.thirteen_content', 'INDEX.fourteen_content', 'INDEX.fiveteen_content'].map(k => ReactHtmlParser(props.t(k))),
       ],
     }
   }
-
 
   componentDidMount() {
     if (getLoggedUserId()) {
@@ -155,8 +152,9 @@ class Home extends React.Component {
   }
 
   render() {
-    const {classes} = this.props
+    const {classes, t} = this.props
     const {mounted, categories, alfred, open, user} = this.state
+    
     if (!mounted) {
       return null
     }
@@ -165,7 +163,7 @@ class Home extends React.Component {
 
       <Grid>
         <Helmet>
-          <title>Services rémunérés entre particuliers - My Alfred </title>
+          <title>{t('COMPANY_NAME')}</title>
           <meta
             property="description"
             content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"
@@ -212,17 +210,9 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           <Grid container className={`customhowitworks ${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
-            <Grid style={{width: '100%'}}>
-              {/* <HowItWorks/>*/}
-              <Grid className={classes.howItWorksMainStyle}>
-                <CustomBannerMultiCol
-                  firstContent={
-                    <div className={'custombannerimgfirst'} style={{backgroundSize: 'contain', width: '100%', height: '100%'}}>
-                      <RandomDisplay arrayText={this.state.arrayText} loop={true}/>
-                    </div>
-                  }
-                />
-              </Grid>
+            {/* <HowItWorks/>*/}
+            <Grid item xs={12} className={classes.howItWorksMainStyle}>
+              <RandomDisplay arrayText={this.state.arrayText} loop={true}/>
             </Grid>
           </Grid>
           <Grid container className={`customouralfred ${classes.mainContainerStyle}`}>

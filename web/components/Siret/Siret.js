@@ -9,7 +9,6 @@ import axios from 'axios'
 import styles from '../../static/css/components/Siret/Siret'
 import ButtonSwitch from '../ButtonSwitch/ButtonSwitch'
 import {SHOP} from '../../utils/i18n'
-
 const moment = require('moment')
 const {SIRET} = require('../../config/config')
 const {compact, compute_vat_number, isSiretSirenLength}=require('../../utils/text')
@@ -110,12 +109,12 @@ class Siret extends React.Component {
   }
 
   render() {
-    const {classes} = this.props
+    const {classes, xl} = this.props
 
     const coupureToday = DATE_COUPURE_INSEE.format('DD/MM/YY') === moment().format('DD/MM/YY')
 
     return (
-      <Grid>
+      <Grid container spacing={2} style={{width: '100%', margin: 0}}>
         {coupureToday ?
           <Typography style={{color: 'red'}}>
             {ReactHtmlParser(this.props.t('SHOP.creation.insee_info_begin')) + DATE_COUPURE_INSEE.format('DD/MM/YY') + ReactHtmlParser(this.props.t('SHOP.creation.insee_info_end'))}
@@ -123,68 +122,65 @@ class Siret extends React.Component {
           :
           null
         }
-        <Grid>
-          <Grid container spacing={3}>
-            <Grid item xl={12} xs={12}>
-              <TextField
-                id="filled-with-placeholder"
-                label={ReactHtmlParser(this.props.t('SHOP.creation.siret'))}
-                variant="outlined"
-                name={'siret'}
-                value={this.state.siret}
-                onChange={this.onChange}
-                classes={{root: classes.textField}}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Grid>
-            <Grid container>
-              <Grid item xl={6}>
-                <em style={{color: 'red'}}>{this.state.errors}</em>
-              </Grid>
+        <Grid container item spacing={3} style={{width: '100%', margin: 0}}>
+          <Grid item xl={12} xs={12}>
+            <TextField
+              id="filled-with-placeholder"
+              label={ReactHtmlParser(this.props.t('SHOP.creation.siret'))}
+              variant="outlined"
+              name={'siret'}
+              value={this.state.siret}
+              onChange={this.onChange}
+              classes={{root: classes.textField}}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </Grid>
+          <Grid container>
+            <Grid item xl={6}>
+              <em style={{color: 'red'}}>{this.state.errors}</em>
             </Grid>
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xl={6} xs={12}>
-              <TextField
-                id="filled-with-placeholder"
-                label={ReactHtmlParser(this.props.t('SHOP.creation.name'))}
-                variant="outlined"
-                type="text"
-                name={'name'}
-                value={this.state.name}
-                onChange={this.onChange}
-                classes={{root: classes.textField}}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Grid>
+        </Grid>
+        <Grid container item spacing={3} style={{width: '100%', margin: 0}}>
+          <Grid item xl={xl ? xl : 6} xs={12}>
+            <TextField
+              id="filled-with-placeholder"
+              label={ReactHtmlParser(this.props.t('SHOP.creation.name'))}
+              variant="outlined"
+              type="text"
+              name={'name'}
+              value={this.state.name}
+              onChange={this.onChange}
+              classes={{root: classes.textField}}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
           </Grid>
-
-          <Grid container spacing={3}>
-            <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-              <ButtonSwitch
-                label={<Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_professional_vat_subject'))}</Typography>}
-                onChange={this.onVatSubjectChanged}
-                name={'vat_subject'}
-                checked={this.state.vat_subject}/>
-            </Grid>
-            {
-              this.state.vat_subject ?
-                <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <TextField
-                    id="outlined-basic"
-                    label={ReactHtmlParser(this.props.t('SHOP.creation.textfield_ntva'))}
-                    variant="outlined"
-                    onChange={this.onChange}
-                    name={'vat_number'}
-                    value={this.state.vat_number}
-                  />
-                </Grid> : null
-            }
+        </Grid>
+        <Grid container item spacing={3} style={{width: '100%', margin: 0}}>
+          <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+            <ButtonSwitch
+              label={<Typography className={classes.policySizeContent}>{ReactHtmlParser(this.props.t('SHOP.creation.is_professional_vat_subject'))}</Typography>}
+              onChange={this.onVatSubjectChanged}
+              name={'vat_subject'}
+              checked={this.state.vat_subject}/>
           </Grid>
+          {
+            this.state.vat_subject ?
+              <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
+                <TextField
+                  id="outlined-basic"
+                  label={ReactHtmlParser(this.props.t('SHOP.creation.textfield_ntva'))}
+                  variant="outlined"
+                  onChange={this.onChange}
+                  name={'vat_number'}
+                  value={this.state.vat_number}
+                />
+              </Grid> : null
+          }
         </Grid>
       </Grid>
     )
