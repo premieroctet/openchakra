@@ -211,9 +211,6 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
   browserInfo.AcceptHeader=req.headers.accept
   const ipAddress=req.connection.remoteAddress
 
-  console.log(`payInDirect IpAddress:${ipAddress}`)
-  console.log(`payInDirect BrowserInfo:${JSON.stringify(browserInfo, null, 2)}`)
-
   const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
   promise
     .then(entity => {
