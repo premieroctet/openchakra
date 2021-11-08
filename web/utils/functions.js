@@ -52,13 +52,6 @@ const computeSumSkills = skills => {
   return res
 }
 
-const roundCurrency = amount => {
-  if (!amount) {
-    return amount
-  }
-  return Math.round(amount*100)/100
-}
-
 const rgbaToHex = orig => {
   let a, isPercent,
     rgb = orig.replace(/\s/g, '').match(/^rgba?\((\d+),(\d+),(\d+),?([^,\s)]+)?/i),
@@ -82,5 +75,5 @@ const rgbaToHex = orig => {
 }
 
 module.exports = {
-  computeDistanceKm, computeAverageNotes, computeSumSkills, roundCurrency, rgbaToHex,
+  computeDistanceKm, computeAverageNotes, computeSumSkills, rgbaToHex,
 }

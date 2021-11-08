@@ -15,7 +15,7 @@ class BookingDetail extends React.Component {
   render() {
     const {
       classes, prestations, count, travel_tax, pick_tax, total, alfred_fee,
-      client_fee, cesu_total, mode, role, company_amount} = this.props
+      customer_fee, cesu_total, mode, role, company_amount} = this.props
 
     return (
       <Grid>
@@ -61,13 +61,13 @@ class BookingDetail extends React.Component {
             </Grid> : null}
           { /* End pick tax */}
           { /* Start commission */}
-          {client_fee && client_fee !== 0 && !mode ?
+          {customer_fee && customer_fee !== 0 && !mode ?
             <Grid className={`customdisplayservicecost ${classes.flexContent}`}>
               <Grid className={classes.labelContent}>
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
               </Grid>
               <Grid className={classes.priceContent}>
-                <p>{client_fee.toFixed(2)}€</p>
+                <p>{customer_fee.toFixed(2)}€</p>
               </Grid>
             </Grid> : null
           }
@@ -87,7 +87,7 @@ class BookingDetail extends React.Component {
             total ?
               <Grid className={`custombookingtotal ${classes.flexContent}`} style={{fontWeight: 'bold'}}>
                 <Grid>
-                  <p>{client_fee !== 0 ? ReactHtmlParser(this.props.t('BOOKING_DETAIL.total')) : ReactHtmlParser(this.props.t('BOOKING_DETAIL.will_total'))}</p>
+                  <p>{customer_fee !== 0 ? ReactHtmlParser(this.props.t('BOOKING_DETAIL.total')) : ReactHtmlParser(this.props.t('BOOKING_DETAIL.will_total'))}</p>
                 </Grid>
                 <Grid>
                   <p>{total.toFixed(2)}€</p>
@@ -97,7 +97,7 @@ class BookingDetail extends React.Component {
 
           { /* End total */}
           { /* Start CESU */}
-          {client_fee && cesu_total && !mode ?
+          {customer_fee && cesu_total && !mode ?
             <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
               <Grid>
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.cesu'))}</p>

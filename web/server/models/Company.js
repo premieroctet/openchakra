@@ -89,4 +89,8 @@ CompanySchema.virtual('full_name').get(function() {
   return this.name
 })
 
+CompanySchema.virtual('mangopay_provider_id').get(function() {
+  return this.id_mangopay
+})
+
 module.exports = CompanySchema

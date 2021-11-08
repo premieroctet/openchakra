@@ -30,15 +30,6 @@ const generate_id = () => {
 
 const GID_LEN = 40
 
-const COMM_ALFRED = 0.0
-const COMM_CLIENT = 0.18
-
-const SIRET = {
-  token: 'ca27811b-126c-35db-aaf0-49aea431706e',
-  siretUrl: 'https://api.insee.fr/entreprises/sirene/V3/siret',
-  sirenUrl: 'https://api.insee.fr/entreprises/sirene/V3/siren',
-}
-
 const ENTITES = {
   '1000': 'Entrepreneur individuel',
   '2110': 'Indivision entre personnes physiques',
@@ -478,7 +469,7 @@ const INSURANCE_TYPES={
 
 module.exports = {
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,
-  generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN, ENTITES, CESU,
+  generate_id, GID_LEN, ENTITES, CESU,
   MODES, GOOGLE_PROVIDER, FACEBOOK_PROVIDER, AMAZON_HOST, LOCAL_HOST,
   SKILLS, LANGUAGES, MAX_DESCRIPTION_LENGTH, BOOK_STATUS, EXPIRATION_DELAY,
   CLOSE_NOTIFICATION_DELAY, ACCOUNT_MIN_AGE, COMPANY_SIZE, COMPANY_ACTIVITY,

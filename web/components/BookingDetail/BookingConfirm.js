@@ -170,7 +170,7 @@ class BookingConfirm extends React.Component {
     const pricedPrestations = this.computePricedPrestations()
     const countPrestations = this.computeCountPrestations()
 
-    const amount = this.state.bookingObj ? parseFloat(this.state.bookingObj.amount) - this.state.bookingObj.fees : 0
+    const amount = this.state.bookingObj ? parseFloat(this.state.bookingObj.alfred_amount) : 0
 
     return (
       <Fragment>

@@ -55,15 +55,11 @@ router.post('/cards', passport.authenticate('jwt', {session: false}), (req, res)
     .then(entity => {
       let id_mangopay = entity.id_mangopay
       const {card_number, expiration_date, csv} = req.body
-      createCard(id_mangopay, card_number, expiration_date, csv)
-        .then(newCard => {
-          console.log(`Created card ${newCard.Id}`)
-          res.json(newCard)
-        })
-        .catch(err => {
-          console.error(`Error creating card:${err}`)
-          res.status(404).json({error: err})
-        })
+      return createCard(id_mangopay, card_number, expiration_date, csv)
+    })
+    .then(newCard => {
+      console.log(`Created card ${newCard.Id}`)
+      res.json(newCard)
     })
     .catch(error => {
       console.error(error)
@@ -75,7 +71,6 @@ router.post('/cards', passport.authenticate('jwt', {session: false}), (req, res)
 // @access private
 router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res) => {
   const amount = req.body.amount * 100
-  const fees = req.body.fees * 100
   const returnUrl= `/paymentSuccess?booking_id=${req.body.booking_id}`
 
   const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
@@ -94,7 +89,7 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
             },
             Fees: {
               Currency: 'EUR',
-              Amount: fees,
+              Amount: 0,
             },
             ReturnURL: `${computeUrl(req)}${returnUrl}`,
             CardType: 'CB_VISA_MASTERCARD',
@@ -207,7 +202,6 @@ router.post('/refund', passport.authenticate('b2badmin', {session: false}), (req
 // @access private
 router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req, res) => {
   const amount = req.body.amount * 100
-  const fees = req.body.fees * 100
   const id_card = req.body.id_card
   const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
 
@@ -225,7 +219,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
             },
             Fees: {
               Currency: 'EUR',
-              Amount: fees,
+              Amount: 0,
             },
             ReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
             CardType: 'CB_VISA_MASTERCARD',
@@ -429,6 +423,7 @@ router.delete('/bank-accounts/:bank_account_id', passport.authenticate('jwt', {s
 // Deactivate a card
 // @access private
 router.delete('/cards/:card_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  console.log('Deleting card', req.params.card_id)
   mangoApi.Cards.update({Id: req.params.card_id, Active: false})
     .then(() => {
       return res.json()

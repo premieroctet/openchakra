@@ -21,7 +21,7 @@
     "ag-grid-react": "^24.1.1",
     "algolia-places-react": "^1.6.1",
     "apexcharts": "^3.25.0",
-    "axios": "0.21.1",
+    "axios": "^0.24.0",
     "babel-preset-env": "^1.7.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",

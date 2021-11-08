@@ -2249,4 +2249,25 @@ router.get('/i18n-queries', (req, res) => {
   res.send(ids.join('\n'))
 })
 
+router.get('/customizations', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('Customization').findOne({})
+    .then(result => res.json(result))
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+router.put('/customizations', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('Customization').update({}, req.body, {upsert: true})
+    .then(() => {
+      req.context.loadCustomization()
+      res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
 module.exports = router
