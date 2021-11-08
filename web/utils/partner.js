@@ -4,11 +4,11 @@ const getPartnerFromHostname = hostname => {
     return null
   }
   const subdomain=hostname.split('.')[0]
+  if (hostname.includes('all-entrepreneurs')) {
+    return 'all-inclusive'
+  }
   if (subdomain=='www') {
     return null
-  }
-  if (subdomain=='all-entrepreneurs') {
-    return 'all-inclusive'
   }
   return subdomain
 }
