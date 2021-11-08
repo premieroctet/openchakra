@@ -56,9 +56,15 @@ class ButtonSwitch extends React.Component {
   }
 
   onChangePrice(event) {
-    let price = parseInt(event.target.value)
+    const {value}=event.target
+    let price = parseFloat(value)
     if (isNaN(price)) {
       price = null
+    }
+    else {
+      const search=/([\.,]\d\d).*$/
+      const rep='$1'
+      price = value.replace(search, rep)
     }
     this.price = price
     this.fireChange()
