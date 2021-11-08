@@ -399,7 +399,7 @@ if (is_production() || is_validation()) {
       context.getModel('User').find({is_alfred: true, mangopay_provider_id: null, active: true})
         .then(alfreds => {
           alfreds.forEach(alfred => {
-            req.context.getModel('Shop').findOne({alfred: alfred})
+            context.getModel('Shop').findOne({alfred: alfred})
               .then(shop => {
                 console.log(`Found alfred ${alfred.name} and shop ${shop._id}`)
                 if (alfred.age<18 || alfred.age>120) {
