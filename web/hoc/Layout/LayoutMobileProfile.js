@@ -80,7 +80,7 @@ class LayoutMobileProfile extends React.Component {
     return(
       <Grid>
         <Grid>
-          <Grid className={isB2BStyle() ? classes.layoutMobileProfilHeaderPro : classes.layoutMobileProfilHeader}>
+          <Grid className={`customprofilbanner ${isB2BStyle() ? classes.layoutMobileProfilHeaderPro : classes.layoutMobileProfilHeader}`}>
             <IconButton aria-label='ArrowBackIosIcon' onClick={() => Router.back()}>
               <ArrowBackIosIcon />
             </IconButton>

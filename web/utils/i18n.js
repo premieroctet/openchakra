@@ -1217,6 +1217,15 @@ const INDEX = {
   four_content: '',
   five_content: '',
   six_content: '',
+  seven_content: '',
+  eight_content: '',
+  nine_content: '',
+  ten_content: '',
+  eleven_content: '',
+  twelve_content: '',
+  thirteen_content: '',
+  fourteen_content: '',
+  fiveteen_content: '',
 }
 
 const PAYMENT_FAILED = {
