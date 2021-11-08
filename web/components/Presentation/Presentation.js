@@ -1,32 +1,33 @@
-import {snackBarError, snackBarSuccess} from "../../utils/notifications";
+import CustomButton from '../CustomButton/CustomButton'
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
+import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 const {setAxiosAuthentication} = require('../../utils/authentication')
-import React from 'react';
+import React from 'react'
 import axios from 'axios'
-import Grid from '@material-ui/core/Grid';
-import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/components/Presentation/Presentation';
-import Topic from "../../hoc/Topic/Topic"
-import Box from '../Box/Box'
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid'
+import {withStyles} from '@material-ui/core/styles'
+import styles from '../../static/css/components/Presentation/Presentation'
+import Topic from '../../hoc/Topic/Topic'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import Typography from '@material-ui/core/Typography'
+import TextField from '@material-ui/core/TextField'
 import {CMP_PRESENTATION} from '../../utils/i18n'
 import {MAX_DESCRIPTION_LENGTH} from '../../utils/consts'
 import {isEditableUser} from '../../utils/context'
-const {frenchFormat} = require('../../utils/text');
 import CreateIcon from '@material-ui/icons/Create'
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 
-const moment = require('moment');
-moment.locale('fr');
+const moment = require('moment')
 
-const DialogTitle = withStyles(styles)((props) => {
-  const {children, classes, onClose, ...other} = props;
+moment.locale('fr')
+
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography {...other} className={classes.root}>
       <Typography variant="h6">{children}</Typography>
@@ -36,14 +37,14 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
 
 class Presentation extends CompanyComponent {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: null,
       company: null,
@@ -65,8 +66,8 @@ class Presentation extends CompanyComponent {
         this.setState({user: user})
         if (user.company) {
           axios.get(`/myAlfred/api/companies/companies/${user.company}`)
-            .then( res =>{
-              const company = res.data;
+            .then(res => {
+              const company = res.data
               this.setState({
                 company: company,
                 website: company.website,
@@ -77,10 +78,10 @@ class Presentation extends CompanyComponent {
                 description: company.description,
                 siret: company.siret,
                 vat_number: company.vat_number,
-                vat_subject: company.vat_subject
+                vat_subject: company.vat_subject,
               })
             })
-          .catch(err => console.error(err))
+            .catch(err => console.error(err))
         }
       })
       .catch(err => console.error(err))
@@ -90,27 +91,28 @@ class Presentation extends CompanyComponent {
     const {newDescription} = this.state
     setAxiosAuthentication()
 
-    if(this.isModeCompany()){
+    if(this.isModeCompany()) {
       axios.put('/myAlfred/api/companies/profile/editProfile', {
-          activity: this.state.activityArea,
-          size: this.state.sizeCompany,
-          website: this.state.website,
-          name: this.state.companyName,
-          billing_address: this.state.billing_address,
-          description: newDescription !== '' && newDescription !== null ? newDescription : this.state.description,
-          siret: this.state.siret,
-          vat_number: this.state.vat_number,
-          vat_subject: this.state.vat_subject
-        }
-      ).then( res =>{
-        snackBarSuccess("Profil modifié avec succès");
+        activity: this.state.activityArea,
+        size: this.state.sizeCompany,
+        website: this.state.website,
+        name: this.state.companyName,
+        billing_address: this.state.billing_address,
+        description: newDescription !== '' && newDescription !== null ? newDescription : this.state.description,
+        siret: this.state.siret,
+        vat_number: this.state.vat_number,
+        vat_subject: this.state.vat_subject,
+      },
+      ).then(() => {
+        snackBarSuccess(ReactHtmlParser(this.props.t('CMP_PRESENTATION.snackbar_update_profil')))
         this.setState({showEdition: false}, () => this.componentDidMount())
-      }).catch( err => {
-        snackBarError(err.response.data);
+      }).catch(err => {
+        snackBarError(err.response.data)
       })
-    }else{
+    }
+    else{
       axios.put('/myAlfred/api/users/profile/description', {description: newDescription})
-        .then(res => {
+        .then(() => {
           this.loadUser()
           this.setState({showEdition: false})
         })
@@ -118,7 +120,7 @@ class Presentation extends CompanyComponent {
   }
 
   onTextChanged = event => {
-    var text = event.target.value
+    let text = event.target.value
     text = text.slice(0, MAX_DESCRIPTION_LENGTH)
     this.setState({newDescription: text})
   }
@@ -127,10 +129,10 @@ class Presentation extends CompanyComponent {
     this.setState({showEdition: false, newDescription: null})
   };
 
-  modalEditDialog = (classes) => {
-    const {user, showEdition, newDescription} = this.state;
-    const enabled = newDescription;
-    const placeholder = newDescription || CMP_PRESENTATION.placeholder;
+  modalEditDialog = classes => {
+    const {showEdition, newDescription} = this.state
+    const enabled = newDescription
+    const placeholder = newDescription || ReactHtmlParser(this.props.t('CMP_PRESENTATION.placeholder'))
 
     return (
       <Dialog
@@ -141,37 +143,37 @@ class Presentation extends CompanyComponent {
         classes={{paper: classes.dialogPaper}}
       >
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}
-                     style={{position: 'absolute', right: 0}}/>
+          style={{position: 'absolute', right: 0}}/>
         <DialogContent>
-          <Topic titleTopic={'Modifiez votre description'}
-                 titleSummary={'Ajoutez ou modifiez votre "À propos" '} underline={true}/>
+          <Topic titleTopic={ReactHtmlParser(this.props.t('CMP_PRESENTATION.edit_dialog_title'))}
+            titleSummary={ReactHtmlParser(this.props.t('CMP_PRESENTATION.edit_dialog_subtitle'))} underline={true}/>
           <Grid container>
-            <Grid item xs={12} lg={12} style={{marginTop: '2vh',}}>
+            <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
               <TextField multiline classes={{root: classes.textField}} rowsMax={15} rows={2}
-                         value={newDescription} placeholder={placeholder} onChange={this.onTextChanged}/>
+                value={newDescription} placeholder={placeholder} onChange={this.onTextChanged}/>
             </Grid>
             <Grid style={{
               marginTop: '2vh',
               display: 'flex',
               alignItems: 'flex-end',
               width: '100%',
-              flexDirection: 'column'
+              flexDirection: 'column',
             }}>
               <Grid>
-                <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
+                <Typography>{ReactHtmlParser(this.props.t('EDIT_PROFIL.char_max', {maxchars: MAX_DESCRIPTION_LENGTH}))}</Typography>
               </Grid>
               <Grid style={{width: '100%'}}>
-                <Button
+                <CustomButton
                   onClick={() => {
-                    this.save();
+                    this.save()
                   }}
                   variant="contained"
                   disabled={!enabled}
                   classes={{root: classes.button}}
                   color={'primary'}
                 >
-                  Modifier
-                </Button>
+                  {ReactHtmlParser(this.props.t('CMP_PRESENTATION.update_button'))}
+                </CustomButton>
               </Grid>
             </Grid>
           </Grid>
@@ -185,10 +187,11 @@ class Presentation extends CompanyComponent {
   };
 
   render() {
-    const {classes} = this.props;
-    const {user, company} = this.state;
-    const editable = isEditableUser(user);
-    const title = this.isModeCompany() ? company ? `À propos de ${company.name}` : null : frenchFormat(`À propos de ${user ? user.firstname : ''}`);
+    const {classes} = this.props
+    const {user, company} = this.state
+    const editable = isEditableUser(user)
+    const displayName=this.isModeCompany() ? company ? company.name : '' : user ? user.firstname : ''
+    const title = ReactHtmlParser(this.props.t('PROFIL.about', {firstname: displayName}))
 
     return (
       <>
@@ -203,7 +206,7 @@ class Presentation extends CompanyComponent {
         }
         <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
           <Topic titleTopic={title}
-                 titleSummary={user ? `membre depuis ${moment(user.creation_date).format("MMMM YYYY")}` : ''}>
+            titleSummary={user ? ReactHtmlParser(this.props.t('CMP_PRESENTATION.member')) + moment(user.creation_date).format('MMMM YYYY') : ''}>
             {user && !this.isModeCompany()?
               <Typography style={{wordWrap: 'break-word'}}>{user.description}</Typography>
               :
@@ -222,4 +225,4 @@ class Presentation extends CompanyComponent {
   }
 }
 
-export default withStyles(styles, {withTheme: true})(Presentation)
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(Presentation))

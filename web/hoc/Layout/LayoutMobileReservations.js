@@ -1,25 +1,28 @@
-import React from 'react';
-import withStyles from "@material-ui/core/styles/withStyles";
-import styles from '../../static/css/components/Layout/LayoutMobileReservations/LayoutMobileReservations';
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import Router from "next/router";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Divider from "@material-ui/core/Divider";
-import MobileNavbar from "./NavBar/MobileNavbar";
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
+import styles from '../../static/css/components/Layout/LayoutMobileReservations/LayoutMobileReservations'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import Router from 'next/router'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import Divider from '@material-ui/core/Divider'
+import MobileNavbar from './NavBar/MobileNavbar'
+import {LAYOUT_RESA} from '../../utils/i18n'
 
-class LayoutMobileReservations extends React.Component{
+class LayoutMobileReservations extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
       reservationType: 1,
     }
   }
 
   render() {
-    const{classes, currentIndex, children, reservationType, userInfo} = this.props;
+    const{classes, currentIndex, children, reservationType, userInfo} = this.props
 
     return(
       <Grid>
@@ -31,8 +34,8 @@ class LayoutMobileReservations extends React.Component{
               </IconButton>
             </Grid>
           </Grid>
-          <Grid style={{marginLeft:'8vh'}}>
-            <h2>Mes Reservations</h2>
+          <Grid style={{marginLeft: '8vh'}}>
+            <h2>{ReactHtmlParser(this.props.t('LAYOUT_RESA.title'))}</h2>
           </Grid>
           <Grid>
             <Tabs
@@ -44,10 +47,10 @@ class LayoutMobileReservations extends React.Component{
             >
               {
                 userInfo && userInfo.is_alfred ?
-                  <Tab label={"Mes réservations d'Alfred"} className={classes.scrollMenuTab} />
+                  <Tab label={ReactHtmlParser(this.props.t('LAYOUT_RESA.messages_alfred'))} className={classes.scrollMenuTab} />
                   : null
               }
-              <Tab label={"Mes réservations d'utilisateur"} className={classes.scrollMenuTab} />
+              <Tab label={ReactHtmlParser(this.props.t('LAYOUT_RESA.messages_user'))} className={classes.scrollMenuTab} />
             </Tabs>
           </Grid>
         </Grid>
@@ -63,8 +66,8 @@ class LayoutMobileReservations extends React.Component{
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles (styles) (LayoutMobileReservations);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(LayoutMobileReservations))

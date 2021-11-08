@@ -1,20 +1,4 @@
-export default theme =>  ({
-  exp1: {
-    '&::before': {
-      height: '0px!important',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%!important',
-    },
-  },
-  bordernone: {
-    [theme.breakpoints.down('sm')]: {
-      border: 'none!important',
-    },
-  },
-  displayn: {
-    display: 'none',
-  },
+export default theme => ({
   bigContainer: {
     marginTop: 0,
     flexGrow: 1,
@@ -28,15 +12,6 @@ export default theme =>  ({
       display: 'none',
     },
   },
-  trait: {
-    width: '100%',
-    height: 4,
-    backgroundColor: 'rgb(47, 188, 211)',
-    borderColor: 'transparent',
-    [theme.breakpoints.down('sm')]: {},
-  },
-
-
   mobilerow: {
     marginTop: '5%',
     justifyContent: 'space-between',
@@ -50,19 +25,8 @@ export default theme =>  ({
     marginLeft: '4%',
     marginTop: '2%',
     [theme.breakpoints.down('xs')]: {
-      margin: 0
+      margin: 0,
     },
-  },
-  toggle: {
-    zIndex: 0,
-  },
-  avatarLetter: {
-    width: 80,
-    height: 80,
-    [theme.breakpoints.down('sm')]:{
-      width: 60,
-      height: 60
-    }
   },
   hrSeparator: {
     width: '100%',
@@ -70,7 +34,6 @@ export default theme =>  ({
     color: 'rgb(80, 80, 80, 0.2)',
   },
   buttonConfirm: {
-    backgroundColor: '#f87280',
     color: 'white',
   },
   reservationContainer: {
@@ -122,64 +85,18 @@ export default theme =>  ({
   mainContainerAbout: {
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
-      marginTop: '3vh'
+      marginTop: '3vh',
     },
   },
-  bookingDetailContainer:{
+  bookingDetailContainer: {
     display: 'flex',
     width: '70%',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('xs')]:{
-      width: '100%'
-    }
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
-  rondYellow: {
-    width: '30px',
-    height: '30px',
-    backgroundColor: '#A7D571',
-    borderRadius: '100%',
-    border:
-      '0.4px solid rgba(112,112,112,0.26)',
-    marginTop: '15%',
-  },
-  rondGrey: {
-    width: '30px',
-    height: '30px',
-    backgroundColor: '#C4C4C4',
-    borderRadius: '100%',
-    border:
-      '0.4px solid rgba(112,112,112,0.26)',
-    marginTop: '15%',
-  },
-  rondOrange: {
-    width: '30px',
-    height: '30px',
-    backgroundColor: '#D5A771',
-    borderRadius: '100%',
-    border:
-      '0.4px solid rgba(112,112,112,0.26)',
-    marginTop: '15%',
-  },
-  buttonReservaionRed: {
-    textAlign: 'center',
-    height: '40px',
-    minWidth: '250px',
-    backgroundColor: '#F8727F',
-    lineHeight: 2.5,
-    borderRadius: '50px',
-    marginTop: '20%',
-    cursor: 'pointer',
-  },
-  buttonReservationNo: {
-    textAlign: 'center',
-    height: '40px',
-    minWidth: '250px',
-    lineHeight: 2.5,
-    borderRadius: '50px',
-    border: '1px solid black',
-    marginTop: '20%',
-    cursor: 'pointer',
-  },
+
   containerStateResa: {
     display: 'flex',
     alignItems: 'center',
@@ -196,20 +113,12 @@ export default theme =>  ({
     width: '100%',
 
   },
-  marginLeftLabel: {
-    marginLeft: 30,
-  },
   equipmentContainer: {
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
     },
   },
-  navbarShopContainer: {
-    width: '100%',
-    [theme.breakpoints.down('xs')]: {
-      display: 'none',
-    },
-  },
+
   detailsReservationContainer: {
     display: 'flex',
     width: '100%',
@@ -231,23 +140,20 @@ export default theme =>  ({
       display: 'none',
     },
   },
-  groupButtonsContainer:{
+  groupButtonsContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    [theme.breakpoints.down('xs')]:{
-      marginTop: '5vh'
-    }
+    [theme.breakpoints.down('xs')]: {
+      marginTop: '5vh',
+    },
   },
-  containerPhone:{
+  containerPhone: {
     marginTop: '3vh',
-    textAlign:'center',
-    width: '100%'
+    textAlign: 'center',
+    width: '100%',
   },
-  phoneContainerWeb:{
-    display: 'flex',
-    flexDirection: 'row',
-    JustifyContent: 'space-between',
-    width: '100%'
-  }
+  buttonCancel: {
+    color: theme.palette.error.main,
+  },
 })

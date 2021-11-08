@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const {normalize} = require('../../utils/text');
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const ServiceSchema = new Schema({
   label: {
@@ -9,15 +8,15 @@ const ServiceSchema = new Schema({
   },
   category: {
     type: Schema.Types.ObjectId,
-    ref: 'category',
+    ref: 'Category',
   },
   equipments: [{
     type: Schema.Types.ObjectId,
-    ref: 'equipment',
+    ref: 'Equipment',
   }],
   tags: [{
     type: Schema.Types.ObjectId,
-    ref: 'tag',
+    ref: 'Tag',
   }],
   picture: {
     type: String,
@@ -26,12 +25,6 @@ const ServiceSchema = new Schema({
     type: String,
   },
   majoration: {
-    type: String,
-  },
-  travel_expense: {
-    type: String,
-  },
-  picking_expense: {
     type: String,
   },
   location: {
@@ -44,10 +37,6 @@ const ServiceSchema = new Schema({
   },
   // Frais livraison
   pick_tax: {
-    type: Boolean,
-  },
-  // Frais déplacement
-  travel_tax: {
     type: Boolean,
   },
   s_label: {
@@ -66,20 +55,23 @@ const ServiceSchema = new Schema({
     type: Boolean,
     required: true,
     sparse: true,
-  }
+  },
 }, {
   toJSON: {virtuals: true, getters: true},
-  toObject: { virtuals: true, getters: true }
-});
+  toObject: {virtuals: true, getters: true},
+})
+
+// travel_tax available for any service made at customer's place
+ServiceSchema.virtual('travel_tax').get(function() {
+  return this && this.location && this.location.client
+})
 
 ServiceSchema.virtual('prestations', {
-   ref: 'prestation', //The Model to use
-   localField: '_id', //Find in Model, where localField
-   foreignField: 'service', // is equal to foreignField
-});
+  ref: 'Prestation', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'service', // is equal to foreignField
+})
 
-ServiceSchema.index({label: 'text'});
+ServiceSchema.index({label: 'text'})
 
-const Service = mongoose.model('service', ServiceSchema);
-
-module.exports = Service;
+module.exports = ServiceSchema

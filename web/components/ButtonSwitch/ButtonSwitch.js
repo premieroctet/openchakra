@@ -1,69 +1,17 @@
-import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
-import Switch from '@material-ui/core/Switch';
-import Grid from '@material-ui/core/Grid';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
-import PropTypes from 'prop-types';
-import styles from './ButtonSwitchStyle';
-import Typography from "@material-ui/core/Typography";
-
-const {inspect} = require('util');
-
-
-const IOSSwitch = withStyles((theme) => ({
-  root: {
-    width: 42,
-    height: 26,
-    padding: 0,
-    margin: theme.spacing(1),
-  },
-  switchBase: {
-    padding: 1,
-    '&$checked': {
-      transform: 'translateX(16px)',
-      color: '#C7D4EE',
-      '& + $track': {
-        backgroundColor: 'white',
-
-      },
-    },
-    '&$focusVisible $thumb': {
-      color: 'white',
-      border: '6px solid #fff',
-    },
-  },
-  thumb: {
-    width: 24,
-    height: 24,
-  },
-  track: {
-    borderRadius: 26 / 2,
-    border: `1px solid ${theme.palette.grey[400]}`,
-    backgroundColor: theme.palette.grey[50],
-    opacity: 1,
-    transition: theme.transitions.create(['background-color', 'border']),
-  },
-  checked: {},
-  focusVisible: {},
-}))(({ classes, ...props }) => {
-  return (
-    <Switch
-      focusVisibleClassName={classes.focusVisible}
-      disableRipple
-      classes={{
-        root: classes.root,
-        switchBase: classes.switchBase,
-        thumb: classes.thumb,
-        track: classes.track,
-        checked: classes.checked,
-      }}
-      {...props}
-    />
-  );
-});
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import {withStyles} from '@material-ui/core/styles'
+import Switch from '@material-ui/core/Switch'
+import Grid from '@material-ui/core/Grid'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import TextField from '@material-ui/core/TextField'
+import styles from './ButtonSwitchStyle'
+import Typography from '@material-ui/core/Typography'
+import '../../static/assets/css/custom.css'
+import {BUTTON_SWITCH} from '../../utils/i18n'
 
 const CssTextField = withStyles({
   root: {
@@ -71,47 +19,52 @@ const CssTextField = withStyles({
       fontSize: '0.8rem',
     },
   },
-})(TextField);
+})(TextField)
 
 
 class ButtonSwitch extends React.Component {
   constructor(props) {
-    super(props);
-    this.checked= this.props.checked;
-    this.billing= props.billing ? (props.billing._id || this.props.billing): props.isOption ? this.props.billings[0]._id : null;
-    this.price = this.props.price;
+    super(props)
+    this.checked= this.props.checked
+    this.billing= props.billing ? (props.billing._id || this.props.billing): props.isOption ? this.props.billings[0]._id : null
+    this.price = this.props.price
     this.label = this.props.label
 
 
+    this.onToggle = this.onToggle.bind(this)
+    this.onChangeBilling = this.onChangeBilling.bind(this)
+    this.onChangePrice = this.onChangePrice.bind(this)
+    this.onChangeLabel = this.onChangeLabel.bind(this)
 
-    this.onToggle = this.onToggle.bind(this);
-    this.onChangeBilling = this.onChangeBilling.bind(this);
-    this.onChangePrice = this.onChangePrice.bind(this);
-    this.onChangeLabel = this.onChangeLabel.bind(this);
-
-    this.fireChange = this.fireChange.bind(this);
+    this.fireChange = this.fireChange.bind(this)
   }
 
-  fireChange(id, checked, price, billing, label) {
+  fireChange() {
     if (this.props.onChange) {
-      this.props.onChange(this.props.id, this.checked, this.checked ? this.price : null, this.billing, this.label);
+      this.props.onChange(this.props.id, this.checked, this.checked ? this.price : null, this.billing, this.label)
     }
   }
 
-  onToggle(value) {
+  onToggle() {
     this.checked = !this.checked
     this.fireChange()
-  };
+  }
 
-  onChangeBilling(event, index) {
+  onChangeBilling(event) {
     this.billing = event.target.value
     this.fireChange()
   }
 
   onChangePrice(event) {
-    var price = parseInt(event.target.value);
+    const {value}=event.target
+    let price = parseFloat(value)
     if (isNaN(price)) {
-      price = null;
+      price = null
+    }
+    else {
+      const search=/([\.,]\d\d).*$/
+      const rep='$1'
+      price = value.replace(search, rep)
     }
     this.price = price
     this.fireChange()
@@ -123,14 +76,23 @@ class ButtonSwitch extends React.Component {
   }
 
   render() {
-    const {classes, isEditable, isOption, isPrice, billings, priceDisabled} = this.props;
-    var{checked, label} = this;
+    const {classes, isEditable, isOption, isPrice, billings, priceDisabled} = this.props
+    let{checked, label} = this
 
     return (
       <Grid className={classes.contentFiltre}>
         <Grid className={classes.responsiveIOSswitch} style={{width: this.props.width}}>
           <Grid>
-            <IOSSwitch
+            <Switch
+              focusVisibleClassName={classes.focusVisible}
+              disableRipple
+              classes={{
+                root: classes.root,
+                switchBase: `custombuttonswitch ${classes.switchBase}`,
+                thumb: classes.thumb,
+                track: classes.track,
+                checked: classes.checked,
+              }}
               color="primary"
               type="checkbox"
               checked={checked}
@@ -141,15 +103,15 @@ class ButtonSwitch extends React.Component {
             <span>
               {isEditable ?
                 <CssTextField
-                  label={'Intitulé'}
-                  placeholder={'Saisissez un intitulé'}
+                  label={ReactHtmlParser(this.props.t('BUTTON_SWITCH.textfield_label'))}
+                  placeholder={ReactHtmlParser(this.props.t('BUTTON_SWITCH.textfield_placeholder'))}
                   value={this.label}
                   onChange={this.onChangeLabel}
                   error={!this.label}
-                  helperText={this.label ? null : 'Obligatoire'}
+                  helperText={this.label ? null : ReactHtmlParser(this.props.t('BUTTON_SWITCH.helpertext'))}
                 />
                 :
-                <p>{label === undefined ? 'label introuvable' : label}</p>
+                <p>{label === undefined ? ReactHtmlParser(this.props.t('BUTTON_SWITCH.error_label')) : label}</p>
               }
             </span>
           </Grid>
@@ -160,9 +122,9 @@ class ButtonSwitch extends React.Component {
               <Grid style={{display: 'flex'}}>
                 <CssTextField
                   value={this.price}
-                  label={<Typography style={{color:'#696767'}}>Tarif</Typography>}
+                  label={<Typography style={{color: '#696767'}}>{ReactHtmlParser(this.props.t('BUTTON_SWITCH.price'))}</Typography>}
                   type="number"
-                  className={classes.textField}
+                  classes={{root: `custombuttonswitchplaceholder ${classes.textField}`}}
                   disabled={!checked || priceDisabled}
                   onChange={this.onChangePrice}
                   InputProps={{
@@ -172,7 +134,7 @@ class ButtonSwitch extends React.Component {
                     endAdornment: <InputAdornment position="start">€</InputAdornment>,
                   }}
                   error={!this.price}
-                  helperText={this.price ? null : 'Obligatoire'}
+                  helperText={this.price ? null : ReactHtmlParser(this.props.t('BUTTON_SWITCH.helpertext'))}
                 />
                 {isOption ?
                   <Select
@@ -186,10 +148,10 @@ class ButtonSwitch extends React.Component {
                     value={this.billing}
                   >
                     {billings.map(bill => {
-                        return (
-                          <MenuItem value={bill._id.toString()}>{bill.label}</MenuItem>
-                        );
-                      },
+                      return (
+                        <MenuItem value={bill._id.toString()}>{bill.label}</MenuItem>
+                      )
+                    },
                     )
                     }
                   </Select> : null
@@ -201,8 +163,8 @@ class ButtonSwitch extends React.Component {
         }
 
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(ButtonSwitch);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ButtonSwitch))

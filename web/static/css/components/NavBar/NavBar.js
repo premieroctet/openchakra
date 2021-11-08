@@ -1,47 +1,47 @@
 export default theme => ({
-  navbarSearchContainer:{
+  navbarSearchContainer: {
     width: '50%',
     marginTop: '5vh',
-    [theme.breakpoints.down('lg')]:{
+    [theme.breakpoints.down('lg')]: {
       width: '50%',
     },
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('sm')]: {
       width: '90%',
     },
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       cursor: 'pointer',
       width: '100%',
     },
   },
-  hiddenXLandLG:{
-    [theme.breakpoints.up('xl')]:{
-      display: 'none'
+  hiddenXLandLG: {
+    [theme.breakpoints.up('xl')]: {
+      display: 'none',
     },
-    [theme.breakpoints.up('lg')]:{
-      display: 'none'
-    }
+    [theme.breakpoints.up('lg')]: {
+      display: 'none',
+    },
   },
-  navbarSearchContainerB2B:{
+  navbarSearchContainerB2B: {
     width: '40%',
     marginTop: '5vh',
-    [theme.breakpoints.down('lg')]:{
+    [theme.breakpoints.down('lg')]: {
       width: '50%',
     },
-    [theme.breakpoints.down('md')]:{
+    [theme.breakpoints.down('md')]: {
       width: '70%',
     },
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('sm')]: {
       width: '90%',
     },
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       cursor: 'pointer',
       width: '100%',
     },
   },
-  fitlerMenuLogged:{
+  fitlerMenuLogged: {
     overflow: 'inherit',
     textOverflow: 'inherit',
-    whiteSpace: 'inherit'
+    whiteSpace: 'inherit',
   },
   navbarSearch: {
     padding: '10px 14px 10px 20px',
@@ -49,21 +49,29 @@ export default theme => ({
     alignItems: 'center',
     width: '100%',
     borderRadius: theme.border.button.borderRadius,
-    boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px'
+    boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px',
   },
 
   iconButton: {
     color: theme.palette.white.main,
   },
 
-  navbarFormControlAddress: {
-    width: '100%'
+  iconColorB2b: {
+    backgroundColor: '#b0cdc8',
   },
-  navbarRootTextFieldWhere:{
+
+  iconColor: {
+    backgroundColor: 'rgba(248, 207, 97, 1)',
+  },
+
+  navbarFormControlAddress: {
     width: '100%',
-    '& .algolia-places':{
+  },
+  navbarRootTextFieldWhere: {
+    width: '100%',
+    '& .algolia-places': {
       height: '100%',
-      color:'rgba(0, 0, 0, 0.87)',
+      color: 'rgba(0, 0, 0, 0.87)',
       width: '100%',
       alignItems: 'center',
       display: 'inline-flex',
@@ -73,23 +81,26 @@ export default theme => ({
       fontWeight: 400,
       fontSize: '1rem',
     },
-    '& input':{
+    '& input': {
       border: 0,
       padding: '6px 0 7px',
       height: '1.1876em',
-      opacity: '0.65',
-      transition: 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-      boxSizing: 'content-box'
+      boxSizing: 'content-box',
+      backgroundColor: 'inherit',
     },
-    '& .ap-input-icon':{
+    '& input::placeholder': {
+      color: 'rgba(0, 0, 0, 0.87)',
+      transition: 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    },
+    '& .ap-input-icon': {
       display: 'none',
-    }
+    },
   },
-  navbarRootTextFieldWhereP:{
+  navbarRootTextFieldWhereP: {
     width: '100%',
-    '& .algolia-places':{
+    '& .algolia-places': {
       height: '100%',
-      color:'rgba(0, 0, 0, 0.87)',
+      color: 'rgba(0, 0, 0, 0.87)',
       width: '100%',
       alignItems: 'center',
       display: 'inline-flex',
@@ -98,185 +109,168 @@ export default theme => ({
       fontWeight: 400,
       fontSize: '1rem',
     },
-    '& input':{
+    '& input': {
       padding: '18.5px 14px',
       height: '100%',
       opacity: '0.65',
       transition: 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     },
-    '& .ap-input-icon':{
+    '& .ap-input-icon': {
       display: 'none',
-    }
-  },
-
-  navbarMainSytle:{
-    alignItems: 'center',
-    width: '70%',
-    display: 'flex',
-    [theme.breakpoints.down('lg')]:{
-      width: '95%'
     },
   },
-  navbarMainSytleB2B:{
+
+  navbarMainSytle: {
+    alignItems: 'center',
+    width: '90%',
+    display: 'flex',
+    [theme.breakpoints.down('lg')]: {
+      width: '95%',
+    },
+  },
+  navbarMainSytleB2B: {
     width: '95%',
   },
 
-  navbarLogoContainer:{
+  navbarLogoContainer: {
     cursor: 'pointer',
-    [theme.breakpoints.down('xs')]:{
-      display: 'none'
-    }
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
   },
-  navbarLogoContainerP:{
+  navbarLogoContainerP: {
     cursor: 'pointer',
-    [theme.breakpoints.down('sm')]:{
-      display: 'none'
-    }
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
 
-  navabarHomepageMenu:{
+  navabarHomepageMenu: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]:{
-      display: 'none'
-    }
-  },
-  navbarHomepageMenuB2B:{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]:{
-      display: 'none'
-    }
-  },
-  navbarMenuBurgerContainer:{
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-  },
-  navbarMenuBurgerContainerB2B:{
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    [theme.breakpoints.only('xl')]:{
-      display: 'none'
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('lg')]:{
-      display: 'none'
-    }
   },
-  navbarTabRoot:{
+  navbarHomepageMenuB2B: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
+    },
+  },
+  navbarMenuBurgerContainer: {
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+  },
+  navbarMenuBurgerContainerB2B: {
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    [theme.breakpoints.only('xl')]: {
+      display: 'none',
+    },
+    [theme.breakpoints.only('lg')]: {
+      display: 'none',
+    },
+  },
+  navbarTabRoot: {
     opacity: 'inherit',
     color: theme.palette.white.main,
-    fontWeight:' bold',
+    fontWeight: ' bold',
     textTransform: 'initial',
     transition: '0.3s',
-    '&:hover':{
-      color: 'rgba(255, 255, 142, 1)'
-    }
+    '&:hover': {
+      color: 'rgba(255, 255, 142, 1)',
+    },
   },
-  navbarTabRootB2b:{
+  navbarTabRootB2b: {
     opacity: 'inherit',
     color: theme.palette.white.main,
-    fontWeight:' bold',
+    fontWeight: ' bold',
     textTransform: 'initial',
     transition: '0.3s',
     minWidth: 'inherit',
-    '& span':{
-      whiteSpace: 'nowrap'
+    '& span': {
+      whiteSpace: 'nowrap',
     },
-    '&:hover':{
-      color: 'rgb(176, 205, 200)'
-    }
+    '&:hover': {
+      color: 'rgb(176, 205, 200)',
+    },
   },
 
-  logoMyAlfred:{
+  logoMyAlfred: {
     height: 64,
-
+    backgroundImage: 'url(/static/assets/icon/logo.svg)',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'contain',
   },
-  hiddenOnlyXs:{
+
+  hiddenOnlyXs: {
     display: 'flex',
     flexDirection: 'column',
     padding: 0,
     width: '100%',
     alignItems: 'center',
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
-    }
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
+    },
   },
-  hiddenOnMobile:{
-    width: '100%',
-    [theme.breakpoints.only('xl')]:{
-      display: 'none'
-    },
-    [theme.breakpoints.only('lg')]:{
-      display: 'none'
-    },
-    [theme.breakpoints.only('md')]:{
-      display: 'none'
-    },
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
-    },
-
-
-
-  },
-
-
-  navbarButtonContainer:{
+  navbarButtonContainer: {
     display: 'flex',
     flexDirection: 'row-reverse',
     alignItems: 'center',
   },
-  navbarButtonContainerP:{
+  navbarButtonContainerP: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  navbarButtonContainerPB2B:{
+  navbarButtonContainerPB2B: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    [theme.breakpoints.only('md')]:{
-      display: 'none'
+    [theme.breakpoints.only('md')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
     },
   },
-  navbarButtonContainerB2B:{
+  navbarButtonContainerB2B: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    [theme.breakpoints.only('md')]:{
-      display: 'none'
+    [theme.breakpoints.only('md')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
     },
   },
-  navBarlogIn:{
-    textTransform: theme.typography.textTransform,
-    borderRadius: theme.border.button.borderRadius,
-    color: theme.palette.white.main,
-    fontWeight: theme.typography.fontWeight
-  },
-  navBarlogInB2B:{
+  navBarlogIn: {
     textTransform: theme.typography.textTransform,
     borderRadius: theme.border.button.borderRadius,
     color: theme.palette.white.main,
     fontWeight: theme.typography.fontWeight,
-    '&:hover':{
+  },
+  navBarlogInB2B: {
+    textTransform: theme.typography.textTransform,
+    borderRadius: theme.border.button.borderRadius,
+    color: theme.palette.white.main,
+    fontWeight: theme.typography.fontWeight,
+    '&:hover': {
       color: 'rgb(176, 205, 200)',
-    }
+    },
   },
   navbarModal: {
     display: 'flex',
@@ -291,7 +285,7 @@ export default theme => ({
     padding: 0,
   },
 
-  navbarWidthLoginContent:{
+  navbarWidthLoginContent: {
     display: 'flex',
     justifyContent: 'center',
   },
@@ -302,56 +296,56 @@ export default theme => ({
     padding: 0,
     width: '100%',
   },
-  navbarSignIn:{
+  navbarSignIn: {
     borderRadius: theme.border.button.borderRadius,
     textTransform: theme.typography.textTransform,
     fontWeight: theme.typography.fontWeight,
     border: '3px solid rgba(255, 255, 255, 1)',
     color: theme.palette.white.main,
   },
-  navbarSignInB2B:{
+  navbarSignInB2B: {
     borderRadius: theme.border.button.borderRadius,
     textTransform: theme.typography.textTransform,
     fontWeight: theme.typography.fontWeight,
     border: '3px solid rgba(255, 255, 255, 1)',
     color: theme.palette.white.main,
 
-    '&:hover':{
+    '&:hover': {
       color: 'rgb(176, 205, 200)',
       border: '3px solid rgb(176, 205, 200)',
-    }
+    },
   },
-  navbarSignInB2BContained:{
+  navbarSignInB2BContained: {
     borderRadius: theme.border.button.borderRadius,
     textTransform: theme.typography.textTransform,
     fontWeight: theme.typography.fontWeight,
     border: '3px solid rgba(255, 255, 255, 1)',
     color: theme.palette.b2b.main,
     backgroundColor: theme.palette.white.main,
-    '&:hover':{
+    '&:hover': {
       color: 'rgb(176, 205, 200)',
       border: '3px solid rgb(176, 205, 200)',
-    }
+    },
   },
-  textFieldMobilSearchInput:{
-    width: '90%'
+  textFieldMobilSearchInput: {
+    width: '90%',
   },
-  buttonNextRoot:{
+  buttonNextRoot: {
     textTransform: 'initial',
-    fontWeight:'bold',
+    fontWeight: 'bold',
     width: '100%',
-    color:'white'
+    color: 'white',
   },
-  drawerStyle:{
-    '& .MuiDrawer-paperAnchorBottom':{
-      height: '50%'
-    }
+  drawerStyle: {
+    '& .MuiDrawer-paperAnchorBottom': {
+      height: '50%',
+    },
   },
-  navbarRegisterContainer:{
-    marginRight: 5
+  navbarRegisterContainer: {
+    marginRight: 5,
   },
 
-  navbarSearchContainerSearchPage:{
+  navbarSearchContainerSearchPage: {
     width: '100%',
     marginTop: '2vh',
     marginBottom: '2vh',
@@ -368,74 +362,85 @@ export default theme => ({
     color: theme.palette.grey[500],
   },
 
-  /**Ifsearchpage**/
-  navbarSearchContainerSearchP:{
+  /** Ifsearchpage**/
+  navbarSearchContainerSearchP: {
     width: '100%',
   },
 
-  navbarMainSytleP:{
+  navbarMainSytleP: {
     alignItems: 'center',
     width: '100%',
     display: 'flex',
   },
-  navbarAppBar:{
-    boxShadow: 'inherit'
+  navbarAppBarNoBg: {
+    boxShadow: 'inherit',
+    backgroundColor: 'transparent',
   },
-  navBartoolbarP:{
+  navbarAppBarWithBg: {
+    boxShadow: 'inherit',
+    backgroundColor: '#353A51',
+  },
+  navBartoolbarP: {
     marginTop: '1%',
     marginBottom: '1%',
-    [theme.breakpoints.down('sm')]:{
-      padding: 0
-    }
+    [theme.breakpoints.down('sm')]: {
+      padding: 0,
+    },
   },
-  navBartoolbar:{
+  navBartoolbar: {
     display: 'flex',
     flexDirection: 'column',
-    padding: 0
+    padding: 0,
   },
-  dialogNavbarMobileFilter:{
-    minWidth: '100%'
+  dialogNavbarMobileFilter: {
+    minWidth: '100%',
   },
-  rootIconButton:{
-    paddingTop:0,
-    paddingBottom: 0
+  rootIconButton: {
+    paddingTop: 0,
+    paddingBottom: 0,
   },
-  navbarPaperWidth:{
-    width: 600
+  navbarPaperWidth: {
+    width: 600,
   },
-  buttonService:{
+  buttonService: {
     width: '100%',
-    textTransform:'initial',
+    textTransform: 'initial',
     border: '3px solid #353A51',
     borderRadius: theme.border.button.borderRadius,
   },
-  buttonLoginB2b:{
+  buttonLoginB2b: {
     width: '100%',
-    textTransform:'initial',
+    textTransform: 'initial',
     border: '3px solid #353A51',
     borderRadius: theme.border.button.borderRadius,
     backgroundColor: '#353A51',
-    color:'white',
-    '& :hover':{
-      color:'#353A51',
-    }
+    color: 'white',
+    '& :hover': {
+      color: '#353A51',
+    },
   },
-  buttonRegisterB2b:{
+  buttonRegisterB2b: {
     width: '100%',
-    textTransform:'initial',
+    textTransform: 'initial',
     border: '3px solid rgb(176, 205, 200)',
     borderRadius: theme.border.button.borderRadius,
     backgroundColor: 'rgb(176, 205, 200)',
-    color:'white',
-    '& :hover':{
-      color:'rgb(176, 205, 200)',
-    }
+    color: 'white',
+    '& :hover': {
+      color: 'rgb(176, 205, 200)',
+    },
   },
-  filterMenuFocused:{
+  filterMenuFocused: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    color: theme.palette.white.main
+    color: theme.palette.white.main,
+  },
+  menuIconB2b: {
+    color: '#353A51',
+  },
+  menuIcon: {
+    color: 'white',
   },
 })

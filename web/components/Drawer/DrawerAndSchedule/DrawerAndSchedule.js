@@ -1,34 +1,35 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import DrawerSchedule from '../../DrawerSchedule/DrawerSchedule';
-import Schedule from '../../Schedule/Schedule';
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import DrawerSchedule from '../../DrawerSchedule/DrawerSchedule'
+import Schedule from '../../Schedule/Schedule'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../../../static/css/components/DrawerAndSchedule/DrawerAndSchedule'
 
-class DrawerAndSchedule extends React.Component{
+class DrawerAndSchedule extends React.Component {
   constructor(props) {
-    super(props);
-    this.schedule = React.createRef();
-    this.drawer = React.createRef();
+    super(props)
+    this.schedule = React.createRef()
+    this.drawer = React.createRef()
     this.state= {
       availabilities: [],
     }
   }
 
-  onDateSelectionChanged = (eventsSelected) => {
-    this.drawer.current.onDateSelectionChanged(eventsSelected);
+  onDateSelectionChanged = eventsSelected => {
+    this.drawer.current.onDateSelectionChanged(eventsSelected)
   };
 
-  availabilityUpdate = (avail) => {
+  availabilityUpdate = avail => {
     this.props.availabilityUpdate(avail)
   };
 
-  availabilityCreated = (avail) =>{
+  availabilityCreated = avail => {
     this.props.availabilityCreated(avail)
   };
 
   onAvailabilityChanged = () => {
-    this.props.onAvailabilityChanged();
+    this.props.onAvailabilityChanged()
   };
 
   onDateSelectionCleared = () => {
@@ -39,8 +40,8 @@ class DrawerAndSchedule extends React.Component{
     return this.drawer.current && this.drawer.current.isDirty()
   };
 
-  render(){
-    const {availabilities, selectable, title, subtitle, bookings, nbSchedule, readOnly, classes} = this.props;
+  render() {
+    const {availabilities, selectable, title, subtitle, bookings, nbSchedule, readOnly, classes} = this.props
 
     return(
       <Grid className={classes.drawerAndSchedule_mainContainer}>
@@ -65,8 +66,8 @@ class DrawerAndSchedule extends React.Component{
           </Grid>
         }
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(DrawerAndSchedule)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(DrawerAndSchedule))

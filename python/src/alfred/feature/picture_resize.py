@@ -31,7 +31,7 @@ def get_image_size(fname):
 
 def handle(dirpath):
   dirpath=abspath(dirpath)
-  if not dirpath.endswith('/static/profile'):
+  if not '/static/profile' in dirpath:
     raise Exception('Répertoire {} incorrect, profile attendu'.format(dirpath))
   print("Searching in {}".format(dirpath))
   files = get_image_files(dirpath)

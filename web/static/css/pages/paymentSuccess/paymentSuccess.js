@@ -1,5 +1,5 @@
 export default theme => ({
-  containerPaymentSuccess:{
+  containerPaymentSuccess: {
     display: 'flex',
     justifyContent: 'center',
     width: '50%',
@@ -11,8 +11,16 @@ export default theme => ({
     paddingBottom: '5%',
     paddingRight: '10%',
     textAlign: 'center',
-    [theme.breakpoints.down('md')]:{
-      width: '100%'
-    }
-  }
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+    },
+  },
+  mainContainer: {
+    display: 'flex',
+    backgroundColor: 'rgba(249,249,249, 1)',
+    width: '100%',
+    justifyContent: 'center',
+    padding: '10%',
+    minHeight: '80vh',
+  },
 })

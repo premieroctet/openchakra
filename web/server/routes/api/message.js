@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
-
-const Message = require('../../models/Message');
 const validateMessageInput = require('../../validation/message');
 
 router.get('/test', (req, res) => res.json({msg: 'Message Works!'}));
@@ -25,7 +23,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   messageFields.receiver = mongoose.Types.ObjectId(req.body.receiver);
 
   const newMessage = new Message(messageFields);
-  newMessage.save().then(message => res.json(message)).catch(err => console.error(err));
+  newreq.context.getModel('Message').save().then(message => res.json(message)).catch(err => console.error(err));
 });
 
 // @Route GET /myAlfred/api/message/all
@@ -33,7 +31,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 // @Access private
 router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  Message.find({$or: [{sender: req.user.id}, {receiver: req.user.id}]})
+  req.context.getModel('Message').find({$or: [{sender: req.user.id}, {receiver: req.user.id}]})
     .populate('sender')
     .populate('receiver')
     .then(message => {
@@ -53,7 +51,7 @@ router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) =>
 // @Access private
 router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  Message.findById(req.params.id)
+  req.context.getModel('Message').findById(req.params.id)
     .populate('sender')
     .populate('receiver')
     .then(message => {
@@ -71,7 +69,7 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 // Delete one message
 // @Access private
 router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Message.findById(req.params.id)
+  req.context.getModel('Message').findById(req.params.id)
     .then(message => {
 
       message.remove().then(() => res.json({success: true}));
@@ -85,7 +83,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
 // Update a message to read
 // @Access private
 router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Message.findByIdAndUpdate(req.params.id, {is_read: true}, {new: true})
+  req.context.getModel('Message').findByIdAndUpdate(req.params.id, {is_read: true}, {new: true})
     .then(message => {
       res.json(message);
     })

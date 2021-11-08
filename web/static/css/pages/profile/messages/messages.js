@@ -9,58 +9,39 @@ export default theme => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
-  messagesDialog:{
+  messagesDialog: {
     width: 600,
-    position:'relative'
+    position: 'relative',
   },
-  dialogActionRoot:{
+  dialogActionRoot: {
     display: 'initial',
-    padding: '5%'
+    padding: '5%',
   },
-  dialogTitleMessages:{
+  dialogTitleMessages: {
     display: 'flex',
-    flexDirection:'row',
+    flexDirection: 'row',
     alignItems: 'center',
-    [theme.breakpoints.down('xs')]:{
-      flexDirection: 'column'
-    }
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+    },
   },
-  dialogTitleMessagesContent:{
+  dialogTitleMessagesContent: {
     display: 'flex',
     flexDirection: 'column',
     marginLeft: '5vh',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       alignItems: 'center',
-      margin: 0
-    }
+      margin: 0,
+    },
   },
-  iconButton:{
-    [theme.breakpoints.down('xs')]:{
-      padding: 0
-    }
+  iconButton: {
+    [theme.breakpoints.down('xs')]: {
+      padding: 0,
+    },
   },
-  avatarLetter:{
+  avatarLetter: {
     width: 80,
     height: 80,
-    margin: 'auto'
+    margin: 'auto',
   },
-  layoutMessagesContainer:{
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
-    }
-  },
-  layoutMobileMessageContainer:{
-    [theme.breakpoints.only('xl')]:{
-      display: 'none'
-    },
-    [theme.breakpoints.only('lg')]:{
-      display: 'none'
-    },
-    [theme.breakpoints.only('md')]:{
-      display: 'none'
-    },
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
-    }
-  }
 })

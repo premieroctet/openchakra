@@ -1,55 +1,59 @@
+import CustomButton from '../CustomButton/CustomButton'
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import withStyles from '@material-ui/core/styles/withStyles';
-import styles from '../../static/css/components/DrawerSchedule/DrawerSchedule';
-import Fab from '@material-ui/core/Fab';
-import SettingsIcon from '@material-ui/icons/Settings';
-import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
-import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule';
-import Drawer from '@material-ui/core/Drawer';
-import axios from 'axios';
-import Button from "@material-ui/core/Button";
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import withStyles from '@material-ui/core/styles/withStyles'
+import styles from '../../static/css/components/DrawerSchedule/DrawerSchedule'
+import Fab from '@material-ui/core/Fab'
+import SettingsIcon from '@material-ui/icons/Settings'
+import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule'
+import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule'
+import Drawer from '@material-ui/core/Drawer'
+import axios from 'axios'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import '../../static/assets/css/custom.css'
+import {DRAWER_SCHEDULE} from '../../utils/i18n'
 
-class DrawerSchedule extends React.Component{
+class DrawerSchedule extends React.Component {
   constructor(props) {
-    super(props);
-    this.drawer = React.createRef();
+    super(props)
+    this.drawer = React.createRef()
     this.state={
       mobileOpen: false,
       eventsSelected: new Set(),
       availabilities: [],
       dirty: false,
-    };
-    this.onDateSelectionChanged = this.onDateSelectionChanged.bind(this);
-    this.updateDrawerState = this.updateDrawerState.bind(this);
+    }
+    this.onDateSelectionChanged = this.onDateSelectionChanged.bind(this)
+    this.updateDrawerState = this.updateDrawerState.bind(this)
     this.onAvailabilityChanged = this.onAvailabilityChanged.bind(this)
   }
 
   componentDidMount = () => {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/availability/currentAlfred')
-      .then ( res => {
+      .then(res => {
         this.setState({availabilities: res.data})
       })
-      .catch (err => console.error(err))
+      .catch(err => console.error(err))
   };
 
   isDirty = () => {
     return this.drawer.current && this.drawer.current.isDirty()
   };
 
-  onDateSelectionChanged = (eventsSelected) => {
-    this.setState({eventsSelected: new Set(eventsSelected)}, () => this.updateDrawerState());
+  onDateSelectionChanged = eventsSelected => {
+    this.setState({eventsSelected: new Set(eventsSelected)}, () => this.updateDrawerState())
   };
 
   updateDrawerState = () => {
-    this.drawer.current.onDateSelectionChanged(this.state.eventsSelected);
+    this.drawer.current.onDateSelectionChanged(this.state.eventsSelected)
   };
 
   handleDrawerToggle = () => {
-    this.setState({mobileOpen: !this.state.mobileOpen});
+    this.setState({mobileOpen: !this.state.mobileOpen})
   };
 
   onAvailabilityChanged = () => {
@@ -57,71 +61,72 @@ class DrawerSchedule extends React.Component{
   };
 
   onDateSelectionCleared = () => {
-    this.setState({eventsSelected : new Set()}, () => this.props.onDateSelectionCleared())
+    this.setState({eventsSelected: new Set()}, () => this.props.onDateSelectionCleared())
   };
 
   render() {
-    const {classes, windows} = this.props;
-    const {mobileOpen} = this.state;
+    const {classes, windows} = this.props
+    const {mobileOpen} = this.state
 
-    const container = windows !== undefined ? () => windows.document.body : undefined;
+    const container = windows !== undefined ? () => windows.document.body : undefined
 
-      return(
-        <Grid style={{width: '100%', height: '100%'}}>
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={'bottom'}
-            open={mobileOpen}
-            onClose={this.handleDrawerToggle}
-            classes={{
-              paper: classes.drawerScheduleDrawerPaper,
-              paperAnchorBottom : classes.drawerPaperAnchorBottom
-            }}
-            ModalProps={{
-                keepMounted: true,
-            }}
-          >
-            {
-              this.state.eventsSelected.size > 0 ?
-                <DrawerEditingSchedule
-                  ref={this.drawer}
-                  handleDrawer={this.handleDrawerToggle}
-                  onAvailabilityChanged={this.onAvailabilityChanged}
-                  onDateSelectionCleared={this.onDateSelectionCleared}
-                />
-                :
-                <DrawerSettingSchedule
-                  ref={this.drawer}
-                  handleDrawer={this.handleDrawerToggle}
-                  onAvailabilityChanged={this.onAvailabilityChanged}
-                />
-            }
-          </Drawer>
-          <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-            <Grid className={classes.buttonShowContainer}>
-              <Button
-                startIcon={this.state.eventsSelected.size > 0 ? <SettingsIcon /> : <AddCircleOutlineIcon />}
-                onClick={this.handleDrawerToggle}
-                color={'primary'}
-              >
-                { this.state.eventsSelected.size > 0 ? 'Modifier vos disponibilités' : 'Paramétrez vos disponibilités'}
-              </Button>
-            </Grid>
-            <Grid className={classes.containerFab}>
-              <Fab
-                color="primary"
-                aria-label="add"
-                onClick={this.handleDrawerToggle}
-                className={classes.drawerScheduleButton}>
-                <SettingsIcon style={{color: 'white'}}/>
-              </Fab>
-            </Grid>
+    return(
+      <Grid style={{width: '100%', height: '100%'}}>
+        <Drawer
+          container={container}
+          variant="temporary"
+          anchor={'bottom'}
+          open={mobileOpen}
+          onClose={this.handleDrawerToggle}
+          classes={{
+            paper: classes.drawerScheduleDrawerPaper,
+            paperAnchorBottom: classes.drawerPaperAnchorBottom,
+          }}
+          ModalProps={{
+            keepMounted: true,
+          }}
+        >
+          {
+            this.state.eventsSelected.size > 0 ?
+              <DrawerEditingSchedule
+                ref={this.drawer}
+                handleDrawer={this.handleDrawerToggle}
+                onAvailabilityChanged={this.onAvailabilityChanged}
+                onDateSelectionCleared={this.onDateSelectionCleared}
+              />
+              :
+              <DrawerSettingSchedule
+                ref={this.drawer}
+                handleDrawer={this.handleDrawerToggle}
+                onAvailabilityChanged={this.onAvailabilityChanged}
+              />
+          }
+        </Drawer>
+        <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
+          <Grid className={classes.buttonShowContainer}>
+            <CustomButton
+              startIcon={this.state.eventsSelected.size > 0 ? <SettingsIcon classes={{root: 'customscheduleseticon'}}/> : <AddCircleOutlineIcon classes={{root: 'customscheduleaddicon'}}/>}
+              onClick={this.handleDrawerToggle}
+              color={'primary'}
+              classe={{root: classes.buttonAction}}
+            >
+              { this.state.eventsSelected.size > 0 ? ReactHtmlParser(this.props.t('DRAWER_SCHEDULE.button_update')) : ReactHtmlParser(this.props.t('DRAWER_SCHEDULE.setting_update'))}
+            </CustomButton>
+          </Grid>
+          <Grid className={classes.containerFab}>
+            <Fab
+              color="primary"
+              aria-label="add"
+              onClick={this.handleDrawerToggle}
+              className={classes.drawerScheduleButton}>
+              <SettingsIcon style={{color: 'white'}}/>
+            </Fab>
           </Grid>
         </Grid>
+      </Grid>
 
-    );
+    )
   }
 }
 
-export default withStyles(styles) (DrawerSchedule);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(DrawerSchedule))

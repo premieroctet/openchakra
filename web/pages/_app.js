@@ -1,92 +1,127 @@
-import React from 'react';
-import App, {Container} from 'next/app';
-import Head from 'next/head';
-import {MuiThemeProvider} from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import JssProvider from 'react-jss/lib/JssProvider';
-import getPageContext from '../lib/getPageContext';
-import 'react-tabs/style/react-tabs.css';
-import 'react-input-range/lib/css/index.css';
-import '../static/stylesfonts.css';
-import '../static/form.css';
-import '../static/forminputs.css';
-import '../static/inputRange.css';
-import 'react-datepicker/dist/react-datepicker.css';
-import '../static/cssdashboard.css';
-import 'react-credit-cards/es/styles-compiled.css';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import '../static/style1.css';
+import {getChatURL, mustDisplayChat} from '../config/config'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+import 'react-datepicker/dist/react-datepicker.css'
+import 'react-input-range/lib/css/index.css'
+import 'react-tabs/style/react-tabs.css'
+import '../static/cssdashboard.css'
+import '../static/form.css'
+import '../static/forminputs.css'
+import '../static/inputRange.css'
+import '../static/style1.css'
+import '../static/stylesfonts.css'
+import ReactHtmlParser from 'react-html-parser'
+import {MuiThemeProvider} from '@material-ui/core/styles'
+import App, {Container} from 'next/app'
+import CookieConsent from 'react-cookie-consent'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Head from 'next/head'
+import JssProvider from 'react-jss/lib/JssProvider'
+import React from 'react'
+import Router from 'next/router'
+import {ACCEPT_COOKIE_NAME} from '../utils/consts'
+import {COOKIE_CONSENT, COMPANY_NAME} from '../utils/i18n'
+import {getLoggedUser} from '../utils/context'
+import {snackBarError} from '../utils/notifications'
+import getPageContext from '../lib/getPageContext'
+import {I18nextProvider, withTranslation} from 'react-i18next'
+import i18n from '../server/utils/i18n_init'
 
 
 class MyApp extends App {
   constructor() {
-    super();
-    this.pageContext = getPageContext();
+    super()
+    this.pageContext = getPageContext()
   }
 
-  loadTawlkto() {
-    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-    (function () {
-      var s1 = document.createElement('script'), s0 = document.getElementsByTagName('script')[0];
-      s1.async = true;
-      s1.src = 'https://embed.tawk.to/5de4db8c43be710e1d201adc/default';
-      s1.charset = 'UTF-8';
-      s1.setAttribute('crossorigin', '*');
-      s0.parentNode.insertBefore(s1, s0);
-    })();
+  loadTawkto() {
+    if (mustDisplayChat()) {
+      (function() {
+        let s1 = document.createElement('script'), s0 = document.getElementsByTagName('script')[0]
+        s1.async = true
+        s1.src=getChatURL()
+        s1.charset = 'UTF-8'
+        s1.setAttribute('crossorigin', '*')
+        s0.parentNode.insertBefore(s1, s0)
+      })()
+    }
   }
 
   componentDidMount() {
-    this.loadTawlkto();
+    this.loadTawkto()
+  }
+
+  onDeclineCookies = () => {
+    if (getLoggedUser()) {
+      snackBarError('Vous allez être déconnecté')
+      Router.push('/logout')
+    }
   }
 
   render() {
-    const {Component, pageProps} = this.props;
+    const {Component, pageProps, t} = this.props
     return (
-      <Container>
-        <Head>
-          <title>My Alfred</title>
-          <meta property="og:image" content="https://my-alfred.io/static/presentation.jpg"/>
-          <meta property="og:description"
-                content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous"/>
-          <meta property="description"
-                content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous"/>
-          <meta property="og:type" content="website"/>
-          <meta property="og:url" content="https://my-alfred.io"/>
-          <meta property="og:image:secure_url" content="https://my-alfred.io/static/presentation.jpg"/>
-          <meta property="og:title" content="My Alfred - services autour de chez vous"/>
-          <meta property="fb:app_id" content="512626602698236"/>
-          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-                integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-                crossOrigin=""/>
-          <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
-          <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
-          <script src="https://sibforms.com/forms/end-form/build/main.js"/>
-          <link rel="preconnect" href="https://fonts.gstatic.com"/>
-          <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
-        </Head>
-        {/* Wrap every page in Jss and Theme providers */}
-
-        <JssProvider
-          registry={this.pageContext.sheetsRegistry}
-          generateClassName={this.pageContext.generateClassName}
-        >
-          {/* MuiThemeProvider makes the theme available down the React
-              tree thanks to React context. */}
-          <MuiThemeProvider
-            theme={this.pageContext.theme}
+      <I18nextProvider i18n={i18n}>
+        <Container>
+          <Head>
+            <title>{t('COMPANY_NAME')}</title>
+            <meta property="og:image" content="https://my-alfred.io/static/presentation.jpg"/>
+            <meta property="og:description"
+              content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous"/>
+            <meta property="description"
+              content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous"/>
+            <meta property="og:type" content="website"/>
+            <meta property="og:url" content="https://my-alfred.io"/>
+            <meta property="og:image:secure_url" content="https://my-alfred.io/static/presentation.jpg"/>
+            <meta property="og:title" content="My Alfred - services autour de chez vous"/>
+            <meta property="fb:app_id" content="512626602698236"/>
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+              integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+              crossOrigin=""/>
+            <link rel="shortcut icon" href="/static/favicon.ico"/>
+            <link rel="icon" href="/static/favicon.ico"/>
+            // Custom favicon
+            <link rel="shortcut icon" href="/static/custom/favicon.svg"/>
+            <link rel="icon" href="/static/custom/favicon.svg"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com"/>
+            <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
+          </Head>
+          {/* Wrap every page in Jss and Theme providers */}
+          <CookieConsent
+            buttonText={ReactHtmlParser(this.props.t('COOKIE_CONSENT.accept'))}
+            enableDeclineButton
+            declineButtonText={ReactHtmlParser(this.props.t('COOKIE_CONSENT.decline'))}
+            location="top"
+            cookieName={ACCEPT_COOKIE_NAME}
+            onDecline={this.onDeclineCookies}
+            containerClasses={'customcookiescontainer'}
+            contentClasses={'customcookiescontent'}
+            buttonClasses={'customcookiesaccept'}
+            declineButtonClasses={'customcookiesdecline'}
           >
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline/>
-            {/* Pass pageContext to the _document though the renderPage enhancer
-                to render collected styles on server-side. */}
-            <Component pageContext={this.pageContext} {...pageProps} />
-          </MuiThemeProvider>
-        </JssProvider>
+            {ReactHtmlParser(this.props.t('COOKIE_CONSENT.message'))}
+          </CookieConsent>
 
-      </Container>
-    );
+          <JssProvider
+            registry={this.pageContext.sheetsRegistry}
+            generateClassName={this.pageContext.generateClassName}
+          >
+            {/* MuiThemeProvider makes the theme available down the React
+                tree thanks to React context. */}
+            <MuiThemeProvider
+              theme={this.pageContext.theme}
+            >
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline/>
+              {/* Pass pageContext to the _document though the renderPage enhancer
+                  to render collected styles on server-side. */}
+              <Component pageContext={this.pageContext} {...pageProps} />
+            </MuiThemeProvider>
+          </JssProvider>
+
+        </Container>
+      </I18nextProvider>
+    )
   }
 }
 
-export default MyApp;
+export default withTranslation('custom', {withRef: true})(MyApp)

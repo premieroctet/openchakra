@@ -87,7 +87,20 @@ export default theme => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  formControl:{
-    width: '100%'
-  }
+  formControl: {
+    width: '100%',
+  },
+  buttonlogin: {
+    width: '100%',
+    color: 'white',
+  },
+  forgetPassword: {
+    textDecoration: 'none',
+    color: '#2FBCD3',
+  },
+  redirectionSignin: {
+    textDecoration: 'none',
+    color: '#2FBCD3',
+    cursor: 'pointer',
+  },
 })

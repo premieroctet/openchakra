@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import Router from 'next/router';
-import {FacebookLoginButton, GoogleLoginButton} from 'react-social-login-buttons';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Grid from '@material-ui/core/Grid';
-import styles from './OAuthStyle';
-import Divider from '@material-ui/core/Divider';
+import {withTranslation} from 'react-i18next'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import Router from 'next/router'
+import {FacebookLoginButton, GoogleLoginButton} from 'react-social-login-buttons'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Grid from '@material-ui/core/Grid'
+import styles from './OAuthStyle'
+import Divider from '@material-ui/core/Divider'
 
 
 class OAuth extends Component {
@@ -16,16 +17,13 @@ class OAuth extends Component {
   };
 
   startAuth = () => {
-    const {provider} = this.props;
-    Router.push(`/myAlfred/api/authentication/${provider}`);
+    const {provider} = this.props
+    Router.push(`/myAlfred/api/authentication/${provider}`)
   };
 
   render() {
-    const {provider, login} = this.props;
-    const {classes} = this.props;
-    const ProviderLoginButton = this.components[provider];
-
-    console.log(provider, 'provider');
+    const {provider, login} = this.props
+    const {classes} = this.props
 
     return (
       <Grid>
@@ -50,14 +48,13 @@ class OAuth extends Component {
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
 OAuth.propTypes = {
   provider: PropTypes.string.isRequired,
-  // Login : true => connect, false : register
   login: PropTypes.string.isRequired,
-};
+}
 
-export default withStyles(styles)(OAuth);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(OAuth))

@@ -1,18 +1,19 @@
-import React from "react";
-import {Page, Text, View, Document, StyleSheet, Image, Link, Font} from '@react-pdf/renderer';
-import {moneyFormat} from '../../utils/converters';
-import moment from "moment";
-import pdfStyle from '../../static/css/components/BillingGeneration/BillingGeneration';
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import {Page, Text, View, Document, StyleSheet, Image, Link, Font} from '@react-pdf/renderer'
+import {moneyFormat} from '../../utils/converters'
+import moment from 'moment'
+import pdfStyle from '../../static/css/components/BillingGeneration/BillingGeneration'
 
 const styles = StyleSheet.create(pdfStyle())
-moment.locale('fr');
+moment.locale('fr')
 
 Font.register({
   family: 'SourceSansPro', fonts: [
     {src: 'https://fonts.gstatic.com/s/sourcesanspro/v14/6xK3dSBYKcSV-LCoeQqfX1RYOo3aPw.ttf'},
     {src: 'https://fonts.gstatic.com/s/sourcesanspro/v14/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rAkA.ttf', fontWeight: 600},
   ]
-});
+})
 
 
 class BillingGeneration extends React.Component {
@@ -22,31 +23,31 @@ class BillingGeneration extends React.Component {
 
 
   render() {
-    const {bookingObj, is_pro} = this.props;
-    const htFees = bookingObj.fees / 1.2;
+    const {bookingObj, is_pro} = this.props
+    const htFees = bookingObj.fees / 1.2
 
     return (
       <Document>
-        <Page pageNumber={"1"} size="A4" style={styles.body}>
+        <Page pageNumber={'1'} size="A4" style={styles.body}>
           <View
             style={{
               display: 'flex',
               justifyContent: 'space-between',
-              flexDirection: 'row'
+              flexDirection: 'row',
             }}
           >
             <View>
-              <Image src={"../../static/assets/icon/logo.png"}
-                     alt={'logo_myAlfred'}
-                     style={{
-                       height: 64
-                     }}/>
+              <Image src={'/static/assets/icon/logo.png'}
+                alt={'logo_myAlfred'}
+                style={{
+                  height: 64,
+                }}/>
             </View>
             <View>
               <View style={{
                 display: 'flex',
                 flexDirection: 'column',
-                textAlign: 'left'
+                textAlign: 'left',
               }}>
                 <View>
                   <Text>
@@ -254,7 +255,7 @@ class BillingGeneration extends React.Component {
             }}
           >
             <View>
-              <Image src={"../../static/assets/icon/logo.png"}
+              <Image src={"/static/assets/icon/logo.png"}
                      alt={'logo_myAlfred'}
                      style={{
                        height: 64
@@ -462,5 +463,4 @@ class BillingGeneration extends React.Component {
   }
 }
 
-export default (BillingGeneration);
-
+export default withTranslation('custom', {withRef: true})((BillingGeneration))

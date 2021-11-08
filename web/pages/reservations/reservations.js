@@ -1,33 +1,37 @@
-const {setAxiosAuthentication}=require('../../utils/authentication');
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import {withStyles} from '@material-ui/core/styles';
-import axios from 'axios';
-import Typography from '@material-ui/core/Typography';
-import moment from 'moment';
-import UserAvatar from '../../components/Avatar/UserAvatar';
-import styles from '../../static/css/pages/reservations/reservations';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Tabs from '@material-ui/core/Tabs'
+import CustomButton from '../../components/CustomButton/CustomButton'
+import '../../static/assets/css/custom.css'
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import CloseIcon from '@material-ui/icons/Close'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import Divider from '@material-ui/core/Divider'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import React from 'react'
+import Router from 'next/router'
 import Tab from '@material-ui/core/Tab'
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import BookingPreview from '../../components/BookingDetail/BookingPreview'
+import Tabs from '@material-ui/core/Tabs'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+import moment from 'moment'
+import BasePage from '../basePage'
 import BookingCancel from '../../components/BookingDetail/BookingCancel'
 import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
-import BookingPreApprouve from "../../components/BookingDetail/BookingPreApprouve";
-import LayoutReservations from "../../hoc/Layout/LayoutReservations";
-import Divider from "@material-ui/core/Divider";
-import LayoutMobileReservations from "../../hoc/Layout/LayoutMobileReservations";
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import CloseIcon from '@material-ui/icons/Close';
-const {BOOK_STATUS}=require('../../utils/consts');
-const {getUserLabel}=require('../../utils/context');
-import Router from 'next/router';
+import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
+import BookingPreview from '../../components/BookingDetail/BookingPreview'
+import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
+import LayoutReservations from '../../hoc/Layout/LayoutReservations'
+import UserAvatar from '../../components/Avatar/UserAvatar'
+import styles from '../../static/css/pages/reservations/reservations'
+import {RESERVATION} from '../../utils/i18n'
+import ReactHtmlParser from 'react-html-parser'
+const {BOOK_STATUS}=require('../../utils/consts')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
@@ -37,16 +41,16 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
-moment.locale('fr');
+moment.locale('fr')
 
-//TODO RASSEMBLER ALLRESERVATIONS + COMINGRESERVATIONS + FINISHEDRESERVATIONS
+// TODO RASSEMBLER ALLRESERVATIONS + COMINGRESERVATIONS + FINISHEDRESERVATIONS
 
-class AllReservations extends React.Component {
+class AllReservations extends BasePage {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: null,
       alfredReservations: [],
@@ -58,118 +62,98 @@ class AllReservations extends React.Component {
       bookingPreview: null,
       bookingCancel: null,
       bookingConfirm: null,
-      bookingPreApprouved: null
-    };
-  }
-
-  static getInitialProps({query: {id}}) {
-    return {
-      id: id,
-    };
+      bookingPreApprouved: null,
+    }
   }
 
   componentDidMount() {
-    setAxiosAuthentication();
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        let result = res.data;
+        let result = res.data
         this.setState({
           userInfo: result,
           user: result._id,
           isAlfred: result.is_alfred,
           reservationType: result.is_alfred ? 0 : 1,
-        });
+        })
         this.loadBookings()
-        if (this.props.id) {
-          setTimeout(() => this.setState({bookingPreview: this.props.id}), 1000)
+        if (this.getURLProps().id) {
+          setTimeout(() => this.setState({bookingPreview: this.getURLProps().id}), 1000)
         }
       })
-      .catch( err => {
+      .catch(err => {
         if (err.response && [401, 403].includes(err.response.status)) {
           localStorage.setItem('path', Router.asPath)
-          Router.push('/');
+          Router.push('/')
         }
       })
-  }
-
-  loadUserLabels = bookings => {
-    bookings.forEach( booking => {
-      getUserLabel(booking.alfred)
-        .then( res => {
-          this.setState({[booking.alfred._id]: res})
-        })
-      getUserLabel(booking.user)
-        .then( res => {
-          this.setState({[booking.user._id]: res})
-        })
-    })
   }
 
   loadBookings = () => {
     axios.get('/myAlfred/api/booking/alfredBooking')
       .then(res => {
         // On n'affiche pas les résas en attente de paiement
-        const alfredBookings=res.data.filter( r => r.status !== BOOK_STATUS.TO_PAY);
-        this.setState({alfredReservations: alfredBookings});
+        const alfredBookings=res.data.filter(r => r.status !== BOOK_STATUS.TO_PAY)
+        this.setState({alfredReservations: alfredBookings})
         axios.get('/myAlfred/api/booking/userBooking')
           .then(res => {
-            const userBookings=res.data;
-            this.setState({userReservations: userBookings});
-            this.loadUserLabels(alfredBookings.concat(userBookings))
-          });
-      });
-  };
+            const userBookings=res.data
+            this.setState({userReservations: userBookings})
+          })
+      })
+  }
 
   onReservationTypeChanged = (event, newValue) => {
     this.setState({reservationType: newValue, reservationStatus: 0})
-  };
+  }
 
   handleReservationStatusChanged = (event, newValue) => {
     this.setState({reservationStatus: newValue})
-  };
+  }
 
   isFinished = reservation => {
-    return [ BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.FINISHED, BOOK_STATUS.EXPIRED].includes(reservation.status)
-  };
+    return [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.FINISHED, BOOK_STATUS.EXPIRED].includes(reservation.status)
+  }
 
   isComing = reservation => {
-    return [ BOOK_STATUS.INFO, BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.CONFIRMED, BOOK_STATUS.PREAPPROVED].includes(reservation.status)
-  };
+    return [BOOK_STATUS.INFO, BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.CONFIRMED, BOOK_STATUS.PREAPPROVED].includes(reservation.status)
+  }
 
   filterReservations = () => {
-    const {reservationType, reservationStatus, alfredReservations, userReservations}=this.state;
+    const {reservationType, reservationStatus, alfredReservations, userReservations}=this.state
     // Alfred/customer reservatioons
-    var reservations = reservationType===0 ?  alfredReservations : userReservations;
+    let reservations = reservationType===0 ? alfredReservations : userReservations
     // All/ coming/finished reservations
-    if (reservationStatus===1) { reservations = reservations.filter(this.isComing)}
-    if (reservationStatus===2) { reservations = reservations.filter(this.isFinished)}
+    if (reservationStatus===1) { reservations = reservations.filter(this.isComing) }
+    if (reservationStatus===2) { reservations = reservations.filter(this.isFinished) }
     return reservations
-  };
+  }
 
   openBookingPreview = bookingId => {
-    this.loadBookings();
-    this.setState({ bookingPreview: bookingId, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: null})
-  };
+    this.loadBookings()
+    this.setState({bookingPreview: bookingId, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: null})
+  }
 
   openBookingCancel = bookingId => {
-    this.setState({ bookingPreview:null, bookingCancel: bookingId, bookingConfirm: null, bookingPreApprouved: null})
-  };
+    this.setState({bookingPreview: null, bookingCancel: bookingId, bookingConfirm: null, bookingPreApprouved: null})
+  }
 
   openBookingConfirm = bookingId => {
-    this.setState({ bookingPreview:null, bookingCancel: null, bookingConfirm: bookingId, bookingPreApprouved: null})
-  };
+    this.setState({bookingPreview: null, bookingCancel: null, bookingConfirm: bookingId, bookingPreApprouved: null})
+  }
 
-  openBookingPreAprouved = bookingId =>{
-    this.loadBookings();
-    this.setState({ bookingPreview:null, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: bookingId})
-  };
+  openBookingPreAprouved = bookingId => {
+    this.loadBookings()
+    this.setState({bookingPreview: null, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: bookingId})
+  }
 
   onClosePreview = () => {
     this.setState({bookingPreview: null}, () => this.loadBookings())
-  };
+  }
 
-  bookingPreviewModal = (classes) => {
-    const {bookingPreview}=this.state;
+  bookingPreviewModal = classes => {
+    const {bookingPreview}=this.state
 
     return (
       <Dialog
@@ -185,10 +169,10 @@ class AllReservations extends React.Component {
         </DialogContent>
       </Dialog>
     )
-  };
+  }
 
-  bookingCancelModal = (classes) => {
-    const {bookingCancel}=this.state;
+  bookingCancelModal = classes => {
+    const {bookingCancel}=this.state
 
     return (
       <Dialog style={{width: '100%'}}
@@ -203,10 +187,10 @@ class AllReservations extends React.Component {
         </DialogContent>
       </Dialog>
     )
-  };
+  }
 
-  bookingConfirmModal = (classes) => {
-    const {bookingConfirm}=this.state;
+  bookingConfirmModal = classes => {
+    const {bookingConfirm}=this.state
 
     return (
       <Dialog style={{width: '100%'}}
@@ -220,10 +204,10 @@ class AllReservations extends React.Component {
         </DialogContent>
       </Dialog>
     )
-  };
+  }
 
-  bookingPreApprouved = (classes) =>{
-    const {bookingPreApprouved}=this.state;
+  bookingPreApprouved = classes => {
+    const {bookingPreApprouved}=this.state
 
     return (
       <Dialog
@@ -238,25 +222,25 @@ class AllReservations extends React.Component {
         </DialogContent>
       </Dialog>
     )
-  };
+  }
 
-  newAppointment = (booking) =>{
-    let newBooking = booking;
-    newBooking.date_prestation = null;
-    newBooking.time_prestation = null;
+  newAppointment = booking => {
+    let newBooking = booking
+    newBooking.date_prestation = null
+    newBooking.time_prestation = null
     localStorage.setItem('bookingObj', JSON.stringify(newBooking))
-    Router.push('/userServicePreview?id=' + newBooking.serviceUserId);
+    Router.push(`/userServicePreview?id=${ newBooking.serviceUserId}&address=main`)
 
-  };
+  }
 
-  content = (classes) =>{
-    const {reservationType} = this.state;
-    const reservations = this.filterReservations();
-    const alfredMode = this.state.reservationType===0;
+  content = classes => {
+    const {reservationType} = this.state
+    const reservations = this.filterReservations()
+    const alfredMode = this.state.reservationType===0
 
     return(
       <Grid style={{width: '100%'}}>
-        <Grid style={{display: 'flex', justifyContent :'center'}}>
+        <Grid style={{display: 'flex', justifyContent: 'center'}}>
           <Tabs
             orientation="horizontal"
             variant="scrollable"
@@ -264,11 +248,11 @@ class AllReservations extends React.Component {
             onChange={this.handleReservationStatusChanged}
             aria-label="scrollable force tabs"
             scrollButtons="on"
-            classes={{indicator: classes.scrollMenuIndicator}}
+            classes={{indicator: `customscrollmenu ${classes.scrollMenuIndicator}`}}
           >
-            <Tab label={"Toutes mes réservations"} className={classes.scrollMenuTab} />
-            <Tab label={"Mes réservations à venir"} className={classes.scrollMenuTab} />
-            <Tab label={"Mes réservations terminées"} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.allresa'))} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.commingresa'))} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.endingresa'))} className={classes.scrollMenuTab} />
           </Tabs>
         </Grid>
         <Grid style={{width: '100%'}}>
@@ -285,7 +269,7 @@ class AllReservations extends React.Component {
                     </Grid>
                     <Grid item xl={5} lg={5} md={6} sm={6} xs={8} className={classes.descriptionContainer}>
                       <Grid className={classes.bookingNameContainer}>
-                        <Typography><strong> {booking.status} - {alfredMode ? this.state[booking.user._id] : this.state[booking.alfred._id]}</strong></Typography>
+                        <Typography><strong> {booking.status} - {alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
                       </Grid>
                       <Grid>
                         <Typography>
@@ -298,30 +282,35 @@ class AllReservations extends React.Component {
                       <Grid>
                         <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}>{booking.service}</Typography>
                       </Grid>
+                      { booking.customer_booking &&
+                        <Grid>
+                          <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}><strong>Réservation AvoCotés</strong></Typography>
+                        </Grid>
+                      }
                     </Grid>
-                    <Grid item  xl={1} lg={1} md={6} sm={3} xs={4} className={classes.priceContainer}>
-                        <Typography className={classes.alfredAmount}><strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong></Typography>
+                    <Grid item xl={1} lg={1} md={6} sm={3} xs={4} className={classes.priceContainer}>
+                      <Typography className={classes.alfredAmount}><strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong></Typography>
                     </Grid>
                     <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer}>
                       <Grid item>
-                        <Button
+                        <CustomButton
                           color={'primary'}
                           variant={'outlined'}
-                          classes={{root: classes.buttonDetail}}
+                          classes={{root: `customreservationdetailbutton ${classes.buttonDetail}`}}
                           onClick={() => this.openBookingPreview(booking._id)}>
-                          Détail
-                        </Button>
+                          {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
+                        </CustomButton>
                       </Grid>
                       {
-                        reservationType === 1 ?
+                        reservationType === 1 && !booking.customer_booking ?
                           <Grid item>
-                            <Button
+                            <CustomButton
                               variant={'contained'}
                               color={'primary'}
-                              classes={{root: classes.buttonResa}}
+                              classes={{root: `customresasaveagain ${classes.buttonResa}`}}
                               onClick={() => this.newAppointment(booking)}>
-                              Réserver de nouveau
-                            </Button>
+                              {ReactHtmlParser(this.props.t('RESERVATION.saveagain'))}
+                            </CustomButton>
                           </Grid> : null
                       }
 
@@ -333,17 +322,17 @@ class AllReservations extends React.Component {
                 </Grid>
               )
             })) :
-            <Typography>{ `Vous n'avez aucune réservation en tant qu'${alfredMode ? 'Alfred' : 'utilisateur'}` }</Typography>
+            <Typography className={'customresanoresamessage'}>{alfredMode ? ReactHtmlParser(this.props.t('RESERVATION.infomessageAlfred')) : ReactHtmlParser(this.props.t('RESERVATION.infomessageUser')) }</Typography>
           }
         </Grid>
       </Grid>
     )
-  };
+  }
 
 
   render() {
-    const {classes} = this.props;
-    const {reservationType, userInfo, bookingPreview, bookingCancel, bookingConfirm, bookingPreApprouved} = this.state;
+    const {classes} = this.props
+    const {reservationType, userInfo, bookingPreview, bookingCancel, bookingConfirm, bookingPreApprouved} = this.state
 
     return (
       <Grid>
@@ -363,8 +352,8 @@ class AllReservations extends React.Component {
         { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
       </Grid>
 
-    );
+    )
   }
 }
 
-export default withStyles(styles)(AllReservations);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(AllReservations))

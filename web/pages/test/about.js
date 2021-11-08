@@ -1,78 +1,76 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
+import {withTranslation} from 'react-i18next'
+import Input from '@material-ui/core/Input'
 import React from 'react'
+import Select from 'react-dropdown-select'
 import axios from 'axios'
 
-
-
-
-import Select from 'react-dropdown-select';
 import About from '../../components/About/About'
-import Layout from '../../hoc/Layout/Layout'
-import Input from '@material-ui/core/Input';
+import BasePage from '../basePage'
 
-class AboutTest extends React.Component{
+const {setAxiosAuthentication}=require('../../utils/authentication')
+
+class AboutTest extends BasePage {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
-      users:[],
+      users: [],
       user: null,
     }
   }
 
-  static getInitialProps ({ query: { user } }) {
-    return { user : user }
-  }
-
   componentDidMount() {
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/admin/users/all_light`)
+    axios.get('/myAlfred/api/admin/users/all_light')
       .then(response => {
-        let users = response.data;
+        let users = response.data
         users = users.map(u => {
           return {
             label: `${u.name} ${u.firstname} ${u.email}`,
             value: u.email,
             key: u.id,
-          };
-        });
-        this.setState({users: users});
+          }
+        })
+        this.setState({users: users})
 
       })
       .catch(err => {
-        console.error(err);
-      });
+        console.error(err)
+      })
   }
 
   onUserChanged = e => {
-    this.setState({user: e[0].key});
+    this.setState({user: e[0].key})
     console.log(e[0].key)
-  };
+  }
 
   render() {
-    const{classes} = this.props;
     const {users, user} = this.state
 
     console.log(`User:${user}`)
     return(
       <>
-      <Select
-        input={<Input name="user" id="genre-label-placeholder"/>}
-        displayEmpty
-        name="user"
-        onChange={this.onUserChanged}
-        options={users}
-        multi={false}
-      >
-      </Select>
-      <div>Sans titre ni photo</div>
-      <About key={this.state.user} user={this.state.user} />
-      <div>Avec titre et photo</div>
-      <About key={this.state.user} user={this.state.user} displayTitlePicture={true}/>
+        <Select
+          input={<Input name="user" id="genre-label-placeholder"/>}
+          displayEmpty
+          name="user"
+          onChange={this.onUserChanged}
+          options={users}
+          multi={false}
+        >
+        </Select>
+        { user &&
+          <>
+            <div>Sans titre ni photo</div>
+            <About key={user} user={user} />
+            <div>Avec titre et photo</div>
+            <About key={user} user={user} displayTitlePicture={true}/>
+          </>
+        }
       </>
-    );
+    )
   }
 
 }
 
-export default AboutTest
+export default withTranslation('custom', {withRef: true})(AboutTest)

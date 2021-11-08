@@ -1,25 +1,25 @@
 export default theme => ({
-  profilLayoutMainContainer:{
-    display:'flex',
-    justifyContent:'center'
-  },
-  profilLayoutContainer:{
+  profilLayoutMainContainer: {
     display: 'flex',
-    justifyContent:'center',
+    justifyContent: 'center',
+  },
+  profilLayoutContainer: {
+    display: 'flex',
+    justifyContent: 'center',
     flexDirection: 'column',
-    alignItems:'center',
-    width: '100%'
+    alignItems: 'center',
+    width: '100%',
   },
-  profilLayoutBackgroundContainer:{
+  profilLayoutBackgroundContainer: {
     backgroundColor: 'rgba(249,249,249, 1)',
-    width: '100%'
+    width: '100%',
   },
-  profilLayoutMargin:{
-    margin:'3vh 15%',
-    display:'flex',
-    justifyContent:'center'
+  profilLayoutMargin: {
+    margin: '3vh 15%',
+    display: 'flex',
+    justifyContent: 'center',
   },
-  profilLayoutBox:{
+  profilLayoutBox: {
     borderRadius: 17,
     border: '1px solid rgba(210, 210, 210, 0.5)',
     width: '100%',
@@ -27,11 +27,11 @@ export default theme => ({
     height: '60vh',
     display: 'flex',
     flexDirection: 'column',
-    [theme.breakpoints.down('md')]:{
-      height:'55vh'
-    }
+    [theme.breakpoints.down('md')]: {
+      height: '55vh',
+    },
   },
-  profilLayoutBannerImg:{
+  profilLayoutBannerImg: {
     display: 'flex',
     justifyContent: 'center',
     height: '50%',
@@ -41,9 +41,9 @@ export default theme => ({
     backgroundSize: 'cover',
     borderRadius: 17,
     position: 'relative',
-    backgroundRepeat: 'no-repeat'
+    backgroundRepeat: 'no-repeat',
   },
-  profilLayoutBannerImgPro:{
+  profilLayoutBannerImgPro: {
     display: 'flex',
     justifyContent: 'center',
     height: '50%',
@@ -53,26 +53,26 @@ export default theme => ({
     backgroundSize: 'cover',
     borderRadius: 17,
     position: 'relative',
-    backgroundRepeat: 'no-repeat'
+    backgroundRepeat: 'no-repeat',
   },
-  profilLayoutBannerImgB2b:{
+  profilLayoutBannerImgB2b: {
     display: 'flex',
     justifyContent: 'center',
     height: '50%',
     width: '100%',
     position: 'relative',
-    backgroundColor: theme.palette.b2b.main
+    backgroundColor: theme.palette.b2b.main,
   },
-  profilLayoutProfileHeader:{
+  profilLayoutProfileHeader: {
     position: 'absolute',
     top: '43%',
     left: '50%',
     transform: 'translate(-49%,50%)',
 
   },
-  profilLayoutAvatar:{
+  profilLayoutAvatar: {
     width: 100,
-    height:100,
+    height: 100,
     backgroundColor: 'white',
     borderRadius: '50%',
     display: 'flex',
@@ -86,15 +86,15 @@ export default theme => ({
     width: '90%',
     height: '90%',
   },
-  profilLayoutScrollMenu:{
+  profilLayoutScrollMenu: {
     display: 'flex',
     justifyContent: 'center',
-    height : '10%',
-    alignItems: 'flex-end'
+    height: '10%',
+    alignItems: 'flex-end',
   },
-  profilLayoutChildren:{
-    margin:'3vh 15%',
-    display:'flex',
-    justifyContent:'center'
-  }
+  profilLayoutChildren: {
+    margin: '3vh 15%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
 })

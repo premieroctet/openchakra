@@ -1,57 +1,69 @@
-import React from 'react';
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import {RESA_SERVICE} from '../../../utils/i18n';
-import Link from '../../Link/Link';
-import styles from '../../../static/css/components/ResaService/ResaService';
-import withStyles from "@material-ui/core/styles/withStyles";
-import Router from 'next/router';
+import { canAlfredSelfRegister } from '../../../config/config';
+import CustomButton from '../../CustomButton/CustomButton'
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import {RESA_SERVICE} from '../../../utils/i18n'
+import styles from '../../../static/css/components/ResaService/ResaService'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Router from 'next/router'
+import {getLoggedUser} from '../../../utils/context'
 
 
 class ResaService extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
-      homePage: false
+      homePage: false,
     }
   }
 
   componentDidMount() {
-    if(Router.pathname=== '/'){
+    if(Router.pathname === '/') {
       this.setState({homePage: true})
     }
   }
 
+  handleController = () => {
+    if(getLoggedUser()) {
+      Router.push('/creaShop/creaShop')
+    }
+    else{
+      this.props.triggerLogin()
+    }
+  }
+
   render() {
-    const {classes} = this.props;
-    const {homePage} = this.state;
+    const {classes} = this.props
+    const {homePage} = this.state
 
     return (
-      <Grid className={classes.ResaServiceMainContainer}>
+      <Grid className={classes.ResaServiceMainContainer} id={'anchorService'}>
         <Grid className={classes.becomeAlfredContainer}>
           <Grid>
-            <h2 className={classes.becomeAlfredTitle}>{RESA_SERVICE.title}</h2>
+            <h2 className={`customresaserviceh2 ${classes.becomeAlfredTitle}`}>{ReactHtmlParser(this.props.t('RESA_SERVICE.title'))}</h2>
           </Grid>
           <Grid>
-            <p className={classes.becomeAlfredText}>{RESA_SERVICE.text}</p>
+            <p className={`customresaservicetext ${classes.becomeAlfredText}`}>{ReactHtmlParser(this.props.t('RESA_SERVICE.text'))}</p>
           </Grid>
-          <Grid>
-            <Link href={'/creaShop/creaShop'}>
-              <Button
-                variant={'contained'}
-                className={classes.resaServiceButton}
-                style={{
-                  color: homePage ? 'rgba(178,204,251,1)' : '#F8CF61',
-                }}
-              >{RESA_SERVICE.button}</Button>
-            </Link>
+          {canAlfredSelfRegister() && <Grid>
+            <CustomButton
+              variant={'contained'}
+              className={`customresaservicebutton ${classes.resaServiceButton}`}
+              onClick={this.handleController}
+              style={{
+                color: homePage ? 'rgba(178,204,251,1)' : '#F8CF61',
+              }}
+            >{ReactHtmlParser(this.props.t('RESA_SERVICE.button'))}</CustomButton>
           </Grid>
+          }
         </Grid>
         <Grid/>
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles (styles) (ResaService);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(ResaService))

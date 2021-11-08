@@ -1,26 +1,27 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+
+const Schema = mongoose.Schema
 
 const {hideIllegal} = require('../../utils/text')
 
 const ServiceUserSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
     required: true,
   },
   service: {
     type: Schema.Types.ObjectId,
-    ref: 'service',
+    ref: 'Service',
   },
   prestations: [{
     prestation: {
       type: Schema.Types.ObjectId,
-      ref: 'prestation',
+      ref: 'Prestation',
     },
     billing: {
       type: Schema.Types.ObjectId,
-      ref: 'billing',
+      ref: 'Billing',
       required: true,
     },
     price: {
@@ -30,7 +31,7 @@ const ServiceUserSchema = new Schema({
   }],
   equipments: [{
     type: Schema.Types.ObjectId,
-    ref: 'equipment',
+    ref: 'Equipment',
   }],
   service_address: {
     type: {
@@ -62,41 +63,41 @@ const ServiceUserSchema = new Schema({
   deadline_before_booking: {
     type: String,
   },
-  graduated: {
-    type: Boolean,
-    default: false,
-  },
   diploma: {
-    name: {
-      type: String,
+    type: {
+      name: {
+        type: String,
+        required: true,
+      },
+      year: {
+        type: String,
+      },
+      file: {
+        type: String,
+      },
+      skills: [{
+        type: String,
+      }],
+      required: false,
     },
-    year: {
-      type: String,
-    },
-    file: {
-      type: String,
-    },
-    skills: [{
-      type: String,
-    }]
-  },
-  is_certified: {
-    type: Boolean,
-    default: false,
   },
   certification: {
-    name: {
-      type: String,
+    type: {
+      name: {
+        type: String,
+        required: true,
+      },
+      year: {
+        type: String,
+      },
+      file: {
+        type: String,
+      },
+      skills: [{
+        type: String,
+      }],
+      required: false,
     },
-    year: {
-      type: String,
-    },
-    file: {
-      type: String,
-    },
-    skills: [{
-      type: String,
-    }]
   },
   option: {
     label: {
@@ -114,21 +115,20 @@ const ServiceUserSchema = new Schema({
   },
   description: {
     type: String,
-    set : text => hideIllegal(text)
+    set: text => hideIllegal(text),
   },
   level: {
     type: Number,
   },
   experience_title: {
-    type: String
+    type: String,
   },
   experience_description: {
-    type: String
+    type: String,
   },
   experience_skills: [{
-      type: String
-    }
-  ],
+    type: String,
+  }],
   number_of_views: {
     type: Number,
     default: 0,
@@ -145,14 +145,26 @@ const ServiceUserSchema = new Schema({
   // Frais livraison
   pick_tax: {
     type: Number,
-    default:0,
-    required:true
+    default: 0,
+    required: true,
   },
   // Frais déplacement
   travel_tax: {
-    type: Number,
-    default:0,
-    required:true
+    type: {
+      // Prix au kilometre (euros)
+      rate: {
+        type: Number,
+        default: 0,
+        required: true,
+      },
+      // Kilomètres facturés à partir de 'from'
+      from: {
+        type: Number,
+        default: 0,
+        required: true,
+      },
+    },
+    required: false,
   },
   // Particulars can book
   particular_access: {
@@ -166,6 +178,27 @@ const ServiceUserSchema = new Schema({
     required: true,
     sparse: true,
   },
-});
+}, {toJSON: {virtuals: true, getters: true}})
 
-module.exports = ServiceUser = mongoose.model('serviceUser', ServiceUserSchema);
+ServiceUserSchema.virtual('is_graduated').get(function() {
+  return Boolean(this.diploma)
+})
+
+ServiceUserSchema.virtual('is_certified').get(function() {
+  return Boolean(this.certification)
+})
+
+ServiceUserSchema.virtual('grade_text').get(function() {
+  let grades=[this.diploma, this.certification].filter(x => Boolean(x))
+  let result=grades.map(grade => {
+    let str=grade.name
+    if (grade.year) {
+      str=`${str}(${grade.year})`
+    }
+    return str
+  }).join(', ')
+  return result
+})
+
+
+module.exports = ServiceUserSchema

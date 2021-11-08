@@ -1,33 +1,42 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import Grid from "@material-ui/core/Grid";
-import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/pages/profile/messages/messages';
-import axios from "axios";
-import Typography from '@material-ui/core/Typography';
-const moment=require('moment');
-import MessageSummary from '../../components/MessageSummary/MessageSummary'
-import _ from 'lodash'
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
-import LayoutMessages from "../../hoc/Layout/LayoutMessages";
-import Divider from '@material-ui/core/Divider';
-import LayoutMobileMessages from "../../hoc/Layout/LayoutMobileMessages";
-import IconButton from "@material-ui/core/IconButton";
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import CloseIcon from '@material-ui/icons/Close';
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import SendIcon from "@material-ui/icons/Send";
-import DialogActions from "@material-ui/core/DialogActions";
-import UserAvatar from "../../components/Avatar/UserAvatar";
-import Router from 'next/router';
+import ReactHtmlParser from 'react-html-parser'
+import '../../static/assets/css/custom.css'
 
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import CloseIcon from '@material-ui/icons/Close'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import Divider from '@material-ui/core/Divider'
+import FormControl from '@material-ui/core/FormControl'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import InputLabel from '@material-ui/core/InputLabel'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import OutlinedInput from '@material-ui/core/OutlinedInput'
+import React from 'react'
+import Router from 'next/router'
+import SendIcon from '@material-ui/icons/Send'
+import Typography from '@material-ui/core/Typography'
+import _ from 'lodash'
+import axios from 'axios'
+import {MESSAGES} from '../../utils/i18n'
+import BasePage from '../basePage'
+import LayoutMessages from '../../hoc/Layout/LayoutMessages'
+import LayoutMobileMessages from '../../hoc/Layout/LayoutMobileMessages'
+import MessageSummary from '../../components/MessageSummary/MessageSummary'
+import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
+import UserAvatar from '../../components/Avatar/UserAvatar'
+import styles from '../../static/css/pages/profile/messages/messages'
+import Hidden from "@material-ui/core/Hidden";
+
+const moment=require('moment')
+
+const {setAxiosAuthentication}=require('../../utils/authentication')
+
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography {...other} className={classes.root}>
       <Typography variant="h6">{children}</Typography>
@@ -37,40 +46,38 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
-class Messages extends React.Component {
+class Messages extends BasePage {
 
   constructor(props) {
-    super(props);
-    this.child = React.createRef();
-    this.messageDetailsRef = React.createRef();
+    super(props)
+    this.messageDetailsRef = React.createRef()
     this.state={
-      tabIndex:0,
+      tabIndex: 0,
       chats: [],
       relativeDetails: null,
       message: '',
       lastMessageDate: '',
-      user: {}
-
-    };
+      user: {},
+    }
   }
 
   componentDidMount() {
-    this.loadChats(true);
+    this.loadChats(true)
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        let result = res.data;
+        let result = res.data
         this.setState({
           user: result,
-          tabIndex: result.is_alfred ? 0 : 1
-        });
+          tabIndex: result.is_alfred ? 0 : 1,
+        })
       })
-      .catch (err => {
+      .catch(err => {
         if (err.response && [401, 403].includes(err.response.status)) {
           localStorage.setItem('path', Router.asPath)
-          Router.push('/');
+          Router.push('/')
         }
       })
   }
@@ -78,11 +85,12 @@ class Messages extends React.Component {
   loadChats = checkRelative => {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
-      .then( res => {
-        const chats=res.data.filter(c => c.booking && c.booking.alfred && c.messages);
-        if (checkRelative && this.props.relative) {
-          axios.get(`/myAlfred/api/users/users/${this.props.relative}`)
-            .then (res => this.setState({chats: chats, relativeDetails: res.data}))
+      .then(res => {
+        const chats=res.data.filter(c => c.booking && c.booking.alfred && c.messages)
+        const relative = this.getURLProps().relative
+        if (checkRelative && relative) {
+          axios.get(`/myAlfred/api/users/users/${relative}`)
+            .then(res => this.setState({chats: chats, relativeDetails: res.data}))
         }
         else {
           this.setState({chats: chats})
@@ -91,74 +99,72 @@ class Messages extends React.Component {
 
   }
 
-  static getInitialProps({query: {user, relative}}) {
-    return {user: user, relative: relative};
+  getChatsRelative = relativeId => {
+    const user=this.getURLProps().user
+    return this.state.chats.slice().filter(c =>
+      (c.emitter._id===user && c.recipient._id===relativeId)
+      ||
+      (c.emitter._id===relativeId && c.recipient._id===user),
+    )
   }
 
-  getChatsRelative = relativeId => {
-    return this.state.chats.slice().filter( c=>
-      (c.emitter._id===this.props.user && c.recipient._id===relativeId)
-      ||
-      (c.emitter._id===relativeId && c.recipient._id===this.props.user)
-    )
-  };
-
   getRelatives = () => {
-    var {chats, tabIndex} = this.state;
+    const user=this.getURLProps().user
+
+    let {chats, tabIndex} = this.state
     if (!chats || chats.length===0) {
       return []
     }
     // Tab index 0 : Alfred, 1 : client
     // Filter chats for Alfred or client
-    chats=chats.slice();
+    chats=chats.slice()
     if (tabIndex===0) {
-      chats=chats.filter(c => c.booking.alfred===this.props.user)
+      chats=chats.filter(c => c.booking.alfred===user)
     }
     else {
-      chats=chats.filter(c => c.booking.user===this.props.user)
+      chats=chats.filter(c => c.booking.user===user)
     }
 
-    chats = chats.sort( (c1, c2) => moment(c2.latest)-moment(c1.latest));
-    const users=_.uniqBy(chats.map( c => c.emitter._id.toString()===this.props.user ? c.recipient : c.emitter), '_id');
+    chats = chats.sort((c1, c2) => moment(c2.latest)-moment(c1.latest))
+    const users=_.uniqBy(chats.map(c => (c.emitter._id.toString()===user ? c.recipient : c.emitter)), '_id')
     return users
-  };
+  }
 
   openMessagesDetails = relative => {
-    this.setState({ relativeDetails: relative})
-  };
+    this.setState({relativeDetails: relative})
+  }
 
-  handleChangeMessage = (event) =>{
+  handleChangeMessage = event => {
     this.setState({message: event.target.value}, () => this.messageDetailsRef.current.getMessage(this.state.message))
-  };
+  }
 
-  handleSubmitMessage = (event) =>{
-    this.setState({message: ''});
+  handleSubmitMessage = event => {
+    this.setState({message: ''})
     this.messageDetailsRef.current.handleSubmit(event)
-  };
+  }
 
-  getOldMessages = () =>{
-    let childState = this.messageDetailsRef.current.state;
-    const dates = childState.messages.concat(childState.oldMessagesDisplay).map(m => moment(m.date));
+  getOldMessages = () => {
+    let childState = this.messageDetailsRef.current.state
+    const dates = childState.messages.concat(childState.oldMessagesDisplay).map(m => moment(m.date))
     const lastMessageDate = dates.length>0 ? Math.max(...dates) : null
 
-    if(this.state.lastMessageDate !== lastMessageDate){
+    if(this.state.lastMessageDate !== lastMessageDate) {
       this.setState({lastMessageDate: lastMessageDate})
     }
-  };
+  }
 
   getBookingId = chats => {
-    chats = chats.slice().sort( (c1, c2) => c2.latest-c1.latest);
-    const booking=chats[0].booking
-    return booking
-  };
+    let sortedChats = chats.slice().sort((c1, c2) => c2.latest-c1.latest)
+    return sortedChats[0].booking
+  }
 
   onDetailsClosed = () => {
     this.setState({relativeDetails: null, message: ''})
     this.loadChats()
   }
 
-  messageDetails = (classes) => {
-    const filteredChats = this.getChatsRelative(this.state.relativeDetails._id);
+  messageDetails = classes => {
+    const filteredChats = this.getChatsRelative(this.state.relativeDetails._id)
     const bookingId = this.getBookingId(filteredChats)
     return (
       <Dialog
@@ -181,7 +187,7 @@ class Messages extends React.Component {
               </Grid>
               <Grid>
                 <Typography style={{textAlign: 'center', whiteSpace: 'nowrap'}}>
-                  {this.state.lastMessageDate ? `Dernier message ${moment(this.state.lastMessageDate).calendar()}` : 'Aucun message'}
+                  {this.state.lastMessageDate ? ReactHtmlParser(this.props.t('MESSAGES.last_message')) + moment(this.state.lastMessageDate).calendar() : ReactHtmlParser(this.props.t('MESSAGES.no_message'))}
                 </Typography>
               </Grid>
             </Grid>
@@ -190,7 +196,7 @@ class Messages extends React.Component {
             <Divider/>
           </Grid>
         </DialogTitle>
-        <DialogContent  id={'chat'}>
+        <DialogContent id={'chat'}>
           <MessagesDetails
             relative={this.state.relativeDetails}
             chats={filteredChats}
@@ -202,7 +208,7 @@ class Messages extends React.Component {
         <DialogActions classes={{root: classes.dialogActionRoot}}>
           <Grid>
             <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="standard-adornment">Saisissez votre message</InputLabel>
+              <InputLabel htmlFor="standard-adornment">{ReactHtmlParser(this.props.t('MESSAGES.dialog_title_content'))}</InputLabel>
               <OutlinedInput
                 id="standard-adornment-password"
                 type={'text'}
@@ -210,7 +216,7 @@ class Messages extends React.Component {
                 value={this.state.message}
                 onChange={this.handleChangeMessage}
                 // onKeyDown={e => {if (e.key === 'Enter') this.handleSubmitMessage(e)}}
-                label={'Saisissez votre message'}
+                label={ReactHtmlParser(this.props.t('MESSAGES.label'))}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -228,29 +234,32 @@ class Messages extends React.Component {
         </DialogActions>
       </Dialog>
     )
-  };
+  }
 
-  handleChange = () => {
-    let childState = this.child.current.state;
-    this.setState({tabIndex: childState.tabIndex})
-  };
+  handleChangeTab = (event, newValue) => {
+    this.setState({tabIndex: newValue})
+  }
 
-  content = (classes) => {
-    const relatives = this.getRelatives();
+  content = () => {
+    const relatives = this.getRelatives()
+    const countChats=relatives.length
+
+    const msg_descr = countChats===0 ? ReactHtmlParser(this.props.t('MESSAGES.no_conversation')) : countChats === 1 ? ReactHtmlParser(this.props.t('MESSAGES.one_conversation')) : `${ReactHtmlParser(this.props.t('MESSAGES.you_got')) } ${ countChats }${MESSAGES.conversation}`
+
     return(
       <Grid style={{width: '100%'}}>
         <Grid>
           <Grid>
-            <h2>Mes messages</h2>
+            <h2 className={'custommessagestitle'}>{ReactHtmlParser(this.props.t('MESSAGES.my_messages'))}</h2>
           </Grid>
           <Grid>
-            <Typography>{`Vous avez ${relatives.length} conversations `}</Typography>
+            <Typography>{msg_descr}</Typography>
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{marginTop: '3vh', marginBottom: '3vh'}}/>
+          <Divider style={{marginTop: '3vh', marginBottom: '3vh'}} className={'custommessagesdivider'}/>
         </Grid>
-        {relatives.map( (m, index) => {
+        {relatives.map((m, index) => {
           return (
             <Grid key={index}>
               <Grid>
@@ -264,11 +273,11 @@ class Messages extends React.Component {
         })}
       </Grid>
     )
-  };
+  }
 
   render() {
-    const {classes}=this.props;
-    const {relativeDetails, user}=this.state;
+    const {classes}=this.props
+    const {relativeDetails, user}=this.state
 
     if (!user) {
       return null
@@ -276,20 +285,20 @@ class Messages extends React.Component {
 
     return (
       <React.Fragment>
-        <Grid className={classes.layoutMessagesContainer}>
-          <LayoutMessages ref={this.child} handleChange={this.handleChange} {...this.state} userInfo={user}>
+        <Hidden only={['xs']}>
+          <LayoutMessages handleChange={this.handleChangeTab} {...this.state} user={user}>
             {this.content(classes)}
           </LayoutMessages>
-        </Grid>
-        <Grid className={classes.layoutMobileMessageContainer}>
-          <LayoutMobileMessages ref={this.child} handleChange={this.handleChange} {...this.state} currentIndex={3} userInfo={user}>
+        </Hidden>
+        <Hidden only={['xl', 'lg', 'md', 'sm']}>
+          <LayoutMobileMessages handleChange={this.handleChangeTab} {...this.state} currentIndex={3} user={user}>
             {this.content(classes)}
           </LayoutMobileMessages>
-        </Grid>
+        </Hidden>
         {relativeDetails ? this.messageDetails(classes) : null}
       </React.Fragment>
     )
   }
 
 }
-export default withStyles(styles)(Messages)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Messages))

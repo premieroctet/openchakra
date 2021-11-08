@@ -1,6 +1,6 @@
 export default theme => ({
   formSchedule: {
-    '& .MuiPickersBasePicker-pickerView':{
+    '& .MuiPickersBasePicker-pickerView': {
       backgroundColor: 'red',
     },
     [theme.breakpoints.down('xs')]: {
@@ -10,15 +10,25 @@ export default theme => ({
   },
   panelFormDays: {
     width: '100%',
-    marginTop: '4vh'
+    marginTop: '4vh',
+  },
+  textFieldChipsActive: {
+    color: 'white',
+    fontWeight: 'bold',
+    margin: 3,
+    //backgroundColor: '#4fbdd7',
   },
   textFieldChips: {
     color: 'white',
     fontWeight: 'bold',
     margin: 3,
+    backgroundColor: '#c4c4c4',
   },
-  marginSaveButton:{
+  marginSaveButton: {
     marginTop: '5vh',
     marginBottom: '5vh',
-  }
+  },
+  cancelButton: {
+    color: theme.palette.error.main,
+  },
 })

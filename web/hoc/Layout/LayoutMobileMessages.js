@@ -1,30 +1,33 @@
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import withStyles from "@material-ui/core/styles/withStyles";
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../static/css/components/Layout/LayoutMobileMessages/LayoutMobileMessages'
-import IconButton from "@material-ui/core/IconButton";
-import Router from "next/router";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import Divider from "@material-ui/core/Divider";
-import MobileNavbar from "./NavBar/MobileNavbar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import IconButton from '@material-ui/core/IconButton'
+import Router from 'next/router'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+import Divider from '@material-ui/core/Divider'
+import MobileNavbar from './NavBar/MobileNavbar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import {LAYOUT_MESSAGES} from '../../utils/i18n'
 
-class LayoutMobileMessages extends React.Component{
+class LayoutMobileMessages extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
       currentUrlIndex: '',
     }
   }
 
   handleChange = (event, newValue) => {
-    this.setState({tabIndex: newValue}, () => this.props.handleChange())
-  };
+    this.setState({tabIndex: newValue}, () => this.props.handleChange(event, newValue))
+  }
 
   render() {
-    const {classes, children, tabIndex, currentIndex, userInfo}= this.props;
+    const {classes, children, tabIndex, currentIndex, user}= this.props
 
     return(
       <Grid>
@@ -36,23 +39,23 @@ class LayoutMobileMessages extends React.Component{
               </IconButton>
             </Grid>
           </Grid>
-          <Grid style={{marginLeft:'8vh'}}>
-            <h2>Mes Messages</h2>
+          <Grid style={{marginLeft: '8vh'}}>
+            <h2>{ReactHtmlParser(this.props.t('LAYOUT_MESSAGES.title'))}</h2>
           </Grid>
           <Grid>
             <Tabs
-              value={userInfo && !userInfo.is_alfred ? 0 : tabIndex}
-              onChange={userInfo && !userInfo.is_alfred ? null : this.handleChange}
+              value={user && !user.is_alfred ? 0 : tabIndex}
+              onChange={user && !user.is_alfred ? null : this.handleChange}
               aria-label="scrollable force tabs"
               classes={{indicator: classes.scrollIndicator}}
             >
               {
-                userInfo && userInfo.is_alfred ?
-                  <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTab} />
+                user && user.is_alfred ?
+                  <Tab label={ReactHtmlParser(this.props.t('LAYOUT_MESSAGES.messages_alfred'))} className={classes.scrollMenuTab} />
                   :null
 
               }
-              <Tab label={"Mes messages d'utilisateur"} className={classes.scrollMenuTab} />
+              <Tab label={ReactHtmlParser(this.props.t('LAYOUT_MESSAGES.messages_user'))} className={classes.scrollMenuTab} />
             </Tabs>
           </Grid>
         </Grid>
@@ -68,9 +71,9 @@ class LayoutMobileMessages extends React.Component{
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
   }
 
 }
 
-export default withStyles(styles)(LayoutMobileMessages);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(LayoutMobileMessages))

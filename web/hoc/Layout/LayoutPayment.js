@@ -1,24 +1,24 @@
-import React from 'react';
-import HeaderColor from "./HeaderColor/HeaderColor";
-import TrustAndSecurityBar from "./TrustAndSecurityBar/TrustAndSecurityBar";
-import Grid from "@material-ui/core/Grid";
-import TrustAndSecurity from "./TrustAndSecurity/TrustAndSecurity";
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import HeaderColor from './HeaderColor/HeaderColor'
+import TrustAndSecurityBar from './TrustAndSecurityBar/TrustAndSecurityBar'
+import Grid from '@material-ui/core/Grid'
 
-class LayoutPayment extends React.Component{
+class LayoutPayment extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
-    const{children} = this.props;
+    const{children} = this.props
     return (
       <Grid>
         <HeaderColor/>
         <TrustAndSecurityBar/>
         {children}
       </Grid>
-    );
+    )
   }
 }
 
-export default LayoutPayment;
+export default withTranslation('custom', {withRef: true})(LayoutPayment)

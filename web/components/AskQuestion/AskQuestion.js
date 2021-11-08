@@ -1,21 +1,23 @@
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import axios from "axios";
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+import {ASK_QUESTION} from '../../utils/i18n'
 
-
-class AskQuestion extends React.Component{
+class AskQuestion extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
-      user:{}
+      user: {},
     }
   }
 
   componentDidMount() {
     axios.get(`/myAlfred/api/shop/alfred/${this.props.user}`)
       .then(response => {
-        let user = response.data;
+        let user = response.data
         this.setState({
           user: user.alfred,
         })
@@ -24,20 +26,20 @@ class AskQuestion extends React.Component{
 
 
   render() {
-    const {user} = this.state;
+    const {user} = this.state
     return(
       <Grid style={{textAlign: 'center'}}>
         <Grid>
-          <h2>{`Vous souhaitez poser une question à ${user.firstname} ?`}</h2>
+          <h2>{ReactHtmlParser(this.props.t('ASK_QUESTION.title', {firstname: user.firstname}))}</h2>
         </Grid>
         <Grid>
-          <Typography>{`Rendez-vous sur la page du service qui vous intéresse, cliquez sur « demande d’informations » en dessous du bouton réserver. Vous pourrez alors poser toutes vos questions à  ${user.firstname}!`}</Typography>
+          <Typography>{ReactHtmlParser(this.props.t('ASK_QUESTION.info', {firstname: user.firstname}))}</Typography>
         </Grid>
 
       </Grid>
-    );
+    )
   }
 
 }
 
-export default AskQuestion;
+export default withTranslation('custom', {withRef: true})(AskQuestion)

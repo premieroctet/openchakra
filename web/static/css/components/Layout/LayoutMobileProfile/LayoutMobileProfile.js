@@ -1,33 +1,33 @@
 export default theme => ({
-  layoutMobileProfilHeader:{
+  layoutMobileProfilHeader: {
     backgroundImage: 'url(/assets/img/banner/bannerProfile.svg)',
     height: '30vh',
     backgroundPosition: 'right',
     backgroundSize: 'cover',
     position: 'relative',
-    backgroundRepeat: 'no-repeat'
+    backgroundRepeat: 'no-repeat',
   },
-  layoutMobileProfilHeaderPro:{
+  layoutMobileProfilHeaderPro: {
     backgroundImage: 'url(/assets/img/banner/bannerProfilePro.svg)',
     height: '30vh',
     backgroundPosition: 'right',
     backgroundSize: 'cover',
     position: 'relative',
-    backgroundRepeat: 'no-repeat'
+    backgroundRepeat: 'no-repeat',
   },
-  layoutMobileProfilHeaderB2b:{
+  layoutMobileProfilHeaderB2b: {
     backgroundColor: theme.palette.b2b.main,
     height: '30vh',
     position: 'relative',
 
   },
-  layoutMobileLayoutProfileHeader:{
+  layoutMobileLayoutProfileHeader: {
     position: 'absolute',
     left: '10px',
   },
-  profilLayoutAvatar:{
+  profilLayoutAvatar: {
     width: 100,
-    height:100,
+    height: 100,
     backgroundColor: 'white',
     borderRadius: '50%',
     display: 'flex',
@@ -41,14 +41,14 @@ export default theme => ({
     width: '90%',
     height: '90%',
   },
-  button:{
+  button: {
     textTransform: 'initial',
-    color: 'black'
+    color: 'black',
   },
-  profilLayoutScrollMenu:{
+  profilLayoutScrollMenu: {
     display: 'flex',
     justifyContent: 'center',
-    height : '10%',
-    alignItems: 'flex-end'
+    height: '10%',
+    alignItems: 'flex-end',
   },
 })

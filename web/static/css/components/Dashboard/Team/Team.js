@@ -1,23 +1,23 @@
 export default theme => ({
-  searchSelectPadding:{
-    paddingRight: '34px !important'
+  searchSelectPadding: {
+    paddingRight: '34px !important',
   },
-  searchFilterRightContainer:{
+  searchFilterRightContainer: {
     display: 'flex',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
-  searchFilterRightLabel:{
-    marginRight: 10
+  searchFilterRightLabel: {
+    marginRight: 10,
   },
-  formControl:{
-    width: 250
+  formControl: {
+    width: 250,
   },
-  dialogPaper:{
+  dialogPaper: {
     width: 600,
   },
   textField: {
-    width: '100%'
+    width: '100%',
   },
   root: {
     margin: 0,
@@ -35,5 +35,8 @@ export default theme => ({
   },
   chip: {
     margin: 2,
+  },
+  cancelButton: {
+    color: theme.palette.error.main,
   },
 })

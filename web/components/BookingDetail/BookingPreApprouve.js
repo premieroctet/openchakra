@@ -1,37 +1,38 @@
+import CustomButton from '../CustomButton/CustomButton'
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import React, {Fragment} from 'react';
-import axios from 'axios';
-import moment from 'moment';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import {withStyles} from '@material-ui/core/styles';
-import DatePicker, {registerLocale} from 'react-datepicker';
-import fr from 'date-fns/locale/fr';
-import io from 'socket.io-client';
-import styles from '../../static/css/components/BookingPreApprouve/BookingPreApprouve';
-import About from '../../components/About/About';
-import UserAvatar from '../../components/Avatar/UserAvatar';
-import Typography from '@material-ui/core/Typography';
-import BookingDetail from '../../components/BookingDetail/BookingDetail';
+import React, {Fragment} from 'react'
+import axios from 'axios'
+import moment from 'moment'
+import Grid from '@material-ui/core/Grid'
+import {withStyles} from '@material-ui/core/styles'
+import DatePicker, {registerLocale} from 'react-datepicker'
+import fr from 'date-fns/locale/fr'
+import io from 'socket.io-client'
+import styles from '../../static/css/components/BookingPreApprouve/BookingPreApprouve'
+import About from '../../components/About/About'
+import UserAvatar from '../../components/Avatar/UserAvatar'
+import Typography from '@material-ui/core/Typography'
+import BookingDetail from '../../components/BookingDetail/BookingDetail'
 
-import {Divider} from "@material-ui/core";
+import {Divider} from '@material-ui/core'
 const {BOOK_STATUS}=require('../../utils/consts')
-registerLocale('fr', fr);
-moment.locale('fr');
-const _ = require('lodash');
-const {frenchFormat} = require('../../utils/text');
+
+registerLocale('fr', fr)
+moment.locale('fr')
+const {frenchFormat} = require('../../utils/text')
 
 const Input2 = ({value, onClick}) => (
-  <Button value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"
-          onClick={onClick}>
+  <CustomButton value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"
+    onClick={onClick}>
     {value}
-  </Button>
+  </CustomButton>
 
-);
+)
 
 class BookingPreApprouve extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       booking_id: null,
       bookingObj: null,
@@ -43,28 +44,28 @@ class BookingPreApprouve extends React.Component {
       minDate: null,
       isToday: false,
       isBookingDay: false,
-    };
+    }
   }
 
   static getInitialProps({query: {id}}) {
-    return {booking_id: id};
+    return {booking_id: id}
   }
 
   componentDidMount() {
 
-    const booking_id = this.props.booking_id;
-    this.setState({booking_id: booking_id});
+    const booking_id = this.props.booking_id
+    this.setState({booking_id: booking_id})
 
     setAxiosAuthentication()
-    axios.get('/myAlfred/api/booking/' + booking_id)
+    axios.get(`/myAlfred/api/booking/${ booking_id}`)
       .then(res => {
-        this.setState({bookingObj: res.data});
+        this.setState({bookingObj: res.data})
 
-        const date_prestation = this.state.bookingObj.date_prestation.split('/');
-        const day = date_prestation[0];
-        const month = date_prestation[1];
-        const year = date_prestation[2];
-        const end = new Date(moment(year + '-' + month + '-' + day + 'T00:00:00.000Z', 'YYYY-MM-DD').startOf('days'));
+        const date_prestation = this.state.bookingObj.date_prestation.split('/')
+        const day = date_prestation[0]
+        const month = date_prestation[1]
+        const year = date_prestation[2]
+        const end = new Date(moment(`${year }-${ month }-${ day }T00:00:00.000Z`, 'YYYY-MM-DD').startOf('days'))
 
         this.setState({
           time_prestation: this.state.bookingObj.time_prestation,
@@ -72,76 +73,76 @@ class BookingPreApprouve extends React.Component {
           end: end,
           begin: end,
           hourToSend: moment(new Date(this.state.bookingObj.time_prestation).setHours(new Date(this.state.bookingObj.time_prestation).getHours() + 1)).utc()._d,
-        });
+        })
 
 
-        let isToday = moment(this.state.currDate).isSame(moment(new Date()), 'day');
+        let isToday = moment(this.state.currDate).isSame(moment(new Date()), 'day')
         this.setState({
           isToday: isToday,
-        });
+        })
 
         if (moment(this.state.currDate).isSame(end, 'day')) {
           this.setState({
             isBookingDate: true,
-          });
+          })
         }
 
         if (moment(this.state.currDate).isAfter(this.state.end)) {
-          this.setState({end: this.state.currDate});
+          this.setState({end: this.state.currDate})
 
         }
 
 
-        this.socket = io();
-        this.socket.on('connect', socket => {
-          this.socket.emit('booking', this.state.bookingObj._id);
-        });
-      });
+        this.socket = io()
+        this.socket.on('connect', () => {
+          this.socket.emit('booking', this.state.bookingObj._id)
+        })
+      })
   }
 
   changeStatus() {
-    const endDate = moment(this.state.end).format('YYYY-MM-DD');
-    const endHour = moment(this.state.hourToSend).format('HH:mm');
+    const endDate = moment(this.state.end).format('YYYY-MM-DD')
+    const endHour = moment(this.state.hourToSend).format('HH:mm')
 
-    const dateObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.PREAPPROVED};
+    const dateObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.PREAPPROVED}
 
-    axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
+    axios.put(`/myAlfred/api/booking/modifyBooking/${ this.state.booking_id}`, dateObj)
 
       .then(res => {
-        this.setState({bookingObj: res.data});
-        setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
+        this.setState({bookingObj: res.data})
+        setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
       })
-      .catch();
+      .catch()
   }
 
   computePricedPrestations() {
-    var result = {};
+    let result = {}
     if (this.state.bookingObj) {
       this.state.bookingObj.prestations.forEach(p => {
-        result[p.name] = p.price * p.value;
-      });
+        result[p.name] = p.price * p.value
+      })
     }
-    return result;
+    return result
   }
 
   computeCountPrestations() {
-    var result = {};
+    let result = {}
     if (this.state.bookingObj) {
       this.state.bookingObj.prestations.forEach(p => {
-        result[p.name] = p.value;
-      });
+        result[p.name] = p.value
+      })
     }
-    return result;
+    return result
   }
 
   render() {
-    const {classes} = this.props;
-    const {bookingObj} = this.state;
+    const {classes} = this.props
+    const {bookingObj} = this.state
 
-    const pricedPrestations = this.computePricedPrestations();
-    const countPrestations = this.computeCountPrestations();
+    const pricedPrestations = this.computePricedPrestations()
+    const countPrestations = this.computeCountPrestations()
 
-    const amount = this.state.bookingObj ? parseFloat(this.state.bookingObj.amount) - this.state.bookingObj.fees : 0;
+    const amount = this.state.bookingObj ? parseFloat(this.state.bookingObj.alfred_amount) : 0
 
     return (
       <Fragment>
@@ -161,7 +162,7 @@ class BookingPreApprouve extends React.Component {
                       justifyContent: 'space-between',
                     }}
                   >
-                    <Grid item  xs={12} sm={3} md={3} xl={3} lg={3}>
+                    <Grid item xs={12} sm={3} md={3} xl={3} lg={3}>
                       <UserAvatar
                         classes={'avatarLetter'}
                         user={bookingObj.user}
@@ -264,16 +265,16 @@ class BookingPreApprouve extends React.Component {
                                     <DatePicker
                                       selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
                                       onChange={date => {
-                                        let isToday = moment(date).isSame(moment(new Date()), 'day');
+                                        let isToday = moment(date).isSame(moment(new Date()), 'day')
                                         this.setState({
                                           end: date,
                                           isToday: isToday,
                                         }, () => {
                                           this.setState({
                                             hourToSend: moment(this.state.begin).isSame(this.state.end, 'day') ? moment(new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1)).utc()._d : moment(this.state.currDate).utc()._d,
-                                          });
+                                          })
 
-                                        });
+                                        })
                                       }}
                                       customInput={<Input2/>}
                                       locale='fr'
@@ -284,39 +285,39 @@ class BookingPreApprouve extends React.Component {
                                   </Grid>
 
                                   - {
-                                  <Grid style={{marginLeft: 10}}>
-                                    <DatePicker
-                                      selected={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1) : this.state.currDate}
-                                      onChange={
-                                        moment(this.state.begin).isSame(this.state.end, 'day') ?
-                                          (date) => this.setState({
-                                            time_prestation: moment(date.setHours(date.getHours() - 1)).utc()._d,
-                                            hour: date,
-                                            hourToSend: moment(date.setHours(date.getHours() + 1)).utc()._d,
-                                          })
-                                          :
-                                          (date) => this.setState({
-                                            currDate: date,
-                                            hour: date,
-                                            hourToSend: date,
-                                          })
+                                    <Grid style={{marginLeft: 10}}>
+                                      <DatePicker
+                                        selected={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1) : this.state.currDate}
+                                        onChange={
+                                          moment(this.state.begin).isSame(this.state.end, 'day') ?
+                                            date => this.setState({
+                                              time_prestation: moment(date.setHours(date.getHours() - 1)).utc()._d,
+                                              hour: date,
+                                              hourToSend: moment(date.setHours(date.getHours() + 1)).utc()._d,
+                                            })
+                                            :
+                                            date => this.setState({
+                                              currDate: date,
+                                              hour: date,
+                                              hourToSend: date,
+                                            })
 
-                                      }
+                                        }
 
-                                      customInput={<Input2/>}
-                                      showTimeSelect
-                                      showTimeSelectOnly
-                                      timeIntervals={15}
-                                      minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.min_time_prestation).setHours(new Date(this.state.min_time_prestation).getHours() + 1) : this.state.isToday ? this.state.currDate : null}
-                                      maxTime={moment(this.state.begin).isSame(this.state.end, 'day') || this.state.isToday ? moment().endOf('day').toDate() : null}
-                                      timeCaption="Heure"
-                                      dateFormat="HH:mm"
-                                      locale='fr'
-                                      minDate={new Date()}
-                                    />
-                                  </Grid>
+                                        customInput={<Input2/>}
+                                        showTimeSelect
+                                        showTimeSelectOnly
+                                        timeIntervals={15}
+                                        minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.min_time_prestation).setHours(new Date(this.state.min_time_prestation).getHours() + 1) : this.state.isToday ? this.state.currDate : null}
+                                        maxTime={moment(this.state.begin).isSame(this.state.end, 'day') || this.state.isToday ? moment().endOf('day').toDate() : null}
+                                        timeCaption="Heure"
+                                        dateFormat="HH:mm"
+                                        locale='fr'
+                                        minDate={new Date()}
+                                      />
+                                    </Grid>
 
-                                }
+                                  }
                                 </Grid>
                               </Grid>
                             :
@@ -326,21 +327,21 @@ class BookingPreApprouve extends React.Component {
                     </Grid>
                   </Grid>
                   <Grid item xs={12}>
-                    <Button
+                    <CustomButton
                       color={'primary'}
                       variant={'contained'}
                       onClick={() => {
-                        this.changeStatus();
-                        setTimeout(()=> this.props.onConfirm(this.state.booking_id), 500)
+                        this.changeStatus()
+                        setTimeout(() => this.props.onConfirm(this.state.booking_id), 500)
                       }}
                       style={{
                         color: 'white',
                         width: '100%',
-                        textTransform: 'initial'
+                        textTransform: 'initial',
                       }}
                     >
                       Pré-approuver
-                    </Button>
+                    </CustomButton>
                   </Grid>
                 </Grid>
               </Grid>
@@ -348,8 +349,8 @@ class BookingPreApprouve extends React.Component {
           </Grid>
         }
       </Fragment>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(BookingPreApprouve);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingPreApprouve))

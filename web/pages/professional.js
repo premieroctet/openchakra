@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React, {Fragment} from 'react';
 import Router from 'next/router';
 
@@ -19,4 +20,4 @@ class Professional extends React.Component {
 
 }
 
-export default Professional
+export default withTranslation('custom', {withRef: true})(Professional)

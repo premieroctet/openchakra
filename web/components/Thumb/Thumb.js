@@ -1,4 +1,5 @@
-import React from "react";
+import {withTranslation} from 'react-i18next'
+import React from 'react'
 
 
 class Thumb extends React.Component {
@@ -9,37 +10,37 @@ class Thumb extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.file) {
-      return;
+      return
     }
 
     this.setState({loading: true}, () => {
-      let reader = new FileReader();
+      let reader = new FileReader()
 
       reader.onloadend = () => {
-        this.setState({loading: false, thumb: reader.result});
-      };
+        this.setState({loading: false, thumb: reader.result})
+      }
 
-      reader.readAsDataURL(nextProps.file);
-    });
+      reader.readAsDataURL(nextProps.file)
+    })
   }
 
   render() {
-    const {file} = this.props;
-    const {loading, thumb} = this.state;
+    const {file} = this.props
+    const {loading, thumb} = this.state
 
     if (!file) {
-      return null;
+      return null
     }
 
     if (loading) {
-      return <p>loading...</p>;
+      return <p>loading...</p>
     }
 
     return (<img src={thumb}
-                 alt={file.name}
-                 width={150}
-    />);
+      alt={file.name}
+      width={150}
+    />)
   }
 }
 
-export default Thumb
+export default withTranslation('custom', {withRef: true})(Thumb)

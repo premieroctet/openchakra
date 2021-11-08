@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const passport = require('passport');
-const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const {get_host_url} = require('../../../config/config');
@@ -27,15 +26,29 @@ router.get('/facebook', facebookAuth);
 router.get('/facebook_hook', facebookAuth, (req, res) => authController(req, res));
 
 
+// Sendback user to / to finish registration
+const redirectRegistration = (user, res) => {
+  const url = new URLSearchParams({
+    [user.provider + '_id']: user.id,
+    'lastname': user.lastName,
+    'firstname': user.firstName,
+    'email': user.email,
+    'picture': user.picture,
+    'isLogin': false,
+  });
+  res.status(200).redirect(new URL('?' + url.toString(), get_host_url()))
+}
+
+
 // Check for email in database and login or register
 const authController = (req, res) => {
 
   const userData = extractUser(req);
 
-  User.findOne({'external_auth.id': userData.id, 'external_auth.provider': userData.provider})
+  req.context.getModel('User').findOne({'external_auth.id': userData.id, 'external_auth.provider': userData.provider})
     .then(user => {
       if (!user) {
-        User.findOne({email: userData.email})
+        req.context.getModel('User').findOne({email: userData.email})
           .then(user => {
             if (!user) {
               redirectRegistration(userData, res);
@@ -65,18 +78,5 @@ const extractUser = (req) => {
   };
   return user;
 };
-
-// Sendback user to / to finish registration
-const redirectRegistration = (user, res) => {
-  const url = new URLSearchParams({
-    [user.provider + '_id']: user.id,
-    'lastname': user.lastName,
-    'firstname': user.firstName,
-    'email': user.email,
-    'picture': user.picture,
-    'isLogin': false,
-  });
-  res.status(200).redirect(new URL('?' + url.toString(), get_host_url()))
-}
 
 module.exports = router;

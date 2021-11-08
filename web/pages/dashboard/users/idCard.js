@@ -1,14 +1,17 @@
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import {Document, Page, pdfjs} from 'react-pdf';
 import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import {Document, Page, pdfjs} from 'react-pdf';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
 import Router from 'next/router';
+import axios from 'axios';
+
+import {snackBarSuccess} from '../../../utils/notifications';
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout';
+
+const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -100,7 +103,7 @@ class idCard extends React.Component {
     const id = this.props.user_id;
     axios.put('/myAlfred/api/admin/users/users/idCard/' + id)
       .then(() => {
-        alert('Carte d\'identité validée');
+        snackBarSuccess('Carte d\'identité validée');
         Router.push({pathname: '/dashboard/users/all'});
       })
       .catch(err => console.error(err));
@@ -110,7 +113,7 @@ class idCard extends React.Component {
     const id = this.props.user_id;
     axios.put('/myAlfred/api/admin/users/users/idCard/delete/' + id)
       .then(() => {
-        alert('Validation supprimée');
+        snackBarSuccess('Validation supprimée');
         Router.push({pathname: '/dashboard/users/all'});
       })
       .catch(err => console.error(err));
@@ -127,7 +130,7 @@ class idCard extends React.Component {
 
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -174,11 +177,11 @@ class idCard extends React.Component {
                   </Grid>
                   <Grid item xs={12}>
                     {user.id_confirmed ?
-                      <Button onClick={() => this.deleteCard()} variant={'contained'} color={'secondary'}
-                              style={{color: 'white'}}>Supprimer la confirmation</Button>
+                      <CustomButton onClick={() => this.deleteCard()} variant={'contained'} color={'secondary'}
+                              style={{color: 'white'}}>Supprimer la confirmation</CustomButton>
                       :
-                      <Button onClick={() => this.validateCard()} variant={'contained'} color={'primary'}
-                              style={{color: 'white'}}>Valider la carte d'ientité</Button>
+                      <CustomButton onClick={() => this.validateCard()} variant={'contained'} color={'primary'}
+                              style={{color: 'white'}}>Valider la carte d'ientité</CustomButton>
                     }
 
                   </Grid>
@@ -196,7 +199,7 @@ class idCard extends React.Component {
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     );
   };
 }

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import DateField from '../../components/DateField/DateField'
 import moment from 'moment'
@@ -27,4 +28,4 @@ class DateTest extends React.Component {
   }
 }
 
-export default DateTest
+export default withTranslation('custom', {withRef: true})(DateTest)

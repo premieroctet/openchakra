@@ -1,19 +1,21 @@
-import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import Grid from '@material-ui/core/Grid';
-import Typography from "@material-ui/core/Typography";
-import DialogContent from '@material-ui/core/DialogContent';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import SecurityIcon from '@material-ui/icons/Security';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/pages/paymentMethod/paymentMethod';
-import moment from 'moment'
+import CustomButton from '../CustomButton/CustomButton'
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import Dialog from '@material-ui/core/Dialog'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import DialogContent from '@material-ui/core/DialogContent'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import {withStyles} from '@material-ui/core/styles'
+import styles from '../../static/css/pages/paymentMethod/paymentMethod'
 import axios from 'axios'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
+import {EMPLOYEE_DIALOG} from '../../utils/i18n'
 
-const DialogTitle = withStyles(styles)((props) => {
-  const {children, classes, onClose, ...other} = props;
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography {...other} className={classes.root}>
       <Typography variant="h6">{children}</Typography>
@@ -23,12 +25,12 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
 class EmployeeImportDialog extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       selectedFile: null,
       errors: null,
@@ -41,26 +43,26 @@ class EmployeeImportDialog extends React.Component {
     this.setState({selectedFile: event.target.files[0]})
   }
 
-  onImport =  () => {
-    this.setState({comments: null, errors:null})
+  onImport = () => {
+    this.setState({comments: null, errors: null})
     const data = new FormData()
     data.append('employees', this.state.selectedFile)
     axios.post('/myAlfred/api/companies/employees', data)
-      .then( response => {
+      .then(response => {
         this.setState({comments: response.data})
       })
-      .catch( err => {
+      .catch(err => {
         this.setState({errors: err.response.data})
       })
-      .finally( () => {
+      .finally(() => {
         // Clear input file to avoid ERR_UPLOAD_FILE_CHANGED
         this.fileRef.current.value=''
-        this.setState({selectedFile:null})
+        this.setState({selectedFile: null})
       })
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
     const {errors, comments, selectedFile}=this.state
     return (
       <Dialog
@@ -71,15 +73,14 @@ class EmployeeImportDialog extends React.Component {
         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseModalAddRib}>
           <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Grid>
-              <h4>Import de collaborateurs</h4>
+              <h4>{ReactHtmlParser(this.props.t('EMPLOYEE_DIALOG.title'))}</h4>
             </Grid>
             <Grid>
               <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-              Importez la liste des collaborateurs à partir d'un fichier csv séparé par des points-virgules.<br/>
-              Les colonnes nom, prénom et email sont requises.
+                {ReactHtmlParser(this.props.t('EMPLOYEE_DIALOG.subtitle'))}
               </Typography>
               {comments}
-              <pre style={{color: 'red', fontSize:'small'}}>{errors}</pre>
+              <pre style={{color: 'red', fontSize: 'small'}}>{errors}</pre>
             </Grid>
           </Grid>
         </DialogTitle>
@@ -88,14 +89,14 @@ class EmployeeImportDialog extends React.Component {
             <input ref={this.fileRef} type="file" name="file" id="file" onChange={this.onFileSelected}/>
           </Grid>
           <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
-            <Button
+            <CustomButton
               onClick={this.onImport}
               variant="contained"
               classes={{root: classes.buttonSave}}
               disabled={!selectedFile}
             >
-              Importer
-            </Button>
+              {ReactHtmlParser(this.props.t('EMPLOYEE_DIALOG.button'))}
+            </CustomButton>
           </Grid>
         </DialogContent>
       </Dialog>
@@ -104,4 +105,4 @@ class EmployeeImportDialog extends React.Component {
 
 }
 
-export default withStyles(styles)(EmployeeImportDialog)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(EmployeeImportDialog))

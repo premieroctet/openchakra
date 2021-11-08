@@ -1,17 +1,21 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import Router from 'next/router'
+import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
+
+import {snackBarSuccess} from '../../../utils/notifications'
+import BasePage from '../../basePage'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
+
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Layout from '../../../hoc/Layout/Layout';
-import axios from 'axios';
-import Router from 'next/router';
 
-
-const styles = {
+const styles = theme => ({
   loginContainer: {
     alignItems: 'center',
     height: '100vh',
@@ -30,94 +34,89 @@ const styles = {
     color: 'black',
     fontSize: 12,
   },
-};
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: 'white',
+  },
+})
 
-class view extends React.Component {
+class View extends BasePage {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       filterPresentation: {},
       label: '',
-
-    };
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  static getInitialProps({query: {id}}) {
-    return {filterPresentation_id: id};
-
+    }
+    this.handleClick = this.handleClick.bind(this)
   }
 
   componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
-    const id = this.props.filterPresentation_id;
+    localStorage.setItem('path', Router.pathname)
+    const id = this.getURLProps().id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/filterPresentation/all/${id}`)
       .then(response => {
-        let filterPresentation = response.data;
-        this.setState({filterPresentation: filterPresentation});
+        let filterPresentation = response.data
+        this.setState({filterPresentation: filterPresentation})
 
       })
       .catch(err => {
-        console.error(err);
+        console.error(err)
         if (err.response.status === 401 || err.response.status === 403) {
           clearAuthenticationToken()
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'})
         }
-      });
+      })
 
   }
 
   onChange = e => {
-    const state = this.state.filterPresentation;
-    state[e.target.name] = e.target.value;
-    this.setState({filterPresentation: state});
+    const state = this.state.filterPresentation
+    state[e.target.name] = e.target.value
+    this.setState({filterPresentation: state})
   };
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const {label} = this.state.filterPresentation;
-    const id = this.props.filterPresentation_id;
+    const {label} = this.state.filterPresentation
+    const id = this.getURLProps().id
     axios.put(`/myAlfred/api/admin/filterPresentation/all/${id}`, {label})
-      .then(res => {
-
-        alert('Filtre modifié avec succès');
-        Router.push({pathname: '/dashboard/filterPresentation/all'});
+      .then(() => {
+        snackBarSuccess('Filtre modifié avec succès')
+        Router.push({pathname: '/dashboard/filterPresentation/all'})
       })
       .catch(err => {
-        console.error(err);
-      });
+        console.error(err)
+      })
 
 
   };
 
   handleClick() {
-    const id = this.props.filterPresentation_id;
+    const id = this.getURLProps().id
     axios.delete(`/myAlfred/api/admin/filterPresentation/all/${id}`)
-      .then(res => {
-
-        alert('Filtre supprimé avec succès');
-        Router.push({pathname: '/dashboard/filterPresentation/all'});
+      .then(() => {
+        snackBarSuccess('Filtre supprimé avec succès')
+        Router.push({pathname: '/dashboard/filterPresentation/all'})
       })
       .catch(err => {
-        console.error(err);
-      });
+        console.error(err)
+      })
 
 
-  };
+  }
 
 
   render() {
-    const {classes} = this.props;
-    const {filterPresentation} = this.state;
+    const {classes} = this.props
+    const {filterPresentation} = this.state
 
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -138,22 +137,22 @@ class view extends React.Component {
                   />
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                  <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Modifier
-                  </Button>
-                  <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
-                          onClick={this.handleClick}>
+                  </CustomButton>
+                  <CustomButton type="button" variant="contained" classes={{root: classes.cancelButton}} style={{width: '100%'}}
+                    onClick={this.handleClick}>
                     Supprimer
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </form>
             </Grid>
           </Card>
         </Grid>
-      </Layout>
-    );
-  };
+      </DashboardLayout>
+    )
+  }
 }
 
 
-export default withStyles(styles)(view);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))

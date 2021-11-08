@@ -1,14 +1,15 @@
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Divider from "@material-ui/core/Divider";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Router from "next/router";
-
+import {PAYMENT_RESPONSIVE} from '../../utils/i18n'
 
 class PaymentResponsive extends React.Component{
 
@@ -22,13 +23,13 @@ class PaymentResponsive extends React.Component{
         <LayoutMobile>
           <Grid>
             <Grid>
-              <h2>Mes modes de paiement</h2>
+              <h2>{PAYMENT_RESPONSIVE}</h2>
             </Grid>
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
             <List component="nav" aria-label="main mailbox folders">
               <ListItem button onClick={() => Router.push('/account/paymentMethod')}>
-                <ListItemText primary="Mes cartes de crédit et mes RIB" secondary={'Ajoutez vos cartes de crédit et RIB'}/>
+                <ListItemText primary={ReactHtmlParser(this.props.t('PAYMENT_RESPONSIVE.my_payment'))} secondary={ReactHtmlParser(this.props.t('PAYMENT_RESPONSIVE.secondary_payment'))}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
@@ -42,4 +43,4 @@ class PaymentResponsive extends React.Component{
 }
 
 
-export default PaymentResponsive;
+export default withTranslation('custom', {withRef: true})(PaymentResponsive)

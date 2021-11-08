@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const CalendarSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
   },
   events: [
     {
@@ -14,8 +14,6 @@ const CalendarSchema = new Schema({
       allDay: Boolean,
     },
   ],
+})
 
-
-});
-
-module.exports = Calendar = mongoose.model('calendar', CalendarSchema);
+module.exports = CalendarSchema

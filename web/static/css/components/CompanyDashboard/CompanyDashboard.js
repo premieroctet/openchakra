@@ -1,35 +1,35 @@
-const drawerWidth = 300;
+const drawerWidth = 300
 
-export default theme =>({
+export default theme => ({
   root: {
     display: 'flex',
     backgroundColor: 'rgba(249,249,249, 1)',
     minHeight: '100vh',
-    [theme.breakpoints.down('sm')]:{
-      flexDirection : 'column'
-    }
+    [ theme.breakpoints.down('sm') ]: {
+      flexDirection: 'column',
+    },
   },
   rootTabs: {
     minWidth: '100%',
-    '& button':{
-      minWidth:0,
-    }
+    '& button': {
+      minWidth: 0,
+    },
   },
-  scrollIndicator:{
-    backgroundColor: 'white'
+  scrollIndicator: {
+    backgroundColor: 'white',
   },
-  colorSelected:{
-    color: 'pink'
+  colorSelected: {
+    color: 'pink',
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [ theme.breakpoints.up('sm') ]: {
       width: drawerWidth,
       flexShrink: 0,
     },
   },
   menuButton: {
     margin: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
+    [ theme.breakpoints.up('md') ]: {
       display: 'none',
     },
   },
@@ -40,63 +40,63 @@ export default theme =>({
     position: 'fixed',
     backgroundColor: '#353A51',
     borderTopRightRadius: '30px 40px',
-    border:0,
-    height: '100vh'
+    border: 0,
+    height: '100vh',
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-    [theme.breakpoints.down('sm')]:{
-      padding: 0
-    }
+    [ theme.breakpoints.down('sm') ]: {
+      padding: 0,
+    },
   },
   appBar: {
-    [theme.breakpoints.up('xs')]: {
+    [ theme.breakpoints.up('xs') ]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
   },
-  paddingList:{
+  paddingList: {
     paddingLeft: 15,
 
   },
 
-  buttonCareteker:{
+  buttonCareteker: {
     display: 'flex',
     justifyContent: 'center',
-    '& :hover':{
+    '& :hover': {
       color: 'black',
-      backgroundColor: 'white'
-    }
-  },
-  buttonCaretekerActif:{
-    display: 'flex',
-    justifyContent: 'center',
-    '& :hover':{
       backgroundColor: 'white',
-      color: 'black'
-    }
+    },
   },
-
-  buttonMicroservice:{
+  buttonCaretekerActif: {
     display: 'flex',
     justifyContent: 'center',
-    '& :hover':{
+    '& :hover': {
+      backgroundColor: 'white',
       color: 'black',
-      backgroundColor: 'white'
-    }
+    },
   },
 
-  buttonMicroserviceActif:{
+  buttonMicroservice: {
     display: 'flex',
     justifyContent: 'center',
-    '& :hover':{
+    '& :hover': {
+      color: 'black',
       backgroundColor: 'white',
-      color: 'black'
-    }
+    },
   },
 
-  buttonActive:{
+  buttonMicroserviceActif: {
+    display: 'flex',
+    justifyContent: 'center',
+    '& :hover': {
+      backgroundColor: 'white',
+      color: 'black',
+    },
+  },
+
+  buttonActive: {
     borderRadius: theme.border.button.borderRadius,
     textTransform: theme.typography.textTransform,
     fontWeight: theme.typography.fontWeight,
@@ -106,7 +106,7 @@ export default theme =>({
     backgroundColor: 'white',
   },
 
-  helpButton:{
+  helpButton: {
     borderRadius: theme.border.button.borderRadius,
     textTransform: theme.typography.textTransform,
     fontWeight: theme.typography.fontWeight,
@@ -114,83 +114,83 @@ export default theme =>({
     color: theme.palette.white.main,
     padding: '10px 50px',
   },
-  listItemText:{
-    '& span':{
-      fontWeight: 'bold'
-    }
+  listItemText: {
+    '& span': {
+      fontWeight: 'bold',
+    },
   },
-  activeButton:{
+  activeButton: {
     backgroundColor: 'white',
     borderTopLeftRadius: '80px',
     borderBottomLeftRadius: '80px',
     transition: 'inherit',
     paddingTop: 16,
     paddingBottom: 16,
-    '& .MuiSvgIcon-root':{
-      color:'black'
-    }
+    '& .MuiSvgIcon-root': {
+      color: 'black',
+    },
   },
-  standartButton:{
+  standartButton: {
     transition: 'inherit',
     paddingTop: 16,
     paddingBottom: 16,
-    color: 'white'
+    color: 'white',
   },
-  hoverButton:{
+  hoverButton: {
     borderTopLeftRadius: '80px',
     borderBottomLeftRadius: '80px',
-    '& :hover':{
-      color:'black',
+    '& :hover': {
+      color: 'black',
       backgroundColor: 'white',
       borderTopLeftRadius: '80px',
       borderBottomLeftRadius: '80px',
-      '& .MuiSvgIcon-root':{
-        color:'black'
-      }
-    }
+      '& .MuiSvgIcon-root': {
+        color: 'black',
+      },
+    },
   },
-  appBarContainer:{
-    display:'flex',
+  appBarContainer: {
+    display: 'flex',
     flexDirection: 'column',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
     height: '100%',
     paddingTop: '50%',
-    paddingBottom: '5%'
+    paddingBottom: '5%',
   },
-  drawerContainer:{
-    [theme.breakpoints.up('sm')]:{
-      display: 'none'
-    }
-  },
-  drawerMobile:{
-    [theme.breakpoints.down('sm')]:{
-      display: 'none'
-    }
-  },
-  navbarContainer:{
-    [theme.breakpoints.only('xs')]:{
-      display: 'none'
+  drawerContainer: {
+    [ theme.breakpoints.up('sm') ]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('sm')]:{
-      display: 'none'
-    }
   },
-  mobileNavbar:{
+  drawerMobile: {
+    [ theme.breakpoints.down('sm') ]: {
+      display: 'none',
+    },
+  },
+  navbarContainer: {
+    [ theme.breakpoints.only('xs') ]: {
+      display: 'none',
+    },
+    [ theme.breakpoints.only('sm') ]: {
+      display: 'none',
+    },
+  },
+  mobileNavbar: {
     position: 'fixed',
     bottom: '3%',
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
     zIndex: 4,
-    [theme.breakpoints.only('lg')]:{
-      display: 'none'
+    [ theme.breakpoints.only('lg') ]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('xl')]:{
-      display: 'none'
+    [ theme.breakpoints.only('xl') ]: {
+      display: 'none',
     },
-    [theme.breakpoints.only('md')]:{
-      display: 'none'
+    [ theme.breakpoints.only('md') ]: {
+      display: 'none',
     },
 
-  }
+  },
 })

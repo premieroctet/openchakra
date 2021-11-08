@@ -24,6 +24,8 @@ class SIB_V3 {
 
     var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
+    //sendSmtpEmail.sender = {name: 'SenderName', email: 'SenderEmail'}
+    //sendSmtpEmail.replyTo = {name: 'SenderName', email: 'SenderEmail'}
     sendSmtpEmail.to = [{email: email}];
     sendSmtpEmail.templateId = parseInt(index);
     sendSmtpEmail.params = {};

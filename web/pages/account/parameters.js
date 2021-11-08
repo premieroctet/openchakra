@@ -1,3 +1,5 @@
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
@@ -5,13 +7,10 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
-import DraftsIcon from '@material-ui/icons/Drafts';
-import InboxIcon from '@material-ui/icons/Inbox';
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import IconButton from "@material-ui/core/IconButton";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Router from "next/router";
+import {PARAMETER} from '../../utils/i18n'
 
 class parameters extends React.Component{
   constructor(props) {
@@ -23,27 +22,27 @@ class parameters extends React.Component{
         <LayoutMobile>
           <Grid>
             <Grid>
-              <h2>Mes Paramètres</h2>
+              <h2>{ReactHtmlParser(this.props.t('PARAMETER.title'))}</h2>
             </Grid>
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
             <List component="nav" aria-label="main mailbox folders">
               <ListItem button onClick={() => Router.push('/account/notifications')}>
-                <ListItemText primary="Mes notifications" secondary={'Messages, rappels'}/>
+                <ListItemText primary={ReactHtmlParser(this.props.t('PARAMETER.my_notification'))} secondary={ReactHtmlParser(this.props.t('PARAMETER.secondary_notification'))}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
               </ListItem>
               <Divider />
               <ListItem button onClick={() => Router.push('/account/paymentResponsive')}>
-                <ListItemText primary="Mes modes de paiement" secondary={'Cartes de crédits, RIB'}/>
+                <ListItemText primary={ReactHtmlParser(this.props.t('PARAMETER.payment_method'))} secondary={ReactHtmlParser(this.props.t('PARAMETER.secondary_payment'))}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
               </ListItem>
               <Divider />
               <ListItem button onClick={() => Router.push('/account/security')}>
-                <ListItemText primary="Sécurité" secondary={'Vos mot de passe, votre compte'} />
+                <ListItemText primary={ReactHtmlParser(this.props.t('PARAMETER.security'))} secondary={ReactHtmlParser(this.props.t('PARAMETER.security_secondary'))} />
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
@@ -56,4 +55,4 @@ class parameters extends React.Component{
   }
 }
 
-export default parameters;
+export default withTranslation('custom', {withRef: true})(parameters)

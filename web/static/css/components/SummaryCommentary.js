@@ -3,25 +3,28 @@ export default theme => ({
   formControl: {
     margin: 0,
     padding: 0,
-    width: '100%'
+    width: '100%',
   },
-  buttonShowMore:{
+  buttonShowMore: {
     backgroundColor: 'black',
-    color:'white',
+    color: 'white',
     textTransform: 'initial',
     padding: '6px 36px',
-    borderRadius: 27
+    borderRadius: 27,
   },
-  summaryContainerAverageNote:{
+  summaryContainerAverageNote: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
-  summaryContainerCommentary:{
+  summaryContainerCommentary: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
-  summaryContainerCompliments:{
-    display:'flex',
-    flexDirection: 'column'
-  }
+  summaryContainerCompliments: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  iconColor: {
+    color: 'green'
+  },
 })

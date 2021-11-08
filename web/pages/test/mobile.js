@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from 'react';
 import {Dialog, DialogActions, DialogContent, Divider} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -47,4 +48,4 @@ class MobileTest extends React.Component {
   }
 }
 
-export default MobileTest
+export default withTranslation('custom', {withRef: true})(MobileTest)

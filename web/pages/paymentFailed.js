@@ -1,73 +1,83 @@
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
-import React, {Fragment} from 'react';
-import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Router from 'next/router';
-import LayoutPayment from "../hoc/Layout/LayoutPayment";
-import Typography from "@material-ui/core/Typography";
+import CustomButton from '../components/CustomButton/CustomButton'
+import ReactHtmlParser from 'react-html-parser'
+import {withStyles} from '@material-ui/core/styles'
+import {withTranslation} from 'react-i18next'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import Router from 'next/router'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+import {PAYMENT_FAILED} from '../utils/i18n'
+import BasePage from './basePage'
+import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
-import {withStyles} from '@material-ui/core/styles';
 
-class PaymentFailed extends React.Component {
+const {setAxiosAuthentication}=require('../utils/authentication')
+
+class PaymentFailed extends BasePage {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: {},
-
-
-    };
-
+      booking: null,
+    }
   }
 
   componentDidMount() {
-
-    localStorage.setItem('path', Router.pathname);
-    let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
+    localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
-    axios
-      .get('/myAlfred/api/users/current')
+    axios.get('/myAlfred/api/users/current')
       .then(res => {
-        let user = res.data;
-        this.setState({user: user});
+        let user = res.data
+        this.setState({user: user})
       })
       .catch(err => {
-        if (err.response.status === 401 || err.response.status === 403) {
-          clearAuthenticationToken()
-          Router.push({pathname: '/'});
-        }
-      });
-
-
+        console.error(err)
+      })
+    axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
+      .then(res => {
+        this.setState({booking: res.data})
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
+    const {booking}=this.state
 
+    if (!booking) {
+      return null
+    }
+    const avocotes_mode = Boolean(booking.company_customer)
 
+    const booking_link = avocotes_mode ? '/avocotes' : '/reservations/reservations'
     return (
       <React.Fragment>
         <LayoutPayment>
-          <Grid style={{display: 'flex', backgroundColor: 'rgba(249,249,249, 1)', width: '100%', justifyContent: 'center', padding: '10%', minHeight: '80vh'}}>
+          <Grid className={`custompaymentfailedcontainer ${classes.mainContainer}`}>
             <Grid className={classes.containerPaymentSuccess}>
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                 <Grid style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid>
-                    <h2>Oups !</h2>
+                    <h2>{ReactHtmlParser(this.props.t('PAYMENT_FAILED.title'))}</h2>
                   </Grid>
                   <Grid>
-                    <Typography>Une erreur est survenue lors du paiement.</Typography>
+                    <Typography>{ReactHtmlParser(this.props.t('PAYMENT_FAILED.subtile'))}</Typography>
                   </Grid>
                 </Grid>
                 <Grid style={{marginTop: '5vh'}}>
                   <Grid>
-                    <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={()=> Router.push('/reservations/reservations')}>
-                      Retour aux réservations
-                    </Button>
-                    <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={()=> Router.push('/')}>
-                      Retour à l'accueil
-                    </Button>
+                    <CustomButton variant={'contained'} className={'custompaymentfailedbuttonback'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push(booking_link)}>
+                      {ReactHtmlParser(this.props.t('PAYMENT_FAILED.back_resa'))}
+                    </CustomButton>
+                    { !avocotes_mode &&
+                      <CustomButton variant={'contained'} className={'custompaymentfailedbuttonhome'} color={'primary'} style={{color: 'white'}} onClick={() => Router.push('/')}>
+                        {ReactHtmlParser(this.props.t('PAYMENT_FAILED.back_home'))}
+                      </CustomButton>
+                    }
                   </Grid>
                 </Grid>
               </Grid>
@@ -75,9 +85,9 @@ class PaymentFailed extends React.Component {
           </Grid>
         </LayoutPayment>
       </React.Fragment>
-    );
-  };
+    )
+  }
 }
 
 
-export default withStyles(styles)(PaymentFailed)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(PaymentFailed))

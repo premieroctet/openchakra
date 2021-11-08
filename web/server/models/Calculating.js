@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 // TODO : supprimer ce modèle
 const CalculatingSchema = new Schema({
@@ -7,6 +7,6 @@ const CalculatingSchema = new Schema({
     type: String,
     required: true,
   },
-});
+})
 
-module.exports = Calculating = mongoose.model('calculating', CalculatingSchema);
+module.exports = CalculatingSchema

@@ -1,3 +1,4 @@
+import {withTranslation} from 'react-i18next'
 import React from "react";
 const {snackBarSuccess, snackBarError}=require('../../utils/notifications')
 
@@ -24,4 +25,4 @@ class TestNotification extends React.Component {
 
 }
 
-export default TestNotification
+export default withTranslation('custom', {withRef: true})(TestNotification)

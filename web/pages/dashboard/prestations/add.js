@@ -1,3 +1,5 @@
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react';
 
@@ -6,9 +8,8 @@ import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Router from 'next/router';
-import Layout from '../../../hoc/Layout/Layout';
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout';
 import axios from 'axios';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -17,6 +18,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select2 from 'react-select';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
 
 import Checkbox from '@material-ui/core/Checkbox';
 
@@ -79,12 +83,19 @@ class add extends React.Component {
       all_filter_presentation: [],
       selectedTags: null,
       selectedBilling: null,
+      companies: [],
+      // Selected company
+      private_company: null,
       cesu_eligible: false,
+      professional_access: false,
+      particular_access: false,
+      order: null,
+      company_price: 0,
       errors: {},
-    };
-    this.onChangeFile = this.onChangeFile.bind(this);
-    this.handleChangeTags = this.handleChangeTags.bind(this);
-    this.handleChangeBilling = this.handleChangeBilling.bind(this);
+    }
+    this.onChangeFile = this.onChangeFile.bind(this)
+    this.handleChangeTags = this.handleChangeTags.bind(this)
+    this.handleChangeBilling = this.handleChangeBilling.bind(this)
   }
 
   componentDidMount() {
@@ -131,12 +142,23 @@ class add extends React.Component {
     });
 
     axios.get('/myAlfred/api/admin/tags/all')
-      .then((response) => {
-        let tags = response.data;
-        this.setState({all_tags: tags});
-      }).catch((error) => {
-      console.log(error);
-    });
+      .then(response => {
+        let tags = response.data
+        this.setState({all_tags: tags})
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+    axios.get('/myAlfred/api/admin/companies/all')
+      .then(response => {
+        let companies = response.data
+        this.setState({companies: companies})
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
   }
 
   onChange = e => {
@@ -149,11 +171,27 @@ class add extends React.Component {
     }
   };
 
+  onAccessChange = e => {
+    const {name, checked}=e.target
+    this.setState({[name]:checked})
+  }
+
   onCesuChange = e => {
     const checked = e.target.checked;
     this.setState({cesu_eligible: checked});
   };
 
+  onChangeCompany = e => {
+    const {value} = e.target
+    const {prestation}=this.state
+    this.setState({private_company: value})
+    if (value) {
+      this.setState({
+        professional_access:true,
+        particular_access:false,
+      })
+    }
+  }
 
   handleChangeTags = selectedTags => {
     this.setState({selectedTags});
@@ -183,33 +221,37 @@ class add extends React.Component {
 
     if (this.state.selectedBilling != null) {
       this.state.selectedBilling.forEach(t => {
-
         arrayBilling.push(t.value);
-
       });
     }
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('label', this.state.label);
-    formData.append('price', this.state.price);
-    formData.append('service', this.state.service);
-    formData.append('billing', JSON.stringify(arrayBilling));
-    formData.append('calculating', null);
-    formData.append('job', this.state.job);
-    formData.append('filter_presentation', this.state.filter_presentation);
-    formData.append('description', this.state.description);
-    formData.append('picture', this.state.picture);
-    formData.append('tags', JSON.stringify(arrayTags));
-    formData.append('cesu_eligible', this.state.cesu_eligible);
+    let body={}
+    body.label=this.state.label
+    body.price=this.state.price
+    body.service=this.state.service
+    body.billing=arrayBilling
+    body.calculating=null
+    body.job=this.state.job
+    body.filter_presentation=this.state.filter_presentation
+    body.description=this.state.description
+    body.picture=this.state.picture
+    body.tags=arrayTags
+    body.cesu_eligible=this.state.cesu_eligible
+    body.particular_access=this.state.particular_access
+    body.professional_access=this.state.professional_access
+    body.private_company=this.state.private_company
+    body.company_price = this.state.company_price
+    body.order = this.state.order
 
     axios
-      .post('/myAlfred/api/admin/prestation/all', formData)
+      .post('/myAlfred/api/admin/prestation/all', body)
       .then(res => {
-        alert('Prestation ajoutée');
+        snackBarSuccess('Prestation ajoutée');
         Router.push({pathname: '/dashboard/prestations/all'});
       })
       .catch(err => {
-          console.error(err);
+          console.error(err)
+          snackBarError(Object.values(err.response.data))
           this.setState({errors: err.response.data});
 
           if (err.response.status === 401 || err.response.status === 403) {
@@ -223,27 +265,23 @@ class add extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
-    const {all_service} = this.state;
-    const {all_billing} = this.state;
-    const {all_filter_presentation} = this.state;
-    const {all_job} = this.state;
-    const {all_tags} = this.state;
-    const {errors} = this.state;
+    const {classes} = this.props
+    const {all_service, all_billing, all_filter_presentation, all_job, all_tags} = this.state
+    const {errors} = this.state
+    const {companies, private_company, particular_access, professional_access, order, company_price} = this.state
 
     const optionsTags = all_tags.map(tag => ({
       label: tag.label,
       value: tag._id,
-    }));
+    }))
 
     const optionsBilling = all_billing.map(billing => ({
       label: billing.label,
       value: billing._id,
-    }));
-
+    }))
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid>
@@ -330,6 +368,19 @@ class add extends React.Component {
                   </FormControl>
                   <em style={{color: 'red'}}>{errors.billing}</em>
                 </Grid>
+		              <Grid item style={{width: '100%', marginTop: 20}}>
+                  <Typography style={{fontSize: 20}}>Ordre</Typography>
+                  <TextField
+                    id="standard-with-placeholder"
+                    margin="normal"
+                    style={{width: '100%'}}
+                    type="text"
+                    name="order"
+                    value={order}
+                    onChange={this.onChange}
+                  />
+                </Grid>
+
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
                     <InputLabel shrink htmlFor="genre-label-placeholder">
@@ -401,6 +452,72 @@ class add extends React.Component {
                   />
                   <em>{errors.description}</em>
                 </Grid>
+                <Typography style={{fontSize: 20}}>
+                  Prestation proposée
+                </Typography>
+                <em style={{ color: 'red'}}>{this.state.errors.access}</em><br/>
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                              checked={particular_access ? 'checked' : ''}
+                              name="particular_access" onChange={this.onAccessChange}
+                              />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux particuliers</p></React.Fragment>}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                              checked={professional_access ? 'checked' : ''}
+                              name="professional_access" onChange={this.onAccessChange}
+                              />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux professionels</p>
+                  </React.Fragment>}
+                />
+                <Grid item style={{width: '100%', marginTop: 20}}>
+                  <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Typography style={{fontSize: 20}}>Restreindre à la compagnie</Typography>
+                    <Select
+                      input={<Input name="job" id="genre-label-placeholder"/>}
+                      displayEmpty
+                      name="private_company"
+                      value={private_company ? private_company.toString():null}
+                      onChange={this.onChangeCompany}
+                      className={classes.selectEmpty}
+                      error={this.state.errors.company}
+                    >
+                      <MenuItem key={''} value={null}>
+                        <em>...</em>
+                      </MenuItem>
+                      {companies.map(e => (
+                        <MenuItem key={e._id} value={e._id.toString()}>
+                          {e.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              { private_company &&
+                <Grid item style={{width: '100%', marginTop: 20}}>
+                  <FormControl className={classes.formControl} style={{width: '100%'}}>
+                    <Typography style={{fontSize: 20}}>Tarif partenaire</Typography>
+                    <TextField
+                      name={'company_price'}
+                      value={company_price || 0}
+                      type={'number'}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+                      onChange={this.onChange}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                        inputProps: {min: 0},
+                      }}
+                      error={this.state.errors.company_price}
+                    />
+                  </FormControl>
+                </Grid>
+              }
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <Typography style={{fontSize: 17}}>Tags</Typography>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
@@ -417,22 +534,18 @@ class add extends React.Component {
                   </FormControl>
                   <em>{errors.tags}</em>
                 </Grid>
-                <Grid item style={{marginTop: 20}}>
-                  <Typography style={{fontSize: 17}}>Image</Typography>
-                  <input type="file" name="picture" onChange={this.onChangeFile} accept="image/*"/>
-                </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                  <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Ajouter
-                  </Button>
+                  </CustomButton>
                 </Grid>
               </form>
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     );
   };
 }
 
-export default withStyles(styles)(add);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(add))

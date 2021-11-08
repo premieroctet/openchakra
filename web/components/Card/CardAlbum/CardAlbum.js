@@ -1,26 +1,27 @@
-import React from "react"
-import Grid from "@material-ui/core/Grid"
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
 
-class CardAlbum extends React.Component{
+class CardAlbum extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
-    const{classes, item, onClick} = this.props;
+    const{classes, item, onClick} = this.props
 
     if (!item) {
       return null
     }
-    
+
     return (
       <Grid>
-        <img src={`/${item.picture || item.path}`} width={100} onClick={onClick ? () => {onClick(item._id)} : {}}/>
+        <img src={`/${item.picture || item.path}`} width={100} onClick={onClick ? () => { onClick(item._id) } : {}}/>
         <div>{item.label}</div>
       </Grid>
 
-    );
+    )
   }
 }
 
-export default CardAlbum
+export default withTranslation('custom', {withRef: true})(CardAlbum)

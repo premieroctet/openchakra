@@ -1,140 +1,152 @@
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import CancelIcon from "@material-ui/icons/Cancel";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import TextField from "@material-ui/core/TextField";
-import DatePicker from "react-datepicker";
-import Divider from "@material-ui/core/Divider";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ButtonSwitch from "../../ButtonSwitch/ButtonSwitch";
-import BookingDetail from "../../BookingDetail/BookingDetail";
-import Button from "@material-ui/core/Button";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import RemoveIcon from "@material-ui/icons/Remove";
-import AddIcon from "@material-ui/icons/Add";
-import styles from '../../../static/css/components/DrawerBooking/DrawerBooking';
-import withStyles from "@material-ui/core/styles/withStyles";
-const isEmpty = require('../../../server/validation/is-empty');
+import CustomButton from '../../CustomButton/CustomButton'
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import CancelIcon from '@material-ui/icons/Cancel'
+import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
+import TextField from '@material-ui/core/TextField'
+import DatePicker from 'react-datepicker'
+import Divider from '@material-ui/core/Divider'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
+import BookingDetail from '../../BookingDetail/BookingDetail'
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
+import Accordion from '@material-ui/core/Accordion'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import RemoveIcon from '@material-ui/icons/Remove'
+import AddIcon from '@material-ui/icons/Add'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import styles from '../../../static/css/components/DrawerBooking/DrawerBooking'
+import withStyles from '@material-ui/core/styles/withStyles'
+const isEmpty = require('../../../server/validation/is-empty')
 const {getLoggedUserId} = require('../../../utils/context')
 const {isMomentAvailable} = require('../../../utils/dateutils')
-const moment = require('moment');
-moment.locale('fr');
+const moment = require('moment')
+const _=require('lodash')
 
-class DrawerBooking extends React.Component{
+moment.locale('fr')
+import '../../../static/assets/css/custom.css'
+import {DRAWER_BOOKING} from '../../../utils/i18n'
+
+class DrawerBooking extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state={
-      expanded: false
+      expanded: false,
     }
   }
 
   handleChange = panel => (event, isExpanded) => {
     this.setState({expanded: isExpanded ? panel : false})
-  };
+  }
 
-  selectedPresta = (prestations, classes) => (
-     prestations.map((p, index) => (
-        <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-            <Grid container style={{display: 'flex', flexDirection: 'column'}}>
-              <Grid>
-                <Typography>{p.prestation.label}</Typography>
-              </Grid>
-              <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                <Grid>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : '?'}€</Typography>
-                </Grid>
-                <Grid style={{marginLeft : '5%', marginRight: '5%'}}>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>/</Typography>
-                </Grid>
-                <Grid style={{whiteSpace: 'nowrap'}}>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
-                </Grid>
-              </Grid>
-              {p.prestation.cesu_eligible && this.props.use_cesu ?
-                <Grid>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}><em>Eligible au <a style={{color:'rgba(39,37,37,35%)'}} href={'#'}>CESU</a></em></Typography>
-                </Grid>
-                : null
-              }
+  selectedPresta = prestations => (
+    _.sortBy(prestations, p => (p && p.prestation ? p.prestation.order: 0)).map((p, index) => (
+      <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
+        <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+          <Grid container style={{display: 'flex', flexDirection: 'column'}}>
+            <Grid>
+              <Typography>{p.prestation.label}</Typography>
             </Grid>
-          </Grid>
-          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <Grid>
-                <IconButton onClick={this.props.onQtyChanged('remove', p._id)}>
-                  <RemoveIcon/>
-                </IconButton>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                  {p.price ? p.price.toFixed(2) : '?'}€
+                </Typography>
               </Grid>
-              <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
-                <Typography>{this.props.count[p._id] ? this.props.count[p._id] : 0}</Typography>
+              <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>/</Typography>
               </Grid>
+              <Grid style={{whiteSpace: 'nowrap'}}>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
+              </Grid>
+            </Grid>
+            {p.prestation.cesu_eligible && this.props.use_cesu ?
               <Grid>
-                <IconButton onClick={this.props.onQtyChanged('add', p._id)}>
-                  <AddIcon/>
-                </IconButton>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}><em>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.eligible'))}</em></Typography>
               </Grid>
+              : null
+            }
+          </Grid>
+        </Grid>
+        <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
+          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Grid>
+              <IconButton onClick={this.props.onQtyChanged('remove', p._id)}>
+                <RemoveIcon/>
+              </IconButton>
+            </Grid>
+            <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
+              <Typography>{this.props.count[p._id] ? this.props.count[p._id] : 0}</Typography>
+            </Grid>
+            <Grid>
+              <IconButton onClick={this.props.onQtyChanged('add', p._id)}>
+                <AddIcon/>
+              </IconButton>
             </Grid>
           </Grid>
         </Grid>
-     ))
-  );
+      </Grid>
+    ))
+  )
 
-  accordion = (prestations,fltr, classes) => {
+  accordion = (prestations, fltr, classes) => {
     return(
       <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon/>}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+          aria-controls='panel1a-content'
+          id='panel1a-header'
         >
           <Typography>{fltr ? fltr : ''}</Typography>
         </AccordionSummary>
         <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-          {this.selectedPresta(prestations, classes)}
+          {this.selectedPresta(prestations)}
         </AccordionDetails>
       </Accordion>
     )
-  };
+  }
 
-  getExcludedTimes = () =>  {
-    var currMoment=moment(this.props.date || new Date()).set({hour:0, minute:0})
-    var exclude=[]
+  getExcludedTimes = () => {
+    let currMoment=moment(this.props.date || new Date()).set({hour: 0, minute: 0})
+    let exclude=[]
     while (currMoment.hour()!=23 || currMoment.minute()!=30) {
       if (!isMomentAvailable(currMoment, this.props.availabilities)) {
         exclude.push(currMoment.toDate())
       }
-      currMoment.add(30, "minutes")
+      currMoment.add(30, 'minutes')
     }
     return exclude
   }
 
   render() {
 
-    const {expanded} = this.state;
-    const {warningPerimeter, warningBudget, side, classes, service, alfred, date, time, errors,
-      count, serviceUser, isChecked, location, pick_tax, total, commission,
-      cesu_total, filters, pricedPrestations, availabilities, excludedDays, role, company_amount} = this.props;
+    const {expanded} = this.state
+    const {warningPerimeter, warningBudget, warningSelf, side, classes, service, alfred, date, time, errors,
+      count, serviceUser, isChecked, location, pick_tax, total, customer_fee,
+      cesu_total, filters, pricedPrestations, excludedDays, role, company_amount,
+      avocotes, all_avocotes} = this.props
 
     const excludedTimes = this.getExcludedTimes()
 
     const res = (
       <Grid>
         {
-          warningPerimeter || warningBudget ?
+          warningPerimeter || warningBudget || warningSelf ?
             <Grid className={classes.userServicePreviewWarningContainer}>
               <Grid>
-                <CancelIcon color={'secondary'}/>
+                <CancelIcon classes={{root: classes.cancelButton}}/>
               </Grid>
               <Grid>
-                { warningPerimeter ? <Typography>Cet Alfred se trouve trop loin de chez vous pour être réservé!</Typography> : null }
-                { warningBudget ? <Typography>Le montant dépasse le budget disponible pour votre département</Typography> : null }
+                { warningPerimeter ? <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.warning_perimiter'))}</Typography> : null }
+                { warningBudget ? <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.warning_budget'))}</Typography> : null }
+                { warningSelf ? <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.warning_self'))}</Typography> : null }
               </Grid>
             </Grid> : null
         }
@@ -143,11 +155,11 @@ class DrawerBooking extends React.Component{
             <Grid style={{marginBottom: 30}}>
               <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                 <Grid>
-                  <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>{service.label} - {alfred.firstname}</Typography>
+                  <Typography variant='h6' style={{color: '#505050', fontWeight: 'bold'}}>{service.label} - {alfred.firstname}</Typography>
                 </Grid>
                 <Grid className={classes.hideOnBigSreen}>
-                  <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
-                    <CloseIcon color={'secondary'} onClick={this.props.toggleDrawer(side, false)}/>
+                  <IconButton aria-label='Edit' className={classes.iconButtonStyle}>
+                    <CloseIcon classes={{root: classes.cancelButton}} onClick={this.props.toggleDrawer(side, false)}/>
                   </IconButton>
                 </Grid>
               </Grid>
@@ -159,13 +171,13 @@ class DrawerBooking extends React.Component{
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent:(inputref) => {
+                        inputComponent: () => {
                           return (
                             <DatePicker
                               selected={date}
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat='dd/MM/yyyy'
                               onChange={this.props.onChangeDate}
-                              placeholderText="Date"
+                              placeholderText='Date'
                               locale='fr'
                               minDate={new Date()}
                               className={classes.datePickerStyle}
@@ -173,18 +185,18 @@ class DrawerBooking extends React.Component{
                             />
                           )
                         },
-                        disableUnderline: true
+                        disableUnderline: true,
                       }}
                     />
                   </Grid>
-                  <Divider style={{height: 28, margin: 4}} orientation="vertical" />
+                  <Divider style={{height: 28, margin: 4}} orientation='vertical' />
                   <Grid style={{width: '50%', marginLeft: '3%'}}>
                     <TextField
                       InputLabelProps={{
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent:(inputref) => {
+                        inputComponent: () => {
                           return (
                             <DatePicker
                               selected={time}
@@ -192,64 +204,64 @@ class DrawerBooking extends React.Component{
                               showTimeSelect
                               showTimeSelectOnly
                               timeIntervals={30}
-                              timeCaption="Heure"
-                              placeholderText="Heure"
-                              dateFormat="HH:mm"
+                              timeCaption='Heure'
+                              placeholderText={ReactHtmlParser(this.props.t('DRAWER_BOOKING.hours'))}
+                              dateFormat='HH:mm'
                               locale='fr'
                               className={classes.datePickerStyle}
                               excludeTimes={excludedTimes}
                             />
                           )
                         },
-                        disableUnderline: true
+                        disableUnderline: true,
                       }}
                     />
                   </Grid>
                 </Grid>
               </Grid>
               <Grid>
-                <em style={{color: '#f87280'}}>{errors['datetime']}</em>
+                <em className={classes.cancelButton}>{errors.datetime}</em>
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.rootAccordion}} expanded={this.state.expanded === 'panel1'} onChange={this.handleChange('panel1')}>
+              <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={this.state.expanded === 'panel1'} onChange={this.handleChange('panel1')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon/>}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
+                  aria-controls='panel1a-content'
+                  id='panel1a-header'
                 >
-                  <Typography>Choix de la presta</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_choice'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails classes={{root: classes.userServicePreviewAccordionDetails}}>
                   {
-                  Object.keys(filters).sort().map((key, index) => {
-                    let fltr = key;
-                    let prestations = filters[key];
-                    return (
-                      <Grid style={{zIndex: 0}} key={index}>
-                        {
-                          fltr === '' ?
-                            this.selectedPresta(prestations, classes) :
-                            this.accordion(prestations,fltr, classes)
-                        }
-                      </Grid>
-                    );
-                  })
-                }
+                    Object.keys(filters).sort().map((key, index) => {
+                      let fltr = key
+                      let prestations = filters[key]
+                      return (
+                        <Grid style={{zIndex: 0}} key={index}>
+                          {
+                            fltr === '' ?
+                              this.selectedPresta(prestations) :
+                              this.accordion(prestations, fltr, classes)
+                          }
+                        </Grid>
+                      )
+                    })
+                  }
                 </AccordionDetails>
               </Accordion>
               <Grid>
-                <em style={{color: '#f87280'}}>{errors['prestations']}</em>
+                <em className={classes.cancelButton}>{errors.prestations}</em>
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.rootAccordion}} expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
+              <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
+                  aria-controls='panel1a-content'
+                  id='panel1a-header'
                 >
-                  <Typography style={{color: '#505050'}}>Lieu de la prestation</Typography>
+                  <Typography style={{color: '#505050'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_place'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
                   { serviceUser.location && serviceUser.location.client && this.props.isInPerimeter() ?
@@ -272,7 +284,7 @@ class DrawerBooking extends React.Component{
                         <ButtonSwitch
                           key={moment()}
                           id='alfred'
-                          label={'Chez ' + alfred.firstname}
+                          label={`Chez ${ alfred.firstname}`}
                           isEditable={false}
                           isPrice={false}
                           isOption={false}
@@ -297,30 +309,26 @@ class DrawerBooking extends React.Component{
                       : null
                   }
                   <Grid>
-                    <em style={{color: '#f87280'}}>{errors['location']}</em>
+                    <em className={classes.cancelButton}>{errors.location}</em>
                   </Grid>
                 </AccordionDetails>
               </Accordion>
             </Grid>
-            {serviceUser.pick_tax || this.props.computeTravelTax() ?
+            {serviceUser.pick_tax || this.props.travel_tax ?
               <Grid style={{marginBottom: 30}}>
-                <Accordion classes={{root: classes.rootAccordion}} expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
+                <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
+                    aria-controls='panel1a-content'
+                    id='panel1a-header'
                   >
-                    <Typography>Option(s) de la prestation</Typography>
+                    <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_option'))}</Typography>
                   </AccordionSummary>
                   <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                    {serviceUser.travel_tax && location === 'client' ?
+                    {this.props.travel_tax ?
                       <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Grid>
-                          Frais de déplacement
-                        </Grid>
-                        <Grid>
-                          {serviceUser.travel_tax.toFixed(2)}€
-                        </Grid>
+                        <Grid>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.deplacement_cost'))}</Grid>
+                        <Grid>{this.props.travel_tax}€</Grid>
                       </Grid>
                       : null
                     }
@@ -329,7 +337,7 @@ class DrawerBooking extends React.Component{
                         <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                           <Grid style={{display: 'flex', alignItems: 'center'}}>
                             <Grid>
-                              <label>Retrait & livraison</label>
+                              <label>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.delivery'))}</label>
                             </Grid>
                           </Grid>
                           {
@@ -345,36 +353,36 @@ class DrawerBooking extends React.Component{
                   </AccordionDetails>
                 </Accordion>
               </Grid>
-            : null
-          }
+              : null
+            }
             <Grid style={{marginBottom: 30}}>
               <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}} expanded={expanded === 'panel4'} onChange={this.handleChange('panel4')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
+                  aria-controls='panel1a-content'
+                  id='panel1a-header'
                 >
-                  <Typography>Afficher les détails</Typography>
+                  <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.display_details'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20}}>
                     <Grid >
-                        <Typography>{this.props.getLocationLabel()}</Typography>
+                      <Typography>{this.props.getLocationLabel()}</Typography>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
-                        <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
+                      <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
                     </Grid>
                   </Grid>
                   <Grid style={{display: 'flex', flexDirection: 'column'}}>
                     <BookingDetail
                       prestations={pricedPrestations}
                       count={count}
-                      travel_tax={this.props.computeTravelTax()}
+                      travel_tax={this.props.travel_tax}
                       pick_tax={pick_tax}
                       company_amount={company_amount}
                       total={total}
                       role={role}
-                      client_fee={commission}
+                      customer_fee={customer_fee}
                       cesu_total={cesu_total}
                     />
                   </Grid>
@@ -382,30 +390,42 @@ class DrawerBooking extends React.Component{
               </Accordion>
             </Grid>
             <Grid>
+              { all_avocotes.length>0 &&
+              <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 20}}>
+                <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.resa_avc'))}</Typography>
+                <Select value={avocotes} name='avocotes' multi={false} onChange={this.props.onAvocotesChanged}>
+                  {all_avocotes.map(avocotes =>
+                    <MenuItem value={avocotes._id}>{`${avocotes.user.full_name} pour ${avocotes.prestations.map(p => p.name).join(',')}`}</MenuItem>,
+                  )}
+                </Select>
+              </Grid>
+              }
+            </Grid>
+            <Grid>
               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <Grid style={{width: '100%'}}>
-                  <Button
-                    classes={{root: classes.userServicePButtonResa}}
-                    variant="contained"
-                    color="primary"
-                    aria-label="add"
+                  <CustomButton
+                    classes={{root: `custombookinresabutton ${classes.userServicePButtonResa}`}}
+                    variant='contained'
+                    color='primary'
+                    aria-label='add'
                     disabled={getLoggedUserId() && !isEmpty(errors)}
                     onClick={() => this.props.book(true)}
                   >
-                    <Typography>Réserver</Typography>
-                  </Button>
+                    <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.resa_button'))}</Typography>
+                  </CustomButton>
                 </Grid>
-                <Grid style={{marginTop:15,  marginBottom: 15}}>
-                  <Typography style={{color: 'rgba(39, 37, 37, 0.35)'}}>Choix du paiement à l’étape suivante</Typography>
+                <Grid style={{marginTop: 15, marginBottom: 15}}>
+                  <Typography className={'custombookinginfoprice'} style={{color: 'rgba(39, 37, 37, 0.35)'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.next_step_paiment'))}</Typography>
                 </Grid>
                 <Grid>
-                  <Button
+                  <CustomButton
                     startIcon={<HelpOutlineIcon />}
                     disabled={!isEmpty(errors)}
                     onClick={() => this.props.book(false)}
                   >
-                    <Typography style={{textDecoration: 'underline', textTransform: 'initial'}}>Demande d’informations</Typography>
-                  </Button>
+                    <Typography style={{textDecoration: 'underline', textTransform: 'initial'}} className={'custombookingaskinfo'}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.button_info'))}</Typography>
+                  </CustomButton>
                 </Grid>
               </Grid>
             </Grid>
@@ -418,4 +438,4 @@ class DrawerBooking extends React.Component{
 
 }
 
-export default withStyles(styles)(DrawerBooking);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(DrawerBooking))

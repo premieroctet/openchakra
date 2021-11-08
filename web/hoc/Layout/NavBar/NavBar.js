@@ -1,59 +1,65 @@
+import {canAlfredSelfRegister, isB2BDisabled} from '../../../config/config'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React, {Component} from 'react';
-import Button from '@material-ui/core/Button';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import Router from 'next/router';
-import Grid from '@material-ui/core/Grid';
-import MultipleSelect from "react-select";
-import moment from "moment";
-import LogIn from '../../../components/LogIn/LogIn';
-import Register from '../../../components/Register/Register';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import Slide from '@material-ui/core/Slide';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import CloseIcon from '@material-ui/icons/Close';
-import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AlgoliaPlaces from 'algolia-places-react';
-import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n';
-import DatePicker from "react-datepicker";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import React, {Component} from 'react'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import MenuItem from '@material-ui/core/MenuItem'
+import Menu from '@material-ui/core/Menu'
+import Router from 'next/router'
+import Grid from '@material-ui/core/Grid'
+import MultipleSelect from 'react-select'
+import moment from 'moment'
+import LogIn from '../../../components/LogIn/LogIn'
+import Register from '../../../components/Register/Register'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import Slide from '@material-ui/core/Slide'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import CloseIcon from '@material-ui/icons/Close'
+import Paper from '@material-ui/core/Paper'
+import Divider from '@material-ui/core/Divider'
+import MenuIcon from '@material-ui/icons/Menu'
+import SearchIcon from '@material-ui/icons/Search'
+import AlgoliaPlaces from 'algolia-places-react'
+import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n'
+import DatePicker from 'react-datepicker'
+import TextField from '@material-ui/core/TextField'
+import Select from '@material-ui/core/Select'
+import FormControl from '@material-ui/core/FormControl'
 import axios from 'axios'
-import withStyles from "@material-ui/core/styles/withStyles";
-import styles from '../../../static/css/components/NavBar/NavBar';
-import {Typography} from '@material-ui/core';
-import TuneIcon from '@material-ui/icons/Tune';
-import InputLabel from '@material-ui/core/InputLabel';
-import DialogActions from "@material-ui/core/DialogActions";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import {DateRangePicker} from "react-dates";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import ClearIcon from "@material-ui/icons/Clear";
-import {is_development} from "../../../config/config";
-import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeStatusRegister, setStatusRegister, getRole} from "../../../utils/context";
-const {emptyPromise} = require('../../../utils/promise.js');
-const {formatAddress} = require('../../../utils/text.js');
-import Slider from '@material-ui/core/Slider';
-const {PRO, PART, EMPLOYEE}=require('../../../utils/consts')
+import withStyles from '@material-ui/core/styles/withStyles'
+import styles from '../../../static/css/components/NavBar/NavBar'
+import {Typography} from '@material-ui/core'
+import TuneIcon from '@material-ui/icons/Tune'
+import InputLabel from '@material-ui/core/InputLabel'
+import DialogActions from '@material-ui/core/DialogActions'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
+import {DateRangePicker} from 'react-dates'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import ClearIcon from '@material-ui/icons/Clear'
+import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
+const {emptyPromise} = require('../../../utils/promise.js')
+const {formatAddress} = require('../../../utils/text.js')
+import Slider from '@material-ui/core/Slider'
+import '../../../static/assets/css/custom.css'
+const {PRO, PART, EMPLOYEE, ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
+import {getCookieConsentValue, resetCookieConsentValue} from 'react-cookie-consent'
+import Logo from '../../../components/Logo/Logo'
+import CustomIcon from '../../../components/CustomIcon/CustomIcon'
+import Hidden from '@material-ui/core/Hidden'
+import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => {
+  return <Slide direction="up" ref={ref} {...props} />
+})
 
-const DialogTitle = withStyles(styles)((props) => {
-  const {children, classes, onClose, ...other} = props;
+const DialogTitle = withStyles(styles)(props => {
+  const {children, classes, onClose, ...other} = props
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
@@ -63,13 +69,13 @@ const DialogTitle = withStyles(styles)((props) => {
         </IconButton>
       ) : null}
     </MuiDialogTitle>
-  );
-});
+  )
+})
 
 
 class NavBar extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       anchorEl: null,
       anchorElB2b: null,
@@ -101,11 +107,11 @@ class NavBar extends Component {
       companyPage: false,
       allAddresses: [],
     }
-    this.radius_marks=[1, 5,10,15,20,30,50,100,200,300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
+    this.radius_marks=[1, 5, 10, 15, 20, 30, 50, 100, 200, 300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
   }
 
   componentDidMount() {
-    let query = Router.query;
+    let query = Router.query
     if (Router.pathname === '/') {
       this.setState({ifHomePage: true})
     }
@@ -127,32 +133,35 @@ class NavBar extends Component {
       .then(res => {
         const user = res.data
         this.setState({user: user})
-        const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({ data : user})
+        const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
         promise
           .then(res => {
-            var allAddresses = {'main': res.data.billing_address};
+            let allAddresses = {'main': res.data.billing_address}
             res.data.service_address.forEach(addr => {
               allAddresses[addr._id] = addr
-            });
-            this.setState({allAddresses: allAddresses})
+            })
+            this.setState({
+              allAddresses: allAddresses,
+              selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
+            })
           })
-      }).catch(err => {
-      console.error(err)
-    });
+      })
+      .catch(err => {
+        console.error(err)
+      })
 
-    this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''});
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/category/${isB2BStyle() ? PRO : PART}`)
       .then(res => {
-        let categories = res.data;
-        this.setState({allCategories: categories.map(c => ({value:c._id, label: c.label}))})
+        let categories = res.data
+        this.setState({allCategories: categories.map(c => ({value: c._id, label: c.label}))})
       })
       .catch(err => {
         console.error(err)
       })
     axios.get('/myAlfred/api/service/all')
       .then(res => {
-        const services=res.data.map(s => ({value:s._id, label: s.label, category: s.category._id}))
+        const services=res.data.map(s => ({value: s._id, label: s.label, category: s.category._id}))
         this.setState({allServices: services, filteredServices: services})
       })
       .catch(err => {
@@ -164,48 +173,66 @@ class NavBar extends Component {
   logout = () => {
     clearAuthenticationToken()
     localStorage.removeItem('path')
-    removeStatusRegister()
+    removeAlfredRegistering()
     if (this.state.ifHomePage) {
       window.location.reload(false)
-    } else {
+    }
+    else {
       Router.push('/')
     }
   };
 
   handleMenuClose = () => {
-    this.setState({anchorEl: null, anchorElB2b: null});
+    this.setState({anchorEl: null, anchorElB2b: null})
   };
 
-  handleOpenLogin = (e) => {
-    this.handleMenuClose();
-    removeStatusRegister();
-    this.setState({setOpenLogin: true, setOpenRegister: null});
+  handleOpenLogin = () => {
+    if (getCookieConsentValue(ACCEPT_COOKIE_NAME) !== 'true') {
+      if (getCookieConsentValue(ACCEPT_COOKIE_NAME)==='false') {
+        resetCookieConsentValue(ACCEPT_COOKIE_NAME)
+        window.location.reload()
+      }
+      return
+    }
+    this.handleMenuClose()
+    removeAlfredRegistering()
+    this.setState({setOpenLogin: true, setOpenRegister: null})
   };
 
-  handleCloseLogin = () => {
-    this.setState({setOpenLogin: false});
+  handleCloseLogin = (event, reason) => {
+    if (reason=='backdropClick') { return }
+    this.setState({setOpenLogin: false})
   };
 
-  handleOpenRegister = (user_id) => {
-    this.handleMenuClose();
-    this.setState({setOpenRegister: user_id, setOpenLogin: false});
+  handleOpenRegister = user_id => {
+    if (getCookieConsentValue(ACCEPT_COOKIE_NAME) !== 'true') {
+      if (getCookieConsentValue(ACCEPT_COOKIE_NAME)==='false') {
+        resetCookieConsentValue(ACCEPT_COOKIE_NAME)
+        window.location.reload()
+      }
+      return
+    }
+    this.handleMenuClose()
+    this.setState({setOpenRegister: user_id, setOpenLogin: false})
   };
 
-  handleCloseRegister = () => {
+  handleCloseRegister = (event, reason) => {
+    if (reason=='backdropClick') { return }
     if (this.state.activeStep === 2) {
-      removeStatusRegister()
-      this.setState({setOpenRegister: null}, () => Router.push('/search?search=1'));
-    } else {
-      removeStatusRegister()
-      this.setState({setOpenRegister: null});
+      removeAlfredRegistering()
+      this.setState({setOpenRegister: null}, () => Router.push('/search'))
+    }
+    else {
+      removeAlfredRegistering()
+      this.setState({setOpenRegister: null})
     }
   };
 
   needRefresh = () => {
-    this.setState({setOpenLogin: false});
+    this.setState({setOpenLogin: false})
     const path = localStorage.getItem('path')
     if (path) {
-      localStorage.removeItem('path');
+      localStorage.removeItem('path')
       Router.push(path)
     }
     else if (!isLoggedUserRegistered() && getRole()==EMPLOYEE) {
@@ -215,62 +242,63 @@ class NavBar extends Component {
     }
     // Alfred pro && b2b_site => on redirige vers le profil
     else if (isB2BStyle() && isLoggedUserAlfredPro()) {
-      Router.push( `/profile/about?user=${getLoggedUserId()}`)
+      Router.push(`/profile/about?user=${getLoggedUserId()}`)
     }
     else if (isB2BAdmin()) {
-      Router.push( `/company/dashboard/companyDashboard`)
+      Router.push('/company/dashboard/companyDashboard')
     }
     else {
-      Router.push('/search?search=1');
+      Router.push('/search')
     }
   };
 
-  getData = (e) => {
-    this.setState({activeStep: e});
+  getData = e => {
+    this.setState({activeStep: e})
   };
 
   onSuggestions = ({query}) => {
-    this.setState({city: query});
+    this.setState({city: query})
   };
 
   onChange = e => {
-    let {name, value} = e.target;
-    this.setState({[name]: value});
+    let {name, value} = e.target
+    this.setState({[name]: value})
     if (name === 'selectedAddress') {
       if (value === 'addAddress') {
-        Router.push('/account/myAddresses');
-      } else {
+        Router.push('/account/myAddresses')
+      }
+      else {
         this.setState({
-          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses['main'].gps : {
+          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses.main.gps : {
             lat: this.state.allAddresses[value].lat,
             lng: this.state.allAddresses[value].lng,
           },
-        });
+        })
       }
     }
   };
 
-  onCategoriesFilterChanged = categories => {
-    categories = categories || []
+  onCategoriesFilterChanged = pcategories => {
+    let categories = pcategories || []
     const filteredServices=this.state.allServices.filter(s => {
-      return categories.map(c=>c.value).includes(s.category)
+      return categories.map(c => c.value).includes(s.category)
     })
     const services=this.state.services.filter(s => {
-      return filteredServices.map(fs=>fs.value).includes(s._id)
+      return filteredServices.map(fs => fs.value).includes(s._id)
     })
-    this.setState({categories: categories, filteredServices: filteredServices, services: services});
+    this.setState({categories: categories, filteredServices: filteredServices, services: services})
   };
 
-  onServicesFilterChanged = services => {
-    services = services || []
-    this.setState({services: services || []});
+  onServicesFilterChanged = pservices => {
+    let services = pservices || []
+    this.setState({services: services || []})
   };
 
-  handleOpenMenuItem = (event) => {
+  handleOpenMenuItem = event => {
     this.setState({anchorEl: event.currentTarget})
   };
 
-  handleOpenMenuItemB2b = (event) => {
+  handleOpenMenuItemB2b = event => {
     this.setState({anchorElB2b: event.currentTarget})
   };
 
@@ -283,7 +311,7 @@ class NavBar extends Component {
   };
 
   fireFilter = () => {
-    var fltr={}
+    let fltr={}
     if (this.state.proSelected) {
       fltr.proSelected = true
     }
@@ -313,66 +341,66 @@ class NavBar extends Component {
   }
 
   findService = () => {
-    var queryParams = {search: 1};
+    let queryParams = {}
     if (this.state.keyword) {
-      queryParams['keyword'] = this.state.keyword;
+      queryParams.keyword = this.state.keyword
     }
 
     if (this.state.city) {
-      queryParams['city'] = this.state.city;
+      queryParams.city = this.state.city
     }
 
     if (this.state.gps) {
-      queryParams['gps'] = JSON.stringify(this.state.gps);
+      queryParams.gps = JSON.stringify(this.state.gps)
     }
 
     if (this.state.selectedAddress) {
-      queryParams['selectedAddress'] = this.state.selectedAddress
+      queryParams.selectedAddress = this.state.selectedAddress
     }
-    Router.push({pathname: '/search', query: queryParams});
+    Router.push({pathname: '/search', query: queryParams})
   };
 
   onChangeCity({suggestion}) {
-    this.setState({gps: suggestion.latlng, city: suggestion.name});
-  };
+    this.setState({gps: suggestion.latlng, city: suggestion.name})
+  }
 
   statusFilterChanged = event => {
-    this.setState({[event.target.name]: event.target.checked});
+    this.setState({[event.target.name]: event.target.checked})
   };
 
   onLocationFilterChanged = event => {
     const {name, checked} = event.target
-    var {locations} = this.state
+    let {locations} = this.state
     if (checked) {
       locations = _.uniq(locations.concat(name))
     }
     else {
-      locations = locations.filter( l => l!=name)
+      locations = locations.filter(l => l!=name)
     }
     this.setState({locations: locations})
   };
 
   onChangeInterval(startDate, endDate) {
     if (startDate) {
-      startDate.hour(0).minute(0).second(0).millisecond(0);
+      startDate.hour(0).minute(0).second(0).millisecond(0)
     }
 
     if (endDate) {
-      endDate.hour(23).minute(59).second(59).millisecond(999);
+      endDate.hour(23).minute(59).second(59).millisecond(999)
     }
 
-    this.setState({startDate: startDate, endDate: endDate});
+    this.setState({startDate: startDate, endDate: endDate})
   }
 
   onRadiusFilterChanged = (event, value) => {
-    this.setState({radius: value});
+    this.setState({radius: value})
   };
 
   handleModalSearchBarInput = () => {
     this.setState({modalMobileSearchBarInput: true})
   };
 
-  mobileSearchBarInput = (classes) => {
+  mobileSearchBarInput = classes => {
     return (
       <Grid
         style={{width: '100%'}}
@@ -389,8 +417,8 @@ class NavBar extends Component {
                 <SearchIcon/>
               </IconButton>
             </Grid>
-            <Grid item xs={10} style={{display:'flex', alignItems: 'center'}}>
-              <Typography style={{marginLeft: '2vh'}}>Commencez votre recherche</Typography>
+            <Grid item xs={10} style={{display: 'flex', alignItems: 'center'}}>
+              <Typography style={{marginLeft: '2vh'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.begin_search'))}</Typography>
             </Grid>
           </Grid>
         </Paper>
@@ -398,7 +426,7 @@ class NavBar extends Component {
     )
   };
 
-  modalMobileSearchBarInput = (classes) => {
+  modalMobileSearchBarInput = classes => {
 
     return (
       <SwipeableDrawer
@@ -410,7 +438,7 @@ class NavBar extends Component {
           mobileStepSearch: 0,
           keyword: null,
           city: undefined,
-          gps: ''
+          gps: '',
         })}
         className={classes.drawerStyle}
       >
@@ -425,14 +453,14 @@ class NavBar extends Component {
                   mobileStepSearch: 0,
                   keyword: null,
                   city: undefined,
-                  gps: ''
+                  gps: '',
                 })}>
                 <ClearIcon/>
               </IconButton>
             </Grid>
             <Grid>
               <h3
-                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? 'Quel service recherchez-vous ?' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
+                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.what_service')) : this.state.mobileStepSearch === 1 ? ReactHtmlParser(this.props.t('SEARCHBAR.where_place')) : ReactHtmlParser(this.props.t('SEARCHBAR.dates'))}</h3>
             </Grid>
           </Grid>
           <Grid item container spacing={3} style={{margin: 0, width: '100%'}}>
@@ -443,9 +471,9 @@ class NavBar extends Component {
                     value={this.state.keyword}
                     onChange={this.onChange}
                     name={'keyword'}
-                    label={'Ménage, jardinage, ...'}
-                    onKeyPress={(e) => {
-                      e.key === 'Enter' && e.preventDefault();
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.what_placeholder'))}
+                    onKeyPress={e => {
+                      e.key === 'Enter' && e.preventDefault()
                     }}
                     variant="outlined"
                     style={{width: '100%'}}
@@ -459,31 +487,31 @@ class NavBar extends Component {
                         id="outlined-select-currency"
                         value={this.state.selectedAddress || 'main'}
                         name={'selectedAddress'}
-                        onChange={(e) => {
-                          this.onChange(e);
+                        onChange={e => {
+                          this.onChange(e)
                         }}
                         classes={{selectMenu: classes.fitlerMenuLogged}}
                       >
                         {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                           <MenuItem value={_id} key={index}>
-                            { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
+                            { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
                           </MenuItem>
                         ))}
                         <MenuItem value={'all'}>
-                          Partout, Rechercher des Alfred partout
+                          {ReactHtmlParser(this.props.t('SEARCHBAR.find_everywhere'))}
                         </MenuItem>
                         <MenuItem value={'addAddress'}>
                           <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                            Ajouter une adresse
+                            {ReactHtmlParser(this.props.t('SEARCHBAR.find_everywhere'))}
                           </Typography>
                         </MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
                   :
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  classes={{root: classes.navbarRootTextFieldWhereP}}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhereP}}>
                     <AlgoliaPlaces
-                      placeholder={SEARCHBAR.where}
+                      placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
                       options={{
                         appId: 'plKATRG826CP',
                         apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -491,7 +519,7 @@ class NavBar extends Component {
                         countries: ['fr'],
                         type: 'city',
                       }}
-                      onChange={(suggestion) => this.onChangeCity(suggestion)}
+                      onChange={suggestion => this.onChangeCity(suggestion)}
                       onClear={() => this.setState({city: '', gps: null})}
                     />
                   </Grid>
@@ -499,11 +527,11 @@ class NavBar extends Component {
           </Grid>
           <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '90%'}}>
-              <Button
-                onClick={() => this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService()}
+              <CustomButton
+                onClick={() => (this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService())}
                 color={'primary'} classes={{root: classes.buttonNextRoot}}
-                variant={'contained'}>{this.state.mobileStepSearch === 0 ? 'Suivant' : 'Rechercher'}
-              </Button>
+                variant={'contained'}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.next_button')) : ReactHtmlParser(this.props.t('SEARCHBAR.find_button'))}
+              </CustomButton>
             </Grid>
           </Grid>
         </Grid>
@@ -511,7 +539,7 @@ class NavBar extends Component {
     )
   };
 
-  mobileSearchBarInputSearchPage = (classes) => {
+  mobileSearchBarInputSearchPage = classes => {
     return (
       <Grid className={classes.navbarSearchContainerSearchPage}>
         <Paper classes={{root: classes.navbarSearch}}>
@@ -526,14 +554,14 @@ class NavBar extends Component {
                 <SearchIcon/>
               </IconButton>
             </Grid>
-            <Grid item xs={8} onClick={this.handleModalSearchBarInput} style={{cursor: 'pointer', display: 'flex', alignItems:'center' }}>
-              <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '2vh'}}>Commencez votre recherche</Typography>
+            <Grid item xs={8} onClick={this.handleModalSearchBarInput} style={{cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
+              <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '2vh'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.begin_search'))}</Typography>
             </Grid>
             <Grid container item xs={2} style={{margin: 0, width: '100%'}}>
               <Grid item xs={1}>
                 <Divider orientation="vertical"/>
               </Grid>
-              <Grid item xs={11} style={{display:'flex', justifyContent: 'center'}}>
+              <Grid item xs={11} style={{display: 'flex', justifyContent: 'center'}}>
                 <IconButton color="primary" aria-label="directions" onClick={() => this.setState({modalFilters: true})}>
                   <TuneIcon/>
                 </IconButton>
@@ -545,7 +573,7 @@ class NavBar extends Component {
     )
   };
 
-    modalMobileFilter = (classes) => {
+    modalMobileFilter = classes => {
       const {locations, radius, categories, allCategories, services, filteredServices} = this.state
       return (
         <Dialog
@@ -554,176 +582,179 @@ class NavBar extends Component {
           open={this.state.modalFilters}
           classes={{paper: classes.dialogNavbarMobileFilter}}
         >
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
-          Filtres
-        </DialogTitle>
-        <DialogContent dividers>
-          <Grid>
+          <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
+            {ReactHtmlParser(this.props.t('SEARCHBAR.filter'))}
+          </DialogTitle>
+          <DialogContent dividers>
             <Grid>
               <Grid>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={this.state.proSelected}
-                      onChange={e => {
-                        this.statusFilterChanged(e);
-                      }}
-                      value={this.state.proSelected}
-                      color="primary"
-                      name={'proSelected'}
-                    />
-                  }
-                  label="Pro"
+                <Grid>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={this.state.proSelected}
+                        onChange={e => {
+                          this.statusFilterChanged(e)
+                        }}
+                        value={this.state.proSelected}
+                        color="primary"
+                        name={'proSelected'}
+                      />
+                    }
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.professional'))}
+                  />
+                </Grid>
+                <Grid>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={this.state.individualSelected}
+                        onChange={this.statusFilterChanged}
+                        value={this.state.individualSelected}
+                        color="primary"
+                        name={'individualSelected'}
+                      />
+                    }
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.particular'))}
+                  />
+                </Grid>
+              </Grid>
+              <Grid>
+                <Divider style={{width: '100%', marginTop: '2vh', marginBottom: '2vh'}}/>
+              </Grid>
+              <Grid>
+                <DateRangePicker
+                  startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+                  startDatePlaceholderText={ReactHtmlParser(this.props.t('SEARCHBAR.start_date'))}
+                  startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                  endDatePlaceholderText={ReactHtmlParser(this.props.t('SEARCHBAR.end_date'))}
+                  endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+                  endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                  onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
+                  focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                  onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
+                  minimumNights={0}
+                  numberOfMonths={1}
+                />
+              </Grid>
+              <Grid>
+                <Slider
+                  name="radius"
+                  min={5}
+                  max={300}
+                  step={null}
+                  value={radius}
+                  valueLabelDisplay="auto"
+                  marks={this.radius_marks}
+                  onChange={this.onRadiusFilterChanged}
                 />
               </Grid>
               <Grid>
                 <FormControlLabel
+                  classes={{root: classes.filterMenuControlLabel}}
                   control={
                     <Switch
-                      checked={this.state.individualSelected}
-                      onChange={this.statusFilterChanged}
-                      value={this.state.individualSelected}
+                      checked={locations.includes('client')}
+                      onChange={this.onLocationFilterChanged}
                       color="primary"
-                      name={'individualSelected'}
+                      name={'client'}
                     />
                   }
-                  label="Particulier"
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.at_home'))}
+                />
+                <FormControlLabel
+                  classes={{root: classes.filterMenuControlLabel}}
+                  control={
+                    <Switch
+                      checked={locations.includes('alfred')}
+                      onChange={this.onLocationFilterChanged}
+                      color="primary"
+                      name={'alfred'}
+                    />
+                  }
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.alfred_home'))}
+                />
+                <FormControlLabel
+                  classes={{root: classes.filterMenuControlLabel}}
+                  control={
+                    <Switch
+                      checked={locations.includes('visio')}
+                      onChange={this.onLocationFilterChanged}
+                      color="primary"
+                      name={'visio'}
+                    />
+                  }
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.remote'))}
                 />
               </Grid>
             </Grid>
-            <Grid>
-              <Divider style={{width: '100%', marginTop: '2vh', marginBottom: '2vh'}}/>
-            </Grid>
-            <Grid>
-              <DateRangePicker
-                startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                startDatePlaceholderText={'Début'}
-                startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                endDatePlaceholderText={'Fin'}
-                endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-                endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
-                focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
-                minimumNights={0}
-                numberOfMonths={1}
+            <Grid className={classes.filterMenuContentMainStyleDateFilter}>
+              <MultipleSelect
+                key={moment()}
+                value={categories}
+                onChange={this.onCategoriesFilterChanged}
+                options={allCategories}
+                isMulti
+                isSearchable
+                closeMenuOnSelect={true}
+                placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}
               />
             </Grid>
-            <Grid>
-              <Slider
-                name="radius"
-                min={5}
-                max={300}
-                step={null}
-                value={radius}
-                valueLabelDisplay="auto"
-                marks={this.radius_marks}
-                onChange={this.onRadiusFilterChanged}
+            <Grid className={classes.filterMenuContentMainStyleDateFilter}>
+              <MultipleSelect
+                key={moment()}
+                value={services}
+                onChange={this.onServicesFilterChanged}
+                options={filteredServices}
+                isMulti
+                isSearchable
+                closeMenuOnSelect={true}
+                placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}
               />
             </Grid>
-            <Grid>
-            <FormControlLabel
-              classes={{root: classes.filterMenuControlLabel}}
-              control={
-                <Switch
-                  checked={locations.includes('client')}
-                  onChange={this.onLocationFilterChanged}
-                  color="primary"
-                  name={'client'}
-                />
-              }
-              label="Chez moi"
-            />
-            <FormControlLabel
-              classes={{root: classes.filterMenuControlLabel}}
-              control={
-                <Switch
-                  checked={locations.includes('alfred')}
-                  onChange={this.onLocationFilterChanged}
-                  color="primary"
-                  name={'alfred'}
-                />
-              }
-              label="Chez l'Alfred"
-            />
-            <FormControlLabel
-              classes={{root: classes.filterMenuControlLabel}}
-              control={
-                <Switch
-                  checked={locations.includes('visio')}
-                  onChange={this.onLocationFilterChanged}
-                  color="primary"
-                  name={'visio'}
-                />
-              }
-              label="En visio"
-            />
-            </Grid>
-          </Grid>
-          <Grid className={classes.filterMenuContentMainStyleDateFilter}>
-            <MultipleSelect
-              key={moment()}
-              value={categories}
-              onChange={this.onCategoriesFilterChanged}
-              options={allCategories}
-              isMulti
-              isSearchable
-              closeMenuOnSelect={true}
-              placeholder={SEARCHBAR.labelCategory}
-            />
-          </Grid>
-          <Grid className={classes.filterMenuContentMainStyleDateFilter}>
-            <MultipleSelect
-              key={moment()}
-              value={services}
-              onChange={this.onServicesFilterChanged}
-              options={filteredServices}
-              isMulti
-              isSearchable
-              closeMenuOnSelect={true}
-              placeholder={SEARCHBAR.labelService}
-            />
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            autoFocus
-            onClick={() => {
-              this.setState({modalFilters: false});
-              this.fireFilter()
-            }}
-            color="primary"
-          >
-            Afficher les résultats
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  };
+          </DialogContent>
+          <DialogActions>
+            <CustomButton
+              autoFocus
+              onClick={() => {
+                this.setState({modalFilters: false})
+                this.fireFilter()
+              }}
+              color="primary"
+            >
+              {ReactHtmlParser(this.props.t('SEARCHBAR.display'))}
+            </CustomButton>
+          </DialogActions>
+        </Dialog>
+      )
+    };
 
-  handleChange = (e) =>{
+  handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
-    });
+    })
   }
 
-  burgerMenuLogged = (classes) =>{
-    const{ifHomePage, companyPage, anchorEl, user} = this.state;
+  burgerMenuLogged = classes => {
+    const{ifHomePage, companyPage, anchorEl, user} = this.state
+
+    const logged = user != null
 
     return(
       <Grid
         className={classes.navbarMenuBurgerContainer}
         item
         xl={ifHomePage ? 3 : 4}
-        lg={3}
-        md={ifHomePage && isB2BStyle(user) ? 10 : 2}
-        sm={ifHomePage ? 11 : 1}
+        lg={ifHomePage && logged ? 1 : 3}
+        md={ifHomePage && !logged ? 10 : ifHomePage && logged ? 2 : 1}
+        sm={1}
       >
         <IconButton
           aria-label="open drawer"
           onClick={this.handleOpenMenuItem}
+          classes={{root: 'custombgburger'}}
         >
-          <MenuIcon style={{color: companyPage ? '#353A51' : 'white'}}/>
+          <CustomIcon className={'customburgerlogo'} materialIcon={<MenuIcon classes={{root: `customburgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}}/>}/>
         </IconButton>
         <Menu
           anchorEl={anchorEl}
@@ -733,31 +764,32 @@ class NavBar extends Component {
           getContentAnchorEl={null}
           anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
           transformOrigin={{vertical: 'top', horizontal: 'center'}}
+          classes={{paper: 'customburger'}}
         >
           {user ?
             <Grid>
-              <MenuItem>Bonjour {user.firstname} !</MenuItem>
-              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>Mon profil</MenuItem>
-              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>Mes paramètres</MenuItem>
+              <MenuItem disabled={true} style={{opacity: 1}}>{`${ReactHtmlParser(this.props.t('SEARCHBAR.hello')) } ${ user.firstname}`} !</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_profil'))}</MenuItem>
+              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? '/account/editProfileCompany' : '/account/editProfile')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_settings'))}</MenuItem>
               {
                 !user.is_employee ?
                   user.is_alfred ?
-                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>Mes services</MenuItem>
+                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_services'))}</MenuItem>
                     :
-                    <MenuItem onClick={() => Router.push(`/creaShop/creaShop`)}>Proposer mes services</MenuItem>
+                    canAlfredSelfRegister() && <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
                   : null
               }
-              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>Mes messages</MenuItem>
-              <MenuItem onClick={()=>Router.push(`/reservations/reservations`)}>Mes réservations</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_messages'))}</MenuItem>
+              <MenuItem onClick={() => Router.push('/reservations/reservations')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_resa'))}</MenuItem>
               {user.is_admin ?
-                <MenuItem onClick={() =>Router.push(`/dashboard/home`)}>Dashboard My Alfred</MenuItem>
+                <MenuItem onClick={() => Router.push('/dashboard/home')}>{ReactHtmlParser(this.props.t('SEARCHBAR.dashboard_alfred'))}</MenuItem>
                 : null
               }
               {isB2BAdmin(user) ?
-                <MenuItem onClick={()=> Router.push(`/company/dashboard/companyDashboard`)}>Dashboard</MenuItem>
-               : null
+                <MenuItem onClick={() => Router.push('/company/dashboard/companyDashboard')}>{ReactHtmlParser(this.props.t('SEARCHBAR.dashboard'))}</MenuItem>
+                : null
               }
-              <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
+              <MenuItem onClick={this.logout}>{ReactHtmlParser(this.props.t('SEARCHBAR.log_out'))}</MenuItem>
             </Grid>
             :
             null
@@ -767,8 +799,8 @@ class NavBar extends Component {
     )
   }
 
-  notLoggedButtonSection = (classes) =>{
-    const{ifHomePage, user} = this.state;
+  notLoggedButtonSection = classes => {
+    const{ifHomePage, user} = this.state
 
     const logged = user != null
 
@@ -776,37 +808,39 @@ class NavBar extends Component {
       <Grid
         item
         xl={!logged && ifHomePage ? 3 : 4}
-        lg={3}
-        md={!logged && !ifHomePage ? 3 : 2}
-        sm={!ifHomePage ? 4 : 11}
+        lg={!logged && !ifHomePage ? 3 : 1}
+        md={ifHomePage && !logged ? 2 : !ifHomePage && !logged ? 3 : 10}
+        sm={!ifHomePage ? 4 : 1}
         className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
       >
         <Grid>
-          <Button
+          <CustomButton
             variant="outlined"
             classes={{root: isB2BStyle(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
+            className={'custombuttonsignin'}
             onClick={this.handleOpenRegister}>
-            {NAVBAR_MENU.signIn}
-          </Button>
+            {ReactHtmlParser(this.props.t('NAVBAR_MENU.signIn'))}
+          </CustomButton>
         </Grid>
-        <Grid  className={classes.navbarRegisterContainer}>
-          <Button
+        <Grid className={classes.navbarRegisterContainer}>
+          <CustomButton
             classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
+            className={'custombuttonlogin'}
             onClick={this.handleOpenLogin}>
-            {NAVBAR_MENU.logIn}
-          </Button>
+            {ReactHtmlParser(this.props.t('NAVBAR_MENU.logIn'))}
+          </CustomButton>
         </Grid>
       </Grid>
     )
   }
 
-  checkAndOpenRegister = () =>{
-    setStatusRegister()
-    this.handleOpenRegister(true);
+  checkAndOpenRegister = () => {
+    setAlfredRegistering()
+    this.handleOpenRegister(true)
   };
 
-  notLoggedButtonSectionB2b = (classes) =>{
-    const{ifHomePage, user, anchorElB2b} = this.state;
+  notLoggedButtonSectionB2b = classes => {
+    const{ifHomePage, user, anchorElB2b} = this.state
 
     const logged = user != null
 
@@ -824,7 +858,7 @@ class NavBar extends Component {
             aria-label="open drawer"
             onClick={this.handleOpenMenuItemB2b}
           >
-            <MenuIcon style={{color: "white"}}/>
+            <MenuIcon style={{color: 'white'}}/>
           </IconButton>
           <Menu
             id="simple-menu"
@@ -837,25 +871,25 @@ class NavBar extends Component {
             transformOrigin={{vertical: 'top', horizontal: 'center'}}
           >
             <MenuItem onClick={() => Router.push('/blog/elementor-211/')}>
-              <Typography>Services aux entreprises</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.service_company'))}</Typography>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/blog/services-aux-collaborateurs/')}>
-              <Typography>Services aux collaboratuers</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.service_collab'))}</Typography>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/blog/tarifs')}>
-              <Typography>Tarifs</Typography>
+              <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.price'))}</Typography>
             </MenuItem>
             <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
               <Divider/>
             </Grid>
             <MenuItem onClick={this.checkAndOpenRegister}>
-              <Button variant="outlined" classes={{root: classes.buttonService}}>Je propose mes services</Button>
+              <CustomButton variant="outlined" classes={{root: classes.buttonService}}>{ReactHtmlParser(this.props.t('SEARCHBAR.crea_service'))}</CustomButton>
             </MenuItem>
             <MenuItem onClick={this.handleOpenLogin}>
-              <Button variant="outlined" classes={{root: classes.buttonLoginB2b}} >Connexion</Button>
+              <CustomButton variant="outlined" classes={{root: classes.buttonLoginB2b}}>{ReactHtmlParser(this.props.t('SEARCHBAR.log_in'))}</CustomButton>
             </MenuItem>
             <MenuItem onClick={() => Router.push('/search')}>
-              <Button variant="outlined" classes={{root: classes.buttonRegisterB2b}}>Inscription</Button>
+              <CustomButton variant="outlined" classes={{root: classes.buttonRegisterB2b}}>{ReactHtmlParser(this.props.t('SEARCHBAR.sign_in'))}</CustomButton>
             </MenuItem>
           </Menu>
         </Grid>
@@ -868,42 +902,45 @@ class NavBar extends Component {
           className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerPB2B}
         >
           <Grid className={classes.navbarRegisterContainer}>
-            <Button
+            <CustomButton
               variant="outlined"
               classes={{root: classes.navbarSignInB2B}}
               style={{whiteSpace: 'nowrap'}}
               onClick={this.checkAndOpenRegister}>
-              {'Je propose mes services'}
-            </Button>
+              {ReactHtmlParser(this.props.t('SEARCHBAR.crea_service'))}
+            </CustomButton>
           </Grid>
           <Grid >
-            <Button
+            <CustomButton
               variant="outlined"
               classes={{root: isB2BStyle(user) ? classes.navbarSignInB2BContained : classes.navbarSignIn}}
               onClick={() => Router.push('/blog/inscription-entreprise/')}>
-              {NAVBAR_MENU.signIn}
-            </Button>
+              {ReactHtmlParser(this.props.t('NAVBAR_MENU.signIn'))}
+            </CustomButton>
           </Grid>
           <Grid>
-            <Button
+            <CustomButton
               classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
               onClick={this.handleOpenLogin}>
-              {NAVBAR_MENU.logIn}
-            </Button>
+              {ReactHtmlParser(this.props.t('NAVBAR_MENU.logIn'))}
+            </CustomButton>
           </Grid>
         </Grid>
       </>
     )
   }
 
-  searchBarInput = (classes) => {
+  searchBarInput = classes => {
     const logged = this.state.user != null
-    const {ifHomePage, user} = this.state;
+    const {ifHomePage, user} = this.state
+    const {excludeSearch} = this.props
 
-
+    if (excludeSearch) {
+      return null
+    }
     return (
       <Grid className={ifHomePage ? isB2BStyle(user) ? classes.navbarSearchContainerB2B : classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
-        <Paper classes={{root: classes.navbarSearch}}>
+        <Paper classes={{root: `customsearch ${classes.navbarSearch}`}}>
           <Grid container style={{margin: 0, width: '100%'}}>
             <Grid
               container
@@ -918,15 +955,15 @@ class NavBar extends Component {
             >
               <Grid item xl={11} lg={11} sm={11} md={11} xs={11} style={{display: 'flex', alignItems: 'center'}}>
                 <TextField
-                  placeholder={'Ménage, Jardinage, ...'}
+                  placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.what_placeholder'))}
                   style={{width: '100%'}}
                   value={this.state.keyword}
                   onChange={this.onChange}
                   name={'keyword'}
-                  label={ifHomePage ? SEARCHBAR.labelWhat : ''}
-                  onKeyPress={(e) => {
+                  label={ifHomePage ? ReactHtmlParser(this.props.t('SEARCHBAR.labelWhat')) : ''}
+                  onKeyPress={e => {
                     if (e.key === 'Enter') {
-                      e.preventDefault();
+                      e.preventDefault()
                       this.findService()
                     }
                   }}
@@ -936,7 +973,7 @@ class NavBar extends Component {
                   InputProps={{disableUnderline: true}}
                 />
               </Grid>
-              <Grid  item xl={1} lg={1} sm={1} md={1} xs={1}>
+              <Grid item xl={1} lg={1} sm={1} md={1} xs={1}>
                 <Divider orientation="vertical"/>
               </Grid>
             </Grid>
@@ -946,7 +983,7 @@ class NavBar extends Component {
                   <FormControl className={classes.navbarFormControlAddress}>
                     {this.state.ifHomePage ?
                       <InputLabel shrink id="demo-simple-select-placeholder-label-label">
-                        L'adresse
+                        {ReactHtmlParser(this.props.t('SEARCHBAR.labelWhere'))}
                       </InputLabel> : null
                     }
                     <Select
@@ -954,62 +991,62 @@ class NavBar extends Component {
                       id="outlined-select-currency"
                       value={this.state.selectedAddress || 'main'}
                       name={'selectedAddress'}
-                      onChange={(e) => {
-                        this.onChange(e);
+                      onChange={e => {
+                        this.onChange(e)
                       }}
-                     style={{marginTop: this.state.ifHomePage ? 20 : 10}}
+                      style={{marginTop: this.state.ifHomePage ? 20 : 10}}
                     >
                       {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                         <MenuItem value={_id} key={index}>
-                          { _id=='main' ? 'Adresse principale' : value.label + ', '} {formatAddress(value)}
+                          { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
                         </MenuItem>
                       ))}
                       <MenuItem value={'all'}>
-                        Partout, Rechercher des Alfred partout
+                        {ReactHtmlParser(this.props.t('SEARCHBAR.find_everywhere'))}
                       </MenuItem>
                       <MenuItem value={'addAddress'}>
                         <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                          Ajouter une adresse
+                          {ReactHtmlParser(this.props.t('SEARCHBAR.add_adresses'))}
                         </Typography>
                       </MenuItem>
                     </Select>
                   </FormControl>
-              </Grid>
-              :
-              <Grid
-                container
-                spacing={1}
-                style={{margin: 0, width: '100%'}}
-                item
-                xl={!logged ? !ifHomePage ? 6 : 4 : 5}
-                lg={!logged ? !ifHomePage ? 6 : 4 : 5}
-                sm={!logged ? !ifHomePage ? 6 : 4 : 5}
-                md={!logged ? !ifHomePage ? 6 : 4 : 5}
-                xs={!logged ? !ifHomePage ? 6 : 4 : 5}
-              >
-                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%', display: 'flex', alignItems:'center'}} >
-                  {
-                    this.state.ifHomePage ?
-                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                        <InputLabel shrink>{SEARCHBAR.labelWhere}</InputLabel>
-                      </Grid> : null
-                  }
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12}  classes={{root: classes.navbarRootTextFieldWhere}}>
-                    <AlgoliaPlaces
-                      placeholder={SEARCHBAR.where}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'city',
-                      }}
-                      onChange={(suggestion) => this.onChangeCity(suggestion)}
-                      onClear={() => this.setState({city: '', gps: null})}
-                    />
+                </Grid>
+                :
+                <Grid
+                  container
+                  spacing={1}
+                  style={{margin: 0, width: '100%'}}
+                  item
+                  xl={!logged ? !ifHomePage ? 6 : 4 : 5}
+                  lg={!logged ? !ifHomePage ? 6 : 4 : 5}
+                  sm={!logged ? !ifHomePage ? 6 : 4 : 5}
+                  md={!logged ? !ifHomePage ? 6 : 4 : 5}
+                  xs={!logged ? !ifHomePage ? 6 : 4 : 5}
+                >
+                  <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%', display: 'flex', alignItems: 'center'}} >
+                    {
+                      this.state.ifHomePage ?
+                        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                          <InputLabel shrink>{ReactHtmlParser(this.props.t('SEARCHBAR.labelWhere'))}</InputLabel>
+                        </Grid> : null
+                    }
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsearch'} classes={{root: `${classes.navbarRootTextFieldWhere}`}}>
+                      <AlgoliaPlaces
+                        placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
+                        options={{
+                          appId: 'plKATRG826CP',
+                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                          language: 'fr',
+                          countries: ['fr'],
+                          type: 'city',
+                        }}
+                        onChange={suggestion => this.onChangeCity(suggestion)}
+                        onClear={() => this.setState({city: '', gps: null})}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
             }
             {
               logged === false && this.state.ifHomePage ?
@@ -1017,41 +1054,41 @@ class NavBar extends Component {
                   <Grid item xl={1} lg={1} sm={1} md={1} xs={1}>
                     <Divider orientation="vertical"/>
                   </Grid>
-                  <Grid  item xl={11} lg={11} sm={11} md={11} xs={11}>
+                  <Grid item xl={11} lg={11} sm={11} md={11} xs={11}>
                     <TextField
-                      label={this.state.ifHomePage ? SEARCHBAR.labelWhen : false}
+                      label={this.state.ifHomePage ? ReactHtmlParser(this.props.t('SEARCHBAR.labelWhen')) : false}
                       InputLabelProps={{
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent: (inputref) => {
+                        inputComponent: inputref => {
                           return (
                             <DatePicker
                               {...inputref}
                               selected={this.state.dateSelected}
-                              onChange={(date) => {
-                                this.setState({dateSelected: date});
+                              onChange={date => {
+                                this.setState({dateSelected: date})
                                 if (date === null) {
-                                  this.setState({dateSelected: ''});
+                                  this.setState({dateSelected: ''})
                                 }
                               }}
                               locale='fr'
                               showMonthDropdown
                               dateFormat="dd/MM/yyyy"
-                              placeholderText={SEARCHBAR.when}
+                              placeholderText={ReactHtmlParser(this.props.t('SEARCHBAR.when'))}
                               minDate={new Date()}
                             />)
                         },
-                        disableUnderline: true
+                        disableUnderline: true,
                       }}
                     />
                   </Grid>
                 </Grid> : null
-              }
+            }
             <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', alignItems: 'center'}}>
               <IconButton
                 classes={{root: classes.iconButton}}
-                style={{backgroundColor: isB2BStyle(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+                className={`customsearchmagnify ${isB2BStyle(this.state.user) ? classes.iconColorB2b : classes.iconColor}`}
                 aria-label="search"
                 onClick={() => this.findService()}>
                 <SearchIcon/>
@@ -1063,118 +1100,100 @@ class NavBar extends Component {
     )
   };
 
-  triggerLogin = () =>{
+  triggerLogin = () => {
     return (
       <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={'connect'} />
-    );
+    )
   }
 
-  logoContainer = (classes) =>{
-    const{ifHomePage, user} = this.state;
-    const logged = user != null
+  logoContainer = classes => {
+    const{ifHomePage} = this.state
 
     return(
       <Grid
-        className={ifHomePage ?  classes.navbarLogoContainer : classes.navbarLogoContainerP}
+        className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP}
         item
         xl={ifHomePage ? 3 : 4}
-        lg={isB2BStyle(user) && ifHomePage ? 2 : isB2BStyle(user) && !ifHomePage && !logged? 2 :  3}
-        md={!logged && !ifHomePage ? 3 : 2}
-        sm={1}
+        lg={ifHomePage ? 1 : 3}
+        md={ifHomePage ? 10 : 3}
+        sm={11}
         onClick={() => Router.push('/')}
       >
-        <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
-             className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
+        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90, width: 200}}/>
       </Grid>
     )
   };
 
-  tabBar = (classes) =>{
-    const{user}= this.state;
+  tabBar = classes => {
+    const modeB2b = [
+      {
+        label: ReactHtmlParser(this.props.t('SEARCHBAR.service_company')),
+        url: '/blog/elementor-211/',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('SEARCHBAR.service_collab')),
+        url: '/blog/services-aux-collaborateurs/',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('SEARCHBAR.price')),
+        url: '/blog/tarifs',
+      },
+    ]
+    const modeAlfred = [
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.ourServices')),
+        url: '/search',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices')),
+        callFunction: this.handleOpenRegister,
+      },
+    ]
+
+    const modeAlle = [
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEPrestation')),
+        url: '/search',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEWork')),
+        url: '/footer/addService',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEntrepreneur')),
+        url: '/footer/ourCommunity',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEBecome')),
+        url: '/footer/becomeAlfred',
+      },
+      {
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEContact')),
+        url: '/contact',
+      },
+    ]
+
+    const modeMenu = isB2BStyle() ? modeB2b : modeAlle
 
     return(
       <Grid
-        item
         xl={6}
-        lg={isB2BStyle(user) ? 7 : 6}
+        lg={10}
         md={8}
         sm={11}
-        className={isB2BStyle(user) ? classes.navbarHomepageMenuB2B : classes.navabarHomepageMenu}
+        className={classes.navabarHomepageMenu}
       >
-        <Tabs value={false} aria-label="simple tabs example">
-          {
-            getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
-              isB2BStyle() ?
-                <>
-                  <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    label={"Services aux entreprises"}
-                    onClick={() => Router.push("/blog/elementor-211/")}
-                  />
-                    <Tab
-                      classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                      label={"Services aux collaborateurs"}
-                      onClick={() => Router.push("/blog/services-aux-collaborateurs/")}
-                    />
-                    <Tab
-                      classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                      label={"Tarifs"}
-                      onClick={() => Router.push('/blog/tarifs')}
-                    />
-                </>
-                :
-                <>
-                  <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    label={NAVBAR_MENU.ourServices}
-                    onClick={() => Router.push('/search?search=1')}
-                  />
-                  {user ?
-                    user.is_alfred ?
-                      <Tab
-                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                        label={NAVBAR_MENU.myServices}
-                        onClick={() => Router.push(`/profile/services?user=${user._id}`)}
-                      />
-                      :
-                        <Tab
-                          classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                          label={NAVBAR_MENU.registerServices}
-                          onClick={() => Router.push('/creaShop/creaShop')}
-                        />
-                    :
-                      <Tab
-                        classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                        label={NAVBAR_MENU.registerServices}
-                        onClick={this.handleOpenRegister}
-                      />
-                  }
-                </>
-          }
-          {
-            // Accès part/pro uniquement si non loggué ou loggué en Alfred pro
-            getLoggedUserId() && !isLoggedUserAlfredPro()  ? null:
-              isB2BStyle() ?
-                null
-                :
-                  <Tab
-                    classes={{root: isB2BStyle(user) ? classes.navbarTabRootB2b : classes.navbarTabRoot}}
-                    label={NAVBAR_MENU.businessSide}
-                    onClick={() => Router.push('/professional')}
-                  />
-          }
-        </Tabs>
+        <CustomTabMenu tabs={modeMenu}/>
       </Grid>
     )
   };
 
   render() {
-    const {user, ifHomePage,setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state;
-    const {classes} = this.props;
-
+    const {user, ifHomePage, setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state
+    const {classes} = this.props
     const logged = user != null
 
-    const dialogLogin = () =>{
+    const dialogLogin = () => {
       return(
         <Dialog
           scroll={'paper'}
@@ -1185,7 +1204,6 @@ class NavBar extends Component {
           onClose={this.handleCloseLogin}
           TransitionComponent={Transition}
           classes={{paperWidthSm: classes.navbarPaperWidth}}
-          disableBackdropClick={true}
           disableEscapeKeyDown={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
@@ -1198,7 +1216,7 @@ class NavBar extends Component {
       )
     }
 
-    const dialogRegister = () =>{
+    const dialogRegister = () => {
       return(
         <Dialog
           scroll={'paper'}
@@ -1208,8 +1226,8 @@ class NavBar extends Component {
           open={setOpenRegister}
           onClose={this.handleCloseRegister}
           TransitionComponent={Transition}
-          disableBackdropClick={true}
           disableEscapeKeyDown={true}
+          classes={{paper: 'customnavbarregisterdialog'}}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
           <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
@@ -1227,28 +1245,28 @@ class NavBar extends Component {
 
     return (
       <Grid className={this.state.ifHomePage ? isB2BStyle(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={'static'} className={classes.navbarAppBar} style={{backgroundColor: isB2BStyle(user) && companyPage || this.state.ifHomePage ? 'transparent' : isB2BStyle(user) && !companyPage ?'#353A51' : null}}>
+        <AppBar position={'static'} className={isB2BStyle(user) && companyPage || this.state.ifHomePage ? `customappbarhomepage ${classes.navbarAppBarNoBg}` : isB2BStyle(user) && !companyPage ? `${classes.navbarAppBarWithBg}` : 'customappbar'}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
-            <Grid className={classes.hiddenOnlyXs}>
-              <Grid container  style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%',margin:0}}>
+            <Hidden only={['xs']}>
+              <Grid container style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin: 0}}>
                 {companyPage ? null : this.logoContainer(classes)}
                 {
-                 companyPage ? null : ifHomePage ? this.tabBar(classes)
-                   :
-                   <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !isB2BStyle(user) ? 8 :  11}>
-                     {this.searchBarInput(classes)}
-                   </Grid>
-                  }
-                  {isB2BStyle(user) && !logged ? this.notLoggedButtonSectionB2b(classes) : logged === true ? this.burgerMenuLogged(classes) : this.notLoggedButtonSection(classes)}
-              </Grid>
-                {
-                  ifHomePage ? this.searchBarInput(classes) : null
+                  companyPage ? null : ifHomePage ? this.tabBar(classes)
+                    :
+                    <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !isB2BStyle(user) ? 8 : 11} style={{display: 'flex', alignItems: 'center'}}>
+                      {this.searchBarInput(classes)}
+                    </Grid>
                 }
-            </Grid>
-            <Grid className={classes.hiddenOnMobile}>
+                {isB2BStyle(user) && !logged ? this.notLoggedButtonSectionB2b(classes) : logged === true ? this.burgerMenuLogged(classes) : this.notLoggedButtonSection(classes)}
+              </Grid>
+              {
+                ifHomePage ? this.searchBarInput(classes) : null
+              }
+            </Hidden>
+            <Hidden only={['xl', 'lg', 'md', 'sm']}>
               {ifHomePage ? this.mobileSearchBarInput(classes) : null}
               {ifSearchPage ? this.mobileSearchBarInputSearchPage(classes) : null}
-            </Grid>
+            </Hidden>
           </Toolbar>
         </AppBar>
         {modalMobileSearchBarInput ? this.modalMobileSearchBarInput(classes) : null}
@@ -1260,4 +1278,4 @@ class NavBar extends Component {
   }
 }
 
-export default withStyles(styles)(NavBar);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(NavBar))

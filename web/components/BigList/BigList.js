@@ -1,20 +1,16 @@
-import React from 'react';
-import { AgGridReact } from 'ag-grid-react'
-import {Typography} from '@material-ui/core';
-import HomeIcon from '@material-ui/icons/Home';
-import Paper from '@material-ui/core/Paper';
-import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
-import IconButton from '@material-ui/core/IconButton';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import React from 'react'
+import {AgGridReact} from 'ag-grid-react'
+import {Typography} from '@material-ui/core'
+import Paper from '@material-ui/core/Paper'
+import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded'
+import IconButton from '@material-ui/core/IconButton'
+import GetAppIcon from '@material-ui/icons/GetApp'
 
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-
-import Link from 'next/link';
-import Grid from '@material-ui/core/Grid';
+import 'ag-grid-community/dist/styles/ag-grid.css'
+import 'ag-grid-community/dist/styles/ag-theme-balham.css'
+import Grid from '@material-ui/core/Grid'
 const moment=require('moment')
 const models=require('./models')
-const util=require('util')
 
 class BigList extends React.Component {
 
@@ -38,7 +34,7 @@ class BigList extends React.Component {
 
   onDownloadClick = event => {
     if (this.gridRef.current) {
-      this.gridRef.current.api.exportDataAsCsv({columnSeparator: ";", processCellCallback: this.processExportCell})
+      this.gridRef.current.api.exportDataAsCsv({columnSeparator: ';', processCellCallback: this.processExportCell})
     }
   }
 
@@ -51,19 +47,19 @@ class BigList extends React.Component {
       return moment(value).format('L LT')
     }
 
-    if (colId=="status") {
-      var res=`${value.alfred ? 'ALF' : ''}/${value.admin ? 'ADM' : ''}`
-      if (res=="/") { res = ""}
+    if (colId=='status') {
+      let res=`${value.alfred ? 'ALF' : ''}/${value.admin ? 'ADM' : ''}`
+      if (res=='/') { res = '' }
       return res
     }
 
     if (colId=='private_alfred') {
-      return value ? "OUI" : "NON"
+      return value ? 'OUI' : 'NON'
     }
 
-    if (colId=="location") {
+    if (colId=='location') {
       const location=value
-      const res = Object.keys(location).filter(k => location[k]).map( k => k.slice(0, 1).toUpperCase()).join('/')
+      const res = Object.keys(location).filter(k => location[k]).map(k => k.slice(0, 1).toUpperCase()).join('/')
       return res
     }
 
@@ -77,10 +73,10 @@ class BigList extends React.Component {
     const frameworkComponents={
       'statusRenderer': models.StatusRenderer,
       'dateRenderer': models.DateRenderer,
-      'mangopayRenderer' : models.MangopayRenderer,
-      'statusFilter' : models.StatusFilter,
-      'pictureRenderer' : models.PictureRenderer,
-      'privateRenderer' : models.PrivateRenderer,
+      'mangopayRenderer': models.MangopayRenderer,
+      'statusFilter': models.StatusFilter,
+      'pictureRenderer': models.PictureRenderer,
+      'privateRenderer': models.PrivateRenderer,
       'dateTimeRenderer': models.DateTimeRenderer,
       'booleanRenderer': models.BooleanRenderer,
       'enumRenderer': models.EnumRenderer,
@@ -88,31 +84,35 @@ class BigList extends React.Component {
       'warningRenderer': models.WarningRenderer,
       'linkRenderer': models.LinkRenderer,
       'currencyRenderer': models.CurrencyRenderer,
+      'colorRenderer': models.ColorRenderer,
+      'fontRenderer': models.FontRenderer,
+      'deleteRenderer': models.DeleteRenderer,
     }
 
     const defaultColDef={
       sortable: true,
-      filter:true,
+      filter: true,
       resizable: true,
       filterParams: {
         buttons: ['reset', 'apply'],
+        newRowsAction: 'keep',
       },
     }
 
     return (
       <>
         <Grid container className={classes.signupContainer}>
-            <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-              <Typography style={{fontSize: 30}}>{title}</Typography>
-              { this.props.onAddClick ?
-                <IconButton onClick={this.onAddClick}><AddCircleRoundedIcon/></IconButton>
-                :
-                null
-              }
-              <IconButton onClick={this.onDownloadClick}><GetAppIcon/></IconButton>
-            </Grid>
-            <Paper style={{height: '600px', width: '100%'}} className={"ag-theme-balham"}>
-              <AgGridReact rowData={data} columnDefs={columnDefs} enableSorting={true}
+          <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+            <Typography style={{fontSize: 30}}>{title}</Typography>
+            { this.props.onAddClick ?
+              <IconButton onClick={this.onAddClick}><AddCircleRoundedIcon/></IconButton>
+              :
+              null
+            }
+            <IconButton onClick={this.onDownloadClick}><GetAppIcon/></IconButton>
+          </Grid>
+          <Paper style={{height: '600px', width: '100%'}} className={'ag-theme-balham'}>
+            <AgGridReact rowData={data} columnDefs={columnDefs} enableSorting={true}
               enableFilter={true} pagination={true} defaultColDef={defaultColDef}
               frameworkComponents={frameworkComponents}
               {...this.props}
@@ -133,14 +133,14 @@ class BigList extends React.Component {
                 notContains: 'Ne contient pas',
                 startsWith: 'Comence par',
                 endsWith: 'Finit par',
-                filterOoo: 'Filtrer...'
+                filterOoo: 'Filtrer...',
               }}
               onRowClicked={ this.props.onRowClicked}
               onCellClicked={ this.props.onCellClicked}
               onFirstDataRendered={this.fitColumns}
               ref={this.gridRef}
-              />
-            </Paper>
+            />
+          </Paper>
         </Grid>
       </>
     )

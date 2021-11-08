@@ -1,6 +1,6 @@
 export default theme => ({
   scrollMenuIndicator:{
-    backgroundColor: theme.palette.yellow.main
+    backgroundColor: theme.palette.secondary.main
   },
   scrollMenuTab:{
     textTransform: 'initial'

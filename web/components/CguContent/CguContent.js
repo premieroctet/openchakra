@@ -1,23 +1,24 @@
-import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Link from 'next/link';
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import {withStyles} from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import Link from 'next/link'
 
 const styles = theme => ({
   a: {
     textDecoration: 'none',
     color: '#84A5E0',
   },
-});
+})
 
 class CguContent extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
 
     return (
       <Grid container>
@@ -55,8 +56,8 @@ class CguContent extends React.Component {
             ci-après
             désignées les « Services de la boutique ».
             Chaque Service de la boutique peut être paramétré selon plusieurs critères :
-            <div style={{paddingLeft: '15px'}}>
-              <br/>• Chaque Service est constitué d’une ou plusieurs prestations proposées dans le
+          <div style={{paddingLeft: '15px'}}>
+            <br/>• Chaque Service est constitué d’une ou plusieurs prestations proposées dans le
               cadre du service,
               ci-après désignées les « Prestations de service ». La typologie des Prestations de
               services est proposée
@@ -71,17 +72,17 @@ class CguContent extends React.Component {
               comprendre des Services de manucure et de coiffure. Le Service de coiffure pourra être
               décomposé en
               Prestations de service telles que la couleur, la coupe, etc.
-              <br/>• Pour chaque Prestation de service, le Membre Alfred pourra choisir le matériel
+            <br/>• Pour chaque Prestation de service, le Membre Alfred pourra choisir le matériel
               qu’il souhaite
               mettre à disposition dans le cadre de la réalisation de sa Prestation de service.
               L’ensemble des
               fournitures et du matériel est ci-après désigné le « Matériel ».
-              <br/>• Pour chaque Prestation de service, le Membre Alfred pourra personnaliser ses
+            <br/>• Pour chaque Prestation de service, le Membre Alfred pourra personnaliser ses
               conditions de
               réservation, à savoir son minimum de réservation, son délai de prévenance, son périmètre
               d’intervention
               etc. L’ensemble de ces conditions seront désignées les « Conditions de réservation ».
-            </div>
+          </div>
           </p>
           <p>2.4 La Place de marché My-Alfred se décline autour d’un site web et d’applications mobiles,
             ci-après
@@ -132,8 +133,8 @@ class CguContent extends React.Component {
             Le Membre peut exercer son droit de rétractation en utilisant le formulaire en ligne
             accessible depuis le
             bas de page, en cliquant sur nous contacter ou sur simple email adressé à <a
-              className={classes.a}
-              href="mailto:hello@my-alfred.io">hello@my-alfred.io</a> ou
+            className={classes.a}
+            href="mailto:hello@my-alfred.io">hello@my-alfred.io</a> ou
             par toute autre déclaration de son choix. Dans ce dernier cas, sa déclaration doit être
             dénuée d’ambiguïté
             et exprimer clairement sa volonté de se rétracter. L’exercice du droit de rétractation dans
@@ -143,7 +144,7 @@ class CguContent extends React.Component {
             L’espace personnel et toutes les informations afférentes au Membre sont alors anonymisés,
             sous réserve des
             stipulations de la politique de protection des données à caractère personnel accessible <a
-              className={classes.a} href="#">ici</a>.
+            className={classes.a} href="#">ici</a>.
             Au titre des présentes, le Membre Utilisateur donne son accord exprès à ce que My-Alfred lui
             fournisse les
             Services My-Alfred (à savoir notamment la mise en relation avec un ou des Membre(s) Alfred)
@@ -205,12 +206,12 @@ class CguContent extends React.Component {
             paiement des Prestations de service. En utilisant ce système de paiement, les Membres
             acceptent les
             conditions de MangoPay disponibles <a className={classes.a} target="_blank"
-                                                  href="/static/assets/PSP_MANGOPAY_FR.pdf">ici</a>.
+            href="/static/assets/PSP_MANGOPAY_FR.pdf">ici</a>.
             Pour toutes
             questions et conditions relatives au paiement des Prestations de services, les Membres
             devront se référer
             aux conditions d’utilisation du tiers de confiance MangoPay.
-            <br/>S’agissant de la rémunération des Membres Alfred, les Membres Utilisateurs confient un
+          <br/>S’agissant de la rémunération des Membres Alfred, les Membres Utilisateurs confient un
             mandat
             d’encaissement de la rémunération convenue avec le Membre Alfred au profit de la Place de
             marché
@@ -219,7 +220,7 @@ class CguContent extends React.Component {
             Utilisateur sur un compte dédié avant de virer la somme sur le compte bancaire du Membre
             Alfred, après
             déduction des Frais de services revenant à My-Alfred, conformément à l’article 9 ci-dessous.
-            <br/>Les Membres Utilisateurs reconnaissent et acceptent qu’aucune des sommes ainsi perçues
+          <br/>Les Membres Utilisateurs reconnaissent et acceptent qu’aucune des sommes ainsi perçues
             au nom et pour
             le compte des Membres Alfred n’emporte droit à intérêts. Les Membres acceptent de répondre
             avec diligence
@@ -234,21 +235,21 @@ class CguContent extends React.Component {
             appropriée notamment le gel des sommes versées, la suspension du compte du Membre ou la
             résiliation des
             CGU.
-            <br/>My Alfred garantit aux Membres que :
-            <div style={{paddingLeft: '15px'}}>
-              <br/>- les fonds destinés aux Membres Alfred ne sont détenus à aucun moment par
+          <br/>My Alfred garantit aux Membres que :
+          <div style={{paddingLeft: '15px'}}>
+            <br/>- les fonds destinés aux Membres Alfred ne sont détenus à aucun moment par
               My-Alfred,
-              <br/>- My Alfred n’a pas accès aux données bancaires des Membres, lesquels restent
+            <br/>- My Alfred n’a pas accès aux données bancaires des Membres, lesquels restent
               entièrement
               sécurisées chez MangoPay qui n’y a accès que pour les besoins de la demande de règlement
               concernée,
-              <br/>- aucune donnée autre que celles nécessaires à l’exécution de la demande de
+            <br/>- aucune donnée autre que celles nécessaires à l’exécution de la demande de
               règlement n’est
               demandée aux Membres,
-              <br/>- les données ne sont ni utilisées ni consultées ni stockées à des fins autres que
+            <br/>- les données ne sont ni utilisées ni consultées ni stockées à des fins autres que
               l’opération
               demandée par le Membre Utilisateur.
-            </div>
+          </div>
           </p>
           <p>4.5 Critères de classement des Alfred :
             Les 20 premiers Alfred sont présentés au Membre Utilisateur, ce nombre pouvant être
@@ -383,29 +384,29 @@ class CguContent extends React.Component {
             sociales et règles en vigueur dans le pays où ils résident ainsi qu’aux présentes CGUS.
             Ainsi, les Membres
             s’interdisent formellement :
-            <div style={{paddingLeft: '15px'}}>
-              <br/>- de reproduire, utiliser ou stocker les informations et contenus présents sur la
+          <div style={{paddingLeft: '15px'}}>
+            <br/>- de reproduire, utiliser ou stocker les informations et contenus présents sur la
               Place de marché,
               y compris l’ensemble des informations nominatives qui concernent les Membres ou en
               portant atteinte à la
               vie privée des Membres,
-              <br/>- d’adopter un comportement discriminant envers un Membre, au regard de son
+            <br/>- d’adopter un comportement discriminant envers un Membre, au regard de son
               origine, son âge, son
               sexe, son état physique ou mental, son orientation sexuelle, etc.
-              <br/>- d’utiliser la Place de marché My-Alfred afin de trouver un prestataire sans
+            <br/>- d’utiliser la Place de marché My-Alfred afin de trouver un prestataire sans
               utiliser la Place de
               marché My-Alfred pour procéder à la réservation du service et ce dans le but d’éviter de
               payer les Frais
               de services dus My-Alfred ou pour toute autre raison.
-              <br/>- de ternir la réputation de la marque My-Alfred ou de nuire à My-Alfred de quelque
+            <br/>- de ternir la réputation de la marque My-Alfred ou de nuire à My-Alfred de quelque
               façon que ce
               soit.
-              <br/>- d’utiliser des processus informatiques permettant de récupérer, d’aspirer, de
+            <br/>- d’utiliser des processus informatiques permettant de récupérer, d’aspirer, de
               collecter,
               d’utiliser et de stocker des informations (y compris l’ensemble des contenus des
               Membres, de My-Alfred,
               les données personnelles, etc.).
-              <br/>- d’utiliser les contenus publiés sur My-Alfred à des fins commerciales ou de
+            <br/>- d’utiliser les contenus publiés sur My-Alfred à des fins commerciales ou de
               diffuser des messages
               à caractère commercial en dehors de l’objet de la Place de marché My-Alfred. Les Membres
               s’interdisent
@@ -414,18 +415,18 @@ class CguContent extends React.Component {
               un but autre que la réservation de ses Services au travers de la Place de marché
               y-Alfred (services
               tiers, recrutement, partenariat, etc.)
-              <br/>- de détourner, copier, endommager, décoder ou contourner par quelque moyen que ce
+            <br/>- de détourner, copier, endommager, décoder ou contourner par quelque moyen que ce
               soit la Place de
               marché My-Alfred ou de tenter de nuire à la Place de marché My-Alfred, d’en perturber
               les performances
               et le bon fonctionnement.
-              <br/>- de tenter de déchiffrer, décompiler, désassembler la Place de marché My-Alfred
+            <br/>- de tenter de déchiffrer, décompiler, désassembler la Place de marché My-Alfred
               ainsi que toute
               rétro-ingénierie .
-              <br/>- plus généralement, de violer ou porter atteinte aux droits de My-Alfred et à ceux
+            <br/>- plus généralement, de violer ou porter atteinte aux droits de My-Alfred et à ceux
               des tiers .
-            </div>
-            <br/>Tout manquement à ces règles est susceptible d'entraîner la fermeture provisoire ou
+          </div>
+          <br/>Tout manquement à ces règles est susceptible d'entraîner la fermeture provisoire ou
             définitive du
             compte et de l’accès à tout ou partie de la Place de marché My-Alfred. De plus, dans
             l’objectif de se
@@ -454,19 +455,19 @@ class CguContent extends React.Component {
             loyale sur
             les obligations sociales et fiscales auxquelles ils doivent se conformer.
             Les Membres sont d’ores et déjà invités à se référer aux informations figurant :
-            <div style={{paddingLeft: '15px'}}>
-              <br/>- sur <a className={classes.a} target="_blank"
-                            href="https://www.impots.gouv.fr">www.impots.gouv.fr</a> concernant leurs
+          <div style={{paddingLeft: '15px'}}>
+            <br/>- sur <a className={classes.a} target="_blank"
+              href="https://www.impots.gouv.fr">www.impots.gouv.fr</a> concernant leurs
               obligations
               fiscales et plus particulièrement la page <a className={classes.a} target="_blank"
-                                                           href="https://www.impots.gouv.fr/portail/node/10841">https://www.impots.gouv.fr/portail/node/10841</a>.
-              <br/>- sur <a className={classes.a} target="_blank"
-                            href="https://www.urssaf.fr">www.urssaf.fr</a> concernant leurs
+              href="https://www.impots.gouv.fr/portail/node/10841">https://www.impots.gouv.fr/portail/node/10841</a>.
+            <br/>- sur <a className={classes.a} target="_blank"
+              href="https://www.urssaf.fr">www.urssaf.fr</a> concernant leurs
               obligations sociales et
               plus particulièrement la page <a className={classes.a} target="_blank"
-                                               href="https://www.urssaf.fr/portail/home/espaces-dedies/activites-relevant-de-leconomie.htm">https://www.urssaf.fr/portail/home/espaces-dedies/activites-relevant-de-leconomie.htm</a>.
-            </div>
-            <br/>My-Alfred attire l’attention des Membres sur le fait que se présenter comme un
+              href="https://www.urssaf.fr/portail/home/espaces-dedies/activites-relevant-de-leconomie.htm">https://www.urssaf.fr/portail/home/espaces-dedies/activites-relevant-de-leconomie.htm</a>.
+          </div>
+          <br/>My-Alfred attire l’attention des Membres sur le fait que se présenter comme un
             consommateur ou un
             non-professionnel alors qu’ils agiraient dans le cadre d’une activité professionnelle
             habituelle ou
@@ -479,19 +480,19 @@ class CguContent extends React.Component {
             des dépenses engagées pour la réalisation de la publicité ou de la pratique constituant ce
             délit, en
             application de l’article L.132-2 du Code de la consommation.
-            <br/>Les Membres Alfred pourront retrouver dans la rubrique « performances » les sommes
+          <br/>Les Membres Alfred pourront retrouver dans la rubrique « performances » les sommes
             perçues à
             l’occasion des activités réalisées au travers de la Place de marché My-Alfred. Les Membres
             s’engagent à
             déclarer loyalement aux services des impôts et aux organismes sociaux les sommes perçues au
             titre des
             activités réalisées sur la Place de marché My-Alfred.
-            <br/>Les Membres dégagent en conséquence My-Alfred de toute responsabilité et garantissent
+          <br/>Les Membres dégagent en conséquence My-Alfred de toute responsabilité et garantissent
             My-Alfred de
             toutes les conséquences découlant directement ou indirectement du non-respect de leurs
             obligations
             fiscales et sociales.
-            <br/>En cas de doute, il est recommandé aux Membres de prendre conseil auprès d’un tiers sur
+          <br/>En cas de doute, il est recommandé aux Membres de prendre conseil auprès d’un tiers sur
             les
             obligations sociales et fiscales découlant de leur statut.
           </p>
@@ -625,7 +626,7 @@ class CguContent extends React.Component {
             fraude ou une activité illégale, My-Alfred pourra, sans préavis, prendre les mesures
             nécessaires contre ce
             Membre.
-            <br/>En cas de suppression définitive du compte de l’un des Membres pour les raisons
+          <br/>En cas de suppression définitive du compte de l’un des Membres pour les raisons
             ci-dessus exposées,
             le Membre s’interdit de créer un autre compte ou d’utiliser le compte d’un tiers pour
             accéder à la Place
@@ -835,14 +836,14 @@ class CguContent extends React.Component {
             une vérification des données concernant ses Membres ou appliquer un certain nombre de taxes
             sur les
             versements opérés par la Place de marché My-Alfred ou son tiers de confiance.
-            <br/>C’est notamment le cas pour les Membres Alfred lorsque certains seuils sont dépassés
+          <br/>C’est notamment le cas pour les Membres Alfred lorsque certains seuils sont dépassés
             cf. <a
-              className={classes.a} target="_blank"
-              href="https://bofip.impots.gouv.fr/bofip/11791-PGP.html?identifiant=BOI-BIC-DECLA-30-70-40-20-20190315">https://bofip.impots.gouv.fr/bofip/11791-PGP.html?identifiant=BOI-BIC-DECLA-30-70-40-20-20190315</a>
-            <br/>Les Membres Alfred s’engagent à nous communiquer à première demande et sans délai les
+            className={classes.a} target="_blank"
+            href="https://bofip.impots.gouv.fr/bofip/11791-PGP.html?identifiant=BOI-BIC-DECLA-30-70-40-20-20190315">https://bofip.impots.gouv.fr/bofip/11791-PGP.html?identifiant=BOI-BIC-DECLA-30-70-40-20-20190315</a>
+          <br/>Les Membres Alfred s’engagent à nous communiquer à première demande et sans délai les
             éléments
             demandées.
-            <br/>Si un Membre refuse de fournir ses informations / documents fiscaux visant à nous
+          <br/>Si un Membre refuse de fournir ses informations / documents fiscaux visant à nous
             acquitter de nos
             obligations, My-Alfred se réserve le droit de suspendre ou de clôturer le compte du Membre
             concerné et/ ou
@@ -955,7 +956,7 @@ class CguContent extends React.Component {
             Alfred impacté(s) par cette annulation - des frais d’annulation. </p>
         </Grid>
         <Grid item xs={12}>
-          <h3 style={{color: '#84A5E0'}}>16 – Données personnelles et respect de la vie privée</h3>
+          <h3 style={{color: '#84A5E0'}} id='privacy'>16 – Données personnelles et respect de la vie privée</h3>
           <p>16.1 Tous les Membres peuvent choisir ce qu’ils souhaitent rendre public sur la Place de
             marché
             My-Alfred, à l’exception du mot de passe qui restera confidentiel en toutes circonstances et
@@ -1059,11 +1060,11 @@ class CguContent extends React.Component {
             Règlement en
             Ligne des Litiges (« RLL ») à laquelle il peut recourir ; elle est accessible depuis le lien
             suivant <a
-            className={classes.a} target="_blank"
-            href="http://ec.europa.eu/consumers/odr/">http://ec.europa.eu/consumers/odr/</a>. Le site
+              className={classes.a} target="_blank"
+              href="http://ec.europa.eu/consumers/odr/">http://ec.europa.eu/consumers/odr/</a>. Le site
             internet
             suivant <a className={classes.a} target="_blank"
-                       href="www.economie.gouv.fr/mediation-conso">www.economie.gouv.fr/mediation-conso</a> comporte
+              href="www.economie.gouv.fr/mediation-conso">www.economie.gouv.fr/mediation-conso</a> comporte
             également toutes informations utiles en cas de litige transfrontalier.
           </p>
           <p>19.3 Toute contestation entre Membres à l’occasion de l’exécution ou l’interprétation des
@@ -1100,4 +1101,4 @@ class CguContent extends React.Component {
 
 }
 
-export default withStyles(styles)(CguContent)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(CguContent))

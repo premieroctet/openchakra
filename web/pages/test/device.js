@@ -1,7 +1,6 @@
-import React from 'react';
+import React from 'react'
 import {
   deviceType,
-  isMobile,
   osName,
   isAndroid,
   isIOS,
@@ -9,19 +8,18 @@ import {
   isWearable,
   engineVersion,
   getUA,
-  isDesktop,
   isWinPhone,
-  deviceDetect
-} from 'react-device-detect';
-import {isApplication, isMobile} from '../../utils/context';
+  deviceDetect,
+} from 'react-device-detect'
+import {isApplication, isMobile} from '../../utils/context'
 
-export default class device extends React.Component {
+class DeviceTest extends React.Component {
 
   render() {
     return (
       <>
         <p>deviceType : {deviceType}</p>
-        <p>isMobile: {isMobile.toString()}</p>
+        <p>isMobile: {isMobile().toString()}</p>
         <p>osName: {osName}</p>
         <p>isAndroid: {isAndroid.toString()}</p>
         <p>isIOS: {isIOS.toString()}</p>
@@ -30,12 +28,11 @@ export default class device extends React.Component {
         <p>isWearable: {isWearable.toString()}</p>
         <p>engineVersion: {engineVersion}</p>
         <p>getUA: {getUA}</p>
-        <p>isDesktop: {isDesktop}</p>
-        <p>isMobile: {isMobile().toString()}</p>
-        <p>isWebView: {isApplication().toString()}
-        </p>
+        <p>isWebView: {isApplication().toString()}</p>
         <p>DeviceDetect: {JSON.stringify(deviceDetect())}</p>
       </>
     )
   }
 }
+
+export default DeviceTest

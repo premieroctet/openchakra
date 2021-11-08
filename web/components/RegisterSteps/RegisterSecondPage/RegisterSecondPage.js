@@ -1,64 +1,69 @@
-import React from 'react';
-import withStyles from "@material-ui/core/styles/withStyles";
-import Grid from "@material-ui/core/Grid";
-import {Typography} from "@material-ui/core";
-import AlgoliaPlaces from "algolia-places-react";
-import TextField from "@material-ui/core/TextField";
-import PhoneIphoneOutlinedIcon from "@material-ui/icons/PhoneIphoneOutlined";
-import Checkbox from "@material-ui/core/Checkbox";
-import Button from "@material-ui/core/Button";
-import NumberFormat from 'react-number-format';
-import PropTypes from "prop-types";
+import { formatAddress } from '../../../utils/text';
+import CustomButton from '../../CustomButton/CustomButton'
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import AlgoliaPlaces from 'algolia-places-react'
+import TextField from '@material-ui/core/TextField'
+import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined'
+import Checkbox from '@material-ui/core/Checkbox'
+import NumberFormat from 'react-number-format'
+import PropTypes from 'prop-types'
 import styles from '../../../static/css/components/RegisterSteps/RegisterSecondPage/RegisterSecondPage'
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import CguContent from "../../CguContent/CguContent";
-import DialogActions from "@material-ui/core/DialogActions";
-const {ACCOUNT_MIN_AGE} = require('../../../utils/consts');
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import CguContent from '../../CguContent/CguContent'
+import DialogActions from '@material-ui/core/DialogActions'
+const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
+import '../../../static/assets/css/custom.css'
+import {REGISTER_SECOND_PAGE} from '../../../utils/i18n'
+import CustomIcon from '../../CustomIcon/CustomIcon'
 
 
 function NumberFormatCustom(props) {
-  const {inputref, onChange, ...other} = props;
+  const {inputref, onChange, ...other} = props
 
   return (
     <NumberFormat
       {...other}
       getInputRef={inputref}
-      onValueChange={(values) => {
+      onValueChange={values => {
         onChange({
           target: {
             name: props.name,
             value: values.value,
           },
-        });
+        })
       }}
       isNumericString
     />
-  );
+  )
 }
 
 NumberFormatCustom.propTypes = {
-  //inputRef: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-};
+}
 
-class RegisterSecondPage extends React.Component{
+class RegisterSecondPage extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props)
     this.state={
-      open: false
+      open: false,
     }
   }
 
-  dialogCgu = (classes) => {
-    const {open} = this.state;
+  dialogCgu = classes => {
+    const {open} = this.state
 
     const handleClose = () => {
       this.setState({open: false})
-    };
+    }
 
     return (
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
@@ -67,7 +72,7 @@ class RegisterSecondPage extends React.Component{
           <CguContent/>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color={'secondary'}>Fermer</Button>
+          <CustomButton onClick={handleClose} classes={{root: classes.cancelButton}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.dialog_cgu_close'))}</CustomButton>
         </DialogActions>
       </Dialog>
     )
@@ -78,20 +83,19 @@ class RegisterSecondPage extends React.Component{
   }
 
   render() {
-    const{classes, state}= this.props;
+    const{classes, state}= this.props
 
+    const address_placeholder = (state.city && state.address && state.zip_code) ?
+      formatAddress(state) : ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.algolia_placeholder'))
     return(
       <Grid container>
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <h3 className={classes.subtitle}>Adresse postale</h3>
+              <h3 className={`customregisteradresstitle ${classes.subtitle}`}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.address_title'))}</h3>
             </Grid>
             <Grid item className={classes.textStyle}>
-              <Typography><em>Votre adresse ne sera pas visible, mais nous l’utiliserons
-                pour vous
-                proposer
-                ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</em></Typography>
+              <Typography className={'customregisteradresssubtitle'}><em>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.address_subtitle'))}</em></Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -99,79 +103,84 @@ class RegisterSecondPage extends React.Component{
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item style={{width: '100%'}}>
               <form>
-              <AlgoliaPlaces
-                className={classes.textFieldAlgo}
-                placeholder='Recherchez votre adresse'
-                options={{
-                  appId: 'plKATRG826CP',
-                  apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                  language: 'fr',
-                  countries: ['fr'],
-                  type: 'address',
+                <AlgoliaPlaces
+                  className={classes.textFieldAlgo}
+                  placeholder={address_placeholder}
+                  options={{
+                    appId: 'plKATRG826CP',
+                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                    language: 'fr',
+                    countries: ['fr'],
+                    type: 'address',
 
-                }}
-                onChange={(suggestion) => this.props.onChangeAddress(suggestion)}
-                onClear={() => this.props.onChangeAddress(null)}
-              />
+                  }}
+                  onChange={suggestion => this.props.onChangeAddress(suggestion)}
+                  onClear={() => this.props.onChangeAddress(null)}
+                />
               </form>
-              <em style={{color: 'red'}}>{state.cityError}</em>
+              <em className={classes.cancelButton}>{state.errors.address}</em>
             </Grid>
           </Grid>
         </Grid>
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <h3 className={classes.subtitle}>Date de naissance</h3>
+              <h3 className={`customregisterbirthdate ${classes.subtitle}`}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.birthdate_title'))}</h3>
             </Grid>
             <Grid item>
-              <Typography className={classes.textStyle}><em>
-                {`Pour vous inscrire, vous devez être âgé d’au moins ${ACCOUNT_MIN_AGE} ans.
-                  Les autres utilisateurs ne verront pas votre date de naissance.`}</em>
+              <Typography className={`customregisterbirthdatesub ${classes.textStyle}`}><em>
+                {ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.minimum_age_start')) + ACCOUNT_MIN_AGE + ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.minimum_age_end'))}</em>
               </Typography>
             </Grid>
             <Grid item className={classes.datenaissance} style={{display: 'flex', alignItems: 'center'}}>
               <Grid container style={{justifyContent: 'space-between', flexWrap: 'nowrap'}}>
                 <Grid item style={{width: '30%'}}>
                   <TextField
-                    label="Jour"
-                    placeholder="Jour"
-                    onChange={(e) => this.props.onChangeBirthdayDate(e)}
+                    label={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_day'))}
+                    placeholder={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_day_placeholder'))}
+                    onChange={e => this.props.onChangeBirthdayDate(e)}
                     inputProps={{
                       maxLength: 2,
                     }}
                     InputProps={{
                       inputComponent: NumberFormatCustom,
                     }}
-                    error={state.birthdayError}
-                    helperText={state.birthdayError}
+                    InputLabelProps={{shrink: true}}
+                    error={state.errors.birthday}
+                    helperText={state.errors.birthday}
+                    value={state.day}
                   />
                 </Grid>
                 <Grid item style={{width: '30%'}}>
                   <TextField
-                    label="Mois"
-                    placeholder="Mois"
-                    onChange={(e) => this.props.onChangeBirthdayMonth(e)}
+                    label={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_month'))}
+                    placeholder={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_month_placeholder'))}
+                    onChange={e => this.props.onChangeBirthdayMonth(e)}
                     inputProps={{
                       maxLength: 2,
                     }}
                     InputProps={{
                       inputComponent: NumberFormatCustom,
                     }}
+                    InputLabelProps={{shrink: true}}
                     error={state.birthdayError}
+                    value={state.month}
                   />
                 </Grid>
                 <Grid item style={{width: '30%'}}>
                   <TextField
-                    label="Année"
-                    placeholder="Année"
-                    onChange={(e) => this.props.onChangeBirthdayYear(e)}
+                    label={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_year'))}
+                    placeholder={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_year_placeholder'))}
+                    onChange={e => this.props.onChangeBirthdayYear(e)}
                     inputProps={{
                       maxLength: 4,
                     }}
                     InputProps={{
                       inputComponent: NumberFormatCustom,
                     }}
+                    InputLabelProps={{shrink: true}}
                     error={state.birthdayError}
+                    value={state.year}
                   />
                 </Grid>
               </Grid>
@@ -181,28 +190,25 @@ class RegisterSecondPage extends React.Component{
         <Grid className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item>
-              <h3 className={classes.subtitle}>Téléphone</h3>
+              <h3 className={`customregisterphone ${classes.subtitle}`}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.phone_title'))}</h3>
             </Grid>
             <Grid item>
-              <Typography className={classes.textStyle}><em>L'ajout de votre numéro de téléphone permet aux membres
-                My-Alfred
-                de disposer d'un moyen pour vous contacter.</em>
-              </Typography>
+              <Typography className={`customregisterphonesubtitle ${classes.textStyle}`}><em>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.phone_subtitle'))}</em></Typography>
             </Grid>
             <Grid item container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
               <Grid item>
-                <PhoneIphoneOutlinedIcon className={classes.colorIcon}/>
+                <CustomIcon className={'customregisterphoneicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<PhoneIphoneOutlinedIcon className={classes.colorIcon}/>}/>
               </Grid>
               <Grid item style={{width: '70%'}}>
                 <TextField
                   id="standard-with-placeholder"
-                  label="Numéro de téléphone"
-                  placeholder="Numéro de téléphone"
+                  label={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_phone'))}
+                  placeholder={ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.textfield_phone_placeholder'))}
                   style={{width: '100%'}}
                   type={'number'}
                   name="phone"
                   value={state.phone}
-                  onChange={(e) => this.props.onChangePhone(e)}
+                  onChange={e => this.props.onChangePhone(e)}
                 />
               </Grid>
             </Grid>
@@ -215,16 +221,18 @@ class RegisterSecondPage extends React.Component{
                 <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
                   <Checkbox
                     checked={state.checked}
-                    onChange={(e) => this.props.handleChecked(e)}
+                    name={'checked'}
+                    onChange={this.props.onChange}
                     value="checked"
-                    color="primary"
+                    color={state.errors.checked ? 'red' : 'primary'}
+                    error={state.errors.checked}
                   />
                 </Grid>
-                <Grid  item xl={11} lg={11} md={11} sm={11} xs={11}>
-                  <Button onClick={this.handleOpenCgu} classes={{root: classes.buttonCGU}} style={{color: '#2FBCD3'}}>J’accepte les
-                    conditions
-                    générales d’utilisation de My-Alfred.</Button>
-                  {this.dialogCgu()}
+                <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
+                  <CustomButton onClick={this.handleOpenCgu} classes={{root: `customregigisterbuttoncgu ${classes.buttonCGU}`}} error={state.errors.checked}>
+                    {ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}
+                  </CustomButton>
+                  {this.dialogCgu(classes)}
                 </Grid>
               </Grid>
             </Grid>
@@ -235,4 +243,4 @@ class RegisterSecondPage extends React.Component{
   }
 }
 
-export default withStyles(styles)(RegisterSecondPage);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(RegisterSecondPage))

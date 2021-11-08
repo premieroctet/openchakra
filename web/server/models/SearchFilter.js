@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 // TODO: supprimer ce modèle
 const SearchFilterSchema = new Schema({
@@ -7,6 +7,6 @@ const SearchFilterSchema = new Schema({
     type: String,
     required: true,
   },
-});
+})
 
-module.exports = SearchFilter = mongoose.model('searchFilter', SearchFilterSchema);
+module.exports = SearchFilterSchema

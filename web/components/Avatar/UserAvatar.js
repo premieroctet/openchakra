@@ -1,12 +1,13 @@
+import {withTranslation} from 'react-i18next'
 import IconButton from '@material-ui/core/IconButton'
 import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
-import { withStyles } from '@material-ui/core/styles'
+import {withStyles} from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import axios from 'axios'
 import styles from './UserAvatarStyle'
-const { isEditableUser, getLoggedUserId } = require('../../utils/context')
+const {isEditableUser, getLoggedUserId} = require('../../utils/context')
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import Badge from '@material-ui/core/Badge'
 
@@ -25,18 +26,32 @@ class UserAvatar extends React.Component {
   }
 
   componentDidMount() {
-    const userId = getLoggedUserId()
-    const profileUrl = ['services', 'about', 'reviews', 'calendar', 'statistics']
+    const {user} = this.props
+    const profileUrl = ['services', 'about', 'reviews', 'calendar', 'statistics', 'myProfile']
     const currentUrl = Router.pathname
 
-    if (userId) {
-      this.setState({ currentUser: userId })
-    }
+    axios.get('/myAlfred/api/users/current').then(res => {
+      let userInfo = res.data
+      this.setState({currentUser: userInfo}, () => {
+        if (getLoggedUserId() === this.state.currentUser._id) {
+          this.setState({owner: true})
+        }
+        else{
+          this.setState({owner: false})
+        }
+        if(user._id === this.state.currentUser._id) {
+          this.setState({isPageEditable: true})
+        }
+      })
+    },
+    ).catch(err => { console.error(err) })
+
+
     if(profileUrl.includes(currentUrl.substring(currentUrl.lastIndexOf('/') + 1))) {
-      this.setState({ isAbout: true })
+      this.setState({isAbout: true})
     }
-    if(Router.pathname === '/account/myProfile' || Router.pathname === '/profile/about') {
-      this.setState({ isPageEditable: true })
+    else{
+      this.setState({isAbout: false})
     }
   }
 
@@ -48,19 +63,19 @@ class UserAvatar extends React.Component {
   };
 
   avatarWithPics = (user, classes) => {
-    const{ isAbout, myProfile } = this.state
+    const{isAbout} = this.state
     const url = user.picture.match(/^https?:\/\//) ? user.picture : `/${ user.picture}`
 
     return (
-      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : myProfile ? classes.myProfile : classes.avatarLetter}/>
+      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}/>
     )
   }
 
   avatarWithoutPics = (user, classes) => {
-    const{ isAbout, myProfile } = this.state
+    const{isAbout} = this.state
 
     return (
-      <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : myProfile ? classes.myProfile : classes.avatarLetter}>
+      <Avatar alt="photo de profil" className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}>
         <p>{user.avatar_letters}</p>
       </Avatar>
     )
@@ -85,13 +100,12 @@ class UserAvatar extends React.Component {
   }
 
   render() {
-    const { user, classes } = this.props
-    const { currentUser, isPageEditable } = this.state
+    const {user, classes} = this.props
+    const {isPageEditable, owner} = this.state
 
-    let owner = user ? currentUser === user._id : null
 
     return (
-      <Grid style={{ width: '100%', height: '100%' }}>
+      <Grid style={{width: '100%', height: '100%'}}>
         <Grid style={{
           height: '100%',
           width: '100%',
@@ -102,7 +116,7 @@ class UserAvatar extends React.Component {
               vertical: 'bottom',
               horizontal: 'right',
             }}
-            classes={{ root: classes.badge }}
+            classes={{root: classes.badge}}
             badgeContent={ owner && isPageEditable ? <Grid>
               <input
                 ref={fileInput => this.fileInput = fileInput}
@@ -128,4 +142,4 @@ class UserAvatar extends React.Component {
   }
 }
 
-export default withStyles(styles)(UserAvatar)
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(UserAvatar))

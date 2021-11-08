@@ -1,3 +1,5 @@
+import CustomButton from '../../components/CustomButton/CustomButton'
+import {withTranslation} from 'react-i18next'
 import axios from 'axios';
 const {setAxiosAuthentication, clearAuthenticationToken}=require('../../utils/authentication')
 
@@ -6,13 +8,12 @@ import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
-import Layout from '../../hoc/Layout/Layout';
+import DashboardLayout from '../../hoc/Layout/DashboardLayout';
 import Link from 'next/link';
 import Router from 'next/router';
 import Paper from '@material-ui/core/Paper';
 import HomeIcon from '@material-ui/icons/Home';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 const {BigList}=require('../../components/BigList/BigList')
 const models = require('../../components/BigList/models')
 
@@ -169,7 +170,7 @@ class all extends React.Component {
     const {prospects, export_data, comments, errors, category, url, lbc_message, lbc_error} = this.state;
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer} style={{width:'100%'}}>
           <Link href={'/dashboard/home'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
@@ -206,9 +207,9 @@ class all extends React.Component {
                     )
                   })
                 }
-                <Button disabled={!category || !url} onClick={this.startSearch}>
+                <CustomButton disabled={!category || !url} onClick={this.startSearch}>
                   Lancer la recherche
-                </Button>
+                </CustomButton>
               </Grid>
               </Card>
               <Card className={classes.card}>
@@ -232,7 +233,7 @@ class all extends React.Component {
                 <em style={{color: 'red'}}>{errors}</em>
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
-                <Button disabled={!this.state.selectedFile} onClick={this.onClickHandler}>Importer</Button>
+                <CustomButton disabled={!this.state.selectedFile} onClick={this.onClickHandler}>Importer</CustomButton>
               </Grid>
               </Card>
               <Card className={classes.card}>
@@ -249,9 +250,9 @@ class all extends React.Component {
             </Grid>
           </Card>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     );
   };
 }
 
-export default withStyles(styles)(all);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(all))

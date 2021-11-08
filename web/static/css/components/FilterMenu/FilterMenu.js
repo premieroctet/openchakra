@@ -1,41 +1,41 @@
-export default theme =>({
+export default theme => ({
 
-  filterMenuTitleContainer:{
+  filterMenuTitleContainer: {
     marginTop: '5%',
-    textAlign: 'center'
+    textAlign: 'center',
   },
-  filterMenuChipContainer:{
+  filterMenuChipContainer: {
     marginTop: '2%',
     display: 'flex',
 
   },
-  filterMenuDescription:{
-    fontFamily: theme.typography.fontFamily
+  filterMenuDescription: {
+    fontFamily: theme.typography.fontFamily,
   },
-  filTerMenuStatusMainStyleFilter:{
+  filTerMenuStatusMainStyleFilter: {
     width: '15%',
-    [theme.breakpoints.down('md')]:{
-      width: '50%'
-    }
+    [theme.breakpoints.down('md')]: {
+      width: '50%',
+    },
   },
 
-  filterMenuContainerStatut:{
+  filterMenuContainerStatut: {
     borderRadius: '15px',
     backgroundColor: 'rgba(248, 207, 97, 1)',
     cursor: 'pointer',
     height: '45px',
   },
-  filterMenuFocused:{
+  filterMenuFocused: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    color: theme.palette.white.main
+    color: theme.palette.white.main,
   },
-  filterMenuTextFocused:{
-    color: theme.palette.white.main
+  filterMenuTextFocused: {
+    color: theme.palette.white.main,
   },
-  filterMenuContentMainStyle:{
+  filterMenuContentMainStyle: {
     borderRadius: '15px',
     backgroundColor: 'white',
     boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
@@ -43,11 +43,11 @@ export default theme =>({
     zIndex: 1,
     position: 'relative',
   },
-  filterMenuControlLabel:{
+  filterMenuControlLabel: {
     margin: 0,
-    verticalAlign: 'inherit'
+    verticalAlign: 'inherit',
   },
-  filterMenuStatusNotFocused:{
+  filterMenuStatusNotFocused: {
     boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
     cursor: 'pointer',
     height: 45,
@@ -56,21 +56,21 @@ export default theme =>({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  filTerMenuStatusMainStyleFilterDate:{
+  filTerMenuStatusMainStyleFilterDate: {
     width: '15%',
     marginLeft: '2%',
-    [theme.breakpoints.down('md')]:{
-      width: '50%'
-    }
+    [theme.breakpoints.down('md')]: {
+      width: '50%',
+    },
   },
-  filterMenuDateFocused:{
+  filterMenuDateFocused: {
     borderRadius: '15px',
     backgroundColor: 'rgba(248, 207, 97, 1)',
     cursor: 'pointer',
     height: 45,
 
   },
-  filterMenuContentMainStyleDateFilter:{
+  filterMenuContentMainStyleDateFilter: {
     borderRadius: '15px',
     backgroundColor: 'white',
     boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
@@ -78,10 +78,10 @@ export default theme =>({
     zIndex: 1,
     position: 'relative',
     padding: 10,
-    width: '140%'
+    width: '140%',
   },
-  filterMenuDateFilterButtonContainer:{
+  filterMenuDateFilterButtonContainer: {
     display: 'flex',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
 })

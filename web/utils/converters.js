@@ -184,7 +184,7 @@ const counterObjects = (data, attribute) => {
   return summed
 }
 
-const moneyFormat = (value) => {
+const moneyFormat = value => {
   return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
 }
 
@@ -192,12 +192,22 @@ const todayDate = () => {
   return moment().format('L')
 }
 
- const invoiceFormat = (num, places) => {
+const invoiceFormat = (num, places) => {
   return String(num).padStart(places, '0')
 }
+
+const roundCurrency = amount => {
+  if (!amount) {
+    return amount
+  }
+  return Math.round(amount*100)/100
+}
+
+
 module.exports = {
   availabilities2events, eventUI2availability, availability2eventUI,
   DAYS, LONG_DAYS,
   bookings2events,
-  counterArray, counterObjects, moneyFormat, todayDate, invoiceFormat
-};
+  counterArray, counterObjects, moneyFormat, todayDate, invoiceFormat,
+  roundCurrency,
+}

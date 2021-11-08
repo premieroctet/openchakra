@@ -1,28 +1,28 @@
 export default theme => ({
-  trustAndSecurityMainContainer:{
+  trustAndSecurityMainContainer: {
     display: 'flex',
     justifyContent: 'space-around',
-    [theme.breakpoints.down('sm')]:{
-      flexWrap: 'wrap'
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap',
     },
-    [theme.breakpoints.down('xs')]:{
-      alignItems: 'start'
-    }
+    [theme.breakpoints.down('xs')]: {
+      alignItems: 'start',
+    },
   },
-  trustAndSecurityContent:{
+  trustAndSecurityContent: {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('sm')]: {
       marginTop: '3vh',
       width: '50%',
       justifyContent: 'start',
-      paddingLeft: '7%'
+      paddingLeft: '7%',
     },
-    [theme.breakpoints.down("xs")]:{
-      padding: 0
-    }
+    [theme.breakpoints.down('xs')]: {
+      padding: 0,
+    },
 
-  }
+  },
 })

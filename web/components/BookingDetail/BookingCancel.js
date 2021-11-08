@@ -1,62 +1,63 @@
+import CustomButton from '../CustomButton/CustomButton'
+import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication} = require('../../utils/authentication')
-import React from 'react';
-import axios from 'axios';
-import moment from 'moment';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import {withStyles} from '@material-ui/core/styles';
-import io from 'socket.io-client';
-import Typography from '@material-ui/core/Typography';
-
+import React from 'react'
+import axios from 'axios'
+import moment from 'moment'
+import Grid from '@material-ui/core/Grid'
+import {withStyles} from '@material-ui/core/styles'
+import io from 'socket.io-client'
+import Typography from '@material-ui/core/Typography'
 const {BOOK_STATUS} = require('../../utils/consts')
-import styles from '../../static/css/components/BookingCancel/BookingCancel';
-import Divider from "@material-ui/core/Divider";
+import styles from '../../static/css/components/BookingCancel/BookingCancel'
+import Divider from '@material-ui/core/Divider'
+import ReactHtmlParser from 'react-html-parser'
 
-const _ = require('lodash');
-moment.locale('fr');
+moment.locale('fr')
 
 class Cancel extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       bookingObj: null,
       currUser: null,
-    };
+    }
   }
 
   componentDidMount() {
-    const booking_id = this.props.booking_id;
+    const booking_id = this.props.booking_id
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current').then(res => {
-      this.setState({currUser: res.data});
-    });
+      this.setState({currUser: res.data})
+    })
 
-    axios.get('/myAlfred/api/booking/' + booking_id)
+    axios.get(`/myAlfred/api/booking/${ booking_id}`)
       .then(res => this.setState({bookingObj: res.data}))
-      .catch();
+      .catch()
 
-    this.socket = io();
-    this.socket.on('connect', socket => {
-      this.socket.emit('booking', booking_id);
-    });
+    this.socket = io()
+    this.socket.on('connect', () => {
+      this.socket.emit('booking', booking_id)
+    })
   }
 
   changeStatus(status) {
     setAxiosAuthentication()
-    axios.put('/myAlfred/api/booking/modifyBooking/' + this.props.booking_id, {
+    axios.put(`/myAlfred/api/booking/modifyBooking/${ this.props.booking_id}`, {
       status: status, user: this.state.currUser._id,
     })
       .then(res => {
-        this.setState({bookingObj: res.data});
-        setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
+        this.setState({bookingObj: res.data})
+        setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
       })
-
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err)
+      })
   }
 
   render() {
-    const {classes} = this.props;
-    const {currUser, bookingObj} = this.state;
+    const {classes, t} = this.props
+    const {currUser, bookingObj} = this.state
 
     return (
       <Grid>
@@ -66,64 +67,62 @@ class Cancel extends React.Component {
           <Grid>
             <Grid container className={classes.bigContainer}>
               <Grid container>
-                <Grid item lg={12} xl={12} md={12} xs={12}>
+                <Grid item xs={12}>
                   <Grid container>
                     <Grid item xs={12}>
-                      <h2>Annuler la réservation</h2>
+                      <h2>{ReactHtmlParser(t('BOOKING_CANCEL.title'))}</h2>
                     </Grid>
                   </Grid>
                   <Grid>
                     <Grid container style={{width: '100%'}}>
                       <Grid item xs={12} style={{padding: '5%'}}>
                         <Typography>
-                          Si vous annulez cette réservation, vous ferez l'objet de pénalités :
+                          {ReactHtmlParser(t('BOOKING_CANCEL.subtitle'))}
                           <br/>
-                          - Le retrait du statut de super Alfred pendant 1 an
+                          {ReactHtmlParser(t('BOOKING_CANCEL.stepA'))}
                           <br/>
-                          - Un commentaire public montrant que vous avez annulé
+                          {ReactHtmlParser(t('BOOKING_CANCEL.stepB'))}
                           <br/>
-                          - Le paiement des frais d'annulation ou le blocage des périodes de la prestation sur votre
-                          calendrier
+                          {ReactHtmlParser(t('BOOKING_CANCEL.stepC'))}
                           <br/>
                           <br/>
-                          Si vous avez accepté la réservation instantanée, vous n'aurez pas ces pénalités si vous avez
-                          annulé moins de 3 prestations dans l'année
+                          {ReactHtmlParser(t('BOOKING_CANCEL.penality'))}
                         </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
                   <Grid container
-                        style={{display: 'flex', flexDirection: 'column', marginTop: '3vh', marginBottom: '3vh'}}>
+                    style={{display: 'flex', flexDirection: 'column', marginTop: '3vh', marginBottom: '3vh'}}>
                     <Divider/>
                   </Grid>
                   <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                     <Grid>
-                      <Button
+                      <CustomButton
                         color={'primary'}
                         variant={'contained'}
                         style={{
                           textTransform: 'initial',
-                          color: 'white'
+                          color: 'white',
                         }}
                         onClick={() => this.props.onMaintain(this.props.booking_id)}
                       >
-                        Maintenir
-                      </Button>
+                        {ReactHtmlParser(t('BOOKING_CANCEL.backButton'))}
+                      </CustomButton>
                     </Grid>
                     <Grid>
-                      <Button
-                        color={'secondary'}
+                      <CustomButton
+                        classes={{root: classes.buttonCancel}}
                         variant={'contained'}
                         style={{
                           textTransform: 'initial',
                         }}
                         onClick={() => {
-                          this.changeStatus(BOOK_STATUS.CANCELED);
+                          this.changeStatus(BOOK_STATUS.CANCELLED)
                           this.props.onMaintain(this.props.booking_id)
                         }}
                       >
-                        Annuler
-                      </Button>
+                        {ReactHtmlParser(t('BOOKING_CANCEL.confirm'))}
+                      </CustomButton>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -132,8 +131,8 @@ class Cancel extends React.Component {
           </Grid>
         }
       </Grid>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(Cancel);
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(Cancel))

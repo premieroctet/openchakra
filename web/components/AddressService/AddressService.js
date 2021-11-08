@@ -1,13 +1,16 @@
-import React from 'react';
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
+import {withTranslation} from 'react-i18next'
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import {ADDRESS_SERVICE} from '../../utils/i18n'
+import ReactHtmlParser from 'react-html-parser'
 
 class AddressService extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   render() {
-    const {bookingObj, currentUser, user} = this.props;
+    const {bookingObj} = this.props
 
     if (!bookingObj) {
       return null
@@ -26,20 +29,12 @@ class AddressService extends React.Component {
               </Grid>
             </>
             :
-            "En visio"
+            ReactHtmlParser(this.props.t('ADDRESS_SERVICE.remote'))
           }
-          {/*TODO UPDATE ADDRESS + CHECK ADDRESS FACTURE
-          <Grid style={{marginTop: '2vh'}}>
-            <Typography style={{color:'rgba(39,37,37,35%)'}}>L'adresse de facturation est identique</Typography>
-          </Grid>
-          <Grid style={{marginTop: '2vh'}}>
-            <Button>Modifier</Button>
-          </Grid>
-          */}
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
-export default AddressService;
+export default withTranslation('custom', {withRef: true})(AddressService)

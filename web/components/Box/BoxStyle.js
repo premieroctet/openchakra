@@ -1,5 +1,5 @@
 export default theme => ({
-  borderBox:{
+  borderBox: {
     borderRadius: 17,
     border: '1px solid rgba(210, 210, 210, 0.5)',
     paddingLeft: '10%',
@@ -9,10 +9,10 @@ export default theme => ({
     height: '100%',
     backgroundColor: 'white',
     position: 'relative',
-    [theme.breakpoints.down('xs')]:{
-      border :'inherit',
+    [theme.breakpoints.down('xs')]: {
+      border: 'inherit',
       paddingLeft: 0,
-      paddingRight: 0
-    }
-  }
+      paddingRight: 0,
+    },
+  },
 })
