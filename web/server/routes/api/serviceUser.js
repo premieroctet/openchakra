@@ -263,10 +263,10 @@ router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false})
     .catch(err => console.error(err))
 })
 
-// @Route POST /myAlfred/api/serviceUser/addDiploma/:id
-// Add a diploma for a service
+// @Route POST /myAlfred/api/serviceUser/setDiploma/:id
+// Sets a diploma for a service
 // @Access private
-router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/setDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
       serviceUser.diploma = serviceUser.diploma || {}
@@ -276,16 +276,22 @@ router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authentic
       if (req.file) {
         serviceUser.diploma.file = req.file.path
       }
-
-      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err))
+      serviceUser.markModified('diploma')
+      return serviceUser.save()
     })
-    .catch(err => console.error(err))
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
 })
 
-// @Route POST /myAlfred/api/serviceUser/addCertification/:id
+// @Route POST /myAlfred/api/serviceUser/setCertification/:id
 // Add a certification for a service
 // @Access private
-router.post('/addCertification/:id', upload.single('file_certification'), passport.authenticate('jwt', {
+router.post('/setCertification/:id', upload.single('file_certification'), passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
@@ -297,11 +303,16 @@ router.post('/addCertification/:id', upload.single('file_certification'), passpo
       if (req.file) {
         serviceUser.certification.file = req.file.path
       }
-      serviceUser.is_certified = true
-
-      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err))
+      serviceUser.markModified('certification')
+      return serviceUser.save()
     })
-    .catch(err => console.error(err))
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
 })
 
 // @Route GET /myAlfred/api/serviceUser/all
