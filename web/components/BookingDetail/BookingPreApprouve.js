@@ -61,7 +61,7 @@ class BookingPreApprouve extends React.Component {
       .then(res => {
         this.setState({bookingObj: res.data})
 
-        const date_prestation = this.state.bookingObj.date_prestation.split('/')
+        const date_prestation = this.state.bookingObj.prestation_date.split('/')
         const day = date_prestation[0]
         const month = date_prestation[1]
         const year = date_prestation[2]
@@ -239,7 +239,7 @@ class BookingPreApprouve extends React.Component {
                         <Grid item className={classes.containerDate}>
                           <Grid item style={{display: 'inline-block', width: '100%'}}>
                             <Typography><strong>Date de début:</strong></Typography>
-                            <Typography>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</Typography>
+                            <Typography>{bookingObj.prestation_date} - {moment(bookingObj.time_prestation).format('HH:mm')}</Typography>
                           </Grid>
                           {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ?
                             <Grid item style={{display: 'flex', width: '100%'}}>

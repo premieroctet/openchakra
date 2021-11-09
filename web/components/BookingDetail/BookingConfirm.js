@@ -79,7 +79,7 @@ class BookingConfirm extends React.Component {
       .then(res => {
         this.setState({bookingObj: res.data})
 
-        const date_prestation = this.state.bookingObj.date_prestation.split('/')
+        const date_prestation = this.state.bookingObj.prestation_date.split('/')
         const day = date_prestation[0]
         const month = date_prestation[1]
         const year = date_prestation[2]
@@ -286,7 +286,7 @@ class BookingConfirm extends React.Component {
                         <Grid item style={{display: 'flex', marginTop: 30, marginBottom: 30, alignItems: 'center'}}>
                           <Grid item style={{display: 'inline-block', width: '100%'}}>
                             <p>Date de début:</p>
-                            <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
+                            <p>{bookingObj.prestation_date} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
                           </Grid>
                           {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ?
                             <Grid item style={{display: 'flex', width: '100%'}}>

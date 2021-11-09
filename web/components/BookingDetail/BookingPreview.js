@@ -59,7 +59,7 @@ class BookingPreview extends React.Component {
     if (!bookingObj) {
       return null
     }
-    return moment(`${bookingObj.date_prestation} ${moment(bookingObj.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
+    return moment(`${bookingObj.prestation_date} ${moment(bookingObj.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
   }
 
   setLoading = () => {
@@ -77,7 +77,7 @@ class BookingPreview extends React.Component {
 
       axios.get(`/myAlfred/api/booking/${booking_id}`).then(res => {
         const booking = res.data
-        const end_datetime = moment(`${booking.date_prestation} ${moment(booking.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
+        const end_datetime = moment(`${booking.prestation_date} ${moment(booking.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
         this.setState(
           {
             bookingObj: booking,
@@ -230,10 +230,10 @@ class BookingPreview extends React.Component {
               ReactHtmlParser(this.props.t('BOOKING.potential_incomes'))
 
     const momentTitle = [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
-      `du ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}
+      `du ${bookingObj.prestation_date} à ${moment(bookingObj.time_prestation).format('HH:mm')}
        au ${moment(bookingObj.end_date).format('DD/MM/YYYY')} à ${bookingObj.end_time}`
       :
-      `le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`
+      `le ${bookingObj.prestation_date} à ${moment(bookingObj.time_prestation).format('HH:mm')}`
 
     const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone
     const customer_booking_title = bookingObj.customer_booking && ReactHtmlParser(this.props.t('BOOKING.avocotes_resa')) + bookingObj.customer_booking.user.full_name
@@ -260,7 +260,7 @@ class BookingPreview extends React.Component {
                         </Grid>
                         <Grid style={{marginTop: '2%'}}>
                           <Typography>
-                            {`${bookingObj.service} le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`}
+                            {`${bookingObj.service} le ${bookingObj.prestation_date} à ${moment(bookingObj.time_prestation).format('HH:mm')}`}
                           </Typography>
                         </Grid>
                         <Grid>

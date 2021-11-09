@@ -59,7 +59,7 @@ class ConfirmPayment extends BasePage {
         this.setState({
           prestations: bookingObj.prestations,
           bookingObj: bookingObj,
-          date: bookingObj.date_prestation,
+          date: bookingObj.prestation_date,
           hour: bookingObj.time_prestation,
           travel_tax: bookingObj.travel_tax,
           pick_tax: bookingObj.pick_tax,

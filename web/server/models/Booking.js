@@ -49,13 +49,8 @@ const BookingSchema = new Schema({
     default: Date.now,
     required: true,
   },
-  date_prestation: {
-    type: String,
-    //required: true,
-  },
-  time_prestation: {
+  prestation_date: {
     type: Date,
-    //required: true,
   },
   end_date: {
     type: Date,
@@ -207,10 +202,10 @@ BookingSchema.virtual('alfred_amount').get(function() {
 })
 
 BookingSchema.virtual('date_prestation_moment').get(function() {
-  if (!this.date_prestation) {
+  if (!this.prestation_date) {
     return null
   }
-  return moment(`${moment(this.date_prestation, 'DD/MM/YYYY').format('YYYY-MM-DD') } ${ moment(this.time_prestation).format('HH:mm')}`)
+  return moment(`${moment(this.prestation_date, 'DD/MM/YYYY').format('YYYY-MM-DD') } ${ moment(this.time_prestation).format('HH:mm')}`)
 })
 
 

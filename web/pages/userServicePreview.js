@@ -238,7 +238,7 @@ class UserServicesPreview extends BasePage {
                                       alfred: serviceUser.user,
                                       count: count,
                                       pick_tax: null,
-                                      date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
+                                      date: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date).toDate() : null,
                                       time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
                                       location: bookingObj ? bookingObj.location : null,
                                       customer_fee: bookingObj ? bookingObj.customer_fee : null,
@@ -539,12 +539,9 @@ class UserServicesPreview extends BasePage {
     if (!this.getClientAddress() && !avocotes_booking) {
       return null
     }
-    console.log(`Has avocotes:${!!avocotes_booking}`)
     const coordUser = avocotes_booking ? avocotes_booking.address.gps : this.getClientAddress().gps
-    console.log(`GPS:client ${JSON.stringify(coordUser)} service ${JSON.stringify(coordSU)}`)
-    const distance=computeDistanceKm(coordSU, coordUser)
-    console.log(`Distance:${distance}, autorisé:${this.state.serviceUser.perimeter}`)
-    return distance
+    return computeDistanceKm(coordSU, coordUser)
+
   }
 
   isInPerimeter = () => {
@@ -570,8 +567,8 @@ class UserServicesPreview extends BasePage {
 
   hasWarningBudget = () => {
     if (getRole()==MANAGER) {
-      const warningBudget = this.state.company_amount < this.state.total
-      return warningBudget
+      return this.state.company_amount < this.state.total
+
     }
     return false
   }
@@ -663,7 +660,7 @@ class UserServicesPreview extends BasePage {
       equipments: this.state.serviceUser.equipments,
       amount: this.state.total,
       company_amount: this.state.company_amount,
-      date_prestation: this.state.date ? moment(this.state.date).format('DD/MM/YYYY') : null,
+      date_prestation: this.state.date,
       time_prestation: this.state.time,
       alfred: this.state.serviceUser.user._id,
       user: user ? user._id : null,
