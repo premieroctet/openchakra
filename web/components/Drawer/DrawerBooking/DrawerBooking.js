@@ -264,7 +264,7 @@ class DrawerBooking extends React.Component {
                   <Typography style={{color: '#505050'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_place'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                  { serviceUser.location && serviceUser.location.client && this.props.isInPerimeter() ?
+                  { serviceUser.location && this.props.isInPerimeter() &&
                     <Grid>
                       <ButtonSwitch
                         key={moment()}
@@ -276,10 +276,9 @@ class DrawerBooking extends React.Component {
                         checked={location === this.props.clientAddressId}
                         onChange={this.props.onLocationChanged}/>
                     </Grid>
-                    : null
                   }
                   {
-                    serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
+                    serviceUser.location && serviceUser.location.alfred && alfred.firstname &&
                       <Grid>
                         <ButtonSwitch
                           key={moment()}
@@ -291,10 +290,9 @@ class DrawerBooking extends React.Component {
                           checked={location === 'alfred'}
                           onChange={this.props.onLocationChanged}/>
                       </Grid>
-                      : null
                   }
                   {
-                    serviceUser.location && serviceUser.location.visio ?
+                    serviceUser.location && serviceUser.location.visio &&
                       <Grid>
                         <ButtonSwitch
                           key={moment()}
@@ -306,7 +304,6 @@ class DrawerBooking extends React.Component {
                           checked={location === 'visio'}
                           onChange={this.props.onLocationChanged}/>
                       </Grid>
-                      : null
                   }
                   <Grid>
                     <em className={classes.cancelButton}>{errors.location}</em>

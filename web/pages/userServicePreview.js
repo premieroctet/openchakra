@@ -97,7 +97,7 @@ class UserServicesPreview extends BasePage {
       albums: [],
       excludedDays: [],
       available_budget: Number.MAX_SAFE_INTEGER,
-      allAddresses: {},
+      allAddresses: null,
       pending: false,
       avocotes: null,
       all_avocotes: [],
@@ -190,7 +190,7 @@ class UserServicesPreview extends BasePage {
             promise
               .then(res => {
                 if (res.data) {
-                  let allAddresses = {'main': res.data.billing_address}
+                  let allAddresses = {'main': {...res.data.billing_address, label: this.props.t('USERSERVICEPREVIEW.at_home')}}
                   res.data.service_address.forEach(addr => {
                     allAddresses[addr._id] = addr
                   })
@@ -539,11 +539,8 @@ class UserServicesPreview extends BasePage {
     if (!this.getClientAddress() && !avocotes_booking) {
       return null
     }
-    console.log(`Has avocotes:${!!avocotes_booking}`)
     const coordUser = avocotes_booking ? avocotes_booking.address.gps : this.getClientAddress().gps
-    console.log(`GPS:client ${JSON.stringify(coordUser)} service ${JSON.stringify(coordSU)}`)
     const distance=computeDistanceKm(coordSU, coordUser)
-    console.log(`Distance:${distance}, autorisé:${this.state.serviceUser.perimeter}`)
     return distance
   }
 
@@ -602,11 +599,11 @@ class UserServicesPreview extends BasePage {
     if (avocotes_booking) {
       return `Chez ${avocotes_booking.user.full_name} (${avocotes_booking.user.billing_address.city})`
     }
-    const {location, user, allAddresses}=this.state
-    if (['client', 'main'].includes(location)) {
-      return ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.at_home'))
+    const {user, allAddresses}=this.state
+    if (!user || !allAddresses) {
+      return ''
     }
-    return user ? (allAddresses[location] || {label: ''}).label : ''
+    return allAddresses? allAddresses[this.get_prop_address()].label : ''
   }
 
   getLocationLabel = () => {
