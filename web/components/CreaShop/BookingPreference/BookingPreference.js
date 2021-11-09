@@ -154,14 +154,16 @@ class BookingPreference extends React.Component {
                         width={100}
                         alt={result.label}
                         title={result.label}
-                        style={{backgroundColor: selected ? theme.palette.primary.main : null}}
+                        style={{filter: selected ? 'invert(3%) sepia(53%) saturate(1998%) hue-rotate(206deg) brightness(97%) contrast(88%)'
+                          :
+                          'invert(99%) sepia(0%) saturate(424%) hue-rotate(149deg) brightness(93%) contrast(88%)'}}
                       />
                       <Checkbox
                         style={{display: 'none'}}
                         color="primary"
                         type="checkbox"
                         name={result._id}
-                        checked={this.state.equipments.includes(result._id)}
+                        checked={selected}
                         onChange={this.onEquipmentChecked}/>
                     </label>
                   </Grid>
