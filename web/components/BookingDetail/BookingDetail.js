@@ -4,7 +4,6 @@ import React from 'react'
 import styles from './BookingDetailStyle'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
-import {BOOKING_DETAIL} from '../../utils/i18n'
 const {EMPLOYEE}=require('../../utils/consts')
 
 class BookingDetail extends React.Component {

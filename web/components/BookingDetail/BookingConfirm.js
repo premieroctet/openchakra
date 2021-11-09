@@ -13,6 +13,7 @@ import io from 'socket.io-client'
 import About from '../../components/About/About'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import BookingDetail from '../../components/BookingDetail/BookingDetail'
+import {booking_datetime_str} from "../../utils/dateutils";
 const {BOOK_STATUS}=require('../../utils/consts')
 
 const {frenchFormat} = require('../../utils/text')
@@ -209,15 +210,13 @@ class BookingConfirm extends React.Component {
                     <Grid item xs={5}>
                       <Grid item style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                         <UserAvatar classes={'avatarLetter'} user={bookingObj.user}/>
-                        <Typography style={{marginTop: 20}}
-                          className={classes.textAvatar}>{bookingObj.user.firstname}</Typography>
+                        <Typography style={{marginTop: 20}}>{bookingObj.user.firstname}</Typography>
                       </Grid>
                     </Grid>
                   </Grid>
 
                   <div style={{marginTop: '8%'}}>
-                    <hr></hr>
-
+                    <hr/>
                     <Grid container>
                       <Grid item xs={12}>
                         <h3
@@ -286,7 +285,7 @@ class BookingConfirm extends React.Component {
                         <Grid item style={{display: 'flex', marginTop: 30, marginBottom: 30, alignItems: 'center'}}>
                           <Grid item style={{display: 'inline-block', width: '100%'}}>
                             <p>Date de début:</p>
-                            <p>{bookingObj.prestation_date} - {moment(bookingObj.prestation_date).format('HH:mm')}</p>
+                            <p>{booking_datetime_str(bookingObj)}</p>
                           </Grid>
                           {typeof bookingObj.end_date !== 'undefined' ?
                             <Grid item style={{display: 'flex', width: '100%'}}>
@@ -294,7 +293,7 @@ class BookingConfirm extends React.Component {
                                 <p>Date de fin:</p>
                               </Grid>
                               <Grid>
-                                <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_date.getTime()}</p>
+                                <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {moment(bookingObj.end_date).format('LT')}</p>
                               </Grid>
                             </Grid>
                             :

@@ -6,7 +6,6 @@ import React from 'react'
 import Router from 'next/router'
 import axios from 'axios'
 import moment from 'moment'
-import {CONFIRM_PAYMENT} from '../utils/i18n'
 import AddressAndFacturation from '../components/Payment/AddressAndFacturation/AddressAndFacturation'
 import BasePage from './basePage'
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
@@ -60,7 +59,7 @@ class ConfirmPayment extends BasePage {
           prestations: bookingObj.prestations,
           bookingObj: bookingObj,
           date: bookingObj.prestation_date,
-          hour: bookingObj.prestation_date.getTime(),
+          hour: moment(bookingObj.prestation_date).format('LT'),
           travel_tax: bookingObj.travel_tax,
           pick_tax: bookingObj.pick_tax,
           customer_fee: bookingObj.customer_fee,

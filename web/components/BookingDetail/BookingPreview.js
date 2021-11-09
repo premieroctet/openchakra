@@ -17,6 +17,7 @@ import Router from 'next/router'
 import DatePicker, {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
 import Hidden from '@material-ui/core/Hidden'
+import {booking_datetime_str} from '../../utils/dateutils'
 
 const {BOOK_STATUS} = require('../../utils/consts')
 
@@ -230,9 +231,9 @@ class BookingPreview extends React.Component {
 
     const momentTitle = [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
       `du ${bookingObj.prestation_date} à ${moment(bookingObj.prestation_date).format('HH:mm')}
-       au ${moment(bookingObj.end_date).format('DD/MM/YYYY')} à ${bookingObj.end_date.getTime()}`
+       au ${moment(bookingObj.end_date).format('DD/MM/YYYY')} à ${moment(bookingObj.end_date).format('LT')}`
       :
-      `le ${bookingObj.prestation_date} à ${moment(bookingObj.prestation_date).format('HH:mm')}`
+      booking_datetime_str(bookingObj)
 
     const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone
     const customer_booking_title = bookingObj.customer_booking && ReactHtmlParser(this.props.t('BOOKING.avocotes_resa')) + bookingObj.customer_booking.user.full_name
@@ -259,7 +260,7 @@ class BookingPreview extends React.Component {
                         </Grid>
                         <Grid style={{marginTop: '2%'}}>
                           <Typography>
-                            {`${bookingObj.service} le ${bookingObj.prestation_date} à ${moment(bookingObj.prestation_date).format('HH:mm')}`}
+                            {`${bookingObj.service } ${ booking_datetime_str(bookingObj)}`}
                           </Typography>
                         </Grid>
                         <Grid>
