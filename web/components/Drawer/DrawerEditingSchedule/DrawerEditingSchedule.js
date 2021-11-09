@@ -60,7 +60,7 @@ class DrawerEditingSchedule extends React.Component {
           let bookings = result.data.filter(b => moment(b.prestation_date, 'DD/MM/YYYY').format('DD/MM/YYYY')==dt)
           let bkgs={}
           bookings.forEach(b => {
-            const hour=moment(b.time_prestation).hour()
+            const hour=moment(b.prestation_date).hour()
             bkgs[hour]=b.user.picture
           })
           this.setState({bookings: bkgs})

@@ -60,7 +60,7 @@ class ConfirmPayment extends BasePage {
           prestations: bookingObj.prestations,
           bookingObj: bookingObj,
           date: bookingObj.prestation_date,
-          hour: bookingObj.time_prestation,
+          hour: bookingObj.prestation_date.getTime(),
           travel_tax: bookingObj.travel_tax,
           pick_tax: bookingObj.pick_tax,
           customer_fee: bookingObj.customer_fee,

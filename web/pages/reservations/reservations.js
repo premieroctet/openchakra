@@ -227,7 +227,6 @@ class AllReservations extends BasePage {
   newAppointment = booking => {
     let newBooking = booking
     newBooking.prestation_date = null
-    newBooking.time_prestation = null
     localStorage.setItem('bookingObj', JSON.stringify(newBooking))
     Router.push(`/userServicePreview?id=${ newBooking.serviceUserId}&address=main`)
 
@@ -274,7 +273,7 @@ class AllReservations extends BasePage {
                       <Grid>
                         <Typography>
                           {booking.prestation_date} -{' '}
-                          {moment(booking.time_prestation).format(
+                          {moment(booking.prestation_date).format(
                             'HH:mm',
                           )}
                         </Typography>

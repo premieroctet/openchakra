@@ -357,9 +357,6 @@ router.put('/modifyBooking/:id', (req, res) => {
   if (req.body.end_date) {
     obj.end_date = req.body.end_date
   }
-  if (req.body.end_time) {
-    obj.end_time = req.body.end_time
-  }
 
   console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}, req is ${req.originalUrl}`)
   req.context.getModel('Booking').findById(req.params.id)
@@ -376,7 +373,6 @@ router.put('/modifyBooking/:id', (req, res) => {
       machine.checkAllowed(obj.status)
       booking.status=obj.status
       booking.end_date = obj.end_date || booking.end_date
-      booking.end_time = obj.end_time || booking.end_time
 
       booking.save()
         .then(booking => {

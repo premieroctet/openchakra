@@ -13,11 +13,8 @@ const all_addresses = user => {
   return result
 }
 const update_booking_locations = () => {
-  console.log(connectionPool.databases)
   connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
-    console.log(`MEP updating database ${context.getDbName()}`)
     const Booking=context.getModel('Booking')
-    const User=context.getModel('User')
     Booking.find({location: {$exists: false}, customer_booking: null, company_customer: null})
       .populate('user')
       .populate('alfred')

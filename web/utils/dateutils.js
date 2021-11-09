@@ -127,7 +127,7 @@ const getDeadLine = (deadline) => {
 };
 
 const booking_datetime_str = booking => {
-  return `Le ${booking.prestation_date} à ${moment(booking.time_prestation).tz('Europe/Paris').format('HH:mm')}`;
+  return `Le ${booking.prestation_date} à ${moment(booking.prestation_date).tz('Europe/Paris').format('HH:mm')}`;
 };
 
 const getDefaultAvailability = () => {

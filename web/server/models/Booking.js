@@ -55,9 +55,6 @@ const BookingSchema = new Schema({
   end_date: {
     type: Date,
   },
-  end_time: {
-    type: String,
-  },
   alfred: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -205,7 +202,7 @@ BookingSchema.virtual('date_prestation_moment').get(function() {
   if (!this.prestation_date) {
     return null
   }
-  return moment(`${moment(this.prestation_date, 'DD/MM/YYYY').format('YYYY-MM-DD') } ${ moment(this.time_prestation).format('HH:mm')}`)
+  return moment(`${moment(this.prestation_date, 'DD/MM/YYYY').format('YYYY-MM-DD') } ${ moment(this.prestation_date).format('HH:mm')}`)
 })
 
 
@@ -220,5 +217,4 @@ BookingSchema.virtual('calendar_display').get(function() {
 })
 
 
-//module.exports = Booking = mongoose.model('booking', BookingSchema)
 module.exports = BookingSchema

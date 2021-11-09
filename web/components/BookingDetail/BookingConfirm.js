@@ -90,9 +90,9 @@ class BookingConfirm extends React.Component {
           date: end,
           minDate: end,
           begin: end,
-          time_prestation: this.state.bookingObj.time_prestation,
-          min_time_prestation: this.state.bookingObj.time_prestation,
-          hourToSend: moment(new Date(this.state.bookingObj.time_prestation).setHours(new Date(this.state.bookingObj.time_prestation).getHours() + 1)).utc()._d,
+          time_prestation: this.state.bookingObj.prestation_date,
+          min_time_prestation: this.state.bookingObj.prestation_date,
+          hourToSend: moment(new Date(this.state.bookingObj.prestation_date).setHours(new Date(this.state.bookingObj.prestation_date).getHours() + 1)).utc()._d,
         })
 
         let isToday = moment(this.state.currDate).isSame(moment(new Date()), 'day')
@@ -124,7 +124,7 @@ class BookingConfirm extends React.Component {
     const dateObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.CONFIRMED}
 
 
-    if (typeof this.state.bookingObj.end_date !== 'undefined' && typeof this.state.bookingObj.end_time !== 'undefined') {
+    if (typeof this.state.bookingObj.end_date !== 'undefined') {
       axios.put(`/myAlfred/api/booking/modifyBooking/${ this.state.booking_id}`, {status: BOOK_STATUS.CONFIRMED})
 
         .then(res => {
@@ -286,21 +286,21 @@ class BookingConfirm extends React.Component {
                         <Grid item style={{display: 'flex', marginTop: 30, marginBottom: 30, alignItems: 'center'}}>
                           <Grid item style={{display: 'inline-block', width: '100%'}}>
                             <p>Date de début:</p>
-                            <p>{bookingObj.prestation_date} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
+                            <p>{bookingObj.prestation_date} - {moment(bookingObj.prestation_date).format('HH:mm')}</p>
                           </Grid>
-                          {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ?
+                          {typeof bookingObj.end_date !== 'undefined' ?
                             <Grid item style={{display: 'flex', width: '100%'}}>
                               <Grid>
                                 <p>Date de fin:</p>
                               </Grid>
                               <Grid>
-                                <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
+                                <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_date.getTime()}</p>
                               </Grid>
                             </Grid>
                             :
                             null
                           }
-                          {typeof this.state.bookingObj.end_date === 'undefined' && typeof this.state.bookingObj.end_time === 'undefined' ?
+                          {typeof this.state.bookingObj.end_date === 'undefined' ?
                             !this.state.end ? null :
                               <Grid item style={{
                                 display: 'flex',

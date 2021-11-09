@@ -1,37 +1,36 @@
-const express = require('express');
-const router = express.Router();
-const passport = require('passport');
-const mongoose = require('mongoose');
-const moment = require('moment');
+const express = require('express')
+const router = express.Router()
+const passport = require('passport')
+const mongoose = require('mongoose')
+const moment = require('moment')
 const {BOOK_STATUS}=require('../../../utils/consts')
 
-moment.locale('fr');
+moment.locale('fr')
 
-router.get('/test', (req, res) => res.json({msg: 'Performances Works!'}));
+router.get('/test', (req, res) => res.json({msg: 'Performances Works!'}))
 
 
 // @Route GET /myAlfred/performances/incomes/totalComing/:yeay
 // Get coming income per year
 // @Access private
 router.get('/incomes/totalComing/:year', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const year = req.params.year;
-  let total = 0;
+  let total = 0
   req.context.getModel('Booking').find({alfred: req.user.id, status: BOOK_STATUS.CONFIRMED, prestation_date: /year$/i})
     .then(booking => {
       booking.forEach(b => {
-        total += b.amount;
-      });
-      res.json(total);
+        total += b.amount
+      })
+      res.json(total)
 
     })
-    .catch(err => res.status(404).json({booking: 'No booking found'}));
-});
+    .catch(() => res.status(404).json({booking: 'No booking found'}))
+})
 
 // @Route GET /myAlfred/performances/incomes/:year
 // Get booking per month
 // @Access private
 router.get('/incomes/:year?/:month?', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const year = req.params.year;
+  const year = req.params.year
   const month= req.params.month
 
   const bookings = new Array(12).fill(0)
@@ -42,23 +41,23 @@ router.get('/incomes/:year?/:month?', passport.authenticate('jwt', {session: fal
       booking.forEach(b => {
         const b_month = b.prestation_date.slice(3, 5)
         bookings[parseInt(b_month-1)]=bookings[parseInt(b_month-1)]+b.alfred_amount
-      });
-      res.json(bookings);
+      })
+      res.json(bookings)
     })
-    .catch(err => {
-      res.status(404).json({booking: 'No booking found'});
-    });
-});
+    .catch(() => {
+      res.status(404).json({booking: 'No booking found'})
+    })
+})
 
 
 // @Route GET /myAlfred/performances/statistics/totalBookings
 // Get all bookings for an alfred
 // @Access private
 router.get('/statistics/:year/:month?', passport.authenticate('jwt', {session: false}), (req, res) => {
-  let totalIncomes = 0;
-  let totalPrestations = 0;
-  let totalViews = 0;
-  let totalReviews = 0;
+  let totalIncomes = 0
+  let totalPrestations = 0
+  let totalViews = 0
+  let totalReviews = 0
 
   const year = parseInt(req.params.year)
   const month = req.params.month
@@ -68,31 +67,31 @@ router.get('/statistics/:year/:month?', passport.authenticate('jwt', {session: f
   req.context.getModel('Booking').find({alfred: req.user.id, status: BOOK_STATUS.FINISHED, prestation_date: re})
     .then(booking => {
       booking.forEach(b => {
-        totalIncomes += b.alfred_amount;
-        totalPrestations += b.prestations.length;
+        totalIncomes += b.alfred_amount
+        totalPrestations += b.prestations.length
       })
       req.context.getModel('ServiceUser').find({user: req.user.id})
         .then(service => {
           service.forEach(s => {
-            totalViews += s.number_of_views;
+            totalViews += s.number_of_views
           })
           req.context.getModel('Review').find({alfred: req.user.id, note_client: undefined})
             .then(reviews => {
-              reviews = reviews.filter( r => {
+              reviews = reviews.filter(r => {
                 return r.date.getFullYear()==year && (month==undefined || parseInt(month)==r.date.getMonth())
               })
-              totalReviews = reviews.length;
+              totalReviews = reviews.length
               res.json({
                 incomes: totalIncomes,
                 prestations: totalPrestations,
                 totalViews: totalViews,
-                totalReviews: totalReviews
+                totalReviews: totalReviews,
               })
             })
 
         })
-      })
-      .catch(err => res.status(404).json({booking: 'No booking found'}))
+    })
+    .catch(() => res.status(404).json({booking: 'No booking found'}))
 })
 
 // @Route GET /myAlfred/performances/statistics/totalBookings
@@ -120,50 +119,50 @@ router.get('/statistics/totalBookings', passport.authenticate('jwt', {session: f
 // Get all services views for an alfred
 // @Access private
 router.get('/statistics/totalViewsServices', passport.authenticate('jwt', {session: false}), (req, res) => {
-  let totalViews = 0;
+  let totalViews = 0
   req.context.getModel('ServiceUser').find({user: req.user.id})
     .then(service => {
 
       service.forEach(s => {
-        totalViews += s.number_of_views;
+        totalViews += s.number_of_views
 
-      });
-      res.json(totalViews);
+      })
+      res.json(totalViews)
 
     })
-    .catch(err => res.status(404).json({services: 'No services found'}));
-});
+    .catch(() => res.status(404).json({services: 'No services found'}))
+})
 
 // @Route GET /myAlfred/performances/statistics/totalReviews
 // Get reviews for an alfred
 // @Access private
 router.get('/statistics/totalReviews', passport.authenticate('jwt', {session: false}), (req, res) => {
-  let totalReviews = 0;
+  let totalReviews = 0
   req.context.getModel('Review').find({alfred: req.user.id, note_client: undefined})
     .then(reviews => {
 
-      totalReviews = reviews.length;
-      res.json(totalReviews);
+      totalReviews = reviews.length
+      res.json(totalReviews)
 
     })
-    .catch(err => res.status(404).json({services: 'No services found'}));
-});
+    .catch(() => res.status(404).json({services: 'No services found'}))
+})
 
 // @Route GET /myAlfred/performances/statistics/reviews/:service
 // Get reviews for a service for an alfred
 // @Access private
 router.get('/statistics/reviews/:service', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const service = req.params.service;
-  let totalReviews = 0;
+  const service = req.params.service
+  let totalReviews = 0
   req.context.getModel('Review').find({alfred: req.user.id, note_client: undefined, serviceUser: service})
     .then(reviews => {
 
-      totalReviews = reviews.length;
-      res.json(totalReviews);
+      totalReviews = reviews.length
+      res.json(totalReviews)
 
     })
-    .catch(err => res.status(404).json({services: 'No services found'}));
-});
+    .catch(() => res.status(404).json({services: 'No services found'}))
+})
 
 // @Route GET /myAlfred/performances/evaluations/allReviews
 // Get all reviews for an alfred
@@ -175,11 +174,11 @@ router.get('/evaluations/allReviews', passport.authenticate('jwt', {session: fal
     .populate({path: 'serviceUser', populate: {path: 'service'}})
     .then(reviews => {
 
-      res.json(reviews);
+      res.json(reviews)
 
     })
-    .catch(err => res.status(404).json({reviews: 'No reviews found'}));
-});
+    .catch(() => res.status(404).json({reviews: 'No reviews found'}))
+})
 
 
-module.exports = router;
+module.exports = router

@@ -68,11 +68,11 @@ class BookingPreApprouve extends React.Component {
         const end = new Date(moment(`${year }-${ month }-${ day }T00:00:00.000Z`, 'YYYY-MM-DD').startOf('days'))
 
         this.setState({
-          time_prestation: this.state.bookingObj.time_prestation,
-          min_time_prestation: this.state.bookingObj.time_prestation,
+          time_prestation: this.state.bookingObj.prestation_date,
+          min_time_prestation: this.state.bookingObj.prestation_date,
           end: end,
           begin: end,
-          hourToSend: moment(new Date(this.state.bookingObj.time_prestation).setHours(new Date(this.state.bookingObj.time_prestation).getHours() + 1)).utc()._d,
+          hourToSend: moment(new Date(this.state.bookingObj.prestation_date).setHours(new Date(this.state.bookingObj.prestation_date).getHours() + 1)).utc()._d,
         })
 
 
@@ -102,9 +102,7 @@ class BookingPreApprouve extends React.Component {
 
   changeStatus() {
     const endDate = moment(this.state.end).format('YYYY-MM-DD')
-    const endHour = moment(this.state.hourToSend).format('HH:mm')
-
-    const dateObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.PREAPPROVED}
+    const dateObj = {end_date: endDate, status: BOOK_STATUS.PREAPPROVED}
 
     axios.put(`/myAlfred/api/booking/modifyBooking/${ this.state.booking_id}`, dateObj)
 
@@ -239,21 +237,21 @@ class BookingPreApprouve extends React.Component {
                         <Grid item className={classes.containerDate}>
                           <Grid item style={{display: 'inline-block', width: '100%'}}>
                             <Typography><strong>Date de début:</strong></Typography>
-                            <Typography>{bookingObj.prestation_date} - {moment(bookingObj.time_prestation).format('HH:mm')}</Typography>
+                            <Typography>{bookingObj.prestation_date} - {moment(bookingObj.prestation_date).format('HH:mm')}</Typography>
                           </Grid>
-                          {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ?
+                          {typeof bookingObj.end_date !== 'undefined' ?
                             <Grid item style={{display: 'flex', width: '100%'}}>
                               <Grid>
                                 <Typography>Date de fin:</Typography>
                               </Grid>
                               <Grid>
-                                <Typography>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</Typography>
+                                <Typography>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_date.getTime()}</Typography>
                               </Grid>
                             </Grid>
                             :
                             null
                           }
-                          {typeof this.state.bookingObj.end_date === 'undefined' && typeof this.state.bookingObj.end_time === 'undefined' ?
+                          {typeof this.state.bookingObj.end_date === 'undefined' ?
                             typeof this.state.end === null ? null :
 
                               <Grid item className={classes.endDateContainer}>
