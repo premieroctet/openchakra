@@ -1,10 +1,10 @@
-import {COMPANY_NAME, INDEX, INFOBAR} from '../utils/i18n'
 const {
   getLoggedUserId,
   isApplication,
   isB2BStyle,
   isMobile,
 } = require('../utils/context')
+import LoggedAsBanner from '../components/LoggedAsBanner'
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -20,7 +20,6 @@ import NavBar from '../hoc/Layout/NavBar/NavBar'
 import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation'
 import CategoryTopic from '../components/HomePage/Category/CategoryTopic'
 import OurAlfred from '../components/HomePage/OurAlfred/OurAlfred'
-import HowItWorks from '../components/HomePage/HowItWorks/HowItWorks'
 import NewsLetter from '../components/HomePage/NewsLetter/NewsLetter'
 import MobileNavbar from '../hoc/Layout/NavBar/MobileNavbar'
 import TrustAndSecurity from '../hoc/Layout/TrustAndSecurity/TrustAndSecurity'
@@ -35,7 +34,6 @@ const {PRO, PART} = require('../utils/consts')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
 import _ from 'lodash'
-import CustomBannerMultiCol from '../components/HomePage/CustomBannerMultiCol/CustomBannerMultiCol'
 import RandomDisplay from '../components/RandomDisplay/RandomDisplay'
 
 const DialogTitle = withStyles(styles)(props => {
@@ -154,7 +152,7 @@ class Home extends React.Component {
   render() {
     const {classes, t} = this.props
     const {mounted, categories, alfred, open, user} = this.state
-    
+
     if (!mounted) {
       return null
     }
@@ -170,6 +168,7 @@ class Home extends React.Component {
           />
         </Helmet>
         <Grid>
+          <LoggedAsBanner />
           <Grid className={`customheaderinfobar ${classes.infoBarContainer}`}>
             <InfoBar/>
           </Grid>

@@ -1,3 +1,4 @@
+import LoggedAsBanner from '../../components/LoggedAsBanner'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
@@ -63,6 +64,7 @@ class Layout extends React.Component {
 
     return (
       <Grid>
+        <LoggedAsBanner />
         <Grid className={classes.hiddenOnMobile}>
           <InfoBar/>
         </Grid>

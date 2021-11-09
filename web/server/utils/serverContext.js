@@ -48,7 +48,7 @@ const isModeCompany = req => {
 }
 
 // Create JWT cookie with user credentials
-const send_cookie = (user, role, res) => {
+const send_cookie = (user, role, res, logged_as=false) => {
   const payload = {
     id: user.id,
     name: user.name,
@@ -58,6 +58,7 @@ const send_cookie = (user, role, res) => {
     is_alfred_pro: user.shop && user.shop.length==1 && !user.shop[0].is_particular,
     role: role,
     is_registered: user.is_registered,
+    logged_as: logged_as,
   } // Create JWT payload
 
   jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
