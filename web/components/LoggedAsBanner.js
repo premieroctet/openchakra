@@ -1,4 +1,4 @@
-import { withTranslation } from 'react-i18next';
+import {withTranslation} from 'react-i18next'
 
 import {getLoggedUser, isLoggedAs} from '../utils/context'
 import React from 'react'

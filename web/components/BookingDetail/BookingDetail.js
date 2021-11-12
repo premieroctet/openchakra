@@ -15,7 +15,7 @@ class BookingDetail extends React.Component {
   render() {
     const {
       classes, prestations, count, travel_tax, pick_tax, total, alfred_fee,
-      customer_fee, cesu_total, mode, role, company_amount} = this.props
+      customer_fee, cesu_total, mode, role, company_amount, alfred_pro} = this.props
 
     return (
       <Grid>
@@ -100,7 +100,7 @@ class BookingDetail extends React.Component {
           {customer_fee && cesu_total && !mode ?
             <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
               <Grid>
-                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.cesu'))}</p>
+                <p>{ReactHtmlParser(this.props.t(alfred_pro ? 'BOOKING_DETAIL.cis': 'BOOKING_DETAIL.cesu'))}</p>
               </Grid>
               <Grid>
                 <p>{cesu_total.toFixed(2)}€</p>

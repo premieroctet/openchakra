@@ -131,7 +131,7 @@ class DrawerBooking extends React.Component {
     const {warningPerimeter, warningBudget, warningSelf, side, classes, service, alfred, date, time, errors,
       count, serviceUser, isChecked, location, pick_tax, total, customer_fee,
       cesu_total, filters, pricedPrestations, excludedDays, role, company_amount,
-      avocotes, all_avocotes} = this.props
+      avocotes, all_avocotes, alfred_pro} = this.props
 
     const excludedTimes = this.getExcludedTimes()
 
@@ -381,6 +381,7 @@ class DrawerBooking extends React.Component {
                       role={role}
                       customer_fee={customer_fee}
                       cesu_total={cesu_total}
+                      alfred_pro={alfred_pro}
                     />
                   </Grid>
                 </AccordionDetails>

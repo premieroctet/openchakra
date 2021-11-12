@@ -3,7 +3,7 @@ const {
   isDateAvailable,
   isMomentAvailable,
 } = require('../utils/dateutils')
-import {snackBarError, snackBarSuccess} from '../utils/notifications'
+import {snackBarError} from '../utils/notifications'
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -23,7 +23,6 @@ import MapComponent from '../components/map'
 import {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
 import {Helmet} from 'react-helmet'
-import {Link} from '@material-ui/core'
 import Topic from '../hoc/Topic/Topic'
 import ListAlfredConditions from '../components/ListAlfredConditions/ListAlfredConditions'
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
@@ -36,7 +35,6 @@ import '../static/assets/css/custom.css'
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
 import {Divider} from '@material-ui/core'
 import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
-import AlarmOnIcon from '@material-ui/icons/AlarmOn'
 import CustomIcon from '../components/CustomIcon/CustomIcon'
 const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage = require('./basePage')
@@ -952,6 +950,7 @@ class UserServicesPreview extends BasePage {
                           clientAddress={this.getClientAddressLabel()}
                           clientAddressId={this.get_prop_address()}
                           book={this.book}
+                          alfred_pro={shop.is_professional}
                           {...this.state}
                         />
                       </Grid>
@@ -980,6 +979,7 @@ class UserServicesPreview extends BasePage {
                     clientAddress={this.getClientAddressLabel()}
                     clientAddressId={this.get_prop_address()}
                     book={this.book}
+                    alfred_pro={shop.is_professional}
                     {...this.state}
                   />
                 </Grid>
