@@ -29,12 +29,6 @@ class BookingPreference extends React.Component {
 
   handleChange = event => {
     let {name, value}=event.target
-    if (['minimum_basket', 'deadline_value'].includes(name)) {
-      value = parseInt(value)
-      if (isNaN(value)) {
-        return
-      }
-    }
     this.setState({[ name ]: value}, () => this.props.onChange(this.state))
   }
 
@@ -86,6 +80,7 @@ class BookingPreference extends React.Component {
                 id="standard-start-adornment"
                 variant={'outlined'}
                 name={'deadline_value'}
+                type="number"
                 value={this.state.deadline_value}
                 label={ReactHtmlParser(this.props.t('SHOP.preferences.label_delay_prevenance'))}
                 style={{width: '100%'}}
