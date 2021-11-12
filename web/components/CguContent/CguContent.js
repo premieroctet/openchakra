@@ -2,7 +2,7 @@ import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 
 const styles = theme => ({
   a: {

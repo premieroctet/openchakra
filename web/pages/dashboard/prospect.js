@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import DashboardLayout from '../../hoc/Layout/DashboardLayout';
-import Link from 'next/link';
+import {Link} from '@material-ui/core';
 import Router from 'next/router';
 import Paper from '@material-ui/core/Paper';
 import HomeIcon from '@material-ui/icons/Home';

@@ -1,6 +1,6 @@
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 const moment = require('moment')
 
 moment.locale('fr')
