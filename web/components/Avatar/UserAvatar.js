@@ -73,12 +73,13 @@ class UserAvatar extends React.Component {
 
   avatarWithPics = (user, classes) => {
     const{isAbout, animated} = this.state
+    const {animateStartup} = this.props
     console.log(`Animated:${animated}`)
     if (!user) {
       return null
     }
     let url
-    if (animated || !user.picture.toLowerCase().endsWith('.gif')) {
+    if (animated || !user.picture.toLowerCase().endsWith('.gif') || animateStartup) {
       url=user.picture.match(/^https?:\/\//) ? user.picture : `/${ user.picture}`
     }
     else {
