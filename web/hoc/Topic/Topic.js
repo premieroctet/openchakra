@@ -28,7 +28,7 @@ class Topic extends React.Component {
     const{titleTopic, titleSummary, needBackground, underline, classes} = this.props
 
     return(
-      <Grid style={{width: '100%'}}>
+      <Grid {...this.props} style={{width: '100%'}}>
         <Grid>
           <h3>{titleTopic}</h3>
         </Grid>

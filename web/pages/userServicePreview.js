@@ -1,3 +1,4 @@
+import { Divider, Link } from '@material-ui/core';
 const {
   getDeadLine,
   isDateAvailable,
@@ -33,7 +34,6 @@ import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
 import '../static/assets/css/custom.css'
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
-import {Divider} from '@material-ui/core'
 import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
 import CustomIcon from '../components/CustomIcon/CustomIcon'
 const {setAxiosAuthentication}=require('../utils/authentication')
@@ -796,7 +796,7 @@ class UserServicesPreview extends BasePage {
                 <Grid container className={classes.avatarAnDescription}>
                   <Grid item sm={3} className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
-                      <UserAvatar user={alfred}/>
+                      <UserAvatar user={alfred} animateStartup={true}/>
                     </Grid>
                   </Grid>
                   <Grid item sm={9} className={classes.flexContentAvatarAndDescription}>
@@ -827,6 +827,11 @@ class UserServicesPreview extends BasePage {
                         disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${alfred._id}`)}>
                         {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}
                       </CustomButton>
+                      <Link href="#availabilities">
+                      <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>
+                        {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_availabilities'))}
+                      </CustomButton>
+                      </Link>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -860,6 +865,7 @@ class UserServicesPreview extends BasePage {
                 </Grid>
                 <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>
                   <Topic
+                    id={'availabilities'}
                     underline={true}
                     titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_date'))}
                     titleSummary={alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_date_summary')) + alfred.firstname : ''}
