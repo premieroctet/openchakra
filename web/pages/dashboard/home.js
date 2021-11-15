@@ -10,7 +10,7 @@ import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import Router from 'next/router'
 import DashboardLayout from '../../hoc/Layout/DashboardLayout'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 
 const styles = () => ({
   signupContainer: {

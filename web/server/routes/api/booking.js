@@ -182,7 +182,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
             console.error(err)
           })
       }
-      console.log(`New booking:${booking}`)
+      console.log(`New booking:${JSON.stringify(booking)}`)
       res.json(booking)
     })
     .catch(err => {

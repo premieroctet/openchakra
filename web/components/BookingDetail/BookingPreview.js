@@ -3,7 +3,7 @@ import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -44,6 +44,7 @@ class BookingPreview extends React.Component {
       is_alfred: null,
       end_datetime: null,
       loading: false,
+      alfred_pro: false,
     }
     this.routingDetailsMessage = this.routingDetailsMessage.bind(this)
     this.getPrestationMinMoment = this.getPrestationMinMoment.bind(this)
@@ -86,6 +87,15 @@ class BookingPreview extends React.Component {
             end_datetime: end_datetime,
           },
         )
+
+        // Alfred part/pto
+        axios.get(`/myAlfred/api/shop/alfred/${booking.alfred._id}`)
+          .then(res => {
+            this.setState({alfred_pro: res.data.is_professional})
+          })
+          .catch(err => {
+            console.error(err)
+          })
 
         if (res.data.serviceUserId) {
           axios.get(`/myAlfred/api/serviceUser/${this.state.bookingObj.serviceUserId}`).then(res => {
@@ -196,7 +206,7 @@ class BookingPreview extends React.Component {
 
   render() {
     const {classes, booking_id} = this.props
-    const {bookingObj, currentUser, is_alfred, end_datetime} = this.state
+    const {bookingObj, currentUser, is_alfred, end_datetime, alfred_pro} = this.state
 
     if (!bookingObj || !currentUser) {
       return null
@@ -605,7 +615,9 @@ class BookingPreview extends React.Component {
                               travel_tax={bookingObj.travel_tax}
                               pick_tax={bookingObj.pick_tax}
                               total={amount}
-                              cesu_total={bookingObj.cesu_amount}/>
+                              cesu_total={bookingObj.cesu_amount}
+                              alfred_pro={alfred_pro}
+                            />
                           </Grid>
                         </Grid>
                       </Grid>

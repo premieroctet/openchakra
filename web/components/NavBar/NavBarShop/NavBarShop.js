@@ -1,6 +1,6 @@
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid';
-import Link from 'next/link';
+import {Link} from '@material-ui/core';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';

@@ -1,8 +1,8 @@
+import {Link} from '@material-ui/core'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import Link from '../../../components/Link/Link'
 import {withStyles} from '@material-ui/core/styles'
 import '../../../static/assets/css/custom.css'
 import {FAQ_NEED_MORE} from '../../../utils/i18n'
@@ -33,11 +33,12 @@ class NeedMoreFaq extends React.Component {
           <h3 style={{fontWeight: 'bold'}} className={'customaddservicewantmore'}>
             {ReactHtmlParser(this.props.t('FAQ_NEED_MORE.link'))}
           </h3>
-          <p>{ReactHtmlParser(this.props.t('FAQ_NEED_MORE.you_can'))}<Link href={'/contact'}>
-            <span className={classes.link}>
-              {ReactHtmlParser(this.props.t('FAQ_NEED_MORE.contact_us'))}
-            </span>
-          </Link>
+          <p>{ReactHtmlParser(this.props.t('FAQ_NEED_MORE.you_can'))}
+            <Link href={'/contact'}>
+              <span className={classes.link}>
+                {ReactHtmlParser(this.props.t('FAQ_NEED_MORE.contact_us'))}
+              </span>
+            </Link>
           </p>
         </Grid>
       </Grid>

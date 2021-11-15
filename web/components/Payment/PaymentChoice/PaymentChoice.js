@@ -17,7 +17,6 @@ class PaymentChoice extends React.Component {
   }
 
   callPay = () => {
-    console.log('Pay')
     this.props.pay()
   };
 

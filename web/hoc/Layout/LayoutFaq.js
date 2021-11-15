@@ -1,3 +1,4 @@
+import LoggedAsBanner from '../../components/LoggedAsBanner'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -43,6 +44,7 @@ class LayoutFaq extends React.Component {
 
     return (
       <Grid className={classes.mainContainerLayoutFaq}>
+        <LoggedAsBanner />
         <Header ref={this.child} search={this.sendSearch} clearFuntion={this.callClearFunction}/>
         <Grid className={becomeAlfredPage ? classes.becomeAlfredPageContainer : classes.childrenContainer}>
           {children}

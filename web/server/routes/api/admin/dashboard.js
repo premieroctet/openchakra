@@ -227,7 +227,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
       }
 
       if (user.active) {
-        send_cookie(user, role, res)
+        send_cookie(user, role, res, true)
       }
       else {
         errors = 'Utilisateur inactif'

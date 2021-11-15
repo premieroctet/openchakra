@@ -4,7 +4,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import styles from '../../../static/css/components/Card/CategoryCard/CategoryCard'
 import withStyles from '@material-ui/core/styles/withStyles'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 import axios from 'axios'
 const {isB2BStyle}=require('../../../utils/context')
 import '../../../static/assets/css/custom.css'

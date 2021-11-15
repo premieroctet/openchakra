@@ -75,42 +75,35 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
 
   const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
 
+  let mangopay_id=0
   promise
     .then(entity => {
-      const id_mangopay = entity.id_mangopay
-      mangoApi.Users.getWallets(id_mangopay)
-        .then(wallets => {
-          const wallet_id = wallets[0].Id
-          mangoApi.PayIns.create({
-            AuthorId: id_mangopay,
-            DebitedFunds: {
-              Currency: 'EUR',
-              Amount: amount,
-            },
-            Fees: {
-              Currency: 'EUR',
-              Amount: 0,
-            },
-            ReturnURL: `${computeUrl(req)}${returnUrl}`,
-            CardType: 'CB_VISA_MASTERCARD',
-            PaymentType: 'CARD',
-            ExecutionType: 'WEB',
-            Culture: 'FR',
-            CreditedWalletId: wallet_id,
-            SecureModeReturnURL: `${computeUrl(req)}${returnUrl}`,
-          })
-            .then(payin => {
-              req.context.getModel('Booking').findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
-                .then(() => console.log('booking update ok'))
-                .catch(err => console.error(`booking update error:${err}`))
-              console.log(`Created Payin ${JSON.stringify(payin)}`)
-              res.json(payin)
-            })
-            .catch(err => {
-              console.error(err)
-              return res.status(404).json(err)
-            })
-        })
+      console.log(entity)
+      mangopay_id=entity.id_mangopay
+      return mangoApi.Users.getWallets(entity.id_mangopay)
+    })
+    .then(wallets => {
+      console.log(`Wallets:${wallets}`)
+      const wallet_id = wallets[0].Id
+      return mangoApi.PayIns.create({
+        AuthorId: mangopay_id,
+        DebitedFunds: {Currency: 'EUR', Amount: amount},
+        Fees: {Currency: 'EUR', Amount: 0},
+        ReturnURL: `${computeUrl(req)}${returnUrl}`,
+        CardType: 'CB_VISA_MASTERCARD',
+        PaymentType: 'CARD',
+        ExecutionType: 'WEB',
+        Culture: 'FR',
+        CreditedWalletId: wallet_id,
+        SecureModeReturnURL: `${computeUrl(req)}${returnUrl}`,
+      })
+    })
+    .then(payin => {
+      req.context.getModel('Booking').findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
+        .then(() => console.log('booking update ok'))
+        .catch(err => console.error(`booking update error:${err}`))
+      console.log(`Created Payin ${JSON.stringify(payin)}`)
+      res.json(payin)
     })
     .catch(error => {
       console.error(error)

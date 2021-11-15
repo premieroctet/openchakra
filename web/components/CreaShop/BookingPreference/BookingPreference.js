@@ -29,12 +29,6 @@ class BookingPreference extends React.Component {
 
   handleChange = event => {
     let {name, value}=event.target
-    if (['minimum_basket', 'deadline_value'].includes(name)) {
-      value = parseInt(value)
-      if (isNaN(value)) {
-        return
-      }
-    }
     this.setState({[ name ]: value}, () => this.props.onChange(this.state))
   }
 
@@ -86,6 +80,7 @@ class BookingPreference extends React.Component {
                 id="standard-start-adornment"
                 variant={'outlined'}
                 name={'deadline_value'}
+                type="number"
                 value={this.state.deadline_value}
                 label={ReactHtmlParser(this.props.t('SHOP.preferences.label_delay_prevenance'))}
                 style={{width: '100%'}}
@@ -154,14 +149,16 @@ class BookingPreference extends React.Component {
                         width={100}
                         alt={result.label}
                         title={result.label}
-                        style={{backgroundColor: selected ? theme.palette.primary.main : null}}
+                        style={{filter: selected ? 'invert(3%) sepia(53%) saturate(1998%) hue-rotate(206deg) brightness(97%) contrast(88%)'
+                          :
+                          'invert(99%) sepia(0%) saturate(424%) hue-rotate(149deg) brightness(93%) contrast(88%)'}}
                       />
                       <Checkbox
                         style={{display: 'none'}}
                         color="primary"
                         type="checkbox"
                         name={result._id}
-                        checked={this.state.equipments.includes(result._id)}
+                        checked={selected}
                         onChange={this.onEquipmentChecked}/>
                     </label>
                   </Grid>

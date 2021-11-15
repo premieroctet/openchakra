@@ -46,6 +46,7 @@ class ConfirmPayment extends BasePage {
       id_card: '',
       cardSelected: false,
       pending: false,
+      alfred_pro: false,
     }
   }
 
@@ -73,6 +74,14 @@ class ConfirmPayment extends BasePage {
           this.setState({user: res.data.user})
         })
 
+        // Alfred part/pto
+        axios.get(`/myAlfred/api/shop/alfred/${bookingObj.alfred._id}`)
+          .then(res => {
+            this.setState({alfred_pro: res.data.is_professional})
+          })
+          .catch(err => {
+            console.error(err)
+          })
       })
 
     axios.get('/myAlfred/api/users/current')
@@ -196,7 +205,9 @@ class ConfirmPayment extends BasePage {
           {...this.state}
           handleStep={this.handleStep}
           pricedPrestations={this.computePricedPrestations}
-          countPrestations={this.computeCountPrestations}/>
+          countPrestations={this.computeCountPrestations}
+          alfred_pro={this.state.alfred_pro}
+        />
       case 1:
         return <PaymentChoice
           {...this.state}
@@ -205,6 +216,7 @@ class ConfirmPayment extends BasePage {
           payDirect={this.payDirect}
           pay={this.pay}
           handleCardSelected={this.handleCardSelected}
+          alfred_pro={this.state.alfred_pro}
         />
       default:
         return null

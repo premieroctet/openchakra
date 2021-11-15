@@ -95,7 +95,7 @@ class UserServicesPreview extends BasePage {
       albums: [],
       excludedDays: [],
       available_budget: Number.MAX_SAFE_INTEGER,
-      allAddresses: {},
+      allAddresses: null,
       pending: false,
       avocotes: null,
       all_avocotes: [],
@@ -188,7 +188,7 @@ class UserServicesPreview extends BasePage {
             promise
               .then(res => {
                 if (res.data) {
-                  let allAddresses = {'main': res.data.billing_address}
+                  let allAddresses = {'main': {...res.data.billing_address, label: this.props.t('USERSERVICEPREVIEW.at_home')}}
                   res.data.service_address.forEach(addr => {
                     allAddresses[addr._id] = addr
                   })
@@ -236,7 +236,8 @@ class UserServicesPreview extends BasePage {
                                       alfred: serviceUser.user,
                                       count: count,
                                       pick_tax: null,
-                                      date: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date).toDate() : null,
+                                      date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
+                                      time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
                                       location: bookingObj ? bookingObj.location : null,
                                       customer_fee: bookingObj ? bookingObj.customer_fee : null,
                                       provider_fee: bookingObj ? bookingObj.provider_fee : null,
@@ -537,8 +538,8 @@ class UserServicesPreview extends BasePage {
       return null
     }
     const coordUser = avocotes_booking ? avocotes_booking.address.gps : this.getClientAddress().gps
-    return computeDistanceKm(coordSU, coordUser)
-
+    const distance=computeDistanceKm(coordSU, coordUser)
+    return distance
   }
 
   isInPerimeter = () => {
@@ -564,8 +565,8 @@ class UserServicesPreview extends BasePage {
 
   hasWarningBudget = () => {
     if (getRole()==MANAGER) {
-      return this.state.company_amount < this.state.total
-
+      const warningBudget = this.state.company_amount < this.state.total
+      return warningBudget
     }
     return false
   }
@@ -596,11 +597,11 @@ class UserServicesPreview extends BasePage {
     if (avocotes_booking) {
       return `Chez ${avocotes_booking.user.full_name} (${avocotes_booking.user.billing_address.city})`
     }
-    const {location, user, allAddresses}=this.state
-    if (['client', 'main'].includes(location)) {
-      return ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.at_home'))
+    const {user, allAddresses}=this.state
+    if (!user || !allAddresses) {
+      return ''
     }
-    return user ? (allAddresses[location] || {label: ''}).label : ''
+    return allAddresses? allAddresses[this.get_prop_address()].label : ''
   }
 
   getLocationLabel = () => {
@@ -657,7 +658,8 @@ class UserServicesPreview extends BasePage {
       equipments: this.state.serviceUser.equipments,
       amount: this.state.total,
       company_amount: this.state.company_amount,
-      date_prestation: this.state.date,
+      date_prestation: this.state.date ? moment(this.state.date).format('DD/MM/YYYY') : null,
+      time_prestation: this.state.time,
       alfred: this.state.serviceUser.user._id,
       user: user ? user._id : null,
       prestations: prestations,
@@ -948,6 +950,7 @@ class UserServicesPreview extends BasePage {
                           clientAddress={this.getClientAddressLabel()}
                           clientAddressId={this.get_prop_address()}
                           book={this.book}
+                          alfred_pro={shop.is_professional}
                           {...this.state}
                         />
                       </Grid>
@@ -976,6 +979,7 @@ class UserServicesPreview extends BasePage {
                     clientAddress={this.getClientAddressLabel()}
                     clientAddressId={this.get_prop_address()}
                     book={this.book}
+                    alfred_pro={shop.is_professional}
                     {...this.state}
                   />
                 </Grid>
