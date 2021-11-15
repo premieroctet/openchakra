@@ -1,3 +1,4 @@
+import UserAvatar from '../../Avatar/UserAvatar';
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -35,7 +36,7 @@ class CardPreview extends React.Component {
         <Grid className={'customcardpreviewavatar'} style={{height: '30%', position: 'relative'}}>
           <Grid style={{position: 'absolute', bottom: 0, left: '50%', transform: 'translate(-50%,50%)', zIndex: 1}}>
             <Grid className={classes.cardPreviewContainerAvatar}>
-              <Avatar alt="Remy Sharp" src={item.user.picture} className={classes.cardPreviewLarge} />
+              <UserAvatar user={item.user} className={classes.cardPreviewLarge} />
             </Grid>
           </Grid>
         </Grid>

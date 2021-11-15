@@ -20,7 +20,8 @@ const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, insta
 const {send_cookie}=require('../../utils/serverContext')
 const {connectionPool}=require('../../utils/database')
 const {serverContextFromPartner}=require('../../utils/serverContext')
-
+const gifFrames = require('gif-frames')
+const fs = require('fs')
 
 axios.defaults.withCredentials = true
 
@@ -1117,6 +1118,24 @@ router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), 
     .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
+    })
+})
+
+router.get('/still_profile/:filename', (req, res) => {
+  res.set('Content-Type', 'image/*')
+  gifFrames({url: `static/profile/${req.params.filename}`, frames: 0})
+    .then(frameData => {
+      const img=frameData[0].getImage().read()
+      return res.send(img)
+    })
+    .catch(err => {
+      fs.readFile(`static/profile/${req.params.filename}`, (err, data) => {
+        if (err) {
+          console.error(err)
+          return res.send()
+        }
+        return res.send(data)
+      })
     })
 })
 
