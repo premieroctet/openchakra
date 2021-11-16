@@ -82,6 +82,7 @@ router.post('/register', (req, res) => {
       user.service_address = []
       user.last_login = []
       user.professional = req.body.company
+      user.is_alfred = req.body.is_alfred
       bcrypt.hash(user.password, 10, (err, hash) => {
         if (err) {
           throw err

@@ -2288,4 +2288,27 @@ router.put('/customizations', passport.authenticate('admin', {session: false}), 
     })
 })
 
+router.get('/reviews', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('Review').find()
+    .populate('alfred', 'firstname name')
+    .populate('user', 'firstname name')
+    .populate({path: 'serviceUser', select: 'service', populate: {path: 'service', select: 'label'}})
+    .then(reviews => {
+      res.json(reviews)
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+})
+
+router.put('/reviews/:review_id', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('Review').findByIdAndUpdate(req.params.review_id, req.body)
+    .then(review => {
+      res.json(review)
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+})
+
 module.exports = router

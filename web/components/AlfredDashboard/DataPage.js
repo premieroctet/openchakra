@@ -1,4 +1,4 @@
-import { Link } from '@material-ui/core';
+import {Link} from '@material-ui/core'
 import {deleteColumn} from '../BigList/models'
 import axios from 'axios'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
@@ -59,6 +59,11 @@ class DataPage extends React.Component {
     }
   }
 
+  onCellEditingStopped = event => {
+    const {colDef, data, oldValue, newValue} = event
+    this.onCellChanged && this.onCellChanged(colDef, data, oldValue, newValue)
+  }
+
   render() {
     const {classes} = this.props
     const {data} = this.state
@@ -78,6 +83,7 @@ class DataPage extends React.Component {
                 title={this.getTitle()}
                 onCellClicked={this._onCellClicked}
                 onAddClick={this.onAddClicked}
+                onCellEditingStopped ={this.onCellEditingStopped}
               />
             </Paper>
           </Grid>
