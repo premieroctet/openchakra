@@ -35,6 +35,7 @@ import Router from 'next/router'
 import '../static/assets/css/custom.css'
 import _ from 'lodash'
 import RandomDisplay from '../components/RandomDisplay/RandomDisplay'
+import {INDEX} from '../utils/i18n'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -62,9 +63,9 @@ class Home extends React.Component {
       open: false,
       mounted: false,
       arrayText: [
-        ['', 'INDEX.first_content', 'INDEX.second_content', 'INDEX.third_content', 'INDEX.four_content', 'INDEX.five_content'].map(k => ReactHtmlParser(props.t(k))),
-        ['', 'INDEX.six_content', 'INDEX.seven_content', 'INDEX.eight_content', 'INDEX.nine_content', 'INDEX.ten_content'].map(k => ReactHtmlParser(props.t(k))),
-        ['', 'INDEX.eleven_content', 'INDEX.twelve_content', 'INDEX.thirteen_content', 'INDEX.fourteen_content', 'INDEX.fiveteen_content'].map(k => ReactHtmlParser(props.t(k))),
+        ['INDEX.first_content_title', '', 'INDEX.first_content', 'INDEX.second_content', 'INDEX.third_content', 'INDEX.four_content', 'INDEX.five_content'].map(k => ReactHtmlParser(props.t(k))),
+        ['INDEX.second_content_title', '', 'INDEX.six_content', 'INDEX.seven_content', 'INDEX.eight_content', 'INDEX.nine_content', 'INDEX.ten_content'].map(k => ReactHtmlParser(props.t(k))),
+        ['INDEX.third_content_title', '', 'INDEX.eleven_content', 'INDEX.twelve_content', 'INDEX.thirteen_content', 'INDEX.fourteen_content', 'INDEX.fiveteen_content'].map(k => ReactHtmlParser(props.t(k))),
       ],
     }
   }
@@ -208,7 +209,7 @@ class Home extends React.Component {
               <CategoryTopic categories={categories}/>
             </Grid>
           </Grid>
-          <Grid container className={`customhowitworks ${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
+          <Grid container className={`${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
             {/* <HowItWorks/>*/}
             <Grid item xs={12} className={classes.howItWorksMainStyle}>
               <RandomDisplay arrayText={this.state.arrayText} loop={true}/>

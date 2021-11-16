@@ -12,9 +12,8 @@ const useStyles = makeStyles(() => ({
   },
   carouselStyle: {
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
-    height: '100%',
+    height: '50%',
   },
   carouselItem: {
     height: '100%',
@@ -22,7 +21,13 @@ const useStyles = makeStyles(() => ({
       height: '100%',
     },
   },
-  
+  title: {
+    display: 'flex',
+    justifyContent: 'center',
+    height: 'auto !important',
+    alignItems: 'center',
+  },
+
 }))
 
 function RandomDisplay(props) {
@@ -38,12 +43,24 @@ function RandomDisplay(props) {
     >
       {
         arrayText.map((res, i) => (
-          <Grid container spacing={2} key={i} style={{height: '100%'}}>
+          <Grid container spacing={2} key={i} className={`customhowitworks${i}`} style={{height: '100%', width: '100%', margin: 0}}>
             {
               res.map((element, index) => (
-                <Grid item md={2} xs={12} key={index} className={classes.carouselStyle}>
-                  <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
-                </Grid>
+                <>
+                  {
+                    index === 0 &&
+                    <Grid item xs={12} className={classes.title} key={index}>
+                      <Typography className={`${classes.colorText} customrandomdisplay`}>{element[0]}</Typography>
+                    </Grid>
+                  }
+                  {
+                    index !== 0 &&
+                    <Grid item md={2} xs={12} className={classes.carouselStyle} key={index}>
+                      <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
+                    </Grid>
+                  }
+
+                </>
               ))
             }
           </Grid>
