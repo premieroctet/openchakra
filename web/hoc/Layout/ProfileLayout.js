@@ -90,7 +90,9 @@ class ProfileLayout extends CompanyComponent {
                 <Grid className={classes.profilLayoutBox}>
                   <Grid className={`customprofilbanner ${isB2BStyle() ? classes.profilLayoutBannerImgPro : classes.profilLayoutBannerImg}`}>
                     <Grid className={`customprofilbanneravatar ${classes.profilLayoutAvatar}`}>
-                      <UserAvatar alt={!this.isModeCompany() ? user.firstname : company ? company.name : ''} user={!this.isModeCompany() ? user : company ? company : ''} fireRefresh={this.componentDidMount}/>
+                      <UserAvatar alt={!this.isModeCompany() ? user.firstname : company ? company.name : ''} user={!this.isModeCompany() ? user : company ? company : ''} fireRefresh={this.componentDidMount}
+                         animateStartup={true}
+                      />
                     </Grid>
                   </Grid>
                   <Grid style={{
