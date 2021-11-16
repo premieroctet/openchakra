@@ -1,8 +1,11 @@
+const {get_logged_id} =require('../../utils/serverContext')
+
+const {REVIEW_STATUS} = require('../../../utils/consts')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
 
 router.get('/test', (req, res) => res.json({msg: 'Reviews Works!'}))
 
@@ -91,9 +94,9 @@ router.post('/add/client', passport.authenticate('jwt', {session: false}), (req,
   reviewFields.note_client.accuracy = req.body.accuracy
   reviewFields.note_client.relational = req.body.relational
 
-  let reception = parseInt(req.body.accueil, 10)
-  let accuracy = parseInt(req.body.accuracy, 10)
-  let relational = parseInt(req.body.relational, 10)
+  let reception = parseInt(req.body.accueil)
+  let accuracy = parseInt(req.body.accuracy)
+  let relational = parseInt(req.body.relational)
 
 
   reviewFields.note_client.global = (reception + relational + accuracy) / 3
@@ -133,7 +136,7 @@ router.post('/add/client', passport.authenticate('jwt', {session: false}), (req,
 router.get('/:user_id', (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.user_id)
   let result = {careful: 0, punctual: 0, flexible: 0, reactive: 0}
-  req.context.getModel('Review').find({alfred: userId})
+  req.context.getModel('Review').find({alfred: userId, status: REVIEW_STATUS.APPROVED})
     .then(reviews => {
       if (typeof reviews !== 'undefined' && reviews.length > 0) {
         reviews.forEach(r => {
@@ -155,35 +158,10 @@ router.get('/:user_id', (req, res) => {
     .catch(err => console.error(err) && res.status(404).json(result))
 })
 
-router.get('/customerReviewsCurrent', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const userId = mongoose.Types.ObjectId(req.user.id)
-  req.context.getModel('Review').find({alfred: userId, note_client: undefined})
-    .populate('alfred', '-id_card')
-    .populate('user', '-id_card')
-    .populate('serviceUser')
-    .populate({path: 'serviceUser', populate: {path: 'service'}})
-    .then(review => {
-      res.status(200).json(review)
-    })
-    .catch(err => res.status(404).json(err))
-})
-
-router.get('/alfredReviewsCurrent', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const userId = mongoose.Types.ObjectId(req.user.id)
-  req.context.getModel('Review').find({user: userId, note_alfred: undefined})
-    .populate('alfred', '-id_card')
-    .populate('user', '-id_card')
-    .populate('serviceUser')
-    .populate({path: 'serviceUser', populate: {path: 'service'}})
-    .then(review => {
-      res.status(200).json(review)
-    })
-    .catch(err => res.status(404).json(err))
-})
-
 router.get('/profile/customerReviewsCurrent/:id', (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.id)
-  req.context.getModel('Review').find({alfred: userId, note_client: undefined})
+  const filter=get_logged_id(req)==userId ? {} : {status: REVIEW_STATUS.APPROVED}
+  req.context.getModel('Review').find({alfred: userId, ...filter, note_client: undefined})
     .populate('alfred', 'firstname name email')
     .populate('user', 'firstname name email')
     .populate('serviceUser', 'service')
@@ -196,7 +174,8 @@ router.get('/profile/customerReviewsCurrent/:id', (req, res) => {
 
 router.get('/profile/alfredReviewsCurrent/:id', (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.id)
-  req.context.getModel('Review').find({user: userId, note_alfred: undefined})
+  const filter=get_logged_id(req)==userId ? {} : {status: REVIEW_STATUS.APPROVED}
+  req.context.getModel('Review').find({user: userId, ...filter, note_alfred: undefined})
     .populate('alfred', 'firstname name email')
     .populate('user', 'firstname name email')
     .populate('serviceUser')
@@ -210,16 +189,13 @@ router.get('/profile/alfredReviewsCurrent/:id', (req, res) => {
 // @Route GET /myAlfred/api/reviews/alfred/:id
 // View the reviews list for one alfred
 router.get('/alfred/:id', (req, res) => {
-  req.context.getModel('Review').find({alfred: req.params.id, note_client: undefined})
+  const userId = mongoose.Types.ObjectId(req.params.id)
+  const filter=get_logged_id(req)==userId ? {} : {status: REVIEW_STATUS.APPROVED}
+  req.context.getModel('Review').findOne({alfred: userId, ...filter, note_client: undefined})
     .populate('alfred')
     .populate('user')
-    .then(reviews => {
-      if (typeof reviews !== 'undefined' && reviews.length > 0) {
-        res.json(reviews)
-      }
-      else {
-        return res.status(400).json({msg: 'No reviews found'})
-      }
+    .then(review => {
+      return res.json(review)
     })
     .catch(err => res.status(404).json({reviews: 'No reviews found'}))
 })
@@ -228,17 +204,12 @@ router.get('/alfred/:id', (req, res) => {
 // View one review
 // @Access private
 router.get('/review/:id', (req, res) => {
-  req.context.getModel('Review').findById(req.params.id)
+  req.context.getModel('Review').findOne({_id: req.params.id, status: REVIEW_STATUS.APPROVED})
     .populate('alfred')
     .populate('user')
     .populate({path: 'serviceUser', populate: {path: 'service', select: 'label'}})
-    .then(reviews => {
-      if (Object.keys(reviews).length === 0 && reviews.constructor === Object) {
-        return res.status(400).json({msg: 'No reviews found'})
-      }
-      res.json(reviews)
-
-
+    .then(review => {
+      return res.json(review)
     })
     .catch(err => res.status(404).json({reviews: 'No reviews found'}))
 })
