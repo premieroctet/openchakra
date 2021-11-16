@@ -13,19 +13,27 @@ const useStyles = makeStyles(() => ({
   carouselStyle: {
     display: 'flex',
     justifyContent: 'center',
-    height: '50%',
+    alignItems: 'center',
   },
-  carouselItem: {
+  carousel: {
     height: '100%',
-    '& div:first-child': {
+    '& .CarouselItem': {
       height: '100%',
+      display: 'flex',
+    },
+    '& .CarouselItem div': {
+      width: '100%',
     },
   },
   title: {
     display: 'flex',
     justifyContent: 'center',
-    height: 'auto !important',
     alignItems: 'center',
+  },
+  mainContainer: {
+    height: '100%',
+    width: '100%',
+    margin: 0,
   },
 
 }))
@@ -39,11 +47,11 @@ function RandomDisplay(props) {
       autoPlay={loop}
       indicators={false}
       interval={6000}
-      className={classes.carouselItem}
+      className={classes.carousel}
     >
       {
         arrayText.map((res, i) => (
-          <Grid container spacing={2} key={i} className={`customhowitworks${i}`} style={{height: '100%', width: '100%', margin: 0}}>
+          <Grid container spacing={2} key={i} className={`${classes.mainContainer} customhowitworks${i}`}>
             {
               res.map((element, index) => (
                 <>
