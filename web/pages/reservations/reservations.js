@@ -140,6 +140,11 @@ class AllReservations extends React.Component {
   downloadIcs = bookingId => {
     Router.push(`/myAlfred/api/booking/${bookingId}/ics`)
   }
+
+  downloadGoogleCalendar = bookingId => {
+    Router.push(`/myAlfred/api/booking/${bookingId}/google_calendar`)
+  }
+
   openBookingCancel = bookingId => {
     this.setState({bookingPreview: null, bookingCancel: bookingId, bookingConfirm: null, bookingPreApprouved: null})
   }
@@ -211,7 +216,7 @@ class AllReservations extends React.Component {
     )
   }
 
-  bookingPreApprouved = classes =>{
+  bookingPreApprouved = classes => {
     const {bookingPreApprouved}=this.state
 
     return (
@@ -305,14 +310,23 @@ class AllReservations extends React.Component {
                           onClick={() => this.openBookingPreview(booking._id)}>
                           Détail
                         </Button>
-                        </Grid>
-                        <Grid item>
+                      </Grid>
+                      <Grid item>
                         <Button
                           color={'primary'}
                           variant={'outlined'}
                           classes={{root: classes.buttonDetail}}
                           onClick={() => this.downloadIcs(booking._id)}>
-                          Agenda
+                          Agenda ICS
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          color={'primary'}
+                          variant={'outlined'}
+                          classes={{root: classes.buttonDetail}}
+                          onClick={() => this.downloadGoogleCalendar(booking._id)}>
+                          Agenda Google
                         </Button>
                       </Grid>
                       {

@@ -1,5 +1,6 @@
 const express = require('express')
 const ics=require('ics')
+const {googleCalendarEventUrl} = require('google-calendar-url')
 const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
@@ -283,7 +284,6 @@ router.get('/:id', (req, res) => {
 })
 
 router.get('/:id/ics', (req, res) => {
-  console.log('Getting ICS')
   let title
   req.context.getModel('Booking').findById(req.params.id)
     .populate({path: 'user', select: 'firstname'})
@@ -311,6 +311,34 @@ router.get('/:id/ics', (req, res) => {
       res.setHeader('Content-Type', 'text/calendar')
       res.setHeader('Content-Disposition', `attachment; filename="${title}.ics"`)
       return res.send(result.value)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
+
+router.get('/:id/google_calendar', (req, res) => {
+  let title
+  req.context.getModel('Booking').findById(req.params.id)
+    .populate({path: 'user', select: 'firstname'})
+    .populate({path: 'alfred', select: 'firstname'})
+    .then(booking => {
+      title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
+      const start=booking.date_prestation_moment.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z')
+      const end=booking.end_prestation_moment ? booking.end_prestation_moment.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z') : start
+      console.log(start)
+      const url=googleCalendarEventUrl({
+        uid: booking._id.toString(),
+        title: title,
+        start: start,
+        end: end,
+        location: formatAddress(booking.address),
+        geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
+        status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
+        busyStatus: 'BUSY',
+      })
+      res.redirect(url)
     })
     .catch(err => {
       console.error(err)
