@@ -25,6 +25,7 @@ import CloseIcon from '@material-ui/icons/Close'
 const {BOOK_STATUS}=require('../../utils/consts')
 import Router from 'next/router'
 
+
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
   return (
@@ -136,6 +137,9 @@ class AllReservations extends React.Component {
     this.setState({bookingPreview: bookingId, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: null})
   }
 
+  downloadIcs = bookingId => {
+    Router.push(`/myAlfred/api/booking/${bookingId}/ics`)
+  }
   openBookingCancel = bookingId => {
     this.setState({bookingPreview: null, bookingCancel: bookingId, bookingConfirm: null, bookingPreApprouved: null})
   }
@@ -300,6 +304,15 @@ class AllReservations extends React.Component {
                           classes={{root: classes.buttonDetail}}
                           onClick={() => this.openBookingPreview(booking._id)}>
                           Détail
+                        </Button>
+                        </Grid>
+                        <Grid item>
+                        <Button
+                          color={'primary'}
+                          variant={'outlined'}
+                          classes={{root: classes.buttonDetail}}
+                          onClick={() => this.downloadIcs(booking._id)}>
+                          Agenda
                         </Button>
                       </Grid>
                       {
