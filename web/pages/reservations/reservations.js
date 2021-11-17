@@ -25,10 +25,11 @@ import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
 import LayoutReservations from '../../hoc/Layout/LayoutReservations'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import styles from '../../static/css/pages/reservations/reservations'
-import {RESERVATION} from '../../utils/i18n'
+import {RESERVATION, BOOKING} from '../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
+import {Link} from '@material-ui/core'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -133,6 +134,14 @@ class AllReservations extends BasePage {
   openBookingPreview = bookingId => {
     this.loadBookings()
     this.setState({bookingPreview: bookingId, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: null})
+  }
+
+  getIcsURL = bookingId => {
+    return `/myAlfred/api/booking/${bookingId}/ics`
+  }
+
+  getGoogleCalendarURL = bookingId => {
+    return `/myAlfred/api/booking/${bookingId}/google_calendar`
   }
 
   openBookingCancel = bookingId => {
@@ -301,6 +310,12 @@ class AllReservations extends BasePage {
                           {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
                         </CustomButton>
                       </Grid>
+                      <Grid item><Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
+                        {BOOKING.ADD_GOOGLE_AGENDA}
+                      </Link></Grid>
+                      <Grid item><Link href={this.getIcsURL(booking._id)}>
+                        {BOOKING.ADD_OTHER_AGENDA}
+                      </Link></Grid>
                       {
                         reservationType === 1 && !booking.customer_booking ?
                           <Grid item>
