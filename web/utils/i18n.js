@@ -295,6 +295,8 @@ const AVOCOTES = {
 
 const BOOKING = {
   MSG_EVALUATE: 'Vous avez 15 jours pour évaluer votre client. Une fois que votre client aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !',
+  ADD_GOOGLE_AGENDA: "Ajouter à l'agenda Google",
+  ADD_OTHER_AGENDA: 'Ajouter à un autre agenda',
 }
 
 const FAQ_ALFRED = {
@@ -522,5 +524,5 @@ module.exports = {
   FAQ,
   INFOBARMOBILE_MESSAGE,
   AVOCOTES,
-  PROFIL
+  PROFIL,
 }

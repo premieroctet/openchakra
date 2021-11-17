@@ -301,6 +301,7 @@ router.get('/:id/ics', (req, res) => {
         geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
         status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
         busyStatus: 'BUSY',
+        url: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString(),
       })
     })
     .then(result => {
@@ -337,6 +338,7 @@ router.get('/:id/google_calendar', (req, res) => {
         geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
         status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
         busyStatus: 'BUSY',
+        details: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString(),
       })
       res.redirect(url)
     })
