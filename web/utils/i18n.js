@@ -93,6 +93,7 @@ const EVALUATE = {
   your_commentary: 'Votre commentaire',
   back_button: 'Retour',
   confirm_button: 'Terminé',
+  warning_message: 'Avant publication, les commentaires seront modérés par l\'équipe All Inclusive.',
 }
 
 const EVALUATE_CLIENT = {
