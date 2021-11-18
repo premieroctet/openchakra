@@ -55,16 +55,15 @@ class CardPreview extends React.Component {
                 <Grid style={{overflow: 'hidden', whiteSpace: 'nowrap'}}>
                   <Typography className={'customcardpreviewplace'} style={{textOverflow: 'ellipsis', overflow: 'hidden'}}>{city}</Typography>
                 </Grid>
-                <Grid>
+                <Grid className={'customcardpreviewrating'}>
                   <Box component="fieldset" mb={item.user.score} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
                     <Rating
                       name="simple-controlled"
                       value={item.user.score}
                       max={1}
                       readOnly
-                      className={'customcardpreviewrating'}
                     />
-                    <Typography className={'customcardpreviewrating'}>({item.user.score})</Typography>
+                    <Typography>({item.user.score})</Typography>
                   </Box>
                 </Grid>
               </Grid>
