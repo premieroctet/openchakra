@@ -48,7 +48,7 @@ const isModeCompany = req => {
 }
 
 // Create JWT cookie with user credentials
-const send_cookie = (user, role, res, logged_as=false) => {
+const send_cookie = (user, role, res, logged_as=null) => {
   const payload = {
     id: user.id,
     name: user.name,
@@ -186,6 +186,11 @@ class RequestServerContext extends PartnerServerContext {
 
   isAdmin = () => {
     return get_token(this.request) && get_token(this.request).is_admin
+  }
+
+  getLoggedAs = () => {
+    const token=get_token(this.request)
+    return token && token.logged_as
   }
 
 }

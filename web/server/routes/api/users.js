@@ -1,6 +1,8 @@
+const {logEvent}=require('../../utils/events')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
 const {ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -537,7 +539,7 @@ router.get('/token', passport.authenticate('jwt', {session: false}), (req, res) 
   req.context.getModel('User').findById(req.user.id)
     .populate('shop', 'is_particular')
     .then(user => {
-      send_cookie(user, null, res)
+      send_cookie(user, null, res, req.context.getLoggedAs())
     })
     .catch(err => {
       console.error(err)
@@ -1041,7 +1043,8 @@ router.delete('/profile/picture/delete', passport.authenticate('jwt', {session: 
 router.put('/current/delete', passport.authenticate('jwt', {session: false}), (req, res) => {
   const hash = crypto.randomBytes(10).toString('hex')
   req.context.getModel('User').findByIdAndUpdate(req.user, {active: false, is_alfred: false, email: hash})
-    .then(() => {
+    .then(user => {
+      logEvent(req, 'Compte', 'Suppression', `Compte de ${user.full_name}(${user._id}) supprimé`)
       res.json({msg: 'Compte désactivé'})
     })
     .catch(err => console.error(err))

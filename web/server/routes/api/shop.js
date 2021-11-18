@@ -1,4 +1,6 @@
+const {logEvent} =require('../../utils/events')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const CronJob = require('cron').CronJob
@@ -84,6 +86,9 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async(req, r
               }
               if (newShop) {
                 sendShopOnline(alfred, req)
+              }
+              if (newShop) {
+                logEvent(req, 'Boutique', 'Création', `Boutique de ${alfred.full_name} créée`)
               }
               res.json(shop)
             })
@@ -260,9 +265,10 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
 // TODO : supperimer serviceUsers et prestations personnalisées
 router.delete('/current/delete', passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('Shop').findOne({alfred: req.user.id})
-    .populate('alfred')
+    .populate('alfred', 'firstname name')
     .then(shop => {
       shop.remove().then(() => {
+        logEvent(req, 'Boutique', 'Suppression', `Boutique de ${shop.alfred.full_name} supprimée`)
         sendShopDeleted(shop.alfred)
         res.json({success: true})
       })

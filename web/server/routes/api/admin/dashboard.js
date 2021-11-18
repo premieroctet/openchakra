@@ -27,6 +27,7 @@ const {computeUrl}=require('../../../../config/config')
 const {delayedPromise}=require('../../../../utils/promise')
 const {get_token, send_cookie, get_logged_id}=require('../../../utils/serverContext')
 const {createUIConfiguration} = require('../../../utils/ui_generation')
+const {logEvent}=require('../../../utils/events')
 
 // For Node < 12.0
 if (!Promise.allSettled) {
@@ -227,7 +228,10 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
       }
 
       if (user.active) {
-        send_cookie(user, role, res, true)
+        send_cookie(user, role, res, req.user._id)
+        logEvent(req, 'Administration', 'Connexion en tant que',
+          `Connexion en tant que ${user.full_name}(${user._id})`,
+        )
       }
       else {
         errors = 'Utilisateur inactif'
@@ -2305,6 +2309,19 @@ router.put('/reviews/:review_id', passport.authenticate('admin', {session: false
   req.context.getModel('Review').findByIdAndUpdate(req.params.review_id, req.body)
     .then(review => {
       res.json(review)
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+})
+
+router.get('/eventlogs', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('EventLog').find()
+    .populate('account.user')
+    .populate('user', 'firstname name')
+    .populate({path: 'serviceUser', select: 'service', populate: {path: 'service', select: 'label'}})
+    .then(events => {
+      res.json(events)
     })
     .catch(err => {
       res.status(500).json(err)
