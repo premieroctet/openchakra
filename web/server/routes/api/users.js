@@ -16,7 +16,6 @@ const moment = require('moment')
 moment.locale('fr')
 const crypto = require('crypto')
 const axios = require('axios')
-const {emptyPromise} = require('../../../utils/promise.js')
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
@@ -830,7 +829,7 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
         return res.status(400).json({errors: {email: 'Adresse mail déjà utilisée'}})
       }
       else if(!isValid) {
-        return res.status(400).json(errors)
+        return res.status(400).json({...errors})
       }
 
       req.context.getModel('User').findByIdAndUpdate(req.user, {
@@ -936,7 +935,7 @@ router.put('/profile/editPassword', passport.authenticate('jwt', {session: false
   }
   req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      const promise = admin ? emptyPromise(true) : emptyPromise(bcrypt.compare(password, user.password))
+      const promise = admin ? Promise.resolve(true) : Promise.resolve(bcrypt.compare(password, user.password))
       promise
         .then(isMatch => {
           if (isMatch) {
