@@ -148,16 +148,6 @@ const insensitiveComparator = (a,b) => {
   return (a||'').localeCompare(b, 'fr')
 }
 
-const isMobilePhone= number => {
-  if (!number) {
-    return false
-  }
-  const MOBILE_RE=/^(0|\+?33)[67]\d{8}$/
-  number = number.toString().trim()
-  const res= MOBILE_RE.test(number)
-  return res
-}
-
 const computeBookingReference = (user, alfred) => {
   var reference = user.avatar_letters + alfred.avatar_letters + '_' + moment().format('DDMMYYYY')
   return reference
@@ -183,7 +173,6 @@ module.exports = {
   compute_vat_number,
   isSiretSirenLength,
   insensitiveComparator,
-  isMobilePhone,
   computeBookingReference,
   capitalize,
 }

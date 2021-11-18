@@ -1,3 +1,4 @@
+const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
 const {ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
@@ -6,7 +7,6 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
-const mongoose = require('mongoose')
 const {is_production, is_validation, computeUrl}=require('../../../config/config')
 const CronJob = require('cron').CronJob
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
@@ -58,7 +58,7 @@ router.post('/register', (req, res) => {
   req.context.getModel('User').findOne({email: req.body.email})
     .then(db_user => {
       if (db_user && (!user_id || db_user._id.toString()!=user_id)) {
-        errors.email = 'L\'email existe déjà'
+        errors.email = EDIT_PROFIL.duplicate_email
         return res.status(400).json(errors)
       }
 
@@ -787,7 +787,7 @@ router.put('/profile/email', passport.authenticate('jwt', {session: false}), (re
   req.context.getModel('User').exists({email: req.body.email, _id: {$ne: req.user._id}})
     .then(duplicate_exists => {
       if (duplicate_exists) {
-        return Promise.reject('Un compte avec cet email existe déjà')
+        return Promise.reject(EDIT_PROFIL.duplicate_email)
       }
       return req.context.getModel('User').findById(req.user.id)
     })
@@ -821,14 +821,15 @@ router.put('/profile/status', passport.authenticate('jwt', {session: false}), (r
 // @Access private
 router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  const {errors, isValid} = validateEditProfile(req.body)
+  let {errors, isValid} = validateEditProfile(req.body)
 
   req.context.getModel('User').findOne({email: req.body.email})
     .then(user => {
       if (user && req.body.email != req.context.getUser().email) {
-        return res.status(400).json({errors: {email: 'Adresse mail déjà utilisée'}})
+        errors={...errors, email: EDIT_PROFIL.duplicate_email}
+        isValid=false
       }
-      else if(!isValid) {
+      if(!isValid) {
         return res.status(400).json({...errors})
       }
 
@@ -874,8 +875,11 @@ router.put('/profile/birthday/:user_id', passport.authenticate('b2badmin', {sess
     return
   }
   req.context.getModel('User').findByIdAndUpdate(req.params.user_id, {birthday: req.body.birthday})
-    .then(user => res.json())
-    .catch(err => res.status(400).json('Date de naissance incorrecte'))
+    .then(() => res.json())
+    .catch(err => {
+      console.error(err)
+      res.status(400).json('Date de naissance incorrecte')
+    })
 })
 
 // @Route PUT /myAlfred/api/users/profile/editProProfile
@@ -889,7 +893,7 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
   req.context.getModel('User').findOne({email: req.body.email})
     .then(user => {
       if (user && req.body.email != req.user.email) {
-        return res.status(400).json({email: 'Adresse mail déjà utilisée'})
+        return res.status(400).json({email: EDIT_PROFIL.duplicate_email})
       }
       else if(!isValid) {
         return res.status(400).json(errors)

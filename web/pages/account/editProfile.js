@@ -252,8 +252,8 @@ class editProfile extends React.Component {
         this.setState({errors: {}}, () => this.loadUser())
       })
       .catch(err => {
-        err.response ?
-          snackBarError(err.response.data) : null
+        snackBarError(err.response.data)
+        this.setState({errors: err.response.data})
       })
   };
 
