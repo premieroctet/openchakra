@@ -188,6 +188,9 @@ class EvaluateClient extends BasePage {
               onChange={e => this.setState({content: e.target.value})}
             />
           </Grid>
+          <Grid>
+            <em>{ReactHtmlParser(this.props.t('EVALUATE.warning_message'))}</em>
+          </Grid>
         </Grid>
         <Grid style={{display: 'flex', justifyContent: 'space-between', marginTop: '10vh'}}>
           <Grid>
