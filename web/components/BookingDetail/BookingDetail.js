@@ -6,6 +6,9 @@ import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import {BOOKING_DETAIL} from '../../utils/i18n'
 const {EMPLOYEE}=require('../../utils/consts')
+import IconButton from '@material-ui/core/IconButton'
+import InfoIcon from '@material-ui/icons/Info'
+import Link from 'next/link'
 
 class BookingDetail extends React.Component {
   constructor(props) {
@@ -61,23 +64,25 @@ class BookingDetail extends React.Component {
             </Grid> : null}
           { /* End pick tax */}
           { /* Start commission */}
-          {customer_fee && customer_fee !== 0 && !mode ?
+          {customer_fee && customer_fee !== 0 && !mode || alfred_fee ?
             <Grid className={`customdisplayservicecost ${classes.flexContent}`}>
               <Grid className={classes.labelContent}>
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
               </Grid>
+              {
+                ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost_link')) !== '' ?
+                  <Grid>
+                    <Link href={ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost_link'))} >
+                      <a target={'_blank'}>
+                        <IconButton aria-label="InfoIcon">
+                          <InfoIcon fontSize="small" />
+                        </IconButton>
+                      </a>
+                    </Link>
+                  </Grid> : null
+              }
               <Grid className={classes.priceContent}>
-                <p>{customer_fee.toFixed(2)}€</p>
-              </Grid>
-            </Grid> : null
-          }
-          {alfred_fee && !mode ?
-            <Grid className={`customdisplayservicecost ${classes.flexContent}`}>
-              <Grid className={classes.labelContent}>
-                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
-              </Grid>
-              <Grid className={classes.priceContent}>
-                <p>-{alfred_fee.toFixed(2)}€</p>
+                <p>-{alfred_fee ? alfred_fee.toFixed(2) : customer_fee.toFixed(2)}€</p>
               </Grid>
             </Grid> : null
           }

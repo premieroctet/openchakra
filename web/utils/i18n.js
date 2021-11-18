@@ -196,6 +196,7 @@ const BOOKING_DETAIL = {
   will_total: ' Total à percevoir',
   cesu: 'dont CESU',
   company: 'dont participation entreprise',
+  service_cost_link: '',
 }
 
 const BUTTON_SWITCH = {
