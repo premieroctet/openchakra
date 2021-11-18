@@ -98,6 +98,7 @@ class home extends React.Component {
                 <Link href="/dashboard/statistics"><a>Statistiques</a></Link><br/>
                 <Link href="/dashboard/map"><a>Carte des services</a></Link><br/>
                 <Link href="/dashboard/bookings"><a>Réservations</a></Link><br/>
+                <Link href="/dashboard/events"><a>Evénements</a></Link><br/>
               </Grid>
             </Grid>
           </Card>
