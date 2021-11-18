@@ -784,6 +784,30 @@ router.post('/resetPassword', (req, res) => {
     })
 })
 
+router.put('/profile/email', passport.authenticate('jwt', {session: false}), (req, res) => {
+  req.context.getModel('User').exists({email: req.body.email, _id: {$ne: req.user._id}})
+    .then(duplicate_exists => {
+      if (duplicate_exists) {
+        return Promise.reject('Un compte avec cet email existe déjà')
+      }
+      return req.context.getModel('User').findById(req.user.id)
+    })
+    .then(user => {
+      if (user.email != req.body.email) {
+        user.email=req.body.email
+        user.is_confirmed=false
+      }
+      return user.save()
+    })
+    .then(() => {
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
+})
+
 router.put('/profile/status', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   req.context.getModel('User').findByIdAndUpdate(req.user.id,
