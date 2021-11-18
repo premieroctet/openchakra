@@ -26,7 +26,7 @@ const isLoggedUserAlfredPro = () => {
   return logged && logged.is_alfred_pro
 }
 
-const isLoggedAs = () => {
+const getLoggedAs = () => {
   const logged=getLoggedUser()
   return logged && logged.logged_as
 }
@@ -177,5 +177,5 @@ module.exports = {
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
   isLoggedUserRegistered, isIOS, isAndroid, getPartner, hideEmptyEvaluations,
-  isLoggedAs,
+  getLoggedAs,
 }

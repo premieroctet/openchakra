@@ -1,3 +1,4 @@
+const {logEvent}=require('../../utils/events')
 const {sendAdminsAlert} =require('../../utils/mailing')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
 const express = require('express')
@@ -150,6 +151,10 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
           const promise = req.params.serviceuser_id ? req.context.getModel('ServiceUser').findByIdAndUpdate(su._id, su, {new: true}) : req.context.getModel('ServiceUser').create(su)
           promise
             .then(su => {
+              req.context.getModel('Service').findById(su.service, 'label')
+                .then(service => {
+                  logEvent(req, 'Boutique', `${req.params.serviceuser_id ? 'Modification': 'Ajout'} de service`, `Service ${service.label}`)
+                })
               if (req.params.serviceuser_id) {
                 return res.json(su)
               }
@@ -911,37 +916,33 @@ router.delete('/current/allServices', passport.authenticate('jwt', {
       })
 
     })
-    .catch(err => res.status(404).json({
-      servicenotfound: 'No service found',
-    }))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
 })
 
 // @Route DELETE /myAlfred/api/serviceUser/:id
 // Delete a service for an alfred
 // @Access private
-router.delete('/:id', passport.authenticate('jwt', {
-  session: false,
-}), (req, res) => {
+router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
-    .then(event => {
-      event.remove().then(() => {
-        req.context.getModel('Shop').findOne({
-          alfred: req.user.id,
-        })
+    .populate('service', 'label')
+    .then(serviceuser => {
+      logEvent(req, 'Boutique', 'Suppression de service', `Service ${serviceuser.service.label}`)
+      serviceuser.remove().then(() => {
+        req.context.getModel('Shop').findOne({alfred: req.user.id})
           .then(shop => {
-            const removeIndex = shop.services
-              .indexOf(req.params.id)
-
+            const removeIndex = shop.services.indexOf(req.params.id)
             shop.services.splice(removeIndex, 1)
-
-
             shop.save().then(newShop => res.json(newShop)).catch(err => console.error(err))
           })
       })
     })
-    .catch(err => res.status(404).json({
-      eventnotfound: 'No event found',
-    }))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
 })
 
 
