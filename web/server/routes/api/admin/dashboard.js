@@ -151,11 +151,24 @@ router.put('/billing/all/:id', passport.authenticate('admin', {session: false}),
 // @Route GET /myAlfred/api/admin/users/all
 // List all users
 router.get('/users/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone')
+  req.context.getModel('User').find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment')
     .populate({path: 'shop', select: 'creation_date'})
     .sort({creation_date: -1})
     .then(users => {
       res.json(users)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({user: 'No users found'})
+    })
+})
+
+// @Route PUT /myAlfred/api/admin/users/:user_id
+// List all users
+router.put('/users/:user_id', passport.authenticate('admin', {session: false}), (req, res) => {
+  req.context.getModel('User').findByIdAndUpdate(req.params.user_id, req.body)
+    .then(() => {
+      res.json()
     })
     .catch(err => {
       console.error(err)
