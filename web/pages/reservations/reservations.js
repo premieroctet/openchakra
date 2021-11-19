@@ -300,7 +300,7 @@ class AllReservations extends BasePage {
                     <Grid item xl={1} lg={1} md={6} sm={3} xs={4} className={classes.priceContainer}>
                       <Typography className={classes.alfredAmount}><strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong></Typography>
                     </Grid>
-                    <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer}>
+                    <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer} style={{alignItems: 'center'}}>
                       <Grid item>
                         <CustomButton
                           color={'primary'}
@@ -313,14 +313,14 @@ class AllReservations extends BasePage {
                       <Grid item>
                         <Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
                           <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
-                            <img src='/static/assets/icon/google_calendar.svg' width="40px"/>
+                            <img src='/static/assets/icon/google_calendar.svg' width="50px"/>
                           </Tooltip>
                         </Link>
                       </Grid>
                       <Grid item>
                         <Link href={this.getIcsURL(booking._id)}>
                           <Tooltip title={BOOKING.ADD_OTHER_AGENDA}>
-                            <img src='/static/assets/icon/calendar.svg' width="40px"/>
+                            <img src='/static/assets/icon/calendar.svg' width="50px"/>
                           </Tooltip>
                         </Link>
                       </Grid>
