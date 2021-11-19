@@ -1,3 +1,4 @@
+import {Link, Tooltip} from '@material-ui/core'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import '../../static/assets/css/custom.css'
 import {withStyles} from '@material-ui/core/styles'
@@ -29,7 +30,6 @@ import {RESERVATION, BOOKING} from '../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import {Link} from '@material-ui/core'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -310,12 +310,20 @@ class AllReservations extends BasePage {
                           {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
                         </CustomButton>
                       </Grid>
-                      <Grid item><Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
-                        {BOOKING.ADD_GOOGLE_AGENDA}
-                      </Link></Grid>
-                      <Grid item><Link href={this.getIcsURL(booking._id)}>
-                        {BOOKING.ADD_OTHER_AGENDA}
-                      </Link></Grid>
+                      <Grid item>
+                        <Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
+                          <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
+                            <img src='/static/assets/icon/google_calendar.svg' width="40px"/>
+                          </Tooltip>
+                        </Link>
+                      </Grid>
+                      <Grid item>
+                        <Link href={this.getIcsURL(booking._id)}>
+                          <Tooltip title={BOOKING.ADD_OTHER_AGENDA}>
+                            <img src='/static/assets/icon/calendar.svg' width="40px"/>
+                          </Tooltip>
+                        </Link>
+                      </Grid>
                       {
                         reservationType === 1 && !booking.customer_booking ?
                           <Grid item>
