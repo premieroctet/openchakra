@@ -104,7 +104,6 @@ class ProfileStatistics extends BasePage {
     const month=this.state.statisticsMonth
     axios.get(`/myAlfred/api/performances/statistics/${year}/${month}`)
       .then(res => {
-        console.log(res, 'resloadmonthstatistics')
         this.setState({
           monthIncomes: res.data.incomes,
           monthPrestations: res.data.prestations,
@@ -112,7 +111,7 @@ class ProfileStatistics extends BasePage {
           monthReviews: res.data.totalReviews,
         })
       })
-      .catch(err => console.log(err, 'errorloadmonthstatistics'))
+      .catch(err => console.error(err))
   }
 
   loadYearStatistics() {
@@ -120,7 +119,6 @@ class ProfileStatistics extends BasePage {
 
     axios.get(`/myAlfred/api/performances/statistics/${year}`)
       .then(res => {
-        console.log(res, 'resloadyearstatistics')
         this.setState({
           yearIncomes: res.data.incomes,
           yearPrestations: res.data.prestations,
@@ -128,7 +126,7 @@ class ProfileStatistics extends BasePage {
           yearReviews: res.data.totalReviews,
         })
       })
-      .catch(err => console.log(err, 'errorloadyearstatistics'))
+      .catch(err => console.error(err))
   }
 
   content = (classes, user, theme) => {

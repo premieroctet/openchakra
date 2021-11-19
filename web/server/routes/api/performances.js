@@ -62,8 +62,6 @@ router.get('/statistics/:year/:month?', passport.authenticate('jwt', {session: f
 
   const year = parseInt(req.params.year)
   const month = req.params.month
-  console.log(month, 'apimonth')
-  console.log(year, 'apiyear')
 
   const re=new RegExp(`${month==undefined ? '':month}/${year}$`)
 
