@@ -46,7 +46,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import AlgoliaPlaces from 'algolia-places-react'
 import {SEARCHBAR} from '../../../utils/i18n'
 import BusinessIcon from '@material-ui/icons/Business'
-const {emptyPromise} = require('../../../utils/promise')
 const {EMPLOYEE}=require('../../../utils/consts')
 const {formatAddress} = require('../../../utils/text.js')
 
@@ -104,7 +103,7 @@ class MobileNavbar extends React.Component {
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         const user=res.data
-        const promise = isB2BAdmin()||isB2BManager() ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
+        const promise = isB2BAdmin()||isB2BManager() ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
         promise
           .then(res => {
             let allAddresses = {'main': res.data.billing_address}

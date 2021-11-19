@@ -1,3 +1,4 @@
+const {EDIT_PROFIL}=require('../../../../utils/i18n')
 const {hasRefs}=require('../../../utils/database')
 const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../../utils/filesystem')
 const {getIdentifiers, getKeys, getQueries}=require('../../../utils/i18n_extraction')
@@ -17,7 +18,7 @@ const validateRegisterAdminInput = require('../../../validation/registerAdmin')
 const validateCategoryInput = require('../../../validation/category')
 const validateServiceInput = require('../../../validation/service')
 const {addIdIfRequired} = require('../../../utils/mangopay')
-const {normalizePhone, bufferToString, normalize, isMobilePhone} = require('../../../../utils/text')
+const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
 const {counterArray} = require('../../../../utils/converters')
 const {ADMIN} = require('../../../../utils/consts')
 const csv_parse = require('csv-parse/lib/sync')
@@ -28,6 +29,7 @@ const {delayedPromise}=require('../../../../utils/promise')
 const {get_token, send_cookie, get_logged_id}=require('../../../utils/serverContext')
 const {createUIConfiguration} = require('../../../utils/ui_generation')
 const {logEvent}=require('../../../utils/events')
+const Validator = require('validator')
 
 // For Node < 12.0
 if (!Promise.allSettled) {
@@ -447,7 +449,7 @@ router.post('/users/admin', passport.authenticate('admin', {session: false}), (r
   req.context.getModel('User').findOne({email: req.body.email, is_admin: true})
     .then(user => {
       if (user) {
-        errors.email = 'Email déjà existant'
+        errors.email = EDIT_PROFIL.duplicate_email
         return res.status(400).json(errors)
       }
       const newUser = {
@@ -2022,11 +2024,11 @@ router.post('/prospect/search', passport.authenticate('jwt', {session: false}), 
             .then(result => {
               // Keep
               phone_results = result.map(p => (p.status=='fulfilled' && p.value.data.utils.status=='OK' ? p.value.data.utils.phonenumber : null))
-              const mobile_count = phone_results.filter(p => isMobilePhone(p))
+              const mobile_count = phone_results.filter(p => Validator.isMobilePhone(p))
               req_result.push(`N°s tel mobiles reçus:${mobile_count.length}`)
               let db_promises = []
               phone_results.forEach((phone, index) => {
-                if (isMobilePhone(phone)) {
+                if (Validator.isMobilePhone(phone)) {
                   const ad = all_ads[index]
                   const pData={
                     category: category,

@@ -623,6 +623,11 @@ const LAYOUT_ABOUT = {
 const EDIT_PROFIL = {
   email_send: 'Mail envoyé',
   error_email: 'email non envoyé',
+  duplicate_email: 'Un compte avec cet email existe déjà',
+  empty_firstname: 'Le prénom est requis',
+  empty_name: 'Le nom est requis',
+  empty_phone: 'Le numéro de téléphone est requis',
+  invalid_phone: 'Le numéro de téléphone est invalide',
   sms_send: 'Le SMS a été envoyé',
   sms_error: "Impossible d'envoyer le SMS",
   validate_phone: 'Votre numéro de téléphone est validé',

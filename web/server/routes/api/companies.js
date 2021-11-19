@@ -1,5 +1,7 @@
+const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../utils/filesystem')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const {computeUrl}=require('../../../config/config')
@@ -338,7 +340,7 @@ router.post('/members', passport.authenticate('b2badmin', {session: false}), (re
   req.context.getModel('User').findOne({email: req.body.email})
     .then(user => {
       if (user) {
-        return res.status(400).json({error: "L'email existe déjà"})
+        return res.status(400).json({error: EDIT_PROFIL.duplicate_email})
       }
       const company_id = req.user.company
       const newUser= {

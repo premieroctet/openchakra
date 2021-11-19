@@ -40,7 +40,6 @@ const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage = require('./basePage')
 const {BOOK_STATUS, MANAGER}=require('../utils/consts')
 const isEmpty = require('../server/validation/is-empty')
-const {emptyPromise} = require('../utils/promise')
 const {computeDistanceKm} = require('../utils/functions')
 const {roundCurrency} = require('../utils/converters')
 const {computeBookingReference} = require('../utils/text')
@@ -184,7 +183,7 @@ class UserServicesPreview extends BasePage {
 
             }
             st.user=user
-            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
+            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
             promise
               .then(res => {
                 if (res.data) {
@@ -674,7 +673,7 @@ class UserServicesPreview extends BasePage {
     }
 
     let chatPromise = !user ?
-      emptyPromise({res: null})
+      Promise.resolve({res: null})
       :
       axios.post('/myAlfred/api/chatRooms/addAndConnect', {
         emitter: this.state.user._id,

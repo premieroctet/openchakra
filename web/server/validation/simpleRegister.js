@@ -1,9 +1,63 @@
 const Validator = require('validator')
 const isEmpty = require('./is-empty')
 const moment = require('moment')
-const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE, MANAGER, DASHBOARD_MODE, CARETAKER_MODE}=require('../../utils/consts')
+const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE, DASHBOARD_MODE}=require('../../utils/consts')
+const {EDIT_PROFIL}=require('../../utils/i18n')
 const _ = require('lodash')
 moment.locale('fr')
+
+const validateBirthday = data => {
+  let errors = {}
+  if (!moment(data).isValid()) {
+    errors.birthday = 'Date de naissance invalide'
+  }
+  if (moment(data).isValid() && moment(data).isAfter(moment().subtract(ACCOUNT_MIN_AGE, 'years'))) {
+    console.warn(`${data} ${moment(data)}<${moment().subtract(ACCOUNT_MIN_AGE, 'years')}`)
+    errors.birthday = `L'âge minimum est de ${ACCOUNT_MIN_AGE} ans`
+  }
+  if (moment(data).isValid() && moment(data).isBefore(moment().subtract(150, 'years'))) {
+    errors.birthday = 'Date de naissance invalide, merci de saisir l\'année sur 4 chiffres'
+  }
+  return Object.keys(errors).length>0 ? errors : null
+}
+
+
+const validateEditProfile = data => {
+  let errors = {}
+
+  data.name = !isEmpty(data.name) ? data.name : ''
+  data.firstname = !isEmpty(data.firstname) ? data.firstname : ''
+  data.email = !isEmpty(data.email) ? data.email : ''
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = EDIT_PROFIL.empty_name
+  }
+
+  if (Validator.isEmpty(data.firstname)) {
+    errors.firstname = EDIT_PROFIL.empty_firstname
+  }
+
+  if (Validator.isEmpty(data.email)) {
+    errors.email = 'Veuillez saisir un email'
+  }
+
+  if (!Validator.isEmail(data.email)) {
+    errors.email = 'Email invalide'
+  }
+
+  // On ne valide le téléphone que s'il est vide
+  if (!Validator.isEmpty(data.phone) && !Validator.isMobilePhone(data.phone, ['fr-FR'])) {
+    errors.phone = EDIT_PROFIL.invalid_phone
+  }
+
+  errors = {...validateBirthday(data.birthday), ...errors}
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  }
+}
+
 
 const validateSimpleRegisterInput = data => {
 
@@ -76,51 +130,6 @@ const validateSimpleRegisterInput = data => {
     errors.country = 'Veuillez choisir un pays'
   }
   */
-  return {
-    errors,
-    isValid: isEmpty(errors),
-  }
-}
-
-const validateBirthday = data => {
-  var errors = {}
-  if (!moment(data).isValid()) {
-    errors.birthday = 'Date de naissance invalide'
-  }
-  if (moment(data).isValid() && moment(data).isAfter(moment().subtract(ACCOUNT_MIN_AGE, 'years'))) {
-    console.warn(`${data} ${moment(data)}<${moment().subtract(ACCOUNT_MIN_AGE, 'years')}`)
-    errors.birthday = `L'âge minimum est de ${ACCOUNT_MIN_AGE} ans`
-  }
-  if (moment(data).isValid() && moment(data).isBefore(moment().subtract(150, 'years'))) {
-    errors.birthday = 'Date de naissance invalide, merci de saisir l\'année sur 4 chiffres'
-  }
-  return Object.keys(errors).length>0 ? errors : null
-}
-
-const validateEditProfile = data =>{
-  let errors = {}
-
-  data.name = !isEmpty(data.name) ? data.name : ''
-  data.firstname = !isEmpty(data.firstname) ? data.firstname : ''
-  data.email = !isEmpty(data.email) ? data.email : ''
-
-  if (Validator.isEmpty(data.name)) {
-    errors.name = 'Veuillez saisir un nom'
-  }
-
-  if (Validator.isEmpty(data.firstname)) {
-    errors.firstname = 'Veuillez saisir un prénom'
-  }
-
-  if (Validator.isEmpty(data.email)) {
-    errors.email = 'Veuillez saisir un email'
-  }
-
-  if (!Validator.isEmail(data.email)) {
-    errors.email = 'Email invalide'
-  }
-
-  errors = {...validateBirthday(data.birthday), ...errors}
 
   return {
     errors,
@@ -128,7 +137,7 @@ const validateEditProfile = data =>{
   }
 }
 
-const validateEditProProfile = data =>{
+const validateEditProProfile = data => {
   let errors = {}
 
   data.name = !isEmpty(data.name) ? data.name : ''
@@ -137,11 +146,11 @@ const validateEditProProfile = data =>{
   data.position = !isEmpty(data.position) ? data.position : ''
 
   if (Validator.isEmpty(data.name)) {
-    errors.name = 'Veuillez saisir un nom'
+    errors.name = EDIT_PROFIL.empty_name
   }
 
   if (Validator.isEmpty(data.firstname)) {
-    errors.firstname = 'Veuillez saisir un prénom'
+    errors.firstname = EDIT_PROFIL.empty_firstname
   }
 
   if (Validator.isEmpty(data.email)) {
@@ -156,14 +165,14 @@ const validateEditProProfile = data =>{
     errors.position = 'Veuillez saisir une fonction'
   }
 
-  errors = { ...validateBirthday(data.birthday), ...errors}
+  errors = {...validateBirthday(data.birthday), ...errors}
   return {
     errors,
     isValid: isEmpty(errors),
   }
 }
 
-const validateCompanyProfile = data =>{
+const validateCompanyProfile = data => {
   let errors = {}
 
   data.name = !isEmpty(data.name) ? data.name : ''
@@ -177,7 +186,7 @@ const validateCompanyProfile = data =>{
   data.billing_address = !isEmpty(data.billing_address) ? data.billing_address : null
 
   if (Validator.isEmpty(data.name)) {
-    errors.name = 'Veuillez saisir un nom'
+    errors.name = EDIT_PROFIL.empty_name
   }
 
   if (data.vat_subject && Validator.isEmpty(data.vat_number)) {
@@ -193,7 +202,7 @@ const validateCompanyProfile = data =>{
   }
 
   if (!data.billing_address) {
-    errors.billing_address = "Veuillez saisir une adresse"
+    errors.billing_address = 'Veuillez saisir une adresse'
   }
 
   if (data.admin_email && !Validator.isEmail(data.admin_email)) {
@@ -201,9 +210,9 @@ const validateCompanyProfile = data =>{
   }
 
   // Admin : all or nothing
-  const admin_empties = _.uniq(['admin_firstname', 'admin_name', 'admin_email'].map( f => Validator.isEmpty(data[f])))
+  const admin_empties = _.uniq(['admin_firstname', 'admin_name', 'admin_email'].map(f => Validator.isEmpty(data[f])))
   if (admin_empties.length>1) {
-    ['admin_firstname', 'admin_name', 'admin_email'].forEach( att => {
+    ['admin_firstname', 'admin_name', 'admin_email'].forEach(att => {
       if (!data[att]) {
         errors[att]='Valeur attendue'
       }
@@ -216,7 +225,7 @@ const validateCompanyProfile = data =>{
   }
 }
 
-const validateCompanyMember = data =>{
+const validateCompanyMember = data => {
   let errors = {}
 
   data.name = !isEmpty(data.name) ? data.name : ''
@@ -245,7 +254,7 @@ const validateCompanyMember = data =>{
   }
 }
 
-const validateCompanyGroup = (data, update) =>{
+const validateCompanyGroup = (data, update) => {
   let errors = {}
 
   data.name = !isEmpty(data.name) ? data.name : ''
@@ -253,7 +262,7 @@ const validateCompanyGroup = (data, update) =>{
   data.budget_period = 'budget_period' in data ? data.budget_period : ''
 
   if (Validator.isEmpty(data.name)) {
-    errors.name = 'Veuillez saisir un nom'
+    errors.name = EDIT_PROFIL.empty_name
   }
 
   if ('budget' in data && !data.budget) {
@@ -274,7 +283,7 @@ const validateCompanyGroup = (data, update) =>{
   }
 }
 
-const validateAvocotesCustomer = data =>{
+const validateAvocotesCustomer = data => {
   let errors = {}
 
   console.log(data.quantities)
@@ -286,15 +295,15 @@ const validateAvocotesCustomer = data =>{
   data.service = data.service || ''
 
   if (Validator.isEmpty(data.firstname)) {
-    errors.name = 'Veuillez saisir un prénom'
+    errors.name = EDIT_PROFIL.empty_firstname
   }
 
   if (Validator.isEmpty(data.name)) {
-    errors.name = 'Veuillez saisir un nom'
+    errors.name = EDIT_PROFIL.empty_name
   }
 
   if (Validator.isEmpty(data.phone)) {
-    errors.phone = 'Numéro de téléphone requis'
+    errors.phone = EDIT_PROFIL.empty_phone
   }
 
   if (!data.address) {

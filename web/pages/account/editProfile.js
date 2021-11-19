@@ -1,4 +1,3 @@
-import {COMPANY_NAME, EDIT_PROFIL} from '../../utils/i18n'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -147,14 +146,18 @@ class editProfile extends React.Component {
   };
 
   sendEmail = () => {
-    axios.get('/myAlfred/api/users/sendMailVerification')
+    setAxiosAuthentication()
+    axios.put('/myAlfred/api/users/profile/email', {email: this.state.user.email})
+      .then(() => {
+        return axios.get('/myAlfred/api/users/sendMailVerification')
+      })
       .then(() => {
         snackBarSuccess(ReactHtmlParser(this.props.t('EDIT_PROFIL.email_send')))
       })
-      .catch(() => {
-        snackBarError(ReactHtmlParser(this.props.t('EDIT_PROFIL.error_email')))
+      .catch(err => {
+        snackBarError(err.response.data)
       })
-  };
+  }
 
   sendSms = () => {
     setAxiosAuthentication()
@@ -249,8 +252,8 @@ class editProfile extends React.Component {
         this.setState({errors: {}}, () => this.loadUser())
       })
       .catch(err => {
-        err.response ?
-          snackBarError(err.response.data) : null
+        snackBarError(err.response.data)
+        this.setState({errors: err.response.data})
       })
   };
 
@@ -366,7 +369,7 @@ class editProfile extends React.Component {
               <CustomButton
                 variant="contained"
                 color={'primary'}
-                onClick={() => (user.is_confirmed ? this.onSubmit() : this.sendEmail())}
+                onClick={this.sendEmail}
                 disabled={user.email ? !!(userEmail === user.email && user.is_confirmed) : true}
                 classes={{root: `customeditprofilcheckemail ${classes.buttonCheckPhone}`}}
               >

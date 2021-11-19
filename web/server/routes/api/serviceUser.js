@@ -10,7 +10,6 @@ const geolib = require('geolib')
 const _ = require('lodash')
 const moment = require('moment')
 const {data2ServiceUser} = require('../../utils/mapping')
-const {emptyPromise} = require('../../../utils/promise')
 const serviceFilters = require('../../utils/filters')
 const {GID_LEN, PRO, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
 const {normalize} = require('../../../utils/text')
@@ -133,7 +132,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
         professional_access: req.body.professional_access,
       }))
 
-      const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : emptyPromise({insertedIds: []})
+      const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : Promise.resolve({insertedIds: []})
       r
         .then(result => {
           let insertedPrestations=result

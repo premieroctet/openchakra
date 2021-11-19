@@ -31,7 +31,6 @@ const {computeDistanceKm}=require('../utils/functions')
 const SearchResults=withSlide(withGrid(CardService))
 const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
-const {emptyPromise}=require('../utils/promise')
 
 
 moment.locale('fr')
@@ -160,7 +159,7 @@ class SearchPage extends BasePage {
                 this.setState({isAdmin: user.is_admin})
                 st.user = user
 
-                const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
+                const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
                 promise
                   .then(res => {
                     let allAddresses = {'main': res.data.billing_address.gps}
