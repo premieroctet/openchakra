@@ -8,7 +8,7 @@ class CardAlbum extends React.Component {
   }
 
   render() {
-    const{classes, item, onClick} = this.props
+    const{item, onClick} = this.props
 
     if (!item) {
       return null
@@ -16,7 +16,7 @@ class CardAlbum extends React.Component {
 
     return (
       <Grid>
-        <img src={`/${item.picture || item.path}`} width={100} onClick={onClick ? () => { onClick(item._id) } : {}}/>
+        <img src={`/${item.picture || item.path || item}`} width={100} onClick={onClick ? () => { onClick(item._id) } : {}}/>
         <div>{item.label}</div>
       </Grid>
 

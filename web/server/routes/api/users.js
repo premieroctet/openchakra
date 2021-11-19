@@ -1119,13 +1119,13 @@ router.post('/profile/album/add', uploadAlbumPicture.single('myImage'), passport
     })
 })
 
-// @Route GET /myAlfred/api/users/profile/albums
+// @Route GET /myAlfred/api/users/profile/album
 // Gets albums
 // @Access private
-router.get('/profile/albums/:user_id', (req, res) => {
-  req.context.getModel('Album').find({user: req.params.user_id})
-    .then(albums => {
-      res.json(albums)
+router.get('/profile/album/:user_id', (req, res) => {
+  req.context.getModel('Album').findOne({user: req.params.user_id})
+    .then(album => {
+      res.json(album && album.pictures || [])
     })
     .catch(err => {
       console.error(err)
@@ -1137,18 +1137,13 @@ router.get('/profile/albums/:user_id', (req, res) => {
 // Add a picture to an album
 // @Access private
 router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  console.log('Adding picture')
-  req.context.getModel('Album').findById(req.body.album)
-    .then(album => {
-      console.log('Album found')
-      album.pictures.push({path: req.file.path})
-      album.save()
-      console.log('Album saved')
-      res.status(200).json({})
+  req.context.getModel('Album').findOneAndUpdate({user: req.user.id}, {$push: {pictures: req.file.path}}, {new: true, upsert: true})
+    .then(() => {
+      res.json({})
     })
     .catch(err => {
       console.error(err)
-      res.status(500).json({error: err})
+      res.status(500).json(err)
     })
 })
 
