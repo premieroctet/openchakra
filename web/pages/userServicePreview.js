@@ -1,3 +1,4 @@
+import Album from '../components/Album/Album';
 import { Divider, Link } from '@material-ui/core';
 const {
   getDeadLine,
@@ -920,6 +921,9 @@ class UserServicesPreview extends BasePage {
                         </Topic>
                       </Grid> : ''
                   }
+                </Grid>
+                <Grid style={{height: '300px'}}>
+                  <Album user={alfred._id} key={moment()} underline={true} readOnly={true}/>
                 </Grid>
                 <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
                   <Grid className={classes.showReservation}>

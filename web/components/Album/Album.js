@@ -52,7 +52,9 @@ class Album extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log(`ComponentDidMount:${this.props.user}`)
+    if (!this.props.user) {
+      return
+    }
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/profile/album/${this.props.user}`)
       .then(res => {
@@ -158,10 +160,10 @@ class Album extends React.Component {
     const {user, classes} = this.props
 
     return (
-      <Topic titleTopic={'Album'}>
+      <Topic titleTopic={'Album'} underline={this.props.underline}>
         <Grid style={{display: 'flex', flexDirection: 'column'}}>
           <Grid>
-            {isEditableUser(user) &&
+            {isEditableUser(user) && !this.props.readOnly &&
               <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
                 <IconButton aria-label="add" onClick={() => this.openAddPicture()}>
                   <AddCircleIcon />
@@ -170,10 +172,11 @@ class Album extends React.Component {
               </Grid>
             }
             <Grid>
-              {pictures.length === 0 ? null :
+              {pictures.length &&
                 <ImageSlide
-                  model={new SlideGridDataModel(pictures, 4, 1, true)}
+                  model={new SlideGridDataModel(pictures, 4, 1, false)}
                   style={classes}
+                  hidePageCount={true}
                 />
               }
             </Grid>
