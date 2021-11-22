@@ -1,3 +1,4 @@
+import { snackBarError, snackBarSuccess } from '../../utils/notifications';
 import Topic from '../../hoc/Topic/Topic'
 import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
@@ -143,6 +144,7 @@ class Album extends React.Component {
         'content-type': 'multipart/form-data',
       },
     }
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/users/profile/album/picture/add', formData, config)
       .then(() => {
         this.componentDidMount()
@@ -152,8 +154,20 @@ class Album extends React.Component {
         console.error(err)
         snackBarError(err.response.data)
       })
-
   };
+
+  onDelete = item => {
+    setAxiosAuthentication()
+    axios.delete(`/myAlfred/api/users/profile/album/picture/${item.id}`)
+      .then(() => {
+        this.componentDidMount()
+        this.closeAddDialog()
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      })
+  }
 
   render() {
     const {showAddPicture, pictures} = this.state
@@ -172,11 +186,12 @@ class Album extends React.Component {
               </Grid>
             }
             <Grid>
-              {pictures.length &&
+              {pictures.length>0 &&
                 <ImageSlide
-                  model={new SlideGridDataModel(pictures, 4, 1, false)}
+                  model={new SlideGridDataModel(pictures.map((p, idx) => { return {id: idx, path: p} }), 4, 1, false)}
                   style={classes}
                   hidePageCount={true}
+                  onDelete={!this.props.readOnly && this.onDelete}
                 />
               }
             </Grid>

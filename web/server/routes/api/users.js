@@ -1146,6 +1146,32 @@ router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), 
       res.status(500).json(err)
     })
 })
+router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
+  req.context.getModel('Album').findOneAndUpdate({user: req.user.id}, {$push: {pictures: req.file.path}}, {new: true, upsert: true})
+    .then(() => {
+      res.json({})
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+router.delete('/profile/album/picture/:pic_index', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const remove_idx=parseInt(req.params.pic_index)
+  req.context.getModel('Album').findOne({user: req.user.id})
+    .then(album => {
+      album.pictures=album.pictures.filter((p, idx) => remove_idx!=idx)
+      return album.save()
+    })
+    .then(() => {
+      res.json({})
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
 
 router.get('/still_profile/:filename', (req, res) => {
   res.set('Content-Type', 'image/*')

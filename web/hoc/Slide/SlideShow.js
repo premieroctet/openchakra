@@ -47,12 +47,10 @@ function withSlide(WrappedComponent) {
               </Grid>
             </Grid>
           </Carousel>
-          { !model.isInfinite() && !this.props.hidePageCount ?
+          { !model.isInfinite() && !this.props.hidePageCount &&
             <Grid style={{display: 'flex', justifyContent: 'center', marginTop: '5vh', marginBottom: '5vh'}}>
               <Pagination count={pageCount} page={pageIndex+1} onChange={this.onPageChange} classes={{root: `custompagination ${style.paginationRoot}`}}/>
             </Grid>
-            :
-            null
           }
         </Grid>
       )
