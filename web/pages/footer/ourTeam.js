@@ -1,4 +1,4 @@
-import {useTranslation, withTranslation} from 'react-i18next'
+import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
@@ -6,12 +6,10 @@ import styles from '../../static/css/pages/homePage/index'
 import LayoutFaq from '../../hoc/Layout/LayoutFaq'
 import CardTeam from '../../components/Card/CardTeam/CardTeam'
 
-
 function OurTeam(props) {
-  const {classes} = props
-  const {t, i18n} = useTranslation('translations')
-  console.log(i18n.exists("test"), t("test"))
-  
+  const {classes, t} = props
+  const team = t('employees', {returnObjects: true})
+
   return (
     <LayoutFaq>
       <Grid container spacing={4} style={{margin: 0, width: '100%'}}>
@@ -21,9 +19,9 @@ function OurTeam(props) {
           </Grid>
           <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
             {
-              [...Array(10)].map((res, index) => (
+              Object.keys(team).map(res => (
                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                  <CardTeam data={res}/>
+                  <CardTeam data={team[res]}/>
                 </Grid>
               ))
             }

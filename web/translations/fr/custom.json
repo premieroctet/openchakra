@@ -1,2 +1,16 @@
 {
+  "employees": [
+    {
+      "name": "Edwin",
+      "job": "Développeur front",
+      "description": "Je suis développeur front chez my alfred",
+      "url": "/static/basicavatar.png"
+    },
+    {
+      "name": "Sebastien",
+      "job": "CTO",
+      "description": "Je suis développeur CTO chez my alfred",
+      "url": "/static/basicavatar.png"
+    }
+  ]
 }

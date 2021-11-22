@@ -37,8 +37,6 @@ const INFOBAR = {
   randomTextC: 'aurevoir',
 }
 
-
-
 const INFOBARMOBILE = {
   message: "L'application MyAlfred est disponible au téléchargement sur :",
 }

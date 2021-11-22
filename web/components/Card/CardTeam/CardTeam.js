@@ -1,13 +1,13 @@
 import {makeStyles} from '@material-ui/core/styles'
 import React from 'react'
 import {withTranslation} from 'react-i18next'
-import {Card, CardContent, CardMedia} from '@material-ui/core'
+import {Card, CardContent} from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    //boxShadow: 'inherite',
+    boxShadow: 'inherit',
   },
   mediaContainer: {
     height: '56.25%',
@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: '1%',
   },
   media: {
-    backgroundImage: 'url(/static/basicavatar.png)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
@@ -41,26 +40,25 @@ const useStyles = makeStyles((theme) => ({
 
 function CardTeam(props) {
   const {data} = props
-  const classes = useStyles()
   console.log(data, 'data')
+  const classes = useStyles()
 
   return(
     <Card className={classes.root}>
       <Grid className={classes.mediaContainer}>
-        <Grid className={classes.media}/>
+        <Grid className={classes.media} style={{backgroundImage: `url(${data.url})`}}/>
       </Grid>
       <CardContent>
         <Grid container spacing={2} style={{width: '100%', margin: 0}}>
           <Grid item xs={12} className={classes.name}>
-            <Typography>Edwin</Typography>
+            <Typography>{data.name}</Typography>
           </Grid>
           <Grid item xs={12} className={classes.title}>
-            <Typography><strong>Profession</strong></Typography>
+            <Typography><strong>{data.job}</strong></Typography>
           </Grid>
           <Grid item xs={12} className={classes.description}>
             <Typography variant="body2" color="textSecondary" component="p">
-              This impressive paella is a perfect party dish and a fun meal to cook together with your
-              guests. Add 1 cup of frozen peas along with the mussels, if you like.
+              {data.description}
             </Typography>
           </Grid>
         </Grid>
