@@ -46,7 +46,7 @@ const validateEditProfile = data => {
   }
 
   // On ne valide le téléphone que s'il est vide
-  if (!Validator.isEmpty(data.phone) && !Validator.isMobilePhone(data.phone, ['fr-FR'])) {
+  if (!isEmpty(data.phone) && !Validator.isMobilePhone(data.phone, ['fr-FR'])) {
     errors.phone = EDIT_PROFIL.invalid_phone
   }
 
@@ -302,7 +302,7 @@ const validateAvocotesCustomer = data => {
     errors.name = EDIT_PROFIL.empty_name
   }
 
-  if (Validator.isEmpty(data.phone)) {
+  if (isEmpty(data.phone)) {
     errors.phone = EDIT_PROFIL.empty_phone
   }
 
