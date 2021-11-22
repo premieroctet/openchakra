@@ -22,7 +22,7 @@ const {send_cookie}=require('../../utils/serverContext')
 const {connectionPool}=require('../../utils/database')
 const {serverContextFromPartner}=require('../../utils/serverContext')
 const gifFrames = require('gif-frames')
-const fs = require('fs')
+const fs = require('fs').promises
 
 axios.defaults.withCredentials = true
 
@@ -1161,7 +1161,11 @@ router.delete('/profile/album/picture/:pic_index', passport.authenticate('jwt', 
   const remove_idx=parseInt(req.params.pic_index)
   req.context.getModel('Album').findOne({user: req.user.id})
     .then(album => {
+      const path=album.pictures[remove_idx]
       album.pictures=album.pictures.filter((p, idx) => remove_idx!=idx)
+      fs.unlink(path)
+        .then(() => console.log(`Removed ${req.user.id}'s album picture ${path}`))
+        .catch(err => console.log(`Remove ${req.user.id}'s album picture ${path}: error ${err}`))
       return album.save()
     })
     .then(() => {
@@ -1180,14 +1184,15 @@ router.get('/still_profile/:filename', (req, res) => {
       const img=frameData[0].getImage().read()
       return res.send(img)
     })
-    .catch(err => {
-      fs.readFile(`static/profile/${req.params.filename}`, (err, data) => {
-        if (err) {
+    .catch(() => {
+      fs.readFile(`static/profile/${req.params.filename}`)
+        .then(data => {
+          return res.send(data)
+        })
+        .catch(err => {
           console.error(err)
           return res.send()
-        }
-        return res.send(data)
-      })
+        })
     })
 })
 
