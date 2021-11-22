@@ -8,8 +8,8 @@ import CardTeam from '../../components/Card/CardTeam/CardTeam'
 
 function OurTeam(props) {
   const {classes, t, i18n} = props
-  const isTeam = i18n.exists('employees')
-  const team = t('employees', {returnObjects: true})
+  const isTeam = i18n.exists('EMPLOYEES')
+  const team = t('EMPLOYEES', {returnObjects: true})
   const nonEmptyMembers = isTeam ? team.filter(m => Object.values(m).some(v => !!v)) : []
 
   return (
