@@ -7,8 +7,10 @@ import LayoutFaq from '../../hoc/Layout/LayoutFaq'
 import CardTeam from '../../components/Card/CardTeam/CardTeam'
 
 function OurTeam(props) {
-  const {classes, t} = props
+  const {classes, t, i18n} = props
+  const isTeam = i18n.exists('employees')
   const team = t('employees', {returnObjects: true})
+  const nonEmptyMembers = isTeam ? team.filter(m => Object.values(m).some(v => !!v)) : []
 
   return (
     <LayoutFaq>
@@ -19,9 +21,9 @@ function OurTeam(props) {
           </Grid>
           <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
             {
-              Object.keys(team).map(res => (
-                <Grid item lg={3} md={4} sm={6} xs={12}>
-                  <CardTeam data={team[res]}/>
+              Object.keys(nonEmptyMembers).map((res, index) => (
+                <Grid item lg={3} md={4} sm={6} xs={12} key={index}>
+                  <CardTeam data={nonEmptyMembers[res]} index={index}/>
                 </Grid>
               ))
             }

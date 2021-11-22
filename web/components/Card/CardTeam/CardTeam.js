@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: '1%',
   },
   media: {
+    backgroundImage: 'url(/static/basicavatar.png)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
@@ -39,14 +40,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function CardTeam(props) {
-  const {data} = props
-  console.log(data, 'data')
+  const {data, index} = props
   const classes = useStyles()
 
   return(
     <Card className={classes.root}>
       <Grid className={classes.mediaContainer}>
-        <Grid className={classes.media} style={{backgroundImage: `url(${data.url})`}}/>
+        <Grid className={`customemployepics${index} ${classes.media}`}/>
       </Grid>
       <CardContent>
         <Grid container spacing={2} style={{width: '100%', margin: 0}}>
