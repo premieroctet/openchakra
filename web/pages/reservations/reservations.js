@@ -1,3 +1,4 @@
+import {Link, Tooltip} from '@material-ui/core'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import '../../static/assets/css/custom.css'
 import {withStyles} from '@material-ui/core/styles'
@@ -29,7 +30,6 @@ import {RESERVATION, BOOKING} from '../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import {Link} from '@material-ui/core'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -300,7 +300,7 @@ class AllReservations extends BasePage {
                     <Grid item xl={1} lg={1} md={6} sm={3} xs={4} className={classes.priceContainer}>
                       <Typography className={classes.alfredAmount}><strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong></Typography>
                     </Grid>
-                    <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer}>
+                    <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer} style={{alignItems: 'center'}}>
                       <Grid item>
                         <CustomButton
                           color={'primary'}
@@ -310,12 +310,20 @@ class AllReservations extends BasePage {
                           {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
                         </CustomButton>
                       </Grid>
-                      <Grid item><Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
-                        {BOOKING.ADD_GOOGLE_AGENDA}
-                      </Link></Grid>
-                      <Grid item><Link href={this.getIcsURL(booking._id)}>
-                        {BOOKING.ADD_OTHER_AGENDA}
-                      </Link></Grid>
+                      <Grid item>
+                        <Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
+                          <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
+                            <img src='/static/assets/icon/google_calendar.svg' width="50px"/>
+                          </Tooltip>
+                        </Link>
+                      </Grid>
+                      <Grid item>
+                        <Link href={this.getIcsURL(booking._id)}>
+                          <Tooltip title={BOOKING.ADD_OTHER_AGENDA}>
+                            <img src='/static/assets/icon/calendar.svg' width="50px"/>
+                          </Tooltip>
+                        </Link>
+                      </Grid>
                       {
                         reservationType === 1 && !booking.customer_booking ?
                           <Grid item>

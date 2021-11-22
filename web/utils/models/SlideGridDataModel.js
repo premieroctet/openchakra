@@ -29,7 +29,7 @@ class SlideGridDataModel {
 
   getDataIndex(page, col, row) {
     const grid_index = row*this.getColumns()+col
-    var arrayIndex=page*(this.getGridSize())+grid_index
+    let arrayIndex=page*(this.getGridSize())+grid_index
     arrayIndex = this.infinite ? arrayIndex%this.data.length : arrayIndex
     return arrayIndex
   }

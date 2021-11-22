@@ -45,7 +45,7 @@ module.exports = function validateRegisterAdminInput(data) {
     errors.password2 = 'Les mots de passe doivent être identiques'
   }
 
-  if (Validator.isEmpty(data.phone)) {
+  if (isEmpty(data.phone)) {
     errors.phone = EDIT_PROFIL.empty_phone
   }
 

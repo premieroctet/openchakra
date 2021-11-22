@@ -136,8 +136,8 @@ class BookingPreference extends React.Component {
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <h4 className={classes.policySizeSubtitle} style={{margin: 0}}>{ReactHtmlParser(this.props.t('SHOP.preferences.title_equipments'))}</h4>
           </Grid>
-          <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
-            <Grid container xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0, width: '100%'}}>
+          <Grid container item spacing={1} style={{margin: 0, width: '100%'}}>
+            <Grid container spacing={1} style={{margin: 0, width: '100%'}}>
               {service.equipments.map((result, index) => {
                 const selected=this.state.equipments.includes(result._id)
                 return (
@@ -145,13 +145,12 @@ class BookingPreference extends React.Component {
                     <label style={{cursor: 'pointer'}}>
                       <img
                         src={`/static/equipments/${result.logo}`}
-                        height={100}
-                        width={100}
                         alt={result.label}
                         title={result.label}
                         style={{filter: selected ? 'invert(3%) sepia(53%) saturate(1998%) hue-rotate(206deg) brightness(97%) contrast(88%)'
                           :
-                          'invert(99%) sepia(0%) saturate(424%) hue-rotate(149deg) brightness(93%) contrast(88%)'}}
+                          'invert(99%) sepia(0%) saturate(424%) hue-rotate(149deg) brightness(93%) contrast(88%)',
+                        }}
                       />
                       <Checkbox
                         style={{display: 'none'}}
