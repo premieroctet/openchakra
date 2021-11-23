@@ -63,6 +63,7 @@ class Header extends React.Component {
 
     const {classes} = this.props
     let {title, content, aboutMenu, items, search, aboutSearch} = this.state
+    const teamPage = window.location.pathname === '/footer/ourTeam'
 
     if (process.browser) {
       if (window.location.pathname === '/footer/apropos') {
@@ -101,11 +102,12 @@ class Header extends React.Component {
 
     return (
       <Grid>
-        <Grid className={'customlayoutfaqheaderbanner'} style={{
+        <Grid className={teamPage ? 'customlayoutfaqheaderbannerteam' : 'customlayoutfaqheaderbanner'} style={{
           backgroundImage: "url('/static/assets/img/footer/footerBanner.svg')",
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           width: '100%',
+          minHeight: 400,
         }}>
           <Grid className={classes.containerArrowBack}>
             <CustomButton
