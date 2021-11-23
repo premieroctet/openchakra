@@ -1,3 +1,4 @@
+import DialogCancel from './DialogCancel'
 import DialogReject from './DialogReject'
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
@@ -46,6 +47,7 @@ class BookingPreview extends React.Component {
       loading: false,
       alfred_pro: false,
       rejectOpen: false,
+      cancelOpen: false,
     }
     this.routingDetailsMessage = this.routingDetailsMessage.bind(this)
     this.getPrestationMinMoment = this.getPrestationMinMoment.bind(this)
@@ -150,6 +152,19 @@ class BookingPreview extends React.Component {
     this.setState({rejectOpen: false})
   }
 
+  openCancelReason = () => {
+    this.setState({cancelOpen: true})
+  }
+
+  onCancel = reason => {
+    this.changeStatus(BOOK_STATUS.CANCELLED, reason)
+    this.onCancelClose()
+  }
+
+  onCancelClose = () => {
+    this.setState({cancelOpen: false})
+  }
+
   onChangeEndDate = ev => {
     const m = moment(`${moment(ev).format('DD/MM/YYYY')} ${moment(this.state.end_datetime).format('HH:mm')}`, 'DD/MM/YYYY HH:mm')
     if (m.isAfter(this.getPrestationMinMoment())) {
@@ -221,7 +236,7 @@ class BookingPreview extends React.Component {
 
   render() {
     const {classes, booking_id} = this.props
-    const {bookingObj, currentUser, is_alfred, end_datetime, alfred_pro, rejectOpen} = this.state
+    const {bookingObj, currentUser, is_alfred, end_datetime, alfred_pro, rejectOpen, cancelOpen} = this.state
 
     if (!bookingObj || !currentUser) {
       return null
@@ -648,7 +663,7 @@ class BookingPreview extends React.Component {
                           }}
                         >
                           <a style={{textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}
-                            onClick={() => this.props.onCancel(booking_id)}>
+                            onClick={this.openCancelReason}>
                             {ReactHtmlParser(this.props.t('BOOKING.cancel_resa'))}
                           </a>
                         </Grid>
@@ -692,6 +707,7 @@ class BookingPreview extends React.Component {
             </Grid>
           )}
         <DialogReject open={rejectOpen} onRefuse={this.onReject} onClose={this.onRejectClose}/>
+        <DialogCancel open={cancelOpen} onCancel={this.onCancel} onClose={this.onCancelClose}/>
       </Grid>
     )
   }

@@ -18,7 +18,6 @@ import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
 import BasePage from '../basePage'
-import BookingCancel from '../../components/BookingDetail/BookingCancel'
 import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
@@ -61,7 +60,6 @@ class AllReservations extends BasePage {
       reservationType: 1,
       reservationStatus: 0,
       bookingPreview: null,
-      bookingCancel: null,
       bookingConfirm: null,
       bookingPreApprouved: null,
     }
@@ -133,7 +131,7 @@ class AllReservations extends BasePage {
 
   openBookingPreview = bookingId => {
     this.loadBookings()
-    this.setState({bookingPreview: bookingId, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: null})
+    this.setState({bookingPreview: bookingId, bookingConfirm: null, bookingPreApprouved: null})
   }
 
   getIcsURL = bookingId => {
@@ -144,17 +142,13 @@ class AllReservations extends BasePage {
     return `/myAlfred/api/booking/${bookingId}/google_calendar`
   }
 
-  openBookingCancel = bookingId => {
-    this.setState({bookingPreview: null, bookingCancel: bookingId, bookingConfirm: null, bookingPreApprouved: null})
-  }
-
   openBookingConfirm = bookingId => {
-    this.setState({bookingPreview: null, bookingCancel: null, bookingConfirm: bookingId, bookingPreApprouved: null})
+    this.setState({bookingPreview: null, bookingConfirm: bookingId, bookingPreApprouved: null})
   }
 
   openBookingPreAprouved = bookingId => {
     this.loadBookings()
-    this.setState({bookingPreview: null, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: bookingId})
+    this.setState({bookingPreview: null, bookingConfirm: null, bookingPreApprouved: bookingId})
   }
 
   onClosePreview = () => {
@@ -174,25 +168,7 @@ class AllReservations extends BasePage {
       >
         <DialogTitle id="customized-dialog-title" onClose={this.onClosePreview}/>
         <DialogContent>
-          <BookingPreview booking_id={bookingPreview} onCancel={this.openBookingCancel} onConfirm={this.openBookingConfirm} onConfirmPreapproved={this.openBookingPreAprouved}/>
-        </DialogContent>
-      </Dialog>
-    )
-  }
-
-  bookingCancelModal = classes => {
-    const {bookingCancel}=this.state
-
-    return (
-      <Dialog style={{width: '100%'}}
-        open={Boolean(bookingCancel)}
-        onClose={() => this.setState({bookingCancel: null})}
-        classes={{paper: classes.dialogPreviewPaper}}
-
-      >
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingCancel: null})}/>
-        <DialogContent>
-          <BookingCancel booking_id={bookingCancel} onMaintain={this.openBookingPreview}/>
+          <BookingPreview booking_id={bookingPreview} onConfirm={this.openBookingConfirm} onConfirmPreapproved={this.openBookingPreAprouved}/>
         </DialogContent>
       </Dialog>
     )
@@ -355,7 +331,7 @@ class AllReservations extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {reservationType, userInfo, bookingPreview, bookingCancel, bookingConfirm, bookingPreApprouved} = this.state
+    const {reservationType, userInfo, bookingPreview, bookingConfirm, bookingPreApprouved} = this.state
 
     return (
       <Grid>
@@ -370,7 +346,6 @@ class AllReservations extends BasePage {
           </LayoutMobileReservations>
         </Grid>
         { bookingPreview ? this.bookingPreviewModal(classes) : null}
-        { bookingCancel ? this.bookingCancelModal(classes) : null}
         { bookingConfirm ? this.bookingConfirmModal(classes) : null}
         { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
       </Grid>

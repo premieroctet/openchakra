@@ -1,3 +1,4 @@
+import DialogCancel from '../../components/BookingDetail/DialogCancel';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import DialogReject from '../../components/BookingDetail/DialogReject'
 import DialogBase from '../../components/Dialog/DialogBase'
@@ -10,6 +11,7 @@ class DialogBaseTest extends React.Component {
     this.state={
       base: false,
       reject: false,
+      cancel: true,
     }
   }
 
@@ -21,13 +23,13 @@ class DialogBaseTest extends React.Component {
     this.setState({[st]: true})
   }
 
-  onRefuse = reason => {
+  onCancelRefuse = reason => {
     alert(`Raison:${reason}`)
     this.close('reject')
   }
 
   render() {
-    const {base, reject}=this.state
+    const {base, reject, cancel}=this.state
     const buttons=[
       {label: 'Annuler', onClick: () => this.close('base')},
       {label: 'Ok', onClick: () => this.close('base')},
@@ -36,6 +38,7 @@ class DialogBaseTest extends React.Component {
       <>
         <CustomButton onClick={() => this.open('base')}>Dialogue base</CustomButton>
         <CustomButton onClick={() => this.open('reject')}>Dialogue refus réservation</CustomButton>
+        <CustomButton onClick={() => this.open('cancel')}>Dialogue annulation réservation</CustomButton>
         <DialogBase title={'Test de dialogue de base'}
           buttons={buttons}
           open={base}
@@ -43,7 +46,8 @@ class DialogBaseTest extends React.Component {
           <h1>{'Le contenu'}</h1>
           <h2>{'Le contenu'}</h2>
         </DialogBase>
-        <DialogReject open={reject} onRefuse={this.onRefuse} onClose={() => this.close('reject')}/>
+        <DialogReject open={reject} onRefuse={this.onCancelRefuse} onClose={() => this.close('reject')}/>
+        <DialogCancel open={cancel} onCancel={this.onCancelRefuse} onClose={() => this.close('cancel')}/>
       </>
     )
   }
