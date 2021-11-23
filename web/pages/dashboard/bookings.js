@@ -18,6 +18,7 @@ class all extends DataPage {
       models.textColumn({headerName: 'Alfred', field: 'alfred.full_name'}),
       models.currencyColumn({headerName: 'Montant client', field: 'amount'}),
       models.textColumn({headerName: 'Statut', field: 'status'}),
+      models.textColumn({headerName: 'Commentaire', field: 'reason'}),
       models.booleanColumn({headerName: 'Virement', field: 'paid'}),
     ]
   }
