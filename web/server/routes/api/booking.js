@@ -443,6 +443,9 @@ router.put('/modifyBooking/:id', (req, res) => {
       const machine=stateMachineFactory(booking.status)
       machine.checkAllowed(obj.status)
       booking.status=obj.status
+      if ('reason' in req.body) {
+        booking.reason=req.body.reason
+      }
       booking.end_date = obj.end_date || booking.end_date
       booking.end_time = obj.end_time || booking.end_time
 

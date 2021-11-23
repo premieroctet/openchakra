@@ -112,6 +112,11 @@ const BookingSchema = new Schema({
     type: String,
     enum: Object.values(BOOK_STATUS),
   },
+  // Cancel/refuse reason
+  reason: {
+    type: String,
+    required: false,
+  },
   serviceUserId: {
     type: String,
   },
