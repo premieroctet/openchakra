@@ -1,3 +1,4 @@
+import { is_development } from '../../config/config';
 import DialogCancel from './DialogCancel'
 import DialogReject from './DialogReject'
 import CustomButton from '../CustomButton/CustomButton'
@@ -311,6 +312,7 @@ class BookingPreview extends React.Component {
                               status
                             }
                           </h2>
+                          {is_development() && bookingObj._id}
                         </Grid>
                         { customer_booking_title &&
                         <Typography>
