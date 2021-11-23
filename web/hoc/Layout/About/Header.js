@@ -15,6 +15,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import {HEADER} from '../../../utils/i18n'
 
 
+
 class Header extends React.Component {
   constructor(props) {
     super(props)
@@ -42,12 +43,16 @@ class Header extends React.Component {
         },
       ],
       search: '',
+      isTeamPage: false,
     }
   }
 
   componentDidMount() {
     if (Router.pathname === '/faq') {
       this.setState({aboutSearch: true})
+    }
+    if(Router.pathname === '/footer/ourTeam') {
+      this.setState({isTeamPage: true})
     }
   }
 
@@ -62,8 +67,7 @@ class Header extends React.Component {
   render() {
 
     const {classes} = this.props
-    let {title, content, aboutMenu, items, search, aboutSearch} = this.state
-    const teamPage = window.location.pathname === '/footer/ourTeam'
+    let {title, content, aboutMenu, items, search, aboutSearch, isTeamPage} = this.state
 
     if (process.browser) {
       if (window.location.pathname === '/footer/apropos') {
@@ -102,7 +106,7 @@ class Header extends React.Component {
 
     return (
       <Grid>
-        <Grid className={teamPage ? 'customlayoutfaqheaderbannerteam' : 'customlayoutfaqheaderbanner'} style={{
+        <Grid className={isTeamPage ? 'customlayoutfaqheaderbannerteam' : 'customlayoutfaqheaderbanner'} style={{
           backgroundImage: "url('/static/assets/img/footer/footerBanner.svg')",
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
