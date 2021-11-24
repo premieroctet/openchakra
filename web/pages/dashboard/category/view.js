@@ -3,11 +3,9 @@ import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Card from '@material-ui/core/Card'
-import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import Router from 'next/router'
-import Select2 from 'react-select'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
@@ -227,11 +225,7 @@ class View extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {category, all_tags} = this.state
-    const optionsTags = all_tags.map(tag => ({
-      label: tag.label,
-      value: tag._id,
-    }))
+    const {category} = this.state
 
     return (
       <DashboardLayout>
@@ -265,20 +259,6 @@ class View extends BasePage {
                     value={category.professional_label}
                     onChange={this.onChange}
                   />
-                </Grid>
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Tags</Typography>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <Select2
-                      value={this.state.selectedTags}
-                      onChange={this.handleChangeTags}
-                      options={optionsTags}
-                      isMulti
-                      isSearchable
-                      closeMenuOnSelect={false}
-
-                    />
-                  </FormControl>
                 </Grid>
                 <Grid item style={{marginTop: 20}}>
                   <Typography style={{fontSize: 20}}>Description</Typography>

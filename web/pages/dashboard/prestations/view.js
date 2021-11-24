@@ -552,22 +552,6 @@ class View extends BasePage {
                   </FormControl>
                 </Grid>
               }
-              <Grid item style={{width: '100%', marginTop: 20}}>
-                <Typography style={{fontSize: 20}}>Tags</Typography>
-                <FormControl className={classes.formControl} style={{width: '100%'}}>
-                  <Select2
-                    value={this.state.selectedTags}
-                    onChange={this.handleChangeTags}
-                    options={optionsTags}
-                    isMulti
-                    isSearchable
-                    closeMenuOnSelect={false}
-
-                  />
-                </FormControl>
-              </Grid>
-
-
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                 <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                   Modifier

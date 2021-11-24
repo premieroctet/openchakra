@@ -310,21 +310,6 @@ class View extends BasePage {
                     {categories}
                   </Select>
                 </FormControl>
-
-              </Grid>
-              <Grid item style={{width: '100%', marginTop: 20}}>
-                <Typography style={{fontSize: 20}}>Tags</Typography>
-                <FormControl className={classes.formControl} style={{width: '100%'}}>
-                  <Select2
-                    value={this.state.selectedTags}
-                    onChange={this.handleChangeTags}
-                    options={optionsTags}
-                    isMulti
-                    isSearchable
-                    closeMenuOnSelect={false}
-
-                  />
-                </FormControl>
               </Grid>
               <Grid item style={{width: '100%', marginTop: 20}}>
                 <Typography style={{fontSize: 20}}>Equipements</Typography>
