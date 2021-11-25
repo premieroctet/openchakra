@@ -31,10 +31,6 @@ const PrestationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Category',
   },
-  calculating: {
-    type: Schema.Types.ObjectId,
-    ref: 'Calculating',
-  },
   job: {
     type: Schema.Types.ObjectId,
     ref: 'Job',

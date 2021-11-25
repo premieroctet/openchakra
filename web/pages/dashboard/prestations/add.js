@@ -218,7 +218,6 @@ class add extends React.Component {
     body.price=this.state.price
     body.service=this.state.service
     body.billing=arrayBilling
-    body.calculating=null
     body.job=this.state.job
     body.filter_presentation=this.state.filter_presentation
     body.description=this.state.description

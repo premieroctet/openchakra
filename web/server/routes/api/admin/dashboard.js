@@ -533,85 +533,7 @@ router.delete('/users/admin/:id', passport.authenticate('admin', {session: false
     })
     .catch(() => res.status(404).json({user: 'No user found'}))
 })
-
-// CALCULATING
-
-
-// @Route POST /myAlfred/calculating/admin/all
-// Add calculating for prestation
-// @Access private
-router.post('/calculating/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  const {errors, isValid} = validateBillingInput(req.body)
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-
-  req.context.getModel('Calculating').findOne({label: req.body.label})
-    .then(calculating => {
-      if (calculating) {
-        errors.label = 'Cette méthode de calcul existe déjà'
-        return res.status(400).json(errors)
-      }
-
-      const newCalculating={
-        label: req.body.label,
-      }
-
-      req.context.getModel('Calculating').create(newCalculating)
-        .then(calculating => res.json(calculating))
-        .catch(err => console.error(err))
-    })
-})
-
-// @Route GET /myAlfred/api/admin/calculating/all
-// View all calculating system
-// @Access private
-router.get('/calculating/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Calculating').find()
-    .then(calculating => {
-      res.json(calculating)
-    })
-    .catch(() => res.status(404).json({calculating: 'No billing found'}))
-})
-
-// @Route GET /myAlfred/api/admin/calculating/all/:id
-// View one calculating system
-// @Access private
-router.get('/calculating/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Calculating').findById(req.params.id)
-    .then(calculating => {
-      if (!calculating) {
-        return res.status(404).json({msg: 'No calculating found'})
-      }
-      res.json(calculating)
-    })
-    .catch(() => res.status(404).json({billing: 'No calculating found'}))
-})
-
-// @Route DELETE /myAlfred/api/admin/calculating/all/:id
-// Delete one calculating system
-// @Access private
-router.delete('/calculating/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Calculating').findById(req.params.id)
-    .then(calculating => {
-      calculating.remove().then(() => res.json({success: true}))
-    })
-    .catch(() => res.status(404).json({calculating: 'No calculating found'}))
-})
-
-// @Route PUT /myAlfred/api/admin/calculating/all/:id
-// Update a calculating system
-// @Access private
-router.put('calculating/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Calculating').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
-    .then(calculating => {
-      res.json(calculating)
-    })
-    .catch(() => res.status(404).json({calculatingnotfound: 'No calculating found'}))
-})
-
 // FILTER PRESENTATION
-
 
 // @Route POST /myAlfred/api/admin/filterPresentation/all
 // Add filterPresentation for prestation
@@ -1371,7 +1293,6 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
         filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
         search_filter: null,
         category: null,
-        calculating: null,
         job: req.body.job,
         description: req.body.description,
         // picture: req.body.picture.path,
@@ -1433,7 +1354,6 @@ router.get('/prestation/all/:id', passport.authenticate('admin', {session: false
     .populate('filter_presentation')
     .populate('category')
     .populate('search_filter')
-    .populate('calculating')
     .populate('job')
     .populate('tags')
     .then(prestation => {
@@ -1480,7 +1400,6 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
       filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
       search_filter: null,
       category: mongoose.Types.ObjectId(req.body.service.category),
-      calculating: null,
       job: req.body.job ? mongoose.Types.ObjectId(req.body.job) : null,
       description: req.body.description,
       tags: req.body.tags,
