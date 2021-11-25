@@ -1,29 +1,29 @@
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React from 'react';
+import React from 'react'
 
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
-import FormControl from '@material-ui/core/FormControl';
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Checkbox from '@material-ui/core/Checkbox'
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked'
+import FormControl from '@material-ui/core/FormControl'
 import {snackBarError, snackBarSuccess} from '../../../utils/notifications'
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
-import Router from 'next/router';
-import Select from '@material-ui/core/Select';
-import Select2 from 'react-select';
-import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked'
+import Router from 'next/router'
+import Select from '@material-ui/core/Select'
+import Select2 from 'react-select'
+import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
 
-import DashboardLayout from '../../../hoc/Layout/DashboardLayout';
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const styles = () => ({
   signupContainer: {
@@ -233,7 +233,7 @@ class add extends React.Component {
 
   render() {
     const {classes, t} = this.props
-    const {all_category, all_tags, all_equipments, errors} = this.state
+    const {all_category, all_equipments, errors} = this.state
 
     const categories = all_category.map(e => (
 
@@ -246,12 +246,6 @@ class add extends React.Component {
       label: equipment.label,
       value: equipment._id,
     }))
-
-    const optionsTags = all_tags.map(tag => ({
-      label: tag.label,
-      value: tag._id,
-    }))
-
 
     return (
       <DashboardLayout>
@@ -298,21 +292,6 @@ class add extends React.Component {
                     <FormHelperText>Sélectionner une catégorie</FormHelperText>
                   </FormControl>
                   <em>{errors.category}</em>
-                </Grid>
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Tags</Typography>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <Select2
-                      value={this.state.selectedTags}
-                      onChange={this.handleChangeTags}
-                      options={optionsTags}
-                      isMulti
-                      isSearchable
-                      closeMenuOnSelect={false}
-
-                    />
-                  </FormControl>
-                  <em>{errors.tags}</em>
                 </Grid>
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <Typography style={{fontSize: 20}}>Equipements</Typography>

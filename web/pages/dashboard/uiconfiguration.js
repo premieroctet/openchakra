@@ -1,9 +1,18 @@
+import {
+  Checkbox,
+  FormControlLabel,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Tooltip,
+} from '@material-ui/core';
+import isEmpty from '../../server/validation/is-empty';
 import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import DashboardLayout from '../../hoc/Layout/DashboardLayout'
-import {Typography, List, ListItem, ListItemIcon, ListItemText, Paper} from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import axios from 'axios'
@@ -21,6 +30,8 @@ import Fab from '@material-ui/core/Fab'
 
 import dashboardstyles from '../../static/css/components/CompanyDashboard/CompanyDashboard'
 import custom from '../../static/assets/css/custom.css'
+
+import InfoIcon from '@material-ui/icons/Info'
 
 const styles = theme => ({
   ...dashboardstyles(theme),
@@ -48,6 +59,8 @@ class UIConfiguration extends React.Component {
       current_page_name: null,
       saving: false,
       filter: '',
+      // Retain only empty parameters if true
+      filterEmpty: false,
       // Modified parameters ids
       modified_parameters: {},
       // Known colors sorted by occurrences for HTML & Color editors
@@ -102,10 +115,18 @@ class UIConfiguration extends React.Component {
     this.setState({[name]: value}, this.filterParameters)
   }
 
+  onFilterEmptyChanged = ev => {
+    const {name, checked}=ev.target
+    this.setState({[name]: checked}, this.filterParameters)
+  }
+
   filterParameters = () => {
-    let {parameters, current_page_name} = this.state
-    const re=new RegExp(this.state.filter, 'i')
+    let {parameters, current_page_name, filter, filterEmpty} = this.state
+    const re=new RegExp(filter, 'i')
     parameters=parameters.filter(p => p.page.match(re)||p.classname.match(re)||p.component.match(re)||p.label.match(re))
+    if (filterEmpty) {
+      parameters=parameters.filter(p => isEmpty(p.attributes))
+    }
     if (parameters.length>0 && !_.uniqBy(parameters.map(p => p.page)).includes(current_page_name)) {
       this.setState({current_page_name: _.uniqBy(parameters.map(p => p.page))[0]})
     }
@@ -213,7 +234,7 @@ class UIConfiguration extends React.Component {
 
   render = () => {
     const {classes}=this.props
-    const {filtered_parameters, current_page_name, saving, filter, modified_parameters}=this.state
+    const {filtered_parameters, current_page_name, saving, filter, filterEmpty, modified_parameters}=this.state
 
     const pages=_.uniqBy(filtered_parameters.map(p => p.page))
 
@@ -229,7 +250,15 @@ class UIConfiguration extends React.Component {
             <CustomButton variant='outlined' onClick={this.onSubmit} disabled={!canSave}>{saveTitle}</CustomButton>
           </Grid>
           <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
-            <TextField placeholder={'Rercherche'} name={'filter'} value={filter} onChange={this.onFilterChanged}/>
+            <TextField placeholder={'Recherche'} name={'filter'} value={filter} onChange={this.onFilterChanged}/>
+          </Grid>
+          <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
+            <FormControlLabel
+              control={<Checkbox name={'filterEmpty'} checked={filterEmpty} onChange={this.onFilterEmptyChanged}/>}
+              label="Eléments non renseignés" />
+            <Tooltip title={"Afficher uniquement les paramètres dont la valeur n'a pas été renseignée"} >
+              <InfoIcon/>
+            </Tooltip>
           </Grid>
           <Grid container style={{display: 'flex', flexDirection: 'row'}}>
             <List className={'customappbar'} classes={{root: classes.paddingList}} style={{minHeight: '100vh'}}>

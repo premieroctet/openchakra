@@ -18,7 +18,6 @@ class all extends DataPage {
       models.textColumn({headerName: 'Label pro', field: 'professional_label'}),
       models.pictureColumn({headerName: 'Illustration particuliers', field: 'particular_picture'}),
       models.pictureColumn({headerName: 'Illustration pro', field: 'professional_picture'}),
-      models.textColumn({headerName: 'Tags', field: 'tags'}),
     ]
   }
 
@@ -30,10 +29,6 @@ class all extends DataPage {
     axios.get('/myAlfred/api/admin/category/all')
       .then(response => {
         let categories = response.data
-        categories=categories.map(c => {
-          c.tags=c.tags.map(t => t.title).join(',')
-          return c
-        })
         this.setState({data: categories})
       })
   }
