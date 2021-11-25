@@ -1,3 +1,4 @@
+import ReactHtmlParser from 'react-html-parser';
 import {makeStyles} from '@material-ui/core/styles'
 import React from 'react'
 import {withTranslation} from 'react-i18next'
@@ -58,7 +59,7 @@ function CardTeam(props) {
           </Grid>
           <Grid item xs={12} className={classes.description}>
             <Typography variant="body2" color="textSecondary" component="p">
-              {data.description}
+              {ReactHtmlParser(data.description)}
             </Typography>
           </Grid>
         </Grid>
