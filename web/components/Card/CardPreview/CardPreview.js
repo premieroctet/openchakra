@@ -53,7 +53,7 @@ class CardPreview extends React.Component {
               </Grid>
               <Grid className={classes.cardPreviewServiceContent}>
                 <Grid style={{overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                  <Typography className={'customcardpreviewplace'} style={{textOverflow: 'ellipsis', overflow: 'hidden'}}>{city}</Typography>
+                  <Typography className={'customcardpreviewplace'} style={{fontSize: '10px', textOverflow: 'ellipsis', overflow: 'hidden'}}>{city}</Typography>
                 </Grid>
                 <Grid className={'customcardpreviewrating'}>
                   <Box component="fieldset" mb={item.user.score} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>

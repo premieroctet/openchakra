@@ -43,7 +43,6 @@ export default theme => ({
   cardPreviewLabelService: {
     fontFamily: theme.typography.textLabel.fontFamily,
     fontWeight: theme.typography.textLabel.fontWeight,
-    fontSize: theme.typography.textLabel.fontSize,
     margin: theme.typography.textLabel.margin,
   },
   cardPreviewServiceContent: {
