@@ -113,9 +113,6 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   const bookingFields = {}
   bookingFields.reference = `${req.body.reference}_${random}`
   bookingFields.service = req.body.service
-  if (req.body.option) {
-    bookingFields.option = req.body.option
-  }
   bookingFields.address = req.body.address
   bookingFields.equipments = req.body.equipments
   bookingFields.amount = req.body.amount
@@ -174,8 +171,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
                 $set: {booking: book._id, emitter: book.user._id, recipient: book.alfred._id},
                 $addToSet: {messages: message},
               }
-              const options={new: true, upsert: true}
-              req.context.getModel('ChatRoom').findOneAndUpdate(filter, update, options)
+              req.context.getModel('ChatRoom').findOneAndUpdate(filter, update, {new: true, upsert: true})
                 .then(() => console.log('Chatroom maj'))
                 .catch(err => console.error(err))
             }

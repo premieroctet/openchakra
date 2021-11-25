@@ -21,3 +21,6 @@ mongo $database --eval 'db.serviceusers.update({"certification.name": "null"}, {
 # Remove unused models
 mongo $database --eval 'db.calendars.drop()'
 mongo $database --eval 'db.favoris.drop()'
+mongo $database --eval 'db.options.drop()'
+mongo $database --eval 'db.bookings.update({}, {$unset: {option: 1}}, {multi:1})'
+mongo $database --eval 'db.shopbanners.drop()'

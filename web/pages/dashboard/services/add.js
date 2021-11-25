@@ -129,26 +129,20 @@ class add extends React.Component {
     this.setState({location: location})
   }
 
-
   handleChange = e => {
     this.setState({tags: e.target.value})
-
-
   }
 
   handleChange2 = e => {
     this.setState({equipments: e.target.value})
-
-
   }
+
   handleChangeSelect = selectedOption => {
     this.setState({selectedOption})
-
   }
 
   handleChangeTags = selectedTags => {
     this.setState({selectedTags})
-
   }
 
   onChangeFile(e) {
@@ -182,17 +176,13 @@ class add extends React.Component {
     let arrayTags = []
     if (this.state.selectedOption != null) {
       this.state.selectedOption.forEach(c => {
-
         arrayEquipments.push(c.value)
-
       })
     }
 
     if (this.state.selectedTags != null) {
       this.state.selectedTags.forEach(w => {
-
         arrayTags.push(w.value)
-
       })
     }
 

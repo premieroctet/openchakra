@@ -687,10 +687,6 @@ class UserServicesPreview extends BasePage {
         bookingObj.chatroom = res.data._id
       }
 
-      if (this.state.selectedOption !== null) {
-        bookingObj.option = this.state.selectedOption
-      }
-
       localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
 
       if (!this.state.user) {

@@ -76,7 +76,6 @@ class home extends React.Component {
                 <Link href="/dashboard/job/all"><a>Métiers</a></Link><br/>
                 {/** TODO Remove Tag model*/}
                 <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
-                {/** TODO Remove ShopBanner model*/}
                 <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                 <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
               </Grid>
