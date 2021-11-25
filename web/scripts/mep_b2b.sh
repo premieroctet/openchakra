@@ -17,3 +17,6 @@ mongo $database --eval 'db.services.update({}, {$unset: {travel_expense: 1, pick
 mongo $database --eval 'db.serviceusers.update({}, {$unset: {graduated: 1, is_certified: 1}}, {multi:1})'
 mongo $database --eval 'db.serviceusers.update({"diploma.name": "null"}, {$set: {diploma: null}}, {multi:1})'
 mongo $database --eval 'db.serviceusers.update({"certification.name": "null"}, {$set: {certification: null}}, {multi:1})'
+
+# Remove unused models
+mongo $database --eval 'db.calendars.drop()'
