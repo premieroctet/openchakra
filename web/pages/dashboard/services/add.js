@@ -62,7 +62,6 @@ class add extends React.Component {
       picture: '',
       location: {alfred: false, client: false, visio: false},
       category: '',
-      tags: [],
       equipments: [],
       description: '',
       majoration: '',
@@ -71,10 +70,8 @@ class add extends React.Component {
       visio: false,
       isChecked: false,
       all_category: [],
-      all_tags: [],
       all_equipments: [],
       selectedOption: null,
-      selectedTags: null,
       travel_tax: false,
       pick_tax: false,
       errors: {},
@@ -82,7 +79,6 @@ class add extends React.Component {
     this.handleChecked = this.handleChecked.bind(this)
     this.onChangeFile = this.onChangeFile.bind(this)
     this.handleChangeSelect = this.handleChangeSelect.bind(this)
-    this.handleChangeTags = this.handleChangeTags.bind(this)
     this.onChangeLocation = this.onChangeLocation.bind(this)
     this.onTaxChange = this.onTaxChange.bind(this)
   }
@@ -95,15 +91,6 @@ class add extends React.Component {
       .then(response => {
         let category = response.data
         this.setState({all_category: category})
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-    axios.get('/myAlfred/api/admin/tags/all')
-      .then(response => {
-        let tags = response.data
-        this.setState({all_tags: tags})
       })
       .catch(error => {
         console.log(error)
@@ -129,26 +116,12 @@ class add extends React.Component {
     this.setState({location: location})
   }
 
-
-  handleChange = e => {
-    this.setState({tags: e.target.value})
-
-
-  }
-
   handleChange2 = e => {
     this.setState({equipments: e.target.value})
-
-
   }
+
   handleChangeSelect = selectedOption => {
     this.setState({selectedOption})
-
-  }
-
-  handleChangeTags = selectedTags => {
-    this.setState({selectedTags})
-
   }
 
   onChangeFile(e) {
@@ -179,20 +152,9 @@ class add extends React.Component {
   onSubmit = e => {
     e.preventDefault()
     let arrayEquipments = []
-    let arrayTags = []
     if (this.state.selectedOption != null) {
       this.state.selectedOption.forEach(c => {
-
         arrayEquipments.push(c.value)
-
-      })
-    }
-
-    if (this.state.selectedTags != null) {
-      this.state.selectedTags.forEach(w => {
-
-        arrayTags.push(w.value)
-
       })
     }
 
@@ -200,7 +162,6 @@ class add extends React.Component {
     formData.append('label', this.state.label)
     formData.append('picture', this.state.picture)
     formData.append('category', this.state.category)
-    formData.append('tags', JSON.stringify(arrayTags))
     formData.append('equipments', JSON.stringify(arrayEquipments))
     formData.append('description', this.state.description)
     formData.append('majoration', this.state.majoration)
