@@ -147,6 +147,28 @@ export default theme => ({
     marginTop: '3%',
     marginBottom: '3%',
   },
+  searchNeedHelpMainContainer: {
+    width: '80%',
+  },
+  searchSearchByHastagMainStyle: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '3%',
+    marginBottom: '3%',
+  },
+  searchSearchByHastagContainer: {
+    width: '80%',
+  },
+  searchResultMessage: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  searchResultMessageContent: {
+    width: '80%',
+  },
+
   searchLoadingContainer: {
     display: 'flex',
     justifyContent: 'center',
