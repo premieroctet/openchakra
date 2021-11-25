@@ -19,8 +19,13 @@ mongo $database --eval 'db.serviceusers.update({"diploma.name": "null"}, {$set: 
 mongo $database --eval 'db.serviceusers.update({"certification.name": "null"}, {$set: {certification: null}}, {multi:1})'
 
 # Remove unused models
+mongo $database --eval 'db.calculatings.drop()'
 mongo $database --eval 'db.calendars.drop()'
 mongo $database --eval 'db.favoris.drop()'
-mongo $database --eval 'db.options.drop()'
 mongo $database --eval 'db.bookings.update({}, {$unset: {option: 1}}, {multi:1})'
+mongo $database --eval 'db.options.drop()'
 mongo $database --eval 'db.shopbanners.drop()'
+mongo $database --eval 'db.categories.update({}, {$unset: {tags: 1}}, {multi:1})'
+mongo $database --eval 'db.services.update({}, {$unset: {tags: 1}}, {multi:1})'
+mongo $database --eval 'db.prestations.update({}, {$unset: {tags: 1}}, {multi:1})'
+mongo $database --eval 'db.tags.drop()'

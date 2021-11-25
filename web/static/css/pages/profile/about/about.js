@@ -1,5 +1,5 @@
 export default theme => ({
-  aboutHastagsContainer: {
+  aboutHashtagsContainer: {
     [theme.breakpoints.down('sm')]: {
       marginBottom: '12vh',
     },

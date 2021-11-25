@@ -12,8 +12,6 @@ module.exports = function validatePrestationInput(data) {
   data.search_filter = !isEmpty(data.search_filter) ? data.search_filter : ''
   data.job = !isEmpty(data.job) ? data.job : ''
   data.description = !isEmpty(data.description) ? data.description : ''
-  data.tags = !isEmpty(data.tags) ? data.tags : []
-
 
   if (Validator.isEmpty(data.label)) {
     errors.label = 'Un label est requis'

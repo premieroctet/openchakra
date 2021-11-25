@@ -784,97 +784,6 @@ router.put('/searchFilter/all/:id', passport.authenticate('admin', {session: fal
     .catch(() => res.status(404).json({searchFilternotfound: 'No searchFilter found'}))
 })
 
-// TAGS
-
-// @Route POST /myAlfred/api/admin/tags/all
-// Add tags for service
-// @Access private
-router.post('/tags/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  const {errors, isValid} = validateBillingInput(req.body)
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-
-  req.context.getModel('Tag').findOne({label: req.body.label})
-    .then(tags => {
-      if (tags) {
-        errors.label = 'Ce tags existe déjà'
-        return res.status(400).json(errors)
-      }
-      const newTag={
-        label: req.body.label,
-        title: req.body.title,
-        description: req.body.description,
-      }
-
-      req.context.getModel('Tag').create(newTag)
-        .then(tags => res.json(tags))
-        .catch(err => console.error(err))
-    })
-})
-
-// @Route GET /myAlfred/api/admin/tags/all
-// View all tags
-// @Access private
-router.get('/tags/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Tag').find()
-    .sort({label: 1})
-    .then(tags => {
-      res.json(tags)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(404).json({tags: 'No tags found'})
-    })
-})
-
-// @Route GET /myAlfred/api/admin/tags/all/:id
-// View one tag
-// @Access private
-router.get('/tags/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Tag').findById(req.params.id)
-    .then(tags => {
-      if (!tags) {
-        return res.status(400).json({msg: 'No tags found'})
-      }
-      res.json(tags)
-
-    })
-    .catch(() => res.status(404).json({tags: 'No tags found'}))
-})
-
-// @Route DELETE /myAlfred/api/admin/tags/all/:id
-// Delete one tag
-// @Access private
-router.delete('/tags/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  Promise.all(['Category.tags', 'Prestation.tags', 'Service.tags'].map(f => hasRefs(req, f, req.params.id)))
-    .then(refs => {
-      if (refs.some(t => t)) {
-        return res.status(400).json('Ce tag est utilisé')
-      }
-      req.context.getModel('Tag').findByIdAndRemove(req.params.id)
-        .then(() => res.json({success: true}))
-        .catch(() => res.status(404).json({tagsnotfound: 'No tags found'}))
-    })
-})
-
-// @Route PUT /myAlfred/api/admin/tags/all/:id
-// Update a tag
-// @Access private
-router.put('/tags/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Tag').findOneAndUpdate({_id: req.params.id}, {
-    $set: {
-      label: req.body.label,
-      title: req.body.title,
-      description: req.body.description,
-    },
-  }, {new: true})
-    .then(tags => {
-      res.json(tags)
-    })
-    .catch(() => res.status(404).json({tagsnotfound: 'No tags found'}))
-})
-
 // @Route POST /myAlfred/api/admin/category/all
 // Add category for prestation
 // @Access private
@@ -895,7 +804,6 @@ router.post('/category/all', uploadCat.single('picture'), passport.authenticate(
         s_label: normalize(req.body.label),
         picture: req.file.path,
         description: req.body.description,
-        tags: JSON.parse(req.body.tags),
       }
 
       req.context.getModel('Category').create(newCategory)
@@ -932,7 +840,6 @@ passport.authenticate('admin', {session: false}), (req, res) => {
 router.get('/category/all', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('Category').find()
     .sort({'label': 1})
-    .populate('tags')
     .then(category => {
       if (!category) {
         return res.status(400).json({msg: 'No category found'})
@@ -953,7 +860,6 @@ router.get('/category/all', passport.authenticate('admin', {session: false}), (r
 // @Access private
 router.get('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('Category').findById(req.params.id)
-    .populate('tags')
     .then(category => {
       if (!category) {
         return res.status(400).json({msg: 'No category found'})
@@ -990,7 +896,6 @@ router.put('/category/all/:id?', passport.authenticate('admin', {session: false}
     professional_label: req.body.professional_label,
     s_professional_label: normalize(req.body.professional_label),
     description: req.body.description,
-    tags: req.body.tags,
   }
   const promise=req.params.id ?
     req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
@@ -1127,7 +1032,6 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
         s_label: normalize(req.body.label),
         category: mongoose.Types.ObjectId(req.body.category),
         equipments: JSON.parse(req.body.equipments),
-        tags: JSON.parse(req.body.tags),
         picture: req.file.path,
         description: req.body.description,
         majoration: req.body.majoration,
@@ -1165,7 +1069,6 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
 
   req.context.getModel('Service').find()
     .sort({'label': 1})
-    .populate('tags', ['label'])
     .populate('equipments', 'label')
     .populate('category', 'particular_label professional_label')
     .populate('prestations', 'particular_access professional_access')
@@ -1189,7 +1092,6 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
 // @Access private
 router.get('/service/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('Service').findById(req.params.id)
-    .populate('tags')
     .populate('equipments')
     .populate('category')
     .then(service => {
@@ -1234,7 +1136,6 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
       $set: {
         label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
         s_label: normalize(req.body.label),
-        tags: req.body.tags,
         description: req.body.description, majoration: req.body.majoration, location: req.body.location,
         travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax,
         professional_access: req.body.professional_access, particular_access: req.body.particular_access,
@@ -1297,7 +1198,6 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
         description: req.body.description,
         // picture: req.body.picture.path,
         picture: req.file ? req.file.path : null,
-        tags: req.body.tags,
         cesu_eligible: req.body.cesu_eligible,
         professional_access: req.body.professional_access,
         particular_access: req.body.particular_access,
@@ -1355,7 +1255,6 @@ router.get('/prestation/all/:id', passport.authenticate('admin', {session: false
     .populate('category')
     .populate('search_filter')
     .populate('job')
-    .populate('tags')
     .then(prestation => {
       if (!prestation) {
         return res.status(400).json({msg: 'No prestation found'})
@@ -1402,7 +1301,6 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
       category: mongoose.Types.ObjectId(req.body.service.category),
       job: req.body.job ? mongoose.Types.ObjectId(req.body.job) : null,
       description: req.body.description,
-      tags: req.body.tags,
       cesu_eligible: req.body.cesu_eligible,
       professional_access: req.body.professional_access,
       particular_access: req.body.particular_access,
@@ -1687,7 +1585,6 @@ router.put('/companies/all/:id', passport.authenticate('admin', {session: false}
       $set: {
         label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
         s_label: normalize(req.body.label),
-        tags: req.body.tags,
         description: req.body.description, majoration: req.body.majoration, location: req.body.location,
         travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax,
         professional_access: req.body.professional_access, particular_access: req.body.particular_access,

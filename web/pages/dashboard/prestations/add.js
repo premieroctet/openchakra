@@ -65,13 +65,10 @@ class add extends React.Component {
       job: '',
       description: '',
       picture: null,
-      tags: [],
-      all_tags: [],
       all_service: [],
       all_billing: [],
       all_job: [],
       all_filter_presentation: [],
-      selectedTags: null,
       selectedBilling: null,
       companies: [],
       // Selected company
@@ -84,7 +81,6 @@ class add extends React.Component {
       errors: {},
     }
     this.onChangeFile = this.onChangeFile.bind(this)
-    this.handleChangeTags = this.handleChangeTags.bind(this)
     this.handleChangeBilling = this.handleChangeBilling.bind(this)
   }
 
@@ -131,15 +127,6 @@ class add extends React.Component {
         console.log(error)
       })
 
-    axios.get('/myAlfred/api/admin/tags/all')
-      .then(response => {
-        let tags = response.data
-        this.setState({all_tags: tags})
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
     axios.get('/myAlfred/api/admin/companies/all')
       .then(response => {
         let companies = response.data
@@ -182,14 +169,8 @@ class add extends React.Component {
     }
   }
 
-  handleChangeTags = selectedTags => {
-    this.setState({selectedTags})
-
-  };
-
   handleChangeBilling = selectedBilling => {
     this.setState({selectedBilling})
-
   };
 
   onChangeFile(e) {
@@ -197,15 +178,7 @@ class add extends React.Component {
   }
 
   onSubmit = e => {
-    let arrayTags = []
     let arrayBilling = []
-    if (this.state.selectedTags != null) {
-      this.state.selectedTags.forEach(w => {
-
-        arrayTags.push(w.value)
-
-      })
-    }
 
     if (this.state.selectedBilling != null) {
       this.state.selectedBilling.forEach(t => {
@@ -222,7 +195,6 @@ class add extends React.Component {
     body.filter_presentation=this.state.filter_presentation
     body.description=this.state.description
     body.picture=this.state.picture
-    body.tags=arrayTags
     body.cesu_eligible=this.state.cesu_eligible
     body.particular_access=this.state.particular_access
     body.professional_access=this.state.professional_access

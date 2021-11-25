@@ -15,7 +15,6 @@ router.get('/all', (req, res) => {
     .populate('billing')
     .populate('search_filter')
     .populate('filter_presentation')
-    .populate('tags')
     .then(prestation => {
       if (typeof prestation !== 'undefined' && prestation.length > 0) {
         res.json(prestation)
@@ -40,7 +39,6 @@ router.get('/home', (req, res) => {
     .populate('billing')
     .populate('search_filter')
     .populate('filter_presentation')
-    .populate('tags')
     .limit(4)
     .then(prestation => {
       if (typeof prestation !== 'undefined' && prestation.length > 0) {
@@ -100,31 +98,9 @@ router.get('/:service/:filter', passport.authenticate('jwt', {session: false}), 
     })
 })
 
-// @Route GET /myAlfred/api/prestation/all/tags/:tags
-// View all prestations per tags
-router.get('/all/tags/:tags', (req, res) => {
-  req.context.getModel('Prestation').find({tags: req.params.tags})
-    .sort({'label': 1})
-    .populate('tags')
-    .then(prestations => {
-      if (typeof prestations !== 'undefined' && prestations.length > 0) {
-        res.json(prestations)
-      }
-      else {
-        return res.status(400).json({msg: 'No prestations found'})
-      }
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(404).json({prestation: `No prestation found:${err}`})
-    })
-})
-
 // @Route GET /myAlfred/api/prestation/:id
 // View one prestation
 router.get('/:id', (req, res) => {
-
-
   req.context.getModel('Prestation').findById(req.params.id)
     .populate('category')
     .populate('job')
@@ -132,7 +108,6 @@ router.get('/:id', (req, res) => {
     .populate('billing')
     .populate('search_filter')
     .populate('filter_presentation')
-    .populate('tags')
     .then(prestation => {
       if (Object.keys(prestation).length === 0 && prestation.constructor === Object) {
         return res.status(400).json({msg: 'No prestation found'})

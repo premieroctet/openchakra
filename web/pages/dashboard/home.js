@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { isLoggedUserAdmin, isUserSuperAdmin } from '../../utils/context';
+import axios from 'axios'
+import {isLoggedUserAdmin, isUserSuperAdmin} from '../../utils/context'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
@@ -74,7 +74,6 @@ class home extends React.Component {
                 <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
                 <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>
                 <Link href="/dashboard/job/all"><a>Métiers</a></Link><br/>
-                {/** TODO Remove Tag model*/}
                 <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
                 <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                 <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>

@@ -41,10 +41,6 @@ const PrestationSchema = new Schema({
   picture: {
     type: String,
   },
-  tags: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Tag',
-  }],
   private_alfred: {
     type: Schema.Types.ObjectId,
     ref: 'User',
