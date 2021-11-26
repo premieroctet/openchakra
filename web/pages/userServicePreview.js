@@ -1,5 +1,5 @@
-import Album from '../components/Album/Album';
-import { Divider, Link } from '@material-ui/core';
+import Album from '../components/Album/Album'
+import {Divider, Link} from '@material-ui/core'
 const {
   getDeadLine,
   isDateAvailable,
@@ -818,16 +818,20 @@ class UserServicesPreview extends BasePage {
                           </Grid>
                       }
                     </Grid>
-                    <Grid>
-                      <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
-                        disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${alfred._id}`)}>
-                        {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}
-                      </CustomButton>
-                      <Link href="#availabilities">
-                      <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>
-                        {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_availabilities'))}
-                      </CustomButton>
-                      </Link>
+                    <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                      <Grid item sm={6} xs={12}>
+                        <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
+                          disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${alfred._id}`)}>
+                          {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}
+                        </CustomButton>
+                      </Grid>
+                      <Grid item sm={6} xs={12}>
+                        <Link href="#availabilities">
+                          <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>
+                            {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_availabilities'))}
+                          </CustomButton>
+                        </Link>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
