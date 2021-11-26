@@ -9,8 +9,10 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingLeft: '5%',
-    paddingRight: '5%',
+    position: 'absolute',
+    top: 0,
+    left: '50%',
+    right: '50%',
     [theme.breakpoints.down('xs')]: {
       padding: '10%',
     },
