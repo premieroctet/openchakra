@@ -125,7 +125,7 @@ class Header extends React.Component {
           </Grid>
           <Grid className={classes.containerTitleAndSubtitle}>
             <Grid>
-              <h1 style={{color: 'white'}}>{title}</h1>
+              <h1 style={{color: 'white', margin: 0}}>{title}</h1>
             </Grid>
             <Grid>
               <h3 style={{color: 'white'}}>{content}</h3>
