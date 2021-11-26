@@ -71,7 +71,7 @@ export default theme => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
-    minHeight: 300,
+    height: 400,
   },
   howItWorksComponentB2b: {
     justifyContent: 'center',

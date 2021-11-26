@@ -13,6 +13,8 @@ const useStyles = makeStyles(() => ({
   carouselStyle: {
     display: 'flex',
     justifyContent: 'center',
+    margin: 0,
+    width: '100%',
   },
   carousel: {
     height: '100%',
@@ -35,6 +37,13 @@ const useStyles = makeStyles(() => ({
     margin: 0,
     backgroundPosition: 'center',
     backgroundSize: 'cover',
+  },
+  randompics: {
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    height: 200,
+    width: 200,
   },
 
 }))
@@ -66,8 +75,11 @@ function RandomDisplay(props) {
                       }
                       {
                         index !== 0 &&
-                        <Grid item md={2} xs={12} className={`${classes.carouselStyle} customrandomdisplaycontainer${i.toString() + index.toString()}`} key={index}>
-                          <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
+                        <Grid container spacing={2} item md={2} xs={12} className={`${classes.carouselStyle} customrandomdisplaycontainer${i.toString() + index.toString()}`} key={index}>
+                          <Grid item xs={12}>
+                            <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
+                          </Grid>
+                          <Grid item xs={12} className={`customrandompics${i.toString() + index.toString()} ${classes.randompics}`}/>
                         </Grid>
                       }
 
