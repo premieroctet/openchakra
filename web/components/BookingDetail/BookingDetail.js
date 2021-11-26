@@ -70,15 +70,13 @@ class BookingDetail extends React.Component {
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
               </Grid>
               {
-                ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost_link')) !== '' ?
+                this.props.t('BOOKING_DETAIL.service_cost_link') ?
                   <Grid>
-                    <Link href={ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost_link'))} >
-                      <a target={'_blank'}>
-                        <IconButton aria-label="InfoIcon">
-                          <InfoIcon fontSize="small" />
-                        </IconButton>
-                      </a>
-                    </Link>
+                    <a target={'_blank'} href={ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost_link'))}>
+                      <IconButton aria-label="InfoIcon">
+                        <InfoIcon fontSize="small" />
+                      </IconButton>
+                    </a>
                   </Grid> : null
               }
               <Grid className={classes.priceContent}>
