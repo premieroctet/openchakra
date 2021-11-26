@@ -1,7 +1,8 @@
+import { TextField } from '@material-ui/core';
+import  Select from 'react-select'
 import React from 'react';
 import util from 'util'
 import TextField from '@material-ui/core/TextField'
-import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 const {normalize, getWordAt} = require('../../utils/text')
 
@@ -12,56 +13,48 @@ class SearchTextField extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      value: '',
-      options:['abattage', 'coiffure'],
+      value: null,
       selectOpen: false,
     }
     this.normalized_options=this.props.options.map(o => normalize(o.label))
   }
 
   onChange = ev => {
-    const {target}=ev
-    this.setState({value: target.value})
+    this.setState({value: ev})
+    this.props.onChange && this.props.onChange(ev.label)
   }
 
-  onKeyUp = event => {
-    const {target}=event
-    console.log(target.selectionStart)
-    console.log(target.selectionEnd)
-    const word=getWordAt(this.state.value, target.selectionStart).word
-    console.log(word)
-    const re=new RegExp(word)
-    const filtered=this.normalized_options.filter(o => o.match(re)).slice(0,50)
-    this.setState({options: filtered})
-    console.log(filtered)
-    this.setState({selectOpen: true})
-  }
+  searchFn = (candidate, input) => {
+    if (candidate) {
+      console.log(`Searching ${input} in ${JSON.stringify(candidate)}`)
+      const search = normalize(input)
+      return candidate.value.includes(search)
+    }
+    return true
+  };
 
-  onSelection = ev => {
-    const {target}=event
-    console.log('onSelection')
-    this.setState({selected: target.value, selectOpen: false})
+  getSelectedOption = (options, service) => {
+    const {particular_professional_access}=this.state
+    let opts=particular_professional_access ? [].concat(...options.map(o => o.options)) : options
+    return opts.find(o => o._id==service)
   }
 
   render() {
-    const {value, selected, options, selectOpen}=this.state
+    const {value, selected, selectOpen}=this.state
+
+    const options=this.props.options.map(o => ({label: o, value: normalize(o)}))
     return (
       <>
-        <TextField
-          value={value}
-          onKeyUp={this.onKeyUp}
-          onChange={this.onChange}
-        />
-        <Select
-          value={selected}
-          onChange={this.onSelection}
-          open={selectOpen}
-        >
-          {options.map(o => (
-            <MenuItem value={o} key={o}>{o}</MenuItem>
-          ))}
-        </Select>
-         <div>Test</div>
+      <Select
+        options={options}
+        onChange={this.onChange}
+        searchable={true}
+        isMulti={true}
+        filterOption={this.searchFn}
+        isLoading={this.props.loading}
+        loadingMessage={() => 'Recherche des services'}
+        value={value}
+      />
       </>
     )
   }

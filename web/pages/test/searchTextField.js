@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios';
 
-import SearchTextField from '../../components/Search/SearchTextField';
+import SearchTextField from '../../components/Search/SearchTextField2';
 
 class TestSearchTextField extends React.Component {
 
@@ -17,8 +17,7 @@ class TestSearchTextField extends React.Component {
     axios.get('/myAlfred/api/serviceUser/keywords/particular')
       .then( res => {
         const keywords=res.data
-        const options=keywords.map(k => { return {label: k}})
-        this.setState({options:options})
+        this.setState({options:keywords})
       })
       .finally(()=> {
         this.setState({loading:false})
@@ -32,9 +31,9 @@ class TestSearchTextField extends React.Component {
     }
     return (
       <SearchTextField
-        //key={options}
         options={options}
         loading={loading}
+        value=""
       />
     )
   }
