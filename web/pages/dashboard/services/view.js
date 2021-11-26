@@ -7,7 +7,7 @@ import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Grid from '@material-ui/core/Grid'
 import Input from '@material-ui/core/Input'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 import React from 'react'
 import Router from 'next/router'
@@ -61,25 +61,20 @@ class View extends BasePage {
 
     this.state = {
       service: {},
-      current_tags: [],
       current_equipments: [],
       current_category: '',
       all_category: [],
-      all_tags: [],
       all_equipments: [],
       category: '',
-      tags: [],
       equipments: [],
       location: {},
       isChecked: false,
       selectedOption: null,
-      selectedTags: null,
       errors: {},
     }
 
     this.handleClick = this.handleClick.bind(this)
     this.handleChangeSelect = this.handleChangeSelect.bind(this)
-    this.handleChangeTags = this.handleChangeTags.bind(this)
     this.onChangeLocation = this.onChangeLocation.bind(this)
     this.onTaxChange = this.onTaxChange.bind(this)
   }
@@ -93,7 +88,6 @@ class View extends BasePage {
         let service = response.data
         this.setState({
           service: service,
-          current_tags: service.tags,
           current_equipments: service.equipments,
           current_category: service.category,
           category: service.category._id,
@@ -106,14 +100,6 @@ class View extends BasePage {
             value: a._id,
           })),
         })
-
-        this.setState({
-          selectedTags: this.state.current_tags.map(b => ({
-            label: b.label,
-            value: b._id,
-          })),
-        })
-
 
       })
       .catch(err => {
@@ -128,14 +114,6 @@ class View extends BasePage {
       .then(response => {
         let category = response.data
         this.setState({all_category: category})
-      }).catch(error => {
-        console.error(error)
-      })
-
-    axios.get('/myAlfred/api/admin/tags/all')
-      .then(response => {
-        let tags = response.data
-        this.setState({all_tags: tags})
       }).catch(error => {
         console.error(error)
       })
@@ -173,21 +151,12 @@ class View extends BasePage {
     this.setState({category: e.target.value})
   };
 
-  handleChange = e => {
-    this.setState({tags: e.target.value})
-  };
-
   handleChange2 = e => {
     this.setState({equipments: e.target.value})
   };
 
   handleChangeSelect = selectedOption => {
     this.setState({selectedOption})
-
-  };
-
-  handleChangeTags = selectedTags => {
-    this.setState({selectedTags})
   };
 
   onTaxChange = e => {
@@ -196,20 +165,12 @@ class View extends BasePage {
     this.setState({service: service})
   };
 
-
   onSubmit = e => {
     e.preventDefault()
     let arrayEquipments = []
     if (this.state.selectedOption != null) {
       this.state.selectedOption.forEach(c => {
         arrayEquipments.push(c.value)
-      })
-    }
-
-    let tags = []
-    if (this.state.selectedTags != null) {
-      this.state.selectedTags.forEach(w => {
-        tags.push(w.value)
       })
     }
 
@@ -221,7 +182,7 @@ class View extends BasePage {
     const {travel_tax, pick_tax, professional_access, particular_access} = service
 
     axios.put(`/myAlfred/api/admin/service/all/${id}`,
-      {label, description, tags, category, equipments, location, travel_tax, pick_tax,
+      {label, description, category, equipments, location, travel_tax, pick_tax,
         professional_access, particular_access})
       .then(() => {
         snackBarSuccess('Service modifié avec succès')
@@ -256,7 +217,7 @@ class View extends BasePage {
 
   render() {
     const {classes, t} = this.props
-    const {service, all_category, all_tags, all_equipments} = this.state
+    const {service, all_category, all_equipments} = this.state
 
     const categories = all_category.map(e => (
       <MenuItem value={e._id}>{`${e.particular_label}/${e.professional_label}`}</MenuItem>
@@ -266,12 +227,6 @@ class View extends BasePage {
       label: equipment.label,
       value: equipment._id,
     }))
-
-    const optionsTags = all_tags.map(tag => ({
-      label: tag.label,
-      value: tag._id,
-    }))
-
 
     return (
       <DashboardLayout>
@@ -309,21 +264,6 @@ class View extends BasePage {
                     </MenuItem>
                     {categories}
                   </Select>
-                </FormControl>
-
-              </Grid>
-              <Grid item style={{width: '100%', marginTop: 20}}>
-                <Typography style={{fontSize: 20}}>Tags</Typography>
-                <FormControl className={classes.formControl} style={{width: '100%'}}>
-                  <Select2
-                    value={this.state.selectedTags}
-                    onChange={this.handleChangeTags}
-                    options={optionsTags}
-                    isMulti
-                    isSearchable
-                    closeMenuOnSelect={false}
-
-                  />
                 </FormControl>
               </Grid>
               <Grid item style={{width: '100%', marginTop: 20}}>

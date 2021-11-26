@@ -1,7 +1,5 @@
 export default theme => ({
   cardPreviewContainerAvatar: {
-    width: 100,
-    height: 100,
     position: 'relative',
     backgroundColor: 'white',
     borderRadius: '50%',
@@ -45,7 +43,6 @@ export default theme => ({
   cardPreviewLabelService: {
     fontFamily: theme.typography.textLabel.fontFamily,
     fontWeight: theme.typography.textLabel.fontWeight,
-    fontSize: theme.typography.textLabel.fontSize,
     margin: theme.typography.textLabel.margin,
   },
   cardPreviewServiceContent: {

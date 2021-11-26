@@ -1,10 +1,12 @@
+const {EDIT_PROFIL}=require('../../../utils/i18n')
+const {logEvent}=require('../../utils/events')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
 const {ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
-const mongoose = require('mongoose')
 const {is_production, is_validation, computeUrl}=require('../../../config/config')
 const CronJob = require('cron').CronJob
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
@@ -14,13 +16,13 @@ const moment = require('moment')
 moment.locale('fr')
 const crypto = require('crypto')
 const axios = require('axios')
-const {emptyPromise} = require('../../../utils/promise.js')
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
 const {connectionPool}=require('../../utils/database')
 const {serverContextFromPartner}=require('../../utils/serverContext')
-
+const gifFrames = require('gif-frames')
+const fs = require('fs').promises
 
 axios.defaults.withCredentials = true
 
@@ -56,7 +58,7 @@ router.post('/register', (req, res) => {
   req.context.getModel('User').findOne({email: req.body.email})
     .then(db_user => {
       if (db_user && (!user_id || db_user._id.toString()!=user_id)) {
-        errors.email = 'L\'email existe déjà'
+        errors.email = EDIT_PROFIL.duplicate_email
         return res.status(400).json(errors)
       }
 
@@ -81,6 +83,7 @@ router.post('/register', (req, res) => {
       user.service_address = []
       user.last_login = []
       user.professional = req.body.company
+      user.is_alfred = req.body.is_alfred
       bcrypt.hash(user.password, 10, (err, hash) => {
         if (err) {
           throw err
@@ -535,7 +538,7 @@ router.get('/token', passport.authenticate('jwt', {session: false}), (req, res) 
   req.context.getModel('User').findById(req.user.id)
     .populate('shop', 'is_particular')
     .then(user => {
-      send_cookie(user, null, res)
+      send_cookie(user, null, res, req.context.getLoggedAs())
     })
     .catch(err => {
       console.error(err)
@@ -780,6 +783,30 @@ router.post('/resetPassword', (req, res) => {
     })
 })
 
+router.put('/profile/email', passport.authenticate('jwt', {session: false}), (req, res) => {
+  req.context.getModel('User').exists({email: req.body.email, _id: {$ne: req.user._id}})
+    .then(duplicate_exists => {
+      if (duplicate_exists) {
+        return Promise.reject(EDIT_PROFIL.duplicate_email)
+      }
+      return req.context.getModel('User').findById(req.user.id)
+    })
+    .then(user => {
+      if (user.email != req.body.email) {
+        user.email=req.body.email
+        user.is_confirmed=false
+      }
+      return user.save()
+    })
+    .then(() => {
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
+})
+
 router.put('/profile/status', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   req.context.getModel('User').findByIdAndUpdate(req.user.id,
@@ -794,15 +821,16 @@ router.put('/profile/status', passport.authenticate('jwt', {session: false}), (r
 // @Access private
 router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  const {errors, isValid} = validateEditProfile(req.body)
+  let {errors, isValid} = validateEditProfile(req.body)
 
   req.context.getModel('User').findOne({email: req.body.email})
     .then(user => {
       if (user && req.body.email != req.context.getUser().email) {
-        return res.status(400).json({errors: {email: 'Adresse mail déjà utilisée'}})
+        errors={...errors, email: EDIT_PROFIL.duplicate_email}
+        isValid=false
       }
-      else if(!isValid) {
-        return res.status(400).json(errors)
+      if(!isValid) {
+        return res.status(400).json({...errors})
       }
 
       req.context.getModel('User').findByIdAndUpdate(req.user, {
@@ -847,8 +875,11 @@ router.put('/profile/birthday/:user_id', passport.authenticate('b2badmin', {sess
     return
   }
   req.context.getModel('User').findByIdAndUpdate(req.params.user_id, {birthday: req.body.birthday})
-    .then(user => res.json())
-    .catch(err => res.status(400).json('Date de naissance incorrecte'))
+    .then(() => res.json())
+    .catch(err => {
+      console.error(err)
+      res.status(400).json('Date de naissance incorrecte')
+    })
 })
 
 // @Route PUT /myAlfred/api/users/profile/editProProfile
@@ -862,7 +893,7 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
   req.context.getModel('User').findOne({email: req.body.email})
     .then(user => {
       if (user && req.body.email != req.user.email) {
-        return res.status(400).json({email: 'Adresse mail déjà utilisée'})
+        return res.status(400).json({email: EDIT_PROFIL.duplicate_email})
       }
       else if(!isValid) {
         return res.status(400).json(errors)
@@ -908,7 +939,7 @@ router.put('/profile/editPassword', passport.authenticate('jwt', {session: false
   }
   req.context.getModel('User').findById(req.user.id)
     .then(user => {
-      const promise = admin ? emptyPromise(true) : emptyPromise(bcrypt.compare(password, user.password))
+      const promise = admin ? Promise.resolve(true) : Promise.resolve(bcrypt.compare(password, user.password))
       promise
         .then(isMatch => {
           if (isMatch) {
@@ -1039,7 +1070,8 @@ router.delete('/profile/picture/delete', passport.authenticate('jwt', {session: 
 router.put('/current/delete', passport.authenticate('jwt', {session: false}), (req, res) => {
   const hash = crypto.randomBytes(10).toString('hex')
   req.context.getModel('User').findByIdAndUpdate(req.user, {active: false, is_alfred: false, email: hash})
-    .then(() => {
+    .then(user => {
+      logEvent(req, 'Compte', 'Suppression', `Compte de ${user.full_name}(${user._id}) supprimé`)
       res.json({msg: 'Compte désactivé'})
     })
     .catch(err => console.error(err))
@@ -1087,13 +1119,13 @@ router.post('/profile/album/add', uploadAlbumPicture.single('myImage'), passport
     })
 })
 
-// @Route GET /myAlfred/api/users/profile/albums
+// @Route GET /myAlfred/api/users/profile/album
 // Gets albums
 // @Access private
-router.get('/profile/albums/:user_id', (req, res) => {
-  req.context.getModel('Album').find({user: req.params.user_id})
-    .then(albums => {
-      res.json(albums)
+router.get('/profile/album/:user_id', (req, res) => {
+  req.context.getModel('Album').findOne({user: req.params.user_id})
+    .then(album => {
+      res.json(album && album.pictures || [])
     })
     .catch(err => {
       console.error(err)
@@ -1105,18 +1137,62 @@ router.get('/profile/albums/:user_id', (req, res) => {
 // Add a picture to an album
 // @Access private
 router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  console.log('Adding picture')
-  req.context.getModel('Album').findById(req.body.album)
-    .then(album => {
-      console.log('Album found')
-      album.pictures.push({path: req.file.path})
-      album.save()
-      console.log('Album saved')
-      res.status(200).json({})
+  req.context.getModel('Album').findOneAndUpdate({user: req.user.id}, {$push: {pictures: req.file.path}}, {new: true, upsert: true})
+    .then(() => {
+      res.json({})
     })
     .catch(err => {
       console.error(err)
-      res.status(500).json({error: err})
+      res.status(500).json(err)
+    })
+})
+router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
+  req.context.getModel('Album').findOneAndUpdate({user: req.user.id}, {$push: {pictures: req.file.path}}, {new: true, upsert: true})
+    .then(() => {
+      res.json({})
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+router.delete('/profile/album/picture/:pic_index', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const remove_idx=parseInt(req.params.pic_index)
+  req.context.getModel('Album').findOne({user: req.user.id})
+    .then(album => {
+      const path=album.pictures[remove_idx]
+      album.pictures=album.pictures.filter((p, idx) => remove_idx!=idx)
+      fs.unlink(path)
+        .then(() => console.log(`Removed ${req.user.id}'s album picture ${path}`))
+        .catch(err => console.log(`Remove ${req.user.id}'s album picture ${path}: error ${err}`))
+      return album.save()
+    })
+    .then(() => {
+      res.json({})
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+router.get('/still_profile/:filename', (req, res) => {
+  res.set('Content-Type', 'image/*')
+  gifFrames({url: `static/profile/${req.params.filename}`, frames: 0})
+    .then(frameData => {
+      const img=frameData[0].getImage().read()
+      return res.send(img)
+    })
+    .catch(() => {
+      fs.readFile(`static/profile/${req.params.filename}`)
+        .then(data => {
+          return res.send(data)
+        })
+        .catch(err => {
+          console.error(err)
+          return res.send()
+        })
     })
 })
 

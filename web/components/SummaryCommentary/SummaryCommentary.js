@@ -1,3 +1,4 @@
+import { setAxiosAuthentication } from '../../utils/authentication';
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -38,6 +39,7 @@ class SummaryCommentary extends React.Component {
       this.setState({userServicesPreview: true})
     }
 
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${userId}`)
       .then(res => {
         let reviews=res.data
@@ -122,20 +124,12 @@ class SummaryCommentary extends React.Component {
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}} classes={{root: 'customreviewdivider'}}/>
         </Grid>
         {
-          userServicesPreview ?
-            showCommentary ?
+          (showCommentary || !userServicesPreview) &&
               allComments.map(r => (
                 <Grid style={{marginTop: '5%'}}>
-                  <Commentary key={r._id} review={r._id} user={this.props.user}/>
+                  <Commentary key={r._id} review={r} user={this.props.user}/>
                 </Grid>
               ))
-              : null
-            :
-            allComments.map(r => (
-              <Grid style={{marginTop: '5%'}}>
-                <Commentary key={r._id} review={r._id} user={this.props.user}/>
-              </Grid>
-            ))
         }
       </Grid>
     )

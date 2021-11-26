@@ -1,36 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const passport = require('passport');
-const mongoose = require('mongoose');
-const path = require('path');
-const ServiceUser = require('../../models/ServiceUser');
-const Shop = require('../../models/Shop');
-const Group = require('../../models/Group');
-const Service = require('../../models/Service');
-const User = require('../../models/User');
-const Availability = require('../../models/Availability');
-const Category = require('../../models/Category');
-const Job = require('../../models/Job');
-const Prestation = require('../../models/Prestation');
-const axios = require('axios');
-const https = require('https');
-const multer = require('multer');
-const crypto = require('crypto');
-const geolib = require('geolib');
-const _ = require('lodash');
-const moment = require('moment');
-const isEmpty = require('../../validation/is-empty');
-const {data2ServiceUser} = require('../../utils/mapping');
-const {emptyPromise} = require('../../../utils/promise');
-const {computeUrl} = require('../../../config/config');
-const serviceFilters = require('../../utils/filters');
-const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts');
-const {normalize} = require('../../../utils/text');
+const {logEvent}=require('../../utils/events')
 const {sendAdminsAlert} =require('../../utils/mailing')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
+const express = require('express')
 
-const parse = require('url-parse')
+const router = express.Router()
+const passport = require('passport')
+const mongoose = require('mongoose')
+const geolib = require('geolib')
+const _ = require('lodash')
+const moment = require('moment')
+const {data2ServiceUser} = require('../../utils/mapping')
+const serviceFilters = require('../../utils/filters')
+const {GID_LEN, PRO, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
+const {normalize} = require('../../../utils/text')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
+const parse = require('url-parse')
 
 moment.locale('fr')
 
@@ -148,7 +132,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
         professional_access: req.body.professional_access,
       }))
 
-      const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : emptyPromise({insertedIds: []})
+      const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : Promise.resolve({insertedIds: []})
       r
         .then(result => {
           let insertedPrestations=result
@@ -166,6 +150,10 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
           const promise = req.params.serviceuser_id ? req.context.getModel('ServiceUser').findByIdAndUpdate(su._id, su, {new: true}) : req.context.getModel('ServiceUser').create(su)
           promise
             .then(su => {
+              req.context.getModel('Service').findById(su.service, 'label')
+                .then(service => {
+                  logEvent(req, 'Boutique', `${req.params.serviceuser_id ? 'Modification': 'Ajout'} de service`, `Service ${service.label}`)
+                })
               if (req.params.serviceuser_id) {
                 return res.json(su)
               }
@@ -279,10 +267,10 @@ router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false})
     .catch(err => console.error(err))
 })
 
-// @Route POST /myAlfred/api/serviceUser/addDiploma/:id
-// Add a diploma for a service
+// @Route POST /myAlfred/api/serviceUser/setDiploma/:id
+// Sets a diploma for a service
 // @Access private
-router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/setDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
     .then(serviceUser => {
       serviceUser.diploma = serviceUser.diploma || {}
@@ -292,16 +280,22 @@ router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authentic
       if (req.file) {
         serviceUser.diploma.file = req.file.path
       }
-
-      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err))
+      serviceUser.markModified('diploma')
+      return serviceUser.save()
     })
-    .catch(err => console.error(err))
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
 })
 
-// @Route POST /myAlfred/api/serviceUser/addCertification/:id
+// @Route POST /myAlfred/api/serviceUser/setCertification/:id
 // Add a certification for a service
 // @Access private
-router.post('/addCertification/:id', upload.single('file_certification'), passport.authenticate('jwt', {
+router.post('/setCertification/:id', upload.single('file_certification'), passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
@@ -313,11 +307,16 @@ router.post('/addCertification/:id', upload.single('file_certification'), passpo
       if (req.file) {
         serviceUser.certification.file = req.file.path
       }
-      serviceUser.is_certified = true
-
-      serviceUser.save().then(service => res.json(service)).catch(err => console.error(err))
+      serviceUser.markModified('certification')
+      return serviceUser.save()
     })
-    .catch(err => console.error(err))
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
 })
 
 // @Route GET /myAlfred/api/serviceUser/all
@@ -956,37 +955,33 @@ router.delete('/current/allServices', passport.authenticate('jwt', {
       })
 
     })
-    .catch(err => res.status(404).json({
-      servicenotfound: 'No service found',
-    }))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
 })
 
 // @Route DELETE /myAlfred/api/serviceUser/:id
 // Delete a service for an alfred
 // @Access private
-router.delete('/:id', passport.authenticate('jwt', {
-  session: false,
-}), (req, res) => {
+router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
-    .then(event => {
-      event.remove().then(() => {
-        req.context.getModel('Shop').findOne({
-          alfred: req.user.id,
-        })
+    .populate('service', 'label')
+    .then(serviceuser => {
+      logEvent(req, 'Boutique', 'Suppression de service', `Service ${serviceuser.service.label}`)
+      serviceuser.remove().then(() => {
+        req.context.getModel('Shop').findOne({alfred: req.user.id})
           .then(shop => {
-            const removeIndex = shop.services
-              .indexOf(req.params.id)
-
+            const removeIndex = shop.services.indexOf(req.params.id)
             shop.services.splice(removeIndex, 1)
-
-
             shop.save().then(newShop => res.json(newShop)).catch(err => console.error(err))
           })
       })
     })
-    .catch(err => res.status(404).json({
-      eventnotfound: 'No event found',
-    }))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
 })
 
 

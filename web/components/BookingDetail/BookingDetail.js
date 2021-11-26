@@ -6,6 +6,9 @@ import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import {BOOKING_DETAIL} from '../../utils/i18n'
 const {EMPLOYEE}=require('../../utils/consts')
+import IconButton from '@material-ui/core/IconButton'
+import InfoIcon from '@material-ui/icons/Info'
+import Link from 'next/link'
 
 class BookingDetail extends React.Component {
   constructor(props) {
@@ -15,7 +18,7 @@ class BookingDetail extends React.Component {
   render() {
     const {
       classes, prestations, count, travel_tax, pick_tax, total, alfred_fee,
-      customer_fee, cesu_total, mode, role, company_amount} = this.props
+      customer_fee, cesu_total, mode, role, company_amount, alfred_pro} = this.props
 
     return (
       <Grid>
@@ -61,23 +64,23 @@ class BookingDetail extends React.Component {
             </Grid> : null}
           { /* End pick tax */}
           { /* Start commission */}
-          {customer_fee && customer_fee !== 0 && !mode ?
+          {customer_fee && customer_fee !== 0 && !mode || alfred_fee ?
             <Grid className={`customdisplayservicecost ${classes.flexContent}`}>
               <Grid className={classes.labelContent}>
                 <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
               </Grid>
+              {
+                this.props.t('BOOKING_DETAIL.service_cost_link') ?
+                  <Grid>
+                    <a target={'_blank'} href={ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost_link'))}>
+                      <IconButton aria-label="InfoIcon">
+                        <InfoIcon fontSize="small" />
+                      </IconButton>
+                    </a>
+                  </Grid> : null
+              }
               <Grid className={classes.priceContent}>
-                <p>{customer_fee.toFixed(2)}€</p>
-              </Grid>
-            </Grid> : null
-          }
-          {alfred_fee && !mode ?
-            <Grid className={`customdisplayservicecost ${classes.flexContent}`}>
-              <Grid className={classes.labelContent}>
-                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.service_cost'))}</p>
-              </Grid>
-              <Grid className={classes.priceContent}>
-                <p>-{alfred_fee.toFixed(2)}€</p>
+                <p>-{alfred_fee ? alfred_fee.toFixed(2) : customer_fee.toFixed(2)}€</p>
               </Grid>
             </Grid> : null
           }
@@ -100,7 +103,7 @@ class BookingDetail extends React.Component {
           {customer_fee && cesu_total && !mode ?
             <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
               <Grid>
-                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.cesu'))}</p>
+                <p>{ReactHtmlParser(this.props.t(alfred_pro ? 'BOOKING_DETAIL.cis': 'BOOKING_DETAIL.cesu'))}</p>
               </Grid>
               <Grid>
                 <p>{cesu_total.toFixed(2)}€</p>

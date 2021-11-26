@@ -5,14 +5,16 @@ export default theme => ({
   },
   labelContent: {
     width: 250,
-    [theme.breakpoints.down('xs')]:{
-      width: '50%'
-    }
-  },
-  priceContent:{
-    [theme.breakpoints.down('xs')]:{
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
       width: '50%',
-      textAlign: 'end'
-    }
-  }
+    },
+  },
+  priceContent: {
+    [theme.breakpoints.down('xs')]: {
+      width: '50%',
+      textAlign: 'end',
+    },
+  },
 })

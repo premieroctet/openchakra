@@ -12,17 +12,31 @@ const useStyles = makeStyles(() => ({
   },
   carouselStyle: {
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
-    height: '100%',
   },
-  carouselItem: {
+  carousel: {
     height: '100%',
-    '& div:first-child': {
+    '& .CarouselItem': {
       height: '100%',
+      display: 'flex',
+    },
+    '& .CarouselItem div': {
+      width: '100%',
     },
   },
-  
+  title: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mainContainer: {
+    height: '100%',
+    width: '100%',
+    margin: 0,
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+  },
+
 }))
 
 function RandomDisplay(props) {
@@ -34,16 +48,28 @@ function RandomDisplay(props) {
       autoPlay={loop}
       indicators={false}
       interval={6000}
-      className={classes.carouselItem}
+      className={classes.carousel}
     >
       {
         arrayText.map((res, i) => (
-          <Grid container spacing={2} key={i} style={{height: '100%'}}>
+          <Grid container spacing={2} key={i} className={`${classes.mainContainer} customhowitworks${i}`}>
             {
               res.map((element, index) => (
-                <Grid item md={2} xs={12} key={index} className={classes.carouselStyle}>
-                  <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
-                </Grid>
+                <>
+                  {
+                    index === 0 &&
+                    <Grid item xs={12} className={classes.title} key={index}>
+                      <Typography className={`${classes.colorText} customrandomdisplay`}>{element[0]}</Typography>
+                    </Grid>
+                  }
+                  {
+                    index !== 0 &&
+                    <Grid item md={2} xs={12} className={classes.carouselStyle} key={index}>
+                      <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
+                    </Grid>
+                  }
+
+                </>
               ))
             }
           </Grid>

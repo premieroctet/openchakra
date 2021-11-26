@@ -14,10 +14,6 @@ const ServiceSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Equipment',
   }],
-  tags: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Tag',
-  }],
   picture: {
     type: String,
   },

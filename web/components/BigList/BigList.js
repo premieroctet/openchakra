@@ -26,20 +26,20 @@ class BigList extends React.Component {
     }
   }
 
-  onAddClick = event => {
+  onAddClick = () => {
     if (this.props.onAddClick) {
       this.props.onAddClick()
     }
   }
 
-  onDownloadClick = event => {
+  onDownloadClick = () => {
     if (this.gridRef.current) {
       this.gridRef.current.api.exportDataAsCsv({columnSeparator: ';', processCellCallback: this.processExportCell})
     }
   }
 
   processExportCell = params => {
-    const {value, node, context, column}=params
+    const {value, column}=params
     const colId = column.colId
     const DATE_FIELD_RE=/birth|_date/i
     // Moment ?
@@ -75,6 +75,7 @@ class BigList extends React.Component {
       'dateRenderer': models.DateRenderer,
       'mangopayRenderer': models.MangopayRenderer,
       'statusFilter': models.StatusFilter,
+      'reviewStatusFilter': models.ReviewStatusFilter,
       'pictureRenderer': models.PictureRenderer,
       'privateRenderer': models.PrivateRenderer,
       'dateTimeRenderer': models.DateTimeRenderer,
@@ -138,6 +139,7 @@ class BigList extends React.Component {
               onRowClicked={ this.props.onRowClicked}
               onCellClicked={ this.props.onCellClicked}
               onFirstDataRendered={this.fitColumns}
+              onCellEditingStopped={this.props.onCellEditingStopped}
               ref={this.gridRef}
             />
           </Paper>

@@ -1,6 +1,7 @@
+import {REVIEW_STATUS} from '../../utils/consts';
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 const moment = require('moment')
 
 moment.locale('fr')
@@ -85,6 +86,48 @@ class StatusFilter extends React.Component {
         <br/>
         <Checkbox name={'admin'} checked={this.state.admin} onChange={this.onChange} />
         <img src="/static/assets/img/admin.svg" style={{width: '40px'}} alt='Admin' title='Admin' />
+      </div>
+    )
+  }
+}
+
+class ReviewStatusFilter extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.params=props
+    this.state=Object.values(REVIEW_STATUS).reduce((acc, v) => { return {...acc, [v]: false} }, {})
+  }
+
+  doesFilterPass = p => {
+    const review=p.data
+    return review && !!this.state[review.status]
+  }
+
+  onChange = event => {
+    this.setState({[ event.target.name ]: event.target.checked}, () => {
+      this.params.filterChangedCallback()
+    })
+  }
+
+  getModel = () => {
+    return this.state
+  }
+
+  isFilterActive = () => {
+    return Object.values(this.state).some(v => v)
+  }
+
+  render = () => {
+    return (
+      <div>
+        {Object.values(REVIEW_STATUS).map(k => (
+          <div>
+            <Checkbox name={k} checked={this.state[k]} onChange={this.onChange} />
+            {k}
+          </div>
+        ))
+        }
       </div>
     )
   }
@@ -305,5 +348,5 @@ module.exports= {
   StatusFilter, PictureRenderer, PrivateRenderer, BooleanRenderer, LocationRenderer, WarningRenderer,
   EnumRenderer, LinkRenderer, ColorRenderer, FontRenderer, DeleteRenderer,
   textColumn, booleanColumn, dateColumn, dateTimeColumn, currencyColumn, pictureColumn,
-  colorColumn, fontColumn, deleteColumn, warningColumn,
+  colorColumn, fontColumn, deleteColumn, warningColumn, ReviewStatusFilter,
 }

@@ -26,6 +26,11 @@ const isLoggedUserAlfredPro = () => {
   return logged && logged.is_alfred_pro
 }
 
+const getLoggedAs = () => {
+  const logged=getLoggedUser()
+  return logged && logged.logged_as
+}
+
 const isB2BSite = () => {
   if (isB2BDisabled()) {
     return false
@@ -172,4 +177,5 @@ module.exports = {
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
   isLoggedUserRegistered, isIOS, isAndroid, getPartner, hideEmptyEvaluations,
+  getLoggedAs,
 }

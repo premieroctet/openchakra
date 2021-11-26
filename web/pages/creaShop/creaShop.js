@@ -297,10 +297,11 @@ class creaShop extends BasePage {
       })
 
       setAxiosAuthentication()
-      axios.post('/myAlfred/api/shop/add', cloned_shop)
+      const noDiplomaShop = _.pickBy(cloned_shop, (v, k) => !k.match(/diploma|certification/i))
+      axios.post('/myAlfred/api/shop/add', noDiplomaShop)
         .then(() => {
           const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.getURLProps().serviceuser_id || ''}`
-          axios.post(su_url, cloned_shop)
+          axios.post(su_url, noDiplomaShop)
             .then(su_res => {
               const su = su_res.data
               // Update token in case of shop creation (i.e. becomes Alfred)
@@ -310,8 +311,8 @@ class creaShop extends BasePage {
                   .catch(err => console.error(err))
               }
               snackBarSuccess(mode==CREASHOP_MODE.CREATION ? 'Boutique créée' : mode==CREASHOP_MODE.SERVICE_ADD ? 'Votre service a été créé' : 'Votre service a été modifié')
-              let su_id = su._id
-              const diplomaChanged = typeof cloned_shop.diplomaPicture=='object'
+
+              const diplomaChanged = cloned_shop.diplomaPicture && typeof cloned_shop.diplomaPicture=='object'
               if (cloned_shop.diplomaName || diplomaChanged || cloned_shop.diplomaYear) {
                 const formData = new FormData()
                 formData.append('name', cloned_shop.diplomaName)
@@ -321,14 +322,14 @@ class creaShop extends BasePage {
                   formData.append('file_diploma', cloned_shop.diplomaPicture)
                 }
 
-                axios.post(`/myAlfred/api/serviceUser/addDiploma/${su_id}`, formData)
+                axios.post(`/myAlfred/api/serviceUser/setDiploma/${su._id}`, formData)
                   .then(() => {
                     console.log('Diplôme enregistré')
                   })
                   .catch(err => console.error(err))
               }
 
-              const certificationChanged = typeof cloned_shop.certificationPicture=='object'
+              const certificationChanged = cloned_shop.certificationPicture && typeof cloned_shop.certificationPicture=='object'
               if (cloned_shop.certificationName || certificationChanged || cloned_shop.certificationYear) {
                 const formData = new FormData()
                 formData.append('name', cloned_shop.certificationName)
@@ -338,7 +339,7 @@ class creaShop extends BasePage {
                   formData.append('file_certification', cloned_shop.certificationPicture)
                 }
 
-                axios.post(`/myAlfred/api/serviceUser/addCertification/${su_id}`, formData)
+                axios.post(`/myAlfred/api/serviceUser/setCertification/${su._id}`, formData)
                   .then(() => {
                     console.log('Certification enregistrée')
                   })

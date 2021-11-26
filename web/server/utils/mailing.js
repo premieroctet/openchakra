@@ -35,8 +35,9 @@ const sendNotification = (notif_index, destinee, params) => {
   const msg = `Sending notif ${notif_index} to ${destinee._id} using ${JSON.stringify(params)}`
 
   let enable_mails = ENABLE_MAILING
-  // En validation, envoyer les notifications et SMS aux membres de @my-alfred.io
-  if (!enable_mails && is_validation() && (destinee.email||'').match(/@my-alfred.io/i)) {
+  const ALLOW_EMAILS=/@.*alfred/i
+  // En validation, envoyer les notifications et SMS aux membres de @.*alfred.*
+  if (!enable_mails && is_validation() && ALLOW_EMAILS.test(destinee.email||'')) {
     console.log('Mailing disabled except for my-alfred.io mails on validation platform')
     enable_mails = true
   }

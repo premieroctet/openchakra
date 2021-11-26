@@ -62,6 +62,7 @@ export default theme => ({
       fontSize: '1rem',
       lineHeight: 1.5,
       color: 'white',
+      opacity: '0.5',
     },
     '& .MuiSvgIcon-root': {
       fill: 'white',

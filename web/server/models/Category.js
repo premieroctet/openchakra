@@ -23,10 +23,6 @@ const CategorySchema = new Schema({
   description: {
     type: String,
   },
-  tags: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Tag',
-  }],
 })
 
 CategorySchema.index({label: 'text'})

@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import {withStyles} from '@material-ui/core/styles'
 import styles from './CommentaryStyle'
 import Rating from '@material-ui/lab/Rating'
-import axios from 'axios'
 import moment from 'moment'
 import Skills from '../Skills/Skills'
 import Typography from '@material-ui/core/Typography'
@@ -16,27 +15,11 @@ class Commentary extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: 4,
-      owner: {},
-      reviews: [],
     }
   }
 
-  componentDidMount() {
-    const review_id = this.props.review
-
-    setAxiosAuthentication()
-    axios.get(`/myAlfred/api/reviews/review/${review_id}`)
-      .then(res => {
-        this.setState({review: res.data})
-      })
-      .catch(err => console.error(err))
-  }
-
-
   render() {
-    const {review} = this.state
-    const {user} = this.props
+    const {user, review} = this.props
 
     if (!review) {
       return null
@@ -65,7 +48,7 @@ class Commentary extends React.Component {
             <Typography>{review.content}</Typography>
           </Grid>
           <Grid style={{marginTop: '3%'}}>
-            <Skills review={review._id} hideCount={true}/>
+            <Skills key={review._id} review={review._id} hideCount={true}/>
           </Grid>
         </Grid>
       </Grid>

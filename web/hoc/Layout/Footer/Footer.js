@@ -1,9 +1,17 @@
+const {
+  getLoggedUserId,
+  isAndroid,
+  isApplication,
+  isB2BStyle,
+  isIOS,
+  isLoggedUserAlfredPro
+} = require('../../../utils/context');
+import { Link } from '@material-ui/core';
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import Link from '../../../components/Link/Link'
 import {withStyles} from '@material-ui/core/styles'
 import FacebookIcon from '@material-ui/icons/Facebook'
 import InstagramIcon from '@material-ui/icons/Instagram'
@@ -12,14 +20,12 @@ import TwitterIcon from '@material-ui/icons/Twitter'
 import Divider from '@material-ui/core/Divider'
 import styles from '../../../static/css/components/Footer/Footer'
 import IconButton from '@material-ui/core/IconButton'
-import {isAndroid, isIOS} from '../../../utils/context'
 import Register from '../../../components/Register/Register'
 import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import {FOOTER} from '../../../utils/i18n'
-const {getLoggedUserId, isLoggedUserAlfredPro, isB2BStyle, isApplication} = require('../../../utils/context')
 const {isB2BDisabled, mustDisplayChat} = require('../../../config/config')
 
 const DialogTitle = withStyles(styles)(props => {

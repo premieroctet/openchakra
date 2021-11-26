@@ -181,15 +181,15 @@ const ServiceUserSchema = new Schema({
 }, {toJSON: {virtuals: true, getters: true}})
 
 ServiceUserSchema.virtual('is_graduated').get(function() {
-  return Boolean(this.diploma)
+  return Boolean(this.diploma && this.diploma.name!='null')
 })
 
 ServiceUserSchema.virtual('is_certified').get(function() {
-  return Boolean(this.certification)
+  return Boolean(this.certification && this.certification.name != 'null')
 })
 
 ServiceUserSchema.virtual('grade_text').get(function() {
-  let grades=[this.diploma, this.certification].filter(x => Boolean(x))
+  let grades=[this.diploma, this.certification].filter(x => Boolean(x) && x.name!='null')
   let result=grades.map(grade => {
     let str=grade.name
     if (grade.year) {

@@ -1,3 +1,4 @@
+import {Link, Tooltip} from '@material-ui/core'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import '../../static/assets/css/custom.css'
 import {withStyles} from '@material-ui/core/styles'
@@ -17,7 +18,6 @@ import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
 import BasePage from '../basePage'
-import BookingCancel from '../../components/BookingDetail/BookingCancel'
 import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
@@ -25,7 +25,7 @@ import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
 import LayoutReservations from '../../hoc/Layout/LayoutReservations'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import styles from '../../static/css/pages/reservations/reservations'
-import {RESERVATION} from '../../utils/i18n'
+import {RESERVATION, BOOKING} from '../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
@@ -60,7 +60,6 @@ class AllReservations extends BasePage {
       reservationType: 1,
       reservationStatus: 0,
       bookingPreview: null,
-      bookingCancel: null,
       bookingConfirm: null,
       bookingPreApprouved: null,
     }
@@ -132,20 +131,24 @@ class AllReservations extends BasePage {
 
   openBookingPreview = bookingId => {
     this.loadBookings()
-    this.setState({bookingPreview: bookingId, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: null})
+    this.setState({bookingPreview: bookingId, bookingConfirm: null, bookingPreApprouved: null})
   }
 
-  openBookingCancel = bookingId => {
-    this.setState({bookingPreview: null, bookingCancel: bookingId, bookingConfirm: null, bookingPreApprouved: null})
+  getIcsURL = bookingId => {
+    return `/myAlfred/api/booking/${bookingId}/ics`
+  }
+
+  getGoogleCalendarURL = bookingId => {
+    return `/myAlfred/api/booking/${bookingId}/google_calendar`
   }
 
   openBookingConfirm = bookingId => {
-    this.setState({bookingPreview: null, bookingCancel: null, bookingConfirm: bookingId, bookingPreApprouved: null})
+    this.setState({bookingPreview: null, bookingConfirm: bookingId, bookingPreApprouved: null})
   }
 
   openBookingPreAprouved = bookingId => {
     this.loadBookings()
-    this.setState({bookingPreview: null, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: bookingId})
+    this.setState({bookingPreview: null, bookingConfirm: null, bookingPreApprouved: bookingId})
   }
 
   onClosePreview = () => {
@@ -165,25 +168,7 @@ class AllReservations extends BasePage {
       >
         <DialogTitle id="customized-dialog-title" onClose={this.onClosePreview}/>
         <DialogContent>
-          <BookingPreview booking_id={bookingPreview} onCancel={this.openBookingCancel} onConfirm={this.openBookingConfirm} onConfirmPreapproved={this.openBookingPreAprouved}/>
-        </DialogContent>
-      </Dialog>
-    )
-  }
-
-  bookingCancelModal = classes => {
-    const {bookingCancel}=this.state
-
-    return (
-      <Dialog style={{width: '100%'}}
-        open={Boolean(bookingCancel)}
-        onClose={() => this.setState({bookingCancel: null})}
-        classes={{paper: classes.dialogPreviewPaper}}
-
-      >
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingCancel: null})}/>
-        <DialogContent>
-          <BookingCancel booking_id={bookingCancel} onMaintain={this.openBookingPreview}/>
+          <BookingPreview booking_id={bookingPreview} onConfirm={this.openBookingConfirm} onConfirmPreapproved={this.openBookingPreAprouved}/>
         </DialogContent>
       </Dialog>
     )
@@ -291,7 +276,7 @@ class AllReservations extends BasePage {
                     <Grid item xl={1} lg={1} md={6} sm={3} xs={4} className={classes.priceContainer}>
                       <Typography className={classes.alfredAmount}><strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong></Typography>
                     </Grid>
-                    <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer}>
+                    <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer} style={{alignItems: 'center'}}>
                       <Grid item>
                         <CustomButton
                           color={'primary'}
@@ -300,6 +285,20 @@ class AllReservations extends BasePage {
                           onClick={() => this.openBookingPreview(booking._id)}>
                           {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
                         </CustomButton>
+                      </Grid>
+                      <Grid item>
+                        <Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
+                          <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
+                            <img src='/static/assets/icon/google_calendar.svg' width="50px"/>
+                          </Tooltip>
+                        </Link>
+                      </Grid>
+                      <Grid item>
+                        <Link href={this.getIcsURL(booking._id)}>
+                          <Tooltip title={BOOKING.ADD_OTHER_AGENDA}>
+                            <img src='/static/assets/icon/calendar.svg' width="50px"/>
+                          </Tooltip>
+                        </Link>
                       </Grid>
                       {
                         reservationType === 1 && !booking.customer_booking ?
@@ -332,7 +331,7 @@ class AllReservations extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {reservationType, userInfo, bookingPreview, bookingCancel, bookingConfirm, bookingPreApprouved} = this.state
+    const {reservationType, userInfo, bookingPreview, bookingConfirm, bookingPreApprouved} = this.state
 
     return (
       <Grid>
@@ -347,7 +346,6 @@ class AllReservations extends BasePage {
           </LayoutMobileReservations>
         </Grid>
         { bookingPreview ? this.bookingPreviewModal(classes) : null}
-        { bookingCancel ? this.bookingCancelModal(classes) : null}
         { bookingConfirm ? this.bookingConfirmModal(classes) : null}
         { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
       </Grid>

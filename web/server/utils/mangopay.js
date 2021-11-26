@@ -5,7 +5,6 @@ const {
 }=require('../../config/config')
 const moment = require('moment')
 const path = require('path')
-const {emptyPromise} = require('../../utils/promise')
 const mangopay = require('mangopay2-nodejs-sdk')
 const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType')
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
@@ -317,7 +316,7 @@ const addIdIfRequired = user => {
           console.log(`Created KyCPage recto ${id_recto}`)
           const id_verso = user.id_card.verso ? path.resolve(user.id_card.verso) : null
 
-          const prom = id_verso == null ? emptyPromise() : mangoApi.Users.createKycPageFromFile(id, documentId, id_verso)
+          const prom = id_verso == null ? Promise.resolve() : mangoApi.Users.createKycPageFromFile(id, documentId, id_verso)
           prom.then(resultVerso => {
             console.log(resultVerso ? `Created KyCPage verso ${id_verso}` : 'No verso required')
             // TODO : PersonType.Legal : ask for validation only on first resrvation
@@ -386,13 +385,13 @@ const createPayment = (booking, mangopay_source_id, mangopay_destination_id, amo
   const result={}
   return new Promise(resolve => {
     const transferPromise = booking[transfer_att] ?
-      emptyPromise({Id: booking[transfer_att]})
+      Promise.resolve({Id: booking[transfer_att]})
       : createTransfer(mangopay_source_id, mangopay_destination_id, amount)
     transferPromise
       .then(transfer => {
         result[transfer_att] = transfer.Id
         const payoutPromise = booking[payout_att] ?
-          emptyPromise({Id: booking[payout_att]})
+          Promise.resolve({Id: booking[payout_att]})
           : createPayout(mangopay_destination_id, amount)
         return payoutPromise
       })
@@ -422,12 +421,12 @@ const payBooking = (booking, context) => {
   }
   // Avocotés : debit from customer account, fees are admin booking fees
   else if (booking.customer_booking) {
-    customer_promise = emptyPromise(booking.customer_booking.user)
+    customer_promise = Promise.resolve(booking.customer_booking.user)
     amount = booking.amount
     fees = booking.fees
   }
   else {
-    customer_promise = emptyPromise(booking.user)
+    customer_promise = Promise.resolve(booking.user)
   }
 
   const recipients=[]

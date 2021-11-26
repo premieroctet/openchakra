@@ -1,9 +1,11 @@
+import Album from '../components/Album/Album';
+import { Divider, Link } from '@material-ui/core';
 const {
   getDeadLine,
   isDateAvailable,
   isMomentAvailable,
 } = require('../utils/dateutils')
-import {snackBarError, snackBarSuccess} from '../utils/notifications'
+import {snackBarError} from '../utils/notifications'
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -23,7 +25,6 @@ import MapComponent from '../components/map'
 import {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
 import {Helmet} from 'react-helmet'
-import Link from 'next/link'
 import Topic from '../hoc/Topic/Topic'
 import ListAlfredConditions from '../components/ListAlfredConditions/ListAlfredConditions'
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
@@ -34,15 +35,12 @@ import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
 import '../static/assets/css/custom.css'
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
-import {Divider} from '@material-ui/core'
 import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
-import AlarmOnIcon from '@material-ui/icons/AlarmOn'
 import CustomIcon from '../components/CustomIcon/CustomIcon'
 const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage = require('./basePage')
 const {BOOK_STATUS, MANAGER}=require('../utils/consts')
 const isEmpty = require('../server/validation/is-empty')
-const {emptyPromise} = require('../utils/promise')
 const {computeDistanceKm} = require('../utils/functions')
 const {roundCurrency} = require('../utils/converters')
 const {computeBookingReference} = require('../utils/text')
@@ -97,7 +95,7 @@ class UserServicesPreview extends BasePage {
       albums: [],
       excludedDays: [],
       available_budget: Number.MAX_SAFE_INTEGER,
-      allAddresses: {},
+      allAddresses: null,
       pending: false,
       avocotes: null,
       all_avocotes: [],
@@ -186,11 +184,11 @@ class UserServicesPreview extends BasePage {
 
             }
             st.user=user
-            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
+            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
             promise
               .then(res => {
                 if (res.data) {
-                  let allAddresses = {'main': res.data.billing_address}
+                  let allAddresses = {'main': {...res.data.billing_address, label: this.props.t('USERSERVICEPREVIEW.at_home')}}
                   res.data.service_address.forEach(addr => {
                     allAddresses[addr._id] = addr
                   })
@@ -539,11 +537,8 @@ class UserServicesPreview extends BasePage {
     if (!this.getClientAddress() && !avocotes_booking) {
       return null
     }
-    console.log(`Has avocotes:${!!avocotes_booking}`)
     const coordUser = avocotes_booking ? avocotes_booking.address.gps : this.getClientAddress().gps
-    console.log(`GPS:client ${JSON.stringify(coordUser)} service ${JSON.stringify(coordSU)}`)
     const distance=computeDistanceKm(coordSU, coordUser)
-    console.log(`Distance:${distance}, autorisé:${this.state.serviceUser.perimeter}`)
     return distance
   }
 
@@ -556,17 +551,13 @@ class UserServicesPreview extends BasePage {
   }
 
   hasWarningPerimeter = () => {
-    console.log(`Check warning perimeter`)
     if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user)) {
-      console.log('No SU || no user')
       return false
     }
     if (isEmpty(this.state.location) && !this.getAvocotesBooking()) {
-      console.log(`No location`)
       return true
     }
     if (this.isServiceAtHome() && !this.isInPerimeter()) {
-      console.log(`At home && too far`)
       return true
     }
     return false
@@ -606,11 +597,11 @@ class UserServicesPreview extends BasePage {
     if (avocotes_booking) {
       return `Chez ${avocotes_booking.user.full_name} (${avocotes_booking.user.billing_address.city})`
     }
-    const {location, user, allAddresses}=this.state
-    if (['client', 'main'].includes(location)) {
-      return ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.at_home'))
+    const {user, allAddresses}=this.state
+    if (!user || !allAddresses) {
+      return ''
     }
-    return user ? (allAddresses[location] || {label: ''}).label : ''
+    return allAddresses? allAddresses[this.get_prop_address()].label : ''
   }
 
   getLocationLabel = () => {
@@ -683,7 +674,7 @@ class UserServicesPreview extends BasePage {
     }
 
     let chatPromise = !user ?
-      emptyPromise({res: null})
+      Promise.resolve({res: null})
       :
       axios.post('/myAlfred/api/chatRooms/addAndConnect', {
         emitter: this.state.user._id,
@@ -694,10 +685,6 @@ class UserServicesPreview extends BasePage {
 
       if (user) {
         bookingObj.chatroom = res.data._id
-      }
-
-      if (this.state.selectedOption !== null) {
-        bookingObj.option = this.state.selectedOption
       }
 
       localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
@@ -773,24 +760,26 @@ class UserServicesPreview extends BasePage {
     const filters = this.extractFilters()
     const pricedPrestations = this.computePricedPrestations()
     const avocotes_booking=this.getAvocotesBooking()
-    const {shop, serviceUser}=this.state
+    const {shop, serviceUser, alfred}=this.state
+
+    const showProfileEnabled = alfred && alfred._id
 
     const listCondition = [
       {
-        label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_label')) : '',
-        summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary')) + this.formatDeadline(this.state.serviceUser.deadline_before_booking) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary_end')) : '',
-        IconName: this.state. alfred.firstname ? <CustomIcon className={'custompreviewsmiley'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<InsertEmoticonIcon fontSize="large"/> }/> : '',
+        label: alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_label')) : '',
+        summary: alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary')) + this.formatDeadline(this.state.serviceUser.deadline_before_booking) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary_end')) : '',
+        IconName: alfred.firstname ? <CustomIcon className={'custompreviewsmiley'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<InsertEmoticonIcon fontSize="large"/> }/> : '',
       },
       {
-        label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_label')) : '',
-        summary: this.state.alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_summary')) + this.state.flexible ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.one_day')) : this.state.moderate ? `${
+        label: alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_label')) : '',
+        summary: alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_summary')) + this.state.flexible ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.one_day')) : this.state.moderate ? `${
           ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.five_days'))}` : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.ten_days')) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.before_end_date')) : '',
-        IconName: this.state.alfred.firstname ? <CustomIcon className={'custompreviewcalendar'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<CalendarTodayIcon fontSize="large"/>}/> : '',
+        IconName: alfred.firstname ? <CustomIcon className={'custompreviewcalendar'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<CalendarTodayIcon fontSize="large"/>}/> : '',
       },
       {
-        label: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket')) : '',
-        summary: this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket_of', {firstname: this.state.alfred.firstname, minimum_basket: this.state.serviceUser.minimum_basket})) : '',
-        IconName: this.state.alfred.firstname ? <CustomIcon className={'custompreviewshopping'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<ShoppingCartIcon fontSize="large"/>}/> : '',
+        label: alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket')) : '',
+        summary: alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket_of', {firstname: this.state.alfred.firstname, minimum_basket: this.state.serviceUser.minimum_basket})) : '',
+        IconName: alfred.firstname ? <CustomIcon className={'custompreviewshopping'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<ShoppingCartIcon fontSize="large"/>}/> : '',
       },
     ]
 
@@ -803,14 +792,14 @@ class UserServicesPreview extends BasePage {
                 <Grid container className={classes.avatarAnDescription}>
                   <Grid item sm={3} className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
-                      <UserAvatar user={this.state.alfred}/>
+                      <UserAvatar user={alfred} animateStartup={true}/>
                     </Grid>
                   </Grid>
                   <Grid item sm={9} className={classes.flexContentAvatarAndDescription}>
                     <Grid className={classes.marginAvatarAndDescriptionContent}>
                       <Grid container spacing={1} style={{margin: 0, width: '100%'}}>
                         <Grid item xl={10} lg={10} md={12} sm={12} xs={12}>
-                          <Typography variant="h6">{this.state.alfred.firstname} - {this.state.service.label}</Typography>
+                          <Typography variant="h6">{alfred.firstname} - {this.state.service.label}</Typography>
                         </Grid>
                         <Grid item xl={2} lg={2} md={12} sm={12} xs={12} className={classes.containerListSkills}>
                           <ListIconsSkills data={{insurance_text: shop.insurance_text, grade_text: serviceUser.grade_text}}/>
@@ -830,13 +819,14 @@ class UserServicesPreview extends BasePage {
                       }
                     </Grid>
                     <Grid>
-                      <Link
-                        href={{
-                          pathname: '/profile/about',
-                          query: {user: this.state.alfred._id},
-                        }}
-                      >
-                        <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>{ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}</CustomButton>
+                      <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
+                        disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${alfred._id}`)}>
+                        {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}
+                      </CustomButton>
+                      <Link href="#availabilities">
+                      <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>
+                        {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_availabilities'))}
+                      </CustomButton>
                       </Link>
                     </Grid>
                   </Grid>
@@ -871,9 +861,10 @@ class UserServicesPreview extends BasePage {
                 </Grid>
                 <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>
                   <Topic
+                    id={'availabilities'}
                     underline={true}
                     titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_date'))}
-                    titleSummary={this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_date_summary')) + this.state.alfred.firstname : ''}
+                    titleSummary={alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_date_summary')) + alfred.firstname : ''}
                   >
                     <Schedule
                       availabilities={this.state.availabilities}
@@ -896,7 +887,7 @@ class UserServicesPreview extends BasePage {
                       titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_stuff'))}
                       needBackground={true}
                       underline={true}
-                      titleSummary={this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_stuff_summary')) + this.state.alfred.firstname : ''}
+                      titleSummary={alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_stuff_summary')) + alfred.firstname : ''}
                     >
                       <ListAlfredConditions
                         columnsXl={6}
@@ -917,7 +908,7 @@ class UserServicesPreview extends BasePage {
                         <Topic
                           underline={true}
                           titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_place'))}
-                          titleSummary={this.state.alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_zone_intervention')) + this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_zone_intervention_end')) : ''}
+                          titleSummary={alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_zone_intervention')) + alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_zone_intervention_end')) : ''}
                         >
                           <MapComponent
                             position={[this.state.serviceUser.service_address.gps.lat, this.state.serviceUser.service_address.gps.lng]}
@@ -926,6 +917,9 @@ class UserServicesPreview extends BasePage {
                         </Topic>
                       </Grid> : ''
                   }
+                </Grid>
+                <Grid style={{height: '300px'}}>
+                  <Album user={alfred._id} key={moment()} underline={true} readOnly={true}/>
                 </Grid>
                 <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
                   <Grid className={classes.showReservation}>
@@ -961,6 +955,7 @@ class UserServicesPreview extends BasePage {
                           clientAddress={this.getClientAddressLabel()}
                           clientAddressId={this.get_prop_address()}
                           book={this.book}
+                          alfred_pro={shop.is_professional}
                           {...this.state}
                         />
                       </Grid>
@@ -989,6 +984,7 @@ class UserServicesPreview extends BasePage {
                     clientAddress={this.getClientAddressLabel()}
                     clientAddressId={this.get_prop_address()}
                     book={this.book}
+                    alfred_pro={shop.is_professional}
                     {...this.state}
                   />
                 </Grid>
@@ -1003,8 +999,8 @@ class UserServicesPreview extends BasePage {
                     <Topic
                       underline={true}
                       titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary'))}
-                      titleSummary={this.state.alfred.firstname ?
-                        ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary_summary', {firstname: this.state.alfred.firstname}))
+                      titleSummary={alfred.firstname ?
+                        ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary_summary', {firstname: alfred.firstname}))
                         :
                         ''}
                     >

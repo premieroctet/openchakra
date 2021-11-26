@@ -24,7 +24,7 @@ class AddressAndFacturation extends React.Component {
   };
 
   render() {
-    const{equipments, pricedPrestations, countPrestations, user, classes} = this.props
+    const{equipments, pricedPrestations, countPrestations, user, classes, alfred_pro} = this.props
 
     return(
       <Grid container className={classes.addressAndFactContainer}>
@@ -79,6 +79,7 @@ class AddressAndFacturation extends React.Component {
                 pricedPrestations={pricedPrestations}
                 countPrestations={countPrestations}
                 handleStep={this.callHandleStep}
+                alfred_pro={alfred_pro}
               />
             </Grid>
           </Grid>

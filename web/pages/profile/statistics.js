@@ -78,10 +78,10 @@ class ProfileStatistics extends BasePage {
 
   loadHistoYear = () => {
     const year = this.state.year
-    axios.get(`/myAlfred/api/performances/incomes/${ year}`)
+    axios.get(`/myAlfred/api/performances/incomes/${year}`)
       .then(resIncome => {
         let bookings = resIncome.data
-        axios.get(`/myAlfred/api/performances/incomes/totalComing/${ year}`)
+        axios.get(`/myAlfred/api/performances/incomes/totalComing/${year}`)
           .then(resIncomeTotal => {
             const totalComing = parseInt(resIncomeTotal.data)
             const annualIncome = bookings.reduce((total, amount) => total + amount, 0)

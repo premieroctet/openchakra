@@ -12,7 +12,6 @@ const {ADMIN}=require('../../../utils/consts')
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/pages/profile/editProfileCompany/editProfileCompany'
-const {emptyPromise} = require('../../../utils/promise')
 import DateField from '../../DateField/DateField'
 import {INDEX_DASHBOARD} from '../../../utils/i18n'
 
@@ -65,7 +64,7 @@ class IndexDashboard extends React.Component {
   onSave = () => {
     const {representative, birthday} = this.state
     const selectedAdmin = this.getSelectedAdmin()
-    const promise = selectedAdmin.birthday ? emptyPromise()
+    const promise = selectedAdmin.birthday ? Promise.resolve()
       : axios.put(`/myAlfred/api/users/profile/birthday/${representative}`, {birthday: birthday})
 
     setAxiosAuthentication()

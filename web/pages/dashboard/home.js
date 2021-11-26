@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { isLoggedUserAdmin, isUserSuperAdmin } from '../../utils/context';
+import axios from 'axios'
+import {isLoggedUserAdmin, isUserSuperAdmin} from '../../utils/context'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
@@ -10,7 +10,7 @@ import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import Router from 'next/router'
 import DashboardLayout from '../../hoc/Layout/DashboardLayout'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 
 const styles = () => ({
   signupContainer: {
@@ -74,15 +74,14 @@ class home extends React.Component {
                 <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
                 <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>
                 <Link href="/dashboard/job/all"><a>Métiers</a></Link><br/>
-                <Link href="/dashboard/tags/all"><a>Tags</a></Link><br/>
                 <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
-                <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
                 <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                 <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
               </Grid>
               <Grid item xs={6}>
                 <Typography style={{fontSize: 30}}>Maintenance</Typography>
                 <Link href="/dashboard/logAsUser"><a>Connexion en tant qu'autre utilisateur</a></Link><br/>
+                <Link href="/dashboard/reviews"><a>Modération des commentaires</a></Link><br/>
 
                 { superAdmin &&
                   <>
@@ -97,6 +96,7 @@ class home extends React.Component {
                 <Link href="/dashboard/statistics"><a>Statistiques</a></Link><br/>
                 <Link href="/dashboard/map"><a>Carte des services</a></Link><br/>
                 <Link href="/dashboard/bookings"><a>Réservations</a></Link><br/>
+                <Link href="/dashboard/events"><a>Evénements</a></Link><br/>
               </Grid>
             </Grid>
           </Card>

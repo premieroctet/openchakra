@@ -4,7 +4,7 @@ import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import Router from 'next/router'
 import axios from 'axios'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 
 const moment = require('moment')

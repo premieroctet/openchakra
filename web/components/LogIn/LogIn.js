@@ -5,7 +5,7 @@ import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import styles from './LogInStyle'
 import Grid from '@material-ui/core/Grid'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import axios from 'axios'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'

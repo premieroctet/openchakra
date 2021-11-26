@@ -22,6 +22,7 @@ class UserAvatar extends React.Component {
       userId: '',
       isAbout: false,
       isPageEditable: false,
+      animated: false,
     }
   }
 
@@ -62,12 +63,38 @@ class UserAvatar extends React.Component {
     }
   };
 
+  onMouseEnter = () => {
+    this.setState({animated: true})
+  }
+
+  onMouseLeave = () => {
+    this.setState({animated: false})
+  }
+
   avatarWithPics = (user, classes) => {
-    const{isAbout} = this.state
-    const url = user.picture.match(/^https?:\/\//) ? user.picture : `/${ user.picture}`
+    const{isAbout, animated} = this.state
+    const {animateStartup} = this.props
+    console.log(`Animated:${animated}`)
+    if (!user) {
+      return null
+    }
+    let url
+    if (animated || !user.picture.toLowerCase().endsWith('.gif') || animateStartup) {
+      url=user.picture.match(/^https?:\/\//) ? user.picture : `/${ user.picture}`
+    }
+    else {
+      const filename = user.picture.split('/').slice(-1).pop()
+      url=`/myAlfred/api/users/still_profile/${filename}`
+    }
 
     return (
-      <Avatar alt="photo de profil" src={url} className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}/>
+      <Avatar
+        alt="photo de profil"
+        src={url}
+        className={isAbout ? classes.avatarLetterProfil : classes.avatarLetter}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
+      />
     )
   }
 
