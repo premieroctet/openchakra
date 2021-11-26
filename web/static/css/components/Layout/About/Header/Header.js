@@ -11,8 +11,7 @@ export default theme => ({
     alignItems: 'center',
     position: 'absolute',
     top: 0,
-    left: '50%',
-    right: '50%',
+    width: '100%',
     [theme.breakpoints.down('xs')]: {
       padding: '10%',
     },
