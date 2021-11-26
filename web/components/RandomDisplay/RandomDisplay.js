@@ -51,29 +51,33 @@ function RandomDisplay(props) {
       className={classes.carousel}
     >
       {
-        arrayText.map((res, i) => (
-          <Grid container spacing={2} key={i} className={`${classes.mainContainer} customhowitworks${i}`}>
-            {
-              res.map((element, index) => (
-                <>
-                  {
-                    index === 0 &&
-                    <Grid item xs={12} className={classes.title} key={index}>
-                      <Typography className={`${classes.colorText} customrandomdisplay`}>{element[0]}</Typography>
-                    </Grid>
-                  }
-                  {
-                    index !== 0 &&
-                    <Grid item md={2} xs={12} className={classes.carouselStyle} key={index}>
-                      <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
-                    </Grid>
-                  }
+        arrayText.map((res, i) => {
+          return(
+            <Grid container spacing={2} key={i} className={`${classes.mainContainer} customhowitworks${i}`}>
+              {
+                res.map((element, index) => {
+                  return(
+                    <>
+                      {
+                        index === 0 &&
+                        <Grid item xs={12} className={classes.title} key={index} >
+                          <Typography className={`${classes.colorText} customrandomdisplay`}>{element[0]}</Typography>
+                        </Grid>
+                      }
+                      {
+                        index !== 0 &&
+                        <Grid item md={2} xs={12} className={`${classes.carouselStyle} customrandomdisplaycontainer${i.toString() + index.toString()}`} key={index}>
+                          <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
+                        </Grid>
+                      }
 
-                </>
-              ))
-            }
-          </Grid>
-        ))
+                    </>
+                  )
+                })
+              }
+            </Grid>
+          )
+        })
       }
     </Carousel>
   )

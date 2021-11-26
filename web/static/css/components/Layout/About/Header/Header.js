@@ -1,40 +1,38 @@
 export default theme => ({
-  layoutScrollMenu:{
+  layoutScrollMenu: {
     display: 'flex',
     justifyContent: 'center',
-    height : '10%',
-    alignItems: 'flex-end'
+    height: '10%',
+    alignItems: 'flex-end',
   },
-  containerTitleAndSubtitle:{
+  containerTitleAndSubtitle: {
     display: 'flex',
-    justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '5%',
-    [theme.breakpoints.down('xs')]:{
-      padding: '10%'
-    }
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    [theme.breakpoints.down('xs')]: {
+      padding: '10%',
+    },
   },
-  containerArrowBack:{
 
-  },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
   },
-  button:{
+  button: {
     margin: theme.spacing(1),
     color: 'white',
-    textTransform: 'initial'
+    textTransform: 'initial',
   },
-  navbarSearchContainer:{
+  navbarSearchContainer: {
   },
   navbarSearch: {
     padding: 14,
     display: 'flex',
     alignItems: 'center',
     borderRadius: theme.border.button.borderRadius,
-    boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px'
+    boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px',
   },
   iconButton: {
     padding: 10,
