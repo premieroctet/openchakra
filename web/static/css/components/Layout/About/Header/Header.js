@@ -25,6 +25,7 @@ export default theme => ({
     margin: theme.spacing(1),
     color: 'white',
     textTransform: 'initial',
+    zIndex: 9
   },
   navbarSearchContainer: {
   },
