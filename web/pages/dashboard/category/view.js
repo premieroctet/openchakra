@@ -51,11 +51,7 @@ class View extends BasePage {
     this.state = {
       category: {particular_label: '', professional_label: ''},
       label: '',
-      tags: [],
       description: '',
-      all_tags: [],
-      current_tags: [],
-      selectedTags: null,
       particular_id: null,
       particular_file: null,
       particular_ext: null,
@@ -65,7 +61,6 @@ class View extends BasePage {
     }
 
     this.handleClick = this.handleClick.bind(this)
-    this.handleChangeTags = this.handleChangeTags.bind(this)
     this.onParticularImageChange=this.onParticularImageChange.bind(this)
     this.onProfessionalImageChange=this.onProfessionalImageChange.bind(this)
   }
@@ -86,14 +81,7 @@ class View extends BasePage {
     axios.get(`/myAlfred/api/admin/category/all/${id}`)
       .then(response => {
         let category = response.data
-        this.setState({category: category, current_tags: category.tags})
-        this.setState({
-          selectedTags: this.state.current_tags.map(b => ({
-            label: b.label,
-            value: b._id,
-          })),
-        })
-
+        this.setState({category: category})
       })
       .catch(err => {
         console.error(err)
@@ -101,15 +89,6 @@ class View extends BasePage {
           clearAuthenticationToken()
           Router.push({pathname: '/login'})
         }
-      })
-
-    axios.get('/myAlfred/api/admin/tags/all')
-      .then(response => {
-        let tags = response.data
-        this.setState({all_tags: tags})
-      })
-      .catch(error => {
-        console.error(error)
       })
   }
 
@@ -124,11 +103,6 @@ class View extends BasePage {
     const state = this.state.category
     state[name]=checked
     this.setState({category: state})
-  }
-
-  handleChangeTags = selectedTags => {
-    this.setState({selectedTags})
-
   }
 
   onParticularImageChange = e => {
@@ -162,20 +136,11 @@ class View extends BasePage {
       return
     }
 
-    let arrayTags = []
-    if (this.state.selectedTags != null) {
-      this.state.selectedTags.forEach(w => {
-        arrayTags.push(w.value)
-      })
-    }
-
-    const tags = arrayTags
     const id = this.getURLProps().id
     const data={
       'particular_label': particular_label,
       'professional_label': professional_label,
       'description': description,
-      'tags': tags,
     }
 
     axios.put(`/myAlfred/api/admin/category/all/${id || ''}`, data)

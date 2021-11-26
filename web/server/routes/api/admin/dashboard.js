@@ -61,8 +61,6 @@ const uploadEquipment = createDiskMulter('static/equipments/', IMAGE_FILTER)
 const uploadService = createDiskMulter('static/service/', IMAGE_FILTER)
 // PRESTATION
 const uploadPrestation = createDiskMulter('static/prestation/', IMAGE_FILTER)
-// SHOP BANNER
-const uploadBanner = createDiskMulter('static/shopBanner/', IMAGE_FILTER)
 // UI CUSTOM
 const uploadCustom = createDiskMulter('static/custom/', IMAGE_FILTER)
 
@@ -535,85 +533,7 @@ router.delete('/users/admin/:id', passport.authenticate('admin', {session: false
     })
     .catch(() => res.status(404).json({user: 'No user found'}))
 })
-
-// CALCULATING
-
-
-// @Route POST /myAlfred/calculating/admin/all
-// Add calculating for prestation
-// @Access private
-router.post('/calculating/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  const {errors, isValid} = validateBillingInput(req.body)
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-
-  req.context.getModel('Calculating').findOne({label: req.body.label})
-    .then(calculating => {
-      if (calculating) {
-        errors.label = 'Cette méthode de calcul existe déjà'
-        return res.status(400).json(errors)
-      }
-
-      const newCalculating={
-        label: req.body.label,
-      }
-
-      req.context.getModel('Calculating').create(newCalculating)
-        .then(calculating => res.json(calculating))
-        .catch(err => console.error(err))
-    })
-})
-
-// @Route GET /myAlfred/api/admin/calculating/all
-// View all calculating system
-// @Access private
-router.get('/calculating/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Calculating').find()
-    .then(calculating => {
-      res.json(calculating)
-    })
-    .catch(() => res.status(404).json({calculating: 'No billing found'}))
-})
-
-// @Route GET /myAlfred/api/admin/calculating/all/:id
-// View one calculating system
-// @Access private
-router.get('/calculating/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Calculating').findById(req.params.id)
-    .then(calculating => {
-      if (!calculating) {
-        return res.status(404).json({msg: 'No calculating found'})
-      }
-      res.json(calculating)
-    })
-    .catch(() => res.status(404).json({billing: 'No calculating found'}))
-})
-
-// @Route DELETE /myAlfred/api/admin/calculating/all/:id
-// Delete one calculating system
-// @Access private
-router.delete('/calculating/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Calculating').findById(req.params.id)
-    .then(calculating => {
-      calculating.remove().then(() => res.json({success: true}))
-    })
-    .catch(() => res.status(404).json({calculating: 'No calculating found'}))
-})
-
-// @Route PUT /myAlfred/api/admin/calculating/all/:id
-// Update a calculating system
-// @Access private
-router.put('calculating/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Calculating').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
-    .then(calculating => {
-      res.json(calculating)
-    })
-    .catch(() => res.status(404).json({calculatingnotfound: 'No calculating found'}))
-})
-
 // FILTER PRESENTATION
-
 
 // @Route POST /myAlfred/api/admin/filterPresentation/all
 // Add filterPresentation for prestation
@@ -864,97 +784,6 @@ router.put('/searchFilter/all/:id', passport.authenticate('admin', {session: fal
     .catch(() => res.status(404).json({searchFilternotfound: 'No searchFilter found'}))
 })
 
-// TAGS
-
-// @Route POST /myAlfred/api/admin/tags/all
-// Add tags for service
-// @Access private
-router.post('/tags/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  const {errors, isValid} = validateBillingInput(req.body)
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-
-  req.context.getModel('Tag').findOne({label: req.body.label})
-    .then(tags => {
-      if (tags) {
-        errors.label = 'Ce tags existe déjà'
-        return res.status(400).json(errors)
-      }
-      const newTag={
-        label: req.body.label,
-        title: req.body.title,
-        description: req.body.description,
-      }
-
-      req.context.getModel('Tag').create(newTag)
-        .then(tags => res.json(tags))
-        .catch(err => console.error(err))
-    })
-})
-
-// @Route GET /myAlfred/api/admin/tags/all
-// View all tags
-// @Access private
-router.get('/tags/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Tag').find()
-    .sort({label: 1})
-    .then(tags => {
-      res.json(tags)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(404).json({tags: 'No tags found'})
-    })
-})
-
-// @Route GET /myAlfred/api/admin/tags/all/:id
-// View one tag
-// @Access private
-router.get('/tags/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Tag').findById(req.params.id)
-    .then(tags => {
-      if (!tags) {
-        return res.status(400).json({msg: 'No tags found'})
-      }
-      res.json(tags)
-
-    })
-    .catch(() => res.status(404).json({tags: 'No tags found'}))
-})
-
-// @Route DELETE /myAlfred/api/admin/tags/all/:id
-// Delete one tag
-// @Access private
-router.delete('/tags/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  Promise.all(['Category.tags', 'Prestation.tags', 'Service.tags'].map(f => hasRefs(req, f, req.params.id)))
-    .then(refs => {
-      if (refs.some(t => t)) {
-        return res.status(400).json('Ce tag est utilisé')
-      }
-      req.context.getModel('Tag').findByIdAndRemove(req.params.id)
-        .then(() => res.json({success: true}))
-        .catch(() => res.status(404).json({tagsnotfound: 'No tags found'}))
-    })
-})
-
-// @Route PUT /myAlfred/api/admin/tags/all/:id
-// Update a tag
-// @Access private
-router.put('/tags/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Tag').findOneAndUpdate({_id: req.params.id}, {
-    $set: {
-      label: req.body.label,
-      title: req.body.title,
-      description: req.body.description,
-    },
-  }, {new: true})
-    .then(tags => {
-      res.json(tags)
-    })
-    .catch(() => res.status(404).json({tagsnotfound: 'No tags found'}))
-})
-
 // @Route POST /myAlfred/api/admin/category/all
 // Add category for prestation
 // @Access private
@@ -975,7 +804,6 @@ router.post('/category/all', uploadCat.single('picture'), passport.authenticate(
         s_label: normalize(req.body.label),
         picture: req.file.path,
         description: req.body.description,
-        tags: JSON.parse(req.body.tags),
       }
 
       req.context.getModel('Category').create(newCategory)
@@ -1012,7 +840,6 @@ passport.authenticate('admin', {session: false}), (req, res) => {
 router.get('/category/all', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('Category').find()
     .sort({'label': 1})
-    .populate('tags')
     .then(category => {
       if (!category) {
         return res.status(400).json({msg: 'No category found'})
@@ -1033,7 +860,6 @@ router.get('/category/all', passport.authenticate('admin', {session: false}), (r
 // @Access private
 router.get('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('Category').findById(req.params.id)
-    .populate('tags')
     .then(category => {
       if (!category) {
         return res.status(400).json({msg: 'No category found'})
@@ -1070,7 +896,6 @@ router.put('/category/all/:id?', passport.authenticate('admin', {session: false}
     professional_label: req.body.professional_label,
     s_professional_label: normalize(req.body.professional_label),
     description: req.body.description,
-    tags: req.body.tags,
   }
   const promise=req.params.id ?
     req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
@@ -1207,7 +1032,6 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
         s_label: normalize(req.body.label),
         category: mongoose.Types.ObjectId(req.body.category),
         equipments: JSON.parse(req.body.equipments),
-        tags: JSON.parse(req.body.tags),
         picture: req.file.path,
         description: req.body.description,
         majoration: req.body.majoration,
@@ -1245,7 +1069,6 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
 
   req.context.getModel('Service').find()
     .sort({'label': 1})
-    .populate('tags', ['label'])
     .populate('equipments', 'label')
     .populate('category', 'particular_label professional_label')
     .populate('prestations', 'particular_access professional_access')
@@ -1269,7 +1092,6 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
 // @Access private
 router.get('/service/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('Service').findById(req.params.id)
-    .populate('tags')
     .populate('equipments')
     .populate('category')
     .then(service => {
@@ -1314,7 +1136,6 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
       $set: {
         label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
         s_label: normalize(req.body.label),
-        tags: req.body.tags,
         description: req.body.description, majoration: req.body.majoration, location: req.body.location,
         travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax,
         professional_access: req.body.professional_access, particular_access: req.body.particular_access,
@@ -1373,12 +1194,10 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
         filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
         search_filter: null,
         category: null,
-        calculating: null,
         job: req.body.job,
         description: req.body.description,
         // picture: req.body.picture.path,
         picture: req.file ? req.file.path : null,
-        tags: req.body.tags,
         cesu_eligible: req.body.cesu_eligible,
         professional_access: req.body.professional_access,
         particular_access: req.body.particular_access,
@@ -1435,9 +1254,7 @@ router.get('/prestation/all/:id', passport.authenticate('admin', {session: false
     .populate('filter_presentation')
     .populate('category')
     .populate('search_filter')
-    .populate('calculating')
     .populate('job')
-    .populate('tags')
     .then(prestation => {
       if (!prestation) {
         return res.status(400).json({msg: 'No prestation found'})
@@ -1482,10 +1299,8 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
       filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
       search_filter: null,
       category: mongoose.Types.ObjectId(req.body.service.category),
-      calculating: null,
       job: req.body.job ? mongoose.Types.ObjectId(req.body.job) : null,
       description: req.body.description,
-      tags: req.body.tags,
       cesu_eligible: req.body.cesu_eligible,
       professional_access: req.body.professional_access,
       particular_access: req.body.particular_access,
@@ -1502,172 +1317,6 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
       console.error(err)
       res.status(404).json({error: err})
     })
-})
-
-// @Route POST /myAlfred/api/admin/shopBanner/all
-// Add picture for shop banner
-// @Access private
-router.post('/shopBanner/all', uploadBanner.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
-  const {errors, isValid} = validateBillingInput(req.body)
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-  req.context.getModel('ShopBanner').findOne({label: req.body.label})
-    .then(service => {
-      if (service) {
-        errors.label = 'Cette bannière existe déjà'
-        return res.status(400).json(errors)
-      }
-      const newBanner={
-        label: req.body.label,
-        picture: req.file.path,
-      }
-      req.context.getModel('ShopBanner').create(newBanner)
-        .then(banner => res.json(banner))
-        .catch(err => console.error(err))
-    })
-})
-
-// @Route POST /myAlfred/api/admin/shopBanner/editPicture/:id
-// Edit picture
-// @Access private
-router.post('/shopBanner/editPicture/:id', uploadBanner.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('ShopBanner').findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
-    .then(banner => {
-      res.json(banner)
-    })
-})
-
-// @Route GET /myAlfred/api/admin/shopBanner/all
-// Get all picture banner
-router.get('/shopBanner/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('ShopBanner').find()
-    .sort({label: 1})
-    .then(banner => {
-      if (!banner) {
-        return res.status(400).json({msg: 'No banner found'})
-      }
-      res.json(banner)
-
-    })
-    .catch(() => res.status(404).json({banner: 'No banner found'}))
-})
-
-// @Route GET /myAlfred/api/admin/shopBanner/all/:id
-// View one shop banner
-router.get('/shopBanner/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('ShopBanner').findById(req.params.id)
-    .then(banner => {
-      if (!banner) {
-        return res.status(400).json({msg: 'No banner found'})
-      }
-      res.json(banner)
-
-    })
-    .catch(() => res.status(404).json({banner: 'No banner found'}))
-})
-
-// @Route DELETE /myAlfred/api/admin/shopBanner/all/:id
-// Delete one shop banner
-// @Access private
-router.delete('/shopBanner/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('ShopBanner').findById(req.params.id)
-    .then(banner => {
-      banner.remove().then(() => res.json({success: true}))
-    })
-    .catch(() => res.status(404).json({bannernotfound: 'No banner found'}))
-})
-
-// @Route PUT /myAlfred/api/admin/shopBanner/all/:id
-// Update a shop banner
-// @Access private
-router.put('/shopBanner/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('ShopBanner').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
-    .then(banner => {
-      res.json(banner)
-    })
-    .catch(() => res.status(404).json({bannernotfound: 'No banner found'}))
-})
-
-// OPTIONS
-
-// @Route POST /myAlfred/api/admin/options/all
-// Add options
-// @Access private
-router.post('/options/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Options').findOne({label: req.body.label})
-    .then(options => {
-      if (options) {
-        return res.status(400).json({msg: 'Cette option existe déjà'})
-      }
-      const newOption={
-        label: req.body.label,
-        description: req.body.description,
-        billing: req.body.billing,
-      }
-
-      req.context.getModel('Option').create(newOption)
-        .then(options => res.json(options))
-        .catch(err => console.error(err))
-    })
-})
-
-// @Route GET /myAlfred/api/admin/options/all
-// View all options
-// @Access private
-router.get('/options/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Options').find()
-    .then(options => {
-      if (!options) {
-        return res.status(400).json({msg: 'No options found'})
-      }
-      res.json(options)
-
-    })
-    .catch(() => res.status(404).json({options: 'No options found'}))
-})
-
-// @Route GET /myAlfred/api/admin/options/all/:id
-// View one option
-// @Access private
-router.get('/options/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Options').findById(req.params.id)
-    .then(options => {
-      if (!options) {
-        return res.status(400).json({msg: 'No options found'})
-      }
-      res.json(options)
-
-    })
-    .catch(() => res.status(404).json({options: 'No options found'}))
-})
-
-// @Route DELETE /myAlfred/api/admin/options/all/:id
-// Delete one option
-// @Access private
-router.delete('/options/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Options').findById(req.params.id)
-    .then(options => {
-      options.remove().then(() => res.json({success: true}))
-    })
-    .catch(() => res.status(404).json({optionsnotfound: 'No options found'}))
-})
-
-// @Route PUT /myAlfred/api/admin/options/all/:id
-// Update an option
-// @Access private
-router.put('/options/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Options').findOneAndUpdate({_id: req.params.id}, {
-    $set: {
-      label: req.body.label,
-      description: req.body.description,
-      billing: req.body.billing,
-    },
-  }, {new: true})
-    .then(options => {
-      res.json(options)
-    })
-    .catch(() => res.status(404).json({optionsnotfound: 'No options found'}))
 })
 
 // TODO: récupérer en sum/aggréation par mois
@@ -1936,7 +1585,6 @@ router.put('/companies/all/:id', passport.authenticate('admin', {session: false}
       $set: {
         label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
         s_label: normalize(req.body.label),
-        tags: req.body.tags,
         description: req.body.description, majoration: req.body.majoration, location: req.body.location,
         travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax,
         professional_access: req.body.professional_access, particular_access: req.body.particular_access,

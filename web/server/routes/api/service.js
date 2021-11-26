@@ -1,58 +1,60 @@
-const express = require('express');
-const router = express.Router();
-const passport = require('passport');
-const _ = require('lodash');
-const mongoose = require('mongoose');
+const express = require('express')
+const router = express.Router()
+const passport = require('passport')
+const _ = require('lodash')
 
-const {PART, PRO}=require('../../../utils/consts');
+const {PART, PRO}=require('../../../utils/consts')
 
 // @Route GET /myAlfred/api/service/all
 // View all service
 router.get('/all', (req, res) => {
   req.context.getModel('Service').find()
     .sort({'label': 1})
-    .populate('tags')
     .populate('equipments')
     .populate('category')
     .then(service => {
       if (typeof service !== 'undefined' && service.length > 0) {
-        res.json(service);
-      } else {
-        return res.status(400).json({msg: 'No service found'});
+        res.json(service)
+      }
+      else {
+        return res.status(400).json({msg: 'No service found'})
       }
     })
-    .catch(err => res.status(404).json({service: 'No service found'}));
-});
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({service: 'No service found'})
+    })
+})
 
 // @Route GET /myAlfred/api/service/professional
 // View all professional services
 router.get('/professional', (req, res) => {
-  req.context.getModel('Service').find({ professional_access: true}, 'label')
-  .sort({'label': 1})
+  req.context.getModel('Service').find({professional_access: true}, 'label')
+    .sort({'label': 1})
     .then(services => {
       if (!services) {
-        return res.status(400).json({msg: 'No service found'});
-      } else {
-        res.json(services);
+        return res.status(400).json({msg: 'No service found'})
       }
+      res.json(services)
+
     })
-    .catch(err => res.status(404).json({service: 'No service found'}));
-});
+    .catch(err => res.status(404).json({service: 'No service found'}))
+})
 
 // @Route GET /myAlfred/api/service/particular
 // View all pro services
 router.get('/particular', (req, res) => {
-  req.context.getModel('Service').find({ particular_access: true}, 'label')
-  .sort({'label': 1})
+  req.context.getModel('Service').find({particular_access: true}, 'label')
+    .sort({'label': 1})
     .then(services => {
       if (!services) {
-        return res.status(400).json({msg: 'No service found'});
-      } else {
-        res.json(services);
+        return res.status(400).json({msg: 'No service found'})
       }
+      res.json(services)
+
     })
-    .catch(err => res.status(404).json({service: 'No service found'}));
-});
+    .catch(err => res.status(404).json({service: 'No service found'}))
+})
 
 // @Route GET /myAlfred/api/service/allCount
 // View all service with count of serviceUser
@@ -84,48 +86,47 @@ router.get('/allCount', (req, res) => {
 // View random service homepage
 router.get('/random/home', (req, res) => {
 
-  req.context.getModel('Service').countDocuments().exec(function (err, count) {
+  req.context.getModel('Service').countDocuments().exec((err, count) => {
 
-    let limitrecords = 6;
+    let limitrecords = 6
 
     function getRandomArbitrary(min, max) {
-      return Math.ceil(Math.random() * (max - min) + min);
+      return Math.ceil(Math.random() * (max - min) + min)
     }
 
-    let skipRecords = getRandomArbitrary(1, count - limitrecords);
+    let skipRecords = getRandomArbitrary(1, count - limitrecords)
 
-    let random = Math.floor(Math.random() * count);
+    let random = Math.floor(Math.random() * count)
 
 
     req.context.getModel('Service').find().populate('category').limit(6).skip(random).exec(
-      function (err, result) {
+      (err, result) => {
 
-        res.json(result);
-      });
-  });
+        res.json(result)
+      })
+  })
 
 
-});
+})
 
 // @Route GET /myAlfred/api/service/:id
 // View one service
 router.get('/:id', (req, res) => {
 
   req.context.getModel('Service').findById(req.params.id)
-    .populate('tags')
     .populate('equipments')
     .populate('category')
     .then(service => {
       if (Object.keys(service).length === 0 && service.constructor === Object) {
-        return res.status(400).json({msg: 'No service found'});
-      } else {
-        res.json(service);
+        return res.status(400).json({msg: 'No service found'})
       }
+      res.json(service)
+
 
     })
-    .catch(err => res.status(404).json({service: 'No service found'}));
+    .catch(err => res.status(404).json({service: 'No service found'}))
 
-});
+})
 
 // @Route GET /myAlfred/api/service/all/:category
 // View all service per category
@@ -133,72 +134,49 @@ router.get('/all/:category', (req, res) => {
 
   req.context.getModel('Service').find({category: req.params.category})
     .sort({'label': 1})
-    .populate('tags')
     .populate('equipments')
     .populate('category')
     .then(service => {
       if (typeof service !== 'undefined' && service.length > 0) {
-        res.json(service);
-      } else {
-        return res.status(400).json({msg: 'No service found'});
+        res.json(service)
+      }
+      else {
+        return res.status(400).json({msg: 'No service found'})
       }
 
     })
-    .catch(err => res.status(404).json({service: 'No service found'}));
+    .catch(err => res.status(404).json({service: 'No service found'}))
 
-});
+})
 
 // @Route GET /myAlfred/api/service/currentAlfred/:category
 // View all service per category filtered by already provided Alfred's services
-router.get('/currentAlfred/:category', passport.authenticate('jwt', {session: false}), async (req, res) => {
+router.get('/currentAlfred/:category', passport.authenticate('jwt', {session: false}), async(req, res) => {
 
-  let serviceUsers = await req.context.getModel('ServiceUser').find({user: req.user});
-  serviceUsers = serviceUsers.map(s => s.service);
+  let serviceUsers = await req.context.getModel('ServiceUser').find({user: req.user})
+  serviceUsers = serviceUsers.map(s => s.service)
 
   req.context.getModel('Service').find({category: req.params.category, _id: {$nin: serviceUsers}})
     .sort({'label': 1})
-    .populate('tags')
     .populate('equipments')
     .populate('category')
     .then(services => {
       if (typeof services !== 'undefined' && services.length > 0) {
-        res.json(services);
-      } else {
-        return res.status(400).json({msg: 'No service found'});
+        res.json(services)
+      }
+      else {
+        return res.status(400).json({msg: 'No service found'})
       }
 
     })
-    .catch(err => res.status(404).json({service: 'No service found:error'}));
-
-});
-
-// @Route GET /myAlfred/api/service/all/tags/:tags
-// View all service per tags
-router.get('/all/tags/:tags', (req, res) => {
-
-  req.context.getModel('Service').find({tags: req.params.tags})
-    .sort({'label': 1})
-    .populate('tags')
-    .populate('equipments')
-    .populate('category')
-    .then(service => {
-      if (typeof service !== 'undefined' && service.length > 0) {
-        res.json(service);
-      } else {
-        return res.status(400).json({msg: 'No service found'});
-      }
-
-    })
-    .catch(err => res.status(404).json({service: 'No service found'}));
-
-});
+    .catch(err => res.status(404).json({service: 'No service found:error'}))
+})
 
 // @Route GET /myAlfred/api/service/keyword/:kw
 // Get services by keyword
 // Search into category(label/description), service(label/description/job), prestation(label/dsecription)
 // Return { category_name : { services} }
 router.get('/keyword/:kw', (req, res) => {
-
   req.context.getModel('Service').find({}, 'label s_label particular_access professional_access')
     .populate('category', 's_particular_label s_professional_label')
     .populate({path: 'prestations', select: 's_label particular_access professional_access private_alfred', populate: {path: 'job', select: 's_label'}})
@@ -257,4 +235,4 @@ router.get('/partner/:partner_name', (req, res) => {
     })
 })
 
-module.exports = router;
+module.exports = router
