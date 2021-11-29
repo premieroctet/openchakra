@@ -1,5 +1,5 @@
 import { Label } from '@material-ui/icons';
-import { Autocomplete } from '@material-ui/lab';
+import Autocomplete, {createFilterOptions} from '@material-ui/lab/Autocomplete'
 import React from 'react';
 import util from 'util'
 import TextField from '@material-ui/core/TextField'
@@ -13,40 +13,52 @@ class SearchTextField extends React.Component {
     this.state={
       value: '',
       selectOpen: false,
+      options: this.props.options,
     }
-    this.normalized_options=this.props.options.map(o => normalize(o.label))
-    this.textField=React.createRef()
-    this.searchFn=this.searchFn.bind(this)
+    /**
+    this.filterOptions=createFilterOptions({
+      matchFrom: 'any',
+      stringify: option => normalize(option),
+      trim: true,
+    })
+    */
+    this.filterOptions= (options, {inputValue}) => {
+      const terms=inputValue.trim().split(' ')
+      const search=terms.pop()
+      return options.filter(o => normalize(o).includes(search))
+    }
+    this.renderTags = (value, getprops) => {
+      return (<span>{value.join(' ')}</span>)
+    }
   }
 
-  onChange = (ev, value) => {
-    this.setState({value: value})
-    this.props.onChange && this.props.onChange(value)
+  onChange = (event, value, reason, details) => {
+    console.log(`onChange Value:${value}, reasin:${reason}, details:${JSON.stringify(details)}`)
   }
 
-  searchFn = (options, state) => {
-    console.log(`Refs:${JSON.stringify(this.textField)}`)
-    console.log(`Searching ${JSON.stringify(state)} in ${JSON.stringify(options)}`)
-    return options
-  };
+  onInputChange= (ev, value, reason) => {
+    console.log(`onInputChange Value:${value}, reasin:${reason}`)
+    console.log(`options:${this.state.options.length}`)
+    this.setState({options: [...this.state.options, value]})
+  }
 
   render() {
     const {value, selected, selectOpen}=this.state
 
-    //const options=this.props.options.map(o => ({label: o}))
-    const options=this.props.options
     return (
       <>
       <Autocomplete
-        options={options}
+        key={this.props.options}
+        options={this.props.options}
         onChange={this.onChange}
-        autoComplete={true}
+        onInputChange={this.onInputChange}
         freeSolo={true}
-        filterOptions={this.searchFn}
-        isLoading={this.props.loading}
-        loadingMessage={() => 'Recherche des services'}
-        //value={value}
-        renderInput={(params) => <TextField {...params} fef={this.textField} />}
+        multiple={true}
+        filterOptions={this.filterOptions}
+        loading={this.props.loading}
+        getOptionLabel={option => option}
+        renderTags={this.renderTags}
+        renderInput={params => <TextField {...params}/>}
       />
       </>
     )
