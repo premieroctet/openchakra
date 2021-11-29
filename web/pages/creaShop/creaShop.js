@@ -26,7 +26,7 @@ const {is_development, isB2BDisabled, canAlfredParticularRegister}=require('../.
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 const {snackBarSuccess}=require('../../utils/notifications')
 import {SHOP} from '../../utils/i18n'
-import ReactHtmlParser from "react-html-parser";
+import ReactHtmlParser from 'react-html-parser'
 
 class creaShop extends BasePage {
 
