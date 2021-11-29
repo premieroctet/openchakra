@@ -34,7 +34,7 @@ class creaShop extends BasePage {
     super(props)
     this.state = {
       mobileOpen: false,
-      activeStep: 7,
+      activeStep: 0,
       saving: false,
       availabilities: [],
       currentUser: {},
@@ -459,7 +459,7 @@ class creaShop extends BasePage {
 
   isLastStep = () => {
     const {mode, activeStep}=this.state
-    const steps_count = STEPS['creation'].length
+    const steps_count = STEPS[mode].length
     return activeStep == steps_count-1
   }
 
@@ -482,14 +482,14 @@ class creaShop extends BasePage {
     }
     const {mode, activeStep}=this.state
 
-    const valid_function = STEPS['creation'][activeStep].is_valid
+    const valid_function = STEPS[mode][activeStep].is_valid
     return !valid_function(this)
   };
 
 
   renderSwitch = stepIndex => {
     const{mode}= this.state
-    return STEPS['creation'][stepIndex].component(this)
+    return STEPS[mode][stepIndex].component(this)
   };
 
   handleDrawerToggle = () => {
@@ -499,7 +499,7 @@ class creaShop extends BasePage {
   drawer = classes => {
     const {activeStep, mode} = this.state
 
-    const steps = STEPS['creation'].map(s => s.menu)
+    const steps = STEPS[mode].map(s => s.menu)
     return (
       <Grid style={{height: '100%'}}>
         <Grid className={classes.appBarContainer}>
