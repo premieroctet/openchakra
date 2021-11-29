@@ -35,7 +35,6 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     width: '100%',
     margin: 0,
-    backgroundPosition: 'center',
     backgroundSize: 'cover',
   },
   randompics: {
@@ -55,7 +54,7 @@ function RandomDisplay(props) {
 
   return(
     <Carousel
-      autoPlay={loop}
+      autoPlay={false}
       indicators={false}
       interval={6000}
       className={classes.carousel}
