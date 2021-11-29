@@ -11,8 +11,8 @@ class all extends DataPage {
   getColumnDefs = () => {
     return [
       {headerName: '_id', field: '_id', width: 0},
-      models.dateTimeColumn({headerName: 'Réservation', field: 'date'}),
-      models.dateTimeColumn({headerName: 'Prestation', field: 'date_prestation_moment'}),
+      models.dateTimeColumn({headerName: 'Date de réservation', field: 'date'}),
+      models.dateTimeColumn({headerName: 'Date de prestation', field: 'date_prestation_moment'}),
       models.textColumn({headerName: 'Service', field: 'service'}),
       models.textColumn({headerName: 'Client', field: 'user.long_name'}),
       models.textColumn({headerName: 'Alfred', field: 'alfred.full_name'}),
