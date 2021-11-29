@@ -42,9 +42,8 @@ function DrawerSettingSchedule(props) {
             as_text: a.as_text,
           }
         })
-        const expanded = Array.from({length: availabilities.length}, () => false)
         setAvailabilities(availabilities)
-        setExpanded(expanded)
+        setExpanded(Array.from({length: availabilities.length}, () => false))
       })
       .catch(err => console.error(err))
   }
@@ -55,13 +54,15 @@ function DrawerSettingSchedule(props) {
   }, [])
 
   function addRecurrDay(day, availIdx) {
-    availabilities[availIdx].recurrDays.add(day)
-    setAvailabilities(availabilities)
+    let newAvailabilities = [...availabilities]
+    newAvailabilities[availIdx].recurrDays.add(day)
+    setAvailabilities(newAvailabilities)
   }
 
   function removeRecurrDay(day, availIdx) {
-    availabilities[availIdx].recurrDays.delete(day)
-    setAvailabilities(availabilities)
+    let newAvailabilities = [...availabilities]
+    newAvailabilities[availIdx].recurrDays.delete(day)
+    setAvailabilities(newAvailabilities)
   }
   
   function toggleRecurrDay(dayIndex, availIdx) {
@@ -90,11 +91,15 @@ function DrawerSettingSchedule(props) {
   }
 
   const handleDateStart = index => date => {
-    setAvailabilities([{...availabilities[index], startDate: date}])
+    let newArray = [...availabilities]
+    newArray[index] = {...newArray[index], startDate: date}
+    setAvailabilities(newArray)
   }
 
   const handleDateEnd = index => date => {
-    setAvailabilities([{...availabilities[index], endDate: date}])
+    let newArray = [...availabilities]
+    newArray[index] = {...newArray[index], endDate: date}
+    setAvailabilities(newArray)
   }
 
   function removeAvailability(index) {
@@ -109,15 +114,16 @@ function DrawerSettingSchedule(props) {
   }
 
   const slotTimerChanged = availIdx => slotIndex => {
-    let tlSet =new Set([...availabilities[availIdx].timelapses])
+    let newAvail = [...availabilities]
+    let tlSet =new Set([...newAvail[availIdx].timelapses])
     if (tlSet.has(slotIndex)) {
       tlSet.delete(slotIndex)
     }
     else {
       tlSet.add(slotIndex)
     }
-    availabilities[availIdx].timelapses = [...tlSet]
-    setAvailabilities(availabilities)
+    newAvail[availIdx].timelapses = [...tlSet]
+    setAvailabilities(newAvail)
   }
 
 
@@ -132,14 +138,16 @@ function DrawerSettingSchedule(props) {
       timelapses: [...availability.timelapses],
     })
       .then(() => {
-        errors[index]={}
-        this.setState({errors: errors})
+        let newArr = errors
+        newArr[index] = {}
+        setErrors(newArr)
         onAvailabilityChanged ? onAvailabilityChanged() : () => {}
-        this.loadAvailabilities()
+        loadAvailabilities()
       })
       .catch(err => {
-        errors[index]=err.response.data
-        setErrors(errors)
+        let newArr = errors
+        newArr[index] = err.response.data
+        setErrors(newArr)
       })
   }
 
@@ -168,7 +176,9 @@ function DrawerSettingSchedule(props) {
   }
 
   const onAccordionChange = availIdx => exp => {
-    setExpanded([{...expanded[availIdx], exp}])
+    let newExpand = expanded
+    newExpand[availIdx] = exp
+    setExpanded(newExpand)
   }
     
   return(
@@ -188,7 +198,6 @@ function DrawerSettingSchedule(props) {
         {
           availabilities.map((availResult, availIdx) => {
             const error = errors[availIdx] || {}
-            console.log(availResult, 'je loop ?')
             return(
               <Accordion key={availIdx} expanded={expanded[availIdx]} onChange={onAccordionChange(availIdx)} className={'customdrawersettingaccordion'}>
                 <AccordionSummary
