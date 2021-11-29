@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     margin: 0,
     backgroundPosition: 'center',
-    backgroundSize: 'contain',
+    backgroundSize: 'cover',
   },
   randompics: {
     backgroundSize: 'contain',
