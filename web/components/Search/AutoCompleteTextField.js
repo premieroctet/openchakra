@@ -1,3 +1,6 @@
+import { Tooltip } from '@material-ui/core';
+
+import { TextField } from '@material-ui/core';
 import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 import getCaretCoordinates from 'textarea-caret';
@@ -50,7 +53,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  Component: 'textarea',
+  Component: TextField,
   defaultValue: '',
   disabled: false,
   maxOptions: 6,
@@ -430,7 +433,7 @@ class AutocompleteTextField extends React.Component {
           onBlur={onBlur}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
-          ref={this.refInput}
+          inputRef={this.refInput}
           value={val}
           {...propagated}
         />

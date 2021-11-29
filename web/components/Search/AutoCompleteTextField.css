@@ -8,7 +8,6 @@
    font-size: 14px;
    list-style: none;
    padding: 1px;
-   position: absolute;
    text-align: left;
    z-index: 20000;
 }
@@ -17,6 +16,7 @@
   cursor: pointer;
   padding: 10px;
   min-width: 100px;
+  z-index: 20000;
 }
 
 .react-autocomplete-input > li.active {
