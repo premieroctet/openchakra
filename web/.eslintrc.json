@@ -122,7 +122,7 @@
     //"one-var": [ 2, "always" ],
     //"operator-linebreak": [ 2, "none" ],
     //"quote-props": [ 2, "always" ],
-    "quotes": [ 1, "quotes", "allowTemplateLiterals" ],
+    "quotes": [ 1, "double", {"allowTemplateLiterals": true} ],
     "semi": [ 1, "never" ],
     "space-before-blocks": [ 2, "always" ],
     "space-before-function-paren": [ 2, "never" ],
