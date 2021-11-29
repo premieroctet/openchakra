@@ -1393,7 +1393,7 @@ router.get('/booking/all', passport.authenticate('admin', {session: false}), (re
   if (context.isAdmin()) {
     context.getModel('Booking').find()
       .populate('alfred', 'firstname name')
-      .populate('user', 'firstname name')
+      .populate('user', 'firstname name email phone')
       .populate({path: 'customer_booking', populate: {path: 'user'}})
       .sort({date: -1})
       .catch(err => {

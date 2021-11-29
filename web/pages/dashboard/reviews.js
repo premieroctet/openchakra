@@ -16,7 +16,7 @@ class Reviews extends DataPage {
       models.textColumn({headerName: 'Client', field: 'user.long_name'}),
       models.textColumn({headerName: 'Service', field: 'serviceUser.service.label'}),
       models.dateColumn({headerName: 'Date', field: 'date'}),
-      models.textColumn({headerName: 'Sens', field: 'direction'}),
+      models.textColumn({headerName: 'Destinaire', field: 'destinee'}),
       models.textColumn({headerName: 'Statut', field: 'status', editable: true,
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: {values: Object.values(REVIEW_STATUS)},
@@ -35,7 +35,7 @@ class Reviews extends DataPage {
       .then(response => {
         let reviews = response.data
         reviews=reviews.map(r => {
-          r.direction=r.note_client ? 'Presta=>client':'Client=>presta'
+          r.destinee=r.note_client ? r.user.full_name : r.alfred.full_name
           r.user.long_name=`${r.user.full_name} ${r.user.email} ${r.user.phone || ''}`
           return r
         })
