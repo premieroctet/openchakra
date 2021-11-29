@@ -30,5 +30,5 @@ mongo $database --eval 'db.services.update({}, {$unset: {tags: 1}}, {multi:1})'
 mongo $database --eval 'db.prestations.update({}, {$unset: {tags: 1}}, {multi:1})'
 mongo $database --eval 'db.tags.drop()'
 
-# Added bookings.reason
-mongo $database --eval 'db.bookings.update({}, {$set: {reason: null}}, {multi:1})'
+# Add attribute bookings.reason
+mongo $database --eval 'db.bookings.update({reason: {$exists: false}}, {$set: {reason: null}}, {multi:1})'
