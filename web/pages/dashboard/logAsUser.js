@@ -135,11 +135,10 @@ class LogAsUser extends BasePage {
           <Card className={classes.card}>
             <Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>Maintenance</Typography>
+                <Typography style={{fontSize: 30}}>{this.props.t('DASHBOARD.logAs')}</Typography>
               </Grid>
               <form onSubmit={this.onSubmit}>
                 <Grid item style={{width: '100%'}}>
-                  <Typography style={{fontSize: 20}}>Se connecter en tant que</Typography>
                   <Select
                     input={<Input name="user" id="genre-label-placeholder"/>}
                     displayEmpty
