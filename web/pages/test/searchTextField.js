@@ -35,20 +35,7 @@ class TestSearchTextField extends React.Component {
 
   render() {
     const {options, loading}=this.state
-    if (options.length==0) {
-      return null
-    }
-    let triggers=[]
-    options.forEach(o => {
-      for (let i=1; i<o.length; i++) {
-        triggers.push(o.slice(0, i))
-      }
-    })
-    triggers=_.uniqBy(triggers)
-    let noptions={}
-    triggers.forEach(t => {
-      noptions[t]=options.filter(o => o.startsWith(t))
-    })
+
     return (
       <>
       <h1>SearchTextField1</h1>
@@ -58,7 +45,7 @@ class TestSearchTextField extends React.Component {
       <h1>SearchTextField3</h1>
       <SearchTextField3 options={options} loading={loading} value="" />
       <h1>SearchTextField4</h1>
-      <SearchTextField4 options={noptions} trigger={triggers} changeOnSelect={this.changeOnSelect}/>
+      <SearchTextField4 options={options}/>
       </>
     )
   }

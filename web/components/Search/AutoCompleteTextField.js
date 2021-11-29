@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import getCaretCoordinates from 'textarea-caret';
 import getInputSelection, { setCaretPosition } from 'get-input-selection';
 import './AutoCompleteTextField.css';
+const {normalize, getWordAt} = require('../../utils/text')
 
 const KEY_UP = 38;
 const KEY_DOWN = 40;
@@ -124,89 +125,21 @@ class AutocompleteTextField extends React.Component {
   }
 
   getMatch(str, caret, providedOptions) {
-    const { trigger, matchAny, regex } = this.props;
-    const re = new RegExp(regex);
 
-    let triggers = trigger;
-    if (!Array.isArray(triggers)) {
-      triggers = new Array(trigger);
+    if (!str) {
+      return null
     }
-    triggers.sort();
-
-    const providedOptionsObject = providedOptions;
-    if (Array.isArray(providedOptions)) {
-      triggers.forEach((triggerStr) => {
-        providedOptionsObject[triggerStr] = providedOptions;
-      });
-    }
-
-    const triggersMatch = this.arrayTriggerMatch(triggers, re);
-    let slugData = null;
-
-    for (let triggersIndex = 0; triggersIndex < triggersMatch.length; triggersIndex++) {
-      const { triggerStr, triggerMatch, triggerLength } = triggersMatch[triggersIndex];
-
-      for (let i = caret - 1; i >= 0; --i) {
-        const substr = str.substring(i, caret);
-        const match = substr.match(re);
-        let matchStart = -1;
-
-        if (triggerLength > 0) {
-          const triggerIdx = triggerMatch ? i : i - triggerLength + 1;
-
-          if (triggerIdx < 0) { // out of input
-            break;
-          }
-
-          if (this.isTrigger(triggerStr, str, triggerIdx)) {
-            matchStart = triggerIdx + triggerLength;
-          }
-
-          if (!match && matchStart < 0) {
-            break;
-          }
-        } else {
-          if (match && i > 0) { // find first non-matching character or begin of input
-            continue;
-          }
-          matchStart = i === 0 && match ? 0 : i + 1;
-
-          if (caret - matchStart === 0) { // matched slug is empty
-            break;
-          }
-        }
-
-        if (matchStart >= 0) {
-          const triggerOptions = providedOptionsObject[triggerStr];
-          if (triggerOptions == null) {
-            continue;
-          }
-
-          const matchedSlug = str.substring(matchStart, caret);
-
-          const options = triggerOptions.filter((slug) => {
-            const idx = slug.toLowerCase().indexOf(matchedSlug.toLowerCase());
-            return idx !== -1 && (matchAny || idx === 0);
-          });
-
-          const currTrigger = triggerStr;
-          const matchLength = matchedSlug.length;
-
-          if (slugData === null) {
-            slugData = {
-              trigger: currTrigger, matchStart, matchLength, options,
-            };
-          }
-          else {
-            slugData = {
-              ...slugData, trigger: currTrigger, matchStart, matchLength, options,
-            };
-          }
-        }
+    const w=getWordAt(str, caret)
+    const matching=providedOptions.filter(o => o.includes(w.word))
+    if (matching.length>0) {
+      return {
+        trigger: '',
+        matchStart: w.start,
+        matchLength: w.end-w.start,
+        options: matching,
       }
     }
-
-    return slugData;
+    return null
   }
 
   arrayTriggerMatch(triggers, re) {
