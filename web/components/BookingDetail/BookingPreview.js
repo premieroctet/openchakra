@@ -132,6 +132,7 @@ class BookingPreview extends React.Component {
   }
 
   changeStatus(status, reason=null) {
+    console.trace(`change status:${reason}`)
     axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, {status: status, reason: reason})
       .then(() => {
         this.componentDidMount()
@@ -563,11 +564,11 @@ class BookingPreview extends React.Component {
                                   </Grid>
                                   <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
                                     <CustomButton
-                                      onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}
+                                      onClick={this.openRejectReason}
                                       variant={'outlined'}
                                       style={{textTransform: 'initial'}}
                                       color={'primary'}>
-                                      Refuser
+                                      {ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}
                                     </CustomButton>
                                   </Grid>
                                 </Grid>
