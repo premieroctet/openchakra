@@ -17,6 +17,10 @@ export default theme => ({
     },
   },
 
+  widthContainer: {
+    width: '70%',
+    textAlign: 'center',
+  },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
@@ -25,7 +29,7 @@ export default theme => ({
     margin: theme.spacing(1),
     color: 'white',
     textTransform: 'initial',
-    zIndex: 9
+    zIndex: 9,
   },
   navbarSearchContainer: {
   },

@@ -35,14 +35,14 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     width: '100%',
     margin: 0,
-    backgroundPosition: 'center',
     backgroundSize: 'cover',
   },
   randompics: {
-    backgroundSize: 'cover',
+    backgroundSize: 'contain',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-    height: 200,
+    minHeight: 250,
+    maxHeight: 400,
     width: 200,
   },
 

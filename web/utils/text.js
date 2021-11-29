@@ -27,7 +27,7 @@ const createRegExpAND = str => {
   str = escapeText(normalize(str)).split(/ |'/g)
   // Remove articles
   str = str.filter(s => !ARTICLES.includes(s))
-  const regexp = new RegExp(str.map(s => `(?=.*\\b${s}\\b)`).join(''), 'i')
+  const regexp = new RegExp(str.map(s => `(?=.*${s})`).join(''), 'i')
   return regexp
 }
 
@@ -148,6 +148,19 @@ const insensitiveComparator = (a,b) => {
   return (a||'').localeCompare(b, 'fr')
 }
 
+const getWordAt = (text, position) => {
+  const patBefore=/\w*$/
+  const patAfter=/^\w*/
+  const before=text.substring(0, position)
+  const after=text.substring(position)
+  const matchBefore=before.match(patBefore)[0]
+  const matchAfter=after.match(patAfter)[0]
+  const start=position-matchBefore.length
+  const end=position+matchAfter.length
+  const length=end-start
+  return {start: start, end: end, word: matchBefore+matchAfter}
+}
+
 const computeBookingReference = (user, alfred) => {
   var reference = user.avatar_letters + alfred.avatar_letters + '_' + moment().format('DDMMYYYY')
   return reference
@@ -175,4 +188,5 @@ module.exports = {
   insensitiveComparator,
   computeBookingReference,
   capitalize,
+  getWordAt,
 }

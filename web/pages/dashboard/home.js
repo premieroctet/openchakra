@@ -80,7 +80,7 @@ class home extends React.Component {
               </Grid>
               <Grid item xs={6}>
                 <Typography style={{fontSize: 30}}>Maintenance</Typography>
-                <Link href="/dashboard/logAsUser"><a>Connexion en tant qu'autre utilisateur</a></Link><br/>
+                <Link href="/dashboard/logAsUser"><a>{this.props.t('DASHBOARD.logAs')}</a></Link><br/>
                 <Link href="/dashboard/reviews"><a>Modération des commentaires</a></Link><br/>
 
                 { superAdmin &&

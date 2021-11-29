@@ -11,10 +11,10 @@ class all extends DataPage {
   getColumnDefs = () => {
     return [
       {headerName: '_id', field: '_id', width: 0},
-      models.dateTimeColumn({headerName: 'Réservation', field: 'date'}),
-      models.dateTimeColumn({headerName: 'Prestation', field: 'date_prestation_moment'}),
+      models.dateTimeColumn({headerName: 'Date de réservation', field: 'date'}),
+      models.dateTimeColumn({headerName: 'Date de prestation', field: 'date_prestation_moment'}),
       models.textColumn({headerName: 'Service', field: 'service'}),
-      models.textColumn({headerName: 'Client', field: 'user.full_name'}),
+      models.textColumn({headerName: 'Client', field: 'user.long_name'}),
       models.textColumn({headerName: 'Alfred', field: 'alfred.full_name'}),
       models.currencyColumn({headerName: 'Montant client', field: 'amount'}),
       models.textColumn({headerName: 'Statut', field: 'status'}),
@@ -38,6 +38,7 @@ class all extends DataPage {
           if (b.customer_booking) {
             b.user.full_name = `${b.user.full_name} pour ${b.customer_booking.user.full_name}`
           }
+          b.user.long_name=`${b.user.full_name} ${b.user.email} ${b.user.phone || ''}`
         })
         this.setState({data: bookings})
       })

@@ -1,3 +1,5 @@
+import AutoCompleteTextField from
+  '../../../components/Search/AutoCompleteTextField';
 import {canAlfredSelfRegister, isB2BDisabled} from '../../../config/config'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
@@ -105,6 +107,7 @@ class NavBar extends Component {
       focusedInput: null,
       companyPage: false,
       allAddresses: [],
+      keywords: [],
     }
     this.radius_marks=[1, 5, 10, 15, 20, 30, 50, 100, 200, 300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
   }
@@ -167,6 +170,10 @@ class NavBar extends Component {
         console.error(err)
       })
 
+    axios.get('/myAlfred/api/serviceUser/keywords/particular')
+      .then(res => {
+        this.setState({keywords: res.data})
+      })
   }
 
   logout = () => {
@@ -953,24 +960,25 @@ class NavBar extends Component {
               style={{margin: 0, width: '100%'}}
             >
               <Grid item xl={11} lg={11} sm={11} md={11} xs={11} style={{display: 'flex', alignItems: 'center'}}>
-                <TextField
-                  placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.what_placeholder'))}
-                  style={{width: '100%'}}
-                  value={this.state.keyword}
-                  onChange={this.onChange}
-                  name={'keyword'}
-                  label={ifHomePage ? ReactHtmlParser(this.props.t('SEARCHBAR.labelWhat')) : ''}
-                  onKeyPress={e => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      this.findService()
-                    }
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  InputProps={{disableUnderline: true}}
-                />
+                <form>
+                  <AutoCompleteTextField
+                    options={this.state.keywords}
+                    Component={TextField}
+                    placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.what_placeholder'))}
+                    style={{width: '100%'}}
+                    value={this.state.keyword}
+                    onChange={v => this.onChange({target: {name: 'keyword', value: v}})}
+                    label={ifHomePage ? ReactHtmlParser(this.props.t('SEARCHBAR.labelWhat')) : ''}
+                    onKeyPress={e => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        this.findService()
+                      }
+                    }}
+                    InputLabelProps={{shrink: true}}
+                    InputProps={{disableUnderline: true}}
+                  />
+                </form>
               </Grid>
               <Grid item xl={1} lg={1} sm={1} md={1} xs={1}>
                 <Divider orientation="vertical"/>
