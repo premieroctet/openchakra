@@ -33,6 +33,7 @@
     "csv-parse": "^4.15.3",
     "date-fns": "^2.17.0",
     "express": "^4.16.4",
+    "fast-levenshtein": "^3.0.0",
     "file-system": "^2.2.2",
     "gif-frames": "^1.0.1",
     "glob": "^7.1.4",

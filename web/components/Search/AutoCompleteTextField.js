@@ -7,6 +7,7 @@ import getCaretCoordinates from 'textarea-caret';
 import getInputSelection, { setCaretPosition } from 'get-input-selection';
 import './AutoCompleteTextField.css';
 const {normalize, getWordAt} = require('../../utils/text')
+var levenshtein = require('fast-levenshtein')
 
 const KEY_UP = 38;
 const KEY_DOWN = 40;
@@ -133,7 +134,10 @@ class AutocompleteTextField extends React.Component {
       return null
     }
     const w=getWordAt(str, caret)
-    const matching=providedOptions.filter(o => o.includes(w.word))
+    let matching=providedOptions.filter(o => o.includes(w.word))
+    const groups=_.groupBy(matching, m => m.startsWith(w.word))
+    // First words are the prefix ones, then others depending on levenshtein's distance
+    matching = [..._.sortBy(groups[true] || []), ...(_.sortBy(groups[false] || [], m => levenshtein.get(m, w.word)))]
     if (matching.length>0) {
       return {
         trigger: '',

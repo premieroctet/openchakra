@@ -27,7 +27,7 @@ const createRegExpAND = str => {
   str = escapeText(normalize(str)).split(/ |'/g)
   // Remove articles
   str = str.filter(s => !ARTICLES.includes(s))
-  const regexp = new RegExp(str.map(s => `(?=.*\\b${s}\\b)`).join(''), 'i')
+  const regexp = new RegExp(str.map(s => `(?=.*${s})`).join(''), 'i')
   return regexp
 }
 
