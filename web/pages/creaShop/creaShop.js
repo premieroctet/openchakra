@@ -26,7 +26,7 @@ const {is_development, isB2BDisabled, canAlfredParticularRegister}=require('../.
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 const {snackBarSuccess}=require('../../utils/notifications')
 import {SHOP} from '../../utils/i18n'
-import ReactHtmlParser from "react-html-parser";
+import ReactHtmlParser from 'react-html-parser'
 
 class creaShop extends BasePage {
 
@@ -34,7 +34,7 @@ class creaShop extends BasePage {
     super(props)
     this.state = {
       mobileOpen: false,
-      activeStep: 0,
+      activeStep: 7,
       saving: false,
       availabilities: [],
       currentUser: {},
@@ -459,7 +459,7 @@ class creaShop extends BasePage {
 
   isLastStep = () => {
     const {mode, activeStep}=this.state
-    const steps_count = STEPS[mode].length
+    const steps_count = STEPS['creation'].length
     return activeStep == steps_count-1
   }
 
@@ -482,14 +482,14 @@ class creaShop extends BasePage {
     }
     const {mode, activeStep}=this.state
 
-    const valid_function = STEPS[mode][activeStep].is_valid
+    const valid_function = STEPS['creation'][activeStep].is_valid
     return !valid_function(this)
   };
 
 
   renderSwitch = stepIndex => {
     const{mode}= this.state
-    return STEPS[mode][stepIndex].component(this)
+    return STEPS['creation'][stepIndex].component(this)
   };
 
   handleDrawerToggle = () => {
@@ -499,7 +499,7 @@ class creaShop extends BasePage {
   drawer = classes => {
     const {activeStep, mode} = this.state
 
-    const steps = STEPS[mode].map(s => s.menu)
+    const steps = STEPS['creation'].map(s => s.menu)
     return (
       <Grid style={{height: '100%'}}>
         <Grid className={classes.appBarContainer}>
