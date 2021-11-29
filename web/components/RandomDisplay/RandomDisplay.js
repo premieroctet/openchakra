@@ -13,6 +13,8 @@ const useStyles = makeStyles(() => ({
   carouselStyle: {
     display: 'flex',
     justifyContent: 'center',
+    margin: 0,
+    width: '100%',
   },
   carousel: {
     height: '100%',
@@ -33,8 +35,15 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     width: '100%',
     margin: 0,
-    backgroundPosition: 'center',
     backgroundSize: 'cover',
+  },
+  randompics: {
+    backgroundSize: 'contain',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    minHeight: 250,
+    maxHeight: 400,
+    width: 200,
   },
 
 }))
@@ -51,29 +60,36 @@ function RandomDisplay(props) {
       className={classes.carousel}
     >
       {
-        arrayText.map((res, i) => (
-          <Grid container spacing={2} key={i} className={`${classes.mainContainer} customhowitworks${i}`}>
-            {
-              res.map((element, index) => (
-                <>
-                  {
-                    index === 0 &&
-                    <Grid item xs={12} className={classes.title} key={index}>
-                      <Typography className={`${classes.colorText} customrandomdisplay`}>{element[0]}</Typography>
-                    </Grid>
-                  }
-                  {
-                    index !== 0 &&
-                    <Grid item md={2} xs={12} className={classes.carouselStyle} key={index}>
-                      <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
-                    </Grid>
-                  }
+        arrayText.map((res, i) => {
+          return(
+            <Grid container spacing={2} key={i} className={`${classes.mainContainer} customhowitworks${i}`}>
+              {
+                res.map((element, index) => {
+                  return(
+                    <>
+                      {
+                        index === 0 &&
+                        <Grid item xs={12} className={classes.title} key={index} >
+                          <Typography className={`${classes.colorText} customrandomdisplay`}>{element[0]}</Typography>
+                        </Grid>
+                      }
+                      {
+                        index !== 0 &&
+                        <Grid container spacing={2} item md={2} xs={12} className={`${classes.carouselStyle} customrandomdisplaycontainer${i.toString() + index.toString()}`} key={index}>
+                          <Grid item xs={12}>
+                            <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
+                          </Grid>
+                          <Grid item xs={12} className={`customrandompics${i.toString() + index.toString()} ${classes.randompics}`}/>
+                        </Grid>
+                      }
 
-                </>
-              ))
-            }
-          </Grid>
-        ))
+                    </>
+                  )
+                })
+              }
+            </Grid>
+          )
+        })
       }
     </Carousel>
   )

@@ -15,7 +15,6 @@ import CloseIcon from '@material-ui/icons/Close'
 import {HEADER} from '../../../utils/i18n'
 
 
-
 class Header extends React.Component {
   constructor(props) {
     super(props)
@@ -111,9 +110,11 @@ class Header extends React.Component {
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           width: '100%',
-          minHeight: 400,
+          height: 400,
+          backgroundPosition: 'center',
+
         }}>
-          <Grid className={classes.containerArrowBack}>
+          <Grid>
             <CustomButton
               classes={{root: `customheaderfaqbackbutton ${classes.button}`}}
               startIcon={<ArrowBackIcon style={{color: 'white'}}/>}
@@ -123,12 +124,15 @@ class Header extends React.Component {
             </CustomButton>
           </Grid>
           <Grid className={classes.containerTitleAndSubtitle}>
-            <Grid>
-              <h1 style={{color: 'white'}}>{title}</h1>
+            <Grid className={classes.widthContainer}>
+              <Grid>
+                <h1 style={{color: 'white', margin: 0}}>{title}</h1>
+              </Grid>
+              <Grid>
+                <h3 style={{color: 'white'}}>{content}</h3>
+              </Grid>
             </Grid>
-            <Grid>
-              <h3 style={{color: 'white'}}>{content}</h3>
-            </Grid>
+
             {
               aboutSearch ?
                 <Grid className={classes.navbarSearchContainer}>
