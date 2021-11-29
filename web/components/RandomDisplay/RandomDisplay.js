@@ -54,7 +54,7 @@ function RandomDisplay(props) {
 
   return(
     <Carousel
-      autoPlay={false}
+      autoPlay={loop}
       indicators={false}
       interval={6000}
       className={classes.carousel}
