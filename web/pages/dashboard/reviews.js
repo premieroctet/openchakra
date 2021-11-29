@@ -13,7 +13,7 @@ class Reviews extends DataPage {
     return [
       {headerName: '_id', field: '_id', width: 0},
       models.textColumn({headerName: 'Prestataire', field: 'alfred.full_name'}),
-      models.textColumn({headerName: 'Client', field: 'user.full_name'}),
+      models.textColumn({headerName: 'Client', field: 'user.long_name'}),
       models.textColumn({headerName: 'Service', field: 'serviceUser.service.label'}),
       models.dateColumn({headerName: 'Date', field: 'date'}),
       models.textColumn({headerName: 'Sens', field: 'direction'}),
@@ -35,7 +35,8 @@ class Reviews extends DataPage {
       .then(response => {
         let reviews = response.data
         reviews=reviews.map(r => {
-          r.direction=r.note_client ? 'Alfred=>client':'Client=>Alfred'
+          r.direction=r.note_client ? 'Presta=>client':'Client=>presta'
+          r.user.long_name=`${r.user.full_name} ${r.user.email} ${r.user.phone || ''}`
           return r
         })
         this.setState({data: reviews})
@@ -54,7 +55,7 @@ class Reviews extends DataPage {
       })
       .catch(err => {
         console.error(err)
-        snackBarError(err.repsonse.data)
+        snackBarError(err.response.data)
       })
   }
 

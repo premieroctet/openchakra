@@ -1958,7 +1958,7 @@ router.put('/customizations', passport.authenticate('admin', {session: false}), 
 router.get('/reviews', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('Review').find()
     .populate('alfred', 'firstname name')
-    .populate('user', 'firstname name')
+    .populate('user', 'firstname name email phone')
     .populate({path: 'serviceUser', select: 'service', populate: {path: 'service', select: 'label'}})
     .then(reviews => {
       res.json(reviews)
