@@ -69,7 +69,9 @@ class DrawerBooking extends React.Component {
             </Grid>
             {p.prestation.cesu_eligible && this.props.use_cesu ?
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}><em>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.eligible'))}</em></Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}><em>
+                  {ReactHtmlParser(this.props.t(this.props.alfred_pro ? 'PRESTATION.cis_eligible': 'PRESTATION.cesu_eligible'))}
+                </em></Typography>
               </Grid>
               : null
             }

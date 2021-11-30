@@ -263,7 +263,7 @@ class add extends React.Component {
                     checked={this.state.cesu_eligible}
                     onChange={this.onCesuChange}
                   />
-                  <Typography>Eligible au CESU</Typography>
+                  <Typography>Eligible au CESU/crédit d'impôt</Typography>
                 </Grid>
                 <Grid item style={{marginTop: 20}}>
                   <TextField
