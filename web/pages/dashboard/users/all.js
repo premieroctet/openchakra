@@ -77,7 +77,7 @@ class all extends DataPage {
       setAxiosAuthentication()
       axios.put(`/myAlfred/api/admin/users/${ data._id}/admin/${set_admin}`)
         .then(() => {
-          snackBarSuccess(`${data.full_name} ${set_admin ? 'est devenu(e)': "n'est plus"} administrateur`)
+          snackBarSuccess(`${data.full_name} ${set_admin ? 'est devenu(e)': 'n\'est plus'} administrateur`)
           this.componentDidMount()
         })
         .catch(err => {
