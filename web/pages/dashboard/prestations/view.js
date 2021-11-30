@@ -249,7 +249,7 @@ class View extends BasePage {
 
     axios.put(`/myAlfred/api/admin/prestation/all/${id}`, {
       label, price, billing, service, filter_presentation,
-      job, description, esu_eligible, particular_access, professional_access,
+      job, description, cesu_eligible, particular_access, professional_access,
       private_company, order, company_price,
     })
       .then(() => {
@@ -322,7 +322,7 @@ class View extends BasePage {
                   checked={this.state.cesu_eligible}
                   onChange={this.onCesuChange}
                 />
-                <Typography>Eligible au CESU</Typography>
+                <Typography>Eligible au CESU/crédit d'impôt</Typography>
               </Grid>
               <Grid item style={{marginTop: 20}}>
                 <Typography style={{fontSize: 20}}>Prix moyen</Typography>
