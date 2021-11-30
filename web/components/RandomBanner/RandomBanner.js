@@ -1,3 +1,5 @@
+import ReactHtmlParser from 'react-html-parser'
+import {is_development} from '../../config/config'
 import React from 'react'
 import {Typography} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
@@ -48,41 +50,34 @@ const useStyles = makeStyles(() => ({
 
 }))
 
-function RandomDisplay(props) {
-  const {arrayText, loop} = props
+function RandomBanner(props) {
+  const {arrayText, loop, t, i18n} = props
   const classes = useStyles()
 
   return(
     <Carousel
       autoPlay={loop}
       indicators={false}
-      interval={6000}
+      interval={is_development() ? 2000 : 6000}
       className={classes.carousel}
     >
       {
         arrayText.map((res, i) => {
           return(
-            <Grid container spacing={2} key={i} className={`${classes.mainContainer} customhowitworks${i}`}>
+            <Grid container spacing={2} key={i} className={`${classes.mainContainer} RANDOM_BANNER_BG_PICTURE_${i}`}>
+              <Grid item xs={12} className={classes.title} key={i} >
+                <Typography className={`${classes.colorText} customrandomdisplay`}>{i18n.exists(`RANDOM_BANNER_TITLE_${i}`) && ReactHtmlParser(t(`RANDOM_BANNER_TITLE_${i}`))}</Typography>
+              </Grid>
               {
-                res.map((element, index) => {
+                [0,1,2,3,4,5].map((val, index) => {
                   return(
                     <>
-                      {
-                        index === 0 &&
-                        <Grid item xs={12} className={classes.title} key={index} >
-                          <Typography className={`${classes.colorText} customrandomdisplay`}>{element[0]}</Typography>
+                      <Grid container spacing={2} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`}>
+                        <Grid item xs={12}>
+                          <Typography className={`${classes.colorText} customrandomdisplay`}>{i18n.exists(`RANDOM_BANNER_TEXT_${i}_${index}`) && ReactHtmlParser(t(`RANDOM_BANNER_TEXT_${i}_${index}`))}</Typography>
                         </Grid>
-                      }
-                      {
-                        index !== 0 &&
-                        <Grid container spacing={2} item md={2} xs={12} className={`${classes.carouselStyle} customrandomdisplaycontainer${i.toString() + index.toString()}`} key={index}>
-                          <Grid item xs={12}>
-                            <Typography className={`${classes.colorText} customrandomdisplay`}>{element}</Typography>
-                          </Grid>
-                          <Grid item xs={12} className={`customrandompics${i.toString() + index.toString()} ${classes.randompics}`}/>
-                        </Grid>
-                      }
-
+                        <Grid item xs={12} className={`RANDOM_BANNER_PICTURE_${i}_${index} ${classes.randompics}`}/>
+                      </Grid>
                     </>
                   )
                 })
@@ -95,4 +90,4 @@ function RandomDisplay(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(RandomDisplay)
+export default withTranslation('custom', {withRef: true})(RandomBanner)
