@@ -56,6 +56,10 @@ class ProfileReviews extends BasePage {
       <React.Fragment>
         <Head>
           <title>{user ? user.full_name : 'Services'}</title>
+          <meta property="og:description" content={user ? user.firstname : ''}/>
+          <meta property="description" content={user ? user.firstname: ''}/>
+          <meta property="og:type" content="website"/>
+          <meta property="og:url" content="https://my-alfred.io"/>
         </Head>
         <Grid className={classes.containerProfileLayout}>
           <ProfileLayout user={user}>

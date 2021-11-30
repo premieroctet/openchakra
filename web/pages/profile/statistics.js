@@ -405,6 +405,10 @@ class ProfileStatistics extends BasePage {
       <React.Fragment>
         <Head>
           <title>{user ? user.full_name : 'Statistiques'}</title>
+          <meta property="og:description" content={user ? user.firstname : '' }/>
+          <meta property="description" content={user ? user.firstname : ''}/>
+          <meta property="og:type" content="website"/>
+          <meta property="og:url" content="https://my-alfred.io"/>
         </Head>
         <Hidden only={['xs']}>
           <ProfileLayout user={user}>

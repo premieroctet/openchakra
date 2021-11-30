@@ -535,6 +535,10 @@ class ProfileAbout extends CompanyComponent {
       <React.Fragment>
         <Head>
           <title>{alfred ? alfred.full_name : 'Profil'}</title>
+          <meta property="og:description" content={alfred ? alfred.firstname : ''}/>
+          <meta property="description" content={alfred ? alfred.firstname : ''}/>
+          <meta property="og:type" content="website"/>
+          <meta property="og:url" content="https://my-alfred.io"/>
         </Head>
         <Grid className={classes.profileLayoutContainer}>
           <ProfileLayout user={user}>

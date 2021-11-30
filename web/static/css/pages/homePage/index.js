@@ -71,7 +71,7 @@ export default theme => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
-    height: 400,
+    height: 500,
     [theme.breakpoints.down('xs')]: {
       height: 'auto',
     },
