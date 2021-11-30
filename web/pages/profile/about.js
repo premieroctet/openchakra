@@ -43,6 +43,7 @@ import ShowDiploma from '../../components/ShowDiploma/ShowDiploma'
 import ShowCertification from '../../components/ShowCertification/ShowCertification'
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 import {ABOUT} from '../../utils/i18n'
+import Head from 'next/head'
 
 const moment=require('moment')
 
@@ -532,6 +533,9 @@ class ProfileAbout extends CompanyComponent {
 
     return (
       <React.Fragment>
+        <Head>
+          <title>{alfred ? alfred.full_name : 'Profil'}</title>
+        </Head>
         <Grid className={classes.profileLayoutContainer}>
           <ProfileLayout user={user}>
             {this.content(classes, user, alfred)}

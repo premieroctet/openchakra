@@ -15,6 +15,7 @@ import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import Services from '../../components/Services/Services'
 import styles from '../../static/css/pages/profile/services/services'
+import Head from 'next/head'
 
 const {isEditableUser}=require('../../utils/context')
 
@@ -89,6 +90,9 @@ class ProfileServices extends BasePage {
 
     return (
       <React.Fragment>
+        <Head>
+          <title>{user ? user.full_name : 'Mes services'}</title>
+        </Head>
         <Grid className={classes.profileLayoutContainer}>
           <ProfileLayout user={user}>
             {this.content(classes, user, shop)}

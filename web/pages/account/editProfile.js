@@ -10,7 +10,7 @@ import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
-import {Helmet} from 'react-helmet'
+import Head from 'next/head'
 import styles from '../../static/css/pages/profile/editProfile/editProfile'
 import LayoutAccount from '../../hoc/Layout/LayoutAccount'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
@@ -475,11 +475,11 @@ class editProfile extends React.Component {
 
     return (
       <React.Fragment>
-        <Helmet>
+        <Head>
           <title>Profil-Modifier mon profil-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
-        </Helmet>
+        </Head>
         <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount>
             {this.content(classes)}

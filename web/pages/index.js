@@ -11,7 +11,7 @@ import {withTranslation} from 'react-i18next'
 import axios from 'axios'
 import React from 'react'
 import Footer from '../hoc/Layout/Footer/Footer'
-import {Helmet} from 'react-helmet'
+import Head from 'next/head'
 import Grid from '@material-ui/core/Grid'
 import InfoBar from '../components/InfoBar/InfoBar'
 import {withStyles} from '@material-ui/core/styles'
@@ -161,13 +161,13 @@ class Home extends React.Component {
     return (
 
       <Grid>
-        <Helmet>
+        <Head>
           <title>{t('COMPANY_NAME')}</title>
           <meta
             property="description"
             content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"
           />
-        </Helmet>
+        </Head>
         <Grid>
           <LoggedAsBanner />
           <Grid className={`customheaderinfobar ${classes.infoBarContainer}`}>

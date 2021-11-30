@@ -9,7 +9,7 @@ import moment from 'moment'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
-import {Helmet} from 'react-helmet'
+import Head from 'next/head'
 import styles from '../../static/css/pages/security/security'
 import IconButton from '@material-ui/core/IconButton'
 import {checkPass1, checkPass2} from '../../utils/passwords'
@@ -473,11 +473,11 @@ class security extends React.Component {
 
     return (
       <Fragment>
-        <Helmet>
+        <Head>
           <title>Compte-Sécurité-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Modifiez votre mot de passe et gérez la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
-        </Helmet>
+        </Head>
         <Grid className={classes.layoutAccounContainer}>
           <LayoutAccount>
             {this.content(classes)}

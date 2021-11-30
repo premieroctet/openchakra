@@ -20,7 +20,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import {Helmet} from 'react-helmet'
+import Head from 'next/head'
 import styles from '../../static/css/pages/trustAndVerification/trustAndVerification'
 import Siret from '../../components/Siret/Siret'
 import {Radio, RadioGroup} from '@material-ui/core'
@@ -635,11 +635,11 @@ class trustAndVerification extends React.Component {
 
     return (
       <React.Fragment>
-        <Helmet>
+        <Head>
           <title>Profil-Confiance et vérification-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
-        </Helmet>
+        </Head>
         <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount>
             {this.content(classes)}

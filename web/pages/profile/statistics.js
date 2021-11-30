@@ -24,6 +24,7 @@ import {isEditableUser} from '../../utils/context'
 import '../../static/assets/css/custom.css'
 import Hidden from '@material-ui/core/Hidden'
 import {rgbaToHex} from '../../utils/functions'
+import Head from 'next/head'
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 
 class ProfileStatistics extends BasePage {
@@ -402,6 +403,9 @@ class ProfileStatistics extends BasePage {
 
     return (
       <React.Fragment>
+        <Head>
+          <title>{user ? user.full_name : 'Statistiques'}</title>
+        </Head>
         <Hidden only={['xs']}>
           <ProfileLayout user={user}>
             {this.content(classes, user, theme)}

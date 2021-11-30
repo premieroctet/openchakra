@@ -24,7 +24,7 @@ import Hidden from '@material-ui/core/Hidden'
 import MapComponent from '../components/map'
 import {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
-import {Helmet} from 'react-helmet'
+import Head from 'next/head'
 import Topic from '../hoc/Topic/Topic'
 import ListAlfredConditions from '../components/ListAlfredConditions/ListAlfredConditions'
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
@@ -1030,14 +1030,15 @@ class UserServicesPreview extends BasePage {
 
     const res = (
       <React.Fragment>
-        <Helmet>
+        <Head>
+          <title>{service.label} par {alfred.full_name}</title>
           <meta property="og:image" content={`/${service.picture}`}/>
           <meta property="og:image:secure_url" content={`/${service.picture}`}/>
           <meta property="og:description" content={`${service.label} par ${alfred.firstname}`}/>
           <meta property="description" content={`${service.label} par ${alfred.firstname}`}/>
           <meta property="og:type" content="website"/>
           <meta property="og:url" content="https://my-alfred.io"/>
-        </Helmet>
+        </Head>
         <Hidden only={['xs']} implementation={'css'} className={classes.hidden}>
           <Layout user={user} selectedAddress={address}>
             {this.content(classes)}
