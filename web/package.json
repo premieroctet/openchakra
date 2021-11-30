@@ -74,7 +74,6 @@
     "react-device-detect": "^1.15.0",
     "react-dom": "^16.14.0",
     "react-dropdown-select": "^4.7.3",
-    "react-helmet": "6.1.0",
     "react-html-parser": "^2.0.2",
     "react-i18next": "^11.11.4",
     "react-img-mapper": "^1.2.2",
