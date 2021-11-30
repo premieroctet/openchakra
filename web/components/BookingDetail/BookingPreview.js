@@ -247,7 +247,7 @@ class BookingPreview extends React.Component {
     const countPrestations = this.computeCountPrestations()
 
     const amount = is_alfred ? parseFloat(bookingObj.alfred_amount) : parseFloat(bookingObj.amount)
-    const alfred_fee = 0
+    const provider_fee = 0
     const customer_fee = is_alfred ? 0 : bookingObj.customer_fee
 
     // Am i the service provider ?
@@ -643,7 +643,7 @@ class BookingPreview extends React.Component {
                             <BookingDetail
                               prestations={pricedPrestations}
                               count={countPrestations}
-                              alfred_fee={alfred_fee}
+                              provider_fee={provider_fee}
                               customer_fee={customer_fee}
                               travel_tax={bookingObj.travel_tax}
                               pick_tax={bookingObj.pick_tax}
