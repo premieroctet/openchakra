@@ -40,9 +40,6 @@ class CategoryCard extends React.Component {
     const {classes, item} = this.props
     const {gps, user} = this.state
 
-    if (item.particular_label.includes('Ani')) {
-      console.log(`Category:${JSON.stringify(item)}`)
-    }
     if (!item) {
       return null
     }
