@@ -1,4 +1,5 @@
-import {REVIEW_STATUS} from '../../utils/consts';
+import {withTranslation} from 'react-i18next'
+import {REVIEW_STATUS} from '../../utils/consts'
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
 import {Link} from '@material-ui/core'
@@ -10,7 +11,7 @@ import CheckIcon from '@material-ui/icons/Check'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 const {insensitiveComparator, normalize} = require('../../utils/text')
 
-class StatusRenderer extends React.Component {
+class _StatusRenderer extends React.Component {
 
   constructor(props) {
     super(props)
@@ -21,16 +22,19 @@ class StatusRenderer extends React.Component {
   }
 
   render = () => {
+    const {t}=this.props
     return (
       <>
         <div>
-          {this.state.value.alfred ? <img src="/static/assets/img/alfred.svg" style={{width: '40px'}} alt={' Alfred '} title='Alfred' /> : null }
+          {this.state.value.alfred ? <img src="/static/assets/img/alfred.svg" style={{width: '40px'}} alt={t('DASHBOARD.alfred')} title={t('DASHBOARD.alfred')} /> : null }
           {this.state.value.admin ? <img src="/static/assets/img/admin.svg" style={{width: '40px'}} alt='Admin' title='Admin' /> : null }
         </div>
       </>
     )
   }
 }
+
+const StatusRenderer=withTranslation('custom', {withRef: true})(_StatusRenderer)
 
 class LocationRenderer extends React.Component {
 
@@ -40,14 +44,14 @@ class LocationRenderer extends React.Component {
 
   render = () => {
     const location = this.props.value
-    const strValue = Object.keys(location).filter(k => location[ k ]).map(k => k.slice(0, 1).toUpperCase()).join('/')
+    const strValue = Object.keys(location).filter(k => location[k]).map(k => k.slice(0, 1).toUpperCase()).join('/')
     return (
       <div>{strValue}</div>
     )
   }
 }
 
-class StatusFilter extends React.Component {
+class _StatusFilter extends React.Component {
 
   constructor(props) {
     super(props)
@@ -65,7 +69,7 @@ class StatusFilter extends React.Component {
   }
 
   onChange = event => {
-    this.setState({[ event.target.name ]: event.target.checked}, () => {
+    this.setState({[event.target.name]: event.target.checked}, () => {
       this.params.filterChangedCallback()
     })
   }
@@ -79,10 +83,11 @@ class StatusFilter extends React.Component {
   }
 
   render = () => {
+    const {t}=this.props
     return (
       <div>
         <Checkbox name={'alfred'} checked={this.state.alfred} onChange={this.onChange} />
-        <img src="/static/assets/img/alfred.svg" style={{width: '40px'}} alt='Alfred' title='Alfred' />
+        <img src="/static/assets/img/alfred.svg" style={{width: '40px'}} alt={t('DASHBOARD.alfred')} title={t('DASHBOARD.alfred')} />
         <br/>
         <Checkbox name={'admin'} checked={this.state.admin} onChange={this.onChange} />
         <img src="/static/assets/img/admin.svg" style={{width: '40px'}} alt='Admin' title='Admin' />
@@ -90,6 +95,8 @@ class StatusFilter extends React.Component {
     )
   }
 }
+
+const StatusFilter=withTranslation('custom', {withRef: true})(_StatusFilter)
 
 class ReviewStatusFilter extends React.Component {
 
@@ -105,7 +112,7 @@ class ReviewStatusFilter extends React.Component {
   }
 
   onChange = event => {
-    this.setState({[ event.target.name ]: event.target.checked}, () => {
+    this.setState({[event.target.name]: event.target.checked}, () => {
       this.params.filterChangedCallback()
     })
   }
@@ -210,7 +217,7 @@ class EnumRenderer extends React.Component {
       return ''
     }
     return (
-      <>{this.props.enum[ this.props.value ]}</>
+      <>{this.props.enum[this.props.value]}</>
     )
   }
 }
