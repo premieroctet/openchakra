@@ -1,23 +1,21 @@
-import { Tooltip } from '@material-ui/core';
+import {TextField} from "@material-ui/core"
+import React, {createRef} from "react"
+import PropTypes from "prop-types"
+import getCaretCoordinates from "textarea-caret"
+import getInputSelection, {setCaretPosition} from "get-input-selection"
+import "./AutoCompleteTextField.css"
+const {getWordAt} = require("../../utils/text")
+let levenshtein = require("fast-levenshtein")
 
-import { TextField } from '@material-ui/core';
-import React, { createRef } from 'react';
-import PropTypes from 'prop-types';
-import getCaretCoordinates from 'textarea-caret';
-import getInputSelection, { setCaretPosition } from 'get-input-selection';
-import './AutoCompleteTextField.css';
-const {normalize, getWordAt} = require('../../utils/text')
-var levenshtein = require('fast-levenshtein')
+const KEY_UP = 38
+const KEY_DOWN = 40
+const KEY_RETURN = 13
+const KEY_ENTER = 14
+const KEY_ESCAPE = 27
+const KEY_TAB = 9
 
-const KEY_UP = 38;
-const KEY_DOWN = 40;
-const KEY_RETURN = 13;
-const KEY_ENTER = 14;
-const KEY_ESCAPE = 27;
-const KEY_TAB = 9;
-
-const OPTION_LIST_Y_OFFSET = 10;
-const OPTION_LIST_MIN_WIDTH = 100;
+const OPTION_LIST_Y_OFFSET = 10
+const OPTION_LIST_MIN_WIDTH = 100
 
 const propTypes = {
   Component: PropTypes.oneOfType([
@@ -51,11 +49,11 @@ const propTypes = {
   offsetX: PropTypes.number,
   offsetY: PropTypes.number,
   passThroughEnter: PropTypes.bool,
-};
+}
 
 const defaultProps = {
   Component: TextField,
-  defaultValue: '',
+  defaultValue: "",
   disabled: false,
   maxOptions: 6,
   onBlur: () => {},
@@ -65,34 +63,34 @@ const defaultProps = {
   onSelect: () => {},
   changeOnSelect: (trigger, slug) => trigger + slug,
   options: [],
-  regex: '^[A-Za-z0-9\\-_]+$',
+  regex: "^[A-Za-z0-9\\-_]+$",
   matchAny: false,
   minChars: 0,
   requestOnlyIfNoOptions: true,
-  spaceRemovers: [',', '.', '!', '?'],
-  spacer: ' ',
-  trigger: '@',
+  spaceRemovers: [",", ".", "!", "?"],
+  spacer: " ",
+  trigger: "@",
   offsetX: 0,
   offsetY: 0,
   value: null,
   passThroughEnter: false,
-};
+}
 
 class AutocompleteTextField extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.isTrigger = this.isTrigger.bind(this);
-    this.arrayTriggerMatch = this.arrayTriggerMatch.bind(this);
-    this.getMatch = this.getMatch.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleResize = this.handleResize.bind(this);
-    this.handleSelection = this.handleSelection.bind(this);
-    this.updateCaretPosition = this.updateCaretPosition.bind(this);
-    this.updateHelper = this.updateHelper.bind(this);
-    this.resetHelper = this.resetHelper.bind(this);
-    this.renderAutocompleteList = this.renderAutocompleteList.bind(this);
+    this.isTrigger = this.isTrigger.bind(this)
+    this.arrayTriggerMatch = this.arrayTriggerMatch.bind(this)
+    this.getMatch = this.getMatch.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleKeyDown = this.handleKeyDown.bind(this)
+    this.handleResize = this.handleResize.bind(this)
+    this.handleSelection = this.handleSelection.bind(this)
+    this.updateCaretPosition = this.updateCaretPosition.bind(this)
+    this.updateHelper = this.updateHelper.bind(this)
+    this.resetHelper = this.resetHelper.bind(this)
+    this.renderAutocompleteList = this.renderAutocompleteList.bind(this)
 
     this.state = {
       helperVisible: false,
@@ -104,28 +102,28 @@ class AutocompleteTextField extends React.Component {
       selection: 0,
       top: 0,
       value: null,
-    };
+    }
 
-    this.recentValue = props.defaultValue;
-    this.enableSpaceRemovers = false;
-    this.refInput = createRef();
+    this.recentValue = props.defaultValue
+    this.enableSpaceRemovers = false
+    this.refInput = createRef()
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener("resize", this.handleResize)
   }
 
   componentDidUpdate(prevProps) {
-    const { options } = this.props;
-    const { caret } = this.state;
+    const {options} = this.props
+    const {caret} = this.state
 
     if (options.length !== prevProps.options.length) {
-      this.updateHelper(this.recentValue, caret, options);
+      this.updateHelper(this.recentValue, caret, options)
     }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener("resize", this.handleResize)
   }
 
   getMatch(str, caret, providedOptions) {
@@ -137,10 +135,10 @@ class AutocompleteTextField extends React.Component {
     let matching=providedOptions.filter(o => o.includes(w.word))
     const groups=_.groupBy(matching, m => m.startsWith(w.word))
     // First words are the prefix ones, then others depending on levenshtein's distance
-    matching = [..._.sortBy(groups[true] || []), ...(_.sortBy(groups[false] || [], m => levenshtein.get(m, w.word)))]
+    matching = [..._.sortBy(groups.true || []), ...(_.sortBy(groups.false || [], m => levenshtein.get(m, w.word)))]
     if (matching.length>0) {
       return {
-        trigger: '',
+        trigger: "",
         matchStart: w.start,
         matchLength: w.end-w.start,
         options: matching,
@@ -150,25 +148,25 @@ class AutocompleteTextField extends React.Component {
   }
 
   arrayTriggerMatch(triggers, re) {
-    const triggersMatch = triggers.map((trigger) => ({
+    const triggersMatch = triggers.map(trigger => ({
       triggerStr: trigger,
       triggerMatch: trigger.match(re),
       triggerLength: trigger.length,
-    }));
+    }))
 
-    return triggersMatch;
+    return triggersMatch
   }
 
   isTrigger(trigger, str, i) {
     if (!trigger || !trigger.length) {
-      return true;
+      return true
     }
 
     if (str.substr(i, trigger.length) === trigger) {
-      return true;
+      return true
     }
 
-    return false;
+    return false
   }
 
   handleChange(e) {
@@ -178,22 +176,22 @@ class AutocompleteTextField extends React.Component {
       spaceRemovers,
       spacer,
       value,
-    } = this.props;
+    } = this.props
 
-    const old = this.recentValue;
-    const str = e.target.value;
-    const caret = getInputSelection(e.target).end;
+    const old = this.recentValue
+    const str = e.target.value
+    const caret = getInputSelection(e.target).end
 
     if (!str.length) {
-      this.setState({ helperVisible: false });
+      this.setState({helperVisible: false})
     }
 
-    this.recentValue = str;
+    this.recentValue = str
 
-    this.setState({ caret, value: e.target.value });
+    this.setState({caret, value: e.target.value})
 
     if (!str.length || !caret) {
-      return onChange(e.target.value);
+      return onChange(e.target.value)
     }
 
     // '@wonderjenny ,|' -> '@wonderjenny, |'
@@ -207,118 +205,119 @@ class AutocompleteTextField extends React.Component {
             && spaceRemovers.indexOf(str[i]) !== -1
             && this.getMatch(str.substring(0, i - 2), caret - 3, options)
           ) {
-            const newValue = (`${str.slice(0, i - 1)}${str.slice(i, i + 1)}${str.slice(i - 1, i)}${str.slice(i + 1)}`);
+            const newValue = (`${str.slice(0, i - 1)}${str.slice(i, i + 1)}${str.slice(i - 1, i)}${str.slice(i + 1)}`)
 
-            this.updateCaretPosition(i + 1);
-            this.refInput.current.value = newValue;
+            this.updateCaretPosition(i + 1)
+            this.refInput.current.value = newValue
 
             if (!value) {
-              this.setState({ value: newValue });
+              this.setState({value: newValue})
             }
 
-            return onChange(newValue);
+            return onChange(newValue)
           }
 
-          break;
+          break
         }
       }
 
-      this.enableSpaceRemovers = false;
+      this.enableSpaceRemovers = false
     }
 
-    this.updateHelper(str, caret, options);
+    this.updateHelper(str, caret, options)
 
     if (!value) {
-      this.setState({ value: e.target.value });
+      this.setState({value: e.target.value})
     }
 
-    return onChange(e.target.value);
+    return onChange(e.target.value)
   }
 
   handleKeyDown(event) {
-    const { helperVisible, options, selection } = this.state;
-    const { onKeyDown, passThroughEnter } = this.props;
+    const {helperVisible, options, selection} = this.state
+    const {onKeyDown, passThroughEnter} = this.props
 
     if (helperVisible) {
       switch (event.keyCode) {
         case KEY_ESCAPE:
-          event.preventDefault();
-          this.resetHelper();
-          break;
+          event.preventDefault()
+          this.resetHelper()
+          break
         case KEY_UP:
-          event.preventDefault();
-          this.setState({ selection: ((options.length + selection) - 1) % options.length });
-          break;
+          event.preventDefault()
+          this.setState({selection: ((options.length + selection) - 1) % options.length})
+          break
         case KEY_DOWN:
-          event.preventDefault();
-          this.setState({ selection: (selection + 1) % options.length });
-          break;
+          event.preventDefault()
+          this.setState({selection: (selection + 1) % options.length})
+          break
         case KEY_ENTER:
         case KEY_RETURN:
-          if (!passThroughEnter) { event.preventDefault(); }
-          this.handleSelection(selection);
-          break;
+          if (!passThroughEnter) { event.preventDefault() }
+          this.handleSelection(selection)
+          break
         case KEY_TAB:
-          this.handleSelection(selection);
-          break;
+          this.handleSelection(selection)
+          break
         default:
-          onKeyDown(event);
-          break;
+          onKeyDown(event)
+          break
       }
-    } else {
-      onKeyDown(event);
+    }
+    else {
+      onKeyDown(event)
     }
   }
 
   handleResize() {
-    this.setState({ helperVisible: false });
+    this.setState({helperVisible: false})
   }
 
   handleSelection(idx) {
-    const { spacer, onSelect, changeOnSelect } = this.props;
+    const {spacer, onSelect, changeOnSelect} = this.props
     const {
       matchStart, matchLength, options, trigger,
-    } = this.state;
+    } = this.state
 
-    const slug = options[idx];
-    const value = this.recentValue;
-    const part1 = value.substring(0, matchStart - trigger.length);
-    const part2 = value.substring(matchStart + matchLength);
+    const slug = options[idx]
+    const value = this.recentValue
+    const part1 = value.substring(0, matchStart - trigger.length)
+    const part2 = value.substring(matchStart + matchLength)
 
-    const event = { target: this.refInput.current };
-    const changedStr = changeOnSelect(trigger, slug);
+    const event = {target: this.refInput.current}
+    const changedStr = changeOnSelect(trigger, slug)
 
-    event.target.value = `${part1}${changedStr}${spacer}${part2}`;
-    this.handleChange(event);
-    onSelect(event.target.value);
+    event.target.value = `${part1}${changedStr}${spacer}${part2}`
+    this.handleChange(event)
+    onSelect(event.target.value)
 
-    this.resetHelper();
+    this.resetHelper()
 
-    this.updateCaretPosition(part1.length + changedStr.length + 1);
+    this.updateCaretPosition(part1.length + changedStr.length + 1)
 
-    this.enableSpaceRemovers = true;
+    this.enableSpaceRemovers = true
   }
 
   updateCaretPosition(caret) {
-    this.setState({ caret }, () => setCaretPosition(this.refInput.current, caret));
+    this.setState({caret}, () => setCaretPosition(this.refInput.current, caret))
   }
 
   updateHelper(str, caret, options) {
-    const input = this.refInput.current;
+    const input = this.refInput.current
 
-    const slug = this.getMatch(str, caret, options);
+    const slug = this.getMatch(str, caret, options)
 
     if (slug) {
-      const caretPos = getCaretCoordinates(input, caret);
-      const rect = input.getBoundingClientRect();
+      const caretPos = getCaretCoordinates(input, caret)
+      const rect = input.getBoundingClientRect()
 
-      const top = caretPos.top + input.offsetTop;
+      const top = caretPos.top + input.offsetTop
       const left = Math.min(
         caretPos.left + input.offsetLeft - OPTION_LIST_Y_OFFSET,
         input.offsetLeft + rect.width - OPTION_LIST_MIN_WIDTH,
-      );
+      )
 
-      const { minChars, onRequestOptions, requestOnlyIfNoOptions } = this.props;
+      const {minChars, onRequestOptions, requestOnlyIfNoOptions} = this.props
       if (
         slug.matchLength >= minChars
         && (
@@ -334,75 +333,78 @@ class AutocompleteTextField extends React.Component {
           top,
           left,
           ...slug,
-        });
-      } else {
+        })
+      }
+      else {
         if (!requestOnlyIfNoOptions || !slug.options.length) {
-          onRequestOptions(str.substr(slug.matchStart, slug.matchLength));
+          onRequestOptions(str.substr(slug.matchStart, slug.matchLength))
         }
 
-        this.resetHelper();
+        this.resetHelper()
       }
-    } else {
-      this.resetHelper();
+    }
+    else {
+      this.resetHelper()
     }
   }
 
   resetHelper() {
-    this.setState({ helperVisible: false, selection: 0 });
+    this.setState({helperVisible: false, selection: 0})
   }
 
   renderAutocompleteList() {
     const {
       helperVisible,
-      left,
       matchStart,
       matchLength,
       options,
       selection,
-      top,
       value,
-    } = this.state;
+    } = this.state
 
     if (!helperVisible) {
-      return null;
+      return null
     }
 
-    const { maxOptions, offsetX, offsetY } = this.props;
+    const {maxOptions} = this.props
 
     if (options.length === 0) {
-      return null;
+      return null
     }
 
     if (selection >= options.length) {
-      this.setState({ selection: 0 });
+      this.setState({selection: 0})
 
-      return null;
+      return null
     }
 
-    const optionNumber = maxOptions === 0 ? options.length : maxOptions;
+    const optionNumber = maxOptions === 0 ? options.length : maxOptions
 
     const helperOptions = options.slice(0, optionNumber).map((val, idx) => {
-      const highlightStart = val.toLowerCase().indexOf(value.substr(matchStart, matchLength).toLowerCase());
+      const highlightStart = val.toLowerCase().indexOf(value.substr(matchStart, matchLength).toLowerCase())
 
       return (
         <li
-          className={idx === selection ? 'active' : null}
+          className={idx === selection ? "active" : null}
           key={val}
-          onClick={() => { this.handleSelection(idx); }}
-          onMouseEnter={() => { this.setState({ selection: idx }); }}
+          onClick={() => { this.handleSelection(idx) }}
+          onMouseEnter={() => { this.setState({selection: idx}) }}
         >
           {val.slice(0, highlightStart)}
           <strong>{val.substr(highlightStart, matchLength)}</strong>
           {val.slice(highlightStart + matchLength)}
         </li>
-      );
-    });
+      )
+    })
 
     return (
-      <ul className="react-autocomplete-input" style={{ left: left + offsetX, top: top + offsetY }}>
-        {helperOptions}
-      </ul>
-    );
+      <div style={{left: 0, top: 10, position: "absolute", transform: "translate3d(0px, 30px, 0px)", willChange: "transform"}}>
+        <ul className="react-autocomplete-input">
+          {helperOptions}
+        </ul>
+      </div>
+
+    )
   }
 
   render() {
@@ -413,25 +415,27 @@ class AutocompleteTextField extends React.Component {
       onBlur,
       value,
       ...rest
-    } = this.props;
+    } = this.props
 
-    const { value: stateValue } = this.state;
+    const {value: stateValue} = this.state
 
-    const propagated = Object.assign({}, rest);
-    Object.keys(propTypes).forEach((k) => { delete propagated[k]; });
+    const propagated = Object.assign({}, rest)
+    Object.keys(propTypes).forEach(k => { delete propagated[k] })
 
-    let val = '';
+    let val = ""
 
-    if (typeof value !== 'undefined' && value !== null) {
-      val = value;
-    } else if (stateValue) {
-      val = stateValue;
-    } else if (defaultValue) {
-      val = defaultValue;
+    if (typeof value !== "undefined" && value !== null) {
+      val = value
+    }
+    else if (stateValue) {
+      val = stateValue
+    }
+    else if (defaultValue) {
+      val = defaultValue
     }
 
     return (
-      <span>
+      <div style={{position: "relative"}}>
         <Component
           disabled={disabled}
           onBlur={onBlur}
@@ -442,12 +446,12 @@ class AutocompleteTextField extends React.Component {
           {...propagated}
         />
         {this.renderAutocompleteList()}
-      </span>
-    );
+      </div>
+    )
   }
 }
 
-AutocompleteTextField.propTypes = propTypes;
-AutocompleteTextField.defaultProps = defaultProps;
+AutocompleteTextField.propTypes = propTypes
+AutocompleteTextField.defaultProps = defaultProps
 
-export default AutocompleteTextField;
+export default AutocompleteTextField
