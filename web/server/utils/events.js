@@ -11,7 +11,6 @@ const logEvent = (req, category, title, description, data=null) => {
   }
   req.context.getModel('User').findOne({_id: superuserid}, 'firstname name email')
     .then(superuser => {
-      console.log(`Loggin event:super ${superuserid}:${JSON.stringify(superuser)}`)
       if (superuserid) {
         if (!superuser) {
           return console.error(`Create event ${JSON.stringify()}: superuser ${superuserid} not found `)

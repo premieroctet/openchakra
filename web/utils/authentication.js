@@ -1,6 +1,6 @@
-import axios from 'axios';
-import cookie from 'react-cookies'
-const jwt = require('jsonwebtoken');
+const axios=require('axios')
+const cookie=require('react-cookies')
+const jwt = require('jsonwebtoken')
 
 const setAuthToken = () => {
   if (typeof localStorage=='undefined') {

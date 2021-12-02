@@ -82,7 +82,7 @@ class home extends React.Component {
                 <Typography style={{fontSize: 30}}>Maintenance</Typography>
                 <Link href="/dashboard/logAsUser"><a>{this.props.t('DASHBOARD.logAs')}</a></Link><br/>
                 <Link href="/dashboard/reviews"><a>Modération des commentaires</a></Link><br/>
-
+                <Link href="/dashboard/invitation"><a>Envoi mail d'inscription</a></Link><br/>
                 { superAdmin &&
                   <>
                     <Typography style={{fontSize: 30}}>Paramétrage</Typography>

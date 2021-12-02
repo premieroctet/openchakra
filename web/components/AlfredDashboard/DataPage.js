@@ -71,7 +71,7 @@ class DataPage extends React.Component {
     const columnDefs=this.getDataType() ? [...this.getColumnDefs(), deleteColumn()] : this.getColumnDefs()
 
     return (
-      <Layout>
+      <DashboardLayout>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
           <Grid style={{width: '90%'}}>
             <Paper style={{width: '100%'}}>
@@ -88,7 +88,7 @@ class DataPage extends React.Component {
             </Paper>
           </Grid>
         </Grid>
-      </Layout>
+      </DashboardLayout>
     )
   }
 }

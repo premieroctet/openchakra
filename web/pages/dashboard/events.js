@@ -17,7 +17,7 @@ class EventLogs extends DataPage {
       models.textColumn({headerName: 'Catégorie', field: 'category'}),
       models.textColumn({headerName: 'Titre', field: 'title'}),
       models.textColumn({headerName: 'Description', field: 'description'}),
-      models.booleanColumn({headerName: 'Données', field: 'data'}),
+      models.textColumn({headerName: 'Données', field: 'data'}),
     ]
   }
 
@@ -28,7 +28,7 @@ class EventLogs extends DataPage {
   loadData = () => {
     axios.get('/myAlfred/api/admin/eventlogs')
       .then(response => {
-        let events = response.data
+        let events = response.data.map(ev => ({...ev, data: ev.data && JSON.stringify(ev.data)}))
         this.setState({data: events})
       })
       .catch(err => {
