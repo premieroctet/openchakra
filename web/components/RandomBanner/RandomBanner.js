@@ -8,7 +8,7 @@ import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   colorText: {
     color: 'white',
   },
@@ -46,6 +46,10 @@ const useStyles = makeStyles(() => ({
     minHeight: 250,
     maxHeight: 400,
     width: 200,
+    [theme.breakpoints.down('sm')]: {
+      height: 'auto',
+      minHeight: 'inherit',
+    },
   },
 
 }))
@@ -69,7 +73,7 @@ function RandomBanner(props) {
                 <Typography className={`${classes.colorText} customrandomdisplay`}>{i18n.exists(`RANDOM_BANNER_TITLE_${i}`) && ReactHtmlParser(t(`RANDOM_BANNER_TITLE_${i}`))}</Typography>
               </Grid>
               {
-                [0,1,2,3,4,5].map((val, index) => {
+                [0, 1, 2, 3, 4, 5].map((val, index) => {
                   return(
                     <>
                       <Grid container spacing={2} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`}>
