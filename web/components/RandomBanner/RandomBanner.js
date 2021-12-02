@@ -8,6 +8,7 @@ import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
 import {useTheme} from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 const useStyles = makeStyles(theme => ({
   colorText: {
@@ -55,8 +56,8 @@ function RandomBanner(props) {
   const {arrayText, loop, t, i18n} = props
   const classes = useStyles()
   const theme = useTheme()
-  const mobile = theme.breakpoints.down('md')
-
+  const mobile = useMediaQuery(theme.breakpoints.down('sm'))
+  
   return(
     <Carousel
       autoPlay={loop}
