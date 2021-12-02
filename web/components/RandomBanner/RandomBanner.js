@@ -7,6 +7,7 @@ import '../../static/assets/css/custom.css'
 import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
+import {useTheme} from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
   colorText: {
@@ -57,6 +58,8 @@ const useStyles = makeStyles(theme => ({
 function RandomBanner(props) {
   const {arrayText, loop, t, i18n} = props
   const classes = useStyles()
+  const theme = useTheme()
+  const mobile = theme.breakpoints.down('md')
 
   return(
     <Carousel
@@ -77,10 +80,10 @@ function RandomBanner(props) {
                   return(
                     <>
                       <Grid container spacing={2} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`}>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} style={{height: mobile && index === 0 ||index === 1 ? 0 : 'initial'}}>
                           <Typography className={`${classes.colorText} customrandomdisplay`}>{i18n.exists(`RANDOM_BANNER_TEXT_${i}_${index}`) && ReactHtmlParser(t(`RANDOM_BANNER_TEXT_${i}_${index}`))}</Typography>
                         </Grid>
-                        <Grid item xs={12} className={`RANDOM_BANNER_PICTURE_${i}_${index} ${classes.randompics}`}/>
+                        <Grid item xs={12} className={`RANDOM_BANNER_PICTURE_${i}_${index} ${classes.randompics}`} style={{height: mobile && index === 0 ||index === 1 ? 0 : 'initial'}}/>
                       </Grid>
                     </>
                   )
