@@ -60,23 +60,14 @@ const EventLogSchema = new Schema({
     default: Date.now,
     required: true,
   },
-  // Title
+  // Description
   description: {
     type: String,
     default: Date.now,
   },
   // Custom data if required
   data: {
-    type: {
-      custom_data: {
-        type: Buffer,
-        required: true,
-      },
-      mime_type: {
-        type: String,
-        required: true,
-      },
-    },
+    type: Schema.Types.Mixed,
     required: false,
   },
 }, {toJSON: {virtuals: true, getters: true}})

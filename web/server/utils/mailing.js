@@ -412,6 +412,17 @@ const sendB2BRegistration = (user, email, role, company, req) => {
   )
 }
 
+const sendRegisterInvitation = (admin, email, code, req) => {
+  sendNotification(
+    SIB_IDS.REGISTER_INVITATION,
+    {email: email},
+    {
+      admin_firstname: admin.firstname,
+      register_link: new URL(`/registerServices?id=${code}`, computeUrl(req)),
+    },
+  )
+}
+
 module.exports = {
   sendVerificationMail,
   sendShopDeleted,
@@ -439,4 +450,5 @@ module.exports = {
   sendB2BRegistration,
   sendBookingRefusedToAlfred,
   sendAdminsAlert,
+  sendRegisterInvitation,
 }

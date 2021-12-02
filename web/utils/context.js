@@ -1,5 +1,5 @@
-import {isAndroid, isIOS, getUA} from 'react-device-detect'
-import {setAxiosAuthentication} from './authentication'
+const {isAndroid, isIOS, getUA}=require('react-device-detect')
+const {setAxiosAuthentication}=require('./authentication')
 const isWebview = require('is-webview')
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
@@ -117,10 +117,13 @@ const isMobile = () => {
 }
 
 const ALFRED_REGISTERING = 'alfredRegistring'
+// Alred registering without invitation
+const REGISTER_WITHOUT_CODE='no_code'
 
-const setAlfredRegistering = () => {
+const setAlfredRegistering = id => {
   if(getLoggedUser() === null) {
-    return localStorage.setItem(ALFRED_REGISTERING, 'true')
+    console.log(`Registering code ${id}`)
+    return localStorage.setItem(ALFRED_REGISTERING, id || REGISTER_WITHOUT_CODE)
   }
 }
 
@@ -129,7 +132,7 @@ const removeAlfredRegistering = () => {
 }
 
 const isAlfredRegistering = () => {
-  return localStorage.getItem(ALFRED_REGISTERING) == 'true'
+  return localStorage.getItem(ALFRED_REGISTERING)
 }
 
 const getLoggedUserId = () => {
@@ -177,5 +180,5 @@ module.exports = {
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
   isLoggedUserRegistered, isIOS, isAndroid, getPartner, hideEmptyEvaluations,
-  getLoggedAs,
+  getLoggedAs, REGISTER_WITHOUT_CODE,
 }

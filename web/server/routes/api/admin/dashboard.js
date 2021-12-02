@@ -1,3 +1,5 @@
+const {getRegisterCode}=require('../../../utils/register')
+const {sendRegisterInvitation}=require('../../../utils/mailing')
 const {EDIT_PROFIL}=require('../../../../utils/i18n')
 const {hasRefs}=require('../../../utils/database')
 const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../../utils/filesystem')
@@ -331,11 +333,13 @@ router.put('/users/users/idCard/delete/:id', passport.authenticate('admin', {ses
 // @Access private
 router.delete('/users/users/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   return res.status(400).json('Ne peut supprimer un utilisateur')
+  /** TODO Check consistency before removing
   req.context.getModel('User').findById(req.params.id)
     .then(user => {
       user.remove().then(() => res.json({success: true}))
     })
     .catch(() => res.status(404).json({user: 'No user found'}))
+  */
 })
 
 // @Route GET /myAlfred/api/admin/users/alfred
@@ -510,7 +514,7 @@ router.put('/users/:user_id/admin/:admin_status', passport.authenticate('admin',
     return res.status(404).json('Statut admin true/false attendu')
   }
   if (req.params.user_id==get_logged_id(req)) {
-    return res.status(404).json("Vous ne pouvez pas vous retirer le statut d'administrateur")
+    return res.status(404).json('Vous ne pouvez pas vous retirer le statut d\'administrateur')
   }
   const set_admin = req.params.admin_status=='true'
   req.context.getModel('User').findOneAndUpdate({_id: req.params.user_id}, {is_admin: set_admin})
@@ -527,11 +531,13 @@ router.put('/users/:user_id/admin/:admin_status', passport.authenticate('admin',
 // @Access private
 router.delete('/users/admin/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   return res.status(400).json('Ne peut supprimer un administrateur')
+  /**  TODO Check consistency before removing
   req.context.getModel('User').findById(req.params.id)
     .then(user => {
       user.remove().then(() => res.json({success: true}))
     })
     .catch(() => res.status(404).json({user: 'No user found'}))
+  */
 })
 // FILTER PRESENTATION
 
@@ -1990,5 +1996,23 @@ router.get('/eventlogs', passport.authenticate('admin', {session: false}), (req,
       res.status(500).json(err)
     })
 })
+
+router.post('/register_invitation', passport.authenticate('admin', {session: false}), (req, res) => {
+  const email=req.body.email
+  console.log(`Register invitation for ${email}`)
+  if (!(email && Validator.isEmail(email))) {
+    return res.status(404).json("L'adresse email est invalide")
+  }
+  getRegisterCode(req, email)
+    .then(code => {
+      sendRegisterInvitation(req.user, email, code, req)
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
+
 
 module.exports = router
