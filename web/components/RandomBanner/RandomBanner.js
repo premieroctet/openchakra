@@ -10,13 +10,14 @@ import {makeStyles} from '@material-ui/core/styles'
 import {useTheme} from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   colorText: {
     color: 'white',
   },
   carouselStyle: {
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
     margin: 0,
     width: '100%',
   },
@@ -80,7 +81,7 @@ function RandomBanner(props) {
                 [0, 1, 2, 3, 4, 5].map((val, index) => {
                   return(
                     <>
-                      <Grid container spacing={1} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`} style={{display: mobile && index === 0 || mobile && index === 1 ? 'none' : 'inherit'}}>
+                      <Grid container spacing={1} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`} style={{display: mobile && index === 0 || mobile && index === 1 ? 'none' : 'flex'}}>
                         <Grid item xs={12} className={classes.containerTitle}>
                           <Typography className={`${classes.colorText} customrandomdisplay`} style={{display: mobile && i === 2 ? 'none' : 'inherit'}}>{i18n.exists(`RANDOM_BANNER_TEXT_${i}_${index}`) && ReactHtmlParser(t(`RANDOM_BANNER_TEXT_${i}_${index}`))}</Typography>
                         </Grid>
