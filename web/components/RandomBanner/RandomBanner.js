@@ -53,6 +53,7 @@ const useStyles = makeStyles(() => ({
   containerTitle: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
   },
 
 }))
