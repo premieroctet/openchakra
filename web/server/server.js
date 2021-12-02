@@ -3,7 +3,7 @@ const cookieParser=require('cookie-parser')
 require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]')
 
 const {is_production, is_validation, is_development, is_development_nossl, displayConfig} = require('../config/config')
-const express = require('express');
+const express = require('express')
 const next = require('next')
 const bodyParser = require('body-parser')
 const dev = process.env.NODE_DEV !== 'production' // true false

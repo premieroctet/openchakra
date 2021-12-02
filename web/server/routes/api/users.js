@@ -1,3 +1,5 @@
+const {REGISTER_WITHOUT_CODE}=require('../../../utils/context')
+const {checkRegisterCodeValidity,setRegisterCodeUsed}=require('../../utils/register')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
@@ -38,6 +40,15 @@ const uploadRegProof = createDiskMulter('static/profile/registrationProof/', IMA
 // Album picture storage
 const uploadAlbumPicture =createDiskMulter('static/profile/album/', IMAGE_FILTER)
 
+router.get('/check_register_code/:code', (req, res) => {
+  checkRegisterCodeValidity(req, req.params.code)
+    .then(result => res.json(result))
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
+
 // @Route POST /myAlfred/api/users/register
 // Register
 router.post('/register', (req, res) => {
@@ -53,16 +64,24 @@ router.post('/register', (req, res) => {
     return res.status(400).json(errors)
   }
 
+  const registerCode=req.body.is_alfred && req.body.is_alfred!=REGISTER_WITHOUT_CODE ? req.body.is_alfred : null
+
+  let user={}
   // In case of pending registration
   const user_id = req.body.user_id
-  req.context.getModel('User').findOne({email: req.body.email})
+
+  const checkCode=registerCode ? checkRegisterCodeValidity(req, registerCode) : Promise.resolve()
+  checkCode
+    .then(() => {
+      return req.context.getModel('User').findOne({email: req.body.email})
+    })
     .then(db_user => {
       if (db_user && (!user_id || db_user._id.toString()!=user_id)) {
         errors.email = EDIT_PROFIL.duplicate_email
-        return res.status(400).json(errors)
+        return Promise.reject(errors)
       }
 
-      let user = {}
+
       user.name = req.body.name
       user.gender = req.body.gender
       user.firstname = req.body.firstname
@@ -83,37 +102,41 @@ router.post('/register', (req, res) => {
       user.service_address = []
       user.last_login = []
       user.professional = req.body.company
-      user.is_alfred = req.body.is_alfred
-      bcrypt.hash(user.password, 10, (err, hash) => {
-        if (err) {
-          throw err
-        }
-        user.password = hash
-        req.context.getModel('User').create(user)
-          .then(user => {
-            createMangoClient(user)
-            sendVerificationMail(user, req)
-            // Warning si adresse incomplète
-            if (!user.billing_address.gps.lat) {
-              req.context.getModel('User').find({is_admin: true}, 'firstname email phone')
-                .then(admins => {
-                  let log_link = new URL(`/dashboard/logAsUser?email=${user.email}`, computeUrl(req))
-                  const msg=`Compléter l'adresse pour le compte ${user.email}, connexion via ${log_link}`
-                  const subject=`Alerte adresse incorrecte pour ${user.email}`
-                  admins.forEach(admin => {
-                    sendAlert(admin, subject, msg)
-                  })
-                })
-                .catch(err => {
-                  console.error(err)
-                })
-            }
-            res.json(user)
+      user.is_alfred = !!req.body.is_alfred
+      return bcrypt.hash(user.password, 10)
+
+    })
+    .then(hash => {
+      user.password = hash
+      return req.context.getModel('User').create(user)
+    })
+    .then(user => {
+      createMangoClient(user)
+      sendVerificationMail(user, req)
+      // Warning si adresse incomplète
+      if (!user.billing_address.gps.lat) {
+        req.context.getModel('User').find({is_admin: true}, 'firstname email phone')
+          .then(admins => {
+            let log_link = new URL(`/dashboard/logAsUser?email=${user.email}`, computeUrl(req))
+            const msg=`Compléter l'adresse pour le compte ${user.email}, connexion via ${log_link}`
+            const subject=`Alerte adresse incorrecte pour ${user.email}`
+            admins.forEach(admin => {
+              sendAlert(admin, subject, msg)
+            })
           })
           .catch(err => {
             console.error(err)
           })
-      })
+      }
+      if (registerCode) {
+        setRegisterCodeUsed(req, registerCode)
+          .then(result => console.log(result))
+          .catch(err => console.log(err))
+      }
+      res.json(user)
+    })
+    .catch(err => {
+      console.error(err)
     })
 })
 
@@ -140,9 +163,9 @@ router.post('/checkSMSVerification', passport.authenticate('jwt', {session: fals
   req.context.getModel('User').findById(req.user.id)
     .then(user => {
       if (user.sms_code == sms_code) {
-        console.log('Code SSMS OK pour moi')
+        console.log('Code SMS OK pour moi')
         req.context.getModel('User').findByIdAndUpdate(req.user, {sms_code: null, phone_confirmed: true})
-          .then(u => console.log('OK'))
+          .then(() => console.log('OK'))
           .catch(err => console.error(err))
         res.json({sms_code_ok: true})
       }

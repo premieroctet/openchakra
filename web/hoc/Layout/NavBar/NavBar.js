@@ -788,7 +788,7 @@ class NavBar extends Component {
               <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_messages"))}</MenuItem>
               <MenuItem onClick={() => Router.push("/reservations/reservations")}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_resa"))}</MenuItem>
               {user.is_admin ?
-                <MenuItem onClick={() => Router.push("/dashboard/home")}>{ReactHtmlParser(this.props.t("SEARCHBAR.dashboard_alfred"))}</MenuItem>
+                <MenuItem onClick={() => Router.push("/dashboard")}>{ReactHtmlParser(this.props.t("SEARCHBAR.dashboard_alfred"))}</MenuItem>
                 : null
               }
               {isB2BAdmin(user) ?
