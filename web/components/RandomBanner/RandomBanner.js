@@ -75,7 +75,7 @@ function RandomBanner(props) {
                 [0, 1, 2, 3, 4, 5].map((val, index) => {
                   return(
                     <>
-                      <Grid container spacing={2} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`} style={{display: mobile && index === 0 ||index === 1 || i === 3 ? 'none' : 'initial'}}>
+                      <Grid container spacing={2} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`} style={{display: mobile && index === 0 ||index === 1 || i === 2 ? 'none' : 'initial'}}>
                         <Grid item xs={12}>
                           <Typography className={`${classes.colorText} customrandomdisplay`}>{i18n.exists(`RANDOM_BANNER_TEXT_${i}_${index}`) && ReactHtmlParser(t(`RANDOM_BANNER_TEXT_${i}_${index}`))}</Typography>
                         </Grid>
