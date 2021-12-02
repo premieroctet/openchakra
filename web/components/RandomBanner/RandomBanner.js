@@ -47,10 +47,6 @@ const useStyles = makeStyles(theme => ({
     minHeight: 250,
     maxHeight: 400,
     width: 200,
-    [theme.breakpoints.down('sm')]: {
-      height: 'auto',
-      minHeight: 'inherit',
-    },
   },
 
 }))
@@ -79,11 +75,11 @@ function RandomBanner(props) {
                 [0, 1, 2, 3, 4, 5].map((val, index) => {
                   return(
                     <>
-                      <Grid container spacing={2} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`} style={{height: mobile && index === 0 ||index === 1 ? 0 : 'initial', padding: mobile && index === 0 ||index === 1 ? 0 : 'initial'}}>
-                        <Grid item xs={12} style={{height: mobile && index === 0 ||index === 1 ? 0 : 'initial', padding: mobile && index === 0 ||index === 1 ? 0 : 'initial'}}>
+                      <Grid container spacing={2} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`} style={{display: mobile && index === 0 ||index === 1 ? 'none' : 'initial'}}>
+                        <Grid item xs={12}>
                           <Typography className={`${classes.colorText} customrandomdisplay`}>{i18n.exists(`RANDOM_BANNER_TEXT_${i}_${index}`) && ReactHtmlParser(t(`RANDOM_BANNER_TEXT_${i}_${index}`))}</Typography>
                         </Grid>
-                        <Grid item xs={12} className={`RANDOM_BANNER_PICTURE_${i}_${index} ${classes.randompics}`} style={{height: mobile && index === 0 ||index === 1 ? 0 : 'initial', padding: mobile && index === 0 ||index === 1 ? 0 : 'initial'}}/>
+                        <Grid item xs={12} className={`RANDOM_BANNER_PICTURE_${i}_${index} ${classes.randompics}`} />
                       </Grid>
                     </>
                   )
