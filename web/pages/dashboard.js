@@ -1,7 +1,7 @@
 import axios from 'axios'
-import {isLoggedUserAdmin, isUserSuperAdmin} from '../../utils/context'
+import {isLoggedUserAdmin, isUserSuperAdmin} from '../utils/context'
 import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
 
 import Card from '@material-ui/core/Card'
@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import Router from 'next/router'
-import DashboardLayout from '../../hoc/Layout/DashboardLayout'
+import DashboardLayout from '../hoc/Layout/DashboardLayout'
 import {Link} from '@material-ui/core'
 
 const styles = () => ({
@@ -62,7 +62,7 @@ class home extends React.Component {
     const superAdmin = isUserSuperAdmin(user)
 
     return (
-      <DashboardLayout>
+      <DashboardLayout home={true}>
         <Grid container className={classes.signupContainer}>
           <Card className={classes.card}>
             <Grid container>

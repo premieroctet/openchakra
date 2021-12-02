@@ -1,15 +1,13 @@
-import {Link} from '@material-ui/core'
+import DashboardLayout from '../../hoc/Layout/DashboardLayout'
 import {deleteColumn} from '../BigList/models'
 import axios from 'axios'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import Layout from '../../hoc/Layout/Layout'
 import Router from 'next/router'
 import Paper from '@material-ui/core/Paper'
 const {BigList}=require('../../components/BigList/BigList')
 const moment = require('moment-timezone')
-import HomeIcon from '@material-ui/icons/Home'
 
 moment.locale('fr')
 const {setAxiosAuthentication} = require('../../utils/authentication')
@@ -71,16 +69,14 @@ class DataPage extends React.Component {
     const columnDefs=this.getDataType() ? [...this.getColumnDefs(), deleteColumn()] : this.getColumnDefs()
 
     return (
-      <DashboardLayout>
+      <DashboardLayout title={this.getTitle()}>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
           <Grid style={{width: '90%'}}>
             <Paper style={{width: '100%'}}>
-              <Link href='/dashboard/home' title='Retour dashboard'><HomeIcon/></Link>
               <BigList
                 data={data}
                 columnDefs={columnDefs}
                 classes={classes}
-                title={this.getTitle()}
                 onCellClicked={this._onCellClicked}
                 onAddClick={this.onAddClicked}
                 onCellEditingStopped ={this.onCellEditingStopped}

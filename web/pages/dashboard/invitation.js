@@ -39,12 +39,9 @@ class Invitation extends React.Component {
     const {classes} = this.props
 
     return (
-      <DashboardLayout>
+      <DashboardLayout title={"Invitation à s'inscrire"}>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
           <Grid style={{width: '90%'}}>
-            <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-              <Typography style={{fontSize: 30}}>Invitation à s'inscrire</Typography>
-            </Grid>
             <Paper style={{width: '100%', alignItems: 'center'}}>
               <RegisterInvitation />
             </Paper>

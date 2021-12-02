@@ -179,7 +179,7 @@ class statistics extends React.Component {
     return (
       <DashboardLayout>
         <Grid container style={{marginTop: 20, width: '90%'}}>
-          <Link href={'/dashboard/home'}>
+          <Link href={'/dashboard'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
           </Link>
         </Grid>

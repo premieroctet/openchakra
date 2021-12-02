@@ -172,7 +172,7 @@ class all extends React.Component {
     return (
       <DashboardLayout>
         <Grid container className={classes.signupContainer} style={{width:'100%'}}>
-          <Link href={'/dashboard/home'}>
+          <Link href={'/dashboard'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
           </Link>
         </Grid>

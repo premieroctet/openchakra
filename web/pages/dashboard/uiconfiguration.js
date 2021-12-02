@@ -6,8 +6,8 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
-} from '@material-ui/core';
-import isEmpty from '../../server/validation/is-empty';
+} from '@material-ui/core'
+import isEmpty from '../../server/validation/is-empty'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -246,19 +246,21 @@ class UIConfiguration extends React.Component {
     return (
       <DashboardLayout title={'Configuration UI'}>
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
-          <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
-            <CustomButton variant='outlined' onClick={this.onSubmit} disabled={!canSave}>{saveTitle}</CustomButton>
-          </Grid>
-          <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
-            <TextField placeholder={'Recherche'} name={'filter'} value={filter} onChange={this.onFilterChanged}/>
-          </Grid>
-          <Grid item style={{display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
-            <FormControlLabel
-              control={<Checkbox name={'filterEmpty'} checked={filterEmpty} onChange={this.onFilterEmptyChanged}/>}
-              label="Eléments non renseignés" />
-            <Tooltip title={"Afficher uniquement les paramètres dont la valeur n'a pas été renseignée"} >
-              <InfoIcon/>
-            </Tooltip>
+          <Grid item style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+            <Grid item style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+              <TextField placeholder={'Recherche'} name={'filter'} value={filter} onChange={this.onFilterChanged}/>
+              <Grid item style={{justifyContent: 'center', alignItems: 'center'}}>
+                <FormControlLabel
+                  control={<Checkbox name={'filterEmpty'} checked={filterEmpty} onChange={this.onFilterEmptyChanged}/>}
+                  label="Eléments non renseignés" />
+                <Tooltip title={"Afficher uniquement les paramètres dont la valeur n'a pas été renseignée"} >
+                  <InfoIcon/>
+                </Tooltip>
+              </Grid>
+            </Grid>
+            <Grid>
+              <CustomButton style={{margin: '10px'}} variant='outlined' onClick={this.onSubmit} disabled={!canSave}>{saveTitle}</CustomButton>
+            </Grid>
           </Grid>
           <Grid container style={{display: 'flex', flexDirection: 'row'}}>
             <List className={'customappbar'} classes={{root: classes.paddingList}} style={{minHeight: '100vh'}}>

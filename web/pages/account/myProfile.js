@@ -149,7 +149,7 @@ class myProfile extends CompanyComponent {
               <CustomButton
                 className={classes.button}
                 startIcon={<SettingsIcon />}
-                onClick={() => Router.push('/dashboard/home')}
+                onClick={() => Router.push('/dashboard')}
               >
                 {ReactHtmlParser(this.props.t('MY_PROFIL.dashboard_alfred'))}
               </CustomButton>
