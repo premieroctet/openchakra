@@ -60,7 +60,7 @@ function RandomBanner(props) {
 
   return(
     <Carousel
-      autoPlay={loop}
+      autoPlay={false}
       indicators={false}
       interval={is_development() ? 2000 : 6000}
       className={classes.carousel}
