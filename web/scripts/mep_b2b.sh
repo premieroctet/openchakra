@@ -32,3 +32,6 @@ mongo $database --eval 'db.tags.drop()'
 
 # Add attribute bookings.reason
 mongo $database --eval 'db.bookings.update({reason: {$exists: false}}, {$set: {reason: null}}, {multi:1})'
+
+# 938438: Remove prospect collection
+mongo $database --eval 'db.prospects.drop()'
