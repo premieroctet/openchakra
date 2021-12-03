@@ -32,3 +32,10 @@ mongo $database --eval 'db.tags.drop()'
 
 # Add attribute bookings.reason
 mongo $database --eval 'db.bookings.update({reason: {$exists: false}}, {$set: {reason: null}}, {multi:1})'
+
+#Update attribute bookings end_time => end_date && time_prestation => prestation_date
+mongo $database --eval 'db.bookings.find({end_time: {$exists: true}).forEach(function(b){const [hour, minute]= b.end_time.split(':'); b.end_date = b.end_date.set('hour', hour).set('minute', minute); db.bookings.save(b)})'
+mongo $database --eval 'db.bookings.find({time_prestation: {$exists: true}).forEach(function(b){const [day, month, year]= b.end_time.split('/');b.time_prestation = b.date_prestation.set('day', day).set('month', month).set('year', year);db.bookings.save(b)})'
+
+# Rename time_prestation => prestation_date
+mongo $database --eval 'db.bookings.update({time_prestation: {$exists: true}, {$rename: {time_prestation: prestation_date}}'
