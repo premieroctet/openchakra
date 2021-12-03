@@ -24,6 +24,7 @@ import {isEditableUser} from '../../utils/context'
 import '../../static/assets/css/custom.css'
 import Hidden from '@material-ui/core/Hidden'
 import {rgbaToHex} from '../../utils/functions'
+import Head from 'next/head'
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 
 class ProfileStatistics extends BasePage {
@@ -78,10 +79,10 @@ class ProfileStatistics extends BasePage {
 
   loadHistoYear = () => {
     const year = this.state.year
-    axios.get(`/myAlfred/api/performances/incomes/${ year}`)
+    axios.get(`/myAlfred/api/performances/incomes/${year}`)
       .then(resIncome => {
         let bookings = resIncome.data
-        axios.get(`/myAlfred/api/performances/incomes/totalComing/${ year}`)
+        axios.get(`/myAlfred/api/performances/incomes/totalComing/${year}`)
           .then(resIncomeTotal => {
             const totalComing = parseInt(resIncomeTotal.data)
             const annualIncome = bookings.reduce((total, amount) => total + amount, 0)
@@ -402,6 +403,13 @@ class ProfileStatistics extends BasePage {
 
     return (
       <React.Fragment>
+        <Head>
+          <title>{user ? user.full_name : 'Statistiques'}</title>
+          <meta property="og:description" content={user ? user.firstname : '' }/>
+          <meta property="description" content={user ? user.firstname : ''}/>
+          <meta property="og:type" content="website"/>
+          <meta property="og:url" content="https://my-alfred.io"/>
+        </Head>
         <Hidden only={['xs']}>
           <ProfileLayout user={user}>
             {this.content(classes, user, theme)}

@@ -104,6 +104,11 @@ const BookingSchema = new Schema({
     type: String,
     enum: Object.values(BOOK_STATUS),
   },
+  // Cancel/refuse reason
+  reason: {
+    type: String,
+    required: false,
+  },
   serviceUserId: {
     type: String,
   },
@@ -205,6 +210,13 @@ BookingSchema.virtual('date_prestation_moment').get(function() {
   return moment(`${moment(this.prestation_date, 'DD/MM/YYYY').format('YYYY-MM-DD') } ${ moment(this.prestation_date).format('HH:mm')}`)
 })
 
+BookingSchema.virtual('end_prestation_moment').get(function() {
+  if (!this.end_date) {
+    return null
+  }
+  const [hour, minute]=this.end_time.split(':')
+  return moment(this.end_date).set('hour', hour).set('minute', minute)
+})
 
 BookingSchema.virtual('calendar_display').get(function() {
   if (!this.status) {

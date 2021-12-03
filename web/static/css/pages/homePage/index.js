@@ -67,11 +67,14 @@ export default theme => ({
   howItWorksComponent: {
     justifyContent: 'center',
     marginTop: '2%',
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
-    minHeight: 300,
+    minHeight: 500,
+    [theme.breakpoints.down('xs')]: {
+      height: 'auto',
+    },
   },
   howItWorksComponentB2b: {
     justifyContent: 'center',

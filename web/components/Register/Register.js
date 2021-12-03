@@ -293,6 +293,7 @@ class Register extends React.Component {
       lng: this.state.lng,
       user_id: this.props.user_id,
       company: this.state.company,
+      is_alfred: isAlfredRegistering(),
     }
 
     const username = this.state.email

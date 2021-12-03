@@ -130,16 +130,12 @@ class LogAsUser extends BasePage {
     const logEnabled = user && (roles.length==0 || role)
 
     return (
-      <DashboardLayout>
+      <DashboardLayout title={this.props.t('DASHBOARD.logAs')}>
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid>
-              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>Maintenance</Typography>
-              </Grid>
               <form onSubmit={this.onSubmit}>
                 <Grid item style={{width: '100%'}}>
-                  <Typography style={{fontSize: 20}}>Se connecter en tant que</Typography>
                   <Select
                     input={<Input name="user" id="genre-label-placeholder"/>}
                     displayEmpty

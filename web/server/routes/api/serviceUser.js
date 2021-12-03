@@ -1,3 +1,4 @@
+const {logEvent}=require('../../utils/events')
 const {sendAdminsAlert} =require('../../utils/mailing')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
 const express = require('express')
@@ -9,12 +10,11 @@ const geolib = require('geolib')
 const _ = require('lodash')
 const moment = require('moment')
 const {data2ServiceUser} = require('../../utils/mapping')
-const {emptyPromise} = require('../../../utils/promise')
 const serviceFilters = require('../../utils/filters')
-const {GID_LEN, PRO, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
+const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
 const {normalize} = require('../../../utils/text')
-const parse = require('url-parse')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
+const parse = require('url-parse')
 
 moment.locale('fr')
 
@@ -132,7 +132,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
         professional_access: req.body.professional_access,
       }))
 
-      const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : emptyPromise({insertedIds: []})
+      const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : Promise.resolve({insertedIds: []})
       r
         .then(result => {
           let insertedPrestations=result
@@ -150,6 +150,10 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
           const promise = req.params.serviceuser_id ? req.context.getModel('ServiceUser').findByIdAndUpdate(su._id, su, {new: true}) : req.context.getModel('ServiceUser').create(su)
           promise
             .then(su => {
+              req.context.getModel('Service').findById(su.service, 'label')
+                .then(service => {
+                  logEvent(req, 'Boutique', `${req.params.serviceuser_id ? 'Modification': 'Ajout'} de service`, `Service ${service.label}`)
+                })
               if (req.params.serviceuser_id) {
                 return res.json(su)
               }
@@ -778,6 +782,46 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
     }))
 })
 
+// @Route GET /myAlfred/api/serviceUser/keywords/:mode
+// Returns all keywords for services
+// mode : PRO ou PART
+// @Access public
+router.get('/keywords/:mode', (req, res) => {
+  const mode=req.params.mode
+  if (![PRO, PART].includes(mode)) {
+    return res.status(400).json(`Mode ${mode} inconnu, ${PRO} ou ${PART} attendu`)
+  }
+  const filter_att=mode==PART ? "particular_access" : "professional_access"
+  const filter={[filter_att]: true}
+  const label_att=mode==PART ? "s_particular_label" : "s_professional_label"
+
+  const promises=[
+    req.context.getModel('Category').find({}, `${label_att} description`),
+    req.context.getModel('Service').find(filter, 's_label description'),
+    req.context.getModel('Prestation').find(filter, 's_label description'),
+    req.context.getModel('ServiceUser').find(filter, 'description'),
+    req.context.getModel('Job').find({}, 's_label'),
+  ]
+  Promise.all(promises.map(p => p.lean()))
+    .then(result => {
+      // One array only
+      result = [].concat(...result)
+      // Attribute valkues to one string only
+      result = result.map(r => {delete r._id; return Object.values(r).join(' ')}).join(' ')
+      // normalize
+      result = normalize(result)
+      // Keep only [a-z]
+      result = result.toLowerCase().replace(/[^a-zA-Z]+/g, " ")
+      result = result.split(' ')
+      result = _.uniq(result).filter(e => e && e.length>2).sort()
+      res.json(result)
+    })
+    .catch (err => {
+      console.error(err)
+      res.json([])
+    })
+})
+
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser
 // @Access private
@@ -911,37 +955,33 @@ router.delete('/current/allServices', passport.authenticate('jwt', {
       })
 
     })
-    .catch(err => res.status(404).json({
-      servicenotfound: 'No service found',
-    }))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
 })
 
 // @Route DELETE /myAlfred/api/serviceUser/:id
 // Delete a service for an alfred
 // @Access private
-router.delete('/:id', passport.authenticate('jwt', {
-  session: false,
-}), (req, res) => {
+router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('ServiceUser').findById(req.params.id)
-    .then(event => {
-      event.remove().then(() => {
-        req.context.getModel('Shop').findOne({
-          alfred: req.user.id,
-        })
+    .populate('service', 'label')
+    .then(serviceuser => {
+      logEvent(req, 'Boutique', 'Suppression de service', `Service ${serviceuser.service.label}`)
+      serviceuser.remove().then(() => {
+        req.context.getModel('Shop').findOne({alfred: req.user.id})
           .then(shop => {
-            const removeIndex = shop.services
-              .indexOf(req.params.id)
-
+            const removeIndex = shop.services.indexOf(req.params.id)
             shop.services.splice(removeIndex, 1)
-
-
             shop.save().then(newShop => res.json(newShop)).catch(err => console.error(err))
           })
       })
     })
-    .catch(err => res.status(404).json({
-      eventnotfound: 'No event found',
-    }))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
 })
 
 

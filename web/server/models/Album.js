@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const AlbumSchema = new Schema({
+  /*
   // Album name
   label: {
     type: String,
@@ -12,6 +13,7 @@ const AlbumSchema = new Schema({
     type: String,
     required: true,
   },
+  */
   creation_date: {
     type: Date,
     required: true,
@@ -22,9 +24,9 @@ const AlbumSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  pictures: [{
-    path: String,
-  }],
+  pictures: {
+    type: [String],
+  },
 })
 
 module.exports = AlbumSchema

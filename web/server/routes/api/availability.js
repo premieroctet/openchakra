@@ -1,31 +1,28 @@
-const express = require('express');
-const router = express.Router();
-const passport = require('passport');
-const moment = require('moment');
-const {availability2eventUI, eventUI2availability} = require('../../../utils/converters');
-const mongoose = require('mongoose');
-const {isIntervalAvailable} = require('../../../utils/dateutils');
-const validateAvailability = require('../../validation/availability');
-const parse = require('url-parse')
-const {emptyPromise} = require('../../../utils/promise')
+const express = require('express')
+const router = express.Router()
+const passport = require('passport')
+const moment = require('moment')
+const mongoose = require('mongoose')
+const {isIntervalAvailable} = require('../../../utils/dateutils')
+const validateAvailability = require('../../validation/availability')
 const {getAvailabilityForDate, combineTimelapses} = require('../../../utils/dateutils')
-moment.locale('fr');
-router.get('/test', (req, res) => res.json({msg: 'Availability Works!'}));
+moment.locale('fr')
+router.get('/test', (req, res) => res.json({msg: 'Availability Works!'}))
 
 // @Route POST /myAlfred/api/availability/addRecurrent
 // add a recurrent availability for current user
 // access private
-router.post('/addRecurrent',passport.authenticate('jwt',{session: false}),(req,res)=> {
+router.post('/addRecurrent', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  const { isValid, errors } = validateAvailability(req.body, true);
+  const {isValid, errors} = validateAvailability(req.body, true)
 
   if (!isValid) {
-      return res.status(400).json(errors);
+    return res.status(400).json(errors)
   }
 
-  const promise = req.body._id ? req.context.getModel('Availability').findOne({_id : req.body._id}) : emptyPromise({})
+  const promise = req.body._id ? req.context.getModel('Availability').findOne({_id: req.body._id}) : Promise.resolve({})
   promise
-    .then( avail => {
+    .then(avail => {
       avail.user = req.user.id
       avail.period = {
         begin: req.body.startDate,
@@ -44,36 +41,36 @@ router.post('/addRecurrent',passport.authenticate('jwt',{session: false}),(req,r
         .catch(err => {
           console.error(err)
           res.status(400).json(err)
-        });
+        })
 
     })
-});
+})
 
 // @Route POST /myAlfred/api/availability/addPunctual
 // add a recurrent availability for current user
 // access private
 router.post('/addPunctual', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  //SAVE FROM TIMELAPSE [true, false, nul, true, true, false, false, false] => Set() union avec existant
+  // SAVE FROM TIMELAPSE [true, false, nul, true, true, false, false, false] => Set() union avec existant
 
   console.log(`Adding punctual : ${JSON.stringify(req.body)}`)
-  const { isValid, errors } = validateAvailability(req.body, false);
+  const {isValid, errors} = validateAvailability(req.body, false)
 
   if (!isValid) {
-      return res.status(400).json(errors);
+    return res.status(400).json(errors)
   }
 
-  req.context.getModel('Availability').find({ user: req.user.id, punctual: { "$ne": null} })
+  req.context.getModel('Availability').find({user: req.user.id, punctual: {'$ne': null}})
     .then(availabilities => {
-      Array(...req.body.punctuals).forEach( punctual => {
-        var avail=getAvailabilityForDate(moment(punctual), availabilities)
+      Array(...req.body.punctuals).forEach(punctual => {
+        let avail=getAvailabilityForDate(moment(punctual), availabilities)
         if (!avail) {
           avail = {
-            user:req.user.id,
+            user: req.user.id,
             period: undefined,
             punctual: punctual,
             available: false,
-            timelapses: []
+            timelapses: [],
           }
         }
         avail.available = req.body.available
@@ -87,11 +84,11 @@ router.post('/addPunctual', passport.authenticate('jwt', {session: false}), (req
             else if (value==false) {
               tl.delete(idx)
             }
-          });
+          })
           avail.timelapses=[...tl]
         }
         else {
-            avail.timelapses=[]
+          avail.timelapses=[]
         }
 
         const promiseSave = avail._id ? avail.save() : req.context.getModel('Availability').create(avail)
@@ -100,172 +97,173 @@ router.post('/addPunctual', passport.authenticate('jwt', {session: false}), (req
             console.log(`Saved punctual availability ${JSON.stringify(availability)}`)
           })
           .catch(err => {
-            console.error(err);
-          });
+            console.error(err)
+          })
       })
     })
-    res.json('Ok')
-});
+  res.json('Ok')
+})
 
 // @Route POST /myAlfred/api/availability/update
 // update an availability for one user
 // access private
 router.post('/update', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  const newAvailability = new Availability({user: req.user.id, ...req.body});
+  const newAvailability = new Availability({user: req.user.id, ...req.body})
   newAvailability.delete()
     .then(availability => {
       availability.save()
         .then(availability => {
-          res.json(availability);
+          res.json(availability)
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 
 router.get('/userAvailabilities', (req, res) => {
   req.context.getModel('Availability').find()
     .then(availabilities => {
-      res.json(availabilities);
+      res.json(availabilities)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 // @Route GET /myAlfred/api/availability/userAvailabilities/:id
 // Get all availability for one user
 router.get('/userAvailabilities/:id', (req, res) => {
   req.context.getModel('Availability').find({user: req.params.id})
     .then(availability => {
-      res.json(availability);
+      res.json(availability)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 // @Route POST /myAlfred/api/availability/check
 // Checks availabilities fouseravatarr serviceusers between start and end
 // Returns available serviceUser ids
 router.post('/check', (req, res) => {
-  const start = moment(req.body.start * 1000);
-  const end = moment(req.body.end * 1000);
-  const serviceUserIds = req.body.serviceUsers;
+  const start = moment(req.body.start * 1000)
+  const end = moment(req.body.end * 1000)
+  const serviceUserIds = req.body.serviceUsers
 
   req.context.getModel('ServiceUser').find({_id: {$in: serviceUserIds.map(su => mongoose.Types.ObjectId(su))}}, 'user service')
     .then(serviceUsers => {
       req.context.getModel('Availability').find({user: {$in: serviceUsers.map(su => mongoose.Types.ObjectId(su.user))}})
         .then(availabilities => {
 
-          var filtered = [];
+          let filtered = []
           serviceUsers.forEach(su => {
             if (isIntervalAvailable(start, end, su.service, availabilities.filter(a => a.user.toString() === su.user.toString()))) {
-              filtered.push(su._id);
+              filtered.push(su._id)
             }
-          });
-          res.json(filtered);
+          })
+          res.json(filtered)
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route GET /myAlfred/api/availability/currentAlfred
 // Get all availabilities for current user
 router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
   req.context.getModel('Availability').find({user: req.user.id})
     .then(availability => {
-      res.json(availability);
+      res.json(availability)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 // @Route POST /myAlfred/api/availability/home/date
 // Return availability for a date
 router.post('/home/date', (req, res) => {
-  const allAvailability = [];
-  const dateBegin = req.body.begin;
-  const beginDay = req.body.beginDay;
-  let newBeginDay;
+  const allAvailability = []
+  const dateBegin = req.body.begin
+  const beginDay = req.body.beginDay
+  let newBeginDay
   switch (beginDay) {
     case 'lundi':
-      newBeginDay = beginDay.replace(beginDay, 'monday');
-      break;
+      newBeginDay = beginDay.replace(beginDay, 'monday')
+      break
     case 'mardi':
-      newBeginDay = beginDay.replace(beginDay, 'tuesday');
-      break;
+      newBeginDay = beginDay.replace(beginDay, 'tuesday')
+      break
     case 'mercredi':
-      newBeginDay = beginDay.replace(beginDay, 'wednesday');
-      break;
+      newBeginDay = beginDay.replace(beginDay, 'wednesday')
+      break
     case 'jeudi':
-      newBeginDay = beginDay.replace(beginDay, 'thursday');
-      break;
+      newBeginDay = beginDay.replace(beginDay, 'thursday')
+      break
     case 'vendredi':
-      newBeginDay = beginDay.replace(beginDay, 'friday');
-      break;
+      newBeginDay = beginDay.replace(beginDay, 'friday')
+      break
     case 'samedi':
-      newBeginDay = beginDay.replace(beginDay, 'saturday');
-      break;
+      newBeginDay = beginDay.replace(beginDay, 'saturday')
+      break
     case 'dimanche':
-      newBeginDay = beginDay.replace(beginDay, 'sunday');
-      break;
+      newBeginDay = beginDay.replace(beginDay, 'sunday')
+      break
   }
   req.context.getModel('Availability').find()
     .then(availability => {
       availability.forEach(e => {
         if (!e.period.active && e[newBeginDay].event.length) {
-          allAvailability.push(e);
-        } else {
-          let begin = e.period.month_begin;
-          let end = e.period.month_end;
-          const betweenBegin = moment(dateBegin).isBetween(begin, end);
+          allAvailability.push(e)
+        }
+        else {
+          let begin = e.period.month_begin
+          let end = e.period.month_end
+          const betweenBegin = moment(dateBegin).isBetween(begin, end)
           if (betweenBegin && e[newBeginDay].event.length) {
-            allAvailability.push(e);
+            allAvailability.push(e)
           }
         }
-      });
-      res.json(allAvailability);
+      })
+      res.json(allAvailability)
     })
-    .catch(err => console.error(err));
-});
+    .catch(err => console.error(err))
+})
 
 // @Route GET /myAlfred/api/availability/all
 // Get all availability for one user
 router.get('/all', (req, res) => {
   req.context.getModel('Availability').find({})
     .then(availability => {
-      res.json(availability);
+      res.json(availability)
     })
     .catch(err => {
-      console.error(err);
-    });
-});
+      console.error(err)
+    })
+})
 
 // @Route GET /myAlfred/api/availability/date?date=...&date=...
 // Delete one availability
 router.post('/dates', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   const dates=req.body.dates
-  req.context.getModel('Availability').find({ user: req.user.id })
+  req.context.getModel('Availability').find({user: req.user.id})
     .then(availabilities => {
-      var result=dates.map( dt =>  getAvailabilityForDate(moment(dt), availabilities))
-      result=result.filter( e => e)
+      let result=dates.map(dt => getAvailabilityForDate(moment(dt), availabilities))
+      result=result.filter(e => e)
       const timelapses=combineTimelapses(result)
       const availability={
-        available: result.map(a => a.available).reduce( (acc, value) => acc || value, false),
+        available: result.map(a => a.available).reduce((acc, value) => acc || value, false),
         timelapses: timelapses,
       }
       res.json(availability)
     })
     .catch(err => {
-      console.error(err);
+      console.error(err)
     })
-});
+})
 
 
 // @Route GET /myAlfred/api/availability/:id
@@ -273,17 +271,17 @@ router.post('/dates', passport.authenticate('jwt', {session: false}), (req, res)
 router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   req.context.getModel('Availability').findById(req.params.id)
-    //.populate({path:'monday.event.services',populate:{path: 'value'}})
-    //.populate({path:'tuesday.event.services',populate:{path: 'value'}})
+    // .populate({path:'monday.event.services',populate:{path: 'value'}})
+    // .populate({path:'tuesday.event.services',populate:{path: 'value'}})
     .then(availability => {
-      res.json(availability);
+      res.json(availability)
     })
     .catch(err => {
-      console.error(err);
-    });
+      console.error(err)
+    })
 
 
-});
+})
 
 // @Route PUT /myAlfred/api/availability/:id
 // edit an availability
@@ -292,23 +290,23 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 
   req.context.getModel('Availability').findById(req.params.id)
     .then(fields => {
-      fields.monday.event = req.body.monday_event;
-      fields.tuesday.event = req.body.tuesday_event;
-      fields.wednesday.event = req.body.wednesday_event;
-      fields.thursday.event = req.body.thursday_event;
-      fields.friday.event = req.body.friday_event;
-      fields.saturday.event = req.body.saturday_event;
-      fields.sunday.event = req.body.sunday_event;
-      fields.period = {};
-      fields.period.active = req.body.active;
-      fields.period.month_begin = req.body.month_begin;
-      fields.period.month_end = req.body.month_end;
+      fields.monday.event = req.body.monday_event
+      fields.tuesday.event = req.body.tuesday_event
+      fields.wednesday.event = req.body.wednesday_event
+      fields.thursday.event = req.body.thursday_event
+      fields.friday.event = req.body.friday_event
+      fields.saturday.event = req.body.saturday_event
+      fields.sunday.event = req.body.sunday_event
+      fields.period = {}
+      fields.period.active = req.body.active
+      fields.period.month_begin = req.body.month_begin
+      fields.period.month_end = req.body.month_end
 
-      fields.save().then(availability => res.json(availability)).catch(err => console.error(err));
+      fields.save().then(availability => res.json(availability)).catch(err => console.error(err))
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error(err))
 
-});
+})
 
 
 // @Route DELETE /myAlfred/api/availability/currentAlfred
@@ -317,14 +315,14 @@ router.delete('/currentAlfred', passport.authenticate('jwt', {session: false}), 
 
   req.context.getModel('Availability').deleteMany({user: req.user.id})
     .then(() => {
-      res.json({success: true});
+      res.json({success: true})
     })
     .catch(err => {
-      console.error(err);
-    });
+      console.error(err)
+    })
 
 
-});
+})
 
 // @Route DELETE /myAlfred/api/availability/:id
 // Delete one availability
@@ -339,9 +337,9 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
         })
     })
     .catch(err => {
-        console.error(err);
+      console.error(err)
     })
-});
+})
 
 
-module.exports = router;
+module.exports = router

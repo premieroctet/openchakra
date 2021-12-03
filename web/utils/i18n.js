@@ -37,8 +37,6 @@ const INFOBAR = {
   randomTextC: 'aurevoir',
 }
 
-
-
 const INFOBARMOBILE = {
   message: "L'application MyAlfred est disponible au téléchargement sur :",
 }
@@ -93,6 +91,7 @@ const EVALUATE = {
   your_commentary: 'Votre commentaire',
   back_button: 'Retour',
   confirm_button: 'Terminé',
+  warning_message: 'Avant publication, les commentaires seront modérés par l\'équipe All Inclusive.',
 }
 
 const EVALUATE_CLIENT = {
@@ -195,6 +194,7 @@ const BOOKING_DETAIL = {
   will_total: ' Total à percevoir',
   cesu: 'dont CESU',
   company: 'dont participation entreprise',
+  service_cost_link: '',
 }
 
 const BUTTON_SWITCH = {
@@ -621,6 +621,11 @@ const LAYOUT_ABOUT = {
 const EDIT_PROFIL = {
   email_send: 'Mail envoyé',
   error_email: 'email non envoyé',
+  duplicate_email: 'Un compte avec cet email existe déjà',
+  empty_firstname: 'Le prénom est requis',
+  empty_name: 'Le nom est requis',
+  empty_phone: 'Le numéro de téléphone est requis',
+  invalid_phone: 'Le numéro de téléphone est invalide',
   sms_send: 'Le SMS a été envoyé',
   sms_error: "Impossible d'envoyer le SMS",
   validate_phone: 'Votre numéro de téléphone est validé',
@@ -1211,16 +1216,19 @@ const INDEX = {
   dialog_store: 'Application MyAlfred',
   store_available: 'Notre application est disponible sur ',
   download_button: 'Télécharger',
+  first_content_title: 'Les avantages All-e',
   first_content: '',
   second_content: '',
   third_content: '',
   four_content: '',
   five_content: '',
+  second_content_title: '',
   six_content: '',
   seven_content: '',
   eight_content: '',
   nine_content: '',
   ten_content: '',
+  third_content_title: '',
   eleven_content: '',
   twelve_content: '',
   thirteen_content: '',
@@ -1419,6 +1427,8 @@ const AVOCOTES = {
 
 const BOOKING = {
   MSG_EVALUATE: 'Vous avez 15 jours pour évaluer votre client. Une fois que votre client aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !',
+  ADD_GOOGLE_AGENDA: "Ajouter à l'agenda Google",
+  ADD_OTHER_AGENDA: 'Ajouter à un autre agenda',
   payment_no_finish: 'Paiement non réalisé',
   payment_title: 'Paiement',
   payment_if_accept: 'Paiement si acceptation',

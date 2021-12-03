@@ -10,7 +10,7 @@ import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
 import Switch from '@material-ui/core/Switch'
 import {snackBarSuccess} from '../../utils/notifications'
-import {Helmet} from 'react-helmet'
+import Head from 'next/head'
 import styles from '../../static/css/pages/account/notifications/notifications'
 import LayoutAccount from '../../hoc/Layout/LayoutAccount'
 import Typography from '@material-ui/core/Typography'
@@ -580,11 +580,11 @@ class notifications extends React.Component {
 
     return (
       <React.Fragment>
-        <Helmet>
+        <Head>
           <title>Mes paramètres-Notifications-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
-        </Helmet>
+        </Head>
         <Grid className={classes.containerLayoutAccount}>
           <LayoutAccount>
             {this.content(classes)}

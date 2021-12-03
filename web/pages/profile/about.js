@@ -1,3 +1,4 @@
+import Album from '../../components/Album/Album'
 import {isEditableUser} from '../../utils/context'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
@@ -42,6 +43,7 @@ import ShowDiploma from '../../components/ShowDiploma/ShowDiploma'
 import ShowCertification from '../../components/ShowCertification/ShowCertification'
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 import {ABOUT} from '../../utils/i18n'
+import Head from 'next/head'
 
 const moment=require('moment')
 
@@ -494,7 +496,7 @@ class ProfileAbout extends CompanyComponent {
           </Grid> : null
         }
         { false ?
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.aboutHastagsContainer}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.aboutHashtagsContainer}>
             <Box>
               <Hashtags user={user} />
             </Box>
@@ -511,7 +513,11 @@ class ProfileAbout extends CompanyComponent {
             </Grid>
             : null
         }
-
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Box>
+            <Album user={this.getURLProps().user}/>
+          </Box>
+        </Grid>
       </Grid>
     )
   };
@@ -527,6 +533,13 @@ class ProfileAbout extends CompanyComponent {
 
     return (
       <React.Fragment>
+        <Head>
+          <title>{alfred ? alfred.full_name : 'Profil'}</title>
+          <meta property="og:description" content={alfred ? alfred.firstname : ''}/>
+          <meta property="description" content={alfred ? alfred.firstname : ''}/>
+          <meta property="og:type" content="website"/>
+          <meta property="og:url" content="https://my-alfred.io"/>
+        </Head>
         <Grid className={classes.profileLayoutContainer}>
           <ProfileLayout user={user}>
             {this.content(classes, user, alfred)}

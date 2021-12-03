@@ -67,13 +67,11 @@ class View extends BasePage {
       current_billing: [],
       current_filter_presentation: '',
       current_job: null,
-      current_tags: [],
       all_category: [],
       all_service: [],
       all_billing: [],
       all_job: [],
       all_filter_presentation: [],
-      all_tags: [],
       category: '',
       service: '',
       billing: '',
@@ -81,14 +79,11 @@ class View extends BasePage {
       filter_presentation: '',
       job: '',
       description: '',
-      tags: [],
-      selectedTags: null,
       selectedBilling: null,
       companies: [],
       errors: {},
     }
     this.handleClick = this.handleClick.bind(this)
-    this.handleChangeTags = this.handleChangeTags.bind(this)
     this.handleChangeBilling = this.handleChangeBilling.bind(this)
   }
 
@@ -103,20 +98,13 @@ class View extends BasePage {
           prestation: prestation, current_service: prestation.service,
           current_billing: prestation.billing, current_category: prestation.category,
           current_job: prestation.job, current_filter_presentation: prestation.filter_presentation,
-          current_tags: prestation.tags, cesu_eligible: prestation.cesu_eligible,
+          cesu_eligible: prestation.cesu_eligible,
         })
         this.setState({
           service: prestation.service._id,
           billing: prestation.billing._id,
           filter_presentation: prestation.filter_presentation ? prestation.filter_presentation._id : null,
           job: prestation.job ? prestation.job._id : '',
-        })
-
-        this.setState({
-          selectedTags: this.state.current_tags.map(b => ({
-            label: b.label,
-            value: b._id,
-          })),
         })
 
         this.setState({
@@ -172,15 +160,6 @@ class View extends BasePage {
         let filter_presentation = response.data
         this.setState({all_filter_presentation: filter_presentation})
       }).catch(error => {
-        console.log(error)
-      })
-
-    axios.get('/myAlfred/api/admin/tags/all')
-      .then(response => {
-        let tags = response.data
-        this.setState({all_tags: tags})
-      })
-      .catch(error => {
         console.log(error)
       })
 
@@ -244,33 +223,19 @@ class View extends BasePage {
     this.setState({prestation: prestation})
   }
 
-  handleChangeTags = selectedTags => {
-    this.setState({selectedTags})
-
-  };
-
   handleChangeBilling = selectedBilling => {
     this.setState({selectedBilling})
-
   };
 
   onSubmit = e => {
     e.preventDefault()
-    let arrayTags = []
     let arrayBilling = []
-
-    if (this.state.selectedTags != null) {
-      this.state.selectedTags.forEach(w => {
-        arrayTags.push(w.value)
-      })
-    }
 
     if (this.state.selectedBilling != null) {
       this.state.selectedBilling.forEach(w => {
         arrayBilling.push(w.value)
       })
     }
-    const tags = arrayTags
     const service = this.state.service
     const billing = arrayBilling
     const job = this.state.job
@@ -284,7 +249,7 @@ class View extends BasePage {
 
     axios.put(`/myAlfred/api/admin/prestation/all/${id}`, {
       label, price, billing, service, filter_presentation,
-      job, description, tags, cesu_eligible, particular_access, professional_access,
+      job, description, cesu_eligible, particular_access, professional_access,
       private_company, order, company_price,
     })
       .then(() => {
@@ -323,12 +288,7 @@ class View extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {prestation, all_service, all_billing, all_filter_presentation, all_job, all_tags, companies} = this.state
-
-    const optionsTags = all_tags.map(tag => ({
-      label: tag.label,
-      value: tag._id,
-    }))
+    const {prestation, all_service, all_billing, all_filter_presentation, all_job, companies} = this.state
 
     const optionsBilling = all_billing.map(billing => ({
       label: billing.label,
@@ -362,7 +322,7 @@ class View extends BasePage {
                   checked={this.state.cesu_eligible}
                   onChange={this.onCesuChange}
                 />
-                <Typography>Eligible au CESU</Typography>
+                <Typography>Eligible au CESU/crédit d'impôt</Typography>
               </Grid>
               <Grid item style={{marginTop: 20}}>
                 <Typography style={{fontSize: 20}}>Prix moyen</Typography>
@@ -552,22 +512,6 @@ class View extends BasePage {
                   </FormControl>
                 </Grid>
               }
-              <Grid item style={{width: '100%', marginTop: 20}}>
-                <Typography style={{fontSize: 20}}>Tags</Typography>
-                <FormControl className={classes.formControl} style={{width: '100%'}}>
-                  <Select2
-                    value={this.state.selectedTags}
-                    onChange={this.handleChangeTags}
-                    options={optionsTags}
-                    isMulti
-                    isSearchable
-                    closeMenuOnSelect={false}
-
-                  />
-                </FormControl>
-              </Grid>
-
-
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                 <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                   Modifier

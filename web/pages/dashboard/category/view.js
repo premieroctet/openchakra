@@ -3,11 +3,9 @@ import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Card from '@material-ui/core/Card'
-import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import Router from 'next/router'
-import Select2 from 'react-select'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
@@ -53,11 +51,7 @@ class View extends BasePage {
     this.state = {
       category: {particular_label: '', professional_label: ''},
       label: '',
-      tags: [],
       description: '',
-      all_tags: [],
-      current_tags: [],
-      selectedTags: null,
       particular_id: null,
       particular_file: null,
       particular_ext: null,
@@ -67,7 +61,6 @@ class View extends BasePage {
     }
 
     this.handleClick = this.handleClick.bind(this)
-    this.handleChangeTags = this.handleChangeTags.bind(this)
     this.onParticularImageChange=this.onParticularImageChange.bind(this)
     this.onProfessionalImageChange=this.onProfessionalImageChange.bind(this)
   }
@@ -88,14 +81,7 @@ class View extends BasePage {
     axios.get(`/myAlfred/api/admin/category/all/${id}`)
       .then(response => {
         let category = response.data
-        this.setState({category: category, current_tags: category.tags})
-        this.setState({
-          selectedTags: this.state.current_tags.map(b => ({
-            label: b.label,
-            value: b._id,
-          })),
-        })
-
+        this.setState({category: category})
       })
       .catch(err => {
         console.error(err)
@@ -103,15 +89,6 @@ class View extends BasePage {
           clearAuthenticationToken()
           Router.push({pathname: '/login'})
         }
-      })
-
-    axios.get('/myAlfred/api/admin/tags/all')
-      .then(response => {
-        let tags = response.data
-        this.setState({all_tags: tags})
-      })
-      .catch(error => {
-        console.error(error)
       })
   }
 
@@ -126,11 +103,6 @@ class View extends BasePage {
     const state = this.state.category
     state[name]=checked
     this.setState({category: state})
-  }
-
-  handleChangeTags = selectedTags => {
-    this.setState({selectedTags})
-
   }
 
   onParticularImageChange = e => {
@@ -164,20 +136,11 @@ class View extends BasePage {
       return
     }
 
-    let arrayTags = []
-    if (this.state.selectedTags != null) {
-      this.state.selectedTags.forEach(w => {
-        arrayTags.push(w.value)
-      })
-    }
-
-    const tags = arrayTags
     const id = this.getURLProps().id
     const data={
       'particular_label': particular_label,
       'professional_label': professional_label,
       'description': description,
-      'tags': tags,
     }
 
     axios.put(`/myAlfred/api/admin/category/all/${id || ''}`, data)
@@ -227,11 +190,7 @@ class View extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {category, all_tags} = this.state
-    const optionsTags = all_tags.map(tag => ({
-      label: tag.label,
-      value: tag._id,
-    }))
+    const {category} = this.state
 
     return (
       <DashboardLayout>
@@ -265,20 +224,6 @@ class View extends BasePage {
                     value={category.professional_label}
                     onChange={this.onChange}
                   />
-                </Grid>
-                <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Tags</Typography>
-                  <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <Select2
-                      value={this.state.selectedTags}
-                      onChange={this.handleChangeTags}
-                      options={optionsTags}
-                      isMulti
-                      isSearchable
-                      closeMenuOnSelect={false}
-
-                    />
-                  </FormControl>
                 </Grid>
                 <Grid item style={{marginTop: 20}}>
                   <Typography style={{fontSize: 20}}>Description</Typography>

@@ -27,7 +27,7 @@ const createRegExpAND = str => {
   str = escapeText(normalize(str)).split(/ |'/g)
   // Remove articles
   str = str.filter(s => !ARTICLES.includes(s))
-  const regexp = new RegExp(str.map(s => `(?=.*\\b${s}\\b)`).join(''), 'i')
+  const regexp = new RegExp(str.map(s => `(?=.*${s})`).join(''), 'i')
   return regexp
 }
 
@@ -148,14 +148,17 @@ const insensitiveComparator = (a,b) => {
   return (a||'').localeCompare(b, 'fr')
 }
 
-const isMobilePhone= number => {
-  if (!number) {
-    return false
-  }
-  const MOBILE_RE=/^(0|\+?33)[67]\d{8}$/
-  number = number.toString().trim()
-  const res= MOBILE_RE.test(number)
-  return res
+const getWordAt = (text, position) => {
+  const patBefore=/\w*$/
+  const patAfter=/^\w*/
+  const before=text.substring(0, position)
+  const after=text.substring(position)
+  const matchBefore=before.match(patBefore)[0]
+  const matchAfter=after.match(patAfter)[0]
+  const start=position-matchBefore.length
+  const end=position+matchAfter.length
+  const length=end-start
+  return {start: start, end: end, word: matchBefore+matchAfter}
 }
 
 const computeBookingReference = (user, alfred) => {
@@ -183,7 +186,7 @@ module.exports = {
   compute_vat_number,
   isSiretSirenLength,
   insensitiveComparator,
-  isMobilePhone,
   computeBookingReference,
   capitalize,
+  getWordAt,
 }

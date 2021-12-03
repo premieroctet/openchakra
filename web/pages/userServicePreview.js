@@ -1,3 +1,5 @@
+import Album from '../components/Album/Album'
+import {Divider, Link} from '@material-ui/core'
 const {
   getDeadLine,
   isDateAvailable,
@@ -22,7 +24,7 @@ import Hidden from '@material-ui/core/Hidden'
 import MapComponent from '../components/map'
 import {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
-import {Helmet} from 'react-helmet'
+import Head from 'next/head'
 import Topic from '../hoc/Topic/Topic'
 import ListAlfredConditions from '../components/ListAlfredConditions/ListAlfredConditions'
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
@@ -33,14 +35,12 @@ import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
 import '../static/assets/css/custom.css'
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
-import {Divider} from '@material-ui/core'
 import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
 import CustomIcon from '../components/CustomIcon/CustomIcon'
 const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage = require('./basePage')
 const {BOOK_STATUS, MANAGER}=require('../utils/consts')
 const isEmpty = require('../server/validation/is-empty')
-const {emptyPromise} = require('../utils/promise')
 const {computeDistanceKm} = require('../utils/functions')
 const {roundCurrency} = require('../utils/converters')
 const {computeBookingReference} = require('../utils/text')
@@ -184,7 +184,7 @@ class UserServicesPreview extends BasePage {
 
             }
             st.user=user
-            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : emptyPromise({data: user})
+            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
             promise
               .then(res => {
                 if (res.data) {
@@ -674,7 +674,7 @@ class UserServicesPreview extends BasePage {
     }
 
     let chatPromise = !user ?
-      emptyPromise({res: null})
+      Promise.resolve({res: null})
       :
       axios.post('/myAlfred/api/chatRooms/addAndConnect', {
         emitter: this.state.user._id,
@@ -685,10 +685,6 @@ class UserServicesPreview extends BasePage {
 
       if (user) {
         bookingObj.chatroom = res.data._id
-      }
-
-      if (this.state.selectedOption !== null) {
-        bookingObj.option = this.state.selectedOption
       }
 
       localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
@@ -796,7 +792,7 @@ class UserServicesPreview extends BasePage {
                 <Grid container className={classes.avatarAnDescription}>
                   <Grid item sm={3} className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
-                      <UserAvatar user={alfred}/>
+                      <UserAvatar user={alfred} animateStartup={true}/>
                     </Grid>
                   </Grid>
                   <Grid item sm={9} className={classes.flexContentAvatarAndDescription}>
@@ -822,11 +818,20 @@ class UserServicesPreview extends BasePage {
                           </Grid>
                       }
                     </Grid>
-                    <Grid>
-                      <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
-                        disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${alfred._id}`)}>
-                        {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}
-                      </CustomButton>
+                    <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                      <Grid item sm={6} xs={12}>
+                        <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
+                          disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${alfred._id}`)}>
+                          {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}
+                        </CustomButton>
+                      </Grid>
+                      <Grid item sm={6} xs={12}>
+                        <Link href="#availabilities">
+                          <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>
+                            {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_availabilities'))}
+                          </CustomButton>
+                        </Link>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -860,6 +865,7 @@ class UserServicesPreview extends BasePage {
                 </Grid>
                 <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>
                   <Topic
+                    id={'availabilities'}
                     underline={true}
                     titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_date'))}
                     titleSummary={alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_date_summary')) + alfred.firstname : ''}
@@ -915,6 +921,9 @@ class UserServicesPreview extends BasePage {
                         </Topic>
                       </Grid> : ''
                   }
+                </Grid>
+                <Grid style={{height: '300px'}}>
+                  <Album user={alfred._id} key={moment()} underline={true} readOnly={true}/>
                 </Grid>
                 <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
                   <Grid className={classes.showReservation}>
@@ -1021,14 +1030,15 @@ class UserServicesPreview extends BasePage {
 
     const res = (
       <React.Fragment>
-        <Helmet>
+        <Head>
+          <title>{service.label} par {alfred.full_name}</title>
           <meta property="og:image" content={`/${service.picture}`}/>
           <meta property="og:image:secure_url" content={`/${service.picture}`}/>
           <meta property="og:description" content={`${service.label} par ${alfred.firstname}`}/>
           <meta property="description" content={`${service.label} par ${alfred.firstname}`}/>
           <meta property="og:type" content="website"/>
           <meta property="og:url" content="https://my-alfred.io"/>
-        </Helmet>
+        </Head>
         <Hidden only={['xs']} implementation={'css'} className={classes.hidden}>
           <Layout user={user} selectedAddress={address}>
             {this.content(classes)}

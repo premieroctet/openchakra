@@ -1,3 +1,6 @@
+import { is_development } from '../../config/config';
+import DialogCancel from './DialogCancel'
+import DialogReject from './DialogReject'
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -45,6 +48,8 @@ class BookingPreview extends React.Component {
       end_datetime: null,
       loading: false,
       alfred_pro: false,
+      rejectOpen: false,
+      cancelOpen: false,
     }
     this.routingDetailsMessage = this.routingDetailsMessage.bind(this)
     this.getPrestationMinMoment = this.getPrestationMinMoment.bind(this)
@@ -127,13 +132,40 @@ class BookingPreview extends React.Component {
       })
   }
 
-  changeStatus(status) {
-    axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, {status: status})
+  changeStatus(status, reason=null) {
+    console.trace(`change status:${reason}`)
+    axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, {status: status, reason: reason})
       .then(() => {
         this.componentDidMount()
         this.socket.emit('changeStatus', this.state.bookingObj)
       })
       .catch(err => console.error(err))
+  }
+
+  openRejectReason = () => {
+    this.setState({rejectOpen: true})
+  }
+
+  onReject = reason => {
+    this.changeStatus(BOOK_STATUS.REFUSED, reason)
+    this.onRejectClose()
+  }
+
+  onRejectClose = () => {
+    this.setState({rejectOpen: false})
+  }
+
+  openCancelReason = () => {
+    this.setState({cancelOpen: true})
+  }
+
+  onCancel = reason => {
+    this.changeStatus(BOOK_STATUS.CANCELLED, reason)
+    this.onCancelClose()
+  }
+
+  onCancelClose = () => {
+    this.setState({cancelOpen: false})
   }
 
   onChangeEndDate = ev => {
@@ -206,7 +238,7 @@ class BookingPreview extends React.Component {
 
   render() {
     const {classes, booking_id} = this.props
-    const {bookingObj, currentUser, is_alfred, end_datetime, alfred_pro} = this.state
+    const {bookingObj, currentUser, is_alfred, end_datetime, alfred_pro, rejectOpen, cancelOpen} = this.state
 
     if (!bookingObj || !currentUser) {
       return null
@@ -215,7 +247,7 @@ class BookingPreview extends React.Component {
     const countPrestations = this.computeCountPrestations()
 
     const amount = is_alfred ? parseFloat(bookingObj.alfred_amount) : parseFloat(bookingObj.amount)
-    const alfred_fee = 0
+    const provider_fee = 0
     const customer_fee = is_alfred ? 0 : bookingObj.customer_fee
 
     // Am i the service provider ?
@@ -281,6 +313,7 @@ class BookingPreview extends React.Component {
                               status
                             }
                           </h2>
+                          {is_development() && bookingObj._id}
                         </Grid>
                         { customer_booking_title &&
                         <Typography>
@@ -514,7 +547,7 @@ class BookingPreview extends React.Component {
                                   </Grid>
                                   <Grid>
                                     <CustomButton variant={'outlined'} classes={{root: classes.buttonCancel}}
-                                      onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}>{ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}</CustomButton>
+                                      onClick={this.openRejectReason}>{ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}</CustomButton>
                                   </Grid>
                                 </Grid>
                               )
@@ -531,11 +564,11 @@ class BookingPreview extends React.Component {
                                   </Grid>
                                   <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
                                     <CustomButton
-                                      onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}
+                                      onClick={this.openRejectReason}
                                       variant={'outlined'}
                                       style={{textTransform: 'initial'}}
                                       color={'primary'}>
-                                      Refuser
+                                      {ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}
                                     </CustomButton>
                                   </Grid>
                                 </Grid>
@@ -610,7 +643,7 @@ class BookingPreview extends React.Component {
                             <BookingDetail
                               prestations={pricedPrestations}
                               count={countPrestations}
-                              alfred_fee={alfred_fee}
+                              provider_fee={provider_fee}
                               customer_fee={customer_fee}
                               travel_tax={bookingObj.travel_tax}
                               pick_tax={bookingObj.pick_tax}
@@ -633,7 +666,7 @@ class BookingPreview extends React.Component {
                           }}
                         >
                           <a style={{textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}
-                            onClick={() => this.props.onCancel(booking_id)}>
+                            onClick={this.openCancelReason}>
                             {ReactHtmlParser(this.props.t('BOOKING.cancel_resa'))}
                           </a>
                         </Grid>
@@ -676,6 +709,8 @@ class BookingPreview extends React.Component {
               </Grid>
             </Grid>
           )}
+        <DialogReject open={rejectOpen} onRefuse={this.onReject} onClose={this.onRejectClose}/>
+        <DialogCancel open={cancelOpen} onCancel={this.onCancel} onClose={this.onCancelClose}/>
       </Grid>
     )
   }

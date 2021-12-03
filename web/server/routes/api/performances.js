@@ -14,8 +14,9 @@ router.get('/test', (req, res) => res.json({msg: 'Performances Works!'}))
 // Get coming income per year
 // @Access private
 router.get('/incomes/totalComing/:year', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const year = req.params.year
   let total = 0
-  req.context.getModel('Booking').find({alfred: req.user.id, status: BOOK_STATUS.CONFIRMED, prestation_date: /year$/i})
+  req.context.getModel('Booking').find({alfred: req.user.id, status: BOOK_STATUS.CONFIRMED, date_prestation: /year$/i})
     .then(booking => {
       booking.forEach(b => {
         total += b.amount
@@ -23,7 +24,7 @@ router.get('/incomes/totalComing/:year', passport.authenticate('jwt', {session: 
       res.json(total)
 
     })
-    .catch(() => res.status(404).json({booking: 'No booking found'}))
+    .catch(err => res.status(404).json({booking: 'No booking found'}))
 })
 
 // @Route GET /myAlfred/performances/incomes/:year
@@ -36,15 +37,15 @@ router.get('/incomes/:year?/:month?', passport.authenticate('jwt', {session: fal
   const bookings = new Array(12).fill(0)
 
   const re=new RegExp(`${month==undefined ? '':month}/${year}$`)
-  req.context.getModel('Booking').find({alfred: req.user.id, status: BOOK_STATUS.FINISHED, prestation_date: re})
+  req.context.getModel('Booking').find({alfred: req.user.id, status: BOOK_STATUS.FINISHED, date_prestation: re})
     .then(booking => {
       booking.forEach(b => {
-        const b_month = b.prestation_date.slice(3, 5)
+        const b_month = b.date_prestation.slice(3, 5)
         bookings[parseInt(b_month-1)]=bookings[parseInt(b_month-1)]+b.alfred_amount
       })
       res.json(bookings)
     })
-    .catch(() => {
+    .catch(err => {
       res.status(404).json({booking: 'No booking found'})
     })
 })
@@ -64,7 +65,7 @@ router.get('/statistics/:year/:month?', passport.authenticate('jwt', {session: f
 
   const re=new RegExp(`${month==undefined ? '':month}/${year}$`)
 
-  req.context.getModel('Booking').find({alfred: req.user.id, status: BOOK_STATUS.FINISHED, prestation_date: re})
+  req.context.getModel('Booking').find({alfred: req.user.id, status: BOOK_STATUS.FINISHED, date_prestation: re})
     .then(booking => {
       booking.forEach(b => {
         totalIncomes += b.alfred_amount
@@ -91,7 +92,7 @@ router.get('/statistics/:year/:month?', passport.authenticate('jwt', {session: f
 
         })
     })
-    .catch(() => res.status(404).json({booking: 'No booking found'}))
+    .catch(err => res.status(404).json({booking: 'No booking found'}))
 })
 
 // @Route GET /myAlfred/performances/statistics/totalBookings
@@ -130,7 +131,7 @@ router.get('/statistics/totalViewsServices', passport.authenticate('jwt', {sessi
       res.json(totalViews)
 
     })
-    .catch(() => res.status(404).json({services: 'No services found'}))
+    .catch(err => res.status(404).json({services: 'No services found'}))
 })
 
 // @Route GET /myAlfred/performances/statistics/totalReviews
@@ -145,7 +146,7 @@ router.get('/statistics/totalReviews', passport.authenticate('jwt', {session: fa
       res.json(totalReviews)
 
     })
-    .catch(() => res.status(404).json({services: 'No services found'}))
+    .catch(err => res.status(404).json({services: 'No services found'}))
 })
 
 // @Route GET /myAlfred/performances/statistics/reviews/:service
@@ -161,7 +162,7 @@ router.get('/statistics/reviews/:service', passport.authenticate('jwt', {session
       res.json(totalReviews)
 
     })
-    .catch(() => res.status(404).json({services: 'No services found'}))
+    .catch(err => res.status(404).json({services: 'No services found'}))
 })
 
 // @Route GET /myAlfred/performances/evaluations/allReviews
@@ -177,7 +178,7 @@ router.get('/evaluations/allReviews', passport.authenticate('jwt', {session: fal
       res.json(reviews)
 
     })
-    .catch(() => res.status(404).json({reviews: 'No reviews found'}))
+    .catch(err => res.status(404).json({reviews: 'No reviews found'}))
 })
 
 

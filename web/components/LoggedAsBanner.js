@@ -1,13 +1,13 @@
 import {withTranslation} from 'react-i18next'
 
-import {getLoggedUser, isLoggedAs} from '../utils/context'
+import {getLoggedUser, getLoggedAs} from '../utils/context'
 import React from 'react'
 
 class LoggedAsBanner extends React.Component {
 
   render = () => {
     const {t} = this.props
-    if (!isLoggedAs()) {
+    if (!getLoggedAs()) {
       return null
     }
     return (

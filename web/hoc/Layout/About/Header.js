@@ -42,12 +42,16 @@ class Header extends React.Component {
         },
       ],
       search: '',
+      isTeamPage: false,
     }
   }
 
   componentDidMount() {
     if (Router.pathname === '/faq') {
       this.setState({aboutSearch: true})
+    }
+    if(Router.pathname === '/footer/ourTeam') {
+      this.setState({isTeamPage: true})
     }
   }
 
@@ -62,7 +66,7 @@ class Header extends React.Component {
   render() {
 
     const {classes} = this.props
-    let {title, content, aboutMenu, items, search, aboutSearch} = this.state
+    let {title, content, aboutMenu, items, search, aboutSearch, isTeamPage} = this.state
 
     if (process.browser) {
       if (window.location.pathname === '/footer/apropos') {
@@ -101,13 +105,16 @@ class Header extends React.Component {
 
     return (
       <Grid>
-        <Grid className={'customlayoutfaqheaderbanner'} style={{
-          backgroundImage: "url('/static/assets/img/footer/footerBanner.svg')",
+        <Grid className={isTeamPage ? 'customlayoutfaqheaderbannerteam' : 'customlayoutfaqheaderbanner'} style={{
+          backgroundImage: 'url(\'/static/assets/img/footer/footerBanner.svg\')',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           width: '100%',
+          height: 500,
+          backgroundPosition: 'center',
+
         }}>
-          <Grid className={classes.containerArrowBack}>
+          <Grid>
             <CustomButton
               classes={{root: `customheaderfaqbackbutton ${classes.button}`}}
               startIcon={<ArrowBackIcon style={{color: 'white'}}/>}
@@ -117,12 +124,15 @@ class Header extends React.Component {
             </CustomButton>
           </Grid>
           <Grid className={classes.containerTitleAndSubtitle}>
-            <Grid>
-              <h1 style={{color: 'white'}}>{title}</h1>
+            <Grid className={classes.widthContainer}>
+              <Grid>
+                <h1 style={{color: 'white', margin: 0}}>{title}</h1>
+              </Grid>
+              <Grid>
+                <h3 style={{color: 'white'}}>{content}</h3>
+              </Grid>
             </Grid>
-            <Grid>
-              <h3 style={{color: 'white'}}>{content}</h3>
-            </Grid>
+
             {
               aboutSearch ?
                 <Grid className={classes.navbarSearchContainer}>

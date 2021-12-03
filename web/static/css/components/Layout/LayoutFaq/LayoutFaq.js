@@ -4,11 +4,11 @@ export default theme => ({
     minHeight: '100vh',
   },
   childrenContainer: {
-    margin: '0 15%',
+    margin: '0 5%',
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: 'white',
-    padding: '5% 10%',
+    padding: '5% 5%',
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       paddingBottom: '20%',

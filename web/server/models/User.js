@@ -347,6 +347,8 @@ const UserSchema = new Schema({
     },
     required: false,
   },
+  // Comments for admins
+  comment: String,
 }, {toJSON: {virtuals: true, getters: true}})
 
 UserSchema.virtual('id_card_error_text').get(function() {

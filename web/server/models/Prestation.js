@@ -31,10 +31,6 @@ const PrestationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Category',
   },
-  calculating: {
-    type: Schema.Types.ObjectId,
-    ref: 'Calculating',
-  },
   job: {
     type: Schema.Types.ObjectId,
     ref: 'Job',
@@ -45,10 +41,6 @@ const PrestationSchema = new Schema({
   picture: {
     type: String,
   },
-  tags: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Tag',
-  }],
   private_alfred: {
     type: Schema.Types.ObjectId,
     ref: 'User',

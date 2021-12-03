@@ -9,7 +9,7 @@ import moment from 'moment'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
-import {Helmet} from 'react-helmet'
+import Head from 'next/head'
 import styles from '../../static/css/pages/paymentMethod/paymentMethod'
 import LayoutAccount from '../../hoc/Layout/LayoutAccount'
 import Typography from '@material-ui/core/Typography'
@@ -84,11 +84,11 @@ class paymentMethod extends React.Component {
 
     return (
       <React.Fragment>
-        <Helmet>
+        <Head>
           <title>Compte-Modes de paiement-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !"/>
-        </Helmet>
+        </Head>
         <Grid className={classes.layoutAccountContainer}>
           <LayoutAccount>
             {this.content(classes)}

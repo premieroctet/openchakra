@@ -1,5 +1,6 @@
 const express = require('express')
-
+const ics=require('ics')
+const {googleCalendarEventUrl} = require('google-calendar-url')
 const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
@@ -20,7 +21,7 @@ const {getRole, get_logged_id} = require('../../utils/serverContext')
 const {connectionPool}=require('../../utils/database')
 const {serverContextFromPartner}=require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
-const {computeBookingReference}=require('../../../utils/text')
+const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
 const uuidv4 = require('uuid/v4')
@@ -112,9 +113,6 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   const bookingFields = {}
   bookingFields.reference = `${req.body.reference}_${random}`
   bookingFields.service = req.body.service
-  if (req.body.option) {
-    bookingFields.option = req.body.option
-  }
   bookingFields.address = req.body.address
   bookingFields.equipments = req.body.equipments
   bookingFields.amount = req.body.amount
@@ -172,8 +170,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
                 $set: {booking: book._id, emitter: book.user._id, recipient: book.alfred._id},
                 $addToSet: {messages: message},
               }
-              const options={new: true, upsert: true}
-              req.context.getModel('ChatRoom').findOneAndUpdate(filter, update, options)
+              req.context.getModel('ChatRoom').findOneAndUpdate(filter, update, {new: true, upsert: true})
                 .then(() => console.log('Chatroom maj'))
                 .catch(err => console.error(err))
             }
@@ -338,6 +335,72 @@ router.get('/:id', (req, res) => {
     })
 })
 
+router.get('/:id/ics', (req, res) => {
+  let title
+  req.context.getModel('Booking').findById(req.params.id)
+    .populate({path: 'user', select: 'firstname'})
+    .populate({path: 'alfred', select: 'firstname'})
+    .then(booking => {
+      title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
+      const start=booking.date_prestation_moment
+      const end=booking.end_prestation_moment
+      return ics.createEvent({
+        uid: booking._id.toString(),
+        title: title,
+        start: [start.year(), start.month()+1, start.date(), start.hour(), start.minute(), start.second()],
+        end: end && [end.year(), end.month()+1, end.date(), end.hour(), end.minute(), end.second()],
+        location: formatAddress(booking.address),
+        geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
+        status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
+        busyStatus: 'BUSY',
+        url: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString(),
+        description: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString()}">Accéder à ma réservation</a>`,
+      })
+    })
+    .then(result => {
+      if (result.error) {
+        console.error(result.error)
+        return res.status(400).json(result.error)
+      }
+      res.setHeader('Content-Type', 'text/calendar')
+      res.setHeader('Content-Disposition', `attachment; filename="${title}.ics"`)
+      return res.send(result.value)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
+
+router.get('/:id/google_calendar', (req, res) => {
+  let title
+  req.context.getModel('Booking').findById(req.params.id)
+    .populate({path: 'user', select: 'firstname'})
+    .populate({path: 'alfred', select: 'firstname'})
+    .then(booking => {
+      title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
+      const start=booking.date_prestation_moment.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z')
+      const end=booking.end_prestation_moment ? booking.end_prestation_moment.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z') : start
+      console.log(start)
+      const url=googleCalendarEventUrl({
+        uid: booking._id.toString(),
+        title: title,
+        start: start,
+        end: end,
+        location: formatAddress(booking.address),
+        geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
+        status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
+        busyStatus: 'BUSY',
+        details: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString()}">Accéder à ma réservation</a>`
+      })
+      res.redirect(url)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    })
+})
+
 // @Route DELETE /myAlfred/booking/:id
 // Delete one booking
 // @Access private
@@ -372,6 +435,9 @@ router.put('/modifyBooking/:id', (req, res) => {
       const machine=stateMachineFactory(booking.status)
       machine.checkAllowed(obj.status)
       booking.status=obj.status
+      if ('reason' in req.body) {
+        booking.reason=req.body.reason
+      }
       booking.end_date = obj.end_date || booking.end_date
 
       booking.save()

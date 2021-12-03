@@ -1,69 +1,61 @@
-const SibApiV3Sdk = require('sib-api-v3-sdk');
+const SibApiV3Sdk = require('sib-api-v3-sdk')
 
-const SIB_API_KEY_V2 = 'SvfYtHq36XGknjwC';
-const SIB_API_KEY_V3 = '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';
-
-const SIB_VERSION = 3;
-
-const SmsTemplateId = 38;
+const SIB_API_KEY_V3 = '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'
 
 class SIB_V3 {
 
   constructor() {
-    var defaultClient = SibApiV3Sdk.ApiClient.instance;
-    var apiKey = defaultClient.authentications['api-key'];
-    apiKey.apiKey = SIB_API_KEY_V3;
+    let defaultClient = SibApiV3Sdk.ApiClient.instance
+    let apiKey = defaultClient.authentications['api-key']
+    apiKey.apiKey = SIB_API_KEY_V3
 
-    this.smtpInstance = new SibApiV3Sdk.SMTPApi();
-    this.smsInstance = new SibApiV3Sdk.TransactionalSMSApi();
+    this.smtpInstance = new SibApiV3Sdk.SMTPApi()
+    this.smsInstance = new SibApiV3Sdk.TransactionalSMSApi()
   }
 
   sendMail(index, email, data) {
-    console.log(`Sending mail template #${index} to ${email} with data ${JSON.stringify(data)}`);
-    var templateId = index; // Number | Id of the template
+    console.log(`Sending mail template #${index} to ${email} with data ${JSON.stringify(data)}`)
 
-    var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+    let emailData = new SibApiV3Sdk.SendSmtpEmail()
 
-    //sendSmtpEmail.sender = {name: 'SenderName', email: 'SenderEmail'}
-    //sendSmtpEmail.replyTo = {name: 'SenderName', email: 'SenderEmail'}
-    sendSmtpEmail.to = [{email: email}];
-    sendSmtpEmail.templateId = parseInt(index);
-    sendSmtpEmail.params = {};
-    Object.assign(sendSmtpEmail.params, data);
+    emailData.to = [{email: email}]
+    emailData.templateId = parseInt(index)
+    emailData.params = {}
+    Object.assign(emailData.params, data)
 
-    this.smtpInstance.sendTransacEmail(sendSmtpEmail)
+    this.smtpInstance.sendTransacEmail(emailData)
       .then(data => {
-        console.log('SMTP called successfully. Returned data: ' + JSON.stringify(data));
-        return true;
+        console.log(`SMTP called successfully. Returned data: ${JSON.stringify(data)}`)
+        return true
       })
       .catch(err => {
-        console.error(err);
-        return false;
-      });
+        console.error(`Error while sending ${JSON.stringify(emailData)}:${JSON.stringify(err.response.body)}`)
+        return false
+      })
   }
 
   sendSms(number, data) {
 
-    console.log(`Sending SMS to ${number}, with data ${data}`);
+    console.log(`Sending SMS to ${number}, data:${JSON.stringify(data)}`)
 
-    const sendTransacSms = new SibApiV3Sdk.SendTransacSms();
-    sendTransacSms.sender = 'MyAlfred';
-    sendTransacSms.recipient = number;
-    sendTransacSms.content = data;
-    sendTransacSms.type = 'transactional';
+    const smsData = new SibApiV3Sdk.SendTransacSms()
+    smsData.sender = 'MyAlfred'
+    smsData.recipient = number
+    smsData.content = data
+    smsData.type = 'transactional'
 
-    this.smsInstance.sendTransacSms(sendTransacSms)
+    this.smsInstance.sendTransacSms(smsData)
       .then(data => {
-        console.log('SMS called successfully. Returned data: ' + JSON.stringify(data, null, 2));
-        return true;
+        console.log(`SMS called successfully. Returned data: ${ JSON.stringify(data, null, 2)}`)
+        return true
       })
       .catch(err => {
-        console.error(err);
-        return false;
-      });
+        console.error(`Error while sending ${JSON.stringify(smsData)}:${JSON.stringify(err.response.body)}`)
+        return false
+      })
   }
 }
 
-const SIB = new SIB_V3();
+const SIB = new SIB_V3()
 
-module.exports = {SIB};
+module.exports = {SIB}

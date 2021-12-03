@@ -1,30 +1,23 @@
-const Validator = require('validator');
-const isEmpty = require('./is-empty');
+const Validator = require('validator')
+const isEmpty = require('./is-empty')
 
 module.exports = function validateCategoryInput(data) {
-  let errors = {};
+  let errors = {}
 
 
-  data.label = !isEmpty(data.label) ? data.label : '';
-  data.description = !isEmpty(data.description) ? data.description : '';
-  data.tags = !isEmpty(data.tags) ? data.tags : '';
-
+  data.label = !isEmpty(data.label) ? data.label : ''
+  data.description = !isEmpty(data.description) ? data.description : ''
 
   if (Validator.isEmpty(data.label)) {
-    errors.label = 'Un label est requis';
+    errors.label = 'Un label est requis'
   }
 
   if (Validator.isEmpty(data.description)) {
-    errors.description = 'Une description est requise';
+    errors.description = 'Une description est requise'
   }
-
-  if (Validator.isEmpty(data.tags)) {
-    errors.tags = 'Veuillez sélectionner au moins 1 tags';
-  }
-
 
   return {
     errors,
     isValid: isEmpty(errors),
-  };
-};
+  }
+}

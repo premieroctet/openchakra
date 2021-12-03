@@ -12,6 +12,7 @@ import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import Topic from '../../hoc/Topic/Topic'
 import styles from '../../static/css/pages/profile/calendar/calendar'
+import Head from 'next/head'
 
 const {setAxiosAuthentication} = require('../../utils/authentication')
 
@@ -85,6 +86,13 @@ class ProfileCalendar extends BasePage {
 
     return (
       <React.Fragment>
+        <Head>
+          <title>{user ? user.full_name : 'Calendrier'}</title>
+          <meta property="og:description" content={`${user.firstname}`}/>
+          <meta property="description" content={`${user.firstname}`}/>
+          <meta property="og:type" content="website"/>
+          <meta property="og:url" content="https://my-alfred.io"/>
+        </Head>
         <Grid className={classes.profileLayoutContainer}>
           <ProfileLayout user={user} index={index}>
             {this.content(classes, bookings, user, readOnly)}

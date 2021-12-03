@@ -67,6 +67,7 @@ class CardService extends React.Component {
       id_service: '',
       reviews: [],
       alfred: {},
+      animated: false,
     }
   }
 
@@ -126,9 +127,17 @@ class CardService extends React.Component {
     )
   };
 
+  onMouseEnter = ev => {
+    this.setState({animated: true})
+  }
+
+  onMouseLeave = ev => {
+    this.setState({animated: false})
+  }
+
   render() {
     const {classes, gps, profileMode, address, loading} = this.props
-    const {cpData, alfred, open} = this.state
+    const {cpData, alfred, open, animated} = this.state
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null
     distance = distance ? distance.toFixed(0) : ''
@@ -176,14 +185,19 @@ class CardService extends React.Component {
       )
     }
 
-    const picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
+    let picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
+
+    if (picture && !animated && picture.toLowerCase().endsWith('.gif')) {
+      const filename = picture.split('/').slice(-1).pop()
+      picture=`myAlfred/api/users/still_profile/${filename}`
+    }
 
     const editable = isEditableUser(alfred)
 
     return(
       loading ?
         cardServiceLoading() :
-        <Grid className={profileMode ? classes.mainCardServiceContainerProfil : classes.mainCardServiceContainer}>
+        <Grid onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} className={profileMode ? classes.mainCardServiceContainerProfil : classes.mainCardServiceContainer}>
           <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : `customcardpaper ${classes.cardServicePaper}`}>
             <Grid container spacing={1} className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>

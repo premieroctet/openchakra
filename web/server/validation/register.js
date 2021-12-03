@@ -44,11 +44,10 @@ module.exports = function validateRegisterInput(data) {
     errors.password2 = 'Password must match'
   }
 
-  if (Validator.isEmpty(data.phone)) {
+  if (isEmpty(data.phone)) {
     errors.phone = 'Phone field is required'
   }
-
-  if (!Validator.isMobilePhone(data.phone, ['fr-FR'])) {
+  else if (!Validator.isMobilePhone(data.phone, ['fr-FR'])) {
     errors.phone = 'Invalid phone number'
   }
 

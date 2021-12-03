@@ -11,7 +11,7 @@ import {withTranslation} from 'react-i18next'
 import axios from 'axios'
 import React from 'react'
 import Footer from '../hoc/Layout/Footer/Footer'
-import {Helmet} from 'react-helmet'
+import Head from 'next/head'
 import Grid from '@material-ui/core/Grid'
 import InfoBar from '../components/InfoBar/InfoBar'
 import {withStyles} from '@material-ui/core/styles'
@@ -34,7 +34,8 @@ const {PRO, PART} = require('../utils/consts')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
 import _ from 'lodash'
-import RandomDisplay from '../components/RandomDisplay/RandomDisplay'
+import RandomBanner from '../components/RandomBanner/RandomBanner'
+import {INDEX} from '../utils/i18n'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -62,9 +63,9 @@ class Home extends React.Component {
       open: false,
       mounted: false,
       arrayText: [
-        ['', 'INDEX.first_content', 'INDEX.second_content', 'INDEX.third_content', 'INDEX.four_content', 'INDEX.five_content'].map(k => ReactHtmlParser(props.t(k))),
-        ['', 'INDEX.six_content', 'INDEX.seven_content', 'INDEX.eight_content', 'INDEX.nine_content', 'INDEX.ten_content'].map(k => ReactHtmlParser(props.t(k))),
-        ['', 'INDEX.eleven_content', 'INDEX.twelve_content', 'INDEX.thirteen_content', 'INDEX.fourteen_content', 'INDEX.fiveteen_content'].map(k => ReactHtmlParser(props.t(k))),
+        ['INDEX.first_content_title', '', 'INDEX.first_content', 'INDEX.second_content', 'INDEX.third_content', 'INDEX.four_content', 'INDEX.five_content'].map(k => ReactHtmlParser(props.t(k))),
+        ['INDEX.second_content_title', '', 'INDEX.six_content', 'INDEX.seven_content', 'INDEX.eight_content', 'INDEX.nine_content', 'INDEX.ten_content'].map(k => ReactHtmlParser(props.t(k))),
+        ['INDEX.third_content_title', '', 'INDEX.eleven_content', 'INDEX.twelve_content', 'INDEX.thirteen_content', 'INDEX.fourteen_content', 'INDEX.fiveteen_content'].map(k => ReactHtmlParser(props.t(k))),
       ],
     }
   }
@@ -160,13 +161,13 @@ class Home extends React.Component {
     return (
 
       <Grid>
-        <Helmet>
+        <Head>
           <title>{t('COMPANY_NAME')}</title>
           <meta
             property="description"
             content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"
           />
-        </Helmet>
+        </Head>
         <Grid>
           <LoggedAsBanner />
           <Grid className={`customheaderinfobar ${classes.infoBarContainer}`}>
@@ -208,10 +209,10 @@ class Home extends React.Component {
               <CategoryTopic categories={categories}/>
             </Grid>
           </Grid>
-          <Grid container className={`customhowitworks ${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
+          <Grid container className={`${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
             {/* <HowItWorks/>*/}
             <Grid item xs={12} className={classes.howItWorksMainStyle}>
-              <RandomDisplay arrayText={this.state.arrayText} loop={true}/>
+              <RandomBanner arrayText={this.state.arrayText} loop={true}/>
             </Grid>
           </Grid>
           <Grid container className={`customouralfred ${classes.mainContainerStyle}`}>

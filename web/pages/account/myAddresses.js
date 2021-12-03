@@ -9,7 +9,7 @@ import moment from 'moment'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
-import {Helmet} from 'react-helmet'
+import Head from 'next/head'
 import styles from '../../static/css/pages/myAddresses/myAddresses'
 import LayoutAccount from '../../hoc/Layout/LayoutAccount'
 import Typography from '@material-ui/core/Typography'
@@ -95,11 +95,11 @@ class myAddresses extends React.Component {
 
     return (
       <React.Fragment>
-        <Helmet>
+        <Head>
           <title>Profil-Mes adresses de prestation-{t('COMPANY_NAME')}</title>
           <meta property="description"
             content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…"/>
-        </Helmet>
+        </Head>
         <Grid className={classes.hideOnlyMobile} >
           <LayoutAccount>
             {this.content(classes)}

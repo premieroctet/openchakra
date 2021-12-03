@@ -11,6 +11,7 @@ import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
 import styles from '../../static/css/pages/profile/reviews/reviews'
+import Head from 'next/head'
 
 class ProfileReviews extends BasePage {
 
@@ -53,6 +54,13 @@ class ProfileReviews extends BasePage {
     }
     return (
       <React.Fragment>
+        <Head>
+          <title>{user ? user.full_name : 'Services'}</title>
+          <meta property="og:description" content={user ? user.firstname : ''}/>
+          <meta property="description" content={user ? user.firstname: ''}/>
+          <meta property="og:type" content="website"/>
+          <meta property="og:url" content="https://my-alfred.io"/>
+        </Head>
         <Grid className={classes.containerProfileLayout}>
           <ProfileLayout user={user}>
             {this.content(classes, user)}
