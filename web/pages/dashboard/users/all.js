@@ -52,6 +52,9 @@ class all extends DataPage {
           if (u.billing_address && u.billing_address.zip_code) {
             u.region = (regions.find(r => u.billing_address.zip_code.startsWith(r.num_dep)) || {}).region_name
           }
+          if (!u.is_alfred) {
+            u.hidden=undefined
+          }
           return u
         })
         this.setState({data: users})
@@ -85,11 +88,21 @@ class all extends DataPage {
           snackBarError(err.response.data)
         })
     }
-    if (field == 'hidden') {
+  }
+
+  onCellValueChanged = (colDef, data, oldValue, newValue) => {
+    console.log(`Changed ${JSON.stringify({colDef, data, oldValue, newValue}, null, 2)}`)
+    if (colDef.field=='comment') {
+      setAxiosAuthentication()
+      axios.put(`/myAlfred/api/admin/users/${data._id}`, {comment: newValue})
+        .then(() => snackBarSuccess('Commentaire enregistré'))
+        .catch(err => snackBarError(err).response.data)
+    }
+    if (colDef.field == 'hidden') {
       if (!data.is_alfred) {
         return
       }
-      const set_hidden=!data.hidden
+      const set_hidden=newValue
       setAxiosAuthentication()
       axios.put(`/myAlfred/api/admin/users/${ data._id}/hidden/${set_hidden}`)
         .then(() => {
@@ -100,16 +113,7 @@ class all extends DataPage {
           snackBarError(err.response.data)
         })
     }
-  }
 
-  onCellChanged = (colDef, data, oldValue, newValue) => {
-    console.log(`Changed ${JSON.stringify({colDef, data, oldValue, newValue}, null, 2)}`)
-    if (colDef.field=='comment') {
-      setAxiosAuthentication()
-      axios.put(`/myAlfred/api/admin/users/${data._id}`, {comment: newValue})
-        .then(() => snackBarSuccess('Commentaire enregistré'))
-        .catch(err => snackBarError(err).response.data)
-    }
   }
 
 }

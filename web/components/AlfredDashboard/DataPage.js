@@ -57,9 +57,9 @@ class DataPage extends React.Component {
     }
   }
 
-  onCellEditingStopped = event => {
+  _onCellValueChanged = event => {
     const {colDef, data, oldValue, newValue} = event
-    this.onCellChanged && this.onCellChanged(colDef, data, oldValue, newValue)
+    this.onCellValueChanged && this.onCellValueChanged(colDef, data, oldValue, newValue)
   }
 
   render() {
@@ -79,7 +79,7 @@ class DataPage extends React.Component {
                 classes={classes}
                 onCellClicked={this._onCellClicked}
                 onAddClick={this.onAddClicked}
-                onCellEditingStopped ={this.onCellEditingStopped}
+                onCellValueChanged ={this._onCellValueChanged}
               />
             </Paper>
           </Grid>
