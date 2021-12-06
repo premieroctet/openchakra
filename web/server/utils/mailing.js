@@ -1,3 +1,4 @@
+const User = require('../models/User')
 const {
   ENABLE_MAILING,
   computeUrl,
@@ -375,8 +376,8 @@ const sendAlert = (user, subject, message) => {
   )
 }
 
-const sendAdminsAlert = (subject, message, context) => {
-  context.getModel('User').find({is_admin: true, active: true})
+const sendAdminsAlert = (subject, message) => {
+  User.find({is_admin: true, active: true})
     .then(admins => {
       admins.forEach(admin => sendAlert(admin, subject, message))
     })

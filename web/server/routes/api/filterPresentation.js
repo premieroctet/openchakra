@@ -1,4 +1,6 @@
+const FilterPresentation = require('../../models/FilterPresentation')
 const express = require('express')
+
 const router = express.Router()
 
 router.get('/test', (req, res) => res.json({msg: 'FilterPresentation Works!'}))
@@ -8,7 +10,7 @@ router.get('/test', (req, res) => res.json({msg: 'FilterPresentation Works!'}))
 // View all filterPresentation
 router.get('/all', (req, res) => {
 
-  req.context.getModel('FilterPresentation').find()
+  FilterPresentation.find()
     .then(filterPresentation => {
       if (typeof filterPresentation !== 'undefined' && filterPresentation.length > 0) {
         res.json(filterPresentation)
@@ -25,7 +27,7 @@ router.get('/all', (req, res) => {
 // View one filterPresentation
 router.get('/:id', (req, res) => {
 
-  req.context.getModel('FilterPresentation').findById(req.params.id)
+  FilterPresentation.findById(req.params.id)
     .then(filterPresentation => {
       if (!filterPresentation) {
         return res.status(400).json({msg: 'No filterPresentation found'})

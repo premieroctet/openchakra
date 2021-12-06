@@ -1,29 +1,32 @@
-const express = require('express');
-const router = express.Router();
+const SearchFilter = require('../../models/SearchFilter')
+const express = require('express')
 
-router.get('/test', (req, res) => res.json({msg: 'SearchFilter Works!'}));
+const router = express.Router()
+
+router.get('/test', (req, res) => res.json({msg: 'SearchFilter Works!'}))
 
 // @Route GET /myAlfred/api/searchFilter/all
 // View all searchFilter
 router.get('/all', (req, res) => {
 
-  req.context.getModel('SearchFilter').find()
+  SearchFilter.find()
     .then(searchFilter => {
       if (typeof searchFilter !== 'undefined' && searchFilter.length > 0) {
-        res.json(searchFilter);
-      } else {
-        return res.status(400).json({msg: 'No searchFilter found'});
+        res.json(searchFilter)
+      }
+      else {
+        return res.status(400).json({msg: 'No searchFilter found'})
       }
 
     })
-    .catch(err => res.status(404).json({searchFilter: 'No searchFilter found'}));
-});
+    .catch(err => res.status(404).json({searchFilter: 'No searchFilter found'}))
+})
 
 // @Route GET /myAlfred/api/searchFilter/:id
 // View one searchFilter
 router.get('/:id', (req, res) => {
 
-  req.context.getModel('SearchFilter').findById(req.params.id)
+  SearchFilter.findById(req.params.id)
     .then(searchFilter => {
       if (!searchFilter) {
         return res.status(400).json({msg: 'No searchFilter found'})
@@ -37,4 +40,4 @@ router.get('/:id', (req, res) => {
 })
 
 
-module.exports = router;
+module.exports = router

@@ -1,4 +1,7 @@
+const fs = require('fs').promises
+const path = require('path')
 const mongoose = require('mongoose')
+
 const Admin = mongoose.mongo.Admin
 const {is_development, is_validation}=require('../../config/config')
 
@@ -65,11 +68,15 @@ const connectionPool = new ConnectionPool()
 /**
 Retourne true si field (model.attribute) contient id
 req fournit le contexte permettant de trouver le modèle dans la bonne BD
+TODO Use mongoose.models instead
 */
 const hasRefs= (req, field, id) => {
-  const model=field.split('.')[0]
+  const modelName=field.split('.')[0]
+  /* eslint-disable global-require */
+  const model=require(`../models/${modelName}`)
+  /* eslint-enable global-require */
   const attribute=field.split('.').slice(1).join('.')
-  return req.context.getModel(model).exists({[attribute]: id})
+  return model.exists({[attribute]: id})
 }
 
 module.exports={connectionPool, hasRefs}

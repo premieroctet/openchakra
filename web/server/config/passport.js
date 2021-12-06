@@ -1,5 +1,8 @@
+const User = require('../models/User')
+const {MANAGER} = require('../../utils/consts')
 const passport = require('passport')
 const keys = require('../config/keys')
+
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const {ADMIN} = require('../../utils/consts')
@@ -42,7 +45,7 @@ const jwt_opts = {
 
 passport.use('jwt', new JwtStrategy(jwt_opts, (req, payload, done) => {
   try {
-    req.context.getModel('User').findById(payload.id)
+    User.findById(payload.id)
       .then(user => {
         if (user) {
           return done(null, user)
@@ -58,7 +61,7 @@ passport.use('jwt', new JwtStrategy(jwt_opts, (req, payload, done) => {
 }))
 
 passport.use('admin', new JwtStrategy(jwt_opts, (req, payload, done) => {
-  req.context.getModel('User').findById(payload.id)
+  User.findById(payload.id)
     .then(user => {
       if (user && user.is_admin) {
         return done(null, user)
@@ -69,7 +72,7 @@ passport.use('admin', new JwtStrategy(jwt_opts, (req, payload, done) => {
 }))
 
 passport.use('b2badmin', new JwtStrategy(jwt_opts, (req, payload, done) => {
-  req.context.getModel('User').findById(payload.id)
+  User.findById(payload.id)
     .then(user => {
       if (user && user.roles && user.roles.includes(ADMIN)) {
         return done(null, user)
@@ -80,7 +83,7 @@ passport.use('b2badmin', new JwtStrategy(jwt_opts, (req, payload, done) => {
 }))
 
 passport.use('b2badminmanager', new JwtStrategy(jwt_opts, (req, payload, done) => {
-  req.context.getModel('User').findById(payload.id)
+  User.findById(payload.id)
     .then(user => {
       if (user && user.roles && (user.roles.includes(ADMIN)||user.roles.includes(MANAGER))) {
         return done(null, user)

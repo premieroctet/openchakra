@@ -1,3 +1,6 @@
+const EventLog = require('../models/EventLog')
+const User = require('../models/User')
+
 const logEvent = (req, category, title, description, data=null) => {
   console.log('Loggin event')
   user = req.user
@@ -9,7 +12,7 @@ const logEvent = (req, category, title, description, data=null) => {
     description: description,
     data: data,
   }
-  req.context.getModel('User').findOne({_id: superuserid}, 'firstname name email')
+  User.findOne({_id: superuserid}, 'firstname name email')
     .then(superuser => {
       if (superuserid) {
         if (!superuser) {
@@ -17,7 +20,7 @@ const logEvent = (req, category, title, description, data=null) => {
         }
         event.super_account={user: superuser._id, full_name: superuser.full_name, email: superuser.email}
       }
-      req.context.getModel('EventLog').create(event)
+      EventLog.create(event)
         .then(ev => console.log(`Event ${JSON.stringify(ev)}`))
         .catch(err => console.error(`Error on event ${JSON.stringify(event)}:${err}`))
     })

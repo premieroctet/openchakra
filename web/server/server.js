@@ -1,3 +1,15 @@
+const mongoose=require('mongoose')
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/test-myAlfred-V2', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => {
+    console.log('MongoDB connected')
+  })
+  .catch(err => console.log(err))
+
+
 const cookieParser=require('cookie-parser')
 
 require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]')
@@ -46,7 +58,7 @@ const path = require('path')
 const app = express()
 const SocketIo = require('socket.io')
 const {serverContextFromRequest}=require('./utils/serverContext')
-const util=require('util')
+
 
 nextApp.prepare().then(() => {
 

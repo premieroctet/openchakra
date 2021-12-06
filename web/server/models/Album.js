@@ -21,7 +21,7 @@ const AlbumSchema = new Schema({
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
     required: true,
   },
   pictures: {
@@ -29,4 +29,4 @@ const AlbumSchema = new Schema({
   },
 })
 
-module.exports = AlbumSchema
+module.exports = Album = mongoose.model('album', AlbumSchema)

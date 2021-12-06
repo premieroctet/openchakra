@@ -1,4 +1,6 @@
+const Equipment = require('../../models/Equipment')
 const express = require('express')
+
 const router = express.Router()
 
 router.get('/test', (req, res) => res.json({msg: 'Equipment Works!'}))
@@ -8,7 +10,7 @@ router.get('/test', (req, res) => res.json({msg: 'Equipment Works!'}))
 // View all equipments
 router.get('/all', (req, res) => {
 
-  req.context.getModel('Equipment').find()
+  Equipment.find()
     .then(equipment => {
       if (typeof equipment !== 'undefined' && equipment.length > 0) {
         res.json(equipment)
@@ -27,7 +29,7 @@ router.get('/all', (req, res) => {
 // View one equipment
 router.get('/:id', (req, res) => {
 
-  req.context.getModel('Equipment').findById(req.params.id)
+  Equipment.findById(req.params.id)
     .then(equipment => {
       if (Object.keys(equipment).length === 0 && equipment.constructor === Object) {
         return res.status(400).json({msg: 'No equipment found'})

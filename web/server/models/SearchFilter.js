@@ -9,4 +9,4 @@ const SearchFilterSchema = new Schema({
   },
 })
 
-module.exports = SearchFilterSchema
+module.exports = SearchFilter = mongoose.model('searchfilter', SearchFilterSchema)

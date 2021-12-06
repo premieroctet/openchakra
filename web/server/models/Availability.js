@@ -22,7 +22,7 @@ const AvailabilitySchema = new Schema({
   // Alfred
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
     required: true,
   },
   timelapses: [{type: Number}], // array containing indexes of available timelapses
@@ -39,4 +39,4 @@ AvailabilitySchema.virtual('as_text').get(function() {
   return `Du ${moment(this.period.begin).format('L')} au ${moment(this.period.end).format('L')}`
 })
 
-module.exports = AvailabilitySchema
+module.exports = Availability = mongoose.model('availability', AvailabilitySchema)

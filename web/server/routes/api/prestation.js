@@ -1,5 +1,7 @@
+const Prestation = require('../../models/Prestation')
 const passport = require('passport')
 const express = require('express')
+
 const router = express.Router()
 
 router.get('/test', (req, res) => res.json({msg: 'Prestation Works!'}))
@@ -7,7 +9,7 @@ router.get('/test', (req, res) => res.json({msg: 'Prestation Works!'}))
 // @Route GET /myAlfred/api/prestation/all
 // Get all prestations
 router.get('/all', (req, res) => {
-  req.context.getModel('Prestation').find()
+  Prestation.find()
     .sort({'label': 1})
     .populate('category')
     .populate('job')
@@ -32,7 +34,7 @@ router.get('/all', (req, res) => {
 // @Route GET /myAlfred/api/prestation/home
 // Get all prestations
 router.get('/home', (req, res) => {
-  req.context.getModel('Prestation').find().sort({'label': 1})
+  Prestation.find().sort({'label': 1})
     .populate('category')
     .populate('job')
     .populate('service')
@@ -59,7 +61,7 @@ router.get('/home', (req, res) => {
 // View all prestations per service
 router.get('/:service', (req, res) => {
 
-  req.context.getModel('Prestation').find({service: req.params.service}).sort({'label': 1})
+  Prestation.find({service: req.params.service}).sort({'label': 1})
     .populate('category')
     .populate('service')
     .populate('filter_presentation')
@@ -81,7 +83,7 @@ router.get('/:service', (req, res) => {
 // @Route GET /myAlfred/api/prestation/:service/:filter
 // View all prestations per service and filter
 router.get('/:service/:filter', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('Prestation').find({
+  Prestation.find({
     service: req.params.service,
     filter_presentation: req.params.filter,
   })
@@ -101,7 +103,7 @@ router.get('/:service/:filter', passport.authenticate('jwt', {session: false}), 
 // @Route GET /myAlfred/api/prestation/:id
 // View one prestation
 router.get('/:id', (req, res) => {
-  req.context.getModel('Prestation').findById(req.params.id)
+  Prestation.findById(req.params.id)
     .populate('category')
     .populate('job')
     .populate('service')
