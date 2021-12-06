@@ -1,4 +1,6 @@
+const Job = require('../../models/Job')
 const express = require('express')
+
 const router = express.Router()
 
 router.get('/test', (req, res) => res.json({msg: 'Job Works!'}))
@@ -7,7 +9,7 @@ router.get('/test', (req, res) => res.json({msg: 'Job Works!'}))
 // View all job
 router.get('/all', (req, res) => {
 
-  req.context.getModel('Job').find()
+  Job.find()
     .then(job => {
       if (typeof job !== 'undefined' && job.length > 0) {
         res.json(job)
@@ -24,7 +26,7 @@ router.get('/all', (req, res) => {
 // View one job
 router.get('/:id', (req, res) => {
 
-  req.context.getModel('Job').findById(req.params.id)
+  Job.findById(req.params.id)
     .then(job => {
       if (!job) {
         return res.status(400).json({msg: 'No job found'})

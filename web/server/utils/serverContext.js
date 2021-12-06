@@ -1,3 +1,5 @@
+const User=require('../models/User')
+const Customization=require('../models/Customization')
 const jwt = require('jsonwebtoken')
 const {ADMIN, MANAGER, EMPLOYEE} = require('../../utils/consts')
 const keys = require('../config/keys')
@@ -78,10 +80,6 @@ class PartnerServerContext {
     this.partner=partner
     this.connection=null
     this.customization=null
-    const models='UIConfiguration User Album Availability Billing Booking Category ChatRoom Company Count Equipment FilterPresentation Group Job Message Newsletter Prestation ResetToken Review SearchFilter Service ServiceUser Shop User'.split(' ')
-    models.forEach(m => {
-      this.getModel(m)
-    })
     this.loadCustomization()
   }
 
@@ -101,17 +99,6 @@ class PartnerServerContext {
       this.connection=connectionPool.getConnection(this.getDbName())
     }
     return this.connection
-  }
-
-  getModel = modelName => {
-    if (this.getConnection().modelNames().includes(modelName)) {
-      return this.getConnection().models[modelName]
-    }
-    /* eslint-disable global-require */
-    const schema=require(`../models/${modelName}`)
-    /* eslint-enable global-require */
-    const model=this.getConnection().model(modelName, schema)
-    return model
   }
 
   getProviderFeeRate = () => {
@@ -146,8 +133,8 @@ class PartnerServerContext {
       || 0
   }
 
-  loadCustomization = () => {
-    this.getModel('Customization').findOne()
+  static getCustomization() {
+    Customization.findOne()
       .then(res => {
         this.customization=res
       })
@@ -165,7 +152,7 @@ class RequestServerContext extends PartnerServerContext {
     this.user=null
     const user_id=get_logged_id(request)
     if (user_id) {
-      this.getModel('User').findById(user_id)
+      User.findById(user_id)
         .then(user => {
           this.user=user
         })

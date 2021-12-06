@@ -12,28 +12,28 @@ const PrestationSchema = new Schema({
   },
   service: {
     type: Schema.Types.ObjectId,
-    ref: 'Service',
+    ref: 'service',
     required: true,
   },
   billing: [{
     type: Schema.Types.ObjectId,
-    ref: 'Billing',
+    ref: 'billing',
   }],
   filter_presentation: {
     type: Schema.Types.ObjectId,
-    ref: 'FilterPresentation',
+    ref: 'filterPresentation',
   },
   search_filter: [{
     type: Schema.Types.ObjectId,
-    ref: 'SearchFilter',
+    ref: 'searchFilter',
   }],
   category: {
     type: Schema.Types.ObjectId,
-    ref: 'Category',
+    ref: 'category',
   },
   job: {
     type: Schema.Types.ObjectId,
-    ref: 'Job',
+    ref: 'job',
   },
   description: {
     type: String,
@@ -43,7 +43,7 @@ const PrestationSchema = new Schema({
   },
   private_alfred: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   s_label: {
     type: String,
@@ -68,7 +68,7 @@ const PrestationSchema = new Schema({
   },
   private_company: {
     type: Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: 'company',
   },
   order: {
     type: Number,
@@ -84,4 +84,4 @@ const PrestationSchema = new Schema({
 
 PrestationSchema.index({label: 'text'})
 
-module.exports = PrestationSchema
+module.exports = Prestation = mongoose.model('prestation', PrestationSchema)

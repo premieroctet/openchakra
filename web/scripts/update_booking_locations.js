@@ -1,3 +1,4 @@
+const Booking = require('../server/models/Booking')
 const mongoose = require('mongoose')
 const {config} = require('../config/config')
 const {connectionPool}=require('../server/utils/database')
@@ -16,8 +17,6 @@ const update_booking_locations = () => {
   console.log(connectionPool.databases)
   connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
     console.log(`MEP updating database ${context.getDbName()}`)
-    const Booking=context.getModel('Booking')
-    const User=context.getModel('User')
     Booking.find({location: {$exists: false}, customer_booking: null, company_customer: null})
       .populate('user')
       .populate('alfred')

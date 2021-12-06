@@ -17,5 +17,4 @@ const CountSchema = new Schema({
 })
 
 
-// module.exports = Booking = mongoose.model('count', CountSchema);
-module.exports = CountSchema
+module.exports = Count = mongoose.model('count', CountSchema)

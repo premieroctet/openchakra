@@ -8,4 +8,4 @@ const NewsletterSchema = new Schema({
   },
 })
 
-module.exports = NewsletterSchema
+module.exports = NewsLetter = mongoose.model('newsletter', NewsletterSchema)

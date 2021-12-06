@@ -1,4 +1,9 @@
+const mongoose = require('mongoose')
+const Category = require('../../models/Category')
+const Service = require('../../models/Service')
+const ServiceUser = require('../../models/ServiceUser')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const _ = require('lodash')
@@ -9,10 +14,10 @@ router.get('/test', (req, res) => res.json({msg: 'Category Works!'}))
 // View all categories
 router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), async(req, res) => {
 
-  let serviceUsers = await req.context.getModel('ServiceUser').find({user: req.user})
+  let serviceUsers = await ServiceUser.find({user: req.user})
   serviceUsers = serviceUsers.map(s => s.service)
 
-  req.context.getModel('Service').find({_id: {$nin: serviceUsers}})
+  Service.find({_id: {$nin: serviceUsers}})
     .sort({'label': 1})
     .populate('category')
     .sort({'category.label': 1})
@@ -33,51 +38,46 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), asy
 // @Route GET /myAlfred/api/category/all
 // View all categories
 router.get('/particular', (req, res) => {
-  req.context.getModel('Service').find({particular_access: true}, 'category')
+  Service.find({particular_access: true}, 'category')
     .populate('category')
     .then(services => {
       let categories=_.uniqBy(services.map(s => s.category), c => c._id)
-      categories = _.orderBy(categories, 'professional_label')
+      categories = _.orderBy(categories, 'particular_label')
       res.json(categories)
     })
-    .catch(err => res.status(404).json({category: 'No category found'}))
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
 })
 
 // @Route GET /myAlfred/api/category/professional
 // View all pro categories, i.e. having at least one service with professional_access
 router.get('/professional', (req, res) => {
-
-  req.context.getModel('Service').find({professional_access: true}, 'category')
+  Service.find({professional_access: true}, 'category')
     .populate('category')
     .then(services => {
       let categories=_.uniqBy(services.map(s => s.category), c => c._id)
       categories = _.orderBy(categories, 'professional_label')
       res.json(categories)
     })
-    .catch(err => res.status(404).json({category: 'No category found'}))
-})
-
-// @Route GET /myAlfred/api/category/random/home
-// View random categories homepage
-router.get('/random/home', (req, res) => {
-
-  req.context.getModel('Category').countDocuments().exec((err, count) => {
-    let random = Math.floor(Math.random() * count)
-    req.context.getModel('Category').find().skip(random).exec(
-      (err, result) => {
-        res.json(result)
-      })
-  })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
 })
 
 // @Route GET /myAlfred/api/category/:id
 // View one category
 router.get('/:id', (req, res) => {
-  req.context.getModel('Category').findById(req.params.id)
+  Category.findById(req.params.id)
     .then(category => {
       res.json(category)
     })
-    .catch(err => res.status(404).json({category: 'No category found'}))
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
 })
 
 

@@ -14,7 +14,7 @@ const EventLogSchema = new Schema({
       // Keep track if not deleted
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'user',
         required: false,
       },
       full_name: {
@@ -34,7 +34,7 @@ const EventLogSchema = new Schema({
       // Keep track if not deleted
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'user',
         required: false,
       },
       full_name: {
@@ -73,4 +73,4 @@ const EventLogSchema = new Schema({
 }, {toJSON: {virtuals: true, getters: true}})
 
 
-module.exports = EventLogSchema
+module.exports = EventLog = mongoose.model('eventLog', EventLogSchema)

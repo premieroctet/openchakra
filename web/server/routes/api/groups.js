@@ -1,16 +1,21 @@
-const express = require('express');
-const router = express.Router();
-const passport = require('passport');
-const mongoose = require('mongoose');
-const moment = require('moment');
-moment.locale('fr');
-const axios = require('axios');
-const {validateCompanyGroup} = require("../../validation/simpleRegister");
+const Service = require('../../models/Service')
+const Booking = require('../../models/Booking')
+const Group = require('../../models/Group')
+const User = require('../../models/User')
+const express = require('express')
+
+const router = express.Router()
+const passport = require('passport')
+const mongoose = require('mongoose')
+const moment = require('moment')
+moment.locale('fr')
+const axios = require('axios')
+const {validateCompanyGroup} = require('../../validation/simpleRegister')
 const {MANAGER, ROLES, MONTH_PERIOD, YEAR_PERIOD, BOOK_STATUS, DASHBOARD_MODE, MICROSERVICE_MODE, CARETAKER_MODE} = require('../../../utils/consts')
 const {computeUrl}=require('../../../config/config')
-const _ = require('lodash');
+const _ = require('lodash')
 const {getPeriodStart} = require('../../../utils/dateutils')
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true
 
 // @Route PUT /myAlfred/api/groups/:group_id/allowedServices
 // Data : service_id
@@ -21,37 +26,37 @@ router.put('/:group_id/allowedServices', passport.authenticate('b2badmin', {sess
   const service_id = req.body.service_id
   const supported_percent = req.body.supported_percent
 
-  req.context.getModel('Service').findById(service_id, 'label professional_access particular_access')
-    .then ( service => {
+  Service.findById(service_id, 'label professional_access particular_access')
+    .then(service => {
       if (!service) {
-        return res.status(404).json({error : `Service ${service._id} introuvable`})
+        return res.status(404).json({error: `Service ${service._id} introuvable`})
       }
-      req.context.getModel('Group').findById(group_id)
+      Group.findById(group_id)
         .then(group => {
           if (!group) {
-            return res.status(400).json({msg: 'Groupe introuvable'});
+            return res.status(400).json({msg: 'Groupe introuvable'})
           }
           if (group.type==MICROSERVICE_MODE && !service.professional_access) {
-            return res.status(400).json({msg: 'Un département ne peut autoriser que des service professionels'});
+            return res.status(400).json({msg: 'Un département ne peut autoriser que des service professionels'})
           }
           if (group.type==CARETAKER_MODE && !service.particular_access) {
-            return res.status(400).json({msg: 'La conciergerie ne peut autoriser que des services aux particuliers'});
+            return res.status(400).json({msg: 'La conciergerie ne peut autoriser que des services aux particuliers'})
           }
           if (group.allowed_services.map(s => s.service).includes(service_id)) {
-            return res.status(400).json({msg: 'Ce service est déjà autorisé'});
+            return res.status(400).json({msg: 'Ce service est déjà autorisé'})
           }
           group.allowed_services.push({
             service: service_id,
-            supported_percent: group.type==MICROSERVICE_MODE ?  1.0 : supported_percent
+            supported_percent: group.type==MICROSERVICE_MODE ? 1.0 : supported_percent,
           })
           group.save()
-           .then (group => {
-             return res.json(group);
-           })
-           .catch(err => {
-             console.error(err)
-             return res.status(404).json({company: 'No group found'})
-           })
+            .then(group => {
+              return res.json(group)
+            })
+            .catch(err => {
+              console.error(err)
+              return res.status(404).json({company: 'No group found'})
+            })
         })
         .catch(err => {
           console.error(err)
@@ -62,7 +67,7 @@ router.put('/:group_id/allowedServices', passport.authenticate('b2badmin', {sess
       console.error(err)
       res.status(404).json({company: 'No group found'})
     })
-});
+})
 
 // @Route DELETE /myAlfred/api/groups/:group_id/allowedServices/:service_id
 // Delete allowed service for current company
@@ -70,19 +75,19 @@ router.delete('/:group_id/allowedServices/:service_id', passport.authenticate('b
   const group_id = req.params.group_id
   const service_id = req.params.service_id
 
-  req.context.getModel('Group').findByIdAndUpdate(group_id, {  $pull : { 'allowed_services' : {'_id' : service_id}}})
+  Group.findByIdAndUpdate(group_id, {$pull: {'allowed_services': {'_id': service_id}}})
     .then(group => {
       if (!group) {
-        return res.status(400).json({msg: 'No group found'});
+        return res.status(400).json({msg: 'No group found'})
       }
-      res.json(group);
+      res.json(group)
 
     })
     .catch(err => {
       console.error(err)
       res.status(404).json({company: 'No group found'})
     })
-});
+})
 
 // @Route GET /myAlfred/api/groups
 // Gets groups for a company
@@ -96,13 +101,13 @@ router.get('/type/:group_type', passport.authenticate('b2badmin', {session: fals
   if (!Object.keys(DASHBOARD_MODE).includes(group_type)) {
     return res.status(400).json({error: `Type groupe ${group_type} inconnu`})
   }
-  req.context.getModel('Group').find({company : company_id, type: group_type})
+  Group.find({company: company_id, type: group_type})
     .populate('members', 'firstname name email roles company cards')
     .populate('allowed_services.service', 'label')
-    .then ( groups => {
+    .then(groups => {
       res.json(groups)
     })
-    .catch (err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
     })
@@ -113,20 +118,20 @@ router.get('/type/:group_type', passport.authenticate('b2badmin', {session: fals
 // @Access private
 router.post('/', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  const {errors, isValid} = validateCompanyGroup(req.body);
+  const {errors, isValid} = validateCompanyGroup(req.body)
   if (!isValid) {
-    return res.status(400).json({error: errors});
+    return res.status(400).json({error: errors})
   }
 
   const company_id = req.user.company
 
-  req.context.getModel('Group').findOne({name: req.body.name, company: company_id})
+  Group.findOne({name: req.body.name, company: company_id})
     .then(group => {
       if (group) {
         res.status(400).json({error: 'Ce groupe existe déjà'})
         return
       }
-      req.context.getModel('Group').create({
+      Group.create({
         name: req.body.name,
         company: company_id,
         budget_period: req.body.budget_period,
@@ -156,19 +161,19 @@ router.put('/:group_id', passport.authenticate('b2badmin', {session: false}), (r
 
   const group_id = req.params.group_id
 
-  const {errors, isValid} = validateCompanyGroup(req.body, true);
+  const {errors, isValid} = validateCompanyGroup(req.body, true)
   if (!isValid) {
-    return res.status(400).json({error: errors});
+    return res.status(400).json({error: errors})
   }
 
-  req.context.getModel('Group').findOneAndUpdate({ _id : group_id}, req.body, { new : true})
-    .then (group => {
+  Group.findOneAndUpdate({_id: group_id}, req.body, {new: true})
+    .then(group => {
       if (!group) {
         return res.status(404).json({error: 'Groupe introuvable'})
       }
       res.json(group)
     })
-    .catch( err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
     })
@@ -181,16 +186,16 @@ router.delete('/:group_id', passport.authenticate('b2badmin', {session: false}),
 
   const company_id = req.user.company
 
-  req.context.getModel('Group').deleteOne({_id : req.params.group_id})
-    .then (result => {
+  Group.deleteOne({_id: req.params.group_id})
+    .then(result => {
       if (result.deletedCount == 0) {
-        res.status(404).json({error : `Le groupe ${req.params.group_id} n'existe pas`})
+        res.status(404).json({error: `Le groupe ${req.params.group_id} n'existe pas`})
       }
       else {
         res.json(`Groupe ${req.params.group_id} supprimé`)
       }
     })
-    .catch( err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
     })
@@ -205,8 +210,8 @@ router.put('/:group_id/members', passport.authenticate('b2badmin', {session: fal
   const group_id = req.params.group_id
   const member_id = req.body.member_id
 
-  req.context.getModel('User').findById(member_id)
-    .then( user => {
+  User.findById(member_id)
+    .then(user => {
       if (!user) {
         res.status(404).json({error: `User ${user_id} introuvable`})
         return
@@ -215,23 +220,23 @@ router.put('/:group_id/members', passport.authenticate('b2badmin', {session: fal
         res.status(404).json({error: `User ${user_id} ne fait pas partie de cette compagnie`})
         return
       }
-      req.context.getModel('Group').findByIdAndUpdate( group_id, { $addToSet : {members : member_id}})
-        .then ( group => {
-          req.context.getModel('Group').updateMany( {_id : { $ne : group_id}}, { $pull : {members : member_id}})
-            .then ( () => {
+      Group.findByIdAndUpdate(group_id, {$addToSet: {members: member_id}})
+        .then(group => {
+          Group.updateMany({_id: {$ne: group_id}}, {$pull: {members: member_id}})
+            .then(() => {
               res.json(group)
             })
-            .catch ( err => {
+            .catch(err => {
               console.error(err)
               res.status(500).json({error: JSON.stringify(err)})
             })
         })
-        .catch ( err => {
+        .catch(err => {
           console.error(err)
           res.status(500).json({error: JSON.stringify(err)})
         })
     })
-    .catch ( err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: JSON.stringify(err)})
     })
@@ -247,11 +252,11 @@ router.delete('/:group_id/members/:member_id', passport.authenticate('b2badmin',
   const group_id = req.params.group_id
   const member_id = req.params.member_id
 
-  req.context.getModel('Group').update( {_id : group_id}, { $pull : { members : member_id}})
-    .then ( group => {
+  Group.update({_id: group_id}, {$pull: {members: member_id}})
+    .then(group => {
       res.json(group)
     })
-    .catch ( err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: JSON.stringify(err)})
     })
@@ -268,8 +273,8 @@ router.put('/:group_id/managers', passport.authenticate('b2badmin', {session: fa
 
   const new_account = req.body.new_account
 
-  req.context.getModel('User').findByIdAndUpdate(manager_id, { $addToSet : { roles : MANAGER }})
-    .then( user => {
+  User.findByIdAndUpdate(manager_id, {$addToSet: {roles: MANAGER}})
+    .then(user => {
       if (!user) {
         res.status(404).json({error: `User ${user_id} introuvable`})
         return
@@ -278,12 +283,12 @@ router.put('/:group_id/managers', passport.authenticate('b2badmin', {session: fa
         res.status(404).json({error: `User ${user_id} ne fait pas partie de cette compagnie`})
         return
       }
-      req.context.getModel('Group').findByIdAndUpdate( group_id, {$addToSet: {members: manager_id}})
+      Group.findByIdAndUpdate(group_id, {$addToSet: {members: manager_id}})
         .then(group => {
-          req.context.getModel('Group').updateMany({_id: {$ne: group_id}} , {$pull: {members: manager_id}})
+          Group.updateMany({_id: {$ne: group_id}}, {$pull: {members: manager_id}})
             .then(() => {
               if (new_account) {
-                axios.post(new URL(`/myAlfred/api/users/forgotPassword`, computeUrl(req)).toString(), { email: user.email, role: MANAGER})
+                axios.post(new URL(`/myAlfred/api/users/forgotPassword`, computeUrl(req)).toString(), {email: user.email, role: MANAGER})
                   .then(() => {})
                   .catch(err => {
                     console.error(err)
@@ -301,7 +306,7 @@ router.put('/:group_id/managers', passport.authenticate('b2badmin', {session: fa
           res.status(500).json({error: JSON.stringify(err)})
         })
     })
-    .catch ( err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: JSON.stringify(err)})
     })
@@ -317,8 +322,8 @@ router.delete('/:group_id/managers/:manager_id', passport.authenticate('b2badmin
   const group_id = req.params.group_id
   const manager_id = req.params.manager_id
 
-  req.context.getModel('User').findByIdAndUpdate(manager_id, { $pull : { roles : MANAGER }}, { new : true})
-    .then( user => {
+  User.findByIdAndUpdate(manager_id, {$pull: {roles: MANAGER}}, {new: true})
+    .then(user => {
       if (!user) {
         res.status(404).json({error: `User ${user_id} introuvable`})
         return
@@ -329,7 +334,7 @@ router.delete('/:group_id/managers/:manager_id', passport.authenticate('b2badmin
         return
       }
     })
-    .catch ( err => {
+    .catch(err => {
       console.error(err)
       res.status(500).json({error: JSON.stringify(err)})
     })
@@ -340,14 +345,14 @@ router.delete('/:group_id/managers/:manager_id', passport.authenticate('b2badmin
 // Returns reamingin budget for this group in the period
 // @Access private b2badminmanager
 router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {session: false}), (req, res) => {
-  req.context.getModel('Group').findById(req.params.group_id, 'budget budget_period members')
+  Group.findById(req.params.group_id, 'budget budget_period members')
     .then(group => {
       if (!group.budget || !group.budget_period) {
         return res.status(400).json("Ce département n'a pas de budget")
       }
       const start_date = getPeriodStart(group.budget_period)
       // get not cancelled bookings for this group from start_date with user_role MANAGER
-      req.context.getModel('Booking').find({
+      Booking.find({
         user: {$in: group.members},
         date: {$gt: start_date},
         user_role: MANAGER,
@@ -362,10 +367,10 @@ router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {sessio
           return res.staatus(400).json(err)
         })
     })
-    .catch( err =>{
+    .catch(err => {
       console.error(err)
       res.status(400).json(err)
     })
 })
 
-module.exports = router;
+module.exports = router

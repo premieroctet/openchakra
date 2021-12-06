@@ -32,7 +32,7 @@ const BookingSchema = new Schema({
   },
   equipments: [{
     type: Schema.Types.ObjectId,
-    ref: 'Equipment',
+    ref: 'equipment',
   }],
   // Total amount
   amount: {
@@ -65,11 +65,11 @@ const BookingSchema = new Schema({
   },
   alfred: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   prestations: [{
     name: {
@@ -95,7 +95,7 @@ const BookingSchema = new Schema({
   },
   chatroom: {
     type: Schema.Types.ObjectId,
-    ref: 'ChatRoom',
+    ref: 'chatRoom',
   },
   fileUpload: [{
     type: Schema.Types.Mixed,
@@ -198,12 +198,12 @@ const BookingSchema = new Schema({
   // Réservation par un client Avocotés
   company_customer: {
     type: Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: 'company',
   },
   // Réservation du client dans le cas de la réservation par l'Afred pour avocotes
   customer_booking: {
     type: Schema.Types.ObjectId,
-    ref: 'Booking',
+    ref: 'booking',
   },
 }, {toJSON: {virtuals: true, getters: true}})
 
@@ -237,5 +237,4 @@ BookingSchema.virtual('calendar_display').get(function() {
 })
 
 
-//module.exports = Booking = mongoose.model('booking', BookingSchema)
-module.exports = BookingSchema
+module.exports = Booking = mongoose.model('booking', BookingSchema)
