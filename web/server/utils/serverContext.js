@@ -78,7 +78,7 @@ class PartnerServerContext {
     this.partner=partner
     this.connection=null
     this.customization=null
-    const models='UIConfiguration User Album Availability Billing Booking Category ChatRoom Company Count Equipment FilterPresentation Group Job Message Newsletter Prestation ResetToken Review SearchFilter Service ServiceUser Shop User'.split(' ')
+    const models='UIConfiguration User Album Availability Billing Booking Category ChatRoom Company Equipment FilterPresentation Group Job Message Newsletter Prestation ResetToken Review Service ServiceUser Shop User'.split(' ')
     models.forEach(m => {
       this.getModel(m)
     })

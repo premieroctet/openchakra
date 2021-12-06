@@ -707,87 +707,6 @@ router.put('/job/all/:id', passport.authenticate('admin', {session: false}), (re
     .catch(() => res.status(404).json({jobnotfound: 'No job found'}))
 })
 
-// SEARCH FILTER
-
-// @Route POST /myAlfred/api/admin/searchFilter/all
-// Add searchFilter for prestation
-// @Access private
-router.post('/searchFilter/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  const {errors, isValid} = validateBillingInput(req.body)
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-
-  req.context.getModel('SearchFilter').findOne({label: req.body.label})
-    .then(searchFilter => {
-      if (searchFilter) {
-        errors.label = 'Ce filtre existe déjà'
-        return res.status(400).json(errors)
-      }
-      const newSearchFilter={
-        label: req.body.label,
-      }
-
-      req.context.getModel('SearchFilter').create(newSearchFilter)
-        .then(searchFilter => res.json(searchFilter))
-        .catch(err => console.error(err))
-    })
-})
-
-// @Route GET /myAlfred/api/admin/searchFilter/all
-// View all searchFilter
-// @Access private
-router.get('/searchFilter/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('SearchFilter').find()
-    .then(searchFilter => {
-      if (!searchFilter) {
-        return res.status(400).json({msg: 'No searchFilter found'})
-      }
-      res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count')
-      res.setHeader('X-Total-Count', searchFilter.length)
-      res.json(searchFilter)
-
-    })
-    .catch(() => res.status(404).json({searchFilter: 'No billing found'}))
-})
-
-// @Route GET /myAlfred/api/admin/searchFilter/all/:id
-// View one searchFilter
-// @Access private
-router.get('/searchFilter/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('SearchFilter').findById(req.params.id)
-    .then(searchFilter => {
-      if (!searchFilter) {
-        return res.status(400).json({msg: 'No searchFilter found'})
-      }
-      res.json(searchFilter)
-
-    })
-    .catch(() => res.status(404).json({billing: 'No searchFilter found'}))
-})
-
-// @Route DELETE /myAlfred/api/admin/searchFilter/all/:id
-// Delete one searchFilter
-// @Access private
-router.delete('/searchFilter/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('SearchFilter').findById(req.params.id)
-    .then(searchFilter => {
-      searchFilter.remove().then(() => res.json({success: true}))
-    })
-    .catch(() => res.status(404).json({searchFilter: 'No searchFilter found'}))
-})
-
-// @Route PUT /myAlfred/api/admin/searchFilter/all/:id
-// Update a searchFilter
-// @Access private
-router.put('/searchFilter/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('SearchFilter').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
-    .then(searchFilter => {
-      res.json(searchFilter)
-    })
-    .catch(() => res.status(404).json({searchFilternotfound: 'No searchFilter found'}))
-})
-
 // @Route POST /myAlfred/api/admin/category/all
 // Add category for prestation
 // @Access private
@@ -1196,7 +1115,6 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
         service: mongoose.Types.ObjectId(req.body.service),
         billing: req.body.billing,
         filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
-        search_filter: null,
         category: null,
         job: req.body.job,
         description: req.body.description,
@@ -1257,7 +1175,6 @@ router.get('/prestation/all/:id', passport.authenticate('admin', {session: false
     .populate('billing')
     .populate('filter_presentation')
     .populate('category')
-    .populate('search_filter')
     .populate('job')
     .then(prestation => {
       if (!prestation) {
@@ -1301,7 +1218,6 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
       service: mongoose.Types.ObjectId(req.body.service),
       billing: req.body.billing,
       filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
-      search_filter: null,
       category: mongoose.Types.ObjectId(req.body.service.category),
       job: req.body.job ? mongoose.Types.ObjectId(req.body.job) : null,
       description: req.body.description,
