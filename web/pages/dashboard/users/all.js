@@ -29,6 +29,7 @@ class all extends DataPage {
       models.textColumn({headerName: `${this.props.t('DASHBOARD.alfred')} Mangopay`, field: 'mangopay_provider_id'}),
       models.warningColumn({headerName: 'Warning', field: 'warning'}),
       models.textColumn({headerName: 'Commentaire', field: 'comment', editable: true}),
+      models.booleanColumn({headerName: 'Masqué', field: 'hidden'}),
     ]
   }
 
@@ -50,6 +51,9 @@ class all extends DataPage {
           }
           if (u.billing_address && u.billing_address.zip_code) {
             u.region = (regions.find(r => u.billing_address.zip_code.startsWith(r.num_dep)) || {}).region_name
+          }
+          if (!u.is_alfred) {
+            u.hidden=undefined
           }
           return u
         })
@@ -86,7 +90,7 @@ class all extends DataPage {
     }
   }
 
-  onCellChanged = (colDef, data, oldValue, newValue) => {
+  onCellValueChanged = (colDef, data, oldValue, newValue) => {
     console.log(`Changed ${JSON.stringify({colDef, data, oldValue, newValue}, null, 2)}`)
     if (colDef.field=='comment') {
       setAxiosAuthentication()
@@ -94,6 +98,22 @@ class all extends DataPage {
         .then(() => snackBarSuccess('Commentaire enregistré'))
         .catch(err => snackBarError(err).response.data)
     }
+    if (colDef.field == 'hidden') {
+      if (!data.is_alfred) {
+        return
+      }
+      const set_hidden=newValue
+      setAxiosAuthentication()
+      axios.put(`/myAlfred/api/admin/users/${ data._id}/hidden/${set_hidden}`)
+        .then(() => {
+          snackBarSuccess(`${data.full_name} ${set_hidden ? 'est masqué': 'est visible'}`)
+          this.componentDidMount()
+        })
+        .catch(err => {
+          snackBarError(err.response.data)
+        })
+    }
+
   }
 
 }

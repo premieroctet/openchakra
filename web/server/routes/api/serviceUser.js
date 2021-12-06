@@ -508,7 +508,7 @@ router.post('/search', (req, res) => {
 
   const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
   req.context.getModel('ServiceUser').find(filter, 'prestations.prestation service_address location perimeter description')
-    .populate({path: 'user', select: 'firstname'})
+    .populate({path: 'user', select: 'firstname hidden'})
     .populate({
       path: 'service', select: 'label s_label description',
       populate: {path: 'category', select: status==PRO ? 's_professional_label':'s_particular_label'},
@@ -520,6 +520,8 @@ router.post('/search', (req, res) => {
     .then(result => {
       let sus=result
       console.log(`Found ${sus.length} before filtering`)
+      // Filter hidden
+      sus = sus.filter(su => !su.user.hidden)
       if (category) {
         sus = sus.filter(su => su.service.category._id.toString() == category)
       }
@@ -720,10 +722,10 @@ router.get('/home/:partpro', (req, res) => {
   const filter= req.params.partpro==PRO ? {'professional_access': true} : {'particular_access': true}
   req.context.getModel('ServiceUser').find(filter, 'user service service_address.city')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
-    .populate('user', 'picture firstname score')
+    .populate('user', 'picture firstname score hidden')
     .populate('service', 'label')
     .then(result => {
-      let services=result
+      let services=result.filter(su => !su.user.hidden)
       if (typeof services !== 'undefined' && services.length > 0) {
         if (gps) {
           services.sort(serviceFilters.distanceComparator(gps))
