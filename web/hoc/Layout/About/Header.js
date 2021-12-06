@@ -110,7 +110,7 @@ class Header extends React.Component {
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           width: '100%',
-          height: 500,
+          height: 400,
           backgroundPosition: 'center',
 
         }}>
