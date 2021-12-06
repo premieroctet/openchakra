@@ -34,6 +34,8 @@ class HtmlEditor extends React.Component {
 
   onChange = html => {
     if (this.props.onChange) {
+      // Replace absolute https://my-alfred.io:3122/ => /
+      html=html.replace(/https:\/\/my-alfred.io:3122\//g, '/')
       // Remove surrounding DIVs
       html=html.replace(/^<div>(.*)<\/div>$/, "$1")
       this.props.onChange(html)
