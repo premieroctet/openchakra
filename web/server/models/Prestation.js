@@ -23,10 +23,6 @@ const PrestationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'filterPresentation',
   },
-  search_filter: [{
-    type: Schema.Types.ObjectId,
-    ref: 'searchFilter',
-  }],
   category: {
     type: Schema.Types.ObjectId,
     ref: 'category',

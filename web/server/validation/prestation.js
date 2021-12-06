@@ -9,7 +9,6 @@ module.exports = function validatePrestationInput(data) {
   data.billing = !isEmpty(data.billing) ? data.billing : []
   data.service = !isEmpty(data.service) ? data.service : ''
   data.filter_presentation = !isEmpty(data.filter_presentation) ? data.filter_presentation : ''
-  data.search_filter = !isEmpty(data.search_filter) ? data.search_filter : ''
   data.job = !isEmpty(data.job) ? data.job : ''
   data.description = !isEmpty(data.description) ? data.description : ''
 

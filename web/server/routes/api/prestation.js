@@ -15,7 +15,6 @@ router.get('/all', (req, res) => {
     .populate('job')
     .populate('service')
     .populate('billing')
-    .populate('search_filter')
     .populate('filter_presentation')
     .then(prestation => {
       if (typeof prestation !== 'undefined' && prestation.length > 0) {
@@ -39,7 +38,6 @@ router.get('/home', (req, res) => {
     .populate('job')
     .populate('service')
     .populate('billing')
-    .populate('search_filter')
     .populate('filter_presentation')
     .limit(4)
     .then(prestation => {
@@ -108,7 +106,6 @@ router.get('/:id', (req, res) => {
     .populate('job')
     .populate('service')
     .populate('billing')
-    .populate('search_filter')
     .populate('filter_presentation')
     .then(prestation => {
       if (Object.keys(prestation).length === 0 && prestation.constructor === Object) {
