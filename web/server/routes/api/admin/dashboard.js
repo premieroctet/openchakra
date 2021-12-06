@@ -149,7 +149,7 @@ router.put('/billing/all/:id', passport.authenticate('admin', {session: false}),
 // @Route GET /myAlfred/api/admin/users/all
 // List all users
 router.get('/users/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment')
+  req.context.getModel('User').find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment hidden')
     .populate({path: 'shop', select: 'creation_date'})
     .sort({creation_date: -1})
     .then(users => {
@@ -516,6 +516,20 @@ router.put('/users/:user_id/admin/:admin_status', passport.authenticate('admin',
   }
   const set_admin = req.params.admin_status=='true'
   req.context.getModel('User').findOneAndUpdate({_id: req.params.user_id}, {is_admin: set_admin})
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+})
+
+router.put('/users/:user_id/hidden/:hidden_status', passport.authenticate('admin', {session: false}), (req, res) => {
+  if (!['true', 'false'].includes(req.params.hidden_status)) {
+    return res.status(404).json('Statut hidden true/false attendu')
+  }
+  const set_hidden = req.params.hidden_status=='true'
+  req.context.getModel('User').findByIdAndUpdate(req.params.user_id, {hidden: set_hidden})
     .then(() => {
       res.json()
     })

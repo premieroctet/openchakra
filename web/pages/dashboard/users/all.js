@@ -29,6 +29,7 @@ class all extends DataPage {
       models.textColumn({headerName: `${this.props.t('DASHBOARD.alfred')} Mangopay`, field: 'mangopay_provider_id'}),
       models.warningColumn({headerName: 'Warning', field: 'warning'}),
       models.textColumn({headerName: 'Commentaire', field: 'comment', editable: true}),
+      models.booleanColumn({headerName: 'Masqué', field: 'hidden'}),
     ]
   }
 
@@ -78,6 +79,21 @@ class all extends DataPage {
       axios.put(`/myAlfred/api/admin/users/${ data._id}/admin/${set_admin}`)
         .then(() => {
           snackBarSuccess(`${data.full_name} ${set_admin ? 'est devenu(e)': 'n\'est plus'} administrateur`)
+          this.componentDidMount()
+        })
+        .catch(err => {
+          snackBarError(err.response.data)
+        })
+    }
+    if (field == 'hidden') {
+      if (!data.is_alfred) {
+        return
+      }
+      const set_hidden=!data.hidden
+      setAxiosAuthentication()
+      axios.put(`/myAlfred/api/admin/users/${ data._id}/hidden/${set_hidden}`)
+        .then(() => {
+          snackBarSuccess(`${data.full_name} ${set_hidden ? 'est masqué': 'est visible'}`)
           this.componentDidMount()
         })
         .catch(err => {

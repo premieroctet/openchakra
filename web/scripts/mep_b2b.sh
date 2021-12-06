@@ -35,3 +35,6 @@ mongo $database --eval 'db.bookings.update({reason: {$exists: false}}, {$set: {r
 
 # 938438: Remove prospect collection
 mongo $database --eval 'db.prospects.drop()'
+
+# 938707: statut hidden sur User
+mongo $database --eval 'db.users.update({hidden: {$exists: false}}, {$set: {hidden: false}}, {multi:1})'
