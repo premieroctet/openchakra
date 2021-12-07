@@ -25,8 +25,6 @@ const {
   sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert,
 } = require('../../utils/mailing')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
-const {connectionPool}=require('../../utils/database')
-const {serverContextFromPartner}=require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
 const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')

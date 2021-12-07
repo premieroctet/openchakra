@@ -1,9 +1,8 @@
+const {MONGOOSE_OPTIONS} = require('./utils/database')
 const mongoose=require('mongoose')
+
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/test-myAlfred-V2', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect('mongodb://localhost:27017/test-myAlfred-V2', MONGOOSE_OPTIONS)
   .then(() => {
     console.log('MongoDB connected')
   })

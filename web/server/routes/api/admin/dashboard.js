@@ -1,3 +1,5 @@
+const Company = require('../../../models/Company')
+const Customization = require('../../../models/Customization')
 const UIConfiguration = require('../../../models/UIConfiguration')
 const Booking = require('../../../models/Booking')
 const {IMAGE_FILTER, createDiskMulter} = require('../../../utils/filesystem')
@@ -15,7 +17,6 @@ const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
-const moment = require('moment')
 const crypto = require('crypto')
 
 const validateBillingInput = require('../../../validation/billing')
@@ -25,37 +26,15 @@ const validateRegisterAdminInput = require('../../../validation/registerAdmin')
 const validateCategoryInput = require('../../../validation/category')
 const validateServiceInput = require('../../../validation/service')
 const {addIdIfRequired} = require('../../../utils/mangopay')
-const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
+const {normalize} = require('../../../../utils/text')
 const {counterArray} = require('../../../../utils/converters')
 const {ADMIN} = require('../../../../utils/consts')
-const csv_parse = require('csv-parse/lib/sync')
 const axios = require('axios')
-const _ = require('lodash')
 const {computeUrl}=require('../../../../config/config')
-const {delayedPromise}=require('../../../../utils/promise')
 const {get_token, send_cookie, get_logged_id}=require('../../../utils/serverContext')
 const {createUIConfiguration} = require('../../../utils/ui_generation')
 const {logEvent}=require('../../../utils/events')
 const Validator = require('validator')
-
-// For Node < 12.0
-if (!Promise.allSettled) {
-  Promise.allSettled = promises =>
-    Promise.all(
-      promises.map(promise => {
-        return promise
-          .then(value => ({
-            status: 'fulfilled',
-            value,
-          }))
-          .catch(reason => ({
-            status: 'rejected',
-            reason,
-          }))
-      },
-      ),
-    )
-}
 
 // Upload multers
 // CATEGORY

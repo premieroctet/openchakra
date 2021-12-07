@@ -11,8 +11,6 @@ const {sendShopDeleted, sendShopOnline} = require('../../utils/mailing')
 const {createMangoProvider} = require('../../utils/mangopay')
 const {is_production, is_validation}=require('../../../config/config')
 const validateShopInput = require('../../validation/shop')
-const {connectionPool}=require('../../utils/database')
-const {serverContextFromPartner}=require('../../utils/serverContext')
 
 // FIX import or require
 const ALF_CONDS = { // my alfred condiitons
