@@ -10,16 +10,10 @@ export default theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
-    height: '100%',
+    padding: '5%',
     [theme.breakpoints.down('xs')]: {
       padding: '10%',
     },
-  },
-
-  widthContainer: {
-    width: '70%',
-    textAlign: 'center',
   },
   input: {
     marginLeft: theme.spacing(1),
