@@ -1,5 +1,5 @@
-const {REVIEW_STATUS} = require("../../utils/consts")
-const mongoose = require("mongoose")
+const {REVIEW_STATUS} = require('../../utils/consts')
+const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
@@ -70,15 +70,15 @@ const ReviewSchema = new Schema({
   },
   serviceUser: {
     type: Schema.Types.ObjectId,
-    ref: "ServiceUser",
+    ref: 'serviceUser',
   },
   alfred: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'user',
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'user',
   },
   status: {
     type: String,
@@ -88,4 +88,4 @@ const ReviewSchema = new Schema({
   },
 })
 
-module.exports = ReviewSchema
+module.exports = Review = mongoose.model('review', ReviewSchema)

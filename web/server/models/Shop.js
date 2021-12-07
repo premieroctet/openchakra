@@ -71,12 +71,12 @@ const ShopSchema = new Schema({
   },
   services: [{
     type: Schema.Types.ObjectId,
-    ref: 'ServiceUser',
+    ref: 'serviceUser',
 
   }],
   alfred: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   picture: String,
   // particulier CESU : oblige, accepte, refuse
@@ -119,4 +119,4 @@ ShopSchema.virtual('insurance_text').get(function() {
 })
 
 
-module.exports = ShopSchema
+module.exports = Shop = mongoose.model('shop', ShopSchema)

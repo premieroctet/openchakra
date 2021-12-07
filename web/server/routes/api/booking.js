@@ -1,6 +1,13 @@
+const Booking = require('../../models/Booking')
+const Company = require('../../models/Company')
+const Shop = require('../../models/Shop')
+const ServiceUser = require('../../models/ServiceUser')
+const User = require('../../models/User')
+const ChatRoom = require('../../models/ChatRoom')
 const express = require('express')
 const ics=require('ics')
 const {googleCalendarEventUrl} = require('google-calendar-url')
+
 const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
@@ -18,8 +25,6 @@ const {
   sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert,
 } = require('../../utils/mailing')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
-const {connectionPool}=require('../../utils/database')
-const {serverContextFromPartner}=require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
 const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
@@ -35,7 +40,7 @@ router.get('/test', (req, res) => res.json({msg: 'Booking Works!'}))
 // @Route GET /myAlfred/api/booking/alfredBooking
 router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id)
-  req.context.getModel('Booking').find({alfred: userId})
+  Booking.find({alfred: userId})
     .sort([['date', -1]])
     .populate('user', ['name', 'firstname', 'picture', 'company'])
     .populate('chatroom')
@@ -52,7 +57,7 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
 
 router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id)
-  req.context.getModel('Booking').find({user: userId})
+  Booking.find({user: userId})
     .sort([['date', -1]])
     .populate('alfred', '-id_card')
     .populate({
@@ -76,7 +81,7 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
 
 router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.user.id)
-  req.context.getModel('Booking').find({
+  Booking.find({
     $and: [
       {
         $or: [
@@ -96,7 +101,7 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
     .then(booking => {
       booking.forEach(b => {
         if (!moment(b.date).isBetween(moment(b.date), moment(b.date).add(1, 'd'))) {
-          req.context.getModel('Booking').findByIdAndUpdate(b._id, {status: BOOK_STATUS.EXPIRED}, {new: true})
+          Booking.findByIdAndUpdate(b._id, {status: BOOK_STATUS.EXPIRED}, {new: true})
             .then(newB => {
               res.json(newB)
             })
@@ -133,11 +138,11 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.user_role = getRole(req) || null
   bookingFields.customer_booking = req.body.customer_booking
 
-  req.context.getModel('Booking').create(bookingFields)
+  Booking.create(bookingFields)
     .then(booking => {
       if (booking.status === BOOK_STATUS.INFO || booking.status === BOOK_STATUS.TO_CONFIRM) {
         // Reload to get user,alfred,service
-        req.context.getModel('Booking').findById(booking._id)
+        Booking.findById(booking._id)
           .populate('alfred')
           .populate('user')
           .then(book => {
@@ -171,7 +176,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
                 $set: {booking: book._id, emitter: book.user._id, recipient: book.alfred._id},
                 $addToSet: {messages: message},
               }
-              req.context.getModel('ChatRoom').findOneAndUpdate(filter, update, {new: true, upsert: true})
+              ChatRoom.findOneAndUpdate(filter, update, {new: true, upsert: true})
                 .then(() => console.log('Chatroom maj'))
                 .catch(err => console.error(err))
             }
@@ -194,7 +199,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 // @Access private
 router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('Booking').find()
+  Booking.find()
     .populate('alfred')
     .populate('user')
     .populate('prestation')
@@ -216,7 +221,7 @@ router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) =>
 // View all the booking for the current alfred
 // @Access private
 router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('Booking').find({alfred: req.user.id})
+  Booking.find({alfred: req.user.id})
     .populate('alfred', {path: 'picture'})
     .populate('user')
     .populate('prestation')
@@ -236,13 +241,13 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 // Returns all bookings from avocotes customer not already handled
 // @Access private
 router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Booking').find({
+  Booking.find({
     company_customer: {$exists: true, $ne: null},
     status: {$nin: [BOOK_STATUS.FINISHED, BOOK_STATUS.CANCELLED]},
   })
     .populate('user')
     .then(customer_bookings => {
-      req.context.getModel('Booking').find({
+      Booking.find({
         customer_booking: {$in: customer_bookings.map(b => b._id)},
         status: {$in: [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED, BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.PREAPPROVED, BOOK_STATUS.TO_PAY]},
       },
@@ -262,11 +267,11 @@ router.post('/compute', (req, res) => {
   const avocotes_amount = req.body.avocotes_amount || 0
 
   let serviceUser
-  req.context.getModel('ServiceUser').findById(serviceUserId)
+  ServiceUser.findById(serviceUserId)
     .populate('prestations.prestation')
     .then(result => {
       serviceUser = result
-      return req.context.getModel('Shop').findOne({alfred: serviceUser.user}, {cesu: 1})
+      return Shop.findOne({alfred: serviceUser.user}, {cesu: 1})
     })
     .then(shop => {
       const totalPrestations=_.sum(serviceUser.prestations.map(p => p.price*(prestations[p._id] || 0)))
@@ -316,7 +321,7 @@ router.get('/:id', (req, res) => {
 
   // Si utilisateur non connecté, on ne retourne le booking que si c'est un AvoCotés (i.e. company_customer)
   const filter=get_logged_id(req) ? {} : {company_customer: {$ne: null}}
-  req.context.getModel('Booking').findOne({...filter, _id: req.params.id})
+  Booking.findOne({...filter, _id: req.params.id})
     .populate('alfred', '-id_card')
     .populate('user', '-id_card')
     .populate('prestation')
@@ -338,7 +343,7 @@ router.get('/:id', (req, res) => {
 
 router.get('/:id/ics', (req, res) => {
   let title
-  req.context.getModel('Booking').findById(req.params.id)
+  Booking.findById(req.params.id)
     .populate({path: 'user', select: 'firstname'})
     .populate({path: 'alfred', select: 'firstname'})
     .then(booking => {
@@ -375,7 +380,7 @@ router.get('/:id/ics', (req, res) => {
 
 router.get('/:id/google_calendar', (req, res) => {
   let title
-  req.context.getModel('Booking').findById(req.params.id)
+  Booking.findById(req.params.id)
     .populate({path: 'user', select: 'firstname'})
     .populate({path: 'alfred', select: 'firstname'})
     .then(booking => {
@@ -392,7 +397,7 @@ router.get('/:id/google_calendar', (req, res) => {
         geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
         status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
         busyStatus: 'BUSY',
-        details: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString()}">Accéder à ma réservation</a>`
+        details: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString()}">Accéder à ma réservation</a>`,
       })
       res.redirect(url)
     })
@@ -406,7 +411,7 @@ router.get('/:id/google_calendar', (req, res) => {
 // Delete one booking
 // @Access private
 router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('Booking').findById(req.params.id)
+  Booking.findById(req.params.id)
     .then(message => {
       message.remove().then(() => res.json({success: true}))
     })
@@ -426,7 +431,7 @@ router.put('/modifyBooking/:id', (req, res) => {
   }
 
   console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}, req is ${req.originalUrl}`)
-  req.context.getModel('Booking').findById(req.params.id)
+  Booking.findById(req.params.id)
     .populate('alfred')
     .populate('user')
     .populate('prestation')
@@ -449,7 +454,7 @@ router.put('/modifyBooking/:id', (req, res) => {
         .then(booking => {
           if (booking.user.company_customer && status==BOOK_STATUS.CUSTOMER_PAID) {
             // Prévenir les admins d'une nouvelle résa
-            req.context.getModel('User').find({is_admin: true}, 'firstname email phone')
+            User.find({is_admin: true}, 'firstname email phone')
               .then(admins => {
                 const search_link = new URL('/search', computeUrl(req))
                 const prestations=booking.prestations.map(p => p.name).join(',')
@@ -513,7 +518,7 @@ router.post('/avocotes', (req, res) => {
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('Company').findOne({name: AVOCOTES_COMPANY_NAME})
+  Company.findOne({name: AVOCOTES_COMPANY_NAME})
     .then(company => {
       const userData={
         firstname: req.body.firstname,
@@ -525,7 +530,7 @@ router.post('/avocotes', (req, res) => {
         birthday: '01/01/1980',
         password: 'tagada',
       }
-      return req.context.getModel('User').findOneAndUpdate({email: req.body.email}, userData, {upsert: true, new: true})
+      return User.findOneAndUpdate({email: req.body.email}, userData, {upsert: true, new: true})
     })
     .then(user => {
       console.log(`Created DB user:${JSON.stringify(user)}`)
@@ -542,7 +547,7 @@ router.post('/avocotes', (req, res) => {
         prestations: req.body.prestations, reference: computeBookingReference(user, user),
         company_customer: user.company_customer, status: BOOK_STATUS.TO_PAY,
       }
-      return req.context.getModel('Booking').create(bookData)
+      return Booking.create(bookData)
     })
     .then(booking => {
       return res.json(booking)
@@ -557,49 +562,45 @@ new CronJob('0 */35 * * * *', (() => {
   console.log('Checking terminated bookings')
   const date = moment().startOf('day')
 
-  connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
-    console.log(`Checking for database ${context.getDbName()}`)
-    context.getModel('Booking').find({status: BOOK_STATUS.CONFIRMED, paid: false})
-      .populate('user')
-      .populate('alfred')
-      .then(booking => {
-        booking.forEach(b => {
-          const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
-          if (moment(date).isSameOrAfter(end_date)) {
-            console.log(`Booking #${b._id} terminated`)
-            b.status = BOOK_STATUS.FINISHED
-            b.save()
-              .then(bo => {
-                sendLeaveCommentForAlfred(bo)
-                sendLeaveCommentForClient(bo)
-              })
-              .catch(err => console.error(err))
-          }
-        },
-        )
-      })
-      .catch(err => console.error(err))
-  })
+  Booking.find({status: BOOK_STATUS.CONFIRMED, paid: false})
+    .populate('user')
+    .populate('alfred')
+    .then(booking => {
+      booking.forEach(b => {
+        const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
+        if (moment(date).isSameOrAfter(end_date)) {
+          console.log(`Booking #${b._id} terminated`)
+          b.status = BOOK_STATUS.FINISHED
+          b.save()
+            .then(bo => {
+              sendLeaveCommentForAlfred(bo)
+              sendLeaveCommentForClient(bo)
+            })
+            .catch(err => console.error(err))
+        }
+      },
+      )
+    })
+    .catch(err => console.error(err))
 
 }), null, true, 'Europe/Paris')
 
 // Handle terminated but not paid bookings
 new CronJob('0 */15 * * * *', (() => {
   console.log('Checking bookings to pay')
-  connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
-    context.getModel('Booking').find({status: BOOK_STATUS.FINISHED, paid: false})
-      .populate('user')
-      .populate('alfred')
-      .populate({path: 'customer_booking', populate: {path: 'user'}})
-      .then(bookings => {
-        bookings.forEach(booking => {
-          console.log(`Booking #${booking._id} to pay`)
-          payBooking(booking, context)
-        })
-      }).catch(err => {
-        console.error(err)
+  Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
+    .populate('user')
+    .populate('alfred')
+    .populate({path: 'customer_booking', populate: {path: 'user'}})
+    .then(bookings => {
+      bookings.forEach(booking => {
+        console.log(`Booking #${booking._id} to pay`)
+        // TODO: context non disponible => à régler
+        payBooking(booking, context)
       })
-  })
+    }).catch(err => {
+      console.error(err)
+    })
 }), null, true, 'Europe/Paris')
 
 // Expiration réervation en attente de confirmation :
@@ -608,33 +609,31 @@ new CronJob('0 */15 * * * *', (() => {
 new CronJob('0 */15 * * * *', (() => {
   console.log('Checking expired bookings')
   const currentDate = moment().startOf('day')
-  connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
-    context.getModel('Booking').find({$or: [{status: BOOK_STATUS.TO_CONFIRM}, {status: BOOK_STATUS.TO_PAY}]})
-      .populate('user')
-      .populate('alfred')
-      .then(booking => {
-        booking.forEach(b => {
-          const expirationDate = moment(b.date).add(EXPIRATION_DELAY, 'days').startOf('day')
-          // Expired because Alfred did not answer
-          const answerExpired = moment(currentDate).isSameOrAfter(expirationDate)
-          // Expired because prestation date passed
-          const prestaDateExpired = moment().isSameOrAfter(b.date_prestation_moment)
-          if (answerExpired || prestaDateExpired) {
-            const reason = answerExpired ? `Alfred did not confirm within ${EXPIRATION_DELAY} days` : 'prestation date passed'
-            console.log(`Booking ${b._id} expired : ${reason}`)
-            b.status = BOOK_STATUS.EXPIRED
-            b.save()
-              .then(bo => {
-                sendBookingExpiredToAlfred(bo)
-                sendBookingExpiredToClient(bo)
-              })
-              .catch(err => {
-                console.error(err)
-              })
-          }
-        })
+  Booking.find({$or: [{status: BOOK_STATUS.TO_CONFIRM}, {status: BOOK_STATUS.TO_PAY}]})
+    .populate('user')
+    .populate('alfred')
+    .then(booking => {
+      booking.forEach(b => {
+        const expirationDate = moment(b.date).add(EXPIRATION_DELAY, 'days').startOf('day')
+        // Expired because Alfred did not answer
+        const answerExpired = moment(currentDate).isSameOrAfter(expirationDate)
+        // Expired because prestation date passed
+        const prestaDateExpired = moment().isSameOrAfter(b.date_prestation_moment)
+        if (answerExpired || prestaDateExpired) {
+          const reason = answerExpired ? `Alfred did not confirm within ${EXPIRATION_DELAY} days` : 'prestation date passed'
+          console.log(`Booking ${b._id} expired : ${reason}`)
+          b.status = BOOK_STATUS.EXPIRED
+          b.save()
+            .then(bo => {
+              sendBookingExpiredToAlfred(bo)
+              sendBookingExpiredToClient(bo)
+            })
+            .catch(err => {
+              console.error(err)
+            })
+        }
       })
-  })
+    })
 }), null, true, 'Europe/Paris')
 
 // pattern reference

@@ -6,11 +6,11 @@ const ChatRoomsSchema = new Schema({
   name: String,
   emitter: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   recipient: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   messages: [{
     user: String,
@@ -22,7 +22,7 @@ const ChatRoomsSchema = new Schema({
     thepicture: String,
     idsender: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
     },
     viewed: {
       type: Boolean,
@@ -31,7 +31,7 @@ const ChatRoomsSchema = new Schema({
   }],
   booking: {
     type: Schema.Types.ObjectId,
-    ref: 'Booking',
+    ref: 'booking',
     required: false,
   },
 }, {toJSON: {virtuals: true, getters: true}})
@@ -44,4 +44,4 @@ ChatRoomsSchema.virtual('latest').get(function() {
   return Math.max(...this.messages.map(m => m.date))
 })
 
-module.exports = ChatRoomsSchema
+module.exports = ChatRoom = mongoose.model('chatRoom', ChatRoomsSchema)

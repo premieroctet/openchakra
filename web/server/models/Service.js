@@ -8,11 +8,11 @@ const ServiceSchema = new Schema({
   },
   category: {
     type: Schema.Types.ObjectId,
-    ref: 'Category',
+    ref: 'category',
   },
   equipments: [{
     type: Schema.Types.ObjectId,
-    ref: 'Equipment',
+    ref: 'equipment',
   }],
   picture: {
     type: String,
@@ -63,11 +63,11 @@ ServiceSchema.virtual('travel_tax').get(function() {
 })
 
 ServiceSchema.virtual('prestations', {
-  ref: 'Prestation', // The Model to use
+  ref: 'prestation', // The Model to use
   localField: '_id', // Find in Model, where localField
   foreignField: 'service', // is equal to foreignField
 })
 
 ServiceSchema.index({label: 'text'})
 
-module.exports = ServiceSchema
+module.exports = Service = mongoose.model('service', ServiceSchema)

@@ -76,7 +76,7 @@ const CompanySchema = new Schema({
   // Legal repesentative
   representative: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   // Mangopay as client
   id_mangopay: {
@@ -93,4 +93,4 @@ CompanySchema.virtual('mangopay_provider_id').get(function() {
   return this.id_mangopay
 })
 
-module.exports = CompanySchema
+module.exports = mongoose.model('company', CompanySchema)

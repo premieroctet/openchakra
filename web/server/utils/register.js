@@ -1,3 +1,5 @@
+const EventLog = require('../models/EventLog')
+const User = require('../models/User')
 const {logEvent}=require('./events')
 const uuidv4 = require('uuid/v4')
 
@@ -5,7 +7,7 @@ const INVITATION_TITLE='Invitation pour inscription'
 
 const getRegisterCode = (req, email) => {
   return new Promise((res, rej) => {
-    req.context.getModel('User').exists({email: email})
+    User.exists({email: email})
       .then(exists => {
         if (exists) {
           return rej(`Un compte avec l'email ${email} existe déjà`)
@@ -22,7 +24,7 @@ const getRegisterCode = (req, email) => {
 
 const checkRegisterCodeValidity = (req, code) => {
   return new Promise((res, rej) => {
-    req.context.getModel('EventLog').findOne({'data.code': code})
+    EventLog.findOne({'data.code': code})
       .then(data => {
         if (!data) {
           return rej('Ce lien n\'est pas valide')
@@ -40,7 +42,7 @@ const setRegisterCodeUsed = (req, code) => {
   return new Promise((res, rej) => {
     checkRegisterCodeValidity(req, code)
       .then(() => {
-        return req.context.getModel('EventLog').update({'data.code': code}, {'data.registered': true})
+        return EventLog.update({'data.code': code}, {'data.registered': true})
       })
       .then(result => {
         if (!result.nModified==1) {

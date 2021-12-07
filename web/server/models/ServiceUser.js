@@ -7,21 +7,21 @@ const {hideIllegal} = require('../../utils/text')
 const ServiceUserSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
     required: true,
   },
   service: {
     type: Schema.Types.ObjectId,
-    ref: 'Service',
+    ref: 'service',
   },
   prestations: [{
     prestation: {
       type: Schema.Types.ObjectId,
-      ref: 'Prestation',
+      ref: 'prestation',
     },
     billing: {
       type: Schema.Types.ObjectId,
-      ref: 'Billing',
+      ref: 'billing',
       required: true,
     },
     price: {
@@ -31,7 +31,7 @@ const ServiceUserSchema = new Schema({
   }],
   equipments: [{
     type: Schema.Types.ObjectId,
-    ref: 'Equipment',
+    ref: 'equipment',
   }],
   service_address: {
     type: {
@@ -201,4 +201,4 @@ ServiceUserSchema.virtual('grade_text').get(function() {
 })
 
 
-module.exports = ServiceUserSchema
+module.exports = ServiceUser = mongoose.model('serviceuser', ServiceUserSchema)

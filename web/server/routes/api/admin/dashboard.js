@@ -1,8 +1,15 @@
+const Company = require('../../../models/Company')
+const Customization = require('../../../models/Customization')
+const UIConfiguration = require('../../../models/UIConfiguration')
+const Booking = require('../../../models/Booking')
+const {IMAGE_FILTER, createDiskMulter} = require('../../../utils/filesystem')
+const {isValid} = require('date-fns')
+const User = require('../../../models/User')
+const Billing = require('../../../models/Billing')
 const {getRegisterCode}=require('../../../utils/register')
 const {sendRegisterInvitation}=require('../../../utils/mailing')
 const {EDIT_PROFIL}=require('../../../../utils/i18n')
 const {hasRefs}=require('../../../utils/database')
-const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../../utils/filesystem')
 const {getIdentifiers, getKeys, getQueries}=require('../../../utils/i18n_extraction')
 const express = require('express')
 
@@ -10,7 +17,6 @@ const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
-const moment = require('moment')
 const crypto = require('crypto')
 
 const validateBillingInput = require('../../../validation/billing')
@@ -20,37 +26,15 @@ const validateRegisterAdminInput = require('../../../validation/registerAdmin')
 const validateCategoryInput = require('../../../validation/category')
 const validateServiceInput = require('../../../validation/service')
 const {addIdIfRequired} = require('../../../utils/mangopay')
-const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
+const {normalize} = require('../../../../utils/text')
 const {counterArray} = require('../../../../utils/converters')
 const {ADMIN} = require('../../../../utils/consts')
-const csv_parse = require('csv-parse/lib/sync')
 const axios = require('axios')
-const _ = require('lodash')
 const {computeUrl}=require('../../../../config/config')
-const {delayedPromise}=require('../../../../utils/promise')
 const {get_token, send_cookie, get_logged_id}=require('../../../utils/serverContext')
 const {createUIConfiguration} = require('../../../utils/ui_generation')
 const {logEvent}=require('../../../utils/events')
 const Validator = require('validator')
-
-// For Node < 12.0
-if (!Promise.allSettled) {
-  Promise.allSettled = promises =>
-    Promise.all(
-      promises.map(promise => {
-        return promise
-          .then(value => ({
-            status: 'fulfilled',
-            value,
-          }))
-          .catch(reason => ({
-            status: 'rejected',
-            reason,
-          }))
-      },
-      ),
-    )
-}
 
 // Upload multers
 // CATEGORY
@@ -74,7 +58,7 @@ router.post('/billing/all', passport.authenticate('admin', {session: false}), (r
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('Billing').findOne({label: req.body.label})
+  Billing.findOne({label: req.body.label})
     .then(billing => {
       if (billing) {
         errors.label = 'Cette méthode de facturation existe déjà'
@@ -85,7 +69,7 @@ router.post('/billing/all', passport.authenticate('admin', {session: false}), (r
         label: req.body.label,
       }
 
-      req.context.getModel('Billing').create(newBilling)
+      Billing.create(newBilling)
         .then(billing => res.json(billing))
         .catch(err => console.error(err))
     })
@@ -95,7 +79,7 @@ router.post('/billing/all', passport.authenticate('admin', {session: false}), (r
 // View all billings system
 // @Access private
 router.get('/billing/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Billing').find()
+  Billing.find()
     .sort({label: 1})
     .then(billings => {
       res.json(billings)
@@ -107,7 +91,7 @@ router.get('/billing/all', passport.authenticate('admin', {session: false}), (re
 // View one billings system
 // @Access private
 router.get('/billing/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Billing').findById(req.params.id)
+  Billing.findById(req.params.id)
     .then(billing => {
       if (!billing) {
         return res.status(400).json({msg: 'No billing found'})
@@ -127,7 +111,7 @@ router.delete('/billing/all/:id', passport.authenticate('admin', {session: false
       if (refs.some(t => t)) {
         return res.status(400).json('Cette méthode de facturation est utilisée')
       }
-      req.context.getModel('Billing').findByIdAndRemove(req.params.id)
+      Billing.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
         .catch(() => res.status(404).json({billingnotfound: 'No billing found'}))
     })
@@ -137,7 +121,7 @@ router.delete('/billing/all/:id', passport.authenticate('admin', {session: false
 // Update a billing system
 // @Access private
 router.put('/billing/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Billing').findByIdAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+  Billing.findByIdAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
     .then(billing => {
       res.json(billing)
     })
@@ -149,7 +133,7 @@ router.put('/billing/all/:id', passport.authenticate('admin', {session: false}),
 // @Route GET /myAlfred/api/admin/users/all
 // List all users
 router.get('/users/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment hidden')
+  User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment hidden')
     .populate({path: 'shop', select: 'creation_date'})
     .sort({creation_date: -1})
     .then(users => {
@@ -164,7 +148,7 @@ router.get('/users/all', passport.authenticate('admin', {session: false}), (req,
 // @Route PUT /myAlfred/api/admin/users/:user_id
 // List all users
 router.put('/users/:user_id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.params.user_id, req.body)
+  User.findByIdAndUpdate(req.params.user_id, req.body)
     .then(() => {
       res.json()
     })
@@ -177,7 +161,7 @@ router.put('/users/:user_id', passport.authenticate('admin', {session: false}), 
 // @Route GET /myAlfred/api/admin/serviceusers/all
 // List all serviuceusers
 router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('ServiceUser').find({}, '_id perimeter location service_address.zip_code service_address.city travel_tax')
+  ServiceUser.find({}, '_id perimeter location service_address.zip_code service_address.city travel_tax')
     .populate({path: 'service', select: 'label category picture', populate: {path: 'category', select: 'label'}})
   // .populate('service.category', 'label')
     .populate({path: 'user', select: 'email shop', populate: {path: 'shop', select: 'is_professional'}})
@@ -193,7 +177,7 @@ router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), 
 // @Route GET /myAlfred/api/admin/users/all_light
 // List all users (firstname, name, email)
 router.get('/users/all_light', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').find({active: true}, 'firstname name email roles')
+  User.find({active: true}, 'firstname name email roles')
     .sort({name: 1})
     .then(user => {
       if (!user) {
@@ -209,7 +193,7 @@ router.get('/users/all_light', passport.authenticate('admin', {session: false}),
 // @Access private
 router.get('/serviceUsersMap', passport.authenticate('admin', {session: false}), (req, res) => {
 
-  req.context.getModel('ServiceUser').find({}, '_id service_address.gps')
+  ServiceUser.find({}, '_id service_address.gps')
     // .populate('user','-id_card')
     .populate('service', '_id label')
     .populate('user', 'firstname')
@@ -231,7 +215,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
   const role = req.body.role
 
   // Find user by email
-  req.context.getModel('User').findOne({email})
+  User.findOne({email})
     .populate('shop', 'is_particular')
     .then(user => {
       // Check for user
@@ -257,7 +241,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
 // @Route GET /myAlfred/api/admin/users/users
 // List all simple users
 router.get('/users/users', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').find({is_admin: false, is_alfred: false})
+  User.find({is_admin: false, is_alfred: false})
     .then(user => {
       if (!user) {
         res.status(400).json({msg: 'No users found'})
@@ -273,7 +257,7 @@ router.get('/users/users', passport.authenticate('admin', {session: false}), (re
 // @Route GET /myAlfred/api/admin/users/users/:id
 // Get one user
 router.get('/users/users/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.params.id)
+  User.findById(req.params.id)
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'})
@@ -291,7 +275,7 @@ router.get('/users/users/:id', passport.authenticate('admin', {session: false}),
 // Update a user
 // @Access private
 router.put('/users/users/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {$set: {active: req.body.active}}, {new: true})
+  User.findOneAndUpdate({_id: req.params.id}, {$set: {active: req.body.active}}, {new: true})
     .then(user => {
       res.json(user)
     })
@@ -305,7 +289,7 @@ router.put('/users/users/:id', passport.authenticate('admin', {session: false}),
 // Validate id card for a user
 // @Access private
 router.put('/users/users/idCard/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: true}}, {new: true})
+  User.findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: true}}, {new: true})
     .then(user => {
       res.json(user)
     })
@@ -319,7 +303,7 @@ router.put('/users/users/idCard/:id', passport.authenticate('admin', {session: f
 // Delete id card for a user
 // @Access private
 router.put('/users/users/idCard/delete/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: false}}, {new: true})
+  User.findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: false}}, {new: true})
     .then(user => {
       res.json(user)
     })
@@ -332,7 +316,7 @@ router.put('/users/users/idCard/delete/:id', passport.authenticate('admin', {ses
 router.delete('/users/users/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   return res.status(400).json('Ne peut supprimer un utilisateur')
   /** TODO Check consistency before removing
-  req.context.getModel('User').findById(req.params.id)
+  User.findById(req.params.id)
     .then(user => {
       user.remove().then(() => res.json({success: true}))
     })
@@ -343,7 +327,7 @@ router.delete('/users/users/:id', passport.authenticate('admin', {session: false
 // @Route GET /myAlfred/api/admin/users/alfred
 // List all alfred
 router.get('/users/alfred', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').find({is_alfred: true})
+  User.find({is_alfred: true})
     .sort({name: 1})
     .then(user => {
       if (!user) {
@@ -358,7 +342,7 @@ router.get('/users/alfred', passport.authenticate('admin', {session: false}), (r
 // @Route GET /myAlfred/api/admin/users/alfred/:id
 // Get one alfred
 router.get('/users/alfred/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.params.id)
+  User.findById(req.params.id)
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'})
@@ -373,7 +357,7 @@ router.get('/users/alfred/:id', passport.authenticate('admin', {session: false})
 // Update an alfred
 // @Access private
 router.put('/users/alfred/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {
+  User.findOneAndUpdate({_id: req.params.id}, {
     $set: {
       is_alfred: req.body.is_alfred,
       active: req.body.active,
@@ -390,7 +374,7 @@ router.put('/users/alfred/:id', passport.authenticate('admin', {session: false})
 // Validate id card for an alfred
 // @Access private
 router.put('/users/alfred/idCard/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: true}}, {new: true})
+  User.findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: true}}, {new: true})
     .then(user => {
       res.json(user)
     })
@@ -401,7 +385,7 @@ router.put('/users/alfred/idCard/:id', passport.authenticate('admin', {session: 
 // Delete id card for an alfred
 // @Access private
 router.put('/users/alfred/idCard/delete/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: false}}, {new: true})
+  User.findOneAndUpdate({_id: req.params.id}, {$set: {id_confirmed: false}}, {new: true})
     .then(user => {
       res.json(user)
     })
@@ -412,7 +396,7 @@ router.put('/users/alfred/idCard/delete/:id', passport.authenticate('admin', {se
 // Delete one alfred
 // @Access private
 router.delete('/users/alfred/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.params.id)
+  User.findById(req.params.id)
     .then(user => {
       user.remove().then(() => res.json({success: true}))
     })
@@ -423,7 +407,7 @@ router.delete('/users/alfred/:id', passport.authenticate('admin', {session: fals
 // List all admin
 // @Access private and for admin only
 router.get('/users/admin', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').find({is_admin: true})
+  User.find({is_admin: true})
     .sort({name: 1})
     .then(user => {
       if (!user) {
@@ -439,7 +423,7 @@ router.get('/users/admin', passport.authenticate('admin', {session: false}), (re
 // Get one admin
 // @Access private and for admin only
 router.get('/users/admin/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.params.id)
+  User.findById(req.params.id)
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'})
@@ -459,7 +443,7 @@ router.post('/users/admin', passport.authenticate('admin', {session: false}), (r
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('User').findOne({email: req.body.email, is_admin: true})
+  User.findOne({email: req.body.email, is_admin: true})
     .then(user => {
       if (user) {
         errors.email = EDIT_PROFIL.duplicate_email
@@ -480,7 +464,7 @@ router.post('/users/admin', passport.authenticate('admin', {session: false}), (r
             throw err
           }
           newUser.password = hash
-          req.context.getModel('User').create(newUser)
+          User.create(newUser)
             .then(user => res.json(user))
             .catch(err => console.error(err))
         })
@@ -493,7 +477,7 @@ router.post('/users/admin', passport.authenticate('admin', {session: false}), (r
 // Update an admin
 // @Access private
 router.put('/users/admin/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findOneAndUpdate({_id: req.params.id}, {
+  User.findOneAndUpdate({_id: req.params.id}, {
     $set: {
       name: req.body.name,
       firstname: req.body.firstname,
@@ -515,7 +499,7 @@ router.put('/users/:user_id/admin/:admin_status', passport.authenticate('admin',
     return res.status(404).json('Vous ne pouvez pas vous retirer le statut d\'administrateur')
   }
   const set_admin = req.params.admin_status=='true'
-  req.context.getModel('User').findOneAndUpdate({_id: req.params.user_id}, {is_admin: set_admin})
+  User.findOneAndUpdate({_id: req.params.user_id}, {is_admin: set_admin})
     .then(() => {
       res.json()
     })
@@ -544,7 +528,7 @@ router.put('/users/:user_id/hidden/:hidden_status', passport.authenticate('admin
 router.delete('/users/admin/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   return res.status(400).json('Ne peut supprimer un administrateur')
   /**  TODO Check consistency before removing
-  req.context.getModel('User').findById(req.params.id)
+  User.findById(req.params.id)
     .then(user => {
       user.remove().then(() => res.json({success: true}))
     })
@@ -562,7 +546,7 @@ router.post('/filterPresentation/all', passport.authenticate('admin', {session: 
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('FilterPresentation').findOne({label: req.body.label})
+  FilterPresentation.findOne({label: req.body.label})
     .then(filterPresentation => {
       if (filterPresentation) {
         errors.label = 'Ce filtre existe déjà'
@@ -572,7 +556,7 @@ router.post('/filterPresentation/all', passport.authenticate('admin', {session: 
         label: req.body.label,
       }
 
-      req.context.getModel('FilterPresentation').create(newFilterPresentation)
+      FilterPresentation.create(newFilterPresentation)
         .then(filterPresentation => res.json(filterPresentation))
         .catch(err => console.error(err))
     })
@@ -582,7 +566,7 @@ router.post('/filterPresentation/all', passport.authenticate('admin', {session: 
 // View all filterPresentation
 // @Access private
 router.get('/filterPresentation/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('FilterPresentation').find()
+  FilterPresentation.find()
     .sort({label: 1})
     .then(filterPresentation => {
       if (!filterPresentation) {
@@ -600,7 +584,7 @@ router.get('/filterPresentation/all', passport.authenticate('admin', {session: f
 // View one filterPresentation
 // @Access private
 router.get('/filterPresentation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('FilterPresentation').findById(req.params.id)
+  FilterPresentation.findById(req.params.id)
     .then(filterPresentation => {
       if (!filterPresentation) {
         return res.status(400).json({msg: 'No filterPresentation found'})
@@ -620,7 +604,7 @@ router.delete('/filterPresentation/all/:id', passport.authenticate('admin', {ses
       if (refs.some(t => t)) {
         return res.status(400).json('Ce filtre de présentation est utilisé')
       }
-      req.context.getModel('FilterPresentation').findByIdAndRemove(req.params.id)
+      FilterPresentation.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
         .catch(() => res.status(404).json({filterPresentation: 'No filterPresentation found'}))
     })
@@ -630,7 +614,7 @@ router.delete('/filterPresentation/all/:id', passport.authenticate('admin', {ses
 // Update a filterPresentation
 // @Access private
 router.put('/filterPresentation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('FilterPresentation').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+  FilterPresentation.findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
     .then(filterPresentation => {
       res.json(filterPresentation)
     })
@@ -648,7 +632,7 @@ router.post('/job/all', passport.authenticate('admin', {session: false}), (req, 
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('Job').findOne({label: req.body.label})
+  Job.findOne({label: req.body.label})
     .then(job => {
       if (job) {
         errors.label = 'Ce métier existe déjà'
@@ -658,7 +642,7 @@ router.post('/job/all', passport.authenticate('admin', {session: false}), (req, 
         label: req.body.label,
       }
 
-      req.context.getModel('Job').create(newJob)
+      Job.create(newJob)
         .then(job => res.json(job))
         .catch(err => console.error(err))
     })
@@ -668,7 +652,7 @@ router.post('/job/all', passport.authenticate('admin', {session: false}), (req, 
 // View all job
 // @Access private
 router.get('/job/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Job').find()
+  Job.find()
     .sort({label: 1})
     .then(job => {
       if (!job) {
@@ -684,7 +668,7 @@ router.get('/job/all', passport.authenticate('admin', {session: false}), (req, r
 // View one job
 // @Access private
 router.get('/job/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Job').findById(req.params.id)
+  Job.findById(req.params.id)
     .then(job => {
       if (!job) {
         return res.status(400).json({msg: 'No job found'})
@@ -704,7 +688,7 @@ router.delete('/job/all/:id', passport.authenticate('admin', {session: false}), 
       if (refs.some(t => t)) {
         return res.status(400).json('Ce métier est utilisé')
       }
-      req.context.getModel('Job').findByIdAndRemove(req.params.id)
+      Job.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
         .catch(() => res.status(404).json({job: 'No job found'}))
     })
@@ -714,7 +698,7 @@ router.delete('/job/all/:id', passport.authenticate('admin', {session: false}), 
 // Update a job
 // @Access private
 router.put('/job/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Job').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+  Job.findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
     .then(job => {
       res.json(job)
     })
@@ -730,7 +714,7 @@ router.post('/category/all', uploadCat.single('picture'), passport.authenticate(
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('Category').findOne({label: req.body.label})
+  Category.findOne({label: req.body.label})
     .then(category => {
       if (category) {
         errors.label = 'Cette catégorie existe déjà'
@@ -743,7 +727,7 @@ router.post('/category/all', uploadCat.single('picture'), passport.authenticate(
         description: req.body.description,
       }
 
-      req.context.getModel('Category').create(newCategory)
+      Category.create(newCategory)
         .then(category => res.json(category))
         .catch(err => console.error(err))
 
@@ -765,7 +749,7 @@ passport.authenticate('admin', {session: false}), (req, res) => {
   if (req.files.professional_picture) {
     attributes.professional_picture = req.files.professional_picture[0].path
   }
-  req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
+  Category.findByIdAndUpdate(req.params.id, attributes, {new: true})
     .then(category => {
       res.json(category)
     })
@@ -775,7 +759,7 @@ passport.authenticate('admin', {session: false}), (req, res) => {
 // View all categories
 // @Access private
 router.get('/category/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Category').find()
+  Category.find()
     .sort({'label': 1})
     .then(category => {
       if (!category) {
@@ -796,7 +780,7 @@ router.get('/category/all', passport.authenticate('admin', {session: false}), (r
 // View one category
 // @Access private
 router.get('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Category').findById(req.params.id)
+  Category.findById(req.params.id)
     .then(category => {
       if (!category) {
         return res.status(400).json({msg: 'No category found'})
@@ -816,7 +800,7 @@ router.delete('/category/all/:id', passport.authenticate('admin', {session: fals
       if (refs.some(t => t)) {
         return res.status(400).json('Cette catégorie est utilisée')
       }
-      req.context.getModel('Category').findByIdAndRemove(req.params.id)
+      Category.findByIdAndRemove(req.params.id)
         .then(() => res.json())
         .catch(() => res.status(404).json({category: 'No category found'}))
     })
@@ -835,9 +819,9 @@ router.put('/category/all/:id?', passport.authenticate('admin', {session: false}
     description: req.body.description,
   }
   const promise=req.params.id ?
-    req.context.getModel('Category').findByIdAndUpdate(req.params.id, attributes, {new: true})
+    Category.findByIdAndUpdate(req.params.id, attributes, {new: true})
     :
-    req.context.getModel('Category').create(attributes)
+    Category.create(attributes)
   promise
     .then(category => {
       res.json(category)
@@ -857,7 +841,7 @@ router.post('/equipment/all', uploadEquipment.single('logo'), passport.authentic
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('Equipment').findOne({label: req.body.label})
+  Equipment.findOne({label: req.body.label})
     .then(equipment => {
       if (equipment) {
         errors.label = 'Cet équipement existe déjà '
@@ -868,7 +852,7 @@ router.post('/equipment/all', uploadEquipment.single('logo'), passport.authentic
         logo: req.file.originalname,
       }
 
-      req.context.getModel('Equipment').create(newEquipment)
+      Equipment.create(newEquipment)
         .then(equipment => res.json(equipment))
         .catch(err => console.error(err))
     })
@@ -883,7 +867,7 @@ router.put('/equipment/all/:id', uploadEquipment.single('logo'), passport.authen
     data.logo=req.file.originalname
   }
   console.log(JSON.stringify(req.file))
-  req.context.getModel('Equipment').findOneAndUpdate({_id: req.params.id}, {$set: data}, {new: true})
+  Equipment.findOneAndUpdate({_id: req.params.id}, {$set: data}, {new: true})
     .then(equipment => {
       res.json(equipment)
     })
@@ -897,7 +881,7 @@ router.put('/equipment/all/:id', uploadEquipment.single('logo'), passport.authen
 // View all equipments
 // @Access private
 router.get('/equipment/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Equipment').find()
+  Equipment.find()
     .sort({label: 1})
     .then(equipment => {
       if (!equipment) {
@@ -918,7 +902,7 @@ router.get('/equipment/all', passport.authenticate('admin', {session: false}), (
 // View one equipments
 // @Access private
 router.get('/equipment/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Equipment').findById(req.params.id)
+  Equipment.findById(req.params.id)
     .then(equipment => {
       if (!equipment) {
         return res.status(400).json({msg: 'No equipment found'})
@@ -941,7 +925,7 @@ router.delete('/equipment/all/:id', passport.authenticate('admin', {session: fal
       if (refs.some(t => t)) {
         return res.status(400).json('Cet équipement est utilisé')
       }
-      req.context.getModel('Equipment').findByIdAndRemove(req.params.id)
+      Equipment.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
         .catch(err => {
           console.error(err)
@@ -958,7 +942,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('Service').findOne({label: req.body.label})
+  Service.findOne({label: req.body.label})
     .then(service => {
       if (service) {
         errors.label = 'Ce service existe déjà'
@@ -983,7 +967,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
         particular_access: req.body.particular_access,
       }
 
-      req.context.getModel('Service').create(newService)
+      Service.create(newService)
         .then(service => res.json(service))
         .catch(err => console.error(err))
     })
@@ -993,7 +977,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
 // Edit picture
 // @Access private
 router.post('/service/editPicture/:id', uploadService.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Service').findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+  Service.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
     .then(service => {
       res.json(service)
     })
@@ -1004,7 +988,7 @@ router.post('/service/editPicture/:id', uploadService.single('picture'), passpor
 // @Access private
 router.get('/service/all', passport.authenticate('admin', {session: false}), (req, res) => {
 
-  req.context.getModel('Service').find()
+  Service.find()
     .sort({'label': 1})
     .populate('equipments', 'label')
     .populate('category', 'particular_label professional_label')
@@ -1028,7 +1012,7 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
 // View one service
 // @Access private
 router.get('/service/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Service').findById(req.params.id)
+  Service.findById(req.params.id)
     .populate('equipments')
     .populate('category')
     .then(service => {
@@ -1053,7 +1037,7 @@ router.delete('/service/all/:id', passport.authenticate('admin', {session: false
       if (refs.some(t => t)) {
         return res.status(400).json('Ce service est utilisé')
       }
-      req.context.getModel('Service').findByIdAndRemove(req.params.id)
+      Service.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
         .catch(() => res.status(404).json({service: 'No service found'}))
     })
@@ -1068,7 +1052,7 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('Service').findByIdAndUpdate({_id: req.params.id},
+  Service.findByIdAndUpdate({_id: req.params.id},
     {
       $set: {
         label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
@@ -1089,7 +1073,7 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
         updates.particular_access=req.body.particular_access
       }
       if (Object.keys(updates).length>0) {
-        req.context.getModel('Prestation').updateMany({service: service._id}, {$set: updates})
+        Prestation.updateMany({service: service._id}, {$set: updates})
           .then(res => console.log(`Prestations updated:${JSON.stringify(res)}`))
           .catch(err => console.error(`Prestations update error:${err}`))
       }
@@ -1111,7 +1095,7 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('Prestation').findOne({
+  Prestation.findOne({
     label: req.body.label,
     filter_presentation: req.body.filter_presentation,
     service: req.body.service,
@@ -1142,7 +1126,7 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
         company_price: req.body.company_price && req.body.private_company ? parseInt(req.body.company_price) : 0,
       }
 
-      req.context.getModel('Prestation').create(newPrestation)
+      Prestation.create(newPrestation)
         .then(prestation => res.json(prestation))
         .catch(err => res.status(400).json(err))
     })
@@ -1152,7 +1136,7 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
 // Edit picture
 // @Access private
 router.post('/prestation/editPicture/:id', uploadPrestation.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Prestation').findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+  Prestation.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
     .then(prestation => {
       res.json(prestation)
     })
@@ -1162,7 +1146,7 @@ router.post('/prestation/editPicture/:id', uploadPrestation.single('picture'), p
 // Get all prestations
 // @Access public
 router.get('/prestation/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Prestation').find({}, 'label cesu_eligible particular_access professional_access order')
+  Prestation.find({}, 'label cesu_eligible particular_access professional_access order')
     .sort({s_label: 1, category: 1})
     .populate({path: 'service', select: 'label', populate: {
       path: 'category', select: 'particular_label professional_label'},
@@ -1184,7 +1168,7 @@ router.get('/prestation/all', passport.authenticate('admin', {session: false}), 
 // View one prestation
 // @Access public
 router.get('/prestation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Prestation').findById(req.params.id)
+  Prestation.findById(req.params.id)
     .populate('service')
     .populate('billing')
     .populate('filter_presentation')
@@ -1209,7 +1193,7 @@ router.delete('/prestation/all/:id', passport.authenticate('admin', {session: fa
       if (refs.some(t => t)) {
         return res.status(400).json('Cette prestation est utilisée')
       }
-      req.context.getModel('Prestation').findByIdAndRemove(req.params.id)
+      Prestation.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
         .catch(() => res.status(404).json({prestationnotfound: 'No prestation found'}))
     })
@@ -1224,7 +1208,7 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('Prestation').findOneAndUpdate({_id: req.params.id}, {
+  Prestation.findOneAndUpdate({_id: req.params.id}, {
     $set: {
       label: req.body.label,
       s_label: normalize(req.body.label),
@@ -1255,7 +1239,7 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
 
 // TODO: récupérer en sum/aggréation par mois
 router.get('/registrations', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').find({}, 'creation_date')
+  User.find({}, 'creation_date')
     .sort({creation_date: 1})
     .then(users => {
       const monthDates = users.map(user => new Date(user.creation_date.getFullYear(), user.creation_date.getMonth()).getTime())
@@ -1279,7 +1263,7 @@ router.get('/ages', passport.authenticate('admin', {session: false}), (req, res)
 
   const alfred = JSON.parse(req.query.alfred || 'false')
   const fltr = alfred ? {is_alfred: true} : {}
-  req.context.getModel('User').find(fltr, 'birthday')
+  User.find(fltr, 'birthday')
     .sort({'birthday': -1})
     .then(users => {
       const labels=users.filter(u => u.age<100).map(u => get_label(u.age))
@@ -1299,13 +1283,13 @@ router.get('/ages', passport.authenticate('admin', {session: false}), (req, res)
 // router.get('/statistics',passport.authenticate('admin',{session:false}),(req,res)=> {
 router.get('/statistics', passport.authenticate('admin', {session: false}), (req, res) => {
   let stats = {}
-  req.context.getModel('User').count()
+  User.count()
     .then(nb_users => {
       stats.users = nb_users
-      req.context.getModel('User').find({is_alfred: true}).count()
+      User.find({is_alfred: true}).count()
         .then(nb_alfred => {
           stats.alfred = nb_alfred
-          req.context.getModel('ServiceUser').find()
+          ServiceUser.find()
             .then(services => {
               stats.services = services.length
               stats.prestations = services.map(s => s.prestations.length).reduce((acc, value) => acc + value)
@@ -1323,24 +1307,18 @@ router.get('/statistics', passport.authenticate('admin', {session: false}), (req
 // Get all bookings
 // @Access private
 router.get('/booking/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  const context = req.context
-  if (context.isAdmin()) {
-    context.getModel('Booking').find()
-      .populate('alfred', 'firstname name')
-      .populate('user', 'firstname name email phone')
-      .populate({path: 'customer_booking', populate: {path: 'user'}})
-      .sort({date: -1})
-      .catch(err => {
-        console.error(err)
-        res.status(404).json({bookings: 'Error'})
-      })
-      .then(bookings => {
-        res.json(bookings)
-      })
-  }
-  else {
-    res.status(403).json({msg: 'Access denied'})
-  }
+  Booking.find()
+    .populate('alfred', 'firstname name')
+    .populate('user', 'firstname name email phone')
+    .populate({path: 'customer_booking', populate: {path: 'user'}})
+    .sort({date: -1})
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({bookings: 'Error'})
+    })
+    .then(bookings => {
+      res.json(bookings)
+    })
 })
 
 // companies
@@ -1350,14 +1328,14 @@ router.get('/booking/all', passport.authenticate('admin', {session: false}), (re
 // @Access private
 router.get('/companies/all', passport.authenticate('admin', {session: false}), (req, res) => {
 
-  req.context.getModel('Company').find()
+  Company.find()
     .sort({'name': 1})
     .lean()
     .then(companies => {
       if (!companies) {
         return res.status(400).json({msg: 'No company found'})
       }
-      req.context.getModel('User').find({company: {$exists: true, $ne: null}}, 'company')
+      User.find({company: {$exists: true, $ne: null}}, 'company')
         .then(users => {
           companies.forEach(company => {
             company.employees = users.filter(u => u.company.toString() == company._id.toString()).length
@@ -1372,7 +1350,7 @@ router.get('/companies/all', passport.authenticate('admin', {session: false}), (
 // View one company
 // @Access private
 router.get('/companies/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Company').findById(req.params.id)
+  Company.findById(req.params.id)
     .then(company => {
       if (!company) {
         return res.status(400).json({msg: 'No company found'})
@@ -1386,7 +1364,7 @@ router.get('/companies/:id', passport.authenticate('admin', {session: false}), (
 // View one company
 // @Access private
 router.get('/companies/:id/users', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').find({company: req.params.id}, 'firstname name email roles')
+  User.find({company: req.params.id}, 'firstname name email roles')
     .then(users => {
       if (!users) {
         return res.status(400).json({msg: 'No company found'})
@@ -1407,21 +1385,21 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
     return res.status(400).json(errors)
   }
 
-  req.context.getModel('Company').findOne({name: req.body.name})
+  Company.findOne({name: req.body.name})
     .then(company => {
       if (company && company._id != req.body._id) {
         return res.status(400).json({error: 'Cette entreprise existe déjà'})
       }
-      const promise=req.body._id ? req.context.getModel('Company').findByIdAndUpdate(req.body._id, req.body, {new: true})
+      const promise=req.body._id ? Company.findByIdAndUpdate(req.body._id, req.body, {new: true})
         :
-        req.context.getModel('Company').create(req.body)
+        Company.create(req.body)
       promise
         .then(company => {
           if (!company) {
             return res.status(400).json({msg: 'No company found'})
           }
           if (req.body.admin_email) {
-            req.context.getModel('User').findOne({email: req.body.admin_email})
+            User.findOne({email: req.body.admin_email})
               .then(user => {
                 if (user) {
                   return res.status(400).json({error: 'Un compte avec cet email existe déjà'})
@@ -1442,7 +1420,7 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
                       throw err
                     }
                     newUser.password = hash
-                    req.context.getModel('User').create(newUser)
+                    User.create(newUser)
                       .then(() => {
                         axios.post(new URL('/myAlfred/api/users/forgotPassword', computeUrl(req)).toString(), {email: req.body.admin_email, role: ADMIN})
                           .then(() => {
@@ -1473,53 +1451,11 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
     })
 })
 
-// @Route PUT /myAlfred/api/admin/companies/all/:id
-// Update a company
-// @Access private
-router.put('/companies/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  const {errors, isValid} = validateServiceInput(req.body)
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-
-  req.context.getModel('Service').findByIdAndUpdate({_id: req.params.id},
-    {
-      $set: {
-        label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
-        s_label: normalize(req.body.label),
-        description: req.body.description, majoration: req.body.majoration, location: req.body.location,
-        travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax,
-        professional_access: req.body.professional_access, particular_access: req.body.particular_access,
-      },
-
-    }, {new: false})
-    .then(service => {
-      // Update prestations if service access changed
-      updates={}
-      if (service.professional_access!=req.body.professional_access) {
-        updates.professional_access=req.body.professional_access
-      }
-      if (service.particular_access!=req.body.particular_access) {
-        updates.particular_access=req.body.particular_access
-      }
-      if (Object.keys(updates).length>0) {
-        req.context.getModel('Prestation').updateMany({service: service._id}, {$set: updates})
-          .then(res => console.log(`Prestations updated:${JSON.stringify(res)}`))
-          .catch(err => console.error(`Prestations update error:${err}`))
-      }
-      res.json(null)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(404).json({servicenotfound: 'No service found'})
-    })
-})
-
 // @Route POST /myAlfred/api/admin/kyc_validate/:alfred_id
 // Validate KYC
 // @Access private
 router.post('/kyc_validate/:alfred_id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').findOne({_id: mongoose.Types.ObjectId(req.params.alfred_id)})
+  User.findOne({_id: mongoose.Types.ObjectId(req.params.alfred_id)})
     .then(user => {
       addIdIfRequired(user)
       res.json(result)
@@ -1536,7 +1472,7 @@ router.get('/context', passport.authenticate('admin', {session: false}), (req, r
 })
 
 router.get('/uiConfiguration', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('UIConfiguration').find()
+  UIConfiguration.find()
     .then(result => {
       res.json(result)
     })
@@ -1547,7 +1483,7 @@ router.get('/uiConfiguration', passport.authenticate('admin', {session: false}),
 })
 
 router.post('/uiConfiguration/generate', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('UIConfiguration').find()
+  UIConfiguration.find()
     .then(config => {
       createUIConfiguration(config)
       res.json('ok')
@@ -1559,7 +1495,7 @@ router.post('/uiConfiguration/generate', passport.authenticate('admin', {session
 })
 
 router.put('/uiConfiguration/:id/:att/picture', uploadCustom.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('UIConfiguration').findById(req.params.id)
+  UIConfiguration.findById(req.params.id)
     .then(config => {
       const att=config.attributes.find(att => att.name==req.params.att)
       if (att) {
@@ -1590,7 +1526,7 @@ router.put('/uiConfiguration/:id', passport.authenticate('admin', {session: fals
       a.value=null
     }
   })
-  req.context.getModel('UIConfiguration').findByIdAndUpdate({_id: req.params.id}, req.body)
+  UIConfiguration.findByIdAndUpdate({_id: req.params.id}, req.body)
     .then(result => {
       res.json(result)
     })
@@ -1612,12 +1548,11 @@ router.get('/i18n-items', (req, res) => {
 
 router.get('/i18n-queries', (req, res) => {
   let ids=getQueries()
-  console.log(ids[0])
   res.send(ids.join('\n'))
 })
 
 router.get('/customizations', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Customization').findOne({})
+  Customization.findOne({})
     .then(result => res.json(result))
     .catch(err => {
       console.error(err)
@@ -1626,7 +1561,7 @@ router.get('/customizations', passport.authenticate('admin', {session: false}), 
 })
 
 router.put('/customizations', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Customization').update({}, req.body, {upsert: true})
+  Customization.update({}, req.body, {upsert: true})
     .then(() => {
       req.context.loadCustomization()
       res.json()
@@ -1638,7 +1573,7 @@ router.put('/customizations', passport.authenticate('admin', {session: false}), 
 })
 
 router.get('/reviews', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Review').find()
+  Review.find()
     .populate('alfred', 'firstname name')
     .populate('user', 'firstname name email phone')
     .populate({path: 'serviceUser', select: 'service', populate: {path: 'service', select: 'label'}})
@@ -1651,7 +1586,7 @@ router.get('/reviews', passport.authenticate('admin', {session: false}), (req, r
 })
 
 router.put('/reviews/:review_id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Review').findByIdAndUpdate(req.params.review_id, req.body)
+  Review.findByIdAndUpdate(req.params.review_id, req.body)
     .then(review => {
       res.json(review)
     })
@@ -1661,7 +1596,7 @@ router.put('/reviews/:review_id', passport.authenticate('admin', {session: false
 })
 
 router.get('/eventlogs', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('EventLog').find()
+  EventLog.find()
     .populate('account.user')
     .populate('user', 'firstname name')
     .populate({path: 'serviceUser', select: 'service', populate: {path: 'service', select: 'label'}})
