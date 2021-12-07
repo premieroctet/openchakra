@@ -33,15 +33,18 @@ mongo $database --eval 'db.tags.drop()'
 # Add attribute bookings.reason
 mongo $database --eval 'db.bookings.update({reason: {$exists: false}}, {$set: {reason: null}}, {multi:1})'
 
-#Update attribute bookings end_time => end_date && time_prestation => prestation_date
-mongo $database --eval 'db.bookings.find({end_time: {$exists: true}).forEach(function(b){const [hour, minute]= b.end_time.split(':'); b.end_date = b.end_date.set('hour', hour).set('minute', minute); db.bookings.save(b)})'
-mongo $database --eval 'db.bookings.find({time_prestation: {$exists: true}).forEach(function(b){const [day, month, year]= b.end_time.split('/');b.time_prestation = b.date_prestation.set('day', day).set('month', month).set('year', year);db.bookings.save(b)})'
-
-# Rename time_prestation => prestation_date
-mongo $database --eval 'db.bookings.update({time_prestation: {$exists: true}, {$rename: {time_prestation: prestation_date}}'
-
 # 938438: Remove prospect collection
 mongo $database --eval 'db.prospects.drop()'
 
 # 938707: statut hidden sur User
 mongo $database --eval 'db.users.update({hidden: {$exists: false}}, {$set: {hidden: false}}, {multi:1})'
+
+#936286 Update attribute bookings end_time => end_date && time_prestation => prestation_date
+mongo $database --eval 'db.bookings.find({end_time: {$exists: true}}).forEach(function(b){const [hour, minute]= b.end_time.split(":"); b.end_date.setHours(hour); b.end_date.setMinutes(minute); b.end_date = b.end_date; db.bookings.save(b)})'
+mongo $database --eval 'db.bookings.find({time_prestation: {$exists: true}}).forEach(function(b){const [day, month, year]= b.date_prestation.split("/"); b.time_prestation.setDate(day); b.time_prestation.setMonth(month); b.time_prestation.setFullYear(year); b.time_prestation = b.time_prestation; db.bookings.save(b)})'
+
+#936286 Rename time_prestation => prestation_date
+mongo $database --eval 'db.bookings.update({time_prestation: {$exists: true}}, {$rename: {"time_prestation": "prestation_date"}})'
+
+#936286 Remove time_prestation && end_time
+mongo $database --eval 'db.bookings.update({}, {$unset: {time_prestation: 1, end_time: 1}}, {multi:1})'
