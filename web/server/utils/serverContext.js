@@ -2,8 +2,6 @@ const User=require('../models/User')
 const jwt = require('jsonwebtoken')
 const {ADMIN, MANAGER, EMPLOYEE} = require('../../utils/consts')
 const keys = require('../config/keys')
-const {is_development, is_validation} = require('../../config/config')
-const {getPartnerFromHostname}=require('../../utils/partner')
 
 const get_token = req => {
   const auth = req.headers.authorization
@@ -73,17 +71,8 @@ const send_cookie = (user, role, res, logged_as=null) => {
   })
 }
 
-class PartnerServerContext {
-  constructor(partner) {
-    this.partner=partner
-    this.connection=null
-  }
-
-}
-
-class RequestServerContext extends PartnerServerContext {
+class RequestServerContext {
   constructor(request) {
-    super(RequestServerContext.getPartner(request))
     this.request=request
     this.user=null
     const user_id=get_logged_id(request)
@@ -96,11 +85,6 @@ class RequestServerContext extends PartnerServerContext {
           console.error(err)
         })
     }
-  }
-
-  static getPartner = request => {
-    const host=request.hostname
-    return getPartnerFromHostname(host)
   }
 
   getUser = () => {
