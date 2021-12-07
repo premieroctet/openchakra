@@ -200,14 +200,30 @@ class PrivateRenderer extends React.Component {
 
 class BooleanRenderer extends React.Component {
 
-  render = () => {
-    if (!this.props.value) {
+  constructor(props) {
+    super(props)
+    this.checkedHandler = this.checkedHandler.bind(this)
+  }
+
+  checkedHandler() {
+    let checked = event.target.checked
+    let colId = this.props.column.colId
+    this.props.node.setDataValue(colId, checked)
+  }
+
+  render() {
+    if (this.props.value===undefined) {
       return null
     }
     return (
-      <CheckIcon/>
+      <input
+        type="checkbox"
+        onClick={this.checkedHandler}
+        checked={this.props.value}
+      />
     )
   }
+
 }
 
 class EnumRenderer extends React.Component {

@@ -349,6 +349,11 @@ const UserSchema = new Schema({
   },
   // Comments for admins
   comment: String,
+  // Hide all Alfred's services
+  hidden: {
+    type: Boolean,
+    default: false,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 UserSchema.virtual('id_card_error_text').get(function() {

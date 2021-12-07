@@ -9,9 +9,9 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    position: 'absolute',
-    top: 0,
+    justifyContent: 'center',
     width: '100%',
+    height: '100%',
     [theme.breakpoints.down('xs')]: {
       padding: '10%',
     },
@@ -29,7 +29,6 @@ export default theme => ({
     margin: theme.spacing(1),
     color: 'white',
     textTransform: 'initial',
-    zIndex: 9,
   },
   navbarSearchContainer: {
   },

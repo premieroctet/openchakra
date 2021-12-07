@@ -48,7 +48,7 @@ class Reviews extends DataPage {
       })
   }
 
-  onCellChanged = (colDef, data, oldValue, newValue) => {
+  onCellValueChanged = (colDef, data, oldValue, newValue) => {
     console.log(`Changed ${JSON.stringify({colDef, data, oldValue, newValue}, null, 2)}`)
     setAxiosAuthentication()
     axios.put(`/myAlfred/api/admin/reviews/${data._id}`, {status: newValue})

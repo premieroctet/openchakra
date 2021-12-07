@@ -63,13 +63,16 @@ function RandomBanner(props) {
   const classes = useStyles()
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down('sm'))
-  
+  // const myNewArray = arrayText.map((res, i) => res.map((result, index) => i18n.exists(`RANDOM_BANNER_TEXT_${i}_${index}`) && ReactHtmlParser(t(`RANDOM_BANNER_TEXT_${i}_${index}`))))
+
   return(
     <Carousel
       autoPlay={mobile ? false : loop}
       indicators={false}
       interval={is_development() ? 2000 : 6000}
       className={classes.carousel}
+      cycleNavigation={false}
+      navButtonsAlwaysInvisible={true}
     >
       {
         arrayText.map((res, i) => {
