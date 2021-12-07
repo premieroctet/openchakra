@@ -110,9 +110,7 @@ class Header extends React.Component {
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           width: '100%',
-          height: 500,
           backgroundPosition: 'center',
-
         }}>
           <Grid>
             <CustomButton
@@ -124,15 +122,12 @@ class Header extends React.Component {
             </CustomButton>
           </Grid>
           <Grid className={classes.containerTitleAndSubtitle}>
-            <Grid className={classes.widthContainer}>
-              <Grid>
-                <h1 style={{color: 'white', margin: 0}}>{title}</h1>
-              </Grid>
-              <Grid>
-                <h3 style={{color: 'white'}}>{content}</h3>
-              </Grid>
+            <Grid>
+              <h1 style={{color: 'white'}}>{title}</h1>
             </Grid>
-
+            <Grid>
+              <h3 style={{color: 'white'}}>{content}</h3>
+            </Grid>
             {
               aboutSearch ?
                 <Grid className={classes.navbarSearchContainer}>

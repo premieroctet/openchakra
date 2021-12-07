@@ -55,8 +55,6 @@ if (!Promise.allSettled) {
 // Upload multers
 // CATEGORY
 const uploadCat = createDiskMulter('static/category/', IMAGE_FILTER)
-// PROSPECT
-const uploadProspect = createMemoryMulter(TEXT_FILTER)
 // EQUIPMENT
 const uploadEquipment = createDiskMulter('static/equipments/', IMAGE_FILTER)
 // SERVICE
@@ -151,7 +149,7 @@ router.put('/billing/all/:id', passport.authenticate('admin', {session: false}),
 // @Route GET /myAlfred/api/admin/users/all
 // List all users
 router.get('/users/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('User').find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment')
+  req.context.getModel('User').find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment hidden')
     .populate({path: 'shop', select: 'creation_date'})
     .sort({creation_date: -1})
     .then(users => {
@@ -526,6 +524,20 @@ router.put('/users/:user_id/admin/:admin_status', passport.authenticate('admin',
     })
 })
 
+router.put('/users/:user_id/hidden/:hidden_status', passport.authenticate('admin', {session: false}), (req, res) => {
+  if (!['true', 'false'].includes(req.params.hidden_status)) {
+    return res.status(404).json('Statut hidden true/false attendu')
+  }
+  const set_hidden = req.params.hidden_status=='true'
+  req.context.getModel('User').findByIdAndUpdate(req.params.user_id, {hidden: set_hidden})
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+})
+
 // @Route DELETE /myAlfred/api/admin/users/admin/:id
 // Delete one admin
 // @Access private
@@ -707,87 +719,6 @@ router.put('/job/all/:id', passport.authenticate('admin', {session: false}), (re
       res.json(job)
     })
     .catch(() => res.status(404).json({jobnotfound: 'No job found'}))
-})
-
-// SEARCH FILTER
-
-// @Route POST /myAlfred/api/admin/searchFilter/all
-// Add searchFilter for prestation
-// @Access private
-router.post('/searchFilter/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  const {errors, isValid} = validateBillingInput(req.body)
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-
-  req.context.getModel('SearchFilter').findOne({label: req.body.label})
-    .then(searchFilter => {
-      if (searchFilter) {
-        errors.label = 'Ce filtre existe déjà'
-        return res.status(400).json(errors)
-      }
-      const newSearchFilter={
-        label: req.body.label,
-      }
-
-      req.context.getModel('SearchFilter').create(newSearchFilter)
-        .then(searchFilter => res.json(searchFilter))
-        .catch(err => console.error(err))
-    })
-})
-
-// @Route GET /myAlfred/api/admin/searchFilter/all
-// View all searchFilter
-// @Access private
-router.get('/searchFilter/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('SearchFilter').find()
-    .then(searchFilter => {
-      if (!searchFilter) {
-        return res.status(400).json({msg: 'No searchFilter found'})
-      }
-      res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count')
-      res.setHeader('X-Total-Count', searchFilter.length)
-      res.json(searchFilter)
-
-    })
-    .catch(() => res.status(404).json({searchFilter: 'No billing found'}))
-})
-
-// @Route GET /myAlfred/api/admin/searchFilter/all/:id
-// View one searchFilter
-// @Access private
-router.get('/searchFilter/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('SearchFilter').findById(req.params.id)
-    .then(searchFilter => {
-      if (!searchFilter) {
-        return res.status(400).json({msg: 'No searchFilter found'})
-      }
-      res.json(searchFilter)
-
-    })
-    .catch(() => res.status(404).json({billing: 'No searchFilter found'}))
-})
-
-// @Route DELETE /myAlfred/api/admin/searchFilter/all/:id
-// Delete one searchFilter
-// @Access private
-router.delete('/searchFilter/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('SearchFilter').findById(req.params.id)
-    .then(searchFilter => {
-      searchFilter.remove().then(() => res.json({success: true}))
-    })
-    .catch(() => res.status(404).json({searchFilter: 'No searchFilter found'}))
-})
-
-// @Route PUT /myAlfred/api/admin/searchFilter/all/:id
-// Update a searchFilter
-// @Access private
-router.put('/searchFilter/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('SearchFilter').findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
-    .then(searchFilter => {
-      res.json(searchFilter)
-    })
-    .catch(() => res.status(404).json({searchFilternotfound: 'No searchFilter found'}))
 })
 
 // @Route POST /myAlfred/api/admin/category/all
@@ -1198,7 +1129,6 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
         service: mongoose.Types.ObjectId(req.body.service),
         billing: req.body.billing,
         filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
-        search_filter: null,
         category: null,
         job: req.body.job,
         description: req.body.description,
@@ -1259,7 +1189,6 @@ router.get('/prestation/all/:id', passport.authenticate('admin', {session: false
     .populate('billing')
     .populate('filter_presentation')
     .populate('category')
-    .populate('search_filter')
     .populate('job')
     .then(prestation => {
       if (!prestation) {
@@ -1303,7 +1232,6 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
       service: mongoose.Types.ObjectId(req.body.service),
       billing: req.body.billing,
       filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
-      search_filter: null,
       category: mongoose.Types.ObjectId(req.body.service.category),
       job: req.body.job ? mongoose.Types.ObjectId(req.body.job) : null,
       description: req.body.description,
@@ -1413,38 +1341,6 @@ router.get('/booking/all', passport.authenticate('admin', {session: false}), (re
   else {
     res.status(403).json({msg: 'Access denied'})
   }
-})
-
-// @Route GET /myAlfred/api/admin/prospect/all
-// Get all prospect
-// @Access admin
-router.get('/prospect/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  req.context.getModel('Prospect').aggregate([
-    {$sort: {'category': 1, 'contacted': 1}},
-    {$group: {_id: {'category': '$category', 'contacted': '$contacted'}, total: {$sum: 1}}},
-  ])
-    .then(prospects => {
-      result={}
-      prospects.forEach(p => {
-        let r=result[p._id.category]||{category: p._id.category, count: 0, contacted: 0, not_contacted: 0}
-        r[p._id.contacted ? 'contacted' : 'not_contacted']=p.total
-        r.count += p.total
-        result[p._id.category]=r
-      })
-      result=_.sortBy(Object.values(result), v => normalize(v.category))
-      return res.json(result)
-    })
-    .catch(err => {
-      console.error(err)
-      return res.status(400).json(err)
-    })
-})
-
-router.get('/prospect/fields', passport.authenticate('admin', {session: false}), (req, res) => {
-  const schema = req.context.getModel('Prospect').schema.obj
-  const schema_fields = Object.keys(schema).sort()
-  const schema_required = schema_fields.filter(k => schema[k].required && !schema[k].default)
-  res.json({mandatory: schema_required, fields: schema_fields})
 })
 
 // companies
@@ -1619,228 +1515,8 @@ router.put('/companies/all/:id', passport.authenticate('admin', {session: false}
     })
 })
 
-
-// @Route POST /myAlfred/api/admin/prospect/search
-// Launch prospects from le bon coin (api notifan)
-// Body : category, url
-// @Access private
-router.post('/prospect/search', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const category = (req.body.category||'').trim()
-  const url = (req.body.url||'').trim()
-  const pages_count = 10
-  if (!category || !url) {
-    res.status(400).json('Catégorie et url requises')
-  }
-
-  if (url.includes('&page=')) {
-    res.status(400).json("L'url doit être une recherche sur la première page")
-  }
-
-  const urls=Array.from(Array(pages_count).keys()).map(i => {
-    if (url.includes('&')) {
-      return `http://api.notifan.fr/search?url=${url}&page=${i+1}`
-    }
-
-    return `http://api.notifan.fr/search?url=${url}/p-${i+1}`
-
-  })
-
-  const DELAY=2000
-  const TIMEOUT=2000
-
-  const promises = urls.map((u, index) => delayedPromise(DELAY*(index+1), () => axios.get(u, {timeout: TIMEOUT})))
-
-  let req_result=[`Pages demandées:${pages_count}\n`]
-  Promise.allSettled(promises)
-    .then(results => {
-      let all_ads = []
-      results.forEach(result => {
-        if (result.status=='fulfilled') {
-          all_ads = all_ads.concat(result.value.data.ads)
-        }
-      })
-
-      const requests_ok = results.filter(r => r.status=='fulfilled')
-      const requests_nok = results.filter(r => r.status=='rejected')
-
-      req_result.push(`Pages reçues:${requests_ok.length}`)
-      if (requests_nok.length>0) {
-        req_result.push(`Pages en erreur:${requests_nok.length}, cause:${_.uniq(requests_nok.map(r => r.reason.toString())).join(',')}`)
-      }
-
-      if (requests_ok.length==0) {
-        return res.status(400).json(req_result)
-      }
-
-      all_ads = [].concat(requests_ok.map(r => r.value.data.ads))
-      req_result.push(`Annonces reçues:${all_ads.length}`)
-      all_ads = all_ads.filter(a => a && a.status=='active' && a.has_phone)
-      req_result.push(`Annonces actives avec téléphone:${all_ads.length}`)
-
-      req.context.getModel('Prospect').find({list_id: {$exists: true}}, 'ad_id')
-        .then(result => {
-          prospects = result.map(p => p.list_id)
-          // Retirer les prospects connus en BD par leur ad_id
-          all_ads = all_ads.filter(ad => !prospects.includes(ad.list_id))
-          req_result.push(`Annonces nouvelles:${all_ads.length}`)
-
-          const phoneUrls = all_ads.map(ad => `http://api.notifan.fr/phone?list_id=${ad.list_id}`)
-          const phonePromises = phoneUrls.map((url, index) => delayedPromise(DELAY*index, () => axios.get(url, {timeout: TIMEOUT})))
-          req_result.push(`N°s tel demandés:${phonePromises.length}`)
-          Promise.allSettled(phonePromises)
-            .then(result => {
-              // Keep
-              phone_results = result.map(p => (p.status=='fulfilled' && p.value.data.utils.status=='OK' ? p.value.data.utils.phonenumber : null))
-              const mobile_count = phone_results.filter(p => Validator.isMobilePhone(p))
-              req_result.push(`N°s tel mobiles reçus:${mobile_count.length}`)
-              let db_promises = []
-              phone_results.forEach((phone, index) => {
-                if (Validator.isMobilePhone(phone)) {
-                  const ad = all_ads[index]
-                  const pData={
-                    category: category,
-                    name: ad.owner.name,
-                    title: ad.subject,
-                    phone: phone,
-                    city: ad.location.city,
-                    zip_code: ad.location.zipcode,
-                    provider: 'le bon coin',
-                    ad_id: ad.list_id,
-                  }
-                  db_promises.push(req.context.getModel('Prospect').create(pData))
-                }
-              })
-              Promise.allSettled(db_promises)
-                .then(db_results => {
-                  const db_results_ok = db_result.filter(r => r.status=='fulfilled')
-                  db_results.forEach((r, index) => {
-                    if (r.status=='rejected') {
-                      console.log(`Phone bd request rejectd, ad_id:${all_ads[index].list_id}, reason:${r.reason}`)
-                    }
-                  })
-
-                  req_result.push(`Prospects ajoutés:${db_results_ok.length}`)
-                  return res.json(req_result)
-                })
-            })
-        })
-    })
-    .catch(err => {
-      console.error(err)
-      return res.status(500).json([err])
-    })
-})
-
-// @Route PROSPECT /myAlfred/api/admin/prospect/add
-// INsert prospects from csv
-router.post('/prospect/add', passport.authenticate('admin', {session: false}), (req, res) => {
-  uploadProspect.single('prospects')(req, res, err => {
-    if (err) {
-      console.error(err)
-      res.status(404).json({errors: err.message})
-    }
-    else {
-      req.context.getModel('Prospect').find({}, 'phone')
-        .then(result => {
-          let phones = result
-          const contents = bufferToString(req.file.buffer)
-          let records = csv_parse(contents, {columns: true, delimiter: ';'})
-
-          const schema = req.context.getModel('Prospect').schema.obj
-          const schema_fields = Object.keys(schema).sort()
-          const schema_required = schema_fields.filter(k => schema[k].required && !schema[k].default)
-          const data_fields = Object.keys(records[0]).sort()
-          const missing = schema_required.filter(att => !data_fields.includes(att))
-          const extra = data_fields.filter(att => !schema_fields.includes(att))
-
-          console.log(`Schema required:${schema_required}, ${JSON.stringify(Buffer.from(schema_required.join(',')))}`)
-          console.log(`Data fields:${data_fields}, ${JSON.stringify(Buffer.from(data_fields.join(',')))}`)
-
-          if (missing.length>0) {
-            throw new Error(`Champ obligatoires manquants:${missing.join(',')}`)
-          }
-          if (extra.length>0) {
-            throw new Error(`Champs inconnus:${extra.join(',')}`)
-          }
-
-          const before = records.length
-          // Normalize phones
-          records = records.map(r => { r.phone=normalizePhone(r.phone); return r })
-          // Remove duplicates
-          phones = phones.map(p => p.phone)
-          records = records.filter(r => {
-            const known = phones.includes(r.phone)
-            phones.push(r.phone)
-            return !known
-          })
-          // Remove empty lines
-          records = records.filter(r => Object.values(r).some(v => v))
-          // Check records with empty mandatory data_fields
-          const invalid_records = records.filter(r => schema_required.some(field => !r[field]))
-          if (invalid_records.length>0) {
-            throw new Error(`Champs obligatoires vides dans ${JSON.stringify(invalid_records)}`)
-          }
-
-          const counts=records.reduce((json, prospect) => ({...json, [prospect.phone]: (json[prospect.phone] || 0) + 1}), {})
-          const duplicates = Object.keys(counts).filter(k => counts[k]>1)
-          if (duplicates.length>0) {
-            throw new Error(`Pas d'import, numéros dupliqués dans le fichier:${duplicates.join('\n')}`)
-          }
-
-          const after = records.length
-          const delta=before-after
-
-          req.context.getModel('Prospect').insertMany(records, {silent: true})
-            .then(() => res.json(`${after}/${before} prospects importés après suppression des ${delta} doublons ou lignes vides`))
-            .catch(err => {
-              console.log('error')
-              throw err
-            })
-        })
-        .catch(err => {
-          console.error(err)
-          res.status(404).json({errors: err.message})
-        })
-    }
-  })
-})
-
-// @Route GET /myAlfred/api/admin/prospect/tocontact
-// View all billings system
-// @Access public
-router.get('/prospect/tocontact/:category', passport.authenticate('admin', {session: false}), (req, res) => {
-  let result = []
-  req.context.getModel('Prospect').find(
-    {$and: [{category: req.params.category}, {$or: [{contacted: false}, {contacted: null}]}]},
-  )
-    .sort({category: 1})
-    .then(prospects => {
-      req.context.getModel('Prospect').updateMany(
-        {$and: [{category: req.params.category}, {$or: [{contacted: false}, {contacted: null}]}]},
-        {contacted: true},
-      )
-        .then(() => {
-          prospects.forEach(p => {
-            data = []
-            data.push(`="${p.phone.replace(/^0/, '+33')}"`)
-            data.push(`${p.category }/${ p.keywords}`)
-            data.push(p.name)
-            data.push(p.city)
-            data.push(p.zip_code)
-            result.push(data.join(';'))
-          })
-          const filename = `export_${req.params.category}_${moment().format('DDMMYYHHmm')}.csv`
-          res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-          res.set('Content-Disposition', `attachment; filename="${filename}"`)
-          res.send(result.join('\n'))
-        })
-    })
-    .catch()
-})
-
-
 // @Route POST /myAlfred/api/admin/kyc_validate/:alfred_id
-// Get all prospect
+// Validate KYC
 // @Access private
 router.post('/kyc_validate/:alfred_id', passport.authenticate('admin', {session: false}), (req, res) => {
   req.context.getModel('User').findOne({_id: mongoose.Types.ObjectId(req.params.alfred_id)})
@@ -1850,7 +1526,7 @@ router.post('/kyc_validate/:alfred_id', passport.authenticate('admin', {session:
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({prospects: 'Error'})
+      res.status(404).json({err})
     })
 
 })

@@ -550,23 +550,6 @@ router.post('/avocotes', (req, res) => {
 
 new CronJob('0 */35 * * * *', (() => {
   console.log('Checking terminated bookings')
-  const getNextNumber = (context, type, key) => {
-    return new Promise((resolve, reject) => {
-      const updateObj = {type: type, key: key, $inc: {value: 1}}
-      context.getModel('Count').updateOne({type: type, key: key}, updateObj, {upsert: true})
-        .then(() => {
-          context.getModel('Count').findOne({type: type, key: key}).then(res => {
-            resolve(res)
-          }).catch(err => {
-            console.error(err)
-          })
-        })
-        .catch(err => {
-          reject(err)
-        })
-    })
-  }
-
   const date = moment().startOf('day')
 
   connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
@@ -578,18 +561,6 @@ new CronJob('0 */35 * * * *', (() => {
         booking.forEach(b => {
           const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
           if (moment(date).isSameOrAfter(end_date)) {
-            /**
-            const type = ['billing', 'receipt', 'myalfred_billing']
-            const key = getKeyDate()
-            Promise.all([getNextNumber(type[ 0 ], key), getNextNumber(type[ 1 ], key), getNextNumber(type[ 2 ], key)]).then(
-              values => {
-                values.map((res, i) => {
-                  const attribute = `${type[ i ]}_number`
-                  b[ attribute ] = `${type[ i ].charAt(0).toUpperCase()}${key}${invoiceFormat(res.value, 5)}`
-                })
-              },
-            )
-            */
             console.log(`Booking #${b._id} terminated`)
             b.status = BOOK_STATUS.FINISHED
             b.save()

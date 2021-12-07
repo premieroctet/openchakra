@@ -212,7 +212,7 @@ class Home extends React.Component {
           <Grid container className={`${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
             {/* <HowItWorks/>*/}
             <Grid item xs={12} className={classes.howItWorksMainStyle}>
-              <RandomBanner arrayText={this.state.arrayText} loop={true}/>
+              <RandomBanner arrayText={this.state.arrayText} loop={false}/>
             </Grid>
           </Grid>
           <Grid container className={`customouralfred ${classes.mainContainerStyle}`}>

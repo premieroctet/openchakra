@@ -9,17 +9,11 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    position: 'absolute',
-    top: 0,
-    width: '100%',
+    justifyContent: 'center',
+    padding: '5%',
     [theme.breakpoints.down('xs')]: {
       padding: '10%',
     },
-  },
-
-  widthContainer: {
-    width: '70%',
-    textAlign: 'center',
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -29,7 +23,6 @@ export default theme => ({
     margin: theme.spacing(1),
     color: 'white',
     textTransform: 'initial',
-    zIndex: 9,
   },
   navbarSearchContainer: {
   },

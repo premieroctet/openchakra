@@ -139,7 +139,7 @@ class BigList extends React.Component {
               onRowClicked={ this.props.onRowClicked}
               onCellClicked={ this.props.onCellClicked}
               onFirstDataRendered={this.fitColumns}
-              onCellEditingStopped={this.props.onCellEditingStopped}
+              onCellValueChanged = {this.props.onCellValueChanged}
               ref={this.gridRef}
             />
           </Paper>

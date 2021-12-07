@@ -39,3 +39,9 @@ mongo $database --eval 'db.bookings.find({time_prestation: {$exists: true}).forE
 
 # Rename time_prestation => prestation_date
 mongo $database --eval 'db.bookings.update({time_prestation: {$exists: true}, {$rename: {time_prestation: prestation_date}}'
+
+# 938438: Remove prospect collection
+mongo $database --eval 'db.prospects.drop()'
+
+# 938707: statut hidden sur User
+mongo $database --eval 'db.users.update({hidden: {$exists: false}}, {$set: {hidden: false}}, {multi:1})'
