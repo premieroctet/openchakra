@@ -1,19 +1,12 @@
+const {checkConfig, getDatabaseUri} = require('../config/config')
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 const mongoose=require('mongoose')
-
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/test-myAlfred-V2', MONGOOSE_OPTIONS)
-  .then(() => {
-    console.log('MongoDB connected')
-  })
-  .catch(err => console.log(err))
-
 
 const cookieParser=require('cookie-parser')
 
 require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]')
 
-const {is_production, is_validation, is_development, is_development_nossl, displayConfig} = require('../config/config')
+const {is_production, is_validation, is_development, is_development_nossl} = require('../config/config')
 const express = require('express')
 const next = require('next')
 const bodyParser = require('body-parser')
@@ -57,119 +50,130 @@ const app = express()
 const SocketIo = require('socket.io')
 const {serverContextFromRequest}=require('./utils/serverContext')
 
-
-nextApp.prepare().then(() => {
-
-  // Body parser middleware
-  app.use(bodyParser.urlencoded({extended: false}))
-  app.use(bodyParser.json())
-
-  // Passport middleware
-  app.use(passport.initialize())
-
-  app.use(cookieParser())
-  // Passport config
-  /* eslint-disable global-require */
-  require('./config/passport')
-  /* eslint-enable global-require */
-
-  // Context handling
-  app.use((req, res, next) => {
-    req.context=serverContextFromRequest(req)
-    next()
+// checkConfig
+checkConfig()
+  .then(() => {
+    return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
   })
-
-  app.use(cors())
-
-
-  app.use('/myAlfred/api/users', users)
-  app.use('/myAlfred/api/companies', companies)
-  app.use('/myAlfred/api/category', category)
-  app.use('/myAlfred/api/groups', groups)
-  app.use('/myAlfred/api/billing', billing)
-  app.use('/myAlfred/api/booking', booking)
-  app.use('/myAlfred/api/equipment', equipment)
-  app.use('/myAlfred/api/filterPresentation', filterPresentation)
-  app.use('/myAlfred/api/job', job)
-  app.use('/myAlfred/api/message', message)
-  app.use('/myAlfred/api/newsletter', newsletter)
-  app.use('/myAlfred/api/service', service)
-  app.use('/myAlfred/api/prestation', prestation)
-  app.use('/myAlfred/api/serviceUser', serviceUser)
-  app.use('/myAlfred/api/shop', shop)
-  app.use('/myAlfred/api/admin', admin)
-  app.use('/myAlfred/api/reviews', reviews)
-  app.use('/myAlfred/api/availability', availability)
-  app.use('/myAlfred/api/chatRooms', chatRooms)
-  app.use('/myAlfred/api/performances', performances)
-  app.use('/myAlfred/api/payment', payment)
-  app.use('/myAlfred/api/authentication', authRoutes)
-  app.use('/blog', blog)
-
-  // const port = process.env.PORT || 5000;
-  const rootPath = path.join(__dirname, '/..')
-  glob.sync(`${rootPath}/server/api/*.js`).forEach(controllerPath => {
-    if (!controllerPath.includes('.test.js')) {
-      /* eslint-disable global-require */
-      require(controllerPath)(app)
-      /* eslint-enable global-require */
-    }
+// Connect to MongoDB
+  .then(() => {
+    console.log(`MongoDB connecté: ${getDatabaseUri()}`)
+    return nextApp.prepare()
   })
-  app.use(express.static('static'))
+  .then(() => {
 
-  if (!is_development_nossl() && !is_development()) {
+    // Body parser middleware
+    app.use(bodyParser.urlencoded({extended: false}))
+    app.use(bodyParser.json())
+
+    // Passport middleware
+    app.use(passport.initialize())
+
+    app.use(cookieParser())
+    // Passport config
+    /* eslint-disable global-require */
+    require('./config/passport')
+    /* eslint-enable global-require */
+
+    // Context handling
     app.use((req, res, next) => {
-      if (!req.secure) {
-        console.log(`'Redirecting to ${JSON.stringify(req.originalUrl)}`)
-        res.redirect(302, `https://${req.hostname}${req.originalUrl}`)
-      }
+      req.context=serverContextFromRequest(req)
       next()
     })
-  }
-  app.get('*', routerHandler)
 
-  if (SERVER_PROD || is_development()) {
-  // HTTP only handling redirect to HTTPS
-    http.createServer(app).listen(80)
-    console.log('Created server on port 80')
-  }
-  // HTTPS server using certificates
-  const httpsServer = https.createServer({
-    cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main-Certificate-x509.txt`),
-    key: fs.readFileSync(`${process.env.HOME}/.ssh/www_my-alfred_io.key`),
-    ca: fs.readFileSync(`${process.env.HOME}/.ssh/Intermediate-Certificate.txt`),
-  },
-  app)
-  const io = SocketIo(httpsServer)
+    app.use(cors())
 
-  displayConfig()
-  if (SERVER_PROD) {
-    httpsServer.listen(443, () => console.log(`${config.appName} running on http://localhost:80/ and https://localhost:443/`))
-  }
-  else {
-    httpsServer.listen(3122, () => console.log(`${config.appName} running on https://localhost:3122/`))
-  }
 
-  let roomName = ''
-  let bookingName = ''
+    app.use('/myAlfred/api/users', users)
+    app.use('/myAlfred/api/companies', companies)
+    app.use('/myAlfred/api/category', category)
+    app.use('/myAlfred/api/groups', groups)
+    app.use('/myAlfred/api/billing', billing)
+    app.use('/myAlfred/api/booking', booking)
+    app.use('/myAlfred/api/equipment', equipment)
+    app.use('/myAlfred/api/filterPresentation', filterPresentation)
+    app.use('/myAlfred/api/job', job)
+    app.use('/myAlfred/api/message', message)
+    app.use('/myAlfred/api/newsletter', newsletter)
+    app.use('/myAlfred/api/service', service)
+    app.use('/myAlfred/api/prestation', prestation)
+    app.use('/myAlfred/api/serviceUser', serviceUser)
+    app.use('/myAlfred/api/shop', shop)
+    app.use('/myAlfred/api/admin', admin)
+    app.use('/myAlfred/api/reviews', reviews)
+    app.use('/myAlfred/api/availability', availability)
+    app.use('/myAlfred/api/chatRooms', chatRooms)
+    app.use('/myAlfred/api/performances', performances)
+    app.use('/myAlfred/api/payment', payment)
+    app.use('/myAlfred/api/authentication', authRoutes)
+    app.use('/blog', blog)
 
-  io.on('connection', socket => {
+    // const port = process.env.PORT || 5000;
+    const rootPath = path.join(__dirname, '/..')
+    glob.sync(`${rootPath}/server/api/*.js`).forEach(controllerPath => {
+      if (!controllerPath.includes('.test.js')) {
+      /* eslint-disable global-require */
+        require(controllerPath)(app)
+      /* eslint-enable global-require */
+      }
+    })
+    app.use(express.static('static'))
+
+    if (!is_development_nossl() && !is_development()) {
+      app.use((req, res, next) => {
+        if (!req.secure) {
+          console.log(`'Redirecting to ${JSON.stringify(req.originalUrl)}`)
+          res.redirect(302, `https://${req.hostname}${req.originalUrl}`)
+        }
+        next()
+      })
+    }
+    app.get('*', routerHandler)
+
+    if (SERVER_PROD || is_development()) {
+      // HTTP only handling redirect to HTTPS
+      http.createServer(app).listen(80)
+      console.log('Created server on port 80')
+    }
+    // HTTPS server using certificates
+    const httpsServer = https.createServer({
+      cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main-Certificate-x509.txt`),
+      key: fs.readFileSync(`${process.env.HOME}/.ssh/www_my-alfred_io.key`),
+      ca: fs.readFileSync(`${process.env.HOME}/.ssh/Intermediate-Certificate.txt`),
+    },
+    app)
+    const io = SocketIo(httpsServer)
+
+    if (SERVER_PROD) {
+      httpsServer.listen(443, () => console.log(`${config.appName} running on http://localhost:80/ and https://localhost:443/`))
+    }
+    else {
+      httpsServer.listen(3122, () => console.log(`${config.appName} running on https://localhost:3122/`))
+    }
+
+    let roomName = ''
+    let bookingName = ''
+
+    io.on('connection', socket => {
     /* socket.on('chat message', msg => {
         io.emit('chat message', msg);
     })*/
-    socket.on('room', room => {
-      socket.join(room)
-      roomName = room
-    })
-    socket.on('booking', booking => {
-      socket.join(booking)
-      bookingName = booking
-    })
-    socket.on('message', msg => {
-      io.to(roomName).emit('displayMessage', msg)
-    })
-    socket.on('changeStatus', booking => {
-      io.to(bookingName).emit('displayStatus', booking)
+      socket.on('room', room => {
+        socket.join(room)
+        roomName = room
+      })
+      socket.on('booking', booking => {
+        socket.join(booking)
+        bookingName = booking
+      })
+      socket.on('message', msg => {
+        io.to(roomName).emit('displayMessage', msg)
+      })
+      socket.on('changeStatus', booking => {
+        io.to(bookingName).emit('displayStatus', booking)
+      })
     })
   })
-})
+  .catch(err => {
+    console.error(`**** Démarrage impossible:${err}`)
+  })

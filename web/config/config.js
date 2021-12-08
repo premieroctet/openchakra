@@ -1,6 +1,9 @@
+const isEmpty = require('../server/validation/is-empty')
 const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
-const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER, SIB_TEMPLATES}=require('../mode')
+const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER, SIB_TEMPLATES, DATABASE_NAME}=require('../mode')
 const source = require('./client_id.json')
+
+const MONGO_BASE_URI='mongodb://localhost/'
 
 const getChatURL = () => {
   return TAWKTO_URL
@@ -157,6 +160,27 @@ const displayConfig = () => {
 // TODO : horrible rustine pour fix erreurs de paiment, à virer TRES VITE !!!
 const DISABLE_PAYMENT_CHECK=is_development() || is_validation()
 
+const checkConfig = () => {
+  return new Promise((resolve, reject) => {
+    if (!Object.values(MODES).includes(MODE)) {
+      reject(`MODE: ${MODE} inconnu, attendu dans ${Object.values(MODES)}`)
+    }
+    if (isEmpty(DATABASE_NAME)) {
+      reject(`DATABASE_NAME non renseigné`)
+    }
+    // TODO check database name correctness
+    if (isEmpty(SIB_TEMPLATES)) {
+      reject(`SIB_TEMPLATES non renseigné`)
+    }
+    displayConfig()
+    resolve('Configuration OK')
+  })
+}
+
+const getDatabaseUri = () => {
+  return `${MONGO_BASE_URI}${DATABASE_NAME}`
+}
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -168,9 +192,9 @@ module.exports = {
   ENABLE_GF_LOGIN,
   GOOGLE_PROVIDER, FACEBOOK_PROVIDER, PROVIDERS,
   is_production, is_validation, is_development, is_development_nossl, SERVER_PROD,
-  get_host_url, MANGOPAY_CONFIG, displayConfig,
+  get_host_url, MANGOPAY_CONFIG,
   ENABLE_MAILING, isB2BDisabled,
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
-  getSibTemplates, DISABLE_PAYMENT_CHECK,
+  getSibTemplates, DISABLE_PAYMENT_CHECK, checkConfig, getDatabaseUri,
 }
