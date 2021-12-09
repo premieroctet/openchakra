@@ -30,14 +30,14 @@ function AddService({t, i18n}) {
       <Grid container spacing={3} className={classes.mainContainerAddService}>
         {
           Object.keys(resources).map((res, index) => {
-            if(i18n.exists(`ADD_SERVICE.title_${index}`) || i18n.exists(`ADD_SERVICE.text_${index}`)) {
+            if(i18n.exists(`ADD_SERVICE_title_${index}`) || i18n.exists(`ADD_SERVICE_text_${index}`)) {
               return(
                 <Grid item xs={12}>
                   <DisplayInformation
                     right={index%2 === 0}
                     pics={`custom_addService_${index}`}
-                    title={ReactHtmlParser(t(`ADD_SERVICE.title_${index}`))}
-                    text={ReactHtmlParser(t(`ADD_SERVICE.text_${index}`))}
+                    title={ReactHtmlParser(t(`ADD_SERVICE_title_${index}`))}
+                    text={ReactHtmlParser(t(`ADD_SERVICE_text_${index}`))}
                   />
                 </Grid>
               )
