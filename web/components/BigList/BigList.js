@@ -83,11 +83,12 @@ class BigList extends React.Component {
       'enumRenderer': models.EnumRenderer,
       'locationRenderer': models.LocationRenderer,
       'warningRenderer': models.WarningRenderer,
-      'linkRenderer': models.LinkRenderer,
+      'urlRenderer': models.LinkRenderer,
       'currencyRenderer': models.CurrencyRenderer,
       'colorRenderer': models.ColorRenderer,
       'fontRenderer': models.FontRenderer,
       'deleteRenderer': models.DeleteRenderer,
+      'percentRenderer': models.PercentRenderer,
     }
 
     const defaultColDef={

@@ -38,3 +38,6 @@ mongo $database --eval 'db.prospects.drop()'
 
 # 938707: statut hidden sur User
 mongo $database --eval 'db.users.update({hidden: {$exists: false}}, {$set: {hidden: false}}, {multi:1})'
+
+# 936294
+mongo $database --eval 'db.customizations.drop()'

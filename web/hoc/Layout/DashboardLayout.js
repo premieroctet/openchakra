@@ -13,16 +13,15 @@ class DashboardLayout extends React.Component {
 
   render() {
     const {children, classes, home, title} = this.props
-
     return (
       <Grid>
         <NavBar excludeSearch={true}/>
         {!home &&
           <Grid container style={{display: 'flex', alignItems: 'center'}}>
-            <Grid xs={4}>
+            <Grid item xs={4}>
               <a href="/dashboard"><h2>Dashboard</h2></a>
             </Grid>
-            <Grid xs={4} style={{display: 'flex', justifyContent: 'center'}}>
+            <Grid item xs={4} style={{display: 'flex', justifyContent: 'center'}}>
               <h1>{title}</h1>
             </Grid>
           </Grid>

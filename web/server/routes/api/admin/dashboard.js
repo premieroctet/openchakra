@@ -1,5 +1,7 @@
+const Review = require('../../../models/Review')
+const EventLog = require('../../../models/EventLog')
+const Commission = require('../../../models/Commission')
 const Company = require('../../../models/Company')
-const Customization = require('../../../models/Customization')
 const UIConfiguration = require('../../../models/UIConfiguration')
 const Booking = require('../../../models/Booking')
 const {IMAGE_FILTER, createDiskMulter} = require('../../../utils/filesystem')
@@ -105,7 +107,7 @@ router.get('/billing/all/:id', passport.authenticate('admin', {session: false}),
 // @Route DELETE /myAlfred/api/admin/billing/:id
 // Delete one billing system
 // @Access private
-router.delete('/billing/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+router.delete('/billing/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   Promise.all(['Prestation.billing', 'ServiceUser.billing'].map(f => hasRefs(req, f, req.params.id)))
     .then(refs => {
       if (refs.some(t => t)) {
@@ -598,7 +600,7 @@ router.get('/filterPresentation/all/:id', passport.authenticate('admin', {sessio
 // @Route DELETE /myAlfred/api/admin/filterPresentation/all/:id
 // Delete one filterPresentation
 // @Access private
-router.delete('/filterPresentation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+router.delete('/filterPresentation/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   Promise.all(['Prestation.filter_presentation'].map(f => hasRefs(req, f, req.params.id)))
     .then(refs => {
       if (refs.some(t => t)) {
@@ -682,7 +684,7 @@ router.get('/job/all/:id', passport.authenticate('admin', {session: false}), (re
 // @Route DELETE /myAlfred/api/admin/job/all/:id
 // Delete one job
 // @Access private
-router.delete('/job/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+router.delete('/job/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   Promise.all(['Prestation.job'].map(f => hasRefs(req, f, req.params.id)))
     .then(refs => {
       if (refs.some(t => t)) {
@@ -794,7 +796,7 @@ router.get('/category/all/:id', passport.authenticate('admin', {session: false})
 // @Route DELETE /myAlfred/api/admin/category/all/:id
 // Delete one category
 // @Access private
-router.delete('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+router.delete('/category/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   Promise.all(['Service.category', 'Prestation.category'].map(f => hasRefs(req, f, req.params.id)))
     .then(refs => {
       if (refs.some(t => t)) {
@@ -919,7 +921,7 @@ router.get('/equipment/all/:id', passport.authenticate('admin', {session: false}
 // @Route DELETE /myAlfred/api/admin/equipment/all/:id
 // Delete one equipment system
 // @Access private
-router.delete('/equipment/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+router.delete('/equipment/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   Promise.all(['Booking.equipments', 'Service.equipments', 'ServiceUser.equipments'].map(f => hasRefs(req, f, req.params.id)))
     .then(refs => {
       if (refs.some(t => t)) {
@@ -1031,7 +1033,7 @@ router.get('/service/all/:id', passport.authenticate('admin', {session: false}),
 // @Route DELETE /myAlfred/api/admin/service/all/:id
 // Delete one service
 // @Access private
-router.delete('/service/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+router.delete('/service/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   Promise.all(['Prestation.service', 'ServiceUser.service'].map(f => hasRefs(req, f, req.params.id)))
     .then(refs => {
       if (refs.some(t => t)) {
@@ -1187,7 +1189,7 @@ router.get('/prestation/all/:id', passport.authenticate('admin', {session: false
 // @Route DELETE /myAlfred/api/admin/prestation/all/:id
 // Delete one prestation
 // @Access private
-router.delete('/prestation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+router.delete('/prestation/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   Promise.all(['ServiceUser.prestations.prestation'].map(f => hasRefs(req, f, req.params.id)))
     .then(refs => {
       if (refs.some(t => t)) {
@@ -1323,10 +1325,10 @@ router.get('/booking/all', passport.authenticate('admin', {session: false}), (re
 
 // companies
 
-// @Route GET /myAlfred/api/admin/companies/all
+// @Route GET /myAlfred/api/admin/companies
 // View all companies
 // @Access private
-router.get('/companies/all', passport.authenticate('admin', {session: false}), (req, res) => {
+router.get('/companies', passport.authenticate('admin', {session: false}), (req, res) => {
 
   Company.find()
     .sort({'name': 1})
@@ -1360,8 +1362,8 @@ router.get('/companies/:id', passport.authenticate('admin', {session: false}), (
     })
 })
 
-// @Route GET /myAlfred/api/admin/companies/:id
-// View one company
+// @Route GET /myAlfred/api/admin/companies/:id/users
+// View company users
 // @Access private
 router.get('/companies/:id/users', passport.authenticate('admin', {session: false}), (req, res) => {
   User.find({company: req.params.id}, 'firstname name email roles')
@@ -1551,8 +1553,8 @@ router.get('/i18n-queries', (req, res) => {
   res.send(ids.join('\n'))
 })
 
-router.get('/customizations', passport.authenticate('admin', {session: false}), (req, res) => {
-  Customization.findOne({})
+router.get('/commissions', passport.authenticate('admin', {session: false}), (req, res) => {
+  Commission.find()
     .then(result => res.json(result))
     .catch(err => {
       console.error(err)
@@ -1560,10 +1562,33 @@ router.get('/customizations', passport.authenticate('admin', {session: false}), 
     })
 })
 
-router.put('/customizations', passport.authenticate('admin', {session: false}), (req, res) => {
-  Customization.update({}, req.body, {upsert: true})
+router.post('/commissions', passport.authenticate('admin', {session: false}), (req, res) => {
+  Commission.create(req.body)
+    .then(commission => {
+      res.json(commission)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+router.put('/commissions/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+  console.log(`put:${req.params.id}:${JSON.stringify(req.body)}`)
+  Commission.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
+    .then(custo => {
+      res.json(custo)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+router.delete('/commissions/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+  console.log(`delete:${req.params.id}`)
+  Commission.findByIdAndRemove(req.params.id)
     .then(() => {
-      req.context.loadCustomization()
       res.json()
     })
     .catch(err => {
@@ -1625,5 +1650,21 @@ router.post('/register_invitation', passport.authenticate('admin', {session: fal
     })
 })
 
+router.get('/warnings', passport.authenticate('admin', {session: false}), (req, res) => {
+  const warnings=[]
+  Commission.count()
+    .then(count => {
+      if (count==0) {
+        warnings.push("Aucune commission n'a été défnie")
+      }
+      return Company.count()
+    })
+    .then(count => {
+      if (count==0) {
+        warnings.push("Aucune compagnie n'a été défnie")
+      }
+      res.json(warnings)
+    })
+})
 
 module.exports = router

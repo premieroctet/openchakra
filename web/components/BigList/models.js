@@ -1,9 +1,12 @@
+const {valueBetween} = require('../../utils/functions')
 import {withTranslation} from 'react-i18next'
 import {REVIEW_STATUS} from '../../utils/consts'
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
 import {Link} from '@material-ui/core'
 const moment = require('moment')
+const { inspect } = require('util');
+
 
 moment.locale('fr')
 import LockIcon from '@material-ui/icons/Lock'
@@ -263,6 +266,14 @@ class CurrencyRenderer extends React.Component {
   }
 }
 
+class PercentRenderer extends React.Component {
+  render = () => {
+    return (
+      <div style={{textAlign: 'right'}}>{Number(this.props.value).toFixed(2)}%</div>
+    )
+  }
+}
+
 class ColorRenderer extends React.Component {
   render = () => {
     console.log(`Color:${this.props.value}`)
@@ -358,6 +369,25 @@ const fontColumn = obj => {
   return Object.assign(base, obj)
 }
 
+const percentColumn = obj => {
+  let base={
+    cellRenderer: 'percentRenderer',
+    valueSetter: p => {
+      const value=parseFloat(p.newValue)
+      if (!valueBetween(value, 0, 100)) {
+        return false
+      }
+      console.log(`Setting value ${value/100.0}`)
+      p.data[p.colDef.field]=value/100.0
+      return true
+    },
+    valueGetter: p => {
+      return p.data[p.colDef.field]*100
+    },
+  }
+  return Object.assign(base, obj)
+}
+
 const deleteColumn = () => {
   let base={
     headerName: 'Supprimer',
@@ -366,10 +396,25 @@ const deleteColumn = () => {
   return base
 }
 
+const refColumn = obj => {
+  let base={
+    cellEditor: 'agSelectCellEditor',
+    refData: obj.data,
+    cellEditorParams: {
+      values: Object.keys(obj.data),
+    },
+  }
+  return Object.assign(base, obj)
+}
+
 module.exports= {
+  // Renderers
   StatusRenderer, DateRenderer, DateTimeRenderer, CurrencyRenderer,
   StatusFilter, PictureRenderer, PrivateRenderer, BooleanRenderer, LocationRenderer, WarningRenderer,
   EnumRenderer, LinkRenderer, ColorRenderer, FontRenderer, DeleteRenderer,
+  PercentRenderer,
+  // Columns
   textColumn, booleanColumn, dateColumn, dateTimeColumn, currencyColumn, pictureColumn,
   colorColumn, fontColumn, deleteColumn, warningColumn, ReviewStatusFilter,
+  refColumn, percentColumn,
 }

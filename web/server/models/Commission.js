@@ -4,13 +4,12 @@ const mongoose = require('mongoose')
 const Schema=mongoose.Schema
 
 const CommissionSchema = new Schema({
-  // Commission rate in %
+  // Commission rate
   rate: {
     type: Number,
     required: true,
-    set: v => parseInt(v),
     min: 0,
-    max: 100,
+    max: 1.0,
   },
   // Commission fixed fee
   fixed: {
@@ -19,7 +18,7 @@ const CommissionSchema = new Schema({
     min: 0,
   },
   // Destinee company
-  destinee: {
+  target: {
     type: Schema.Types.ObjectId,
     ref: 'company',
     required: true,
@@ -27,7 +26,7 @@ const CommissionSchema = new Schema({
   // Taken from provider or customer ?
   source: {
     type: String,
-    enum: Object.values(COMMISSION_SOURCE),
+    enum: Object.keys(COMMISSION_SOURCE),
     required: true,
   },
 })

@@ -74,6 +74,11 @@ const rgbaToHex = orig => {
   return `#${ hex}`
 }
 
+const valueBetween = (value, start, stop) => {
+  return value>=start && value <=stop
+}
+
 module.exports = {
   computeDistanceKm, computeAverageNotes, computeSumSkills, rgbaToHex,
+  valueBetween,
 }

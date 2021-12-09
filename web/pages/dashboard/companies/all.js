@@ -26,7 +26,7 @@ class all extends DataPage {
   }
 
   loadData = () => {
-    axios.get('/myAlfred/api/admin/companies/all')
+    axios.get('/myAlfred/api/admin/companies')
       .then(response => {
         let companies = response.data
         this.setState({data: companies})

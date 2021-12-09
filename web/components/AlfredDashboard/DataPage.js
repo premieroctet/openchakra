@@ -45,7 +45,7 @@ class DataPage extends React.Component {
     const {colDef, data, value}=event
     if (colDef.headerName=='Supprimer' && this.getDataType()) {
       setAxiosAuthentication()
-      axios.delete(`/myAlfred/api/admin/${this.getDataType()}/all/${data._id}`)
+      axios.delete(`/myAlfred/api/admin/${this.getDataType()}/${data._id}`)
         .then(() => {
           snackBarSuccess('Donnée supprimée')
           this.componentDidMount()
@@ -59,7 +59,7 @@ class DataPage extends React.Component {
 
   _onCellValueChanged = event => {
     const {colDef, data, oldValue, newValue} = event
-    this.onCellValueChanged && this.onCellValueChanged(colDef, data, oldValue, newValue)
+    this.onCellValueChanged && this.onCellValueChanged(colDef, data, oldValue, newValue, event)
   }
 
   render() {

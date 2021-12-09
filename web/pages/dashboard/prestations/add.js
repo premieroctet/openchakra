@@ -127,7 +127,7 @@ class add extends React.Component {
         console.log(error)
       })
 
-    axios.get('/myAlfred/api/admin/companies/all')
+    axios.get('/myAlfred/api/admin/companies')
       .then(response => {
         let companies = response.data
         this.setState({companies: companies})
