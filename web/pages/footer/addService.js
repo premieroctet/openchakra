@@ -2,71 +2,54 @@ import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import {withStyles} from '@material-ui/core/styles'
+import {makeStyles} from '@material-ui/core/styles'
 import LayoutFaq from '../../hoc/Layout/LayoutFaq'
 import NeedMoreFaq from '../../hoc/Layout/Faq/NeedMoreFaq'
-import styles from '../../static/css/pages/footer/addService/addService'
-import Typography from '@material-ui/core/Typography'
 import '../../static/assets/css/custom.css'
-import {ADD_SERVICE} from '../../utils/i18n'
+import DisplayInformation from '../../components/DisplayInformation/DisplayInformation'
+const _ = require('lodash')
 
-class AddService extends React.Component {
-  constructor(props) {
-    super(props)
-  }
+const useStyles = makeStyles(theme => ({
+  mainContainerAddService: {
+    width: '50%',
+    margin: 0,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  },
+}),
+)
 
-  render() {
-    const {classes} = this.props
-    return (
-      <LayoutFaq>
-        <Grid className={classes.mainContainerAddService}>
-          <Grid style={{display: 'flex'}}>
-            <Grid className={classes.hideOnMobile}>
-              <h1 style={{marginRight: '25px', color: '#F8CF61'}} className={'customaddserviceone'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.one'))}</h1>
-            </Grid>
-            <Grid style={{display: 'flex', flexDirection: 'column'}}>
-              <Grid>
-                <h3 className={`customaddserviceonetitle ${classes.titleRub}`}>{ReactHtmlParser(this.props.t('ADD_SERVICE.register_title'))}</h3>
-              </Grid>
-              <Grid>
-                <Typography style={{marginTop: '5px'}} className={'customaddserviceonetext'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.register_phone'))}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid style={{display: 'flex'}}>
-            <Grid className={classes.hideOnMobile}>
-              <h1 style={{marginRight: '25px', color: '#84A5E0'}} className={'customaddservicetwo'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.two'))}</h1>
-            </Grid>
-            <Grid style={{display: 'flex', flexDirection: 'column'}}>
-              <Grid>
-                <h3 className={`customaddservicetwotitle ${classes.titleRub}`}>{ReactHtmlParser(this.props.t('ADD_SERVICE.begin_your_research'))}</h3>
-              </Grid>
-              <Grid>
-                <Typography style={{marginTop: '5px'}} className={'customaddservicetwotext'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.begin_your_research_content'))}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid style={{display: 'flex'}}>
-            <Grid className={classes.hideOnMobile}>
-              <h1 style={{marginRight: '25px', color: '#F36B7F'}} className={'customaddservicethree'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.three'))}</h1>
-            </Grid>
-            <Grid style={{display: 'flex', flexDirection: 'column'}}>
-              <Grid>
-                <h3 className={`customaddservicethreetitle ${classes.titleRub}`}>{ReactHtmlParser(this.props.t('ADD_SERVICE.three_title'))}</h3>
-              </Grid>
-              <Grid>
-                <Typography style={{marginTop: '5px'}} className={'customaddservicethreetext'}>{ReactHtmlParser(this.props.t('ADD_SERVICE.three_content'))}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid style={{marginTop: '10vh'}}>
-            <NeedMoreFaq/>
-          </Grid>
+function AddService({t, i18n}) {
+  const classes = useStyles()
+  let resources = i18n.getResourceBundle(i18n.language)
+  resources = _.pickBy(resources, (val, key) => key.startsWith('ADD_SERVICE'))
+
+  return (
+    <LayoutFaq>
+      <Grid container spacing={3} className={classes.mainContainerAddService}>
+        {
+          Object.keys(resources).map((res, index) => {
+            if(i18n.exists(`ADD_SERVICE.title_${index}`) || i18n.exists(`ADD_SERVICE.text_${index}`)) {
+              return(
+                <Grid item xs={12}>
+                  <DisplayInformation
+                    right={index%2 === 0}
+                    pics={`custom_addService_${index}`}
+                    title={ReactHtmlParser(t(`ADD_SERVICE.title_${index}`))}
+                    text={ReactHtmlParser(t(`ADD_SERVICE.text_${index}`))}
+                  />
+                </Grid>
+              )
+            }
+          })
+        }
+        <Grid style={{marginTop: '10vh'}}>
+          <NeedMoreFaq/>
         </Grid>
-      </LayoutFaq>
-    )
-  }
-
+      </Grid>
+    </LayoutFaq>
+  )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(AddService))
+export default withTranslation('custom')(AddService)
