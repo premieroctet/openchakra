@@ -12,7 +12,8 @@ const logEvent = (req, category, title, description, data=null) => {
     description: description,
     data: data,
   }
-  User.findOne({_id: superuserid}, 'firstname name email')
+  const promise = superuserid ?  User.findOne({_id: superuserid}, 'firstname name email') : Promise.resolve(null)
+  promise
     .then(superuser => {
       if (superuserid) {
         if (!superuser) {
