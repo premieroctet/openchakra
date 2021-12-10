@@ -24,9 +24,8 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 const {BOOK_STATUS}=require('../../utils/consts')
 import Router from 'next/router'
-import Link from 'next/link'
+import {Link} from '@material-ui/core'
 import {BOOKING} from '../../utils/i18n'
-
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props

@@ -556,7 +556,7 @@ new CronJob('0 */15 * * * *', (() => {
 }), null, true, 'Europe/Paris')
 
 // Handle terminated but not paid bookings
-new CronJob('0 */15 * * * *', (() => {
+new CronJob('0 0 0 * * *', (() => {
   console.log('Checking bookings to pay')
   connectionPool.databases.map(d => serverContextFromPartner(d)).forEach(context => {
     context.getModel('Booking').find({status: BOOK_STATUS.FINISHED, paid: false})
