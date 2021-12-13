@@ -10,7 +10,7 @@ import {makeStyles} from '@material-ui/core/styles'
 import {useTheme} from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   colorText: {
     color: 'white',
   },
@@ -21,6 +21,7 @@ const useStyles = makeStyles(() => ({
     margin: 0,
     backgroundPosition: 'center',
     width: '100%',
+    backgroundRepeat: 'no-repeat',
   },
   carousel: {
     height: '100%',
@@ -42,6 +43,11 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     margin: 0,
     backgroundSize: 'cover',
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      flexWrap: 'no-wrap',
+      overflowX: 'scroll',
+    },
   },
   randompics: {
     backgroundSize: 'contain',
