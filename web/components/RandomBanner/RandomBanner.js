@@ -19,6 +19,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 0,
+    backgroundPosition: 'center',
     width: '100%',
   },
   carousel: {
