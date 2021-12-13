@@ -201,4 +201,4 @@ ServiceUserSchema.virtual('grade_text').get(function() {
 })
 
 
-module.exports = ServiceUser = mongoose.model('serviceuser', ServiceUserSchema)
+module.exports = ServiceUser = mongoose.model('serviceUser', ServiceUserSchema)

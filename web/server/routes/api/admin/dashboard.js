@@ -513,7 +513,7 @@ router.put('/users/:user_id/hidden/:hidden_status', passport.authenticate('admin
     return res.status(404).json('Statut hidden true/false attendu')
   }
   const set_hidden = req.params.hidden_status=='true'
-  req.context.getModel('User').findByIdAndUpdate(req.params.user_id, {hidden: set_hidden})
+  User.findByIdAndUpdate(req.params.user_id, {hidden: set_hidden})
     .then(() => {
       res.json()
     })
