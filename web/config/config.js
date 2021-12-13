@@ -1,6 +1,7 @@
 const isEmpty = require('../server/validation/is-empty')
 const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
-const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER, SIB_TEMPLATES, DATABASE_NAME}=require('../mode')
+const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG}=require('../mode')
 const source = require('./client_id.json')
 
 const MONGO_BASE_URI='mongodb://localhost/'
@@ -181,6 +182,11 @@ const getDatabaseUri = () => {
   return `${MONGO_BASE_URI}${DATABASE_NAME}`
 }
 
+// Hide application installation popup
+const hideStoreDialog = () => {
+  return !!HIDE_STORE_DIALOG
+}
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -197,4 +203,5 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, DISABLE_PAYMENT_CHECK, checkConfig, getDatabaseUri,
+  hideStoreDialog,
 }
