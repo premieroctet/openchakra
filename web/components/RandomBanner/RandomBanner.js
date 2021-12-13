@@ -22,6 +22,9 @@ const useStyles = makeStyles(theme => ({
     backgroundPosition: 'center',
     width: '100%',
     backgroundRepeat: 'no-repeat',
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 500,
+    },
   },
   carousel: {
     height: '100%',
@@ -43,11 +46,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     margin: 0,
     backgroundSize: 'cover',
-    [theme.breakpoints.down('sm')]: {
-      display: 'flex',
-      flexWrap: 'no-wrap',
-      overflowX: 'scroll',
-    },
+
   },
   randompics: {
     backgroundSize: 'contain',
@@ -61,6 +60,13 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  classesBoxPics: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      flexWrap: 'nowrap',
+      overflowX: 'scroll',
+    },
   },
 
 }))
@@ -96,7 +102,9 @@ function RandomBanner(props) {
                         <Grid item xs={12} className={`${classes.containerTitle} customrandomdisplay_${i}_${index}`}>
                           <h1 className={`${classes.colorText} customrandomdisplay_${i}_${index}`} style={{display: mobile && i === 2 ? 'none' : 'inherit'}}>{i18n.exists(`RANDOM_BANNER_TEXT_${i}_${index}`) && ReactHtmlParser(t(`RANDOM_BANNER_TEXT_${i}_${index}`))}</h1>
                         </Grid>
-                        <Grid item xs={12} className={`RANDOM_BANNER_PICTURE_${i}_${index} ${classes.randompics}`} style={{display: mobile && i === 2 ? 'none' : 'inherit'}}/>
+                        <Grid item xs={12} className={classesBoxPics} style={{display: mobile && i === 2 ? 'none' : 'inherit'}}>
+                          <Grid className={`RANDOM_BANNER_PICTURE_${i}_${index} ${classes.randompics}`}/>
+                        </Grid>
                       </Grid>
                     </>
                   )
