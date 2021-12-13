@@ -22,9 +22,6 @@ const useStyles = makeStyles(theme => ({
     backgroundPosition: 'center',
     width: '100%',
     backgroundRepeat: 'no-repeat',
-    [theme.breakpoints.down('sm')]: {
-      minWidth: 500,
-    },
   },
   carousel: {
     height: '100%',
@@ -61,13 +58,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  classesBoxPics: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'flex',
-      flexWrap: 'nowrap',
-      overflowX: 'scroll',
-    },
-  },
+
 
 }))
 
@@ -97,7 +88,7 @@ function RandomBanner(props) {
               {
                 [0, 1, 2, 3, 4, 5].map((val, index) => {
                   return(
-                    <Grid className={classes.classesBoxPics}>
+                    <Grid>
                       <Grid container spacing={1} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`} style={{display: mobile && index === 0 || mobile && index === 1 ? 'none' : 'flex'}}>
                         <Grid item xs={12} className={`${classes.containerTitle} customrandomdisplay_${i}_${index}`}>
                           <h1 className={`${classes.colorText} customrandomdisplay_${i}_${index}`} style={{display: mobile && i === 2 ? 'none' : 'inherit'}}>{i18n.exists(`RANDOM_BANNER_TEXT_${i}_${index}`) && ReactHtmlParser(t(`RANDOM_BANNER_TEXT_${i}_${index}`))}</h1>
