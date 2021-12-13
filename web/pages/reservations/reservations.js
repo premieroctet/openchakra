@@ -24,6 +24,8 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 const {BOOK_STATUS}=require('../../utils/consts')
 import Router from 'next/router'
+import {Link} from '@material-ui/core'
+import {BOOKING} from '../../utils/i18n'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -136,6 +138,14 @@ class AllReservations extends React.Component {
     this.setState({bookingPreview: bookingId, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: null})
   }
 
+  getIcsURL = bookingId => {
+    return `/myAlfred/api/booking/${bookingId}/ics`
+  }
+
+  getGoogleCalendarURL = bookingId => {
+    return `/myAlfred/api/booking/${bookingId}/google_calendar`
+  }
+
   openBookingCancel = bookingId => {
     this.setState({bookingPreview: null, bookingCancel: bookingId, bookingConfirm: null, bookingPreApprouved: null})
   }
@@ -207,7 +217,7 @@ class AllReservations extends React.Component {
     )
   }
 
-  bookingPreApprouved = classes =>{
+  bookingPreApprouved = classes => {
     const {bookingPreApprouved}=this.state
 
     return (
@@ -302,6 +312,12 @@ class AllReservations extends React.Component {
                           Détail
                         </Button>
                       </Grid>
+                      <Grid item><Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
+                        {BOOKING.ADD_GOOGLE_AGENDA}
+                      </Link></Grid>
+                      <Grid item><Link href={this.getIcsURL(booking._id)}>
+                        {BOOKING.ADD_OTHER_AGENDA}
+                      </Link></Grid>
                       {
                         reservationType === 1 && !booking.customer_booking ?
                           <Grid item>

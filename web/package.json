@@ -35,6 +35,8 @@
     "express": "^4.16.4",
     "file-system": "^2.2.2",
     "glob": "^7.1.4",
+    "google-calendar-url": "^0.0.5",
+    "ics": "^2.31.0",
     "is-webview": "^1.0.1",
     "jsonwebtoken": "^8.5.1",
     "jss": "^9.8.7",
@@ -109,5 +111,6 @@
     "jest": "^24.8.0",
     "nodemon": "^1.19.0",
     "systemjs-plugin-json": "^0.3.0"
-  }
+  },
+  "version": "0.0.0"
 }
