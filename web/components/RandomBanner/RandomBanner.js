@@ -97,16 +97,14 @@ function RandomBanner(props) {
               {
                 [0, 1, 2, 3, 4, 5].map((val, index) => {
                   return(
-                    <>
+                    <Grid className={classes.classesBoxPics}>
                       <Grid container spacing={1} item md={2} xs={12} className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`} key={`${i}_${index}`} style={{display: mobile && index === 0 || mobile && index === 1 ? 'none' : 'flex'}}>
                         <Grid item xs={12} className={`${classes.containerTitle} customrandomdisplay_${i}_${index}`}>
                           <h1 className={`${classes.colorText} customrandomdisplay_${i}_${index}`} style={{display: mobile && i === 2 ? 'none' : 'inherit'}}>{i18n.exists(`RANDOM_BANNER_TEXT_${i}_${index}`) && ReactHtmlParser(t(`RANDOM_BANNER_TEXT_${i}_${index}`))}</h1>
                         </Grid>
-                        <Grid item xs={12} className={classes.classesBoxPics} style={{display: mobile && i === 2 ? 'none' : 'inherit'}}>
-                          <Grid className={`RANDOM_BANNER_PICTURE_${i}_${index} ${classes.randompics}`}/>
-                        </Grid>
+                        <Grid item xs={12} className={`RANDOM_BANNER_PICTURE_${i}_${index} ${classes.randompics}`} style={{display: mobile && i === 2 ? 'none' : 'inherit'}}/>
                       </Grid>
-                    </>
+                    </Grid>
                   )
                 })
               }
