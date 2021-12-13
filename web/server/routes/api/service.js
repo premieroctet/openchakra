@@ -232,8 +232,10 @@ router.get('/keyword/:kw', (req, res) => {
 
 router.get('/partner/:partner_name', (req, res) => {
   const company_name=req.params.partner_name
+  let company=null
   req.context.getModel('Company').findOne({name: company_name}, '_id')
-    .then(company => {
+    .then(result => {
+      company=result
       if (!company) {
         return res.status(404).json(`No company ${company_name} found`)
       }
@@ -246,7 +248,7 @@ router.get('/partner/:partner_name', (req, res) => {
         return res.status(500).json(`${count} services différents trouvés pour ${company_name}`)
       }
       return req.context.getModel('Service').findOne({_id: prestations[0].service})
-        .populate('prestations')
+        .populate({path: 'prestations', match: {private_company: company}})
     })
     .then(service => {
       return res.json(service)
