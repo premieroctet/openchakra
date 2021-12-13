@@ -1,7 +1,6 @@
 const Job = require('../../models/Job')
 const Group = require('../../models/Group')
-require('../../models/User')
-const {Shop} = require('@material-ui/icons')
+const Shop = require('../../models/Shop')
 const Prestation = require('../../models/Prestation')
 const Service = require('../../models/Service')
 const User = require('../../models/User')

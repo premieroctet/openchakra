@@ -128,8 +128,8 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.date_prestation = req.body.date_prestation
   bookingFields.time_prestation = moment(req.body.time_prestation)
   bookingFields.prestations = req.body.prestations
-  bookingFields.customer_fee = req.body.customer_fee
-  bookingFields.provider_fee = req.body.provider_fee
+  bookingFields.customer_fees = req.body.customer_fees
+  bookingFields.provider_fees = req.body.provider_fees
   bookingFields.travel_tax = req.body.travel_tax
   bookingFields.pick_tax = req.body.pick_tax
   bookingFields.status = req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status
@@ -260,52 +260,10 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
 })
 
 router.post('/compute', (req, res) => {
-  const serviceUserId=req.body.serviceUser
-  const prestations=req.body.prestations
-  const location=req.body.location
-  const distance=req.body.distance || 0
-  const avocotes_amount = req.body.avocotes_amount || 0
 
-  let serviceUser
-  ServiceUser.findById(serviceUserId)
-    .populate('prestations.prestation')
+  req.context.payment.compute(req.body)
     .then(result => {
-      serviceUser = result
-      return Shop.findOne({alfred: serviceUser.user}, {cesu: 1})
-    })
-    .then(shop => {
-      const totalPrestations=_.sum(serviceUser.prestations.map(p => p.price*(prestations[p._id] || 0)))
-      let totalCesu=0
-      if (shop.cesu!='Disabled') {
-        totalCesu = _.sum(serviceUser.prestations
-          .filter(p => p.prestation.cesu_eligible)
-          .map(p => p.price*(prestations[p._id] || 0)))
-      }
-      const pick_tax = location=='alfred' && totalPrestations && serviceUser.pick_tax || 0
-      const travel_tax = ['alfred', 'visio'].includes(location) || !distance || !serviceUser.travel_tax ?
-        0 :
-        totalPrestations && Math.max(roundCurrency((distance-serviceUser.travel_tax.from)*serviceUser.travel_tax.rate), 0)
-
-      const totalPrestationsFrais =totalPrestations+travel_tax+pick_tax
-      // Avocotes : commission client = cout avocotes-(prestations+frais)
-      const customer_fee = avocotes_amount ?
-        avocotes_amount-totalPrestationsFrais
-        :
-        roundCurrency(totalPrestationsFrais*req.context.getCustomerFeeRate())
-      // Avocotes : commission alfred = 0
-      const provider_fee = avocotes_amount ?
-        0
-        :
-        roundCurrency(totalPrestationsFrais*req.context.getProviderFeeRate())
-      const total=totalPrestationsFrais+customer_fee
-      res.json({
-        total_prestations: totalPrestations,
-        travel_tax: travel_tax,
-        pick_tax: pick_tax,
-        customer_fee: customer_fee,
-        provider_fee: provider_fee,
-        total_cesu: totalCesu,
-        total: total})
+      res.json(result)
     })
     .catch(err => {
       console.error(err)

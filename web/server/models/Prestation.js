@@ -75,6 +75,8 @@ const PrestationSchema = new Schema({
   // Price in partner catalog
   company_price: {
     type: Number,
+    default: 0,
+    required: true,
   },
 })
 

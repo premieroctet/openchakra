@@ -1,3 +1,5 @@
+const MarketplacePayment = require('../plugins/payment/marketplacePayment')
+const PlatformPayment = require('../plugins/payment/platformPayment')
 const User=require('../models/User')
 const jwt = require('jsonwebtoken')
 const {ADMIN, MANAGER, EMPLOYEE} = require('../../utils/consts')
@@ -85,6 +87,7 @@ class RequestServerContext {
           console.error(err)
         })
     }
+    this.payment=new MarketplacePayment()
   }
 
   getUser = () => {

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const moment = require('moment')
+const lodash=require('lodash')
 const {BOOK_STATUS, ROLES} = require('../../utils/consts')
 const Schema = mongoose.Schema
 
@@ -100,14 +101,28 @@ const BookingSchema = new Schema({
   fileUpload: [{
     type: Schema.Types.Mixed,
   }],
-  customer_fee: {
-    type: Number,
-    default: 0,
-  },
-  provider_fee: {
-    type: Number,
-    default: 0,
-  },
+  customer_fees: [{
+    amount: {
+      type: Number,
+      required: true,
+    },
+    target: {
+      type: Schema.Types.ObjectId,
+      ref: 'company',
+      required: true,
+    },
+  }],
+  provider_fees: [{
+    amount: {
+      type: Number,
+      required: true,
+    },
+    target: {
+      type: Schema.Types.ObjectId,
+      ref: 'company',
+      required: true,
+    },
+  }],
   status: {
     type: String,
     enum: Object.values(BOOK_STATUS),
@@ -234,6 +249,14 @@ BookingSchema.virtual('calendar_display').get(function() {
     return false
   }
   return true
+})
+
+BookingSchema.virtual('customer_fee').get(function() {
+  return lodash.sum(this.customer_fees.map(c => c.amount))
+})
+
+BookingSchema.virtual('provider_fee').get(function() {
+  return lodash.sum(this.provider_fees.map(c => c.amount))
 })
 
 

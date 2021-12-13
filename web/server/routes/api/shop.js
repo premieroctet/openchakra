@@ -221,10 +221,10 @@ router.get('/alfred/:id_alfred', (req, res) => {
       res.json(shop)
 
     })
-    .catch(() => res.status(404).json({
-      shop: 'No shop found',
-    }))
-
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({shop: 'No shop found'})
+    })
 
 })
 

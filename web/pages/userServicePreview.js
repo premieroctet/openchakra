@@ -516,6 +516,8 @@ class UserServicesPreview extends BasePage {
         this.setState({
           total: res.data.total,
           totalPrestations: res.data.total_prestations,
+          customer_fees: res.data.customer_fees,
+          provider_fees: res.data.provider_fees,
           customer_fee: res.data.customer_fee,
           provider_fee: res.data.provider_fee,
           travel_tax: res.data.travel_tax,

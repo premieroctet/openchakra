@@ -74,7 +74,6 @@ class UserAvatar extends React.Component {
   avatarWithPics = (user, classes) => {
     const{isAbout, animated} = this.state
     const {animateStartup} = this.props
-    console.log(`Animated:${animated}`)
     if (!user) {
       return null
     }
