@@ -1,3 +1,4 @@
+const {hideStoreDialog} = require('../config/config')
 const {
   getLoggedUserId,
   isApplication,
@@ -258,7 +259,7 @@ class Home extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {!isApplication() ? open ? this.dialogStore(classes) : null : null}
+        {!hideStoreDialog() && !isApplication() && open && this.dialogStore(classes)}
       </Grid>
     )
   }
