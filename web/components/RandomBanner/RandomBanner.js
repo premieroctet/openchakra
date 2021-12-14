@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     backgroundRepeat: 'no-repeat',
 
+
   },
   carousel: {
     height: '100%',
@@ -45,6 +46,10 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     margin: 0,
     backgroundSize: 'cover',
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'nowrap',
+      overflowX: 'scroll',
+    },
   },
   randompics: {
     backgroundSize: 'contain',
@@ -52,15 +57,14 @@ const useStyles = makeStyles(theme => ({
     backgroundRepeat: 'no-repeat',
     minHeight: 250,
     maxHeight: 400,
-    width: 200,
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 300,
+    },
   },
   containerTitle: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  mobileRender: {
-
   },
 
 }))
@@ -71,11 +75,9 @@ function RandomBanner(props) {
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down('sm'))
 
-  console.log(arrayText)
-  
-  function contentToRender(arrayTextModifier) {
+  function contentToRender(nbLoop) {
     return(
-      arrayTextModifier.map((res, i) => (
+      [...Array(nbLoop)].map((res, i= 0) => (
         <Grid container spacing={2} key={i} className={`${classes.mainContainer} RANDOM_BANNER_BG_PICTURE_${i}`}>
           <Grid item xs={12} className={classes.title} key={i} >
             <Typography className={`${classes.colorText} customrandomdisplay`}>{i18n.exists(`RANDOM_BANNER_TITLE_${i}`) && ReactHtmlParser(t(`RANDOM_BANNER_TITLE_${i}`))}</Typography>
@@ -119,12 +121,12 @@ function RandomBanner(props) {
           cycleNavigation={false}
           navButtonsAlwaysInvisible={true}
         >
-          {contentToRender(arrayText)}
+          {contentToRender(arrayText.length)}
         </Carousel>
       </Hidden>
       <Hidden only={['xl', 'lg', 'md']}>
         <Grid>
-          {contentToRender(arrayText[0])}
+          {contentToRender(1)}
         </Grid>
       </Hidden>
     </>
