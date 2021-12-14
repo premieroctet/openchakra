@@ -107,7 +107,7 @@ class Header extends React.Component {
           backgroundRepeat: 'no-repeat',
           width: '100%',
           backgroundPosition: 'center',
-          height: 400,
+          height: 370,
         }}>
           <Grid>
             <CustomButton
