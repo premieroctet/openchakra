@@ -5,6 +5,7 @@ import {withStyles} from '@material-ui/core/styles'
 import styles from '../../static/css/pages/homePage/index'
 import LayoutFaq from '../../hoc/Layout/LayoutFaq'
 import CardTeam from '../../components/Card/CardTeam/CardTeam'
+import ReactHtmlParser from 'react-html-parser'
 
 function OurTeam(props) {
   const {classes, t, i18n} = props
@@ -34,7 +35,7 @@ function OurTeam(props) {
       <Grid container spacing={4} style={{margin: 0, width: '100%'}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
           <Grid>
-            <h2 style={{textAlign: 'center'}} className={'customourteamtitle'}>Notre équipe</h2>
+            <h2 style={{textAlign: 'center'}}>{ReactHtmlParser(t('CUSTOM_OURTEAM_TITLE'))}</h2>
           </Grid>
           <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
             {
