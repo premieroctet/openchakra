@@ -50,6 +50,10 @@ export default theme => ({
     display: 'flex',
     marginTop: 20,
     marginLeft: 100,
+    [theme.breakpoints.down('sm')]: {
+      margin: 0,
+      justifyContent: 'center',
+    },
   },
   bannerPresentationButton: {
     color: theme.palette.primary.main,
