@@ -42,16 +42,12 @@ class Header extends React.Component {
         },
       ],
       search: '',
-      isTeamPage: false,
     }
   }
 
   componentDidMount() {
     if (Router.pathname === '/faq') {
       this.setState({aboutSearch: true})
-    }
-    if(Router.pathname === '/footer/ourTeam') {
-      this.setState({isTeamPage: true})
     }
   }
 
@@ -66,7 +62,7 @@ class Header extends React.Component {
   render() {
 
     const {classes} = this.props
-    let {title, content, aboutMenu, items, search, aboutSearch, isTeamPage} = this.state
+    let {title, content, aboutMenu, items, search, aboutSearch} = this.state
 
     if (process.browser) {
       if (window.location.pathname === '/footer/apropos') {
@@ -105,12 +101,13 @@ class Header extends React.Component {
 
     return (
       <Grid>
-        <Grid className={isTeamPage ? 'customlayoutfaqheaderbannerteam' : 'customlayoutfaqheaderbanner'} style={{
+        <Grid className={'customlayoutfaqheaderbanner'} style={{
           backgroundImage: 'url(\'/static/assets/img/footer/footerBanner.svg\')',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           width: '100%',
           backgroundPosition: 'center',
+          height: 400,
         }}>
           <Grid>
             <CustomButton
