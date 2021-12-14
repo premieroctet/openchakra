@@ -51,7 +51,7 @@ export default theme => ({
     marginTop: 20,
     marginLeft: 100,
     [theme.breakpoints.down('sm')]: {
-      margin: 0,
+      marginLeft: 0,
       justifyContent: 'center',
     },
   },
