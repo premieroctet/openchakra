@@ -78,7 +78,7 @@ function RandomBanner(props) {
   function contentToRender(nbLoop) {
     return(
       [...Array(nbLoop)].map((res, i= 0) => (
-        <Grid container spacing={2} key={i} className={`${classes.mainContainer} RANDOM_BANNER_BG_PICTURE_${i}`}>
+        <Grid container spacing={2} key={i} className={`${classes.mainContainer} ${ !mobile ? `RANDOM_BANNER_BG_PICTURE_${i}` : `RANDOM_BANNER_BG_MOBILE_PICTURE_${i}` } `}>
           <Grid item xs={12} className={classes.title} key={i} >
             <Typography className={`${classes.colorText} customrandomdisplay`}>{i18n.exists(`RANDOM_BANNER_TITLE_${i}`) && ReactHtmlParser(t(`RANDOM_BANNER_TITLE_${i}`))}</Typography>
           </Grid>
