@@ -5,8 +5,6 @@ import React, {useEffect, useState} from 'react'
 import Grid from '@material-ui/core/Grid'
 import {BANNER_PRESENTATION, BANNER_B2B_PRESENTATION} from '../../../utils/i18n'
 import {Link} from '@material-ui/core'
-import styles from '../../../static/css/components/BannerPresentation/BannerPresentation'
-import withStyles from '@material-ui/core/styles/withStyles'
 import {isB2BStyle} from '../../../utils/context.js'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
@@ -165,4 +163,4 @@ function BannerPresentation(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(BannerPresentation))
+export default withTranslation('custom', {withRef: true})(BannerPresentation)
