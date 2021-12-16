@@ -19,7 +19,7 @@ class HtmlEditor extends React.Component {
       colorList: [this.props.colors],
       buttonList: [
         ['undo', 'redo'],
-        ['font', 'fontSize', 'formatBlock'],
+        ['fontSize', 'formatBlock'],
         ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
         ['removeFormat'], '/',
         ['fontColor', 'hiliteColor'],
