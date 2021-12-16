@@ -128,7 +128,7 @@ function BannerPresentation(props) {
 
   return (
     <Grid container spacing={2} style={{width: '100%', margin: 0}}>
-      <Grid container spacing={2} style={{width: '100%', margin: 0}} item xs={12}>
+      <Grid container spacing={2} style={{width: '100%', margin: 0}} item xs={12} lg={6}>
         <Grid item xs={12} className={'custombannerh1'}>
           <h2 className={classes.bannerPresentationTitle}>
             <span className={`custombannerh1 ${classes.titleSpan}`}>{title}</span>
