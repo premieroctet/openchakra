@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     [theme.breakpoints.down('xs')]: {
       '& span': {
-        lineHeight: 1,
+        lineHeight: 2,
       },
     },
   },
