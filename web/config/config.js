@@ -68,7 +68,7 @@ const MANGOPAY_CONFIG = {
   sandbox: !is_production(),
 }
 
-if (is_production) {
+if (is_production()) {
   MANGOPAY_CONFIG.baseUrl='https://api.mangopay.com'
 }
 
