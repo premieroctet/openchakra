@@ -1,7 +1,6 @@
+const {is_development} = require('../../../config/config')
 const Booking = require('../../models/Booking')
 const Company = require('../../models/Company')
-const Shop = require('../../models/Shop')
-const ServiceUser = require('../../models/ServiceUser')
 const User = require('../../models/User')
 const ChatRoom = require('../../models/ChatRoom')
 const express = require('express')
@@ -14,8 +13,6 @@ const mongoose = require('mongoose')
 const crypto = require('crypto')
 const moment = require('moment')
 const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
-const {getKeyDate} = require('../../utils/booking')
-const {invoiceFormat, roundCurrency} = require('../../../utils/converters')
 const {payBooking} = require('../../utils/mangopay')
 const CronJob = require('cron').CronJob
 const {
@@ -31,7 +28,6 @@ const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
 const uuidv4 = require('uuid/v4')
 const {stateMachineFactory} = require('../../../utils/BookingStateMachine')
-const _=require('lodash')
 
 moment.locale('fr')
 
@@ -137,6 +133,8 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.cesu_amount = req.body.cesu_amount
   bookingFields.user_role = getRole(req) || null
   bookingFields.customer_booking = req.body.customer_booking
+
+  console.log(JSON.stringify(bookingFields))
 
   Booking.create(bookingFields)
     .then(booking => {
@@ -379,14 +377,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
 })
 
 router.put('/modifyBooking/:id', (req, res) => {
-  const obj = {status: req.body.status}
-  const canceller_id = req.body.user
-  if (req.body.end_date) {
-    obj.end_date = req.body.end_date
-  }
-  if (req.body.end_time) {
-    obj.end_time = req.body.end_time
-  }
+  const obj = req.body
 
   console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}, req is ${req.originalUrl}`)
   Booking.findById(req.params.id)
@@ -399,14 +390,13 @@ router.put('/modifyBooking/:id', (req, res) => {
       if (!booking) {
         return res.status(404).json('No booking #${req.params.id}')
       }
-      const machine=stateMachineFactory(booking.status)
-      machine.checkAllowed(obj.status)
-      booking.status=obj.status
-      if ('reason' in req.body) {
-        booking.reason=req.body.reason
+      if (obj.status) {
+        const machine=stateMachineFactory(booking.status)
+        machine.checkAllowed(obj.status)
       }
-      booking.end_date = obj.end_date || booking.end_date
-      booking.end_time = obj.end_time || booking.end_time
+      Object.keys(obj).forEach(key => {
+        booking[key]=obj[key]
+      })
 
       booking.save()
         .then(booking => {
@@ -525,6 +515,7 @@ new CronJob('0 */35 * * * *', (() => {
     .populate('alfred')
     .then(booking => {
       booking.forEach(b => {
+        console.log(JSON.stringify(b, null, 2))
         const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day')
         if (moment(date).isSameOrAfter(end_date)) {
           console.log(`Booking #${b._id} terminated`)
@@ -544,17 +535,19 @@ new CronJob('0 */35 * * * *', (() => {
 }), null, true, 'Europe/Paris')
 
 // Handle terminated but not paid bookings
-new CronJob('0 */15 * * * *', (() => {
+new CronJob(is_development() ? '*/10 * * * * *' : '0 */15 * * * *', (() => {
   console.log('Checking bookings to pay')
   Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
     .populate('user')
     .populate('alfred')
     .populate({path: 'customer_booking', populate: {path: 'user'}})
+    .populate({path: 'provider_fees', populate: {path: 'target'}})
+    .populate({path: 'customer_fees', populate: {path: 'target'}})
     .then(bookings => {
       bookings.forEach(booking => {
-        console.log(`Booking #${booking._id} to pay`)
+        console.log(`Booking ${booking._id} to pay`)
         // TODO: context non disponible => à régler
-        payBooking(booking, context)
+        payBooking(booking)// , context)
       })
     }).catch(err => {
       console.error(err)

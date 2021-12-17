@@ -1,7 +1,7 @@
 const isEmpty = require('../server/validation/is-empty')
 const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
-  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG}=require('../mode')
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY}=require('../mode')
 const source = require('./client_id.json')
 
 const MONGO_BASE_URI='mongodb://localhost/'
@@ -62,22 +62,15 @@ const get_host_url = () => {
   return host_url
 }
 
-const MANGOPAY_CONFIG_PROD = {
-  clientId: 'myalfredprod',
-  clientApiKey: 'j8R8fLZmUderNNp27siCqMAJ3y7Bv7BB82trfGuhqSKcYpEZ91',
-  baseUrl: 'https://api.mangopay.com',
-  sandbox: false,
+const MANGOPAY_CONFIG = {
+  clientId: MANGOPAY_CLIENTID,
+  clientApiKey: MANGOPAY_APIKEY,
+  sandbox: !is_production(),
 }
 
-const MANGOPAY_CONFIG_TEST = {
-  clientId: 'testmyalfredv2',
-  clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
-  sandbox: true,
-  logClass: () => {},
-  errorHandler: (options, err) => {},
+if (is_production) {
+  MANGOPAY_CONFIG.baseUrl='https://api.mangopay.com'
 }
-
-const MANGOPAY_CONFIG = is_production() ? MANGOPAY_CONFIG_PROD : MANGOPAY_CONFIG_TEST
 
 const completeConfig = {
 
@@ -158,9 +151,6 @@ const displayConfig = () => {
 `)
 }
 
-// TODO : horrible rustine pour fix erreurs de paiment, à virer TRES VITE !!!
-const DISABLE_PAYMENT_CHECK=is_development() || is_validation()
-
 const checkConfig = () => {
   return new Promise((resolve, reject) => {
     if (!Object.values(MODES).includes(MODE)) {
@@ -172,6 +162,12 @@ const checkConfig = () => {
     // TODO check database name correctness
     if (isEmpty(SIB_TEMPLATES)) {
       reject(`SIB_TEMPLATES non renseigné`)
+    }
+    if (isEmpty(MANGOPAY_CLIENTID)) {
+      reject(`MANGOPAY_CLIENTID non renseigné`)
+    }
+    if (isEmpty(MANGOPAY_APIKEY)) {
+      reject(`MANGOPAY_APIKEY non renseigné`)
     }
     displayConfig()
     resolve('Configuration OK')
@@ -202,6 +198,5 @@ module.exports = {
   ENABLE_MAILING, isB2BDisabled,
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
-  getSibTemplates, DISABLE_PAYMENT_CHECK, checkConfig, getDatabaseUri,
-  hideStoreDialog,
+  getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
 }

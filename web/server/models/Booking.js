@@ -4,6 +4,22 @@ const lodash=require('lodash')
 const {BOOK_STATUS, ROLES} = require('../../utils/consts')
 const Schema = mongoose.Schema
 
+const BookingFee = new Schema({
+  amount: {
+    type: Number,
+    required: true,
+  },
+  target: {
+    type: Schema.Types.ObjectId,
+    ref: 'company',
+    required: true,
+  },
+  transfer_id: String,
+  transfer_status: String,
+  payout_id: String,
+  payout_status: String,
+})
+
 const BookingSchema = new Schema({
   reference: {
     type: String,
@@ -101,28 +117,12 @@ const BookingSchema = new Schema({
   fileUpload: [{
     type: Schema.Types.Mixed,
   }],
-  customer_fees: [{
-    amount: {
-      type: Number,
-      required: true,
-    },
-    target: {
-      type: Schema.Types.ObjectId,
-      ref: 'company',
-      required: true,
-    },
-  }],
-  provider_fees: [{
-    amount: {
-      type: Number,
-      required: true,
-    },
-    target: {
-      type: Schema.Types.ObjectId,
-      ref: 'company',
-      required: true,
-    },
-  }],
+  customer_fees: [
+    BookingFee,
+  ],
+  provider_fees: [
+    BookingFee,
+  ],
   status: {
     type: String,
     enum: Object.values(BOOK_STATUS),
@@ -164,32 +164,29 @@ const BookingSchema = new Schema({
   mangopay_payin_id: {
     type: String,
   },
+  mangopay_payin_status: {
+    type: String,
+  },
+  // Provider process
   // Transfer from customer to provider
   mangopay_transfer_id: {
+    type: String,
+  },
+  mangopay_transfer_status: {
     type: String,
   },
   // Payout for provider
   mangopay_payout_id: {
     type: String,
   },
+  mangopay_payout_status: {
+    type: String,
+  },
   // Client refund id
   mangopay_refund_id: {
     type: String,
   },
-  // Transfer from customer to provider fee recipient (ex: all-inclusive)
-  provider_fee_transfer_id: {
-    type: String,
-  },
-  // Payout for provider fee recipient (ex: all-inclusive)
-  provider_fee_payout_id: {
-    type: String,
-  },
-  // Transfer from customer to client fee recipient (ex: My Alfred)
-  customer_fee_transfer_id: {
-    type: String,
-  },
-  // Payout for client fee recipient (ex: My Alfred)
-  customer_fee_payout_id: {
+  mangopay_refund_status: {
     type: String,
   },
   cesu_amount: {

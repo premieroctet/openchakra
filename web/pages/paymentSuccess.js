@@ -1,4 +1,4 @@
-import { DISABLE_PAYMENT_CHECK } from '../config/config';
+const {snackBarError} = require('../utils/notifications')
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import io from 'socket.io-client'
 
-import {PAYMENT_SUCCESS} from '../utils/i18n'
 import BasePage from './basePage'
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
@@ -39,36 +38,41 @@ class paymentSuccess extends BasePage {
         console.error(err)
       })
     const booking_id = this.getURLProps().booking_id
+    let transaction=null
+    let booking=null
     axios.get(`/myAlfred/api/booking/${booking_id}`)
       .then(res => {
-        const booking = res.data
+        booking = res.data
         this.setState({booking: booking})
-        axios.get(`/myAlfred/api/payment/payin/${booking.mangopay_payin_id}`)
-          .then(result => {
-            let transaction = result.data
-            console.log(`Transaction:${JSON.stringify(transaction)}`)
-            if (transaction.Status === 'FAILED' && !DISABLE_PAYMENT_CHECK) {
-              return Router.push(`/paymentFailed?booking_id=${booking_id}`)
-            }
-            this.setState({success: true})
-            this.socket = io()
-            this.socket.on('connect', () => {
-              this.socket.emit('booking', booking_id)
-              const newStatus = booking.user.company_customer ? BOOK_STATUS.CUSTOMER_PAID : booking.status==BOOK_STATUS.PREAPPROVED ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
-              axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {status: newStatus})
-                .then(res => {
-                  setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
-                  localStorage.removeItem('booking_id')
-                  if (!booking.user.company_customer) {
-                    setTimeout(() => Router.push('/reservations/reservations'), 4000)
-                  }
-                })
-                .catch()
+        return axios.get(`/myAlfred/api/payment/payin/${booking.mangopay_payin_id}`)
+      })
+      .then(result => {
+        transaction = result.data
+        console.log(`Transaction:${JSON.stringify(transaction)}`)
+        return axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {mangopay_payin_status: transaction.Status})
+      })
+      .then(() => {
+        if (transaction.Status === 'FAILED') {
+          return Router.push(`/paymentFailed?booking_id=${booking_id}`)
+        }
+        this.setState({success: true})
+        this.socket = io()
+        this.socket.on('connect', () => {
+          this.socket.emit('booking', booking_id)
+          const newStatus = booking.user.company_customer ? BOOK_STATUS.CUSTOMER_PAID : booking.status==BOOK_STATUS.PREAPPROVED ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
+          axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {status: newStatus})
+            .then(res => {
+              setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
+              localStorage.removeItem('booking_id')
+              if (!booking.user.company_customer) {
+                setTimeout(() => Router.push('/reservations/reservations'), 4000)
+              }
             })
-          })
+        })
       })
       .catch(err => {
         console.error(err)
+        snackBarError(err.response.data)
       })
 
   }

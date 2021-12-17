@@ -398,6 +398,7 @@ UserSchema.virtual('is_registered').get(function() {
   return true
 })
 
+// TODO Use justOne to return the shop or null
 UserSchema.virtual('shop', {
   ref: 'shop', // The Model to use
   localField: '_id', // Find in Model, where localField

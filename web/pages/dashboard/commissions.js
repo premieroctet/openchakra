@@ -35,7 +35,8 @@ class Commissions extends DataPage {
   loadData = () => {
     axios.get('/myAlfred/api/admin/commissions')
       .then(response => {
-        let commissions = response.data
+        let commissions = response.data.map(c => ({...c, target: c.target.toString()}))
+        console.log(commissions.map(c => typeof c.target))
         this.setState({data: commissions})
       })
     axios.get('/myAlfred/api/admin/companies')

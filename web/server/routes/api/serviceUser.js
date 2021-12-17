@@ -23,7 +23,6 @@ const serviceFilters = require('../../utils/filters')
 const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
 const {normalize} = require('../../../utils/text')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
-const parse = require('url-parse')
 
 moment.locale('fr')
 
@@ -720,7 +719,7 @@ router.get('/all/nearOther/:id/:service', passport.authenticate('jwt', {session:
 // View service for home, sorted according to GPS if provided
 // @Access public
 router.get('/home/:partpro', (req, res) => {
-  const query=parse(req.originalUrl, true).query
+  const query=req.query
 
   let gps=null
   // Sort according to GPS coordinates

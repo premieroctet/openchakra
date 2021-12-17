@@ -1,3 +1,4 @@
+const {checkPaid} = require('../../utils/booking')
 const Group = require('../../models/Group')
 const Booking = require('../../models/Booking')
 const Company = require('../../models/Company')
@@ -9,7 +10,6 @@ const passport = require('passport')
 const moment = require('moment')
 const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay')
 const {maskIban} = require('../../../utils/text')
-const parse = require('url-parse')
 moment.locale('fr')
 const {isB2BAdmin, isB2BManager, isB2BEmployee, isModeCompany}=require('../../utils/serverContext')
 const {computeUrl} = require('../../../config/config')
@@ -38,8 +38,53 @@ MANGOPAY 3DS schema : https://support.mangopay.com/s/article/How-does-3DS-work-w
 // Create credit card
 // @access public
 router.get('/hook', (req, res) => {
-  let query = parse(req.originalUrl, true).query
-  console.log(`Mangopay hook params:${JSON.stringify(query)}`)
+  let query = req.query
+  const id=query.RessourceId
+  const event=query.EventType
+  console.log(`Mangopay hook ${event}:${id}`)
+  const status=event.split('_').pop()
+  if (!id || !event) {
+    console.error(`Payment hook invalid id/event: id:${id}, event:${event}`)
+    return res.json()
+  }
+  if (event.startsWith('TRANSFER_NORMAL_') || event.startsWith('PAYOUT_NORMAL_')) {
+    Booking.findOne({$or: [
+      {mangopay_transfer_id: id}, {mangopay_payout_id: id},
+      {'customer_fees.transfer_id': id}, {'customer_fees.payout_id': id},
+      {'provider_fees.transfer_id': id}, {'provider_fees.payout_id': id},
+    ]})
+      .then(book => {
+        if (!book) {
+          return console.error(`Event ${event}:${id}`)
+        }
+        if (book.mangopay_transfer_id==id) {
+          console.log(`Hook set booking ${book._id} transfer status to ${status}`)
+          book.mangopay_transfer_status=status
+        }
+        if (book.mangopay_payout_id==id) {
+          console.log(`Hook set booking ${book._id} payout status to ${status}`)
+          book.mangopay_payout_status=status
+        }
+        [...book.customer_fees, ...book.provider_fees].forEach(f => {
+          if (f.transfer_id==id) {
+            console.log(`Hook set booking ${book._id} fee ${f._id} transfer status to ${status}`)
+            f.transfer_status=status
+          }
+          if (f.payout_id==id) {
+            console.log(`Hook set booking ${book._id} fee ${f._id} payout status to ${status}`)
+            f.payout_status=status
+          }
+        })
+        checkPaid(book)
+        book.save()
+          .then(() => {
+            console.error(`Booking ${book._id} handled by hook`)
+          })
+          .catch(err => {
+            console.error(`Booking ${book._id} save error:${err}`)
+          })
+      })
+  }
   res.json()
 })
 
@@ -104,15 +149,15 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
       })
     })
     .then(payin => {
-      Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
+      Booking.findByIdAndUpdate(req.body.booking_id,
+        {mangopay_payin_id: payin.Id, mangopay_payin_status: payin.Status})
         .then(() => console.log('booking update ok'))
         .catch(err => console.error(`booking update error:${err}`))
-      console.log(`Created Payin ${JSON.stringify(payin)}`)
       res.json(payin)
     })
     .catch(error => {
       console.error(error)
-      return res.status(404).json({error: err})
+      return res.status(404).json({error: error})
     })
 })
 
@@ -155,7 +200,6 @@ router.post('/avocotesPayIn', (req, res) => {
               Booking.findByIdAndUpdate(bookingId, {mangopay_payin_id: payin.Id})
                 .then(() => console.log('booking update ok'))
                 .catch(err => console.error(`booking update error:${err}`))
-              console.log(`Created Payin ${JSON.stringify(payin)}`)
               res.json(payin)
             })
             .catch(error => {
@@ -239,7 +283,9 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
           })
             .then(payin => {
               console.log(`Created Payin ${JSON.stringify(payin)}`)
-              Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
+              console.log(`Sttaus ${JSON.stringify(payin.Sttaus)}`)
+              Booking.findByIdAndUpdate(req.body.booking_id,
+                {mangopay_payin_id: payin.Id, mangopay_payin_status: payin.Status})
                 .then(() => console.log('booking update ok'))
                 .catch(err => console.error(`booking update error:${err}`))
               return res.json(payin)

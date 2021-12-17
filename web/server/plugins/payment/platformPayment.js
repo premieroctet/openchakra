@@ -24,7 +24,7 @@ class PlatformPayment extends PaymentBase {
         serviceUser.prestations
           .map(p => p.prestation.company_price*(prestations[p._id] || 0))) || 0
       const customer_fee=companyTotal-grandTotal
-      resolve([{fee: customer_fee, target:null}])
+      resolve([{amount: customer_fee, target:null}])
     })
   }
 

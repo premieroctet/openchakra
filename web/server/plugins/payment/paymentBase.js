@@ -57,7 +57,7 @@ class PaymentBase {
     return new Promise((resolve, reject) => {
       Commission.find({source: 'PROVIDER'})
         .then(commissions => {
-          const fees=commissions.map(c => ({fee: c.fixed+c.rate*grandTotal, target: c.target}))
+          const fees=commissions.map(c => ({amount: c.fixed+c.rate*grandTotal, target: c.target}))
           resolve(fees)
         })
         .catch(err => {
@@ -74,7 +74,7 @@ class PaymentBase {
     return new Promise((resolve, reject) => {
       Commission.find({source: 'CUSTOMER'})
         .then(commissions => {
-          const fees=commissions.map(c => ({fee: c.fixed+c.rate*grandTotal, target: c.target}))
+          const fees=commissions.map(c => ({amount: c.fixed+c.rate*grandTotal, target: c.target}))
           resolve(fees)
         })
         .catch(err => {
@@ -129,12 +129,12 @@ class PaymentBase {
         })
         .then(provider_fees => {
           res.provider_fees=provider_fees
-          res.provider_fee = lodash.sum(provider_fees.map(f => f.fee))
+          res.provider_fee = lodash.sum(provider_fees.map(f => f.amount))
           return this.computeCustomerFees(serviceUser, prestations, res.total_prestations, res.travel_tax, res.pick_tax)
         })
         .then(customer_fees => {
           res.customer_fees=customer_fees
-          res.customer_fee = lodash.sum(customer_fees.map(f => f.fee))
+          res.customer_fee = lodash.sum(customer_fees.map(f => f.amount))
           res.total=res.total_prestations+res.travel_tax+res.pick_tax+res.customer_fee
           resolve(res)
         })

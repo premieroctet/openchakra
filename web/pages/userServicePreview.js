@@ -670,6 +670,8 @@ class UserServicesPreview extends BasePage {
       cesu_amount: this.state.cesu_total,
       customer_fee: this.state.customer_fee,
       provider_fee: this.state.provider_fee,
+      customer_fees: this.state.customer_fees,
+      provider_fees: this.state.provider_fees,
       status: avocotes_booking ? BOOK_STATUS.TO_CONFIRM : actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
       serviceUserId: this.state.serviceUser._id,
       customer_booking: avocotes_booking ? avocotes_booking._id : null,
