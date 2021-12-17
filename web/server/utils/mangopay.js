@@ -44,6 +44,10 @@ const createTransfer = (booking_id, mangopay_source, mangopay_target, amount, fe
     Promise.all([mangopay_source, mangopay_target].map(getWallet))
       .then(res => {
         const [source_wallet, target_wallet]=res
+        const sourceAmount=source_wallet.Balance.Amount/100.0
+        if (sourceAmount<amount) {
+          return Promise.reject(`source wallet amount ${sourceAmount}<${amount}`)
+        }
         return mangoApi.Transfers.create({
           AuthorId: mangopay_source,
           DebitedFunds: {Currency: 'EUR', Amount: amount*100},
@@ -86,6 +90,11 @@ const createPayout = (booking_id, mangopay_id, amount, fees=0) => {
     Promise.all([getWallet(mangopay_id), getBankAccount(mangopay_id)])
       .then(result => {
         const [wallet, bankAccount]=result
+        const sourceAmount=wallet.Balance.Amount/100.0
+        if (sourceAmount<amount) {
+          return Promise.reject(`source wallet amount ${sourceAmount}<${amount}`)
+        }
+
         return mangoApi.PayOuts.create({
           AuthorId: mangopay_id,
           DebitedFunds: {Currency: 'EUR', Amount: amount*100},
@@ -448,7 +457,7 @@ const payBooking = booking => {
         payments.push([mangopay_source, fee.target.id_mangopay, fee.amount,
           fee, 'transfer_id', 'transfer_status', 'payout_id', 'payout_status'])
       })
-      console.log(`Booking ${booking._id}: ${payments.length} to pay`)
+      console.log(`Booking ${booking._id}: ${payments.length} recipients to pay`)
 
       const paymentsPromise=payments.map(p => createPayment(booking._id, ...p))
       return Promise.allSettled(paymentsPromise)
