@@ -1,3 +1,13 @@
+const Job = require('../../models/Job')
+const Group = require('../../models/Group')
+require('../../models/User')
+const Shop = require('../../models/Shop')
+const Prestation = require('../../models/Prestation')
+const Service = require('../../models/Service')
+const User = require('../../models/User')
+const Review = require('../../models/Review')
+const ServiceUser = require('../../models/ServiceUser')
+const Category = require('../../models/Category')
 const {logEvent}=require('../../utils/events')
 const {sendAdminsAlert} =require('../../utils/mailing')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
@@ -30,7 +40,7 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
   maxCount: 1,
 }]), passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('ServiceUser').findOne({
+  ServiceUser.findOne({
     user: req.user.id,
     service: req.body.service,
   })
@@ -90,7 +100,7 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
       fields.travel_tax = JSON.parse(req.body.travel_tax)
       fields.pick_tax = req.body.pick_tax === 'null' ? null : req.body.pick_tax
 
-      req.context.getModel('ServiceUser').create(fields)
+      ServiceUser.create(fields)
         .then(service => {
           res.json(service)
         })
@@ -109,7 +119,7 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
 // @Access private
 router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('ServiceUser').findOne({_id: req.params.serviceuser_id})
+  ServiceUser.findOne({_id: req.params.serviceuser_id})
     .then(su => {
       if (!su) {
         su = {}
@@ -121,7 +131,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
       // FIX : créer les prestations custom avant
       let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN)
       console.log(`New prestations:${JSON.stringify(newPrestations)}`)
-      let newPrestaModels = newPrestations.map(p => req.context.getModel('Prestation')({
+      let newPrestaModels = newPrestations.map(p => Prestation({
         label: p.label,
         s_label: normalize(p.label),
         service: req.body.service,
@@ -132,7 +142,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
         professional_access: req.body.professional_access,
       }))
 
-      const r = newPrestaModels.length > 0 ? req.context.getModel('Prestation').insertMany(newPrestaModels) : Promise.resolve({insertedIds: []})
+      const r = newPrestaModels.length > 0 ? Prestation.insertMany(newPrestaModels) : Promise.resolve({insertedIds: []})
       r
         .then(result => {
           let insertedPrestations=result
@@ -147,10 +157,10 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
             su.prestations.push(newp)
           })
 
-          const promise = req.params.serviceuser_id ? req.context.getModel('ServiceUser').findByIdAndUpdate(su._id, su, {new: true}) : req.context.getModel('ServiceUser').create(su)
+          const promise = req.params.serviceuser_id ? ServiceUser.findByIdAndUpdate(su._id, su, {new: true}) : ServiceUser.create(su)
           promise
             .then(su => {
-              req.context.getModel('Service').findById(su.service, 'label')
+              Service.findById(su.service, 'label')
                 .then(service => {
                   logEvent(req, 'Boutique', `${req.params.serviceuser_id ? 'Modification': 'Ajout'} de service`, `Service ${service.label}`)
                 })
@@ -158,14 +168,14 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
                 return res.json(su)
               }
 
-              req.context.getModel('Shop').update({alfred: req.user.id}, {$push: {services: su}})
+              Shop.update({alfred: req.user.id}, {$push: {services: su}})
                 .then(() => {
-                  req.context.getModel('Service').findOne({_id: req.body.service, picture: null}, {label: 1})
+                  Service.findOne({_id: req.body.service, picture: null}, {label: 1})
                     .then(service => {
                       if (service) {
                         const subject='Illustration manquante'
                         const message = `Le service ${service.label}(${service._id}) proposé par ${req.user.full_name} n'a pas d'illustration`
-                        sendAdminsAlert(subject, message, req.context)
+                        sendAdminsAlert(subject, message)
                       }
                     })
                     .catch(err => console.error(err))
@@ -195,7 +205,7 @@ router.post('/addUpdate/:serviceuser_id?', passport.authenticate('jwt', {session
 router.put('/editWithCity/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  req.context.getModel('ServiceUser').findById(req.params.id)
+  ServiceUser.findById(req.params.id)
     .then(serviceUser => {
 
       serviceUser.prestations = req.body.prestations
@@ -235,7 +245,7 @@ router.put('/editWithCity/:id', passport.authenticate('jwt', {
 router.put('/addPrestation/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  req.context.getModel('ServiceUser').findById(req.params.id)
+  ServiceUser.findById(req.params.id)
     .then(serviceUser => {
 
 
@@ -256,7 +266,7 @@ router.put('/addPrestation/:id', passport.authenticate('jwt', {
 // Edit the price of a prestation for a service
 // @Access private
 router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('ServiceUser').findById(req.params.id)
+  ServiceUser.findById(req.params.id)
     .then(serviceUser => {
       const index = serviceUser.prestations
         .map(item => item.id)
@@ -271,7 +281,7 @@ router.put('/editPrestation/:id', passport.authenticate('jwt', {session: false})
 // Sets a diploma for a service
 // @Access private
 router.post('/setDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('ServiceUser').findById(req.params.id)
+  ServiceUser.findById(req.params.id)
     .then(serviceUser => {
       serviceUser.diploma = serviceUser.diploma || {}
       serviceUser.diploma.name = req.body.name
@@ -298,7 +308,7 @@ router.post('/setDiploma/:id', upload.single('file_diploma'), passport.authentic
 router.post('/setCertification/:id', upload.single('file_certification'), passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  req.context.getModel('ServiceUser').findById(req.params.id)
+  ServiceUser.findById(req.params.id)
     .then(serviceUser => {
       serviceUser.certification = serviceUser.certification || {}
       serviceUser.certification.name = req.body.name
@@ -324,7 +334,7 @@ router.post('/setCertification/:id', upload.single('file_certification'), passpo
 // @Access private
 router.get('/all', (req, res) => {
 
-  req.context.getModel('ServiceUser').find()
+  ServiceUser.find()
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
@@ -348,7 +358,7 @@ router.get('/all', (req, res) => {
 // @Access private
 router.get('/all/category/:category', (req, res) => {
   let allServices = []
-  req.context.getModel('ServiceUser').find()
+  ServiceUser.find()
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
@@ -372,7 +382,7 @@ router.get('/all/category/:category', (req, res) => {
 // Count number of service per category
 router.get('/category/:id', (req, res) => {
 
-  req.context.getModel('ServiceUser').find()
+  ServiceUser.find()
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
@@ -405,9 +415,9 @@ router.get('/category/:id', (req, res) => {
 // @Access private
 router.get('/near', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
-      req.context.getModel('ServiceUser').find()
+      ServiceUser.find()
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
@@ -456,9 +466,9 @@ router.get('/near', passport.authenticate('jwt', {session: false}), (req, res) =
 // @Access private
 router.get('/near/:service', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
-      req.context.getModel('ServiceUser').find({service: req.params.service})
+      ServiceUser.find({service: req.params.service})
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
@@ -507,7 +517,7 @@ router.post('/search', (req, res) => {
   console.log(`Searching ${JSON.stringify(req.body)}`)
 
   const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
-  req.context.getModel('ServiceUser').find(filter, 'prestations.prestation service_address location perimeter description')
+  ServiceUser.find(filter, 'prestations.prestation service_address location perimeter description')
     .populate({path: 'user', select: 'firstname hidden'})
     .populate({
       path: 'service', select: 'label s_label description',
@@ -549,7 +559,7 @@ router.post('/search', (req, res) => {
 
       // Manager : filtrer les services autorisés
       if (getRole(req)==MANAGER) {
-        req.context.getModel('Group').findOne({members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
+        Group.findOne({members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
           .then(group => {
             const manager_sus = serviceFilters.filterServicesIds(sus, group.allowed_services.map(s => s.service._id))
             return res.json(manager_sus)
@@ -576,7 +586,7 @@ router.post('/search', (req, res) => {
 router.post('/nearCity', (req, res) => {
   const dat = req.body.city
   const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), '[eéèêaàoôuù]')
-  req.context.getModel('ServiceUser').find({'service_address.city': {$regex: data, $options: 'i'}})
+  ServiceUser.find({'service_address.city': {$regex: data, $options: 'i'}})
     .populate('user', '-id_card')
     .populate('service')
     .then(service => {
@@ -594,7 +604,7 @@ router.post('/nearCity', (req, res) => {
 // @Access private
 router.get('/cardPreview/:id', (req, res) => {
   const suId = mongoose.Types.ObjectId(req.params.id)
-  req.context.getModel('ServiceUser').findOne(suId, 'label picture alfred service service_address.city service_address.gps diploma certification level description')
+  ServiceUser.findOne(suId, 'label picture alfred service service_address.city service_address.gps diploma certification level description')
     .populate({path: 'service', select: 'picture label'})
     .populate({path: 'user', select: 'firstname picture avatar_letters'})
     .catch(err => {
@@ -602,9 +612,9 @@ router.get('/cardPreview/:id', (req, res) => {
       res.status(404).json({error: err})
     })
     .then(su => {
-      req.context.getModel('Shop').findOne({alfred: su.user}, 'is_professional insurances')
+      Shop.findOne({alfred: su.user}, 'is_professional insurances')
         .then(shop => {
-          req.context.getModel('Review').find({alfred: su.user, note_client: undefined, serviceUser: su._id})
+          Review.find({alfred: su.user, note_client: undefined, serviceUser: su._id})
             .then(reviews => {
               const result = {
                 _id: su._id, label: su.service.label, picture: su.service.picture,
@@ -627,9 +637,9 @@ router.get('/cardPreview/:id', (req, res) => {
 // @Access private
 router.get('/nearOther/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
-      req.context.getModel('ServiceUser').find()
+      ServiceUser.find()
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
@@ -672,9 +682,9 @@ router.get('/nearOther/:id', passport.authenticate('jwt', {session: false}), (re
 // @Access private
 router.get('/all/nearOther/:id/:service', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
-      req.context.getModel('ServiceUser').find({service: req.params.service})
+      ServiceUser.find({service: req.params.service})
         .populate('user', '-id_card')
         .populate('service')
         .then(service => {
@@ -720,7 +730,7 @@ router.get('/home/:partpro', (req, res) => {
   }
 
   const filter= req.params.partpro==PRO ? {'professional_access': true} : {'particular_access': true}
-  req.context.getModel('ServiceUser').find(filter, 'user service service_address.city')
+  ServiceUser.find(filter, 'user service service_address.city')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
     .populate('user', 'picture firstname score hidden')
     .populate('service', 'label')
@@ -756,7 +766,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
 
-  req.context.getModel('ServiceUser').find({
+  ServiceUser.find({
     user: req.user.id,
   })
     .populate('service')
@@ -793,32 +803,32 @@ router.get('/keywords/:mode', (req, res) => {
   if (![PRO, PART].includes(mode)) {
     return res.status(400).json(`Mode ${mode} inconnu, ${PRO} ou ${PART} attendu`)
   }
-  const filter_att=mode==PART ? "particular_access" : "professional_access"
+  const filter_att=mode==PART ? 'particular_access' : 'professional_access'
   const filter={[filter_att]: true}
-  const label_att=mode==PART ? "s_particular_label" : "s_professional_label"
+  const label_att=mode==PART ? 's_particular_label' : 's_professional_label'
 
   const promises=[
-    req.context.getModel('Category').find({}, `${label_att} description`),
-    req.context.getModel('Service').find(filter, 's_label description'),
-    req.context.getModel('Prestation').find(filter, 's_label description'),
-    req.context.getModel('ServiceUser').find(filter, 'description'),
-    req.context.getModel('Job').find({}, 's_label'),
+    Category.find({}, `${label_att} description`),
+    Service.find(filter, 's_label description'),
+    Prestation.find(filter, 's_label description'),
+    ServiceUser.find(filter, 'description'),
+    Job.find({}, 's_label'),
   ]
   Promise.all(promises.map(p => p.lean()))
     .then(result => {
       // One array only
       result = [].concat(...result)
       // Attribute valkues to one string only
-      result = result.map(r => {delete r._id; return Object.values(r).join(' ')}).join(' ')
+      result = result.map(r => { delete r._id; return Object.values(r).join(' ') }).join(' ')
       // normalize
       result = normalize(result)
       // Keep only [a-z]
-      result = result.toLowerCase().replace(/[^a-zA-Z]+/g, " ")
+      result = result.toLowerCase().replace(/[^a-zA-Z]+/g, ' ')
       result = result.split(' ')
       result = _.uniq(result).filter(e => e && e.length>2).sort()
       res.json(result)
     })
-    .catch (err => {
+    .catch(err => {
       console.error(err)
       res.json([])
     })
@@ -829,7 +839,7 @@ router.get('/keywords/:mode', (req, res) => {
 // @Access private
 router.get('/:id', (req, res) => {
 
-  req.context.getModel('ServiceUser').findById(req.params.id)
+  ServiceUser.findById(req.params.id)
     .populate('user', '-id_card')
     .populate('service')
     .populate({
@@ -860,7 +870,7 @@ router.get('/:id', (req, res) => {
 // @Access private
 router.get('/allUserServices/:id', (req, res) => {
   let userId = mongoose.Types.ObjectId(req.params.id)
-  req.context.getModel('ServiceUser').find({user: userId})
+  ServiceUser.find({user: userId})
     .populate('service')
     .then(services => {
       res.json(services)
@@ -875,7 +885,7 @@ router.get('/allUserServices/:id', (req, res) => {
 router.put('/deletePrestation/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  req.context.getModel('ServiceUser').findById(req.params.id)
+  ServiceUser.findById(req.params.id)
     .then(serviceUser => {
       const removeIndex = serviceUser.prestations
         .map(item => item.id)
@@ -892,7 +902,7 @@ router.put('/deletePrestation/:id', passport.authenticate('jwt', {
 // @Route PUT /myAlfred/api/serviceUser/views/:id
 // Update number of views for a service
 router.put('/views/:id', (req, res) => {
-  req.context.getModel('ServiceUser').findByIdAndUpdate(req.params.id, {
+  ServiceUser.findByIdAndUpdate(req.params.id, {
     $inc: {
       number_of_views: 1,
     },
@@ -920,7 +930,7 @@ router.put('/views/:id', (req, res) => {
 router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  req.context.getModel('ServiceUser').findByIdAndUpdate(req.params.id, {diploma: null})
+  ServiceUser.findByIdAndUpdate(req.params.id, {diploma: null})
     .then(service => res.json(service))
     .catch(err => {
       console.error(err)
@@ -934,7 +944,7 @@ router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
 router.delete('/delete/certification/:id', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  req.context.getModel('ServiceUser').findByIdAndUpdate(req.params.id, {certification: null})
+  ServiceUser.findByIdAndUpdate(req.params.id, {certification: null})
     .then(service => res.json(service))
     .catch(err => {
       console.error(err)
@@ -948,7 +958,7 @@ router.delete('/delete/certification/:id', passport.authenticate('jwt', {
 router.delete('/current/allServices', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  req.context.getModel('ServiceUser').deleteMany({
+  ServiceUser.deleteMany({
     user: req.user.id,
   })
     .then(() => {
@@ -967,12 +977,12 @@ router.delete('/current/allServices', passport.authenticate('jwt', {
 // Delete a service for an alfred
 // @Access private
 router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('ServiceUser').findById(req.params.id)
+  ServiceUser.findById(req.params.id)
     .populate('service', 'label')
     .then(serviceuser => {
       logEvent(req, 'Boutique', 'Suppression de service', `Service ${serviceuser.service.label}`)
       serviceuser.remove().then(() => {
-        req.context.getModel('Shop').findOne({alfred: req.user.id})
+        Shop.findOne({alfred: req.user.id})
           .then(shop => {
             const removeIndex = shop.services.indexOf(req.params.id)
             shop.services.splice(removeIndex, 1)

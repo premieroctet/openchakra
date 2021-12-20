@@ -10,7 +10,6 @@ const getIdentifiersInner = (prefix, data) => {
 }
 
 const getQueries = () => {
-  console.log('get queries')
   const ids=getIdentifiersInner('', i18n).flat(6)
   const queries=ids.filter(i => i).map(obj => {
     let [k, v]=Object.entries(obj)[0]

@@ -1,3 +1,5 @@
+const User = require('../models/User')
+const Company = require('../models/Company')
 const {
   MANGOPAY_CONFIG,
   get_host_url,
@@ -434,21 +436,21 @@ const payBooking = (booking, context) => {
   // Paiement Alfred
   if (booking.alfred_amount && !(booking.mangopay_transfer_id && booking.mangopay_payout_id)) {
     recipients.push(
-      {recipient_promise: context.getModel('User').findById(booking.alfred._id), amount: booking.alfred_amount, transfer_att: 'mangopay_transfer_id', payout_att: 'mangopay_payout_id'},
+      {recipient_promise: User.findById(booking.alfred._id), amount: booking.alfred_amount, transfer_att: 'mangopay_transfer_id', payout_att: 'mangopay_payout_id'},
     )
   }
 
   // Paiement comm. sur l'Alfred
   if (booking.provider_fee && !(booking.provider_fee_transfer_id && booking.provider_fee_payout_id)) {
     recipients.push(
-      {recipient_promise: context.getModel('Company').findById(context.getProviderFeeRecipient()), amount: booking.provider_fee, transfer_att: 'provider_fee_transfer_id', payout_att: 'provider_fee_payout_id'},
+      {recipient_promise: Company.findById(context.getProviderFeeRecipient()), amount: booking.provider_fee, transfer_att: 'provider_fee_transfer_id', payout_att: 'provider_fee_payout_id'},
     )
   }
 
   // Paiement comm. sur le client
   if (booking.customer_fee && !(booking.customer_fee_transfer_id && booking.customer_fee_payout_id)) {
     recipients.push(
-      {recipient_promise: context.getModel('Company').findById(context.getCustomerFeeRecipient()), amount: booking.customer_fee, transfer_att: 'customer_fee_transfer_id', payout_att: 'customer_fee_payout_id'},
+      {recipient_promise: Company.findById(context.getCustomerFeeRecipient()), amount: booking.customer_fee, transfer_att: 'customer_fee_transfer_id', payout_att: 'customer_fee_payout_id'},
     )
   }
 

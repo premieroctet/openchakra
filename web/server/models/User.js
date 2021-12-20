@@ -269,11 +269,11 @@ const UserSchema = new Schema({
   },
   resetToken: {
     type: Schema.Types.ObjectId,
-    ref: 'ResetToken',
+    ref: 'resetToken',
   },
   chatRooms: {
     type: Schema.Types.ObjectId,
-    ref: 'ChatRoom',
+    ref: 'chatRoom',
   },
   // Mangopay as client
   id_mangopay: {
@@ -310,7 +310,7 @@ const UserSchema = new Schema({
   // Pour le B2B, compagnie à laquelle appartient le compte
   company: {
     type: Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: 'company',
   },
   position: {
     type: String,
@@ -322,7 +322,7 @@ const UserSchema = new Schema({
   // Avocotés : lien vers compagnie avocotes
   company_customer: {
     type: Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: 'company',
   },
   // Entreprise si le client est un professionel
   professional: {
@@ -399,9 +399,9 @@ UserSchema.virtual('is_registered').get(function() {
 })
 
 UserSchema.virtual('shop', {
-  ref: 'Shop', // The Model to use
+  ref: 'shop', // The Model to use
   localField: '_id', // Find in Model, where localField
   foreignField: 'alfred', // is equal to foreignField
 })
 
-module.exports = UserSchema
+module.exports = User = mongoose.model('user', UserSchema)

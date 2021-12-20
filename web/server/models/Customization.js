@@ -12,12 +12,12 @@ const Commission = new Schema({
   // Destinee company
   destinee: {
     type: Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: 'company',
     required: true,
   },
 })
 
-const Customization = new Schema({
+const CustomizationSchema = new Schema({
   provider_fee: {
     type: Commission,
     required: false,
@@ -28,4 +28,4 @@ const Customization = new Schema({
   },
 })
 
-module.exports = Customization
+module.exports = Customization = mongoose.model('customization', CustomizationSchema)

@@ -10,4 +10,4 @@ const EquipmentSchema = new Schema({
   },
 })
 
-module.exports = EquipmentSchema
+module.exports = Equipment = mongoose.model('equipment', EquipmentSchema)

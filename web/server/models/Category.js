@@ -27,4 +27,5 @@ const CategorySchema = new Schema({
 
 CategorySchema.index({label: 'text'})
 
-module.exports = CategorySchema
+const Category = mongoose.model('category', CategorySchema)
+module.exports = Category

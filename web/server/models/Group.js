@@ -10,17 +10,17 @@ const GroupSchema = new Schema({
   },
   company: {
     type: Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: 'company',
     required: true,
   },
   members: [{
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   }],
   allowed_services: [{
     service: {
       type: Schema.Types.ObjectId,
-      ref: 'Service',
+      ref: 'service',
     },
     // Amount percent paid by the company
     supported_percent: {
@@ -48,4 +48,4 @@ const GroupSchema = new Schema({
   },
 })
 
-module.exports = GroupSchema
+module.exports = Group = mongoose.model('group', GroupSchema)

@@ -55,28 +55,34 @@ const ShopSchema = new Schema({
     type: Boolean,
   },
   company: {
-    name: {
-      type: String,
+    type: {
+      name: {
+        type: String,
+        required: true,
+      },
+      siret: {
+        type: String,
+        required: true,
+      },
+      vat_subject: {
+        type: Boolean,
+        required: true,
+        default: false,
+      },
+      vat_number: {
+        type: String,
+      },
     },
-    siret: {
-      type: String,
-    },
-    vat_subject: {
-      type: Boolean,
-      default: false,
-    },
-    vat_number: {
-      type: String,
-    },
+    required: true,
   },
   services: [{
     type: Schema.Types.ObjectId,
-    ref: 'ServiceUser',
+    ref: 'serviceUser',
 
   }],
   alfred: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   picture: String,
   // particulier CESU : oblige, accepte, refuse
@@ -119,4 +125,4 @@ ShopSchema.virtual('insurance_text').get(function() {
 })
 
 
-module.exports = ShopSchema
+module.exports = Shop = mongoose.model('shop', ShopSchema)

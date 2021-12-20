@@ -1,4 +1,9 @@
+const Group = require('../../models/Group')
+const Booking = require('../../models/Booking')
+const Company = require('../../models/Company')
+const User = require('../../models/User')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const moment = require('moment')
@@ -34,7 +39,7 @@ MANGOPAY 3DS schema : https://support.mangopay.com/s/article/How-does-3DS-work-w
 // @access public
 router.get('/hook', (req, res) => {
   let query = parse(req.originalUrl, true).query
-  console.log(`Got params:${JSON.stringify(query)}`)
+  console.log(`Mangopay hook params:${JSON.stringify(query)}`)
   res.json()
 })
 
@@ -50,7 +55,7 @@ router.post('/cards', passport.authenticate('jwt', {session: false}), (req, res)
     console.log(`Creating card for user ${req.user.id}`)
   }
 
-  const promise = b2b ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
+  const promise = b2b ? Company.findById(req.user.company) : User.findById(req.user.id)
   promise
     .then(entity => {
       let id_mangopay = entity.id_mangopay
@@ -73,7 +78,7 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
   const amount = req.body.amount * 100
   const returnUrl= `/paymentSuccess?booking_id=${req.body.booking_id}`
 
-  const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
+  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
 
   let mangopay_id=0
   promise
@@ -99,7 +104,7 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
       })
     })
     .then(payin => {
-      req.context.getModel('Booking').findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
+      Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
         .then(() => console.log('booking update ok'))
         .catch(err => console.error(`booking update error:${err}`))
       console.log(`Created Payin ${JSON.stringify(payin)}`)
@@ -117,7 +122,7 @@ router.post('/avocotesPayIn', (req, res) => {
   const bookingId= req.body.bookingId
   const returnUrl= `/paymentSuccess?booking_id=${bookingId}`
 
-  req.context.getModel('Booking').findById(bookingId)
+  Booking.findById(bookingId)
     .populate('user')
     .then(booking => {
       const amount = booking.amount*100
@@ -147,7 +152,7 @@ router.post('/avocotesPayIn', (req, res) => {
           })
             .then(payin => {
               console.log(`Avocote PayIn created:${payin}`)
-              req.context.getModel('Booking').findByIdAndUpdate(bookingId, {mangopay_payin_id: payin.Id})
+              Booking.findByIdAndUpdate(bookingId, {mangopay_payin_id: payin.Id})
                 .then(() => console.log('booking update ok'))
                 .catch(err => console.error(`booking update error:${err}`))
               console.log(`Created Payin ${JSON.stringify(payin)}`)
@@ -176,7 +181,7 @@ router.post('/refund', passport.authenticate('b2badmin', {session: false}), (req
   const payInId=req.body.payInId
   console.log(`Refunding transaction ${payInId}`)
 
-  req.context.getModel('Company').findById(req.user.company)
+  Company.findById(req.user.company)
     .then(entity => {
       const id_mangopay = entity.id_mangopay
       mangoApi.PayIns.createRefund(payInId, {AuthorId: id_mangopay})
@@ -204,7 +209,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
   browserInfo.AcceptHeader=req.headers.accept
   const ipAddress=req.connection.remoteAddress
 
-  const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
+  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
   promise
     .then(entity => {
       const id_mangopay = entity.id_mangopay
@@ -234,7 +239,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
           })
             .then(payin => {
               console.log(`Created Payin ${JSON.stringify(payin)}`)
-              req.context.getModel('Booking').findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
+              Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
                 .then(() => console.log('booking update ok'))
                 .catch(err => console.error(`booking update error:${err}`))
               return res.json(payin)
@@ -253,7 +258,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
 router.post('/bank-accounts', passport.authenticate('jwt', {session: false}), (req, res) => {
   const {iban, bic} = req.body
 
-  const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
+  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
   promise
     .then(entity => {
       const mangopay_id = entity.mangopay_provider_id
@@ -301,7 +306,7 @@ router.post('/bank-accounts', passport.authenticate('jwt', {session: false}), (r
 
 const get_cards = req => {
   return new Promise((resolve, reject) => {
-    const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
+    const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
     promise
       .then(entity => {
         mangoApi.Users.getCards(entity.id_mangopay, {parameters: {per_page: 100}})
@@ -340,7 +345,7 @@ router.get('/active-cards', passport.authenticate('jwt', {session: false}), (req
       // B2B manager or employee : retain only cards allowed for group
       const group_mode=isB2BManager(req) ? MICROSERVICE_MODE : isB2BEmployee(req) ? CARETAKER_MODE : null
       if (group_mode) {
-        req.context.getModel('Group').findOne({members: req.user.id, type: group_mode}, 'cards')
+        Group.findOne({members: req.user.id, type: group_mode}, 'cards')
           .then(group => {
             cards = cards.filter(c => group.cards.includes(c.Id))
           })
@@ -358,7 +363,7 @@ router.get('/active-cards', passport.authenticate('jwt', {session: false}), (req
 // @access private
 router.get('/bank-accounts', passport.authenticate('jwt', {session: false}), (req, res) => {
   const allAccount = []
-  const promise = isB2BAdmin(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
+  const promise = isB2BAdmin(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
   promise
     .then(entity => {
       const id_mangopay = entity.mangopay_provider_id
@@ -404,7 +409,7 @@ router.get('/payin/:payin_id', (req, res) => {
 // @access private
 router.delete('/bank-accounts/:bank_account_id', passport.authenticate('jwt', {session: false}), (req, res) => {
   const account_id = req.params.bank_account_id
-  const promise = isB2BAdmin(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
+  const promise = isB2BAdmin(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
   promise
     .then(entity => {
       const mangopay_id = entity.mangopay_provider_id

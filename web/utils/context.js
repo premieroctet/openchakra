@@ -1,11 +1,9 @@
 const {isAndroid, isIOS, getUA}=require('react-device-detect')
-const {setAxiosAuthentication}=require('./authentication')
 const isWebview = require('is-webview')
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
 const {isB2BDisabled} = require('../config/config')
 const jwt = require('jsonwebtoken')
-const {getPartnerFromHostname}=require('./partner')
 const {HIDE_EMPTY_EVALUATIONS}=require('../mode')
 
 const getLoggedUser = () => {
@@ -16,7 +14,7 @@ const getLoggedUser = () => {
   if (!token) {
     return null
   }
-  const data=token.split(' ')[ 1 ]
+  const data=token.split(' ')[1]
   const decoded = jwt.decode(data)
   return decoded
 }
@@ -170,15 +168,11 @@ const isEditableUser = user => {
   return isEditable
 }
 
-const getPartner = () => {
-  return getPartnerFromHostname(window.location.hostname)
-}
-
 module.exports = {
   isB2BStyle, isB2BEmployee, isB2BAdmin, isB2BManager, isModeCompany, isApplication, isMobile,
   getRole, setAlfredRegistering, removeAlfredRegistering, isAlfredRegistering,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
-  isLoggedUserRegistered, isIOS, isAndroid, getPartner, hideEmptyEvaluations,
+  isLoggedUserRegistered, isIOS, isAndroid, hideEmptyEvaluations,
   getLoggedAs, REGISTER_WITHOUT_CODE,
 }

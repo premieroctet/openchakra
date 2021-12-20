@@ -234,14 +234,14 @@ class UIConfiguration extends React.Component {
 
   render = () => {
     const {classes}=this.props
-    const {filtered_parameters, current_page_name, saving, filter, filterEmpty, modified_parameters}=this.state
+    const {filtered_parameters, current_page_name, saving, filter, filterEmpty}=this.state
 
     const pages=_.uniqBy(filtered_parameters.map(p => p.page))
 
     const pageParameters=filtered_parameters.filter(p => p.page==current_page_name)
 
     const saveTitle=saving ? 'Génération en cours...': 'Enregistrer & générer'
-    const canSave = !saving && Object.keys(modified_parameters).length>0
+    const canSave = !saving
 
     return (
       <DashboardLayout title={'Configuration UI'}>

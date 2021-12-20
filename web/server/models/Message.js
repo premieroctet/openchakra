@@ -21,13 +21,12 @@ const MessageSchema = new Schema({
   },
   receiver: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   sender: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
 })
 
-// module.exports = Message = mongoose.model('message', MessageSchema);
-module.exports = MessageSchema
+module.exports = Message = mongoose.model('message', MessageSchema)

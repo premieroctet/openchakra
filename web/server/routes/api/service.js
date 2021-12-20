@@ -1,4 +1,9 @@
+const Company = require('../../models/Company')
+const Prestation = require('../../models/Prestation')
+const Service = require('../../models/Service')
+const ServiceUser = require('../../models/ServiceUser')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const _ = require('lodash')
@@ -8,7 +13,7 @@ const {PART, PRO}=require('../../../utils/consts')
 // @Route GET /myAlfred/api/service/all
 // View all service
 router.get('/all', (req, res) => {
-  req.context.getModel('Service').find()
+  Service.find()
     .sort({'label': 1})
     .populate('equipments')
     .populate('category')
@@ -29,7 +34,7 @@ router.get('/all', (req, res) => {
 // @Route GET /myAlfred/api/service/professional
 // View all professional services
 router.get('/professional', (req, res) => {
-  req.context.getModel('Service').find({professional_access: true}, 'label')
+  Service.find({professional_access: true}, 'label')
     .sort({'label': 1})
     .then(services => {
       if (!services) {
@@ -44,7 +49,7 @@ router.get('/professional', (req, res) => {
 // @Route GET /myAlfred/api/service/particular
 // View all pro services
 router.get('/particular', (req, res) => {
-  req.context.getModel('Service').find({particular_access: true}, 'label')
+  Service.find({particular_access: true}, 'label')
     .sort({'label': 1})
     .then(services => {
       if (!services) {
@@ -59,10 +64,10 @@ router.get('/particular', (req, res) => {
 // @Route GET /myAlfred/api/service/allCount
 // View all service with count of serviceUser
 router.get('/allCount', (req, res) => {
-  req.context.getModel('Service').find({})
+  Service.find({})
     .sort({label: 1})
     .then(services => {
-      req.context.getModel('ServiceUser').find({})
+      ServiceUser.find({})
         .then(sus => {
           let counts = []
           services.forEach(service => {
@@ -78,42 +83,15 @@ router.get('/allCount', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      return res.status(404).json({service: `No service found:${err}`})
+      return res.status(500).json({service: `No service found:${err}`})
     })
-})
-
-// @Route GET /myAlfred/api/service/random/home
-// View random service homepage
-router.get('/random/home', (req, res) => {
-
-  req.context.getModel('Service').countDocuments().exec((err, count) => {
-
-    let limitrecords = 6
-
-    function getRandomArbitrary(min, max) {
-      return Math.ceil(Math.random() * (max - min) + min)
-    }
-
-    let skipRecords = getRandomArbitrary(1, count - limitrecords)
-
-    let random = Math.floor(Math.random() * count)
-
-
-    req.context.getModel('Service').find().populate('category').limit(6).skip(random).exec(
-      (err, result) => {
-
-        res.json(result)
-      })
-  })
-
-
 })
 
 // @Route GET /myAlfred/api/service/:id
 // View one service
 router.get('/:id', (req, res) => {
 
-  req.context.getModel('Service').findById(req.params.id)
+  Service.findById(req.params.id)
     .populate('equipments')
     .populate('category')
     .then(service => {
@@ -124,15 +102,17 @@ router.get('/:id', (req, res) => {
 
 
     })
-    .catch(err => res.status(404).json({service: 'No service found'}))
-
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json({service: `No service found:${err}`})
+    })
 })
 
 // @Route GET /myAlfred/api/service/all/:category
 // View all service per category
 router.get('/all/:category', (req, res) => {
 
-  req.context.getModel('Service').find({category: req.params.category})
+  Service.find({category: req.params.category})
     .sort({'label': 1})
     .populate('equipments')
     .populate('category')
@@ -153,10 +133,10 @@ router.get('/all/:category', (req, res) => {
 // View all service per category filtered by already provided Alfred's services
 router.get('/currentAlfred/:category', passport.authenticate('jwt', {session: false}), async(req, res) => {
 
-  let serviceUsers = await req.context.getModel('ServiceUser').find({user: req.user})
+  let serviceUsers = await ServiceUser.find({user: req.user})
   serviceUsers = serviceUsers.map(s => s.service)
 
-  req.context.getModel('Service').find({category: req.params.category, _id: {$nin: serviceUsers}})
+  Service.find({category: req.params.category, _id: {$nin: serviceUsers}})
     .sort({'label': 1})
     .populate('equipments')
     .populate('category')
@@ -177,7 +157,7 @@ router.get('/currentAlfred/:category', passport.authenticate('jwt', {session: fa
 // Search into category(label/description), service(label/description/job), prestation(label/dsecription)
 // Return { category_name : { services} }
 router.get('/keyword/:kw', (req, res) => {
-  req.context.getModel('Service').find({}, 'label s_label particular_access professional_access')
+  Service.find({}, 'label s_label particular_access professional_access')
     .populate('category', 's_particular_label s_professional_label')
     .populate({path: 'prestations', select: 's_label particular_access professional_access private_alfred', populate: {path: 'job', select: 's_label'}})
     .sort({s_label: 1})
@@ -210,12 +190,12 @@ router.get('/keyword/:kw', (req, res) => {
 
 router.get('/partner/:partner_name', (req, res) => {
   const company_name=req.params.partner_name
-  req.context.getModel('Company').findOne({name: company_name}, '_id')
+  Company.findOne({name: company_name}, '_id')
     .then(company => {
       if (!company) {
         return res.status(404).json(`No company ${company_name} found`)
       }
-      return req.context.getModel('Prestation').find({private_company: company}, '_id')
+      return Prestation.find({private_company: company}, '_id')
         .populate('service', '_id')
     })
     .then(prestations => {
@@ -223,7 +203,7 @@ router.get('/partner/:partner_name', (req, res) => {
       if (count!=1) {
         return res.status(500).json(`${count} services différents trouvés pour ${company_name}`)
       }
-      return req.context.getModel('Service').findOne({_id: prestations[0].service})
+      return Service.findOne({_id: prestations[0].service})
         .populate('prestations')
     })
     .then(service => {

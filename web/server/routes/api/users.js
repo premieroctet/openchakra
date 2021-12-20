@@ -1,5 +1,9 @@
+const User = require('../../models/User')
+const ServiceUser = require('../../models/ServiceUser')
+require('../../models/ResetToken')
+const Album = require('../../models/Album')
 const {REGISTER_WITHOUT_CODE}=require('../../../utils/context')
-const {checkRegisterCodeValidity,setRegisterCodeUsed}=require('../../utils/register')
+const {checkRegisterCodeValidity, setRegisterCodeUsed}=require('../../utils/register')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
@@ -21,8 +25,6 @@ const axios = require('axios')
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
-const {connectionPool}=require('../../utils/database')
-const {serverContextFromPartner}=require('../../utils/serverContext')
 const gifFrames = require('gif-frames')
 const fs = require('fs').promises
 
@@ -73,7 +75,7 @@ router.post('/register', (req, res) => {
   const checkCode=registerCode ? checkRegisterCodeValidity(req, registerCode) : Promise.resolve()
   checkCode
     .then(() => {
-      return req.context.getModel('User').findOne({email: req.body.email})
+      return User.findOne({email: req.body.email})
     })
     .then(db_user => {
       if (db_user && (!user_id || db_user._id.toString()!=user_id)) {
@@ -108,14 +110,14 @@ router.post('/register', (req, res) => {
     })
     .then(hash => {
       user.password = hash
-      return req.context.getModel('User').create(user)
+      return User.create(user)
     })
     .then(user => {
       createMangoClient(user)
       sendVerificationMail(user, req)
       // Warning si adresse incomplète
       if (!user.billing_address.gps.lat) {
-        req.context.getModel('User').find({is_admin: true}, 'firstname email phone')
+        User.find({is_admin: true}, 'firstname email phone')
           .then(admins => {
             let log_link = new URL(`/dashboard/logAsUser?email=${user.email}`, computeUrl(req))
             const msg=`Compléter l'adresse pour le compte ${user.email}, connexion via ${log_link}`
@@ -144,7 +146,7 @@ router.post('/register', (req, res) => {
 // Send email
 // @access private
 router.get('/sendMailVerification', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       sendVerificationMail(user, req)
       res.json({})
@@ -160,11 +162,11 @@ router.get('/sendMailVerification', passport.authenticate('jwt', {session: false
 // @access private
 router.post('/checkSMSVerification', passport.authenticate('jwt', {session: false}), (req, res) => {
   const sms_code = req.body.sms_code
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       if (user.sms_code == sms_code) {
         console.log('Code SMS OK pour moi')
-        req.context.getModel('User').findByIdAndUpdate(req.user, {sms_code: null, phone_confirmed: true})
+        User.findByIdAndUpdate(req.user, {sms_code: null, phone_confirmed: true})
           .then(() => console.log('OK'))
           .catch(err => console.error(err))
         res.json({sms_code_ok: true})
@@ -185,7 +187,7 @@ router.post('/checkSMSVerification', passport.authenticate('jwt', {session: fals
 router.post('/sendSMSVerification', passport.authenticate('jwt', {session: false}), (req, res) => {
   const code = Math.floor(Math.random() * Math.floor(10000)).toString().padStart(4, '0')
   console.log(`Création code sms ${code} pour ${req.user}`)
-  req.context.getModel('User').findByIdAndUpdate(req.user, {sms_code: code}, {new: true})
+  User.findByIdAndUpdate(req.user, {sms_code: code}, {new: true})
     .then(user => {
       if (req.body.phone) {
         user.phone = req.body.phone
@@ -205,7 +207,7 @@ router.post('/sendSMSVerification', passport.authenticate('jwt', {session: false
 // @Route PUT /myAlfred/api/users/validateAccount
 // Validate account after register
 router.post('/validateAccount', (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.body.user_id, {is_confirmed: true})
+  User.findByIdAndUpdate(req.body.user_id, {is_confirmed: true})
     .then(() => res.json())
     .catch(err => {
       console.error(err)
@@ -218,13 +220,13 @@ router.post('/validateAccount', (req, res) => {
 // @Access private
 router.put('/profile/billingAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       user.billing_address = req.body
       user.save()
         .then(
           user => {
-            req.context.getModel('ServiceUser').updateMany({user: user.id}, {service_address: user.billing_address})
+            ServiceUser.updateMany({user: user.id}, {service_address: user.billing_address})
           },
         )
         .catch(
@@ -240,7 +242,7 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
 // @Access private
 router.put('/profile/languages', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       user.languages = req.body.languages
       user.save().then(user => res.json(user)).catch(err => console.error(err))
@@ -252,7 +254,7 @@ router.put('/profile/languages', passport.authenticate('jwt', {session: false}),
 // @Access private
 router.put('/profile/description', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       user.description = req.body.description
       user.save().then(user => res.json(user)).catch(err => console.error(err))
@@ -264,7 +266,7 @@ router.put('/profile/description', passport.authenticate('jwt', {session: false}
 // @Access private
 router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       const address = {
         address: req.body.address,
@@ -290,7 +292,7 @@ router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: fal
 // Get service address by id
 // @Access private
 router.get('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       const index = req.params.id
       const address = user.service_address
@@ -306,7 +308,7 @@ router.get('/profile/address/:id', passport.authenticate('jwt', {session: false}
 // Edit service address by id
 // @Access private
 router.put('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       const index = user.service_address
         .map(item => item.id)
@@ -330,7 +332,7 @@ router.put('/profile/address/:id', passport.authenticate('jwt', {session: false}
 // Delete service address by id
 // @Access private
 router.delete('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       const index = user.service_address
         .map(item => item.id)
@@ -346,7 +348,7 @@ router.delete('/profile/address/:id', passport.authenticate('jwt', {session: fal
 // Add phone number in profile
 // @Access private
 router.put('/profile/phone', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.user, {
+  User.findByIdAndUpdate(req.user, {
     phone: req.body.phone,
     phone_confirmed: req.body.phone_confirmed,
   }, {new: true})
@@ -362,7 +364,7 @@ router.put('/profile/phone', passport.authenticate('jwt', {session: false}), (re
 // Add job in profile
 // @Access private
 router.put('/profile/job', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.user, {
+  User.findByIdAndUpdate(req.user, {
     job: req.body.job,
   }, {new: true})
     .then(user => {
@@ -377,7 +379,7 @@ router.put('/profile/job', passport.authenticate('jwt', {session: false}), (req,
 // Add a picture profile
 // @Access private
 router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.user, {
+  User.findByIdAndUpdate(req.user, {
     picture: req.file ? req.file.path : '',
   }, {new: true})
     .then(user => {
@@ -392,7 +394,7 @@ router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.auth
 // Add a picture profile
 // @Access private
 router.put('/profile/pictureLater', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.user, {picture: req.body.picture}, {new: true})
+  User.findByIdAndUpdate(req.user, {picture: req.body.picture}, {new: true})
     .then(user => {
       res.json(user)
     })
@@ -406,7 +408,7 @@ router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 
   name: 'myCardV',
   maxCount: 1,
 }]), passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       user.id_card = {}
       user.id_card.recto = req.files.myCardR[0].path
@@ -433,7 +435,7 @@ router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 
 // Add an identity card
 // @Access private
 router.post('/profile/idCard/addVerso', uploadIdCard.single('myCardV'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       user.id_card.verso = req.file.path
 
@@ -449,7 +451,7 @@ router.post('/profile/idCard/addVerso', uploadIdCard.single('myCardV'), passport
 // Add a registration proof
 // @Access private
 router.post('/profile/registrationProof/add', uploadRegProof.single('registrationProof'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       user.registration_proof = req.file.path
       return user.save()
@@ -467,7 +469,7 @@ router.post('/profile/registrationProof/add', uploadRegProof.single('registratio
 // Deletes a registration proof
 // @Access private
 router.delete('/profile/registrationProof', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       user.registration_proof = null
       return user.save()
@@ -503,7 +505,7 @@ router.post('/login', (req, res) => {
   let b2b_login = req.body.b2b_login
 
   // Find user by email
-  req.context.getModel('User').findOne({email: new RegExp(`^${email}$`, 'i')})
+  User.findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('shop', 'is_particular')
     .then(user => {
       // Check for user
@@ -558,7 +560,7 @@ router.post('/login', (req, res) => {
 })
 
 router.get('/token', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .populate('shop', 'is_particular')
     .then(user => {
       send_cookie(user, null, res, req.context.getLoggedAs())
@@ -579,7 +581,7 @@ router.get('/logout', (req, res) => {
 // List all users
 router.get('/all', (req, res) => {
 
-  req.context.getModel('User').find({is_admin: false})
+  User.find({is_admin: false})
     .then(user => {
       if (!user) {
         res.status(400).json({msg: 'No users found'})
@@ -592,7 +594,7 @@ router.get('/all', (req, res) => {
 // @Route GET /myAlfred/api/users/users
 // List all simple users
 router.get('/users', (req, res) => {
-  req.context.getModel('User').find({is_admin: false, is_alfred: false})
+  User.find({is_admin: false, is_alfred: false})
     .then(user => {
       if (!user) {
         res.status(400).json({msg: 'No users found'})
@@ -606,7 +608,7 @@ router.get('/users', (req, res) => {
 // Get roles for an email's user
 router.get('/roles/:email', (req, res) => {
 
-  req.context.getModel('User').findOne({email: req.params.email}, 'roles')
+  User.findOne({email: req.params.email}, 'roles')
     .then(user => {
       if (!user) {
         console.log(`Request roles for email ${req.params.email}:[]`)
@@ -621,7 +623,7 @@ router.get('/roles/:email', (req, res) => {
 // @Route GET /myAlfred/api/users/users/:id
 // Get one user
 router.get('/users/:id', (req, res) => {
-  req.context.getModel('User').findById(req.params.id)
+  User.findById(req.params.id)
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'})
@@ -635,7 +637,7 @@ router.get('/users/:id', (req, res) => {
 // @Route DELETE /myAlfred/api/users/:id/role/:role
 // Get one user
 router.delete('/:id/role/:role', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.params.id)
+  User.findById(req.params.id)
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'})
@@ -658,7 +660,7 @@ router.delete('/:id/role/:role', passport.authenticate('jwt', {session: false}),
 // @Route PUT /myAlfred/api/users/users/becomeAlfred
 // Update one user is_alfred's status
 router.put('/users/becomeAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.user, {is_alfred: true}, {new: true})
+  User.findByIdAndUpdate(req.user, {is_alfred: true}, {new: true})
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'})
@@ -672,7 +674,7 @@ router.put('/users/becomeAlfred', passport.authenticate('jwt', {session: false})
 // @Route PUT /myAlfred/api/users/users/deleteAlfred
 // Update one user is_alfred's status
 router.put('/users/deleteAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.user, {is_alfred: false}, {new: true})
+  User.findByIdAndUpdate(req.user, {is_alfred: false}, {new: true})
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'})
@@ -686,7 +688,7 @@ router.put('/users/deleteAlfred', passport.authenticate('jwt', {session: false})
 // @Route PUT /myAlfred/api/users/alfredViews/:id
 // Update number of views for an alfred
 router.put('/alfredViews/:id', (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.params.id, {$inc: {number_of_views: 1}}, {new: true})
+  User.findByIdAndUpdate(req.params.id, {$inc: {number_of_views: 1}}, {new: true})
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No user found'})
@@ -700,7 +702,7 @@ router.put('/alfredViews/:id', (req, res) => {
 // @Route GET /myAlfred/api/users/home/alfred
 // List alfred homepage
 router.get('/home/alfred', (req, res) => {
-  req.context.getModel('User').find({is_alfred: true})
+  User.find({is_alfred: true})
     .sort({creation_date: -1})
     .limit(10)
     .then(user => {
@@ -715,7 +717,7 @@ router.get('/home/alfred', (req, res) => {
 // @Route GET /myAlfred/api/users/alfred
 // List all alfred
 router.get('/alfred', (req, res) => {
-  req.context.getModel('User').find({is_alfred: true})
+  User.find({is_alfred: true})
     .then(user => {
       if (!user) {
         return res.status(400).json({msg: 'No alfred found'})
@@ -731,7 +733,7 @@ router.get('/alfred', (req, res) => {
 // Get the current user
 // @Access private
 router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .populate('resetToken')
     .then(user => {
       res.json(user)
@@ -748,7 +750,7 @@ router.post('/forgotPassword', (req, res) => {
   const email = (req.body.email || '').toLowerCase().trim()
   const role = req.body.role
 
-  req.context.getModel('User').findOne({email: new RegExp(`^${email}$`, 'i')})
+  User.findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('company')
     .then(user => {
       if (user === null) {
@@ -756,7 +758,7 @@ router.post('/forgotPassword', (req, res) => {
         return res.status(404).json({error: 'Aucun compte avec cet email'})
       }
       const token = crypto.randomBytes(20).toString('hex')
-      req.context.getModel('ResetToken').create({token: token})
+      ResetToken.create({token: token})
         .then(token => {
           user.update({resetToken: token._id})
             .catch(err => console.error(err))
@@ -777,9 +779,9 @@ router.post('/forgotPassword', (req, res) => {
 router.post('/resetPassword', (req, res) => {
   const password = req.body.password
   const token = req.body.token
-  req.context.getModel('ResetToken').findOne({token: token})
+  ResetToken.findOne({token: token})
     .then(resetToken => {
-      req.context.getModel('User').findOne({resetToken: resetToken._id})
+      User.findOne({resetToken: resetToken._id})
         .then(user => {
           if (!user) {
             throw 'No user'
@@ -807,12 +809,12 @@ router.post('/resetPassword', (req, res) => {
 })
 
 router.put('/profile/email', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').exists({email: req.body.email, _id: {$ne: req.user._id}})
+  User.exists({email: req.body.email, _id: {$ne: req.user._id}})
     .then(duplicate_exists => {
       if (duplicate_exists) {
         return Promise.reject(EDIT_PROFIL.duplicate_email)
       }
-      return req.context.getModel('User').findById(req.user.id)
+      return User.findById(req.user.id)
     })
     .then(user => {
       if (user.email != req.body.email) {
@@ -832,7 +834,7 @@ router.put('/profile/email', passport.authenticate('jwt', {session: false}), (re
 
 router.put('/profile/status', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findByIdAndUpdate(req.user.id,
+  User.findByIdAndUpdate(req.user.id,
     {professional: req.body.company},
   )
     .then(() => { res.json('ok') })
@@ -846,7 +848,7 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
 
   let {errors, isValid} = validateEditProfile(req.body)
 
-  req.context.getModel('User').findOne({email: req.body.email})
+  User.findOne({email: req.body.email})
     .then(user => {
       if (user && req.body.email != req.context.getUser().email) {
         errors={...errors, email: EDIT_PROFIL.duplicate_email}
@@ -856,7 +858,7 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
         return res.status(400).json({...errors})
       }
 
-      req.context.getModel('User').findByIdAndUpdate(req.user, {
+      User.findByIdAndUpdate(req.user, {
         email: req.body.email,
         name: req.body.name,
         firstname: req.body.firstname,
@@ -870,7 +872,7 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
       }, {new: true})
         .then(user => {
           if(req.user.email !== req.body.email) {
-            req.context.getModel('User').findByIdAndUpdate(req.user, {
+            User.findByIdAndUpdate(req.user, {
               is_confirmed: false,
             }).then(() => {
               sendVerificationMail(user, req)
@@ -897,7 +899,7 @@ router.put('/profile/birthday/:user_id', passport.authenticate('b2badmin', {sess
     res.status(400).json(errors)
     return
   }
-  req.context.getModel('User').findByIdAndUpdate(req.params.user_id, {birthday: req.body.birthday})
+  User.findByIdAndUpdate(req.params.user_id, {birthday: req.body.birthday})
     .then(() => res.json())
     .catch(err => {
       console.error(err)
@@ -913,7 +915,7 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
   console.log(`Received:${JSON.stringify(req.body)}`)
   const {errors, isValid} = validateEditProProfile(req.body)
 
-  req.context.getModel('User').findOne({email: req.body.email})
+  User.findOne({email: req.body.email})
     .then(user => {
       if (user && req.body.email != req.user.email) {
         return res.status(400).json({email: EDIT_PROFIL.duplicate_email})
@@ -922,7 +924,7 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
         return res.status(400).json(errors)
       }
 
-      req.context.getModel('User').findByIdAndUpdate(req.user, {
+      User.findByIdAndUpdate(req.user, {
         email: req.body.email,
         name: req.body.name,
         firstname: req.body.firstname,
@@ -932,7 +934,7 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
         .populate('company')
         .then(user => {
           if(req.user.email !== req.body.email) {
-            req.context.getModel('User').findByIdAndUpdate(req.user, {is_confirmed: false})
+            User.findByIdAndUpdate(req.user, {is_confirmed: false})
               .then(() => {
                 sendVerificationMail(user, req)
                 res.json({success: 'Profil mis à jour et e-mail envoyé !'})
@@ -960,7 +962,7 @@ router.put('/profile/editPassword', passport.authenticate('jwt', {session: false
   if (!newPassword.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')) {
     return res.status(400).json({error: 'Le nouveau mot de passe doit contenir au moins :\n\t- 8 caractères\n\t- 1 minuscule\n\t- 1 majuscule\n\t- 1 chiffre'})
   }
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       const promise = admin ? Promise.resolve(true) : Promise.resolve(bcrypt.compare(password, user.password))
       promise
@@ -991,7 +993,7 @@ router.put('/profile/editPassword', passport.authenticate('jwt', {session: false
 // @Access private
 router.put('/account/notifications', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       if (!user) {
         return res.status(404).json(`Unknown user ${req.user}`)
@@ -1046,7 +1048,7 @@ router.put('/account/notifications', passport.authenticate('jwt', {session: fals
 // @Access private
 router.put('/account/rib', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       user.account = {}
       user.account.name = req.body.name
@@ -1064,7 +1066,7 @@ router.put('/account/rib', passport.authenticate('jwt', {session: false}), (req,
 // Define preference for indexing account
 // @Access private
 router.put('/account/indexGoogle', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.user, {index_google: req.body.index_google})
+  User.findByIdAndUpdate(req.user, {index_google: req.body.index_google})
     .then(user => {
       res.json(user)
     })
@@ -1075,7 +1077,7 @@ router.put('/account/indexGoogle', passport.authenticate('jwt', {session: false}
 // Delete the picture profile
 // @Access private
 router.delete('/profile/picture/delete', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findByIdAndUpdate(req.user, {
+  User.findByIdAndUpdate(req.user, {
     picture: null,
   }, {new: true})
     .then(user => {
@@ -1092,7 +1094,7 @@ router.delete('/profile/picture/delete', passport.authenticate('jwt', {session: 
 // @Access private
 router.put('/current/delete', passport.authenticate('jwt', {session: false}), (req, res) => {
   const hash = crypto.randomBytes(10).toString('hex')
-  req.context.getModel('User').findByIdAndUpdate(req.user, {active: false, is_alfred: false, email: hash})
+  User.findByIdAndUpdate(req.user, {active: false, is_alfred: false, email: hash})
     .then(user => {
       logEvent(req, 'Compte', 'Suppression', `Compte de ${user.full_name}(${user._id}) supprimé`)
       res.json({msg: 'Compte désactivé'})
@@ -1104,7 +1106,7 @@ router.put('/current/delete', passport.authenticate('jwt', {session: false}), (r
 // Delete recto identity card
 // @Access private
 router.delete('/profile/idCard/recto', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user.id)
+  User.findById(req.user.id)
     .then(user => {
       user.id_card = null
       user.id_card_status = null
@@ -1146,7 +1148,7 @@ router.post('/profile/album/add', uploadAlbumPicture.single('myImage'), passport
 // Gets albums
 // @Access private
 router.get('/profile/album/:user_id', (req, res) => {
-  req.context.getModel('Album').findOne({user: req.params.user_id})
+  Album.findOne({user: req.params.user_id})
     .then(album => {
       res.json(album && album.pictures || [])
     })
@@ -1160,7 +1162,7 @@ router.get('/profile/album/:user_id', (req, res) => {
 // Add a picture to an album
 // @Access private
 router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('Album').findOneAndUpdate({user: req.user.id}, {$push: {pictures: req.file.path}}, {new: true, upsert: true})
+  Album.findOneAndUpdate({user: req.user.id}, {$push: {pictures: req.file.path}}, {new: true, upsert: true})
     .then(() => {
       res.json({})
     })
@@ -1170,7 +1172,7 @@ router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), 
     })
 })
 router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('Album').findOneAndUpdate({user: req.user.id}, {$push: {pictures: req.file.path}}, {new: true, upsert: true})
+  Album.findOneAndUpdate({user: req.user.id}, {$push: {pictures: req.file.path}}, {new: true, upsert: true})
     .then(() => {
       res.json({})
     })
@@ -1182,7 +1184,7 @@ router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), 
 
 router.delete('/profile/album/picture/:pic_index', passport.authenticate('jwt', {session: false}), (req, res) => {
   const remove_idx=parseInt(req.params.pic_index)
-  req.context.getModel('Album').findOne({user: req.user.id})
+  Album.findOne({user: req.user.id})
     .then(album => {
       const path=album.pictures[remove_idx]
       album.pictures=album.pictures.filter((p, idx) => remove_idx!=idx)
@@ -1226,7 +1228,7 @@ router.get('/hook', (req, res) => {
   const doc_id = req.query.RessourceId
   const kyc_status = req.query.EventType
   console.log(`Mangopay called ${req.url}`)
-  req.context.getModel('User').findOne({$or: [{identity_proof_id: doc_id}, {registration_proof_id: doc_id}]})
+  User.findOne({$or: [{identity_proof_id: doc_id}, {registration_proof_id: doc_id}]})
     .then(user => {
       if (user) {
         // Got callback for id proof or registration proof ?
@@ -1257,31 +1259,29 @@ router.get('/hook', (req, res) => {
 if (is_production() || is_validation()) {
   new CronJob('0 */15 * * * *', () => {
     console.log('Customers who need mango account')
-    connectionPool.databases.map(db => serverContextFromPartner(db)).forEach(context => {
-      context.getModel('User').find({id_mangopay: null, active: true})
-        .limit(100)
-        .then(usrs => {
-          usrs.forEach(user => {
-            if (user.age<18) {
-              console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}<18`)
-            }
-            else if (user.age>120) {
-              console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}>120`)
-            }
-            else {
-              createMangoClient(user)
-                .then(user => {
-                  console.log(`Created mango for ${user._id} ${user.full_name}`)
-                  user.save()
-                })
-                .catch(err => {
-                  console.error(err)
-                })
-            }
-          })
+    User.find({id_mangopay: null, active: true})
+      .limit(100)
+      .then(usrs => {
+        usrs.forEach(user => {
+          if (user.age<18) {
+            console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}<18`)
+          }
+          else if (user.age>120) {
+            console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}>120`)
+          }
+          else {
+            createMangoClient(user)
+              .then(user => {
+                console.log(`Created mango for ${user._id} ${user.full_name}`)
+                user.save()
+              })
+              .catch(err => {
+                console.error(err)
+              })
+          }
         })
-        .catch(err => console.error(err))
-    })
+      })
+      .catch(err => console.error(err))
   }, null, true, 'Europe/Paris')
 }
 

@@ -1,3 +1,7 @@
+const Group = require('../../models/Group')
+const Company = require('../../models/Company')
+const Booking = require('../../models/Booking')
+const User = require('../../models/User')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../utils/filesystem')
 const express = require('express')
@@ -34,7 +38,7 @@ const uploadEmployees = createMemoryMulter(TEXT_FILTER)
 // @Access private
 router.put('/profile/billingAddress', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  req.context.getModel('Company').findById(req.user.company)
+  Company.findById(req.user.company)
     .then(company => {
       company.billing_address = {}
       company.billing_address.address = req.body.address
@@ -53,7 +57,7 @@ router.put('/profile/billingAddress', passport.authenticate('b2badmin', {session
 // @Access private
 router.put('/profile/serviceAddress', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  req.context.getModel('Company').findById(req.user.company)
+  Company.findById(req.user.company)
     .then(company => {
       const address = {
         address: req.body.address,
@@ -79,7 +83,7 @@ router.put('/profile/serviceAddress', passport.authenticate('b2badmin', {session
 // Get service address by id
 // @Access private
 router.get('/profile/address/:id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  req.context.getModel('Company').findById(req.user.company)
+  Company.findById(req.user.company)
     .then(company => {
       const index = req.params.id
       const address = company.service_address
@@ -95,7 +99,7 @@ router.get('/profile/address/:id', passport.authenticate('b2badmin', {session: f
 // Edit service address by id
 // @Access private
 router.put('/profile/address/:id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  req.context.getModel('Company').findById(req.user.company)
+  Company.findById(req.user.company)
     .then(company => {
       const index = company.service_address
         .map(item => item.id)
@@ -119,7 +123,7 @@ router.put('/profile/address/:id', passport.authenticate('b2badmin', {session: f
 // Delete service address by id
 // @Access private
 router.delete('/profile/address/:id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  req.context.getModel('Company').findById(req.user.company)
+  Company.findById(req.user.company)
     .then(company => {
       const index = company.service_address
         .map(item => item.id)
@@ -135,7 +139,7 @@ router.delete('/profile/address/:id', passport.authenticate('b2badmin', {session
 // Add a picture profile
 // @Access private
 router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  req.context.getModel('Company').findByIdAndUpdate(req.company.id, {
+  Company.findByIdAndUpdate(req.company.id, {
     picture: req.file ? req.file.path : '',
   }, {new: true})
     .then(company => {
@@ -150,7 +154,7 @@ router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.auth
 // Add a picture profile
 // @Access private
 router.put('/profile/pictureLater', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  req.context.getModel('Company').findByIdAndUpdate(req.company.id, {picture: req.body.picture}, {new: true})
+  Company.findByIdAndUpdate(req.company.id, {picture: req.body.picture}, {new: true})
     .then(company => {
       res.json(company)
     })
@@ -161,7 +165,7 @@ router.put('/profile/pictureLater', passport.authenticate('b2badmin', {session: 
 // Add a registration proof
 // @Access private
 router.post('/profile/registrationProof/add', uploadRegProof.single('registrationProof'), passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  req.context.getModel('Company').findById(req.company.id)
+  Company.findById(req.company.id)
     .then(company => {
       company.registration_proof = req.file.path
       return company.save()
@@ -179,7 +183,7 @@ router.post('/profile/registrationProof/add', uploadRegProof.single('registratio
 // Deletes a registration proof
 // @Access private
 router.delete('/profile/registrationProof', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  req.context.getModel('Company').findById(req.company.id)
+  Company.findById(req.company.id)
     .then(company => {
       company.registration_proof = null
       return company.save()
@@ -195,9 +199,9 @@ router.delete('/profile/registrationProof', passport.authenticate('b2badmin', {s
 // @Route GET /myAlfred/api/companies/current
 // Get the company for the current logged user
 router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
-  req.context.getModel('User').findById(req.user, 'company')
+  User.findById(req.user, 'company')
     .then(user => {
-      req.context.getModel('Company').findById(user.company)
+      Company.findById(user.company)
         .then(company => {
           if (!company) {
             return res.status(400).json({msg: 'No company found'})
@@ -218,7 +222,7 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
 // @Route GET /myAlfred/api/companies/companies/:id
 // Get one company
 router.get('/companies/:id', (req, res) => {
-  req.context.getModel('Company').findById(req.params.id)
+  Company.findById(req.params.id)
     .then(company => {
       if (!company) {
         return res.status(400).json({msg: 'No company found'})
@@ -232,7 +236,7 @@ router.get('/companies/:id', (req, res) => {
 // @Route PUT /myAlfred/api/companies/alfredViews/:id
 // Update number of views for an alfred
 router.put('/alfredViews/:id', (req, res) => {
-  req.context.getModel('Company').findByIdAndUpdate(req.params.id, {$inc: {number_of_views: 1}}, {new: true})
+  Company.findByIdAndUpdate(req.params.id, {$inc: {number_of_views: 1}}, {new: true})
     .then(company => {
       if (!company) {
         return res.status(400).json({msg: 'No company found'})
@@ -251,7 +255,7 @@ router.put('/profile/editProfile', passport.authenticate('b2badmin', {session: f
   const {errors, isValid} = validateCompanyProfile(req.body)
   const companyId = req.user.company
 
-  req.context.getModel('Company').findOne({name: req.body.name})
+  Company.findOne({name: req.body.name})
     .then(company => {
       if (company && JSON.stringify(company._id) !== JSON.stringify(companyId)) {
         return res.status(400).json({name: 'Une société de ce nom existe déjà'})
@@ -260,7 +264,7 @@ router.put('/profile/editProfile', passport.authenticate('b2badmin', {session: f
         return res.status(400).json(errors)
       }
 
-      req.context.getModel('Company').findByIdAndUpdate(companyId, {
+      Company.findByIdAndUpdate(companyId, {
         name: req.body.name,
         description: req.body.description,
         website: req.body.website,
@@ -290,7 +294,7 @@ router.put('/profile/editProfile', passport.authenticate('b2badmin', {session: f
 // @Access private
 router.get('/account/rib', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  req.context.getModel('Company').findById(req.company.id)
+  Company.findById(req.company.id)
     .then(company => {
       company.account = {}
       company.account.name = req.body.name
@@ -311,7 +315,7 @@ router.get('/account/rib', passport.authenticate('b2badmin', {session: false}), 
 // @Access private
 router.put('/account/rib', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  req.context.getModel('Company').findById(req.company.id)
+  Company.findById(req.company.id)
     .then(company => {
       company.account = {}
       company.account.name = req.body.name
@@ -337,7 +341,7 @@ router.post('/members', passport.authenticate('b2badmin', {session: false}), (re
     return res.status(400).json({error: errors})
   }
 
-  req.context.getModel('User').findOne({email: req.body.email})
+  User.findOne({email: req.body.email})
     .then(user => {
       if (user) {
         return res.status(400).json({error: EDIT_PROFIL.duplicate_email})
@@ -351,7 +355,7 @@ router.post('/members', passport.authenticate('b2badmin', {session: false}), (re
         password: crypto.randomBytes(10).toString('hex'),
         roles: [EMPLOYEE],
       }
-      req.context.getModel('User').create(newUser)
+      User.create(newUser)
         .then(newUser => {
           newUser.populate('company')
           return newUser
@@ -382,7 +386,7 @@ router.post('/employees', passport.authenticate('b2badmin', {session: false}), (
     }
     else {
       const EXPECTED=['nom', 'prénom', 'email']
-      req.context.getModel('User').find({}, 'email')
+      User.find({}, 'email')
         .then(users => {
           const contents = bufferToString(req.file.buffer)
           let records = csv_parse(contents, {columns: true, delimiter: ';'})
@@ -416,7 +420,7 @@ router.post('/employees', passport.authenticate('b2badmin', {session: false}), (
           if (messages.length>0) {
             return res.status(400).json(messages.join('\n'))
           }
-          req.context.getModel('User').insertMany(records.map(r => {
+          User.insertMany(records.map(r => {
             return {
               firstname: r['prénom'],
               name: r.nom,
@@ -427,7 +431,7 @@ router.post('/employees', passport.authenticate('b2badmin', {session: false}), (
             }
           }))
             .then(users => {
-              req.context.getModel('Company').findById(req.user.company)
+              Company.findById(req.user.company)
                 .then(company => {
                   users.forEach(u => {
                     sendB2BRegistration(u, u.email, ROLES[EMPLOYEE], company.name, req)
@@ -457,13 +461,13 @@ router.delete('/members/:member_id', passport.authenticate('b2badmin', {session:
   const member_id = req.params.member_id
 
   const company_id = req.user.company
-  req.context.getModel('User').find({company: company_id, roles: {'$in': [ADMIN]}, _id: {$ne: member_id}})
+  User.find({company: company_id, roles: {'$in': [ADMIN]}, _id: {$ne: member_id}})
     .then(users => {
       if (users.length==0) {
         return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
       }
 
-      req.context.getModel('User').findByIdAndUpdate(member_id, {roles: [], company: null})
+      User.findByIdAndUpdate(member_id, {roles: [], company: null})
         .then(user => {
           if (!user) {
             return res.status(404).json({error: 'Utilisateur inconnu'})
@@ -488,7 +492,7 @@ router.delete('/members/:member_id', passport.authenticate('b2badmin', {session:
 router.get('/members', passport.authenticate('b2badmin', {session: false}), (req, res) => {
   const company_id = req.user.company
 
-  req.context.getModel('User').find({company: company_id}, 'firstname name email company roles birthday')
+  User.find({company: company_id}, 'firstname name email company roles birthday')
     .then(users => {
       res.json(users)
     })
@@ -505,7 +509,7 @@ router.put('/representative', passport.authenticate('b2badmin', {session: false}
   const company_id = req.user.company
   const representative_id = req.body.representative_id
 
-  req.context.getModel('Company').findByIdAndUpdate(company_id, {representative: representative_id}, {new: true})
+  Company.findByIdAndUpdate(company_id, {representative: representative_id}, {new: true})
     .populate('representative')
     .then(company => {
       if (!company.representative.birthday) {
@@ -530,7 +534,7 @@ router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, 
 
   const new_account = req.body.new_account
 
-  req.context.getModel('User').findByIdAndUpdate(admin_id, {company: company_id, $addToSet: {roles: ADMIN}}, {new: true})
+  User.findByIdAndUpdate(admin_id, {company: company_id, $addToSet: {roles: ADMIN}}, {new: true})
     .then(user => {
       if (new_account) {
         axios.post(new URL('/myAlfred/api/users/forgotPassword', computeUrl(req)).toString(), {email: user.email, role: ADMIN})
@@ -552,13 +556,13 @@ router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: fa
   const company_id = req.user.company
   const admin_id = req.params.admin_id
 
-  req.context.getModel('User').count({company: company_id, roles: {'$in': [ADMIN]}, _id: {$ne: admin_id}})
+  User.count({company: company_id, roles: {'$in': [ADMIN]}, _id: {$ne: admin_id}})
     .then(remainingAdmins => {
       if (remainingAdmins==0) {
         return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
       }
 
-      req.context.getModel('User').findByIdAndUpdate(admin_id, {$pull: {roles: ADMIN}}, {new: true})
+      User.findByIdAndUpdate(admin_id, {$pull: {roles: ADMIN}}, {new: true})
         .then(user => {
           if (!user) {
             return res.status(404).json({error: 'Utilisateur inconnu'})
@@ -584,10 +588,10 @@ router.get('/billings', passport.authenticate('b2badmin', {session: false}),
   (req, res) => {
     const company_id = req.user.company
 
-    req.context.getModel('User').find({company: company_id})
+    User.find({company: company_id})
       .then(users => {
         const user_ids = users.map(u => u._id)
-        req.context.getModel('Booking').find({
+        Booking.find({
           user: {$in: user_ids},
           user_role: {$in: [ADMIN, MANAGER]},
           $where: 'this.billing_number && this.billing_number.length>0',
@@ -623,7 +627,7 @@ router.get('/budget/:user_id/:role', passport.authenticate('jwt', {session: fals
   if (role==ADMIN || !role) {
     return Number.MAX_SAFE_INTEGER
   }
-  req.context.getModel('Group').findOne({members: user_id, type: role==MANAGER ? MICROSERVICE_MODE : CARETAKER_MODE})
+  Group.findOne({members: user_id, type: role==MANAGER ? MICROSERVICE_MODE : CARETAKER_MODE})
     .then(group => {
       if (!group) {
         return res.status(400).json('Aucun groupe trouvé pour ce user')
@@ -634,7 +638,7 @@ router.get('/budget/:user_id/:role', passport.authenticate('jwt', {session: fals
       }
       const start_date = getPeriodStart(group.budget_period)
       const user_predicate = role==MANAGER ? {$in: group.members} : user_id
-      req.context.getModel('Booking').find({
+      Booking.find({
         user: user_predicate,
         date: {$gt: start_date},
         user_role: role,
@@ -675,7 +679,7 @@ router.get('/supported/:user_id/:service_id/:role', passport.authenticate('jwt',
   if (!role) {
     return res.json(0.0)
   }
-  req.context.getModel('Group').findOne({members: user_id, type: role==MANAGER ? MICROSERVICE_MODE : CARETAKER_MODE})
+  Group.findOne({members: user_id, type: role==MANAGER ? MICROSERVICE_MODE : CARETAKER_MODE})
     .then(group => {
       if (!group) {
         return res.status(400).json('Aucun groupe trouvé pour ce user')
