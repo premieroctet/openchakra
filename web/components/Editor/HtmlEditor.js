@@ -1,3 +1,4 @@
+const {TextField} = require('@material-ui/core')
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import dynamic from 'next/dynamic'
@@ -37,7 +38,7 @@ class HtmlEditor extends React.Component {
       // Replace absolute https://my-alfred.io:3122/ => /
       html=html.replace(/https:\/\/my-alfred.io:3122\//g, '/')
       // Remove surrounding DIVs
-      html=html.replace(/^<div>(.*)<\/div>$/, "$1")
+      html=html.replace(/^<div>(.*)<\/div>$/, '$1')
       this.props.onChange(html)
     }
   }
@@ -47,10 +48,17 @@ class HtmlEditor extends React.Component {
       <Grid>
         <span>{this.props.title}</span>
         <SunEditor
+          key={this.props.value}
           lang='fr'
           setOptions={this.options}
           onChange={this.onChange}
           defaultValue={this.props.value}
+        />
+        <TextField style={{width: '100%'}}
+          multiline
+          variant={'outlined'}
+          value={this.props.value}
+          onChange={ev => this.onChange(ev.target.value)}
         />
       </Grid>
     )

@@ -91,6 +91,9 @@ const introduceYou = shop => {
   if (!shop.company.siret) {
     return false
   }
+  if (!shop.company.name) {
+    return false
+  }
   if (!shop.is_certified) {
     return false
   }
