@@ -370,7 +370,7 @@ class SearchPage extends BasePage {
                 <Grid className={classes.searchSecondFilterContainerLeft}>
                   {
                     !(this.state.searching || this.state.mounting) &&
-                      <Typography>{ReactHtmlParser(this.props.t(serviceUsers.length ? ' SEARCH.alfred_avail':' SEARCH.no_one', {count: serviceUsers.length}))}</Typography>
+                      <Typography>{ReactHtmlParser(this.props.t(serviceUsers.length ? 'SEARCH.alfred_avail':'SEARCH.no_one', {count: `${serviceUsers.length} `}))}</Typography>
                   }
                 </Grid>
                 { gps ? <Grid className={classes.searchFilterRightContainer}>
