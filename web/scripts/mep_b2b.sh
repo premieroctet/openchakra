@@ -46,5 +46,5 @@ mongo $database --eval 'db.bookings.find({time_prestation: {$exists: true}}).for
 #936286 Rename time_prestation => prestation_date
 mongo $database --eval 'db.bookings.update({time_prestation: {$exists: true}}, {$rename: {"time_prestation": "prestation_date"}})'
 
-#936286 Remove time_prestation && end_time
-mongo $database --eval 'db.bookings.update({}, {$unset: {time_prestation: 1, end_time: 1}}, {multi:1})'
+#936286 Remove date_prestation, time_prestation && end_time
+mongo $database --eval 'db.bookings.update({}, {$unset: {date_prestation:1, end_time: 1}}, {multi:1})'
