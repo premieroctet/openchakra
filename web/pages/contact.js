@@ -22,8 +22,8 @@ const useStyles = makeStyles(() => ({
 
 
 function Contact(props) {
-  const {classes} = useStyles()
   const {t} = props
+  const classes = useStyles()
 
   return (
     <LayoutFaq>
