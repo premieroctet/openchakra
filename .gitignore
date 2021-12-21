@@ -12,7 +12,7 @@
 /dist
 **/.next
 web/mode.js
-web/server/routes/api/booking.js
+
 
 # misc
 .env

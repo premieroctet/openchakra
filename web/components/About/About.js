@@ -39,7 +39,6 @@ const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import CustomIcon from '../CustomIcon/CustomIcon'
 
-const {frenchFormat} = require('../../utils/text')
 const moment = require('moment')
 
 moment.locale('fr')
