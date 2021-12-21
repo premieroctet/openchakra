@@ -55,22 +55,20 @@ const useStyles = makeStyles(theme => ({
 function UserAvatar(props) {
   const classes = useStyles()
   const {user, animateStartup, fireRefresh} = props
-
-  const [currentUser, setCurrentUser] = useState('')
   const [owner, setOwner] = useState(false)
   const [isAbout, setAbout] = useState(false)
-  const [isPageEditable, setPageEditable] = useState(false)
   const [animated, setAnimated] = useState(false)
 
   useEffect(() => {
     const profileUrl = ['services', 'about', 'reviews', 'calendar', 'statistics', 'myProfile']
     const currentUrl = Router.pathname
 
-    axios.get('/myAlfred/api/users/current').then(res => {
-      let userInfo = res.data
-      setCurrentUser(userInfo)
-    },
-    ).catch(err => { console.error(err) })
+    if (getLoggedUserId() === user._id) {
+      setOwner(true)
+    }
+    else{
+      setOwner(false)
+    }
 
     if(profileUrl.includes(currentUrl.substring(currentUrl.lastIndexOf('/') + 1))) {
       setAbout(true)
@@ -79,20 +77,7 @@ function UserAvatar(props) {
       setAbout(false)
     }
   }, [])
-
-  useEffect(() => {
-    if (getLoggedUserId() === currentUser._id) {
-      setOwner(true)
-    }
-    else{
-      setOwner(false)
-    }
-    if(user._id === currentUser._id) {
-      setPageEditable(true)
-    }
-  }, [currentUser])
-
-
+  
   const selectPicture = e => {
     e.preventDefault()
     if (isEditableUser(user)) {
@@ -172,7 +157,7 @@ function UserAvatar(props) {
             horizontal: 'right',
           }}
           classes={{root: classes.badge}}
-          badgeContent={ owner && isPageEditable ? <Grid>
+          badgeContent={ owner && <Grid>
             <input
               accept="image/*"
               className={classes.input}
@@ -185,7 +170,7 @@ function UserAvatar(props) {
                 <PhotoCameraIcon/>
               </IconButton>
             </label>
-          </Grid> : null}
+          </Grid>}
         >
           {
             user.picture ? avatarWithPics(user, classes) : avatarWithoutPics(user, classes)
