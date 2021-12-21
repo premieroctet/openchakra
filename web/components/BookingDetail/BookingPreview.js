@@ -271,7 +271,7 @@ class BookingPreview extends React.Component {
               :
               ReactHtmlParser(this.props.t('BOOKING.potential_incomes'))
 
-    const momentTitle = [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
+    const momentTitle = [BOOK_STATUS.PREAPPROVED, BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
       `du ${moment(booking.prestation_date).format('DD/MM/YY HH:mm')}
        au ${moment(booking.end_date).format('DD/MM/YY HH:mm')}`
       :

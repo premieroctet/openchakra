@@ -1,3 +1,4 @@
+const {formatAddress} = require('../../utils/text')
 import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
@@ -35,12 +36,8 @@ class BookingPreApprouve extends React.Component {
     super(props)
     this.state = {
       booking: null,
-      currDate: Date.now(),
-      hour: Date.now(),
-      begin: null,
-      end: null,
-      isToday: false,
-      isBookingDay: false,
+      end_date: null,
+      minimum_end_date: null,
     }
   }
 
@@ -57,36 +54,13 @@ class BookingPreApprouve extends React.Component {
         const booking=res.data
         this.setState({booking: booking})
 
-        const date_prestation = booking.prestation_date.split('/')
-        const day = date_prestation[0]
-        const month = date_prestation[1]
-        const year = date_prestation[2]
-        const end = new Date(moment(`${year }-${ month }-${ day }T00:00:00.000Z`, 'YYYY-MM-DD').startOf('days'))
+        const end = moment(booking.prestation_date).add(1, 'hour')
 
         this.setState({
-          time_prestation: booking.prestation_date,
-          min_time_prestation: booking.prestation_date,
-          end: end,
-          begin: end,
+          booking: booking,
+          end_date: end,
+          minimum_end_date: end,
         })
-
-
-        let isToday = moment(this.state.currDate).isSame(moment(new Date()), 'day')
-        this.setState({
-          isToday: isToday,
-        })
-
-        if (moment(this.state.currDate).isSame(end, 'day')) {
-          this.setState({
-            isBookingDate: true,
-          })
-        }
-
-        if (moment(this.state.currDate).isAfter(this.state.end)) {
-          this.setState({end: this.state.currDate})
-
-        }
-
 
         this.socket = io()
         this.socket.on('connect', () => {
@@ -97,8 +71,8 @@ class BookingPreApprouve extends React.Component {
 
   changeStatus() {
     const {booking_id}=this.props
-    const endDate = moment(this.state.end).format('YYYY-MM-DD')
-    const dateObj = {end_date: endDate, status: BOOK_STATUS.PREAPPROVED}
+    const {end_date}=this.state
+    const dateObj = {end_date: end_date, status: BOOK_STATUS.PREAPPROVED}
 
     axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, dateObj)
 
@@ -127,11 +101,18 @@ class BookingPreApprouve extends React.Component {
     return result
   }
 
+  handleEndDateChange = date => {
+    const {minimum_end_date}=this.state
+    if (moment(date).isSameOrAfter(minimum_end_date)) {
+      this.setState({end_date: moment(date)})
+    }
+  }
+
   render() {
     const {classes} = this.props
-    const {booking} = this.state
+    const {booking, end_date} = this.state
 
-    if (!booking) {
+    if (!booking || !end_date) {
       return null
     }
 
@@ -228,7 +209,7 @@ class BookingPreApprouve extends React.Component {
                               <Typography>Adresse de la prestation:</Typography>
                             </Grid>
                             <Grid>
-                              <Typography>{booking.address.address}, {booking.address.city} {booking.address.zip_code}</Typography>
+                              <Typography>{formatAddress(booking.address)}</Typography>
                             </Grid>
                           </Grid>
                         </Grid>
@@ -237,83 +218,37 @@ class BookingPreApprouve extends React.Component {
                             <Typography><strong>Date de début:</strong></Typography>
                             <Typography>{moment(booking.prestation_date).format('DD/MM/YYYY [-] HH:mm')}</Typography>
                           </Grid>
-                          {booking.end_date &&
-                            <Grid item style={{display: 'inline-block', width: '100%'}}>
-                              <Grid>
-                                <Typography><strong>Date de fin:</strong></Typography>
+                          <Grid item className={classes.endDateContainer}>
+                            <Grid style={{width: '100%'}}>
+                              <Typography><strong>Date de fin:</strong></Typography>
+                            </Grid>
+                            <Grid style={{display: 'flex', alignItems: 'center'}}>
+                              <Grid style={{marginRight: 10}}>
+                                <DatePicker
+                                  selected={end_date.toDate()}
+                                  onChange={this.handleEndDateChange}
+                                  customInput={<Input2/>}
+                                  locale='fr'
+                                  showMonthDropdown
+                                  dateFormat="dd/MM/yyyy"
+                                />
                               </Grid>
-                              <Grid>
-                                <Typography>{moment(booking.end_date).format('DD/MM/YYYY [-] HH:mm')}</Typography>
+                              <Grid>-</Grid>
+                              <Grid style={{marginLeft: 10}}>
+                                <DatePicker
+                                  selected={end_date.toDate()}
+                                  onChange={this.handleEndDateChange}
+                                  customInput={<Input2/>}
+                                  showTimeSelect
+                                  showTimeSelectOnly
+                                  timeIntervals={15}
+                                  timeCaption="Heure"
+                                  dateFormat="HH:mm"
+                                  locale='fr'
+                                />
                               </Grid>
                             </Grid>
-                          }
-                          {typeof booking.end_date === 'undefined' ?
-                            typeof this.state.end === null ? null :
-
-                              <Grid item className={classes.endDateContainer}>
-                                <Grid style={{width: '100%'}}>
-                                  <Typography><strong>Date de fin:</strong></Typography>
-                                </Grid>
-                                <Grid style={{display: 'flex'}}>
-                                  <Grid style={{marginRight: 10}}>
-                                    <DatePicker
-                                      // selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
-                                      selected={Math.max(this.state.end, this.state.currDate)}
-                                      onChange={date => {
-                                        let isToday = moment(date).isSame(moment(new Date()), 'day')
-                                        this.setState({
-                                          end: date,
-                                          isToday: isToday,
-                                        }, () => {
-                                          this.setState({
-                                          })
-
-                                        })
-                                      }}
-                                      customInput={<Input2/>}
-                                      locale='fr'
-                                      showMonthDropdown
-                                      dateFormat="dd/MM/yyyy"
-                                      minDate={this.state.begin}
-                                    />
-                                  </Grid>
-
-                                  - {
-                                    <Grid style={{marginLeft: 10}}>
-                                      <DatePicker
-                                        selected={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1) : this.state.currDate}
-                                        onChange={
-                                          moment(this.state.begin).isSame(this.state.end, 'day') ?
-                                            date => this.setState({
-                                              time_prestation: moment(date.setHours(date.getHours() - 1)).utc()._d,
-                                              hour: date,
-                                            })
-                                            :
-                                            date => this.setState({
-                                              currDate: date,
-                                              hour: date,
-                                            })
-
-                                        }
-
-                                        customInput={<Input2/>}
-                                        showTimeSelect
-                                        showTimeSelectOnly
-                                        timeIntervals={15}
-                                        minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.min_time_prestation).setHours(new Date(this.state.min_time_prestation).getHours() + 1) : this.state.isToday ? this.state.currDate : null}
-                                        maxTime={moment(this.state.begin).isSame(this.state.end, 'day') || this.state.isToday ? moment().endOf('day').toDate() : null}
-                                        timeCaption="Heure"
-                                        dateFormat="HH:mm"
-                                        locale='fr'
-                                        minDate={new Date()}
-                                      />
-                                    </Grid>
-
-                                  }
-                                </Grid>
-                              </Grid>
-                            :
-                            null}
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
