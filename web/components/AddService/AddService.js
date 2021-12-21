@@ -48,7 +48,7 @@ function AddService(props) {
   
   useEffect(() => {
     setAxiosAuthentication()
-  })
+  }, [])
 
   function clickService() {
     // Router.push(isLoggedUserAlfred() ? `/myShop/services?user=${this.props.user}` : '/creaShop/creaShop')
