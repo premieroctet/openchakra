@@ -44,7 +44,7 @@ mongo $database --eval 'db.bookings.find({end_time: {$exists: true}}).forEach(fu
 mongo $database --eval 'db.bookings.find({time_prestation: {$exists: true}}).forEach(function(b){const [day, month, year]= b.date_prestation.split("/"); b.time_prestation.setDate(day); b.time_prestation.setMonth(month); b.time_prestation.setFullYear(year); b.time_prestation = b.time_prestation; db.bookings.save(b)})'
 
 #936286 Rename time_prestation => prestation_date
-mongo $database --eval 'db.bookings.update({time_prestation: {$exists: true}}, {$rename: {"time_prestation": "prestation_date"}})'
+mongo $database --eval 'db.bookings.update({time_prestation: {$exists: true}}, {$rename: {"time_prestation": "prestation_date"}}, {multi:1})'
 
 #936286 Remove date_prestation, time_prestation && end_time
 mongo $database --eval 'db.bookings.update({}, {$unset: {date_prestation:1, end_time: 1}}, {multi:1})'

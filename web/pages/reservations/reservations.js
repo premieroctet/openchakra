@@ -20,7 +20,6 @@ import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
 import BasePage from '../basePage'
-import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
@@ -62,7 +61,6 @@ class AllReservations extends BasePage {
       reservationType: 1,
       reservationStatus: 0,
       bookingPreview: null,
-      bookingConfirm: null,
       bookingPreApprouved: null,
     }
   }
@@ -133,7 +131,7 @@ class AllReservations extends BasePage {
 
   openBookingPreview = bookingId => {
     this.loadBookings()
-    this.setState({bookingPreview: bookingId, bookingConfirm: null, bookingPreApprouved: null})
+    this.setState({bookingPreview: bookingId, bookingPreApprouved: null})
   }
 
   getIcsURL = bookingId => {
@@ -144,13 +142,9 @@ class AllReservations extends BasePage {
     return `/myAlfred/api/booking/${bookingId}/google_calendar`
   }
 
-  openBookingConfirm = bookingId => {
-    this.setState({bookingPreview: null, bookingConfirm: bookingId, bookingPreApprouved: null})
-  }
-
   openBookingPreAprouved = bookingId => {
     this.loadBookings()
-    this.setState({bookingPreview: null, bookingConfirm: null, bookingPreApprouved: bookingId})
+    this.setState({bookingPreview: null, bookingPreApprouved: bookingId})
   }
 
   onClosePreview = () => {
@@ -170,24 +164,7 @@ class AllReservations extends BasePage {
       >
         <DialogTitle id="customized-dialog-title" onClose={this.onClosePreview}/>
         <DialogContent>
-          <BookingPreview booking_id={bookingPreview} onConfirm={this.openBookingConfirm} onConfirmPreapproved={this.openBookingPreAprouved}/>
-        </DialogContent>
-      </Dialog>
-    )
-  }
-
-  bookingConfirmModal = classes => {
-    const {bookingConfirm}=this.state
-
-    return (
-      <Dialog style={{width: '100%'}}
-        open={Boolean(bookingConfirm)}
-        onClose={() => this.setState({bookingConfirm: null})}
-        classes={{paper: classes.dialogPreviewPaper}}
-      >
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingConfirm: null})}/>
-        <DialogContent>
-          <BookingConfirm booking_id={bookingConfirm} onConfirm={this.openBookingPreview}/>
+          <BookingPreview booking_id={bookingPreview} onConfirmPreapproved={this.openBookingPreAprouved}/>
         </DialogContent>
       </Dialog>
     )
@@ -329,7 +306,7 @@ class AllReservations extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {reservationType, userInfo, bookingPreview, bookingConfirm, bookingPreApprouved} = this.state
+    const {reservationType, userInfo, bookingPreview, bookingPreApprouved} = this.state
 
     return (
       <Grid>
@@ -344,7 +321,6 @@ class AllReservations extends BasePage {
           </LayoutMobileReservations>
         </Grid>
         { bookingPreview ? this.bookingPreviewModal(classes) : null}
-        { bookingConfirm ? this.bookingConfirmModal(classes) : null}
         { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
       </Grid>
 

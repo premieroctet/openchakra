@@ -34,14 +34,11 @@ class BookingPreApprouve extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      booking_id: null,
-      bookingObj: null,
+      booking: null,
       currDate: Date.now(),
       hour: Date.now(),
-      hourToSend: Date.now(),
       begin: null,
       end: null,
-      minDate: null,
       isToday: false,
       isBookingDay: false,
     }
@@ -54,25 +51,23 @@ class BookingPreApprouve extends React.Component {
   componentDidMount() {
 
     const booking_id = this.props.booking_id
-    this.setState({booking_id: booking_id})
-
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/booking/${ booking_id}`)
+    axios.get(`/myAlfred/api/booking/${booking_id}`)
       .then(res => {
-        this.setState({bookingObj: res.data})
+        const booking=res.data
+        this.setState({booking: booking})
 
-        const date_prestation = this.state.bookingObj.prestation_date.split('/')
+        const date_prestation = booking.prestation_date.split('/')
         const day = date_prestation[0]
         const month = date_prestation[1]
         const year = date_prestation[2]
         const end = new Date(moment(`${year }-${ month }-${ day }T00:00:00.000Z`, 'YYYY-MM-DD').startOf('days'))
 
         this.setState({
-          time_prestation: this.state.bookingObj.prestation_date,
-          min_time_prestation: this.state.bookingObj.prestation_date,
+          time_prestation: booking.prestation_date,
+          min_time_prestation: booking.prestation_date,
           end: end,
           begin: end,
-          hourToSend: moment(new Date(this.state.bookingObj.prestation_date).setHours(new Date(this.state.bookingObj.prestation_date).getHours() + 1)).utc()._d,
         })
 
 
@@ -95,56 +90,59 @@ class BookingPreApprouve extends React.Component {
 
         this.socket = io()
         this.socket.on('connect', () => {
-          this.socket.emit('booking', this.state.bookingObj._id)
+          this.socket.emit('booking', booking._id)
         })
       })
   }
 
   changeStatus() {
+    const {booking_id}=this.props
     const endDate = moment(this.state.end).format('YYYY-MM-DD')
     const dateObj = {end_date: endDate, status: BOOK_STATUS.PREAPPROVED}
 
-    axios.put(`/myAlfred/api/booking/modifyBooking/${ this.state.booking_id}`, dateObj)
+    axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, dateObj)
 
       .then(res => {
-        this.setState({bookingObj: res.data})
+        this.setState({booking: res.data})
         setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
       })
       .catch()
   }
 
   computePricedPrestations() {
-    let result = {}
-    if (this.state.bookingObj) {
-      this.state.bookingObj.prestations.forEach(p => {
-        result[p.name] = p.price * p.value
-      })
+    const {booking}=this.state
+    if (!booking) {
+      return {}
     }
+    const result=Object.fromEntries((booking.prestations.map(p => [p.name, p.price*p.value])))
     return result
   }
 
   computeCountPrestations() {
-    let result = {}
-    if (this.state.bookingObj) {
-      this.state.bookingObj.prestations.forEach(p => {
-        result[p.name] = p.value
-      })
+    const {booking}=this.state
+    if (!booking) {
+      return {}
     }
+    const result=Object.fromEntries((booking.prestations.map(p => [p.name, p.value])))
     return result
   }
 
   render() {
     const {classes} = this.props
-    const {bookingObj} = this.state
+    const {booking} = this.state
+
+    if (!booking) {
+      return null
+    }
 
     const pricedPrestations = this.computePricedPrestations()
     const countPrestations = this.computeCountPrestations()
 
-    const amount = this.state.bookingObj ? parseFloat(this.state.bookingObj.alfred_amount) : 0
+    const amount = booking ? parseFloat(booking.alfred_amount) : 0
 
     return (
       <Fragment>
-        {this.state.bookingObj === null ?
+        {booking === null ?
           null
           :
           <Grid>
@@ -163,20 +161,20 @@ class BookingPreApprouve extends React.Component {
                     <Grid item xs={12} sm={3} md={3} xl={3} lg={3}>
                       <UserAvatar
                         classes={'avatarLetter'}
-                        user={bookingObj.user}
+                        user={booking.user}
                         className={classes.avatarLetter}
                       />
                     </Grid>
                     <Grid item xs={12} sm={9} md={9} xl={9} lg={9}>
                       <Grid item style={{marginTop: '2%'}}>
                         <Typography className={classes.fontSizeTitleSectionAbout}>
-                          {frenchFormat(`Pré-approuver la réservation de ${bookingObj.user.firstname} ${bookingObj.user.name} `)}
+                          {frenchFormat(`Pré-approuver la réservation de ${booking.user.firstname} ${booking.user.name} `)}
                         </Typography>
                       </Grid>
                       <Grid container>
                         <Grid item>
                           <Grid style={{marginLeft: '3%', width: '100%'}}>
-                            <About alfred={bookingObj.user._id} profil={false}/>
+                            <About user={booking.user._id} profil={false}/>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -195,10 +193,10 @@ class BookingPreApprouve extends React.Component {
                           <BookingDetail
                             prestations={pricedPrestations}
                             count={countPrestations}
-                            travel_tax={this.state.bookingObj ? this.state.bookingObj.travel_tax : 0}
-                            pick_tax={this.state.bookingObj ? this.state.bookingObj.pick_tax : 0}
+                            travel_tax={booking ? booking.travel_tax : 0}
+                            pick_tax={booking ? booking.pick_tax : 0}
                             total={amount}
-                            cesu_total={this.state.bookingObj ? this.state.bookingObj.cesu_amount : 0}
+                            cesu_total={booking ? booking.cesu_amount : 0}
                           />
                         </Grid>
                       </Grid>
@@ -230,28 +228,26 @@ class BookingPreApprouve extends React.Component {
                               <Typography>Adresse de la prestation:</Typography>
                             </Grid>
                             <Grid>
-                              <Typography>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</Typography>
+                              <Typography>{booking.address.address}, {booking.address.city} {booking.address.zip_code}</Typography>
                             </Grid>
                           </Grid>
                         </Grid>
                         <Grid item className={classes.containerDate}>
                           <Grid item style={{display: 'inline-block', width: '100%'}}>
                             <Typography><strong>Date de début:</strong></Typography>
-                            <Typography>{bookingObj.prestation_date} - {moment(bookingObj.prestation_date).format('HH:mm')}</Typography>
+                            <Typography>{moment(booking.prestation_date).format('DD/MM/YYYY [-] HH:mm')}</Typography>
                           </Grid>
-                          {typeof bookingObj.end_date !== 'undefined' ?
-                            <Grid item style={{display: 'flex', width: '100%'}}>
+                          {booking.end_date &&
+                            <Grid item style={{display: 'inline-block', width: '100%'}}>
                               <Grid>
-                                <Typography>Date de fin:</Typography>
+                                <Typography><strong>Date de fin:</strong></Typography>
                               </Grid>
                               <Grid>
-                                <Typography>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_date.getTime()}</Typography>
+                                <Typography>{moment(booking.end_date).format('DD/MM/YYYY [-] HH:mm')}</Typography>
                               </Grid>
                             </Grid>
-                            :
-                            null
                           }
-                          {typeof this.state.bookingObj.end_date === 'undefined' ?
+                          {typeof booking.end_date === 'undefined' ?
                             typeof this.state.end === null ? null :
 
                               <Grid item className={classes.endDateContainer}>
@@ -261,7 +257,8 @@ class BookingPreApprouve extends React.Component {
                                 <Grid style={{display: 'flex'}}>
                                   <Grid style={{marginRight: 10}}>
                                     <DatePicker
-                                      selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
+                                      // selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
+                                      selected={Math.max(this.state.end, this.state.currDate)}
                                       onChange={date => {
                                         let isToday = moment(date).isSame(moment(new Date()), 'day')
                                         this.setState({
@@ -269,7 +266,6 @@ class BookingPreApprouve extends React.Component {
                                           isToday: isToday,
                                         }, () => {
                                           this.setState({
-                                            hourToSend: moment(this.state.begin).isSame(this.state.end, 'day') ? moment(new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1)).utc()._d : moment(this.state.currDate).utc()._d,
                                           })
 
                                         })
@@ -291,13 +287,11 @@ class BookingPreApprouve extends React.Component {
                                             date => this.setState({
                                               time_prestation: moment(date.setHours(date.getHours() - 1)).utc()._d,
                                               hour: date,
-                                              hourToSend: moment(date.setHours(date.getHours() + 1)).utc()._d,
                                             })
                                             :
                                             date => this.setState({
                                               currDate: date,
                                               hour: date,
-                                              hourToSend: date,
                                             })
 
                                         }

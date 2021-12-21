@@ -1,4 +1,4 @@
-import { is_development } from '../../config/config';
+import {is_development} from '../../config/config'
 import DialogCancel from './DialogCancel'
 import DialogReject from './DialogReject'
 import CustomButton from '../CustomButton/CustomButton'
@@ -42,7 +42,7 @@ class BookingPreview extends React.Component {
     super(props)
     this.child = React.createRef()
     this.state = {
-      bookingObj: null,
+      booking: null,
       currentUser: null,
       is_alfred: null,
       end_datetime: null,
@@ -62,11 +62,11 @@ class BookingPreview extends React.Component {
   }
 
   getPrestationMinMoment = () => {
-    const {bookingObj} = this.state
-    if (!bookingObj) {
+    const {booking} = this.state
+    if (!booking) {
       return null
     }
-    return moment(`${bookingObj.prestation_date} ${moment(bookingObj.prestation_date).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
+    return moment(booking.prestation_date).add(1, 'hours')
   }
 
   setLoading = () => {
@@ -84,10 +84,10 @@ class BookingPreview extends React.Component {
 
       axios.get(`/myAlfred/api/booking/${booking_id}`).then(res => {
         const booking = res.data
-        const end_datetime = moment(`${booking.prestation_date} ${moment(booking.prestation_date).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
+        const end_datetime = moment(booking.prestation_date).add(1, 'hours')
         this.setState(
           {
-            bookingObj: booking,
+            booking: booking,
             is_alfred: booking.alfred._id === result._id,
             end_datetime: end_datetime,
           },
@@ -103,7 +103,7 @@ class BookingPreview extends React.Component {
           })
 
         if (res.data.serviceUserId) {
-          axios.get(`/myAlfred/api/serviceUser/${this.state.bookingObj.serviceUserId}`).then(res => {
+          axios.get(`/myAlfred/api/serviceUser/${this.state.booking.serviceUserId}`).then(res => {
             let resultat = res.data
             this.setState({category: resultat.service.category})
           }).catch(error => {
@@ -113,10 +113,10 @@ class BookingPreview extends React.Component {
 
         this.socket = io()
         this.socket.on('connect', () => {
-          this.socket.emit('booking', this.state.bookingObj._id)
+          this.socket.emit('booking', this.state.booking._id)
         })
         this.socket.on('displayStatus', data => {
-          this.setState({bookingObj: data})
+          this.setState({booking: data})
         })
       })
         .catch(error => {
@@ -137,7 +137,7 @@ class BookingPreview extends React.Component {
     axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, {status: status, reason: reason})
       .then(() => {
         this.componentDidMount()
-        this.socket.emit('changeStatus', this.state.bookingObj)
+        this.socket.emit('changeStatus', this.state.booking)
       })
       .catch(err => console.error(err))
   }
@@ -184,8 +184,8 @@ class BookingPreview extends React.Component {
 
   computePricedPrestations() {
     let result = {}
-    if (this.state.bookingObj) {
-      this.state.bookingObj.prestations.forEach(p => {
+    if (this.state.booking) {
+      this.state.booking.prestations.forEach(p => {
         result[p.name] = p.price * p.value
       })
     }
@@ -194,8 +194,8 @@ class BookingPreview extends React.Component {
 
   computeCountPrestations() {
     let result = {}
-    if (this.state.bookingObj) {
-      this.state.bookingObj.prestations.forEach(p => {
+    if (this.state.booking) {
+      this.state.booking.prestations.forEach(p => {
         result[p.name] = p.value
       })
     }
@@ -204,7 +204,7 @@ class BookingPreview extends React.Component {
 
   onConfirm = () => {
     const {end_datetime} = this.state
-    const endDate = moment(end_datetime).format('YYYY-MM-DD')
+    const endDate = moment(end_datetime)
     const modifyObj = {end_date: endDate, status: BOOK_STATUS.CONFIRMED}
 
     axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, modifyObj)
@@ -216,8 +216,8 @@ class BookingPreview extends React.Component {
   }
 
   routingDetailsMessage() {
-    const {currentUser, bookingObj} = this.state
-    const displayUser = currentUser._id === bookingObj.alfred._id ? bookingObj.user : bookingObj.alfred
+    const {currentUser, booking} = this.state
+    const displayUser = currentUser._id === booking.alfred._id ? booking.user : booking.alfred
     Router.push({
       pathname: '/profile/messages',
       query: {
@@ -238,23 +238,23 @@ class BookingPreview extends React.Component {
 
   render() {
     const {classes, booking_id} = this.props
-    const {bookingObj, currentUser, is_alfred, end_datetime, alfred_pro, rejectOpen, cancelOpen} = this.state
+    const {booking, currentUser, is_alfred, end_datetime, alfred_pro, rejectOpen, cancelOpen} = this.state
 
-    if (!bookingObj || !currentUser) {
+    if (!booking || !currentUser) {
       return null
     }
     const pricedPrestations = this.computePricedPrestations()
     const countPrestations = this.computeCountPrestations()
 
-    const amount = is_alfred ? parseFloat(bookingObj.alfred_amount) : parseFloat(bookingObj.amount)
+    const amount = is_alfred ? parseFloat(booking.alfred_amount) : parseFloat(booking.amount)
     const provider_fee = 0
-    const customer_fee = is_alfred ? 0 : bookingObj.customer_fee
+    const customer_fee = is_alfred ? 0 : booking.customer_fee
 
     // Am i the service provider ?
-    const amIAlfred = currentUser._id === bookingObj.alfred._id
-    const displayUser = amIAlfred ? bookingObj.user : bookingObj.alfred
+    const amIAlfred = currentUser._id === booking.alfred._id
+    const displayUser = amIAlfred ? booking.user : booking.alfred
 
-    const status = bookingObj.status
+    const status = booking.status
     const paymentTitle =
       amIAlfred ?
         status === BOOK_STATUS.REFUSED ? ReactHtmlParser(this.props.t('BOOKING.payment_no_finish'))
@@ -272,18 +272,18 @@ class BookingPreview extends React.Component {
               ReactHtmlParser(this.props.t('BOOKING.potential_incomes'))
 
     const momentTitle = [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
-      `du ${bookingObj.prestation_date} à ${moment(bookingObj.prestation_date).format('HH:mm')}
-       au ${moment(bookingObj.end_date).format('DD/MM/YYYY')} à ${moment(bookingObj.end_date).format('LT')}`
+      `du ${moment(booking.prestation_date).format('DD/MM/YY HH:mm')}
+       au ${moment(booking.end_date).format('DD/MM/YY HH:mm')}`
       :
-      booking_datetime_str(bookingObj)
+      booking_datetime_str(booking)
 
-    const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone
-    const customer_booking_title = bookingObj.customer_booking && ReactHtmlParser(this.props.t('BOOKING.avocotes_resa')) + bookingObj.customer_booking.user.full_name
+    const phone = amIAlfred ? booking.user.phone : booking.alfred.phone
+    const customer_booking_title = booking.customer_booking && ReactHtmlParser(this.props.t('BOOKING.avocotes_resa')) + booking.customer_booking.user.full_name
 
     return (
       <Grid>
         {currentUser._id !==
-        bookingObj.alfred._id && currentUser._id !== bookingObj.user._id ? (
+        booking.alfred._id && currentUser._id !== booking.user._id ? (
             <Typography>{ReactHtmlParser(this.props.t('BOOKING.disabled_user_access'))}</Typography>
           ) : (
             <Grid>
@@ -302,7 +302,7 @@ class BookingPreview extends React.Component {
                         </Grid>
                         <Grid style={{marginTop: '2%'}}>
                           <Typography>
-                            {`${bookingObj.service } ${ booking_datetime_str(bookingObj)}`}
+                            {`${booking.service } ${booking_datetime_str(booking)}`}
                           </Typography>
                         </Grid>
                         <Grid>
@@ -313,7 +313,7 @@ class BookingPreview extends React.Component {
                               status
                             }
                           </h2>
-                          {is_development() && bookingObj._id}
+                          {is_development() && booking._id}
                         </Grid>
                         { customer_booking_title &&
                         <Typography>
@@ -323,17 +323,17 @@ class BookingPreview extends React.Component {
                       </Grid>
                     </Grid>
                     <hr className={classes.hrSeparator}/>
-                    {bookingObj === null ||
-                  currentUser === null ? null : bookingObj.status ===
+                    {booking === null ||
+                  currentUser === null ? null : booking.status ===
                   BOOK_STATUS.FINISHED ? (
-                          currentUser._id === bookingObj.alfred._id ? (
+                          currentUser._id === booking.alfred._id ? (
                             <Grid container
                               style={{borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%'}}>
                               <Grid container>
                                 <Typography style={{marginBottom: '5%'}}>{ReactHtmlParser(this.props.t('BOOKING.commentary'))}</Typography>
                               </Grid>
                               <div style={{display: 'flex', flexFlow: 'row'}}>
-                                {bookingObj.user_evaluated ?
+                                {booking.user_evaluated ?
                                   <Grid container>
                                     <Grid item md={12} xs={12} style={{marginBottom: '35px'}}>
                                       <Typography>{ReactHtmlParser(this.props.t('BOOKING.already_evaluate'))}</Typography>
@@ -349,7 +349,7 @@ class BookingPreview extends React.Component {
                                     <Grid item xs={2}/>
                                     <Grid item md={4} xs={12}>
                                       <Link
-                                        href={`/evaluateClient?booking=${bookingObj._id}&id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
+                                        href={`/evaluateClient?booking=${booking._id}&id=${booking.serviceUserId}&client=${booking.user._id}`}>
                                         <CustomButton color={'primary'} variant={'contained'} style={{color: 'white'}}>{ReactHtmlParser(this.props.t('BOOKING.button_evaluate_client'))}</CustomButton>
                                       </Link>
                                     </Grid>
@@ -365,7 +365,7 @@ class BookingPreview extends React.Component {
                                 </Typography>
                               </Grid>
                               <div style={{display: 'flex', flexFlow: 'row'}}>
-                                {bookingObj.alfred_evaluated ?
+                                {booking.alfred_evaluated ?
                                   <Grid container>
                                     <Grid item md={12} xs={12} style={{marginBottom: '35px'}}>
                                       <Typography>{ReactHtmlParser(this.props.t('BOOKING.already_evaluate_alfred'))}</Typography>
@@ -379,7 +379,7 @@ class BookingPreview extends React.Component {
                                     <Grid item xs={2}/>
                                     <Grid item md={4} xs={12}>
                                       <Link
-                                        href={`/evaluate?booking=${bookingObj._id}&id=${bookingObj.serviceUserId}`}
+                                        href={`/evaluate?booking=${booking._id}&id=${booking.serviceUserId}`}
                                       >
                                         <Grid
                                           style={{
@@ -435,7 +435,7 @@ class BookingPreview extends React.Component {
                               <CustomButton variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage}
                                 style={{textTransform: 'initial', color: 'white'}}>{ReactHtmlParser(this.props.t('BOOKING.button_send_message'))}</CustomButton>
                             </Grid>
-                            {bookingObj.status === BOOK_STATUS.CONFIRMED && phone?
+                            {booking.status === BOOK_STATUS.CONFIRMED && phone?
                               <Grid item className={classes.containerPhone}>
                                 <Hidden only={['xl', 'lg', 'md', 'sm']}>
                                   <CustomButton>
@@ -452,7 +452,7 @@ class BookingPreview extends React.Component {
                           </Grid>
                         </Grid>
                         {
-                          bookingObj.status === BOOK_STATUS.CONFIRMED && phone?
+                          booking.status === BOOK_STATUS.CONFIRMED && phone?
                             <Hidden only={['xs']}>
                               <Grid item xl={6}>
                                 <Grid>
@@ -479,7 +479,7 @@ class BookingPreview extends React.Component {
                             <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
                               <Grid item>
                                 <Typography>
-                                  {bookingObj.service}
+                                  {booking.service}
                                 </Typography>
                                 <Typography>
                                   {momentTitle}
@@ -489,15 +489,15 @@ class BookingPreview extends React.Component {
                             <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
                               <Grid item>
                                 <Typography>
-                                  {bookingObj.address ?
-                                    `au ${bookingObj.address.address}, ${bookingObj.address.zip_code} ${bookingObj.address.city}` : ReactHtmlParser(this.props.t('BOOKING.visio'))}
+                                  {booking.address ?
+                                    `au ${booking.address.address}, ${booking.address.zip_code} ${booking.address.city}` : ReactHtmlParser(this.props.t('BOOKING.visio'))}
                                 </Typography>
                                 <Typography>
-                                  {ReactHtmlParser(this.props.t('BOOKING.created_date')) + moment(bookingObj.date).format('DD/MM/YYYY')} à {moment(bookingObj.date).format('HH:mm')}
+                                  {ReactHtmlParser(this.props.t('BOOKING.created_date')) + moment(booking.date).format('DD/MM/YYYY')} à {moment(booking.date).format('HH:mm')}
                                 </Typography>
                               </Grid>
                             </Grid>
-                            {bookingObj.status === BOOK_STATUS.TO_CONFIRM && amIAlfred ?
+                            {booking.status === BOOK_STATUS.TO_CONFIRM && amIAlfred ?
                               <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
                                 <Grid item>
                                   <Typography>{ReactHtmlParser(this.props.t('BOOKING.end_date'))}</Typography>
@@ -536,9 +536,9 @@ class BookingPreview extends React.Component {
                                 <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                   <Grid className={classes.labelReservation}>
                                     <Typography>
-                                      {ReactHtmlParser(this.props.t('BOOKING.info_end_resa')) + moment(bookingObj.date)
+                                      {ReactHtmlParser(this.props.t('BOOKING.info_end_resa')) + moment(booking.date)
                                         .add(1, 'd')
-                                        .format('DD/MM/YYYY') + ReactHtmlParser(this.props.t('BOOKING.a')) + moment(bookingObj.date).format('HH:mm')}
+                                        .format('DD/MM/YYYY') + ReactHtmlParser(this.props.t('BOOKING.a')) + moment(booking.date).format('HH:mm')}
                                     </Typography>
                                   </Grid>
                                   <Grid className={classes.buttonConfirmResa}>
@@ -555,7 +555,7 @@ class BookingPreview extends React.Component {
                                 null
                             )
                               :
-                              bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.alfred._id ? (
+                              booking.status === BOOK_STATUS.INFO && currentUser._id === booking.alfred._id ? (
                                 <Grid container className={classes.groupButtonsContainer} spacing={1}>
                                   <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
                                     <CustomButton onClick={() => this.props.onConfirmPreapproved(booking_id)} color={'primary'}
@@ -574,7 +574,7 @@ class BookingPreview extends React.Component {
                                 </Grid>
                               )
                                 :
-                                bookingObj.status === BOOK_STATUS.TO_PAY && currentUser._id === bookingObj.user._id ? (
+                                booking.status === BOOK_STATUS.TO_PAY && currentUser._id === booking.user._id ? (
                                   <Grid className={classes.groupButtonsContainer}>
                                     <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
                                       color={'primary'} variant={'contained'}
@@ -582,10 +582,10 @@ class BookingPreview extends React.Component {
                                   </Grid>
                                 )
                                   :
-                                  bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.user._id ?
+                                  booking.status === BOOK_STATUS.INFO && currentUser._id === booking.user._id ?
                                     null
                                     :
-                                    bookingObj.status === BOOK_STATUS.PREAPPROVED && currentUser._id === bookingObj.user._id ? (
+                                    booking.status === BOOK_STATUS.PREAPPROVED && currentUser._id === booking.user._id ? (
                                       <Grid className={classes.groupButtonsContainer}>
                                         <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
                                           color={'primary'} variant={'contained'}
@@ -610,9 +610,9 @@ class BookingPreview extends React.Component {
                           {ReactHtmlParser(this.props.t('BOOKING.stuff'))}
                         </Typography>
                       </Grid>
-                      {bookingObj === null ? null : bookingObj.equipments
+                      {booking === null ? null : booking.equipments
                         .length ? (
-                          bookingObj.equipments.map(equipment => {
+                          booking.equipments.map(equipment => {
                             return (
                               <Grid item xs={1} style={{textAlign: 'center'}}>
                                 <img
@@ -645,10 +645,10 @@ class BookingPreview extends React.Component {
                               count={countPrestations}
                               provider_fee={provider_fee}
                               customer_fee={customer_fee}
-                              travel_tax={bookingObj.travel_tax}
-                              pick_tax={bookingObj.pick_tax}
+                              travel_tax={booking.travel_tax}
+                              pick_tax={booking.pick_tax}
                               total={amount}
-                              cesu_total={bookingObj.cesu_amount}
+                              cesu_total={booking.cesu_amount}
                               alfred_pro={alfred_pro}
                             />
                           </Grid>
@@ -689,8 +689,8 @@ class BookingPreview extends React.Component {
                         {ReactHtmlParser(this.props.t('BOOKING.warning_behavior'))}
                       </a>
                     </Grid>
-                    {bookingObj === null ||
-                  currentUser === null ? null : bookingObj.status ===
+                    {booking === null ||
+                  currentUser === null ? null : booking.status ===
                   BOOK_STATUS.FINISHED && (
                         <Grid
                           container

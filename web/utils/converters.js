@@ -144,9 +144,9 @@ const booking2event = booking => {
   let res = {
     _id: booking._id,
     title: booking.service,
-    start: moment(booking.date_prestation_moment),
+    start: moment(booking.prestation_date),
     // TODO : compute proper end date
-    end: moment(booking.date_prestation_moment).add(1, 'hours'),
+    end: moment(booking.prestation_date).add(1, 'hours'),
   };
   return res;
 };

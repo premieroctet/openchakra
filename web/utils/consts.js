@@ -419,8 +419,8 @@ const MONTH_PERIOD='MONTHLY'
 const YEAR_PERIOD='ANNUALY'
 
 const BUDGET_PERIOD = {
-  [ MONTH_PERIOD ]: 'Mois',
-  [ YEAR_PERIOD ]: 'An',
+  [MONTH_PERIOD]: 'Mois',
+  [YEAR_PERIOD]: 'An',
 }
 
 const PRO='professional'
@@ -448,16 +448,16 @@ const MICROSERVICE_MODE='MICROSERVICE'
 const CARETAKER_MODE='CARETAKER'
 
 const DASHBOARD_MODE ={
-  [ MICROSERVICE_MODE ]: 'microservice',
-  [ CARETAKER_MODE ]: 'conciergerie',
+  [MICROSERVICE_MODE]: 'microservice',
+  [CARETAKER_MODE]: 'conciergerie',
 }
 
 const PEND_EMPLOYEE_REGISTER='PEND_EMPLOYEE_REGISTER'
 const PEND_ALFRED_PRO_REGISTER='PEND_ALFRED_PRO_REGISTER'
 
 const PENDING_REASONS= {
-  [ PEND_EMPLOYEE_REGISTER ]: 'Inscription employé',
-  [ PEND_ALFRED_PRO_REGISTER ]: 'Inscription Alfred',
+  [PEND_EMPLOYEE_REGISTER]: 'Inscription employé',
+  [PEND_ALFRED_PRO_REGISTER]: 'Inscription Alfred',
 }
 
 const AVOCOTES_COMPANY_NAME='AOD avocotés'

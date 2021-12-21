@@ -19,7 +19,7 @@ router.get('/test', (req, res) => res.json({msg: 'Performances Works!'}))
 router.get('/incomes/totalComing/:year', passport.authenticate('jwt', {session: false}), (req, res) => {
   const year = req.params.year
   let total = 0
-  Booking.find({alfred: req.user.id, status: BOOK_STATUS.CONFIRMED, date_prestation: /year$/i})
+  Booking.find({alfred: req.user.id, status: BOOK_STATUS.CONFIRMED, prestation_date: /year$/i})
     .then(booking => {
       booking.forEach(b => {
         total += b.amount
@@ -27,7 +27,10 @@ router.get('/incomes/totalComing/:year', passport.authenticate('jwt', {session: 
       res.json(total)
 
     })
-    .catch(err => res.status(404).json({booking: 'No booking found'}))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
 })
 
 // @Route GET /myAlfred/performances/incomes/:year
@@ -43,13 +46,14 @@ router.get('/incomes/:year?/:month?', passport.authenticate('jwt', {session: fal
   Booking.find({alfred: req.user.id, status: BOOK_STATUS.FINISHED, date_prestation: re})
     .then(booking => {
       booking.forEach(b => {
-        const b_month = b.date_prestation.slice(3, 5)
-        bookings[parseInt(b_month-1)]=bookings[parseInt(b_month-1)]+b.alfred_amount
+        const b_month = moment(b.prestation_date).month()
+        bookings[b_month]=bookings[b_month]+b.alfred_amount
       })
       res.json(bookings)
     })
     .catch(err => {
-      res.status(404).json({booking: 'No booking found'})
+      console.error(err)
+      res.status(404).json(err)
     })
 })
 

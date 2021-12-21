@@ -203,21 +203,6 @@ BookingSchema.virtual('alfred_amount').get(function() {
   return this.amount - this.customer_fee - this.provider_fee
 })
 
-BookingSchema.virtual('date_prestation_moment').get(function() {
-  if (!this.prestation_date) {
-    return null
-  }
-  return moment(`${moment(this.prestation_date, 'DD/MM/YYYY').format('YYYY-MM-DD') } ${ moment(this.prestation_date).format('HH:mm')}`)
-})
-
-BookingSchema.virtual('end_prestation_moment').get(function() {
-  if (!this.end_date) {
-    return null
-  }
-  const [hour, minute]=this.end_time.split(':')
-  return moment(this.end_date).set('hour', hour).set('minute', minute)
-})
-
 BookingSchema.virtual('calendar_display').get(function() {
   if (!this.status) {
     return false

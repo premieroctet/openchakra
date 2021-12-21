@@ -81,13 +81,8 @@ class About extends CompanyComponent {
   }
 
   componentDidMount = () => {
-    this.loadUser()
-  };
-
-  loadUser = () => {
     this.setState({showEdition: false})
     setAxiosAuthentication()
-
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then(res => {
         const user = res.data
@@ -171,7 +166,7 @@ class About extends CompanyComponent {
       axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(() => {
         axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(() => {
           snackBarSuccess(ReactHtmlParser(this.props.t('ABOUT.snackbar_profil_update')))
-          setTimeout(this.loadUser, 1000)
+          setTimeout(this.componentDidMount, 1000)
         },
         ).catch(err => {
           console.error(err)
