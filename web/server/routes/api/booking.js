@@ -380,7 +380,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
 router.put('/modifyBooking/:id', (req, res) => {
   const obj = req.body
 
-  console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}, req is ${req.originalUrl}`)
+  console.log(`Booking ${req.params.id}: setting booking:${JSON.stringify(obj)}`)
   Booking.findById(req.params.id)
     .populate('alfred')
     .populate('user')

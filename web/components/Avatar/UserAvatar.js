@@ -93,10 +93,7 @@ function UserAvatar(props) {
     setAnimated(false)
   }
 
-  avatarWithPics = (user, classes) => {
-    const{isAbout, animated} = this.state
-    const {animateStartup} = this.props
-    console.log(`Animated:${animated}`)
+  function avatarWithPics(user, classes) {
     if (!user) {
       return null
     }
