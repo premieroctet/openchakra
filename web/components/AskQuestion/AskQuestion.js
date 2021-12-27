@@ -1,45 +1,33 @@
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
-import {ASK_QUESTION} from '../../utils/i18n'
 
-class AskQuestion extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state={
-      user: {},
-    }
-  }
-
-  componentDidMount() {
-    axios.get(`/myAlfred/api/shop/alfred/${this.props.user}`)
+function AskQuestion(props) {
+  const {t, user} = props
+  const [alfred, setAlfred] = useState({})
+    
+  useEffect(() => {
+    axios.get(`/myAlfred/api/shop/alfred/${user}`)
       .then(response => {
         let user = response.data
-        this.setState({
-          user: user.alfred,
-        })
+        setAlfred(user.alfred)
       }).catch(err => console.error(err))
-  }
+  })
 
-
-  render() {
-    const {user} = this.state
-    return(
-      <Grid style={{textAlign: 'center'}}>
-        <Grid>
-          <h2>{ReactHtmlParser(this.props.t('ASK_QUESTION.title', {firstname: user.firstname}))}</h2>
-        </Grid>
-        <Grid>
-          <Typography>{ReactHtmlParser(this.props.t('ASK_QUESTION.info', {firstname: user.firstname}))}</Typography>
-        </Grid>
-
+  return(
+    <Grid style={{textAlign: 'center'}}>
+      <Grid>
+        <h2>{ReactHtmlParser(t('ASK_QUESTION.title', {firstname: alfred.firstname}))}</h2>
       </Grid>
-    )
-  }
+      <Grid>
+        <Typography>{ReactHtmlParser(t('ASK_QUESTION.info', {firstname: alfred.firstname}))}</Typography>
+      </Grid>
 
+    </Grid>
+  )
 }
 
 export default withTranslation('custom', {withRef: true})(AskQuestion)

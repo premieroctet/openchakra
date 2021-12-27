@@ -46,7 +46,9 @@ const useStyles = makeStyles(theme => ({
     lineHeight: '1em',
     display: 'block',
     [theme.breakpoints.down('xs')]: {
-      fontSize: '30px',
+      '& strong': {
+        lineHeight: 1,
+      },
     },
   },
   titleSpan: {
