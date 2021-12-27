@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
 
 function DisplayInformation({pics, title, text, right}) {
   const classes = useStyles()
-  const img = <Grid item xs={6} style={{minHeight: 200, minWidth: 200, backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundSize: 'contain'}} className={pics}/>
+  const img = <Grid item xs={6} style={{height: 330, minWidth: 200, backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundSize: 'contain'}} className={pics}/>
   
   return(
     <Grid container spacing={3} style={{display: 'flex', width: '100%', margin: 0}}>

@@ -164,11 +164,11 @@ class SearchPage extends BasePage {
                   .then(res => {
                     let allAddresses = {'main': res.data.billing_address.gps}
                     res.data.service_address.forEach(addr => {
-                      allAddresses[ addr._id ] = {lat: addr.lat, lng: addr.lng}
+                      allAddresses[addr._id] = {lat: addr.lat, lng: addr.lng}
                     })
                     st.allAddresses=allAddresses
                     if ('selectedAddress' in url_props && url_props.selectedAddress !== 'all') {
-                      st.gps = allAddresses[ url_props.selectedAddress ]
+                      st.gps = allAddresses[url_props.selectedAddress]
                     }
                     if (!url_props.selectedAddress && !url_props.gps) {
                       st.gps = allAddresses.main
@@ -219,7 +219,7 @@ class SearchPage extends BasePage {
     if (criterion.locations) {
       const locations_filter = criterion.locations
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
-        const su_locations = Object.keys(su.location).filter(k => Boolean(su.location[ k ]))
+        const su_locations = Object.keys(su.location).filter(k => Boolean(su.location[k]))
         return _.intersection(su_locations, locations_filter).length > 0
       })
     }
@@ -264,7 +264,7 @@ class SearchPage extends BasePage {
 
   onChange = e => {
     let {name, value} = e.target
-    this.setState({[ e.target.name ]: e.target.value})
+    this.setState({[e.target.name]: e.target.value})
     if (name === 'selectedAddress') {
       this.setState({
         gps: value === 'all' ? null : 'gps' in value ? value.gps : {
@@ -345,7 +345,7 @@ class SearchPage extends BasePage {
 
     const {width} = this.props
 
-    const [cols, rows]={'xs': [100, 1], 'sm': [2, 3], 'md': [3, 3], 'lg': [4, 4], 'xl': [4, 3]}[ width ]
+    const [cols, rows]={'xs': [100, 1], 'sm': [2, 3], 'md': [3, 3], 'lg': [4, 4], 'xl': [4, 3]}[width]
 
     return(
       <Grid>
@@ -370,7 +370,7 @@ class SearchPage extends BasePage {
                 <Grid className={classes.searchSecondFilterContainerLeft}>
                   {
                     !(this.state.searching || this.state.mounting) &&
-                      <Typography>{ReactHtmlParser(this.props.t(serviceUsers.length ? 'SEARCH.alfred_avail':'SEARCH.no_one', {count: serviceUsers.length}))}</Typography>
+                      <Typography>{ReactHtmlParser(this.props.t(serviceUsers.length ? 'SEARCH.alfred_avail':'SEARCH.no_one', {count: `${serviceUsers.length} `}))}</Typography>
                   }
                 </Grid>
                 { gps ? <Grid className={classes.searchFilterRightContainer}>

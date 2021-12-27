@@ -57,10 +57,10 @@ class DrawerEditingSchedule extends React.Component {
       const dt=moment([...eventsSelected][0]).format('DD/MM/YYYY')
       axios.get('/myAlfred/api/booking/currentAlfred')
         .then(result => {
-          let bookings = result.data.filter(b => moment(b.date_prestation, 'DD/MM/YYYY').format('DD/MM/YYYY')==dt)
+          let bookings = result.data.filter(b => moment(b.prestation_date, 'DD/MM/YYYY').format('DD/MM/YYYY')==dt)
           let bkgs={}
           bookings.forEach(b => {
-            const hour=moment(b.time_prestation).hour()
+            const hour=moment(b.prestation_date).hour()
             bkgs[hour]=b.user.picture
           })
           this.setState({bookings: bkgs})

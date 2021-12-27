@@ -2,51 +2,76 @@ import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
+import React, {useEffect} from 'react'
 import Router from 'next/router'
 import Grid from '@material-ui/core/Grid'
-import {withStyles} from '@material-ui/core/styles'
-import styles from '../../static/css/components/AddService/AddService'
-import {Button} from '@material-ui/core'
-import {SHOP, ADD_SERVICES} from '../../utils/i18n'
 import Typography from '@material-ui/core/Typography'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 const {isLoggedUserAlfred}=require('../../utils/context')
 import '../../static/assets/css/custom.css'
+import {makeStyles} from '@material-ui/core'
 
-class AddService extends React.Component {
-  constructor(props) {
-    super(props)
-  }
+const useStyles = makeStyles(theme => ({
+  containerAddService: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px',
+      borderRadius: 10,
+    },
+  },
+  buttonAddService: {
+    textTransform: 'initial',
+    fontWeight: 'bold',
+  },
+  descriptionAddService: {
+    color: 'rgba(39,37,37,35%)',
+    textAlign: 'center',
+  },
+  containerTitle: {
+    [theme.breakpoints.only('xs')]: {
+      display: 'none',
+    },
+    [theme.breakpoints.only('sm')]: {
+      display: 'none',
+    },
+    [theme.breakpoints.only('md')]: {
+      display: 'none',
+    },
+  },
+}))
 
-  componentDidMount = () => {
+function AddService(props) {
+  const {t} = props
+  const classes= useStyles()
+  
+  useEffect(() => {
     setAxiosAuthentication()
-  };
+  }, [])
 
-  clickService = () => {
+  function clickService() {
     // Router.push(isLoggedUserAlfred() ? `/myShop/services?user=${this.props.user}` : '/creaShop/creaShop')
     Router.push('/creaShop/creaShop')
-  };
-
-  render() {
-    const {classes}=this.props
-
-    return (
-      <Grid className={classes.containerAddService}>
-        <Grid className={classes.containerTitle}>
-          <h3 className={'customaddservicestitle'}>{ReactHtmlParser(this.props.t('ADD_SERVICES.title'))}</h3>
-        </Grid>
-        <CustomButton classes={{root: `customaddservicesbutton ${classes.buttonAddService}`}} onClick={this.clickService} startIcon={<AddCircleOutlineIcon />}>
-          { isLoggedUserAlfred() ?
-            ReactHtmlParser(this.props.t('SHOP.addService'))
-            :
-            ReactHtmlParser(this.props.t('SHOP.createShop'))
-          }
-        </CustomButton>
-        <Typography className={`customaddservicessubtitle ${classes.descriptionAddService}`}>{ReactHtmlParser(this.props.t('ADD_SERVICES.add_service'))}</Typography>
-      </Grid>
-    )
   }
+
+
+  return (
+    <Grid className={classes.containerAddService}>
+      <Grid className={classes.containerTitle}>
+        <h3 className={'customaddservicestitle'}>{ReactHtmlParser(t('ADD_SERVICES.title'))}</h3>
+      </Grid>
+      <CustomButton classes={{root: `customaddservicesbutton ${classes.buttonAddService}`}} onClick={clickService} startIcon={<AddCircleOutlineIcon />}>
+        { isLoggedUserAlfred() ?
+          ReactHtmlParser(t('SHOP.addService'))
+          :
+          ReactHtmlParser(t('SHOP.createShop'))
+        }
+      </CustomButton>
+      <Typography className={`customaddservicessubtitle ${classes.descriptionAddService}`}>{ReactHtmlParser(t('ADD_SERVICES.add_service'))}</Typography>
+    </Grid>
+  )
+  
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(AddService))
+export default withTranslation('custom')(AddService)

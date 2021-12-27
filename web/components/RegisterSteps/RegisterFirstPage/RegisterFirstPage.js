@@ -1,8 +1,4 @@
-import { Switch } from '@material-ui/core';
-
 import '../../../static/assets/css/custom.css'
-import { Checkbox } from 'material-ui';
-import { FormControlLabel } from '@material-ui/core';
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -17,7 +13,6 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
-import Siret from '../../Siret/Siret';
 import styles from '../../../static/css/components/RegisterSteps/RegisterFirstPage/RegisterFirstPage'
 import {REGISTER_FIRST_PAGE} from '../../../utils/i18n'
 import CustomIcon from '../../CustomIcon/CustomIcon'

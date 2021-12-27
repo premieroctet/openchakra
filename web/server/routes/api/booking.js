@@ -27,7 +27,8 @@ const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
 const uuidv4 = require('uuid/v4')
-const {stateMachineFactory} = require('../../../utils/BookingStateMachine')
+const {stateMachineFactory} = require('../../utils/BookingStateMachine')
+const _=require('lodash')
 
 moment.locale('fr')
 
@@ -121,8 +122,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred)
   bookingFields.user = mongoose.Types.ObjectId(req.body.user)
   bookingFields.chatroom = mongoose.Types.ObjectId(req.body.chatroom)
-  bookingFields.date_prestation = req.body.date_prestation
-  bookingFields.time_prestation = moment(req.body.time_prestation)
+  bookingFields.prestation_date = moment(req.body.prestation_date)
   bookingFields.prestations = req.body.prestations
   bookingFields.customer_fees = req.body.customer_fees
   bookingFields.provider_fees = req.body.provider_fees
@@ -304,8 +304,8 @@ router.get('/:id/ics', (req, res) => {
     .populate({path: 'alfred', select: 'firstname'})
     .then(booking => {
       title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
-      const start=booking.date_prestation_moment
-      const end=booking.end_prestation_moment
+      const start=booking.prestation_date
+      const end=booking.end_date
       return ics.createEvent({
         uid: booking._id.toString(),
         title: title,
@@ -340,9 +340,10 @@ router.get('/:id/google_calendar', (req, res) => {
     .populate({path: 'user', select: 'firstname'})
     .populate({path: 'alfred', select: 'firstname'})
     .then(booking => {
+      console.log(`Type date:${typeof booking.prestation_date}`)
       title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
-      const start=booking.date_prestation_moment.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z')
-      const end=booking.end_prestation_moment ? booking.end_prestation_moment.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z') : start
+      const start=booking.prestation_date.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z')
+      const end=booking.end_date ? booking.end_date.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z') : start
       console.log(start)
       const url=googleCalendarEventUrl({
         uid: booking._id.toString(),
@@ -569,7 +570,7 @@ new CronJob('0 */15 * * * *', (() => {
         // Expired because Alfred did not answer
         const answerExpired = moment(currentDate).isSameOrAfter(expirationDate)
         // Expired because prestation date passed
-        const prestaDateExpired = moment().isSameOrAfter(b.date_prestation_moment)
+        const prestaDateExpired = moment().isSameOrAfter(b.prestation_date)
         if (answerExpired || prestaDateExpired) {
           const reason = answerExpired ? `Alfred did not confirm within ${EXPIRATION_DELAY} days` : 'prestation date passed'
           console.log(`Booking ${b._id} expired : ${reason}`)

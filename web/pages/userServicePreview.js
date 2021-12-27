@@ -236,8 +236,8 @@ class UserServicesPreview extends BasePage {
                                       alfred: serviceUser.user,
                                       count: count,
                                       pick_tax: null,
-                                      date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
-                                      time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
+                                      date: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date, 'DD/MM/YYYY').toDate() : null,
+                                      time: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date).toDate() : null,
                                       location: bookingObj ? bookingObj.location : null,
                                       customer_fee: bookingObj ? bookingObj.customer_fee : null,
                                       provider_fee: bookingObj ? bookingObj.provider_fee : null,
@@ -651,6 +651,10 @@ class UserServicesPreview extends BasePage {
 
     const avocotes_booking = this.getAvocotesBooking()
 
+    const date=moment(this.state.date)
+    const time=moment(this.state.time)
+    const prestation_date=date.set('hours', time.hours()).set('minutes', time.minutes()).set('seconds', 0)
+
     let bookingObj = {
       reference: user ? computeBookingReference(user, this.state.serviceUser.user) : '',
       service: this.state.serviceUser.service.label,
@@ -660,8 +664,7 @@ class UserServicesPreview extends BasePage {
       equipments: this.state.serviceUser.equipments,
       amount: this.state.total,
       company_amount: this.state.company_amount,
-      date_prestation: this.state.date ? moment(this.state.date).format('DD/MM/YYYY') : null,
-      time_prestation: this.state.time,
+      prestation_date: prestation_date,
       alfred: this.state.serviceUser.user._id,
       user: user ? user._id : null,
       prestations: prestations,

@@ -26,6 +26,7 @@ import Hidden from '@material-ui/core/Hidden'
 import {rgbaToHex} from '../../utils/functions'
 import Head from 'next/head'
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+const lodash=require('lodash')
 
 class ProfileStatistics extends BasePage {
 
@@ -63,6 +64,7 @@ class ProfileStatistics extends BasePage {
 
     this.loadMonthStatistics()
     this.loadYearStatistics()
+    this.loadHistoYear()
   }
 
   histoYearChanged = e => {
@@ -85,7 +87,7 @@ class ProfileStatistics extends BasePage {
         axios.get(`/myAlfred/api/performances/incomes/totalComing/${year}`)
           .then(resIncomeTotal => {
             const totalComing = parseInt(resIncomeTotal.data)
-            const annualIncome = bookings.reduce((total, amount) => total + amount, 0)
+            const annualIncome = lodash.sum(bookings)
 
             this.setState({
               revenus: [{data: bookings, name: 'revenus'}],
@@ -102,8 +104,8 @@ class ProfileStatistics extends BasePage {
 
   loadMonthStatistics() {
     const year = new Date().getFullYear()
-    const month=this.state.statisticsMonth
-    axios.get(`/myAlfred/api/performances/statistics/${year}/${month}`)
+    const {statisticsMonth}=this.state
+    axios.get(`/myAlfred/api/performances/statistics/${year}/${statisticsMonth}`)
       .then(res => {
         this.setState({
           monthIncomes: res.data.incomes,
@@ -116,9 +118,8 @@ class ProfileStatistics extends BasePage {
   }
 
   loadYearStatistics() {
-    const year = this.state.statisticsYear
-
-    axios.get(`/myAlfred/api/performances/statistics/${year}`)
+    const {statisticsYear} = this.state
+    axios.get(`/myAlfred/api/performances/statistics/${statisticsYear}`)
       .then(res => {
         this.setState({
           yearIncomes: res.data.incomes,
@@ -134,6 +135,7 @@ class ProfileStatistics extends BasePage {
     const editable = isEditableUser(user)
     const primary = theme.palette.primary.main
     const result = rgbaToHex(primary)
+    const YEARS=[-2, -1, 0, 1, 2].map(offset => new Date().getFullYear()+offset)
 
     const CHART_OPTIONS= {
       chart: {
@@ -143,7 +145,7 @@ class ProfileStatistics extends BasePage {
       },
       theme: {
         monochrome: {
-          enabled: true,
+          enabled: false,
           color: result,
           shadeIntensity: 0.65,
         },
@@ -175,7 +177,7 @@ class ProfileStatistics extends BasePage {
                           disableUnderline
                           classes={{select: classes.searchSelectPadding}}
                         >
-                          {[2019, 2020, 2021].map(year => {
+                          {YEARS.map(year => {
                             return (
                               <MenuItem value={year}>{year}</MenuItem>
                             )
@@ -321,7 +323,7 @@ class ProfileStatistics extends BasePage {
                             disableUnderline
                             classes={{select: classes.searchSelectPadding}}
                           >
-                            { [2019, 2020, 2021].map(year => {
+                            { YEARS.map(year => {
                               return (
                                 <MenuItem value={year}>{year}</MenuItem>
                               )

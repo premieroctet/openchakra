@@ -4,7 +4,6 @@ import React from 'react'
 import styles from './BookingDetailStyle'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
-import {BOOKING_DETAIL} from '../../utils/i18n'
 const {EMPLOYEE}=require('../../utils/consts')
 import IconButton from '@material-ui/core/IconButton'
 import InfoIcon from '@material-ui/icons/Info'

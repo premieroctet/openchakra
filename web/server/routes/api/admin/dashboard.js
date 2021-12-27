@@ -1308,18 +1308,19 @@ router.get('/statistics', passport.authenticate('admin', {session: false}), (req
 // @Route GET /myAlfred/api/admin/booking/all
 // Get all bookings
 // @Access private
-router.get('/booking/all', passport.authenticate('admin', {session: false}), (req, res) => {
+router.get('/bookings', passport.authenticate('admin', {session: false}), (req, res) => {
   Booking.find()
     .populate('alfred', 'firstname name')
     .populate('user', 'firstname name email phone')
     .populate({path: 'customer_booking', populate: {path: 'user'}})
     .sort({date: -1})
+    .then(bookings => {
+      console.log(`Typeof booking.prestation_date:${typeof bookings[0].prestation_date}`)
+      res.json(bookings)
+    })
     .catch(err => {
       console.error(err)
       res.status(404).json({bookings: 'Error'})
-    })
-    .then(bookings => {
-      res.json(bookings)
     })
 })
 

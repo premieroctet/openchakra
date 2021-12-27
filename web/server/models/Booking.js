@@ -66,19 +66,11 @@ const BookingSchema = new Schema({
     default: Date.now,
     required: true,
   },
-  date_prestation: {
-    type: String,
-    //required: true,
-  },
-  time_prestation: {
+  prestation_date: {
     type: Date,
-    //required: true,
   },
   end_date: {
     type: Date,
-  },
-  end_time: {
-    type: String,
   },
   alfred: {
     type: Schema.Types.ObjectId,
@@ -221,21 +213,6 @@ const BookingSchema = new Schema({
 
 BookingSchema.virtual('alfred_amount').get(function() {
   return this.amount - this.customer_fee - this.provider_fee
-})
-
-BookingSchema.virtual('date_prestation_moment').get(function() {
-  if (!this.date_prestation) {
-    return null
-  }
-  return moment(`${moment(this.date_prestation, 'DD/MM/YYYY').format('YYYY-MM-DD') } ${ moment(this.time_prestation).format('HH:mm')}`)
-})
-
-BookingSchema.virtual('end_prestation_moment').get(function() {
-  if (!this.end_date) {
-    return null
-  }
-  const [hour, minute]=this.end_time.split(':')
-  return moment(this.end_date).set('hour', hour).set('minute', minute)
 })
 
 BookingSchema.virtual('calendar_display').get(function() {

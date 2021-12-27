@@ -1,60 +1,62 @@
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Typography from '@material-ui/core/Typography'
 import {Divider} from '@material-ui/core'
 import Router from 'next/router'
-import withStyles from '@material-ui/core/styles/withStyles'
-import styles from '../../static/css/components/Topic/Topic'
 import '../../static/assets/css/custom.css'
+import {makeStyles} from '@material-ui/core/styles'
 
-class Topic extends React.Component {
+const useStyle = makeStyles(theme => ({
+  topicDivider: {
+    height: 6,
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: 27,
+    width: '3vw',
+    [theme.breakpoints.down('xs')]: {
+      width: '15vw',
+    },
+  },
+}))
 
-  constructor(props) {
-    super(props)
-    this.state={
-      subTitleColor: 'rgba(39,37,37,35%)',
-    }
-  }
+function Topic(props) {
+  const classes = useStyle()
+  const {titleTopic, titleSummary, needBackground, underline, children} = props
+  const [subTitleColor, setSubTitleColor]= useState('rgba(39,37,37,35%)')
 
-  componentDidMount() {
+
+  useEffect(() => {
     if(Router.pathname === '/confirmPayment') {
-      this.setState({subTitleColor: 'rgba(248, 207, 97, 1)'})
+      setSubTitleColor('rgba(248, 207, 97, 1)')
     }
-  }
-
-  render() {
-    const{subTitleColor} = this.state
-    const{titleTopic, titleSummary, needBackground, underline, classes} = this.props
-
-    return(
-      <Grid {...this.props} style={{width: '100%'}}>
-        <Grid>
-          <h3>{titleTopic}</h3>
-        </Grid>
-        {
-          titleSummary ?
-            <Grid>
-              <Typography style={{color: subTitleColor}}>{titleSummary}</Typography>
-            </Grid> : null
-        }
-        {
-          underline ?
-            <Grid style={{marginTop: '2%'}}>
-              <Divider className={`customtopicdivider ${classes.topicDivider}`}/>
-            </Grid> : null
-        }
-        {this.props.children ?
-          <Grid style={{marginTop: '3vh', backgroundColor: needBackground ? 'rgba(229,229,229,1)' : 'white', borderRadius: 27}}>
-            { this.props.children }
-          </Grid>
-          :
-          null
-        }
+  })
+  
+  return(
+    <Grid {...props} style={{width: '100%'}}>
+      <Grid>
+        <h3>{titleTopic}</h3>
       </Grid>
-    )
-  }
-
+      {
+        titleSummary ?
+          <Grid>
+            <Typography style={{color: subTitleColor}}>{titleSummary}</Typography>
+          </Grid> : null
+      }
+      {
+        underline ?
+          <Grid style={{marginTop: '2%'}}>
+            <Divider className={`customtopicdivider ${classes.topicDivider}`}/>
+          </Grid> : null
+      }
+      {children ?
+        <Grid style={{marginTop: '3vh', backgroundColor: needBackground ? 'rgba(229,229,229,1)' : 'white', borderRadius: 27}}>
+          { children }
+        </Grid>
+        :
+        null
+      }
+    </Grid>
+  )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Topic))
+export default withTranslation('custom')(Topic)
