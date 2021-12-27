@@ -1,6 +1,6 @@
 const fs=require('fs').promises
 const {validate: validateCss} = require('csstree-validator')
-const _=require('lodash')
+const lodash = require('lodash')
 
 const CSS_PATH='static/assets/css/custom.css'
 const CSS_PATH_ERR='/tmp/custom.css'
@@ -143,7 +143,7 @@ createThemeConfiguration = items => {
 
 createUIConfiguration = items => {
   console.log(`Generating ${items.length} custom items`)
-  const i18n_grouped=_.groupBy(items, it => (['text', 'sample'].includes(it.type) ? 'I18N': it.type=='palette' ? 'THEME' : 'CSS'))
+  const i18n_grouped=lodash.groupBy(items, it => (['text', 'sample'].includes(it.type) ? 'I18N': it.type=='palette' ? 'THEME' : 'CSS'))
   createCSSConfiguration(i18n_grouped.CSS || [])
   createI18NConfiguration(i18n_grouped.I18N || [])
   createThemeConfiguration(i18n_grouped.THEME || [])

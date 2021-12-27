@@ -18,7 +18,7 @@ const {setAxiosAuthentication}=require('../../utils/authentication')
 const {isB2BStyle}=require('../../utils/context')
 const {PRO, PART}=require('../../utils/consts')
 import axios from 'axios'
-import _ from 'lodash'
+import lodash from 'lodash'
 
 
 class FilterMenu extends React.Component {
@@ -161,7 +161,7 @@ class FilterMenu extends React.Component {
     const {name, checked} = event.target
     let {locations} = this.state
     if (checked) {
-      locations = _.uniq(locations.concat(name))
+      locations = lodash.uniq(locations.concat(name))
     }
     else {
       locations = locations.filter(l => l!=name)

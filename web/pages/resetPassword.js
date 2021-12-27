@@ -15,7 +15,7 @@ import BasePage from './basePage'
 import Layout from '../hoc/Layout/Layout'
 import styles from '../static/css/pages/resetPassword/resetPassword'
 
-const _ = require('lodash')
+const lodash = require('lodash')
 
 const {ADMIN, MANAGER}=require('../utils/consts')
 const {snackBarSuccess, snackBarError}=require('../utils/notifications')
@@ -70,7 +70,7 @@ class resetPassword extends BasePage {
         const user = res.data
         snackBarSuccess(ReactHtmlParser(this.props.t('RESET_PASSWORD.password_update')))
         // Rediriger vers /particular ou /professional suivant les rôles
-        if (_.intersection(user.roles, [ADMIN, MANAGER]).length>0) {
+        if (lodash.intersection(user.roles, [ADMIN, MANAGER]).length>0) {
           localStorage.setItem('b2b', 'true')
         }
         else {

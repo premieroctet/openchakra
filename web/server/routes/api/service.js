@@ -6,7 +6,7 @@ const express = require('express')
 
 const router = express.Router()
 const passport = require('passport')
-const _ = require('lodash')
+const lodash = require('lodash')
 
 const {PART, PRO}=require('../../../utils/consts')
 
@@ -172,7 +172,7 @@ router.get('/keyword/:kw', (req, res) => {
             keywords.push(p.s_label, p.job && p.job.s_label ? p.job.s_label : '')
           })
           // single string with unique words
-          keywords = _.uniq(keywords.filter(kw => Boolean(kw)).join(' ').split(' ')).join(' ')
+          keywords = lodash.uniq(keywords.filter(kw => Boolean(kw)).join(' ').split(' ')).join(' ')
           result[access_type].push({
             _id: service._id,
             label: service.label,

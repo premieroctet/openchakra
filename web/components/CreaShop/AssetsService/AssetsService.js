@@ -18,7 +18,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import Chip from '@material-ui/core/Chip'
 import Divider from '@material-ui/core/Divider'
-import _ from 'lodash'
+import lodash from 'lodash'
 import '../../../static/assets/css/custom.css'
 import {YEARS_RANGE} from '../../../utils/consts'
 
@@ -83,7 +83,7 @@ class AssetsService extends React.Component {
     let skills = this.state[skillsAttribute]
     if (newSkill) {
       skills.push(newSkill)
-      skills = _.uniqBy(skills, s => s.trim().toLowerCase())
+      skills = lodash.uniqBy(skills, s => s.trim().toLowerCase())
       this.setState({[skillsAttribute]: skills, [newSkillAttribute]: ''}, () => this.props.onChange(this.state))
     }
   }

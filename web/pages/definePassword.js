@@ -17,7 +17,7 @@ import {checkPass1, checkPass2} from '../utils/passwords'
 import BasePage from './basePage'
 import styles from '../static/css/pages/definePassword/definePassword'
 
-const _ = require('lodash')
+const lodash = require('lodash')
 
 const {ADMIN, MANAGER} = require('../utils/consts')
 const {snackBarSuccess, snackBarError} = require('../utils/notifications')
@@ -60,7 +60,7 @@ class DefinePassword extends BasePage {
         const user = res.data
         snackBarSuccess(ReactHtmlParser(this.props.t('DEFINE_PASSWORD.snackbar_password_update')))
         // Rediriger vers /particular ou /professional suivant les rôles
-        if (_.intersection(user.roles, [ADMIN, MANAGER]).length > 0) {
+        if (lodash.intersection(user.roles, [ADMIN, MANAGER]).length > 0) {
           localStorage.setItem('b2b', 'true')
         }
         else {

@@ -3,7 +3,7 @@ const isEmpty = require('./is-empty')
 const moment = require('moment')
 const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE, DASHBOARD_MODE}=require('../../utils/consts')
 const {EDIT_PROFIL}=require('../../utils/i18n')
-const _ = require('lodash')
+const lodash = require('lodash')
 moment.locale('fr')
 
 const validateBirthday = data => {
@@ -210,7 +210,7 @@ const validateCompanyProfile = data => {
   }
 
   // Admin : all or nothing
-  const admin_empties = _.uniq(['admin_firstname', 'admin_name', 'admin_email'].map(f => Validator.isEmpty(data[f])))
+  const admin_empties = lodash.uniq(['admin_firstname', 'admin_name', 'admin_email'].map(f => Validator.isEmpty(data[f])))
   if (admin_empties.length>1) {
     ['admin_firstname', 'admin_name', 'admin_email'].forEach(att => {
       if (!data[att]) {
@@ -323,7 +323,7 @@ const validateAvocotesCustomer = data => {
   }
 
   console.log(JSON.stringify(data.prestations))
-  if (!data.prestations || _.sum(data.prestations.map(p => p.value))==0) {
+  if (!data.prestations || lodash.sum(data.prestations.map(p => p.value))==0) {
     errors.prestations = 'Sélectionnez au moins une prestation'
   }
 

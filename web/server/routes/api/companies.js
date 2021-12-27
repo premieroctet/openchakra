@@ -15,7 +15,7 @@ moment.locale('fr')
 const crypto = require('crypto')
 const axios = require('axios')
 const {ADMIN, MANAGER, EMPLOYEE, ROLES, MICROSERVICE_MODE, CARETAKER_MODE, BOOK_STATUS} = require('../../../utils/consts')
-const _ = require('lodash')
+const lodash = require('lodash')
 const {addRegistrationProof, createOrUpdateMangoCompany} = require('../../utils/mangopay')
 const {getPeriodStart}=require('../../../utils/dateutils')
 const {bufferToString, normalize} = require('../../../utils/text')
@@ -394,7 +394,7 @@ router.post('/employees', passport.authenticate('b2badmin', {session: false}), (
             throw new Error('Aucun employé à importer')
           }
           const fields=Object.keys(records[0])
-          if (!_.isEqual(fields.sort(), EXPECTED.sort())) {
+          if (!lodash.isEqual(fields.sort(), EXPECTED.sort())) {
             throw new Error(`Colonnes ${EXPECTED.join(',')} attendues`)
           }
           let messages=[]
@@ -646,7 +646,7 @@ router.get('/budget/:user_id/:role', passport.authenticate('jwt', {session: fals
       })
         .then(bookings => {
           console.log(`Found ${bookings.length} bookings`)
-          const consumed = _.sumBy(bookings, b => b.amount)
+          const consumed = lodash.sumBy(bookings, b => b.amount)
           const remaining = Math.max(group.budget-consumed, 0)
           return res.json(remaining)
         })

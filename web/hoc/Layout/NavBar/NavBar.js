@@ -54,6 +54,7 @@ import Logo from "../../../components/Logo/Logo"
 import CustomIcon from "../../../components/CustomIcon/CustomIcon"
 import Hidden from "@material-ui/core/Hidden"
 import CustomTabMenu from "../../../components/CustomTabMenu/CustomTabMenu"
+import lodash from 'lodash'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -378,7 +379,7 @@ class NavBar extends Component {
     const {name, checked} = event.target
     let {locations} = this.state
     if (checked) {
-      locations = _.uniq(locations.concat(name))
+      locations = lodash.uniq(locations.concat(name))
     }
     else {
       locations = locations.filter(l => l!=name)

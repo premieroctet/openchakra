@@ -12,7 +12,7 @@ import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN, COMPANY_PRIVATE_FLTR} fro
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import {SHOP} from '../../../utils/i18n'
-import _ from 'lodash'
+import lodash from 'lodash'
 const {getLoggedUserId}=require('../../../utils/context')
 const {isB2BDisabled}=require('../../../config/config')
 
@@ -67,8 +67,8 @@ class SelectPrestation extends React.Component {
         let private_prestations = prestations.filter(p => Boolean(p.private_alfred))
         let companyPrestations = prestations.filter(p => alfredPro && Boolean(p.private_company))
         let public_prestations = prestations.filter(p => !p.private_alfred && !p.private_company)
-        let grouped = _.mapValues(_.groupBy(public_prestations, 'filter_presentation.label'),
-          clist => clist.map(el => _.omit(el, 'filter_presentation.label')))
+        let grouped = lodash.mapValues(lodash.groupBy(public_prestations, 'filter_presentation.label'),
+          clist => clist.map(el => lodash.omit(el, 'filter_presentation.label')))
         let presta_templates = private_prestations.map(p => {
           return {...p, billing: billings}
         })
@@ -156,7 +156,7 @@ class SelectPrestation extends React.Component {
                     </Grid>
                   }
                   <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                    {prestas ? _.sortBy(prestas, 'order').map(p => {
+                    {prestas ? lodash.sortBy(prestas, 'order').map(p => {
                       let isEditable = p._id.length === GID_LEN
                       let presta = this.state.prestations[ p._id ]
                       return (
@@ -201,7 +201,7 @@ class SelectPrestation extends React.Component {
             <Typography>{ReactHtmlParser(this.props.t('SHOP.parameter.descriptionIsPro'))} <a href='/static/assets/avocotes/guide_boutique.pdf' target='_blank'>Cliquez ici pour consulter la notice d'installation.</a></Typography>
           </Grid>
           <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={2} style={{width: '100%', margin: 0}}>
-            {_.sortBy(this.state.grouped[ COMPANY_PRIVATE_FLTR ], 'order').map(res => {
+            {lodash.sortBy(this.state.grouped[ COMPANY_PRIVATE_FLTR ], 'order').map(res => {
               let isEditable = res._id.length === GID_LEN
               let presta = this.state.prestations[ res._id ]
               return(

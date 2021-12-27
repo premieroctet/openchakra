@@ -31,7 +31,7 @@ const {computeDistanceKm}=require('../utils/functions')
 const SearchResults=withSlide(withGrid(CardService))
 const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
-
+const lodash=require('lodash')
 
 moment.locale('fr')
 
@@ -220,7 +220,7 @@ class SearchPage extends BasePage {
       const locations_filter = criterion.locations
       serviceUsersDisplay = serviceUsersDisplay.filter(su => {
         const su_locations = Object.keys(su.location).filter(k => Boolean(su.location[k]))
-        return _.intersection(su_locations, locations_filter).length > 0
+        return lodash.intersection(su_locations, locations_filter).length > 0
       })
     }
 

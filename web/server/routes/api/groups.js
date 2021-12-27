@@ -13,7 +13,7 @@ const axios = require('axios')
 const {validateCompanyGroup} = require('../../validation/simpleRegister')
 const {MANAGER, ROLES, MONTH_PERIOD, YEAR_PERIOD, BOOK_STATUS, DASHBOARD_MODE, MICROSERVICE_MODE, CARETAKER_MODE} = require('../../../utils/consts')
 const {computeUrl}=require('../../../config/config')
-const _ = require('lodash')
+const lodash = require('lodash')
 const {getPeriodStart} = require('../../../utils/dateutils')
 axios.defaults.withCredentials = true
 
@@ -359,7 +359,7 @@ router.get('/:group_id/budget', passport.authenticate('b2badminmanager', {sessio
         status: {$nin: [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED, BOOK_STATUS.INFO, BOOK_STATUS.PREAPPROVED]},
       })
         .then(bookings => {
-          const consumed = _.sumBy(bookings, b => b.amount)
+          const consumed = lodash.sumBy(bookings, b => b.amount)
           const remaining = group.budget-consumed
           return res.json(remaining)
         })

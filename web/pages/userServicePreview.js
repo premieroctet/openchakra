@@ -44,7 +44,7 @@ const isEmpty = require('../server/validation/is-empty')
 const {computeDistanceKm} = require('../utils/functions')
 const {roundCurrency} = require('../utils/converters')
 const {computeBookingReference} = require('../utils/text')
-const _=require('lodash')
+const lodash = require('lodash')
 
 const moment = require('moment')
 const {isB2BAdmin, isB2BManager, getRole, isModeCompany, isLoggedUserAdmin}=require('../utils/context')
@@ -313,7 +313,7 @@ class UserServicesPreview extends BasePage {
     }
     const suPrestaNames=serviceUser.prestations.map(p => p.prestation.label)
     const avocotesPrestaNames=avocotes_booking.prestations.map(p => p.name)
-    const diff=_.difference(avocotesPrestaNames, suPrestaNames)
+    const diff=lodash.difference(avocotesPrestaNames, suPrestaNames)
     if (diff.length>0) {
       return snackBarError(ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.snackbar_error_avc')) + diff.join(','))
     }

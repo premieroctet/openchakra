@@ -12,7 +12,7 @@ import styles from '../static/css/pages/forgotPassword/forgotPassword'
 import Router from 'next/router'
 const {snackBarSuccess, snackBarError} = require('../utils/notifications')
 const {ADMIN, MANAGER} = require('../utils/consts')
-const _ = require('lodash')
+const lodash = require('lodash')
 import {isB2BStyle} from '../utils/context'
 import {FORGOT_PASSWORD} from '../utils/i18n'
 
@@ -51,7 +51,7 @@ class forgotPassword extends React.Component {
         const user= res.data
         snackBarSuccess(ReactHtmlParser(this.props.t('FORGOT_PASSWORD.snackbar_send_email')) + email)
         // Rediriger vers /particular ou /professional suivant les rôles
-        const redirect_url=_.intersection(user.roles, [ADMIN, MANAGER]).length>0 ? '/professional': '/particular'
+        const redirect_url=lodash.intersection(user.roles, [ADMIN, MANAGER]).length>0 ? '/professional': '/particular'
         setTimeout(() => Router.push({pathname: redirect_url}), 2000)
       })
       .catch(err => {

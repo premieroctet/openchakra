@@ -7,7 +7,7 @@ import styles from '../../static/css/components/ScrollMenu/ScrollMenu'
 import withStyles from '@material-ui/core/styles/withStyles'
 import querystring from 'querystring'
 import Router from 'next/router'
-import _ from 'lodash'
+import lodash from 'lodash'
 
 function a11yProps(index) {
   return {
@@ -36,11 +36,11 @@ class ScrollMenu extends React.Component {
 
     let tabIndex=0
     if (['account', 'profile', 'faq'].includes(mode)) {
-      tabIndex = _.findIndex(categories.map(c => c.url), url => location.includes(url))
+      tabIndex = lodash.findIndex(categories.map(c => c.url), url => location.includes(url))
       tabIndex = tabIndex == -1 ? 0 : tabIndex
     }
     else if (mode=='search') {
-      tabIndex = _.findIndex(categories.map(c => c._id), id => location.includes(`category=${id}`))
+      tabIndex = lodash.findIndex(categories.map(c => c._id), id => location.includes(`category=${id}`))
       tabIndex = tabIndex == -1 ? 0 : tabIndex
     }
     else {

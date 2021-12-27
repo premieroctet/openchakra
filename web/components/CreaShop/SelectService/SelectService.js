@@ -13,7 +13,7 @@ import {rgbaToHex} from '../../../utils/functions'
 const {PART, PRO, CREASHOP_MODE} = require('../../../utils/consts')
 import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch'
 import moment from 'moment'
-import _ from 'lodash'
+import lodash from 'lodash'
 const {isB2BDisabled}=require('../../../config/config')
 
 class SelectService extends React.Component {
@@ -139,9 +139,9 @@ class SelectService extends React.Component {
     let options = []
     if (particular_professional_access) {
       // Intersection services pro & part
-      const both_options = _.intersectionBy(services[PRO], services[PART], s => s._id)
-      const part_options = _.differenceBy(services[PART], both_options, s => s._id)
-      const pro_options = _.differenceBy(services[PRO], both_options, s => s._id)
+      const both_options = lodash.intersectionBy(services[PRO], services[PART], s => s._id)
+      const part_options = lodash.differenceBy(services[PART], both_options, s => s._id)
+      const pro_options = lodash.differenceBy(services[PRO], both_options, s => s._id)
       options.push({label: 'Services aux particuliers uniquement', options: part_options})
       options.push({label: 'Services aux professionels uniquement', options: pro_options})
       options.push({label: 'Services aux particuliers et aux professionels', options: both_options})

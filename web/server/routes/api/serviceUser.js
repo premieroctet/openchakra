@@ -16,7 +16,7 @@ const router = express.Router()
 const passport = require('passport')
 const mongoose = require('mongoose')
 const geolib = require('geolib')
-const _ = require('lodash')
+const lodash = require('lodash')
 const moment = require('moment')
 const {data2ServiceUser} = require('../../utils/mapping')
 const serviceFilters = require('../../utils/filters')
@@ -737,10 +737,10 @@ router.get('/home/:partpro', (req, res) => {
       if (typeof services !== 'undefined' && services.length > 0) {
         if (gps) {
           services.sort(serviceFilters.distanceComparator(gps))
-          services = _.uniqBy(services, su => su.user)
+          services = lodash.uniqBy(services, su => su.user)
         }
         else {
-          services = _.shuffle(services)
+          services = lodash.shuffle(services)
         }
         res.json(services.slice(0, 24))
       }
@@ -823,7 +823,7 @@ router.get('/keywords/:mode', (req, res) => {
       // Keep only [a-z]
       result = result.toLowerCase().replace(/[^a-zA-Z]+/g, ' ')
       result = result.split(' ')
-      result = _.uniq(result).filter(e => e && e.length>2).sort()
+      result = lodash.uniq(result).filter(e => e && e.length>2).sort()
       res.json(result)
     })
     .catch(err => {

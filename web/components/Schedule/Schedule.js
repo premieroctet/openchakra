@@ -2,7 +2,7 @@ import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {Calendar, momentLocalizer, Views} from 'react-big-calendar'
-import _ from 'lodash'
+import lodash from 'lodash'
 import moment from 'moment'
 import Grid from '@material-ui/core/Grid'
 import {bookings2events} from '../../utils/converters'
@@ -91,7 +91,7 @@ class Schedule extends React.Component {
     }
 
     if (view === Views.MONTH) {
-      events = _.uniqBy(events, e => e.start.format('DD/MM/YYYY'))
+      events = lodash.uniqBy(events, e => e.start.format('DD/MM/YYYY'))
     }
 
     const customToolbar = toolbar => {

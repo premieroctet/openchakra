@@ -27,6 +27,7 @@ const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication
 const {snackBarSuccess}=require('../../utils/notifications')
 import {SHOP} from '../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
+import lodash from 'lodash'
 
 class creaShop extends BasePage {
 
@@ -289,7 +290,7 @@ class creaShop extends BasePage {
     else {
       const mode=this.state.mode
       this.setState({saving: true})
-      let cloned_shop = _.cloneDeep(this.state.shop)
+      let cloned_shop = lodash.cloneDeep(this.state.shop)
       Object.keys(cloned_shop.prestations).forEach(key => {
         if (key < 0) {
           cloned_shop.prestations[key]._id = null
@@ -297,7 +298,7 @@ class creaShop extends BasePage {
       })
 
       setAxiosAuthentication()
-      const noDiplomaShop = _.pickBy(cloned_shop, (v, k) => !k.match(/diploma|certification/i))
+      const noDiplomaShop = lodash.pickBy(cloned_shop, (v, k) => !k.match(/diploma|certification/i))
       axios.post('/myAlfred/api/shop/add', noDiplomaShop)
         .then(() => {
           const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.getURLProps().serviceuser_id || ''}`

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
-import _ from 'lodash'
+import lodash from 'lodash'
 import Button from '@material-ui/core/Button'
 import {setAxiosAuthentication} from '../../utils/authentication'
 
@@ -38,7 +38,7 @@ class TextExtractTest extends React.Component {
           <Button variant='outlined' color={this.state.sql_mode ? 'black': 'primary'} onClick={() => this.setState({sql_mode: true})}>Requêtes Mongo</Button> ({ids.length})
         </h1>
         <code>
-          {_.sortBy(ids).map(id => (
+          {lodash.sortBy(ids).map(id => (
             <>
               <div>{id}</div>
             </>

@@ -4,8 +4,6 @@ import axios from 'axios';
 
 import SearchTextField4 from '../../components/Search/AutoCompleteTextField';
 
-import _ from 'lodash'
-
 class TestSearchTextField extends React.Component {
 
   constructor(props) {

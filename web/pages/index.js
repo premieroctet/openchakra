@@ -34,7 +34,7 @@ import {isAndroid} from 'react-device-detect'
 const {PRO, PART} = require('../utils/consts')
 import Router from 'next/router'
 import '../static/assets/css/custom.css'
-import _ from 'lodash'
+import lodash from 'lodash'
 import RandomBanner from '../components/RandomBanner/RandomBanner'
 import {INDEX} from '../utils/i18n'
 
@@ -95,7 +95,7 @@ class Home extends React.Component {
 
     axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
       .then(res => {
-        let categories = _.shuffle(res.data)
+        let categories = lodash.shuffle(res.data)
         this.setState({categories: categories})
       }).catch(err => console.error(err))
 

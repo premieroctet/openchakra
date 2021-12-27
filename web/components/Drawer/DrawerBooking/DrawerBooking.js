@@ -27,7 +27,7 @@ const isEmpty = require('../../../server/validation/is-empty')
 const {getLoggedUserId} = require('../../../utils/context')
 const {isMomentAvailable} = require('../../../utils/dateutils')
 const moment = require('moment')
-const _=require('lodash')
+const lodash = require('lodash')
 
 moment.locale('fr')
 import '../../../static/assets/css/custom.css'
@@ -47,7 +47,7 @@ class DrawerBooking extends React.Component {
   }
 
   selectedPresta = prestations => (
-    _.sortBy(prestations, p => (p && p.prestation ? p.prestation.order: 0)).map((p, index) => (
+    lodash.sortBy(prestations, p => (p && p.prestation ? p.prestation.order: 0)).map((p, index) => (
       <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
         <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
           <Grid container style={{display: 'flex', flexDirection: 'column'}}>

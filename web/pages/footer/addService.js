@@ -7,7 +7,7 @@ import LayoutFaq from '../../hoc/Layout/LayoutFaq'
 import NeedMoreFaq from '../../hoc/Layout/Faq/NeedMoreFaq'
 import '../../static/assets/css/custom.css'
 import DisplayInformation from '../../components/DisplayInformation/DisplayInformation'
-const _ = require('lodash')
+const lodash = require('lodash')
 
 const useStyles = makeStyles(theme => ({
   mainContainerAddService: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 function AddService({t, i18n}) {
   const classes = useStyles()
   let resources = i18n.getResourceBundle(i18n.language)
-  resources = _.pickBy(resources, (val, key) => key.startsWith('ADD_SERVICE'))
+  resources = lodash.pickBy(resources, (val, key) => key.startsWith('ADD_SERVICE'))
 
   return (
     <LayoutFaq>

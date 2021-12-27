@@ -6,7 +6,7 @@ const express = require('express')
 
 const router = express.Router()
 const passport = require('passport')
-const _ = require('lodash')
+const lodash = require('lodash')
 
 router.get('/test', (req, res) => res.json({msg: 'Category Works!'}))
 
@@ -41,8 +41,8 @@ router.get('/particular', (req, res) => {
   Service.find({particular_access: true}, 'category')
     .populate('category')
     .then(services => {
-      let categories=_.uniqBy(services.map(s => s.category), c => c._id)
-      categories = _.orderBy(categories, 'particular_label')
+      let categories=lodash.uniqBy(services.map(s => s.category), c => c._id)
+      categories = lodash.orderBy(categories, 'particular_label')
       res.json(categories)
     })
     .catch(err => {
@@ -57,8 +57,8 @@ router.get('/professional', (req, res) => {
   Service.find({professional_access: true}, 'category')
     .populate('category')
     .then(services => {
-      let categories=_.uniqBy(services.map(s => s.category), c => c._id)
-      categories = _.orderBy(categories, 'professional_label')
+      let categories=lodash.uniqBy(services.map(s => s.category), c => c._id)
+      categories = lodash.orderBy(categories, 'professional_label')
       res.json(categories)
     })
     .catch(err => {

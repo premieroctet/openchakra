@@ -28,7 +28,6 @@ const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
 const uuidv4 = require('uuid/v4')
 const {stateMachineFactory} = require('../../utils/BookingStateMachine')
-const _=require('lodash')
 
 moment.locale('fr')
 

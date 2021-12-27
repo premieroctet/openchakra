@@ -19,7 +19,7 @@ import React from 'react'
 import Router from 'next/router'
 import SendIcon from '@material-ui/icons/Send'
 import Typography from '@material-ui/core/Typography'
-import _ from 'lodash'
+import lodash from 'lodash'
 import axios from 'axios'
 import {MESSAGES} from '../../utils/i18n'
 import BasePage from '../basePage'
@@ -126,7 +126,7 @@ class Messages extends BasePage {
     }
 
     chats = chats.sort((c1, c2) => moment(c2.latest)-moment(c1.latest))
-    const users=_.uniqBy(chats.map(c => (c.emitter._id.toString()===user ? c.recipient : c.emitter)), '_id')
+    const users=lodash.uniqBy(chats.map(c => (c.emitter._id.toString()===user ? c.recipient : c.emitter)), '_id')
     return users
   }
 

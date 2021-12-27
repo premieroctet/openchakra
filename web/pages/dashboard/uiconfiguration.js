@@ -16,7 +16,7 @@ import DashboardLayout from '../../hoc/Layout/DashboardLayout'
 import Grid from '@material-ui/core/Grid'
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import axios from 'axios'
-import _ from 'lodash'
+import lodash from 'lodash'
 import UIParameter from '../../components/Editor/UIParameter'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Accordion from '@material-ui/core/Accordion'
@@ -74,7 +74,7 @@ class UIConfiguration extends React.Component {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/admin/uiConfiguration')
       .then(response => {
-        let parameters=_.sortBy(response.data, 'order')
+        let parameters=lodash.sortBy(response.data, 'order')
         this.setState({parameters: parameters, filtered_parameters: parameters})
         if (parameters.length>0) {
           this.setState({current_page_name: parameters[0].page}, () => this.sortColors())
@@ -105,8 +105,8 @@ class UIConfiguration extends React.Component {
 
   sortColors = () => {
     const {parameters}=this.state
-    const colors=_.flatten(parameters.map(p => p.attributes.filter(att => att.value.startsWith && att.value.startsWith('#')).map(a => a.value)))
-    const sorted=_.chain(colors).countBy().toPairs().sortBy(1).reverse().map(0).value()
+    const colors=lodash.flatten(parameters.map(p => p.attributes.filter(att => att.value.startsWith && att.value.startsWith('#')).map(a => a.value)))
+    const sorted=lodash.chain(colors).countBy().toPairs().sortBy(1).reverse().map(0).value()
     this.setState({used_colors: sorted})
   }
 
@@ -127,8 +127,8 @@ class UIConfiguration extends React.Component {
     if (filterEmpty) {
       parameters=parameters.filter(p => isEmpty(p.attributes))
     }
-    if (parameters.length>0 && !_.uniqBy(parameters.map(p => p.page)).includes(current_page_name)) {
-      this.setState({current_page_name: _.uniqBy(parameters.map(p => p.page))[0]})
+    if (parameters.length>0 && !lodash.uniqBy(parameters.map(p => p.page)).includes(current_page_name)) {
+      this.setState({current_page_name: lodash.uniqBy(parameters.map(p => p.page))[0]})
     }
     this.setState({filtered_parameters: parameters})
   }
@@ -197,11 +197,11 @@ class UIConfiguration extends React.Component {
       return res
     }
     // Paramètres dans le composant (path==prefix)
-    const params=parameters.filter(p => _.isEqual(path(p), prefix))
+    const params=parameters.filter(p => lodash.isEqual(path(p), prefix))
     // Paramètres enfants du composant dans le composant (path.length>==prefix.length)
     const subParams=parameters.filter(p => path(p).length>level)
     // Sous-paramètres groupés par nom du niveau level
-    const names=_.groupBy(subParams, p => path(p)[level])
+    const names=lodash.groupBy(subParams, p => path(p)[level])
     if (level==0) {
       return (
         <Grid>
@@ -236,7 +236,7 @@ class UIConfiguration extends React.Component {
     const {classes}=this.props
     const {filtered_parameters, current_page_name, saving, filter, filterEmpty}=this.state
 
-    const pages=_.uniqBy(filtered_parameters.map(p => p.page))
+    const pages=lodash.uniqBy(filtered_parameters.map(p => p.page))
 
     const pageParameters=filtered_parameters.filter(p => p.page==current_page_name)
 
