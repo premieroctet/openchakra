@@ -109,7 +109,7 @@ const createPayout = (booking_id, mangopay_id, amount, fees=0) => {
         return delayedPromise(DELAY, () => mangoApi.PayOuts.get(payOut.Id))
       })
       .then(payOut => {
-        console.log(`Booking ${booking_id}: payout ${payout.Id}/${payout.Status} for ${mangopay_id}, amount ${amount}, fees ${fees}`)
+        console.log(`Booking ${booking_id}: payout ${payOut.Id}/${payout.Status} for ${mangopay_id}, amount ${amount}, fees ${fees}`)
         return resolve(payOut)
       })
       .catch(err => {
@@ -389,7 +389,7 @@ const createPayment = (book_id, mangopay_source, mangopay_target, amount, obj, t
     const transferPromise = !transferId || transferStatus==TRANSACTION_FAILED ?
       createTransfer(book_id, mangopay_source, mangopay_target, amount)
       :
-      Promise.Resolve({Id: transferId, Status: transferStatus})
+      Promise.resolve({Id: transferId, Status: transferStatus})
 
     transferPromise
       .then(transfer => {
@@ -402,7 +402,7 @@ const createPayment = (book_id, mangopay_source, mangopay_target, amount, obj, t
         const payoutPromise = !payoutId || payoutStatus==TRANSACTION_FAILED ?
           createPayout(book_id, mangopay_target, amount)
           :
-          Promise.Resolve({Id: payoutId, Status: payoutStatus})
+          Promise.resolve({Id: payoutId, Status: payoutStatus})
 
         return payoutPromise
       })

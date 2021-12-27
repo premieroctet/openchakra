@@ -21,13 +21,9 @@ router.get('/incomes/totalComing/:year', passport.authenticate('jwt', {session: 
   const now=moment().set('year', year)
   const start=moment(now).startOf('year')
   const end=moment(now).endOf('year')
-  let total = 0
   Booking.find({alfred: req.user.id, status: BOOK_STATUS.CONFIRMED, prestation_date: {$gte: start, $lte: end}})
-    .then(booking => {
-      console.log(booking)
-      booking.forEach(b => {
-        total += b.amount
-      })
+    .then(bookings => {
+      const total=lodash.sumBy(bookings, b => b.alfred_amount)
       res.json(total)
 
     })
@@ -85,12 +81,12 @@ router.get('/statistics/:year/:month?', passport.authenticate('jwt', {session: f
 
   Booking.find({alfred: req.user.id, status: BOOK_STATUS.FINISHED, prestation_date: {$gte: start, $lte: end}})
     .then(bookings => {
-      totalIncomes=lodash.sum(bookings.map(b => b.alfred_amount))
-      totalPrestations=lodash.sum(bookings.map(b => b.prestations.length))
+      totalIncomes=lodash.sumBy(bookings, b => b.alfred_amount)
+      totalPrestations=lodash.sumBy(bookings, b => b.prestations.length)
       return ServiceUser.find({user: req.user.id})
     })
     .then(serviceusers => {
-      totalViews = lodash.sum(serviceusers.map(su => su.number_of_views))
+      totalViews = lodash.sumBy(serviceusers, su => su.number_of_views)
       return Review.find({alfred: req.user.id, note_client: undefined, date: {$gte: start, $lte: end}})
     })
     .then(reviews => {
