@@ -21,7 +21,7 @@ const useStyle = makeStyles(theme => ({
 
 function Topic(props) {
   const classes = useStyle()
-  const {titleTopic, titleSummary, needBackground, underline, children} = props
+  const {titleTopic, titleSummary, needBackground, underline, children, tReady, t, ...rest} = props
   const [subTitleColor, setSubTitleColor]= useState('rgba(39,37,37,35%)')
 
 
@@ -30,9 +30,9 @@ function Topic(props) {
       setSubTitleColor('rgba(248, 207, 97, 1)')
     }
   })
-  
+
   return(
-    <Grid {...props} style={{width: '100%'}}>
+    <Grid {...rest} style={{width: '100%'}}>
       <Grid>
         <h3>{titleTopic}</h3>
       </Grid>

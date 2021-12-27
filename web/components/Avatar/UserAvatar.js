@@ -150,7 +150,7 @@ function UserAvatar(props) {
         width: '100%',
       }}>
         <Badge
-          overlap="circle"
+          overlap="circular"
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
