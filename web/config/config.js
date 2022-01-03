@@ -1,7 +1,15 @@
+const {
+  AMAZON_HOST,
+  FACEBOOK_PROVIDER,
+  GOOGLE_PROVIDER,
+  LOCAL_HOST,
+  MODES,
+  SITE_MODES,
+} = require('../utils/consts')
 const isEmpty = require('../server/validation/is-empty')
-const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
-  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY}=require('../mode')
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY,
+  SITE_MODE}=require('../mode')
 const source = require('./client_id.json')
 
 const MONGO_BASE_URI='mongodb://localhost/'
@@ -36,6 +44,14 @@ const is_development = () => {
 
 const is_development_nossl = () => {
   return get_mode()==MODES.DEVELOPMENT_NOSSL
+}
+
+const isPlatform = () => {
+  return SITE_MODE==SITE_MODES.PLATFORM
+}
+
+const isMarketplace = () => {
+  return SITE_MODE==SITE_MODES.MARKETPLACE
 }
 
 const appName = 'myalfred'
@@ -140,6 +156,7 @@ const displayConfig = () => {
 
   console.log(`Configuration is:\n\
 \tMode:${get_mode()}\n\
+\tSite mode:${isPlatform() ? 'plateforme' : isMarketplace() ? 'marketplace' : 'inconnu'}\n\
 \tDatabase:${databaseName}\n\
 \tServer prod:${SERVER_PROD}\n\
 \tServer port:${SERVER_PROD ? '80/443':'3122'}\n\
@@ -154,7 +171,10 @@ const displayConfig = () => {
 const checkConfig = () => {
   return new Promise((resolve, reject) => {
     if (!Object.values(MODES).includes(MODE)) {
-      reject(`MODE: ${MODE} inconnu, attendu dans ${Object.values(MODES)}`)
+      reject(`MODE: ${MODE} inconnu, attendu ${JSON.stringiffy(Object.values(MODES))}`)
+    }
+    if (!Object.values(SITE_MODES).includes(SITE_MODE)) {
+      reject(`SITE_MODE: ${SITE_MODE} inconnu, attendu ${JSON.stringify(Object.values(SITE_MODES))}`)
     }
     if (isEmpty(DATABASE_NAME)) {
       reject(`DATABASE_NAME non renseigné`)
@@ -199,4 +219,5 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
+  isPlatform, isMarketplace,
 }
