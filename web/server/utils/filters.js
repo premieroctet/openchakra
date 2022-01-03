@@ -4,7 +4,7 @@ const {createRegExpOR, createRegExpAND} = require('../../utils/text')
 const {PRO, PART}=require('../../utils/consts')
 const {normalize}=require('../../utils/text')
 
-const isServiceAroundGPS = (serviceUser, coordinates) => {
+const isServiceUserAroundGPS = (serviceUser, coordinates) => {
 
   const serviceGPS = serviceUser.service_address.gps
   if (!serviceGPS) {
@@ -39,7 +39,7 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
 
 }
 
-const isServiceAtAlfredOrVisio = su => {
+const isServiceUserAtAlfredOrVisio = su => {
   return su.location.alfred || su.location.visio
 }
 
@@ -67,14 +67,14 @@ const distanceComparator = gps => {
 }
 
 
-const filterServicesGPS = (serviceUsers, coordinates, restrict) => {
-  let filteredServiceUsers = serviceUsers.filter(su => isServiceAtAlfredOrVisio(su) || !restrict || isServiceAroundGPS(su, coordinates))
+const filterServiceUsersGPS = (serviceUsers, coordinates, restrict) => {
+  let filteredServiceUsers = serviceUsers.filter(su => isServiceUserAtAlfredOrVisio(su) || !restrict || isServiceUserAroundGPS(su, coordinates))
   filteredServiceUsers.sort(distanceComparator(coordinates))
   return filteredServiceUsers
 }
 
 // Check ANDed words first, then ORed if not result
-const filterServicesKeyword = (serviceUsers, keyword, status) => {
+const filterServicesKeyword = (serviceUsers, keyword, status, dataFn=null) => {
   const regExpFunctions = [createRegExpAND, createRegExpOR]
   const catLabel = status==PRO ? 's_professional_label' : 's_particular_label'
   // On recherche d'abord avec un AND des mots-clés
@@ -82,14 +82,20 @@ const filterServicesKeyword = (serviceUsers, keyword, status) => {
   for (i = 0; i < regExpFunctions.length; i++) {
     const regExpFn = regExpFunctions[i]
     const regexp = regExpFn(keyword)
-    const filteredServices = serviceUsers.filter(su => {
-      return regexp.test(su.service && su.service.s_label) ||
-        regexp.test(su.service && su.service.category && su.service.category[catLabel]) ||
-        regexp.test(normalize(su.service && su.service.description)) ||
-        su.prestations.some(p => p.prestation &&
-          (regexp.test(p.prestation.s_label) ||
-           regexp.test(normalize(p.prestation.description)) ||
-           regexp.test(p.prestation.job && p.prestation.job.s_label)),
+    const filteredServices = serviceUsers.filter(data => {
+      const service=(dataFn && dataFn(data)) || data
+      if (service.label.includes('PAO')) {
+        console.log(`Service after:${JSON.stringify(service.prestations)}`)
+      }
+      return regexp.test(service && service.s_label) ||
+        regexp.test(service && normalize(service.label)) ||
+        regexp.test(service && service.category && service.category[catLabel]) ||
+        regexp.test(normalize(service && service.description)) ||
+        service.prestations.some(p => p &&
+          (regexp.test(p.s_label) ||
+          regexp.test(normalize(p.label)) ||
+           regexp.test(normalize(p.description)) ||
+           regexp.test(p.job && p.job.s_label)),
         )
     })
     if (filteredServices.length > 0) {
@@ -125,5 +131,5 @@ const filterPartnerServices = (sus, admin) => {
 }
 
 module.exports = {
-  filterServicesGPS, filterServicesKeyword, distanceComparator,
+  filterServiceUsersGPS, filterServicesKeyword, distanceComparator,
   filterServicesIds, filterPartnerServices}

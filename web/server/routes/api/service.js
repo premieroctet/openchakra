@@ -1,3 +1,5 @@
+const {MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
+const {get_logged_id} = require('../../utils/serverContext')
 const Company = require('../../models/Company')
 const Prestation = require('../../models/Prestation')
 const Service = require('../../models/Service')
@@ -9,6 +11,8 @@ const passport = require('passport')
 const lodash = require('lodash')
 
 const {PART, PRO}=require('../../../utils/consts')
+
+const serviceFilters = require('../../utils/filters')
 
 // @Route GET /myAlfred/api/service/all
 // View all service
@@ -214,5 +218,37 @@ router.get('/partner/:partner_name', (req, res) => {
       return res.status(400).json(err)
     })
 })
+
+// @Route POST /myAlfred/api/serviceUser/search
+// Search serviceUser according to optional coordinates, keyword, cat/service/prestation
+router.post('/search', (req, res) => {
+  const kw = req.body.keyword
+  const status = req.body.status // PRO or PART
+
+  console.time(`Searching services`)
+
+  const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
+  Service.find(filter, 'prestations category description label')
+    .populate({
+      path: 'prestations', match: filter,
+      populate: {path: 'job', select: 's_label'},
+    })
+    .lean({virtuals: true})
+    .then(result => {
+      let services=result
+      console.log(`Found ${services.length} before filtering`)
+      if (kw) {
+        services = serviceFilters.filterServicesKeyword(services, kw, status)
+      }
+      console.log(`Remaining ${services.length} after keyword filtering`)
+      console.timeEnd(`Searching services`)
+      return res.json(services)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(404).json(err)
+    })
+})
+
 
 module.exports = router

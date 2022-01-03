@@ -512,6 +512,10 @@ router.post('/search', (req, res) => {
   const restrictPerimeter = req.body.perimeter
   const status = req.body.status // PRO or PART
 
+  const dataFn = su => {
+    return {...su.service, prestations: su.prestations.map(p => p.prestation)}
+  }
+
   console.log(`Searching ${JSON.stringify(req.body)}`)
 
   const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
@@ -525,6 +529,7 @@ router.post('/search', (req, res) => {
       path: 'prestations.prestation', match: filter,
       populate: {path: 'job', select: 's_label'},
     })
+    .lean({virtuals: true})
     .then(result => {
       let sus=result
       console.log(`Found ${sus.length} before filtering`)
@@ -540,17 +545,17 @@ router.post('/search', (req, res) => {
         sus = sus.filter(su => su.prestations.some(p => p.prestation && p.prestation._id.toString() == prestation))
       }
       if (kw) {
-        sus = serviceFilters.filterServicesKeyword(sus, kw, status)
+        sus = serviceFilters.filterServicesKeyword(sus, kw, status, dataFn)
       }
       sus = serviceFilters.filterPartnerServices(sus, req.context.isAdmin())
       console.log(`Remaining ${sus.length} after keyword filtering`)
 
       if (gps) {
         try {
-          sus = serviceFilters.filterServicesGPS(sus, JSON.parse(req.body.gps), restrictPerimeter)
+          sus = serviceFilters.filterServiceUsersGPS(sus, JSON.parse(req.body.gps), restrictPerimeter)
         }
         catch (err) {
-          sus = serviceFilters.filterServicesGPS(sus, req.body.gps, restrictPerimeter)
+          sus = serviceFilters.filterServiceUsersGPS(sus, req.body.gps, restrictPerimeter)
         }
       }
       console.log(`Remaining ${sus.length} after gps filtering`)
@@ -812,7 +817,7 @@ router.get('/keywords/:mode', (req, res) => {
     ServiceUser.find(filter, 'description'),
     Job.find({}, 's_label'),
   ]
-  Promise.all(promises.map(p => p.lean()))
+  Promise.all(promises.map(p => p.lean({virtuals: true})))
     .then(result => {
       // One array only
       result = [].concat(...result)

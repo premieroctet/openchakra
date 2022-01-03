@@ -138,6 +138,7 @@ router.get('/users/all', passport.authenticate('admin', {session: false}), (req,
   User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment hidden')
     .populate({path: 'shop', select: 'creation_date'})
     .sort({creation_date: -1})
+    .lean({virtuals: true})
     .then(users => {
       res.json(users)
     })
@@ -1333,7 +1334,7 @@ router.get('/companies', passport.authenticate('admin', {session: false}), (req,
 
   Company.find()
     .sort({'name': 1})
-    .lean()
+    .lean({virtuals: true})
     .then(companies => {
       if (!companies) {
         return res.status(400).json({msg: 'No company found'})
