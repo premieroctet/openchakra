@@ -1,6 +1,6 @@
 import '../../static/assets/css/custom.css'
 import {booking_datetime_str} from '../../utils/dateutils'
-import {Link, Tooltip} from '@material-ui/core'
+import {Tooltip} from '@material-ui/core'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
@@ -29,6 +29,7 @@ import {RESERVATION, BOOKING} from '../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
+import Link from 'next/link'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props

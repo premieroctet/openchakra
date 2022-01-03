@@ -240,7 +240,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
   Booking.find({
     company_customer: {$exists: true, $ne: null},
-    status: {$nin: [BOOK_STATUS.FINISHED, BOOK_STATUS.CANCELLED]},
+    status: {$nin: [BOOK_STATUS.TO_PAY, BOOK_STATUS.FINISHED, BOOK_STATUS.CANCELLED]},
   })
     .populate('user')
     .then(customer_bookings => {
@@ -535,7 +535,7 @@ new CronJob('0 */35 * * * *', (() => {
 }), null, true, 'Europe/Paris')
 
 // Handle terminated but not paid bookings
-new CronJob(is_development() ? '*/10 * * * * *' : '0 */15 * * * *', (() => {
+new CronJob(is_development() ? '*/10 * * * * *' : '0 0 0 * * *', (() => {
   console.log('Checking bookings to pay')
   Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
     .populate('user')
