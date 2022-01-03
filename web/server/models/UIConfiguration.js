@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+
 const Schema = mongoose.Schema
 
 const UIConfigurationSchema = new Schema({
@@ -47,5 +49,7 @@ const UIConfigurationSchema = new Schema({
 UIConfigurationSchema.virtual('type_label').get(function() {
   return this.type=='content' ? `${this.classname}.${this.type}` : this.classname
 })
+
+UIConfigurationSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = UIConfiguration = mongoose.model('uiconfiguration', UIConfigurationSchema)

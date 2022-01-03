@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+
 const ServiceSchema = new Schema({
   label: {
     type: String,
@@ -69,5 +71,7 @@ ServiceSchema.virtual('prestations', {
 })
 
 ServiceSchema.index({label: 'text'})
+
+ServiceSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = Service = mongoose.model('service', ServiceSchema)

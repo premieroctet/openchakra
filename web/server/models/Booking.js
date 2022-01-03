@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
-const moment = require('moment')
 const lodash=require('lodash')
 const {BOOK_STATUS, ROLES} = require('../../utils/consts')
 const Schema = mongoose.Schema
+
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
 const BookingFee = new Schema({
   amount: {
@@ -233,5 +234,6 @@ BookingSchema.virtual('provider_fee').get(function() {
   return lodash.sum(this.provider_fees.map(c => c.amount))
 })
 
+BookingSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = Booking = mongoose.model('booking', BookingSchema)

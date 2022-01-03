@@ -7,6 +7,8 @@ const {ACCOUNT_MIN_AGE, ROLES}=require('../../utils/consts')
 
 const maxBirth=new Date(moment().add(-ACCOUNT_MIN_AGE, 'years'))
 
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+
 const UserSchema = new Schema({
   name: {
     type: String,
@@ -404,5 +406,7 @@ UserSchema.virtual('shop', {
   localField: '_id', // Find in Model, where localField
   foreignField: 'alfred', // is equal to foreignField
 })
+
+UserSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = User = mongoose.model('user', UserSchema)

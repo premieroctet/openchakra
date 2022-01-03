@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
-
 const Schema = mongoose.Schema
+
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
 const {hideIllegal} = require('../../utils/text')
 
@@ -199,5 +200,7 @@ ServiceUserSchema.virtual('grade_text').get(function() {
   }).join(', ')
   return result
 })
+
+ServiceUserSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = ServiceUser = mongoose.model('serviceUser', ServiceUserSchema)

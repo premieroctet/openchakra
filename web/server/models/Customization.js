@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
-
 const Schema = mongoose.Schema
+
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
 const Commission = new Schema({
   rate: {
@@ -27,5 +28,7 @@ const CustomizationSchema = new Schema({
     required: false,
   },
 })
+
+CustomizationSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = Customization = mongoose.model('customization', CustomizationSchema)

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+
 const MessageSchema = new Schema({
   subject: {
     type: String,
@@ -28,5 +30,7 @@ const MessageSchema = new Schema({
     ref: 'user',
   },
 })
+
+MessageSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = Message = mongoose.model('message', MessageSchema)

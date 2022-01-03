@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../utils/consts')
 const {hideIllegal} = require('../../utils/text')
 
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
 const CompanySchema = new Schema({
   name: {
@@ -92,5 +93,7 @@ CompanySchema.virtual('full_name').get(function() {
 CompanySchema.virtual('mangopay_provider_id').get(function() {
   return this.id_mangopay
 })
+
+CompanySchema.plugin(mongooseLeanVirtuals)
 
 module.exports = mongoose.model('company', CompanySchema)

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+
 const CategorySchema = new Schema({
   particular_label: {
     type: String,
@@ -27,5 +29,6 @@ const CategorySchema = new Schema({
 
 CategorySchema.index({label: 'text'})
 
-const Category = mongoose.model('category', CategorySchema)
-module.exports = Category
+CategorySchema.plugin(mongooseLeanVirtuals)
+
+module.exports = Category = mongoose.model('category', CategorySchema)
