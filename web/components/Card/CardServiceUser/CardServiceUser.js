@@ -10,7 +10,7 @@ import Box from '@material-ui/core/Box'
 import Rating from '@material-ui/lab/Rating'
 import RoomIcon from '@material-ui/icons/Room'
 import Chip from '@material-ui/core/Chip'
-import styles from '../../../static/css/components/Card/CardService/CardService'
+import styles from '../../../static/css/components/Card/CardServiceUser/CardServiceUser'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import EditIcon from '@material-ui/icons/Edit'
@@ -28,7 +28,7 @@ const {isEditableUser, hideEmptyEvaluations}=require('../../../utils/context')
 import '../../../static/assets/css/custom.css'
 import ListIconsSkills from '../../ListIconsSkills/ListIconsSkills'
 
-class RawCardServiceInfo extends React.Component {
+class RawCardServiceUserInfo extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -52,9 +52,9 @@ class RawCardServiceInfo extends React.Component {
   }
 }
 
-const CardServiceInfo=withTranslation('custom', {withRef: true})(withStyles(styles)(RawCardServiceInfo))
+const CardServiceUserInfo=withTranslation('custom', {withRef: true})(withStyles(styles)(RawCardServiceUserInfo))
 
-class CardService extends React.Component {
+class CardServiceUser extends React.Component {
   constructor(props) {
     super(props)
     this.state={
@@ -151,14 +151,14 @@ class CardService extends React.Component {
     if (this.props.item===null) {
       return (
         <Grid className={`customcardinfocont ${classes.carServiceInfoContainer}`}>
-          <CardServiceInfo classes={classes} />
+          <CardServiceUserInfo classes={classes} />
         </Grid>
       )
     }
 
     const cardServiceLoading = () => {
       return(
-        <Grid className={classes.mainCardServiceContainer}>
+        <Grid className={classes.mainCardServiceUserContainer}>
           <Paper elevation={1} className={classes.paperloadingCard}>
             <Grid className={classes.cardLoadingImgCont}>
               <Grid className={classes.cardLoadingCard}>
@@ -197,9 +197,9 @@ class CardService extends React.Component {
     return(
       loading ?
         cardServiceLoading() :
-        <Grid onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} className={profileMode ? classes.mainCardServiceContainerProfil : classes.mainCardServiceContainer}>
+        <Grid onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} className={profileMode ? classes.mainCardServiceUserContainerProfil : classes.mainCardServiceUserContainer}>
           <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : `customcardpaper ${classes.cardServicePaper}`}>
-            <Grid container spacing={1} className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
+            <Grid container spacing={1} className={profileMode ? classes.profileModeCardServiceUser : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
                 <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
                   <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}>
@@ -317,4 +317,4 @@ class CardService extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(CardService))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(CardServiceUser))

@@ -12,7 +12,7 @@ import FilterMenu from '../components/FilterMenu/FilterMenu'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import CardService from '../components/Card/CardService/CardService'
+import CardServiceUser from '../components/Card/CardServiceUser/CardServiceUser'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Layout from '../hoc/Layout/Layout'
 import withSlide from '../hoc/Slide/SlideShow'
@@ -28,7 +28,7 @@ const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage=require('./basePage')
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')
-const SearchResults=withSlide(withGrid(CardService))
+const SearchResults=withSlide(withGrid(CardServiceUser))
 const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
 const lodash=require('lodash')
@@ -53,7 +53,7 @@ class SearchDataModel extends SlideGridDataModel {
   }
 
   /**
-    Première cellule : null => affichage CardServiceInfo
+    Première cellule : null => affichage CardServiceUserInfo
   */
   getData(page, col, row) {
     // return super.getData(page, col, row)
@@ -415,7 +415,7 @@ class SearchPage extends BasePage {
                     {
                       [...Array(8)].map(() => (
                         <Grid item xl={3} lg={3} md={4} sm={6} xs={12}>
-                          <CardService loading={true}/>
+                          <CardServiceUser loading={true}/>
                         </Grid>
 
                       ))
@@ -440,7 +440,7 @@ class SearchPage extends BasePage {
                       >
                         {
                           serviceUsers.slice(0, scroll_count).map(su => (
-                            <CardService
+                            <CardServiceUser
                               key={su._id}
                               item={su._id}
                               gps={gps}

@@ -170,7 +170,7 @@ export default theme => ({
       overflow: 'hidden',
     },
   },
-  profileModeCardService: {
+  profileModeCardServiceUser: {
     width: '90%',
     padding: '5%',
   },
@@ -205,13 +205,13 @@ export default theme => ({
     height: '60%',
     position: 'relative',
   },
-  mainCardServiceContainer: {
+  mainCardServiceUserContainer: {
     width: '100%',
     [theme.breakpoints.down('xs')]: {
       padding: 10,
     },
   },
-  mainCardServiceContainerProfil: {
+  mainCardServiceUserContainerProfil: {
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
