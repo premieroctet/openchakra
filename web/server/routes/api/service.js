@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const {MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
 const {get_logged_id} = require('../../utils/serverContext')
 const Company = require('../../models/Company')
@@ -247,6 +248,24 @@ router.post('/search', (req, res) => {
     .catch(err => {
       console.error(err)
       return res.status(404).json(err)
+    })
+})
+
+// @Route GET /myAlfred/api/serviceUser/cardPreview/:id
+// Data fro serviceUser cardPreview
+// @Access private
+router.get('/cardPreview/:id', (req, res) => {
+  const suId = mongoose.Types.ObjectId(req.params.id)
+  Service.findOne(suId, 'label picture description')
+    .then(service => {
+      const result = {
+        _id: service._id, label: service.label, picture: service.picture, description: service.description,
+      }
+      res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({error: err})
     })
 })
 

@@ -635,6 +635,7 @@ router.get('/cardPreview/:id', (req, res) => {
         })
     })
 })
+
 // @Route GET /myAlfred/api/serviceUser/nearOther
 // View all service around other address
 // @Access private

@@ -37,13 +37,13 @@ class RawCardServiceUserInfo extends React.Component {
 
     return (
       <Grid>
-        <Paper elevation={1} className={`customcardinfopaper ${classes.cardServiceInfoPaper}`}>
-          <Grid className={classes.cardServiceInfoContent}>
+        <Paper elevation={1} className={`customcardinfopaper ${classes.cardServiceUserInfoPaper}`}>
+          <Grid className={classes.cardServiceUserInfoContent}>
             <Grid>
-              <h2 className={`customcardinfotitle ${classes.cardServiceInfoTitle}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_title'))}</h2>
+              <h2 className={`customcardinfotitle ${classes.cardServiceUserInfoTitle}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_title'))}</h2>
             </Grid>
             <Grid>
-              <p className={`customcardinfosubtitle ${classes.cardServiceInfoText}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_chat'))}</p>
+              <p className={`customcardinfosubtitle ${classes.cardServiceUserInfoText}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_chat'))}</p>
             </Grid>
           </Grid>
         </Paper>
@@ -198,11 +198,11 @@ class CardServiceUser extends React.Component {
       loading ?
         cardServiceLoading() :
         <Grid onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} className={profileMode ? classes.mainCardServiceUserContainerProfil : classes.mainCardServiceUserContainer}>
-          <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : `customcardpaper ${classes.cardServicePaper}`}>
-            <Grid container spacing={1} className={profileMode ? classes.profileModeCardServiceUser : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
-                <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
-                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}>
+          <Paper elevation={1} className={profileMode ? classes.profileModeCardServiceUserPaper : `customcardpaper ${classes.cardServiceUserPaper}`}>
+            <Grid container spacing={1} className={profileMode ? classes.profileModeCardServiceUser : classes.cardServiceUserMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModeCardServiceUserFlexContainer : classes.cardServiceUserFlexContainer}>
+                <Grid className={profileMode ? classes.profileModeCardServiceUserPicsContainer : classes.cardServiceUserPicsContainer}>
+                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceUserBackgroundPicsProfil : classes.cardServiceUserBackgroundPics}>
                     {
                       profileMode && editable ?
                         <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
@@ -219,13 +219,13 @@ class CardServiceUser extends React.Component {
                         </Grid>
                         :
                         <>
-                          <Grid className={profileMode ? classes.cardServiceCHipNameP : classes.cardServiceChipName}>
-                            <Chip label={alfred.firstname} avatar={<ListIconsSkills data={cpData} />} classes={{root: `customcardchipname ${classes.cardServiceChip}`}} />
+                          <Grid className={profileMode ? classes.cardServiceUserChipNamePro : classes.cardServiceUserChipName}>
+                            <Chip label={alfred.firstname} avatar={<ListIconsSkills data={cpData} />} classes={{root: `customcardchipname ${classes.cardServiceUserChip}`}} />
                           </Grid>
                           {
                             cpData.is_professional ?
-                              <Grid className={classes.cardServiceChipPro}>
-                                <Chip label={'Pro'} classes={{root: `customcardchippro ${classes.cardServiceChipBckg}`}}/>
+                              <Grid className={classes.cardServiceUserChipPro}>
+                                <Chip label={'Pro'} classes={{root: `customcardchippro ${classes.cardServiceUserChipBckg}`}}/>
                               </Grid> : null
                           }
                         </>
@@ -239,8 +239,8 @@ class CardServiceUser extends React.Component {
                   <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
                 </Grid>
                 { profileMode ? null :
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServicePlaceContainer}>
-                    <Grid className={classes.cardServicePlaceLogo}>
+                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserPlaceContainer}>
+                    <Grid className={classes.cardServiceUserPlaceLogo}>
                       <RoomIcon/>
                     </Grid>
                     <Grid className={classes.cardKmContainer}>
@@ -255,7 +255,7 @@ class CardServiceUser extends React.Component {
                         </>
                       }
                       <Grid style={{overflow: 'hidden'}}>
-                        <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
+                        <Typography className={classes.cardServiceUserDistance}>{cpData.city}</Typography>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -266,8 +266,8 @@ class CardServiceUser extends React.Component {
                       <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
                         <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : ReactHtmlParser(this.props.t('CARD_SERVICE.no_description'))}</Typography>
                       </Grid>
-                      <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceScoreAndButtonContainer}>
-                        <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceRatingContainer}>
+                      <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserScoreAndButtonContainer}>
+                        <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceUserRatingContainer}>
                           <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
                             { !hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length>0 ?
                               <Rating
@@ -279,17 +279,17 @@ class CardServiceUser extends React.Component {
                               :
                               null
                             }
-                            <Grid className={classes.cardServiceBoxRatingDisplay}>
-                              <Grid className={classes.cardServiceRating}>
+                            <Grid className={classes.cardServiceUserBoxRatingDisplay}>
+                              <Grid className={classes.cardServiceUserRating}>
                                 { !hideEmptyEvaluations() || notes.global && notes.global >0 ?
-                                  <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
+                                  <Typography className={classes.cardServiceUserLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
                                   :
                                   null
                                 }
                               </Grid>
                               <Grid>
                                 {!hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length >0 ?
-                                  <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
+                                  <Typography className={classes.cardServiceUserLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
                                   :
                                   null
                                 }
