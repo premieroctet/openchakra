@@ -1,3 +1,4 @@
+const {BOOK_STATUS, CESU_DISABLED, MANAGER} = require('../utils/consts')
 import Album from '../components/Album/Album'
 import {Divider, Link} from '@material-ui/core'
 const {
@@ -39,7 +40,6 @@ import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
 import CustomIcon from '../components/CustomIcon/CustomIcon'
 const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage = require('./basePage')
-const {BOOK_STATUS, MANAGER}=require('../utils/consts')
 const isEmpty = require('../server/validation/is-empty')
 const {computeDistanceKm} = require('../utils/functions')
 const {roundCurrency} = require('../utils/converters')
@@ -215,7 +215,7 @@ class UserServicesPreview extends BasePage {
                             st.flexible=shop.flexible_cancel
                             st.moderate=shop.moderate_cancel
                             st.strict=shop.strict_cancel
-                            st.use_cesu=shop.cesu !== 'Disabled'
+                            st.use_cesu=shop.cesu !== CESU_DISABLED
                             axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
                               .then(res => {
                                 let reviews = res.data
