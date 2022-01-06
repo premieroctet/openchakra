@@ -84,9 +84,6 @@ const filterServicesKeyword = (serviceUsers, keyword, status, dataFn=null) => {
     const regexp = regExpFn(keyword)
     const filteredServices = serviceUsers.filter(data => {
       const service=(dataFn && dataFn(data)) || data
-      if (service.label.includes('PAO')) {
-        console.log(`Service after:${JSON.stringify(service.prestations)}`)
-      }
       return regexp.test(service && service.s_label) ||
         regexp.test(service && normalize(service.label)) ||
         regexp.test(service && service.category && service.category[catLabel]) ||

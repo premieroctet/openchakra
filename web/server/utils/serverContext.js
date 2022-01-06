@@ -1,3 +1,4 @@
+const {isPlatform} = require('../../config/config')
 const MarketplacePayment = require('../plugins/payment/marketplacePayment')
 const PlatformPayment = require('../plugins/payment/platformPayment')
 const User=require('../models/User')
@@ -87,7 +88,7 @@ class RequestServerContext {
           console.error(err)
         })
     }
-    this.payment=new MarketplacePayment()
+    this.payment=isPlatform() ? new MarketplacePayment() : new PlatformPayment()
   }
 
   getUser = () => {
@@ -104,7 +105,6 @@ class RequestServerContext {
   }
 
 }
-
 
 const serverContextFromRequest = req => {
   return new RequestServerContext(req)

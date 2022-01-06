@@ -1,3 +1,4 @@
+const {isMarketplace} = require('../config/config')
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -13,6 +14,7 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import CardServiceUser from '../components/Card/CardServiceUser/CardServiceUser'
+import CardService from '../components/Card/CardService/CardService'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Layout from '../hoc/Layout/Layout'
 import withSlide from '../hoc/Slide/SlideShow'
@@ -28,7 +30,6 @@ const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage=require('./basePage')
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')
-const SearchResults=withSlide(withGrid(CardServiceUser))
 const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
 const lodash=require('lodash')
@@ -94,6 +95,18 @@ class SearchPage extends BasePage {
       scroll_count: 0,
     }
     this.SCROLL_DELTA=30
+  }
+
+  isServiceSearch = () => {
+    if (isMarketplace()) {
+      return false
+    }
+    // Simple search => services
+    // Search on booking  => providers
+    if (this.getURLProps().booking_id) {
+      return false
+    }
+    return true
   }
 
   componentDidUpdate(prevProps) {
@@ -313,7 +326,8 @@ class SearchPage extends BasePage {
 
     filters.status = isB2BStyle() ? PRO : PART
 
-    axios.post('/myAlfred/api/serviceUser/search', filters)
+    const search_url=this.isServiceSearch() ? '/myAlfred/api/service/search' : '/myAlfred/api/serviceUser/search'
+    axios.post(search_url, filters)
       .then(res => {
         let serviceUsers = res.data
         this.setState({serviceUsers: serviceUsers})
@@ -346,6 +360,8 @@ class SearchPage extends BasePage {
     const {width} = this.props
 
     const [cols, rows]={'xs': [100, 1], 'sm': [2, 3], 'md': [3, 3], 'lg': [4, 4], 'xl': [4, 3]}[width]
+
+    const SearchResults=withSlide(withGrid(this.isServiceSearch() ? CardService : CardServiceUser))
 
     return(
       <Grid>
@@ -415,7 +431,7 @@ class SearchPage extends BasePage {
                     {
                       [...Array(8)].map(() => (
                         <Grid item xl={3} lg={3} md={4} sm={6} xs={12}>
-                          <CardServiceUser loading={true}/>
+                          <CardService loading={true}/>
                         </Grid>
 
                       ))
@@ -440,7 +456,7 @@ class SearchPage extends BasePage {
                       >
                         {
                           serviceUsers.slice(0, scroll_count).map(su => (
-                            <CardServiceUser
+                            <CardService
                               key={su._id}
                               item={su._id}
                               gps={gps}

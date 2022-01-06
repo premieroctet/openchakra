@@ -124,7 +124,7 @@ class CardService extends React.Component {
                         variant={'contained'}
                         classes={{root: `customshoprofil ${classes.buttonShowProfil}`}}
                       >
-                        {ReactHtmlParser(this.props.t('CARD_SERVICE.button_show_profil'))}AAA
+                        {ReactHtmlParser(this.props.t('CARD_SERVICE.button_show_profil'))}
                       </CustomButton>
                     </Grid>
                   </Grid>
