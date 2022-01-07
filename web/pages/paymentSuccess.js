@@ -49,7 +49,7 @@ class paymentSuccess extends React.Component {
           .then(result => {
             let transaction = result.data
             console.log(`Transaction:${JSON.stringify(transaction)}`)
-            if (transaction.Status === 'FAILED') {
+            if (transaction.Status != 'SUCCEEDED') {
               return Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`)
             }
             this.setState({success: true})
