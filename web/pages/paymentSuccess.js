@@ -52,7 +52,7 @@ class paymentSuccess extends BasePage {
         return axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {mangopay_payin_status: transaction.Status})
       })
       .then(() => {
-        if (transaction.Status === 'FAILED') {
+        if (transaction.Status != 'SUCCEEDED') {
           return Router.push(`/paymentFailed?booking_id=${booking_id}`)
         }
         this.setState({success: true})
