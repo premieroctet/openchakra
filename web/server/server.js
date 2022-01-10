@@ -135,9 +135,9 @@ nextApp.prepare().then(() => {
   }
   // HTTPS server using certificates
   const httpsServer = https.createServer({
-    cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main-Certificate-x509.txt`),
-    key: fs.readFileSync(`${process.env.HOME}/.ssh/www_my-alfred_io.key`),
-    ca: fs.readFileSync(`${process.env.HOME}/.ssh/Intermediate-Certificate.txt`),
+    cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main.txt`),
+    key: fs.readFileSync(`${process.env.HOME}/.ssh/Key.txt`),
+    ca: fs.readFileSync(`${process.env.HOME}/.ssh/Intermediate.txt`),
   },
   app)
   const io = SocketIo(httpsServer)
