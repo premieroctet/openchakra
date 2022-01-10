@@ -1,5 +1,6 @@
 const Commission = require('../../models/Commission')
 const lodash=require('lodash')
+const {CESU_DISABLED}=require('../../../utils/consts')
 
 class PaymentBase {
 
@@ -13,7 +14,7 @@ class PaymentBase {
       Shop.findOne({alfred: serviceUser.user}, {cesu: 1})
         .then(shop => {
           let cesu=0
-          if (shop.cesu!='Disabled') {
+          if (shop.cesu!=CESU_DISABLED) {
             cesu= lodash.sum(serviceUser.prestations
               .filter(p => p.prestation.cesu_eligible)
               .map(p => p.price*(prestations[p._id] || 0))) || 0
