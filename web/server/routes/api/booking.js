@@ -471,11 +471,14 @@ router.post('/avocotes', (req, res) => {
       return req.context.getModel('User').findOneAndUpdate({email: req.body.email}, userData, {upsert: true, new: true})
     })
     .then(user => {
-      console.log(`Created DB user:${JSON.stringify(user)}`)
+      console.log(`Created/updated DB user:${JSON.stringify(user)}`)
+      if (user.id_mangopay) {
+        return Promise.resolve(user)
+      }
+      console.log(`Creating Mango user:${JSON.stringify(user)}`)
       return createMangoClient(user)
     })
     .then(user => {
-      console.log(`Created Mango user:${JSON.stringify(user)}`)
       return user.save()
     })
     .then(user => {

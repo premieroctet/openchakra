@@ -1,19 +1,17 @@
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
-import React from 'react'
-import axios from 'axios'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import Router from 'next/router'
 import {withStyles} from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import Router from 'next/router'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
 import io from 'socket.io-client'
 
+import {delayedPromise} from '../utils/promise'
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
 const {BOOK_STATUS}=require('../utils/consts')
-
-const {is_production, is_validation}=require('../config/config')
-const {snackBarError}=require('../utils/notifications')
+const {setAxiosAuthentication}=require('../utils/authentication')
 
 class paymentSuccess extends React.Component {
   constructor(props) {
@@ -45,7 +43,7 @@ class paymentSuccess extends React.Component {
       .then(res => {
         const booking = res.data
         this.setState({booking: booking})
-        axios.get(`/myAlfred/api/payment/payin/${booking.mangopay_payin_id}`)
+        delayedPromise(1000, () => axios.get(`/myAlfred/api/payment/payin/${booking.mangopay_payin_id}`))
           .then(result => {
             let transaction = result.data
             console.log(`Transaction:${JSON.stringify(transaction)}`)
