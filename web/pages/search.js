@@ -325,7 +325,9 @@ class SearchPage extends BasePage {
     }
 
     filters.status = isB2BStyle() ? PRO : PART
-
+    if (this.getURLProps().booking_id) {
+      filters.booking_id=this.getURLProps().booking_id
+    }
     const search_url=this.isServiceSearch() ? '/myAlfred/api/service/search' : '/myAlfred/api/serviceUser/search'
     axios.post(search_url, filters)
       .then(res => {
