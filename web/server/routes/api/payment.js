@@ -196,7 +196,7 @@ router.post('/avocotesPayIn', (req, res) => {
             Tag: `Booking ${booking.reference}`,
           })
             .then(payin => {
-              console.log(`Avocote PayIn created:${payin}`)
+              console.log(`Avocote PayIn created:${JSON.stringify(payin)}`)
               Booking.findByIdAndUpdate(bookingId, {mangopay_payin_id: payin.Id})
                 .then(() => console.log('booking update ok'))
                 .catch(err => console.error(`booking update error:${err}`))

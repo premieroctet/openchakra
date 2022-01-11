@@ -1,3 +1,4 @@
+const {delayedPromise} = require('../utils/promise')
 const {snackBarError} = require('../utils/notifications')
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
@@ -44,7 +45,7 @@ class paymentSuccess extends BasePage {
       .then(res => {
         booking = res.data
         this.setState({booking: booking})
-        return axios.get(`/myAlfred/api/payment/payin/${booking.mangopay_payin_id}`)
+        return delayedPromise(1000, () => axios.get(`/myAlfred/api/payment/payin/${booking.mangopay_payin_id}`))
       })
       .then(result => {
         transaction = result.data
@@ -52,7 +53,7 @@ class paymentSuccess extends BasePage {
         return axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {mangopay_payin_status: transaction.Status})
       })
       .then(() => {
-        if (transaction.Status === 'FAILED') {
+        if (transaction.Status != 'SUCCEEDED') {
           return Router.push(`/paymentFailed?booking_id=${booking_id}`)
         }
         this.setState({success: true})

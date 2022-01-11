@@ -1,14 +1,17 @@
 WebView:
 
 pré-requis:
-	-Installer Xcode
-	-CocoaPods(sudo gem install cocoapods)
-	-Installer Android Studio
+	Mac:
+		-Installer Xcode
+		-CocoaPods(sudo gem install cocoapods)
+	Android:
+		-Installer Android Studio
+		-Installer Android SDK
 
 
 Apple:
 
-1) Lancement de l'app:
+1) Lancement de l'app (émulation) dans le dossier webview:
 
 	a) Android :
 	- npx react-native start.
@@ -18,12 +21,12 @@ Apple:
 	b)IOS:
 	- Lancer Xcode.
 	- Ouvrir le dossier Ios dans Xcode.
-	- Choisir un device sur lequel lancé l'app (mobile ou emulateur).
-	- Cliqué sur la flèche en haut à gauche 'build'.
+	- Choisir un device sur lequel lancer l'app (mobile ou emulateur).
+	- Cliquer sur la flèche en haut à gauche 'build'.
 
 
 2) Mettre l'app sur l'appleStoreConnect:
-
+	Commandes dans Xcode (boutons)
 	-Product/Archive
 	-Validate App
 	-Distribute App
@@ -58,6 +61,7 @@ Apple:
 4) Release APK 
 
 	Terminal:
+		- cd webview && yarn install
 		- cd android
 		- windows : gradlew assembleRelease, linux/max : ./gradlew assembleRelease
 	AndroidStudio:
@@ -79,5 +83,14 @@ Apple:
 	Source: 
 	-https://medium.com/better-programming/react-native-add-app-icons-and-launch-screens-onto-ios-and-android-apps-3bfbc20b7d4c
 	-https://medium.com/handlebar-labs/how-to-add-a-splash-screen-to-a-react-native-app-ios-and-android-30a3cec835ae
+	
+	Android:
+	  - icon appli: webvew/app/src/main/res/mipmap*/ic_launcher.png
+	  - splash screen: webvew/app/src/main/res/mipmap*/icon.png
+	  
+	IOS:
+	  - Générateur dans XCode
+	  
+	  
 
 
