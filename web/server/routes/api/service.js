@@ -95,17 +95,15 @@ router.get('/allCount', (req, res) => {
 // @Route GET /myAlfred/api/service/:id
 // View one service
 router.get('/:id', (req, res) => {
-
   Service.findById(req.params.id)
-    .populate('equipments')
     .populate('category')
+    .populate('prestations')
+    .populate('equipments')
     .then(service => {
-      if (Object.keys(service).length === 0 && service.constructor === Object) {
+      if (!service) {
         return res.status(400).json({msg: 'No service found'})
       }
       res.json(service)
-
-
     })
     .catch(err => {
       console.error(err)

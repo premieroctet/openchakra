@@ -133,7 +133,7 @@ class DrawerBooking extends React.Component {
     const {warningPerimeter, warningBudget, warningSelf, side, classes, service, alfred, date, time, errors,
       count, serviceUser, isChecked, location, pick_tax, total, customer_fee,
       cesu_total, filters, pricedPrestations, excludedDays, role, company_amount,
-      avocotes, all_avocotes, alfred_pro} = this.props
+      avocotes, all_avocotes, alfred_pro, title, serviceMode} = this.props
 
     const excludedTimes = this.getExcludedTimes()
 
@@ -157,7 +157,7 @@ class DrawerBooking extends React.Component {
             <Grid style={{marginBottom: 30}}>
               <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                 <Grid>
-                  <Typography variant='h6' style={{color: '#505050', fontWeight: 'bold'}}>{service.label} - {alfred.firstname}</Typography>
+                  <Typography variant='h6' style={{color: '#505050', fontWeight: 'bold'}}>{title}</Typography>
                 </Grid>
                 <Grid className={classes.hideOnBigSreen}>
                   <IconButton aria-label='Edit' className={classes.iconButtonStyle}>
@@ -266,7 +266,7 @@ class DrawerBooking extends React.Component {
                   <Typography style={{color: '#505050'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_place'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                  { serviceUser.location && this.props.isInPerimeter() &&
+                  { serviceMode || (serviceUser.location && this.props.isInPerimeter()) &&
                     <Grid>
                       <ButtonSwitch
                         key={moment()}
@@ -280,12 +280,12 @@ class DrawerBooking extends React.Component {
                     </Grid>
                   }
                   {
-                    serviceUser.location && serviceUser.location.alfred && alfred.firstname &&
+                    (serviceMode || (serviceUser.location && serviceUser.location.alfred && alfred.firstname)) &&
                       <Grid>
                         <ButtonSwitch
                           key={moment()}
                           id='alfred'
-                          label={`Chez ${ alfred.firstname}`}
+                          label={`Chez ${serviceMode ? 'le prestataire' : alfred.firstname}`}
                           isEditable={false}
                           isPrice={false}
                           isOption={false}

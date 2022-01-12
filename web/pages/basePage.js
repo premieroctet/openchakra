@@ -3,10 +3,6 @@ import parse from 'url-parse'
 
 class BasePage extends React.Component {
 
-  constructor(props) {
-    super(props)
-  }
-
   getURLProps = () => {
     if (typeof window=='undefined') {
       return {}

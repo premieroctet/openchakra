@@ -57,10 +57,13 @@ class CardService extends React.Component {
   }
 
   render() {
-    const {classes, loading} = this.props
+    const {classes, loading, address} = this.props
     const {cpData} = this.state
 
-    let resa_link = `/userServicePreview?id=${cpData._id}`
+    let resa_link = `/servicePreview?id=${cpData._id}`
+    if (address) {
+      resa_link+=`&address=${address}`
+    }
     if (this.props.item===null) {
       return (
         <Grid className={`customcardinfocont ${classes.carServiceInfoContainer}`}>

@@ -24,7 +24,7 @@ class InfoWithPics extends React.Component {
     return (
       <Grid>
         {
-          data ?
+          data &&
             <Grid className={classes.infoWithPicsMainContainer}>
               {
                 data.IconName ?
@@ -69,7 +69,7 @@ class InfoWithPics extends React.Component {
                     }
                   </Grid> : null
               }
-            </Grid> : null
+            </Grid>
         }
 
       </Grid>

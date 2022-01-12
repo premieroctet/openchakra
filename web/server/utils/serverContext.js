@@ -88,7 +88,7 @@ class RequestServerContext {
           console.error(err)
         })
     }
-    this.payment=isPlatform() ? new MarketplacePayment() : new PlatformPayment()
+    this.payment=isPlatform() ? new PlatformPayment() : new MarketplacePayment()
   }
 
   getUser = () => {
