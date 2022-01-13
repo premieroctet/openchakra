@@ -41,6 +41,21 @@ class UserServicePreview extends BookingBase {
     this.setState({location: location})
   }
 
+  computePricedPrestations = () => {
+    const {count, prestations}=this.state
+    let result = Object.fromEntries(prestations.filter(p => count[p._id]).map(p => [p.prestation.label, count[p._id] * p.price]))
+    return result
+  }
+
+  convertPrestation = p => {
+    return {
+      label: p.prestation.label,
+      cesu_eligible: p.prestation.cesu_eligible,
+      billing: p.billing,
+      price: p.price,
+      _id: p._id,
+    }
+  }
 }
 
 module.exports=withTranslation('custom', {withRef: true})(withStyles(styles)(UserServicePreview))

@@ -48,6 +48,16 @@ class ServicePreview extends BookingBase {
     this.setState({location: location})
   }
 
+  computePricedPrestations = () => {
+    const {count, prestations}=this.state
+    let result = Object.fromEntries(prestations.filter(p => count[p._id]).map(p => [p.label, count[p._id] * p.company_price]))
+    return result
+  }
+
+  convertPrestation = p => {
+    return {...p, price: p.company_price}
+  }
+
 }
 
 export default withTranslation('custom', {withRef: true})(withStyles(styles)(ServicePreview))

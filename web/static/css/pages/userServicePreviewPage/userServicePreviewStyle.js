@@ -97,7 +97,7 @@ export default theme => ({
     },
   },
   equipmentsContainer: {
-    marginTop: '15%',
+    marginTop: '5%',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',

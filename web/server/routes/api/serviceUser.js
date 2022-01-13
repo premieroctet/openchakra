@@ -1000,5 +1000,19 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
     })
 })
 
+// @Route POST /myAlfred/api/serviceUser/compute
+// Computes total price and fees for serviceUser booking
+// @Access public
+router.post('/compute', (req, res) => {
+
+  req.context.payment.compute(req.body)
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(JSON.stringify(err))
+    })
+})
 
 module.exports = router

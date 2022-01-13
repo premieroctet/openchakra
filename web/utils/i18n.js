@@ -124,6 +124,7 @@ const USERSERVICEPREVIEW = {
   button_show_profil: 'Voir le profil',
   topic_description: 'Description',
   topic_description_summary: "Cet utilisateur n'a pas encore de description.",
+  service_no_description: "Ce service n'a pas encore de description.",
   topic_list_label: 'Délai de prévenance',
   topic_list_summary: ' a besoin de ',
   topic_list_summary_end: ' pour préparer son service',

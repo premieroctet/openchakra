@@ -118,9 +118,9 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.equipments = req.body.equipments
   bookingFields.amount = req.body.amount
   bookingFields.company_amount = req.body.company_amount
-  bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred)
-  bookingFields.user = mongoose.Types.ObjectId(req.body.user)
-  bookingFields.chatroom = mongoose.Types.ObjectId(req.body.chatroom)
+  bookingFields.alfred = req.body.alfred
+  bookingFields.user = req.body.user
+  bookingFields.chatroom = req.body.chatroom
   bookingFields.prestation_date = moment(req.body.prestation_date)
   bookingFields.prestations = req.body.prestations
   bookingFields.customer_fees = req.body.customer_fees
@@ -255,19 +255,6 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
         })
     })
 })
-
-router.post('/compute', (req, res) => {
-
-  req.context.payment.compute(req.body)
-    .then(result => {
-      res.json(result)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(500).json(JSON.stringify(err))
-    })
-})
-
 
 // @Route GET /myAlfred/booking/:id
 // View one booking

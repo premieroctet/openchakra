@@ -106,6 +106,7 @@ const BookingSchema = new Schema({
   chatroom: {
     type: Schema.Types.ObjectId,
     ref: 'chatRoom',
+    required: false,
   },
   fileUpload: [{
     type: Schema.Types.Mixed,

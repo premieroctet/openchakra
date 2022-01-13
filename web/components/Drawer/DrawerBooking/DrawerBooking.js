@@ -47,12 +47,12 @@ class DrawerBooking extends React.Component {
   }
 
   selectedPresta = prestations => (
-    lodash.sortBy(prestations, p => (p && p.prestation ? p.prestation.order: 0)).map((p, index) => (
+    lodash.sortBy(prestations, p => p.order || 0).map((p, index) => (
       <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
         <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
           <Grid container style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
-              <Typography>{p.prestation.label}</Typography>
+              <Typography>{p.label}</Typography>
             </Grid>
             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <Grid>
@@ -67,7 +67,7 @@ class DrawerBooking extends React.Component {
                 <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
               </Grid>
             </Grid>
-            {p.prestation.cesu_eligible && this.props.use_cesu ?
+            {p.cesu_eligible && this.props.use_cesu ?
               <Grid>
                 <Typography style={{color: 'rgba(39,37,37,35%)'}}><em>
                   {ReactHtmlParser(this.props.t(this.props.alfred_pro ? 'PRESTATION.cis_eligible': 'PRESTATION.cesu_eligible'))}
@@ -80,7 +80,7 @@ class DrawerBooking extends React.Component {
         <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
           <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <Grid>
-              <IconButton onClick={this.props.onQtyChanged('remove', p._id)}>
+              <IconButton onClick={this.props.onQtyChanged(p._id, -1)}>
                 <RemoveIcon/>
               </IconButton>
             </Grid>
@@ -88,7 +88,7 @@ class DrawerBooking extends React.Component {
               <Typography>{this.props.count[p._id] ? this.props.count[p._id] : 0}</Typography>
             </Grid>
             <Grid>
-              <IconButton onClick={this.props.onQtyChanged('add', p._id)}>
+              <IconButton onClick={this.props.onQtyChanged(p._id, 1)}>
                 <AddIcon/>
               </IconButton>
             </Grid>
@@ -266,7 +266,7 @@ class DrawerBooking extends React.Component {
                   <Typography style={{color: '#505050'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_place'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                  { serviceMode || (serviceUser.location && this.props.isInPerimeter()) &&
+                  { (serviceMode || (serviceUser.location && this.props.isInPerimeter())) &&
                     <Grid>
                       <ButtonSwitch
                         key={moment()}

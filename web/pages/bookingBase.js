@@ -1,3 +1,5 @@
+const {is_development} = require('../config/config')
+const i18n = require('../utils/i18n')
 const {BOOK_STATUS, CESU_DISABLED, MANAGER} = require('../utils/consts')
 import Album from '../components/Album/Album'
 import {Divider, Link} from '@material-ui/core'
@@ -69,7 +71,7 @@ class BookingBase extends BasePage {
       strict: false,
       availabilities: [],
       bottom: false,
-      count: {},
+      count: is_development() ? {'61684e0c2a7ca01a4cb50bf2': 2} : {},
       totalPrestations: 0,
       customer_fee: 0,
       provider_fee: 0,
@@ -78,8 +80,8 @@ class BookingBase extends BasePage {
       company_amount: 0,
       company_percent: 0,
       location: null,
-      date: null,
-      time: null,
+      date: is_development() ? new moment().add(1, 'day').toDate() : null,
+      time: is_development() ? new Date() : null,
       skills: {
         careful: 0,
         punctual: 0,
@@ -132,7 +134,7 @@ class BookingBase extends BasePage {
     this.loadData()
       .then(res => {
         let serviceUser = res.data
-        let count = Object.fromEntries(serviceUser.prestations.map(p => [p._id, null]))
+        let count = this.state.count || {} //Object.fromEntries(serviceUser.prestations.map(p => [p._id, null]))
 
         if (bookingObj) {
           serviceUser.prestations.forEach(p => {
@@ -253,10 +255,10 @@ class BookingBase extends BasePage {
                   serviceUser: serviceUser,
                   service: serviceUser.service,
                   prestations: serviceUser.prestations,
-                  alfred: serviceUser.user,
+                  alfred: this.serviceMode ? null : serviceUser.user,
                   pick_tax: null,
-                  date: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date, 'DD/MM/YYYY').toDate() : null,
-                  time: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date).toDate() : null,
+                  date: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date, 'DD/MM/YYYY').toDate() : this.state.date,
+                  time: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date).toDate() : this.state.time,
                   location: bookingObj ? bookingObj.location : null,
                   customer_fee: bookingObj ? bookingObj.customer_fee : null,
                   provider_fee: bookingObj ? bookingObj.provider_fee : null,
@@ -395,10 +397,10 @@ class BookingBase extends BasePage {
         let filter = (this.serviceMode ? p : p.prestation).filter_presentation
         let key = !filter || filter.label === 'Aucun' ? '' : filter.label
         if (key in result) {
-          result[key].push(p)
+          result[key].push(this.convertPrestation(p))
         }
         else {
-          result[key] = [p]
+          result[key] = [this.convertPrestation(p)]
         }
       }
     })
@@ -438,7 +440,7 @@ class BookingBase extends BasePage {
     this.onChange({target: {name: 'location', value: checked ? id : null}})
   }
 
-  onQtyChanged = (state, id) => () => {
+  onQtyChanged = (id, offset) => () => {
     let value = this.state.count[id]
     if (!value) {
       value = null
@@ -446,13 +448,7 @@ class BookingBase extends BasePage {
     value = parseInt(value)
     value = !isNaN(value) && value >= 0 ? value : null
     let count = this.state.count
-    if(state=== 'add') {
-      count[id] = value + 1
-
-    }
-    else{
-      count[id] = Math.max(0, value - 1)
-    }
+    count[id] = Math.max(0, value+offset)
     this.setState({count: count}, () => this.computeTotal())
   }
 
@@ -468,7 +464,8 @@ class BookingBase extends BasePage {
     const avocotes_amount = avocotes ? avocotes.amount : null
 
     setAxiosAuthentication()
-    axios.post('/myAlfred/api/booking/compute', {
+    const computeUrl=this.serviceMode ? '/myAlfred/api/service/compute' : '/myAlfred/api/serviceUser/compute'
+    axios.post(computeUrl, {
       prestations: count,
       serviceUser: serviceUser._id,
       distance: this.serviceMode ? 0 : this.computeDistance(),
@@ -597,7 +594,7 @@ class BookingBase extends BasePage {
     let prestations = []
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
-        prestations.push({price: p.price, value: count[p._id], name: p.prestation.label})
+        prestations.push({price: this.serviceMode ? p.company_price : p.price, value: count[p._id], name: this.serviceMode ? p.label : p.prestation.label})
       }
     })
 
@@ -621,16 +618,16 @@ class BookingBase extends BasePage {
     const prestation_date=date.set('hours', time.hours()).set('minutes', time.minutes()).set('seconds', 0)
 
     let bookingObj = {
-      reference: user ? computeBookingReference(user, this.state.serviceUser.user) : '',
-      service: this.state.serviceUser.service.label,
-      serviceId: this.state.serviceUser.service._id,
+      reference: user ? computeBookingReference(user, this.serviceMode ? user : this.state.serviceUser.user) : '',
+      service: (this.serviceMode ? this.state.serviceUser : this.state.serviceUser.service).label,
+      serviceId: (this.serviceMode ? this.state.serviceUser : this.state.serviceUser.service)._id,
       address: avocotes_booking ? avocotes_booking.address : place,
       location: this.state.location,
       availableEquipments: this.state.serviceUser.equipments,
       amount: this.state.total,
       company_amount: this.state.company_amount,
       prestation_date: prestation_date,
-      alfred: this.state.serviceUser.user._id,
+      alfred: this.serviceMode ? null : this.state.serviceUser.user._id,
       user: user ? user._id : null,
       prestations: prestations,
       travel_tax: this.state.travel_tax,
@@ -641,23 +638,21 @@ class BookingBase extends BasePage {
       customer_fees: this.state.customer_fees,
       provider_fees: this.state.provider_fees,
       status: avocotes_booking ? BOOK_STATUS.TO_CONFIRM : actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
-      serviceUserId: this.state.serviceUser._id,
+      serviceUserId: this.serviceMode ? null : this.state.serviceUser._id,
       customer_booking: avocotes_booking ? avocotes_booking._id : null,
     }
 
-    let chatPromise = !user ?
-      Promise.resolve({res: null})
-      :
+    let chatPromise = (user&&!this.serviceMode) ?
       axios.post('/myAlfred/api/chatRooms/addAndConnect', {
         emitter: this.state.user._id,
         recipient: this.state.serviceUser.user._id,
       })
+      :
+      Promise.resolve({res: null})
 
     chatPromise.then(res => {
 
-      if (user) {
-        bookingObj.chatroom = res.data._id
-      }
+      bookingObj.chatroom = (res.data && res.data._id) || null
 
       localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
 
@@ -668,6 +663,7 @@ class BookingBase extends BasePage {
       }
 
       this.setState({pending: true})
+      alert(`BookingObj:${typeof bookingObj.chatroom}`)
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
           const booking = response.data
@@ -696,17 +692,6 @@ class BookingBase extends BasePage {
       return dl
     }
     return dl.replace('jours', 'jour(s)').replace('semaines', 'semaine(s)').replace('heures', 'heure(s)')
-  }
-
-  computePricedPrestations = () => {
-    const count = this.state.count
-    let result = {}
-    this.state.prestations.forEach(p => {
-      if (count[p._id]) {
-        result[p.prestation.label] = count[p._id] * p.price
-      }
-    })
-    return result
   }
 
   // TODO : force computing disponibility
@@ -739,6 +724,8 @@ class BookingBase extends BasePage {
 
     let listCondition=null
 
+    const emptyDescriptionTitle = this.serviceMode ? i18n.USERSERVICEPREVIEW.service_no_description : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description_summary'))
+
     if (!this.serviceMode) {
       listCondition = [
         {
@@ -767,13 +754,13 @@ class BookingBase extends BasePage {
             <Grid container className={classes.widthContainer}>
               <Grid item lg={6} xs={12} className={classes.leftContainer}>
                 <Grid container className={classes.avatarAnDescription}>
+                  {!this.serviceMode &&
                   <Grid item sm={3} className={classes.avatarContainer}>
-                    {!this.serviceMode &&
-                      <Grid item className={classes.itemAvatar}>
-                        <UserAvatar user={alfred} animateStartup={true}/>
-                      </Grid>
-                    }
+                    <Grid item className={classes.itemAvatar}>
+                      <UserAvatar user={alfred} animateStartup={true}/>
+                    </Grid>
                   </Grid>
+                  }
                   <Grid item sm={9} className={classes.flexContentAvatarAndDescription}>
                     <Grid className={classes.marginAvatarAndDescriptionContent}>
                       <Grid container spacing={1} style={{margin: 0, width: '100%'}}>
@@ -822,7 +809,7 @@ class BookingBase extends BasePage {
                         <h3>{ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description'))}</h3>
                       </Grid>
                       <Grid>
-                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>{this.state.serviceUser.description ? this.state.serviceUser.description : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description_summary'))}</Typography>
+                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>{this.state.serviceUser.description || emptyDescriptionTitle}</Typography>
                       </Grid>
                       <Grid>
                         <CustomListGrades grade={this.state.serviceUser.grade_text} insurance={this.state.shop.insurance_text}/>
@@ -869,7 +856,7 @@ class BookingBase extends BasePage {
                     </Topic>
                   </Grid>
                 }
-                {this.state.allEquipments.length !== 0 ?
+                {this.state.allEquipments.length !== 0 &&
                   <Grid className={classes.equipmentsContainer}>
                     <Topic
                       titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_stuff'))}
@@ -887,11 +874,11 @@ class BookingBase extends BasePage {
                         equipmentsSelected={this.state.availableEquipments}
                       />
                     </Topic>
-                  </Grid> : null
+                  </Grid>
                 }
-                <Grid className={`custompreviewbookingmap ${classes.perimeterContent}`}>
-                  {
-                    this.state.serviceUser && this.state.serviceUser.service_address ?
+                {
+                  this.state.serviceUser && this.state.serviceUser.service_address ?
+                    <Grid className={`custompreviewbookingmap ${classes.perimeterContent}`}>
                       <Grid style={{width: '100%'}}>
                         <Topic
                           underline={true}
@@ -903,9 +890,9 @@ class BookingBase extends BasePage {
                             perimeter={this.state.serviceUser.perimeter * 1000}
                           />
                         </Topic>
-                      </Grid> : ''
-                  }
-                </Grid>
+                      </Grid>
+                    </Grid> : ''
+                }
                 {!this.serviceMode &&
                   <Grid style={{height: '300px'}}>
                     <Album user={alfred._id} key={moment()} underline={true} readOnly={true}/>
@@ -988,7 +975,7 @@ class BookingBase extends BasePage {
           <Grid style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
               {
-                this.state.reviews.length === 0 ? null :
+                this.state.reviews.length > 0 &&
                   <Grid style={{marginTop: '5%'}}>
                     <Topic
                       underline={true}
@@ -1012,7 +999,7 @@ class BookingBase extends BasePage {
   render() {
     const {classes} = this.props
     const {address} = this.getURLProps()
-    const {service, alfred, user} = this.state
+    const {user} = this.state
 
     if (!this.state.serviceUser) {
       return null

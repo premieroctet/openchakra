@@ -268,4 +268,37 @@ router.get('/cardPreview/:id', (req, res) => {
 })
 
 
+// @Route POST /myAlfred/api/serviceUser/compute
+// Computes total price and fees for serviceUser booking
+// @Access public
+router.post('/compute', (req, res) => {
+
+  // Just sum prestations prices
+  const valued_prestas = lodash.pickBy(req.body.prestations, value => !!value)
+  Prestation.find({_id: {$in: Object.keys(valued_prestas)}}, {company_price: 1})
+    .then(prestations => {
+      const total=lodash.sumBy(prestations.filter(p => !!p.company_price), p => p.company_price*valued_prestas[p._id.toString()])
+      res.json({
+        total_prestations: total,
+        travel_tax: 0,
+        pick_tax: 0,
+        // Fees array
+        customer_fees: [],
+        // Fees total
+        customer_fee: 0,
+        // Fees array
+        provider_fees: [],
+        // Fees total
+        provider_fee: 0,
+        total_cesu: 0,
+        total: total,
+      })
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+
 module.exports = router
