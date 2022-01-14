@@ -235,6 +235,10 @@ BookingSchema.virtual('provider_fee').get(function() {
   return lodash.sum(this.provider_fees.map(c => c.amount))
 })
 
+BookingSchema.virtual('is_service').get(function() {
+  return !this.alfred || !this.serviceUserId
+})
+
 BookingSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = Booking = mongoose.model('booking', BookingSchema)

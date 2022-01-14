@@ -17,6 +17,7 @@ import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import axios from 'axios'
 import UserAvatar from '../components/Avatar/UserAvatar'
+import ServiceAvatar from '../components/Avatar/ServiceAvatar'
 import Typography from '@material-ui/core/Typography'
 import Schedule from '../components/Schedule/Schedule'
 import Drawer from '@material-ui/core/Drawer'
@@ -80,8 +81,7 @@ class BookingBase extends BasePage {
       company_amount: 0,
       company_percent: 0,
       location: null,
-      date: is_development() ? new moment().add(1, 'day').toDate() : null,
-      time: is_development() ? new Date() : null,
+      prestation_date: is_development() ? new moment().add(1, 'day').toDate() : null,
       skills: {
         careful: 0,
         punctual: 0,
@@ -134,7 +134,7 @@ class BookingBase extends BasePage {
     this.loadData()
       .then(res => {
         let serviceUser = res.data
-        let count = this.state.count || {} //Object.fromEntries(serviceUser.prestations.map(p => [p._id, null]))
+        let count = this.state.count || {} // Object.fromEntries(serviceUser.prestations.map(p => [p._id, null]))
 
         if (bookingObj) {
           serviceUser.prestations.forEach(p => {
@@ -257,8 +257,7 @@ class BookingBase extends BasePage {
                   prestations: serviceUser.prestations,
                   alfred: this.serviceMode ? null : serviceUser.user,
                   pick_tax: null,
-                  date: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date, 'DD/MM/YYYY').toDate() : this.state.date,
-                  time: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date).toDate() : this.state.time,
+                  prestation_date: bookingObj && bookingObj.prestation_date ? bookingObj.prestation_date : this.state.date,
                   location: bookingObj ? bookingObj.location : null,
                   customer_fee: bookingObj ? bookingObj.customer_fee : null,
                   provider_fee: bookingObj ? bookingObj.provider_fee : null,
@@ -288,17 +287,6 @@ class BookingBase extends BasePage {
       currMoment.add(1, 'd')
     }
     return exclude
-  }
-
-
-  computeReservationDate = () => {
-    let dt = moment(this.state.date)
-    let tm = moment(this.state.time)
-    if (!dt.isValid() || !tm.isValid()) {
-      return null
-    }
-    dt.hour(tm.hour()).minute(tm.minute())
-    return dt
   }
 
   getAvocotesBooking = () => {
@@ -344,15 +332,11 @@ class BookingBase extends BasePage {
       errors.prestations = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_minimum_basket', {minimum_basket: this.state.serviceUser.minimum_basket}))
     }
 
-    if (!errors.datetime && this.state.date == null) {
+    if (!errors.datetime && this.state.prestation_date == null) {
       errors.datetime = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_select_date'))
     }
 
-    if (!errors.datetime && this.state.time == null) {
-      errors.datetime = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_select_hour'))
-    }
-
-    const reservationDate = this.computeReservationDate()
+    const reservationDate = this.state.prestation_date
     if (!errors.datetime && reservationDate.isValid() && !isMomentAvailable(reservationDate, this.state.availabilities)) {
       errors.datetime = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_not_available', {firstname: this.state.alfred.firstname}))
     }
@@ -415,11 +399,21 @@ class BookingBase extends BasePage {
   }
 
   onChangeTime = tm => {
-    this.onChange({target: {name: 'time', value: tm}})
+    const mmt=moment(tm)
+    const {prestation_date}=this.state
+    if (prestation_date) {
+      mmt.set({hour: mmt.hour, minute: mmt.minute})
+    }
+    this.onChange({target: {name: 'prestation_date', value: mmt}})
   }
 
   onChangeDate = dt => {
-    this.onChange({target: {name: 'date', value: dt}})
+    const mmt=moment(dt)
+    const {prestation_date}=this.state
+    if (prestation_date) {
+      mmt.set({year: mmt.year, month: mmt.month, date: mmt.date})
+    }
+    this.onChange({target: {name: 'prestation_date', value: mmt}})
   }
 
   onChange = event => {
@@ -613,10 +607,6 @@ class BookingBase extends BasePage {
 
     const avocotes_booking = this.getAvocotesBooking()
 
-    const date=moment(this.state.date)
-    const time=moment(this.state.time)
-    const prestation_date=date.set('hours', time.hours()).set('minutes', time.minutes()).set('seconds', 0)
-
     let bookingObj = {
       reference: user ? computeBookingReference(user, this.serviceMode ? user : this.state.serviceUser.user) : '',
       service: (this.serviceMode ? this.state.serviceUser : this.state.serviceUser.service).label,
@@ -626,7 +616,7 @@ class BookingBase extends BasePage {
       availableEquipments: this.state.serviceUser.equipments,
       amount: this.state.total,
       company_amount: this.state.company_amount,
-      prestation_date: prestation_date,
+      prestation_date: this.state.prestation_date,
       alfred: this.serviceMode ? null : this.state.serviceUser.user._id,
       user: user ? user._id : null,
       prestations: prestations,
@@ -663,7 +653,6 @@ class BookingBase extends BasePage {
       }
 
       this.setState({pending: true})
-      alert(`BookingObj:${typeof bookingObj.chatroom}`)
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
           const booking = response.data
@@ -754,13 +743,15 @@ class BookingBase extends BasePage {
             <Grid container className={classes.widthContainer}>
               <Grid item lg={6} xs={12} className={classes.leftContainer}>
                 <Grid container className={classes.avatarAnDescription}>
-                  {!this.serviceMode &&
                   <Grid item sm={3} className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
-                      <UserAvatar user={alfred} animateStartup={true}/>
+                      { this.serviceMode ?
+                        <ServiceAvatar service={serviceUser}/>
+                        :
+                        <UserAvatar user={alfred} animateStartup={true}/>
+                      }
                     </Grid>
                   </Grid>
-                  }
                   <Grid item sm={9} className={classes.flexContentAvatarAndDescription}>
                     <Grid className={classes.marginAvatarAndDescriptionContent}>
                       <Grid container spacing={1} style={{margin: 0, width: '100%'}}>

@@ -130,7 +130,7 @@ class DrawerBooking extends React.Component {
   render() {
 
     const {expanded} = this.state
-    const {warningPerimeter, warningBudget, warningSelf, side, classes, service, alfred, date, time, errors,
+    const {warningPerimeter, warningBudget, warningSelf, side, classes, service, alfred, prestation_date, errors,
       count, serviceUser, isChecked, location, pick_tax, total, customer_fee,
       cesu_total, filters, pricedPrestations, excludedDays, role, company_amount,
       avocotes, all_avocotes, alfred_pro, title, serviceMode} = this.props
@@ -176,7 +176,7 @@ class DrawerBooking extends React.Component {
                         inputComponent: () => {
                           return (
                             <DatePicker
-                              selected={date}
+                              selected={prestation_date && prestation_date.toDate() || null}
                               dateFormat='dd/MM/yyyy'
                               onChange={this.props.onChangeDate}
                               placeholderText='Date'
@@ -201,7 +201,7 @@ class DrawerBooking extends React.Component {
                         inputComponent: () => {
                           return (
                             <DatePicker
-                              selected={time}
+                              selected={prestation_date && prestation_date.toDate() || null}
                               onChange={this.props.onChangeTime}
                               showTimeSelect
                               showTimeSelectOnly
@@ -369,7 +369,7 @@ class DrawerBooking extends React.Component {
                       <Typography>{this.props.getLocationLabel()}</Typography>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
-                      <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
+                      <Typography>{prestation_date ? prestation_date.format('Le DD/MM/YYYY à HH:mm') : ''}</Typography>
                     </Grid>
                   </Grid>
                   <Grid style={{display: 'flex', flexDirection: 'column'}}>
