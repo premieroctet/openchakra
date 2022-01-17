@@ -1,4 +1,6 @@
+const { canAlfredParticularRegister } = require('../../config/config');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 const {CESU, INSURANCE_TYPES} = require('../../utils/consts')
 const {hideIllegal} = require('../../utils/text')
@@ -73,7 +75,7 @@ const ShopSchema = new Schema({
         type: String,
       },
     },
-    required: true,
+    required: !canAlfredParticularRegister(),
   },
   services: [{
     type: Schema.Types.ObjectId,
