@@ -31,7 +31,7 @@ class DrawerBookingRecap extends React.Component {
 
     const{pricedPrestations, countPrestations, grandTotal, customer_fee, travel_tax,
       classes, pick_tax, cesu_total, mode, prestations, bookingObj,
-      user, id_card, activeStep, pending, alfred_pro} = this.props
+      alfred, id_card, activeStep, pending, alfred_pro} = this.props
 
     return(
       <Grid>
@@ -41,7 +41,9 @@ class DrawerBookingRecap extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <Typography>{bookingObj.service} par {user.firstname}</Typography>
+              <Typography>{bookingObj.service}
+              {!bookingObj.is_service && `par ${alfred.firstname}}`}
+              </Typography>
             </Grid>
             <Grid>
               <Typography><strong>{booking_datetime_str(bookingObj)}</strong></Typography>

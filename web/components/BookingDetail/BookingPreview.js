@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
 import UserAvatar from '../../components/Avatar/UserAvatar'
+import ServiceAvatar from '../../components/Avatar/ServiceAvatar'
 import io from 'socket.io-client'
 import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview'
 import BookingDetail from '../../components/BookingDetail/BookingDetail'
@@ -88,7 +89,7 @@ class BookingPreview extends React.Component {
         this.setState(
           {
             booking: booking,
-            is_alfred: booking.alfred._id === result._id,
+            is_alfred: booking.alfred && booking.alfred._id === result._id,
             end_datetime: end_datetime,
           },
         )
@@ -217,7 +218,7 @@ class BookingPreview extends React.Component {
 
   routingDetailsMessage() {
     const {currentUser, booking} = this.state
-    const displayUser = currentUser._id === booking.alfred._id ? booking.user : booking.alfred
+    const displayUser = currentUser._id === booking.user._id ? (booking.alfred || null) : booking.user
     Router.push({
       pathname: '/profile/messages',
       query: {
@@ -251,7 +252,7 @@ class BookingPreview extends React.Component {
     const customer_fee = is_alfred ? 0 : booking.customer_fee
 
     // Am i the service provider ?
-    const amIAlfred = currentUser._id === booking.alfred._id
+    const amIAlfred = !booking.is_service && (currentUser._id == booking.alfred._id)
     const displayUser = amIAlfred ? booking.user : booking.alfred
 
     const status = booking.status
@@ -277,27 +278,29 @@ class BookingPreview extends React.Component {
       :
       booking_datetime_str(booking)
 
-    const phone = amIAlfred ? booking.user.phone : booking.alfred.phone
+    const phone = booking.is_service ? '' : amIAlfred ? booking.user.phone : booking.alfred.phone 
     const customer_booking_title = booking.customer_booking && ReactHtmlParser(this.props.t('BOOKING.avocotes_resa')) + booking.customer_booking.user.full_name
 
+	if (currentUser._id != booking.user._id || (booking.alfred && booking.alfred._id != currentUser._id)) {
+      return (
+        <Typography>{ReactHtmlParser(this.props.t('BOOKING.disabled_user_access'))}</Typography>
+      )
+	}
     return (
       <Grid>
-        {currentUser._id !==
-        booking.alfred._id && currentUser._id !== booking.user._id ? (
-            <Typography>{ReactHtmlParser(this.props.t('BOOKING.disabled_user_access'))}</Typography>
-          ) : (
             <Grid>
               <Grid container className={classes.bigContainer}>
                 <Grid container>
                   <Grid className={classes.Rightcontent} item xs={12} sm={12} md={12} xl={12} lg={12}>
                     <Grid container className={classes.mobilerow}>
                       <Grid item xs={2} sm={3} md={3} xl={3} lg={3}>
-                        <UserAvatar user={displayUser}/>
+                        { /** TODO get service for ServiceAvatar */ }
+                        {booking.is_service ? <ServiceAvatar service={{label: booking.service}}/>:  <UserAvatar user={displayUser}/>}
                       </Grid>
                       <Grid item xs={9} sm={9} md={9} xl={9} lg={9}>
                         <Grid>
                           <Typography>
-                            {displayUser.full_name}
+                            {displayUser && displayUser.full_name}
                           </Typography>
                         </Grid>
                         <Grid style={{marginTop: '2%'}}>
@@ -410,25 +413,22 @@ class BookingPreview extends React.Component {
                         ) : null}
                     <Grid container className={classes.mainContainerAboutResa}>
                       <Grid item xs={12} className={classes.containerTitleSectionAbout}>
-                        <Typography className={classes.fontSizeTitleSectionAbout}>{ReactHtmlParser(this.props.t('PROFIL.about', {firstname: displayUser.firstname}))}</Typography>
+                        <Typography className={classes.fontSizeTitleSectionAbout}>{ReactHtmlParser(this.props.t('PROFIL.about', {firstname: displayUser && displayUser.firstname}))}</Typography>
                       </Grid>
                       <Grid container className={classes.reservationContainer}>
-                        <Grid item xl={6}>
+                        { displayUser && 
+                          <Grid item xl={6}>
                           <Grid container>
                             <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
                               <Grid item>
-                                {displayUser.id_confirmed ?
-                                  <Typography>{ReactHtmlParser(this.props.t('BOOKING.id_checked'))}</Typography>
-                                  :
-                                  null
-                                }
+                                {displayUser.id_confirmed && <Typography>{ReactHtmlParser(this.props.t('BOOKING.id_checked'))}</Typography>}
                                 <Typography>
                                   {ReactHtmlParser(this.props.t('BOOKING.member_since')) + moment(displayUser.creation_date).format('MMMM YYYY')}
                                 </Typography>
                               </Grid>
                             </Grid>
                           </Grid>
-                        </Grid>
+                        </Grid>}
                         <Grid item xl={6} className={classes.mainContainerAbout}>
                           <Grid item container className={classes.containerButtonGroup}>
                             <Grid item>
@@ -708,7 +708,6 @@ class BookingPreview extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-          )}
         <DialogReject open={rejectOpen} onRefuse={this.onReject} onClose={this.onRejectClose}/>
         <DialogCancel open={cancelOpen} onCancel={this.onCancel} onClose={this.onCancelClose}/>
       </Grid>

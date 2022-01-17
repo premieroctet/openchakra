@@ -24,7 +24,7 @@ class AddressAndFacturation extends React.Component {
   };
 
   render() {
-    const{equipments, pricedPrestations, countPrestations, user, classes, alfred_pro} = this.props
+    const{equipments, pricedPrestations, countPrestations, alfred, classes, alfred_pro} = this.props
 
     return(
       <Grid container className={classes.addressAndFactContainer}>
@@ -42,15 +42,18 @@ class AddressAndFacturation extends React.Component {
               </Topic>
             </Grid>
             <Grid className={`customadandfaccontainer ${classes.adandfaccontainer}`} style={{marginTop: '2vh'}}>
-              <Topic
-                titleTopic={ReactHtmlParser(this.props.t('PROFIL.about', {firstname: user.firstname}))}
-                titleSummary={false}
-                underline={false}
-              >
-                <Profile
-                  {...this.props}
-                />
-              </Topic>
+              { /** TODO Afficher ServiceAvatar si booking.is_service */ }
+              {alfred &&
+                <Topic
+                  titleTopic={ReactHtmlParser(this.props.t('PROFIL.about', {firstname: alfred.firstname}))}
+                  titleSummary={false}
+                  underline={false}
+                >
+                  <Profile
+                    user={alfred}
+                  />
+                </Topic>
+               }
               <Grid style={{marginTop: 30, marginBottom: 30}}>
                 <Divider className={`customadreandfacdivider ${classes.divider}`}/>
               </Grid>

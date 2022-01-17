@@ -22,7 +22,7 @@ class ConfirmPayment extends BasePage {
   constructor(props) {
     super(props)
     this.state = {
-      user: null,
+      alfred: null,
       currentUser: null,
       bookingObj: null,
       city: null,
@@ -39,7 +39,6 @@ class ConfirmPayment extends BasePage {
       optionPrice: null,
       date: null,
       hour: null,
-      alfredId: '',
       activeStep: 0,
       equipments: [],
       cards: [],
@@ -66,15 +65,16 @@ class ConfirmPayment extends BasePage {
           customer_fee: bookingObj.customer_fee,
           grandTotal: bookingObj.amount,
           cesu_total: bookingObj.cesu_amount,
-          alfredId: bookingObj.alfred._id,
           equipments: bookingObj.equipments,
         })
 
+        !bookingObj.is_service &&
         axios.get(`/myAlfred/api/serviceUser/${bookingObj.serviceUserId}`).then(res => {
-          this.setState({user: res.data.user})
+          this.setState({alfred: res.data.user})
         })
 
-        // Alfred part/pto
+        // Alfred part/pro
+        !bookingObj.is_service &&
         axios.get(`/myAlfred/api/shop/alfred/${bookingObj.alfred._id}`)
           .then(res => {
             this.setState({alfred_pro: res.data.is_professional})
@@ -225,25 +225,26 @@ class ConfirmPayment extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {currentUser, user, activeStep} = this.state
+    const {currentUser, alfred, activeStep} = this.state
 
+    if (!currentUser) {
+      return null
+    }
     return (
       <React.Fragment>
-        {user === null || currentUser === null ? null : (
-          <Grid style={{position: 'relative'}}>
-            <LayoutPayment>
-              <Grid className={classes.contentStepper}>
-                <Stepper
-                  activeStep={activeStep}
-                  steps={[ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.address_billing_title')), ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.payment_title'))]}
-                  orientation={'horizontal'}/>
-              </Grid>
-              <Grid className={classes.mainContainer}>
-                {this.renderSwitch(activeStep)}
-              </Grid>
-            </LayoutPayment>
-          </Grid>
-        )}
+        <Grid style={{position: 'relative'}}>
+          <LayoutPayment>
+            <Grid className={classes.contentStepper}>
+              <Stepper
+                activeStep={activeStep}
+                steps={[ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.address_billing_title')), ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.payment_title'))]}
+                orientation={'horizontal'}/>
+            </Grid>
+            <Grid className={classes.mainContainer}>
+              {this.renderSwitch(activeStep)}
+            </Grid>
+          </LayoutPayment>
+        </Grid>
       </React.Fragment>
     )
   }

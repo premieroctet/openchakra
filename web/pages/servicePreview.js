@@ -13,6 +13,7 @@ moment.locale('fr')
 registerLocale('fr', fr)
 
 // TODO : gérer affichage si utilisateur non connecté
+// TODO : les �quipements ne sont pas sauvegardés
 class ServicePreview extends BookingBase {
 
   constructor(props) {

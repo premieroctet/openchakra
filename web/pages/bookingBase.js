@@ -118,7 +118,7 @@ class BookingBase extends BasePage {
     setAxiosAuthentication()
 
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'))
-    if (bookingObj && bookingObj.serviceUserId.toString() !== id) {
+    if (bookingObj && bookingObj.serviceUserId && bookingObj.serviceUserId.toString() !== id) {
       console.warn('Incorrect bookingObj.serviceUserId')
       bookingObj = null
       localStorage.removeItem('bookingObj')
@@ -656,18 +656,19 @@ class BookingBase extends BasePage {
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
           const booking = response.data
-          axios.put(`/myAlfred/api/chatRooms/addBookingId/${bookingObj.chatroom}`, {booking: booking._id})
-            .then(() => {
-              if (booking.customer_booking) {
-                Router.push({pathname: '/paymentSuccess', query: {booking_id: booking._id}})
-              }
-              else if (actual) {
-                Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
-              }
-              else {
-                Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
-              }
-            })
+          if (booking.chatRoom) {
+            axios.put(`/myAlfred/api/chatRooms/addBookingId/${bookingObj.chatroom}`, {booking: booking._id})
+              .catch(err => console.error(err))
+          }
+          if (booking.customer_booking) {
+            Router.push({pathname: '/paymentSuccess', query: {booking_id: booking._id}})
+          }
+          else if (actual) {
+            Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
+          }
+          else {
+            Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
+          }
         })
         .catch(err => {
           this.setState({pending: false})

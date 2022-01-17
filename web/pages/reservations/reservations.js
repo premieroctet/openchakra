@@ -24,8 +24,9 @@ import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
 import LayoutReservations from '../../hoc/Layout/LayoutReservations'
 import UserAvatar from '../../components/Avatar/UserAvatar'
+import ServiceAvatar from '../../components/Avatar/ServiceAvatar'
 import styles from '../../static/css/pages/reservations/reservations'
-import {RESERVATION, BOOKING} from '../../utils/i18n'
+import {BOOKING} from '../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
@@ -228,11 +229,16 @@ class AllReservations extends BasePage {
                 <Grid key={index} className={classes.reservationsMainContainer}>
                   <Grid container spacing={2} style={{display: 'flex', alignItems: 'center', margin: 0, width: '100%'}}>
                     <Grid item xl={2} lg={2} md={6} sm={6} xs={4}>
-                      <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
+                      {booking.is_service ?
+                        // TODO Display service picture
+                        <ServiceAvatar service={{label: booking.service}}/>
+                        :
+                        <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
+                      }
                     </Grid>
                     <Grid item xl={5} lg={5} md={6} sm={6} xs={8} className={classes.descriptionContainer}>
                       <Grid className={classes.bookingNameContainer}>
-                        <Typography><strong> {booking.status} - {alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
+                        <Typography><strong> {booking.status} - {booking.is_service ? booking.service : alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
                       </Grid>
                       <Grid>
                         <Typography>
