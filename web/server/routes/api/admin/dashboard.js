@@ -37,6 +37,7 @@ const {get_token, send_cookie, get_logged_id}=require('../../../utils/serverCont
 const {createUIConfiguration} = require('../../../utils/ui_generation')
 const {logEvent}=require('../../../utils/events')
 const Validator = require('validator')
+const lodash=require('lodash')
 
 // Upload multers
 // CATEGORY
@@ -1289,21 +1290,22 @@ router.get('/statistics', passport.authenticate('admin', {session: false}), (req
   User.count()
     .then(nb_users => {
       stats.users = nb_users
-      User.find({is_alfred: true}).count()
-        .then(nb_alfred => {
-          stats.alfred = nb_alfred
-          ServiceUser.find()
-            .then(services => {
-              stats.services = services.length
-              stats.prestations = services.map(s => s.prestations.length).reduce((acc, value) => acc + value)
-              res.json(stats)
-            })
-            .catch(() => res.status(404).json({statistics: 'Error on alfred'}))
-        })
-        .catch(() => res.status(404).json({statistics: 'Error on alfred'}))
+      return User.find({is_alfred: true}).count()
     })
-    .catch(() => res.status(404).json({statistics: 'Error on users'}))
-
+    .then(nb_alfred => {
+      stats.alfred = nb_alfred
+      return ServiceUser.find({}, {'prestations._id': 1})
+    })
+    .then(services => {
+      console.timeEnd('services')
+      stats.services = services.length
+      stats.prestations = lodash.sumBy(services, s => s.prestations.length)
+      res.json(stats)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json(err)
+    })
 })
 
 // @Route GET /myAlfred/api/admin/booking/all
@@ -1316,7 +1318,6 @@ router.get('/bookings', passport.authenticate('admin', {session: false}), (req, 
     .populate({path: 'customer_booking', populate: {path: 'user'}})
     .sort({date: -1})
     .then(bookings => {
-      console.log(`Typeof booking.prestation_date:${typeof bookings[0].prestation_date}`)
       res.json(bookings)
     })
     .catch(err => {
