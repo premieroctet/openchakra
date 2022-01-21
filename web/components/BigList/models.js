@@ -1,9 +1,9 @@
+const {Button, Link} = require('@material-ui/core')
 const {valueBetween} = require('../../utils/functions')
 import {withTranslation} from 'react-i18next'
 import {REVIEW_STATUS} from '../../utils/consts'
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
-import {Link} from '@material-ui/core'
 const moment = require('moment')
 const { inspect } = require('util');
 
@@ -215,19 +215,26 @@ class BooleanRenderer extends React.Component {
   }
 
   render() {
-    if (this.props.value===undefined) {
+    const {value, editable}=this.props
+
+    if (!value) {
       return null
     }
+    if (editable) {
+      return (
+        <input
+          type="checkbox"
+          onClick={this.checkedHandler}
+          checked={this.props.value}
+          disabled={!this.props.editable}
+        />
+      )
+    }
+
     return (
-      <input
-        type="checkbox"
-        onClick={this.checkedHandler}
-        checked={this.props.value}
-        disabled={!this.props.editable}
-      />
+      <CheckIcon />
     )
   }
-
 }
 
 class EnumRenderer extends React.Component {
@@ -298,6 +305,29 @@ class DeleteRenderer extends React.Component {
     return (
       <DeleteForeverIcon />
     )
+  }
+}
+
+class ActionRenderer extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.clickedHandler = this.clickedHandler.bind(this)
+  }
+
+  clickedHandler() {
+    const {onClick, value}=this.props
+    onClick && onClick(value)
+  }
+
+  render() {
+    const {value, label}=this.props
+    if (value) {
+      return (
+        <Button>{label}</Button>
+      )
+    }
+    return null
   }
 }
 
@@ -408,14 +438,22 @@ const refColumn = obj => {
   return Object.assign(base, obj)
 }
 
+const actionColumn = obj => {
+  let base={
+    cellRenderer: 'actionRenderer',
+    cellRendererParams: obj,
+  }
+  return Object.assign(base, obj)
+}
+
 module.exports= {
   // Renderers
   StatusRenderer, DateRenderer, DateTimeRenderer, CurrencyRenderer,
   StatusFilter, PictureRenderer, PrivateRenderer, BooleanRenderer, LocationRenderer, WarningRenderer,
   EnumRenderer, LinkRenderer, ColorRenderer, FontRenderer, DeleteRenderer,
-  PercentRenderer,
+  PercentRenderer, ActionRenderer,
   // Columns
   textColumn, booleanColumn, dateColumn, dateTimeColumn, currencyColumn, pictureColumn,
   colorColumn, fontColumn, deleteColumn, warningColumn, ReviewStatusFilter,
-  refColumn, percentColumn,
+  refColumn, percentColumn, actionColumn,
 }
