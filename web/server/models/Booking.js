@@ -243,7 +243,7 @@ BookingSchema.virtual('is_service').get(function() {
   return !this.alfred
 })
 
-// TODO Use justOne to return the shop or null
+// Actual booking linked to this service booking
 BookingSchema.virtual('actual_booking', {
   ref: 'booking', // The Model to use
   localField: '_id', // Find in Model, where localField

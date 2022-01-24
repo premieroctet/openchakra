@@ -1315,9 +1315,9 @@ router.get('/bookings', passport.authenticate('admin', {session: false}), (req, 
   Booking.find({}, 'service prestation_date date amount status reason paid address.city address.zip_code')
     .populate('alfred', 'firstname name')
     .populate('user', 'firstname name email phone')
-    //.populate({path: 'customer_booking', select: 'user', populate: {path: 'user', select: 'full_name'}})
     .populate({path: 'customer_booking', select: 'user', populate: {path: 'user', select: 'firstname name'}})
     .populate({path: 'actual_booking', select: '_id'})
+    .populate({path: 'service', select: 'label'})
     .lean({virtuals: true})
     .sort({date: -1})
     .then(bookings => {

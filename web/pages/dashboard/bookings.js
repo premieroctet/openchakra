@@ -14,7 +14,7 @@ class all extends DataPage {
       models.dateTimeColumn({headerName: 'Date de réservation', field: 'date'}),
       models.dateTimeColumn({headerName: 'Date de prestation', field: 'prestation_date'}),
       models.textColumn({headerName: 'Lieu de prestation', field: 'prestation_location'}),
-      models.textColumn({headerName: 'Service', field: 'service'}),
+      models.textColumn({headerName: 'Service', field: 'service.label'}),
       models.textColumn({headerName: this.props.t('DASHBOARD.alfred'), field: 'alfred.full_name'}),
       models.textColumn({headerName: 'Client', field: 'user.full_name'}),
       models.textColumn({headerName: 'Email client', field: 'user.email'}),
