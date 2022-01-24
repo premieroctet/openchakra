@@ -40,6 +40,7 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
     .sort([['date', -1]])
     .populate('user', ['name', 'firstname', 'picture', 'company'])
     .populate('chatroom')
+    .populate('service')
     .then(alfred => {
       if (!alfred) {
         res.status(404).json({msg: 'No booking found'})
@@ -56,6 +57,7 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
   Booking.find({user: userId})
     .sort([['date', -1]])
     .populate('alfred', '-id_card')
+    .populate('service')
     .populate({
       path: 'chatroom',
       populate: {path: 'emitter'},
@@ -268,7 +270,9 @@ router.get('/:id', (req, res) => {
     .populate('user', '-id_card')
     .populate('prestation')
     .populate('equipments')
+    .populate('service')
     .populate({path: 'customer_booking', populate: {path: 'user'}})
+    .lean({virtuals: true})
     .then(booking => {
       if (booking) {
         res.json(booking)

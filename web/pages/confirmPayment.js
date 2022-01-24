@@ -12,6 +12,7 @@ import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import PaymentChoice from '../components/Payment/PaymentChoice/PaymentChoice'
 import Stepper from '../components/Stepper/Stepper'
 import styles from '../static/css/pages/confirmPayment/confirmPayment'
+import Head from 'next/head'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../utils/authentication')
 const {snackBarError}=require('../utils/notifications')
@@ -225,13 +226,16 @@ class ConfirmPayment extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {currentUser, alfred, activeStep} = this.state
+    const {currentUser, activeStep} = this.state
 
     if (!currentUser) {
       return null
     }
     return (
       <React.Fragment>
+        <Head>
+          <title>Paiement</title>
+        </Head>
         <Grid style={{position: 'relative'}}>
           <LayoutPayment>
             <Grid className={classes.contentStepper}>

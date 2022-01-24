@@ -1,13 +1,8 @@
 import {withTranslation} from 'react-i18next'
-import IconButton from '@material-ui/core/IconButton'
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import {makeStyles} from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
-import Router from 'next/router'
-import axios from 'axios'
-const {isEditableUser, getLoggedUserId} = require('../../utils/context')
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import Badge from '@material-ui/core/Badge'
 
 const useStyles = makeStyles(theme => ({

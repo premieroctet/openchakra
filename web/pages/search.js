@@ -25,7 +25,6 @@ import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Hidden from '@material-ui/core/Hidden'
 import '../static/assets/css/custom.css'
-import {SEARCH} from '../utils/i18n'
 const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage=require('./basePage')
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
@@ -78,8 +77,8 @@ class SearchPage extends BasePage {
       city: '',
       gps: null,
       categories: [],
-      serviceUsers: [],
-      serviceUsersDisplay: [],
+      results: [],
+      filteredResuls: [],
       shops: [],
       proAlfred: [], // Professional Alfred ids
       keyword: '',
@@ -88,13 +87,10 @@ class SearchPage extends BasePage {
       focusedInput: null,
       statusFilterVisible: false,
       dateFilterVisible: false,
-      isAdmin: false,
-      mounting: true,
-      searching: false,
       logged: false,
       scroll_count: 0,
     }
-    this.SCROLL_DELTA=30
+    this.SCROLL_DELTA=3023
   }
 
   isServiceSearch = () => {
@@ -107,6 +103,13 @@ class SearchPage extends BasePage {
       return false
     }
     return true
+  }
+
+  getFilters = () => {
+    if (this.isServiceSearch()) {
+      return {category: true, service: true}
+    }
+    return {date: true, perimeter: true, location: true, category: true, service: true}
   }
 
   componentDidUpdate(prevProps) {
@@ -125,90 +128,83 @@ class SearchPage extends BasePage {
     // If date in URL then force filter after search
     const url_props=this.getURLProps()
 
-    let st = {
-      keyword: 'keyword' in url_props ? url_props.keyword : '',
-      gps: 'gps' in url_props ? JSON.parse(url_props.gps) : null,
-      city: url_props.city || '',
-    }
-    if ('date' in url_props && url_props.date) {
-      let startDate = moment(parseInt(url_props.date))
-      startDate.hour(0).minute(0).second(0)
-      let endDate = moment(parseInt(url_props.date))
-      endDate.hour(23).minute(59).second(59)
-      st.startDate = startDate
-      st.endDate = endDate
-    }
-    if ('category' in url_props) {
-      st.category = url_props.category
-    }
-    if ('service' in url_props) {
-      st.service = url_props.service
-    }
-    if ('prestation' in url_props) {
-      st.prestation = url_props.prestation
-    }
-    if ('selectedAddress' in url_props) {
-      st.selectedAddress = url_props.selectedAddress
-    }
     setAxiosAuthentication()
 
+    if (this.getURLProps().booking_id) {
+      setAxiosAuthentication()
+      axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
+        .then(res => {
+          this.setState({gps: res.data.address.gps}, () => { this.search() })
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }
+    else {
+      this.setState({
+        keyword: url_props.keyword || '',
+        gps: 'gps' in url_props ? JSON.parse(url_props.gps) : null,
+        city: url_props.city || '',
+        category: url_props.category,
+        service: url_props.service,
+        prestation: url_props.prestation,
+      })
+      if ('date' in url_props && url_props.date) {
+        this.setState({
+          startDate: moment(parseInt(url_props.date)).startOf('day'),
+          endDate: moment(parseInt(url_props.date)).endOf('day'),
+        })
+      }
+      axios.get('/myAlfred/api/users/current')
+        .then(res => {
+          let user = res.data
+          this.setState({user: user})
+
+          const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
+          promise
+            .then(res => {
+              let allAddresses = {'main': res.data.billing_address.gps}
+              res.data.service_address.forEach(addr => {
+                allAddresses[addr._id] = {lat: addr.lat, lng: addr.lng}
+              })
+
+              let gps=null
+              if ('selectedAddress' in url_props && url_props.selectedAddress !== 'all') {
+                gps=allAddresses[url_props.selectedAddress]
+              }
+              if (!url_props.selectedAddress && !url_props.gps) {
+                gps=allAddresses.main
+              }
+              this.setState({gps: gps}, () => { this.search() })
+            })
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }
+
     axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
+      .then(res => {
+        this.setState({categories: res.data})
+      })
       .catch(err => {
         console.error(err)
-        this.setState({mounting: false})
       })
+    axios.get('/myAlfred/api/shop/allStatus')
       .then(res => {
-        st.categories = res.data
-        axios.get('/myAlfred/api/shop/allStatus')
-          .catch(err => {
-            console.error(err)
-            this.setState({mounting: false})
-          })
-          .then(res => {
-            st.shops = res.data
-            axios.get('/myAlfred/api/users/current')
-              .then(res => {
-                let user = res.data
-                this.setState({isAdmin: user.is_admin})
-                st.user = user
-
-                const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
-                promise
-                  .then(res => {
-                    let allAddresses = {'main': res.data.billing_address.gps}
-                    res.data.service_address.forEach(addr => {
-                      allAddresses[addr._id] = {lat: addr.lat, lng: addr.lng}
-                    })
-                    st.allAddresses=allAddresses
-                    if ('selectedAddress' in url_props && url_props.selectedAddress !== 'all') {
-                      st.gps = allAddresses[url_props.selectedAddress]
-                    }
-                    if (!url_props.selectedAddress && !url_props.gps) {
-                      st.gps = allAddresses.main
-                      st.selectedAddress = 'main'
-                    }
-                    this.setState(st, () => {
-                      this.search('date' in url_props)
-                      this.setState({mounting: false})
-                    })
-                  })
-              })
-              .catch(() => {
-                this.setState(st, () => {
-                  this.search('date' in url_props)
-                  this.setState({mounting: false})
-                })
-              })
-          })
+        this.setState({shops: res.data})
+      })
+      .catch(err => {
+        console.error(err)
       })
   }
 
   filter = data => {
     let criterion = data ? data : this.state
-    const serviceUsers = this.state.serviceUsers
-    let serviceUsersDisplay = []
+    const results = this.state.results
+    let filteredResuls = []
     if (criterion.proSelected || criterion.individualSelected) {
-      serviceUsers.forEach(su => {
+      results.forEach(su => {
         if (!su.user) {
           console.warn(`No user for serviceUser:${JSON.stringify(su, null, 2)}`)
           return
@@ -216,22 +212,22 @@ class SearchPage extends BasePage {
         let alfId = su.user._id
         const isPro = this.state.proAlfred.includes(alfId)
         if (isPro && criterion.proSelected || !isPro && criterion.individualSelected) {
-          serviceUsersDisplay.push(su)
+          filteredResuls.push(su)
         }
       })
     }
     else {
-      serviceUsersDisplay = serviceUsers
+      filteredResuls = results
     }
 
     if (criterion.radius && this.state.gps) {
       const radius = criterion.radius
-      serviceUsersDisplay = serviceUsersDisplay.filter(su => computeDistanceKm(this.state.gps, su.service_address.gps) <= radius)
+      filteredResuls = filteredResuls.filter(su => computeDistanceKm(this.state.gps, su.service_address.gps) <= radius)
     }
 
     if (criterion.locations) {
       const locations_filter = criterion.locations
-      serviceUsersDisplay = serviceUsersDisplay.filter(su => {
+      filteredResuls = filteredResuls.filter(su => {
         const su_locations = Object.keys(su.location).filter(k => Boolean(su.location[k]))
         return lodash.intersection(su_locations, locations_filter).length > 0
       })
@@ -239,15 +235,15 @@ class SearchPage extends BasePage {
 
     if (data && criterion.categories) {
       const categories = criterion.categories
-      serviceUsersDisplay = serviceUsersDisplay.filter(su => {
-        return categories.includes(su.service.category._id)
+      filteredResuls = filteredResuls.filter(su => {
+        return categories.includes(this.isServiceSearch ? su.category : su.service.category._id)
       })
     }
 
     if (data && criterion.services) {
       const services = criterion.services
-      serviceUsersDisplay = serviceUsersDisplay.filter(su => {
-        return services.includes(su.service._id)
+      filteredResuls = filteredResuls.filter(su => {
+        return services.includes(this.isServiceSearch ? su._id : su.service._id)
       })
     }
 
@@ -258,21 +254,21 @@ class SearchPage extends BasePage {
       axios.post('/myAlfred/api/availability/check', {
         start: moment(start).unix(),
         end: moment(end).unix(),
-        serviceUsers: serviceUsersDisplay.map(su => su._id),
+        results: filteredResuls.map(su => su._id),
       })
         .then(response => {
           const filteredServiceUsers = response.data
-          serviceUsersDisplay = serviceUsersDisplay.filter(su => filteredServiceUsers.includes(su._id.toString()))
-          this.setFilteredServiceUsers(serviceUsersDisplay)
+          filteredResuls = filteredResuls.filter(su => filteredServiceUsers.includes(su._id.toString()))
+          this.setFilteredServiceUsers(filteredResuls)
         })
     }
     else {
-      this.setFilteredServiceUsers(serviceUsersDisplay)
+      this.setFilteredServiceUsers(filteredResuls)
     }
   };
 
-  setFilteredServiceUsers = serviceUsers => {
-    this.setState({serviceUsersDisplay: serviceUsers, scroll_count: Math.min(this.SCROLL_DELTA, serviceUsers.length)})
+  setFilteredServiceUsers = results => {
+    this.setState({filteredResuls: results, scroll_count: Math.min(this.SCROLL_DELTA, results.length)})
   };
 
   onChange = e => {
@@ -294,46 +290,57 @@ class SearchPage extends BasePage {
     const url_props = this.getURLProps()
     let filters = {}
 
-    // GPS
-    if (this.state.gps) {
-      filters.gps = this.state.gps
-      filters.perimeter = true
-    }
-    // "Search everywhere" : provide GPS of first users' addresses if any, no limit
-    else if (this.state.user && this.state.user.billing_address) {
-      filters.gps = this.state.user.billing_address.gps
-      filters.perimeter = false
+    if (this.getURLProps().booking_id) {
+      filters.booking_id=this.getURLProps().booking_id
+      setAxiosAuthentication()
+      axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
+        .then(res => {
+          this.setState({gps: res.address.gps})
+        })
+        .catch(err => {
+          console.error(err)
+        })
     }
 
-    // Keyword search disables cat/ser/presta filter
-    if (this.state.keyword) {
-      filters.keyword = this.state.keyword
-    }
     else {
+    // GPS
+      if (this.state.gps) {
+        filters.gps = this.state.gps
+        filters.perimeter = true
+      }
+      // "Search everywhere" : provide GPS of first users' addresses if any, no limit
+      else if (this.state.user && this.state.user.billing_address) {
+        filters.gps = this.state.user.billing_address.gps
+        filters.perimeter = false
+      }
+
+      // Keyword search disables cat/ser/presta filter
+      if (this.state.keyword) {
+        filters.keyword = this.state.keyword
+      }
+      else {
       // Category
-      if (url_props.category) {
-        filters.category = url_props.category
-      }
-      // Service
-      if (url_props.service) {
-        filters.service = url_props.service
-      }
-      // Prestation
-      if (url_props.prestation) {
-        filters.prestation = url_props.prestation
+        if (url_props.category) {
+          filters.category = url_props.category
+        }
+        // Service
+        if (url_props.service) {
+          filters.service = url_props.service
+        }
+        // Prestation
+        if (url_props.prestation) {
+          filters.prestation = url_props.prestation
+        }
       }
     }
 
     filters.status = isB2BStyle() ? PRO : PART
-    if (this.getURLProps().booking_id) {
-      filters.booking_id=this.getURLProps().booking_id
-    }
     const search_url=this.isServiceSearch() ? '/myAlfred/api/service/search' : '/myAlfred/api/serviceUser/search'
     axios.post(search_url, filters)
       .then(res => {
-        let serviceUsers = res.data
-        this.setState({serviceUsers: serviceUsers})
-        this.setFilteredServiceUsers(serviceUsers)
+        let results = res.data
+        this.setState({results: results})
+        this.setFilteredServiceUsers(results)
         const categories = this.state.categories
         let proAlfred = this.state.shops.filter(s => s.is_professional).map(s => s.alfred._id)
         this.setState({categories: categories, proAlfred: proAlfred},
@@ -356,10 +363,10 @@ class SearchPage extends BasePage {
 
 
   content = classes => {
-    let serviceUsers = this.state.serviceUsersDisplay
-    const {gps, selectedAddress, scroll_count} = this.state
+    let results = this.state.filteredResuls
+    const {gps, scroll_count} = this.state
 
-    const {width} = this.props
+    const {width, selectedAddress} = this.props
 
     const [cols, rows]={'xs': [100, 1], 'sm': [2, 3], 'md': [3, 3], 'lg': [4, 4], 'xl': [4, 3]}[width]
 
@@ -374,9 +381,9 @@ class SearchPage extends BasePage {
               categories={this.state.categories}
               gps={this.state.gps}
               filter={this.filter}
-              mounting={this.state.mounting}
+              filters={this.getFilters()}
               searching={this.state.searching}
-              serviceUsers={serviceUsers}
+              results={results}
               displayPerimeter={this.state.gps}
             />
           </Grid>
@@ -387,8 +394,8 @@ class SearchPage extends BasePage {
               <Grid className={classes.searchSecondFilterContainer}>
                 <Grid className={classes.searchSecondFilterContainerLeft}>
                   {
-                    !(this.state.searching || this.state.mounting) &&
-                      <Typography>{ReactHtmlParser(this.props.t(serviceUsers.length ? 'SEARCH.alfred_avail':'SEARCH.no_one', {count: `${serviceUsers.length} `}))}</Typography>
+                    !this.state.searching &&
+                      <Typography>{ReactHtmlParser(this.props.t(results.length ? 'SEARCH.alfred_avail':'SEARCH.no_one', {count: `${results.length} `}))}</Typography>
                   }
                 </Grid>
                 { gps ? <Grid className={classes.searchFilterRightContainer}>
@@ -424,7 +431,7 @@ class SearchPage extends BasePage {
             <Grid className={classes.searchContainerDisplayResult}>
               <Grid className={classes.displayNbAvailable}>
                 {
-                  this.state.searching || this.state.mounting ? null : <Typography>{serviceUsers.length || ReactHtmlParser(this.props.t('SEARCH.no_one'))} {ReactHtmlParser(this.props.t('SEARCH.alfred_avail'))}</Typography>
+                  this.state.searching ? null : <Typography>{results.length || ReactHtmlParser(this.props.t('SEARCH.no_one'))} {ReactHtmlParser(this.props.t('SEARCH.alfred_avail'))}</Typography>
                 }
               </Grid>
               <Grid container >
@@ -438,11 +445,11 @@ class SearchPage extends BasePage {
 
                       ))
                     }
-                  </Grid> : serviceUsers.length===0 ? null : <Grid container className={classes.searchMainContainer} spacing={3}>
+                  </Grid> : results.length===0 ? null : <Grid container className={classes.searchMainContainer} spacing={3}>
                     <Grid item className={classes.hideOnMobile}>
                       <SearchResults
                         key={moment()}
-                        model={new SearchDataModel(serviceUsers.map(su => su._id), cols, rows, false)}
+                        model={new SearchDataModel(results.map(su => su._id), cols, rows, false)}
                         style={classes}
                         gps={gps}
                         user={this.state.user}
@@ -453,11 +460,11 @@ class SearchPage extends BasePage {
                       <InfiniteScroll
                         dataLength={scroll_count}
                         next={() => this.setState({scroll_count: this.state.scroll_count+this.SCROLL_DELTA}) }
-                        hasMore={scroll_count<serviceUsers.length}
+                        hasMore={scroll_count<results.length}
                         loader={<CircularProgress/>}
                       >
                         {
-                          serviceUsers.slice(0, scroll_count).map(su => (
+                          results.slice(0, scroll_count).map(su => (
                             <CardService
                               key={su._id}
                               item={su._id}
@@ -480,8 +487,8 @@ class SearchPage extends BasePage {
   };
 
   render() {
-    const {classes} = this.props
-    const {user, gps, selectedAddress, keyword} = this.state
+    const {classes, selectedAddress} = this.props
+    const {user, gps, keyword} = this.state
 
     return (
       <React.Fragment>

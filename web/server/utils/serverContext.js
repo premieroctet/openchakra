@@ -59,6 +59,7 @@ const send_cookie = (user, role, res, logged_as=null) => {
     is_alfred_pro: user.shop && user.shop.length==1 && !user.shop[0].is_particular,
     role: role,
     is_registered: user.is_registered,
+    is_super_admin: user.is_admin && user.email.match(/@my-alfred\.io$/),
     logged_as: logged_as,
   } // Create JWT payload
 

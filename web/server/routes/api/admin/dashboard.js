@@ -1312,17 +1312,20 @@ router.get('/statistics', passport.authenticate('admin', {session: false}), (req
 // Get all bookings
 // @Access private
 router.get('/bookings', passport.authenticate('admin', {session: false}), (req, res) => {
-  Booking.find()
+  Booking.find({}, 'service prestation_date date amount status reason paid address.city address.zip_code')
     .populate('alfred', 'firstname name')
     .populate('user', 'firstname name email phone')
-    .populate({path: 'customer_booking', populate: {path: 'user'}})
+    //.populate({path: 'customer_booking', select: 'user', populate: {path: 'user', select: 'full_name'}})
+    .populate({path: 'customer_booking', select: 'user', populate: {path: 'user', select: 'firstname name'}})
+    .populate({path: 'actual_booking', select: '_id'})
+    .lean({virtuals: true})
     .sort({date: -1})
     .then(bookings => {
       res.json(bookings)
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({bookings: 'Error'})
+      res.status(404).json(err)
     })
 })
 

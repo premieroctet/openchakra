@@ -96,11 +96,14 @@ class AllReservations extends BasePage {
         // On n'affiche pas les résas en attente de paiement
         const alfredBookings=res.data.filter(r => r.status !== BOOK_STATUS.TO_PAY)
         this.setState({alfredReservations: alfredBookings})
-        axios.get('/myAlfred/api/booking/userBooking')
-          .then(res => {
-            const userBookings=res.data
-            this.setState({userReservations: userBookings})
-          })
+        return axios.get('/myAlfred/api/booking/userBooking')
+      })
+      .then(res => {
+        const userBookings=res.data
+        this.setState({userReservations: userBookings})
+      })
+      .catch(err => {
+        console.error(err)
       })
   }
 
@@ -231,14 +234,14 @@ class AllReservations extends BasePage {
                     <Grid item xl={2} lg={2} md={6} sm={6} xs={4}>
                       {booking.is_service ?
                         // TODO Display service picture
-                        <ServiceAvatar service={{label: booking.service}}/>
+                        <ServiceAvatar service={booking.service}/>
                         :
                         <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
                       }
                     </Grid>
                     <Grid item xl={5} lg={5} md={6} sm={6} xs={8} className={classes.descriptionContainer}>
                       <Grid className={classes.bookingNameContainer}>
-                        <Typography><strong> {booking.status} - {booking.is_service ? booking.service : alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
+                        <Typography><strong> {booking.status} - {booking.is_service ? booking.service.label : alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
                       </Grid>
                       <Grid>
                         <Typography>
@@ -246,7 +249,7 @@ class AllReservations extends BasePage {
                         </Typography>
                       </Grid>
                       <Grid>
-                        <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}>{booking.service}</Typography>
+                        <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}>{booking.service.label}</Typography>
                       </Grid>
                       { booking.customer_booking &&
                         <Grid>

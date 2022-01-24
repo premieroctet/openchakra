@@ -283,7 +283,6 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
           })
             .then(payin => {
               console.log(`Created Payin ${JSON.stringify(payin)}`)
-              console.log(`Sttaus ${JSON.stringify(payin.Sttaus)}`)
               Booking.findByIdAndUpdate(req.body.booking_id,
                 {mangopay_payin_id: payin.Id, mangopay_payin_status: payin.Status})
                 .then(() => console.log('booking update ok'))

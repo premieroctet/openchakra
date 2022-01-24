@@ -13,7 +13,6 @@ import styles from '../../static/css/components/FilterMenu/FilterMenu'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Slider from '@material-ui/core/Slider'
 import MultipleSelect from 'react-select'
-const {SEARCHBAR}=require('../../utils/i18n')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 const {isB2BStyle}=require('../../utils/context')
 const {PRO, PART}=require('../../utils/consts')
@@ -241,7 +240,7 @@ class FilterMenu extends React.Component {
   };
 
   render() {
-    const{classes, mounting, searching, serviceUsers} = this.props
+    const{classes, searching, results, filters} = this.props
     const {
       statusFilterSet, statusFilterVisible, individualSelected, proSelected,
       dateFilterSet, dateFilterVisible, startDate, endDate, focusedInput,
@@ -258,15 +257,12 @@ class FilterMenu extends React.Component {
     const categoriesFilterBg = categoriesFilterSet ? '#2FBCD3' : 'white'
     const servicesFilterBg = servicesFilterSet ? '#2FBCD3' : 'white'
 
-    let resultMessage
+    let resultMessage=''
 
-    if (mounting) {
-      resultMessage = ''
-    }
-    else if (searching) {
+    if (searching) {
       resultMessage = ReactHtmlParser(this.props.t('SEARCHBAR.searching'))
     }
-    else if (serviceUsers.length === 0) {
+    else if (results.length === 0) {
       resultMessage = ReactHtmlParser(this.props.t('SEARCHBAR.no_results'))
     }
 
@@ -348,48 +344,50 @@ class FilterMenu extends React.Component {
             }
           </Grid>
           }
-          <Grid className={` ${classes.filTerMenuStatusMainStyleFilterDate}`}>
-            {dateFilterVisible ?
-              <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
-                <Grid className={classes.filterMenuFocused} onClick={this.dateFilterToggled}>
-                  <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.labelDate'))}</Typography>
-                </Grid>
-                <Grid className={classes.filterMenuContentMainStyleDateFilter}>
-                  <Grid>
-                    <DateRangePicker
-                      startDate={startDate} // momentPropTypes.momentObj or null,
-                      startDatePlaceholderText={ReactHtmlParser(this.props.t('SEARCHBAR.start_date'))}
-                      endDatePlaceholderText={ReactHtmlParser(this.props.t('SEARCHBAR.end_date'))}
-                      startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                      endDate={endDate} // momentPropTypes.momentObj or null,
-                      endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                      onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
-                      focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                      onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
-                      minimumNights={0}
-                      numberOfMonths={1}
-                    />
+          {filters.date &&
+            <Grid className={` ${classes.filTerMenuStatusMainStyleFilterDate}`}>
+              {dateFilterVisible ?
+                <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
+                  <Grid className={classes.filterMenuFocused} onClick={this.dateFilterToggled}>
+                    <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.labelDate'))}</Typography>
                   </Grid>
-                  <Grid className={classes.filterMenuDateFilterButtonContainer}>
+                  <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                     <Grid>
-                      <CustomButton onClick={this.cancelDateFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
+                      <DateRangePicker
+                        startDate={startDate} // momentPropTypes.momentObj or null,
+                        startDatePlaceholderText={ReactHtmlParser(this.props.t('SEARCHBAR.start_date'))}
+                        endDatePlaceholderText={ReactHtmlParser(this.props.t('SEARCHBAR.end_date'))}
+                        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                        endDate={endDate} // momentPropTypes.momentObj or null,
+                        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                        onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
+                        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                        onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
+                        minimumNights={0}
+                        numberOfMonths={1}
+                      />
                     </Grid>
-                    <Grid>
-                      <CustomButton onClick={this.validateDateFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
+                    <Grid className={classes.filterMenuDateFilterButtonContainer}>
+                      <Grid>
+                        <CustomButton onClick={this.cancelDateFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
+                      </Grid>
+                      <Grid>
+                        <CustomButton onClick={this.validateDateFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              :
-              <Grid
-                onClick={this.dateFilterToggled}
-                className={classes.filterMenuStatusNotFocused}
-                style={{backgroundColor: `${dateFilterBg}`}}>
-                <Typography style={{color: dateFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelDate'))}</Typography>
-              </Grid>
-            }
-          </Grid>
-          { this.props.displayPerimeter ?
+                :
+                <Grid
+                  onClick={this.dateFilterToggled}
+                  className={classes.filterMenuStatusNotFocused}
+                  style={{backgroundColor: `${dateFilterBg}`}}>
+                  <Typography style={{color: dateFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelDate'))}</Typography>
+                </Grid>
+              }
+            </Grid>
+          }
+          { filters.perimeter && this.props.displayPerimeter ?
             <Grid className={`${classes.filTerMenuStatusMainStyleFilterDate}`}>
               {radiusFilterVisible ?
                 <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
@@ -431,144 +429,150 @@ class FilterMenu extends React.Component {
             :
             null
           }
-          <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
-            {locationFilterVisible?
-              <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
-                <Grid className={classes.filterMenuFocused} onClick={this.locationFilterToggled}>
-                  <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelLocation'))}</Typography>
-                </Grid>
-                <Grid className={classes.filterMenuContentMainStyleDateFilter}>
-                  <Grid>
-                    <FormControlLabel
-                      classes={{root: classes.filterMenuControlLabel}}
-                      control={
-                        <Switch
-                          checked={locations.includes('client')}
-                          onChange={this.onLocationFilterChanged}
-                          color="primary"
-                          name={'client'}
-                        />
-                      }
-                      label={ReactHtmlParser(this.props.t('SEARCHBAR.at_home'))}
-                    />
-                    <FormControlLabel
-                      classes={{root: classes.filterMenuControlLabel}}
-                      control={
-                        <Switch
-                          checked={locations.includes('alfred')}
-                          onChange={this.onLocationFilterChanged}
-                          color="primary"
-                          name={'alfred'}
-                        />
-                      }
-                      label={ReactHtmlParser(this.props.t('SEARCHBAR.alfred_home'))}
-                    />
-                    <FormControlLabel
-                      classes={{root: classes.filterMenuControlLabel}}
-                      control={
-                        <Switch
-                          checked={locations.includes('visio')}
-                          onChange={this.onLocationFilterChanged}
-                          color="primary"
-                          name={'visio'}
-                        />
-                      }
-                      label={ReactHtmlParser(this.props.t('SEARCHBAR.remote'))}
-                    />
+          {filters.location &&
+            <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
+              {locationFilterVisible?
+                <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
+                  <Grid className={classes.filterMenuFocused} onClick={this.locationFilterToggled}>
+                    <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelLocation'))}</Typography>
                   </Grid>
-                  <Grid className={classes.filterMenuDateFilterButtonContainer}>
+                  <Grid className={classes.filterMenuContentMainStyleDateFilter}>
                     <Grid>
-                      <CustomButton onClick={this.cancelLocationFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
+                      <FormControlLabel
+                        classes={{root: classes.filterMenuControlLabel}}
+                        control={
+                          <Switch
+                            checked={locations.includes('client')}
+                            onChange={this.onLocationFilterChanged}
+                            color="primary"
+                            name={'client'}
+                          />
+                        }
+                        label={ReactHtmlParser(this.props.t('SEARCHBAR.at_home'))}
+                      />
+                      <FormControlLabel
+                        classes={{root: classes.filterMenuControlLabel}}
+                        control={
+                          <Switch
+                            checked={locations.includes('alfred')}
+                            onChange={this.onLocationFilterChanged}
+                            color="primary"
+                            name={'alfred'}
+                          />
+                        }
+                        label={ReactHtmlParser(this.props.t('SEARCHBAR.alfred_home'))}
+                      />
+                      <FormControlLabel
+                        classes={{root: classes.filterMenuControlLabel}}
+                        control={
+                          <Switch
+                            checked={locations.includes('visio')}
+                            onChange={this.onLocationFilterChanged}
+                            color="primary"
+                            name={'visio'}
+                          />
+                        }
+                        label={ReactHtmlParser(this.props.t('SEARCHBAR.remote'))}
+                      />
                     </Grid>
-                    <Grid>
-                      <CustomButton onClick={this.validateLocationFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              :
-              <Grid
-                onClick={this.locationFilterToggled}
-                className={classes.filterMenuStatusNotFocused}
-                style={{backgroundColor: `${locationFilterBg}`}}>
-                <Typography style={{color: locationFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelLocation'))}</Typography>
-              </Grid>
-            }
-          </Grid>
-          <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
-            {categoriesFilterVisible?
-              <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
-                <Grid className={classes.filterMenuFocused} onClick={this.categoriesFilterToggled}>
-                  <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}</Typography>
-                </Grid>
-                <Grid className={classes.filterMenuContentMainStyleDateFilter}>
-                  <Grid>
-                    <MultipleSelect
-                      key={moment()}
-                      value={categories}
-                      onChange={this.onCategoriesFilterChanged}
-                      options={allCategories}
-                      isMulti
-                      isSearchable
-                      closeMenuOnSelect={false}
-                    />
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <CustomButton onClick={this.cancelCategoriesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
+                        <CustomButton onClick={this.cancelLocationFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
                       </Grid>
                       <Grid>
-                        <CustomButton onClick={this.validateCategoriesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
+                        <CustomButton onClick={this.validateLocationFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              :
-              <Grid
-                onClick={this.categoriesFilterToggled}
-                className={classes.filterMenuStatusNotFocused}
-                style={{backgroundColor: `${categoriesFilterBg}`}}>
-                <Typography style={{color: categoriesFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}</Typography>
-              </Grid>
-            }
-          </Grid>
-          <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
-            {servicesFilterVisible?
-              <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
-                <Grid className={classes.filterMenuFocused} onClick={this.servicesFilterToggled}>
-                  <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}</Typography>
+                :
+                <Grid
+                  onClick={this.locationFilterToggled}
+                  className={classes.filterMenuStatusNotFocused}
+                  style={{backgroundColor: `${locationFilterBg}`}}>
+                  <Typography style={{color: locationFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelLocation'))}</Typography>
                 </Grid>
-                <Grid className={classes.filterMenuContentMainStyleDateFilter}>
-                  <Grid>
-                    <MultipleSelect
-                      key={moment()}
-                      value={services}
-                      onChange={this.onServicesFilterChanged}
-                      options={filteredServices}
-                      isMulti
-                      isSearchable
-                      closeMenuOnSelect={false}
-                    />
-                    <Grid className={classes.filterMenuDateFilterButtonContainer}>
-                      <Grid>
-                        <CustomButton onClick={this.cancelServicesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
-                      </Grid>
-                      <Grid>
-                        <CustomButton onClick={this.validateServicesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
+              }
+            </Grid>
+          }
+          {filters.category &&
+            <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
+              {categoriesFilterVisible?
+                <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
+                  <Grid className={classes.filterMenuFocused} onClick={this.categoriesFilterToggled}>
+                    <Typography >{ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}</Typography>
+                  </Grid>
+                  <Grid className={classes.filterMenuContentMainStyleDateFilter}>
+                    <Grid>
+                      <MultipleSelect
+                        key={moment()}
+                        value={categories}
+                        onChange={this.onCategoriesFilterChanged}
+                        options={allCategories}
+                        isMulti
+                        isSearchable
+                        closeMenuOnSelect={false}
+                      />
+                      <Grid className={classes.filterMenuDateFilterButtonContainer}>
+                        <Grid>
+                          <CustomButton onClick={this.cancelCategoriesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
+                        </Grid>
+                        <Grid>
+                          <CustomButton onClick={this.validateCategoriesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              :
-              <Grid
-                onClick={this.servicesFilterToggled}
-                className={classes.filterMenuStatusNotFocused}
-                style={{backgroundColor: `${servicesFilterBg}`}}>
-                <Typography style={{color: servicesFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}</Typography>
-              </Grid>
-            }
-          </Grid>
+                :
+                <Grid
+                  onClick={this.categoriesFilterToggled}
+                  className={classes.filterMenuStatusNotFocused}
+                  style={{backgroundColor: `${categoriesFilterBg}`}}>
+                  <Typography style={{color: categoriesFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}</Typography>
+                </Grid>
+              }
+            </Grid>
+          }
+          {filters.service &&
+            <Grid className={classes.filTerMenuStatusMainStyleFilterDate}>
+              {servicesFilterVisible?
+                <Grid className={`customfilterbutton ${classes.filterMenuDateFocused}`}>
+                  <Grid className={classes.filterMenuFocused} onClick={this.servicesFilterToggled}>
+                    <Typography>{ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}</Typography>
+                  </Grid>
+                  <Grid className={classes.filterMenuContentMainStyleDateFilter}>
+                    <Grid>
+                      <MultipleSelect
+                        key={moment()}
+                        value={services}
+                        onChange={this.onServicesFilterChanged}
+                        options={filteredServices}
+                        isMulti
+                        isSearchable
+                        closeMenuOnSelect={false}
+                      />
+                      <Grid className={classes.filterMenuDateFilterButtonContainer}>
+                        <Grid>
+                          <CustomButton onClick={this.cancelServicesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}</CustomButton>
+                        </Grid>
+                        <Grid>
+                          <CustomButton onClick={this.validateServicesFilter}>{ReactHtmlParser(this.props.t('COMMON.btn_validate'))}</CustomButton>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                :
+                <Grid
+                  onClick={this.servicesFilterToggled}
+                  className={classes.filterMenuStatusNotFocused}
+                  style={{backgroundColor: `${servicesFilterBg}`}}>
+                  <Typography style={{color: servicesFilterSet ? 'white' : 'black'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}</Typography>
+                </Grid>
+              }
+            </Grid>
+          }
         </Grid>
       </Grid>
     )

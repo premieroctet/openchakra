@@ -41,8 +41,8 @@ class DrawerBookingRecap extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <Typography>{bookingObj.service}
-              {!bookingObj.is_service && `par ${alfred.firstname}}`}
+              <Typography>{bookingObj.service.label}
+                {!bookingObj.is_service && `par ${alfred.firstname}}`}
               </Typography>
             </Grid>
             <Grid>
@@ -70,7 +70,7 @@ class DrawerBookingRecap extends React.Component {
                     id="panel1a-header"
                     style={{padding: 0}}
                   >
-                    <Typography>{bookingObj.service}</Typography>
+                    <Typography>{bookingObj.service.label}</Typography>
                   </AccordionSummary>
                   <AccordionDetails style={{display: 'flex', flexDirection: 'column', paddingRight: 0, paddingLeft: 0}}>
                     <Grid style={{

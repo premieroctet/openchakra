@@ -108,16 +108,15 @@ class BookingBase extends BasePage {
 
   // Converts 'all' to 'main'
   get_prop_address = () => {
-    return this.getURLProps().address=='all' ? 'main' : this.getURLProps().address
+    return (!this.getURLProps().address || this.getURLProps().address=='all') ? 'main' : this.getURLProps().address
   }
 
   componentDidMount() {
-
     const id = this.getURLProps().id
 
     setAxiosAuthentication()
 
-    let bookingObj = JSON.parse(localStorage.getItem('bookingObj'))
+    let bookingObj = null
     if (bookingObj && bookingObj.serviceUserId.toString() !== id) {
       console.warn('Incorrect bookingObj.serviceUserId')
       bookingObj = null
@@ -555,11 +554,8 @@ class BookingBase extends BasePage {
     if (avocotes_booking) {
       return `Chez ${avocotes_booking.user.full_name} (${avocotes_booking.user.billing_address.city})`
     }
-    const {user, allAddresses}=this.state
-    if (!user || !allAddresses) {
-      return ''
-    }
-    return allAddresses? allAddresses[this.get_prop_address()].label : ''
+    const {allAddresses}=this.state
+    return allAddresses && allAddresses[this.get_prop_address()] ? allAddresses[this.get_prop_address()].label : this.props.t('USERSERVICEPREVIEW.at_home')
   }
 
   getLocationLabel = () => {
@@ -609,7 +605,7 @@ class BookingBase extends BasePage {
 
     let bookingObj = {
       reference: user ? computeBookingReference(user, this.serviceMode ? user : this.state.serviceUser.user) : '',
-      service: (this.serviceMode ? this.state.serviceUser : this.state.serviceUser.service).label,
+      service: this.serviceMode ? this.state.serviceUser : this.state.serviceUser.service,
       serviceId: (this.serviceMode ? this.state.serviceUser : this.state.serviceUser.service)._id,
       address: avocotes_booking ? avocotes_booking.address : place,
       location: this.state.location,
@@ -656,7 +652,11 @@ class BookingBase extends BasePage {
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
           const booking = response.data
-          axios.put(`/myAlfred/api/chatRooms/addBookingId/${bookingObj.chatroom}`, {booking: booking._id})
+          const promise=booking.chatroom ?
+            axios.put(`/myAlfred/api/chatRooms/addBookingId/${bookingObj.chatroom}`, {booking: booking._id})
+            :
+            Promise.resolve(null)
+          promise
             .then(() => {
               if (booking.customer_booking) {
                 Router.push({pathname: '/paymentSuccess', query: {booking_id: booking._id}})

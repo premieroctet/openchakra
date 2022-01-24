@@ -1,3 +1,4 @@
+const Booking = require('../../models/Booking')
 const Job = require('../../models/Job')
 const Group = require('../../models/Group')
 const Shop = require('../../models/Shop')
@@ -505,11 +506,11 @@ router.get('/near/:service', passport.authenticate('jwt', {session: false}), (re
 router.post('/search', (req, res) => {
   const start2 = process.hrtime()
   const kw = req.body.keyword
-  const gps = req.body.gps
+  let gps = req.body.gps
   const category = req.body.category
-  const service = req.body.service
+  let service = req.body.service
   const prestation = req.body.prestation
-  const restrictPerimeter = req.body.perimeter
+  let restrictPerimeter = req.body.perimeter
   const status = req.body.status // PRO or PART
 
   const dataFn = su => {
@@ -518,7 +519,8 @@ router.post('/search', (req, res) => {
 
   console.log(`Searching ${JSON.stringify(req.body)}`)
 
-  const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
+  const filter = {} // status==PRO ? {'professional_access': true} : {'particular_access': true}
+  let serviceUsers=[]
   ServiceUser.find(filter, 'prestations.prestation service_address location perimeter description')
     .populate({path: 'user', select: 'firstname hidden'})
     .populate({
@@ -526,45 +528,78 @@ router.post('/search', (req, res) => {
       populate: {path: 'category', select: status==PRO ? 's_professional_label':'s_particular_label'},
     })
     .populate({
-      path: 'prestations.prestation', match: filter,
+      path: 'prestations.prestation', // match: filter,
       populate: {path: 'job', select: 's_label'},
     })
     .lean({virtuals: true})
     .then(result => {
-      let sus=result
-      console.log(`Found ${sus.length} before filtering`)
+      serviceUsers=result
+      console.log(`Found ${serviceUsers.length} before filtering`)
       // Filter hidden
-      sus = sus.filter(su => !su.user.hidden)
+      serviceUsers = serviceUsers.filter(su => !su.user.hidden)
+      const promise=req.body.booking_id ? Booking.findById(req.body.booking_id) : Promise.resolve(null)
+      return promise
+    })
+    .then(booking => {
+      if (booking) {
+        gps = booking.address && booking.address.gps
+        service=booking.service
+        const prestaLabels=booking.prestations.map(p => p.name)
+        serviceUsers = serviceUsers.filter(su => {
+          const suLabels=su.prestations.map(p => p.prestation && p.prestation.label)
+          return lodash.intersection(suLabels, prestaLabels).length==prestaLabels.length
+        })
+        console.log(`After prestations filter:${serviceUsers.length}`)
+      }
+      else if(req.body.booking_id) {
+        return res.status(404).json(`Could not find booking ${req.body.booking_id}`)
+      }
       if (category) {
-        sus = sus.filter(su => su.service.category._id.toString() == category)
+        serviceUsers = serviceUsers.filter(su => su.service.category._id.toString() == category)
       }
+      console.log(`Remaining ${serviceUsers.length} after category filtering`)
       if (service) {
-        sus = sus.filter(su => su.service._id.toString() == service)
+        serviceUsers = serviceUsers.filter(su => su.service._id.toString() == service)
       }
+      console.log(`Remaining ${serviceUsers.length} after service filtering`)
       if (prestation) {
-        sus = sus.filter(su => su.prestations.some(p => p.prestation && p.prestation._id.toString() == prestation))
+        serviceUsers = serviceUsers.filter(su => su.prestations.some(p => p.prestation && p.prestation._id.toString() == prestation))
       }
+      console.log(`Remaining ${serviceUsers.length} after prestation filtering`)
       if (kw) {
-        sus = serviceFilters.filterServicesKeyword(sus, kw, status, dataFn)
+        serviceUsers = serviceFilters.filterServicesKeyword(serviceUsers, kw, status, dataFn)
       }
-      sus = serviceFilters.filterPartnerServices(sus, req.context.isAdmin())
-      console.log(`Remaining ${sus.length} after keyword filtering`)
+      console.log(`Remaining ${serviceUsers.length} after keyword filtering`)
+      if (!booking) {
+        serviceUsers = serviceFilters.filterPartnerServices(serviceUsers, req.context.isAdmin())
+      }
+      console.log(`Remaining ${serviceUsers.length} after partner filtering (admin:${req.context.isAdmin()})`)
 
       if (gps) {
         try {
-          sus = serviceFilters.filterServiceUsersGPS(sus, JSON.parse(req.body.gps), restrictPerimeter)
+          serviceUsers = serviceFilters.filterServiceUsersGPS(serviceUsers, JSON.parse(gps), restrictPerimeter)
         }
         catch (err) {
-          sus = serviceFilters.filterServiceUsersGPS(sus, req.body.gps, restrictPerimeter)
+          serviceUsers = serviceFilters.filterServiceUsersGPS(serviceUsers, gps, restrictPerimeter)
         }
+        // if booking : keep only if alfred && same GPS || client
+        if (booking) {
+          serviceUsers = serviceUsers.filter(su => (lodash.isEqual(gps, su.service_address.gps) ? !!su.location.alfred : su.location.client))
+        }
+
       }
-      console.log(`Remaining ${sus.length} after gps filtering`)
+      // Search corresponding booking : visio if gps is null
+      else if (!gps && booking) {
+        // Retain visio only
+        serviceUsers = serviceUsers.filter(su => !!su.location.visio)
+      }
+      console.log(`Remaining ${serviceUsers.length} after gps filtering`)
 
       // Manager : filtrer les services autorisés
       if (getRole(req)==MANAGER) {
         Group.findOne({members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
           .then(group => {
-            const manager_sus = serviceFilters.filterServicesIds(sus, group.allowed_services.map(s => s.service._id))
+            const manager_sus = serviceFilters.filterServicesIds(serviceUsers, group.allowed_services.map(s => s.service._id))
             return res.json(manager_sus)
           })
           .catch(err => {
@@ -574,8 +609,8 @@ router.post('/search', (req, res) => {
       }
       else {
         const elapsed = process.hrtime(start2)
-        console.log(`Fast Search found ${sus.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`)
-        return res.json(sus)
+        console.log(`Fast Search found ${serviceUsers.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`)
+        return res.json(serviceUsers)
       }
     })
     .catch(err => {

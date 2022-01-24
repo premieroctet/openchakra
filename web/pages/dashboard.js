@@ -1,7 +1,5 @@
-import axios from 'axios'
-import {isLoggedUserAdmin, isUserSuperAdmin} from '../utils/context'
+import {isLoggedUserAdmin, isLoggedUserSuperAdmin} from '../utils/context'
 import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
 
 import Card from '@material-ui/core/Card'
@@ -48,18 +46,13 @@ class home extends React.Component {
     if (!isLoggedUserAdmin()) {
       Router.push('/login')
     }
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current')
-      .then(response => {
-        this.setState({user: response.data})
-      })
   }
 
   render() {
     const {classes} = this.props
     const {user}=this.state
 
-    const superAdmin = isUserSuperAdmin(user)
+    const superAdmin = isLoggedUserSuperAdmin(user)
 
     return (
       <DashboardLayout home={true}>

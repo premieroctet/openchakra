@@ -1,3 +1,4 @@
+const {isPlatform} = require('../../../config/config')
 const mongoose = require('mongoose')
 const {MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
 const {get_logged_id} = require('../../utils/serverContext')
@@ -235,7 +236,13 @@ router.post('/search', (req, res) => {
     .lean({virtuals: true})
     .then(result => {
       let services=result
-      console.log(`Found ${services.length} before filtering`)
+      console.log(`Found ${services.length} services before filtering`)
+      if (isPlatform()) {
+        console.log('En plateforme')
+        // Only retain prestations having company_price
+        services=services.map(s => { return {...s, prestations: s.prestations.filter(p => !!p.company_price)} })
+        services=services.filter(s => s.prestations.length>0)
+      }
       if (kw) {
         services = serviceFilters.filterServicesKeyword(services, kw, status)
       }

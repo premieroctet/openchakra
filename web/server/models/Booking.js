@@ -27,26 +27,30 @@ const BookingSchema = new Schema({
     required: true,
   },
   address: {
-    address: {
-      type: String,
+    type: {
+      address: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      zip_code: {
+        type: String,
+      },
+      country: {
+        type: String,
+      },
+      gps: {
+        lat: Number,
+        lng: Number,
+      },
     },
-    city: {
-      type: String,
-    },
-    zip_code: {
-      type: String,
-    },
-    country: {
-      type: String,
-    },
-    gps: {
-      lat: Number,
-      lng: Number,
-    },
+    required: false,
   },
   service: {
-    type: String,
-    required: true,
+    type: Schema.Types.ObjectId,
+    ref: 'service',
+    required: false,
   },
   equipments: [{
     type: Schema.Types.ObjectId,
@@ -228,15 +232,23 @@ BookingSchema.virtual('calendar_display').get(function() {
 })
 
 BookingSchema.virtual('customer_fee').get(function() {
-  return lodash.sum(this.customer_fees.map(c => c.amount))
+  return lodash.sumBy(this.customer_fees||[], c => c.amount)
 })
 
 BookingSchema.virtual('provider_fee').get(function() {
-  return lodash.sum(this.provider_fees.map(c => c.amount))
+  return lodash.sumBy(this.provider_fees||[], c => c.amount)
 })
 
 BookingSchema.virtual('is_service').get(function() {
-  return !this.alfred || !this.serviceUserId
+  return !this.alfred
+})
+
+// TODO Use justOne to return the shop or null
+BookingSchema.virtual('actual_booking', {
+  ref: 'booking', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'customer_booking', // is equal to foreignField
+  justOne: true, // 1 <=> 1 relationship
 })
 
 BookingSchema.plugin(mongooseLeanVirtuals)

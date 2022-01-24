@@ -13,7 +13,7 @@ moment.locale('fr')
 registerLocale('fr', fr)
 
 // TODO : gérer affichage si utilisateur non connecté
-// TODO : les �quipements ne sont pas sauvegardés
+// TODO : les �quipements ne sont pas sauvegardés
 class ServicePreview extends BookingBase {
 
   constructor(props) {
@@ -21,7 +21,17 @@ class ServicePreview extends BookingBase {
   }
 
   loadData = () => {
-    return axios.get(`/myAlfred/api/service/${this.getURLProps().id}`)
+    return new Promise((resolve, reject) => {
+      axios.get(`/myAlfred/api/service/${this.getURLProps().id}`)
+        .then(result => {
+          let service=result.data
+          service.prestations=service.prestations.filter(p => !!p.company_price)
+          resolve({data: service})
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
   }
 
   getServiceLabel = () => {
