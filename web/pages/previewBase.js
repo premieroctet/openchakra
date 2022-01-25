@@ -53,7 +53,7 @@ moment.locale('fr')
 registerLocale('fr', fr)
 
 // TODO : gérer affichage si utilisateur non connecté
-class BookingBase extends BasePage {
+class PreviewBase extends BasePage {
   constructor(props, serviceMode) {
     super(props)
     this.serviceMode=serviceMode
@@ -111,17 +111,14 @@ class BookingBase extends BasePage {
     return (!this.getURLProps().address || this.getURLProps().address=='all') ? 'main' : this.getURLProps().address
   }
 
+  postLoadData = () => {
+    return Promise.resolve()
+  }
+
   componentDidMount() {
     const id = this.getURLProps().id
 
     setAxiosAuthentication()
-
-    let bookingObj = null
-    if (bookingObj && bookingObj.serviceUserId.toString() !== id) {
-      console.warn('Incorrect bookingObj.serviceUserId')
-      bookingObj = null
-      localStorage.removeItem('bookingObj')
-    }
 
     axios.get('/myAlfred/api/booking/avocotes')
       .then(res => {
@@ -133,19 +130,6 @@ class BookingBase extends BasePage {
     this.loadData()
       .then(res => {
         let serviceUser = res.data
-        let count = this.state.count || {} // Object.fromEntries(serviceUser.prestations.map(p => [p._id, null]))
-
-        if (bookingObj) {
-          serviceUser.prestations.forEach(p => {
-            const bookP = bookingObj.prestations.find(bp => {
-              return bp.name === (this.serviceMode ? p.label : p.prestation.label)
-            })
-            if (bookP) {
-              count[p._id] = parseInt(bookP.value)
-            }
-          })
-        }
-        this.setState({count: count})
         const allEquipmentsPromise=(this.serviceMode ? serviceUser : serviceUser.service).equipments.map(res => axios.get(`/myAlfred/api/equipment/${this.serviceMode ? res._id : res}`))
         Promise.all(allEquipmentsPromise)
           .then(res => {
@@ -256,14 +240,17 @@ class BookingBase extends BasePage {
                   prestations: serviceUser.prestations,
                   alfred: this.serviceMode ? null : serviceUser.user,
                   pick_tax: null,
-                  prestation_date: bookingObj && bookingObj.prestation_date ? bookingObj.prestation_date : this.state.date,
-                  location: bookingObj ? bookingObj.location : null,
-                  customer_fee: bookingObj ? bookingObj.customer_fee : null,
-                  provider_fee: bookingObj ? bookingObj.provider_fee : null,
+                  prestation_date: this.state.date,
+                  location: null,
+                  customer_fee: null,
+                  provider_fee: null,
                   ...st,
                 }, () => {
-                  this.setDefaultLocation()
-                  this.computeTotal()
+                  this.postLoadData()
+                    .then(() => {
+                      this.setDefaultLocation()
+                      this.computeTotal()
+                    })
                 })
               })
               .catch(err => console.error(err))
@@ -272,6 +259,10 @@ class BookingBase extends BasePage {
       .catch(err => console.error(err))
 
     localStorage.removeItem('bookingObj')
+  }
+
+  readOnly() {
+    return false
   }
 
   getExcludedDays = availabilities => {
@@ -398,6 +389,9 @@ class BookingBase extends BasePage {
   }
 
   onChangeTime = tm => {
+    if (this.readOnly()) {
+      return
+    }
     const mmt=moment(tm)
     const {prestation_date}=this.state
     if (prestation_date) {
@@ -407,6 +401,9 @@ class BookingBase extends BasePage {
   }
 
   onChangeDate = dt => {
+    if (this.readOnly()) {
+      return
+    }
     const mmt=moment(dt)
     const {prestation_date}=this.state
     if (prestation_date) {
@@ -426,6 +423,9 @@ class BookingBase extends BasePage {
   }
 
   onLocationChanged = (id, checked) => {
+    if (this.readOnly()) {
+      return
+    }
     // Ne pas permettre la déselection
     if (!checked) {
       return
@@ -434,6 +434,9 @@ class BookingBase extends BasePage {
   }
 
   onQtyChanged = (id, offset) => () => {
+    if (this.readOnly()) {
+      return
+    }
     let value = this.state.count[id]
     if (!value) {
       value = null
@@ -554,7 +557,10 @@ class BookingBase extends BasePage {
     if (avocotes_booking) {
       return `Chez ${avocotes_booking.user.full_name} (${avocotes_booking.user.billing_address.city})`
     }
-    const {allAddresses}=this.state
+    const {location, allAddresses}=this.state
+    if (location=='main') {
+      return this.props.t('USERSERVICEPREVIEW.at_home')
+    }
     return allAddresses && allAddresses[this.get_prop_address()] ? allAddresses[this.get_prop_address()].label : this.props.t('USERSERVICEPREVIEW.at_home')
   }
 
@@ -1023,4 +1029,4 @@ class BookingBase extends BasePage {
   }
 }
 
-module.exports=BookingBase
+module.exports=PreviewBase

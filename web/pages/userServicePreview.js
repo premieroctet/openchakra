@@ -1,13 +1,15 @@
+const moment = require('moment')
+const {setAxiosAuthentication} = require('../utils/authentication')
 import ReactHtmlParser from 'react-html-parser'
 const axios = require('axios')
-const BookingBase = require('./bookingBase')
+const PreviewBase = require('./previewBase')
 import {withTranslation} from 'react-i18next'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
 import '../static/assets/css/custom.css'
 
 // TODO : gérer affichage si utilisateur non connecté
-class UserServicePreview extends BookingBase {
+class UserServicePreview extends PreviewBase {
   constructor(props) {
     super(props, false)
   }
@@ -55,6 +57,44 @@ class UserServicePreview extends BookingBase {
       price: p.price,
       _id: p._id,
     }
+  }
+
+  readOnly = () => {
+    return !!this.getURLProps()
+  }
+
+  postLoadData = () => {
+    const {booking_id}=this.getURLProps()
+    if (!booking_id) {
+      return Promise.resolve()
+    }
+    return new Promise((resolve, reject) => {
+      setAxiosAuthentication()
+      axios.get(`/myAlfred/api/booking/${booking_id}`)
+        .then(res => {
+          const booking=res.data
+          const {serviceUser}=this.state
+          this.onChange({target: {name: 'prestation_date', value: moment(booking.prestation_date)}})
+          this.setState({allAddresses: {'main': booking.address}})
+          this.onLocationChanged('main', true)
+          let count={}
+          booking.prestations.forEach(p => {
+            const presta = serviceUser.prestations.find(pr => pr.prestation.label == p.name)
+            count[presta._id]=p.value
+          })
+          this.setState({
+            prestation_date: moment(booking.prestation_date),
+            allAddresses: {'main': booking.address},
+            location: 'main',
+            count: count,
+          },
+          () => this.computeTotal())
+          resolve(null)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
   }
 }
 

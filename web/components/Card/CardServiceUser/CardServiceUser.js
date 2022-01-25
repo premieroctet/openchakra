@@ -136,7 +136,7 @@ class CardServiceUser extends React.Component {
   }
 
   render() {
-    const {classes, gps, profileMode, address, loading} = this.props
+    const {classes, gps, profileMode, address, loading, booking_id} = this.props
     const {cpData, alfred, open, animated} = this.state
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null
@@ -144,7 +144,7 @@ class CardServiceUser extends React.Component {
 
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {}
 
-    let resa_link = `/userServicePreview?id=${cpData._id}`
+    let resa_link = `/userServicePreview?id=${cpData._id}&booking_id=${booking_id}`
     if (address) {
       resa_link+=`&address=${address}`
     }

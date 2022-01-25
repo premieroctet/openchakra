@@ -1,6 +1,6 @@
 import ReactHtmlParser from 'react-html-parser'
 const axios = require('axios')
-const BookingBase = require('./bookingBase')
+const PreviewBase = require('./previewBase')
 import {withTranslation} from 'react-i18next'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
@@ -14,7 +14,7 @@ registerLocale('fr', fr)
 
 // TODO : gérer affichage si utilisateur non connecté
 // TODO : les �quipements ne sont pas sauvegardés
-class ServicePreview extends BookingBase {
+class ServicePreview extends PreviewBase {
 
   constructor(props) {
     super(props, true)

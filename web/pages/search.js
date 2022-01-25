@@ -454,6 +454,7 @@ class SearchPage extends BasePage {
                         gps={gps}
                         user={this.state.user}
                         address={selectedAddress}
+                        booking_id={this.getURLProps().booking_id}
                       />
                     </Grid>
                     <Hidden only={['xl', 'lg', 'md', 'sm']} >
