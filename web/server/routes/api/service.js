@@ -98,7 +98,7 @@ router.get('/allCount', (req, res) => {
 router.get('/:id', (req, res) => {
   Service.findById(req.params.id)
     .populate('category')
-    .populate('prestations')
+    .populate({path: 'prestations', populate:{path: 'filter_presentation'}})
     .populate('equipments')
     .then(service => {
       if (!service) {
