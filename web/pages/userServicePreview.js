@@ -82,12 +82,12 @@ class UserServicePreview extends PreviewBase {
       axios.get(`/myAlfred/api/booking/${booking_id}`)
         .then(res => {
           const booking=res.data
-          const prestas=booking.prestations.map(p => `${p.value} ${p.name} à ${p.price}€`).join(',')
+          const prestas=booking.prestations.map(p => (<li>{p.value} {p.name} à {p.price}€</li>))
           const title=(
             <>
-              <div>Réservation de {booking.service.label} pour {booking.user.full_name}</div>
+              <div>Commande : {booking.service.label} pour {booking.user.full_name}</div>
               <div>{formatAddress(booking.address)}</div>
-              <div>{prestas}</div>
+              <ul>{prestas}</ul>
               <div>Total:{booking.amount}€</div>
             </>
           )

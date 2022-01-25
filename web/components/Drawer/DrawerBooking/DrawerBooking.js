@@ -173,6 +173,7 @@ class DrawerBooking extends React.Component {
                 </Grid>
               </Grid>
               <Grid style={{marginTop: '5%'}}>
+                <Typography>{this.props.reminder}</Typography>
                 <Grid style={{padding: '10px 16px', display: 'flex', alignItems: 'center', border: '1px solid rgba(112,112,112,0.5)', borderRadius: 14, width: '100%'}}>
                   <Grid style={{width: '50%'}}>
                     <TextField

@@ -1,6 +1,6 @@
 export default theme => ({
   mainContainer: {
-    marginTop: 100,
+    marginTop: 50,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
