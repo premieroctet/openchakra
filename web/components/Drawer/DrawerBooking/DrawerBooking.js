@@ -46,7 +46,9 @@ class DrawerBooking extends React.Component {
     this.setState({expanded: isExpanded ? panel : false})
   }
 
-  selectedPresta = prestations => (
+  selectedPresta = prestations => {
+    const {readonly}=this.props
+    return (
     lodash.sortBy(prestations, p => p.order || 0).map((p, index) => (
       <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
         <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
@@ -79,24 +81,29 @@ class DrawerBooking extends React.Component {
         </Grid>
         <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
           <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-            <Grid>
-              <IconButton onClick={this.props.onQtyChanged(p._id, -1)}>
-                <RemoveIcon/>
-              </IconButton>
-            </Grid>
+            {!readonly &&
+              <Grid>
+                <IconButton onClick={this.props.onQtyChanged(p._id, -1)}>
+                  <RemoveIcon/>
+                </IconButton>
+              </Grid>
+            }
             <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
               <Typography>{this.props.count[p._id] ? this.props.count[p._id] : 0}</Typography>
             </Grid>
-            <Grid>
-              <IconButton onClick={this.props.onQtyChanged(p._id, 1)}>
-                <AddIcon/>
-              </IconButton>
-            </Grid>
+            {!readonly &&
+              <Grid>
+                <IconButton onClick={this.props.onQtyChanged(p._id, 1)}>
+                  <AddIcon/>
+                </IconButton>
+              </Grid>
+            }
           </Grid>
         </Grid>
       </Grid>
     ))
   )
+  }
 
   accordion = (prestations, fltr, classes) => {
     return(
@@ -133,7 +140,7 @@ class DrawerBooking extends React.Component {
     const {warningPerimeter, warningBudget, warningSelf, side, classes, service, alfred, prestation_date, errors,
       count, serviceUser, isChecked, location, pick_tax, total, customer_fee,
       cesu_total, filters, pricedPrestations, excludedDays, role, company_amount,
-      avocotes, all_avocotes, alfred_pro, title, serviceMode} = this.props
+      avocotes, all_avocotes, alfred_pro, title, serviceMode, readonly} = this.props
 
     const excludedTimes = this.getExcludedTimes()
 
@@ -176,6 +183,7 @@ class DrawerBooking extends React.Component {
                         inputComponent: () => {
                           return (
                             <DatePicker
+                              readOnly={readonly}
                               selected={prestation_date && prestation_date.toDate() || null}
                               dateFormat='dd/MM/yyyy'
                               onChange={this.props.onChangeDate}
@@ -201,6 +209,7 @@ class DrawerBooking extends React.Component {
                         inputComponent: () => {
                           return (
                             <DatePicker
+                              readOnly={readonly}
                               selected={prestation_date && prestation_date.toDate() || null}
                               onChange={this.props.onChangeTime}
                               showTimeSelect
@@ -276,7 +285,7 @@ class DrawerBooking extends React.Component {
                         isPrice={false}
                         isOption={false}
                         checked={location === this.props.clientAddressId}
-                        onChange={this.props.onLocationChanged}/>
+                        onChange={!readonly && this.props.onLocationChanged}/>
                     </Grid>
                   }
                   {
@@ -290,7 +299,7 @@ class DrawerBooking extends React.Component {
                           isPrice={false}
                           isOption={false}
                           checked={location === 'alfred'}
-                          onChange={this.props.onLocationChanged}/>
+                          onChange={!readonly && this.props.onLocationChanged}/>
                       </Grid>
                   }
                   {
@@ -304,7 +313,7 @@ class DrawerBooking extends React.Component {
                           isPrice={false}
                           isOption={false}
                           checked={location === 'visio'}
-                          onChange={this.props.onLocationChanged}/>
+                          onChange={!readonly && this.props.onLocationChanged}/>
                       </Grid>
                   }
                   <Grid>
@@ -418,15 +427,17 @@ class DrawerBooking extends React.Component {
                 <Grid style={{marginTop: 15, marginBottom: 15}}>
                   <Typography className={'custombookinginfoprice'} style={{color: 'rgba(39, 37, 37, 0.35)'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.next_step_paiment'))}</Typography>
                 </Grid>
-                <Grid>
-                  <CustomButton
-                    startIcon={<HelpOutlineIcon />}
-                    disabled={!isEmpty(errors)}
-                    onClick={() => this.props.book(false)}
-                  >
-                    <Typography style={{textDecoration: 'underline', textTransform: 'initial'}} className={'custombookingaskinfo'}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.button_info'))}</Typography>
-                  </CustomButton>
-                </Grid>
+                {!readonly &&
+                  <Grid>
+                    <CustomButton
+                      startIcon={<HelpOutlineIcon />}
+                      disabled={!isEmpty(errors)}
+                      onClick={() => this.props.book(false)}
+                    >
+                      <Typography style={{textDecoration: 'underline', textTransform: 'initial'}} className={'custombookingaskinfo'}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.button_info'))}</Typography>
+                    </CustomButton>
+                  </Grid>
+                }
               </Grid>
             </Grid>
           </Grid>

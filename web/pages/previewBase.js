@@ -347,7 +347,7 @@ class PreviewBase extends BasePage {
     if (this.hasWarningBudget()) {
       errors.total = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_amount_too_high'))
     }
-    if (this.hasWarningSelf()) {
+    if (this.hasWarningSelf() && !this.getURLProps().booking_id) {
       errors.user = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_resa_myself'))
     }
     if (!this.serviceMode && this.hasWarningPerimeter()) {
@@ -557,11 +557,11 @@ class PreviewBase extends BasePage {
     if (avocotes_booking) {
       return `Chez ${avocotes_booking.user.full_name} (${avocotes_booking.user.billing_address.city})`
     }
-    const {location, allAddresses}=this.state
-    if (location=='main') {
-      return this.props.t('USERSERVICEPREVIEW.at_home')
+    const {user, allAddresses}=this.state
+    if (!user || !allAddresses) {
+      return ''
     }
-    return allAddresses && allAddresses[this.get_prop_address()] ? allAddresses[this.get_prop_address()].label : this.props.t('USERSERVICEPREVIEW.at_home')
+    return allAddresses? allAddresses[this.get_prop_address()].label : ''
   }
 
   getLocationLabel = () => {
@@ -713,7 +713,7 @@ class PreviewBase extends BasePage {
     const filters = this.extractFilters()
     const pricedPrestations = this.computePricedPrestations()
     const avocotes_booking=this.getAvocotesBooking()
-    const {shop, serviceUser, alfred}=this.state
+    const {shop, serviceUser, alfred, bookingHeader}=this.state
 
     const showProfileEnabled = alfred && alfred._id
 
@@ -799,6 +799,7 @@ class PreviewBase extends BasePage {
                     }
                   </Grid>
                 </Grid>
+                <Grid>{bookingHeader}</Grid>
                 <Grid className={'custompreviewboxdescription'} style={{marginTop: '10%'}}>
                   <Grid className={classes.overrideCssChild}>
                     <Grid style={{width: '100%'}}>
@@ -932,6 +933,7 @@ class PreviewBase extends BasePage {
                           alfred_pro={shop.is_professional}
                           title={this.getPageDescription()}
                           serviceMode={this.serviceMode}
+                          readonly={this.readOnly()}
                           {...this.state}
                         />
                       </Grid>
@@ -963,6 +965,7 @@ class PreviewBase extends BasePage {
                     alfred_pro={shop.is_professional}
                     title={this.getPageDescription()}
                     serviceMode={this.serviceMode}
+                    readonly={this.readOnly()}
                     {...this.state}
                   />
                 </Grid>

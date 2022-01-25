@@ -6,6 +6,7 @@ const {normalize}=require('../../utils/text')
 
 const isServiceUserAroundGPS = (serviceUser, coordinates) => {
 
+  console.log(`SU:${JSON.stringify(serviceUser.address)}, coordinates:${JSON.stringify(coordinates)}`)
   const serviceGPS = serviceUser.service_address.gps
   if (!serviceGPS) {
     console.warn(`Incorect GPS in ${ serviceUser._id }:${ JSON.stringify(serviceGPS)}`)

@@ -1,3 +1,4 @@
+const {formatAddress} = require('../utils/text')
 const moment = require('moment')
 const {setAxiosAuthentication} = require('../utils/authentication')
 import ReactHtmlParser from 'react-html-parser'
@@ -7,6 +8,7 @@ import {withTranslation} from 'react-i18next'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
 import '../static/assets/css/custom.css'
+import React from 'react'
 
 // TODO : gérer affichage si utilisateur non connecté
 class UserServicePreview extends PreviewBase {
@@ -63,6 +65,13 @@ class UserServicePreview extends PreviewBase {
     return !!this.getURLProps()
   }
 
+  hasWarningSelf = () => {
+    if (this.getURLProps().booking_id) {
+      return false
+    }
+    return super.hasWarningSelf()
+  }
+
   postLoadData = () => {
     const {booking_id}=this.getURLProps()
     if (!booking_id) {
@@ -73,9 +82,19 @@ class UserServicePreview extends PreviewBase {
       axios.get(`/myAlfred/api/booking/${booking_id}`)
         .then(res => {
           const booking=res.data
+          const prestas=booking.prestations.map(p => `${p.value} ${p.name} à ${p.price}€`).join(',')
+          const title=(
+            <>
+              <div>Réservation de {booking.service.label} pour {booking.user.full_name}</div>
+              <div>{formatAddress(booking.address)}</div>
+              <div>{prestas}</div>
+              <div>Total:{booking.amount}€</div>
+            </>
+          )
+          this.setState({bookingHeader: title})
           const {serviceUser}=this.state
           this.onChange({target: {name: 'prestation_date', value: moment(booking.prestation_date)}})
-          this.setState({allAddresses: {'main': booking.address}})
+          this.setState({allAddresses: {'main': {...booking.address, label: this.props.t('USERSERVICEPREVIEW.at_home')}}})
           this.onLocationChanged('main', true)
           let count={}
           booking.prestations.forEach(p => {

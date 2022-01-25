@@ -292,14 +292,6 @@ class SearchPage extends BasePage {
 
     if (this.getURLProps().booking_id) {
       filters.booking_id=this.getURLProps().booking_id
-      setAxiosAuthentication()
-      axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
-        .then(res => {
-          this.setState({gps: res.address.gps})
-        })
-        .catch(err => {
-          console.error(err)
-        })
     }
 
     else {
@@ -335,6 +327,7 @@ class SearchPage extends BasePage {
     }
 
     filters.status = isB2BStyle() ? PRO : PART
+    console.log(`GPS:${JSON.stringify(this.state.gps)}`)
     const search_url=this.isServiceSearch() ? '/myAlfred/api/service/search' : '/myAlfred/api/serviceUser/search'
     axios.post(search_url, filters)
       .then(res => {

@@ -537,12 +537,14 @@ router.post('/search', (req, res) => {
       console.log(`Found ${serviceUsers.length} before filtering`)
       // Filter hidden
       serviceUsers = serviceUsers.filter(su => !su.user.hidden)
-      const promise=req.body.booking_id ? Booking.findById(req.body.booking_id) : Promise.resolve(null)
+      const promise=req.body.booking_id ? Booking.findById(req.body.booking_id).populate('user') : Promise.resolve(null)
       return promise
     })
     .then(booking => {
       if (booking) {
+        console.log(`GPS was:${JSON.stringify(gps)}`)
         gps = booking.address && booking.address.gps
+        console.log(`GPS becomes:${JSON.stringify(gps)}`)
         service=booking.service
         const prestaLabels=booking.prestations.map(p => p.name)
         serviceUsers = serviceUsers.filter(su => {
@@ -584,7 +586,18 @@ router.post('/search', (req, res) => {
         }
         // if booking : keep only if alfred && same GPS || client
         if (booking) {
-          serviceUsers = serviceUsers.filter(su => (lodash.isEqual(gps, su.service_address.gps) ? !!su.location.alfred : su.location.client))
+          // TODO lodash.isEqual({lat:1, lng:1},{'lat':1, 'lng':2})=>false,lodash.isEqual(Object.entries({lat:1, lng:1}),Object.entries({'lat':1, 'lng':2}))
+          let location=''
+          if (!booking.address.gps) {
+            location='visio'
+          }
+          else if (lodash.isEqual(Object.entries(booking.address.gps), Object.entries(booking.user.billing_address.gps))) {
+            location='client'
+          }
+          else {
+            location='alfred'
+          }
+          serviceUsers = serviceUsers.filter(su => !!su.location[location])
         }
 
       }
