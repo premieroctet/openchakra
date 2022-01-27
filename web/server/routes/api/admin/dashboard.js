@@ -1,3 +1,4 @@
+const {isPlatform} = require('../../../../config/config')
 const Review = require('../../../models/Review')
 const EventLog = require('../../../models/EventLog')
 const Commission = require('../../../models/Commission')
@@ -990,20 +991,33 @@ router.post('/service/editPicture/:id', uploadService.single('picture'), passpor
 // @Route GET /myAlfred/api/admin/service/all
 // View all service
 // @Access private
-router.get('/service/all', passport.authenticate('admin', {session: false}), (req, res) => {
+router.get('/service/all', /*passport.authenticate('admin', {session: false}),*/ (req, res) => {
 
   Service.find()
     .sort({'label': 1})
     .populate('equipments', 'label')
     .populate('category', 'particular_label professional_label')
-    .populate('prestations', 'particular_access professional_access')
-    .then(service => {
-      if (!service) {
-        return res.status(400).json({msg: 'No service found'})
-      }
-      res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count')
-      res.setHeader('X-Total-Count', service.length)
-      res.json(service)
+    .populate('prestations', 'particular_access professional_access company_price')
+    .lean({virtuals: true})
+    .then(services => {
+      services.forEach(s => {
+        s.category_label = [s.category.particular_label, s.category.professional_label].join('/')
+        warnings=[]
+        if (s.professional_access && !s.prestations.find(p => p.professional_access)) {
+          warnings.push('aucune prestation pro')
+        }
+        if (s.particular_access && !s.prestations.find(p => p.particular_access)) {
+          warnings.push('aucune prestation particuliers')
+        }
+        if (isPlatform()) {
+          const no_price_count = s.prestations.filter(p => !p.company_price).length
+          if (no_price_count>0) {
+            warnings.push(`${no_price_count}/${s.prestations.length} prestations à 0€`)
+          }
+        }
+        s.warning=warnings.join(',')
+      })
+      res.json(services)
 
     })
     .catch(err => {
