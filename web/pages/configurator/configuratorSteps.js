@@ -44,6 +44,6 @@ const SUMMARY = {
   component: props => <Summary {...props}/>,
 }
 
-const STEPS=[MACHINE_TYPE, JOB, MACHINE_WEIGHT, USE_CASE, BLADE_DIMENSION, SUMMARY]
+const STEPS=[MACHINE_TYPE, /* JOB,*/ /* MACHINE_WEIGHT,*/ USE_CASE, BLADE_DIMENSION, SUMMARY]
 
 module.exports={STEPS}
