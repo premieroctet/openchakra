@@ -4,30 +4,10 @@ import lodash from 'lodash'
 
 function MachineType(props) {
 
-  const [mark, setMark]=useState(props.machineMark)
-  const [model, setModel]=useState(props.machineModel)
-  const [models, setModels]=useState([])
-  const [power, setPower]=useState(props.machinePower)
-  const [powers, setPowers]=useState([])
-  const [weight, setWeight]=useState(props.machineWeight)
-  const [weights, setWeights]=useState([])
-
-  const machines=props.models
-
-  function onChange(name, value) {
-    props.onChange && props.onChange({target: {name: name, value: value}})
-  }
-
-  useEffect(() => {
-    const mdls=lodash.uniq(machines.filter(v => v.mark==mark).map(v => v.model)).sort()
-    setModels(mdls)
-    onChange('machineMark', mark)
-  }, [mark])
-
   useEffect(() => {
     const pwrs=lodash.uniq(machines.filter(v => v.mark==mark && v.model==model).map(v => v.power)).sort()
     setPowers(pwrs)
-    onChange('machineModel', model)
+    onChange('model', model)
   }, [model])
 
   useEffect(() => {
@@ -46,7 +26,7 @@ function MachineType(props) {
     <Grid style={{display: 'flex'}}>
       <Grid xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
         <h1>Marque</h1>
-        <Select name='mark' value={mark} onChange={ev => { setMark(ev.target.value);setModel(null);setPower(null);setWeight(null) }}>
+        <Select name='mark' value={mark} onChange={ev => { props.setMark(ev.target.value) }}>
           {marks.map(mk => (
             <MenuItem value={mk}>{mk}</MenuItem>
           ))
@@ -98,9 +78,11 @@ function MachineType(props) {
 
 const validator= state => {
   console.log(JSON.stringify(lodash.omit(state, 'models')))
-  const res=!!state.machineMark && !!state.machineModel && !!state.machinePower && !!state.machineWeight
+  /** const res=!!state.mark && !!state.model && !!state.machinePower && !!state.machineWeight
   console.log(`Validate:${res}`)
   return res
+  */
+  return true
 }
 
 module.exports={MachineType, machineTypeValidator: validator}

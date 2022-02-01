@@ -25,15 +25,16 @@ const getDatabase = () => {
           let mark=null
           sh.eachRow(row => {
             if (inside && row.getCell(MARK_COL).value!='CONSTRUCTEUR MANUFACTURER') {
-              mark_value=row.getCell(MARK_COL).value
+              mark_value=`${row.getCell(MARK_COL).value}`
               if (mark_value && !mark_value.match(exclude_marks_re)) {
                 mark = mark_value
               }
-              model=row.getCell(MODEL_COL).value
+              model=`${row.getCell(MODEL_COL).value}`
               power=row.getCell(POWER_COL).value
               weight=row.getCell(WEIGHT_COL).value
               if (model) {
-                const data={type: type, mark: mark, model: model, power: power, weight: weight,
+                console.log(model, typeof model)
+                const data={type: type.trim(), mark: mark.trim(), model: model.trim(), power: power, weight: weight,
                   stick: {std: row.getCell(STICK_STD_COL).value, xhd: row.getCell(STICK_XHD_COL).value},
                   fast: {std: row.getCell(FAST_STD_COL).value, xhd: row.getCell(FAST_XHD_COL).value},
                   turn: {std: row.getCell(TURN_STD_COL).value, xhd: row.getCell(TURN_XHD_COL).value},

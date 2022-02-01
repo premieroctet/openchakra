@@ -1,8 +1,6 @@
 import React from 'react'
 
 import {MachineType, machineTypeValidator} from '../../components/configurator/MachineType'
-import {Job, jobValidator} from '../../components/configurator/Job'
-import {MachineWeight, machineWeightValidator} from '../../components/configurator/MachineWeight'
 import {UseCase, useCaseValidator} from '../../components/configurator/UseCase'
 import {BladeDimension, bladeDimensionValidator} from '../../components/configurator/BladeDimension'
 import {Summary, summaryValidator} from '../../components/configurator/Summary'
@@ -12,18 +10,6 @@ const MACHINE_TYPE = {
   menu: 'Type de machine',
   validator: machineTypeValidator,
   component: props => <MachineType {...props}/>,
-}
-
-const JOB = {
-  menu: 'Métier',
-  validator: jobValidator,
-  component: props => <Job {...props}/>,
-}
-
-const MACHINE_WEIGHT = {
-  menu: 'Tonnage Machine',
-  validator: machineWeightValidator,
-  component: props => <MachineWeight {...props}/>,
 }
 
 const USE_CASE = {
@@ -44,6 +30,6 @@ const SUMMARY = {
   component: props => <Summary {...props}/>,
 }
 
-const STEPS=[MACHINE_TYPE, /* JOB,*/ /* MACHINE_WEIGHT,*/ USE_CASE, BLADE_DIMENSION, SUMMARY]
+const STEPS=[MACHINE_TYPE, USE_CASE, BLADE_DIMENSION, SUMMARY]
 
 module.exports={STEPS}
