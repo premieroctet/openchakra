@@ -1,4 +1,5 @@
-const {Grid, MenuItem, Select} = require('@material-ui/core')
+const {Grid, MenuItem, Select, TextField} = require('@material-ui/core')
+const {Autocomplete} = require('@material-ui/lab')
 import React from 'react'
 
 function MachineType(props) {
@@ -32,13 +33,13 @@ function MachineType(props) {
         {!!props.models.length &&
         <>
           <h1>Modèle</h1>
-          <Select name='model' value={props.model} onChange={ev => { props.onModelChange(ev.target.value) }}>
-            <MenuItem key={''} value={''}>Inconnu</MenuItem>
-            {props.models.map(mdl => (
-              <MenuItem key={mdl} value={mdl}>{mdl}</MenuItem>
-            ))
-            }
-          </Select>
+          <Autocomplete
+            options={props.models}
+            filterOptions={(opts, {inputValue}) => { return opts.filter(o => o.toLowerCase().replace(/ /g, '').includes(inputValue.toLowerCase().replace(/ /g, ''))) }}
+            renderInput={params => (<TextField {...params}/>)}
+            onChange={(ev, value) => props.onModelChange(value)}
+            onInputChange={(ev, value) => props.onModelChange(value)}
+          />
         </>
         }
       </Grid>
