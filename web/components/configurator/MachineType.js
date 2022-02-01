@@ -1,71 +1,69 @@
 const {Grid, MenuItem, Select} = require('@material-ui/core')
-import React, {useState, useEffect} from 'react'
-import lodash from 'lodash'
+import React from 'react'
 
 function MachineType(props) {
 
-  useEffect(() => {
-    const pwrs=lodash.uniq(machines.filter(v => v.mark==mark && v.model==model).map(v => v.power)).sort()
-    setPowers(pwrs)
-    onChange('model', model)
-  }, [model])
-
-  useEffect(() => {
-    const whts=lodash.uniq(machines.filter(v => v.mark==mark && v.model==model && v.power==power).map(v => v.weight)).sort()
-    setWeights(whts)
-    onChange('machinePower', power)
-  }, [power])
-
-  useEffect(() => {
-    onChange('machineWeight', weight)
-  }, [weight])
-
-  const marks=lodash.uniq(machines.map(v => v.mark)).sort()
-
   return (
     <Grid style={{display: 'flex'}}>
-      <Grid xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-        <h1>Marque</h1>
-        <Select name='mark' value={mark} onChange={ev => { props.setMark(ev.target.value) }}>
-          {marks.map(mk => (
-            <MenuItem value={mk}>{mk}</MenuItem>
+      <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
+        <h1>Type</h1>
+        <Select name='type' value={props.type} onChange={ev => { props.onTypeChange(ev.target.value) }}>
+          {[['', 'Inconnu'], ['excavator', 'Excavatrice'], ['loader', 'Chargeuse'], ['shovel', 'Pelle-butte']].map(tp => (
+            <MenuItem key={tp[0]} value={tp[0]}>{tp[1]}</MenuItem>
           ))
           }
         </Select>
       </Grid>
-      <Grid xs={3} name='model' style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-        {!!models.length &&
+      <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
+        {!!props.marks.length &&
+          <>
+            <h1>Marque</h1>
+            <Select name='mark' value={props.mark} onChange={ev => { props.onMarkChange(ev.target.value) }}>
+              <MenuItem key={''} value={''}>Inconnu</MenuItem>
+              {props.marks.map(mk => (
+                <MenuItem key={mk} value={mk}>{mk}</MenuItem>
+              ))
+              }
+            </Select>
+          </>
+        }
+      </Grid>
+      <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
+        {!!props.models.length &&
         <>
-          <h1>Modele</h1>
-          <Select id='model' value={model} onChange={ev => { setModel(ev.target.value);setPower(null);setWeight(null) }}>
-            {models.map(mdl => (
-              <MenuItem value={mdl}>{mdl}</MenuItem>
+          <h1>Modèle</h1>
+          <Select name='model' value={props.model} onChange={ev => { props.onModelChange(ev.target.value) }}>
+            <MenuItem key={''} value={''}>Inconnu</MenuItem>
+            {props.models.map(mdl => (
+              <MenuItem key={mdl} value={mdl}>{mdl}</MenuItem>
             ))
             }
           </Select>
         </>
         }
       </Grid>
-      <Grid xs={3} name='power' style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-        {!!powers.length &&
+      <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
+        {!!props.powers.length &&
         <>
-          <h1>Puissance</h1>
-          <Select id='power' value={power} onChange={ev => { setPower(ev.target.value);setWeight(null) }}>
-            {powers.map(pwr => (
-              <MenuItem value={pwr}>{pwr} kW</MenuItem>
+          <h1>Puissance(kW)</h1>
+          <Select name='power' disabled={!!props.model} value={props.power} onChange={ev => { props.onPowerChange(ev.target.value) }}>
+            <MenuItem key={null} value={null}>Inconnu</MenuItem>
+            {props.powers.map(pwr => (
+              <MenuItem key={pwr} value={pwr}>{pwr}</MenuItem>
             ))
             }
           </Select>
         </>
         }
       </Grid>
-      <Grid xs={3} name='weight' style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-        {!!weights.length &&
+      <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
+        {!!props.weights.length &&
         <>
-          <h1>Poids</h1>
-          <Select id='weight' value={weight} onChange={ev => setWeight(ev.target.value)}>
-            {weights.map(wght => (
-              <MenuItem value={wght}>{wght} t</MenuItem>
+          <h1>Poids(t)</h1>
+          <Select name='weight' disabled={!!props.model} value={props.weight} onChange={ev => props.onWeightChange(ev.target.value)}>
+            <MenuItem key={null} value={null}>Inconnu</MenuItem>
+            {props.weights.map(wght => (
+              <MenuItem key={wght} value={wght}>{wght}</MenuItem>
             ))
             }
           </Select>
@@ -77,12 +75,9 @@ function MachineType(props) {
 }
 
 const validator= state => {
-  console.log(JSON.stringify(lodash.omit(state, 'models')))
-  /** const res=!!state.mark && !!state.model && !!state.machinePower && !!state.machineWeight
-  console.log(`Validate:${res}`)
+  let res=!!state.type && !!state.mark && !!state.power && !!state.weight
+  res = res || state.type=='shovel'
   return res
-  */
-  return true
 }
 
 module.exports={MachineType, machineTypeValidator: validator}

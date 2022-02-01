@@ -7,13 +7,13 @@ import {Summary, summaryValidator} from '../../components/configurator/Summary'
 // const validationSteps=require('../../utils/validationSteps/validationSteps')
 
 const MACHINE_TYPE = {
-  menu: 'Type de machine',
+  menu: 'Votre machine',
   validator: machineTypeValidator,
   component: props => <MachineType {...props}/>,
 }
 
 const USE_CASE = {
-  menu: "Conditions d'utilisation",
+  menu: "Vos conditions d'utilisation",
   validator: useCaseValidator,
   component: props => <UseCase {...props}/>,
 }

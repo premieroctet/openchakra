@@ -1,53 +1,83 @@
 const ExcelJS = require('exceljs')
+const lodash=require('lodash')
+
+const loadThicknesses = sheets => {
+
+  const THICKNESS_COL=3
+
+  let thicknesses=[]
+
+  sheets.forEach(sheet => {
+    let inside=false
+    sheet.eachRow(row => {
+      if (inside && row.getCell(THICKNESS_COL).value) {
+        thicknesses.push(row.getCell(THICKNESS_COL).value)
+      }
+      if (row.getCell(1)=='TAILLE') {
+        inside=true
+      }
+    })
+  })
+  thicknesses=lodash.uniq(thicknesses.filter(v => !!v)).sort((a, b) => a-b)
+  return thicknesses
+}
+
+const loadMachines = sheet => {
+
+  const TYPE_COL=1
+  const MARK_COL=2
+  const MODEL_COL=3
+  const WEIGHT_COL=4
+  const POWER_COL=5
+  const FAMILY_COL=11
+  const STD_REF_COL=12
+  const STD_TEETH_COL=13
+  const XHD_REF_COL=14
+  const XHD_TEETH_COL=15
+
+  const machines=[]
+  let inside=false
+  sheet.eachRow(row => {
+    if (inside) {
+      const type=`${row.getCell(TYPE_COL).value}`=='EXCAVATRICE' ? 'excavator' : 'loader'
+      const mark=`${row.getCell(MARK_COL).value}`
+      const model=`${row.getCell(MODEL_COL).value}`
+      const power=parseInt(row.getCell(POWER_COL).value) || null
+      const weight=parseInt(row.getCell(WEIGHT_COL).value) || null
+      const family=parseInt(row.getCell(FAMILY_COL).value) || null
+      if (mark && model) {
+        const data={type: type.trim(), mark: mark.trim(), model: model.trim(), power: power, weight: weight, family: family && family.trim()}
+        if (family) {
+          data.reference= {
+            std: {
+              ref: row.getCell(STD_REF_COL).value, teeth: row.getCell(STD_TEETH_COL).value,
+            },
+            xhd: {
+              ref: row.getCell(XHD_REF_COL).value, teeth: row.getCell(XHD_TEETH_COL).value,
+            },
+          }
+        }
+        machines.push(data)
+      }
+    }
+    if (row.getCell(1).value=='TYPE DE MACHINE') {
+      inside=true
+    }
+  })
+  return machines
+}
 
 const getDatabase = () => {
-  const MARK_COL=1
-  const MODEL_COL=2
-  const WEIGHT_COL=3
-  const POWER_COL=4
-  const STICK_STD_COL=11
-  const STICK_XHD_COL=12
-  const FAST_STD_COL=13
-  const FAST_XHD_COL=14
-  const TURN_STD_COL=15
-  const TURN_XHD_COL=16
-
-  const exclude_marks_re=new RegExp('hybrid pelle mining longue portée flèche articulé'.split(' ').join('|'), 'i')
-
   return new Promise((resolve, reject) => {
     const workbook = new ExcelJS.Workbook()
     workbook.xlsx.readFile(`${__dirname}/../../../static/assets/data/feurst_db.xlsx`)
       .then(wb => {
-        const db=[]
-        wb.eachSheet(sh => {
-          const type=sh.name=='EXCAVATOR' ? 'pelleteuse' : 'chargeuse'
-          let inside=false
-          let mark=null
-          sh.eachRow(row => {
-            if (inside && row.getCell(MARK_COL).value!='CONSTRUCTEUR MANUFACTURER') {
-              mark_value=`${row.getCell(MARK_COL).value}`
-              if (mark_value && !mark_value.match(exclude_marks_re)) {
-                mark = mark_value
-              }
-              model=`${row.getCell(MODEL_COL).value}`
-              power=row.getCell(POWER_COL).value
-              weight=row.getCell(WEIGHT_COL).value
-              if (model) {
-                console.log(model, typeof model)
-                const data={type: type.trim(), mark: mark.trim(), model: model.trim(), power: power, weight: weight,
-                  stick: {std: row.getCell(STICK_STD_COL).value, xhd: row.getCell(STICK_XHD_COL).value},
-                  fast: {std: row.getCell(FAST_STD_COL).value, xhd: row.getCell(FAST_XHD_COL).value},
-                  turn: {std: row.getCell(TURN_STD_COL).value, xhd: row.getCell(TURN_XHD_COL).value},
-                }
-                db.push(data)
-              }
-            }
-            if (row.getCell(1).value=='CONSTRUCTEUR MANUFACTURER') {
-              inside=true
-            }
-          })
+        const machines=loadMachines(wb.getWorksheet('Machines'))
+        const thicknesses=loadThicknesses(wb.worksheets.slice(1))
+        resolve({
+          machines: machines,
+          thicknesses: thicknesses,
         })
-        resolve(db)
       })
       .catch(err => {
         reject(err)
