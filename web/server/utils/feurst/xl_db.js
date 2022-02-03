@@ -39,24 +39,12 @@ const loadGrounds = sheet => {
 }
 
 const loadThicknesses = sheets => {
-
+  const HEADER_ROW=3
   const THICKNESS_COL=3
 
-  let thicknesses=[]
-
-  sheets.forEach(sheet => {
-    let inside=false
-    sheet.eachRow(row => {
-      if (inside && row.getCell(THICKNESS_COL).value) {
-        thicknesses.push(row.getCell(THICKNESS_COL).value)
-      }
-      if (row.getCell(1)=='TAILLE') {
-        inside=true
-      }
-    })
-  })
-  thicknesses=lodash.uniq(thicknesses.filter(v => !!v)).sort((a, b) => a-b)
-  return thicknesses
+  let values=sheets.map(s => s.getRows(HEADER_ROW+1, s.rowCount).map(r => r.getCell(THICKNESS_COL).value))
+  values=lodash(values).flattenDeep().uniq().filter(v => !!v).sort((a, b) => a-b)
+  return values
 }
 
 const loadMachines = sheet => {
@@ -104,6 +92,36 @@ const loadMachines = sheet => {
   return machines
 }
 
+const loadAcccessories = wb => {
+
+  const FAMILY_COL=2
+  const THICKNESS_COL=3
+  const HEADER_ROW=2
+
+  const res={}
+  'excavatrice chargeuse'.split(' ').forEach(type => {
+    const sheet=wb.worksheets.find(s => s.name.match(new RegExp(`_${type}`, 'i')))
+    if (!sheet) {
+      return null
+    }
+    const header=sheet.getRow(HEADER_ROW).values.slice(THICKNESS_COL+1)
+    sheet.getRows(HEADER_ROW+1, sheet.rowCount).forEach(row => {
+      const values=row.values.map(v => v.result || v)
+      const family=values[FAMILY_COL]
+      const thickness=values[THICKNESS_COL]
+      if (!family || !thickness) {
+        return
+      }
+      const key=[type, family, thickness]
+      const obj=Object.fromEntries(values.slice(THICKNESS_COL+1).filter((v, idx) => !!v && !!header[idx]).map((v, idx) => {
+        return [header[idx], v]
+      }))
+      res[key]=(res[key]||[]).concat(obj)
+    })
+  })
+  console.log(JSON.stringify(Object.entries(res).filter(e => e[0].includes('euse,TKN11,60')), null, 2))
+}
+
 const getDatabase = () => {
   return new Promise((resolve, reject) => {
     const workbook = new ExcelJS.Workbook()
@@ -112,10 +130,12 @@ const getDatabase = () => {
         const machines=loadMachines(wb.getWorksheet('Machines'))
         const thicknesses=loadThicknesses(['Matrice Ep LAME_Excavatrice', 'Matrice Ep LAME_Chargeuse'].map(s => wb.getWorksheet(s)))
         const grounds=loadGrounds(wb.getWorksheet('Matrice Dents développée'))
+        const accessories=loadAcccessories(wb)
         resolve({
           machines: machines,
           thicknesses: thicknesses,
           grounds: grounds,
+          accessories: accessories,
         })
       })
       .catch(err => {
