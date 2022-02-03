@@ -1,9 +1,4 @@
-const {
-  FormControlLabel,
-  Grid,
-  Radio,
-  RadioGroup,
-} = require('@material-ui/core')
+const {Grid, MenuItem, Select} = require('@material-ui/core')
 
 import React from 'react'
 
@@ -11,13 +6,14 @@ function UseCase(props) {
 
   return (
     <Grid style={{display: 'flex'}}>
-      <Grid xs={12} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
+      <Grid style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
         <h2>Type de terrain</h2>
-        <RadioGroup value={props.quality} onChange={ev => props.onQualityChange(ev.target.value)}>
-          <FormControlLabel value='standard' control={<Radio />} label='Terre/gravat/tout venant' />
-          <FormControlLabel value='xd' control={<Radio />} label='Basalte/calcaire/marbre' />
-          <FormControlLabel value='xhd' control={<Radio />} label='Granit/porphyre/rhyolite' />
-        </RadioGroup>
+        <Select name='ground' value={props.ground} onChange={ev => { props.onGroundChange(ev.target.value) }}>
+          {props.grounds.map(mk => (
+            <MenuItem key={mk} value={mk}>{mk}</MenuItem>
+          ))
+          }
+        </Select>
       </Grid>
     </Grid>
 
@@ -25,7 +21,7 @@ function UseCase(props) {
 }
 
 const validator = state => {
-  return !!state.quality
+  return !!state.ground
 }
 
 module.exports={UseCase, useCaseValidator: validator}

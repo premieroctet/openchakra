@@ -13,7 +13,7 @@ class Configurator extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      step: 0,
+      step: 2,
       machines: [],
       type: '',
       types: [],
@@ -25,6 +25,8 @@ class Configurator extends React.Component {
       powers: [],
       weight: null,
       weights: [],
+      thicknesses: [],
+      fixTypes: ['A souder', 'A claveter'],
     }
   }
 
@@ -35,6 +37,7 @@ class Configurator extends React.Component {
         this.setState({
           machines: res.data.machines,
           thicknesses: res.data.thicknesses,
+          grounds: res.data.grounds.sort(),
         })
         this.onMachinesChange(res.data.machines)
       })
@@ -42,7 +45,7 @@ class Configurator extends React.Component {
   }
 
   getList = (data, attribute) => {
-    return lodash.uniq(data.map(v => v[attribute])).sort((a, b) => (a==null ? -1 : b ==null ? 1 : a-b))
+    return lodash.uniq(data.map(v => v[attribute])).sort((a, b) => (a==null ? -1 : b ==null ? 1 : a-b)).sort()
   }
 
   onMachinesChange = machines => {
@@ -99,10 +102,6 @@ class Configurator extends React.Component {
     this.setState({weight: weight})
   }
 
-  onQualityChange = quality => {
-    this.setState({quality: quality})
-  }
-
   onBladeShapeChange = shape => {
     this.setState({bladeShape: shape})
   }
@@ -115,6 +114,13 @@ class Configurator extends React.Component {
     this.setState({bladeThickness: thickness})
   }
 
+  onGroundChange = ground => {
+    this.setState({ground: ground})
+  }
+
+  onFixTypeChange = fixType => {
+    this.setState({fixType: fixType})
+  }
 
   nextPage = () => {
     const {step}=this.state
@@ -136,7 +142,7 @@ class Configurator extends React.Component {
 
     return (
       <Grid style={{width: '80%', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}} className='configurator'>
-        <h6>{is_development() && JSON.stringify(lodash.omit(this.state, ['marks', 'machines', 'models']))}</h6>
+        <h6>{is_development() && JSON.stringify(lodash.omit(this.state, ['marks', 'machines', 'models', 'powers', 'weights', 'thicknesses', 'grounds']))}</h6>
         <ProgressBar value={step} max={STEPS.length} />
         <h1>{menu}</h1>
         { component({...this.state, ...this}) }

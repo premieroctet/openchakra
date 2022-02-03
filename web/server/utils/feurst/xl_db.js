@@ -1,6 +1,20 @@
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
 
+const loadGrounds = sheet => {
+
+  const GROUND_ROW=3
+  const EXCLUDES=[/TAILLE/, /MACHINES/]
+  let grounds=[]
+
+  sheet.getRow(GROUND_ROW).eachCell(cell => {
+    if (!EXCLUDES.map(re => cell.value.match(re)).some(v => !!v)) {
+      grounds.push(cell.value)
+    }
+  })
+  return grounds
+}
+
 const loadThicknesses = sheets => {
 
   const THICKNESS_COL=3
@@ -70,13 +84,17 @@ const loadMachines = sheet => {
 const getDatabase = () => {
   return new Promise((resolve, reject) => {
     const workbook = new ExcelJS.Workbook()
+    console.time('Loading workbook')
     workbook.xlsx.readFile(`${__dirname}/../../../static/assets/data/feurst_db.xlsx`)
       .then(wb => {
+        console.timeEnd('Loading workbook')
         const machines=loadMachines(wb.getWorksheet('Machines'))
-        const thicknesses=loadThicknesses(wb.worksheets.slice(1))
+        const thicknesses=loadThicknesses(['Matrice Ep LAME_Excavatrice', 'Matrice Ep LAME_Chargeuse'].map(s => wb.getWorksheet(s)))
+        const grounds=loadGrounds(wb.getWorksheet('Matrice Dents développée'))
         resolve({
           machines: machines,
           thicknesses: thicknesses,
+          grounds: grounds,
         })
       })
       .catch(err => {
