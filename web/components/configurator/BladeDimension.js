@@ -22,9 +22,9 @@ function BladeDimension(props) {
         </RadioGroup>
       </Grid>
       <Grid xs={4} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-        <h2>Largeur godet</h2>
+        <h2>Largeur godet (cm)</h2>
         <Grid>
-          <TextField name='bucketWidth' type='number' value={props.bucketSize} onChange={ev => props.onBucketWidthChange(ev.target.value)} />mm
+          <TextField name='bucketWidth' type='number' value={props.bucketSize} onChange={ev => props.onBucketWidthChange(ev.target.value)} />
         </Grid>
         <h2>Epaisseur (mm)</h2>
         <Grid>

@@ -13,7 +13,7 @@ class Configurator extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      step: 2,
+      step: 3,
       machines: [],
       type: '',
       types: [],
@@ -25,8 +25,19 @@ class Configurator extends React.Component {
       powers: [],
       weight: null,
       weights: [],
+      bladeThickness: null,
       thicknesses: [],
+      ground: null,
+      grounds: [],
+      fixType: null,
       fixTypes: ['A souder', 'A claveter'],
+    }
+
+    if (is_development()) {
+      this.state={...this.state,
+        'type': 'loader', 'types': ['excavator', 'loader'], 'mark': 'BOBCAT',
+        'model': 'E 32', 'power': 23.1, 'weight': 3.5,
+        'ground': 'GRAVIER', 'bladeShape': 'delta', 'bladeThickness': 80}
     }
   }
 
@@ -37,9 +48,25 @@ class Configurator extends React.Component {
         this.setState({
           machines: res.data.machines,
           thicknesses: res.data.thicknesses,
-          grounds: res.data.grounds.sort(),
+          grounds: res.data.grounds,
         })
         this.onMachinesChange(res.data.machines)
+      })
+      .catch(err => console.error(err))
+
+    if (is_development()) {
+      this.getPrecos()
+    }
+  }
+
+  getPrecos = () => {
+    setAxiosAuthentication()
+    const data=lodash.pick(this.state, 'type mark model power weight bladeThickness ground fixType'.split(' '))
+    axios.post('/feurst/api/preconisations', data)
+      .then(res => {
+        this.setState({
+          precos: res.data,
+        })
       })
       .catch(err => console.error(err))
   }
@@ -122,9 +149,24 @@ class Configurator extends React.Component {
     this.setState({fixType: fixType})
   }
 
+  onCompanyChange = company => {
+    this.setState({company: company})
+  }
+
+  onNameChange = name => {
+    this.setState({name: name})
+  }
+
+  onEmailChange = email => {
+    this.setState({email: email})
+  }
+
   nextPage = () => {
     const {step}=this.state
     const newStep=Math.min(step+1, STEPS.length-1)
+    if (newStep==3) {
+      this.getPrecos()
+    }
     this.setState({step: newStep})
   }
 
@@ -136,7 +178,7 @@ class Configurator extends React.Component {
 
   render = () => {
 
-    const {step}=this.state
+    const {step, precos}=this.state
 
     const {component, validator, menu}=STEPS[step]
 
@@ -146,6 +188,7 @@ class Configurator extends React.Component {
         <ProgressBar value={step} max={STEPS.length} />
         <h1>{menu}</h1>
         { component({...this.state, ...this}) }
+        {JSON.stringify(precos)}
         <Grid>
           <Button disabled={step==0} onClick={this.previousPage}>Précédent</Button>
           <Button disabled={!validator(this.state)} onClick={this.nextPage}>Suivant</Button>
