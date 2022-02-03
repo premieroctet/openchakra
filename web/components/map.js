@@ -7,7 +7,6 @@ let Map, TileLayer, Marker, Popup, Circle;
 const styles = {
   container: {
     height: 200,
-
   },
 };
 
@@ -33,7 +32,7 @@ class MapComponent extends React.Component {
     circles = circles || [];
     if (Map) {
       return (
-        <Grid id={'map-container'} style={{height: 300}}>
+        <Grid id={'map-container'} style={{height: 700}}>
           <Map center={position} zoom={zoom} style={{height: '100%', zIndex:0}}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
