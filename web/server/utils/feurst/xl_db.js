@@ -1,6 +1,11 @@
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
 
+const ADAPTATEUR='ADAPTEUR'
+const CHAPEAU="CHAPEAU D'USURE"
+const CLAVETTE='CLAVETTE'
+const FOURREAU='FOURREAU'
+
 const loadGrounds = sheet => {
 
   const HARDNESS_ROW=2
@@ -14,7 +19,7 @@ const loadGrounds = sheet => {
   // Dureté du terrain
   const hardness_row=sheet.getRow(HARDNESS_ROW)
   const machineColumns=[]
-  header_row.eachCell(c => {
+  header_row.eachCell({includeEmpty: true}, c => {
     if (c.value && c.value.match(MACHINE_RE)) {
       machineColumns.push(c.col)
     }
@@ -22,7 +27,7 @@ const loadGrounds = sheet => {
   sheet.getRows(HEADER_ROW+1, sheet.rowCount).forEach(row => {
     const type=row.getCell(1).value
     let machine=null
-    row.eachCell(cell => {
+    row.eachCell({includeEmpty: true}, cell => {
       if (machineColumns.includes(cell.col)) {
         machine=cell.value
       }
@@ -64,7 +69,7 @@ const loadMachines = sheet => {
   let inside=false
   sheet.eachRow(row => {
     if (inside) {
-      const type=`${row.getCell(TYPE_COL).value}`=='EXCAVATRICE' ? 'excavator' : 'loader'
+      const type=`${row.getCell(TYPE_COL).value}`=='EXCAVATRICE' ? 'excavatrice' : 'chargeuse'
       const mark=`${row.getCell(MARK_COL).value}`
       const model=`${row.getCell(MODEL_COL).value}`
       const power=parseFloat(row.getCell(POWER_COL).value) || null
@@ -92,7 +97,7 @@ const loadMachines = sheet => {
   return machines
 }
 
-const loadAcccessories = wb => {
+const loadAccessories = wb => {
 
   const FAMILY_COL=2
   const THICKNESS_COL=3
@@ -104,22 +109,26 @@ const loadAcccessories = wb => {
     if (!sheet) {
       return null
     }
-    const header=sheet.getRow(HEADER_ROW).values.slice(THICKNESS_COL+1)
+    const header=sheet.getRow(HEADER_ROW)
     sheet.getRows(HEADER_ROW+1, sheet.rowCount).forEach(row => {
-      const values=row.values.map(v => v.result || v)
-      const family=values[FAMILY_COL]
-      const thickness=values[THICKNESS_COL]
+      const family=row.getCell(FAMILY_COL).text
+      const thickness=row.getCell(THICKNESS_COL).text
       if (!family || !thickness) {
         return
       }
       const key=[type, family, thickness]
-      const obj=Object.fromEntries(values.slice(THICKNESS_COL+1).filter((v, idx) => !!v && !!header[idx]).map((v, idx) => {
-        return [header[idx], v]
-      }))
-      res[key]=(res[key]||[]).concat(obj)
+      const config={}
+      row.eachCell({includeEmpty: true}, c => {
+        if (c.col>THICKNESS_COL && c.text && header.getCell(c.col).text) {
+          const key2=header.getCell(c.col).text
+          config[key2]=c.text
+        }
+      })
+      res[key]=(res[key]||[])
+      res[key].push(config)
     })
   })
-  console.log(JSON.stringify(Object.entries(res).filter(e => e[0].includes('euse,TKN11,60')), null, 2))
+  return res
 }
 
 const getDatabase = () => {
@@ -130,7 +139,7 @@ const getDatabase = () => {
         const machines=loadMachines(wb.getWorksheet('Machines'))
         const thicknesses=loadThicknesses(['Matrice Ep LAME_Excavatrice', 'Matrice Ep LAME_Chargeuse'].map(s => wb.getWorksheet(s)))
         const grounds=loadGrounds(wb.getWorksheet('Matrice Dents développée'))
-        const accessories=loadAcccessories(wb)
+        const accessories=loadAccessories(wb)
         resolve({
           machines: machines,
           thicknesses: thicknesses,
@@ -139,6 +148,7 @@ const getDatabase = () => {
         })
       })
       .catch(err => {
+        console.error(`Error:${err}`)
         reject(err)
       })
   })
@@ -163,7 +173,11 @@ const getFamily = (database, data) => {
 }
 
 const getAccessories = (database, data) => {
-  return null
+  const key=[data.type, data.family, data.bladeThickness]
+  const acc=database.accessories[key]
+  const confs=acc.map(conf => ({[CHAPEAU]: conf[CHAPEAU], [ADAPTATEUR]: conf[ADAPTATEUR], [CLAVETTE]: conf[CLAVETTE], [FOURREAU]: conf[FOURREAU]}))
+  const adapter=lodash.uniqBy(confs, JSON.stringify)
+  return {ADAPTER: adapter}
 }
 
 const computePrecos = data => {

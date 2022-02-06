@@ -16,7 +16,7 @@ class Configurator extends React.Component {
       step: 3,
       machines: [],
       type: '',
-      types: [],
+      types: ['excavatrice', 'chargeuse', 'pelle-butte'],
       mark: '',
       marks: [],
       model: '',
@@ -35,9 +35,9 @@ class Configurator extends React.Component {
 
     if (is_development()) {
       this.state={...this.state,
-        'type': 'loader', 'types': ['excavator', 'loader'], 'mark': 'BOBCAT',
-        'model': 'E 32', 'power': 23.1, 'weight': 3.5,
-        'ground': 'GRAVIER', 'bladeShape': 'delta', 'bladeThickness': 80}
+        'type': 'excavatrice', 'mark': 'CATERPILLAR',
+        'model': '374D L', 'weight': 75.5, 'power': 355,
+        'ground': 'GRAVIER', 'bladeShape': 'delta', 'bladeThickness': 70}
     }
   }
 

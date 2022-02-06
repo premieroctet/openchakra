@@ -9,8 +9,9 @@ function MachineType(props) {
       <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
         <h1>Type</h1>
         <Select name='type' value={props.type} onChange={ev => { props.onTypeChange(ev.target.value) }}>
-          {[['', 'Inconnu'], ['excavator', 'Excavatrice'], ['loader', 'Chargeuse'], ['shovel', 'Pelle-butte']].map(tp => (
-            <MenuItem key={tp[0]} value={tp[0]}>{tp[1]}</MenuItem>
+          <MenuItem key={''} value={''}>Inconnu</MenuItem>
+          {props.types.map(tp => (
+            <MenuItem key={tp} value={tp}>{tp}</MenuItem>
           ))
           }
         </Select>
@@ -35,6 +36,7 @@ function MachineType(props) {
           <h1>Modèle</h1>
           <Autocomplete
             options={props.models}
+            value={props.model}
             filterOptions={(opts, {inputValue}) => { return opts.filter(o => o.toLowerCase().replace(/ /g, '').includes(inputValue.toLowerCase().replace(/ /g, ''))) }}
             renderInput={params => (<TextField {...params}/>)}
             onChange={(ev, value) => props.onModelChange(value)}
