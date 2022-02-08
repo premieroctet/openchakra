@@ -94,7 +94,7 @@ function Summary(props) {
         <>
           <Button onClick={sendQuotation}>Envoyer le devis</Button>
           <NoSSR>
-            <PDFViewer style={{height: '300px'}}>
+            <PDFViewer style={{height: '500px'}}>
               <Quotation precos={props.precos} infos={props}/>
             </PDFViewer>
           </NoSSR>

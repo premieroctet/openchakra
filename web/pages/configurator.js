@@ -13,7 +13,7 @@ class Configurator extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      step: 3,
+      step: 0,
       machines: [],
       type: '',
       types: ['excavatrice', 'chargeuse', 'pelle-butte'],
@@ -34,7 +34,7 @@ class Configurator extends React.Component {
     }
 
     if (is_development()) {
-      this.state={...this.state,
+      this.state={...this.state, step: 3,
         type: 'excavatrice', mark: 'CATERPILLAR', fixType: 'PIN',
         model: '374D L', weight: 75.5, power: 355,
         ground: 'GRAVIER', bladeShape: 'delta', bladeThickness: 70,
@@ -186,11 +186,11 @@ class Configurator extends React.Component {
 
     return (
       <Grid style={{width: '80%', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}} className='configurator'>
-        <h6>{is_development() && JSON.stringify(lodash.omit(this.state, ['marks', 'machines', 'models', 'powers', 'weights', 'thicknesses', 'grounds']))}</h6>
+        <h6>{/** is_development() && JSON.stringify(lodash.omit(this.state, ['marks', 'machines', 'models', 'powers', 'weights', 'thicknesses', 'grounds']))*/}</h6>
         <ProgressBar value={step} max={STEPS.length} />
         <h1>{menu}</h1>
         { component({...this.state, ...this}) }
-        {JSON.stringify(precos)}
+        {/** JSON.stringify(precos) */}
         <Grid>
           <Button disabled={step==0} onClick={this.previousPage}>Précédent</Button>
           <Button disabled={!validator(this.state)} onClick={this.nextPage}>Suivant</Button>
