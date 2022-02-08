@@ -1,8 +1,34 @@
+const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
+const axios = require('axios')
+const {Button, Grid, TextField} = require('@material-ui/core')
+const {setAxiosAuthentication} = require('../../utils/authentication')
+
+import {PDFViewer} from '@react-pdf/renderer'
+import Quotation from'../Feurst/Quotation'
 const Validator = require('validator')
-const {Grid, TextField} = require('@material-ui/core')
 import React from 'react'
+import NoSSR from 'react-no-ssr'
 
 function Summary(props) {
+
+  const sendQuotation = () => {
+    // TODO Envoyer le PDF ou le générer sur le serveur
+    setAxiosAuthentication()
+    const data={
+      email: props.email,
+      name: props.name,
+      quotation_id: 'identifiant',
+      machine: `${props.type} ${props.mark} ${props.model}`,
+    }
+
+    axios.post('/feurst/api/quotation', data)
+      .then(() => {
+        snackBarSuccess('Devis envoyé')
+      })
+      .catch(err => {
+        snackBarError(err)
+      })
+  }
 
   return (
     <Grid style={{display: 'flex', flexDirection: 'column'}}>
@@ -64,6 +90,16 @@ function Summary(props) {
           <TextField disabled={true} value={props.fixType}/>
         </Grid>
       </Grid>
+      {props.precos &&
+        <>
+          <Button onClick={sendQuotation}>Envoyer le devis</Button>
+          <NoSSR>
+            <PDFViewer style={{height: '300px'}}>
+              <Quotation precos={props.precos} infos={props}/>
+            </PDFViewer>
+          </NoSSR>
+        </>
+      }
     </Grid>
   )
 }

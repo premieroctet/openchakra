@@ -32,13 +32,13 @@ const SMS_CONTENTS = {
   [SIB_IDS.BOOKING_EXPIRED_2_ALFRED]: 'La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée',
 }
 
-const sendNotification = (notif_index, destinee, params) => {
-  const msg = `Sending notif ${notif_index} to ${destinee._id} using ${JSON.stringify(params)}`
+const sendNotification = (notif_index, destinee, params, attachment=null) => {
+  const msg = `Sending notif ${notif_index} to ${destinee.email}(${destinee._id}) using ${JSON.stringify(params)}`
 
   let enable_mails = ENABLE_MAILING
   const ALLOW_EMAILS=/@.*alfred/i
   // En validation, envoyer les notifications et SMS aux membres de @.*alfred.*
-  if (!enable_mails && is_validation() && ALLOW_EMAILS.test(destinee.email||'')) {
+  if (!enable_mails && ALLOW_EMAILS.test(destinee.email||'')) {
     console.log('Mailing disabled except for my-alfred.io mails on validation platform')
     enable_mails = true
   }
@@ -53,7 +53,7 @@ const sendNotification = (notif_index, destinee, params) => {
 
   // Send mail
   if (enable_mails && notif_index != SIB_IDS.CONFIRM_PHONE) {
-    resultMail = SIB.sendMail(notif_index, destinee.email, params)
+    resultMail = SIB.sendMail(notif_index, destinee.email, params, attachment)
   }
 
   // Send SMS
@@ -424,6 +424,20 @@ const sendRegisterInvitation = (admin, email, code, req) => {
   )
 }
 
+const sendQuotation = (email, name, quotation_id, machine, quotation_data) => {
+
+  sendNotification(
+    SIB_IDS.FEURST_QUOTATION,
+    {email: email},
+    {
+      name: name,
+      quotation_id: quotation_id,
+      machine: machine,
+    },
+    attachment=quotation_data,
+  )
+}
+
 module.exports = {
   sendVerificationMail,
   sendShopDeleted,
@@ -452,4 +466,5 @@ module.exports = {
   sendBookingRefusedToAlfred,
   sendAdminsAlert,
   sendRegisterInvitation,
+  sendQuotation,
 }

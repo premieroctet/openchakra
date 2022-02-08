@@ -1,3 +1,4 @@
+const {sendQuotation} = require('../../../utils/mailing')
 const {computePrecos} = require('../../../utils/feurst/xl_db')
 
 const router = require('express').Router()
@@ -27,6 +28,17 @@ router.post('/preconisations', (req, res) => {
       console.error(err)
       return res.status(500).json(err)
     })
+})
+
+router.post('/quotation', (req, res) => {
+  sendQuotation(
+    req.body.email,
+    req.body.name,
+    req.body.quotation_id,
+    req.body.machine,
+    req.body.quotation_data,
+  )
+  res.json('ok')
 })
 
 module.exports = router

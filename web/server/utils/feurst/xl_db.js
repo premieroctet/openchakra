@@ -1,10 +1,55 @@
+/**
+SUPPOSITIONS:
+- terrains: un terrain STANDARD donne une qualité standard, tout autre donne une qualité XHD
+     (lien entre utilisation standard ou utilisation XHD dans Machines et type de terrain dans Matrice Dents Développée)
+- on suppose qu'un bouclier centre est un bouclier interdent
+- les calculs de quantités par nombre de dents sont à vérifier
+
+*/
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
 
-const ADAPTATEUR='ADAPTEUR'
-const CHAPEAU="CHAPEAU D'USURE"
-const CLAVETTE='CLAVETTE'
-const FOURREAU='FOURREAU'
+const SOLD='SOLD'
+const PIN='PIN'
+
+const FIX_TYPES=[SOLD, PIN]
+
+const UNKNOWN_TEETH='nb de dents'
+
+const GROUPS={
+  'Bloc adaptateur': {
+    'ADAPTEUR': teeth => teeth || UNKNOWN_TEETH,
+    "CHAPEAU D'USURE": teeth => teeth || UNKNOWN_TEETH,
+    'CLAVETTE': teeth => teeth || UNKNOWN_TEETH,
+    'FOURREAU': teeth => teeth || UNKNOWN_TEETH,
+    'BASE A SOUDER': teeth => teeth || UNKNOWN_TEETH,
+  },
+  'Bouclier dents': {
+    SOLD: {
+      'BOUCLIER A SOUDER': () => 1,
+      'BOUCLIER A SOUDER DROIT': () => 1,
+      'BOUCLIER A SOUDER GAUCHE': () => 1,
+    },
+    PIN: {
+      'BOUCLIER A CLAVETER CENTRE': teeth => (teeth ? teeth -1 : UNKNOWN_TEETH),
+      'BOUCLIER A CLAVETER DROIT': () => 1,
+      'BOUCLIER A CLAVETER GAUCHE': () => 1,
+      'CLE BOUCLIER': () => 1,
+    },
+  },
+  'Bouclier flanc': {
+    'BOUCLIER DE FLANC': () => 1,
+    SOLD: {
+      'BOUCLIER DE FLANC A SOUDER': () => 1,
+    },
+    PIN: {
+      'BOUCLIER DE FLANC A CLAVETER': () => 1,
+    },
+  },
+  'Bouclier talon': {
+    'BOUCLIER DE TALON DE GODET': () => 1,
+  },
+}
 
 const loadGrounds = sheet => {
 
@@ -79,10 +124,10 @@ const loadMachines = sheet => {
         const data={type: type.trim(), mark: mark.trim(), model: model.trim(), power: power, weight: weight, family: family && family.trim()}
         if (family) {
           data.reference= {
-            std: {
+            STANDARD: {
               ref: row.getCell(STD_REF_COL).value, teeth: row.getCell(STD_TEETH_COL).value,
             },
-            xhd: {
+            XHD: {
               ref: row.getCell(XHD_REF_COL).value, teeth: row.getCell(XHD_TEETH_COL).value,
             },
           }
@@ -168,16 +213,48 @@ const getFamily = (database, data) => {
   if (data.hardness==null) {
     return null
   }
-  const ref_hardness=machine.reference[data.hardness=='STANDARD' ? 'std':'xhd']
+  const ref_hardness=machine.reference[data.hardness=='STANDARD' ? 'STANDARD':'XHD']
   return ref_hardness && ref_hardness.ref
+}
+
+const getTeethRef = (database, data) => {
+  const groundKeyRe=new RegExp(`${data.family},(${data.type}|TOUTES),${data.ground}`, 'i')
+  const teeth_ref=Object.entries(database.grounds).filter(e => e[0].match(groundKeyRe)).map(e => e[1])
+  return lodash.flattenDeep(teeth_ref)
+}
+
+const getTeethCount = (database, data) => {
+  const machine=database.machines.find(m => ['mark', 'model', 'power', 'weight'].every(att => m[att]==data[att]))
+  if (machine && data.hardness && machine.reference) {
+    const use=data.hardness=='STANDARD' ? 'STANDARD' : 'XHD'
+    return machine.reference[use] && machine.reference[use].teeth
+  }
+  return null
 }
 
 const getAccessories = (database, data) => {
   const key=[data.type, data.family, data.bladeThickness]
   const acc=database.accessories[key]
-  const confs=acc.map(conf => ({[CHAPEAU]: conf[CHAPEAU], [ADAPTATEUR]: conf[ADAPTATEUR], [CLAVETTE]: conf[CLAVETTE], [FOURREAU]: conf[FOURREAU]}))
-  const adapter=lodash.uniqBy(confs, JSON.stringify)
-  return {ADAPTER: adapter}
+  let res={}
+  Object.entries(GROUPS).forEach(entity => {
+    const key=entity[0]
+    res[key]={}
+    const g=entity[1]
+    FIX_TYPES.forEach(fixType => {
+      if (fixType in g && (data.fixType==fixType || !data.fixType)) {
+        let sub=lodash.uniqBy(acc.map(ac => lodash.pick(ac, Object.keys(g[fixType]))), JSON.stringify)
+        sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[fixType][ent[0]](data.teeth_count)]])))
+        res[key]=Object.assign(res[key], {[fixType]: sub})
+      }
+    })
+    let sub=lodash.uniqBy(acc.map(ac => lodash.pick(ac, Object.keys(g))), JSON.stringify)
+    sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[ent[0]](data.teeth_count)]])))
+    if (sub.length>0) {
+      res[key].ALL=sub
+    }
+  })
+
+  return res
 }
 
 const computePrecos = data => {
@@ -186,6 +263,8 @@ const computePrecos = data => {
       .then(db => {
         data={...data, hardness: getHardness(db, data)}
         data={...data, family: getFamily(db, data)}
+        data={...data, teeth_ref: getTeethRef(db, data)}
+        data={...data, teeth_count: getTeethCount(db, data)}
         data={...data, accessories: getAccessories(db, data)}
         resolve(data)
       })

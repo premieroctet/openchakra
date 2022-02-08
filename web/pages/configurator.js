@@ -30,14 +30,16 @@ class Configurator extends React.Component {
       ground: null,
       grounds: [],
       fixType: null,
-      fixTypes: ['A souder', 'A claveter'],
+      fixTypes: [['PIN', 'À claveter'], ['SOLD', 'À souder']],
     }
 
     if (is_development()) {
       this.state={...this.state,
-        'type': 'excavatrice', 'mark': 'CATERPILLAR',
-        'model': '374D L', 'weight': 75.5, 'power': 355,
-        'ground': 'GRAVIER', 'bladeShape': 'delta', 'bladeThickness': 70}
+        type: 'excavatrice', mark: 'CATERPILLAR', fixType: 'PIN',
+        model: '374D L', weight: 75.5, power: 355,
+        ground: 'GRAVIER', bladeShape: 'delta', bladeThickness: 70,
+        name: 'Gérard Robert', company: 'COLAS', email: 'sebastien.auvray@my-alfred.io',
+      }
     }
   }
 
@@ -199,4 +201,4 @@ class Configurator extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(Configurator)
+module.exports =withTranslation('custom', {withRef: true})(Configurator)
