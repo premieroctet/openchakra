@@ -261,7 +261,7 @@ router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req
   const promise=isModeCompany(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
   promise
     .then(entity => {
-      const id_mangopay = entity.id_mangopay
+      const id_mangopay = entity.mangopay_provider_id || entity.id_mangopay
       const billing_address = entity.billing_address
       const address = billing_address.address
       const city = billing_address.city
@@ -367,7 +367,7 @@ router.get('/activeAccount', passport.authenticate('jwt', {session: false}), (re
   const promise = isB2BAdmin(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
   promise
     .then(entity => {
-      const id_mangopay = entity.id_mangopay
+      const id_mangopay = entity.mangopay_provider_id || entity.id_mangopay
       mangoApi.Users.getBankAccounts(id_mangopay)
         .then(accounts => {
           accounts.forEach(a => {
@@ -408,7 +408,7 @@ router.delete('/account/:account_id', passport.authenticate('jwt', {session: fal
   const promise = isB2BAdmin(req) ? req.context.getModel('Company').findById(req.user.company) : req.context.getModel('User').findById(req.user.id)
   promise
     .then(entity => {
-      const id_mangopay = entity.id_mangopay
+      const id_mangopay = entity.mangopay_provider_id || entity.id_mangopay
       mangoApi.Users.deactivateBankAccount(id_mangopay, account_id)
         .then(account => {
           res.json(account)
