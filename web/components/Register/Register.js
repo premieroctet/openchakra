@@ -23,7 +23,7 @@ import TextField from '@material-ui/core/TextField'
 import DialogActions from '@material-ui/core/DialogActions'
 let parse = require('url-parse')
 import {hasStatusRegister, removeStatusRegister, getRole} from '../../utils/context'
-import { isEmailOk } from '../../utils/sms'
+import {isEmailOk} from '../../utils/sms'
 const moment=require('moment')
 const {isPhoneOk} = require('../../utils/sms')
 const {STEPS}=require('../../utils/registerStep')
@@ -291,7 +291,6 @@ class Register extends React.Component {
       country: this.state.country,
       lat: this.state.lat,
       lng: this.state.lng,
-      user_id: this.props.user_id,
     }
 
     const username = this.state.email

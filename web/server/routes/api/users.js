@@ -170,6 +170,8 @@ router.post('/register', (req, res) => {
         req.context.getModel('User').create(user)
           .then(user => {
             createMangoClient(user)
+              .then(user => user.save().then().catch(err => console.error(err)))
+              .catch(err => console.error(err))
             sendVerificationMail(user, req)
             // Warning si adresse incomplète
             if (!user.billing_address.gps.lat) {
