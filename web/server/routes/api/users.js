@@ -1,4 +1,5 @@
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -16,7 +17,7 @@ const multer = require('multer')
 const axios = require('axios')
 const {emptyPromise} = require('../../../utils/promise.js')
 const {ROLES}=require('../../../utils/consts')
-const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, install_hooks} = require('../../utils/mangopay')
+const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
 const {ensureDirectoryExists, isImageFile} = require('../../utils/filesystem')
 const {connectionPool}=require('../../utils/database')
@@ -281,6 +282,13 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
         .then(
           user => {
             req.context.getModel('ServiceUser').updateMany({user:user.id}, {service_address: user.billing_address})
+            createMangoClient(user)
+            if (user.mangopay_provider_id) {
+              req.context.getModel('Shop').findOne({alfred: user._id})
+                .then(shop => {
+                  createMangoProvider(user, shop)
+                })
+            }
           }
         )
         .catch(

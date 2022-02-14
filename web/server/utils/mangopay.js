@@ -131,9 +131,7 @@ const createPayout = (mangopay_id, amount, fees=0) => {
 
 const createMangoClient = user => {
   return new Promise((resolve, reject) => {
-    if (user.id_mangopay) {
-      resolve(user)
-    }
+    const addr=user.billing_address
     let userData = {
       PersonType: PersonType.Natural,
       FirstName: user.firstname,
@@ -143,11 +141,29 @@ const createMangoClient = user => {
       Email: user.email,
       Tag: `Client ${user._id} / ${user.firstname} ${user.name}`,
       Birthday: moment(user.birthday).unix(),
+      Address: {
+        AddressLine1: addr.address,
+        AddressLine2: '',
+        City: addr.city,
+        Region: '',
+        PostalCode: addr.zip_code,
+        Country: 'FR',
+      },
     }
 
-    mangoApi.Users.create(userData)
+    const updating = !!user.id_mangopay
+    const userPromise=updating ?
+      mangoApi.Users.update({Id: user.id_mangopay, ...userData})
+      :
+      mangoApi.Users.create(userData)
+
+    userPromise
       .then(newUser => {
         console.log(`Created Mango User ${JSON.stringify(newUser)}`)
+        user.id_mangopay=newUser.Id
+        if (updating) {
+          return resolve(user)
+        }
         mangoApi.Wallets.create({
           Owners: [newUser.Id],
           Description: `Wallet ${user._id} / ${user.firstname} ${user.name} client`,
@@ -155,7 +171,6 @@ const createMangoClient = user => {
         })
           .then(wallet => {
             console.log(`Created Wallet ${JSON.stringify(wallet)}`)
-            user.id_mangopay=newUser.Id
             resolve(user)
           })
           .catch(err => {
@@ -171,6 +186,16 @@ const createMangoClient = user => {
 const createMangoProvider = (user, shop) => {
 
   console.log(`Creating mango provider for ${user.name}`)
+  const addr = user.billing_address
+  const mangoAddr = new mangoApi.models.Address({
+    AddressLine1: addr.address,
+    AddressLine2: '',
+    City: addr.city,
+    Region: '',
+    PostalCode: addr.zip_code,
+    Country: 'FR',
+  })
+
   let userData = {
     PersonType: shop.is_particular ? PersonType.Natural : PersonType.Legal,
     FirstName: user.firstname,
@@ -180,9 +205,9 @@ const createMangoProvider = (user, shop) => {
     CountryOfResidence: 'FR',
     Email: user.email,
     Tag: `Provider ${user._id} / ${user.firstname} ${user.name}`,
+    Address: mangoAddr,
   }
   if (shop.is_professional) {
-    const addr = user.billing_address
     userData.LegalPersonType = 'SOLETRADER'
     userData.Name = shop.company.name
     userData.CompanyNumber = shop.company.siret
@@ -192,24 +217,25 @@ const createMangoProvider = (user, shop) => {
     userData.LegalRepresentativeNationality = 'FR'
     userData.LegalRepresentativeCountryOfResidence = 'FR'
     userData.LegalRepresentativeEmail = user.email
-    const mangoAddr = new mangoApi.models.Address({
-      AddressLine1: addr.address,
-      AddressLine2: '',
-      City: addr.city,
-      Region: '',
-      PostalCode: addr.zip_code,
-      Country: 'FR',
-    })
     userData.HeadquartersAddress = mangoAddr
     userData.LegalRepresentativeAddress = mangoAddr
   }
 
-  mangoApi.Users.create(userData)
+  const updating = !!user.mangopay_provider_id
+  const userPromise=updating ?
+    mangoApi.Users.update({Id: user.mangopay_provider_id, ...userData})
+    :
+    mangoApi.Users.create(userData)
+
+  userPromise
     .then(newUser => {
       console.log(`Created Mango Provider ${JSON.stringify(newUser)}`)
       user.mangopay_provider_id = newUser.Id
       user.mangopay_provider_status = newUser.PersonType
       user.save().then().catch()
+      if (updating) {
+        return
+      }
       mangoApi.Wallets.create({
         Owners: [newUser.Id],
         Description: `${user._id} / ${user.full_name} provider`,
