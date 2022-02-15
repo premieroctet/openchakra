@@ -23,8 +23,10 @@ const theme = ({
 
 function Clock(props) {
 
-  const {classes, hours, minutes} = props
-  const LETTERS='ILNESTODEUXQUATRETROISNEUFUNESEPTHUITSIXCINQMIDIXMINUITONZERHEURESMOINSOLEDIXETRQUARTPMDVINGT-CINQUETSDEMIEPAM'.split('')
+  let {classes, hours, minutes} = props
+  hours=2
+  minutes=48
+  const LETTERS='ILNESTUDEUXQUATRETROISNEUFUNESEPTHUITSIXCINQMIDIXMINUITONZERHEURESMOINSOLEDIXETRQUARTPMDVINGT-CINQUETSDEMIEPAM'.split('')
 
   const HOURS={
     0: lodash.range(49, 55), 1: lodash.range(26, 29), 2: lodash.range(7, 11),
@@ -46,6 +48,7 @@ function Clock(props) {
   }
   let on=[]
   // Il est
+  if (minutes>=35) { hours+=1}
   on=on.concat(lodash.range(0, 2)).concat(lodash.range(3, 6))
   // Heures
   on=on.concat(HOURS[hours] || HOURS[hours%12])
