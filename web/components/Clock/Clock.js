@@ -24,8 +24,6 @@ const theme = ({
 function Clock(props) {
 
   let {classes, hours, minutes} = props
-  hours=2
-  minutes=48
   const LETTERS='ILNESTUDEUXQUATRETROISNEUFUNESEPTHUITSIXCINQMIDIXMINUITONZERHEURESMOINSOLEDIXETRQUARTPMDVINGT-CINQUETSDEMIEPAM'.split('')
 
   const HOURS={
