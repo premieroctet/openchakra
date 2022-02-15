@@ -16,10 +16,7 @@ const theme = ({
   all: {
     fontSize: 'xx-large',
     backgroundColor: '#333',
-    height: '100vh',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    height: '95vh',
     textAlign: 'center',
   },
 })
@@ -56,7 +53,7 @@ function Clock(props) {
   on=on.concat(hours%12==0 ? [] : lodash.range(60, hours%12==1 ? 65 : 66))
   // Minutes
   on=on.concat(MINUTES[Math.floor(minutes/5)])
-  console.log(on)
+
   return (
     <>
       <Grid container xs={12} className={classes.all}>
