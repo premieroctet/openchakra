@@ -183,14 +183,14 @@ BookingSchema.virtual('alfred_amount').get(function() {
 })
 
 BookingSchema.virtual('date_prestation_moment').get(function() {
-  if (!this.date_prestation) {
+  if (!this.date_prestation || !this.time_prestation) {
     return null
   }
   return moment(`${moment(this.date_prestation, 'DD/MM/YYYY').format('YYYY-MM-DD') } ${ moment(this.time_prestation).format('HH:mm')}`)
 })
 
 BookingSchema.virtual('end_prestation_moment').get(function() {
-  if (!this.end_date) {
+  if (!this.end_date || !this.end_time) {
     return null
   }
   const [hour, minute]=this.end_time.split(':')

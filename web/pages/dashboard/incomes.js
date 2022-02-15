@@ -21,8 +21,8 @@ class Incomes extends DataPage {
       models.textColumn({headerName: 'Service', field: 'service'}),
       models.textColumn({headerName: 'Client', field: 'user.full_name'}),
       models.textColumn({headerName: 'Alfred', field: 'alfred.full_name'}),
-      models.currencyColumn({headerName: 'Montant client', field: 'amount'}),
-      models.currencyColumn({headerName: 'Commission', field: 'commission'}),
+      models.currencyColumn({headerName: 'Montant client', field: 'amount', aggFunc: 'sum'}),
+      models.currencyColumn({headerName: 'Commission', field: 'commission', aggFunc: 'sum'}),
       models.textColumn({headerName: 'Statut', field: 'status'}),
       models.booleanColumn({headerName: 'Payé au fournisseur', field: 'paid'}),
     ]

@@ -31,6 +31,7 @@ class DataPage extends React.Component {
   getHeader() {
     return null
   }
+
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     setAxiosAuthentication()

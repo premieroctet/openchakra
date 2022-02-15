@@ -10,6 +10,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
+import 'ag-grid-enterprise'
 import Link from 'next/link';
 import Grid from '@material-ui/core/Grid';
 const moment=require('moment')
@@ -99,6 +100,8 @@ class BigList extends React.Component {
       },
     }
 
+    const group=!!columnDefs.find(c => !!c.aggFunc)
+
     return (
       <>
         <Grid container className={classes.signupContainer}>
@@ -115,6 +118,7 @@ class BigList extends React.Component {
             <Paper style={{height: '600px', width: '100%'}} className={"ag-theme-balham"}>
               <AgGridReact rowData={data} columnDefs={columnDefs} enableSorting={true}
               enableFilter={true} pagination={true} defaultColDef={defaultColDef}
+              groupIncludeTotalFooter={group}
               frameworkComponents={frameworkComponents}
               {...this.props}
               localeText= {{
@@ -127,14 +131,16 @@ class BigList extends React.Component {
                 greaterThan: '>',
                 lessThanOrEqual: '<=',
                 greaterThanOrEqual: '>=',
-                inRange: 'Dans',
+                inRange: "Dans l'intervalle",
                 inRangeStart: 'Entre',
                 inRangeEnd: 'et',
                 contains: 'Contient',
                 notContains: 'Ne contient pas',
                 startsWith: 'Comence par',
                 endsWith: 'Finit par',
-                filterOoo: 'Filtrer...'
+                filterOoo: 'Filtrer...',
+		blank: 'Vide',
+		notBlank: 'Non vide',
               }}
               onRowClicked={ this.props.onRowClicked}
               onCellClicked={ this.props.onCellClicked}
