@@ -72,7 +72,7 @@ class BigList extends React.Component {
 
   render = () => {
 
-    const {data, columnDefs, classes, title} = this.props
+    const {data, columnDefs, classes, title, header} = this.props
 
     const frameworkComponents={
       'statusRenderer': models.StatusRenderer,
@@ -111,6 +111,7 @@ class BigList extends React.Component {
               }
               <IconButton onClick={this.onDownloadClick}><GetAppIcon/></IconButton>
             </Grid>
+            {header && <Grid>{header}</Grid>}
             <Paper style={{height: '600px', width: '100%'}} className={"ag-theme-balham"}>
               <AgGridReact rowData={data} columnDefs={columnDefs} enableSorting={true}
               enableFilter={true} pagination={true} defaultColDef={defaultColDef}

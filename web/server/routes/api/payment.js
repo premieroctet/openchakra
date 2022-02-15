@@ -469,31 +469,4 @@ router.get('/siret/:siret_siren', (req, res) => {
     })
 })
 
-router.get('/commissions', (req, res) => {
-  const startDate=moment(parseInt(req.query.start_date)*1000).startOf('day')
-  const endDate=moment(parseInt(req.query.end_date)*1000).endOf('day')
-  console.log(startDate, endDate)
-  req.context.getModel('Booking').find({$and: [{end_date: {$gt: startDate}}, {end_date: {$lt: endDate}}]})
-    .then(bookings => {
-      let ids=[]
-      bookings.forEach(b => {
-        ids=ids.concat([
-          b.mangopay_payin_id && mangoApi.PayIns.get(b.mangopay_payin_id),
-          b.mangopay_transfer_id && mangoApi.Transfers.get(b.mangopay_transfer_id),
-          b.mangopay_payout_id && mangoApi.PayOuts.get(b.mangopay_payout_id),
-        ]).filter(e => !!e)
-      })
-      Promise.allSettled(ids)
-        .then(events => {
-          return res.json(events)
-          events = events.filter(e => e.status=='fulfilled').map(e => e.value)
-          events = events.filter(e => e.Fees && e.Fees.Amount && e.ExecutionDate >= parseInt(req.query.start_date) && e.ExecutionDate <= parseInt(req.query.end_date))
-        })
-        .catch(err => {
-          console.error(err)
-          res.json(err)
-        })
-    })
-})
-
 module.exports = router

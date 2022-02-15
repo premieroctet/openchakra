@@ -17,7 +17,6 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'top',
     flexDirection: 'column',
-
   },
 });
 
@@ -29,6 +28,9 @@ class DataPage extends React.Component {
     }
   }
 
+  getHeader() {
+    return null
+  }
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     setAxiosAuthentication()
@@ -57,6 +59,7 @@ class DataPage extends React.Component {
                 columnDefs={this.getColumnDefs()}
                 classes={classes}
                 title={this.getTitle()}
+                header={this.getHeader()}
                 onCellClicked={this._onCellClicked}
 		            onAddClick={this.onAddClicked}
               />
