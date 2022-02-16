@@ -89,6 +89,7 @@ class home extends React.Component {
                     <Link href="/dashboard/uiconfiguration"><a>Configuration UI</a></Link><br/>
                     <Link href="/dashboard/companies/all"><a>Entreprises</a></Link><br/>
                     <Link href="/dashboard/commissions"><a>Paramétrage des commissions</a></Link><br/>
+                    <Link href="/dashboard/incomes"><a>Commissions perçues</a></Link><br/>
                   </>
                 }
 
