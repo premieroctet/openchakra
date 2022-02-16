@@ -17,7 +17,6 @@ const styles = () => ({
     alignItems: 'center',
     justifyContent: 'top',
     flexDirection: 'column',
-
   },
 })
 
@@ -28,6 +27,10 @@ class DataPage extends React.Component {
     this.state = {
       data: [],
     }
+  }
+
+  getHeader() {
+    return null
   }
 
   componentDidMount() {
@@ -77,6 +80,8 @@ class DataPage extends React.Component {
                 data={data}
                 columnDefs={columnDefs}
                 classes={classes}
+                title={this.getTitle()}
+                header={this.getHeader()}
                 onCellClicked={this._onCellClicked}
                 onAddClick={this.onAddClicked}
                 onCellValueChanged ={this._onCellValueChanged}
