@@ -1,4 +1,4 @@
-import {is_development, is_production} from '../../config/config'
+import {is_production} from '../../config/config'
 const {
   getLoggedUserId,
   getRole,
@@ -6,17 +6,15 @@ const {
   isLoggedUserRegistered,
   removeAlfredRegistering,
 } = require('../../utils/context')
-const {isEmailOk, isPhoneOk} = require('../../utils/sms')
+const {isPhoneOk} = require('../../utils/sms')
 import {EMPLOYEE, REGISTER_MODE} from '../../utils/consts'
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import CguContent from '../CguContent/CguContent'
-import {REGISTER} from '../../utils/i18n'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 const {setAuthToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
-import {checkPass1, checkPass2} from '../../utils/passwords'
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
 import {registerLocale} from 'react-datepicker'
@@ -291,7 +289,6 @@ class Register extends React.Component {
       country: this.state.country,
       lat: this.state.lat,
       lng: this.state.lng,
-      user_id: this.props.user_id,
       company: this.state.company,
       is_alfred: isAlfredRegistering(),
     }

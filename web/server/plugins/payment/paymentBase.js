@@ -18,8 +18,8 @@ class PaymentBase {
             cesu= lodash.sum(serviceUser.prestations
               .filter(p => p.prestation.cesu_eligible)
               .map(p => p.price*(prestations[p._id] || 0))) || 0
-            resolve([total, cesu])
           }
+          resolve([total, cesu])
         })
         .catch(err => {
           console.error(err)

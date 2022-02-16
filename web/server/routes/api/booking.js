@@ -264,7 +264,7 @@ router.post('/compute', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(500).json(JSON.stringify(err))
+      res.status(500).json(err)
     })
 })
 
