@@ -1,5 +1,5 @@
 require('@babel/register')
-const Quotation = require('../components/Feurst/Quotation')
+const Quotation = require('../../components/Feurst/Quotation')
 const React=require('react')
 const ReactPDF=require('@react-pdf/renderer')
 

@@ -1,3 +1,4 @@
+const {is_development} = require('../../config/config')
 const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const axios = require('axios')
 const {Button, Grid, TextField} = require('@material-ui/core')
@@ -95,7 +96,7 @@ function Summary(props) {
       {props.precos &&
         <>
           <Button onClick={sendQuotation}>Envoyer le devis</Button>
-          { false && <NoSSR>
+          { is_development() && <NoSSR>
             <PDFViewer style={{height: '500px'}}>
               <Quotation precos={props.precos} infos={props}/>
             </PDFViewer>

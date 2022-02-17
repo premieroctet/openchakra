@@ -1,4 +1,4 @@
-const generatePdf = require('../../../../utils/generatePdf')
+const generatePdf = require('../../../utils/generatePdf')
 const {sendQuotation} = require('../../../utils/mailing')
 const {computePrecos} = require('../../../utils/feurst/xl_db')
 
