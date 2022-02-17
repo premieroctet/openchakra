@@ -1,7 +1,7 @@
-import {withTranslation} from 'react-i18next'
-import React from 'react'
-import {Page, Text, View, Document, StyleSheet, Image, Link, Font} from '@react-pdf/renderer'
-import moment from 'moment'
+const {withTranslation}=require('react-i18next')
+const React=require('react')
+const {Page, Text, View, Document, StyleSheet, Image, Font}=require('@react-pdf/renderer')
+const moment=require('moment')
 import pdfStyle from '../../static/css/components/BillingGeneration/BillingGeneration'
 
 const styles = StyleSheet.create(pdfStyle())
@@ -55,7 +55,7 @@ class Quotation extends React.Component {
             }}
           >
             <View>
-              <Image src={'/static/assets/icon/feurst.png'}
+              <Image src={'./static/assets/icon/feurst.png'}
                 alt={'logo_myAlfred'}
                 style={{
                   height: 64,

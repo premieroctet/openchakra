@@ -13,7 +13,7 @@ class SIB_V3 {
     this.smsInstance = new SibApiV3Sdk.TransactionalSMSApi()
   }
 
-  sendMail(index, email, data) {
+  sendMail(index, email, data, attachment=null) {
     console.log(`Sending mail template #${index} to ${email} with data ${JSON.stringify(data)}`)
 
     let emailData = new SibApiV3Sdk.SendSmtpEmail()
@@ -21,6 +21,9 @@ class SIB_V3 {
     emailData.to = [{email: email}]
     emailData.templateId = parseInt(index)
     emailData.params = {}
+    if (attachment) {
+      emailData.attachment=[attachment]
+    }
     Object.assign(emailData.params, data)
 
     this.smtpInstance.sendTransacEmail(emailData)

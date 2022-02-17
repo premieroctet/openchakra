@@ -426,6 +426,11 @@ const sendRegisterInvitation = (admin, email, code, req) => {
 
 const sendQuotation = (email, name, quotation_id, machine, quotation_data) => {
 
+  const attachment={
+    name: 'devis_feurst.pdf',
+    content: Buffer.from(quotation_data).toString('base64'),
+  }
+
   sendNotification(
     SIB_IDS.FEURST_QUOTATION,
     {email: email},
@@ -434,7 +439,7 @@ const sendQuotation = (email, name, quotation_id, machine, quotation_data) => {
       quotation_id: quotation_id,
       machine: machine,
     },
-    attachment=quotation_data,
+    attachment,
   )
 }
 

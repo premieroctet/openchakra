@@ -4,11 +4,16 @@
       "@babel/preset-react",
       {
         "throwIfNamespace": false
-      }
-    ]
+      },
+    ],
+    "@babel/env",
   ],
   "plugins": [
     "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-syntax-dynamic-import"
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-transform-async-to-generator",
+    "@babel/transform-arrow-functions",
+    "@babel/proposal-object-rest-spread",
   ]
 }
