@@ -1,9 +1,11 @@
+const generatePdf = require('../../../utils/generatePdf')
 const {sendQuotation} = require('../../../utils/mailing')
 const {computePrecos} = require('../../../utils/feurst/xl_db')
 
 const router = require('express').Router()
 const {getDatabase}=require('../../../utils/feurst/xl_db')
 const lodash=require('lodash')
+const fs=require('fs').promises
 
 // @Route GET /feurst/api/database
 // Google callback
@@ -31,14 +33,28 @@ router.post('/preconisations', (req, res) => {
 })
 
 router.post('/quotation', (req, res) => {
-  sendQuotation(
-    req.body.email,
-    req.body.name,
-    req.body.quotation_id,
-    req.body.machine,
-    req.body.quotation_data,
-  )
-  res.json('ok')
+  let pdf=null
+  let contents=null
+  generatePdf({name: req.body.name, company: req.body.company, email: req.body.email}, req.body.precos)
+    .then(result => {
+      pdf=result
+      return fs.readFile('/tmp/test.pdf')
+    })
+    .then(result => {
+      contents=result
+      sendQuotation(
+        req.body.email,
+        req.body.name,
+        req.body.quotation_id,
+        req.body.machine,
+        contents,
+      )
+      return res.json('ok')
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
 })
 
 module.exports = router

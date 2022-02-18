@@ -1,3 +1,4 @@
+const {is_development} = require('../../config/config')
 const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const axios = require('axios')
 const {Button, Grid, TextField} = require('@material-ui/core')
@@ -15,10 +16,12 @@ function Summary(props) {
     // TODO Envoyer le PDF ou le générer sur le serveur
     setAxiosAuthentication()
     const data={
-      email: props.email,
       name: props.name,
+      company: props.company,
+      email: props.email,
       quotation_id: 'identifiant',
       machine: `${props.type} ${props.mark} ${props.model}`,
+      precos: props.precos,
     }
 
     axios.post('/feurst/api/quotation', data)
@@ -93,11 +96,12 @@ function Summary(props) {
       {props.precos &&
         <>
           <Button onClick={sendQuotation}>Envoyer le devis</Button>
-          <NoSSR>
+          { is_development() && <NoSSR>
             <PDFViewer style={{height: '500px'}}>
               <Quotation precos={props.precos} infos={props}/>
             </PDFViewer>
           </NoSSR>
+          }
         </>
       }
     </Grid>

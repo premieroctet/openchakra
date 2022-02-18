@@ -1,7 +1,7 @@
-import {withTranslation} from 'react-i18next'
-import React from 'react'
-import {Page, Text, View, Document, StyleSheet, Image, Link, Font} from '@react-pdf/renderer'
-import moment from 'moment'
+const {withTranslation}=require('react-i18next')
+const React=require('react')
+const {Page, Text, View, Document, StyleSheet, Image, Font}=require('@react-pdf/renderer')
+const moment=require('moment')
 import pdfStyle from '../../static/css/components/BillingGeneration/BillingGeneration'
 
 const styles = StyleSheet.create(pdfStyle())
@@ -47,35 +47,33 @@ class Quotation extends React.Component {
     return (
       <Document>
         <Page pageNumber={'1'} size="A4" style={styles.body}>
-          <View
+          <View key='header'
             style={{
               display: 'flex',
               justifyContent: 'space-between',
               flexDirection: 'row',
             }}
           >
-            <View>
-              <Image src={'/static/assets/icon/feurst.png'}
+            <View key='logo'>
+              <Image src={'./static/assets/icon/feurst.png'}
                 alt={'logo_myAlfred'}
                 style={{
                   height: 64,
                 }}/>
             </View>
-            <View>
-              <View style={{
-                display: 'flex',
-                flexDirection: 'column',
-                textAlign: 'left',
-              }}>
-                <View><Text>FEURST</Text></View>
-                <View><Text>Boulevard de la Boissonnette</Text></View>
-                <View><Text>42110 FEURS</Text></View>
-                <View><Text>France</Text></View>
-                <View><Text>RCS: 388 420 556</Text></View>
-              </View>
+            <View key='address' style={{
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: 'left',
+            }}>
+              <View><Text>FEURST</Text>
+                <Text>Boulevard de la Boissonnette</Text>
+                <Text>42110 FEURS</Text>
+                <Text>France</Text>
+                <Text>RCS: 388 420 556</Text></View>
             </View>
           </View>
-          <View>
+          <View key='title'>
             <Text style={styles.title}>Préconisation</Text>
           </View>
 
@@ -99,22 +97,14 @@ class Quotation extends React.Component {
               display: 'flex',
               flexDirection: 'row',
             }}>
-              <View>
-                <Text style={styles.objectHead}>Pour : </Text>
-              </View>
-              <View style={{
+              <Text style={styles.objectHead}>Pour : </Text>
+              <View key='recipient' style={{
                 display: 'flex',
                 flexDirection: 'column',
               }}>
-                <View>
-                  <Text>{infos.name}</Text>
-                </View>
-                <View>
-                  <Text>{infos.company}</Text>
-                </View>
-                <View>
-                  <Text>{infos.email}</Text>
-                </View>
+                <Text>{infos.name}</Text>
+                <Text>{infos.company}</Text>
+                <Text>{infos.email}</Text>
               </View>
             </View>
           </View>
@@ -136,16 +126,16 @@ class Quotation extends React.Component {
               </View>
             </View>
             {
-              lines.map(l => {
+              lines.map((l, idx) => {
                 return (
-                  <View style={styles.tableRow}>
-                    <View style={styles.tableColModule}>
+                  <View key={`row${idx}`} style={styles.tableRow}>
+                    <View key={`row${idx}1`} style={styles.tableColModule}>
                       <Text style={styles.tableCell}>{l[0]}</Text>
                     </View>
-                    <View style={styles.tableColDescription}>
+                    <View key={`row${idx}2`} style={styles.tableColDescription}>
                       <Text style={styles.tableCell}>{l[1]}</Text>
                     </View>
-                    <View style={styles.tableColQuantity}>
+                    <View key={`row${idx}3`} style={styles.tableColQuantity}>
                       <Text style={styles.tableCellNum}>{l[2]}</Text>
                     </View>
                   </View>
