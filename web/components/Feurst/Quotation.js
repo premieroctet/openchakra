@@ -174,6 +174,9 @@ class Quotation extends React.Component {
               Pour toute question concernant cette facture, veuillez nous contacter.
             </Text>
           </View>
+          <View fixed style={styles.footer} >
+            <Text render={({ pageNumber, totalPages }) => (<span>Page {pageNumber}</span>)} />
+          </View>
         </Page>
       </Document>
     )
