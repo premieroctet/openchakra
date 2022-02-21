@@ -761,7 +761,7 @@ class NavBar extends Component {
           onClick={this.handleOpenMenuItem}
           classes={{root: "custombgburger"}}
         >
-          <CustomIcon className={"customburgerlogo"} materialIcon={<MenuIcon classes={{root: `customburgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}}/>}/>
+          <MenuIcon classes={{root: `customburgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}}/>
         </IconButton>
         <Menu
           anchorEl={anchorEl}
