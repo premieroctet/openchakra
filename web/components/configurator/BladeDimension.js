@@ -40,7 +40,7 @@ function BladeDimension(props) {
         <Grid>
           <Select name='fixType' value={props.fixType} onChange={ev => props.onFixTypeChange(ev.target.value)}>
             {props.fixTypes.map(fixType => (
-              <MenuItem value={fixType} key={fixType}>{fixType}</MenuItem>
+              <MenuItem value={fixType[0]} key={fixType[0]}>{fixType[1]}</MenuItem>
             ))}
           </Select>
         </Grid>

@@ -17,15 +17,15 @@ const FIX_TYPES=[SOLD, PIN]
 const UNKNOWN_TEETH='nb de dents'
 
 const GROUPS={
-  'Bloc adaptateur': {
+  'Porte-dents': {
     'ADAPTEUR': teeth => teeth || UNKNOWN_TEETH,
     "CHAPEAU D'USURE": teeth => teeth || UNKNOWN_TEETH,
     'CLAVETTE': teeth => teeth || UNKNOWN_TEETH,
     'FOURREAU': teeth => teeth || UNKNOWN_TEETH,
-    'BASE A SOUDER': teeth => teeth || UNKNOWN_TEETH,
   },
   'Bouclier dents': {
     SOLD: {
+      'BASE A SOUDER': teeth => teeth || UNKNOWN_TEETH,
       'BOUCLIER A SOUDER': () => 1,
       'BOUCLIER A SOUDER DROIT': () => 1,
       'BOUCLIER A SOUDER GAUCHE': () => 1,
@@ -48,6 +48,9 @@ const GROUPS={
   },
   'Bouclier talon': {
     'BOUCLIER DE TALON DE GODET': () => 1,
+  },
+  'Dents': {
+    'REFERENCE DENT': teeth => teeth,
   },
 }
 
@@ -220,6 +223,7 @@ const getFamily = (database, data) => {
 const getTeethRef = (database, data) => {
   const groundKeyRe=new RegExp(`${data.family},(${data.type}|TOUTES),${data.ground}`, 'i')
   const teeth_ref=Object.entries(database.grounds).filter(e => e[0].match(groundKeyRe)).map(e => e[1])
+  console.log(`Teeth ref:${teeth_ref}`)
   return lodash.flattenDeep(teeth_ref)
 }
 
@@ -253,6 +257,7 @@ const getAccessories = (database, data) => {
       res[key].ALL=sub
     }
   })
+  res.Dents={ALL: data.teeth_ref.map(ref => ({'Dent': [ref, data.teeth_count]}))}
 
   return res
 }

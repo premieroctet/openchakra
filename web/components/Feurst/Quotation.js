@@ -2,7 +2,7 @@ const {withTranslation}=require('react-i18next')
 const React=require('react')
 const {Page, Text, View, Document, StyleSheet, Image, Font}=require('@react-pdf/renderer')
 const moment=require('moment')
-import pdfStyle from '../../static/css/components/BillingGeneration/BillingGeneration'
+import pdfStyle from '../../static/css/components/Quotation/Quotation'
 
 const styles = StyleSheet.create(pdfStyle())
 moment.locale('fr')
@@ -82,7 +82,7 @@ class Quotation extends React.Component {
               <Text style={styles.objectHead}>Objet :</Text>
             </View>
             <View>
-              <Text>Configuration pour {infos.type} {infos.mark} {infos.model}</Text>
+              <Text>Configuration pour {infos.type} {infos.mark} {infos.model}, {infos.ground}</Text>
             </View>
           </View>
 
@@ -118,7 +118,7 @@ class Quotation extends React.Component {
                   textAlign: 'center',
                 }}>Module</Text>
               </View>
-              <View style={styles.tableColHeaderDescription}>
+              <View style={styles.tableColHeaderReference}>
                 <Text style={styles.tableCellHeader}>Reference</Text>
               </View>
               <View style={styles.tableColHeaderQuantity}>
@@ -132,7 +132,7 @@ class Quotation extends React.Component {
                     <View key={`row${idx}1`} style={styles.tableColModule}>
                       <Text style={styles.tableCell}>{l[0]}</Text>
                     </View>
-                    <View key={`row${idx}2`} style={styles.tableColDescription}>
+                    <View key={`row${idx}2`} style={styles.tableColReference}>
                       <Text style={styles.tableCell}>{l[1]}</Text>
                     </View>
                     <View key={`row${idx}3`} style={styles.tableColQuantity}>
@@ -173,10 +173,6 @@ class Quotation extends React.Component {
             <Text>
               Pour toute question concernant cette facture, veuillez nous contacter.
             </Text>
-          </View>
-          {/* Footer*/}
-          <View fixed style={styles.footer}>
-            <Text>Page {'1'}</Text>
           </View>
         </Page>
       </Document>
