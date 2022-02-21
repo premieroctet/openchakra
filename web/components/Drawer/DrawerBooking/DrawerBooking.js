@@ -266,7 +266,7 @@ class DrawerBooking extends React.Component {
                         isEditable={false}
                         isPrice={false}
                         isOption={false}
-                        checked={location === this.props.clientAddressId}
+                        checked={['main', this.props.clientAddressId].includes(location)}
                         onChange={this.props.onLocationChanged}/>
                     </Grid>
                     : null

@@ -315,7 +315,7 @@ class UserServicesPreview extends React.Component {
       count[presta._id]=p.value
     })
     const allAddresses={'main': avocotes_booking.address}
-    this.setState({[name]: value, count: count, allAddresses: allAddresses}, () => this.computeTotal())
+    this.setState({[name]: value, count: count, allAddresses: allAddresses, location: 'main'}, () => this.computeTotal())
   }
 
   checkBook = () => {
@@ -558,7 +558,7 @@ class UserServicesPreview extends React.Component {
     if (!user) {
       return null
     }
-    const{address}=this.props
+    const address=this.state.location || this.props.address
     if (!address || ['client', 'main', 'all'].includes(address)) {
       return allAddresses.main
     }
