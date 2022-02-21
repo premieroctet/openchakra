@@ -56,10 +56,7 @@ const isMarketplace = () => {
 
 const appName = 'myalfred'
 
-const DATABASE_PRODUCTION='test-myAlfred'
-const DATABASE_TEST='test-myAlfred-V2'
-
-const databaseName = MODE==MODES.PRODUCTION ? DATABASE_PRODUCTION : DATABASE_TEST
+const databaseName = DATABASE_NAME
 const serverPort = process.env.PORT || 3122
 
 const SERVER_PROD = is_production() || is_development()
