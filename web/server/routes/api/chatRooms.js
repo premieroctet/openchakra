@@ -73,11 +73,12 @@ router.post('/addAndConnect', (req, res) => {
           })
           .catch(err => {
             console.error(err)
+            res.status(500).json(err)
           })
       }
 
       if (users) {
-        return res.status(400).json({msg: 'chat déjà existant'})
+        return res.json(users)
       }
     })
     .catch(err => {

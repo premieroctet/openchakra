@@ -306,7 +306,7 @@ router.post('/bank-accounts', passport.authenticate('jwt', {session: false}), (r
   const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
   promise
     .then(entity => {
-      const mangopay_id = entity.mangopay_provider_id
+      const mangopay_id = entity.mangopay_provider_id || entity.id_mangopay
 
       if (!mangopay_id) {
         res.status(400).json('Pas de compte mangopay')
@@ -411,7 +411,7 @@ router.get('/bank-accounts', passport.authenticate('jwt', {session: false}), (re
   const promise = isB2BAdmin(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
   promise
     .then(entity => {
-      const id_mangopay = entity.mangopay_provider_id
+      const id_mangopay = entity.mangopay_provider_id || entity.id_mangopay
       mangoApi.Users.getBankAccounts(id_mangopay, {parameters: {per_page: 100}})
         .then(accounts => {
           console.log(accounts.map(a => a.Id))
@@ -457,7 +457,7 @@ router.delete('/bank-accounts/:bank_account_id', passport.authenticate('jwt', {s
   const promise = isB2BAdmin(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
   promise
     .then(entity => {
-      const mangopay_id = entity.mangopay_provider_id
+      const mangopay_id = entity.mangopay_provider_id || entity.id_mangopay
       mangoApi.Users.deactivateBankAccount(mangopay_id, account_id)
         .then(() => res.json())
         .catch(err => {

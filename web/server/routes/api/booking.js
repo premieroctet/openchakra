@@ -258,6 +258,18 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
     })
 })
 
+router.post('/compute', (req, res) => {
+
+  req.context.payment.compute(req.body)
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
 // @Route GET /myAlfred/booking/:id
 // View one booking
 // @Access public

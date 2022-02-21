@@ -23,7 +23,7 @@ moment.locale('fr')
 const crypto = require('crypto')
 const axios = require('axios')
 const {ROLES}=require('../../../utils/consts')
-const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, install_hooks} = require('../../utils/mangopay')
+const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
 const gifFrames = require('gif-frames')
 const fs = require('fs').promises
@@ -114,6 +114,8 @@ router.post('/register', (req, res) => {
     })
     .then(user => {
       createMangoClient(user)
+        .then(user => user.save().then().catch(err => console.error(err)))
+        .catch(err => console.error(err))
       sendVerificationMail(user, req)
       // Warning si adresse incomplète
       if (!user.billing_address.gps.lat) {
@@ -227,6 +229,13 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
         .then(
           user => {
             ServiceUser.updateMany({user: user.id}, {service_address: user.billing_address})
+            createMangoClient(user)
+            if (user.mangopay_provider_id) {
+              req.context.getModel('Shop').findOne({alfred: user._id})
+                .then(shop => {
+                  createMangoProvider(user, shop)
+                })
+            }
           },
         )
         .catch(
@@ -1256,7 +1265,9 @@ router.get('/hook', (req, res) => {
 
 
 // Create mango client account for all user with no id_mangopay
-if (is_production() || is_validation()) {
+// DISABLED because it operates on ALL DATABASES !!
+//if (is_production() || is_validation()) {
+if (false) {
   new CronJob('0 */15 * * * *', () => {
     console.log('Customers who need mango account')
     User.find({id_mangopay: null, active: true})

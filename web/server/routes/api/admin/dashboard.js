@@ -1,4 +1,14 @@
 const {isPlatform} = require('../../../../config/config')
+const Prestation = require('../../../models/Prestation');
+const Service = require('../../../models/Service');
+const Equipment = require('../../../models/Equipment');
+const Category = require('../../../models/Category');
+const Job = require('../../../models/Job');
+const FilterPresentation = require('../../../models/FilterPresentation');
+const ServiceUser = require('../../../models/ServiceUser');
+const moment = require('moment');
+const { BOOK_STATUS } = require('../../../../utils/consts');
+const { mangoApi } = require('../../../utils/mangopay');
 const Review = require('../../../models/Review')
 const EventLog = require('../../../models/EventLog')
 const Commission = require('../../../models/Commission')
@@ -1684,6 +1694,72 @@ router.get('/warnings', passport.authenticate('admin', {session: false}), (req, 
         warnings.push("Aucune compagnie n'a été défnie")
       }
       res.json(warnings)
+    })
+})
+
+router.get('/fees', passport.authenticate('admin', {session: false}), (req, res) => {
+  const startMoment=req.query.start_date && moment(parseInt(req.query.start_date)*1000).startOf('day')
+  const endMoment=req.query.end_date && moment(parseInt(req.query.end_date)*1000).endOf('day')
+
+  const REQUIRED_FIELDS='_id amount alfred.full_name user.full_name status service date_prestation_moment'.split(' ')
+
+  const linkedPromise= (userData, childPromise) => {
+    return new Promise((resolve, reject) => {
+      childPromise
+        .then(result => {
+          result.userData=userData
+          resolve(result)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  }
+
+  // const filter={$and: [{end_date: {$gt: startMoment}}, {end_date: {$lt: endMoment}}]}
+  let filter={status: BOOK_STATUS.FINISHED}
+  const criterions=[]
+  if (startMoment) {
+    criterions.push({end_date: {$gt: startMoment}})
+  }
+  if (endMoment) {
+    criterions.push({end_date: {$lt: endMoment}})
+  }
+  if (criterions.length) {
+    filter={...filter, $and: criterions}
+  }
+  Booking.find(filter)
+    .populate('alfred', 'firstname name')
+    .populate('user', 'firstname name')
+    .then(bookings => {
+      let mangoPromises=[]
+      bookings.forEach(b => {
+        mangoPromises=mangoPromises.concat([
+          b.mangopay_payin_id && linkedPromise(b._id, mangoApi.PayIns.get(b.mangopay_payin_id)),
+          b.mangopay_transfer_id && linkedPromise(b.id, mangoApi.Transfers.get(b.mangopay_transfer_id)),
+          b.mangopay_payout_id && linkedPromise(b._id, mangoApi.PayOuts.get(b.mangopay_payout_id)),
+        ]).filter(e => !!e)
+      })
+      Promise.allSettled(mangoPromises)
+        .then(events => {
+          events = events.filter(e => e.status=='fulfilled').map(e => e.value)
+          events = events.filter(e => e.Fees && e.Fees.Amount
+            && (!req.query.start_date || e.ExecutionDate >= parseInt(req.query.start_date))
+            && (!req.query.end_date || e.ExecutionDate <= parseInt(req.query.end_date)),
+          )
+          bookings=bookings.map(booking => lodash.pick(booking, REQUIRED_FIELDS))
+          events.forEach(event => {
+            const booking=bookings.find(b => b._id.toString()==event.userData.toString())
+            booking.commission = (booking.commission||0)+event.Fees.Amount/100.0
+          })
+          bookings = bookings.filter(b => b.commission)
+
+          return res.json(bookings)
+        })
+        .catch(err => {
+          console.error(err)
+          res.json(err)
+        })
     })
 })
 
