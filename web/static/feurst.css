@@ -1,0 +1,137 @@
+:root {
+  --brand-color: #35629c;
+  --bg-input: #f2f2f2;
+  --text-input: #707070;
+}
+
+
+.configurator {
+  margin: 2rem;
+}
+
+@media (min-width: 768px) {
+
+  .configurator {
+    margin: 10rem;
+  }
+}
+
+.mx-auto {
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+}
+
+.gridcols {
+  grid-template-columns:  repeat(auto-fit, minmax(250px,1fr));
+}
+
+
+.flex {
+  display: flex;
+}
+
+.flex-col {flex-direction: column;}
+
+.place-items-center {
+  place-items: center;
+}
+
+.justify-center	{justify-content: center;}
+.justify-evenly	{justify-content: space-evenly;}
+.justify-between	{justify-content: space-between;}
+
+.items-center {
+  align-items: center;
+}
+
+.gap-x-4 {
+  column-gap: 1rem;
+}
+
+.gap-x-8 {
+  column-gap: 4rem;
+}
+
+.gap-y-1 {
+  row-gap: .25rem;
+}
+
+.gap-y-4 {
+  row-gap: 1rem;
+}
+
+.sticky {
+  position: sticky;
+}
+
+.absolute {
+  position: absolute;
+}
+
+
+.relative {
+  position: relative;
+}
+
+.bottom-0 {
+  bottom: 0;
+}
+
+
+
+.w-full {
+  width: 100%;
+}
+
+/* Espacements */
+
+.mb-6 {
+  margin-bottom: 1.5rem !important;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+
+/* Inputs */
+
+.beautifulSelect {
+  background-color: bisque;
+  color: black;
+}
+
+
+/* Boutons */
+
+.previous, .next {
+  appearance: none;
+  border: 1px solid var(--brand-color);
+  background: none;
+  padding: 1rem 1.5rem;
+  border-radius: 30px;
+  min-width: 100px;
+}
+
+.previous {
+
+}
+
+.next {
+  color: #FFF;
+  background: var(--brand-color);
+}
+
+
+/* Backgrounds */
+
+.bg-white {
+  background-color: #FFF;
+}
