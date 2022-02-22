@@ -23,7 +23,10 @@ const GROUPS={
     'CLAVETTE': teeth => teeth || UNKNOWN_TEETH,
     'FOURREAU': teeth => teeth || UNKNOWN_TEETH,
   },
-  'Bouclier dents': {
+  'Dents': {
+    'REFERENCE DENT': teeth => teeth,
+  },
+  'Boucliers inter-dents': {
     SOLD: {
       'BASE A SOUDER': teeth => teeth || UNKNOWN_TEETH,
       'BOUCLIER A SOUDER': () => 1,
@@ -48,9 +51,6 @@ const GROUPS={
   },
   'Bouclier talon': {
     'BOUCLIER DE TALON DE GODET': () => 10,
-  },
-  'Dents': {
-    'REFERENCE DENT': teeth => teeth,
   },
 }
 

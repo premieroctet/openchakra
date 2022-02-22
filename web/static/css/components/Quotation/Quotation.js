@@ -67,7 +67,8 @@ export default theme => ({
   },
   illustration: {
     marginTop: MARGIN,
-    width: '100px',
+    marginBottom: MARGIN,
+    width: '80px',
   },
   optionBody: {
     marginLeft: MARGIN,

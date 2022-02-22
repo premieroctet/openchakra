@@ -16,7 +16,7 @@ const PRECOS={'type': 'excavatrice', 'mark': 'CATERPILLAR', 'model': '374D L', '
         {'ADAPTEUR': ['TKN13 1570 STD', 5],
           'CLAVETTE': ['TKN13 CL', 5],
           'FOURREAU': ['TKN13 SB', 5]}]},
-    'Bouclier dents': {'PIN':
+    'Boucliers inter-dents': {'PIN':
       [
         {'BOUCLIER A CLAVETER CENTRE': ['TKSH EXC 245-70 C', 4],
           'BOUCLIER A CLAVETER DROIT': ['TKSH EXC 250-70 R', 1],

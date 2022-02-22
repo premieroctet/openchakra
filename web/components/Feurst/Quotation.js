@@ -6,19 +6,19 @@ import pdfStyle from '../../static/css/components/Quotation/Quotation'
 const styles = StyleSheet.create(pdfStyle())
 moment.locale('fr')
 
-import logo from '../../static/assets/icon/feurst/logo.png'
-import dent from '../../static/assets/icon/feurst/dent.png'
-import adapteur from '../../static/assets/icon/feurst/adapteur.png'
-import bouclier_flanc from '../../static/assets/icon/feurst/bouclier_flanc.png'
-import bouclier_interdent from '../../static/assets/icon/feurst/bouclier_interdent.png'
-import bouclier_talon from '../../static/assets/icon/feurst/bouclier_talon.png'
+const LOGO='static/assets/icon/feurst/logo.png'
+const DENT='static/assets/icon/feurst/dent.png'
+const ADAPTEUR='static/assets/icon/feurst/adapteur.png'
+const BOUCLIER_FLANC='static/assets/icon/feurst/bouclier_flanc.png'
+const BOUCLIER_INTERDENTS='static/assets/icon/feurst/bouclier_interdent.png'
+const BOUCLIER_TALON='static/assets/icon/feurst/bouclier_talon.png'
 
 const ILLUS={
-  'Porte-dents': adapteur,
-  'Bouclier dents': bouclier_interdent,
-  'Bouclier flanc': bouclier_flanc,
-  'Bouclier talon': bouclier_talon,
-  'Dents': dent,
+  'Porte-dents': ADAPTEUR,
+  'Boucliers inter-dents': BOUCLIER_INTERDENTS,
+  'Bouclier flanc': BOUCLIER_FLANC,
+  'Bouclier talon': BOUCLIER_TALON,
+  'Dents': DENT,
 }
 
 Font.register(
@@ -43,7 +43,7 @@ class Quotation extends React.Component {
       <Document>
         <Page pageNumber={'1'} size="A4" style={styles.body}>
           <View style={styles.logo}>
-            <Image src={logo} />
+            <Image src={LOGO} />
           </View>
           <View style={styles.addresses}>
             <View style={styles.address}>
@@ -77,7 +77,7 @@ class Quotation extends React.Component {
               const [group, data]=entry
               return (
                 <>
-                  <View style={styles.group}>
+                  <View style={styles.group} wrap={false}>
                     <View style={styles.groupHeader}>
                       <Text>{group}</Text>
                       <Image style={styles.illustration} src={ILLUS[group]}/>
