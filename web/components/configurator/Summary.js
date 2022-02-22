@@ -1,10 +1,9 @@
+const { PDFViewer } = require('@react-pdf/renderer');
 const {is_development} = require('../../config/config')
 const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const axios = require('axios')
 const {Button, Grid, TextField} = require('@material-ui/core')
 const {setAxiosAuthentication} = require('../../utils/authentication')
-
-import {PDFViewer} from '@react-pdf/renderer'
 import Quotation from'../Feurst/Quotation'
 const Validator = require('validator')
 import React from 'react'
@@ -35,6 +34,7 @@ function Summary(props) {
 
   return (
     <Grid style={{display: 'flex', flexDirection: 'column'}}>
+      { false && <Grid>
       <Grid style={{display: 'flex', flexDirection: 'row', marginRight: '40px'}}>
         <Grid xs={4} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
           <h3>Société</h3>
@@ -93,11 +93,12 @@ function Summary(props) {
           <TextField disabled={true} value={props.fixType}/>
         </Grid>
       </Grid>
+      </Grid>}
       {props.precos &&
         <>
           <Button onClick={sendQuotation}>Envoyer le devis</Button>
           { is_development() && <NoSSR>
-            <PDFViewer style={{height: '500px'}}>
+            <PDFViewer style={{height: '800px'}}>
               <Quotation precos={props.precos} infos={props}/>
             </PDFViewer>
           </NoSSR>
