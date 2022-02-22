@@ -40,14 +40,14 @@ const GROUPS={
   'Bouclier flanc': {
     'BOUCLIER DE FLANC': () => 1,
     SOLD: {
-      'BOUCLIER DE FLANC A SOUDER': () => 1,
+      'BOUCLIER DE FLANC A SOUDER': () => '2 ou 4',
     },
     PIN: {
-      'BOUCLIER DE FLANC A CLAVETER': () => 1,
+      'BOUCLIER DE FLANC A CLAVETER': () => '2 ou 4',
     },
   },
   'Bouclier talon': {
-    'BOUCLIER DE TALON DE GODET': () => 1,
+    'BOUCLIER DE TALON DE GODET': () => 10,
   },
   'Dents': {
     'REFERENCE DENT': teeth => teeth,
