@@ -47,7 +47,7 @@ export default theme => ({
   groupHeader: {
     width: '30%',
     backgroundColor: BACKGROUND_COLOR,
-    paddingTop: '20px',
+    paddingTop: MARGIN,
     textAlign: 'center',
     color: 'white',
     alignItems: 'center',
