@@ -103,6 +103,10 @@ class Quotation extends React.Component {
               )
             })}
           </View>
+          <View fixed style={styles.footer}>
+            <Text render={({ pageNumber, totalPages }) =>
+                  `${pageNumber}/${totalPages}`}/>
+          </View>
         </Page>
       </Document>
     )

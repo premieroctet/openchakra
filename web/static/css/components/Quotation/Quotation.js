@@ -89,9 +89,9 @@ export default theme => ({
   },
   footer: {
     textAlign: 'center',
-    paddingTop: '1vh',
-    borderTop: '1 solid grey',
-    bottom: -130,
+    padding: MARGIN,
+    backgroundColor: BACKGROUND_COLOR,
+    color: 'white',
   },
   title: {
     fontSize: 16,
@@ -99,28 +99,5 @@ export default theme => ({
     marginTop: MARGIN,
     marginBottom: MARGIN,
     textAlign: 'center',
-  },
-  infos: {
-    marginTop: '7vh',
-    paddingTop: '1vh',
-    borderTop: '1 solid black',
-  },
-  table: {
-    display: 'table',
-    width: '100%',
-    borderStyle: BORDER_STYLE,
-    borderColor: BORDER_COLOR,
-    borderWidth: 1,
-    borderRightWidth: 0,
-    borderBottomWidth: 0,
-    marginBottom: '8vh',
-  },
-  tableRow: {
-    margin: 'auto',
-    flexDirection: 'row',
-  },
-  resultRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
   },
 })
