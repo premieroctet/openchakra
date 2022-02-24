@@ -11,6 +11,8 @@ const {STEPS} = require('./configurator/configuratorSteps')
 const ProgressBar = require('../components/ProgressBar/ProgressBar')
 const lodash = require('lodash')
 
+export const feurstImgPath = './static/assets/img/feurst'
+
 
 class Configurator extends React.Component {
   constructor(props) {
@@ -43,7 +45,7 @@ class Configurator extends React.Component {
     if (is_development()) {
       this.state = {
         ...this.state,
-        step: 1,
+        step: 2,
         type: 'excavatrice',
         mark: 'CATERPILLAR',
         fixType: 'PIN',

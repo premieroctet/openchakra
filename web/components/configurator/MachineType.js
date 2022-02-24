@@ -1,4 +1,5 @@
 import React from 'react'
+import {feurstImgPath} from '../../pages/configurator'
 // import InputLabel from '@mui/material/InputLabel'
 // import MenuItem from '@mui/material/MenuItem'
 // import FormControl from '@mui/material/FormControl'
@@ -10,26 +11,27 @@ import React from 'react'
 const {Grid, FormControl, InputLabel, MenuItem, Select, TextField} = require('@material-ui/core')
 const {Autocomplete} = require('@material-ui/lab')
 
-const imagesMachine = {
-  chargeuse: './static/assets/feurst/configurateur-12.svg',
-  excavatrice: './static/assets/feurst/configurateur-13.svg',
-}
 
 function MachineType(props) {
 
+  const imagesMachine = {
+    chargeuse: `${feurstImgPath}/configurateur-12.svg`,
+    excavatrice: `${feurstImgPath}/configurateur-13.svg`,
+  }
+
   return (
-    <div className='grid gridcols gap-x-8'>
+    <div className='grid machine gap-x-8'>
       
-      <div>
+      <div className='machine-type'>
         <h2>Quelle machine souhaitez-vous équiper ?</h2>
     
         <div className='flex justify-evenly gap-x-4 mb-6'>
           {props.types.map(tp => (
-            <label className='flex flex-col items-center gap-y-1 relative'>
+            <label key={tp} className='flex flex-col items-center gap-y-1 relative'>
               <input className='absolute' type="radio" name='type' key={tp} value={tp} onChange={ev => { props.onTypeChange(ev.target.value) }} />
               <div className='flex flex-col items-center bg-white z-10 p-2 rounded-xl'>
                 <img src={imagesMachine[tp]} alt='' width={80} height={80} />
-                <span>Une {tp}</span>
+                <span className='machine-type-name'>Une {tp}</span>
               </div>
             </label>))
           }

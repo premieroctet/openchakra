@@ -1,5 +1,16 @@
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/static/assets/fonts/Roboto-Regular.ttf');
+  src: local('Roboto'), url('/static/assets/fonts/Roboto-Regular.woff2') format('woff2'),
+  url('/static/assets/fonts/Roboto-Regular.ttf') format('truetype');
+}
+
 :root {
-  --brand-color: #35629c;
+  --brand-color: #182d45;
+  --bg-nextbutton: #2b3760;
   --bg-app: #f5f5f5;
   --bg-input: #f2f2f2;
   --text-input: #707070;
@@ -7,8 +18,9 @@
   --text-selectedZone: #fff;
 }
 
+
 * {
-  font-family: Roboto !important;
+  font-family: 'Roboto', Courier, monospace !important;
   color: black;
 }
 
@@ -33,9 +45,17 @@ body {
   background: var(--bg-app) !important;
 }
 
-/*  */
+/* textes */
 h1:nth-child(2) {
   margin-left: 1rem;
+}
+
+.materialName {
+  text-transform: lowercase;
+}
+
+.materialName::first-letter {
+  text-transform: capitalize;
 }
 
 .configurator {
@@ -45,8 +65,30 @@ h1:nth-child(2) {
   display: grid;
 }
 
-.gridcols {
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+.machine {
+  grid-template-areas: 'machinetype' 'machinebrand' 'machinemodel' 'machinepower' 'machineweight';
+  grid-template-columns: repeat(auto-fill, minmax(auto, 1fr));
+  place-items: center;
+}
+
+.machine-type {
+  grid-area: machinetype;
+}
+
+.machine-brand {
+  grid-area: machinebrand;
+}
+
+.machine-model {
+  grid-area: machinemodel;
+}
+
+.machine-power {
+  grid-area: machinepower;
+}
+
+.machine-weight {
+  grid-area: machineweight;
 }
 
 .flex {
@@ -186,6 +228,32 @@ input:checked ~ div {
   border: 0 !important;
 }
 
+.MuiAccordion-root {
+  box-shadow: none !important;
+  margin-bottom: 1rem;
+}
+
+.MuiAccordion-root::before {
+  content: none !important;
+}
+
+.MuiAccordionSummary-root {
+  background-color: #f2f2f2 !important;
+}
+
+.MuiAccordionSummary-content {
+  align-items: center;
+  column-gap: 1rem;
+}
+
+.MuiAccordion-root.Mui-expanded {
+  margin: 0 !important;
+}
+
+.MuiAccordionSummary-content.Mui-expanded, .MuiAccordionSummary-content {
+  margin: 0 !important;
+}
+
 /* Boutons */
 
 /* Backgrounds */
@@ -210,7 +278,7 @@ input:checked ~ div {
   overflow: scroll;
   min-height: 60vh;
   max-height: 80vh;
-  max-width: 1140px;
+  max-width: 1200px;
 }
 
 .whereami {
@@ -234,15 +302,25 @@ input:checked ~ div {
   min-width: 100px;
 }
 
-.previous {
-}
-
 .next {
   color: #fff;
-  background: var(--brand-color);
+  background: var(--bg-nextbutton);
 }
 
-@media screen and (min-width: 900px) {
+.grounds {
+  display: flex;
+  flex-direction: column;
+}
+
+
+@media screen and (min-width: 768px) {
+  .machine {
+    grid-template-areas: 'machinetype machinetype' 'machinebrand machinemodel' 'machinepower machineweight';
+  }
+}
+
+
+@media screen and (min-width: 1024px) {
   body {
     background: none !important;
   }
@@ -261,13 +339,25 @@ input:checked ~ div {
     overflow: unset;
   }
 
-  .gridcols {
-    grid-template-columns: repeat(3, 1fr);
+  .machine {
+    grid-template-areas: 'machinetype machinebrand machinemodel' 'machinetype machinepower machineweight';
   }
+
+  .machine-type-name {
+    text-align: center;
+  }
+  
 
   .nextprevZone {
     margin-top: unset;
     position: unset;
+  }
+
+  .grounds {
+    flex-direction: row;
+    column-gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   /* hack input */
@@ -280,4 +370,25 @@ input:checked ~ div {
   .MuiInputBase-root {
     background: unset !important;
   }
+
+  .MuiCollapse-root {
+    height: auto !important;
+  }
+
+  .MuiCollapse-hidden {
+    visibility: visible !important;
+  }
+
+  .MuiAccordionSummary-root {
+    background: none !important;
+  }
+
+  .MuiAccordionSummary-expandIcon {
+    display: none !important;
+  }
+
+  .MuiAccordionSummary-content {
+    flex-direction: column;
+  }
+
 }

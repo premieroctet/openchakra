@@ -3,19 +3,32 @@ const {Grid, MenuItem, Select, Switch, Accordion, AccordionSummary, AccordionDet
 import React from 'react'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {withStyles} from '@material-ui/core/styles'
-
+import {feurstImgPath} from '../../pages/configurator'
 
 const IOSSwitch = withStyles(theme => ({
   root: {
-    width: 42,
+    width: 54,
     height: 26,
     padding: 0,
     margin: theme.spacing(1),
   },
   switchBase: {
+    color: '#f50057',
+    '&.Mui-disabled': {
+      color: '#e886a9',
+    },
+    '&.Mui-checked': {
+      color: '#95cc97',
+    },
+    '&.Mui-checked + .MuiSwitch-track': {
+      backgroundColor: 'white',
+    },
+    '&.Mui-checked .MuiSwitch-thumb': {
+      backgroundColor: '#f8cf61',
+    },
     padding: 1,
     '&$checked': {
-      transform: 'translateX(16px)',
+      transform: 'translateX(28px)',
       color: theme.palette.common.white,
     },
     '&$focusVisible $thumb': {
@@ -26,7 +39,7 @@ const IOSSwitch = withStyles(theme => ({
   thumb: {
     width: 24,
     height: 24,
-    backgroundColor: '#f8cf61',
+    backgroundColor: '#646464',
   },
   track: {
     borderRadius: 26 / 2,
@@ -55,15 +68,15 @@ const IOSSwitch = withStyles(theme => ({
 })
 
 
-const groundImages = {
-  STANDARD: './static/assets/feurst/IMG_9ED5370B226C-1-08.png',
-  DUR: './static/assets/feurst/IMG_9ED5370B226C-1-09.png',
-  'TRES DUR': './static/assets/feurst/IMG_9ED5370B226C-1-10.png',
-  ABRASIF: './static/assets/feurst/IMG_9ED5370B226C-1-10.png',
-  'TRES ABRASIF': './static/assets/feurst/IMG_9ED5370B226C-1-11.png',
-}
-
 function UseCase(props) {
+
+  const groundImages = {
+    STANDARD: `${feurstImgPath}/IMG_9ED5370B226C-1-08.png`,
+    DUR: `${feurstImgPath}/IMG_9ED5370B226C-1-09.png`,
+    'TRES DUR': `${feurstImgPath}/IMG_9ED5370B226C-1-10.png`,
+    ABRASIF: `${feurstImgPath}/IMG_9ED5370B226C-1-10.png`,
+    'TRES ABRASIF': `${feurstImgPath}/IMG_9ED5370B226C-1-11.png`,
+  }
 
   const groundsHardness = new Set(props.grounds.map(({groundHardness}) => groundHardness))
 
@@ -71,23 +84,26 @@ function UseCase(props) {
     <Grid >
       
       <h2>Sélectionnez votre usage</h2>
-      <div>
+      <div className='grounds'>
         {
           [...groundsHardness].map(hardness => (
             <Accordion key={hardness}>
-              <AccordionSummary expandIcon='▲'
+              <AccordionSummary expandIcon={<ExpandMoreIcon/>}
                 aria-controls={`panel${hardness}-content`}
                 id={`panel${hardness}-header`}>
-                <span sx={{width: '33%', flexShrink: 0}}>
+                <span>
                   <img src={groundImages[hardness]} alt="" width={80} height={80} />
                 </span>
-                <span sx={{color: 'gray'}}>{hardness}</span>
+                <span>{hardness}</span>
               </AccordionSummary>
               <AccordionDetails className='flex flex-col'>
                 {props.grounds.map(({groundType, groundHardness: groundHard}) => {
                   return groundHard === hardness ? (
                     <div className='flex items-center'>
-                      <IOSSwitch name="ground" value={groundType} checked={props.ground === groundType } onChange={ev => { props.onGroundChange(ev.target.value) }} /> {groundType}
+                      <label for={groundType.replace(/\s/g, '')}>
+                        <IOSSwitch name="ground" id={groundType.replace(/\s/g, '')} value={groundType} checked={props.ground === groundType } onChange={ev => { props.onGroundChange(ev.target.value) }} />
+                        <span className='materialName'>{groundType}</span>
+                      </label>
                     </div>
                   ) : null
                   
