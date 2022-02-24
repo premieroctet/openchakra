@@ -2,14 +2,15 @@ import React from 'react'
 
 import '../static/feurst.css'
 
-const { is_development } = require('../config/config')
+const {is_development} = require('../config/config')
 const axios = require('axios')
-const { setAxiosAuthentication } = require('../utils/authentication')
-const { Button, Grid } = require('@material-ui/core')
-const { withTranslation } = require('react-i18next')
-const { STEPS } = require('./configurator/configuratorSteps')
+const {setAxiosAuthentication} = require('../utils/authentication')
+const {Button, Grid} = require('@material-ui/core')
+const {withTranslation} = require('react-i18next')
+const {STEPS} = require('./configurator/configuratorSteps')
 const ProgressBar = require('../components/ProgressBar/ProgressBar')
 const lodash = require('lodash')
+
 
 class Configurator extends React.Component {
   constructor(props) {
@@ -37,24 +38,25 @@ class Configurator extends React.Component {
         ['SOLD', 'À souder'],
       ],
     }
+    
 
     if (is_development()) {
-      // this.state = {
-      //   ...this.state,
-      //   step: 0,
-      //   type: 'excavatrice',
-      //   mark: 'CATERPILLAR',
-      //   fixType: 'PIN',
-      //   model: '374D L',
-      //   weight: 75.5,
-      //   power: 355,
-      //   ground: 'GRAVIER',
-      //   bladeShape: 'delta',
-      //   bladeThickness: 70,
-      //   name: 'Gérard Robert',
-      //   company: 'COLAS',
-      //   email: 'sebastien.auvray@my-alfred.io',
-      // }
+      this.state = {
+        ...this.state,
+        step: 1,
+        type: 'excavatrice',
+        mark: 'CATERPILLAR',
+        fixType: 'PIN',
+        model: '374D L',
+        weight: 75.5,
+        power: 355,
+        ground: 'GRAVIER',
+        bladeShape: 'delta',
+        bladeThickness: 70,
+        name: 'Gérard Robert',
+        company: 'COLAS',
+        email: 'sebastien.auvray@my-alfred.io',
+      }
     }
   }
 
@@ -62,7 +64,7 @@ class Configurator extends React.Component {
     setAxiosAuthentication()
     axios
       .get('/feurst/api/database')
-      .then((res) => {
+      .then(res => {
         this.setState({
           machines: res.data.machines,
           thicknesses: res.data.thicknesses,
@@ -70,7 +72,7 @@ class Configurator extends React.Component {
         })
         this.onMachinesChange(res.data.machines)
       })
-      .catch((err) => console.error(err))
+      .catch(err => console.error(err))
 
     if (is_development()) {
       this.getPrecos()
@@ -81,26 +83,26 @@ class Configurator extends React.Component {
     setAxiosAuthentication()
     const data = lodash.pick(
       this.state,
-      'type mark model power weight bladeThickness ground fixType'.split(' ')
+      'type mark model power weight bladeThickness ground fixType'.split(' '),
     )
     axios
       .post('/feurst/api/preconisations', data)
-      .then((res) => {
+      .then(res => {
         this.setState({
           precos: res.data,
         })
       })
-      .catch((err) => console.error(err))
+      .catch(err => console.error(err))
   }
 
   getList = (data, attribute) => {
     return lodash
-      .uniq(data.map((v) => v[attribute]))
+      .uniq(data.map(v => v[attribute]))
       .sort((a, b) => (a == null ? -1 : b == null ? 1 : a - b))
       .sort()
   }
 
-  onMachinesChange = (machines) => {
+  onMachinesChange = machines => {
     this.setState({
       machines: machines,
       types: this.getList(machines, 'type'),
@@ -111,8 +113,8 @@ class Configurator extends React.Component {
     })
   }
 
-  onTypeChange = (type) => {
-    const { machines } = this.state
+  onTypeChange = type => {
+    const {machines} = this.state
     const isShovel = type == 'shovel'
     this.setState({
       type: type,
@@ -123,143 +125,143 @@ class Configurator extends React.Component {
       marks:
         (isShovel && []) ||
         this.getList(
-          machines.filter((v) => v.type == type),
-          'mark'
+          machines.filter(v => v.type == type),
+          'mark',
         ),
       models:
         (isShovel && []) ||
         this.getList(
-          machines.filter((v) => v.type == type),
-          'model'
+          machines.filter(v => v.type == type),
+          'model',
         ),
       powers:
         (isShovel && []) ||
         this.getList(
-          machines.filter((v) => v.type == type),
-          'power'
+          machines.filter(v => v.type == type),
+          'power',
         ),
       weights:
         (isShovel && []) ||
         this.getList(
-          machines.filter((v) => v.type == type),
-          'weight'
+          machines.filter(v => v.type == type),
+          'weight',
         ),
     })
   }
 
-  onMarkChange = (mark) => {
-    const { machines } = this.state
+  onMarkChange = mark => {
+    const {machines} = this.state
     this.setState({
       mark: mark,
       model: null,
       power: null,
       weight: null,
       models: this.getList(
-        machines.filter((v) => !mark || v.mark == mark),
-        'model'
+        machines.filter(v => !mark || v.mark == mark),
+        'model',
       ),
     })
     let list = this.getList(
-      machines.filter((v) => !mark || v.mark == mark),
-      'type'
+      machines.filter(v => !mark || v.mark == mark),
+      'type',
     )
     if (list.length == 1) {
-      this.setState({ type: list[0] })
+      this.setState({type: list[0]})
     }
   }
 
-  onModelChange = (model) => {
-    const { machines } = this.state
-    this.setState({ model: model })
+  onModelChange = model => {
+    const {machines} = this.state
+    this.setState({model: model})
     let list = this.getList(
-      machines.filter((v) => v.model == model),
-      'mark'
+      machines.filter(v => v.model == model),
+      'mark',
     )
     if (list.length == 1) {
-      this.setState({ mark: list[0] })
+      this.setState({mark: list[0]})
     }
     list = this.getList(
-      machines.filter((v) => v.model == model),
-      'type'
+      machines.filter(v => v.model == model),
+      'type',
     )
     if (list.length == 1) {
-      this.setState({ type: list[0] })
+      this.setState({type: list[0]})
     }
     list = this.getList(
-      machines.filter((v) => v.model == model),
-      'power'
+      machines.filter(v => v.model == model),
+      'power',
     )
     if (list.length == 1) {
-      this.setState({ power: list[0] })
+      this.setState({power: list[0]})
     }
     list = this.getList(
-      machines.filter((v) => v.model == model),
-      'weight'
+      machines.filter(v => v.model == model),
+      'weight',
     )
     if (list.length == 1) {
-      this.setState({ weight: list[0] })
+      this.setState({weight: list[0]})
     }
   }
 
-  onPowerChange = (power) => {
-    this.setState({ power: power })
+  onPowerChange = power => {
+    this.setState({power: power})
   }
 
-  onWeightChange = (weight) => {
-    this.setState({ weight: weight })
+  onWeightChange = weight => {
+    this.setState({weight: weight})
   }
 
-  onBladeShapeChange = (shape) => {
-    this.setState({ bladeShape: shape })
+  onBladeShapeChange = shape => {
+    this.setState({bladeShape: shape})
   }
 
-  onBucketWidthChange = (width) => {
-    this.setState({ bucketWidth: width })
+  onBucketWidthChange = width => {
+    this.setState({bucketWidth: width})
   }
 
-  onBladeThicknessChange = (thickness) => {
-    this.setState({ bladeThickness: thickness })
+  onBladeThicknessChange = thickness => {
+    this.setState({bladeThickness: thickness})
   }
 
-  onGroundChange = (ground) => {
-    this.setState({ ground: ground })
+  onGroundChange = ground => {
+    this.setState({ground: ground})
   }
 
-  onFixTypeChange = (fixType) => {
-    this.setState({ fixType: fixType })
+  onFixTypeChange = fixType => {
+    this.setState({fixType: fixType})
   }
 
-  onCompanyChange = (company) => {
-    this.setState({ company: company })
+  onCompanyChange = company => {
+    this.setState({company: company})
   }
 
-  onNameChange = (name) => {
-    this.setState({ name: name })
+  onNameChange = name => {
+    this.setState({name: name})
   }
 
-  onEmailChange = (email) => {
-    this.setState({ email: email })
+  onEmailChange = email => {
+    this.setState({email: email})
   }
 
   nextPage = () => {
-    const { step } = this.state
+    const {step} = this.state
     const newStep = Math.min(step + 1, STEPS.length - 1)
     if (newStep == 3) {
       this.getPrecos()
     }
-    this.setState({ step: newStep })
+    this.setState({step: newStep})
   }
 
   previousPage = () => {
-    const { step } = this.state
+    const {step} = this.state
     const newStep = Math.max(step - 1, 0)
-    this.setState({ step: newStep })
+    this.setState({step: newStep})
   }
 
   render = () => {
-    const { step, precos } = this.state
+    const {step, precos} = this.state
 
-    const { component, validator, menu } = STEPS[step]
+    const {component, validator, menu} = STEPS[step]
 
     return (
       <Grid
@@ -268,21 +270,23 @@ class Configurator extends React.Component {
         
         {/** is_development() && JSON.stringify(lodash.omit(this.state, ['marks', 'machines', 'models', 'powers', 'weights', 'thicknesses', 'grounds']))*/}
         
+        <h1 className='whereami'>{menu}</h1>
         <ProgressBar value={step} max={STEPS.length} />
-        <h1>{menu}</h1>
-        {component({ ...this.state, ...this })}
-        {/** JSON.stringify(precos) */}
-        <div className='flex sticky justify-between w-full mt-8 bottom-0 bg-white p-4'>
-          <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
-            Précédent
-          </Button>
-          <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
-            Suivant
-          </Button>
+        <div className="rounded-container m-4 p-4">
+          {component({...this.state, ...this})}
+          {/** JSON.stringify(precos) */}
         </div>
-      </Grid>
-    )
+        <div className='flex justify-between w-full nextprevZone bg-white p-4'>
+          <button className='previous' disabled={step == 0} onClick={this.previousPage}>
+            Précédent
+          </button>
+          <button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
+            Suivant
+          </button>
+        </div>
+      </Grid>)
+    
   }
 }
 
-module.exports = withTranslation('custom', { withRef: true })(Configurator)
+module.exports = withTranslation('custom', {withRef: true})(Configurator)
