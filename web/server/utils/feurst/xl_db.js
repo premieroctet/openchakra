@@ -4,7 +4,10 @@ SUPPOSITIONS:
      (lien entre utilisation standard ou utilisation XHD dans Machines et type de terrain dans Matrice Dents Développée)
 - on suppose qu'un bouclier centre est un bouclier interdent
 - les calculs de quantités par nombre de dents sont à vérifier
-
+- une lame semi-delta est à considérer comme une lame delta
+- lames possibles:
+   - excavatrice : droite ou semi-delta
+   - chargeuse : droite ou delta
 */
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')

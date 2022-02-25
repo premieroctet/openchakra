@@ -5,6 +5,7 @@ const {Button, Grid, TextField} = require('@material-ui/core')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 const Validator = require('validator')
 import React from 'react'
+const lodash=require('lodash')
 
 function Summary(props) {
 
@@ -52,7 +53,7 @@ function Summary(props) {
             <TextField name='email' value={props.email} onChange={ev => props.onEmailChange(ev.target.value)}/>
           </Grid>
           <Grid xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-            <h3>Phone</h3>
+            <h3>Téléphone</h3>
             <TextField name='phone' value={props.phone} onChange={ev => props.onPhoneChange(ev.target.value)}/>
           </Grid>
         </Grid>
@@ -102,7 +103,7 @@ function Summary(props) {
         </Grid>
       </Grid>
       <Grid>
-        {props.precos && <Button disabled={!validator(props)} onClick={sendQuotation}>Envoyer le devis</Button>}
+        {lodash.get(props, 'precos.accessories') && <Button disabled={!validator(props)} onClick={sendQuotation}>Envoyer le devis</Button>}
         <Button disabled={!validator(props)} onClick={sendQuotation}>Doute? Demander une préconisation maison</Button>
       </Grid>
     </Grid>

@@ -62,9 +62,9 @@ class Quotation extends React.Component {
           <View style={styles.summary}>
             <View style={styles.summaryBlock}>
               <Text>Récapitulatif de votre demande:</Text>
-              <Text><span style={styles.lightText}>Votre machine: </span>{infos.type}-{infos.model}</Text>
-              <Text><span style={styles.lightText}>Votre terrain: </span>{infos.ground}</Text>
-              <Text><span style={styles.lightText}>Votre godet/lame: </span>{infos.bladeShape} - L : {infos.bucketSize && `${infos.bucketSize}mm` || 'inconnue'}</Text>
+              <Text><span style={styles.lightText}>Votre machine: </span>{precos.type}-{precos.mark} {precos.model}</Text>
+              <Text><span style={styles.lightText}>Votre terrain: </span>{precos.ground}</Text>
+              <Text><span style={styles.lightText}>Votre godet/lame: </span>{precos.bladeShape} - L : {precos.bucketSize && `${precos.bucketSize}mm` || 'inconnue'}</Text>
             </View>
             <View style={styles.summaryBlock}>
               <Text>Votre équipement:</Text>

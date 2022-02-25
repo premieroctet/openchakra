@@ -1,6 +1,7 @@
 const FeurstProspect = require('../../../models/FeurstProspect')
 const generatePdf = require('../../../utils/generatePdf')
-const {sendQuotation} = require('../../../utils/mailing')
+const {sendAutoQuotation2Client, sendAutoQuotation2Feurst,
+  sendCustomQuotation2Client, sendCustomQuotation2Feurst} = require('../../../utils/mailing')
 const {computePrecos} = require('../../../utils/feurst/xl_db')
 
 const router = require('express').Router()
@@ -13,18 +14,12 @@ const validateFeurstProspect=require('../../../validation/feurstProspect')
 router.get('/database', (req, res) => {
   getDatabase()
     .then(db => {
-      const grounds=lodash.uniq(Object.keys(db.grounds).map(k => {
-        const elemGrounds = k.split(',')
-        return {
-          groundType: elemGrounds[2],
-          groundHardness: elemGrounds[3],
-        }
-      })).filter((value, index, self) =>
-        index === self.findIndex(t => (
-          t.groundType === value.groundType && t.groundHardness === value.groundHardness
-        )),
-      ).sort()
-      res.json({...db, grounds: grounds})
+      db.grounds=lodash(Object.keys(db.grounds))
+        .groupBy(c => c.split(',')[3])
+        .map((value, key) => [key, lodash.uniq(value.map(v => v.split(',')[2])).sort()])
+        .fromPairs()
+        .value()
+      res.json(lodash.omit(db, 'accessories'))
     })
     .catch(err => {
       console.error(err)
@@ -61,9 +56,18 @@ router.post('/quotation', (req, res) => {
       req.body.precos)
     })
     .then(buffer => {
-      sendQuotation(
+      sendAutoQuotation2Client(
         prospect.email,
         prospect.name,
+        req.body.quotation_id,
+        req.body.machine,
+        buffer,
+      )
+      sendAutoQuotation2Feurst(
+        'sebastien.auvray@my-alfred.io',
+        prospect.name,
+        prospect.email,
+        prospect.company,
         req.body.quotation_id,
         req.body.machine,
         buffer,
