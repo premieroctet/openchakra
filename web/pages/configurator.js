@@ -37,8 +37,8 @@ class Configurator extends React.Component {
       this.state={...this.state, step: 3,
         type: 'excavatrice', mark: 'CATERPILLAR', fixType: 'PIN',
         model: '374D L', weight: 75.5, power: 355,
-        ground: 'GRAVIER', bladeShape: 'delta', bladeThickness: 70,
-        name: 'Gérard Robert', company: 'COLAS', email: 'sebastien.auvray@my-alfred.io',
+        ground: 'GRAVIER', bladeShape: 'delta', bladeThickness: 70, phone: '0675774324',
+        firstname: 'Gérard', name: 'Robert', company: 'COLAS', email: 'sebastien.auvray@my-alfred.io',
       }
     }
   }
@@ -155,12 +155,20 @@ class Configurator extends React.Component {
     this.setState({company: company})
   }
 
+  onFirstnameChange = name => {
+    this.setState({name: name})
+  }
+
   onNameChange = name => {
     this.setState({name: name})
   }
 
   onEmailChange = email => {
     this.setState({email: email})
+  }
+
+  onPhoneChange = phone => {
+    this.setState({phone: phone})
   }
 
   nextPage = () => {

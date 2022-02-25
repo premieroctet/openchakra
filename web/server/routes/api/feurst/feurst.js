@@ -1,3 +1,4 @@
+const FeurstProspect = require('../../../models/FeurstProspect')
 const generatePdf = require('../../../utils/generatePdf')
 const {sendQuotation} = require('../../../utils/mailing')
 const {computePrecos} = require('../../../utils/feurst/xl_db')
@@ -5,7 +6,7 @@ const {computePrecos} = require('../../../utils/feurst/xl_db')
 const router = require('express').Router()
 const {getDatabase}=require('../../../utils/feurst/xl_db')
 const lodash=require('lodash')
-const fs=require('fs').promises
+const validateFeurstProspect=require('../../../validation/feurstProspect')
 
 // @Route GET /feurst/api/database
 // Google callback
@@ -33,23 +34,31 @@ router.post('/preconisations', (req, res) => {
 })
 
 router.post('/quotation', (req, res) => {
-  let pdf=null
-  let contents=null
-  generatePdf({name: req.body.name, company: req.body.company, email: req.body.email}, req.body.precos)
+
+  const {errors, isValid}=validateFeurstProspect(req.body)
+  if (!isValid) {
+    return res.status(400).json(errors)
+  }
+
+  let prospect=null
+  FeurstProspect.findOneAndUpdate({email: req.body.email}, req.body, {upsert: true, new: true})
     .then(result => {
-      pdf=result
-      return fs.readFile('/tmp/test.pdf')
+      prospect=result
+      return generatePdf({
+        name: prospect.name,
+        company: prospect.company,
+        email: prospect.email},
+      req.body.precos)
     })
-    .then(result => {
-      contents=result
+    .then(buffer => {
       sendQuotation(
-        req.body.email,
-        req.body.name,
+        prospect.email,
+        prospect.name,
         req.body.quotation_id,
         req.body.machine,
-        contents,
+        buffer,
       )
-      return res.json('ok')
+      return res.json()
     })
     .catch(err => {
       console.error(err)

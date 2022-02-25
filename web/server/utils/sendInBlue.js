@@ -14,7 +14,7 @@ class SIB_V3 {
   }
 
   sendMail(index, email, data, attachment=null) {
-    console.log(`Sending mail template #${index} to ${email} with data ${JSON.stringify(data)}`)
+    console.log(`Sending mail template #${index} to ${email} with data ${JSON.stringify(data)}, attachment:${attachment ? 'yes' : 'no'}`)
 
     let emailData = new SibApiV3Sdk.SendSmtpEmail()
 

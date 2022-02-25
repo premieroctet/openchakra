@@ -1,4 +1,3 @@
-const {withTranslation}=require('react-i18next')
 const React=require('react')
 const {Page, Text, View, Document, StyleSheet, Image, Font}=require('@react-pdf/renderer')
 const moment=require('moment')
@@ -104,8 +103,8 @@ class Quotation extends React.Component {
             })}
           </View>
           <View fixed style={styles.footer}>
-            <Text render={({ pageNumber, totalPages }) =>
-                  `${pageNumber}/${totalPages}`}/>
+            <Text render={({pageNumber, totalPages}) =>
+              `${pageNumber}/${totalPages}`}/>
           </View>
         </Page>
       </Document>
@@ -113,4 +112,4 @@ class Quotation extends React.Component {
   }
 }
 
-module.exports=withTranslation('custom', {withRef: true})((Quotation))
+module.exports=Quotation

@@ -238,8 +238,11 @@ const getTeethCount = (database, data) => {
 }
 
 const getAccessories = (database, data) => {
-  const key=[data.type, data.family, data.bladeThickness, data.bladeShape.toUpperCase()]
+  const key=[data.type, data.family, data.bladeThickness, (data.bladeShape||'').toUpperCase()]
   const acc=database.accessories[key]
+  if (!acc) {
+    return null
+  }
   let res={}
   Object.entries(GROUPS).forEach(entity => {
     const key=entity[0]

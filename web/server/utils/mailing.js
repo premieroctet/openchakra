@@ -428,7 +428,7 @@ const sendQuotation = (email, name, quotation_id, machine, quotation_data) => {
 
   const attachment={
     name: 'devis_feurst.pdf',
-    content: Buffer.from(quotation_data).toString('base64'),
+    content: quotation_data.toString('base64'),
   }
 
   sendNotification(

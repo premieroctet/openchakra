@@ -109,6 +109,7 @@
     "suneditor": "^2.41.3",
     "suneditor-react": "^3.3.0",
     "textarea-caret": "^3.1.0",
+    "tmp": "^0.2.1",
     "url-loader": "^4.1.1",
     "url-parse": "^1.5.1",
     "uuid": "^3.3.3",
