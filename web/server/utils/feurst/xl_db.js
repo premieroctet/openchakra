@@ -4,7 +4,10 @@ SUPPOSITIONS:
      (lien entre utilisation standard ou utilisation XHD dans Machines et type de terrain dans Matrice Dents Développée)
 - on suppose qu'un bouclier centre est un bouclier interdent
 - les calculs de quantités par nombre de dents sont à vérifier
-
+- une lame semi-delta est à considérer comme une lame delta
+- lames possibles:
+   - excavatrice : droite ou semi-delta
+   - chargeuse : droite ou delta
 */
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
@@ -23,7 +26,10 @@ const GROUPS={
     'CLAVETTE': teeth => teeth || UNKNOWN_TEETH,
     'FOURREAU': teeth => teeth || UNKNOWN_TEETH,
   },
-  'Bouclier dents': {
+  'Dents': {
+    'REFERENCE DENT': teeth => teeth,
+  },
+  'Boucliers inter-dents': {
     SOLD: {
       'BASE A SOUDER': teeth => teeth || UNKNOWN_TEETH,
       'BOUCLIER A SOUDER': () => 1,
@@ -40,17 +46,14 @@ const GROUPS={
   'Bouclier flanc': {
     'BOUCLIER DE FLANC': () => 1,
     SOLD: {
-      'BOUCLIER DE FLANC A SOUDER': () => 1,
+      'BOUCLIER DE FLANC A SOUDER': () => '2 ou 4',
     },
     PIN: {
-      'BOUCLIER DE FLANC A CLAVETER': () => 1,
+      'BOUCLIER DE FLANC A CLAVETER': () => '2 ou 4',
     },
   },
   'Bouclier talon': {
-    'BOUCLIER DE TALON DE GODET': () => 1,
-  },
-  'Dents': {
-    'REFERENCE DENT': teeth => teeth,
+    'BOUCLIER DE TALON DE GODET': () => 10,
   },
 }
 
@@ -149,6 +152,7 @@ const loadAccessories = wb => {
 
   const FAMILY_COL=2
   const THICKNESS_COL=3
+  const BLADESHAPE_COL=4
   const HEADER_ROW=2
 
   const res={}
@@ -161,13 +165,14 @@ const loadAccessories = wb => {
     sheet.getRows(HEADER_ROW+1, sheet.rowCount).forEach(row => {
       const family=row.getCell(FAMILY_COL).text
       const thickness=row.getCell(THICKNESS_COL).text
-      if (!family || !thickness) {
+      const bladeShape=row.getCell(BLADESHAPE_COL).text
+      if (!family || !thickness || !bladeShape) {
         return
       }
-      const key=[type, family, thickness]
+      const key=[type, family, thickness, bladeShape]
       const config={}
       row.eachCell({includeEmpty: true}, c => {
-        if (c.col>THICKNESS_COL && c.text && header.getCell(c.col).text) {
+        if (c.col>BLADESHAPE_COL && c.text && header.getCell(c.col).text) {
           const key2=header.getCell(c.col).text
           config[key2]=c.text
         }
@@ -223,7 +228,6 @@ const getFamily = (database, data) => {
 const getTeethRef = (database, data) => {
   const groundKeyRe=new RegExp(`${data.family},(${data.type}|TOUTES),${data.ground}`, 'i')
   const teeth_ref=Object.entries(database.grounds).filter(e => e[0].match(groundKeyRe)).map(e => e[1])
-  console.log(`Teeth ref:${teeth_ref}`)
   return lodash.flattenDeep(teeth_ref)
 }
 
@@ -237,8 +241,11 @@ const getTeethCount = (database, data) => {
 }
 
 const getAccessories = (database, data) => {
-  const key=[data.type, data.family, data.bladeThickness]
+  const key=[data.type, data.family, data.bladeThickness, (data.bladeShape||'').toUpperCase()]
   const acc=database.accessories[key]
+  if (!acc) {
+    return null
+  }
   let res={}
   Object.entries(GROUPS).forEach(entity => {
     const key=entity[0]

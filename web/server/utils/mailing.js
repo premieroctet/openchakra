@@ -424,18 +424,39 @@ const sendRegisterInvitation = (admin, email, code, req) => {
   )
 }
 
-const sendQuotation = (email, name, quotation_id, machine, quotation_data) => {
+const sendAutoQuotation2Client = (email, name, quotation_id, machine, quotation_data) => {
 
   const attachment={
     name: 'devis_feurst.pdf',
-    content: Buffer.from(quotation_data).toString('base64'),
+    content: quotation_data.toString('base64'),
   }
 
   sendNotification(
-    SIB_IDS.FEURST_QUOTATION,
+    SIB_IDS.FEURST_QUOTATION_2_CLIENT,
     {email: email},
     {
       name: name,
+      quotation_id: quotation_id,
+      machine: machine,
+    },
+    attachment,
+  )
+}
+
+const sendAutoQuotation2Feurst = (email, customer_name, customer_email, customer_company, quotation_id, machine, quotation_data) => {
+
+  const attachment={
+    name: 'devis_feurst.pdf',
+    content: quotation_data.toString('base64'),
+  }
+
+  sendNotification(
+    SIB_IDS.FEURST_QUOTATION_2_FEURST,
+    {email: email},
+    {
+      customer_name: customer_name,
+      customer_email: customer_email,
+      customer_company: customer_company,
       quotation_id: quotation_id,
       machine: machine,
     },
@@ -471,5 +492,8 @@ module.exports = {
   sendBookingRefusedToAlfred,
   sendAdminsAlert,
   sendRegisterInvitation,
-  sendQuotation,
+  sendAutoQuotation2Client,
+  sendAutoQuotation2Feurst,
+  //sendCustomQuotation2Client,
+  //sendCustomQuotation2Feurst,
 }

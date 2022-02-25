@@ -40,24 +40,14 @@ class Configurator extends React.Component {
         ['SOLD', 'À souder'],
       ],
     }
-    
+
 
     if (is_development()) {
-      this.state = {
-        ...this.state,
-        step: 2,
-        type: 'excavatrice',
-        mark: 'CATERPILLAR',
-        fixType: 'PIN',
-        model: '374D L',
-        weight: 75.5,
-        power: 355,
-        ground: 'GRAVIER',
-        bladeShape: 'delta',
-        bladeThickness: 70,
-        name: 'Gérard Robert',
-        company: 'COLAS',
-        email: 'sebastien.auvray@my-alfred.io',
+      this.state={...this.state, step: 3,
+        type: 'excavatrice', mark: 'CATERPILLAR', fixType: 'PIN',
+        model: '374D L', weight: 75.5, power: 355,
+        ground: 'GRAVIER', bladeShape: 'delta', bladeThickness: 70, phone: '0675774324',
+        firstname: 'Gérard', name: 'Robert', company: 'COLAS', email: 'sebastien.auvray@my-alfred.io',
       }
     }
   }
@@ -83,12 +73,8 @@ class Configurator extends React.Component {
 
   getPrecos = () => {
     setAxiosAuthentication()
-    const data = lodash.pick(
-      this.state,
-      'type mark model power weight bladeThickness ground fixType'.split(' '),
-    )
-    axios
-      .post('/feurst/api/preconisations', data)
+    const data=lodash.pick(this.state, 'type mark model power weight bladeThickness ground fixType bladeShape'.split(' '))
+    axios.post('/feurst/api/preconisations', data)
       .then(res => {
         this.setState({
           precos: res.data,
@@ -237,12 +223,20 @@ class Configurator extends React.Component {
     this.setState({company: company})
   }
 
+  onFirstnameChange = name => {
+    this.setState({name: name})
+  }
+
   onNameChange = name => {
     this.setState({name: name})
   }
 
   onEmailChange = email => {
     this.setState({email: email})
+  }
+
+  onPhoneChange = phone => {
+    this.setState({phone: phone})
   }
 
   nextPage = () => {
@@ -269,9 +263,9 @@ class Configurator extends React.Component {
       <Grid
         className="configurator relative"
       >
-        
+
         {/** is_development() && JSON.stringify(lodash.omit(this.state, ['marks', 'machines', 'models', 'powers', 'weights', 'thicknesses', 'grounds']))*/}
-        
+
         <h1 className='whereami'>{menu}</h1>
         <ProgressBar value={step} max={STEPS.length} />
         <div className="rounded-container m-4 p-4">
@@ -287,7 +281,7 @@ class Configurator extends React.Component {
           </button>
         </div>
       </Grid>)
-    
+
   }
 }
 

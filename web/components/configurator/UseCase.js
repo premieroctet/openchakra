@@ -78,40 +78,38 @@ function UseCase(props) {
     'TRES ABRASIF': `${feurstImgPath}/IMG_9ED5370B226C-1-11.png`,
   }
 
-  const groundsHardness = new Set(props.grounds.map(({groundHardness}) => groundHardness))
-
   return (
     <>
       <h2>Sélectionnez votre usage</h2>
       <div className='grounds'>
         {
-          [...groundsHardness].map(hardness => (
-            <Accordion key={hardness}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon/>}
-                aria-controls={`panel${hardness}-content`}
-                id={`panel${hardness}-header`}>
-                <span>
-                  <img src={groundImages[hardness]} alt="" width={80} height={80} />
-                </span>
-                <span>{hardness}</span>
-              </AccordionSummary>
-              <AccordionDetails className='flex flex-col'>
-                {props.grounds.map(({groundType, groundHardness: groundHard}) => {
-                  return groundHard === hardness ? (
+          Object.entries(props.grounds).map(entry => {
+            const [hardness, groundTypes]=entry
+            console.log(`${groundTypes}`)
+            return (
+              <Accordion key={hardness}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon/>}
+                  aria-controls={`panel${hardness}-content`}
+                  id={`panel${hardness}-header`}>
+                  <span>
+                    <img src={groundImages[hardness]} alt="" width={80} height={80} />
+                  </span>
+                  <span>{hardness}</span>
+                </AccordionSummary>
+                <AccordionDetails className='flex flex-col'>
+                  {groundTypes.map(groundType => (
                     <div className='flex items-center'>
                       <label for={groundType.replace(/\s/g, '')}>
                         <IOSSwitch name="ground" id={groundType.replace(/\s/g, '')} value={groundType} checked={props.ground === groundType } onChange={ev => { props.onGroundChange(ev.target.value) }} />
                         <span className='materialName'>{groundType}</span>
                       </label>
                     </div>
-                  ) : null
-                  
-                })}
-              </AccordionDetails>
-            </Accordion>
-          ))
+                  ))}
+                </AccordionDetails>
+              </Accordion>
+            )
+          })
         }
-        
       </div>
     </>
 
