@@ -1,4 +1,4 @@
-const {Grid, MenuItem, Select, Switch, Accordion, AccordionSummary, AccordionDetails} = require('@material-ui/core')
+const {Switch, Accordion, AccordionSummary, AccordionDetails} = require('@material-ui/core')
 
 import React from 'react'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
@@ -81,8 +81,7 @@ function UseCase(props) {
   const groundsHardness = new Set(props.grounds.map(({groundHardness}) => groundHardness))
 
   return (
-    <Grid >
-      
+    <>
       <h2>Sélectionnez votre usage</h2>
       <div className='grounds'>
         {
@@ -114,9 +113,7 @@ function UseCase(props) {
         }
         
       </div>
-      
-
-    </Grid>
+    </>
 
   )
 }

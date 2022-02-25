@@ -31,6 +31,7 @@ body {
   padding: 0;
   margin: 0;
   min-height: 100vh;
+  background: var(--bg-app) !important;
 }
 
 /* Avoid Chrome to see Safari hack */
@@ -41,9 +42,6 @@ body {
   }
 }
 
-body {
-  background: var(--bg-app) !important;
-}
 
 /* textes */
 h1:nth-child(2) {
@@ -54,12 +52,16 @@ h1:nth-child(2) {
   text-transform: lowercase;
 }
 
-.materialName::first-letter {
+.materialName:first-letter {
   text-transform: capitalize;
 }
 
-.configurator {
+.configurator > *, h2, .MuiTypography-root {
+  color: black !important;
 }
+
+
+/* disposition */
 
 .grid {
   display: grid;
@@ -172,6 +174,10 @@ h1:nth-child(2) {
   margin: 0 auto;
 }
 
+.mr-8 {
+  margin-right: 2rem;
+}
+
 .mb-6 {
   margin-bottom: 1.5rem !important;
 }
@@ -217,16 +223,22 @@ input:checked ~ div {
 
 .MuiSelect-root,
 .MuiInputBase-root {
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
+.machine .MuiSelect-root,
+.machine .MuiInputBase-root {
   background: var(--bg-input) !important;
 }
 
-.MuiInput-underline::after {
+/* .MuiInput-underline::after {
   border: 0 !important;
 }
 
 .MuiInput-underline::before {
   border: 0 !important;
-}
+} */
 
 .MuiAccordion-root {
   box-shadow: none !important;
@@ -276,7 +288,7 @@ input:checked ~ div {
   padding: 1rem;
   border-radius: 20px;
   overflow: scroll;
-  min-height: 60vh;
+  min-height: 50vh;
   max-height: 80vh;
   max-width: 1200px;
 }
@@ -312,6 +324,11 @@ input:checked ~ div {
   flex-direction: column;
 }
 
+.bladedimension {
+  display: flex;
+  flex-direction: column;
+}
+
 
 @media screen and (min-width: 768px) {
   .machine {
@@ -335,8 +352,8 @@ input:checked ~ div {
   }
 
   .rounded-container {
-    min-height: unset;
     overflow: unset;
+    max-height: unset;
   }
 
   .machine {
@@ -358,6 +375,10 @@ input:checked ~ div {
     column-gap: 1rem;
     flex-wrap: wrap;
     justify-content: center;
+  }
+  
+  .bladedimension {
+    flex-direction: row;
   }
 
   /* hack input */

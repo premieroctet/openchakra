@@ -1,14 +1,7 @@
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
-// import InputLabel from '@mui/material/InputLabel'
-// import MenuItem from '@mui/material/MenuItem'
-// import FormControl from '@mui/material/FormControl'
-// import Select from '@mui/material/Select'
-// import TextField from '@mui/material/TextField'
-// import Autocomplete from '@mui/material/Autocomplete'
-// const {Grid} = require('@material-ui/core')
 
-const {Grid, FormControl, InputLabel, MenuItem, Select, TextField} = require('@material-ui/core')
+const {FormControl, InputLabel, MenuItem, Select, TextField} = require('@material-ui/core')
 const {Autocomplete} = require('@material-ui/lab')
 
 
@@ -41,8 +34,8 @@ function MachineType(props) {
       {!!props.marks.length &&
         <FormControl variant="standard" className='w-full mb-6 machine-brand'>
           <InputLabel id="machine-brand">Marque de votre machine</InputLabel>
-          <Select labelId="machine-brand" name='mark' value={props.mark} onChange={ev => { props.onMarkChange(ev.target.value) }}>
-            {/* <MenuItem key={''} value={''}>Inconnu</MenuItem> */}
+          <Select labelId="machine-brand" name='mark' disableUnderline value={props.mark} onChange={ev => { props.onMarkChange(ev.target.value) }}>
+            {<MenuItem key={''} value={''}>Inconnu</MenuItem>}
             {props.marks.map(mk => (
               <MenuItem key={mk} value={mk}>{mk}</MenuItem>
             ))
@@ -67,8 +60,7 @@ function MachineType(props) {
       {!!props.powers.length &&
         <FormControl className='w-full mb-6 machine-power' >
           <InputLabel id="machine-power">Puissance(kW)</InputLabel>
-
-          <Select name='power' labelId='machine-power' disabled={!!props.model} value={props.power} onChange={ev => { props.onPowerChange(ev.target.value) }}>
+          <Select name='power' labelId='machine-power' disableUnderline disabled={!!props.model} value={props.power} onChange={ev => { props.onPowerChange(ev.target.value) }}>
             <MenuItem key={null} value={null}>Inconnu</MenuItem>
             {props.powers.map(pwr => (
               <MenuItem key={pwr} value={pwr}>{pwr}</MenuItem>
@@ -82,7 +74,7 @@ function MachineType(props) {
       {!!props.weights.length &&
         <FormControl className='w-full mb-6 machine-weight' >
           <InputLabel id="machine-weight">Poids(t)</InputLabel>
-          <Select name='weight' labelId='machine-weight' disabled={!!props.model} value={props.weight} onChange={ev => props.onWeightChange(ev.target.value)}>
+          <Select name='weight' labelId='machine-weight' disableUnderline disabled={!!props.model} value={props.weight} onChange={ev => props.onWeightChange(ev.target.value)}>
             <MenuItem key={null} value={null}>Inconnu</MenuItem>
             {props.weights.map(wght => (
               <MenuItem key={wght} value={wght}>{wght}</MenuItem>

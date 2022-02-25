@@ -3,6 +3,7 @@ import React from 'react'
 import {MachineType, machineTypeValidator} from '../../components/configurator/MachineType'
 import {UseCase, useCaseValidator} from '../../components/configurator/UseCase'
 import {BladeDimension, bladeDimensionValidator} from '../../components/configurator/BladeDimension'
+import {Fixtypes, fixtypesValidator} from '../../components/configurator/Fixtypes'
 import {Summary, summaryValidator} from '../../components/configurator/Summary'
 // const validationSteps=require('../../utils/validationSteps/validationSteps')
 
@@ -24,12 +25,18 @@ const BLADE_DIMENSION = {
   component: props => <BladeDimension {...props}/>,
 }
 
+const FIXTYPES = {
+  menu: 'A propos de votre équipement',
+  validator: fixtypesValidator,
+  component: props => <Fixtypes {...props}/>,
+}
+
 const SUMMARY = {
   menu: 'Résumé de recherche',
   validator: summaryValidator,
   component: props => <Summary {...props}/>,
 }
 
-const STEPS=[MACHINE_TYPE, USE_CASE, BLADE_DIMENSION, SUMMARY]
+const STEPS=[MACHINE_TYPE, USE_CASE, BLADE_DIMENSION, FIXTYPES, SUMMARY]
 
 module.exports={STEPS}
