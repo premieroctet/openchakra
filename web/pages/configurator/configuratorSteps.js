@@ -19,7 +19,7 @@ const USE_CASE = {
 }
 
 const BLADE_DIMENSION = {
-  menu: 'Type et dimensions de la lame',
+  menu: 'A propos de votre lame',
   validator: bladeDimensionValidator,
   component: props => <BladeDimension {...props}/>,
 }

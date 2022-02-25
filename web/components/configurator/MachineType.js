@@ -1,79 +1,98 @@
-const {Grid, MenuItem, Select, TextField} = require('@material-ui/core')
-const {Autocomplete} = require('@material-ui/lab')
 import React from 'react'
+import {feurstImgPath} from '../../pages/configurator'
+// import InputLabel from '@mui/material/InputLabel'
+// import MenuItem from '@mui/material/MenuItem'
+// import FormControl from '@mui/material/FormControl'
+// import Select from '@mui/material/Select'
+// import TextField from '@mui/material/TextField'
+// import Autocomplete from '@mui/material/Autocomplete'
+// const {Grid} = require('@material-ui/core')
+
+const {Grid, FormControl, InputLabel, MenuItem, Select, TextField} = require('@material-ui/core')
+const {Autocomplete} = require('@material-ui/lab')
+
 
 function MachineType(props) {
 
+  const imagesMachine = {
+    chargeuse: `${feurstImgPath}/configurateur-12.svg`,
+    excavatrice: `${feurstImgPath}/configurateur-13.svg`,
+  }
+
   return (
-    <Grid style={{display: 'flex'}}>
-      <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-        <h1>Type</h1>
-        <Select name='type' value={props.type} onChange={ev => { props.onTypeChange(ev.target.value) }}>
-          <MenuItem key={''} value={''}>Inconnu</MenuItem>
+    <div className='grid machine gap-x-8'>
+      
+      <div className='machine-type'>
+        <h2>Quelle machine souhaitez-vous équiper ?</h2>
+    
+        <div className='flex justify-evenly gap-x-4 mb-6'>
           {props.types.map(tp => (
-            <MenuItem key={tp} value={tp}>{tp}</MenuItem>
-          ))
+            <label key={tp} className='flex flex-col items-center gap-y-1 relative'>
+              <input className='absolute' type="radio" name='type' key={tp} value={tp} onChange={ev => { props.onTypeChange(ev.target.value) }} />
+              <div className='flex flex-col items-center bg-white z-10 p-2 rounded-xl'>
+                <img src={imagesMachine[tp]} alt='' width={80} height={80} />
+                <span className='machine-type-name'>Une {tp}</span>
+              </div>
+            </label>))
           }
-        </Select>
-      </Grid>
-      <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-        {!!props.marks.length &&
-          <>
-            <h1>Marque</h1>
-            <Select name='mark' value={props.mark} onChange={ev => { props.onMarkChange(ev.target.value) }}>
-              <MenuItem key={''} value={''}>Inconnu</MenuItem>
-              {props.marks.map(mk => (
-                <MenuItem key={mk} value={mk}>{mk}</MenuItem>
-              ))
-              }
-            </Select>
-          </>
-        }
-      </Grid>
-      <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-        {!!props.models.length &&
-        <>
-          <h1>Modèle</h1>
-          <Autocomplete
-            options={props.models}
-            value={props.model}
-            filterOptions={(opts, {inputValue}) => { return opts.filter(o => o.toLowerCase().replace(/ /g, '').includes(inputValue.toLowerCase().replace(/ /g, ''))) }}
-            renderInput={params => (<TextField {...params}/>)}
-            onChange={(ev, value) => props.onModelChange(value)}
-            onInputChange={(ev, value) => props.onModelChange(value)}
-          />
-        </>
-        }
-      </Grid>
-      <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-        {!!props.powers.length &&
-        <>
-          <h1>Puissance(kW)</h1>
-          <Select name='power' disabled={!!props.model} value={props.power} onChange={ev => { props.onPowerChange(ev.target.value) }}>
+        </div>
+      </div>
+      
+      {!!props.marks.length &&
+        <FormControl variant="standard" className='w-full mb-6 machine-brand'>
+          <InputLabel id="machine-brand">Marque de votre machine</InputLabel>
+          <Select labelId="machine-brand" name='mark' value={props.mark} onChange={ev => { props.onMarkChange(ev.target.value) }}>
+            {/* <MenuItem key={''} value={''}>Inconnu</MenuItem> */}
+            {props.marks.map(mk => (
+              <MenuItem key={mk} value={mk}>{mk}</MenuItem>
+            ))
+            }
+          </Select>
+        </FormControl>
+      }
+      
+      
+      {!!props.models.length &&
+        <Autocomplete
+          className='w-full mb-6 machine-model'
+          options={props.models}
+          value={props.model}
+          filterOptions={(opts, {inputValue}) => { return opts.filter(o => o.toLowerCase().replace(/ /g, '').includes(inputValue.toLowerCase().replace(/ /g, ''))) }}
+          renderInput={params => (<TextField {...params} label='Modèle'/>)}
+          onChange={(ev, value) => props.onModelChange(value)}
+          onInputChange={(ev, value) => props.onModelChange(value)}
+        />
+      }
+      
+      {!!props.powers.length &&
+        <FormControl className='w-full mb-6 machine-power' >
+          <InputLabel id="machine-power">Puissance(kW)</InputLabel>
+
+          <Select name='power' labelId='machine-power' disabled={!!props.model} value={props.power} onChange={ev => { props.onPowerChange(ev.target.value) }}>
             <MenuItem key={null} value={null}>Inconnu</MenuItem>
             {props.powers.map(pwr => (
               <MenuItem key={pwr} value={pwr}>{pwr}</MenuItem>
             ))
             }
           </Select>
-        </>
-        }
-      </Grid>
-      <Grid item xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-        {!!props.weights.length &&
-        <>
-          <h1>Poids(t)</h1>
-          <Select name='weight' disabled={!!props.model} value={props.weight} onChange={ev => props.onWeightChange(ev.target.value)}>
+        </FormControl>
+      }
+      
+      
+      {!!props.weights.length &&
+        <FormControl className='w-full mb-6 machine-weight' >
+          <InputLabel id="machine-weight">Poids(t)</InputLabel>
+          <Select name='weight' labelId='machine-weight' disabled={!!props.model} value={props.weight} onChange={ev => props.onWeightChange(ev.target.value)}>
             <MenuItem key={null} value={null}>Inconnu</MenuItem>
             {props.weights.map(wght => (
               <MenuItem key={wght} value={wght}>{wght}</MenuItem>
             ))
             }
           </Select>
-        </>
-        }
-      </Grid>
-    </Grid>
+        </FormControl>
+      }
+      
+    </div>
   )
 }
 

@@ -1,0 +1,394 @@
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/static/assets/fonts/Roboto-Regular.ttf');
+  src: local('Roboto'), url('/static/assets/fonts/Roboto-Regular.woff2') format('woff2'),
+  url('/static/assets/fonts/Roboto-Regular.ttf') format('truetype');
+}
+
+:root {
+  --brand-color: #182d45;
+  --bg-nextbutton: #2b3760;
+  --bg-app: #f5f5f5;
+  --bg-input: #f2f2f2;
+  --text-input: #707070;
+  --bg-selectedZone: #bcc0cd;
+  --text-selectedZone: #fff;
+}
+
+
+* {
+  font-family: 'Roboto', Courier, monospace !important;
+  color: black;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+body {
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Avoid Chrome to see Safari hack */
+@supports (-webkit-touch-callout: none) {
+  body {
+    /* The hack for Safari */
+    min-height: -webkit-fill-available;
+  }
+}
+
+body {
+  background: var(--bg-app) !important;
+}
+
+/* textes */
+h1:nth-child(2) {
+  margin-left: 1rem;
+}
+
+.materialName {
+  text-transform: lowercase;
+}
+
+.materialName::first-letter {
+  text-transform: capitalize;
+}
+
+.configurator {
+}
+
+.grid {
+  display: grid;
+}
+
+.machine {
+  grid-template-areas: 'machinetype' 'machinebrand' 'machinemodel' 'machinepower' 'machineweight';
+  grid-template-columns: repeat(auto-fill, minmax(auto, 1fr));
+  place-items: center;
+}
+
+.machine-type {
+  grid-area: machinetype;
+}
+
+.machine-brand {
+  grid-area: machinebrand;
+}
+
+.machine-model {
+  grid-area: machinemodel;
+}
+
+.machine-power {
+  grid-area: machinepower;
+}
+
+.machine-weight {
+  grid-area: machineweight;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.place-items-center {
+  place-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+.justify-evenly {
+  justify-content: space-evenly;
+}
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.gap-x-4 {
+  column-gap: 1rem;
+}
+
+.gap-x-8 {
+  column-gap: 4rem;
+}
+
+.gap-y-1 {
+  row-gap: 0.25rem;
+}
+
+.gap-y-4 {
+  row-gap: 1rem;
+}
+
+/* Positionnement */
+
+.sticky {
+  position: sticky;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.bottom-0 {
+  bottom: 0;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* Espacements */
+
+.m-4 {
+  margin: 1em;
+}
+.m-8 {
+  margin: 2em;
+}
+
+.mx-auto {
+  margin: 0 auto;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem !important;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+.p-4 {
+  padding: 1rem;
+}
+
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.mt-80 {
+  margin-top: 20rem;
+}
+
+/* Inputs */
+
+input:checked ~ div {
+  background: var(--bg-selectedZone);
+  color: var(--text-selectedZone);
+}
+
+.beautifulSelect {
+  background-color: bisque;
+  color: black;
+}
+
+/* hack inputs */
+.MuiInputLabel-root {
+  color: var(--text-input);
+  z-index: 2;
+}
+
+.MuiSelect-root,
+.MuiInputBase-root {
+  background: var(--bg-input) !important;
+}
+
+.MuiInput-underline::after {
+  border: 0 !important;
+}
+
+.MuiInput-underline::before {
+  border: 0 !important;
+}
+
+.MuiAccordion-root {
+  box-shadow: none !important;
+  margin-bottom: 1rem;
+}
+
+.MuiAccordion-root::before {
+  content: none !important;
+}
+
+.MuiAccordionSummary-root {
+  background-color: #f2f2f2 !important;
+}
+
+.MuiAccordionSummary-content {
+  align-items: center;
+  column-gap: 1rem;
+}
+
+.MuiAccordion-root.Mui-expanded {
+  margin: 0 !important;
+}
+
+.MuiAccordionSummary-content.Mui-expanded, .MuiAccordionSummary-content {
+  margin: 0 !important;
+}
+
+/* Boutons */
+
+/* Backgrounds */
+
+.bg-white {
+  background-color: #fff;
+}
+
+/* Arrondis */
+
+.rounded-xl {
+  border-radius: 0.75rem;
+}
+
+/* pseudo components */
+
+.rounded-container {
+  background: #fff;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 20px;
+  overflow: scroll;
+  min-height: 60vh;
+  max-height: 80vh;
+  max-width: 1200px;
+}
+
+.whereami {
+  display: none;
+}
+
+.nextprevZone {
+  margin-top: 20rem;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+}
+
+.previous,
+.next {
+  appearance: none;
+  border: 1px solid var(--brand-color);
+  background: none;
+  padding: 1rem 1.5rem;
+  border-radius: 30px;
+  min-width: 100px;
+}
+
+.next {
+  color: #fff;
+  background: var(--bg-nextbutton);
+}
+
+.grounds {
+  display: flex;
+  flex-direction: column;
+}
+
+
+@media screen and (min-width: 768px) {
+  .machine {
+    grid-template-areas: 'machinetype machinetype' 'machinebrand machinemodel' 'machinepower machineweight';
+  }
+}
+
+
+@media screen and (min-width: 1024px) {
+  body {
+    background: none !important;
+  }
+
+  .configurator {
+    margin: 10rem;
+  }
+
+  .whereami {
+    display: block;
+    text-align: center;
+  }
+
+  .rounded-container {
+    min-height: unset;
+    overflow: unset;
+  }
+
+  .machine {
+    grid-template-areas: 'machinetype machinebrand machinemodel' 'machinetype machinepower machineweight';
+  }
+
+  .machine-type-name {
+    text-align: center;
+  }
+  
+
+  .nextprevZone {
+    margin-top: unset;
+    position: unset;
+  }
+
+  .grounds {
+    flex-direction: row;
+    column-gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* hack input */
+
+  .MuiInput-underline::before {
+    border-bottom: 1px solid black !important;
+  }
+
+  .MuiSelect-root,
+  .MuiInputBase-root {
+    background: unset !important;
+  }
+
+  .MuiCollapse-root {
+    height: auto !important;
+  }
+
+  .MuiCollapse-hidden {
+    visibility: visible !important;
+  }
+
+  .MuiAccordionSummary-root {
+    background: none !important;
+  }
+
+  .MuiAccordionSummary-expandIcon {
+    display: none !important;
+  }
+
+  .MuiAccordionSummary-content {
+    flex-direction: column;
+  }
+
+}
