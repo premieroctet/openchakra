@@ -10,7 +10,7 @@
 
 :root {
   --brand-color: #182d45;
-  --bg-nextbutton: #2b3760;
+  --bg-blue-700: #2b3760;
   --bg-app: #f5f5f5;
   --bg-input: #f2f2f2;
   --text-input: #707070;
@@ -54,6 +54,10 @@ h1:nth-child(2) {
 
 .materialName:first-letter {
   text-transform: capitalize;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .configurator > *, h2, .MuiTypography-root {
@@ -316,17 +320,19 @@ input:checked ~ div {
 
 .next {
   color: #fff;
-  background: var(--bg-nextbutton);
+  background: var(--bg-blue-700);
 }
 
-.grounds {
-  display: flex;
-  flex-direction: column;
+.fixtypes input ~ div {
+  border: 1px solid #707070;
 }
 
-.bladedimension {
-  display: flex;
-  flex-direction: column;
+.fixtypes input:checked ~ div {
+  background: var(--bg-blue-700);
+}
+
+.fixtypes input:checked ~ div span {
+  color: #fff !important;
 }
 
 
@@ -340,6 +346,14 @@ input:checked ~ div {
 @media screen and (min-width: 1024px) {
   body {
     background: none !important;
+  }
+
+  .md-flex-row {
+    flex-direction: row;
+  }
+
+  .md-flex-wrap {
+    flex-wrap: wrap;
   }
 
   .configurator {
@@ -360,26 +374,11 @@ input:checked ~ div {
     grid-template-areas: 'machinetype machinebrand machinemodel' 'machinetype machinepower machineweight';
   }
 
-  .machine-type-name {
-    text-align: center;
-  }
-  
-
   .nextprevZone {
     margin-top: unset;
     position: unset;
   }
 
-  .grounds {
-    flex-direction: row;
-    column-gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .bladedimension {
-    flex-direction: row;
-  }
 
   /* hack input */
 

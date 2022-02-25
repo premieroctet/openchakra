@@ -36,7 +36,7 @@ function BladeDimension(props) {
   
 
   return (
-    <div className='bladedimension justify-evenly gap-x-8'>
+    <div className='flex flex-col gap-x-4 md-flex-row justify-evenly gap-x-8'>
       <div>
         <h2>Sélectionnez la forme de votre lame</h2>
         

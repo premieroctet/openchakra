@@ -81,7 +81,7 @@ function UseCase(props) {
   return (
     <>
       <h2>Sélectionnez votre usage</h2>
-      <div className='grounds'>
+      <div className='flex flex-col justify-center gap-x-4 md-flex-row md-flex-wrap'>
         {
           Object.entries(props.grounds).map(entry => {
             const [hardness, groundTypes]=entry

@@ -21,7 +21,7 @@ function MachineType(props) {
         <div className='flex justify-evenly gap-x-4 mb-6'>
           {props.types.map(tp => (
             <label key={tp} className='flex flex-col items-center gap-y-1 relative'>
-              <input className='absolute' type="radio" name='type' key={tp} value={tp} onChange={ev => { props.onTypeChange(ev.target.value) }} />
+              <input className='absolute' type="radio" name='type' value={tp} onChange={ev => { props.onTypeChange(ev.target.value) }} />
               <div className='flex flex-col items-center bg-white z-10 p-2 rounded-xl'>
                 <img src={imagesMachine[tp]} alt='' width={80} height={80} />
                 <span className='machine-type-name'>Une {tp}</span>

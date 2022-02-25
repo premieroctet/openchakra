@@ -34,11 +34,8 @@ class Configurator extends React.Component {
       thicknesses: [],
       ground: null,
       grounds: [],
-      fixType: null,
-      fixTypes: [
-        ['PIN', 'À claveter'],
-        ['SOLD', 'À souder'],
-      ],
+      teethShieldFixType: null,
+      borderShieldFixType: null,
     }
 
 
@@ -213,6 +210,14 @@ class Configurator extends React.Component {
 
   onGroundChange = ground => {
     this.setState({ground: ground})
+  }
+
+  onTeethShieldFixTypeChange = teethShieldFixType => {
+    this.setState({teethShieldFixType: teethShieldFixType})
+  }
+
+  onBorderShieldFixTypeChange = borderShieldFixType => {
+    this.setState({borderShieldFixType})
   }
 
   onFixTypeChange = fixType => {
