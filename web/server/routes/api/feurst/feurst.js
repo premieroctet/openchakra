@@ -13,7 +13,17 @@ const validateFeurstProspect=require('../../../validation/feurstProspect')
 router.get('/database', (req, res) => {
   getDatabase()
     .then(db => {
-      const grounds=lodash.uniq(Object.keys(db.grounds).map(k => k.split(',')[2])).sort()
+      const grounds=lodash.uniq(Object.keys(db.grounds).map(k => {
+        const elemGrounds = k.split(',')
+        return {
+          groundType: elemGrounds[2],
+          groundHardness: elemGrounds[3],
+        }
+      })).filter((value, index, self) =>
+        index === self.findIndex(t => (
+          t.groundType === value.groundType && t.groundHardness === value.groundHardness
+        )),
+      ).sort()
       res.json({...db, grounds: grounds})
     })
     .catch(err => {
