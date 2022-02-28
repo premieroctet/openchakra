@@ -35,7 +35,7 @@ const PRECOS={'type': 'excavatrice', 'mark': 'CATERPILLAR', 'model': '374D L', '
 
 const INFOS={
   name: 'Gérard Poin', company: 'Colas', email: 'gerard.poin@colas.fr.com.net', phone: '0621436587',
-  type: 'excavatrice', mark: 'CATERPILLAR', model: '374D L', ground: 'GRAVIER', bucketSize: 2000,
+  type: 'excavatrice', mark: 'CATERPILLAR', model: '374D L', ground: 'GRAVIER', bucketWidth: 2000,
   fixType: 'SOLD', bladeShape: 'delta',
 }
 
