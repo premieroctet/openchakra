@@ -31,6 +31,7 @@ class Configurator extends React.Component {
       weight: null,
       weights: [],
       bladeThickness: null,
+      bucketWidth: null,
       thicknesses: [],
       ground: null,
       grounds: [],
@@ -99,8 +100,10 @@ class Configurator extends React.Component {
   }
 
   onTypeChange = type => {
+    
     const {machines} = this.state
-    const isShovel = type == 'shovel'
+    const isShovel = type == 'pelle-butte'
+
     this.setState({
       type: type,
       mark: null,
@@ -122,13 +125,13 @@ class Configurator extends React.Component {
       powers:
         (isShovel && []) ||
         this.getList(
-          machines.filter(v => v.type == type),
+          machines,
           'power',
         ),
       weights:
         (isShovel && []) ||
         this.getList(
-          machines.filter(v => v.type == type),
+          machines,
           'weight',
         ),
     })
@@ -136,64 +139,65 @@ class Configurator extends React.Component {
 
   onMarkChange = mark => {
     const {machines} = this.state
-    this.setState({
+    let typeMachine = this.getList(
+      machines.filter(v => !mark || v.mark == mark),
+      'type',
+    )
+
+    /* TODO : Filtrer si un type de machine est déjà sélectionné */
+
+    const nextState = {
       mark: mark,
       model: null,
       power: null,
       weight: null,
       models: this.getList(
-        machines.filter(v => !mark || v.mark == mark),
+        typeMachine.filter(v => !mark || v.mark == mark),
         'model',
       ),
-    })
-    let list = this.getList(
-      machines.filter(v => !mark || v.mark == mark),
-      'type',
-    )
-    if (list.length == 1) {
-      this.setState({type: list[0]})
     }
+
+    typeMachine.length == 1 && Object.assign(nextState, {type: typeMachine[0]})
+    this.setState(nextState)
   }
 
   onModelChange = model => {
     const {machines} = this.state
-    this.setState({model: model})
-    let list = this.getList(
+    const nextState = {model}
+
+    let brand = this.getList(
       machines.filter(v => v.model == model),
       'mark',
     )
-    if (list.length == 1) {
-      this.setState({mark: list[0]})
-    }
-    list = this.getList(
+    brand.length == 1 && Object.assign(nextState, {mark: brand[0]})
+
+    let typeMachine = this.getList(
       machines.filter(v => v.model == model),
       'type',
     )
-    if (list.length == 1) {
-      this.setState({type: list[0]})
-    }
-    list = this.getList(
+    typeMachine.length == 1 && Object.assign(nextState, {type: typeMachine[0]})
+    
+    let powerMachine = this.getList(
       machines.filter(v => v.model == model),
       'power',
-    )
-    if (list.length == 1) {
-      this.setState({power: list[0]})
-    }
-    list = this.getList(
+    ) || ['']
+    powerMachine.length == 1 && Object.assign(nextState, {power: powerMachine[0]})
+    
+    let machineWeight = this.getList(
       machines.filter(v => v.model == model),
       'weight',
     )
-    if (list.length == 1) {
-      this.setState({weight: list[0]})
-    }
+    machineWeight.length == 1 && Object.assign(nextState, {weight: machineWeight[0]})
+
+    this.setState(nextState)
   }
 
   onPowerChange = power => {
-    this.setState({power: power})
+    this.setState({power})
   }
 
   onWeightChange = weight => {
-    this.setState({weight: weight})
+    this.setState({weight})
   }
 
   onBladeShapeChange = shape => {
@@ -209,11 +213,11 @@ class Configurator extends React.Component {
   }
 
   onGroundChange = ground => {
-    this.setState({ground: ground})
+    this.setState({ground})
   }
 
   onTeethShieldFixTypeChange = teethShieldFixType => {
-    this.setState({teethShieldFixType: teethShieldFixType})
+    this.setState({teethShieldFixType})
   }
 
   onBorderShieldFixTypeChange = borderShieldFixType => {
@@ -221,27 +225,27 @@ class Configurator extends React.Component {
   }
 
   onFixTypeChange = fixType => {
-    this.setState({fixType: fixType})
+    this.setState({fixType})
   }
 
   onCompanyChange = company => {
-    this.setState({company: company})
+    this.setState({company})
   }
 
-  onFirstnameChange = name => {
-    this.setState({name: name})
+  onFirstnameChange = firstname => {
+    this.setState({firstname})
   }
 
   onNameChange = name => {
-    this.setState({name: name})
+    this.setState({name})
   }
 
   onEmailChange = email => {
-    this.setState({email: email})
+    this.setState({email})
   }
 
   onPhoneChange = phone => {
-    this.setState({phone: phone})
+    this.setState({phone})
   }
 
   nextPage = () => {

@@ -1,8 +1,3 @@
-const {
-  MenuItem,
-  Select,
-} = require('@material-ui/core')
-  
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
   

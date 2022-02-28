@@ -150,10 +150,6 @@ h2,
   row-gap: 1rem;
 }
 
-.gap-y-8 {
-  row-gap: 4rem;
-}
-
 /* Positionnement */
 
 .sticky {
@@ -368,11 +364,9 @@ h2,
     grid-template-areas: 'machinetype machinetype' 'machinebrand machinemodel' 'machineweight machinepower';
     grid-template-columns: repeat(2, 1fr);
   }
-}
 
-@media screen and (min-width: 1200px) {
-  body {
-    background: none !important;
+  .md-gap-y-8 {
+    row-gap: 4rem;
   }
 
   .md-flex-row {
@@ -381,6 +375,12 @@ h2,
 
   .md-flex-wrap {
     flex-wrap: wrap;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  body {
+    background: none !important;
   }
 
   .configurator {

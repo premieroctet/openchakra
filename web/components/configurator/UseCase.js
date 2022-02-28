@@ -85,7 +85,6 @@ function UseCase(props) {
         {
           Object.entries(props.grounds).map(entry => {
             const [hardness, groundTypes]=entry
-            console.log(`${groundTypes}`)
             return (
               <Accordion key={hardness}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>}

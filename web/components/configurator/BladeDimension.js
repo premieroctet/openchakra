@@ -67,7 +67,7 @@ function BladeDimension(props) {
           ))}
         </Select>
 
-        <h2 id="bucketwidth">Indiquez la largeur de votre godet</h2>
+        <h2 id="bucket_width">Indiquez la largeur de votre godet</h2>
         
         <FormControl className='w-full mb-6' variant="standard">
           <Input
@@ -75,10 +75,10 @@ function BladeDimension(props) {
             name="bucketWidth"
             type='number'
             min={0}
-            value={props.bucketSize}
+            value={props.bucketWidth}
             onChange={ev => props.onBucketWidthChange(ev.target.value)}
             endAdornment={<InputAdornment position="end">mm</InputAdornment>}
-            aria-describedby="bucketwidth"
+            aria-describedby="bucket_width"
             inputProps={{
               'aria-label': 'largeur godet en mm',
             }}
