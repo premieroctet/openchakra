@@ -1,3 +1,6 @@
+const Quotation = require('../Feurst/Quotation');
+const { PDFViewer } = require('@react-pdf/renderer');
+const { is_development } = require('../../config/config');
 const {isPhoneOk} = require('../../utils/sms')
 const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const axios = require('axios')
@@ -106,6 +109,13 @@ function Summary(props) {
         {lodash.get(props, 'precos.accessories') && <Button disabled={!validator(props)} onClick={sendQuotation}>Envoyer le devis</Button>}
         <Button disabled={!validator(props)} onClick={sendQuotation}>Doute? Demander une préconisation maison</Button>
       </Grid>
+      {is_development() && lodash.get(props, 'precos.accessories') &&
+        <Grid style={{width:'1200px', height: '800px', backgroundColor: 'red'}} >
+          <PDFViewer width='1200px' height='800px'>
+            <Quotation infos={props} precos={props.precos} />
+          </PDFViewer>
+        </Grid>
+      }
     </Grid>
   )
 }

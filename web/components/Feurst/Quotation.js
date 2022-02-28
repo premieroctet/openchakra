@@ -68,7 +68,8 @@ class Quotation extends React.Component {
             </View>
             <View style={styles.summaryBlock}>
               <Text>Votre équipement:</Text>
-              <Text>Type de fixation: {infos.fixType}</Text>
+              <Text>Boucliers inter-dents: {infos.teethShieldFixType}</Text>
+              <Text>Boucliers de flancs: {infos.borderShieldFixType}</Text>
             </View>
           </View>
           <View style={styles.contents}>
@@ -82,20 +83,18 @@ class Quotation extends React.Component {
                       <Image style={styles.illustration} src={ILLUS[group]}/>
                     </View>
                     <View style={styles.groupBody}>
-                      {Object.entries(data).map(entry => {
-                        const value=entry[1]
-                        return value.map((v, index) => (
-                          <>
-                            {value.length>1 && <Text style={styles.optionTitle}>option {index+1}</Text>}
-                            {Object.entries(v).map(entry => {
-                              const [type, refQty]=entry
-                              return (
-                                <Text style={styles.optionBody}>{refQty[1]} X {type} {refQty[0]}</Text>
-                              )
-                            })}
-                          </>
-                        ))
-                      })}
+                      {data.map((v, index) => (
+                        <>
+                          {data.length>1 && <Text style={styles.optionTitle}>option {index+1}</Text>}
+                          {Object.entries(v).map(entry => {
+                            const [type, refQty]=entry
+                            return (
+                              <Text style={styles.optionBody}>{refQty[1]} X {type} {refQty[0]}</Text>
+                            )
+                          })}
+                        </>
+                      ))
+                      }
                     </View>
                   </View>
                 </>

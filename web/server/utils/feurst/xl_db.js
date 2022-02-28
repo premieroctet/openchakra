@@ -19,11 +19,11 @@ const FIX_TYPES=[SOLD, PIN]
 
 const UNKNOWN_TEETH='nb de dents'
 
-const GROUPS= (teeth, bladeShape) => {
+const GROUPS= (teeth, bladeShape, borderShieldFixType, teethShieldFixType) => {
 
   const delta= /delta/i.test(bladeShape)
 
-  return {
+  const config={
     'Porte-dents': {
       'ADAPTEUR': teeth || UNKNOWN_TEETH,
       "CHAPEAU D'USURE": teeth || UNKNOWN_TEETH,
@@ -32,32 +32,30 @@ const GROUPS= (teeth, bladeShape) => {
       'CLE DENT': 1,
       'BASE A SOUDER': teeth || UNKNOWN_TEETH,
     },
-    'Boucliers inter-dents': {
-      SOLD: {
-        'BOUCLIER A SOUDER': teeth-(delta ? 3 : 1),
-        'BOUCLIER A SOUDER DROITE': delta ? 1 : 0,
-        'BOUCLIER A SOUDER GAUCHE': delta ? 1 : 0,
-      },
-      PIN: {
+    Dents: {
+
+    },
+    'Boucliers inter-dents': teethShieldFixType=='SOLD' ? {
+      'BOUCLIER A SOUDER': teeth-(delta ? 3 : 1),
+      'BOUCLIER A SOUDER DROITE': delta ? 1 : 0,
+      'BOUCLIER A SOUDER GAUCHE': delta ? 1 : 0,
+    }:
+      {
         'BOUCLIER A CLAVETER CENTRE': teeth-(delta ? 3 : 1),
         'BOUCLIER A CLAVETER DROITE': delta ? 1 : 0,
         'BOUCLIER A CLAVETER GAUCHE': delta ? 1 : 0,
         'CLE BOUCLIER': 1,
       },
-    },
     'Bouclier flanc': {
       'BOUCLIER DE FLANC': '2 ou 4',
-      SOLD: {
-        'BOUCLIER DE FLANC A SOUDER': '2 ou 4',
-      },
-      PIN: {
-        'BOUCLIER DE FLANC A CLAVETER': '2 ou 4',
-      },
+      [borderShieldFixType=='PIN' ? 'BOUCLIER DE FLANC A CLAVETER' : 'BOUCLIER DE FLANC A SOUDER']: '2 ou 4',
     },
     'Bouclier talon': {
       'BOUCLIER DE TALON DE GODET': 10,
     },
   }
+
+  return config
 }
 
 const checkXLFormat = workbook => {
@@ -289,26 +287,18 @@ const getAccessories = (database, data) => {
   }
   data.fixType='PIN'
   let res={}
-  const groups=GROUPS(data.teeth_count, data.bladeShape)
+  const groups=GROUPS(data.teeth_count, data.bladeShape, data.borderShieldFixType, data.teethShieldFixType)
   Object.entries(groups).forEach(entity => {
     const key=entity[0]
     res[key]={}
     const g=entity[1]
-    FIX_TYPES.forEach(fixType => {
-      if (fixType in g && (data.fixType==fixType || !data.fixType)) {
-        let sub=lodash.uniqBy(acc.map(ac => lodash.pick(ac, Object.keys(g[fixType]))), JSON.stringify)
-        sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[fixType][ent[0]]]])))
-        console.log(sub[0])
-        res[key]=Object.assign(res[key], {[fixType]: sub})
-      }
-    })
     let sub=lodash.uniqBy(acc.map(ac => lodash.pick(ac, Object.keys(g))), JSON.stringify)
     sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[ent[0]]]])))
     if (sub.length>0) {
-      res[key].ALL=sub
+      res[key]=sub
     }
   })
-  res.Dents={ALL: data.teeth_ref.map(ref => ({'Dent': [ref, data.teeth_count]}))}
+  res.Dents=data.teeth_ref.map(ref => ({'Dent': [ref, data.teeth_count]}))
 
   return res
 }

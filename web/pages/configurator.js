@@ -71,7 +71,7 @@ class Configurator extends React.Component {
 
   getPrecos = () => {
     setAxiosAuthentication()
-    const data=lodash.pick(this.state, 'type mark model power weight bladeThickness ground fixType bladeShape'.split(' '))
+    const data=lodash.pick(this.state, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape'.split(' '))
     axios.post('/feurst/api/preconisations', data)
       .then(res => {
         this.setState({

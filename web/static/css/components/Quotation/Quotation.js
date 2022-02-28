@@ -85,7 +85,6 @@ export default theme => ({
     borderStyle: BORDER_STYLE,
   },
   summaryBlock: {
-    width: '100%',
   },
   footer: {
     textAlign: 'center',
