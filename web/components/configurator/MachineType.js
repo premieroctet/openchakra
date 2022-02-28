@@ -1,7 +1,7 @@
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
 
-const {FormControl, InputLabel, MenuItem, Select, TextField} = require('@material-ui/core')
+const {MenuItem, Select, TextField} = require('@material-ui/core')
 const {Autocomplete} = require('@material-ui/lab')
 
 
@@ -10,21 +10,22 @@ function MachineType(props) {
   const imagesMachine = {
     chargeuse: `${feurstImgPath}/configurateur-12.svg`,
     excavatrice: `${feurstImgPath}/configurateur-13.svg`,
+    'pelle-butte': `${feurstImgPath}/configurateur-13.svg`,
   }
 
   return (
-    <div className='grid machine gap-x-8'>
+    <div className='grid machine gap-x-8 gap-y-8'>
       
-      <div className='machine-type'>
-        <h2>Quelle machine souhaitez-vous équiper ?</h2>
+      <div className='machine-type h-full grid content-start gap-y-4'>
+        <h2>Quelle machine souhaitez-vous équiper&nbsp;?</h2>
     
-        <div className='flex justify-evenly gap-x-4 mb-6'>
+        <div className='flex justify-evenly gap-x-4'>
           {props.types.map(tp => (
             <label key={tp} className='flex flex-col items-center gap-y-1 relative'>
               <input className='absolute' type="radio" name='type' value={tp} onChange={ev => { props.onTypeChange(ev.target.value) }} />
               <div className='flex flex-col items-center bg-white z-10 p-2 rounded-xl'>
                 <img src={imagesMachine[tp]} alt='' width={80} height={80} />
-                <span className='machine-type-name'>Une {tp}</span>
+                <span className='text-center'>Une {tp}</span>
               </div>
             </label>))
           }
@@ -32,56 +33,66 @@ function MachineType(props) {
       </div>
       
       {!!props.marks.length &&
-        <FormControl variant="standard" className='w-full mb-6 machine-brand'>
-          <InputLabel id="machine-brand">Marque de votre machine</InputLabel>
-          <Select labelId="machine-brand" name='mark' disableUnderline value={props.mark} onChange={ev => { props.onMarkChange(ev.target.value) }}>
-            {<MenuItem key={''} value={''}>Inconnu</MenuItem>}
-            {props.marks.map(mk => (
-              <MenuItem key={mk} value={mk}>{mk}</MenuItem>
-            ))
-            }
-          </Select>
-        </FormControl>
+
+          <div className='machine-brand grid content-between gap-y-4 h-full'>
+            <h2 id="machinebrand">Indiquez la marque de votre machine&nbsp;:</h2>
+            <Select className='w-full' aria-labelledby='machinebrand' name='mark' value={props.mark} onChange={ev => { props.onMarkChange(ev.target.value) }}>
+              {<MenuItem key={''} value={''}>Inconnu</MenuItem>}
+              {props.marks.map(mk => (
+                <MenuItem key={mk} value={mk}>{mk}</MenuItem>
+              ))
+              }
+            </Select>
+        
+          </div>
       }
       
       
       {!!props.models.length &&
-        <Autocomplete
-          className='w-full mb-6 machine-model'
-          options={props.models}
-          value={props.model}
-          filterOptions={(opts, {inputValue}) => { return opts.filter(o => o.toLowerCase().replace(/ /g, '').includes(inputValue.toLowerCase().replace(/ /g, ''))) }}
-          renderInput={params => (<TextField {...params} label='Modèle'/>)}
-          onChange={(ev, value) => props.onModelChange(value)}
-          onInputChange={(ev, value) => props.onModelChange(value)}
-        />
+
+        <div className='machine-model grid content-between gap-y-4 h-full'>
+
+          <h2 id="machinemodel">Choisissez le modèle de votre machine&nbsp;:</h2>
+          <Autocomplete
+            className='w-full'
+            options={props.models}
+            aria-labelledby='machinemodel'
+            value={props.model}
+            filterOptions={(opts, {inputValue}) => { return opts.filter(o => o.toLowerCase().replace(/ /g, '').includes(inputValue.toLowerCase().replace(/ /g, ''))) }}
+            renderInput={params => (<TextField {...params} />)}
+            onChange={(ev, value) => props.onModelChange(value)}
+            onInputChange={(ev, value) => props.onModelChange(value)}
+          />
+
+        </div>
       }
-      
-      {!!props.powers.length &&
-        <FormControl className='w-full mb-6 machine-power' >
-          <InputLabel id="machine-power">Puissance(kW)</InputLabel>
-          <Select name='power' labelId='machine-power' disableUnderline disabled={!!props.model} value={props.power} onChange={ev => { props.onPowerChange(ev.target.value) }}>
-            <MenuItem key={null} value={null}>Inconnu</MenuItem>
-            {props.powers.map(pwr => (
-              <MenuItem key={pwr} value={pwr}>{pwr}</MenuItem>
-            ))
-            }
-          </Select>
-        </FormControl>
-      }
-      
       
       {!!props.weights.length &&
-        <FormControl className='w-full mb-6 machine-weight' >
-          <InputLabel id="machine-weight">Poids(t)</InputLabel>
-          <Select name='weight' labelId='machine-weight' disableUnderline disabled={!!props.model} value={props.weight} onChange={ev => props.onWeightChange(ev.target.value)}>
+        <div className='machine-weight grid content-between gap-y-4 h-full'>
+          <h2 id="machineweight">Indiquez le tonnage de votre machine&nbsp;:</h2>
+          <Select name='weight' aria-labelledby='machineweight' disabled={!!props.model} value={props.weight} onChange={ev => props.onWeightChange(ev.target.value)}>
             <MenuItem key={null} value={null}>Inconnu</MenuItem>
             {props.weights.map(wght => (
               <MenuItem key={wght} value={wght}>{wght}</MenuItem>
             ))
             }
           </Select>
-        </FormControl>
+
+          
+        </div>
+      }
+
+      {!!props.powers.length &&
+        <div className='machine-power grid content-between gap-y-4 h-full'>
+          <h2 id="machinepower">Indiquez la puissance de votre machine&nbsp;:</h2>
+          <Select name='power' aria-labelledby='machinepower' disabled={!!props.model} value={props.power} onChange={ev => { props.onPowerChange(ev.target.value) }}>
+            <MenuItem key={null} value={null}>Inconnu</MenuItem>
+            {props.powers.map(pwr => (
+              <MenuItem key={pwr} value={pwr}>{pwr}</MenuItem>
+            ))
+            }
+          </Select>
+        </div>
       }
       
     </div>

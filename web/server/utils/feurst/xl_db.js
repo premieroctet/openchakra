@@ -60,6 +60,38 @@ const GROUPS= (teeth, bladeShape) => {
   }
 }
 
+const checkXLFormat = workbook => {
+  const errors=[]
+  const EXPECTED={
+    // NOM d'onglet: {ligne: valeurs, ligne: valeurs}
+    Machines: {1: 'TYPE DE MACHINE,CONSTRUCTEURMANUFACTURER,MACHINE\n MODEL,POIDS\nWEIGHT,KW,B.O.F. Mini (kN),B.O.F Maxi (kN),PNEU,CHENILLE,SHOVEL,Famille\nProduit,Utilisation\nSTANDARD,Nb de dent du godet,Utilisation\nXHD,Nb de dent du godet'.split(',')},
+    'Matrice Ep LAME_Excavatrice': {2: "TAILLE,TYPE,EPAISSEUR LAME,TYPE LAME,ADAPTEUR,CHAPEAU D'USURE,CLAVETTE,FOURREAU,CLE DENT,BOUCLIER A SOUDER,BOUCLIER A SOUDER DROITE,BOUCLIER A SOUDER GAUCHE,BASE A SOUDER,BOUCLIER A CLAVETER CENTRE,BOUCLIER A CLAVETER DROITE,BOUCLIER A CLAVETER GAUCHE,CLAVETTE BOUCLIER,BOUCLIER DE FLANC,CLE BOUCLIER,BOUCLIER DE FLANC A CLAVETER,BOUCLIER DE FLANC A SOUDER,BOUCLIER DE TALON DE GODET".split(',')},
+    'Matrice Ep LAME_Chargeuse': {2: "TAILLE,TYPE,EPAISSEUR LAME,TYPE DE LAME,ADAPTEUR,CHAPEAU D'USURE,CLAVETTE,FOURREAU,CLE DENT,BOUCLIER A SOUDER,BOUCLIER A SOUDER DROIT,BOUCLIER A SOUDER GAUCHE,BASE A SOUDER,BOUCLIER A CLAVETER CENTRE,BOUCLIER A CLAVETER DROIT,BOUCLIER A CLAVETER GAUCHE,CLAVETTE BOUCLIER,BOUCLIER DE FLANC,CLE BOUCLIER,BOUCLIER DE FLANC A CLAVETER,BOUCLIER DE FLANC A SOUDER,BOUCLIER DE TALON DE GODET".split(',')},
+    'Matrice Dents développée': {
+      2: ',,STANDARD,STANDARD,STANDARD,STANDARD,STANDARD,STANDARD,,DUR,DUR,DUR,,TRES DUR,TRES DUR,TRES DUR,,ABRASIF,ABRASIF,ABRASIF,,TRES ABRASIF,TRES ABRASIF,TRES ABRASIF'.split(','),
+      3: 'TAILLE / TYPE,MACHINES,TERRE\n (terre pierre),SABLE,GRAVIER,CHARBON,CRAIE,MINERAIS (Peu Abrasif),MACHINES,CALCAIRE,BASALTE,SCHISTE,MACHINES,AMPHIBOLITE,LEPTYNITE,RHYOLITE,MACHINES,QUARTZ,SILICE,POUZOLLANE,MACHINES,GRANITES,GNEISS,PORPHYRE'.split(','),
+    },
+  }
+
+  Object.entries(EXPECTED).forEach(([sheetName, constants]) => {
+    const sheet=workbook.getWorksheet(sheetName)
+    if (!sheet) {
+      return errors.push(`Missing worksheet:${sheetName}`)
+    }
+    Object.entries(constants).map(([row, expectedValues]) => {
+      const rowValues=sheet.getRow(row)
+      expectedValues.map((expectedValue, idx) => {
+        const cellValue=rowValues.getCell(idx+1).value || ''
+        if (cellValue!=expectedValue) {
+          return errors.push(`Onglet ${sheetName}, ligne ${row} colonne ${idx+1}: valeur ${cellValue}, attendu ${expectedValue}`)
+        }
+      })
+    })
+  })
+
+  return errors
+}
+
 const loadGrounds = sheet => {
 
   const HARDNESS_ROW=2
@@ -192,6 +224,10 @@ const getDatabase = () => {
     const workbook = new ExcelJS.Workbook()
     workbook.xlsx.readFile(`${__dirname}/../../../static/assets/data/feurst_db.xlsx`)
       .then(wb => {
+        const errors=checkXLFormat(workbook)
+        if (errors.length>0) {
+          return reject(errors)
+        }
         const machines=loadMachines(wb.getWorksheet('Machines'))
         const thicknesses=loadThicknesses(['Matrice Ep LAME_Excavatrice', 'Matrice Ep LAME_Chargeuse'].map(s => wb.getWorksheet(s)))
         const grounds=loadGrounds(wb.getWorksheet('Matrice Dents développée'))
@@ -244,7 +280,6 @@ const getTeethCount = (database, data) => {
 }
 
 const getAccessories = (database, data) => {
-  console.log(`Teeth count:${data.teeth_count}`)
   data.bladeShape = /delta/i.test(data.bladeShape) && 'delta' || data.bladeShape
   const key=[data.type, data.family, data.bladeThickness, (data.bladeShape||'').toUpperCase()]
   const acc=database.accessories[key]

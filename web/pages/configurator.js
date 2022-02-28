@@ -91,7 +91,7 @@ class Configurator extends React.Component {
   onMachinesChange = machines => {
     this.setState({
       machines: machines,
-      types: this.getList(machines, 'type'),
+      // types: this.getList(machines, 'type'),
       marks: this.getList(machines, 'mark'),
       models: this.getList(machines, 'model'),
       powers: this.getList(machines, 'power'),
@@ -279,12 +279,12 @@ class Configurator extends React.Component {
           {/** JSON.stringify(precos) */}
         </div>
         <div className='flex justify-between w-full nextprevZone bg-white p-4'>
-          <button className='previous' disabled={step == 0} onClick={this.previousPage}>
+          <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
             Précédent
-          </button>
-          <button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
+          </Button>
+          <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
             Suivant
-          </button>
+          </Button>
         </div>
       </Grid>)
 

@@ -1,11 +1,11 @@
-
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
   src: url('/static/assets/fonts/Roboto-Regular.ttf');
-  src: local('Roboto'), url('/static/assets/fonts/Roboto-Regular.woff2') format('woff2'),
-  url('/static/assets/fonts/Roboto-Regular.ttf') format('truetype');
+  src: local('Roboto'),
+    url('/static/assets/fonts/Roboto-Regular.woff2') format('woff2'),
+    url('/static/assets/fonts/Roboto-Regular.ttf') format('truetype');
 }
 
 :root {
@@ -17,7 +17,6 @@
   --bg-selectedZone: #bcc0cd;
   --text-selectedZone: #fff;
 }
-
 
 * {
   font-family: 'Roboto', Courier, monospace !important;
@@ -42,7 +41,6 @@ body {
   }
 }
 
-
 /* textes */
 h1:nth-child(2) {
   margin-left: 1rem;
@@ -60,21 +58,19 @@ h1:nth-child(2) {
   text-align: center;
 }
 
-.configurator > *, h2, .MuiTypography-root {
+.configurator > *,
+h2,
+.MuiTypography-root {
   color: black !important;
 }
 
-
 /* disposition */
 
-.grid {
-  display: grid;
-}
-
 .machine {
-  grid-template-areas: 'machinetype' 'machinebrand' 'machinemodel' 'machinepower' 'machineweight';
-  grid-template-columns: repeat(auto-fill, minmax(auto, 1fr));
-  place-items: center;
+  grid-template-areas: 'machinetype' 'machinebrand' 'machinemodel' 'machineweight' 'machinepower';
+  grid-template-columns: 1fr;
+  /* justify-items: flex-start;
+  align-items: center; */
 }
 
 .machine-type {
@@ -97,12 +93,27 @@ h1:nth-child(2) {
   grid-area: machineweight;
 }
 
+.grid {
+  display: grid;
+}
+
+.content-start {
+  align-content: flex-start;
+}
+.content-between {
+  align-content: space-between;
+}
+
 .flex {
   display: flex;
 }
 
 .flex-col {
   flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .place-items-center {
@@ -139,6 +150,10 @@ h1:nth-child(2) {
   row-gap: 1rem;
 }
 
+.gap-y-8 {
+  row-gap: 4rem;
+}
+
 /* Positionnement */
 
 .sticky {
@@ -163,6 +178,10 @@ h1:nth-child(2) {
 
 .w-full {
   width: 100%;
+}
+
+.h-full {
+  height: 100%;
 }
 
 /* Espacements */
@@ -209,7 +228,7 @@ h1:nth-child(2) {
 
 /* Inputs */
 
-input:checked ~ div {
+.machine input:checked ~ div {
   background: var(--bg-selectedZone);
   color: var(--text-selectedZone);
 }
@@ -227,14 +246,14 @@ input:checked ~ div {
 
 .MuiSelect-root,
 .MuiInputBase-root {
-  padding-left: .5rem;
-  padding-right: .5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
-.machine .MuiSelect-root,
+/* .machine .MuiSelect-root,
 .machine .MuiInputBase-root {
   background: var(--bg-input) !important;
-}
+} */
 
 /* .MuiInput-underline::after {
   border: 0 !important;
@@ -266,7 +285,8 @@ input:checked ~ div {
   margin: 0 !important;
 }
 
-.MuiAccordionSummary-content.Mui-expanded, .MuiAccordionSummary-content {
+.MuiAccordionSummary-content.Mui-expanded,
+.MuiAccordionSummary-content {
   margin: 0 !important;
 }
 
@@ -294,7 +314,7 @@ input:checked ~ div {
   overflow: scroll;
   min-height: 50vh;
   max-height: 80vh;
-  max-width: 1200px;
+  /* max-width: 1200px; */
 }
 
 .whereami {
@@ -310,17 +330,20 @@ input:checked ~ div {
 
 .previous,
 .next {
-  appearance: none;
-  border: 1px solid var(--brand-color);
-  background: none;
-  padding: 1rem 1.5rem;
-  border-radius: 30px;
-  min-width: 100px;
+  appearance: none !important;
+  border: 1px solid var(--brand-color) !important;
+  background: none !important;
+  padding: 1rem 1.5rem !important;
+  border-radius: 30px !important;
+  min-width: 100px !important;
 }
 
 .next {
-  color: #fff;
-  background: var(--bg-blue-700);
+  background: var(--bg-blue-700) !important;
+}
+
+.next span {
+  color: #fff !important;
 }
 
 .fixtypes input ~ div {
@@ -331,19 +354,23 @@ input:checked ~ div {
   background: var(--bg-blue-700);
 }
 
+.fixtypes input:checked ~ div img {
+  filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(117deg)
+    brightness(101%) contrast(109%);
+}
+
 .fixtypes input:checked ~ div span {
   color: #fff !important;
 }
 
-
 @media screen and (min-width: 768px) {
   .machine {
-    grid-template-areas: 'machinetype machinetype' 'machinebrand machinemodel' 'machinepower machineweight';
+    grid-template-areas: 'machinetype machinetype' 'machinebrand machinemodel' 'machineweight machinepower';
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1200px) {
   body {
     background: none !important;
   }
@@ -357,7 +384,7 @@ input:checked ~ div {
   }
 
   .configurator {
-    margin: 10rem;
+    margin: 8rem;
   }
 
   .whereami {
@@ -371,7 +398,8 @@ input:checked ~ div {
   }
 
   .machine {
-    grid-template-areas: 'machinetype machinebrand machinemodel' 'machinetype machinepower machineweight';
+    grid-template-areas: 'machinetype machinebrand machinemodel' 'machinetype machineweight machinepower';
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .nextprevZone {
@@ -379,6 +407,21 @@ input:checked ~ div {
     position: unset;
   }
 
+  .previous,
+  .next {
+    font-size: 1.1rem !important;
+    padding: 1rem 1.5rem !important;
+    border-radius: 30px !important;
+    min-width: 150px !important;
+    text-transform: initial !important;
+  }
+
+  .previous:disabled,
+  .next:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.5;
+    pointer-events: all !important;
+  }
 
   /* hack input */
 
@@ -410,5 +453,4 @@ input:checked ~ div {
   .MuiAccordionSummary-content {
     flex-direction: column;
   }
-
 }
