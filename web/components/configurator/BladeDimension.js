@@ -1,3 +1,4 @@
+const { DELTA, DROITE, SEMI_DELTA } = require('../../utils/feurst_consts');
 const {
   FormControl,
   MenuItem,
@@ -14,25 +15,26 @@ import {feurstImgPath} from '../../pages/configurator'
 function BladeDimension(props) {
 
   const blades = {
-    straight: {
+    DROITE: {
       label: 'Droite',
       path: `${feurstImgPath}/lame-droite.svg`,
       width: '120',
       height: '74',
     },
-    semidelta: {
+    SEMI_DELTA: {
       label: 'Semi-delta',
       path: `${feurstImgPath}/lame-semidelta.svg`,
       width: '120',
       height: '74',
     },
-    delta: {
+    DELTA: {
       label: 'Delta',
       path: `${feurstImgPath}/lame-delta.svg`,
       width: '120',
       height: '74',
     },
   }
+
   
 
   return (
@@ -55,12 +57,12 @@ function BladeDimension(props) {
             </label>
           </div>
         ))}
-       
+
       </div>
 
       <div>
         <h2 id='bucketthickness'>Indiquez l'épaisseur de la lame</h2>
-        
+
         <Select className='w-full mb-6' name='bladeThickness' value={props.bladeThickness} onChange={ev => props.onBladeThicknessChange(ev.target.value)} aria-describedby="bucketthickness">
           {props.thicknesses.map(thick => (
             <MenuItem value={thick}>{`${thick} mm`}</MenuItem>
@@ -68,7 +70,7 @@ function BladeDimension(props) {
         </Select>
 
         <h2 id="bucketwidth">Indiquez la largeur de votre godet</h2>
-        
+
         <FormControl className='w-full mb-6' variant="standard">
           <Input
             id="bucketWidth"
@@ -86,7 +88,7 @@ function BladeDimension(props) {
           {/* <FormHelperText id="outlined-weight-helper-text">Weight</FormHelperText> */}
         </FormControl>
       </div>
-      
+
       <div className='flex items-center justify-center' style={{textAlign: 'center'}}>
         <img src='' alt='belle image' width={300} height={300} className='flex items-center justify-center' style={{border: '1px solid blue'}} />
       </div>

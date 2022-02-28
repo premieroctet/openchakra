@@ -9,13 +9,9 @@ SUPPOSITIONS:
    - excavatrice : droite ou semi-delta
    - chargeuse : droite ou delta
 */
+const {PIN} = require('../../../utils/feurst_consts')
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
-
-const SOLD='SOLD'
-const PIN='PIN'
-
-const FIX_TYPES=[SOLD, PIN]
 
 const UNKNOWN_TEETH='nb de dents'
 
@@ -35,20 +31,21 @@ const GROUPS= (teeth, bladeShape, borderShieldFixType, teethShieldFixType) => {
     Dents: {
 
     },
-    'Boucliers inter-dents': teethShieldFixType=='SOLD' ? {
-      'BOUCLIER A SOUDER': teeth-(delta ? 3 : 1),
-      'BOUCLIER A SOUDER DROITE': delta ? 1 : 0,
-      'BOUCLIER A SOUDER GAUCHE': delta ? 1 : 0,
+    'Boucliers inter-dents': teethShieldFixType==PIN ? {
+      'BOUCLIER A CLAVETER CENTRE': teeth-(delta ? 3 : 1),
+      'BOUCLIER A CLAVETER DROITE': delta ? 1 : 0,
+      'BOUCLIER A CLAVETER GAUCHE': delta ? 1 : 0,
+      'CLE BOUCLIER': 1,
     }:
       {
-        'BOUCLIER A CLAVETER CENTRE': teeth-(delta ? 3 : 1),
-        'BOUCLIER A CLAVETER DROITE': delta ? 1 : 0,
-        'BOUCLIER A CLAVETER GAUCHE': delta ? 1 : 0,
+        'BOUCLIER A SOUDER': teeth-(delta ? 3 : 1),
+        'BOUCLIER A SOUDER DROITE': delta ? 1 : 0,
+        'BOUCLIER A SOUDER GAUCHE': delta ? 1 : 0,
         'CLE BOUCLIER': 1,
       },
     'Bouclier flanc': {
       'BOUCLIER DE FLANC': '2 ou 4',
-      [borderShieldFixType=='PIN' ? 'BOUCLIER DE FLANC A CLAVETER' : 'BOUCLIER DE FLANC A SOUDER']: '2 ou 4',
+      [borderShieldFixType==PIN ? 'BOUCLIER DE FLANC A CLAVETER' : 'BOUCLIER DE FLANC A SOUDER']: '2 ou 4',
     },
     'Bouclier talon': {
       'BOUCLIER DE TALON DE GODET': 10,
@@ -285,7 +282,6 @@ const getAccessories = (database, data) => {
     console.log(`Pas de preco pour ${key}`)
     return null
   }
-  data.fixType='PIN'
   let res={}
   const groups=GROUPS(data.teeth_count, data.bladeShape, data.borderShieldFixType, data.teethShieldFixType)
   Object.entries(groups).forEach(entity => {
