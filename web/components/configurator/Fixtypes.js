@@ -37,7 +37,7 @@ function Fixtypes(props) {
           <div className='flex justify-center gap-x-4'>
             {Object.keys(fixtures).map(fixType => (
               <label key={fixType} className='flex flex-col items-center gap-y-1 relative'>
-                <input className='absolute' type="radio" name='teethShieldFixType' value={fixType} onChange={ev => { props.onTeethShieldFixTypeChange(ev.target.value) }} />
+                <input className='absolute' type="radio" name='teethShieldFixType' value={fixType} checked={props.teethShieldFixType === fixType} onChange={ev => { props.onTeethShieldFixTypeChange(ev.target.value) }} />
                 <div className='flex flex-col items-center bg-white z-10 rounded-xl p-4'>
                   <img src={fixtures[fixType].path} alt='' width={80} height={80} />
                   <span className='text-center'>{fixtures[fixType].label}</span>
@@ -53,7 +53,7 @@ function Fixtypes(props) {
           <div className='flex justify-center gap-x-4'>
             {Object.keys(fixtures).map(fixType => (
               <label key={fixType} className='flex flex-col items-center gap-y-1 relative'>
-                <input className='absolute' type="radio" name='borderShieldFixType' value={fixType} onChange={ev => { props.onBorderShieldFixTypeChange(ev.target.value) }} />
+                <input className='absolute' type="radio" name='borderShieldFixType' value={fixType} checked={props.borderShieldFixType === fixType} onChange={ev => { props.onBorderShieldFixTypeChange(ev.target.value) }} />
                 <div className='flex flex-col items-center bg-white z-10 rounded-xl p-4'>
                   <img src={fixtures[fixType].path} alt='' width={80} height={80} />
                   <span className='text-center'>{fixtures[fixType].label}</span>
