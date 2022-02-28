@@ -1,3 +1,4 @@
+const {BLADE_SHAPES, FIX_TYPES} = require('../utils/feurst_consts')
 import React from 'react'
 
 import '../static/feurst.css'
@@ -197,8 +198,11 @@ class Configurator extends React.Component {
     this.setState({weight: weight})
   }
 
-  onBladeShapeChange = shape => {
-    this.setState({bladeShape: shape})
+  onBladeShapeChange = bladeShape => {
+    if (!Object.keys(BLADE_SHAPES).includes(bladeShape)) {
+      return console.error(`Invalid blade shape:${bladeShape}`)
+    }
+    this.setState({bladeShape: bladeShape})
   }
 
   onBucketWidthChange = width => {
@@ -214,15 +218,17 @@ class Configurator extends React.Component {
   }
 
   onTeethShieldFixTypeChange = teethShieldFixType => {
+    if (!Object.keys(FIX_TYPES).includes(teethShieldFixType)) {
+      return console.error(`Invalid border shield fix type:${teethShieldFixType}`)
+    }
     this.setState({teethShieldFixType: teethShieldFixType})
   }
 
   onBorderShieldFixTypeChange = borderShieldFixType => {
+    if (!Object.keys(FIX_TYPES).includes(borderShieldFixType)) {
+      return console.error(`Invalid teeth shield fix type:${borderShieldFixType}`)
+    }
     this.setState({borderShieldFixType})
-  }
-
-  onFixTypeChange = fixType => {
-    this.setState({fixType: fixType})
   }
 
   onCompanyChange = company => {
@@ -248,9 +254,9 @@ class Configurator extends React.Component {
   nextPage = () => {
     const {step} = this.state
     const newStep = Math.min(step + 1, STEPS.length - 1)
-    //if (newStep == 3) {
-      this.getPrecos()
-    //}
+    // if (newStep == 3) {
+    this.getPrecos()
+    // }
     this.setState({step: newStep})
   }
 
