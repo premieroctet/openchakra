@@ -19,42 +19,45 @@ const FIX_TYPES=[SOLD, PIN]
 
 const UNKNOWN_TEETH='nb de dents'
 
-const GROUPS={
-  'Porte-dents': {
-    'ADAPTEUR': teeth => teeth || UNKNOWN_TEETH,
-    "CHAPEAU D'USURE": teeth => teeth || UNKNOWN_TEETH,
-    'CLAVETTE': teeth => teeth || UNKNOWN_TEETH,
-    'FOURREAU': teeth => teeth || UNKNOWN_TEETH,
-  },
-  'Dents': {
-    'REFERENCE DENT': teeth => teeth,
-  },
-  'Boucliers inter-dents': {
-    SOLD: {
-      'BASE A SOUDER': teeth => teeth || UNKNOWN_TEETH,
-      'BOUCLIER A SOUDER': () => 1,
-      'BOUCLIER A SOUDER DROIT': () => 1,
-      'BOUCLIER A SOUDER GAUCHE': () => 1,
+const GROUPS= (teeth, bladeShape) => {
+
+  const delta= /delta/i.test(bladeShape)
+
+  return {
+    'Porte-dents': {
+      'ADAPTEUR': teeth || UNKNOWN_TEETH,
+      "CHAPEAU D'USURE": teeth || UNKNOWN_TEETH,
+      'CLAVETTE': teeth || UNKNOWN_TEETH,
+      'FOURREAU': teeth || UNKNOWN_TEETH,
+      'CLE DENT': 1,
+      'BASE A SOUDER': teeth || UNKNOWN_TEETH,
     },
-    PIN: {
-      'BOUCLIER A CLAVETER CENTRE': teeth => (teeth ? teeth -1 : UNKNOWN_TEETH),
-      'BOUCLIER A CLAVETER DROIT': () => 1,
-      'BOUCLIER A CLAVETER GAUCHE': () => 1,
-      'CLE BOUCLIER': () => 1,
+    'Boucliers inter-dents': {
+      SOLD: {
+        'BOUCLIER A SOUDER': teeth-(delta ? 3 : 1),
+        'BOUCLIER A SOUDER DROITE': delta ? 1 : 0,
+        'BOUCLIER A SOUDER GAUCHE': delta ? 1 : 0,
+      },
+      PIN: {
+        'BOUCLIER A CLAVETER CENTRE': teeth-(delta ? 3 : 1),
+        'BOUCLIER A CLAVETER DROITE': delta ? 1 : 0,
+        'BOUCLIER A CLAVETER GAUCHE': delta ? 1 : 0,
+        'CLE BOUCLIER': 1,
+      },
     },
-  },
-  'Bouclier flanc': {
-    'BOUCLIER DE FLANC': () => 1,
-    SOLD: {
-      'BOUCLIER DE FLANC A SOUDER': () => '2 ou 4',
+    'Bouclier flanc': {
+      'BOUCLIER DE FLANC': '2 ou 4',
+      SOLD: {
+        'BOUCLIER DE FLANC A SOUDER': '2 ou 4',
+      },
+      PIN: {
+        'BOUCLIER DE FLANC A CLAVETER': '2 ou 4',
+      },
     },
-    PIN: {
-      'BOUCLIER DE FLANC A CLAVETER': () => '2 ou 4',
+    'Bouclier talon': {
+      'BOUCLIER DE TALON DE GODET': 10,
     },
-  },
-  'Bouclier talon': {
-    'BOUCLIER DE TALON DE GODET': () => 10,
-  },
+  }
 }
 
 const loadGrounds = sheet => {
@@ -241,25 +244,31 @@ const getTeethCount = (database, data) => {
 }
 
 const getAccessories = (database, data) => {
+  console.log(`Teeth count:${data.teeth_count}`)
+  data.bladeShape = /delta/i.test(data.bladeShape) && 'delta' || data.bladeShape
   const key=[data.type, data.family, data.bladeThickness, (data.bladeShape||'').toUpperCase()]
   const acc=database.accessories[key]
   if (!acc) {
+    console.log(`Pas de preco pour ${key}`)
     return null
   }
+  data.fixType='PIN'
   let res={}
-  Object.entries(GROUPS).forEach(entity => {
+  const groups=GROUPS(data.teeth_count, data.bladeShape)
+  Object.entries(groups).forEach(entity => {
     const key=entity[0]
     res[key]={}
     const g=entity[1]
     FIX_TYPES.forEach(fixType => {
       if (fixType in g && (data.fixType==fixType || !data.fixType)) {
         let sub=lodash.uniqBy(acc.map(ac => lodash.pick(ac, Object.keys(g[fixType]))), JSON.stringify)
-        sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[fixType][ent[0]](data.teeth_count)]])))
+        sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[fixType][ent[0]]]])))
+        console.log(sub[0])
         res[key]=Object.assign(res[key], {[fixType]: sub})
       }
     })
     let sub=lodash.uniqBy(acc.map(ac => lodash.pick(ac, Object.keys(g))), JSON.stringify)
-    sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[ent[0]](data.teeth_count)]])))
+    sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[ent[0]]]])))
     if (sub.length>0) {
       res[key].ALL=sub
     }

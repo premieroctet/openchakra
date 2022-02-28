@@ -40,10 +40,11 @@ class Configurator extends React.Component {
 
 
     if (is_development()) {
-      this.state={...this.state, step: 3,
-        type: 'excavatrice', mark: 'CATERPILLAR', fixType: 'PIN',
+      this.state={...this.state, step: 4,
+        type: 'excavatrice', mark: 'CATERPILLAR', borderShieldFixType: 'PIN',
+        teethShieldFixType: 'PIN',
         model: '374D L', weight: 75.5, power: 355,
-        ground: 'GRAVIER', bladeShape: 'delta', bladeThickness: 70, phone: '0675774324',
+        ground: 'GRAVIER', bladeShape: 'droite', bladeThickness: 70, phone: '0675774324',
         firstname: 'Gérard', name: 'Robert', company: 'COLAS', email: 'sebastien.auvray@my-alfred.io',
       }
     }
@@ -247,9 +248,9 @@ class Configurator extends React.Component {
   nextPage = () => {
     const {step} = this.state
     const newStep = Math.min(step + 1, STEPS.length - 1)
-    if (newStep == 3) {
+    //if (newStep == 3) {
       this.getPrecos()
-    }
+    //}
     this.setState({step: newStep})
   }
 
