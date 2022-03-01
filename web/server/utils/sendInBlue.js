@@ -32,6 +32,7 @@ class SIB_V3 {
         return true
       })
       .catch(err => {
+        console.error(err)
         console.error(`Error while sending ${JSON.stringify(emailData)}:${JSON.stringify(err.response.body)}`)
         return false
       })

@@ -10,7 +10,6 @@ const MARGIN='10px'
 export default theme => ({
   body: {
     padding: 50,
-    fontFamily: 'SourceSansPro',
     fontSize: 11,
     fontWeight: 'bold',
   },

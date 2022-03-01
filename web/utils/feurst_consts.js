@@ -8,7 +8,7 @@ const FIX_TYPES={
 
 const DROITE='DROITE'
 const DELTA='DELTA'
-const SEMI_DELTA='SEMI_DELTA'
+const SEMI_DELTA='SEMI-DELTA'
 
 const BLADE_SHAPES={
   [DROITE]: 'Droite',

@@ -1,5 +1,6 @@
 const {
   BLADE_SHAPES,
+  DROITE,
   FIX_TYPES,
   PIN,
   SOLD,
@@ -50,8 +51,8 @@ class Configurator extends React.Component {
         type: 'excavatrice', mark: 'CATERPILLAR', borderShieldFixType: SOLD,
         teethShieldFixType: PIN,
         model: '374D L', weight: 75.5, power: 355,
-        ground: 'GRAVIER', bladeShape: 'droite', bladeThickness: 70, phone: '0675774324',
-        firstname: 'Gérard', name: 'Robert', company: 'COLAS', email: 'sebastien.auvray@my-alfred.io',
+        ground: 'GRAVIER', bladeShape: DROITE, bladeThickness: 70, phone: '0675774324',
+        firstname: 'Gérard', name: 'Robert', company: 'COLAS', email: 'sebastien.auvray@alfredplace.io',
       }
     }
   }
@@ -78,10 +79,10 @@ class Configurator extends React.Component {
   getPrecos = () => {
     setAxiosAuthentication()
     const data=lodash.pick(this.state, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape'.split(' '))
-    axios.post('/feurst/api/preconisations', data)
+    axios.get('/feurst/api/auto_quotation_available', {params: data})
       .then(res => {
         this.setState({
-          precos: res.data,
+          auto_quotation: res.data,
         })
       })
       .catch(err => console.error(err))
@@ -272,7 +273,7 @@ class Configurator extends React.Component {
   }
 
   render = () => {
-    const {step, precos} = this.state
+    const {step} = this.state
 
     const {component, validator, menu} = STEPS[step]
 
@@ -281,13 +282,10 @@ class Configurator extends React.Component {
         className="configurator relative"
       >
 
-        {/** is_development() && JSON.stringify(lodash.omit(this.state, ['marks', 'machines', 'models', 'powers', 'weights', 'thicknesses', 'grounds']))*/}
-
         <h1 className='whereami'>{menu}</h1>
         <ProgressBar value={step} max={STEPS.length} />
         <div className="rounded-container m-4 p-4">
           {component({...this.state, ...this})}
-          {/** JSON.stringify(precos) */}
         </div>
         <div className='flex justify-between w-full nextprevZone bg-white p-4'>
           <Button className='previous' disabled={step == 0} onClick={this.previousPage}>

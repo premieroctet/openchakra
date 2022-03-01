@@ -1,8 +1,10 @@
+const {
+  computeDescription,
+  computePrecos,
+} = require('../../../utils/feurst/xl_db')
 const FeurstProspect = require('../../../models/FeurstProspect')
 const generatePdf = require('../../../utils/generatePdf')
-const {sendAutoQuotation2Client, sendAutoQuotation2Feurst,
-  sendCustomQuotation2Client, sendCustomQuotation2Feurst} = require('../../../utils/mailing')
-const {computePrecos} = require('../../../utils/feurst/xl_db')
+const {sendAutoQuotation, sendCustomQuotation} = require('../../../utils/mailing')
 
 const router = require('express').Router()
 const {getDatabase}=require('../../../utils/feurst/xl_db')
@@ -27,10 +29,10 @@ router.get('/database', (req, res) => {
     })
 })
 
-router.post('/preconisations', (req, res) => {
-  computePrecos(req.body)
+router.get('/auto_quotation_available', (req, res) => {
+  computePrecos(req.query)
     .then(precos => {
-      res.json(precos)
+      res.json(!!precos.accessories)
     })
     .catch(err => {
       console.error(err)
@@ -38,7 +40,7 @@ router.post('/preconisations', (req, res) => {
     })
 })
 
-router.post('/quotation', (req, res) => {
+router.post('/auto_quotation', (req, res) => {
 
   const {errors, isValid}=validateFeurstProspect(req.body)
   if (!isValid) {
@@ -46,30 +48,27 @@ router.post('/quotation', (req, res) => {
   }
 
   let prospect=null
-  FeurstProspect.findOneAndUpdate({email: req.body.email}, req.body, {upsert: true, new: true})
+  let precos=null
+
+  computePrecos(req.body)
+    .then(result => {
+      precos=result
+      return FeurstProspect.findOneAndUpdate({email: req.body.email}, req.body, {upsert: true, new: true})
+    })
     .then(result => {
       prospect=result
-      return generatePdf({
-        name: prospect.name,
-        company: prospect.company,
-        email: prospect.email},
-      req.body.precos)
+      return generatePdf({...req.body, ...precos})
     })
     .then(buffer => {
-      sendAutoQuotation2Client(
-        prospect.email,
-        prospect.name,
-        req.body.quotation_id,
-        req.body.machine,
-        buffer,
-      )
-      sendAutoQuotation2Feurst(
+      sendAutoQuotation(
+        // TODO Stocker le mail de Feurst
         'sebastien.auvray@my-alfred.io',
-        prospect.name,
         prospect.email,
+        prospect.name,
         prospect.company,
         req.body.quotation_id,
-        req.body.machine,
+        // TODO Composer la description de la machine
+        computeDescription({...req.body, ...precos}),
         buffer,
       )
       return res.json()
@@ -78,6 +77,26 @@ router.post('/quotation', (req, res) => {
       console.error(err)
       return res.status(500).json(err)
     })
+})
+
+router.post('/custom_quotation', (req, res) => {
+
+  const {errors, isValid}=validateFeurstProspect(req.body)
+  if (!isValid) {
+    return res.status(400).json(errors)
+  }
+
+  sendCustomQuotation(
+    // TODO Stocker le mail de Feurst
+    'sebastien.auvray@my-alfred.io',
+    req.body.email,
+    req.body.name,
+    req.body.company,
+    req.body.quotation_id,
+    // TODO Composer la description de la machine
+    computeDescription(req.body, true),
+  )
+  return res.json()
 })
 
 module.exports = router

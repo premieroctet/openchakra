@@ -9,7 +9,11 @@ SUPPOSITIONS:
    - excavatrice : droite ou semi-delta
    - chargeuse : droite ou delta
 */
-const {PIN} = require('../../../utils/feurst_consts')
+const {
+  BLADE_SHAPES,
+  FIX_TYPES,
+  PIN,
+} = require('../../../utils/feurst_consts')
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
 
@@ -253,9 +257,13 @@ const getFamily = (database, data) => {
     return null
   }
   if (data.hardness==null) {
+    console.log(`Missing hardness`)
     return null
   }
   const ref_hardness=machine.reference[data.hardness=='STANDARD' ? 'STANDARD':'XHD']
+  if (!ref_hardness) {
+    console.log(`No refhardness`)
+  }
   return ref_hardness && ref_hardness.ref
 }
 
@@ -275,7 +283,6 @@ const getTeethCount = (database, data) => {
 }
 
 const getAccessories = (database, data) => {
-  data.bladeShape = /delta/i.test(data.bladeShape) && 'delta' || data.bladeShape
   const key=[data.type, data.family, data.bladeThickness, (data.bladeShape||'').toUpperCase()]
   const acc=database.accessories[key]
   if (!acc) {
@@ -308,7 +315,7 @@ const computePrecos = data => {
         data={...data, teeth_ref: getTeethRef(db, data)}
         data={...data, teeth_count: getTeethCount(db, data)}
         data={...data, accessories: getAccessories(db, data)}
-        resolve(data)
+        resolve(lodash.pick(data, 'hardness family teeth_ref teeth_count accessories'.split(' ')))
       })
       .catch(err => {
         reject(err)
@@ -316,4 +323,17 @@ const computePrecos = data => {
   })
 }
 
-module.exports={getDatabase, computePrecos}
+const computeDescription = (data, full_info) => {
+  let description='type mark model'.split(' ').map(att => data[att] || '').join(' ')
+  if (full_info) {
+    if (data.bladeShape) { description += `, lame:${BLADE_SHAPES[data.bladeShape]}` }
+    if (data.bladeThickness) { description += `, épaisseur:${data.bladeThickness}mm` }
+    if (data.bucketWidth) { description += `, L:${data.bucketWidth}mm` }
+    if (data.ground) { description += `, terrain:${data.ground}` }
+    if (data.teethShieldFixType) { description += `, fixation boucliers dents:${FIX_TYPES[data.teethShieldFixType]}` }
+    if (data.borderShieldFixType) { description += `, fixation boucliers flancs:${FIX_TYPES[data.borderShieldFixType]}` }
+  }
+  return description
+}
+
+module.exports={getDatabase, computePrecos, computeDescription}

@@ -424,43 +424,61 @@ const sendRegisterInvitation = (admin, email, code, req) => {
   )
 }
 
-const sendAutoQuotation2Client = (email, name, quotation_id, machine, quotation_data) => {
+const sendAutoQuotation = (company_email, prospect_email, prospect_name, prospect_company, quotation_id, machine_description, data_buffer) => {
 
   const attachment={
     name: 'devis_feurst.pdf',
-    content: quotation_data.toString('base64'),
+    content: data_buffer.toString('base64'),
   }
 
   sendNotification(
-    SIB_IDS.FEURST_QUOTATION_2_CLIENT,
-    {email: email},
+    SIB_IDS.FEURST_AUTO_QUOTATION_2_CLIENT,
+    {email: prospect_email},
     {
-      name: name,
+      name: prospect_name,
       quotation_id: quotation_id,
-      machine: machine,
+      machine: machine_description,
     },
     attachment,
   )
-}
-
-const sendAutoQuotation2Feurst = (email, customer_name, customer_email, customer_company, quotation_id, machine, quotation_data) => {
-
-  const attachment={
-    name: 'devis_feurst.pdf',
-    content: quotation_data.toString('base64'),
-  }
 
   sendNotification(
-    SIB_IDS.FEURST_QUOTATION_2_FEURST,
-    {email: email},
+    SIB_IDS.FEURST_AUTO_QUOTATION_2_FEURST,
+    {email: company_email},
     {
-      customer_name: customer_name,
-      customer_email: customer_email,
-      customer_company: customer_company,
+      customer_name: prospect_name,
+      customer_email: prospect_email,
+      customer_company: prospect_company,
       quotation_id: quotation_id,
-      machine: machine,
+      machine: machine_description,
     },
     attachment,
+  )
+
+}
+
+const sendCustomQuotation = (company_email, prospect_email, prospect_name, prospect_company, quotation_id, machine_description) => {
+
+  sendNotification(
+    SIB_IDS.FEURST_CUSTOM_QUOTATION_2_CLIENT,
+    {email: prospect_email},
+    {
+      name: prospect_name,
+      quotation_id: quotation_id,
+      machine: machine_description,
+    },
+  )
+
+  sendNotification(
+    SIB_IDS.FEURST_CUSTOM_QUOTATION_2_FEURST,
+    {email: company_email},
+    {
+      customer_name: prospect_name,
+      customer_email: prospect_email,
+      customer_company: prospect_company,
+      quotation_id: quotation_id,
+      machine: machine_description,
+    },
   )
 }
 
@@ -492,8 +510,6 @@ module.exports = {
   sendBookingRefusedToAlfred,
   sendAdminsAlert,
   sendRegisterInvitation,
-  sendAutoQuotation2Client,
-  sendAutoQuotation2Feurst,
-  //sendCustomQuotation2Client,
-  //sendCustomQuotation2Feurst,
+  sendAutoQuotation,
+  sendCustomQuotation,
 }

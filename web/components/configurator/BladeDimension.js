@@ -1,4 +1,9 @@
-const { DELTA, DROITE, SEMI_DELTA } = require('../../utils/feurst_consts');
+const {
+  BLADE_SHAPES,
+  DELTA,
+  DROITE,
+  SEMI_DELTA,
+} = require('../../utils/feurst_consts')
 const {
   FormControl,
   MenuItem,
@@ -15,33 +20,32 @@ import {feurstImgPath} from '../../pages/configurator'
 function BladeDimension(props) {
 
   const blades = {
-    DROITE: {
-      label: 'Droite',
+    [DROITE]: {
+      label: BLADE_SHAPES[DROITE],
       path: `${feurstImgPath}/lame-droite.svg`,
       width: '120',
       height: '74',
     },
-    SEMI_DELTA: {
-      label: 'Semi-delta',
+    [SEMI_DELTA]: {
+      label: BLADE_SHAPES[SEMI_DELTA],
       path: `${feurstImgPath}/lame-semidelta.svg`,
       width: '120',
       height: '74',
     },
-    DELTA: {
-      label: 'Delta',
+    [DELTA]: {
+      label: BLADE_SHAPES[DELTA],
       path: `${feurstImgPath}/lame-delta.svg`,
       width: '120',
       height: '74',
     },
   }
 
-  
 
   return (
     <div className='flex flex-col gap-x-4 md-flex-row justify-evenly gap-x-8'>
       <div>
         <h2>Sélectionnez la forme de votre lame</h2>
-        
+
         {Object.keys(blades).map(shape => (
           <div className='flex justify-center mr-8 mb-6'>
             <Radio
