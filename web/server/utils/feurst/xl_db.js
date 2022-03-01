@@ -154,7 +154,7 @@ const loadMachines = sheet => {
   let inside=false
   sheet.eachRow(row => {
     if (inside) {
-      const type=`${row.getCell(TYPE_COL).value}`=='EXCAVATRICE' ? 'excavatrice' : 'chargeuse'
+      const type=row.getCell(TYPE_COL).value
       const mark=`${row.getCell(MARK_COL).value}`
       const model=`${row.getCell(MODEL_COL).value}`
       const power=parseFloat(row.getCell(POWER_COL).value) || null

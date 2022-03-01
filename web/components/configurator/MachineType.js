@@ -1,3 +1,10 @@
+const {normalize} = require('../../utils/text')
+const {
+  CHARGEUSE,
+  EXCAVATRICE,
+  MACHINE_TYPES,
+  PELLE_BUTTE,
+} = require('../../utils/feurst_consts')
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
 
@@ -8,9 +15,9 @@ const {Autocomplete} = require('@material-ui/lab')
 function MachineType(props) {
 
   const imagesMachine = {
-    chargeuse: `${feurstImgPath}/chargeuse.svg`,
-    excavatrice: `${feurstImgPath}/excavatrice.svg`,
-    'pelle-butte': `${feurstImgPath}/pelle_butte.svg`,
+    [CHARGEUSE]: `${feurstImgPath}/chargeuse.svg`,
+    [EXCAVATRICE]: `${feurstImgPath}/excavatrice.svg`,
+    [PELLE_BUTTE]: `${feurstImgPath}/pelle_butte.svg`,
   }
 
   return (
@@ -20,19 +27,19 @@ function MachineType(props) {
         <h2>Quelle machine souhaitez-vous équiper&nbsp;?</h2>
 
         <div className='flex justify-evenly gap-x-4'>
-          {props.types.map(tp => (
+          {Object.keys(MACHINE_TYPES).map(tp => (
             <label key={tp} className='flex flex-col items-center gap-y-1 relative'>
               <input className='absolute' type="radio" name='type' checked={tp === props.type || false} value={tp || ''} onChange={ev => { props.onTypeChange(ev.target.value) }} />
               <div className='flex flex-col items-center bg-white z-10 p-2 rounded-xl'>
                 <img src={imagesMachine[tp]} alt='' width={80} height={80} />
-                <span className='text-center'>Une {tp}</span>
+                <span className='text-center'>Une {MACHINE_TYPES[tp]}</span>
               </div>
             </label>))
           }
         </div>
       </div>
 
-      {!!props.marks.length &&
+      {(!!props.marks.length || props.type==PELLE_BUTTE) &&
           <div className='machine-brand grid content-between gap-y-4 h-full'>
             <h2 id="machinebrand">Indiquez la marque de votre machine&nbsp;:</h2>
             <Select className='w-full' aria-labelledby='machinebrand' name='mark' defaultValue="" value={props.mark || ''} onChange={ev => { props.onMarkChange(ev.target.value) }}>
@@ -42,12 +49,11 @@ function MachineType(props) {
               ))
               }
             </Select>
-
           </div>
       }
 
 
-      {!!props.models.length &&
+      {(!!props.models.length || props.type==PELLE_BUTTE) &&
         <div className='machine-model grid content-between gap-y-4 h-full'>
           <h2 id="machinemodel">Choisissez le modèle de votre machine&nbsp;:</h2>
           <Autocomplete
@@ -63,7 +69,7 @@ function MachineType(props) {
         </div>
       }
 
-      {!!props.weights.length &&
+      {(!!props.weights.length || props.type==PELLE_BUTTE) &&
         <div className='machine-weight grid content-between gap-y-4 h-full'>
           <h2 id="machineweight">Indiquez le tonnage de votre machine&nbsp;:</h2>
           <Select name='weight' aria-labelledby='machineweight' disabled={!!props.model} value={props.weight} onChange={ev => props.onWeightChange(ev.target.value)}>
@@ -76,7 +82,7 @@ function MachineType(props) {
         </div>
       }
 
-      {!!props.powers.length &&
+      {!!props.powers.length || props.type==PELLE_BUTTE &&
         <div className='machine-power grid content-between gap-y-4 h-full'>
           <h2 id="machinepower">Indiquez la puissance de votre machine&nbsp;:</h2>
           <Select name='power' aria-labelledby='machinepower' disabled={!!props.model} value={props.power} onChange={ev => { props.onPowerChange(ev.target.value) }}>
@@ -95,7 +101,7 @@ function MachineType(props) {
 
 const validator= state => {
   let res=!!state.type && !!state.mark && !!state.power && !!state.weight
-  res = res || state.type=='shovel'
+  res = res || state.type==PELLE_BUTTE
   return res
 }
 
