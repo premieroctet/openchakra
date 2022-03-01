@@ -2,6 +2,7 @@ const {
   BLADE_SHAPES,
   DROITE,
   FIX_TYPES,
+  PELLE_BUTTE,
   PIN,
   SOLD,
 } = require('../utils/feurst_consts')
@@ -29,7 +30,6 @@ class Configurator extends React.Component {
       step: 0,
       machines: [],
       type: '',
-      types: ['excavatrice', 'chargeuse', 'pelle-butte'],
       mark: '',
       marks: [],
       model: '',
@@ -48,16 +48,6 @@ class Configurator extends React.Component {
       auto_quotation: false,
     }
 
-
-    if (is_development()) {
-      this.state={...this.state, step: 4,
-        type: 'excavatrice', mark: 'CATERPILLAR', borderShieldFixType: SOLD,
-        teethShieldFixType: PIN,
-        model: '374D L', weight: 75.5, power: 355,
-        ground: 'GRAVIER', bladeShape: DROITE, bladeThickness: 70, phone: '0675774324',
-        firstname: 'Richard', name: 'Pasquiou', company: 'COLAS', email: 'richard.pasquiou@alfredplace.io',
-      }
-    }
   }
 
   componentDidMount = () => {
@@ -101,7 +91,6 @@ class Configurator extends React.Component {
   onMachinesChange = machines => {
     this.setState({
       machines: machines,
-      // types: this.getList(machines, 'type'),
       marks: this.getList(machines, 'mark'),
       models: this.getList(machines, 'model'),
       powers: this.getList(machines, 'power'),
@@ -112,7 +101,7 @@ class Configurator extends React.Component {
   onTypeChange = type => {
 
     const {machines} = this.state
-    const isShovel = type == 'pelle-butte'
+    const isShovel = type == PELLE_BUTTE
 
     this.setState({
       type: type,
@@ -148,13 +137,11 @@ class Configurator extends React.Component {
   }
 
   onMarkChange = mark => {
-    const {machines} = this.state
+    const {machines, type} = this.state
     let typeMachine = this.getList(
       machines.filter(v => !mark || v.mark == mark),
       'type',
     )
-
-    /* TODO : Filtrer si un type de machine est déjà sélectionné */
 
     const nextState = {
       mark: mark,
@@ -162,7 +149,7 @@ class Configurator extends React.Component {
       power: null,
       weight: null,
       models: this.getList(
-        typeMachine.filter(v => !mark || v.mark == mark),
+        machines.filter(v => (!mark || v.mark == mark) && (!type || v.type==type)),
         'model',
       ),
     }
@@ -174,6 +161,12 @@ class Configurator extends React.Component {
   onModelChange = model => {
     const {machines} = this.state
     const nextState = {model}
+
+    // Nouveau modèle : reset infos sur lame et fixations boucliers
+    Object.assign(nextState, {
+      bladeShape: null, bladeThickness: null, bucketWidth: null,
+      teethShieldFixType: null, borderShieldFixType: null},
+    )
 
     let brand = this.getList(
       machines.filter(v => v.model == model),
@@ -318,7 +311,7 @@ class Configurator extends React.Component {
     const {step} = this.state
 
     const {component, validator, menu} = STEPS[step]
-    
+
     return (
       <Grid
         className="configurator relative"
@@ -335,7 +328,7 @@ class Configurator extends React.Component {
           </Button>
           {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>Suivant
           </Button> : null}
-          
+
 
           {STEPS.length - 1 === step &&
           <div className='flex gap-x-4'>

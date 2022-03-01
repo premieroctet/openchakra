@@ -2,6 +2,7 @@ const {
   BLADE_SHAPES,
   DELTA,
   DROITE,
+  EXCAVATRICE,
   SEMI_DELTA,
 } = require('../../utils/feurst_consts')
 const {
@@ -15,7 +16,7 @@ const {
 
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
-
+const lodash=require('lodash')
 
 function BladeDimension(props) {
 
@@ -40,13 +41,14 @@ function BladeDimension(props) {
     },
   }
 
+  const availableBlades=lodash.pick(blades, [DROITE, props.type==EXCAVATRICE ? SEMI_DELTA : DELTA])
 
   return (
     <div className='flex flex-col gap-x-4 md-flex-row justify-evenly gap-x-8'>
       <div>
         <h2>Sélectionnez la forme de votre lame</h2>
 
-        {Object.keys(blades).map(shape => (
+        {Object.keys(availableBlades).map(shape => (
           <div className='flex justify-center mr-8 mb-6'>
             <Radio
               checked={props.bladeShape === shape}

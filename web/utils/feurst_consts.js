@@ -1,3 +1,13 @@
+const EXCAVATRICE='EXCAVATRICE'
+const CHARGEUSE='CHARGEUSE'
+const PELLE_BUTTE='PELLE-BUTTE'
+
+const MACHINE_TYPES={
+  [EXCAVATRICE]: 'excavatrice',
+  [CHARGEUSE]: 'chargeuse',
+  [PELLE_BUTTE]: 'pelle-butte',
+}
+
 const PIN='PIN'
 const SOLD='SOLD'
 
@@ -16,4 +26,8 @@ const BLADE_SHAPES={
   [SEMI_DELTA]: 'Semi-delta',
 }
 
-module.exports={PIN, SOLD, FIX_TYPES, DROITE, DELTA, SEMI_DELTA, BLADE_SHAPES}
+module.exports={
+  PIN, SOLD, FIX_TYPES,
+  DROITE, DELTA, SEMI_DELTA, BLADE_SHAPES,
+  EXCAVATRICE, CHARGEUSE, PELLE_BUTTE, MACHINE_TYPES,
+}
