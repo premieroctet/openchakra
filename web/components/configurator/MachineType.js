@@ -8,17 +8,17 @@ const {Autocomplete} = require('@material-ui/lab')
 function MachineType(props) {
 
   const imagesMachine = {
-    chargeuse: `${feurstImgPath}/configurateur-12.svg`,
-    excavatrice: `${feurstImgPath}/configurateur-13.svg`,
+    chargeuse: `${feurstImgPath}/chargeuse.svg`,
+    excavatrice: `${feurstImgPath}/excavatrice.svg`,
     'pelle-butte': `${feurstImgPath}/pelle_butte.svg`,
   }
 
   return (
     <div className='grid machine gap-x-8 gap-y-4 md-gap-y-8'>
-      
+
       <div className='machine-type h-full grid content-start gap-y-4'>
         <h2>Quelle machine souhaitez-vous équiper&nbsp;?</h2>
-    
+
         <div className='flex justify-evenly gap-x-4'>
           {props.types.map(tp => (
             <label key={tp} className='flex flex-col items-center gap-y-1 relative'>
@@ -31,7 +31,7 @@ function MachineType(props) {
           }
         </div>
       </div>
-      
+
       {!!props.marks.length &&
           <div className='machine-brand grid content-between gap-y-4 h-full'>
             <h2 id="machinebrand">Indiquez la marque de votre machine&nbsp;:</h2>
@@ -42,11 +42,11 @@ function MachineType(props) {
               ))
               }
             </Select>
-        
+
           </div>
       }
-      
-      
+
+
       {!!props.models.length &&
         <div className='machine-model grid content-between gap-y-4 h-full'>
           <h2 id="machinemodel">Choisissez le modèle de votre machine&nbsp;:</h2>
@@ -62,7 +62,7 @@ function MachineType(props) {
           />
         </div>
       }
-      
+
       {!!props.weights.length &&
         <div className='machine-weight grid content-between gap-y-4 h-full'>
           <h2 id="machineweight">Indiquez le tonnage de votre machine&nbsp;:</h2>
@@ -88,7 +88,7 @@ function MachineType(props) {
           </Select>
         </div>
       }
-      
+
     </div>
   )
 }

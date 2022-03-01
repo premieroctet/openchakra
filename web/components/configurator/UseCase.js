@@ -71,11 +71,11 @@ const IOSSwitch = withStyles(theme => ({
 function UseCase(props) {
 
   const groundImages = {
-    STANDARD: `${feurstImgPath}/IMG_9ED5370B226C-1-08.png`,
-    DUR: `${feurstImgPath}/IMG_9ED5370B226C-1-09.png`,
-    'TRES DUR': `${feurstImgPath}/IMG_9ED5370B226C-1-10.png`,
-    ABRASIF: `${feurstImgPath}/IMG_9ED5370B226C-1-10.png`,
-    'TRES ABRASIF': `${feurstImgPath}/IMG_9ED5370B226C-1-11.png`,
+    STANDARD: `${feurstImgPath}/terrain_standard.png`,
+    DUR: `${feurstImgPath}/terrain_dur.png`,
+    'TRES DUR': `${feurstImgPath}/terrain_tres_dur.png`,
+    ABRASIF: `${feurstImgPath}/terrain_abrasif.png`,
+    'TRES ABRASIF': `${feurstImgPath}/terrain_tres_abrasif.png`,
   }
 
   return (
