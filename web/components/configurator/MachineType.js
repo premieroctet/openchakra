@@ -39,7 +39,7 @@ function MachineType(props) {
         </div>
       </div>
 
-      {(!!props.marks.length || props.type==PELLE_BUTTE) &&
+      {!!props.marks.length &&
           <div className='machine-brand grid content-between gap-y-4 h-full'>
             <h2 id="machinebrand">Indiquez la marque de votre machine&nbsp;:</h2>
             <Select className='w-full' aria-labelledby='machinebrand' name='mark' defaultValue="" value={props.mark || ''} onChange={ev => { props.onMarkChange(ev.target.value) }}>
@@ -53,7 +53,7 @@ function MachineType(props) {
       }
 
 
-      {(!!props.models.length || props.type==PELLE_BUTTE) &&
+      {!!props.models.length &&
         <div className='machine-model grid content-between gap-y-4 h-full'>
           <h2 id="machinemodel">Choisissez le modèle de votre machine&nbsp;:</h2>
           <Autocomplete
@@ -69,7 +69,7 @@ function MachineType(props) {
         </div>
       }
 
-      {(!!props.weights.length || props.type==PELLE_BUTTE) &&
+      {!!props.weights.length &&
         <div className='machine-weight grid content-between gap-y-4 h-full'>
           <h2 id="machineweight">Indiquez le tonnage de votre machine&nbsp;:</h2>
           <Select name='weight' aria-labelledby='machineweight' disabled={!!props.model} value={props.weight} onChange={ev => props.onWeightChange(ev.target.value)}>
