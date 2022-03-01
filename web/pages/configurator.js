@@ -17,6 +17,7 @@ const {withTranslation} = require('react-i18next')
 const {STEPS} = require('./configurator/configuratorSteps')
 const ProgressBar = require('../components/ProgressBar/ProgressBar')
 const lodash = require('lodash')
+const {snackBarError, snackBarSuccess} = require('../utils/notifications')
 
 export const feurstImgPath = './static/assets/img/feurst'
 
@@ -44,6 +45,7 @@ class Configurator extends React.Component {
       grounds: [],
       teethShieldFixType: null,
       borderShieldFixType: null,
+      auto_quotation: false,
     }
 
 
@@ -53,7 +55,7 @@ class Configurator extends React.Component {
         teethShieldFixType: PIN,
         model: '374D L', weight: 75.5, power: 355,
         ground: 'GRAVIER', bladeShape: DROITE, bladeThickness: 70, phone: '0675774324',
-        firstname: 'Gérard', name: 'Robert', company: 'COLAS', email: 'sebastien.auvray@alfredplace.io',
+        firstname: 'Richard', name: 'Pasquiou', company: 'COLAS', email: 'richard.pasquiou@alfredplace.io',
       }
     }
   }
@@ -280,11 +282,43 @@ class Configurator extends React.Component {
     this.setState({step: newStep})
   }
 
+  sendAutoQuotation = () => {
+    // TODO Envoyer le PDF ou le générer sur le serveur
+    setAxiosAuthentication()
+
+    const data=lodash.pick(this.state,
+      'type,mark,model,weight,power,bladeShape,bladeThickness,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
+    axios.post('/feurst/api/auto_quotation', data)
+      .then(() => {
+        snackBarSuccess('Devis envoyé')
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError(JSON.stringify(err.response.data))
+      })
+  }
+
+  sendCustomQuotation = () => {
+    // TODO Envoyer le PDF ou le générer sur le serveur
+    setAxiosAuthentication()
+
+    const data=lodash.pick(this.state,
+      'type,mark,model,weight,power,bladeShape,bladeThickness,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
+    axios.post('/feurst/api/custom_quotation', data)
+      .then(() => {
+        snackBarSuccess('Demande envoyée')
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError(JSON.stringify(err.response.data))
+      })
+  }
+
   render = () => {
     const {step} = this.state
 
     const {component, validator, menu} = STEPS[step]
-
+    
     return (
       <Grid
         className="configurator relative"
@@ -299,13 +333,21 @@ class Configurator extends React.Component {
           <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
             Précédent
           </Button>
-          <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
-            Suivant
-          </Button>
+          {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>Suivant
+          </Button> : null}
+          
+
+          {STEPS.length - 1 === step &&
+          <div className='flex gap-x-4'>
+            <Button className='previous' disabled={!validator(this.state)} onClick={this.sendCustomQuotation}>Contacter un expert</Button>
+            {this.state.auto_quotation && <Button className='next' disabled={!validator(this.state)} onClick={this.sendAutoQuotation}>Recevoir ma configuration</Button>}
+          </div>
+          }
         </div>
       </Grid>)
 
   }
 }
+
 
 module.exports = withTranslation('custom', {withRef: true})(Configurator)
