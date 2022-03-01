@@ -82,7 +82,7 @@ function MachineType(props) {
         </div>
       }
 
-      {!!props.powers.length || props.type==PELLE_BUTTE &&
+      {!!props.powers.length &&
         <div className='machine-power grid content-between gap-y-4 h-full'>
           <h2 id="machinepower">Indiquez la puissance de votre machine&nbsp;:</h2>
           <Select name='power' aria-labelledby='machinepower' disabled={!!props.model} value={props.power} onChange={ev => { props.onPowerChange(ev.target.value) }}>
