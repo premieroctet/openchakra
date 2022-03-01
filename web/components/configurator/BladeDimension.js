@@ -1,4 +1,10 @@
 const {
+  BLADE_SHAPES,
+  DELTA,
+  DROITE,
+  SEMI_DELTA,
+} = require('../../utils/feurst_consts')
+const {
   FormControl,
   MenuItem,
   Radio,
@@ -14,32 +20,32 @@ import {feurstImgPath} from '../../pages/configurator'
 function BladeDimension(props) {
 
   const blades = {
-    straight: {
-      label: 'Droite',
+    [DROITE]: {
+      label: BLADE_SHAPES[DROITE],
       path: `${feurstImgPath}/lame-droite.svg`,
       width: '120',
       height: '74',
     },
-    semidelta: {
-      label: 'Semi-delta',
+    [SEMI_DELTA]: {
+      label: BLADE_SHAPES[SEMI_DELTA],
       path: `${feurstImgPath}/lame-semidelta.svg`,
       width: '120',
       height: '74',
     },
-    delta: {
-      label: 'Delta',
+    [DELTA]: {
+      label: BLADE_SHAPES[DELTA],
       path: `${feurstImgPath}/lame-delta.svg`,
       width: '120',
       height: '74',
     },
   }
-  
+
 
   return (
     <div className='flex flex-col gap-x-4 md-flex-row justify-evenly gap-x-8'>
       <div>
         <h2>Sélectionnez la forme de votre lame</h2>
-        
+
         {Object.keys(blades).map(shape => (
           <div className='flex justify-center mr-8 mb-6'>
             <Radio
@@ -55,20 +61,20 @@ function BladeDimension(props) {
             </label>
           </div>
         ))}
-       
+
       </div>
 
       <div>
         <h2 id='bucketthickness'>Indiquez l'épaisseur de la lame</h2>
-        
+
         <Select className='w-full mb-6' name='bladeThickness' value={props.bladeThickness} onChange={ev => props.onBladeThicknessChange(ev.target.value)} aria-describedby="bucketthickness">
           {props.thicknesses.map(thick => (
             <MenuItem value={thick}>{`${thick} mm`}</MenuItem>
           ))}
         </Select>
 
-        <h2 id="bucket_width">Indiquez la largeur de votre godet</h2>
-        
+        <h2 id="bucketWidth">Indiquez la largeur de votre godet</h2>
+
         <FormControl className='w-full mb-6' variant="standard">
           <Input
             id="bucketWidth"
@@ -86,7 +92,7 @@ function BladeDimension(props) {
           {/* <FormHelperText id="outlined-weight-helper-text">Weight</FormHelperText> */}
         </FormControl>
       </div>
-      
+
       <div className='flex items-center justify-center' style={{textAlign: 'center'}}>
         <img src='' alt='belle image' width={300} height={300} className='flex items-center justify-center' style={{border: '1px solid blue'}} />
       </div>

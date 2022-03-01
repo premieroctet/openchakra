@@ -1,7 +1,9 @@
+const { BLADE_SHAPES, FIX_TYPES } = require('../../utils/feurst_consts');
 const React=require('react')
-const {Page, Text, View, Document, StyleSheet, Image, Font}=require('@react-pdf/renderer')
+const {Page, Text, View, Document, StyleSheet, Image}=require('@react-pdf/renderer')
 const moment=require('moment')
 import pdfStyle from '../../static/css/components/Quotation/Quotation'
+
 const styles = StyleSheet.create(pdfStyle())
 moment.locale('fr')
 
@@ -20,23 +22,13 @@ const ILLUS={
   'Dents': DENT,
 }
 
-Font.register(
-  {
-    family: 'SourceSansPro', fonts: [
-      {src: 'https://fonts.gstatic.com/s/sourcesanspro/v14/6xK3dSBYKcSV-LCoeQqfX1RYOo3aPw.ttf'},
-      {src: 'https://fonts.gstatic.com/s/sourcesanspro/v14/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rAkA.ttf', fontWeight: 600},
-    ],
-  },
-)
-
-
 class Quotation extends React.Component {
   constructor(props) {
     super(props)
   }
 
   render() {
-    const {infos, precos}=this.props
+    const {data}=this.props
 
     return (
       <Document>
@@ -52,28 +44,29 @@ class Quotation extends React.Component {
               <Text>04 XX XX XX XX</Text>
             </View>
             <View style={styles.address}>
-              <Text>{infos.name}</Text>
-              <Text>{infos.company}</Text>
-              <Text>{infos.email}</Text>
-              <Text>{infos.phone}</Text>
+              <Text>{data.name}</Text>
+              <Text>{data.company}</Text>
+              <Text>{data.email}</Text>
+              <Text>{data.phone}</Text>
             </View>
           </View>
           <Text style={styles.title}>Préconisation - Configuration de vos équipements Feurst</Text>
           <View style={styles.summary}>
             <View style={styles.summaryBlock}>
               <Text>Récapitulatif de votre demande:</Text>
-              <Text><span style={styles.lightText}>Votre machine: </span>{precos.type}-{precos.mark} {precos.model}</Text>
-              <Text><span style={styles.lightText}>Votre terrain: </span>{precos.ground}</Text>
-              <Text><span style={styles.lightText}>Votre godet/lame: </span>{precos.bladeShape} - L : {precos.bucketSize && `${precos.bucketSize}mm` || 'inconnue'}</Text>
+              <Text><span style={styles.lightText}>Votre machine: </span>{data.type}-{data.mark} {data.model}</Text>
+              <Text><span style={styles.lightText}>Votre terrain: </span>{data.ground}</Text>
+              <Text><span style={styles.lightText}>Votre godet/lame: </span>{BLADE_SHAPES[data.bladeShape]} - L : {data.bucketWidth && `${data.bucketWidth}mm` || 'inconnue'}</Text>
             </View>
             <View style={styles.summaryBlock}>
               <Text>Votre équipement:</Text>
-              <Text>Type de fixation: {infos.fixType}</Text>
+              <Text>Boucliers inter-dents: {FIX_TYPES[data.teethShieldFixType]}</Text>
+              <Text>Boucliers de flancs: {FIX_TYPES[data.borderShieldFixType]}</Text>
             </View>
           </View>
           <View style={styles.contents}>
-            {Object.entries(precos.accessories).map(entry => {
-              const [group, data]=entry
+            {Object.entries(data.accessories).map(entry => {
+              const [group, items]=entry
               return (
                 <>
                   <View style={styles.group} wrap={false}>
@@ -82,20 +75,18 @@ class Quotation extends React.Component {
                       <Image style={styles.illustration} src={ILLUS[group]}/>
                     </View>
                     <View style={styles.groupBody}>
-                      {Object.entries(data).map(entry => {
-                        const value=entry[1]
-                        return value.map((v, index) => (
-                          <>
-                            {value.length>1 && <Text style={styles.optionTitle}>option {index+1}</Text>}
-                            {Object.entries(v).map(entry => {
-                              const [type, refQty]=entry
-                              return (
-                                <Text style={styles.optionBody}>{refQty[1]} X {type} {refQty[0]}</Text>
-                              )
-                            })}
-                          </>
-                        ))
-                      })}
+                      {items.map((v, index) => (
+                        <>
+                          {items.length>1 && <Text style={styles.optionTitle}>option {index+1}</Text>}
+                          {Object.entries(v).map(entry => {
+                            const [type, refQty]=entry
+                            return (
+                              <Text style={styles.optionBody}>{refQty[1]} X {type} {refQty[0]}</Text>
+                            )
+                          })}
+                        </>
+                      ))
+                      }
                     </View>
                   </View>
                 </>

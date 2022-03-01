@@ -9,52 +9,86 @@ SUPPOSITIONS:
    - excavatrice : droite ou semi-delta
    - chargeuse : droite ou delta
 */
+const {
+  BLADE_SHAPES,
+  FIX_TYPES,
+  PIN,
+} = require('../../../utils/feurst_consts')
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
 
-const SOLD='SOLD'
-const PIN='PIN'
-
-const FIX_TYPES=[SOLD, PIN]
-
 const UNKNOWN_TEETH='nb de dents'
 
-const GROUPS={
-  'Porte-dents': {
-    'ADAPTEUR': teeth => teeth || UNKNOWN_TEETH,
-    "CHAPEAU D'USURE": teeth => teeth || UNKNOWN_TEETH,
-    'CLAVETTE': teeth => teeth || UNKNOWN_TEETH,
-    'FOURREAU': teeth => teeth || UNKNOWN_TEETH,
-  },
-  'Dents': {
-    'REFERENCE DENT': teeth => teeth,
-  },
-  'Boucliers inter-dents': {
-    SOLD: {
-      'BASE A SOUDER': teeth => teeth || UNKNOWN_TEETH,
-      'BOUCLIER A SOUDER': () => 1,
-      'BOUCLIER A SOUDER DROIT': () => 1,
-      'BOUCLIER A SOUDER GAUCHE': () => 1,
+const GROUPS= (teeth, bladeShape, borderShieldFixType, teethShieldFixType) => {
+
+  const delta= /delta/i.test(bladeShape)
+
+  const config={
+    'Porte-dents': {
+      'ADAPTEUR': teeth || UNKNOWN_TEETH,
+      "CHAPEAU D'USURE": teeth || UNKNOWN_TEETH,
+      'CLAVETTE': teeth || UNKNOWN_TEETH,
+      'FOURREAU': teeth || UNKNOWN_TEETH,
+      'CLE DENT': 1,
+      'BASE A SOUDER': teeth || UNKNOWN_TEETH,
     },
-    PIN: {
-      'BOUCLIER A CLAVETER CENTRE': teeth => (teeth ? teeth -1 : UNKNOWN_TEETH),
-      'BOUCLIER A CLAVETER DROIT': () => 1,
-      'BOUCLIER A CLAVETER GAUCHE': () => 1,
-      'CLE BOUCLIER': () => 1,
+    Dents: {
+
     },
-  },
-  'Bouclier flanc': {
-    'BOUCLIER DE FLANC': () => 1,
-    SOLD: {
-      'BOUCLIER DE FLANC A SOUDER': () => '2 ou 4',
+    'Boucliers inter-dents': teethShieldFixType==PIN ? {
+      'BOUCLIER A CLAVETER CENTRE': teeth-(delta ? 3 : 1),
+      'BOUCLIER A CLAVETER DROITE': delta ? 1 : 0,
+      'BOUCLIER A CLAVETER GAUCHE': delta ? 1 : 0,
+      'CLE BOUCLIER': 1,
+    }:
+      {
+        'BOUCLIER A SOUDER': teeth-(delta ? 3 : 1),
+        'BOUCLIER A SOUDER DROITE': delta ? 1 : 0,
+        'BOUCLIER A SOUDER GAUCHE': delta ? 1 : 0,
+        'CLE BOUCLIER': 1,
+      },
+    'Bouclier flanc': {
+      'BOUCLIER DE FLANC': '2 ou 4',
+      [borderShieldFixType==PIN ? 'BOUCLIER DE FLANC A CLAVETER' : 'BOUCLIER DE FLANC A SOUDER']: '2 ou 4',
     },
-    PIN: {
-      'BOUCLIER DE FLANC A CLAVETER': () => '2 ou 4',
+    'Bouclier talon': {
+      'BOUCLIER DE TALON DE GODET': 10,
     },
-  },
-  'Bouclier talon': {
-    'BOUCLIER DE TALON DE GODET': () => 10,
-  },
+  }
+
+  return config
+}
+
+const checkXLFormat = workbook => {
+  const errors=[]
+  const EXPECTED={
+    // NOM d'onglet: {ligne: valeurs, ligne: valeurs}
+    Machines: {1: 'TYPE DE MACHINE,CONSTRUCTEURMANUFACTURER,MACHINE\n MODEL,POIDS\nWEIGHT,KW,B.O.F. Mini (kN),B.O.F Maxi (kN),PNEU,CHENILLE,SHOVEL,Famille\nProduit,Utilisation\nSTANDARD,Nb de dent du godet,Utilisation\nXHD,Nb de dent du godet'.split(',')},
+    'Matrice Ep LAME_Excavatrice': {2: "TAILLE,TYPE,EPAISSEUR LAME,TYPE LAME,ADAPTEUR,CHAPEAU D'USURE,CLAVETTE,FOURREAU,CLE DENT,BOUCLIER A SOUDER,BOUCLIER A SOUDER DROITE,BOUCLIER A SOUDER GAUCHE,BASE A SOUDER,BOUCLIER A CLAVETER CENTRE,BOUCLIER A CLAVETER DROITE,BOUCLIER A CLAVETER GAUCHE,CLAVETTE BOUCLIER,BOUCLIER DE FLANC,CLE BOUCLIER,BOUCLIER DE FLANC A CLAVETER,BOUCLIER DE FLANC A SOUDER,BOUCLIER DE TALON DE GODET".split(',')},
+    'Matrice Ep LAME_Chargeuse': {2: "TAILLE,TYPE,EPAISSEUR LAME,TYPE DE LAME,ADAPTEUR,CHAPEAU D'USURE,CLAVETTE,FOURREAU,CLE DENT,BOUCLIER A SOUDER,BOUCLIER A SOUDER DROIT,BOUCLIER A SOUDER GAUCHE,BASE A SOUDER,BOUCLIER A CLAVETER CENTRE,BOUCLIER A CLAVETER DROIT,BOUCLIER A CLAVETER GAUCHE,CLAVETTE BOUCLIER,BOUCLIER DE FLANC,CLE BOUCLIER,BOUCLIER DE FLANC A CLAVETER,BOUCLIER DE FLANC A SOUDER,BOUCLIER DE TALON DE GODET".split(',')},
+    'Matrice Dents développée': {
+      2: ',,STANDARD,STANDARD,STANDARD,STANDARD,STANDARD,STANDARD,,DUR,DUR,DUR,,TRES DUR,TRES DUR,TRES DUR,,ABRASIF,ABRASIF,ABRASIF,,TRES ABRASIF,TRES ABRASIF,TRES ABRASIF'.split(','),
+      3: 'TAILLE / TYPE,MACHINES,TERRE\n (terre pierre),SABLE,GRAVIER,CHARBON,CRAIE,MINERAIS (Peu Abrasif),MACHINES,CALCAIRE,BASALTE,SCHISTE,MACHINES,AMPHIBOLITE,LEPTYNITE,RHYOLITE,MACHINES,QUARTZ,SILICE,POUZOLLANE,MACHINES,GRANITES,GNEISS,PORPHYRE'.split(','),
+    },
+  }
+
+  Object.entries(EXPECTED).forEach(([sheetName, constants]) => {
+    const sheet=workbook.getWorksheet(sheetName)
+    if (!sheet) {
+      return errors.push(`Missing worksheet:${sheetName}`)
+    }
+    Object.entries(constants).map(([row, expectedValues]) => {
+      const rowValues=sheet.getRow(row)
+      expectedValues.map((expectedValue, idx) => {
+        const cellValue=rowValues.getCell(idx+1).value || ''
+        if (cellValue!=expectedValue) {
+          return errors.push(`Onglet ${sheetName}, ligne ${row} colonne ${idx+1}: valeur ${cellValue}, attendu ${expectedValue}`)
+        }
+      })
+    })
+  })
+
+  return errors
 }
 
 const loadGrounds = sheet => {
@@ -189,6 +223,10 @@ const getDatabase = () => {
     const workbook = new ExcelJS.Workbook()
     workbook.xlsx.readFile(`${__dirname}/../../../static/assets/data/feurst_db.xlsx`)
       .then(wb => {
+        const errors=checkXLFormat(workbook)
+        if (errors.length>0) {
+          return reject(errors)
+        }
         const machines=loadMachines(wb.getWorksheet('Machines'))
         const thicknesses=loadThicknesses(['Matrice Ep LAME_Excavatrice', 'Matrice Ep LAME_Chargeuse'].map(s => wb.getWorksheet(s)))
         const grounds=loadGrounds(wb.getWorksheet('Matrice Dents développée'))
@@ -219,9 +257,13 @@ const getFamily = (database, data) => {
     return null
   }
   if (data.hardness==null) {
+    console.log(`Missing hardness`)
     return null
   }
   const ref_hardness=machine.reference[data.hardness=='STANDARD' ? 'STANDARD':'XHD']
+  if (!ref_hardness) {
+    console.log(`No refhardness`)
+  }
   return ref_hardness && ref_hardness.ref
 }
 
@@ -244,27 +286,22 @@ const getAccessories = (database, data) => {
   const key=[data.type, data.family, data.bladeThickness, (data.bladeShape||'').toUpperCase()]
   const acc=database.accessories[key]
   if (!acc) {
+    console.log(`Pas de preco pour ${key}`)
     return null
   }
   let res={}
-  Object.entries(GROUPS).forEach(entity => {
+  const groups=GROUPS(data.teeth_count, data.bladeShape, data.borderShieldFixType, data.teethShieldFixType)
+  Object.entries(groups).forEach(entity => {
     const key=entity[0]
     res[key]={}
     const g=entity[1]
-    FIX_TYPES.forEach(fixType => {
-      if (fixType in g && (data.fixType==fixType || !data.fixType)) {
-        let sub=lodash.uniqBy(acc.map(ac => lodash.pick(ac, Object.keys(g[fixType]))), JSON.stringify)
-        sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[fixType][ent[0]](data.teeth_count)]])))
-        res[key]=Object.assign(res[key], {[fixType]: sub})
-      }
-    })
     let sub=lodash.uniqBy(acc.map(ac => lodash.pick(ac, Object.keys(g))), JSON.stringify)
-    sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[ent[0]](data.teeth_count)]])))
+    sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[ent[0]]]])))
     if (sub.length>0) {
-      res[key].ALL=sub
+      res[key]=sub
     }
   })
-  res.Dents={ALL: data.teeth_ref.map(ref => ({'Dent': [ref, data.teeth_count]}))}
+  res.Dents=data.teeth_ref.map(ref => ({'Dent': [ref, data.teeth_count]}))
 
   return res
 }
@@ -278,7 +315,7 @@ const computePrecos = data => {
         data={...data, teeth_ref: getTeethRef(db, data)}
         data={...data, teeth_count: getTeethCount(db, data)}
         data={...data, accessories: getAccessories(db, data)}
-        resolve(data)
+        resolve(lodash.pick(data, 'hardness family teeth_ref teeth_count accessories'.split(' ')))
       })
       .catch(err => {
         reject(err)
@@ -286,4 +323,17 @@ const computePrecos = data => {
   })
 }
 
-module.exports={getDatabase, computePrecos}
+const computeDescription = (data, full_info) => {
+  let description='type mark model'.split(' ').map(att => data[att] || '').join(' ')
+  if (full_info) {
+    if (data.bladeShape) { description += `, lame:${BLADE_SHAPES[data.bladeShape]}` }
+    if (data.bladeThickness) { description += `, épaisseur:${data.bladeThickness}mm` }
+    if (data.bucketWidth) { description += `, L:${data.bucketWidth}mm` }
+    if (data.ground) { description += `, terrain:${data.ground}` }
+    if (data.teethShieldFixType) { description += `, fixation boucliers dents:${FIX_TYPES[data.teethShieldFixType]}` }
+    if (data.borderShieldFixType) { description += `, fixation boucliers flancs:${FIX_TYPES[data.borderShieldFixType]}` }
+  }
+  return description
+}
+
+module.exports={getDatabase, computePrecos, computeDescription}

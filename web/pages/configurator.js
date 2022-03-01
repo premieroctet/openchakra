@@ -1,3 +1,10 @@
+const {
+  BLADE_SHAPES,
+  DROITE,
+  FIX_TYPES,
+  PIN,
+  SOLD,
+} = require('../utils/feurst_consts')
 import React from 'react'
 
 import '../static/feurst.css'
@@ -41,11 +48,12 @@ class Configurator extends React.Component {
 
 
     if (is_development()) {
-      this.state={...this.state, step: 0,
-        type: 'excavatrice', mark: 'CATERPILLAR', fixType: 'PIN',
+      this.state={...this.state, step: 4,
+        type: 'excavatrice', mark: 'CATERPILLAR', borderShieldFixType: SOLD,
+        teethShieldFixType: PIN,
         model: '374D L', weight: 75.5, power: 355,
-        ground: 'GRAVIER', bladeShape: 'delta', bladeThickness: 70, phone: '0675774324',
-        firstname: 'Gérard', name: 'Robert', company: 'COLAS', email: 'sebastien.auvray@my-alfred.io',
+        ground: 'GRAVIER', bladeShape: DROITE, bladeThickness: 70, phone: '0675774324',
+        firstname: 'Gérard', name: 'Robert', company: 'COLAS', email: 'sebastien.auvray@alfredplace.io',
       }
     }
   }
@@ -71,11 +79,11 @@ class Configurator extends React.Component {
 
   getPrecos = () => {
     setAxiosAuthentication()
-    const data=lodash.pick(this.state, 'type mark model power weight bladeThickness ground fixType bladeShape'.split(' '))
-    axios.post('/feurst/api/preconisations', data)
+    const data=lodash.pick(this.state, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape'.split(' '))
+    axios.get('/feurst/api/auto_quotation_available', {params: data})
       .then(res => {
         this.setState({
-          precos: res.data,
+          auto_quotation: res.data,
         })
       })
       .catch(err => console.error(err))
@@ -100,7 +108,7 @@ class Configurator extends React.Component {
   }
 
   onTypeChange = type => {
-    
+
     const {machines} = this.state
     const isShovel = type == 'pelle-butte'
 
@@ -176,13 +184,13 @@ class Configurator extends React.Component {
       'type',
     )
     typeMachine.length == 1 && Object.assign(nextState, {type: typeMachine[0]})
-    
+
     let powerMachine = this.getList(
       machines.filter(v => v.model == model),
       'power',
     ) || ['']
     powerMachine.length == 1 && Object.assign(nextState, {power: powerMachine[0]})
-    
+
     let machineWeight = this.getList(
       machines.filter(v => v.model == model),
       'weight',
@@ -200,8 +208,11 @@ class Configurator extends React.Component {
     this.setState({weight})
   }
 
-  onBladeShapeChange = shape => {
-    this.setState({bladeShape: shape})
+  onBladeShapeChange = bladeShape => {
+    if (!Object.keys(BLADE_SHAPES).includes(bladeShape)) {
+      return console.error(`Invalid blade shape:${bladeShape}`)
+    }
+    this.setState({bladeShape: bladeShape})
   }
 
   onBucketWidthChange = width => {
@@ -217,10 +228,16 @@ class Configurator extends React.Component {
   }
 
   onTeethShieldFixTypeChange = teethShieldFixType => {
+    if (!Object.keys(FIX_TYPES).includes(teethShieldFixType)) {
+      return console.error(`Invalid border shield fix type:${teethShieldFixType}`)
+    }
     this.setState({teethShieldFixType})
   }
 
   onBorderShieldFixTypeChange = borderShieldFixType => {
+    if (!Object.keys(FIX_TYPES).includes(borderShieldFixType)) {
+      return console.error(`Invalid teeth shield fix type:${borderShieldFixType}`)
+    }
     this.setState({borderShieldFixType})
   }
 
@@ -251,9 +268,9 @@ class Configurator extends React.Component {
   nextPage = () => {
     const {step} = this.state
     const newStep = Math.min(step + 1, STEPS.length - 1)
-    if (newStep == 3) {
-      this.getPrecos()
-    }
+    // if (newStep == 3) {
+    this.getPrecos()
+    // }
     this.setState({step: newStep})
   }
 
@@ -264,7 +281,7 @@ class Configurator extends React.Component {
   }
 
   render = () => {
-    const {step, precos} = this.state
+    const {step} = this.state
 
     const {component, validator, menu} = STEPS[step]
 
@@ -273,13 +290,10 @@ class Configurator extends React.Component {
         className="configurator relative"
       >
 
-        {/** is_development() && JSON.stringify(lodash.omit(this.state, ['marks', 'machines', 'models', 'powers', 'weights', 'thicknesses', 'grounds']))*/}
-
         <h1 className='whereami'>{menu}</h1>
         <ProgressBar value={step} max={STEPS.length} />
         <div className="rounded-container m-4 p-4">
           {component({...this.state, ...this})}
-          {/** JSON.stringify(precos) */}
         </div>
         <div className='flex justify-between w-full nextprevZone bg-white p-4'>
           <Button className='previous' disabled={step == 0} onClick={this.previousPage}>

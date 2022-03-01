@@ -1,3 +1,4 @@
+const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
 const {isPhoneOk} = require('../../utils/sms')
 const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const axios = require('axios')
@@ -5,26 +6,35 @@ const {Button, Grid, TextField} = require('@material-ui/core')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 const Validator = require('validator')
 import React from 'react'
-const lodash=require('lodash')
+import lodash from 'lodash'
 
 function Summary(props) {
 
-  const sendQuotation = () => {
+  const sendAutoQuotation = () => {
     // TODO Envoyer le PDF ou le générer sur le serveur
     setAxiosAuthentication()
-    const data={
-      firstname: props.firstname,
-      name: props.name,
-      company: props.company,
-      email: props.email,
-      phone: props.phone,
-      machine: `${props.type} ${props.mark} ${props.model}`,
-      precos: props.precos,
-    }
 
-    axios.post('/feurst/api/quotation', data)
+    const data=lodash.pick(props,
+      'type,mark,model,weight,power,bladeShape,bladeThickness,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
+    axios.post('/feurst/api/auto_quotation', data)
       .then(() => {
         snackBarSuccess('Devis envoyé')
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError(JSON.stringify(err.response.data))
+      })
+  }
+
+  const sendCustomQuotation = () => {
+    // TODO Envoyer le PDF ou le générer sur le serveur
+    setAxiosAuthentication()
+
+    const data=lodash.pick(props,
+      'type,mark,model,weight,power,bladeShape,bladeThickness,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
+    axios.post('/feurst/api/custom_quotation', data)
+      .then(() => {
+        snackBarSuccess('Demande envoyée')
       })
       .catch(err => {
         console.error(err)
@@ -86,7 +96,7 @@ function Summary(props) {
         <Grid style={{display: 'flex', flexDirection: 'row', marginRight: '40px'}}>
           <Grid xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
             <h3>Forme de lame</h3>
-            <TextField disabled={true} value={props.bladeShape}/>
+            <TextField disabled={true} value={BLADE_SHAPES[props.bladeShape]}/>
           </Grid>
           <Grid xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
             <h3>Epaisseur de lame (mm)</h3>
@@ -97,14 +107,16 @@ function Summary(props) {
             <TextField disabled={true} value={props.bucketWidth}/>
           </Grid>
           <Grid xs={3} style={{display: 'flex', flexDirection: 'column', marginRight: '40px'}}>
-            <h3>Fixation</h3>
-            <TextField disabled={true} value={props.fixType}/>
+            <h3>Fixation boucliers dents</h3>
+            <TextField disabled={true} value={FIX_TYPES[props.teethShieldFixType]}/>
+            <h3>Fixation boucliers flancs</h3>
+            <TextField disabled={true} value={FIX_TYPES[props.borderShieldFixType]}/>
           </Grid>
         </Grid>
       </Grid>
       <Grid>
-        {lodash.get(props, 'precos.accessories') && <Button disabled={!validator(props)} onClick={sendQuotation}>Envoyer le devis</Button>}
-        <Button disabled={!validator(props)} onClick={sendQuotation}>Doute? Demander une préconisation maison</Button>
+        {props.auto_quotation && <Button disabled={!validator(props)} onClick={sendAutoQuotation}>Envoyer le devis</Button>}
+        <Button disabled={!validator(props)} onClick={sendCustomQuotation}>Doute? Demander une préconisation maison</Button>
       </Grid>
     </Grid>
   )
