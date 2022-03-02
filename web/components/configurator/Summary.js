@@ -4,7 +4,6 @@ const {isPhoneOk} = require('../../utils/sms')
 const {
   FormControl,
   TextField,
-  Input,
 } = require('@material-ui/core')
 const Validator = require('validator')
 import React from 'react'
@@ -31,15 +30,14 @@ function Summary(props) {
     onNameChange,
     onCompanyChange,
     onEmailChange,
+    isValidEmail,
     onPhoneChange,
   } = props
   
   return (
     <div className='summary'>
-      
       <h2 className='pl-6'>Recevoir ma préconisation</h2>
       <form className='personaldata'>
-        
         <FormControl variant="standard">
           <label htmlFor='name'>Nom</label>
           <TextField
@@ -48,56 +46,56 @@ function Summary(props) {
             name='name'
             autoComplete="family-name"
             value={name}
-            error={error?.name}
+            error={error?.name || false}
             helperText={error?.firstname}
             onChange={ev => onNameChange(ev.target.value)}/>
         </FormControl>
-        <div>
+        <FormControl variant="standard">
           <label htmlFor='firstname'>Prénom</label>
           <TextField
             placeholder='Saisissez votre prénom'
             id="firstname"
-            error={error?.firstname}
+            error={error?.firstname || false}
             helperText={error?.firstname}
             name='firstname'
             autoComplete="given-name"
             value={firstname}
             onChange={ev => onFirstnameChange(ev.target.value)}/>
-        </div>
-      
-        <div>
+        </FormControl>
+        <FormControl variant="standard">
           <label htmlFor='company'>Société</label>
           <TextField
             placeholder='Saisissez votre société'
             id="company"
             name='company'
-            error={error?.company}
+            error={error?.company || false}
             helperText={error?.company}
             autoComplete="organization"
             value={company}
             onChange={ev => onCompanyChange(ev.target.value)}/>
-        </div>
-
-        <div>
+        </FormControl>
+        <FormControl variant="standard">
           <label htmlFor='email'>Email</label>
-          <Input
+          <TextField
             placeholder='Saisissez votre email'
             id="email"
             name='email'
-            error={error?.email}
+            error={error?.email || false}
             helperText={error?.email}
             type="email"
             autoComplete="email"
             value={email}
-            onChange={ev => onEmailChange(ev.target.value)} />
-        </div>
+            onChange={ev => onEmailChange(ev.target.value)}
+            onBlur={ev => isValidEmail(ev.target.value)}
+          />
+        </FormControl>
         <FormControl variant="standard">
           <label htmlFor='phone'>Téléphone</label>
           <TextField
             placeholder='Saisissez votre numéro de téléphone'
             id="phone"
             name='phone'
-            error={error?.phone}
+            error={error?.phone || false}
             helperText={error?.phone}
             autoComplete="tel"
             value={phone}

@@ -43,10 +43,11 @@ function MachineType(props) {
       <div className='machine-brand grid content-between gap-y-4 h-full'>
         <h2 id="machinebrand">Indiquez la marque de votre machine&nbsp;:</h2>
         <Autocomplete
+          freeSolo
           className='w-full'
           options={props.marks}
           aria-labelledby='machinebrand'
-          value={props.mark}
+          value={props.mark || ''}
           filterOptions={(opts, {inputValue}) => { return opts.filter(o => normalize(o).includes(normalize(props.mark))) }}
           renderInput={params => (<TextField {...params} />)}
           onChange={(ev, value) => props.onMarkChange(value)}
@@ -58,10 +59,11 @@ function MachineType(props) {
       <div className='machine-model grid content-between gap-y-4 h-full'>
         <h2 id="machinemodel">Choisissez le modèle de votre machine&nbsp;:</h2>
         <Autocomplete
+          freeSolo
           className='w-full'
           options={props.models}
           aria-labelledby='machinemodel'
-          value={props.model}
+          value={props.model || ''}
           filterOptions={(opts, {inputValue}) => { return opts.filter(o => normalize(o).includes(normalize(props.model))) }}
           renderInput={params => (<TextField {...params} />)}
           onChange={(ev, value) => props.onModelChange(value)}
@@ -71,7 +73,7 @@ function MachineType(props) {
 
       <div className='machine-weight grid content-between gap-y-4 h-full'>
         <h2 id="machineweight">Indiquez le tonnage de votre machine&nbsp;:</h2>
-        <Select name='weight' aria-labelledby='machineweight' disabled={!!props.model} value={props.weight} onChange={ev => props.onWeightChange(ev.target.value)}>
+        <Select name='weight' aria-labelledby='machineweight' disabled={!!props.model} value={props.weight || ''} onChange={ev => props.onWeightChange(ev.target.value)}>
           <MenuItem key={null} value={null}>Inconnu</MenuItem>
           {props.weights.map(wght => (
             <MenuItem key={wght} value={wght}>{wght}</MenuItem>
@@ -82,7 +84,7 @@ function MachineType(props) {
 
       <div className='machine-power grid content-between gap-y-4 h-full'>
         <h2 id="machinepower">Indiquez la puissance de votre machine&nbsp;:</h2>
-        <Select name='power' aria-labelledby='machinepower' disabled={!!props.model} value={props.power} onChange={ev => { props.onPowerChange(ev.target.value) }}>
+        <Select name='power' aria-labelledby='machinepower' disabled={!!props.model} value={props.power || ''} onChange={ev => { props.onPowerChange(ev.target.value) }}>
           <MenuItem key={null} value={null}>Inconnu</MenuItem>
           {props.powers.map(pwr => (
             <MenuItem key={pwr} value={pwr}>{pwr}</MenuItem>
