@@ -265,6 +265,19 @@ h2,
 }
 
 /* hack inputs */
+.MuiLinearProgress-root {
+  height: 24px !important;
+}
+
+.MuiLinearProgress-colorPrimary {
+  background: #eaeaea !important;
+}
+
+
+.MuiLinearProgress-barColorPrimary {
+  background: var(--brand-color) !important;
+}
+
 .MuiInputLabel-root {
   color: var(--text-input);
   z-index: 2;
@@ -275,19 +288,6 @@ h2,
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 }
-
-/* .machine .MuiSelect-root,
-.machine .MuiInputBase-root {
-  background: var(--bg-input) !important;
-} */
-
-/* .MuiInput-underline::after {
-  border: 0 !important;
-}
-
-.MuiInput-underline::before {
-  border: 0 !important;
-} */
 
 .MuiAccordion-root {
   box-shadow: none !important;
