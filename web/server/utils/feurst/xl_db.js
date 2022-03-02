@@ -12,8 +12,9 @@ SUPPOSITIONS:
 const {
   BLADE_SHAPES,
   FIX_TYPES,
+  MACHINE_TYPES,
   PIN,
-} = require('../../../utils/feurst_consts')
+} = require('../../../utils/feurst_consts');
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
 
@@ -190,7 +191,7 @@ const loadAccessories = wb => {
   const HEADER_ROW=2
 
   const res={}
-  'excavatrice chargeuse'.split(' ').forEach(type => {
+  Object.keys(MACHINE_TYPES).forEach(type => {
     const sheet=wb.worksheets.find(s => s.name.match(new RegExp(`_${type}`, 'i')))
     if (!sheet) {
       return null
@@ -225,8 +226,10 @@ const getDatabase = () => {
       .then(wb => {
         const errors=checkXLFormat(workbook)
         if (errors.length>0) {
+          console.error(`Invalid Feurst database:${JSON.stringify(errors)}`)
           return reject(errors)
         }
+        console.log(`Feurst database OK`)
         const machines=loadMachines(wb.getWorksheet('Machines'))
         const thicknesses=loadThicknesses(['Matrice Ep LAME_Excavatrice', 'Matrice Ep LAME_Chargeuse'].map(s => wb.getWorksheet(s)))
         const grounds=loadGrounds(wb.getWorksheet('Matrice Dents développée'))
@@ -283,10 +286,10 @@ const getTeethCount = (database, data) => {
 }
 
 const getAccessories = (database, data) => {
-  const key=[data.type, data.family, data.bladeThickness, (data.bladeShape||'').toUpperCase()]
+  const key=[data.type, data.family, data.bladeThickness, data.bladeShape]
   const acc=database.accessories[key]
+  console.log(`Configuration for ${key}:${!!acc}`)
   if (!acc) {
-    console.log(`Pas de preco pour ${key}`)
     return null
   }
   let res={}
