@@ -1,10 +1,7 @@
 const {
   BLADE_SHAPES,
-  DROITE,
   FIX_TYPES,
   PELLE_BUTTE,
-  PIN,
-  SOLD,
 } = require('../utils/feurst_consts')
 import React from 'react'
 
@@ -145,7 +142,6 @@ class Configurator extends React.Component {
 
     const nextState = {
       mark: mark,
-      model: null,
       power: null,
       weight: null,
       models: this.getList(
@@ -154,6 +150,15 @@ class Configurator extends React.Component {
       ),
     }
 
+    // Nouveau modèle : reset infos sur lame et fixations boucliers
+    Object.assign(nextState, {
+      bladeShape: null, bladeThickness: null, bucketWidth: null,
+      teethShieldFixType: null, borderShieldFixType: null},
+    )
+
+    if (!nextState.models.includes(this.state.model)) {
+      Object.assign(nextState, {model: null})
+    }
     typeMachine.length == 1 && Object.assign(nextState, {type: typeMachine[0]})
     this.setState(nextState)
   }
