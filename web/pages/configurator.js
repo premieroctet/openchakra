@@ -127,13 +127,13 @@ class Configurator extends React.Component {
       powers:
         (isShovel && []) ||
         this.getList(
-          machines,
+          machines.filter(v => v.type == type),
           'power',
         ),
       weights:
         (isShovel && []) ||
         this.getList(
-          machines,
+          machines.filter(v => v.type == type),
           'weight',
         ),
     })
