@@ -19,11 +19,17 @@ const {snackBarError, snackBarSuccess} = require('../utils/notifications')
 
 export const feurstImgPath = './static/assets/img/feurst'
 
-
+const utilizeFocus = () => {
+  const ref = React.createRef()
+  const setFocus = () => { ref.current && ref.current.focus() }
+  return {ref, setFocus}
+}
 class Configurator extends React.Component {
   constructor(props) {
     super(props)
+    this.titleFocus = utilizeFocus()
     this.state = {
+      error: null,
       step: 0,
       machines: [],
       type: '',
@@ -44,7 +50,7 @@ class Configurator extends React.Component {
       borderShieldFixType: null,
       auto_quotation: false,
     }
-
+  
   }
 
   componentDidMount = () => {
@@ -246,23 +252,23 @@ class Configurator extends React.Component {
   }
 
   onCompanyChange = company => {
-    this.setState({company})
+    this.setState({company, error: {...this.state.error, 'company': null}})
   }
 
   onFirstnameChange = firstname => {
-    this.setState({firstname})
+    this.setState({firstname, error: {...this.state.error, 'firstname': null}})
   }
 
   onNameChange = name => {
-    this.setState({name})
+    this.setState({name, error: {...this.state.error, 'name': null}})
   }
 
   onEmailChange = email => {
-    this.setState({email})
+    this.setState({email, error: {...this.state.error, 'email': null}})
   }
 
   onPhoneChange = phone => {
-    this.setState({phone})
+    this.setState({phone, error: {...this.state.error, 'phone': null}})
   }
 
   nextPage = () => {
@@ -272,12 +278,14 @@ class Configurator extends React.Component {
     this.getPrecos()
     // }
     this.setState({step: newStep})
+    this.titleFocus.setFocus()
   }
 
   previousPage = () => {
     const {step} = this.state
     const newStep = Math.max(step - 1, 0)
     this.setState({step: newStep})
+    this.titleFocus.setFocus()
   }
 
   sendAutoQuotation = () => {
@@ -308,6 +316,7 @@ class Configurator extends React.Component {
       })
       .catch(err => {
         console.error(err)
+        this.setState({error: err.response.data})
         snackBarError(JSON.stringify(err.response.data))
       })
   }
@@ -322,9 +331,9 @@ class Configurator extends React.Component {
         className="configurator relative"
       >
 
-        <h1 className='whereami'>{menu}</h1>
+        <h1 className='whereami' ref={this.titleFocus.ref} tabIndex="0">{menu}</h1>
         <ProgressBar value={step} max={STEPS.length} />
-        <div className="rounded-container m-4 p-4">
+        <div className="rounded-container m-4 p-4" >
           {component({...this.state, ...this})}
         </div>
         <div className='flex justify-between w-full nextprevZone bg-white p-4'>

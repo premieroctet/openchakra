@@ -5,14 +5,34 @@ const {
   FormControl,
   TextField,
   Input,
-  FormHelperText,
 } = require('@material-ui/core')
 const Validator = require('validator')
 import React from 'react'
 
 function Summary(props) {
 
-  const {type, mark, model, bladeShape, bucketWidth, bladeThickness, teethShieldFixType, borderShieldFixType, ground} = props
+  const {
+    error,
+    name,
+    firstname,
+    company,
+    email,
+    phone,
+    type,
+    mark,
+    model,
+    ground,
+    bladeShape,
+    bucketWidth,
+    bladeThickness,
+    teethShieldFixType,
+    borderShieldFixType,
+    onFirstnameChange,
+    onNameChange,
+    onCompanyChange,
+    onEmailChange,
+    onPhoneChange,
+  } = props
   
   return (
     <div className='summary'>
@@ -22,26 +42,66 @@ function Summary(props) {
         
         <FormControl variant="standard">
           <label htmlFor='name'>Nom</label>
-          <TextField placeholder='Saisissez votre nom' id="name" name='name' autocomplete="family-name" value={props.name} onChange={ev => props.onNameChange(ev.target.value)}/>
+          <TextField
+            placeholder='Saisissez votre nom'
+            id="name"
+            name='name'
+            autoComplete="family-name"
+            value={name}
+            error={error?.name}
+            helperText={error?.firstname}
+            onChange={ev => onNameChange(ev.target.value)}/>
         </FormControl>
         <div>
           <label htmlFor='firstname'>Prénom</label>
-          <TextField placeholder='Saisissez votre prénom' id="firstname" name='firstname' autocomplete="given-name" value={props.firstname} onChange={ev => props.onFirstnameChange(ev.target.value)}/>
+          <TextField
+            placeholder='Saisissez votre prénom'
+            id="firstname"
+            error={error?.firstname}
+            helperText={error?.firstname}
+            name='firstname'
+            autoComplete="given-name"
+            value={firstname}
+            onChange={ev => onFirstnameChange(ev.target.value)}/>
         </div>
       
         <div>
           <label htmlFor='company'>Société</label>
-          <TextField placeholder='Saisissez votre société' id="company" name='company' autocomplete="organization" value={props.company} onChange={ev => props.onCompanyChange(ev.target.value)}/>
+          <TextField
+            placeholder='Saisissez votre société'
+            id="company"
+            name='company'
+            error={error?.company}
+            helperText={error?.company}
+            autoComplete="organization"
+            value={company}
+            onChange={ev => onCompanyChange(ev.target.value)}/>
         </div>
 
         <div>
           <label htmlFor='email'>Email</label>
-          <Input placeholder='Saisissez votre email' id="email" name='email' type="email" autocomplete="email" value={props.email} onChange={ev => props.onEmailChange(ev.target.value)} />
+          <Input
+            placeholder='Saisissez votre email'
+            id="email"
+            name='email'
+            error={error?.email}
+            helperText={error?.email}
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={ev => onEmailChange(ev.target.value)} />
         </div>
         <FormControl variant="standard">
           <label htmlFor='phone'>Téléphone</label>
-          <TextField placeholder='Saisissez votre numéro de téléphone' id="phone" name='phone' autocomplete="tel" value={props.phone} onChange={ev => props.onPhoneChange(ev.target.value)}/>
-          <FormHelperText>Seuls des chiffres sont autorisés</FormHelperText>
+          <TextField
+            placeholder='Saisissez votre numéro de téléphone'
+            id="phone"
+            name='phone'
+            error={error?.phone}
+            helperText={error?.phone}
+            autoComplete="tel"
+            value={phone}
+            onChange={ev => onPhoneChange(ev.target.value)} />
         </FormControl>
       </form>
 
