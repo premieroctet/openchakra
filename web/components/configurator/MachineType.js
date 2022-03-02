@@ -26,7 +26,7 @@ function MachineType(props) {
       <div className='machine-type h-full grid content-start gap-y-4'>
         <h2>Quelle machine souhaitez-vous équiper&nbsp;?</h2>
 
-        <div className='flex justify-evenly gap-x-4'>
+        <div className='flex flex-wrap justify-evenly gap-x-4'>
           {Object.keys(MACHINE_TYPES).map(tp => (
             <label key={tp} className='flex flex-col items-center gap-y-1 relative'>
               <input className='absolute' type="radio" name='type' checked={tp === props.type || false} value={tp || ''} onChange={ev => { props.onTypeChange(ev.target.value) }} />

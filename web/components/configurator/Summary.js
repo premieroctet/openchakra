@@ -1,7 +1,12 @@
 const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
 const {isPhoneOk} = require('../../utils/sms')
 
-const {TextField} = require('@material-ui/core')
+const {
+  FormControl,
+  TextField,
+  Input,
+  FormHelperText,
+} = require('@material-ui/core')
 const Validator = require('validator')
 import React from 'react'
 
@@ -13,31 +18,32 @@ function Summary(props) {
     <div className='summary'>
       
       <h2 className='pl-6'>Recevoir ma préconisation</h2>
-      <div className='personaldata'>
+      <form className='personaldata'>
         
+        <FormControl variant="standard">
+          <label htmlFor='name'>Nom</label>
+          <TextField placeholder='Saisissez votre nom' id="name" name='name' autocomplete="family-name" value={props.name} onChange={ev => props.onNameChange(ev.target.value)}/>
+        </FormControl>
         <div>
-          <h3>Nom</h3>
-          <TextField placeholder='Saisissez votre nom' name='name' value={props.name} onChange={ev => props.onNameChange(ev.target.value)}/>
-        </div>
-        <div>
-          <h3>Prénom</h3>
-          <TextField placeholder='Saisissez votre prénom' name='firstname' value={props.firstname} onChange={ev => props.onFirstnameChange(ev.target.value)}/>
+          <label htmlFor='firstname'>Prénom</label>
+          <TextField placeholder='Saisissez votre prénom' id="firstname" name='firstname' autocomplete="given-name" value={props.firstname} onChange={ev => props.onFirstnameChange(ev.target.value)}/>
         </div>
       
         <div>
-          <h3>Société</h3>
-          <TextField placeholder='Saisissez votre société' name='company' value={props.company} onChange={ev => props.onCompanyChange(ev.target.value)}/>
+          <label htmlFor='company'>Société</label>
+          <TextField placeholder='Saisissez votre société' id="company" name='company' autocomplete="organization" value={props.company} onChange={ev => props.onCompanyChange(ev.target.value)}/>
         </div>
 
         <div>
-          <h3>Email</h3>
-          <TextField placeholder='Saisissez votre email' name='email' value={props.email} onChange={ev => props.onEmailChange(ev.target.value)} />
+          <label htmlFor='email'>Email</label>
+          <Input placeholder='Saisissez votre email' id="email" name='email' type="email" autocomplete="email" value={props.email} onChange={ev => props.onEmailChange(ev.target.value)} />
         </div>
-        <div>
-          <h3>Téléphone</h3>
-          <TextField name='phone' value={props.phone} onChange={ev => props.onPhoneChange(ev.target.value)}/>
-        </div>
-      </div>
+        <FormControl variant="standard">
+          <label htmlFor='phone'>Téléphone</label>
+          <TextField placeholder='Saisissez votre numéro de téléphone' id="phone" name='phone' autocomplete="tel" value={props.phone} onChange={ev => props.onPhoneChange(ev.target.value)}/>
+          <FormHelperText>Seuls des chiffres sont autorisés</FormHelperText>
+        </FormControl>
+      </form>
 
       <div className='recap'>
         <h2 className='text-2xl'>Récapitulatif de votre demande&nbsp;:</h2>
