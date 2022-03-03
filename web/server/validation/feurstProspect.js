@@ -22,16 +22,15 @@ module.exports = function validateFeurstProspect(data) {
   if (Validator.isEmpty(data.email)) {
     errors.email = 'Le mail doit être renseigné'
   }
-
-  if (!Validator.isEmail(data.email)) {
+  else if (!Validator.isEmail(data.email)) {
     errors.email = 'Le mail est incorrect'
   }
 
   if (isEmpty(data.phone)) {
-    errors.phone = 'Le téléphone doit être renseigné'
+    errors.phone = 'Un numéro de téléphone doit être renseigné'
   }
   else if (!Validator.isMobilePhone(data.phone, ['fr-FR'])) {
-    errors.phone = 'Le téléphone est incorrect'
+    errors.phone = 'Numéro incorrect. Ex : 0623350036'
   }
 
   if (Validator.isEmpty(data.company)) {

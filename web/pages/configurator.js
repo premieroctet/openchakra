@@ -16,7 +16,7 @@ const {STEPS} = require('./configurator/configuratorSteps')
 const ProgressBar = require('../components/ProgressBar/ProgressBar')
 const lodash = require('lodash')
 const {snackBarError, snackBarSuccess} = require('../utils/notifications')
-const Validator = require('validator')
+const validateFeurstProspect=require('../server/validation/feurstProspect')
 
 export const feurstImgPath = './static/assets/img/feurst'
 
@@ -51,7 +51,7 @@ class Configurator extends React.Component {
       borderShieldFixType: null,
       auto_quotation: false,
     }
-  
+
   }
 
   componentDidMount = () => {
@@ -252,28 +252,15 @@ class Configurator extends React.Component {
     this.setState({fixType})
   }
 
-  onCompanyChange = company => {
-    this.setState({company, error: {...this.state.error, 'company': null}})
+  isValueExpected = name => {
+    const {errors} = validateFeurstProspect(this.state)
+    if (errors[name]) {
+      this.setState({error: {...this.state.error, [name]: errors[name]}})
+    }
   }
 
-  onFirstnameChange = firstname => {
-    this.setState({firstname, error: {...this.state.error, 'firstname': null}})
-  }
-
-  onNameChange = name => {
-    this.setState({name, error: {...this.state.error, 'name': null}})
-  }
-
-  onEmailChange = email => {
-    this.setState({email, error: {...this.state.error, 'email': null}})
-  }
-
-  isValidEmail = str => {
-    !Validator.isEmail(str) && this.setState({error: {...this.state.error, 'email': 'Email incorrect'}})
-  }
-
-  onPhoneChange = phone => {
-    this.setState({phone, error: {...this.state.error, 'phone': null}})
+  onValueChange = ({inputName, value}) => {
+    this.setState({[inputName]: value, error: {...this.state.error, [inputName]: null}})
   }
 
   nextPage = () => {
