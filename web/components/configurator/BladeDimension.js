@@ -49,7 +49,7 @@ function BladeDimension(props) {
         <h2>Sélectionnez la forme de votre lame</h2>
 
         {Object.keys(availableBlades).map(shape => (
-          <div className='flex justify-center mr-8 mb-6'>
+          <div key={shape} className='flex justify-center mr-8 mb-6'>
             <Radio
               checked={props.bladeShape === shape}
               onChange={ev => props.onBladeShapeChange(ev.target.value)}
@@ -69,9 +69,9 @@ function BladeDimension(props) {
       <div>
         <h2 id='bucketthickness'>Indiquez l'épaisseur de la lame</h2>
 
-        <Select className='w-full mb-6' name='bladeThickness' value={props.bladeThickness} onChange={ev => props.onBladeThicknessChange(ev.target.value)} aria-describedby="bucketthickness">
-          {props.thicknesses.map(thick => (
-            <MenuItem value={thick}>{`${thick} mm`}</MenuItem>
+        <Select labelId='bucketthickness' className='w-full mb-6' name='bladeThickness' value={props.bladeThickness || ''} onChange={ev => props.onBladeThicknessChange(ev.target.value)} aria-describedby="bucketthickness">
+          {props.thicknesses.map((thick, index) => (
+            <MenuItem key={`${thick}-${index}`} value={thick}>{`${thick} mm`}</MenuItem>
           ))}
         </Select>
 
@@ -83,7 +83,7 @@ function BladeDimension(props) {
             name="bucketWidth"
             type='number'
             min={0}
-            value={props.bucketWidth}
+            value={props.bucketWidth || ''}
             onChange={ev => props.onBucketWidthChange(ev.target.value)}
             endAdornment={<InputAdornment position="end">mm</InputAdornment>}
             aria-describedby="bucket_width"
@@ -91,7 +91,6 @@ function BladeDimension(props) {
               'aria-label': 'largeur godet en mm',
             }}
           />
-          {/* <FormHelperText id="outlined-weight-helper-text">Weight</FormHelperText> */}
         </FormControl>
       </div>
 

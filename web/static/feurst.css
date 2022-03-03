@@ -265,6 +265,19 @@ h2,
 }
 
 /* hack inputs */
+.MuiLinearProgress-root {
+  height: 24px !important;
+}
+
+.MuiLinearProgress-colorPrimary {
+  background: #eaeaea !important;
+}
+
+
+.MuiLinearProgress-barColorPrimary {
+  background: var(--brand-color) !important;
+}
+
 .MuiInputLabel-root {
   color: var(--text-input);
   z-index: 2;
@@ -275,19 +288,6 @@ h2,
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 }
-
-/* .machine .MuiSelect-root,
-.machine .MuiInputBase-root {
-  background: var(--bg-input) !important;
-} */
-
-/* .MuiInput-underline::after {
-  border: 0 !important;
-}
-
-.MuiInput-underline::before {
-  border: 0 !important;
-} */
 
 .MuiAccordion-root {
   box-shadow: none !important;
@@ -376,6 +376,11 @@ h2,
   border: 1px solid #707070;
 }
 
+.fixtypes input:focus ~ div {
+  outline: 1px solid #707070;
+  outline-offset: 3px;
+}
+
 .fixtypes input:checked ~ div {
   background: var(--bg-blue-700);
 }
@@ -391,8 +396,9 @@ h2,
 
 
 /* Last step */
-.summary h3 {
-  color: unset;
+.summary label {
+  font-size: 1.1rem;
+  padding-bottom: 0.4rem;
 }
 
 .summary .personaldata {
@@ -400,6 +406,7 @@ h2,
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   column-gap: 2rem;
+  row-gap: 2rem;
 }
 
 .summary .recap {
@@ -425,6 +432,7 @@ h2,
 
 .summary .personaldata > div {
   display: grid;
+  align-content: baseline;
 }
 
 .summary .MuiSelect-root,
