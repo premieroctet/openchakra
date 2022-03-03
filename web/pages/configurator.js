@@ -202,7 +202,8 @@ class Configurator extends React.Component {
       machines.filter(v => v.model == model),
       'weight',
     )
-    machineWeight.length == 1 && Object.assign(nextState, {weight: machineWeight[0]})
+
+    machineWeight.length >= 1 && Object.assign(nextState, {weight: machineWeight[0]})
 
     this.setState(nextState)
   }
@@ -212,7 +213,8 @@ class Configurator extends React.Component {
   }
 
   onWeightChange = weight => {
-    this.setState({weight})
+    let castWeightString = typeof weight === 'string' ? Number(weight.replace(/,/g, '.')) : weight
+    this.setState({weight: castWeightString})
   }
 
   onBladeShapeChange = bladeShape => {

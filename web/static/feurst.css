@@ -77,6 +77,10 @@ h1:nth-child(2) {
   margin-left: 1rem;
 }
 
+h2, h3 {
+  font-size: 1.1rem !important;
+}
+
 .materialName {
   text-transform: lowercase;
 }

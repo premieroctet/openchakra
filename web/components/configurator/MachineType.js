@@ -73,24 +73,35 @@ function MachineType(props) {
 
       <div className='machine-weight grid content-between gap-y-4 h-full'>
         <h2 id="machineweight">Indiquez le tonnage de votre machine&nbsp;:</h2>
-        <Select name='weight' aria-labelledby='machineweight' disabled={!!props.model} value={props.weight || ''} onChange={ev => props.onWeightChange(ev.target.value)}>
-          <MenuItem key={null} value={null}>Inconnu</MenuItem>
-          {props.weights.map(wght => (
-            <MenuItem key={wght} value={wght}>{wght}</MenuItem>
-          ))
-          }
-        </Select>
+        <Autocomplete
+          freeSolo
+          className='w-full'
+          options={props.weights}
+          getOptionLabel={option => option.toString() }
+          aria-labelledby='machineweight'
+          value={props.weight || ''}
+          filterOptions={opts => (opts.filter(o => o >= props.weight).sort((a, b) => a - b)) }
+          renderInput={params => <TextField {...params} variant="standard" />}
+          onChange={(ev, value) => props.onWeightChange(value) }
+          onInputChange={(ev, value) => props.onWeightChange(value)}
+        />
       </div>
 
       <div className='machine-power grid content-between gap-y-4 h-full'>
         <h2 id="machinepower">Indiquez la puissance de votre machine&nbsp;:</h2>
-        <Select name='power' aria-labelledby='machinepower' disabled={!!props.model} value={props.power || ''} onChange={ev => { props.onPowerChange(ev.target.value) }}>
-          <MenuItem key={null} value={null}>Inconnu</MenuItem>
-          {props.powers.map(pwr => (
-            <MenuItem key={pwr} value={pwr}>{pwr}</MenuItem>
-          ))
-          }
-        </Select>
+
+        <Autocomplete
+          freeSolo
+          className='w-full'
+          options={props.powers}
+          getOptionLabel={option => option?.toString() }
+          aria-labelledby='machinepower'
+          value={props.power || ''}
+          filterOptions={opts => (opts.filter(o => o >= props.power).sort((a, b) => a - b)) }
+          renderInput={params => <TextField {...params} variant="standard" />}
+          onChange={(ev, value) => props.onPowerChange(value) }
+          onInputChange={(ev, value) => props.onPowerChange(value)}
+        />
       </div>
 
     </div>

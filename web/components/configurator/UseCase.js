@@ -98,7 +98,7 @@ function UseCase(props) {
                 <AccordionDetails className='flex flex-col'>
                   {groundTypes.map(groundType => (
                     <div key={groundType} className='flex items-center'>
-                      <label for={groundType.replace(/\s/g, '')}>
+                      <label htmlFor={groundType.replace(/\s/g, '')}>
                         <IOSSwitch name="ground" id={groundType.replace(/\s/g, '')} value={groundType} checked={props.ground === groundType } onChange={ev => { props.onGroundChange(ev.target.value) }} />
                         <span className='materialName'>{groundType}</span>
                       </label>
