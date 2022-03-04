@@ -197,14 +197,14 @@ class Configurator extends React.Component {
       machines.filter(v => v.model == model),
       'power',
     ) || ['']
-    powerMachine.length == 1 && Object.assign(nextState, {power: powerMachine[0]})
+    powerMachine.length == 1 && Object.assign(nextState, {power: powerMachine[0], powers: powerMachine})
 
     let machineWeight = this.getList(
       machines.filter(v => v.model == model),
       'weight',
     )
 
-    machineWeight.length >= 1 && Object.assign(nextState, {weight: machineWeight[0]})
+    machineWeight.length >= 1 && Object.assign(nextState, {weight: machineWeight[0], weights: machineWeight})
 
     this.setState(nextState)
   }
@@ -325,13 +325,14 @@ class Configurator extends React.Component {
       <Grid
         className="configurator relative"
       >
-        <h1 className='whereami' ref={this.titleFocus.ref} tabIndex="0">{t(menu)}</h1>
+        <a ref={this.titleFocus.ref} href='#'></a> {/* Lien pour remonter le focus suite actions "précédent" "suivant" */}
+        <h1 className='whereami'>{t(menu)}</h1>
         <ProgressBar value={step} max={STEPS.length} />
         <div className='app-container flex flex-col justify-between'>
           <div className="rounded-container m-4 p-4" >
             {component({...this.state, ...this})}
           </div>
-          <div className='flex justify-between w-full nextprevZone bg-white p-4'>
+          <div className='flex justify-between w-full bg-white p-4'>
             <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
               {t('NAVIGATION.previous')}
             </Button>

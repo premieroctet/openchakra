@@ -8,7 +8,7 @@ function FixTypes(props) {
   const fixtures = {
     PIN: {
       label: props.t('FIX_TYPE.pin'),
-      path: `${feurstImgPath}/fixture-lock.png`,
+      path: `${feurstImgPath}/clavette.svg`,
       width: '120',
       height: '74',
     },
@@ -64,7 +64,7 @@ function FixTypes(props) {
   )
 }
 
-  
+
 const validator = state => {
   return !!state.teethShieldFixType && !!state.borderShieldFixType
 }
