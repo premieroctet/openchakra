@@ -1,4 +1,4 @@
-const { withTranslation } = require('react-i18next');
+const {withTranslation} = require('react-i18next')
 
 const {
   CHARGEUSE,
@@ -34,7 +34,7 @@ function MachineType(props) {
               <input className='absolute' type="radio" name='type' checked={tp === props.type || false} value={tp || ''} onChange={ev => { props.onTypeChange(ev.target.value) }} />
               <div className='flex flex-col items-center bg-white z-10 p-2 rounded-xl'>
                 <img src={imagesMachine[tp]} alt='' width={80} height={80} />
-                <span className='text-center'>Une {MACHINE_TYPES[tp]}</span>
+                <span className='text-center'>{props.t(MACHINE_TYPES[tp])}</span>
               </div>
             </label>))
           }
@@ -89,7 +89,7 @@ function MachineType(props) {
       </div>
 
       <div className='machine-power grid content-between gap-y-4 h-full'>
-        <h2 id="machinepower">Indiquez la puissance de votre machine&nbsp;:</h2>
+        <h2 id="machinepower">{props.t('MACHINE_TYPE.power_label')}</h2>
 
         <Autocomplete
           freeSolo

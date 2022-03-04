@@ -1,33 +1,34 @@
+const {withTranslation} = require('react-i18next')
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
-  
-  
-function Fixtypes(props) {
-  
+
+
+function FixTypes(props) {
+
   const fixtures = {
     PIN: {
-      label: 'A claveter',
+      label: props.t('FIX_TYPE.pin'),
       path: `${feurstImgPath}/fixture-lock.png`,
       width: '120',
       height: '74',
     },
     SOLD: {
-      label: 'A souder',
+      label: props.t('FIX_TYPE.sold'),
       path: `${feurstImgPath}/fixture-sold.svg`,
       width: '120',
       height: '74',
-      
+
     },
   }
-    
-  
+
+
   return (
     <div className='fixtypes'>
-      <h2>Je souhaite une recommandation comprenant les équipements suivants&nbsp;:</h2>
+      <h2>{props.t('FIX_TYPES.fix_type_label')}</h2>
       <div className='flex flex-col gap-x-8 justify-center md-flex-row'>
 
         <div>
-          <h2 className='text-center'>Boucliers inter-dents</h2>
+          <h2 className='text-center'>{props.t('FIX_TYPES.teeth_fix_type')}</h2>
 
           <div className='flex justify-center gap-x-4'>
             {Object.keys(fixtures).map(fixType => (
@@ -43,8 +44,8 @@ function Fixtypes(props) {
         </div>
 
         <div>
-          <h2 className='text-center'>Boucliers de flancs</h2>
-        
+          <h2 className='text-center'>{props.t('FIX_TYPES.borders_fix_type')}</h2>
+
           <div className='flex justify-center gap-x-4'>
             {Object.keys(fixtures).map(fixType => (
               <label key={fixType} className='flex flex-col items-center gap-y-1 relative'>
@@ -62,10 +63,11 @@ function Fixtypes(props) {
     </div>
   )
 }
+
   
 const validator = state => {
   return !!state.teethShieldFixType && !!state.borderShieldFixType
 }
-  
-module.exports={Fixtypes, fixtypesValidator: validator}
-  
+
+const TransFixTypes=withTranslation('feurst', {withRef: true})(FixTypes)
+module.exports={FixTypes: TransFixTypes, fixtypesValidator: validator}

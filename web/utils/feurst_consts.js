@@ -3,17 +3,17 @@ const CHARGEUSE='CHARGEUSE'
 const PELLE_BUTTE='PELLE-BUTTE'
 
 const MACHINE_TYPES={
-  [EXCAVATRICE]: 'excavatrice',
-  [CHARGEUSE]: 'chargeuse',
-  [PELLE_BUTTE]: 'pelle-butte',
+  [EXCAVATRICE]: 'MACHINE_TYPE.excavator',
+  [CHARGEUSE]: 'MACHINE_TYPE.loader',
+  [PELLE_BUTTE]: 'MACHINE_TYPE.shovel',
 }
 
 const PIN='PIN'
 const SOLD='SOLD'
 
 const FIX_TYPES={
-  [PIN]: 'À claveter',
-  [SOLD]: 'À souder',
+  [PIN]: 'FIX_TYPE.pin',
+  [SOLD]: 'FIX_TYPE.sold',
 }
 
 const DROITE='DROITE'
@@ -21,9 +21,9 @@ const DELTA='DELTA'
 const SEMI_DELTA='SEMI-DELTA'
 
 const BLADE_SHAPES={
-  [DROITE]: 'Droite',
-  [DELTA]: 'Delta',
-  [SEMI_DELTA]: 'Semi-delta',
+  [DROITE]: 'BLADE_SHAPE.straight',
+  [DELTA]: 'BLADE_SHAPE.delta',
+  [SEMI_DELTA]: 'BLADE_SHAPE.semi_delta',
 }
 
 module.exports={

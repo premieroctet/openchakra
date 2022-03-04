@@ -3,36 +3,36 @@ import React from 'react'
 import {MachineType, machineTypeValidator} from '../../components/configurator/MachineType'
 import {UseCase, useCaseValidator} from '../../components/configurator/UseCase'
 import {BladeDimension, bladeDimensionValidator} from '../../components/configurator/BladeDimension'
-import {Fixtypes, fixtypesValidator} from '../../components/configurator/Fixtypes'
+import {FixTypes, fixtypesValidator} from '../../components/configurator/Fixtypes'
 import {Summary, summaryValidator} from '../../components/configurator/Summary'
 // const validationSteps=require('../../utils/validationSteps/validationSteps')
 
 const MACHINE_TYPE = {
-  menu: 'Votre machine',
+  menu: 'MACHINE_TYPE.title',
   validator: machineTypeValidator,
   component: props => <MachineType {...props}/>,
 }
 
 const USE_CASE = {
-  menu: "Vos conditions d'utilisation",
+  menu: 'USE_CASE.title',
   validator: useCaseValidator,
   component: props => <UseCase {...props}/>,
 }
 
 const BLADE_DIMENSION = {
-  menu: 'A propos de votre lame',
+  menu: 'BLADE_DIMENSION.title',
   validator: bladeDimensionValidator,
   component: props => <BladeDimension {...props}/>,
 }
 
 const FIXTYPES = {
-  menu: 'A propos de votre équipement',
+  menu: 'FIX_TYPES.title',
   validator: fixtypesValidator,
-  component: props => <Fixtypes {...props}/>,
+  component: props => <FixTypes {...props}/>,
 }
 
 const SUMMARY = {
-  menu: 'Résumé de recherche',
+  menu: 'SUMMARY.title',
   validator: summaryValidator,
   component: props => <Summary {...props}/>,
 }

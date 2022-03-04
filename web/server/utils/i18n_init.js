@@ -2,6 +2,7 @@
 TUTO : https://phrase.com/blog/posts/localizing-react-apps-with-i18next/
 */
 
+const {is_development} = require('../../config/config')
 import {initReactI18next} from 'react-i18next'
 import i18n from 'i18next'
 
@@ -28,11 +29,10 @@ i18n
     },
     ns: ['custom', 'feurst'],
     defaultNS: 'custom',
-    // debug: is_development(),
+    debug: is_development(),
     react: {
       useSuspense: false,
     },
   })
-
 
 export default i18n

@@ -1,3 +1,4 @@
+const {withTranslation} = require('react-i18next')
 const {Switch, Accordion, AccordionSummary, AccordionDetails} = require('@material-ui/core')
 
 import React from 'react'
@@ -80,7 +81,7 @@ function UseCase(props) {
 
   return (
     <>
-      <h2>Sélectionnez votre usage</h2>
+      <h2>{props.t('USE_CASE.use_case_label')}</h2>
       <div className='flex flex-col justify-center gap-x-4 md-flex-row md-flex-wrap'>
         {
           Object.entries(props.grounds).map(entry => {
@@ -119,4 +120,5 @@ const validator = state => {
   return !!state.ground
 }
 
-module.exports={UseCase, useCaseValidator: validator}
+const TransUseCase=withTranslation('feurst', {withRef: true})(UseCase)
+module.exports={UseCase: TransUseCase, useCaseValidator: validator}

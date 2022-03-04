@@ -325,7 +325,7 @@ class Configurator extends React.Component {
       <Grid
         className="configurator relative"
       >
-        <h1 className='whereami' ref={this.titleFocus.ref} tabIndex="0">{menu}</h1>
+        <h1 className='whereami' ref={this.titleFocus.ref} tabIndex="0">{t(menu)}</h1>
         <ProgressBar value={step} max={STEPS.length} />
         <div className='app-container flex flex-col justify-between'>
           <div className="rounded-container m-4 p-4" >
@@ -342,8 +342,12 @@ class Configurator extends React.Component {
 
             {STEPS.length - 1 === step &&
           <div className='flex gap-x-4'>
-            <Button className='previous' disabled={!validator(this.state)} onClick={this.sendCustomQuotation}>Contacter un expert</Button>
-            {this.state.auto_quotation && <Button className='next' disabled={!validator(this.state)} onClick={this.sendAutoQuotation}>Recevoir ma configuration</Button>}
+            <Button className='previous' disabled={!validator(this.state)} onClick={this.sendCustomQuotation}>
+              {t('SUMMARY.contact_expert')}
+            </Button>
+            {this.state.auto_quotation && <Button className='next' disabled={!validator(this.state)} onClick={this.sendAutoQuotation}>
+              {t('SUMMARY.receive_quotation')}
+            </Button>}
           </div>
             }
           </div>

@@ -1,3 +1,4 @@
+const {withTranslation} = require('react-i18next')
 const {
   BLADE_SHAPES,
   CHARGEUSE,
@@ -22,19 +23,19 @@ function BladeDimension(props) {
 
   const blades = {
     [DROITE]: {
-      label: BLADE_SHAPES[DROITE],
+      label: props.t(BLADE_SHAPES[DROITE]),
       path: `${feurstImgPath}/lame-droite.svg`,
       width: '120',
       height: '74',
     },
     [SEMI_DELTA]: {
-      label: BLADE_SHAPES[SEMI_DELTA],
+      label: props.t(BLADE_SHAPES[SEMI_DELTA]),
       path: `${feurstImgPath}/lame-semidelta.svg`,
       width: '120',
       height: '74',
     },
     [DELTA]: {
-      label: BLADE_SHAPES[DELTA],
+      label: props.t(BLADE_SHAPES[DELTA]),
       path: `${feurstImgPath}/lame-delta.svg`,
       width: '120',
       height: '74',
@@ -46,7 +47,7 @@ function BladeDimension(props) {
   return (
     <div className='flex flex-col gap-x-4 md-flex-row justify-evenly gap-x-8'>
       <div>
-        <h2>Sélectionnez la forme de votre lame</h2>
+        <h2>{props.t('BLADE_DIMENSIONS.blade_shape_label')}</h2>
 
         {Object.keys(availableBlades).map(shape => (
           <div key={shape} className='flex justify-center mr-8 mb-6'>
@@ -67,7 +68,7 @@ function BladeDimension(props) {
       </div>
 
       <div>
-        <h2 id='bucketthickness'>Indiquez l'épaisseur de la lame</h2>
+        <h2 id='bucketthickness'>{props.t('BLADE_DIMENSION.blade_thickness_label')}</h2>
 
         <Select labelId='bucketthickness' className='w-full mb-6' name='bladeThickness' value={props.bladeThickness || ''} onChange={ev => props.onBladeThicknessChange(ev.target.value)} aria-describedby="bucketthickness">
           {props.thicknesses.map((thick, index) => (
@@ -75,7 +76,7 @@ function BladeDimension(props) {
           ))}
         </Select>
 
-        <h2 id="bucketWidth">Indiquez la largeur de votre godet</h2>
+        <h2 id="bucketWidth">{props.t('BLADE_DIMENSION.bucket_width_label')}</h2>
 
         <FormControl className='w-full mb-6' variant="standard">
           <Input
@@ -105,4 +106,5 @@ const validator = state => {
   return !!state.bladeShape && !!state.bladeThickness
 }
 
-module.exports={BladeDimension, bladeDimensionValidator: validator}
+const TransBladeDimension=withTranslation('feurst', {withRef: true})(BladeDimension)
+module.exports={BladeDimension: TransBladeDimension, bladeDimensionValidator: validator}
