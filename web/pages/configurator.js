@@ -16,7 +16,7 @@ const {STEPS} = require('./configurator/configuratorSteps')
 const ProgressBar = require('../components/ProgressBar/ProgressBar')
 const lodash = require('lodash')
 const {snackBarError, snackBarSuccess} = require('../utils/notifications')
-const Validator = require('validator')
+const validateFeurstProspect=require('../server/validation/feurstProspect')
 
 export const feurstImgPath = './static/assets/img/feurst'
 
@@ -203,7 +203,8 @@ class Configurator extends React.Component {
       machines.filter(v => v.model == model),
       'weight',
     )
-    machineWeight.length == 1 && Object.assign(nextState, {weight: machineWeight[0]})
+
+    machineWeight.length >= 1 && Object.assign(nextState, {weight: machineWeight[0]})
 
     this.setState(nextState)
   }
@@ -213,7 +214,8 @@ class Configurator extends React.Component {
   }
 
   onWeightChange = weight => {
-    this.setState({weight})
+    let castWeightString = typeof weight === 'string' ? Number(weight.replace(/,/g, '.')) : weight
+    this.setState({weight: castWeightString})
   }
 
   onBladeShapeChange = bladeShape => {
@@ -253,28 +255,15 @@ class Configurator extends React.Component {
     this.setState({fixType})
   }
 
-  onCompanyChange = company => {
-    this.setState({company, error: {...this.state.error, 'company': null}})
+  isValueExpected = name => {
+    const {errors} = validateFeurstProspect(this.state)
+    if (errors[name]) {
+      this.setState({error: {...this.state.error, [name]: errors[name]}})
+    }
   }
 
-  onFirstnameChange = firstname => {
-    this.setState({firstname, error: {...this.state.error, 'firstname': null}})
-  }
-
-  onNameChange = name => {
-    this.setState({name, error: {...this.state.error, 'name': null}})
-  }
-
-  onEmailChange = email => {
-    this.setState({email, error: {...this.state.error, 'email': null}})
-  }
-
-  isValidEmail = str => {
-    !Validator.isEmail(str) && this.setState({error: {...this.state.error, 'email': 'Email incorrect'}})
-  }
-
-  onPhoneChange = phone => {
-    this.setState({phone, error: {...this.state.error, 'phone': null}})
+  onValueChange = ({inputName, value}) => {
+    this.setState({[inputName]: value, error: {...this.state.error, [inputName]: null}})
   }
 
   nextPage = () => {
@@ -338,23 +327,26 @@ class Configurator extends React.Component {
       >
         <h1 className='whereami' ref={this.titleFocus.ref} tabIndex="0">{menu}</h1>
         <ProgressBar value={step} max={STEPS.length} />
-        <div className="rounded-container m-4 p-4" >
-          {component({...this.state, ...this})}
-        </div>
-        <div className='flex justify-between w-full nextprevZone bg-white p-4'>
-          <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
-            {t('NAVIGATION.previous')}
-          </Button>
-          {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
-            {t('NAVIGATION.next')}
-          </Button> : null}
+        <div className='app-container flex flex-col justify-between'>
+          <div className="rounded-container m-4 p-4" >
+            {component({...this.state, ...this})}
+          </div>
+          <div className='flex justify-between w-full nextprevZone bg-white p-4'>
+            <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
+              {t('NAVIGATION.previous')}
+            </Button>
+            {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
+              {t('NAVIGATION.next')}
+            </Button> : null}
 
-          {STEPS.length - 1 === step &&
+
+            {STEPS.length - 1 === step &&
           <div className='flex gap-x-4'>
             <Button className='previous' disabled={!validator(this.state)} onClick={this.sendCustomQuotation}>Contacter un expert</Button>
             {this.state.auto_quotation && <Button className='next' disabled={!validator(this.state)} onClick={this.sendAutoQuotation}>Recevoir ma configuration</Button>}
           </div>
-          }
+            }
+          </div>
         </div>
       </Grid>)
 

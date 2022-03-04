@@ -8,6 +8,10 @@ const {
 const Validator = require('validator')
 import React from 'react'
 
+const RequiredField = () => (
+  <span className='asterixsm text-sm' aria-label='requis'>*</span>
+)
+
 function Summary(props) {
 
   const {
@@ -26,81 +30,83 @@ function Summary(props) {
     bladeThickness,
     teethShieldFixType,
     borderShieldFixType,
-    onFirstnameChange,
-    onNameChange,
-    onCompanyChange,
-    onEmailChange,
-    isValidEmail,
-    onPhoneChange,
+    isValueExpected,
+    onValueChange,
   } = props
+
+  const formInputs = [
+    {
+      label: 'Nom',
+      placeholder: 'Saisissez votre nom',
+      name: 'name',
+      id: 'name',
+      autoComplete: 'family-name',
+      value: name,
+      required: true,
+    },
+    {
+      label: 'Prénom',
+      placeholder: 'Saisissez votre prénom',
+      name: 'firstname',
+      id: 'firstname',
+      autoComplete: 'given-name',
+      value: firstname,
+      required: true,
+    },
+    {
+      label: 'Société',
+      placeholder: 'Saisissez votre société',
+      name: 'company',
+      id: 'company',
+      autoComplete: 'organization',
+      value: company,
+      required: true,
+    },
+    {
+      type: 'email',
+      label: 'Email',
+      placeholder: 'Saisissez votre email',
+      name: 'email',
+      id: 'email',
+      autoComplete: 'email',
+      value: email,
+      required: true,
+    },
+    {
+      type: 'tel',
+      label: 'Téléphone',
+      placeholder: 'Saisissez votre numéro de téléphone',
+      name: 'phone',
+      id: 'phone',
+      autoComplete: 'tel',
+      value: phone,
+      required: true,
+    },
+  ]
   
   return (
     <div className='summary'>
       <h2 className='pl-6'>Recevoir ma préconisation</h2>
+      <p className='text-base text-right'><RequiredField /> Champs obligatoires</p>
       <form className='personaldata'>
-        <FormControl variant="standard">
-          <label htmlFor='name'>Nom</label>
-          <TextField
-            placeholder='Saisissez votre nom'
-            id="name"
-            name='name'
-            autoComplete="family-name"
-            value={name}
-            error={error?.name || false}
-            helperText={error?.firstname}
-            onChange={ev => onNameChange(ev.target.value)}/>
-        </FormControl>
-        <FormControl variant="standard">
-          <label htmlFor='firstname'>Prénom</label>
-          <TextField
-            placeholder='Saisissez votre prénom'
-            id="firstname"
-            error={error?.firstname || false}
-            helperText={error?.firstname}
-            name='firstname'
-            autoComplete="given-name"
-            value={firstname}
-            onChange={ev => onFirstnameChange(ev.target.value)}/>
-        </FormControl>
-        <FormControl variant="standard">
-          <label htmlFor='company'>Société</label>
-          <TextField
-            placeholder='Saisissez votre société'
-            id="company"
-            name='company'
-            error={error?.company || false}
-            helperText={error?.company}
-            autoComplete="organization"
-            value={company}
-            onChange={ev => onCompanyChange(ev.target.value)}/>
-        </FormControl>
-        <FormControl variant="standard">
-          <label htmlFor='email'>Email</label>
-          <TextField
-            placeholder='Saisissez votre email'
-            id="email"
-            name='email'
-            error={error?.email || false}
-            helperText={error?.email}
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={ev => onEmailChange(ev.target.value)}
-            onBlur={ev => isValidEmail(ev.target.value)}
-          />
-        </FormControl>
-        <FormControl variant="standard">
-          <label htmlFor='phone'>Téléphone</label>
-          <TextField
-            placeholder='Saisissez votre numéro de téléphone'
-            id="phone"
-            name='phone'
-            error={error?.phone || false}
-            helperText={error?.phone}
-            autoComplete="tel"
-            value={phone}
-            onChange={ev => onPhoneChange(ev.target.value)} />
-        </FormControl>
+
+        {formInputs.map((inp, i) => (
+          <FormControl key={`summary${i}`} variant="standard">
+            <label htmlFor={inp.id}>{inp.label} {inp.required && <RequiredField />}</label>
+            <TextField
+              placeholder={inp.placeholder}
+              id={inp.id}
+              name={inp.name}
+              type={inp?.type || 'text'}
+              required
+              autoComplete={inp.autoComplete}
+              value={inp.value}
+              error={!!error?.[inp.name] || false}
+              helperText={error?.[inp.name] || null}
+              onChange={ev => onValueChange({inputName: inp.name, value: ev.target.value})}
+              onBlur={() => isValueExpected(inp.name)}
+            />
+          </FormControl>))}
       </form>
 
       <div className='recap'>
