@@ -50,6 +50,9 @@ body {
 
 /* textes */
 
+.text-sm {
+  font-size: 0.875rem;
+}
 .text-base {
   font-size: var(--text-base);
 }
@@ -93,6 +96,14 @@ h2, h3 {
   text-align: center;
 }
 
+.text-right {
+  text-align: right;
+}
+
+.asterixsm {
+  color: red;
+}
+
 .configurator > *,
 h2,
 .MuiTypography-root {
@@ -104,8 +115,6 @@ h2,
 .machine {
   grid-template-areas: 'machinetype' 'machinebrand' 'machinemodel' 'machineweight' 'machinepower';
   grid-template-columns: 1fr;
-  /* justify-items: flex-start;
-  align-items: center; */
 }
 
 .machine-type {
@@ -336,15 +345,15 @@ h2,
 
 /* pseudo components */
 
+.app-container {
+  min-height: 60vh;
+}
+
 .rounded-container {
   background: #fff;
   margin: 1rem;
   padding: 1rem;
   border-radius: 20px;
-  overflow: scroll;
-  min-height: 50vh;
-  max-height: 80vh;
-  /* max-width: 1200px; */
 }
 
 .whereami {
@@ -352,7 +361,6 @@ h2,
 }
 
 .nextprevZone {
-  margin-top: 20rem;
   position: sticky;
   bottom: 0;
   left: 0;
@@ -467,10 +475,6 @@ h2,
 @media screen and (min-width: 1200px) {
   body {
     background: none !important;
-  }
-
-  .configurator {
-    margin: 8rem;
   }
 
   .whereami {

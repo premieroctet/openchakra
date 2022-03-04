@@ -8,6 +8,10 @@ const {
 const Validator = require('validator')
 import React from 'react'
 
+const RequiredField = () => (
+  <span className='asterixsm text-sm' aria-label='requis'>*</span>
+)
+
 function Summary(props) {
 
   const {
@@ -38,6 +42,7 @@ function Summary(props) {
       id: 'name',
       autoComplete: 'family-name',
       value: name,
+      required: true,
     },
     {
       label: 'Prénom',
@@ -46,6 +51,7 @@ function Summary(props) {
       id: 'firstname',
       autoComplete: 'given-name',
       value: firstname,
+      required: true,
     },
     {
       label: 'Société',
@@ -54,6 +60,7 @@ function Summary(props) {
       id: 'company',
       autoComplete: 'organization',
       value: company,
+      required: true,
     },
     {
       type: 'email',
@@ -63,6 +70,7 @@ function Summary(props) {
       id: 'email',
       autoComplete: 'email',
       value: email,
+      required: true,
     },
     {
       type: 'tel',
@@ -72,18 +80,19 @@ function Summary(props) {
       id: 'phone',
       autoComplete: 'tel',
       value: phone,
+      required: true,
     },
   ]
   
   return (
     <div className='summary'>
       <h2 className='pl-6'>Recevoir ma préconisation</h2>
-      <p>Tous les champs sont obligatoires</p>
+      <p className='text-base text-right'><RequiredField /> Champs obligatoires</p>
       <form className='personaldata'>
 
         {formInputs.map((inp, i) => (
           <FormControl key={`summary${i}`} variant="standard">
-            <label htmlFor={inp.id}>{inp.label}</label>
+            <label htmlFor={inp.id}>{inp.label} {inp.required && <RequiredField />}</label>
             <TextField
               placeholder={inp.placeholder}
               id={inp.id}

@@ -327,23 +327,25 @@ class Configurator extends React.Component {
 
         <h1 className='whereami' ref={this.titleFocus.ref} tabIndex="0">{menu}</h1>
         <ProgressBar value={step} max={STEPS.length} />
-        <div className="rounded-container m-4 p-4" >
-          {component({...this.state, ...this})}
-        </div>
-        <div className='flex justify-between w-full nextprevZone bg-white p-4'>
-          <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
+        <div className='app-container flex flex-col justify-between'>
+          <div className="rounded-container m-4 p-4" >
+            {component({...this.state, ...this})}
+          </div>
+          <div className='flex justify-between w-full nextprevZone bg-white p-4'>
+            <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
             Précédent
-          </Button>
-          {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>Suivant
-          </Button> : null}
+            </Button>
+            {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>Suivant
+            </Button> : null}
 
 
-          {STEPS.length - 1 === step &&
+            {STEPS.length - 1 === step &&
           <div className='flex gap-x-4'>
             <Button className='previous' disabled={!validator(this.state)} onClick={this.sendCustomQuotation}>Contacter un expert</Button>
             {this.state.auto_quotation && <Button className='next' disabled={!validator(this.state)} onClick={this.sendAutoQuotation}>Recevoir ma configuration</Button>}
           </div>
-          }
+            }
+          </div>
         </div>
       </Grid>)
 
