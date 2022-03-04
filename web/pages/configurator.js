@@ -52,10 +52,12 @@ class Configurator extends React.Component {
       borderShieldFixType: null,
       auto_quotation: false,
     }
-  
+
   }
 
   componentDidMount = () => {
+    // Hide Tawk TO
+    Tawk_API.hideWidget()
     setAxiosAuthentication()
     axios
       .get('/feurst/api/database')
@@ -329,14 +331,13 @@ class Configurator extends React.Component {
 
   render = () => {
     const {step} = this.state
-
+    const {t} = this.props
     const {component, validator, menu} = STEPS[step]
 
     return (
       <Grid
         className="configurator relative"
       >
-
         <h1 className='whereami' ref={this.titleFocus.ref} tabIndex="0">{menu}</h1>
         <ProgressBar value={step} max={STEPS.length} />
         <div className="rounded-container m-4 p-4" >
@@ -344,11 +345,11 @@ class Configurator extends React.Component {
         </div>
         <div className='flex justify-between w-full nextprevZone bg-white p-4'>
           <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
-            Précédent
+            {t('NAVIGATION.previous')}
           </Button>
-          {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>Suivant
+          {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
+            {t('NAVIGATION.next')}
           </Button> : null}
-
 
           {STEPS.length - 1 === step &&
           <div className='flex gap-x-4'>
@@ -363,4 +364,4 @@ class Configurator extends React.Component {
 }
 
 
-module.exports = withTranslation('custom', {withRef: true})(Configurator)
+module.exports = withTranslation('feurst', {withRef: true})(Configurator)
