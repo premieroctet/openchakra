@@ -1,0 +1,9 @@
+{
+  "NAVIGATION.previous": "Précédent",
+  "NAVIGATION.next": "Suivant",
+  "MACHINE_TYPE.type_label": "Quelle machine souhaitez-vous équiper ?",
+  "MACHINE_TYPE.brand_label": "Indiquez la marque de votre machine:",
+  "MACHINE_TYPE.model_label": "Choisissez le modèle de votre machine:",
+  "MACHINE_TYPE.weight_label": "Indiquez le tonnage de votre machine:",
+  "MACHINE_TYPE.power_label": "Indiquez la puissance de votre machine:"
+}

@@ -1,3 +1,4 @@
+const { withTranslation } = require('react-i18next');
 
 const {
   CHARGEUSE,
@@ -25,7 +26,7 @@ function MachineType(props) {
     <div className='grid machine gap-x-8 gap-y-4 md-gap-y-8'>
 
       <div className='machine-type h-full grid content-start gap-y-4'>
-        <h2>Quelle machine souhaitez-vous équiper&nbsp;?</h2>
+        <h2>{props.t('MACHINE_TYPE.type_label')}</h2>
 
         <div className='flex flex-wrap justify-evenly gap-x-4'>
           {Object.keys(MACHINE_TYPES).map(tp => (
@@ -41,7 +42,7 @@ function MachineType(props) {
       </div>
 
       <div className='machine-brand grid content-between gap-y-4 h-full'>
-        <h2 id="machinebrand">Indiquez la marque de votre machine&nbsp;:</h2>
+        <h2 id="machinebrand">{props.t('MACHINE_TYPE.brand_label')}</h2>
         <Autocomplete
           freeSolo
           className='w-full'
@@ -57,7 +58,7 @@ function MachineType(props) {
 
 
       <div className='machine-model grid content-between gap-y-4 h-full'>
-        <h2 id="machinemodel">Choisissez le modèle de votre machine&nbsp;:</h2>
+        <h2 id="machinemodel">{props.t('MACHINE_TYPE.model_label')}</h2>
         <Autocomplete
           freeSolo
           className='w-full'
@@ -72,7 +73,7 @@ function MachineType(props) {
       </div>
 
       <div className='machine-weight grid content-between gap-y-4 h-full'>
-        <h2 id="machineweight">Indiquez le tonnage de votre machine&nbsp;:</h2>
+        <h2 id="machineweight">{props.t('MACHINE_TYPE.weight_label')}</h2>
         <Select name='weight' aria-labelledby='machineweight' disabled={!!props.model} value={props.weight || ''} onChange={ev => props.onWeightChange(ev.target.value)}>
           <MenuItem key={null} value={null}>Inconnu</MenuItem>
           {props.weights.map(wght => (
@@ -102,4 +103,5 @@ const validator= state => {
   return res
 }
 
-module.exports={MachineType, machineTypeValidator: validator}
+const TransMachineType=withTranslation('feurst', {withRef: true})(MachineType)
+module.exports={MachineType: TransMachineType, machineTypeValidator: validator}

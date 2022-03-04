@@ -56,8 +56,6 @@ class Configurator extends React.Component {
   }
 
   componentDidMount = () => {
-    // Hide Tawk TO
-    Tawk_API.hideWidget()
     setAxiosAuthentication()
     axios
       .get('/feurst/api/database')
