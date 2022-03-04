@@ -1,4 +1,3 @@
-
 const {
   CHARGEUSE,
   EXCAVATRICE,
@@ -8,7 +7,7 @@ const {
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
 
-const {MenuItem, Select, TextField} = require('@material-ui/core')
+const {TextField} = require('@material-ui/core')
 const {Autocomplete} = require('@material-ui/lab')
 const {normalize} = require('../../utils/text')
 
@@ -80,6 +79,7 @@ function MachineType(props) {
           getOptionLabel={option => option.toString() }
           aria-labelledby='machineweight'
           value={props.weight || ''}
+          disabled={props.model?.includes(props.model) && props.weights?.length===1}
           filterOptions={opts => (opts.filter(o => o >= props.weight).sort((a, b) => a - b)) }
           renderInput={params => <TextField {...params} variant="standard" />}
           onChange={(ev, value) => props.onWeightChange(value) }
@@ -97,6 +97,7 @@ function MachineType(props) {
           getOptionLabel={option => option?.toString() }
           aria-labelledby='machinepower'
           value={props.power || ''}
+          disabled={props.model?.includes(props.model) && props.powers?.length===1}
           filterOptions={opts => (opts.filter(o => o >= props.power).sort((a, b) => a - b)) }
           renderInput={params => <TextField {...params} variant="standard" />}
           onChange={(ev, value) => props.onPowerChange(value) }

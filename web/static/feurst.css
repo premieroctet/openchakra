@@ -37,7 +37,6 @@ body {
   padding: 0;
   margin: 0;
   min-height: 100vh;
-  background: var(--bg-app) !important;
 }
 
 /* Avoid Chrome to see Safari hack */
@@ -360,12 +359,6 @@ h2,
   display: none;
 }
 
-.nextprevZone {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-}
-
 .previous,
 .next {
   appearance: none !important;
@@ -490,11 +483,6 @@ h2,
   .machine {
     grid-template-areas: 'machinetype machinebrand machinemodel' 'machinetype machineweight machinepower';
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  .nextprevZone {
-    margin-top: unset;
-    position: unset;
   }
 
   .previous,

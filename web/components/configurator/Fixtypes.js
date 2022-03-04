@@ -7,7 +7,7 @@ function Fixtypes(props) {
   const fixtures = {
     PIN: {
       label: 'A claveter',
-      path: `${feurstImgPath}/fixture-lock.png`,
+      path: `${feurstImgPath}/clavette.svg`,
       width: '120',
       height: '74',
     },
