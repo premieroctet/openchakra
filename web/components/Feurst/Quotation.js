@@ -28,7 +28,7 @@ class Quotation extends React.Component {
   }
 
   render() {
-    const {data}=this.props
+    const {data, t}=this.props
 
     return (
       <Document>
@@ -56,12 +56,12 @@ class Quotation extends React.Component {
               <Text>Récapitulatif de votre demande:</Text>
               <Text><span style={styles.lightText}>Votre machine: </span>{data.type}-{data.mark} {data.model}</Text>
               <Text><span style={styles.lightText}>Votre terrain: </span>{data.ground}</Text>
-              <Text><span style={styles.lightText}>Votre godet/lame: </span>{BLADE_SHAPES[data.bladeShape]} - L : {data.bucketWidth && `${data.bucketWidth}mm` || 'inconnue'}</Text>
+              <Text><span style={styles.lightText}>Votre godet/lame: </span>{t(BLADE_SHAPES[data.bladeShape])} - L : {data.bucketWidth && `${data.bucketWidth}mm` || 'inconnue'}</Text>
             </View>
             <View style={styles.summaryBlock}>
               <Text>Votre équipement:</Text>
-              <Text>Boucliers inter-dents: {FIX_TYPES[data.teethShieldFixType]}</Text>
-              <Text>Boucliers de flancs: {FIX_TYPES[data.borderShieldFixType]}</Text>
+              <Text>Boucliers inter-dents: {t(FIX_TYPES[data.teethShieldFixType])}</Text>
+              <Text>Boucliers de flancs: {t(FIX_TYPES[data.borderShieldFixType])}</Text>
             </View>
           </View>
           <View style={styles.contents}>
