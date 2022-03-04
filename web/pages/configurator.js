@@ -42,6 +42,7 @@ class Configurator extends React.Component {
       powers: [],
       weight: null,
       weights: [],
+      bladeShape: null,
       bladeThickness: null,
       bucketWidth: null,
       thicknesses: [],

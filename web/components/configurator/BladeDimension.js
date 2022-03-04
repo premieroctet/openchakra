@@ -1,8 +1,8 @@
 const {
   BLADE_SHAPES,
+  CHARGEUSE,
   DELTA,
   DROITE,
-  EXCAVATRICE,
   SEMI_DELTA,
 } = require('../../utils/feurst_consts')
 const {
@@ -41,7 +41,7 @@ function BladeDimension(props) {
     },
   }
 
-  const availableBlades=lodash.pick(blades, [DROITE, props.type==EXCAVATRICE ? SEMI_DELTA : DELTA])
+  const availableBlades=lodash.pick(blades, [DROITE, props.type==CHARGEUSE ? DELTA : SEMI_DELTA])
 
   return (
     <div className='flex flex-col gap-x-4 md-flex-row justify-evenly gap-x-8'>
