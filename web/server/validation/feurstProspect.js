@@ -1,5 +1,6 @@
 const Validator = require('validator')
 const isEmpty = require('./is-empty')
+import parsePhoneNumber from 'libphonenumber-js'
 
 module.exports = function validateFeurstProspect(data) {
   let errors = {}
@@ -7,8 +8,9 @@ module.exports = function validateFeurstProspect(data) {
   data.firstname = data.firstname || ''
   data.name = data.name || ''
   data.email = data.email || ''
-  data.phone = data.phone || ''
+  data.rawphone = data.rawphone || ''
   data.company = data.company || ''
+  const phoneNumber = parsePhoneNumber(data.rawphone, data.langIsoCode || 'FR')
 
 
   if (Validator.isEmpty(data.firstname)) {
@@ -26,11 +28,11 @@ module.exports = function validateFeurstProspect(data) {
     errors.email = 'Le mail est incorrect'
   }
 
-  if (isEmpty(data.phone)) {
+  if (isEmpty(data.rawphone)) {
     errors.phone = 'Un numéro de téléphone doit être renseigné'
   }
-  else if (!Validator.isMobilePhone(data.phone, ['fr-FR'])) {
-    errors.phone = 'Numéro incorrect. Ex : 0623350036'
+  else if (!phoneNumber.isValid()) {
+    errors.phone = 'Numéro invalide'
   }
 
   if (Validator.isEmpty(data.company)) {

@@ -17,6 +17,7 @@ const ProgressBar = require('../components/ProgressBar/ProgressBar')
 const lodash = require('lodash')
 const {snackBarError, snackBarSuccess} = require('../utils/notifications')
 const validateFeurstProspect=require('../server/validation/feurstProspect')
+import parsePhoneNumber from 'libphonenumber-js'
 
 export const feurstImgPath = './static/assets/img/feurst'
 
@@ -255,11 +256,19 @@ class Configurator extends React.Component {
     this.setState({fixType})
   }
 
-  isValueExpected = name => {
+  isValueExpected = fieldname => {
     const {errors} = validateFeurstProspect(this.state)
-    if (errors[name]) {
-      this.setState({error: {...this.state.error, [name]: errors[name]}})
+    if (errors[fieldname]) {
+      this.setState({error: {...this.state.error, [fieldname]: errors[fieldname]}})
     }
+  }
+ 
+  onPhoneChange = (numberPhone, langIsoCode) => {
+    const checkPhone = parsePhoneNumber(numberPhone, langIsoCode)
+    this.setState({
+      'rawphone': numberPhone,
+      'langIsoCode': langIsoCode || 'fr',
+      'phone': checkPhone?.number || numberPhone, error: {...this.state.error, phone: null}})
   }
 
   onValueChange = ({inputName, value}) => {
@@ -332,10 +341,11 @@ class Configurator extends React.Component {
           <div className="rounded-container m-4 p-4" >
             {component({...this.state, ...this})}
           </div>
-          <div className='flex justify-between w-full bg-white p-4'>
-            <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
+          <div className='flex justify-between w-full bg-white p-4 mb-6'>
+            {step !== 0 ?
+              <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
             Précédent
-            </Button>
+              </Button> : <div></div>}
             {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>Suivant
             </Button> : null}
 
