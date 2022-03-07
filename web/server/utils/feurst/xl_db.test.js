@@ -1,14 +1,9 @@
 const {computePrecos} = require('./xl_db')
 
 // excavatrice FKM 15
-const EX_FKM_15 = {type: 'excavatrice', mark: 'BOBCAT', model: 'E 08', power: 7.4,
-  weight: 1, bladeThickness: 15, bladeShape: 'DROITE', ground: 'GRAVIER',
-  borderShieldFixType: 'PIN', teethShieldFixType: 'PIN'}
+const EX_FKM_15 = {type: 'excavatrice', mark: 'BOBCAT', model: 'E 08', power: 7.4, weight: 1, ground: 'GRAVIER'}
 // excavatrice FK9 45
-const EX_FK9_45 = {type: 'excavatrice', mark: 'CATERPILLAR', model: '235 C',
-  power: 186, weight: 30.9, bladeThickness: 45, bladeShape: 'DROITE',
-  ground: 'GRAVIER', fixType: null,
-  borderShieldFixType: 'PIN', teethShieldFixType: 'PIN'}
+const EX_FK9_45 = {type: 'excavatrice', mark: 'CATERPILLAR', model: '235 C', power: 186, weight: 30.9, ground: 'GRAVIER'}
 
 const cases=[[EX_FKM_15, 'FKM'], [EX_FK9_45, 'FK9']]
 describe('Feurst families', () => {
