@@ -1,5 +1,5 @@
 const Validator = require('validator')
-
+const {isValidPhoneNumber} = require('libphonenumber-js')
 
 class RegExpParam extends RegExp {
 
@@ -30,9 +30,13 @@ const fillSms = (pattern, values) => {
 const isPhoneOk = value => {
   return Validator.isMobilePhone(value, ['fr-FR'])
 }
-const isEmailOk = value => {
-  return Validator.isEmail(value)
 
+const isInternationalPhoneOK = (value, langIsoCode = 'FR') => {
+  return isValidPhoneNumber(value, langIsoCode)
 }
 
-module.exports = {fillSms, isPhoneOk, isEmailOk}
+const isEmailOk = value => {
+  return Validator.isEmail(value)
+}
+
+module.exports = {fillSms, isPhoneOk, isEmailOk, isInternationalPhoneOK}

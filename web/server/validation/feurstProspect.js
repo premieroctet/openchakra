@@ -1,6 +1,6 @@
 const Validator = require('validator')
 const isEmpty = require('./is-empty')
-import parsePhoneNumber from 'libphonenumber-js'
+import {isInternationalPhoneOK} from '../../utils/sms'
 
 module.exports = function validateFeurstProspect(data) {
   let errors = {}
@@ -10,7 +10,6 @@ module.exports = function validateFeurstProspect(data) {
   data.email = data.email || ''
   data.rawphone = data.rawphone || ''
   data.company = data.company || ''
-  const phoneNumber = parsePhoneNumber(data.rawphone, data.langIsoCode || 'FR')
 
 
   if (Validator.isEmpty(data.firstname)) {
@@ -31,7 +30,7 @@ module.exports = function validateFeurstProspect(data) {
   if (isEmpty(data.rawphone)) {
     errors.phone = 'Un numéro de téléphone doit être renseigné'
   }
-  else if (!phoneNumber.isValid()) {
+  else if (!isInternationalPhoneOK(data.rawphone, data.langIsoCode || 'FR')) {
     errors.phone = 'Numéro invalide'
   }
 

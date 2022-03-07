@@ -1,3 +1,4 @@
+const {is_development} = require('../../config/config')
 const axios = require('axios')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 const Quotation = require('../Feurst/Quotation')
@@ -7,7 +8,7 @@ import NoSSR from 'react-no-ssr'
 
 const {withTranslation} = require('react-i18next')
 const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
-const {isPhoneOk} = require('../../utils/sms')
+const {isInternationalPhoneOK} = require('../../utils/sms')
 const {normalize} = require('../../utils/text')
 
 const {Autocomplete} = require('@material-ui/lab')
@@ -159,6 +160,7 @@ function Summary(props) {
   ]
 
   useEffect(() => {
+    console.log(`Into axios post`)
     if (is_development()) {
       setAxiosAuthentication()
       const data=lodash.pick(props, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape'.split(' '))
@@ -167,7 +169,7 @@ function Summary(props) {
           setPrecos(res.data)
         })
     }
-  })
+  }, [])
 
   return (
     <div className='summary'>
@@ -196,8 +198,7 @@ function Summary(props) {
         <PhoneNumber {...props} />
       </form>
 
-      <p className='feurstconditions mb-6'>Feurst® a besoin des coordonnées que vous nous fournissez pour vous contacter au sujet de nos produits et services. Vous pouvez vous désabonner de ces communications à tout moment. Consultez notre Politique de confidentialité pour en savoir plus sur nos modalités de désabonnement, ainsi que sur nos politiques de confidentialité et sur notre engagement vis-à-vis de la protection et de la vie privée.
-      </p>
+      <p className='feurstconditions mb-6'>{props.t('SUMMARY.rgpdconditions')}</p>
 
       <div className='recap'>
         <h2 className='text-2xl'>{props.t('SUMMARY.summary_label')}</h2>
@@ -209,13 +210,13 @@ function Summary(props) {
 
         <div className='text-lg'>
           <h3>{props.t('SUMMARY.use_case_label')}</h3>
-          <p>Extraction de {ground.toLowerCase()}</p>
+          <p>{props.t('SUMMARY.quarrying_some')} {ground.toLowerCase()}</p>
         </div>
 
 
         <div className='text-lg'>
           <h3>{props.t('SUMMARY.blade_label')}</h3>
-          <p>Lame {BLADE_SHAPES[bladeShape].toLowerCase()} - L&nbsp;: {bucketWidth}mm - E&nbsp;: {bladeThickness}mm</p>
+          <p>{props.t('SUMMARY.blade_name')} {props.t(BLADE_SHAPES[bladeShape]).toLowerCase()} - {props.t('SUMMARY.blade_width_abbr')}&nbsp;: {bucketWidth}<abbr title={props.t('SUMMARY.millimeter_abbr')}>mm</abbr> - {props.t('SUMMARY.blade_thickness_abbr')}&nbsp;: {bladeThickness}mm</p>
         </div>
 
         <div className='text-lg'>
@@ -242,7 +243,7 @@ function Summary(props) {
 
 const validator = state => {
   return !!state.company && !!state.name && !!state.email && Validator.isEmail(state.email)
-    && !!state.phone && isPhoneOk(state.phone)
+    && isInternationalPhoneOK(state.phone, state.langIsoCode)
 }
 
 const TransSummary=withTranslation('feurst', {withRef: true})(Summary)
