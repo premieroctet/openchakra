@@ -26,7 +26,7 @@ const PhoneNumber = ({rawphone, error, onPhoneChange, isValueExpected}) => {
 
   useEffect(() => {
     const {language} = window.navigator
-    if (isoCode === '') { setIsoCode(language.toUpperCase()) }
+    if (isoCode === '') { setIsoCode(language.substring(0, 2).toUpperCase()) }
 
   }, [isoCode])
 

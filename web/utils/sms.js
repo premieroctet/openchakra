@@ -32,7 +32,7 @@ const isPhoneOk = value => {
 }
 
 const isInternationalPhoneOK = (value, langIsoCode = 'FR') => {
-  if (typeof value === 'undefined') {
+  if (!value) {
     return false
   }
   return isValidPhoneNumber(value, langIsoCode)
