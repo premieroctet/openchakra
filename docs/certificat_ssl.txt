@@ -1,0 +1,7 @@
+A parti de ZeroSSL:
+- certificat 90 jours (gratuit)
+- Télécharger en format défaut
+- Renommer dans .ssh:
+  - certificate.crt => Main.txt
+  - private.key => Key.txt
+  - ca_bundle.crt => Intermediate.txt
