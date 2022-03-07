@@ -8,7 +8,7 @@ module.exports = function validateFeurstProspect(data) {
   data.firstname = data.firstname || ''
   data.name = data.name || ''
   data.email = data.email || ''
-  data.rawphone = data.rawphone || ''
+  data.phone = data.phone || ''
   data.company = data.company || ''
 
 
@@ -27,10 +27,10 @@ module.exports = function validateFeurstProspect(data) {
     errors.email = 'Le mail est incorrect'
   }
 
-  if (isEmpty(data.rawphone)) {
+  if (isEmpty(data.phone)) {
     errors.phone = 'Un numéro de téléphone doit être renseigné'
   }
-  else if (!isInternationalPhoneOK(data.rawphone, data.langIsoCode || 'FR')) {
+  else if (!isInternationalPhoneOK(data.phone)) {
     errors.phone = 'Numéro invalide'
   }
 

@@ -266,8 +266,6 @@ class Configurator extends React.Component {
   onPhoneChange = (numberPhone, langIsoCode) => {
     const checkPhone = parsePhoneNumber(numberPhone, langIsoCode)
     this.setState({
-      'rawphone': numberPhone,
-      'langIsoCode': langIsoCode || 'fr',
       'phone': checkPhone?.number || numberPhone, error: {...this.state.error, phone: null}})
   }
 

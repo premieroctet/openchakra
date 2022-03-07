@@ -20,9 +20,16 @@ const Validator = require('validator')
 import React, {useEffect, useState} from 'react'
 import {countries} from 'country-flag-icons'
 
-const PhoneNumber = ({rawphone, error, onPhoneChange, isValueExpected}) => {
+
+const PhoneNumber = ({error, onPhoneChange, isValueExpected}) => {
 
   const [isoCode, setIsoCode] = useState('')
+  const [rawphone, setRawphone] = useState('')
+
+  const setAndCheckPhone = ev => {
+    setRawphone(ev.target.value)
+    onPhoneChange(ev.target.value, isoCode)
+  }
 
   useEffect(() => {
     const {language} = window.navigator
@@ -80,7 +87,7 @@ const PhoneNumber = ({rawphone, error, onPhoneChange, isValueExpected}) => {
           value={rawphone}
           error={!!error?.phone || false}
           helperText={error?.phone || null}
-          onChange={ev => onPhoneChange(ev.target.value, isoCode)}
+          onChange={ev => setAndCheckPhone(ev)}
           onBlur={() => isValueExpected('phone')}
         />
       </FormControl>

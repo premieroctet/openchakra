@@ -31,11 +31,11 @@ const isPhoneOk = value => {
   return Validator.isMobilePhone(value, ['fr-FR'])
 }
 
-const isInternationalPhoneOK = (value, langIsoCode = 'FR') => {
+const isInternationalPhoneOK = value => {
   if (!value) {
     return false
   }
-  return isValidPhoneNumber(value, langIsoCode)
+  return isValidPhoneNumber(value)
 }
 
 const isEmailOk = value => {
