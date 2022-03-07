@@ -1,3 +1,10 @@
+const axios = require('axios')
+const {setAxiosAuthentication} = require('../../utils/authentication')
+const Quotation = require('../Feurst/Quotation')
+const {PDFViewer} = require('@react-pdf/renderer')
+const lodash=require('lodash')
+import NoSSR from 'react-no-ssr'
+
 const {withTranslation} = require('react-i18next')
 const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
 const {isPhoneOk} = require('../../utils/sms')
@@ -88,6 +95,8 @@ const RequiredField = () => (
 
 function Summary(props) {
 
+  const [precos, setPrecos]=useState(null)
+
   const {
     error,
     name,
@@ -149,6 +158,16 @@ function Summary(props) {
 
   ]
 
+  useEffect(() => {
+    if (is_development()) {
+      setAxiosAuthentication()
+      const data=lodash.pick(props, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape'.split(' '))
+      axios.post('/feurst/api/quotation', data)
+        .then(res => {
+          setPrecos(res.data)
+        })
+    }
+  })
 
   return (
     <div className='summary'>
@@ -195,7 +214,7 @@ function Summary(props) {
 
 
         <div className='text-lg'>
-          <h3>{props.t('SUMMARY.balde_label')}</h3>
+          <h3>{props.t('SUMMARY.blade_label')}</h3>
           <p>Lame {BLADE_SHAPES[bladeShape].toLowerCase()} - L&nbsp;: {bucketWidth}mm - E&nbsp;: {bladeThickness}mm</p>
         </div>
 
@@ -210,6 +229,13 @@ function Summary(props) {
         </div>
       </div>
 
+      {precos?.accessories &&
+        <NoSSR>
+          <PDFViewer style={{width: '100%', height: '800px'}}>
+            <Quotation data={precos} t={props.t}/>
+          </PDFViewer>
+        </NoSSR>
+      }
     </div>
   )
 }

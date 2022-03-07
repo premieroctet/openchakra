@@ -67,6 +67,9 @@ class Quotation extends React.Component {
           <View style={styles.contents}>
             {Object.entries(data.accessories).map(entry => {
               const [group, items]=entry
+              if (items.length==0) {
+                return null
+              }
               return (
                 <>
                   <View style={styles.group} wrap={false}>

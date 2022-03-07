@@ -1,3 +1,4 @@
+const { is_development } = require('../../../../config/config');
 const {
   computeDescription,
   computePrecos,
@@ -99,4 +100,17 @@ router.post('/custom_quotation', (req, res) => {
   return res.json()
 })
 
+is_development() &&
+router.post('/quotation', (req, res) => {
+
+  computePrecos(req.body)
+    .then(precos => {
+      res.json(precos)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+
+})
 module.exports = router

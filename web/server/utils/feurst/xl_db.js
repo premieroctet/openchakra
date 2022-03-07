@@ -14,7 +14,7 @@ const {
   FIX_TYPES,
   MACHINE_TYPES,
   PIN,
-} = require('../../../utils/feurst_consts');
+} = require('../../../utils/feurst_consts')
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
 
@@ -31,12 +31,12 @@ const GROUPS= (teeth, bladeShape, borderShieldFixType, teethShieldFixType) => {
       'CLAVETTE': teeth || UNKNOWN_TEETH,
       'FOURREAU': teeth || UNKNOWN_TEETH,
       'CLE DENT': 1,
-      'BASE A SOUDER': teeth || UNKNOWN_TEETH,
     },
     Dents: {
 
     },
     'Boucliers inter-dents': teethShieldFixType==PIN ? {
+      'BASE A SOUDER': teeth-(delta ? 3 : 1),
       'BOUCLIER A CLAVETER CENTRE': teeth-(delta ? 3 : 1),
       'BOUCLIER A CLAVETER DROITE': delta ? 1 : 0,
       'BOUCLIER A CLAVETER GAUCHE': delta ? 1 : 0,
@@ -46,11 +46,11 @@ const GROUPS= (teeth, bladeShape, borderShieldFixType, teethShieldFixType) => {
         'BOUCLIER A SOUDER': teeth-(delta ? 3 : 1),
         'BOUCLIER A SOUDER DROITE': delta ? 1 : 0,
         'BOUCLIER A SOUDER GAUCHE': delta ? 1 : 0,
-        'CLE BOUCLIER': 1,
       },
     'Bouclier flanc': {
-      'BOUCLIER DE FLANC': '2 ou 4',
+      [teethShieldFixType==PIN ? 'BOUCLIER DE FLANC': undefined]: '2 ou 4',
       [borderShieldFixType==PIN ? 'BOUCLIER DE FLANC A CLAVETER' : 'BOUCLIER DE FLANC A SOUDER']: '2 ou 4',
+      [teethShieldFixType==PIN ? 'BASE A SOUDER': undefined]: '2 ou 4',
     },
     'Bouclier talon': {
       'BOUCLIER DE TALON DE GODET': 10,
@@ -66,7 +66,7 @@ const checkXLFormat = workbook => {
     // NOM d'onglet: {ligne: valeurs, ligne: valeurs}
     Machines: {1: 'TYPE DE MACHINE,CONSTRUCTEURMANUFACTURER,MACHINE\n MODEL,POIDS\nWEIGHT,KW,B.O.F. Mini (kN),B.O.F Maxi (kN),PNEU,CHENILLE,SHOVEL,Famille\nProduit,Utilisation\nSTANDARD,Nb de dent du godet,Utilisation\nXHD,Nb de dent du godet'.split(',')},
     'Matrice Ep LAME_Excavatrice': {2: "TAILLE,TYPE,EPAISSEUR LAME,TYPE LAME,ADAPTEUR,CHAPEAU D'USURE,CLAVETTE,FOURREAU,CLE DENT,BOUCLIER A SOUDER,BOUCLIER A SOUDER DROITE,BOUCLIER A SOUDER GAUCHE,BASE A SOUDER,BOUCLIER A CLAVETER CENTRE,BOUCLIER A CLAVETER DROITE,BOUCLIER A CLAVETER GAUCHE,CLAVETTE BOUCLIER,BOUCLIER DE FLANC,CLE BOUCLIER,BOUCLIER DE FLANC A CLAVETER,BOUCLIER DE FLANC A SOUDER,BOUCLIER DE TALON DE GODET".split(',')},
-    'Matrice Ep LAME_Chargeuse': {2: "TAILLE,TYPE,EPAISSEUR LAME,TYPE DE LAME,ADAPTEUR,CHAPEAU D'USURE,CLAVETTE,FOURREAU,CLE DENT,BOUCLIER A SOUDER,BOUCLIER A SOUDER DROIT,BOUCLIER A SOUDER GAUCHE,BASE A SOUDER,BOUCLIER A CLAVETER CENTRE,BOUCLIER A CLAVETER DROIT,BOUCLIER A CLAVETER GAUCHE,CLAVETTE BOUCLIER,BOUCLIER DE FLANC,CLE BOUCLIER,BOUCLIER DE FLANC A CLAVETER,BOUCLIER DE FLANC A SOUDER,BOUCLIER DE TALON DE GODET".split(',')},
+    'Matrice Ep LAME_Chargeuse': {2: "TAILLE,TYPE,EPAISSEUR LAME,TYPE DE LAME,ADAPTEUR,CHAPEAU D'USURE,CLAVETTE,FOURREAU,CLE DENT,BOUCLIER A SOUDER,BOUCLIER A SOUDER DROITE,BOUCLIER A SOUDER GAUCHE,BASE A SOUDER,BOUCLIER A CLAVETER CENTRE,BOUCLIER A CLAVETER DROITE,BOUCLIER A CLAVETER GAUCHE,CLAVETTE BOUCLIER,BOUCLIER DE FLANC,CLE BOUCLIER,BOUCLIER DE FLANC A CLAVETER,BOUCLIER DE FLANC A SOUDER,BOUCLIER DE TALON DE GODET".split(',')},
     'Matrice Dents développée': {
       2: ',,STANDARD,STANDARD,STANDARD,STANDARD,STANDARD,STANDARD,,DUR,DUR,DUR,,TRES DUR,TRES DUR,TRES DUR,,ABRASIF,ABRASIF,ABRASIF,,TRES ABRASIF,TRES ABRASIF,TRES ABRASIF'.split(','),
       3: 'TAILLE / TYPE,MACHINES,TERRE\n (terre pierre),SABLE,GRAVIER,CHARBON,CRAIE,MINERAIS (Peu Abrasif),MACHINES,CALCAIRE,BASALTE,SCHISTE,MACHINES,AMPHIBOLITE,LEPTYNITE,RHYOLITE,MACHINES,QUARTZ,SILICE,POUZOLLANE,MACHINES,GRANITES,GNEISS,PORPHYRE'.split(','),
@@ -254,6 +254,7 @@ const getHardness = (database, data) => {
 }
 
 const getFamily = (database, data) => {
+  console.log(`Get family for ${JSON.stringify(data)}`)
   const machine=database.machines.find(m => ['mark', 'model', 'power', 'weight'].every(att => m[att]==data[att]))
   if (!machine || !machine.reference) {
     console.log(`No machine or reference`)
@@ -300,9 +301,8 @@ const getAccessories = (database, data) => {
     const g=entity[1]
     let sub=lodash.uniqBy(acc.map(ac => lodash.pick(ac, Object.keys(g))), JSON.stringify)
     sub=sub.map(obj => Object.fromEntries(Object.entries(obj).map(ent => [ent[0], [ent[1], g[ent[0]]]])))
-    if (sub.length>0) {
-      res[key]=sub
-    }
+    sub=sub.filter(v => !lodash.isEmpty(v))
+    res[key]=sub
   })
   res.Dents=data.teeth_ref.map(ref => ({'Dent': [ref, data.teeth_count]}))
 
