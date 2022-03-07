@@ -1,13 +1,86 @@
 const {withTranslation} = require('react-i18next')
 const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
 const {isPhoneOk} = require('../../utils/sms')
+const {normalize} = require('../../utils/text')
 
+const {Autocomplete} = require('@material-ui/lab')
 const {
-  FormControl,
   TextField,
+  FormControl,
 } = require('@material-ui/core')
 const Validator = require('validator')
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import {countries} from 'country-flag-icons'
+
+const PhoneNumber = ({rawphone, error, onPhoneChange, isValueExpected}) => {
+
+  const [isoCode, setIsoCode] = useState('')
+
+  useEffect(() => {
+    const {language} = window.navigator
+    if (isoCode === '') { setIsoCode(language.toUpperCase()) }
+
+  }, [isoCode])
+
+  return (
+    <div className='grid-cols-2-3 gap-x-4'>
+      <div className='flex flex-col h-full'>
+        <label htmlFor='country-select'>Indice pays</label>
+        <Autocomplete
+          id="country-select"
+          options={countries}
+          value={isoCode !== '' ? isoCode : countries[0]}
+          onChange={(ev, value) => setIsoCode(value)}
+          autoHighlight
+          getOptionLabel={option => option.toUpperCase()}
+
+          renderOption={(props, option) => {
+            return (
+              <div>
+                <img
+                  loading="lazy"
+                  width="20"
+                  src={`https://flagcdn.com/w20/${props.toLowerCase()}.png`}
+                  srcSet={`https://flagcdn.com/w40/${props.toLowerCase()}.png 2x`}
+                  alt=""
+                /> {' '}
+                {props.toUpperCase()}
+              </div>)
+
+          }}
+          renderInput={params => {
+            return (
+              <TextField
+                {...params}
+                inputProps={{
+                  ...params.inputProps,
+                }}
+              />
+            )
+          } }
+        />
+      </div>
+
+      <FormControl variant="standard">
+        <label htmlFor="phone">Téléphone <RequiredField /></label>
+        <TextField
+          placeholder='Saisissez votre numéro de téléphone'
+          id='phone'
+          name='phone'
+          required
+          autoComplete='tel'
+          value={rawphone}
+          error={!!error?.phone || false}
+          helperText={error?.phone || null}
+          onChange={ev => onPhoneChange(ev.target.value, isoCode)}
+          onBlur={() => isValueExpected('phone')}
+        />
+      </FormControl>
+    </div>
+  )
+
+}
+
 
 const RequiredField = () => (
   <span className='asterixsm text-sm' aria-label='requis'>*</span>
@@ -55,15 +128,6 @@ function Summary(props) {
       required: true,
     },
     {
-      label: props.t('SUMMARY.company_label'),
-      placeholder: 'Saisissez votre société',
-      name: 'company',
-      id: 'company',
-      autoComplete: 'organization',
-      value: company,
-      required: true,
-    },
-    {
       type: 'email',
       label: props.t('SUMMARY.email_label'),
       placeholder: 'Saisissez votre email',
@@ -74,15 +138,15 @@ function Summary(props) {
       required: true,
     },
     {
-      type: 'tel',
-      label: props.t('SUMMARY.phone_label'),
-      placeholder: 'Saisissez votre numéro de téléphone',
-      name: 'phone',
-      id: 'phone',
-      autoComplete: 'tel',
-      value: phone,
+      label: props.t('SUMMARY.company_label'),
+      placeholder: 'Saisissez votre société',
+      name: 'company',
+      id: 'company',
+      autoComplete: 'organization',
+      value: company,
       required: true,
     },
+
   ]
 
 
@@ -109,7 +173,12 @@ function Summary(props) {
               onBlur={() => isValueExpected(inp.name)}
             />
           </FormControl>))}
+
+        <PhoneNumber {...props} />
       </form>
+
+      <p className='feurstconditions mb-6'>Feurst® a besoin des coordonnées que vous nous fournissez pour vous contacter au sujet de nos produits et services. Vous pouvez vous désabonner de ces communications à tout moment. Consultez notre Politique de confidentialité pour en savoir plus sur nos modalités de désabonnement, ainsi que sur nos politiques de confidentialité et sur notre engagement vis-à-vis de la protection et de la vie privée.
+      </p>
 
       <div className='recap'>
         <h2 className='text-2xl'>{props.t('SUMMARY.summary_label')}</h2>
