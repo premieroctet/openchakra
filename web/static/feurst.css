@@ -467,6 +467,10 @@ h2,
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .summary .personaldata {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
   .md-gap-y-8 {
     row-gap: 4rem;
   }
