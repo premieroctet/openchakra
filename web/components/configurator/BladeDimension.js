@@ -96,7 +96,7 @@ function BladeDimension(props) {
       </div>
 
       <div className='flex items-center justify-center'>
-        <img className='img-responsive max-w-350' src={`${feurstImgPath}/dessinGodet.webp`} alt='godet avec mise en évidence des dents et des boucliers' width={320} height={303} />
+        <img className='img-responsive max-w-350' src={`${feurstImgPath}/illustrationGodet.webp`} alt='godet avec mise en évidence des dents et des boucliers' width={320} height={303} />
       </div>
     </div>
   )
