@@ -36,14 +36,14 @@ const GROUPS= (teeth, bladeShape, borderShieldFixType, teethShieldFixType) => {
 
     },
     'Boucliers inter-dents': teethShieldFixType==PIN ? {
-      'BASE A SOUDER': teeth-(delta ? 3 : 1),
+      'BASE A SOUDER': teeth-1,
       'BOUCLIER A CLAVETER CENTRE': teeth-(delta ? 3 : 1),
       'BOUCLIER A CLAVETER DROITE': delta ? 1 : 0,
       'BOUCLIER A CLAVETER GAUCHE': delta ? 1 : 0,
       'CLE BOUCLIER': 1,
     }:
       {
-        'BOUCLIER A SOUDER': teeth-(delta ? 3 : 1),
+        'BOUCLIER A SOUDER': teeth-1,
         'BOUCLIER A SOUDER DROITE': delta ? 1 : 0,
         'BOUCLIER A SOUDER GAUCHE': delta ? 1 : 0,
       },
@@ -254,7 +254,6 @@ const getHardness = (database, data) => {
 }
 
 const getFamily = (database, data) => {
-  console.log(`Get family for ${JSON.stringify(data)}`)
   const machine=database.machines.find(m => ['mark', 'model', 'power', 'weight'].every(att => m[att]==data[att]))
   if (!machine || !machine.reference) {
     console.log(`No machine or reference`)

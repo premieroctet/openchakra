@@ -167,7 +167,6 @@ function Summary(props) {
   ]
 
   useEffect(() => {
-    console.log(`Into axios post`)
     if (is_development()) {
       setAxiosAuthentication()
       const data=lodash.pick(props, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape'.split(' '))

@@ -298,7 +298,7 @@ class Configurator extends React.Component {
       'type,mark,model,weight,power,bladeShape,bladeThickness,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
     axios.post('/feurst/api/auto_quotation', data)
       .then(() => {
-        snackBarSuccess('Devis envoyé')
+        snackBarSuccess('Préconisation envoyée')
       })
       .catch(err => {
         console.error(err)

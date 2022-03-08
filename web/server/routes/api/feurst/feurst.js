@@ -1,4 +1,8 @@
-const { is_development } = require('../../../../config/config');
+const {
+  BLADE_SHAPES,
+  FIX_TYPES,
+} = require('../../../../utils/feurst_consts')
+const {is_development} = require('../../../../config/config')
 const {
   computeDescription,
   computePrecos,
@@ -11,6 +15,7 @@ const router = require('express').Router()
 const {getDatabase}=require('../../../utils/feurst/xl_db')
 const lodash=require('lodash')
 const validateFeurstProspect=require('../../../validation/feurstProspect')
+const i18n=require('../../../utils/i18n_init')
 
 // @Route GET /feurst/api/database
 // Google callback
@@ -50,6 +55,12 @@ router.post('/auto_quotation', (req, res) => {
 
   let prospect=null
   let precos=null
+  const t=i18n.default.getFixedT(null, 'feurst')
+  const data={...req.body,
+    bladeShape: t(BLADE_SHAPES[req.body.bladeShape]),
+    teethShieldFixType: t(FIX_TYPES[req.body.teethShieldFixType]),
+    borderShieldFixType: t(FIX_TYPES[req.body.borderShieldFixType]),
+  }
 
   computePrecos(req.body)
     .then(result => {
@@ -58,12 +69,10 @@ router.post('/auto_quotation', (req, res) => {
     })
     .then(result => {
       prospect=result
-      return generatePdf({...req.body, ...precos})
+      return generatePdf({...data, ...precos})
     })
     .then(buffer => {
       sendAutoQuotation(
-        // TODO Stocker le mail de Feurst
-        'sebastien.auvray@my-alfred.io',
         prospect.email,
         prospect.name,
         prospect.company,
@@ -88,8 +97,6 @@ router.post('/custom_quotation', (req, res) => {
   }
 
   sendCustomQuotation(
-    // TODO Stocker le mail de Feurst
-    'sebastien.auvray@my-alfred.io',
     req.body.email,
     req.body.name,
     req.body.company,
@@ -105,7 +112,7 @@ router.post('/quotation', (req, res) => {
 
   computePrecos(req.body)
     .then(precos => {
-      res.json(precos)
+      res.json({...req.body, ...precos})
     })
     .catch(err => {
       console.error(err)

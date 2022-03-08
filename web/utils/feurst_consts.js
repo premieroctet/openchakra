@@ -1,3 +1,5 @@
+const {is_development} = require('../config/config')
+
 const EXCAVATRICE='EXCAVATRICE'
 const CHARGEUSE='CHARGEUSE'
 const PELLE_BUTTE='PELLE-BUTTE'
@@ -26,8 +28,11 @@ const BLADE_SHAPES={
   [SEMI_DELTA]: 'BLADE_SHAPE.semi_delta',
 }
 
+const QUOTATION_CC=is_development() ? 'sebastien.auvray@alfredplace.io': 'florian.benetiere@safe-feurst.fr'
+
 module.exports={
   PIN, SOLD, FIX_TYPES,
   DROITE, DELTA, SEMI_DELTA, BLADE_SHAPES,
   EXCAVATRICE, CHARGEUSE, PELLE_BUTTE, MACHINE_TYPES,
+  QUOTATION_CC,
 }
