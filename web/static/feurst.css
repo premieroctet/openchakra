@@ -39,6 +39,11 @@ body {
   min-height: 100vh;
 }
 
+.img-responsive {
+  width: 100%;
+  height: auto;
+}
+
 /* Avoid Chrome to see Safari hack */
 @supports (-webkit-touch-callout: none) {
   body {
@@ -236,6 +241,10 @@ h2,
 
 .h-full {
   height: 100%;
+}
+
+.max-w-350 {
+  max-width: 350px;
 }
 
 /* Espacements */
