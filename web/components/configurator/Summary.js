@@ -26,10 +26,16 @@ const PhoneNumber = ({error, onPhoneChange, isValueExpected}) => {
   const [isoCode, setIsoCode] = useState('')
   const [rawphone, setRawphone] = useState('')
 
-  const setAndCheckPhone = ev => {
+  const setPrefixedPhone = ev => {
     setRawphone(ev.target.value)
     onPhoneChange(ev.target.value, isoCode)
   }
+  
+  const blurLangIsoCode = () => {
+    console.log(rawphone, isoCode)
+    onPhoneChange(rawphone, isoCode, true)
+  }
+  
 
   useEffect(() => {
     const {language} = window.navigator
@@ -46,6 +52,7 @@ const PhoneNumber = ({error, onPhoneChange, isValueExpected}) => {
           options={countries}
           value={isoCode !== '' ? isoCode : countries[0]}
           onChange={(ev, value) => setIsoCode(value)}
+          onBlur={() => blurLangIsoCode()}
           autoHighlight
           getOptionLabel={option => option.toUpperCase()}
 
@@ -87,7 +94,7 @@ const PhoneNumber = ({error, onPhoneChange, isValueExpected}) => {
           value={rawphone}
           error={!!error?.phone || false}
           helperText={error?.phone || null}
-          onChange={ev => setAndCheckPhone(ev)}
+          onChange={ev => setPrefixedPhone(ev)}
           onBlur={() => isValueExpected('phone')}
         />
       </FormControl>
