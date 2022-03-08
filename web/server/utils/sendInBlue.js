@@ -13,14 +13,14 @@ class SIB_V3 {
     this.smsInstance = new SibApiV3Sdk.TransactionalSMSApi()
   }
 
-  sendMail(index, email, bccs, data, attachment=null) {
+  sendMail(index, email, ccs, data, attachment=null) {
     console.log(`Sending mail template #${index} to ${email} with data ${JSON.stringify(data)}, attachment:${attachment ? 'yes' : 'no'}`)
 
     let emailData = new SibApiV3Sdk.SendSmtpEmail()
 
     emailData.to = [{email: email}]
-    if (bccs?.length>0) {
-      emailData.bcc=bccs.map(bcc => ({email: bcc}))
+    if (ccs?.length>0) {
+      emailData.cc=ccs.map(cc => ({email: cc}))
     }
     emailData.templateId = parseInt(index)
     emailData.params = {}

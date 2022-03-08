@@ -36,7 +36,7 @@ const SMS_CONTENTS = {
 const sendNotification = (notif_index, destinees, params, attachment=null) => {
 
   const destinee=lodash.isArray(destinees) ? destinees[0]: destinees
-  const bccs=lodash.isArray(destinees) ? destinees.slice(1) : []
+  const ccs=lodash.isArray(destinees) ? destinees.slice(1) : []
 
   const msg = `Sending notif ${notif_index} to ${destinee.email}(${destinee._id}) using ${JSON.stringify(params)}`
 
@@ -58,7 +58,7 @@ const sendNotification = (notif_index, destinees, params, attachment=null) => {
 
   // Send mail
   if (enable_mails && notif_index != SIB_IDS.CONFIRM_PHONE) {
-    resultMail = SIB.sendMail(notif_index, destinee.email, bccs, params, attachment)
+    resultMail = SIB.sendMail(notif_index, destinee.email, ccs, params, attachment)
   }
 
   // Send SMS
