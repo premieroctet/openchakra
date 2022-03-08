@@ -95,8 +95,8 @@ function BladeDimension(props) {
         </FormControl>
       </div>
 
-      <div className='flex items-center justify-center' style={{textAlign: 'center'}}>
-        <img src='' alt='belle image' width={300} height={300} className='flex items-center justify-center' style={{border: '1px solid blue'}} />
+      <div className='flex items-center justify-center'>
+        <img className='img-responsive max-w-350' src={`${feurstImgPath}/dessinGodet.webp`} alt='godet avec mise en évidence des dents et des boucliers' width={320} height={303} />
       </div>
     </div>
   )

@@ -263,10 +263,16 @@ class Configurator extends React.Component {
     }
   }
 
-  onPhoneChange = (numberPhone, langIsoCode) => {
+  onPhoneChange = (numberPhone, langIsoCode, checkThisPhone=false) => {
     const checkPhone = parsePhoneNumber(numberPhone, langIsoCode)
+    let phoneError = null
+    if (checkThisPhone) {
+      const {errors} = validateFeurstProspect({...this.state, 'phone': checkPhone?.number})
+      phoneError = errors?.phone || null
+    }
+    
     this.setState({
-      'phone': checkPhone?.number || numberPhone, error: {...this.state.error, phone: null}})
+      'phone': checkPhone?.number || numberPhone, error: {...this.state.error, phone: phoneError}})
   }
 
   onValueChange = ({inputName, value}) => {
