@@ -219,8 +219,13 @@ const loadAccessories = wb => {
   return res
 }
 
+let cached_database=null
+
 const getDatabase = () => {
   return new Promise((resolve, reject) => {
+    if (cached_database!=null) {
+      return resolve(cached_database)
+    }
     const workbook = new ExcelJS.Workbook()
     workbook.xlsx.readFile(`${__dirname}/../../../static/assets/data/feurst_db.xlsx`)
       .then(wb => {
@@ -234,12 +239,13 @@ const getDatabase = () => {
         const thicknesses=loadThicknesses(['Matrice Ep LAME_Excavatrice', 'Matrice Ep LAME_Chargeuse'].map(s => wb.getWorksheet(s)))
         const grounds=loadGrounds(wb.getWorksheet('Matrice Dents développée'))
         const accessories=loadAccessories(wb)
-        resolve({
+        cached_database={
           machines: machines,
           thicknesses: thicknesses,
           grounds: grounds,
           accessories: accessories,
-        })
+        }
+        resolve(cached_database)
       })
       .catch(err => {
         console.error(`Error:${err}`)
