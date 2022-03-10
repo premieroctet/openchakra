@@ -14,11 +14,11 @@
   "FIX_TYPE.sold": "À souder",
 
   "MACHINE_TYPE.title": "Votre machine",
-  "MACHINE_TYPE.type_label": "Quelle machine souhaitez-vous équiper ?",
-  "MACHINE_TYPE.brand_label": "Indiquez la marque de votre machine:",
-  "MACHINE_TYPE.model_label": "Choisissez le modèle de votre machine:",
-  "MACHINE_TYPE.weight_label": "Indiquez le tonnage de votre machine:",
-  "MACHINE_TYPE.power_label": "Indiquez la puissance de votre machine:",
+  "MACHINE_TYPE.type_label": "Quelle machine souhaitez-vous équiper ?",
+  "MACHINE_TYPE.brand_label": "Indiquez la marque de votre machine : ",
+  "MACHINE_TYPE.model_label": "Choisissez le modèle de votre machine : ",
+  "MACHINE_TYPE.weight_label": "Indiquez le tonnage de votre machine : ",
+  "MACHINE_TYPE.power_label": "Indiquez la puissance de votre machine : ",
 
   "USE_CASE.title": "Vos conditions d'utilisation",
   "USE_CASE.use_case_label": "Sélectionnez votre usage",
@@ -29,9 +29,9 @@
   "BLADE_DIMENSION.bucket_width_label": "Indiquez la largeur de votre godet",
 
   "FIX_TYPES.title": "A propos de votre équipement",
-  "FIX_TYPES.fix_type_label": "Je souhaite une recommandation comprenant les équipements suivants:",
-  "FIX_TYPES.teeth_fix_type": "Boucliers inter-dents:",
-  "FIX_TYPES.borders_fix_type": "Boucliers de flancs:",
+  "FIX_TYPES.fix_type_label": "Je souhaite une recommandation comprenant les équipements suivants : ",
+  "FIX_TYPES.teeth_fix_type": "Boucliers inter-dents : ",
+  "FIX_TYPES.borders_fix_type": "Boucliers de flancs : ",
 
   "SUMMARY.title": "Résumé de recherche",
   "SUMMARY.name_label": "Nom",
@@ -42,9 +42,9 @@
   "SUMMARY.receive_label": "Recevoir ma préconisation",
   "SUMMARY.mandatory_label": "Champs obligatoires",
   "SUMMARY.rgpdconditions": "Feurst® a besoin des coordonnées que vous nous fournissez pour vous contacter au sujet de nos produits et services. Vous pouvez vous désabonner de ces communications à tout moment. Consultez notre Politique de confidentialité pour en savoir plus sur nos modalités de désabonnement, ainsi que sur nos politiques de confidentialité et sur notre engagement vis-à-vis de la protection et de la vie privée.",
-  "SUMMARY.summary_label": "Récapitulatif de votre commande :",
-  "SUMMARY.machine_label": "Votre machine :",
-  "SUMMARY.use_case_label": "Votre usage :",
+  "SUMMARY.summary_label": "Récapitulatif de votre demande : ",
+  "SUMMARY.machine_label": "Votre machine : ",
+  "SUMMARY.use_case_label": "Votre usage : ",
   "SUMMARY.quarrying_some": "Extraction de ",
   "SUMMARY.blade_name": "Lame",
   "SUMMARY.blade_width_abbr": "L",
@@ -53,8 +53,8 @@
   
   "SUMMARY.blade_label": "Votre godet :",
   "SUMMARY.equipment_label": "Votre équipement :",
-  "SUMMARY.teeth_shield_label": "Boucliers inter-dents :",
-  "SUMMARY.border_shield_label": "Boucliers de flancs :",
+  "SUMMARY.teeth_shield_label": "Boucliers inter-dents : ",
+  "SUMMARY.border_shield_label": "Boucliers de flancs : ",
 
   "SUMMARY.contact_expert": "Contacter un expert",
   "SUMMARY.receive_quotation": "Recevoir ma configuration"

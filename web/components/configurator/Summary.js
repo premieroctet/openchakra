@@ -236,9 +236,9 @@ function Summary(props) {
           <h3>{props.t('SUMMARY.equipment_label')}</h3>
           <dl >
             <dt className='text-gray-500'>{props.t('SUMMARY.teeth_shield_label')}</dt>
-            <dd className='text-gray-500'>{props.t(FIX_TYPES[teethShieldFixType])}</dd>
+            <dd>{props.t(FIX_TYPES[teethShieldFixType])}</dd>
             <dt className='text-gray-500'>{props.t('SUMMARY.border_shield_label')}</dt>
-            <dd className='text-gray-500'>{props.t(FIX_TYPES[borderShieldFixType])}</dd>
+            <dd>{props.t(FIX_TYPES[borderShieldFixType])}</dd>
           </dl>
         </div>
       </div>
