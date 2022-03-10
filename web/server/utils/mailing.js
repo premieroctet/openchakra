@@ -1,14 +1,15 @@
+const {QUOTATION_CC} = require('../../utils/feurst_consts')
 const User = require('../models/User')
 const {
   ENABLE_MAILING,
   computeUrl,
   getSibTemplates,
   get_host_url,
-  is_validation,
 } = require('../../config/config')
 const {SIB} = require('./sendInBlue')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
+const lodash=require('lodash')
 
 // Templates
 const SIB_IDS=require(`./sib_templates/${getSibTemplates()}.js`)
@@ -32,7 +33,11 @@ const SMS_CONTENTS = {
   [SIB_IDS.BOOKING_EXPIRED_2_ALFRED]: 'La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée',
 }
 
-const sendNotification = (notif_index, destinee, params, attachment=null) => {
+const sendNotification = (notif_index, destinees, params, attachment=null) => {
+
+  const destinee=lodash.isArray(destinees) ? destinees[0]: destinees
+  const ccs=lodash.isArray(destinees) ? destinees.slice(1) : []
+
   const msg = `Sending notif ${notif_index} to ${destinee.email}(${destinee._id}) using ${JSON.stringify(params)}`
 
   let enable_mails = ENABLE_MAILING
@@ -53,7 +58,7 @@ const sendNotification = (notif_index, destinee, params, attachment=null) => {
 
   // Send mail
   if (enable_mails && notif_index != SIB_IDS.CONFIRM_PHONE) {
-    resultMail = SIB.sendMail(notif_index, destinee.email, params, attachment)
+    resultMail = SIB.sendMail(notif_index, destinee.email, ccs, params, attachment)
   }
 
   // Send SMS
@@ -424,31 +429,18 @@ const sendRegisterInvitation = (admin, email, code, req) => {
   )
 }
 
-const sendAutoQuotation = (company_email, prospect_email, prospect_name, prospect_company, quotation_id, machine_description, data_buffer) => {
+const sendAutoQuotation = (prospect_email, prospect_name, prospect_company, quotation_id, machine_description, data_buffer) => {
 
   const attachment={
-    name: 'devis_feurst.pdf',
+    name: 'Préconisation Feurst.pdf',
     content: data_buffer.toString('base64'),
   }
 
   sendNotification(
     SIB_IDS.FEURST_AUTO_QUOTATION_2_CLIENT,
-    {email: prospect_email},
+    [{email: prospect_email}, QUOTATION_CC],
     {
       name: prospect_name,
-      quotation_id: quotation_id,
-      machine: machine_description,
-    },
-    attachment,
-  )
-
-  sendNotification(
-    SIB_IDS.FEURST_AUTO_QUOTATION_2_FEURST,
-    {email: company_email},
-    {
-      customer_name: prospect_name,
-      customer_email: prospect_email,
-      customer_company: prospect_company,
       quotation_id: quotation_id,
       machine: machine_description,
     },
@@ -457,11 +449,11 @@ const sendAutoQuotation = (company_email, prospect_email, prospect_name, prospec
 
 }
 
-const sendCustomQuotation = (company_email, prospect_email, prospect_name, prospect_company, quotation_id, machine_description) => {
+const sendCustomQuotation = (prospect_email, prospect_name, prospect_company, quotation_id, machine_description) => {
 
   sendNotification(
     SIB_IDS.FEURST_CUSTOM_QUOTATION_2_CLIENT,
-    {email: prospect_email},
+    [{email: prospect_email}, QUOTATION_CC],
     {
       name: prospect_name,
       quotation_id: quotation_id,
@@ -469,17 +461,6 @@ const sendCustomQuotation = (company_email, prospect_email, prospect_name, prosp
     },
   )
 
-  sendNotification(
-    SIB_IDS.FEURST_CUSTOM_QUOTATION_2_FEURST,
-    {email: company_email},
-    {
-      customer_name: prospect_name,
-      customer_email: prospect_email,
-      customer_company: prospect_company,
-      quotation_id: quotation_id,
-      machine: machine_description,
-    },
-  )
 }
 
 module.exports = {

@@ -48,7 +48,7 @@ class Configurator extends React.Component {
       bucketWidth: null,
       thicknesses: [],
       ground: null,
-      grounds: [],
+      grounds: {},
       teethShieldFixType: null,
       borderShieldFixType: null,
       auto_quotation: false,
@@ -58,8 +58,7 @@ class Configurator extends React.Component {
 
   componentDidMount = () => {
     setAxiosAuthentication()
-    axios
-      .get('/feurst/api/database')
+    axios.get('/feurst/api/database')
       .then(res => {
         this.setState({
           machines: res.data.machines,
@@ -94,6 +93,23 @@ class Configurator extends React.Component {
       .sort()
   }
 
+  updateThicknesses = () => {
+    const params=lodash.pick(this.state, 'type mark model weight power ground bladeShape'.split(' '))
+    setAxiosAuthentication()
+    axios.get('/feurst/api/thicknesses', {params: params})
+      .then(res => {
+        const thicknesses=res.data
+        const st={thicknesses: thicknesses}
+        if (thicknesses.length==1) {
+          st.bladeThickness=thicknesses[0]
+        }
+        else if (thicknesses.length>0 && !thicknesses.includes(this.state.bladeThickness)) {
+          st.bladeThickness=null
+        }
+        this.setState(st)
+      })
+  }
+
   onMachinesChange = machines => {
     this.setState({
       machines: machines,
@@ -101,7 +117,7 @@ class Configurator extends React.Component {
       models: this.getList(machines, 'model'),
       powers: this.getList(machines, 'power'),
       weights: this.getList(machines, 'weight'),
-    })
+    }, () => this.updateThicknesses())
   }
 
   onTypeChange = type => {
@@ -139,7 +155,7 @@ class Configurator extends React.Component {
           machines.filter(v => v.type == type),
           'weight',
         ),
-    })
+    }, () => this.updateThicknesses())
   }
 
   onMarkChange = mark => {
@@ -207,23 +223,23 @@ class Configurator extends React.Component {
 
     machineWeight.length >= 1 && Object.assign(nextState, {weight: machineWeight[0], weights: machineWeight})
 
-    this.setState(nextState)
+    this.setState(nextState, () => this.updateThicknesses())
   }
 
   onPowerChange = power => {
-    this.setState({power})
+    this.setState({power}, () => this.updateThicknesses())
   }
 
   onWeightChange = weight => {
     let castWeightString = typeof weight === 'string' ? Number(weight.replace(/,/g, '.')) : weight
-    this.setState({weight: castWeightString})
+    this.setState({weight: castWeightString}, () => this.updateThicknesses())
   }
 
   onBladeShapeChange = bladeShape => {
     if (!Object.keys(BLADE_SHAPES).includes(bladeShape)) {
       return console.error(`Invalid blade shape:${bladeShape}`)
     }
-    this.setState({bladeShape: bladeShape})
+    this.setState({bladeShape: bladeShape}, () => this.updateThicknesses())
   }
 
   onBucketWidthChange = width => {
@@ -235,7 +251,7 @@ class Configurator extends React.Component {
   }
 
   onGroundChange = ground => {
-    this.setState({ground})
+    this.setState({ground}, () => this.updateThicknesses())
   }
 
   onTeethShieldFixTypeChange = teethShieldFixType => {
@@ -270,6 +286,8 @@ class Configurator extends React.Component {
       const {errors} = validateFeurstProspect({...this.state, 'phone': checkPhone?.number})
       phoneError = errors?.phone || null
     }
+
+
     
     this.setState({
       'phone': checkPhone?.number || numberPhone, error: {...this.state.error, phone: phoneError}})
@@ -304,7 +322,7 @@ class Configurator extends React.Component {
       'type,mark,model,weight,power,bladeShape,bladeThickness,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
     axios.post('/feurst/api/auto_quotation', data)
       .then(() => {
-        snackBarSuccess('Devis envoyé')
+        snackBarSuccess('Préconisation envoyée')
       })
       .catch(err => {
         console.error(err)

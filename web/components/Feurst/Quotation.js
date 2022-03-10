@@ -1,4 +1,3 @@
-const { BLADE_SHAPES, FIX_TYPES } = require('../../utils/feurst_consts');
 const React=require('react')
 const {Page, Text, View, Document, StyleSheet, Image}=require('@react-pdf/renderer')
 const moment=require('moment')
@@ -28,7 +27,7 @@ class Quotation extends React.Component {
   }
 
   render() {
-    const {data, t}=this.props
+    const {data}=this.props
 
     return (
       <Document>
@@ -44,7 +43,7 @@ class Quotation extends React.Component {
               <Text>04 XX XX XX XX</Text>
             </View>
             <View style={styles.address}>
-              <Text>{data.name}</Text>
+              <Text>{data.firstname} {data.name}</Text>
               <Text>{data.company}</Text>
               <Text>{data.email}</Text>
               <Text>{data.phone}</Text>
@@ -56,12 +55,12 @@ class Quotation extends React.Component {
               <Text>Récapitulatif de votre demande:</Text>
               <Text><span style={styles.lightText}>Votre machine: </span>{data.type}-{data.mark} {data.model}</Text>
               <Text><span style={styles.lightText}>Votre terrain: </span>{data.ground}</Text>
-              <Text><span style={styles.lightText}>Votre godet/lame: </span>{t(BLADE_SHAPES[data.bladeShape])} - L : {data.bucketWidth && `${data.bucketWidth}mm` || 'inconnue'}</Text>
+              <Text><span style={styles.lightText}>Votre godet/lame: </span>{data.bladeShape} - L : {data.bucketWidth && `${data.bucketWidth}mm` || 'inconnue'}</Text>
             </View>
             <View style={styles.summaryBlock}>
               <Text>Votre équipement:</Text>
-              <Text>Boucliers inter-dents: {t(FIX_TYPES[data.teethShieldFixType])}</Text>
-              <Text>Boucliers de flancs: {t(FIX_TYPES[data.borderShieldFixType])}</Text>
+              <Text><span style={styles.lightText}>Boucliers inter-dents: </span>{data.teethShieldFixType}</Text>
+              <Text><span style={styles.lightText}>Boucliers de flancs: </span>{data.borderShieldFixType}</Text>
             </View>
           </View>
           <View style={styles.contents}>
