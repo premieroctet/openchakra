@@ -6,8 +6,10 @@ const {is_development} = require('../../../../config/config')
 const {
   computeDescription,
   computePrecos,
-  getHardness,
   getFamily,
+  getHardness,
+  getTeethCount,
+  getTeethRef,
 } = require('../../../utils/feurst/xl_db')
 const FeurstProspect = require('../../../models/FeurstProspect')
 const generatePdf = require('../../../utils/generatePdf')
@@ -117,12 +119,16 @@ router.post('/custom_quotation', (req, res) => {
 router.get('/thicknesses', (req, res) => {
   getDatabase()
     .then(db => {
-      const hardness=getHardness(db, req.query)
-      const family=getFamily(db, {...req.query, hardness: hardness})
-      const pattern=new RegExp(`${req.query.type||'.*'},${family||'.*'},.*,${req.query.bladeShape||'.*'}`)
+      let data={...req.query}
+      data={...data, hardness: getHardness(db, data)}
+      data={...data, family: getFamily(db, data)}
+      data={...data, teeth_ref: getTeethRef(db, data)}
+      data={...data, teeth_count: getTeethCount(db, data)}
+
+      const pattern=new RegExp(`${data.type||'.*'},${data.family||'.*'},.*,${data.bladeShape||'.*'}`)
       const keys=Object.keys(db.accessories).filter(v => pattern.test(v))
       const thicknesses=lodash.uniq(keys.map(k => k.split(',')[2])).map(v => parseInt(v)).sort()
-      res.json(thicknesses)
+      res.json({thicknesses: thicknesses, teeth_count: data.teeth_count})
     })
     .catch(err => {
       console.error(err)
