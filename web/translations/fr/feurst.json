@@ -2,6 +2,8 @@
   "NAVIGATION.previous": "Précédent",
   "NAVIGATION.next": "Suivant",
 
+  "PROGRESS_BAR.step_label": "Étape",
+
   "MACHINE_TYPE.excavator": "Une excavatrice",
   "MACHINE_TYPE.loader": "Une chargeuse",
   "MACHINE_TYPE.shovel": "Une pelle-butte",
@@ -14,7 +16,7 @@
   "FIX_TYPE.pin": "À claveter",
   "FIX_TYPE.sold": "À souder",
 
-  "MACHINE_TYPE.title": "Votre machine",
+  "MACHINE_TYPE.title": "Bienvenue dans le configurateur",
   "MACHINE_TYPE.type_label": "Quelle machine souhaitez-vous équiper ?",
   "MACHINE_TYPE.brand_label": "Indiquez la marque de votre machine : ",
   "MACHINE_TYPE.model_label": "Choisissez le modèle de votre machine : ",
@@ -40,8 +42,9 @@
   "SUMMARY.company_label": "Société",
   "SUMMARY.email_label": "Email",
   "SUMMARY.phone_label": "Téléphone",
+  "SUMMARY.phone_placeholder": "Saisissez votre numéro de téléphone",
   "SUMMARY.receive_label": "Recevoir ma préconisation",
-  "SUMMARY.mandatory_label": "Champs obligatoires",
+  "SUMMARY.mandatory_label": " Champs obligatoires",
   "SUMMARY.rgpdconditions": "Feurst® a besoin des coordonnées que vous nous fournissez pour vous contacter au sujet de nos produits et services. Vous pouvez vous désabonner de ces communications à tout moment. Consultez notre Politique de confidentialité pour en savoir plus sur nos modalités de désabonnement, ainsi que sur nos politiques de confidentialité et sur notre engagement vis-à-vis de la protection et de la vie privée.",
   "SUMMARY.summary_label": "Récapitulatif de votre demande : ",
   "SUMMARY.machine_label": "Votre machine : ",
@@ -57,7 +60,7 @@
   "SUMMARY.teeth_shield_label": "Boucliers inter-dents : ",
   "SUMMARY.border_shield_label": "Boucliers de flancs : ",
 
-  "SUMMARY.contact_expert": "Contacter un expert",
+  "SUMMARY.contact_expert": "Être contacté par un expert",
   "SUMMARY.receive_quotation": "Recevoir ma configuration"
 
 }

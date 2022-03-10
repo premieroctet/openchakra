@@ -9,6 +9,7 @@ import NoSSR from 'react-no-ssr'
 const {withTranslation} = require('react-i18next')
 const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
 const {isInternationalPhoneOK} = require('../../utils/sms')
+const {getCountries, getPhoneCode} = require('libphonenumber-js')
 const {normalize} = require('../../utils/text')
 
 const {Autocomplete} = require('@material-ui/lab')
@@ -18,13 +19,18 @@ const {
 } = require('@material-ui/core')
 const Validator = require('validator')
 import React, {useEffect, useState} from 'react'
-import {countries} from 'country-flag-icons'
 
 
-const PhoneNumber = ({error, onPhoneChange, isValueExpected}) => {
+const PhoneNumber = ({t, error, onPhoneChange, isValueExpected}) => {
 
   const [isoCode, setIsoCode] = useState('')
   const [rawphone, setRawphone] = useState('')
+
+  const countries = getCountries()
+
+  const countriesCodes = countries.map(country => {
+    if (country) { return {country, 'phonecode': getPhoneCode(country)} }
+  })
 
   const setPrefixedPhone = ev => {
     setRawphone(ev.target.value)
@@ -32,7 +38,6 @@ const PhoneNumber = ({error, onPhoneChange, isValueExpected}) => {
   }
   
   const blurLangIsoCode = () => {
-    console.log(rawphone, isoCode)
     onPhoneChange(rawphone, isoCode, true)
   }
   
@@ -44,9 +49,9 @@ const PhoneNumber = ({error, onPhoneChange, isValueExpected}) => {
   }, [isoCode])
 
   return (
-    <div className='grid-cols-2-3 gap-x-4'>
+    <div className='grid-cols-1-3 gap-x-4 md-col-span-2'>
       <div className='flex flex-col h-full'>
-        <label htmlFor='country-select'>Indice pays</label>
+        <label htmlFor='country-select'>Préfixe tél. pays</label>
         <Autocomplete
           id="country-select"
           options={countries}
@@ -54,7 +59,8 @@ const PhoneNumber = ({error, onPhoneChange, isValueExpected}) => {
           onChange={(ev, value) => setIsoCode(value)}
           onBlur={() => blurLangIsoCode()}
           autoHighlight
-          getOptionLabel={option => option.toUpperCase()}
+          autocomplete='tel-country-code'
+          getOptionLabel={option => { return `+${countriesCodes.filter(el => el.country == option).map(el => el.phonecode)}` }}
 
           renderOption={(props, option) => {
             return (
@@ -65,8 +71,9 @@ const PhoneNumber = ({error, onPhoneChange, isValueExpected}) => {
                   src={`https://flagcdn.com/w20/${props.toLowerCase()}.png`}
                   srcSet={`https://flagcdn.com/w40/${props.toLowerCase()}.png 2x`}
                   alt=""
-                /> {' '}
-                {props.toUpperCase()}
+                  style={{marginRight: '0.5em'}}
+                />
+                +{countriesCodes.filter(el => el.country == props).map(el => el.phonecode)}
               </div>)
 
           }}
@@ -83,10 +90,10 @@ const PhoneNumber = ({error, onPhoneChange, isValueExpected}) => {
         />
       </div>
 
-      <FormControl variant="standard">
-        <label htmlFor="phone">Téléphone <RequiredField /></label>
+      <FormControl variant="standard" className='grid content-between'>
+        <label htmlFor="phone">{t('SUMMARY.phone_label')} <RequiredField /></label>
         <TextField
-          placeholder='Saisissez votre numéro de téléphone'
+          placeholder={t('SUMMARY.phone_placeholder')}
           id='phone'
           name='phone'
           required
@@ -213,34 +220,31 @@ function Summary(props) {
 
       <p className='feurstconditions mb-6'>{props.t('SUMMARY.rgpdconditions')}</p>
 
-      <div className='recap'>
-        <h2 className='text-2xl'>{props.t('SUMMARY.summary_label')}</h2>
+      <h2 className='text-2xl pl-4'>{props.t('SUMMARY.summary_label')}</h2>
+      <div className='recap grid gap-x-4'>
 
-        <div className='text-lg'>
-          <h3>{props.t('SUMMARY.machine_label')}</h3>
-          <p>{type} {mark} {model}</p>
+        <div>
+          <dl className='text-lg dl-inline mb-6'>
+            <dt className='text-gray-500'>{props.t('SUMMARY.machine_label')}</dt>
+            <dd>{type} {mark} {model}</dd>
+            <dt className='text-gray-500'>{props.t('SUMMARY.use_case_label')}</dt>
+            <dd>{props.t('SUMMARY.quarrying_some')} {ground.toLowerCase()}</dd>
+            <dt className='text-gray-500'>{props.t('SUMMARY.blade_label')}</dt>
+            <dd>{props.t('SUMMARY.blade_name')} {props.t(BLADE_SHAPES[bladeShape]).toLowerCase()} - {props.t('SUMMARY.blade_width_abbr')}&nbsp;: {bucketWidth}<abbr title={props.t('SUMMARY.millimeter_abbr')}>mm</abbr> - {props.t('SUMMARY.blade_thickness_abbr')}&nbsp;: {bladeThickness}mm</dd>
+          </dl>
         </div>
 
-        <div className='text-lg'>
-          <h3>{props.t('SUMMARY.use_case_label')}</h3>
-          <p>{props.t('SUMMARY.quarrying_some')} {ground.toLowerCase()}</p>
-        </div>
-
-
-        <div className='text-lg'>
-          <h3>{props.t('SUMMARY.blade_label')}</h3>
-          <p>{props.t('SUMMARY.blade_name')} {props.t(BLADE_SHAPES[bladeShape]).toLowerCase()} - {props.t('SUMMARY.blade_width_abbr')}&nbsp;: {bucketWidth}<abbr title={props.t('SUMMARY.millimeter_abbr')}>mm</abbr> - {props.t('SUMMARY.blade_thickness_abbr')}&nbsp;: {bladeThickness}mm</p>
-        </div>
-
-        <div className='text-lg'>
+        <div>
           <h3>{props.t('SUMMARY.equipment_label')}</h3>
-          <dl >
+
+          <dl className='text-lg dl-inline ml-12'>
             <dt className='text-gray-500'>{props.t('SUMMARY.teeth_shield_label')}</dt>
             <dd>{props.t(FIX_TYPES[teethShieldFixType])}</dd>
             <dt className='text-gray-500'>{props.t('SUMMARY.border_shield_label')}</dt>
             <dd>{props.t(FIX_TYPES[borderShieldFixType])}</dd>
           </dl>
         </div>
+        
       </div>
 
       {precos?.accessories &&
