@@ -9,6 +9,7 @@
   "BLADE_SHAPE.straight": "Droite",
   "BLADE_SHAPE.semi_delta": "Semi-delta",
   "BLADE_SHAPE.delta": "Delta",
+  "BLADE_SHAPE.unknown": "Je ne sais pas",
 
   "FIX_TYPE.pin": "À claveter",
   "FIX_TYPE.sold": "À souder",
@@ -50,7 +51,7 @@
   "SUMMARY.blade_width_abbr": "L",
   "SUMMARY.blade_thickness_abbr": "E",
   "SUMMARY.millimeter_abbr": "millimètres",
-  
+
   "SUMMARY.blade_label": "Votre godet :",
   "SUMMARY.equipment_label": "Votre équipement :",
   "SUMMARY.teeth_shield_label": "Boucliers inter-dents : ",

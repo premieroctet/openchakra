@@ -5,6 +5,7 @@ const {
   DELTA,
   DROITE,
   SEMI_DELTA,
+  UNKNOWN,
 } = require('../../utils/feurst_consts')
 const {
   FormControl,
@@ -40,9 +41,15 @@ function BladeDimension(props) {
       width: '120',
       height: '74',
     },
+    [UNKNOWN]: {
+      label: props.t(BLADE_SHAPES[UNKNOWN]),
+      path: `${feurstImgPath}/lame-delta.svg`,
+      width: '120',
+      height: '74',
+    },
   }
 
-  const availableBlades=lodash.pick(blades, [DROITE, props.type==CHARGEUSE ? DELTA : SEMI_DELTA])
+  const availableBlades=lodash.pick(blades, [DROITE, props.type==CHARGEUSE ? DELTA : SEMI_DELTA, UNKNOWN])
 
   return (
     <div className='flex flex-col gap-x-4 md-flex-row justify-evenly gap-x-8'>
