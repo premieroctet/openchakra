@@ -41,6 +41,7 @@
   "SUMMARY.firstname_label": "Prénom",
   "SUMMARY.company_label": "Société",
   "SUMMARY.email_label": "Email",
+  "SUMMARY.phone_prefix": "Préfixe",
   "SUMMARY.phone_label": "Téléphone",
   "SUMMARY.phone_placeholder": "Saisissez votre numéro de téléphone",
   "SUMMARY.receive_label": "Recevoir ma préconisation",

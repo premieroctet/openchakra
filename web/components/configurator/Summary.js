@@ -12,10 +12,11 @@ const {isInternationalPhoneOK} = require('../../utils/sms')
 const {getCountries, getPhoneCode} = require('libphonenumber-js')
 const {normalize} = require('../../utils/text')
 
-const {Autocomplete} = require('@material-ui/lab')
 const {
   TextField,
   FormControl,
+  Select,
+  MenuItem,
 } = require('@material-ui/core')
 const Validator = require('validator')
 import React, {useEffect, useState} from 'react'
@@ -49,46 +50,24 @@ const PhoneNumber = ({t, error, onPhoneChange, isValueExpected}) => {
   }, [isoCode])
 
   return (
-    <div className='grid-cols-1-3 gap-x-4 md-col-span-2'>
-      <div className='flex flex-col h-full'>
-        <label htmlFor='country-select'>Préfixe tél. pays</label>
-        <Autocomplete
+    <div className='grid-cols-1-2 gap-x-2'>
+      
+      <FormControl variant="standard">
+        <label htmlFor='country-select'>{t('SUMMARY.phone_prefix')}</label>
+          
+        <Select
           id="country-select"
-          options={countries}
-          value={isoCode !== '' ? isoCode : countries[0]}
-          onChange={(ev, value) => setIsoCode(value)}
+          value={isoCode}
+          onChange={ev => setIsoCode(ev.target.value)}
           onBlur={() => blurLangIsoCode()}
-          autoHighlight
-          autocomplete='tel-country-code'
-          getOptionLabel={option => { return `+${countriesCodes.filter(el => el.country == option).map(el => el.phonecode)}` }}
-
-          renderOption={(props, option) => {
-            return (
-              <div>
-                <img
-                  loading="lazy"
-                  width="20"
-                  src={`https://flagcdn.com/w20/${props.toLowerCase()}.png`}
-                  srcSet={`https://flagcdn.com/w40/${props.toLowerCase()}.png 2x`}
-                  alt=""
-                  style={{marginRight: '0.5em'}}
-                />
-                +{countriesCodes.filter(el => el.country == props).map(el => el.phonecode)}
-              </div>)
-
-          }}
-          renderInput={params => {
-            return (
-              <TextField
-                {...params}
-                inputProps={{
-                  ...params.inputProps,
-                }}
-              />
-            )
-          } }
-        />
-      </div>
+        >
+          {countries.map(country => (
+            <MenuItem key={country} value={country}>
+              {`${country} +${countriesCodes.filter(el => el.country == country).map(el => el.phonecode)}`}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       <FormControl variant="standard" className='grid content-between'>
         <label htmlFor="phone">{t('SUMMARY.phone_label')} <RequiredField /></label>
