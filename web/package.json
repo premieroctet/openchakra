@@ -34,7 +34,6 @@
     "console-stamp": "^0.2.9",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "country-flag-icons": "^1.4.21",
     "cron": "^1.7.2",
     "csstree-validator": "^2.0.1",
     "csv-parse": "^4.15.3",

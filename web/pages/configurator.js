@@ -340,7 +340,7 @@ class Configurator extends React.Component {
       >
         <a ref={this.titleFocus.ref} href='#'></a> {/* Lien pour remonter le focus suite actions "précédent" "suivant" */}
         <h1 className='whereami'>{t(menu)}</h1>
-        <ProgressBar value={step} max={STEPS.length} />
+        <ProgressBar value={step} max={STEPS.length} label={t('PROGRESS_BAR.step_label')}/>
         <div className='app-container flex flex-col justify-between'>
           <div className="rounded-container m-4 p-4" >
             {component({...this.state, ...this})}
