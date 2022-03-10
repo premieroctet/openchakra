@@ -23,7 +23,7 @@
   "USE_CASE.title": "Vos conditions d'utilisation",
   "USE_CASE.use_case_label": "Sélectionnez votre usage",
 
-  "BLADE_DIMENSION.title": "A propos de votre lame",
+  "BLADE_DIMENSION.title": "A propos de votre godet",
   "BLADE_DIMENSIONS.blade_shape_label": "Sélectionnez la forme de votre lame",
   "BLADE_DIMENSION.blade_thickness_label": "Indiquez l'épaisseur de la lame",
   "BLADE_DIMENSION.bucket_width_label": "Indiquez la largeur de votre godet",

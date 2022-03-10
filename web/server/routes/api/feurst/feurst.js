@@ -6,6 +6,8 @@ const {is_development} = require('../../../../config/config')
 const {
   computeDescription,
   computePrecos,
+  getHardness,
+  getFamily,
 } = require('../../../utils/feurst/xl_db')
 const FeurstProspect = require('../../../models/FeurstProspect')
 const generatePdf = require('../../../utils/generatePdf')
@@ -112,6 +114,21 @@ router.post('/custom_quotation', (req, res) => {
   return res.json()
 })
 
+router.get('/thicknesses', (req, res) => {
+  getDatabase()
+    .then(db => {
+      const hardness=getHardness(db, req.query)
+      const family=getFamily(db, {...req.query, hardness: hardness})
+      const pattern=new RegExp(`${req.query.type||'.*'},${family||'.*'},.*,${req.query.bladeShape||'.*'}`)
+      const keys=Object.keys(db.accessories).filter(v => pattern.test(v))
+      const thicknesses=lodash.uniq(keys.map(k => k.split(',')[2])).map(v => parseInt(v)).sort()
+      res.json(thicknesses)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
 is_development() &&
 router.post('/quotation', (req, res) => {
 
@@ -125,4 +142,5 @@ router.post('/quotation', (req, res) => {
     })
 
 })
+
 module.exports = router
