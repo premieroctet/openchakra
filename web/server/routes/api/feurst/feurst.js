@@ -22,12 +22,17 @@ const i18n=require('../../../utils/i18n_init')
 router.get('/database', (req, res) => {
   getDatabase()
     .then(db => {
-      db.grounds=lodash(Object.keys(db.grounds))
+      const grounds=lodash(Object.keys(db.grounds))
         .groupBy(c => c.split(',')[3])
         .map((value, key) => [key, lodash.uniq(value.map(v => v.split(',')[2])).sort()])
         .fromPairs()
         .value()
-      res.json(lodash.omit(db, 'accessories'))
+      const result={
+        machines: db.machines,
+        thicknesses: db.thicknesses,
+        grounds: grounds,
+      }
+      res.json(result)
     })
     .catch(err => {
       console.error(err)

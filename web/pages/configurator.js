@@ -48,7 +48,7 @@ class Configurator extends React.Component {
       bucketWidth: null,
       thicknesses: [],
       ground: null,
-      grounds: [],
+      grounds: {},
       teethShieldFixType: null,
       borderShieldFixType: null,
       auto_quotation: false,
@@ -270,6 +270,7 @@ class Configurator extends React.Component {
       const {errors} = validateFeurstProspect({...this.state, 'phone': checkPhone?.number})
       phoneError = errors?.phone || null
     }
+
     
     this.setState({
       'phone': checkPhone?.number || numberPhone, error: {...this.state.error, phone: phoneError}})
