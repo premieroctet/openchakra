@@ -26,7 +26,7 @@ function MachineType(props) {
   return (
     <>
       <p className='text-base text-right'><RequiredField />{props.t('SUMMARY.mandatory_label')}</p>
-      <div className='grid machine gap-x-8 gap-y-4 md-gap-y-8'>
+      <div className='grid machine gap-x-8 gap-y-4'>
 
         <div className='machine-type h-full grid content-start gap-y-4'>
           <h2>{props.t('MACHINE_TYPE.type_label')} <RequiredField /></h2>
@@ -44,7 +44,9 @@ function MachineType(props) {
           </div>
         </div>
 
-        <div className='machine-brand grid content-between gap-y-4 h-full'>
+        <div className='machine-avert p-4'><span role="img" alt="information" className='infotext'>ℹ</span>{props.t('MACHINE_TYPE.info_text')}</div>
+
+        <div className='machine-brand grid gap-y-4'>
           <h2 id="machinebrand">{props.t('MACHINE_TYPE.brand_label')} <RequiredField /></h2>
           <Autocomplete
             freeSolo
@@ -60,7 +62,7 @@ function MachineType(props) {
         </div>
 
 
-        <div className='machine-model grid content-between gap-y-4 h-full'>
+        <div className='machine-model grid gap-y-4'>
           <h2 id="machinemodel">{props.t('MACHINE_TYPE.model_label')} <RequiredField /></h2>
           <Autocomplete
             freeSolo
@@ -75,7 +77,7 @@ function MachineType(props) {
           />
         </div>
 
-        <div className='machine-weight grid content-between gap-y-4 h-full'>
+        <div className='machine-weight grid gap-y-4'>
           <h2 id="machineweight">{props.t('MACHINE_TYPE.weight_label')}</h2>
           <Autocomplete
             freeSolo
@@ -92,7 +94,7 @@ function MachineType(props) {
           />
         </div>
 
-        <div className='machine-power grid content-between gap-y-4 h-full'>
+        <div className='machine-power grid gap-y-4'>
           <h2 id="machinepower">{props.t('MACHINE_TYPE.power_label')}</h2>
 
           <Autocomplete

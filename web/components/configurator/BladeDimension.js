@@ -14,8 +14,10 @@ const {
   Radio,
   InputAdornment,
   Select,
+  TextField,
   Input,
 } = require('@material-ui/core')
+const {Autocomplete} = require('@material-ui/lab')
 
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
@@ -59,7 +61,7 @@ function BladeDimension(props) {
           <h2>{props.t('BLADE_DIMENSIONS.blade_shape_label')} <RequiredField /></h2>
 
           {Object.keys(availableBlades).map(shape => (
-            <div key={shape} className='flex justify-center mr-8 mb-6'>
+            <div key={shape} className='grid grid-cols-1-2 justify-center mr-8 mb-6'>
               <Radio
                 checked={props.bladeShape === shape}
                 onChange={ev => props.onBladeShapeChange(ev.target.value)}
@@ -80,27 +82,51 @@ function BladeDimension(props) {
         <div>
           <h2 id='bucketthickness'>{props.t('BLADE_DIMENSION.blade_thickness_label')} <RequiredField /></h2>
 
-          <Select labelId='bucketthickness' className='w-full mb-6' name='bladeThickness' value={props.bladeThickness || ''} onChange={ev => props.onBladeThicknessChange(ev.target.value)} aria-describedby="bucketthickness">
-            {props.thicknesses.map((thick, index) => (
-              <MenuItem key={`${thick}-${index}`} value={thick}>{`${thick} mm`}</MenuItem>
-            ))}
-          </Select>
+          <Autocomplete
+            freeSolo
+            className='w-full mb-6'
+            options={props.thicknesses}
+            getOptionLabel={option => option.toString() }
+            aria-labelledby='machineweight'
+            value={props.bladeThickness || ''}
+            filterOptions={opts => (opts.filter(o => o >= props.bladeThickness).sort((a, b) => a - b)) }
+            // renderInput={params => <><TextField {...params} variant="standard" /> mm</>}
+            renderInput={params => {
+              return (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        <InputAdornment position="end">
+                      mm
+                        </InputAdornment>
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )
+            }}
+            onChange={(ev, value) => props.onBladeThicknessChange(value)}
+            onInputChange={(ev, value) => props.onBladeThicknessChange(value)}
 
-          <h2 id="bucketWidth">{props.t('BLADE_DIMENSION.bucket_width_label')}</h2>
+          />
+
+          <h2 id="bucketwidthlabel">{props.t('BLADE_DIMENSION.bucket_width_label')}</h2>
 
           <FormControl className='w-full mb-6' variant="standard">
             <Input
               id="bucketWidth"
               name="bucketWidth"
               type='number'
-              min={0}
+              InputProps={{inputProps: {min: 0, max: 100, 'aria-label': 'largeur godet en mm'}}}
               value={props.bucketWidth || ''}
               onChange={ev => props.onBucketWidthChange(ev.target.value)}
               endAdornment={<InputAdornment position="end">mm</InputAdornment>}
-              aria-describedby="bucket_width"
-              inputProps={{
-                'aria-label': 'largeur godet en mm',
-              }}
+              aria-describedby="bucketwidthlabel"
             />
           </FormControl>
         </div>

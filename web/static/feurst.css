@@ -124,12 +124,16 @@ h2,
 /* disposition */
 
 .machine {
-  grid-template-areas: 'machinetype' 'machinebrand' 'machinemodel' 'machineweight' 'machinepower';
+  grid-template-areas: 'machinetype' 'machineavert' 'machinebrand' 'machinemodel' 'machineweight' 'machinepower';
   grid-template-columns: 1fr;
 }
 
 .machine-type {
   grid-area: machinetype;
+}
+
+.machine-avert {
+  grid-area: machineavert;
 }
 
 .machine-brand {
@@ -150,6 +154,10 @@ h2,
 
 .grid {
   display: grid !important;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .grid-cols-1-2 {
@@ -367,6 +375,11 @@ h2,
   margin: 0 !important;
 }
 
+/* Adornment bucketWidth */
+#bucketWidth ~ .MuiInputAdornment-root {
+  margin-right: 1.4rem;
+}
+
 /* Boutons */
 
 /* Backgrounds */
@@ -385,6 +398,19 @@ h2,
 
 .app-container {
   min-height: 33rem;
+}
+
+.infotext {
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5em;
+  border: 1px solid var(--brand-color);
+  width: 2em;
+  height: 2em;
+  margin-right: .5rem;
+  color: var(--brand-color);
 }
 
 .rounded-container {
@@ -498,13 +524,15 @@ dl {
 
 .summary .MuiSelect-root,
 .summary .MuiInputBase-root {
-  padding: 0;
+  padding-left: 0;
+  padding-top: 0;
+  margin-top: .4em;
 }
 
 
 @media screen and (min-width: 768px) {
   .machine {
-    grid-template-areas: 'machinetype machinetype' 'machinebrand machinemodel' 'machineweight machinepower';
+    grid-template-areas: 'machinetype machinetype' 'machineavert machineavert' 'machinebrand machinemodel' 'machineweight machinepower';
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -549,7 +577,7 @@ dl {
   }
 
   .machine {
-    grid-template-areas: 'machinetype machinebrand machinemodel' 'machinetype machineweight machinepower';
+    grid-template-areas: '. machineavert machineavert' 'machinetype machinebrand machinemodel' 'machinetype machineweight machinepower';
     grid-template-columns: repeat(3, 1fr);
   }
 

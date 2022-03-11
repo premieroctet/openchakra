@@ -17,6 +17,7 @@
   "FIX_TYPE.sold": "À souder",
 
   "MACHINE_TYPE.title": "Bienvenue dans le configurateur",
+  "MACHINE_TYPE.info_text" : "Si vous ne trouvez pas votre machine, veuillez saisir les informations. Un de nos experts reviendra vers vous.",
   "MACHINE_TYPE.type_label": "Quelle machine souhaitez-vous équiper ?",
   "MACHINE_TYPE.brand_label": "Indiquez la marque de votre machine : ",
   "MACHINE_TYPE.model_label": "Choisissez le modèle de votre machine : ",
