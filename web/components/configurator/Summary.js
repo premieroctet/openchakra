@@ -69,7 +69,7 @@ const PhoneNumber = ({t, error, onPhoneChange, isValueExpected}) => {
         </Select>
       </FormControl>
 
-      <FormControl variant="standard" className='grid content-between'>
+      <FormControl variant="standard">
         <label htmlFor="phone">{t('SUMMARY.phone_label')} <RequiredField /></label>
         <TextField
           placeholder={t('SUMMARY.phone_placeholder')}
