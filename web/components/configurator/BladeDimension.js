@@ -43,7 +43,6 @@ function BladeDimension(props) {
     },
     [UNKNOWN]: {
       label: props.t(BLADE_SHAPES[UNKNOWN]),
-      path: `${feurstImgPath}/lame-delta.svg`,
       width: '120',
       height: '74',
     },
@@ -66,8 +65,9 @@ function BladeDimension(props) {
               id={shape}
               inputProps={{'aria-label': blades[shape].label}}
             />
-            <label className='flex flex-col items-center' htmlFor={shape}>
-              {blades[shape].label}<img src={blades[shape].path} alt="" width={blades[shape].width} height={blades[shape].height} />
+            <label className='flex flex-col items-center justify-center' htmlFor={shape}>
+              {blades[shape].label}
+              {blades[shape].path && <img src={blades[shape].path} alt="" width={blades[shape].width} height={blades[shape].height} />}
             </label>
           </div>
         ))}

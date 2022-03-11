@@ -104,7 +104,6 @@ h2, h3 {
   text-transform: capitalize;
 }
 
-
 .asterixsm {
   color: red;
 }
@@ -119,6 +118,8 @@ h2,
   font-style: italic;
   margin: 1rem;
 }
+
+.invisible {visibility: hidden;}
 
 /* disposition */
 
@@ -151,8 +152,8 @@ h2,
   display: grid !important;
 }
 
-.grid-cols-1-3 {
-  grid-template-columns: 1fr 3fr;
+.grid-cols-1-2 {
+  grid-template-columns: 1fr 2fr;
 }
 
 .col-span-2 {
@@ -466,12 +467,16 @@ h2,
   margin-bottom: .5rem;
 }
 
-/* 
+ 
 .summary .recap dl {
   margin: 0;
   display: grid;
   grid-template-columns: max-content auto;;
-} */
+} 
+
+dd {
+  margin-bottom: 0.2rem;
+}
 
 dl {
   margin: 0;
