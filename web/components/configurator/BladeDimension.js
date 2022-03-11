@@ -120,7 +120,6 @@ function BladeDimension(props) {
               id="bucketWidth"
               name="bucketWidth"
               type='number'
-              InputProps={{inputProps: {min: 0, max: 100, 'aria-label': 'largeur godet en mm'}}}
               value={props.bucketWidth || ''}
               onChange={ev => props.onBucketWidthChange(ev.target.value)}
               endAdornment={<InputAdornment position="end">mm</InputAdornment>}
