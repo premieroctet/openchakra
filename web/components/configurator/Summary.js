@@ -47,7 +47,11 @@ const PhoneNumber = ({t, error, onPhoneChange, isValueExpected}) => {
 
   useEffect(() => {
     const {language} = window.navigator
-    if (isoCode === '') { setIsoCode(language.substring(0, 2).toUpperCase()) }
+    if (isoCode === '') {
+      let country = language.split('-')
+      country = country.length > 1 ? country[1] : country[0]
+      setIsoCode(country.toUpperCase())
+    }
 
   }, [isoCode])
 
