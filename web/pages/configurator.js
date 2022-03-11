@@ -43,6 +43,7 @@ class Configurator extends React.Component {
       powers: [],
       weight: null,
       weights: [],
+      teeth_count: null,
       bladeShape: null,
       bladeThickness: null,
       bucketWidth: null,
@@ -112,12 +113,11 @@ class Configurator extends React.Component {
     setAxiosAuthentication()
     axios.get('/feurst/api/thicknesses', {params: params})
       .then(res => {
-        const thicknesses=res.data
-        const st={thicknesses: thicknesses}
-        if (thicknesses.length==1) {
-          st.bladeThickness=thicknesses[0]
+        const st=res.data
+        if (st.thicknesses.length==1) {
+          st.bladeThickness=st.thicknesses[0]
         }
-        else if (thicknesses.length>0 && !thicknesses.includes(this.state.bladeThickness)) {
+        else if (st.thicknesses.length>0 && !st.thicknesses.includes(this.state.bladeThickness)) {
           st.bladeThickness=null
         }
         this.setState(st)

@@ -344,4 +344,4 @@ const computeDescription = (data, full_info) => {
   return description
 }
 
-module.exports={getDatabase, computePrecos, computeDescription, getHardness, getFamily}
+module.exports={getDatabase, computePrecos, computeDescription, getHardness, getFamily, getTeethRef, getTeethCount}

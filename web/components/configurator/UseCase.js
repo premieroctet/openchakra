@@ -1,3 +1,4 @@
+const RequiredField = require('../misc/RequiredField')
 const {withTranslation} = require('react-i18next')
 const {Switch, Accordion, AccordionSummary, AccordionDetails} = require('@material-ui/core')
 
@@ -81,7 +82,8 @@ function UseCase(props) {
 
   return (
     <>
-      <h2>{props.t('USE_CASE.use_case_label')}</h2>
+      <p className='text-base text-right'><RequiredField />{props.t('SUMMARY.mandatory_label')}</p>
+      <h2>{props.t('USE_CASE.use_case_label')} <RequiredField /></h2>
       <div className='flex flex-col justify-center gap-x-4 md-flex-row md-flex-wrap'>
         {
           Object.entries(props.grounds).map(entry => {
