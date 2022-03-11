@@ -56,6 +56,14 @@ class Configurator extends React.Component {
 
   }
 
+  onResize = () => {
+    // Obviously you can format your data object however you want
+    window.parent.postMessage({
+      type: 'resize',
+      height: document.body.scrollHeight,
+    }, '*')
+  }
+
   componentDidMount = () => {
     setAxiosAuthentication()
     axios.get('/feurst/api/database')
@@ -66,12 +74,18 @@ class Configurator extends React.Component {
           grounds: res.data.grounds,
         })
         this.onMachinesChange(res.data.machines)
+        this.onResize() // Invoke the handler manually once initially
       })
       .catch(err => console.error(err))
 
     if (is_development()) {
       this.getPrecos()
     }
+    
+    (new ResizeObserver(() =>
+      this.onResize(),
+    )).observe(document.body)
+    
   }
 
   getPrecos = () => {
@@ -287,8 +301,6 @@ class Configurator extends React.Component {
       phoneError = errors?.phone || null
     }
 
-
-    
     this.setState({
       'phone': checkPhone?.number || numberPhone, error: {...this.state.error, phone: phoneError}})
   }

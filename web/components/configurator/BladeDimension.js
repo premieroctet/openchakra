@@ -9,10 +9,8 @@ const {
 } = require('../../utils/feurst_consts')
 const {
   FormControl,
-  MenuItem,
   Radio,
   InputAdornment,
-  Select,
   TextField,
   Input,
 } = require('@material-ui/core')
@@ -87,7 +85,6 @@ function BladeDimension(props) {
           aria-labelledby='machineweight'
           value={props.bladeThickness || ''}
           filterOptions={opts => (opts.filter(o => o >= props.bladeThickness).sort((a, b) => a - b)) }
-          // renderInput={params => <><TextField {...params} variant="standard" /> mm</>}
           renderInput={params => {
             return (
               <TextField
@@ -119,7 +116,6 @@ function BladeDimension(props) {
             id="bucketWidth"
             name="bucketWidth"
             type='number'
-            InputProps={{inputProps: {min: 0, max: 100, 'aria-label': 'largeur godet en mm'}}}
             value={props.bucketWidth || ''}
             onChange={ev => props.onBucketWidthChange(ev.target.value)}
             endAdornment={<InputAdornment position="end">mm</InputAdornment>}

@@ -120,6 +120,7 @@ function Summary(props) {
     borderShieldFixType,
     isValueExpected,
     onValueChange,
+    onResize,
   } = props
 
   const formInputs = [
@@ -172,6 +173,9 @@ function Summary(props) {
           setPrecos(res.data)
         })
     }
+
+    onResize()
+
   }, [])
 
   return (
