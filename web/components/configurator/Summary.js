@@ -1,3 +1,4 @@
+const RequiredField = require('../misc/RequiredField')
 const {is_development} = require('../../config/config')
 const axios = require('axios')
 const {setAxiosAuthentication} = require('../../utils/authentication')
@@ -37,11 +38,12 @@ const PhoneNumber = ({t, error, onPhoneChange, isValueExpected}) => {
     setRawphone(ev.target.value)
     onPhoneChange(ev.target.value, isoCode)
   }
-  
+
+
   const blurLangIsoCode = () => {
     onPhoneChange(rawphone, isoCode, true)
   }
-  
+
 
   useEffect(() => {
     const {language} = window.navigator
@@ -51,10 +53,12 @@ const PhoneNumber = ({t, error, onPhoneChange, isValueExpected}) => {
 
   return (
     <div className='grid-cols-1-2 gap-x-2'>
-      
+
+
       <FormControl variant="standard">
         <label htmlFor='country-select'>{t('SUMMARY.phone_prefix')}</label>
-          
+
+
         <Select
           id="country-select"
           value={isoCode}
@@ -89,10 +93,6 @@ const PhoneNumber = ({t, error, onPhoneChange, isValueExpected}) => {
 
 }
 
-
-const RequiredField = () => (
-  <span className='asterixsm text-sm' aria-label='requis'>*</span>
-)
 
 function Summary(props) {
 
@@ -223,7 +223,8 @@ function Summary(props) {
             <dd>{props.t(FIX_TYPES[borderShieldFixType])}</dd>
           </dl>
         </div>
-        
+
+
       </div>
 
       {precos?.accessories &&

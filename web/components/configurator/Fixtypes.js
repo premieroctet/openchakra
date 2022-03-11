@@ -1,3 +1,4 @@
+const RequiredField = require('../misc/RequiredField');
 const {withTranslation} = require('react-i18next')
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
@@ -24,11 +25,12 @@ function FixTypes(props) {
 
   return (
     <div className='fixtypes'>
+      <p className='text-base text-right'><RequiredField />{props.t('SUMMARY.mandatory_label')}</p>
       <h2>{props.t('FIX_TYPES.fix_type_label')}</h2>
       <div className='flex flex-col gap-x-8 justify-center md-flex-row'>
 
         <div>
-          <h2 className='text-center'>{props.t('FIX_TYPES.teeth_fix_type')}</h2>
+          <h2 className='text-center'>{props.t('FIX_TYPES.teeth_fix_type')} <RequiredField /></h2>
 
           <div className='flex justify-center gap-x-4'>
             {Object.keys(fixtures).map(fixType => (
@@ -44,7 +46,7 @@ function FixTypes(props) {
         </div>
 
         <div>
-          <h2 className='text-center'>{props.t('FIX_TYPES.borders_fix_type')}</h2>
+          <h2 className='text-center'>{props.t('FIX_TYPES.borders_fix_type')} <RequiredField /></h2>
 
           <div className='flex justify-center gap-x-4'>
             {Object.keys(fixtures).map(fixType => (
