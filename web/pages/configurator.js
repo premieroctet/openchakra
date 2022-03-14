@@ -82,11 +82,11 @@ class Configurator extends React.Component {
     if (is_development()) {
       this.getPrecos()
     }
-    
+
     (new ResizeObserver(() =>
       this.onResize(),
     )).observe(document.body)
-    
+
   }
 
   getPrecos = () => {

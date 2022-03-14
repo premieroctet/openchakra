@@ -1,13 +1,14 @@
-const RequiredField = require('../misc/RequiredField')
-const {withTranslation} = require('react-i18next')
 const {
   BLADE_SHAPES,
   CHARGEUSE,
   DELTA,
   DROITE,
+  EXCAVATRICE,
   SEMI_DELTA,
   UNKNOWN,
 } = require('../../utils/feurst_consts')
+const RequiredField = require('../misc/RequiredField')
+const {withTranslation} = require('react-i18next')
 const {
   FormControl,
   Radio,
@@ -26,19 +27,22 @@ function BladeDimension(props) {
   const blades = {
     [DROITE]: {
       label: props.t(BLADE_SHAPES[DROITE]),
-      path: `${feurstImgPath}/lame-droite.svg`,
+      path: `${feurstImgPath}/lame-droite-${props.teeth_count}.svg`,
+      alt_path: `${feurstImgPath}/lame-droite.svg`,
       width: '120',
       height: '74',
     },
     [SEMI_DELTA]: {
       label: props.t(BLADE_SHAPES[SEMI_DELTA]),
-      path: `${feurstImgPath}/lame-semidelta.svg`,
+      path: `${feurstImgPath}/lame-semidelta-${props.teeth_count}.svg`,
+      alt_path: `${feurstImgPath}/lame-semidelta.svg`,
       width: '120',
       height: '74',
     },
     [DELTA]: {
       label: props.t(BLADE_SHAPES[DELTA]),
-      path: `${feurstImgPath}/lame-delta.svg`,
+      path: `${feurstImgPath}/lame-delta-${props.teeth_count}.svg`,
+      alt_path: `${feurstImgPath}/lame-delta.svg`,
       width: '120',
       height: '74',
     },
@@ -49,7 +53,7 @@ function BladeDimension(props) {
     },
   }
 
-  const availableBlades=lodash.pick(blades, [DROITE, props.type==CHARGEUSE ? DELTA : SEMI_DELTA, UNKNOWN])
+  const availableBlades=lodash.omit(blades, [CHARGEUSE, EXCAVATRICE].includes(props.type) ? [DELTA] : [])
 
   return (
     <>
@@ -58,22 +62,29 @@ function BladeDimension(props) {
         <div>
           <h2>{props.t('BLADE_DIMENSIONS.blade_shape_label')} <RequiredField /></h2>
 
-          {Object.keys(availableBlades).map(shape => (
-            <div key={shape} className='grid grid-cols-1-2 justify-center mr-8 mb-6'>
-              <Radio
-                checked={props.bladeShape === shape}
-                onChange={ev => props.onBladeShapeChange(ev.target.value)}
-                value={shape}
-                name="bladeShape"
-                id={shape}
-                inputProps={{'aria-label': blades[shape].label}}
-              />
-              <label className='flex flex-col items-center justify-center' htmlFor={shape}>
-                {blades[shape].label}
-                {blades[shape].path && <img src={blades[shape].path} alt="" width={blades[shape].width} height={blades[shape].height} />}
-              </label>
-            </div>
-          ))}
+          {Object.keys(availableBlades).map(shape => {
+            const blade_data=availableBlades[shape]
+            return(
+              <div key={shape} className='grid grid-cols-1-2 justify-center mr-8 mb-6'>
+                <Radio
+                  checked={props.bladeShape === shape}
+                  onChange={ev => props.onBladeShapeChange(ev.target.value)}
+                  value={shape}
+                  name="bladeShape"
+                  id={shape}
+                  inputProps={{'aria-label': blade_data.label}}
+                />
+                <label className='flex flex-col items-center justify-center' htmlFor={shape}>
+                  {blade_data.label}
+                  {blade_data.path && <img src={blade_data.path} alt="" width={blade_data.width} height={blade_data.height}
+                    onError={({currentTarget}) => {
+                      currentTarget.onerror = null
+                      currentTarget.src=blade_data.alt_path
+                    }} />}
+                </label>
+              </div>
+            )
+          })}
 
         </div>
 
