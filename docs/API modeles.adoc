@@ -1,0 +1,24 @@
+# Feurst EDI Api et modèles de données
+Séabstien Auvray <sebastien.auvray@alfredplace.io>
+v1.0
+// Mise en place de la table des matières
+:toc-title: Table des matières
+:toc:
+
+Description des modèles de données et API nécessaires à la fonction EDI de Feurst
+
+## Login
+- Fourniture des rôles possibles suivant l'adresse mail
+- A la connexion, vérification validité email/password/rôle
+- Fourniture cookie identification
+- Lien vers reset password
+- Lien vers demande d'accès
+
+## Saisie des commandes
+- GET Données commande par id
+- POST Import Excel pour commande id ou nouvelle => retourne log d'import
+- GET Recherche produit par partie de référence => retourne tableau infos produit et stock
+- PUT Ajout ligne de commande dans commande
+- GET Fourniture modèle excel pour import
+
+NOTE: Quid de la gestion de stock (disc. avec Feurst)?
