@@ -1,0 +1,615 @@
+# Feurst EDI Gestion des commandes
+Richard Pasquiou <richard.pasquiou@alfredplace.io>
+v1.0, 2022-03-08
+// Mise en place de la table des matières
+:toc-title: Table des matières
+:toc:
+
+Feurst souhaite éditer des devis, et des commandes via un module nommé EDI accessible via l'url https://www.tools.feurst.fr. 
+
+Selon le *profil utilisé* pour visiter ce site, les *clients, commerciaux et administrateurs* de Feurst disposent d'une interface adaptée à leurs besoins.
+
+Les *administrateurs* attribuent des accès aux comptes.  
+
+Les *clients* peuvent saisir des références des produits pour établir des commandes et des devis. Un import de fichier type tableur permet d'ajouter / remplacer (rayer la mention inutile) des références de produits dans le formulaire de saisie de commande. Le modèle de fichier est téléchargeable.
+
+Les *commerciaux* peuvent créer, modifier des devis et envoyer au client la proposition finale. Ils mettent à jour le statut des commandes en important les factures et bons de livraison.
+
+<<<
+:numbered:
+## Vue d'ensemble des rubriques selon profil
+
+. Administrateur
+.. Commandes
+.. Mon profil
+.. Dashboard
+... Gestion des accès
+... Factures
+... Compte
+.... Modification informations compte (Infos E)
+. Commerciaux / ADV
+.. Commandes
+... Commandes à traiter
+.... Statuts de commandes
+.... Ajout de documents (Factures, bons de livraison)
+... Commandes traitées
+.. Devis
+... Devis à traiter
+.... Modification de devis
+... Devis traités
+... Création de devis
+. Clients
+.. Commandes
+... Commandes
+.... Création de commande (ajout de produits selon référence, adresse de livraison)
+... Historique de commandes
+... Mes devis
+.. Mon Compte
+... Modification informations compte (Infos E et modif mot de passe)
+
+<<<
+
+## Formulaire de connexion
+
+TIP: maquette p.10
+
+Afin d'accéder à l'espace dédié au profil, on renseigne un formulaire (unique ?) de connexion ou l'on a la possibilité de demander un accès.
+
+### Login
+
+*Informations*`saisie`:: 
+- [ ] Login email
+- [ ] Login mot de passe 
+
+*Actions*::
+- [ ] _Bouton_ *Se connecter*
+- [ ] _Lien_ *Mot de passe oublié*
+
+NOTE: Interface de récupération de mot de passe manquante.
+
+### Demande accès
+
+Demande accès compte
+
+*Informations*`visu`:: 
+- [ ] _Lien_ Demander des accès
+
+NOTE: Interface de demande d'accès manquante.
+
+## Profil administrateur
+
+### Gestion des accès
+
+TIP: maquette p.17
+
+#### Administrateurs
+
+Liste des administrateurs
+
+*Informations*`visu`:: 
+- [ ] Administrateur nom
+- [ ] Administrateur prénom
+- [ ] Administrateur email
+
+*Actions*::
+- [ ] Administrateur ajout
+- [ ] Administrateur modification
+- [ ] Administrateur suppression
+
+#### Gestion des accès
+
+Liste des revendeurs ayant accès au service.
+
+*Informations*`visu`:: 
+- [ ] Revendeur nom
+- [ ] Revendeur prénom
+- [ ] Revendeur email
+- [ ] Revendeur recherche utilisateur `saisie`
+
+*Actions*::
+- [ ] Revendeur ajout
+- [ ] Revendeur modification
+- [ ] Revendeur suppression
+- [ ] Revendeur tri par ordre alpha
+
+NOTE: Quid des profils assignés ? Les affiche t'on ?
+
+NOTE: Screen de modification revendeurs manquant
+
+NOTE: Téléchargement ou upload sous forme de tableur des revendeurs ayant accès ? Exemple de fichier ?
+
+
+### Factures
+
+TIP: maquette p.15
+
+Tableau recensant les commandes réalisées par l'ensemble des clients affichées selon un *filtre de date/période*, et un *tri par colonne*
+
+.Exemple d'entrée du tableau des factures
+[width="80%",options="header"]
+|==============================================
+| Date       | Désignation        | Quantité | Prix total | Détails       | Statut
+| 21/12/21   | Carrière de granit | 4        | 380,93 €   | Télécharger   | Livrée
+|==============================================
+
+*Informations*`visu`:: 
+- [ ] facture date
+- [ ] facture désignation
+- [ ] quantité
+- [ ] facture prix total
+- [ ] facture statut
+
+*Actions*::
+- [ ] Trier par
+- [ ] Filtres
+- [ ] Télécharger facture (colonne détails)
+
+NOTE: Le statut *Livrée* est-il affiché quand le bon de livraison a été renseigné sur la commande ?
+
+### Compte
+
+TIP: maquette p.16
+
+*Informations*`visu|saisie`:: 
+- [ ] Dénomination sociale
+- [ ] SIRET
+- [ ] No TVA
+- [ ] Adresse de facturation
+
+## Profil Commerciaux / ADV
+
+### Commandes
+
+#### Commandes à traiter
+
+TIP: maquette p.19
+
+Liste de commandes à traiter affichées selon un *filtre de compte client*, et un *tri par date*.
+Sur cet écran, les statuts des commandes sont _taguées_ selon les statuts suivants :
+
+* Traitée
+* Partiellement traitée
+
+*Informations*`visu`::
+Les informations pour chaque commande affichée sont :
+- [ ] intitulé
+- [ ] Numéro de commande
+- [ ] Date de commande
+
+*Actions*::
+sur chaque commande : 
+- [ ] Voir la commande
+- [ ] Ajout d'éléments relatifs à la commande (facture, bon de livraison, commentaires)
+
+
+NOTE: Comment accède-t'on à la modale de dépôt de documents ?
+
+NOTE: Une commande est considérée traitée lorsque la facture et le BL ont été renseignés ?
+
+NOTE: Je ne comprends pas le _tag_ du statut (traitée|partiellement traitée) étant donné la segmentation plus haut (Commandes à traiter, commandes traitées)
+
+#### Commandes traitées
+
+A discuter 🤔
+
+### Devis
+
+#### Devis à traiter
+
+TIP: maquette p.21
+
+Liste des devis à traiter sous forme de tableau selon un *filtre de compte client*, et un *tri par date*.
+
+.Exemple d'entrée du tableau des devis à traiter
+[width="80%",options="header"]
+|==================================================================
+| Date       | Désignation            | Détails | Statut     | Validation
+| 21/12/21   | Carrière de Val d'Oise | Voir    | à traiter  | Traiter
+|==================================================================
+
+*Informations*`visu`::
+Les informations pour chaque devis affiché sont :
+- [ ] Devis date
+- [ ] Devis désignation
+- [ ] Devis statut
+
+*Actions*::
+sur chaque devis :
+- [ ] Voir (colonne détails)
+- [ ] Traiter (colonne validation)
+
+NOTE: Il y a un filtre compte client, mais le numéro ou identifiant client n'est pas présent dans le tableau des devis à traiter.
+
+NOTE: Qu'implique l'action traiter ? La modification du devis ?
+
+#### Modification de devis
+
+TIP: maquette p.22
+
+[#addRefProduct]
+##### Ajout produit par référence 
+
+Le commercial peut ajouter d'autres produits au devis. L'interface à cet effet dispose d'un champ de saisie de référence catalogue, et d'un champ quantité. 
+
+*Informations*`saisie`::
+- [ ] référence produit
+- [ ] quantité produit
+
+*Actions*::
+- [ ] _Bouton_ *valider* (ajout de réf et quantité) => Zone relatant existence / dispo produit
+
+
+##### Ajout produit au devis
+A l'action du bouton valider (ajout de réf et quantité), vérification du produit en base, et affichage d'une zone relatant l'existence et la dispo produit : 
+
+###### Produit existant
+
+*Informations*`visu`::
+- [ ] Produit désignation
+- [ ] Produit quantité disponible par rapport à celle demandée
+- [ ] Produit poids
+- [ ] Produit prix catalogue
+- [ ] Produit remise
+- [ ] Produit prix
+
+*Actions*::
+- [ ] _Bouton_ *Ajouter au devis* => Nouvelle entrée au tableau "Détails du devis en cours"
+
+###### Produit inexistant
+
+*Informations*`visu`::
+- [ ] Message erreur invitant à saisir une autre référence.
+
+##### Détails du devis en cours
+
+Le commercial peut également supprimer un produit, modifier les quantités et le pourcentage de remise appliqué sur un produit.
+
+[#productEntry]
+.Exemple d'entrée du tableau Détails du devis en cours
+[width="100%",options="header", caption="Les champs éditables sont entre []. "]
+|==========================================================================================
+| Réf catalogue | Désignation | Quantité | Poids | Prix catalogue | Remises | Votre prix | Suppression
+| 940561        | TKN13-PE    | [1]      | 14kg  | 64,88          | [40] %  | 38,93      | 🗑️
+|==========================================================================================
+
+*Informations*`visu`::
+Les informations pour chaque ligne du devis affiché sont :
+- [ ] Produit ref catalogue
+- [ ] Produit désignation
+- [ ] Produit quantité `visu|saisie`
+- [ ] Produit poids
+- [ ] Produit prix catalogue
+- [ ] Produit remise `visu|saisie`
+- [ ] Produit prix `visu|saisie`
+- [ ] En fin de tableau : total du devis comprenant le total des produits remisés + le montant de la livraison
+
+
+*Actions*::
+- [ ] Saisie référence produit
+- [ ] Quantité produit (colonne Quantité)
+- [ ] Remise produit (colonne Remises)
+- [ ] Suppression ligne produit (colonne Suppression)
+
+
+##### Livraison
+
+Une zone de l'édition du devis précise l'adresse et le montant de la livraison. Ce dernier est modifiable.
+
+*Informations*`visu`::
+- [ ] Livraison type (standard|express)
+- [ ] Livraison adresse
+- [ ] Livraison numéro téléphone
+- [ ] Livraison montant `visu|saisie`
+- [ ] Livraison délai estimé
+
+
+##### Envoi du devis modifié au client
+
+L'envoi du devis au client est envoyé par mél. 
+Le devis édité a une date de validité de `XXX` jours à compter de son édition.
+
+*Actions*::
+- [ ] _Bouton_ *Envoyer au client* 
+
+
+NOTE: Le prix remisé est-il arrondi à l'inférieur ou supérieur ?
+
+[#devisTraites]
+### Devis traités
+
+TIP: maquette p.15
+
+Tableau recensant les devis traités affichés selon un *filtre compte client*, et un *tri par date/période*
+
+.Exemple d'entrées du tableau devis traités
+[width="100%",options="header"]
+|==========================================================================================
+| Date     | Désignation     | Détails | Statut                                                        | Validation 
+| 21/12/21 | Carrière du...  | Voir    | 🟢 traitée https://example.org/[voir la proposition]  Valable jusqu'au 20/01/22 | En attente d'acceptation
+| 21/12/21 | Carrière du...  | Voir    | ⚫ terminée   | La proposition a été acceptée - https://example.org/[voir la commande]
+| 21/12/21 | Carrière du...  | Voir    | ⚫ expirée   | La proposition a expiré
+|==========================================================================================
+
+*Informations*`visu`::
+Les informations pour chaque ligne du tableau devis traités sont :
+- [ ] Devis date
+- [ ] Devis désignation
+- [ ] Devis détails
+- [ ] Devis statut
+- [ ] Devis validation
+
+*Actions*::
+- [ ] Voir la proposition (colonne _Statut_)
+- [ ] Voir la commande (colonne _Validation_)
+
+
+
+### Création de devis
+
+TIP: maquette p.21 pour le _bouton_ *Créer un devis*
+
+Le bouton *Créer un devis* est sur le screen des devis à traiter. 
+
+NOTE: Est-ce le même process que lorsque le client commande ? Avec l'option Demande de devis ? Voir maquette p.3 
+
+NOTE: Je propose de mettre le bouton *Créer un devis* dans le section devis, en haut, à côté du titre Traitement des devis. (accessible sur les sections devis à traiter et devis traités)
+
+
+## Clients
+
+### Commandes
+
+#### Commande
+
+TIP: maquette p.1
+
+Deux options sont proposées en premier lieu :
+* Importer un fichier Excel
+* Renseigner manuellement la commande
+
+##### Import fichier Excel
+
+*Actions*::
+- [ ] _Bouton_ *Import fichier Excel*
+- [ ] _Lien_ *Télécharger le modèle de fichier Excel*
+
+[#commandeClientSaisie]
+##### Saisie référence
+
+Voir <<addRefProduct, Ajout produit par référence>>. La saisie des références induit le même comportement présenté ci-dessus : Zone présentant la dispo du produit, ou erreur si référence non trouvée.
+
+##### Tableau des références en commande
+
+Le modèle est proche de celui présenté sur la <<productEntry, modification du devis>>
+
+.Exemple d'entrée du tableau détails de la commande en cours
+[width="100%",options="header"]
+|==========================================================================================
+| Réf catalogue | Désignation | Quantité | Poids | Prix catalogue | Remises | Votre prix | Suppression
+| 940561        | TKN13-PE    | 1        | 14kg  | 64,88          | 40 %    | 38,93      | 🗑️
+|==========================================================================================
+
+*Informations*`visu`::
+Les informations pour chaque ligne de la commande affichée sont :
+- [ ] Produit ref catalogue
+- [ ] Produit désignation
+- [ ] Produit quantité
+- [ ] Produit poids
+- [ ] Produit prix catalogue
+- [ ] Produit remise
+- [ ] Produit prix
+
+*Actions*::
+- [ ] Suppression ligne produit (colonne Suppression)
+
+NOTE: Pas de total de commande indiqué ?
+
+##### Modale de livraison 
+
+Dès qu'une référence est renseignée, le bouton *J'ai fini, indiquer mes options de livraison* est actif.
+
+Lors du clic sur *J'ai fini, indiquer mes options de livraison*, la modale de livraison doit afficher les élements suivants :
+
+*Informations*`saisie`::
+- [ ] Livraison nom commande
+- [ ] Livraison nom adresse (si adresses du client, les afficher en listes)
+- [ ] Livraison adresse 
+- [ ] Livraison cp
+- [ ] Livraison ville
+- [ ] Livraison pays
+- [ ] Livraison numéro téléphone (non requis)
+- [ ] Livraison option [standard|express]
+
+*Actions*::
+- [ ] Valider ces informations => fermeture de la modale
+
+
+NOTE: Sur la maquette p.3, il y a les boutons *demande de devis* et *J'ai fini, indiquer mes options de livraison*. ça me chagrine. Je préférerai n'afficher que *J'ai fini*
+
+##### Revenir à la saisie
+
+On revient à la saisie <<commandeClientSaisie, dans le tableau>>.
+
+NOTE: Efface-t'on l'adresse ? Je sais pas, je suis fatigué.
+
+##### Demande de devis
+
+*Actions*::
+- [ ] _Bouton_ *Demande de devis*
+- [ ] Envoi mél client devis reçu
+- [ ] Envoi mél Feurst devis
+
+
+##### Valider ma commande
+
+*Actions*::
+- [ ] _Bouton_ *Valider ma commande*
+- [ ] Envoi mél client confirmation commande
+- [ ] Envoi mél Feurst commande
+
+
+#### Historique de commandes
+
+TIP: maquette p.6
+
+Tableau recensant l'historique de commandes du client connecté affichées selon un *filtre de date/période*, et un *tri par date*
+
+.Exemple d'entrée du tableau historique de commandes
+[width="80%",options="header"]
+|================================================================================
+| Date       | Désignation        | Quantité | Prix total | Détails | Statut  | Re-commander
+| 21/12/21   | Carrière de granit | 4        | 380,93 €   | Voir    | Traitée | trolleyIcon
+|================================================================================
+
+*Informations*`visu`:: 
+- [ ] Commande date
+- [ ] Commande désignation
+- [ ] Commande quantité
+- [ ] Commande prix total
+- [ ] Commande détails
+- [ ] Commande statut
+- [ ] Commande recommander
+
+*Actions*::
+- [ ] Trier par
+- [ ] Filtres
+- [ ] Voir commande (colonne détails)
+
+##### Voir commande
+
+TIP: maquette p.7
+
+###### Détails commande (général)
+
+Affichage du nom, numéro et date de commande
+
+*Informations*`visu`:: 
+- [ ] Commande nom/désignation
+- [ ] Commande numéro
+- [ ] Commande date
+
+*Actions*::
+- [ ] _Bouton_ imprimer commande
+
+
+###### détails commande (tableau)
+
+Tableau recensant les détails d'une commande
+
+.Exemple d'entrée du tableau détails de la commande
+[width="80%",options="header"]
+|==========================================================================================
+| Réf catalogue | Désignation | Quantité | Poids | Prix catalogue | Remises | Votre prix 
+| 940561        | TKN13-PE    | 4        | 14kg  | 64,88          | 40 %    | 38,93      
+|==========================================================================================
+
+*Informations*`visu`:: 
+- [ ] Article ref catalogue
+- [ ] Article désignation
+- [ ] Article quantité
+- [ ] Article poids
+- [ ] Article prix catalogue
+- [ ] Article remise
+- [ ] Article prix
+
+###### détails commande (livraison)
+
+*Informations*`visu`::
+- [ ] Livraison type (standard|express)
+- [ ] Livraison prix
+- [ ] Livraison adresse
+- [ ] Livraison numéro téléphone
+- [ ] Livraison montant 
+- [ ] Livraison délai estimé
+
+###### détails commande (documents utiles)
+
+*Actions*::
+- [ ] _Bouton_ télécharger *facture*
+- [ ] _Bouton_ télécharger *bon de livraison*
+
+
+NOTE: Livraison prix => environ ?
+
+NOTE: Bouton imprimer ou télécharger. Est-ce nécessaire vu la section documents utiles
+
+
+#### Mes devis
+
+.Exemple d'entrées du tableau Mes devis
+[width="100%",options="header"]
+|==========================================================================================
+| Date     | Désignation     | Détails | Statut                                                        | Validation 
+| 21/12/21 | Carrière du...  | Voir    | 🟢 traitée https://example.org/[voir la proposition]  Valable jusqu'au 20/01/22 | Bouton passer commande
+| 21/12/21 | Carrière du...  | Voir    | 🟢 Commandé          | Vous avez accepté la proposition
+| 21/12/21 | Carrière du...  | Voir    | 🔶 Devis en cours    | Proposition en cours
+| 21/12/21 | Carrière du...  | Voir    | ⚫ Expiré            | Votre proposition a expiré
+|==========================================================================================
+
+*Informations*`visu`::
+Les informations pour chaque ligne du tableau Mes devis sont :
+- [ ] Devis date
+- [ ] Devis désignation
+- [ ] Devis détails
+- [ ] Devis statut
+- [ ] Devis validation
+
+*Actions*::
+- [ ] Passer commande (colonne _Validation_)
+- [ ] => Confirmation mél commande client
+- [ ] => Envoi mél commande Feurst
+
+
+### Mon Compte
+
+Informations générales sur le client, et changement de mot de passe.
+
+*Informations*`visu|saisie`:: 
+- [ ] Client nom
+- [ ] Client prénom
+- [ ] Client Entreprise
+- [ ] Client email
+- [ ] Client téléphone
+
+#### Modification mot de passe
+
+Texte indiquant les critères valides pour l'enregistrement du mot de passe
+
+*Informations*`saisie`:: 
+- [ ] Mot de passe actuel
+- [ ] Nouveau mot de passe
+
+*Actions*::
+- [ ] Sauvegarder
+
+
+
+
+## Divers 
+
+• Pour se répérer, mettre un élément visuel sur Commande, mon compte
+• Adresse unique de livraison pour une commande ? Pourquoi mettre un nom de l'adresse ?
+• Dans mon compte, il n'y a pas l'identifiant client
+• Côté UX, demande de quotation perso: What is it ?
+• En tant que commercial, Créer un devis mais pour qui ? Une E existante en base uniquement ? Manque un screen
+• Il est indiquée commande livrée page . Mais comment indiquer ce statut. Est-ce commande traitée
+• Gestion des accès (manque nom de la boite peut-être /  recherche sur tous les champs ?
+• Page 15 : Pourquoi une colonne quantité ? Une colonne entreprise à ajouter ?
+• Page 19 Traitée et partiellement traitée sont des boutons ?
+• Les clients disposent t'ils d'un taux de remise automatique négocié ?
+
+Bulles grises : Leur objet ? Imprimer ou télécharger
+
+Modales : Manque côté UI un élément pour quitter la modale (une croix avec un label, ou un label)
+
+Devis
+
+Mes devis :
+
+Lien vers "Voir la proposition".
+Quel est le visu de cet élément
+
+Traitement des devis :
+
+Sur devis à traiter si il y en a, je mettrai entre () le nombre de devis à traiter : 
+Ex: Devis à traiter (2)
