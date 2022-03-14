@@ -5,11 +5,11 @@ v1.0, 2022-03-08
 :toc-title: Table des matières
 :toc:
 
-Feurst souhaite éditer des devis, et des commandes via un module nommé EDI accessible via l'url https://www.tools.feurst.fr. 
+Feurst souhaite éditer des devis, et des commandes via un module nommé EDI accessible via l'url https://www.tools.feurst.fr.
 
 Selon le *profil utilisé* pour visiter ce site, les *clients, commerciaux et administrateurs* de Feurst disposent d'une interface adaptée à leurs besoins.
 
-Les *administrateurs* attribuent des accès aux comptes.  
+Les *administrateurs* attribuent des accès aux comptes.
 
 Les *clients* peuvent saisir des références des produits pour établir des commandes et des devis. Un import de fichier type tableur permet d'ajouter / remplacer (rayer la mention inutile) des références de produits dans le formulaire de saisie de commande. Le modèle de fichier est téléchargeable.
 
@@ -57,21 +57,23 @@ Afin d'accéder à l'espace dédié au profil, on renseigne un formulaire (uniqu
 
 ### Login
 
-*Informations*`saisie`:: 
+*Informations*`saisie`::
 - [ ] Login email
-- [ ] Login mot de passe 
+- [ ] Login mot de passe
 
 *Actions*::
 - [ ] _Bouton_ *Se connecter*
 - [ ] _Lien_ *Mot de passe oublié*
 
 NOTE: Interface de récupération de mot de passe manquante.
+NOTE: Manque le choix du rôle (admin/client/vendeur).
+NOTE: Manque la maquette de la page *Nous contacter*
 
 ### Demande accès
 
 Demande accès compte
 
-*Informations*`visu`:: 
+*Informations*`visu`::
 - [ ] _Lien_ Demander des accès
 
 NOTE: Interface de demande d'accès manquante.
@@ -86,7 +88,7 @@ TIP: maquette p.17
 
 Liste des administrateurs
 
-*Informations*`visu`:: 
+*Informations*`visu`::
 - [ ] Administrateur nom
 - [ ] Administrateur prénom
 - [ ] Administrateur email
@@ -100,7 +102,7 @@ Liste des administrateurs
 
 Liste des revendeurs ayant accès au service.
 
-*Informations*`visu`:: 
+*Informations*`visu`::
 - [ ] Revendeur nom
 - [ ] Revendeur prénom
 - [ ] Revendeur email
@@ -132,7 +134,7 @@ Tableau recensant les commandes réalisées par l'ensemble des clients affichée
 | 21/12/21   | Carrière de granit | 4        | 380,93 €   | Télécharger   | Livrée
 |==============================================
 
-*Informations*`visu`:: 
+*Informations*`visu`::
 - [ ] facture date
 - [ ] facture désignation
 - [ ] quantité
@@ -150,7 +152,7 @@ NOTE: Le statut *Livrée* est-il affiché quand le bon de livraison a été rens
 
 TIP: maquette p.16
 
-*Informations*`visu|saisie`:: 
+*Informations*`visu|saisie`::
 - [ ] Dénomination sociale
 - [ ] SIRET
 - [ ] No TVA
@@ -177,7 +179,7 @@ Les informations pour chaque commande affichée sont :
 - [ ] Date de commande
 
 *Actions*::
-sur chaque commande : 
+sur chaque commande :
 - [ ] Voir la commande
 - [ ] Ajout d'éléments relatifs à la commande (facture, bon de livraison, commentaires)
 
@@ -227,9 +229,9 @@ NOTE: Qu'implique l'action traiter ? La modification du devis ?
 TIP: maquette p.22
 
 [#addRefProduct]
-##### Ajout produit par référence 
+##### Ajout produit par référence
 
-Le commercial peut ajouter d'autres produits au devis. L'interface à cet effet dispose d'un champ de saisie de référence catalogue, et d'un champ quantité. 
+Le commercial peut ajouter d'autres produits au devis. L'interface à cet effet dispose d'un champ de saisie de référence catalogue, et d'un champ quantité.
 
 *Informations*`saisie`::
 - [ ] référence produit
@@ -238,9 +240,12 @@ Le commercial peut ajouter d'autres produits au devis. L'interface à cet effet 
 *Actions*::
 - [ ] _Bouton_ *valider* (ajout de réf et quantité) => Zone relatant existence / dispo produit
 
+NOTE: Comment saisir une quantité différente après la validation ?
+
+NOTE: Peut-être remplacer la zone d'informations produit par une popup si stock insuffisant ?
 
 ##### Ajout produit au devis
-A l'action du bouton valider (ajout de réf et quantité), vérification du produit en base, et affichage d'une zone relatant l'existence et la dispo produit : 
+A l'action du bouton valider (ajout de réf et quantité), vérification du produit en base, et affichage d'une zone relatant l'existence et la dispo produit :
 
 ###### Produit existant
 
@@ -305,11 +310,11 @@ Une zone de l'édition du devis précise l'adresse et le montant de la livraison
 
 ##### Envoi du devis modifié au client
 
-L'envoi du devis au client est envoyé par mél. 
+L'envoi du devis au client est envoyé par mél.
 Le devis édité a une date de validité de `XXX` jours à compter de son édition.
 
 *Actions*::
-- [ ] _Bouton_ *Envoyer au client* 
+- [ ] _Bouton_ *Envoyer au client*
 
 
 NOTE: Le prix remisé est-il arrondi à l'inférieur ou supérieur ?
@@ -324,7 +329,7 @@ Tableau recensant les devis traités affichés selon un *filtre compte client*, 
 .Exemple d'entrées du tableau devis traités
 [width="100%",options="header"]
 |==========================================================================================
-| Date     | Désignation     | Détails | Statut                                                        | Validation 
+| Date     | Désignation     | Détails | Statut                                                        | Validation
 | 21/12/21 | Carrière du...  | Voir    | 🟢 traitée https://example.org/[voir la proposition]  Valable jusqu'au 20/01/22 | En attente d'acceptation
 | 21/12/21 | Carrière du...  | Voir    | ⚫ terminée   | La proposition a été acceptée - https://example.org/[voir la commande]
 | 21/12/21 | Carrière du...  | Voir    | ⚫ expirée   | La proposition a expiré
@@ -348,9 +353,9 @@ Les informations pour chaque ligne du tableau devis traités sont :
 
 TIP: maquette p.21 pour le _bouton_ *Créer un devis*
 
-Le bouton *Créer un devis* est sur le screen des devis à traiter. 
+Le bouton *Créer un devis* est sur le screen des devis à traiter.
 
-NOTE: Est-ce le même process que lorsque le client commande ? Avec l'option Demande de devis ? Voir maquette p.3 
+NOTE: Est-ce le même process que lorsque le client commande ? Avec l'option Demande de devis ? Voir maquette p.3
 
 NOTE: Je propose de mettre le bouton *Créer un devis* dans le section devis, en haut, à côté du titre Traitement des devis. (accessible sur les sections devis à traiter et devis traités)
 
@@ -404,7 +409,7 @@ Les informations pour chaque ligne de la commande affichée sont :
 
 NOTE: Pas de total de commande indiqué ?
 
-##### Modale de livraison 
+##### Modale de livraison
 
 Dès qu'une référence est renseignée, le bouton *J'ai fini, indiquer mes options de livraison* est actif.
 
@@ -413,7 +418,7 @@ Lors du clic sur *J'ai fini, indiquer mes options de livraison*, la modale de li
 *Informations*`saisie`::
 - [ ] Livraison nom commande
 - [ ] Livraison nom adresse (si adresses du client, les afficher en listes)
-- [ ] Livraison adresse 
+- [ ] Livraison adresse
 - [ ] Livraison cp
 - [ ] Livraison ville
 - [ ] Livraison pays
@@ -454,6 +459,8 @@ TIP: maquette p.6
 
 Tableau recensant l'historique de commandes du client connecté affichées selon un *filtre de date/période*, et un *tri par date*
 
+NOTE: Peut-être supprimer les zones "Trier par" et "Filtres", le tableau a déjà ses filtres
+
 .Exemple d'entrée du tableau historique de commandes
 [width="80%",options="header"]
 |================================================================================
@@ -461,7 +468,7 @@ Tableau recensant l'historique de commandes du client connecté affichées selon
 | 21/12/21   | Carrière de granit | 4        | 380,93 €   | Voir    | Traitée | trolleyIcon
 |================================================================================
 
-*Informations*`visu`:: 
+*Informations*`visu`::
 - [ ] Commande date
 - [ ] Commande désignation
 - [ ] Commande quantité
@@ -483,7 +490,7 @@ TIP: maquette p.7
 
 Affichage du nom, numéro et date de commande
 
-*Informations*`visu`:: 
+*Informations*`visu`::
 - [ ] Commande nom/désignation
 - [ ] Commande numéro
 - [ ] Commande date
@@ -499,11 +506,11 @@ Tableau recensant les détails d'une commande
 .Exemple d'entrée du tableau détails de la commande
 [width="80%",options="header"]
 |==========================================================================================
-| Réf catalogue | Désignation | Quantité | Poids | Prix catalogue | Remises | Votre prix 
-| 940561        | TKN13-PE    | 4        | 14kg  | 64,88          | 40 %    | 38,93      
+| Réf catalogue | Désignation | Quantité | Poids | Prix catalogue | Remises | Votre prix
+| 940561        | TKN13-PE    | 4        | 14kg  | 64,88          | 40 %    | 38,93
 |==========================================================================================
 
-*Informations*`visu`:: 
+*Informations*`visu`::
 - [ ] Article ref catalogue
 - [ ] Article désignation
 - [ ] Article quantité
@@ -519,7 +526,7 @@ Tableau recensant les détails d'une commande
 - [ ] Livraison prix
 - [ ] Livraison adresse
 - [ ] Livraison numéro téléphone
-- [ ] Livraison montant 
+- [ ] Livraison montant
 - [ ] Livraison délai estimé
 
 ###### détails commande (documents utiles)
@@ -539,7 +546,7 @@ NOTE: Bouton imprimer ou télécharger. Est-ce nécessaire vu la section documen
 .Exemple d'entrées du tableau Mes devis
 [width="100%",options="header"]
 |==========================================================================================
-| Date     | Désignation     | Détails | Statut                                                        | Validation 
+| Date     | Désignation     | Détails | Statut                                                        | Validation
 | 21/12/21 | Carrière du...  | Voir    | 🟢 traitée https://example.org/[voir la proposition]  Valable jusqu'au 20/01/22 | Bouton passer commande
 | 21/12/21 | Carrière du...  | Voir    | 🟢 Commandé          | Vous avez accepté la proposition
 | 21/12/21 | Carrière du...  | Voir    | 🔶 Devis en cours    | Proposition en cours
@@ -564,7 +571,7 @@ Les informations pour chaque ligne du tableau Mes devis sont :
 
 Informations générales sur le client, et changement de mot de passe.
 
-*Informations*`visu|saisie`:: 
+*Informations*`visu|saisie`::
 - [ ] Client nom
 - [ ] Client prénom
 - [ ] Client Entreprise
@@ -575,7 +582,7 @@ Informations générales sur le client, et changement de mot de passe.
 
 Texte indiquant les critères valides pour l'enregistrement du mot de passe
 
-*Informations*`saisie`:: 
+*Informations*`saisie`::
 - [ ] Mot de passe actuel
 - [ ] Nouveau mot de passe
 
@@ -585,7 +592,7 @@ Texte indiquant les critères valides pour l'enregistrement du mot de passe
 
 
 
-## Divers 
+## Divers
 
 • Pour se répérer, mettre un élément visuel sur Commande, mon compte
 • Adresse unique de livraison pour une commande ? Pourquoi mettre un nom de l'adresse ?
@@ -611,5 +618,5 @@ Quel est le visu de cet élément
 
 Traitement des devis :
 
-Sur devis à traiter si il y en a, je mettrai entre () le nombre de devis à traiter : 
+Sur devis à traiter si il y en a, je mettrai entre () le nombre de devis à traiter :
 Ex: Devis à traiter (2)
