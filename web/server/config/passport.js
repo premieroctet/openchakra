@@ -7,35 +7,6 @@ const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const {ADMIN} = require('../../utils/consts')
 
-const {ENABLE_GF_LOGIN} = require('../../config/config')
-
-if (ENABLE_GF_LOGIN) {
-  /* eslint-disable global-require */
-  const {get_host_url} = require('../../config/config')
-  const {OAuth2Strategy: GoogleStrategy} = require('passport-google-oauth')
-  const {Strategy: FacebookStrategy} = require('passport-facebook')
-  /* eslint-enable global-require */
-
-  const google_opts = {
-    clientID: keys.GOOGLE_TOKENS.CLIENT_ID,
-    clientSecret: keys.GOOGLE_TOKENS.CLIENT_SECRET,
-    callbackURL: new URL('/myAlfred/api/authentication/google_hook', get_host_url()).toString(),
-  }
-
-  const facebook_opts = {
-    clientID: keys.FACEBOOK_TOKENS.CLIENT_ID,
-    clientSecret: keys.FACEBOOK_TOKENS.CLIENT_SECRET,
-    callbackURL: new URL('/myAlfred/api/authentication/facebook_hook', get_host_url()).toString(),
-    profileFields: ['id', 'name', 'photos', 'emails'],
-  }
-
-  const callback = (accessToken, refreshToken, profile, cb) => cb(null, profile)
-
-  // TODO: check google token
-  passport.use(new GoogleStrategy(google_opts, callback))
-  passport.use(new FacebookStrategy(facebook_opts, callback))
-}
-
 const jwt_opts = {
   passReqToCallback: true,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

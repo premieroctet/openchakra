@@ -18,7 +18,6 @@ import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 const {snackBarError}=require('../../utils/notifications')
 const {PROVIDERS, ROLES} = require('../../utils/consts')
-const {ENABLE_GF_LOGIN} = require('../../config/config')
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
@@ -111,34 +110,6 @@ class LogIn extends React.Component {
             <Grid>
               <h2 className={classes.titleRegister}>{ReactHtmlParser(this.props.t('LOGIN.title'))}</h2>
             </Grid>
-            {ENABLE_GF_LOGIN ?
-              <Grid className={classes.margin}>
-                <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-                  <Grid className={classes.margin}>
-                    <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
-                      <Grid style={{width: '100%'}}>
-                        {PROVIDERS.map(provider =>
-                          <OAuth
-                            login={true}
-                            provider={provider}
-                            key={provider}
-                          />,
-                        )}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid className={classes.margin}>
-                    <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
-                      <Grid>
-                        <h3 style={{color: 'rgba(84,89,95,0.95)', fontWeight: 'bold', letterSpacing: -1}}>Ou</h3>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              :
-              null
-            }
             <Grid container spacing={3} className={classes.containerDialogContent}>
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
