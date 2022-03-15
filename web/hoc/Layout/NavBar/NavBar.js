@@ -48,8 +48,7 @@ import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BSty
 const {formatAddress} = require("../../../utils/text.js")
 import Slider from "@material-ui/core/Slider"
 import "../../../static/assets/css/custom.css"
-const {PRO, PART, EMPLOYEE, ACCEPT_COOKIE_NAME}=require("../../../utils/consts")
-import {getCookieConsentValue, resetCookieConsentValue} from "react-cookie-consent"
+const {PRO, PART, EMPLOYEE}=require("../../../utils/consts")
 import Logo from "../../../components/Logo/Logo"
 import CustomIcon from "../../../components/CustomIcon/CustomIcon"
 import Hidden from "@material-ui/core/Hidden"
@@ -194,13 +193,6 @@ class NavBar extends Component {
   };
 
   handleOpenLogin = () => {
-    if (getCookieConsentValue(ACCEPT_COOKIE_NAME) !== "true") {
-      if (getCookieConsentValue(ACCEPT_COOKIE_NAME)==="false") {
-        resetCookieConsentValue(ACCEPT_COOKIE_NAME)
-        window.location.reload()
-      }
-      return
-    }
     this.handleMenuClose()
     removeAlfredRegistering()
     this.setState({setOpenLogin: true, setOpenRegister: null})
@@ -212,13 +204,6 @@ class NavBar extends Component {
   };
 
   handleOpenRegister = user_id => {
-    if (getCookieConsentValue(ACCEPT_COOKIE_NAME) !== "true") {
-      if (getCookieConsentValue(ACCEPT_COOKIE_NAME)==="false") {
-        resetCookieConsentValue(ACCEPT_COOKIE_NAME)
-        window.location.reload()
-      }
-      return
-    }
     this.handleMenuClose()
     this.setState({setOpenRegister: user_id, setOpenLogin: false})
   };

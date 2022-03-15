@@ -14,6 +14,8 @@ Description des modèles de données et API nécessaires à la fonction EDI de F
 - Lien vers reset password
 - Lien vers demande d'accès
 
+NOTE: Mettre à jour le template SendInBlue de récupération du mot de passe
+
 ## Saisie des commandes
 - GET Données commande par id
 - POST Import Excel pour commande id ou nouvelle => retourne log d'import
@@ -22,3 +24,4 @@ Description des modèles de données et API nécessaires à la fonction EDI de F
 - GET Fourniture modèle excel pour import
 
 NOTE: Quid de la gestion de stock (disc. avec Feurst)?
+NOTE: Remise globale pour un client ? Poure une commande ? Pour un produit ?
