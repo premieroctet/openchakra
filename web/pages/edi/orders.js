@@ -1,16 +1,13 @@
 import React from 'react'
-
-import EDIHeader from '../../components/Feurst/EDIHeader'
 import Table from '../../components/Table/Table'
 
 import '../../static/feurst.css'
 
-const Edi = () => {
+const Orders = ({}) => {
   
   return (<>
-    <EDIHeader />
     <h2>Ici, on commande</h2>
     <Table /></>)
 }
 
-export default Edi
+export default Orders
