@@ -13,14 +13,13 @@ const BookingItemSchema = new Schema({
     type: Number,
     get: v => Math.round(v),
     set: v => Math.round(v),
-    min: 0,
+    min: 1,
     required: true,
   },
   discount: {
     type: Number,
     min: 0,
     max: 1.0,
-    default: 0,
     required: true,
   },
   // Catalog price
@@ -71,10 +70,7 @@ const BookingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   },
-  items: {
-    type: [BookingItemSchema],
-    required: false,
-  },
+  items: [BookingItemSchema],
   status: {
     type: String,
     enum: Object.values(BOOK_STATUS),

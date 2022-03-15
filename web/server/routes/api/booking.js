@@ -26,7 +26,6 @@ const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
 const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
-const uuidv4 = require('uuid/v4')
 const {stateMachineFactory} = require('../../utils/BookingStateMachine')
 
 moment.locale('fr')
@@ -107,6 +106,9 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
     .catch(err => console.error(err))
 })
 
+// @Route POST /myAlfred/api/booking/
+// Add a new booking
+// @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   const random = crypto.randomBytes(Math.ceil(5 / 2)).toString('hex').slice(0, 5)
@@ -173,6 +175,28 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     .catch(err => {
       console.error(err)
       res.status(404)
+    })
+})
+
+// @Route PUT /myAlfred/api/booking/:id/item
+// Add item to a booking
+// @Access private
+router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const booking_id=req.params.id
+  const item=req.body
+
+  Booking.findByIdAndUpdate(booking_id, {$push: {items: item}}, {runValidators: true})
+    .then(result => {
+      if (!result) {
+        console.error(`No booking #${booking_id}`)
+        return Promise.reject(`No booking #${booking_id}`)
+      }
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
     })
 })
 
