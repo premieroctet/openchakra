@@ -91,7 +91,7 @@ class Configurator extends React.Component {
 
   getPrecos = () => {
     setAxiosAuthentication()
-    const data=lodash.pick(this.state, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape'.split(' '))
+    const data=lodash.pick(this.state, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape bucketWidth'.split(' '))
     axios.get('/feurst/api/auto_quotation_available', {params: data})
       .then(res => {
         this.setState({
@@ -331,7 +331,7 @@ class Configurator extends React.Component {
     setAxiosAuthentication()
 
     const data=lodash.pick(this.state,
-      'type,mark,model,weight,power,bladeShape,bladeThickness,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
+      'type,mark,model,weight,power,bladeShape,bladeThickness,bucketWidth,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
     axios.post('/feurst/api/auto_quotation', data)
       .then(() => {
         snackBarSuccess('Préconisation envoyée')
@@ -347,7 +347,7 @@ class Configurator extends React.Component {
     setAxiosAuthentication()
 
     const data=lodash.pick(this.state,
-      'type,mark,model,weight,power,bladeShape,bladeThickness,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
+      'type,mark,model,weight,power,bladeShape,bladeThickness,bucketWidth,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
     axios.post('/feurst/api/custom_quotation', data)
       .then(() => {
         snackBarSuccess('Demande envoyée')

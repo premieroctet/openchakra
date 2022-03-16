@@ -29,7 +29,6 @@ class Quotation extends React.Component {
   render() {
     const {data}=this.props
 
-    console.log(data.bucketWidth)
     return (
       <Document>
         <Page pageNumber={'1'} size="A4" style={styles.body}>

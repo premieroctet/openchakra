@@ -166,7 +166,7 @@ function Summary(props) {
   useEffect(() => {
     if (is_development()) {
       setAxiosAuthentication()
-      const data=lodash.pick(props, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape'.split(' '))
+      const data=lodash.pick(props, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape bucketWidth'.split(' '))
       axios.post('/feurst/api/quotation', data)
         .then(res => {
           setPrecos(res.data)
@@ -218,7 +218,7 @@ function Summary(props) {
             <dt className='text-gray-500'>{props.t('SUMMARY.blade_label')}</dt>
             <dd>{props.t('SUMMARY.blade_name')} {props.t(BLADE_SHAPES[bladeShape]).toLowerCase()} - {props.t('SUMMARY.blade_width_abbr')}&nbsp;: {bucketWidth}<abbr title={props.t('SUMMARY.millimeter_abbr')}>mm</abbr> - {props.t('SUMMARY.blade_thickness_abbr')}&nbsp;: {bladeThickness}mm</dd>
           </dl>
-        
+
           <h3>{props.t('SUMMARY.equipment_label')}</h3>
 
           <dl className='text-lg dl-inline ml-12'>
