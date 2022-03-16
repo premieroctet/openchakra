@@ -1,3 +1,4 @@
+const BladePicture = require('./BladePicture');
 const {
   BLADE_SHAPES,
   CHARGEUSE,
@@ -24,36 +25,13 @@ const lodash=require('lodash')
 
 function BladeDimension(props) {
 
-  const blades = {
-    [DROITE]: {
-      label: props.t(BLADE_SHAPES[DROITE]),
-      path: `${feurstImgPath}/lame-droite-${props.teeth_count}.svg`,
-      alt_path: `${feurstImgPath}/lame-droite.svg`,
-      width: '120',
-      height: '74',
-    },
-    [SEMI_DELTA]: {
-      label: props.t(BLADE_SHAPES[SEMI_DELTA]),
-      path: `${feurstImgPath}/lame-semidelta-${props.teeth_count}.svg`,
-      alt_path: `${feurstImgPath}/lame-semidelta.svg`,
-      width: '120',
-      height: '74',
-    },
-    [DELTA]: {
-      label: props.t(BLADE_SHAPES[DELTA]),
-      path: `${feurstImgPath}/lame-delta-${props.teeth_count}.svg`,
-      alt_path: `${feurstImgPath}/lame-delta.svg`,
-      width: '120',
-      height: '74',
-    },
-    [UNKNOWN]: {
-      label: props.t(BLADE_SHAPES[UNKNOWN]),
-      width: '120',
-      height: '74',
-    },
+  const BLADE_LABELS = {
+    [DROITE]: props.t(BLADE_SHAPES[DROITE]),
+    [SEMI_DELTA]: props.t(BLADE_SHAPES[SEMI_DELTA]),
+    [DELTA]: props.t(BLADE_SHAPES[DELTA]),
   }
 
-  const availableBlades=lodash.omit(blades, [CHARGEUSE, EXCAVATRICE].includes(props.type) ? [DELTA] : [])
+  const availableBlades=lodash.omit(BLADE_LABELS, [CHARGEUSE, EXCAVATRICE].includes(props.type) ? [DELTA] : [])
 
   return (
     <>
@@ -63,7 +41,7 @@ function BladeDimension(props) {
           <h2>{props.t('BLADE_DIMENSIONS.blade_shape_label')} <RequiredField /></h2>
 
           {Object.keys(availableBlades).map(shape => {
-            const blade_data=availableBlades[shape]
+            const blade_label=availableBlades[shape]
             return(
               <div key={shape} className='grid grid-cols-1-2 justify-center mr-8 mb-6'>
                 <Radio
@@ -72,15 +50,11 @@ function BladeDimension(props) {
                   value={shape}
                   name="bladeShape"
                   id={shape}
-                  inputProps={{'aria-label': blade_data.label}}
+                  inputProps={{'aria-label': blade_label}}
                 />
                 <label className='flex flex-col items-center justify-center' htmlFor={shape}>
-                  {blade_data.label}
-                  {blade_data.path && <img src={blade_data.path} alt="" width={blade_data.width} height={blade_data.height}
-                    onError={({currentTarget}) => {
-                      currentTarget.onerror = null
-                      currentTarget.src=blade_data.alt_path
-                    }} />}
+                  {blade_label}
+                  <BladePicture shape={shape} teeth_count={props.teeth_count} />
                 </label>
               </div>
             )
