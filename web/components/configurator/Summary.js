@@ -11,7 +11,7 @@ const {withTranslation} = require('react-i18next')
 const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
 const {isInternationalPhoneOK} = require('../../utils/sms')
 const {getCountries, getPhoneCode} = require('libphonenumber-js')
-const {normalize} = require('../../utils/text')
+const BladePicture=require('./BladePicture.js')
 
 const {
   TextField,
@@ -108,7 +108,6 @@ function Summary(props) {
     firstname,
     company,
     email,
-    phone,
     type,
     mark,
     model,
@@ -232,10 +231,10 @@ function Summary(props) {
           </dl>
         </div>
 
-
       </div>
+      <BladePicture shape={props.bladeShape} teeth_count={props.teeth_count} />
 
-      {precos?.accessories &&
+      {precos?.accessories && is_development() &&
         <NoSSR>
           <PDFViewer style={{width: '100%', height: '800px'}}>
             <Quotation data={precos} t={props.t}/>
