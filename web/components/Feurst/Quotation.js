@@ -29,6 +29,7 @@ class Quotation extends React.Component {
   render() {
     const {data}=this.props
 
+    console.log(data.bucketWidth)
     return (
       <Document>
         <Page pageNumber={'1'} size="A4" style={styles.body}>
@@ -78,7 +79,10 @@ class Quotation extends React.Component {
                     </View>
                     <View style={styles.groupBody}>
                       {items.map((v, index) => {
-                        let title=items.length>1 && `option ${index+1}`
+                        let title='option'
+                        if (items.length>1) {
+                          title=`${title} ${index+1}`
+                        }
                         if (Object.keys(v).includes("CHAPEAU D'USURE")) {
                           title=`${title} avec chapeau d'usure`
                         }

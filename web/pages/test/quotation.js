@@ -38,11 +38,11 @@ class QuotationTest extends React.Component {
   }
 
   render() {
-    if (!this.state.precos){
+    if (!this.state.precos) {
       return null
     }
     return(
-      <Quotation data={this.state.precos}/>
+      <Quotation data={{...this.state, ...this.state.precos}}/>
     )
   }
 
