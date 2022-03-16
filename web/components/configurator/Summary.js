@@ -207,7 +207,7 @@ function Summary(props) {
       <p className='feurstconditions mb-6'>{props.t('SUMMARY.rgpdconditions')}</p>
 
       <h2 className='text-2xl pl-4'>{props.t('SUMMARY.summary_label')}</h2>
-      <div className='recap grid gap-x-4'>
+      <div className='recap grid grid-cols-2 gap-x-4'>
 
         <div>
           <dl className='text-lg dl-inline mb-6'>
@@ -218,9 +218,7 @@ function Summary(props) {
             <dt className='text-gray-500'>{props.t('SUMMARY.blade_label')}</dt>
             <dd>{props.t('SUMMARY.blade_name')} {props.t(BLADE_SHAPES[bladeShape]).toLowerCase()} - {props.t('SUMMARY.blade_width_abbr')}&nbsp;: {bucketWidth}<abbr title={props.t('SUMMARY.millimeter_abbr')}>mm</abbr> - {props.t('SUMMARY.blade_thickness_abbr')}&nbsp;: {bladeThickness}mm</dd>
           </dl>
-        </div>
-
-        <div>
+        
           <h3>{props.t('SUMMARY.equipment_label')}</h3>
 
           <dl className='text-lg dl-inline ml-12'>
@@ -231,8 +229,8 @@ function Summary(props) {
           </dl>
         </div>
 
+        <BladePicture width={400} height={265} shape={props.bladeShape} teeth_count={props.teeth_count} />
       </div>
-      <BladePicture shape={props.bladeShape} teeth_count={props.teeth_count} />
 
       {precos?.accessories && is_development() &&
         <NoSSR>

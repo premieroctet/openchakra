@@ -1,4 +1,4 @@
-const BladePicture = require('./BladePicture');
+const BladePicture = require('./BladePicture')
 const {
   BLADE_SHAPES,
   CHARGEUSE,
@@ -45,6 +45,7 @@ function BladeDimension(props) {
             return(
               <div key={shape} className='grid grid-cols-1-2 justify-center mr-8 mb-6'>
                 <Radio
+                  className='justify-self-end'
                   checked={props.bladeShape === shape}
                   onChange={ev => props.onBladeShapeChange(ev.target.value)}
                   value={shape}
