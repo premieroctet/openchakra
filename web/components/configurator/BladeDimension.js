@@ -1,13 +1,15 @@
-const RequiredField = require('../misc/RequiredField')
-const {withTranslation} = require('react-i18next')
+const BladePicture = require('./BladePicture');
 const {
   BLADE_SHAPES,
   CHARGEUSE,
   DELTA,
   DROITE,
+  EXCAVATRICE,
   SEMI_DELTA,
   UNKNOWN,
 } = require('../../utils/feurst_consts')
+const RequiredField = require('../misc/RequiredField')
+const {withTranslation} = require('react-i18next')
 const {
   FormControl,
   Radio,
@@ -23,33 +25,13 @@ const lodash=require('lodash')
 
 function BladeDimension(props) {
 
-  const blades = {
-    [DROITE]: {
-      label: props.t(BLADE_SHAPES[DROITE]),
-      path: `${feurstImgPath}/lame-droite.svg`,
-      width: '120',
-      height: '74',
-    },
-    [SEMI_DELTA]: {
-      label: props.t(BLADE_SHAPES[SEMI_DELTA]),
-      path: `${feurstImgPath}/lame-semidelta.svg`,
-      width: '120',
-      height: '74',
-    },
-    [DELTA]: {
-      label: props.t(BLADE_SHAPES[DELTA]),
-      path: `${feurstImgPath}/lame-delta.svg`,
-      width: '120',
-      height: '74',
-    },
-    [UNKNOWN]: {
-      label: props.t(BLADE_SHAPES[UNKNOWN]),
-      width: '120',
-      height: '74',
-    },
+  const BLADE_LABELS = {
+    [DROITE]: props.t(BLADE_SHAPES[DROITE]),
+    [SEMI_DELTA]: props.t(BLADE_SHAPES[SEMI_DELTA]),
+    [DELTA]: props.t(BLADE_SHAPES[DELTA]),
   }
 
-  const availableBlades=lodash.pick(blades, [DROITE, props.type==CHARGEUSE ? DELTA : SEMI_DELTA, UNKNOWN])
+  const availableBlades=lodash.omit(BLADE_LABELS, [CHARGEUSE, EXCAVATRICE].includes(props.type) ? [DELTA] : [])
 
   return (
     <>
@@ -58,22 +40,25 @@ function BladeDimension(props) {
         <div>
           <h2>{props.t('BLADE_DIMENSIONS.blade_shape_label')} <RequiredField /></h2>
 
-          {Object.keys(availableBlades).map(shape => (
-            <div key={shape} className='grid grid-cols-1-2 justify-center mr-8 mb-6'>
-              <Radio
-                checked={props.bladeShape === shape}
-                onChange={ev => props.onBladeShapeChange(ev.target.value)}
-                value={shape}
-                name="bladeShape"
-                id={shape}
-                inputProps={{'aria-label': blades[shape].label}}
-              />
-              <label className='flex flex-col items-center justify-center' htmlFor={shape}>
-                {blades[shape].label}
-                {blades[shape].path && <img src={blades[shape].path} alt="" width={blades[shape].width} height={blades[shape].height} />}
-              </label>
-            </div>
-          ))}
+          {Object.keys(availableBlades).map(shape => {
+            const blade_label=availableBlades[shape]
+            return(
+              <div key={shape} className='grid grid-cols-1-2 justify-center mr-8 mb-6'>
+                <Radio
+                  checked={props.bladeShape === shape}
+                  onChange={ev => props.onBladeShapeChange(ev.target.value)}
+                  value={shape}
+                  name="bladeShape"
+                  id={shape}
+                  inputProps={{'aria-label': blade_label}}
+                />
+                <label className='flex flex-col items-center justify-center' htmlFor={shape}>
+                  {blade_label}
+                  <BladePicture shape={shape} teeth_count={props.teeth_count} />
+                </label>
+              </div>
+            )
+          })}
 
         </div>
 

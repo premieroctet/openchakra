@@ -1,0 +1,40 @@
+= Modèles données EDI Feurst
+
+== Comptes
+
+* Entreprise
+** Nom:  *obligatoire*
+** Siret
+** Adresses: => liens vers adresses
+
+* Client
+** Nom: *obligatoire*
+** Prénom: *obligatoire*
+** Société: : *obligatoire* => lien vers sociétés
+** Rôle: vide (défaut: client)
+
+* Administrateur
+** Rôle: ADMINISTRATEUR
+
+* Commercial
+** Rôle: COMMERCIAL
+
+== Devis/commandes
+* Devis
+** Client: lien vers client
+** Date de création: *obligatoire*
+** DetailProduit:
+*** Produit: lien vers produit
+***
+* Commande
+* Produit
+** Réference: *obligatoire*
+** Label: *obligatoire*
+** Prix catalogue: *obligatoire*
+** Poids:
+
+= Questions
+
+== Commandes/devis
+Le devis est une commande, mais créée par le client en tant produit
+? Le commercial applique ensuite des remises puis le renvoie au client en mode "validé" ?
