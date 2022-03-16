@@ -32,7 +32,7 @@ class Configurator extends React.Component {
     this.titleFocus = utilizeFocus()
     this.state = {
       error: null,
-      step: 3,
+      step: 0,
       machines: [],
       type: '',
       mark: '',
