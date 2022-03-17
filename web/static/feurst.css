@@ -204,6 +204,9 @@ h2,
 .justify-between {
   justify-content: space-between;
 }
+.justify-self-end {
+  justify-self: end;
+}	
 
 .items-center {
   align-items: center;

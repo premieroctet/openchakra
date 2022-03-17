@@ -17,8 +17,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 const {snackBarError}=require('../../utils/notifications')
-const {ROLES} = require('../../utils/consts')
-const {ENABLE_GF_LOGIN} = require('../../config/config')
+const {PROVIDERS, ROLES} = require('../../utils/consts')
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
@@ -27,7 +26,6 @@ import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
 import {EMPLOYEE} from '../../utils/consts'
 const {isB2BStyle}=require('../../utils/context')
 import CustomIcon from '../CustomIcon/CustomIcon'
-import LoginGafa from './LoginGafa'
 
 
 const Login = ({callRegister, t, classes}) => {
@@ -113,12 +111,6 @@ const Login = ({callRegister, t, classes}) => {
 
   return <div>
     <h2 className={classes.titleRegister}>{ReactHtmlParser(t('LOGIN.title'))}</h2>
-    {ENABLE_GF_LOGIN ?
-      <LoginGafa classes={classes}/>
-      :
-      null
-    }
-
     <Grid container spacing={3} className={classes.containerDialogContent}>
       <Grid item className={classes.margin}>
         <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
