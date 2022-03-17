@@ -40,7 +40,7 @@ class Quotation extends React.Component {
               <Text>Boulevard de la Boissonnette</Text>
               <Text>42110 FEURS</Text>
               <Text>RCS: 388 420 556</Text>
-              <Text>04 XX XX XX XX</Text>
+              <Text>+33 4 77 27 40 63</Text>
             </View>
             <View style={styles.address}>
               <Text>{data.firstname} {data.name}</Text>
@@ -77,17 +77,26 @@ class Quotation extends React.Component {
                       <Image style={styles.illustration} src={ILLUS[group]}/>
                     </View>
                     <View style={styles.groupBody}>
-                      {items.map((v, index) => (
-                        <>
-                          {items.length>1 && <Text style={styles.optionTitle}>option {index+1}</Text>}
-                          {Object.entries(v).map(entry => {
-                            const [type, refQty]=entry
-                            return (
-                              <Text style={styles.optionBody}>{refQty[1]} X {type} {refQty[0]}</Text>
-                            )
-                          })}
-                        </>
-                      ))
+                      {items.map((v, index) => {
+                        let title='option'
+                        if (items.length>1) {
+                          title=`${title} ${index+1}`
+                        }
+                        if (Object.keys(v).includes("CHAPEAU D'USURE")) {
+                          title=`${title} avec chapeau d'usure`
+                        }
+                        return (
+                          <>
+                            {title && <Text style={styles.optionTitle}>{title}</Text>}
+                            {Object.entries(v).map(entry => {
+                              const [type, refQty]=entry
+                              return (
+                                <Text style={styles.optionBody}>{refQty[1]} X {type} {refQty[0]}</Text>
+                              )
+                            })}
+                          </>
+                        )
+                      })
                       }
                     </View>
                   </View>

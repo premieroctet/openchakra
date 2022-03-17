@@ -83,7 +83,7 @@ function MachineType(props) {
             freeSolo
             className='w-full'
             options={props.weights}
-            getOptionLabel={option => option.toString() }
+            getOptionLabel={option => option?.toLocaleString() }
             aria-labelledby='machineweight'
             value={props.weight || ''}
             disabled={props.models?.includes(props.model) && props.weights?.length===1}
@@ -101,7 +101,7 @@ function MachineType(props) {
             freeSolo
             className='w-full'
             options={props.powers}
-            getOptionLabel={option => option?.toString() }
+            getOptionLabel={option => option?.toLocaleString() }
             aria-labelledby='machinepower'
             value={props.power || ''}
             disabled={props.models?.includes(props.model) && props.powers?.length===1}
