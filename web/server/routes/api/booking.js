@@ -26,7 +26,6 @@ const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
 const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
-const uuidv4 = require('uuid/v4')
 const {stateMachineFactory} = require('../../utils/BookingStateMachine')
 
 moment.locale('fr')
@@ -107,31 +106,19 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
     .catch(err => console.error(err))
 })
 
-router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+// @Route POST /myAlfred/api/booking/
+// Add a new booking
+// @Access private
+router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   const random = crypto.randomBytes(Math.ceil(5 / 2)).toString('hex').slice(0, 5)
 
-  const bookingFields = {}
-  bookingFields.reference = `${req.body.reference}_${random}`
-  bookingFields.service = req.body.service
-  bookingFields.address = req.body.address
-  bookingFields.equipments = req.body.equipments
-  bookingFields.amount = req.body.amount
-  bookingFields.company_amount = req.body.company_amount
-  bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred)
-  bookingFields.user = mongoose.Types.ObjectId(req.body.user)
-  bookingFields.chatroom = mongoose.Types.ObjectId(req.body.chatroom)
-  bookingFields.prestation_date = moment(req.body.prestation_date)
-  bookingFields.prestations = req.body.prestations
-  bookingFields.customer_fees = req.body.customer_fees
-  bookingFields.provider_fees = req.body.provider_fees
-  bookingFields.travel_tax = req.body.travel_tax
-  bookingFields.pick_tax = req.body.pick_tax
-  bookingFields.status = req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status
-  bookingFields.serviceUserId = req.body.serviceUserId
-  bookingFields.cesu_amount = req.body.cesu_amount
-  bookingFields.user_role = getRole(req) || null
-  bookingFields.customer_booking = req.body.customer_booking
+  const bookingFields = {
+    ...req.body,
+    reference: `${req.body.reference}_${random}`,
+    status: req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status,
+    user_role: getRole(req) || null,
+  }
 
   console.log(JSON.stringify(bookingFields))
 
@@ -188,6 +175,28 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
     .catch(err => {
       console.error(err)
       res.status(404)
+    })
+})
+
+// @Route PUT /myAlfred/api/booking/:id/item
+// Add item to a booking
+// @Access private
+router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const booking_id=req.params.id
+  const item=req.body
+
+  Booking.findByIdAndUpdate(booking_id, {$push: {items: item}}, {runValidators: true})
+    .then(result => {
+      if (!result) {
+        console.error(`No booking #${booking_id}`)
+        return Promise.reject(`No booking #${booking_id}`)
+      }
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
     })
 })
 

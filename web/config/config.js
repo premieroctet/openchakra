@@ -1,7 +1,7 @@
 const isEmpty = require('../server/validation/is-empty')
 const {MODES, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
-  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY}=require('../mode')
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, DATA_MODEL}=require('../mode')
 
 const MONGO_BASE_URI='mongodb://localhost/'
 
@@ -152,6 +152,9 @@ const checkConfig = () => {
     if (isEmpty(MANGOPAY_APIKEY)) {
       reject(`MANGOPAY_APIKEY non renseigné`)
     }
+    if (isEmpty(DATA_MODEL)) {
+      reject(`DATA_MODEL non renseigné`)
+    }
     displayConfig()
     resolve('Configuration OK')
   })
@@ -159,6 +162,10 @@ const checkConfig = () => {
 
 const getDatabaseUri = () => {
   return `${MONGO_BASE_URI}${DATABASE_NAME}`
+}
+
+const getDataModel = () => {
+  return DATA_MODEL
 }
 
 // Hide application installation popup
@@ -179,4 +186,5 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
+  getDataModel,
 }

@@ -7,7 +7,6 @@ const {checkRegisterCodeValidity, setRegisterCodeUsed}=require('../../utils/regi
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
-const {ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
 const express = require('express')
 
 const router = express.Router()
@@ -54,11 +53,6 @@ router.get('/check_register_code/:code', (req, res) => {
 // @Route POST /myAlfred/api/users/register
 // Register
 router.post('/register', (req, res) => {
-
-  const accept_cookie = req.cookies[ACCEPT_COOKIE_NAME]
-  if (accept_cookie !== 'true') {
-    return res.status(403).json({security: 'Vous devez accepter les cookies pour vous inscrire'})
-  }
 
   const {errors, isValid} = validateSimpleRegisterInput(req.body)
 
@@ -495,11 +489,6 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
 // Login
 // TODO 934169 Gérer si cookies non autorisés (pas de login)
 router.post('/login', (req, res) => {
-
-  const accept_cookie = req.cookies[ACCEPT_COOKIE_NAME]
-  if (accept_cookie !== 'true') {
-    return res.status(403).json({security: 'Vous devez accepter les cookies pour vous connecter'})
-  }
 
   const {errors, isValid} = validateLoginInput(req.body)
 
