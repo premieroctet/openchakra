@@ -1,14 +1,14 @@
-import React, {useState} from 'react'
-import CustomButton from '../CustomButton/CustomButton'
-import ReactHtmlParser from 'react-html-parser'
+import React from 'react'
 import {withTranslation} from 'react-i18next'
 import {withStyles} from '@material-ui/core/styles'
-import styles from './LogInStyle'
+import ReactHtmlParser from 'react-html-parser'
+const {ENABLE_GF_LOGIN} = require('../../config/config')
 import Grid from '@material-ui/core/Grid'
-import {Link} from '@material-ui/core'
-const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
-import Validator from 'validator'
-import axios from 'axios'
+import LoginGafa from '../../components/LogIn/LoginGafa'
+import styles from '../../components/LogIn/LogInStyle'
+import CustomIcon from '../CustomIcon/CustomIcon'
+import CustomButton from '../CustomButton/CustomButton'
+import withLogin from '../../hoc/withLogin'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined'
 import Visibility from '@material-ui/icons/Visibility'
@@ -16,100 +16,23 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
-const {snackBarError}=require('../../utils/notifications')
-const {ROLES} = require('../../utils/consts')
-const {ENABLE_GF_LOGIN} = require('../../config/config')
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
-import {EMPLOYEE} from '../../utils/consts'
-const {isB2BStyle}=require('../../utils/context')
-import CustomIcon from '../CustomIcon/CustomIcon'
-import LoginGafa from './LoginGafa'
-
-
-const Login = ({callRegister, t, classes}) => {
-
-  const [state, setState] = useState({
-    username: '',
-    password: '',
-    errors: {},
-    showPassword: false,
-    // Roles : null : pas de réposne du serveur, [] : réponse serveur pas de rôle pour l'email
-    roles: null,
-    selectedRole: null,
-  })
+import {Link} from '@material-ui/core'
+ 
+const FeurstLogin = ({
+  callRegister,
+  t,
+  classes,
+  onChange,
+  onSubmit,
+  checkRoles,
+  showRoles,
+  handleClickShowPassword,
+  handleMouseDownPassword,
+  state,
+}) => {
 
   const {errors, username, password, showPassword, roles, selectedRole} = state
-  const showRoles = isB2BStyle() && roles && roles.length >= 1
   const loginDisabled = roles == null || (roles.length>0 && !selectedRole) || !password
-
-  const onChange = e => {
-    const {name, value} = e.target
-    setState({...state, [name]: value})
-  }
-
-  const checkRoles = e => {
-    const {name, value} = e.target
-
-    const newState = {...state, [name]: value}
-
-    if(name === 'username') {
-      Object.assign(newState, {roles: null})
-      // TODO aller chercher les rôles au bout d'une tepo, sinon GET /roles trop nombreux
-      const usermail = e.target.value
-      if (Validator.isEmail(usermail)) {
-        axios.get(`/myAlfred/api/users/roles/${usermail}`)
-          .then(res => {
-            const roles = res.data
-            const filteredRoles = roles.filter(r => (isB2BStyle() ? r != EMPLOYEE : r == EMPLOYEE))
-            const selectedRole = filteredRoles.length == 1 ? filteredRoles[0] : null
-            // console.log({roles: filteredRoles, selectedRole: selectedRole})
-            Object.assign(newState, {roles: filteredRoles, selectedRole: selectedRole})
-          })
-          .catch(err => {
-            console.error(err)
-            Object.assign(newState, {selectedRole: null, roles: ''})
-          })
-      }
-    }
-    setState({...newState})
-  }
-
-  const onSubmit = e => {
-    e.preventDefault()
-
-    const user = {
-      username: username,
-      password: password,
-      role: selectedRole,
-      b2b_login: isB2BStyle(),
-    }
-
-    axios.post('/myAlfred/api/users/login', user)
-      .then(() => {
-        setAuthToken()
-        setAxiosAuthentication()
-        this.props.login()
-      })
-      .catch(err => {
-        console.error(err)
-        if (err.response) {
-          snackBarError(err.response.data)
-          setState({...state, errors: err.response.data})
-        }
-      })
-  }
-
-  const handleClickShowPassword = () => {
-    setState({...state, showPassword: !showPassword})
-  }
-
-  const handleMouseDownPassword = event => {
-    event.preventDefault()
-  }
 
   return <div>
     <h2 className={classes.titleRegister}>{ReactHtmlParser(t('LOGIN.title'))}</h2>
@@ -118,7 +41,7 @@ const Login = ({callRegister, t, classes}) => {
       :
       null
     }
-
+    
     <Grid container spacing={3} className={classes.containerDialogContent}>
       <Grid item className={classes.margin}>
         <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
@@ -164,7 +87,7 @@ const Login = ({callRegister, t, classes}) => {
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDownPassword}
                   >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                    {showPassword ? 'cacher' : 'montrer'}
                   </IconButton>
                 </InputAdornment>
               }
@@ -219,5 +142,5 @@ const Login = ({callRegister, t, classes}) => {
   </div>
 }
 
- 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Login))
+
+export default withLogin(withTranslation('custom', {withRef: true})(withStyles(styles)(FeurstLogin)))
