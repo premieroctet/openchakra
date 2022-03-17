@@ -11,7 +11,7 @@ const {withTranslation} = require('react-i18next')
 const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
 const {isInternationalPhoneOK} = require('../../utils/sms')
 const {getCountries, getPhoneCode} = require('libphonenumber-js')
-const {normalize} = require('../../utils/text')
+const BladePicture=require('./BladePicture.js')
 
 const {
   TextField,
@@ -108,7 +108,6 @@ function Summary(props) {
     firstname,
     company,
     email,
-    phone,
     type,
     mark,
     model,
@@ -167,7 +166,7 @@ function Summary(props) {
   useEffect(() => {
     if (is_development()) {
       setAxiosAuthentication()
-      const data=lodash.pick(props, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape'.split(' '))
+      const data=lodash.pick(props, 'type mark model power weight bladeThickness ground borderShieldFixType teethShieldFixType bladeShape bucketWidth'.split(' '))
       axios.post('/feurst/api/quotation', data)
         .then(res => {
           setPrecos(res.data)
@@ -208,7 +207,7 @@ function Summary(props) {
       <p className='feurstconditions mb-6'>{props.t('SUMMARY.rgpdconditions')}</p>
 
       <h2 className='text-2xl pl-4'>{props.t('SUMMARY.summary_label')}</h2>
-      <div className='recap grid gap-x-4'>
+      <div className='recap grid grid-cols-2 gap-x-4'>
 
         <div>
           <dl className='text-lg dl-inline mb-6'>
@@ -219,9 +218,7 @@ function Summary(props) {
             <dt className='text-gray-500'>{props.t('SUMMARY.blade_label')}</dt>
             <dd>{props.t('SUMMARY.blade_name')} {props.t(BLADE_SHAPES[bladeShape]).toLowerCase()} - {props.t('SUMMARY.blade_width_abbr')}&nbsp;: {bucketWidth}<abbr title={props.t('SUMMARY.millimeter_abbr')}>mm</abbr> - {props.t('SUMMARY.blade_thickness_abbr')}&nbsp;: {bladeThickness}mm</dd>
           </dl>
-        </div>
 
-        <div>
           <h3>{props.t('SUMMARY.equipment_label')}</h3>
 
           <dl className='text-lg dl-inline ml-12'>
@@ -232,10 +229,10 @@ function Summary(props) {
           </dl>
         </div>
 
-
+        <BladePicture width={400} height={265} shape={props.bladeShape} teeth_count={props.teeth_count} />
       </div>
 
-      {precos?.accessories &&
+      {precos?.accessories && is_development() &&
         <NoSSR>
           <PDFViewer style={{width: '100%', height: '800px'}}>
             <Quotation data={precos} t={props.t}/>
