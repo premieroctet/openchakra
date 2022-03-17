@@ -59,7 +59,7 @@ export default theme => ({
     color: LIGHT_FONT,
   },
   optionTitle: {
-    maxWidth: '15%',
+    maxWidth: '50%',
     display: 'inline-block',
     backgroundColor: YELLOW_COLOR,
     margin: MARGIN,
