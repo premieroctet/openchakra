@@ -1,15 +1,17 @@
-const {QUOTATION_CC} = require('../../utils/feurst_consts')
-const User = require('../models/User')
 const {
   ENABLE_MAILING,
   computeUrl,
   getSibTemplates,
   get_host_url,
+  is_development,
 } = require('../../config/config')
+const User = require('../models/User')
 const {SIB} = require('./sendInBlue')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
 const lodash=require('lodash')
+
+const QUOTATION_CC=is_development() ? 'sebastien.auvray@alfredplace.io': 'florian.benetiere@safe-feurst.fr'
 
 // Templates
 const SIB_IDS=require(`./sib_templates/${getSibTemplates()}.js`)
