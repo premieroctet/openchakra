@@ -65,11 +65,8 @@ Afin d'accéder à l'espace dédié au profil, on renseigne un formulaire (uniqu
 - [ ] _Bouton_ *Se connecter*
 - [ ] _Lien_ *Mot de passe oublié*
 
-
 NOTE: Interface de récupération de mot de passe manquante.
-
 NOTE: Manque le choix du rôle (admin/client/vendeur).
-
 NOTE: Manque la maquette de la page *Nous contacter*
 
 ### Demande accès
@@ -78,7 +75,6 @@ Demande accès compte
 
 *Informations*`visu`::
 - [ ] _Lien_ Demander des accès
-
 
 NOTE: Interface de demande d'accès manquante.
 
@@ -118,12 +114,9 @@ Liste des revendeurs ayant accès au service.
 - [ ] Revendeur suppression
 - [ ] Revendeur tri par ordre alpha
 
-
 NOTE: Quid des profils assignés ? Les affiche t'on ?
 
-
 NOTE: Screen de modification revendeurs manquant
-
 
 NOTE: Téléchargement ou upload sous forme de tableur des revendeurs ayant accès ? Exemple de fichier ?
 
@@ -152,7 +145,6 @@ Tableau recensant les commandes réalisées par l'ensemble des clients affichée
 - [ ] Trier par
 - [ ] Filtres
 - [ ] Télécharger facture (colonne détails)
-
 
 NOTE: Le statut *Livrée* est-il affiché quand le bon de livraison a été renseigné sur la commande ?
 
@@ -192,12 +184,9 @@ sur chaque commande :
 - [ ] Ajout d'éléments relatifs à la commande (facture, bon de livraison, commentaires)
 
 
-
 NOTE: Comment accède-t'on à la modale de dépôt de documents ?
 
-
 NOTE: Une commande est considérée traitée lorsque la facture et le BL ont été renseignés ?
-
 
 NOTE: Je ne comprends pas le _tag_ du statut (traitée|partiellement traitée) étant donné la segmentation plus haut (Commandes à traiter, commandes traitées)
 
@@ -231,9 +220,7 @@ sur chaque devis :
 - [ ] Voir (colonne détails)
 - [ ] Traiter (colonne validation)
 
-
 NOTE: Il y a un filtre compte client, mais le numéro ou identifiant client n'est pas présent dans le tableau des devis à traiter.
-
 
 NOTE: Qu'implique l'action traiter ? La modification du devis ?
 
@@ -253,9 +240,7 @@ Le commercial peut ajouter d'autres produits au devis. L'interface à cet effet 
 *Actions*::
 - [ ] _Bouton_ *valider* (ajout de réf et quantité) => Zone relatant existence / dispo produit
 
-
 NOTE: Comment saisir une quantité différente après la validation ?
-
 
 NOTE: Peut-être remplacer la zone d'informations produit par une popup si stock insuffisant ?
 
@@ -332,7 +317,6 @@ Le devis édité a une date de validité de `XXX` jours à compter de son éditi
 - [ ] _Bouton_ *Envoyer au client*
 
 
-
 NOTE: Le prix remisé est-il arrondi à l'inférieur ou supérieur ?
 
 [#devisTraites]
@@ -371,9 +355,7 @@ TIP: maquette p.21 pour le _bouton_ *Créer un devis*
 
 Le bouton *Créer un devis* est sur le screen des devis à traiter.
 
-
 NOTE: Est-ce le même process que lorsque le client commande ? Avec l'option Demande de devis ? Voir maquette p.3
-
 
 NOTE: Je propose de mettre le bouton *Créer un devis* dans le section devis, en haut, à côté du titre Traitement des devis. (accessible sur les sections devis à traiter et devis traités)
 
@@ -425,7 +407,6 @@ Les informations pour chaque ligne de la commande affichée sont :
 *Actions*::
 - [ ] Suppression ligne produit (colonne Suppression)
 
-
 NOTE: Pas de total de commande indiqué ?
 
 ##### Modale de livraison
@@ -448,13 +429,11 @@ Lors du clic sur *J'ai fini, indiquer mes options de livraison*, la modale de li
 - [ ] Valider ces informations => fermeture de la modale
 
 
-
 NOTE: Sur la maquette p.3, il y a les boutons *demande de devis* et *J'ai fini, indiquer mes options de livraison*. ça me chagrine. Je préférerai n'afficher que *J'ai fini*
 
 ##### Revenir à la saisie
 
 On revient à la saisie <<commandeClientSaisie, dans le tableau>>.
-
 
 NOTE: Efface-t'on l'adresse ? Je sais pas, je suis fatigué.
 
@@ -479,7 +458,6 @@ NOTE: Efface-t'on l'adresse ? Je sais pas, je suis fatigué.
 TIP: maquette p.6
 
 Tableau recensant l'historique de commandes du client connecté affichées selon un *filtre de date/période*, et un *tri par date*
-
 
 NOTE: Peut-être supprimer les zones "Trier par" et "Filtres", le tableau a déjà ses filtres
 
@@ -558,9 +536,7 @@ Tableau recensant les détails d'une commande
 - [ ] _Bouton_ télécharger *bon de livraison*
 
 
-
 NOTE: Livraison prix => environ ?
-
 
 NOTE: Bouton imprimer ou télécharger. Est-ce nécessaire vu la section documents utiles
 

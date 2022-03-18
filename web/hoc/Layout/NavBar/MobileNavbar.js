@@ -1,7 +1,7 @@
 const {
   clearAuthenticationToken,
-  setAxiosAuthentication
-} = require('../../../utils/authentication');
+  setAxiosAuthentication,
+} = require('../../../utils/authentication')
 const {
   getLoggedUserId,
   getRole,
@@ -9,8 +9,8 @@ const {
   isB2BManager,
   isB2BStyle,
   isLoggedUserAlfredPro,
-  isLoggedUserRegistered
-} = require('../../../utils/context');
+  isLoggedUserRegistered,
+} = require('../../../utils/context')
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -100,19 +100,21 @@ class MobileNavbar extends React.Component {
     }
 
     setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        const user=res.data
-        const promise = isB2BAdmin()||isB2BManager() ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
-        promise
-          .then(res => {
-            let allAddresses = {'main': res.data.billing_address}
-            res.data.service_address.forEach(addr => {
-              allAddresses[addr._id] = addr
+    if (this.state.logged) {
+      axios.get('/myAlfred/api/users/current')
+        .then(res => {
+          const user=res.data
+          const promise = isB2BAdmin()||isB2BManager() ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
+          promise
+            .then(res => {
+              let allAddresses = {'main': res.data.billing_address}
+              res.data.service_address.forEach(addr => {
+                allAddresses[addr._id] = addr
+              })
+              this.setState({user: user, allAddresses: allAddresses})
             })
-            this.setState({user: user, allAddresses: allAddresses})
-          })
-      }).catch(err => console.error(err))
+        }).catch(err => console.error(err))
+    }
   }
 
   needRefresh = () => {

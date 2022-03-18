@@ -29,7 +29,7 @@ function CustomTabMenu(props) {
         <Tabs value={false} aria-label="simple tabs example">
           {
             Object.keys(tabs).map((res, index) => (
-              <a href={tabs[res].url} style={{textTransform: 'initial'}}>
+              <a key={`tab${index}`} href={tabs[res].url} style={{textTransform: 'initial'}}>
                 <Tab
                   key={index}
                   classes={{root: `customnavbartab ${classes.navbarTabRoot}`}}

@@ -79,32 +79,34 @@ class Home extends React.Component {
       this.setState({open: true})
     }
 
+    if (this.state.logged) {
+      axios.get('/myAlfred/api/users/current')
+        .then(res => {
+          let data = res.data
+          this.setState({
+            user: data,
+            gps: data.billing_address ? data.billing_address.gps : null,
+          },
+          )
+        })
+        .catch(err => {
+          console.error((err))
+        })
+    
 
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        let data = res.data
-        this.setState({
-          user: data,
-          gps: data.billing_address ? data.billing_address.gps : null,
-        },
-        )
-      })
-      .catch(err => {
-        console.error((err))
-      })
+      axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
+        .then(res => {
+          let categories = lodash.shuffle(res.data)
+          this.setState({categories: categories})
+        }).catch(err => console.error(err))
 
-    axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
-      .then(res => {
-        let categories = lodash.shuffle(res.data)
-        this.setState({categories: categories})
-      }).catch(err => console.error(err))
-
-    axios.get(`/myAlfred/api/serviceUser/home/${isB2BStyle(this.state.user) ? PRO : PART}`)
-      .then(response => {
-        let alfred = response.data
-        this.setState({alfred: alfred})
-      }).catch(err => console.error(err))
-
+      axios.get(`/myAlfred/api/serviceUser/home/${isB2BStyle(this.state.user) ? PRO : PART}`)
+        .then(response => {
+          let alfred = response.data
+          this.setState({alfred: alfred})
+        }).catch(err => console.error(err))
+    }
+    
     this.setState({mounted: true})
   }
 
