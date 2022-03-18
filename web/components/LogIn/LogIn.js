@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -6,9 +6,6 @@ import {withStyles} from '@material-ui/core/styles'
 import styles from './LogInStyle'
 import Grid from '@material-ui/core/Grid'
 import {Link} from '@material-ui/core'
-const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
-import Validator from 'validator'
-import axios from 'axios'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined'
 import Visibility from '@material-ui/icons/Visibility'
@@ -16,98 +13,32 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
-const {snackBarError}=require('../../utils/notifications')
 const {PROVIDERS, ROLES} = require('../../utils/consts')
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
-import {EMPLOYEE} from '../../utils/consts'
-const {isB2BStyle}=require('../../utils/context')
 import CustomIcon from '../CustomIcon/CustomIcon'
+import withLogin from '../../hoc/withLogin'
 
 
-const Login = ({callRegister, t, classes}) => {
-
-  const [state, setState] = useState({
-    username: '',
-    password: '',
-    errors: {},
-    showPassword: false,
-    // Roles : null : pas de réposne du serveur, [] : réponse serveur pas de rôle pour l'email
-    roles: null,
-    selectedRole: null,
-  })
+const Login = ({callRegister,
+  t,
+  classes,
+  onChange,
+  onSubmit,
+  checkRoles,
+  showRoles,
+  handleClickShowPassword,
+  handleMouseDownPassword,
+  state,
+}) => {
 
   const {errors, username, password, showPassword, roles, selectedRole} = state
-  const showRoles = isB2BStyle() && roles && roles.length >= 1
+  
   const loginDisabled = roles == null || (roles.length>0 && !selectedRole) || !password
 
-  const onChange = e => {
-    const {name, value} = e.target
-    setState({...state, [name]: value})
-  }
-
-  const checkRoles = e => {
-    const {name, value} = e.target
-
-    const newState = {...state, [name]: value}
-
-    if(name === 'username') {
-      Object.assign(newState, {roles: null})
-      // TODO aller chercher les rôles au bout d'une tepo, sinon GET /roles trop nombreux
-      const usermail = e.target.value
-      if (Validator.isEmail(usermail)) {
-        axios.get(`/myAlfred/api/users/roles/${usermail}`)
-          .then(res => {
-            const roles = res.data
-            const filteredRoles = roles.filter(r => (isB2BStyle() ? r != EMPLOYEE : r == EMPLOYEE))
-            const selectedRole = filteredRoles.length == 1 ? filteredRoles[0] : null
-            // console.log({roles: filteredRoles, selectedRole: selectedRole})
-            Object.assign(newState, {roles: filteredRoles, selectedRole: selectedRole})
-          })
-          .catch(err => {
-            console.error(err)
-            Object.assign(newState, {selectedRole: null, roles: ''})
-          })
-      }
-    }
-    setState({...newState})
-  }
-
-  const onSubmit = e => {
-    e.preventDefault()
-
-    const user = {
-      username: username,
-      password: password,
-      role: selectedRole,
-      b2b_login: isB2BStyle(),
-    }
-
-    axios.post('/myAlfred/api/users/login', user)
-      .then(() => {
-        setAuthToken()
-        setAxiosAuthentication()
-        this.props.login()
-      })
-      .catch(err => {
-        console.error(err)
-        if (err.response) {
-          snackBarError(err.response.data)
-          setState({...state, errors: err.response.data})
-        }
-      })
-  }
-
-  const handleClickShowPassword = () => {
-    setState({...state, showPassword: !showPassword})
-  }
-
-  const handleMouseDownPassword = event => {
-    event.preventDefault()
-  }
 
   return <div>
     <h2 className={classes.titleRegister}>{ReactHtmlParser(t('LOGIN.title'))}</h2>
@@ -124,6 +55,7 @@ const Login = ({callRegister, t, classes}) => {
               style={{width: '100%', marginTop: 16, marginBottom: 8}}
               name="username"
               value={username}
+              autoComplete="email"
               onChange={onChange}
               onBlur={checkRoles}
               error={errors.username}
@@ -146,6 +78,7 @@ const Login = ({callRegister, t, classes}) => {
               type={showPassword ? 'text' : 'password'}
               name="password"
               value={password}
+              autoComplete="current-password"
               onChange={onChange}
               error={errors.password}
               endAdornment={
@@ -212,4 +145,4 @@ const Login = ({callRegister, t, classes}) => {
 }
 
  
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Login))
+export default withLogin(withTranslation('custom', {withRef: true})(withStyles(styles)(Login)))

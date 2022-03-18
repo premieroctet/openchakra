@@ -1,6 +1,10 @@
 import React from 'react'
 const {isB2BStyle}=require('../utils/context')
 const {setAuthToken, setAxiosAuthentication}=require('../utils/authentication')
+import Validator from 'validator'
+import axios from 'axios'
+const {snackBarError}=require('../utils/notifications')
+import {EMPLOYEE} from '../utils/consts'
 
 function withLogin(WrappedComponent) {
   
@@ -25,7 +29,7 @@ function withLogin(WrappedComponent) {
     }
   
     checkRoles = e => {
-  
+      console.log(e)
       const {name, value} = e.target
       const newState = {...this.state, [name]: value}
   
@@ -88,6 +92,7 @@ function withLogin(WrappedComponent) {
       return <WrappedComponent
         state={this.state}
         onChange={this.onChange}
+        checkRoles={this.checkRoles}
         onSubmit={this.onSubmit}
         handleClickShowPassword={this.handleClickShowPassword}
         handleMouseDownPassword={this.handleMouseDownPassword}
