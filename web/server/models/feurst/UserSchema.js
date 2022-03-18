@@ -94,4 +94,9 @@ UserSchema.virtual('full_name').get(function() {
   return `${this.firstname} ${this.name}`
 })
 
+// Registered => has firstname, name, email, birthday, password, address
+UserSchema.virtual('is_registered').get(() => {
+  return true
+})
+
 module.exports = UserSchema

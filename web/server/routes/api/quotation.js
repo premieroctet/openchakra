@@ -1,13 +1,23 @@
-const {is_development} = require('../../../config/config')
 const Quotation = require('../../models/Quotation')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
-const crypto = require('crypto')
 const moment = require('moment')
-const {getRole, get_logged_id} = require('../../utils/serverContext')
+const {validateQuotation}=require('../../validation/quotation')
 
 moment.locale('fr')
+
+const roleFilter= req => {
+  // TODO How to filter available data ??
+  /**
+  if ([FEURST_ADMIN, CUSTOMER_MASTER].includes(getRole(req))) {
+    return {}
+  }
+  return {user: get_logged_id(req)}
+  */
+  return {}
+}
 
 // @Route POST /myAlfred/api/quotations/
 // Add a new quotation
@@ -37,7 +47,7 @@ router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, re
   const quotation_id=req.params.id
   const item=req.body
 
-  Quotation.findByIdAndUpdate(quotation_id, {$push: {items: item}}, {runValidators: true})
+  Quotation.findOneAndUpdate({_id: quotation_id, ...roleFilter(req)}, {$push: {items: item}}, {runValidators: true})
     .then(result => {
       if (!result) {
         console.error(`No quotation #${quotation_id}`)
@@ -59,7 +69,7 @@ router.delete('/:quotation_id/item/:item_id', passport.authenticate('jwt', {sess
   const quotation_id=req.params.quotation_id
   const item_id=req.params.item_id
 
-  Quotation.findByIdAndUpdate(quotation_id, {$pull: {items: {_id: item_id}}}, {runValidators: true})
+  Quotation.findOneAndUpdate({_id: quotation_id, ...roleFilter(req)}, {$pull: {items: {_id: item_id}}}, {runValidators: true})
     .then(() => {
       res.json()
     })
@@ -74,7 +84,7 @@ router.delete('/:quotation_id/item/:item_id', passport.authenticate('jwt', {sess
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  Quotation.find()
+  Quotation.find(roleFilter(req))
     .then(quotations => {
       return res.json(quotations)
     })
@@ -89,12 +99,12 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 // @Access public
 router.get('/:quotation_id', (req, res) => {
 
-  Quotation.findById(req.params.quotation_id)
+  Quotation.findOne({_id: req.params.quotation_id, ...roleFilter(req)})
     .then(quotation => {
       if (quotation) {
         return res.json(quotation)
       }
-      return res.status(400).json({msg: 'No quotation found'})
+      return res.status(404).json({msg: 'No quotation found'})
     })
     .catch(err => {
       console.error(err)
@@ -106,7 +116,7 @@ router.get('/:quotation_id', (req, res) => {
 // Delete one quotation
 // @Access private
 router.delete('/:quotation_id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Quotation.findByIdAndDelete(req.params.quotation_id)
+  Quotation.findOneAndDelete({_id: req.params.quotation_id, ...roleFilter(req)})
     .then(() => {
       return res.json()
     })
