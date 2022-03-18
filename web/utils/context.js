@@ -52,17 +52,17 @@ const getRole = () => {
 }
 
 const isB2BEmployee = () => {
-  const is_employee = getRole() == EMPLOYEE
+  const is_employee = getRole() === EMPLOYEE
   return is_employee
 }
 
 const isB2BAdmin = () => {
-  const is_admin = getRole() == ADMIN
+  const is_admin = getRole() === ADMIN
   return is_admin
 }
 
 const isB2BManager = () => {
-  const is_manager = getRole() == MANAGER
+  const is_manager = getRole() === MANAGER
   return is_manager
 }
 
