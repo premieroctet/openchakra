@@ -8,7 +8,7 @@ const lodash=require('lodash')
 import NoSSR from 'react-no-ssr'
 
 const {withTranslation} = require('react-i18next')
-const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
+const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/consts')
 const {isInternationalPhoneOK} = require('../../utils/sms')
 const {getCountries, getPhoneCode} = require('libphonenumber-js')
 const BladePicture=require('./BladePicture.js')

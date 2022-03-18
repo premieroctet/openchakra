@@ -200,6 +200,24 @@ router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, re
     })
 })
 
+// @Route PUT /myAlfred/api/booking/:id/item
+// Removes item from a booking
+// @Access private
+router.delete('/:booking_id/item/:item_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const booking_id=req.params.booking_id
+  const item_id=req.params.item_id
+
+  Booking.findByIdAndUpdate(booking_id, {$pull: {items: {_id: item_id}}}, {runValidators: true})
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+})
+
 // @Route GET /myAlfred/api/booking/all
 // View all booking
 // @Access private
@@ -518,6 +536,7 @@ router.post('/avocotes', (req, res) => {
     })
 })
 
+// Check bookings to set to FINISHED
 new CronJob('0 */35 * * * *', (() => {
   console.log('Checking terminated bookings')
   const date = moment().startOf('day')
@@ -546,7 +565,7 @@ new CronJob('0 */35 * * * *', (() => {
 
 }), null, true, 'Europe/Paris')
 
-// Handle terminated but not paid bookings
+// Check bookings to pay
 new CronJob('0 0 * * * *', (() => {
   console.log('Checking bookings to pay')
   Booking.find({status: BOOK_STATUS.FINISHED, paid: false})

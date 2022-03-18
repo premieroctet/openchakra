@@ -1,7 +1,7 @@
 const {
   BLADE_SHAPES,
   FIX_TYPES,
-} = require('../../../../utils/feurst_consts')
+} = require('../../../../utils/consts')
 const {is_development} = require('../../../../config/config')
 const {
   computeDescription,

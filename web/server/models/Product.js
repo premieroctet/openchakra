@@ -3,4 +3,4 @@ const {getDataModel}=require('../../config/config')
 
 const ProductSchema=require(`./${getDataModel()}/ProductSchema`)
 
-module.exports = mongoose.model('user', ProductSchema)
+module.exports = mongoose.model('product', ProductSchema)

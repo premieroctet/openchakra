@@ -6,8 +6,7 @@ const {
   DROITE,
   EXCAVATRICE,
   SEMI_DELTA,
-  UNKNOWN,
-} = require('../../utils/feurst_consts')
+} = require('../../utils/consts')
 const RequiredField = require('../misc/RequiredField')
 const {withTranslation} = require('react-i18next')
 const {

@@ -1,7 +1,16 @@
 const isEmpty = require('../server/validation/is-empty')
-const {MODES, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
   SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, DATA_MODEL}=require('../mode')
+
+const MODES={
+  PRODUCTION: 'production',
+  VALIDATION: 'validation',
+  DEVELOPMENT: 'development',
+  DEVELOPMENT_NOSSL: 'development_nossl',
+}
+
+const AMAZON_HOST='my-alfred.io'
+const LOCAL_HOST='localhost'
 
 const MONGO_BASE_URI='mongodb://localhost/'
 
