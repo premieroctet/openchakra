@@ -13,7 +13,6 @@ import Router from 'next/router'
 const {snackBarSuccess, snackBarError} = require('../utils/notifications')
 const {ADMIN, MANAGER} = require('../utils/consts')
 const lodash = require('lodash')
-import {isB2BStyle} from '../utils/context'
 import {FORGOT_PASSWORD} from '../utils/i18n'
 
 

@@ -21,23 +21,6 @@ export default theme => ({
       display: 'none',
     },
   },
-  navbarSearchContainerB2B: {
-    width: '40%',
-    marginTop: '5vh',
-    [theme.breakpoints.down('lg')]: {
-      width: '50%',
-    },
-    [theme.breakpoints.down('md')]: {
-      width: '70%',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '90%',
-    },
-    [theme.breakpoints.down('xs')]: {
-      cursor: 'pointer',
-      width: '100%',
-    },
-  },
   fitlerMenuLogged: {
     overflow: 'inherit',
     textOverflow: 'inherit',
@@ -54,10 +37,6 @@ export default theme => ({
 
   iconButton: {
     color: theme.palette.white.main,
-  },
-
-  iconColorB2b: {
-    backgroundColor: '#b0cdc8',
   },
 
   iconColor: {
@@ -119,7 +98,6 @@ export default theme => ({
       display: 'none',
     },
   },
-
   navbarMainSytle: {
     alignItems: 'center',
     width: '90%',
@@ -128,10 +106,6 @@ export default theme => ({
       width: '95%',
     },
   },
-  navbarMainSytleB2B: {
-    width: '95%',
-  },
-
   navbarLogoContainer: {
     cursor: 'pointer',
     [theme.breakpoints.down('xs')]: {
@@ -146,14 +120,6 @@ export default theme => ({
   },
 
   navabarHomepageMenu: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      display: 'none',
-    },
-  },
-  navbarHomepageMenuB2B: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -187,21 +153,6 @@ export default theme => ({
       color: 'rgba(255, 255, 142, 1)',
     },
   },
-  navbarTabRootB2b: {
-    opacity: 'inherit',
-    color: theme.palette.white.main,
-    fontWeight: ' bold',
-    textTransform: 'initial',
-    transition: '0.3s',
-    minWidth: 'inherit',
-    '& span': {
-      whiteSpace: 'nowrap',
-    },
-    '&:hover': {
-      color: 'rgb(176, 205, 200)',
-    },
-  },
-
   logoMyAlfred: {
     height: 64,
     backgroundImage: 'url(/static/assets/icon/logo.svg)',
@@ -243,34 +194,11 @@ export default theme => ({
       display: 'none',
     },
   },
-  navbarButtonContainerB2B: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    [theme.breakpoints.only('md')]: {
-      display: 'none',
-    },
-    [theme.breakpoints.only('xs')]: {
-      display: 'none',
-    },
-    [theme.breakpoints.only('sm')]: {
-      display: 'none',
-    },
-  },
   navBarlogIn: {
     textTransform: theme.typography.textTransform,
     borderRadius: theme.border.button.borderRadius,
     color: theme.palette.white.main,
     fontWeight: theme.typography.fontWeight,
-  },
-  navBarlogInB2B: {
-    textTransform: theme.typography.textTransform,
-    borderRadius: theme.border.button.borderRadius,
-    color: theme.palette.white.main,
-    fontWeight: theme.typography.fontWeight,
-    '&:hover': {
-      color: 'rgb(176, 205, 200)',
-    },
   },
   navbarModal: {
     display: 'flex',
@@ -302,30 +230,6 @@ export default theme => ({
     fontWeight: theme.typography.fontWeight,
     border: '3px solid rgba(255, 255, 255, 1)',
     color: theme.palette.white.main,
-  },
-  navbarSignInB2B: {
-    borderRadius: theme.border.button.borderRadius,
-    textTransform: theme.typography.textTransform,
-    fontWeight: theme.typography.fontWeight,
-    border: '3px solid rgba(255, 255, 255, 1)',
-    color: theme.palette.white.main,
-
-    '&:hover': {
-      color: 'rgb(176, 205, 200)',
-      border: '3px solid rgb(176, 205, 200)',
-    },
-  },
-  navbarSignInB2BContained: {
-    borderRadius: theme.border.button.borderRadius,
-    textTransform: theme.typography.textTransform,
-    fontWeight: theme.typography.fontWeight,
-    border: '3px solid rgba(255, 255, 255, 1)',
-    color: theme.palette.b2b.main,
-    backgroundColor: theme.palette.white.main,
-    '&:hover': {
-      color: 'rgb(176, 205, 200)',
-      border: '3px solid rgb(176, 205, 200)',
-    },
   },
   textFieldMobilSearchInput: {
     width: '90%',
@@ -417,17 +321,6 @@ export default theme => ({
     color: 'white',
     '& :hover': {
       color: '#353A51',
-    },
-  },
-  buttonRegisterB2b: {
-    width: '100%',
-    textTransform: 'initial',
-    border: '3px solid rgb(176, 205, 200)',
-    borderRadius: theme.border.button.borderRadius,
-    backgroundColor: 'rgb(176, 205, 200)',
-    color: 'white',
-    '& :hover': {
-      color: 'rgb(176, 205, 200)',
     },
   },
   filterMenuFocused: {

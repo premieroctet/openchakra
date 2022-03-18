@@ -4,7 +4,6 @@ import Tabs from '@material-ui/core/Tabs'
 import '../../static/assets/css/custom.css'
 import {withTranslation} from 'react-i18next'
 import {makeStyles} from '@material-ui/core/styles'
-import {isB2BStyle} from '../../utils/context'
 
 const useStyles = makeStyles(theme => ({
   navbarTabRoot: {

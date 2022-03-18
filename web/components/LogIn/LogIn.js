@@ -24,7 +24,6 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
 import {EMPLOYEE} from '../../utils/consts'
-const {isB2BStyle}=require('../../utils/context')
 import CustomIcon from '../CustomIcon/CustomIcon'
 
 class LogIn extends React.Component {
@@ -50,7 +49,7 @@ class LogIn extends React.Component {
       axios.get(`/myAlfred/api/users/roles/${e.target.value}`)
         .then(res => {
           const roles = res.data
-          const filteredRoles = roles.filter(r => (isB2BStyle() ? r != EMPLOYEE : r == EMPLOYEE))
+          const filteredRoles = roles.filter(r => (r == EMPLOYEE))
           const selectedRole = filteredRoles.length == 1 ? filteredRoles[0] : null
           console.log({roles: filteredRoles, selectedRole: selectedRole})
           this.setState({roles: filteredRoles, selectedRole: selectedRole})
@@ -70,7 +69,6 @@ class LogIn extends React.Component {
       username: this.state.username,
       password: this.state.password,
       role: this.state.selectedRole,
-      b2b_login: isB2BStyle(),
     }
 
     axios.post('/myAlfred/api/users/login', user)
@@ -99,7 +97,7 @@ class LogIn extends React.Component {
   render() {
     const {classes, callRegister} = this.props
     const {errors, username, password, showPassword, roles, selectedRole} = this.state
-    const showRoles = isB2BStyle() && roles && roles.length >= 1
+    const showRoles = false && roles && roles.length >= 1
 
     const loginDisabled = roles==null || (roles.length>0 && !selectedRole) || !password
 

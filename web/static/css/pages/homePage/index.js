@@ -33,9 +33,6 @@ export default theme => ({
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
   },
-  navbarAndBannerBackgroundb2b: {
-    backgroundColor: theme.palette.b2b.main,
-  },
   navbarComponentPosition: {
     display: 'flex',
     width: '100%',
@@ -74,11 +71,6 @@ export default theme => ({
     [theme.breakpoints.down('xs')]: {
       height: 'auto',
     },
-  },
-  howItWorksComponentB2b: {
-    justifyContent: 'center',
-    marginTop: '2%',
-    backgroundColor: '#3C4047',
   },
   generalWidthFooter: {
     width: '90%',

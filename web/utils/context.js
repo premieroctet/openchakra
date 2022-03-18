@@ -74,31 +74,6 @@ const hideEmptyEvaluations = () => {
   return Boolean(HIDE_EMPTY_EVALUATIONS)
 }
 
-const isB2BStyle = () => {
-  if (isB2BDisabled()) {
-    return false
-  }
-  // User non loggué : return isB2BSite (localStorage)
-  // Loggué :
-  // - b2b admin ou b2b manager : true
-  // - b2b employé : false
-  // - alfred pro : return isB2BSite (localStorage)
-  // - sans rôle : false
-  if (!getLoggedUser()) {
-    return isB2BSite()
-  }
-  if (isB2BAdmin() || isB2BManager()) {
-    return true
-  }
-  if (isB2BEmployee()) {
-    return false
-  }
-  if (isLoggedUserAlfredPro()) {
-    return isB2BSite()
-  }
-  return false
-}
-
 const isApplication = () => {
   const _ua = getUA.toLocaleLowerCase()
   const safari = /safari/.test(_ua)
@@ -169,7 +144,7 @@ const isEditableUser = user => {
 }
 
 module.exports = {
-  isB2BStyle, isB2BEmployee, isB2BAdmin, isB2BManager, isModeCompany, isApplication, isMobile,
+  isB2BEmployee, isB2BAdmin, isB2BManager, isModeCompany, isApplication, isMobile,
   getRole, setAlfredRegistering, removeAlfredRegistering, isAlfredRegistering,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,

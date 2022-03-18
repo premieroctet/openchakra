@@ -14,7 +14,7 @@ import MobileNavbar from './NavBar/MobileNavbar'
 import styles from '../../static/css/components/Layout/LayoutMobileProfile/LayoutMobileProfile'
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import UserAvatar from '../../components/Avatar/UserAvatar'
-import {isEditableUser, isModeCompany, isB2BStyle} from '../../utils/context'
+import {isEditableUser, isModeCompany} from '../../utils/context'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
 class LayoutMobileProfile extends React.Component {
@@ -80,7 +80,7 @@ class LayoutMobileProfile extends React.Component {
     return(
       <Grid>
         <Grid>
-          <Grid className={`customprofilbanner ${isB2BStyle() ? classes.layoutMobileProfilHeaderPro : classes.layoutMobileProfilHeader}`}>
+          <Grid className={`customprofilbanner ${classes.layoutMobileProfilHeader}`}>
             <IconButton aria-label='ArrowBackIosIcon' onClick={() => Router.back()}>
               <ArrowBackIosIcon />
             </IconButton>

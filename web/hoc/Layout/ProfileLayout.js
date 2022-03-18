@@ -7,7 +7,7 @@ import Layout from '../../hoc/Layout/Layout'
 import Grid from '@material-ui/core/Grid'
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import axios from 'axios'
-const {isEditableUser, isB2BStyle}=require('../../utils/context')
+const {isEditableUser}=require('../../utils/context')
 import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayout'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Typography from '@material-ui/core/Typography'
@@ -88,7 +88,7 @@ class ProfileLayout extends CompanyComponent {
             <Grid className={classes.profilLayoutBackgroundContainer}>
               <Grid className={classes.profilLayoutMargin}>
                 <Grid className={classes.profilLayoutBox}>
-                  <Grid className={`customprofilbanner ${isB2BStyle() ? classes.profilLayoutBannerImgPro : classes.profilLayoutBannerImg}`}>
+                  <Grid className={`customprofilbanner ${classes.profilLayoutBannerImg}`}>
                     <Grid className={`customprofilbanneravatar ${classes.profilLayoutAvatar}`}>
                       <UserAvatar alt={!this.isModeCompany() ? user.firstname : company ? company.name : ''} user={!this.isModeCompany() ? user : company ? company : ''} fireRefresh={this.componentDidMount}
                          animateStartup={true}

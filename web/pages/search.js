@@ -29,7 +29,7 @@ const BasePage=require('./basePage')
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')
 const SearchResults=withSlide(withGrid(CardService))
-const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
+const {getLoggedUserId, isB2BAdmin, isB2BManager} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
 const lodash=require('lodash')
 
@@ -139,7 +139,7 @@ class SearchPage extends BasePage {
     }
     setAxiosAuthentication()
 
-    axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${PART}`)
       .catch(err => {
         console.error(err)
         this.setState({mounting: false})
@@ -311,7 +311,7 @@ class SearchPage extends BasePage {
       }
     }
 
-    filters.status = isB2BStyle() ? PRO : PART
+    filters.status = PART
 
     axios.post('/myAlfred/api/serviceUser/search', filters)
       .then(res => {
