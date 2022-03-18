@@ -2,7 +2,6 @@ const {isAndroid, isIOS, getUA}=require('react-device-detect')
 const isWebview = require('is-webview')
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
-const {isB2BDisabled} = require('../config/config')
 const jwt = require('jsonwebtoken')
 const {HIDE_EMPTY_EVALUATIONS}=require('../mode')
 
@@ -29,21 +28,7 @@ const getLoggedAs = () => {
   return logged && logged.logged_as
 }
 
-const isB2BSite = () => {
-  if (isB2BDisabled()) {
-    return false
-  }
-  if (typeof localStorage == 'undefined') {
-    return false
-  }
-  const is_b2b = localStorage.getItem('b2b') === 'true'
-  return is_b2b
-}
-
 const getRole = () => {
-  if (isB2BDisabled()) {
-    return null
-  }
   const token = getAuthToken()
   if (!token) {
     return null

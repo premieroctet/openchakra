@@ -46,10 +46,6 @@ const SERVER_PROD = is_production() || is_development()
 
 const ENABLE_MAILING = is_production()
 
-const isB2BDisabled = () => {
-  return true
-}
-
 const get_host_url = () => {
   const protocol='https'
   const hostname=is_development() ? LOCAL_HOST : AMAZON_HOST
@@ -175,7 +171,7 @@ module.exports = {
   SIRET,
   is_production, is_validation, is_development, is_development_nossl, SERVER_PROD,
   get_host_url, MANGOPAY_CONFIG,
-  ENABLE_MAILING, isB2BDisabled,
+  ENABLE_MAILING,
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,

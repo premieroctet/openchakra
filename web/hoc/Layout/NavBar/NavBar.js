@@ -1,6 +1,6 @@
 import AutoCompleteTextField from
 "../../../components/Search/AutoCompleteTextField"
-import {canAlfredSelfRegister, isB2BDisabled} from "../../../config/config"
+import {canAlfredSelfRegister} from "../../../config/config"
 import CustomButton from "../../../components/CustomButton/CustomButton"
 import ReactHtmlParser from "react-html-parser"
 import {withTranslation} from "react-i18next"

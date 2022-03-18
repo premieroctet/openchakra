@@ -14,7 +14,6 @@ import AddIcon from '@material-ui/icons/Add'
 import {SHOP} from '../../../utils/i18n'
 import lodash from 'lodash'
 const {getLoggedUserId}=require('../../../utils/context')
-const {isB2BDisabled}=require('../../../config/config')
 
 // TODO fix prestaitons personnalisées qui disparaissent lors du clic sur "Précédent"
 class SelectPrestation extends React.Component {
@@ -59,9 +58,6 @@ class SelectPrestation extends React.Component {
       .then(res => {
         let prestations = res.data
         // Filter particular/professional
-        if (!isB2BDisabled()) {
-          prestations=prestations.filter(p => (p.particular_access && part)||(p.professional_access && pro))
-        }
         // Remove private belonging to other Alfreds
         prestations = prestations.filter(p => !p.private_alfred || p.private_alfred == alfred_id)
         let private_prestations = prestations.filter(p => Boolean(p.private_alfred))

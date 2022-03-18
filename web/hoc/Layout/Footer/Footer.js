@@ -25,7 +25,7 @@ import Dialog from '@material-ui/core/Dialog'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import {FOOTER} from '../../../utils/i18n'
-const {isB2BDisabled, mustDisplayChat} = require('../../../config/config')
+const {mustDisplayChat} = require('../../../config/config')
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose} = props
@@ -119,13 +119,6 @@ class Footer extends React.Component {
               <Link href={'/contact'}>
                 <Typography>{ReactHtmlParser(this.props.t('FOOTER.contact_us'))}</Typography>
               </Link>
-            </Grid>
-            <Grid item>
-              { isB2BDisabled() ? null:
-                <Link href={'/professional'}>
-                  <Typography>{ReactHtmlParser(this.props.t('FOOTER.professional'))}</Typography>
-                </Link>
-              }
             </Grid>
           </>
         </Grid>
