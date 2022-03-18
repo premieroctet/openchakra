@@ -1,6 +1,15 @@
 const mongoose = require('mongoose')
 const {getDataModel}=require('../../config/config')
 
-const ProductSchema=require(`./${getDataModel()}/ProductSchema`)
+let ProductSchema=null
 
-module.exports = mongoose.model('product', ProductSchema)
+try {
+  require(`./${getDataModel()}/ProductSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw e
+  }
+}
+
+module.exports = ProductSchema ? mongoose.model('product', ProductSchema) : null
