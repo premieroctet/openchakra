@@ -5,7 +5,7 @@ v1.0, 2022-03-08
 :toc-title: Table des matières
 :toc:
 
-Feurst souhaite donner accès à ses clients une édtion des devis, et des commandes via un module nommé EDI accessible via l'url https://www.tools.feurst.fr.
+Feurst souhaite éditer des devis, et des commandes via un module nommé EDI accessible via l'url https://www.tools.feurst.fr.
 
 Selon le *profil utilisé* pour visiter ce site, les *clients, commerciaux et administrateurs* de Feurst disposent d'une interface adaptée à leurs besoins.
 
@@ -14,8 +14,6 @@ Les *administrateurs* attribuent des accès aux comptes.
 Les *clients* peuvent saisir des références des produits pour établir des commandes et des devis. Un import de fichier type tableur permet d'ajouter / remplacer (rayer la mention inutile) des références de produits dans le formulaire de saisie de commande. Le modèle de fichier est téléchargeable.
 
 Les *commerciaux* peuvent créer, modifier des devis et envoyer au client la proposition finale. Ils mettent à jour le statut des commandes en important les factures et bons de livraison.
-
-
 
 <<<
 :numbered:
@@ -55,7 +53,7 @@ Les *commerciaux* peuvent créer, modifier des devis et envoyer au client la pro
 
 TIP: maquette p.10
 
-Afin d'accéder à l'espace dédié au profil, on renseigne un formulaire de connexion ou l'on a la possibilité de demander un accès.
+Afin d'accéder à l'espace dédié au profil, on renseigne un formulaire (unique ?) de connexion ou l'on a la possibilité de demander un accès.
 
 ### Login
 
@@ -66,14 +64,9 @@ Afin d'accéder à l'espace dédié au profil, on renseigne un formulaire de con
 *Actions*::
 - [ ] _Bouton_ *Se connecter*
 - [ ] _Lien_ *Mot de passe oublié*
-- [ ] Contrôle saisie mot de passe 8 caractères/chiffres/majuscules
-
-Si plusieurs rôles, 
 
 NOTE: Interface de récupération de mot de passe manquante.
-
-NOTE: Manque le choix du rôle (admin/client/commerciaux).
-
+NOTE: Manque le choix du rôle (admin/client/vendeur).
 NOTE: Manque la maquette de la page *Nous contacter*
 
 ### Demande accès
@@ -83,7 +76,7 @@ Demande accès compte
 *Informations*`visu`::
 - [ ] _Lien_ Demander des accès
 
-NOTE: Interface de demande d'accès manquante. Maquette absente, mais fonctionnalité existante. Pour MS, faire nouveau template pour le reset password.
+NOTE: Interface de demande d'accès manquante.
 
 ## Profil administrateur
 
@@ -95,8 +88,6 @@ TIP: maquette p.17
 
 Liste des administrateurs
 
-Admin === ADV (administration des ventes) 
-
 *Informations*`visu`::
 - [ ] Administrateur nom
 - [ ] Administrateur prénom
@@ -107,36 +98,32 @@ Admin === ADV (administration des ventes)
 - [ ] Administrateur modification
 - [ ] Administrateur suppression
 
-#### Gestion des comptes
+#### Gestion des accès
 
-Liste des clients et commerciaux ayant accès au service.
-Type comptes : 
+Liste des revendeurs ayant accès au service.
 
 *Informations*`visu`::
-- [ ] Client/commercial nom
-- [ ] Client/commercial prénom
-- [ ] Client/commercial email
-- [ ] Client/commercial nom entreprise
-- [ ] Client/commercial type compte
-- [ ] Client/commercial recherche utilisateur `saisie`
+- [ ] Revendeur nom
+- [ ] Revendeur prénom
+- [ ] Revendeur email
+- [ ] Revendeur recherche utilisateur `saisie`
 
 *Actions*::
-- [ ] Client/commercial ajout
-- [ ] Client/commercial modification
-- [ ] Client/commercial suppression
-- [ ] Client/commercial tri par ordre alpha
-- [ ] Client/commercial Boutons radios pour afficher comptes clients/commerciaux/admin
-- [ ] Client/commercial Upload/téléchargement fichier des accès 
+- [ ] Revendeur ajout
+- [ ] Revendeur modification
+- [ ] Revendeur suppression
+- [ ] Revendeur tri par ordre alpha
 
+NOTE: Quid des profils assignés ? Les affiche t'on ?
 
 NOTE: Screen de modification revendeurs manquant
 
+NOTE: Téléchargement ou upload sous forme de tableur des revendeurs ayant accès ? Exemple de fichier ?
 
-### Commandes
 
-Le compte admin dispose historique comptes esclaves
+### Factures
 
-TIP: maquette p.15 (commandes remplace factures)
+TIP: maquette p.15
 
 Tableau recensant les commandes réalisées par l'ensemble des clients affichées selon un *filtre de date/période*, et un *tri par colonne*
 
@@ -161,11 +148,15 @@ Tableau recensant les commandes réalisées par l'ensemble des clients affichée
 
 NOTE: Le statut *Livrée* est-il affiché quand le bon de livraison a été renseigné sur la commande ?
 
-### Mon compte
-
-compte pour les maitres. Gestion des accès : Mes informations. Aucune saisie possible. C'est des données importées. Fusion des pages 16 et 9
+### Compte
 
 TIP: maquette p.16
+
+*Informations*`visu|saisie`::
+- [ ] Dénomination sociale
+- [ ] SIRET
+- [ ] No TVA
+- [ ] Adresse de facturation
 
 ## Profil Commerciaux / ADV
 
@@ -177,10 +168,6 @@ TIP: maquette p.19
 
 Liste de commandes à traiter affichées selon un *filtre de compte client*, et un *tri par date*.
 Sur cet écran, les statuts des commandes sont _taguées_ selon les statuts suivants :
-
-
-Les statuts sont en cours de traitement.
-Quand on cliquer sur voir la commande, cela permet de sélectionner :
 
 * Traitée
 * Partiellement traitée
@@ -245,9 +232,6 @@ TIP: maquette p.22
 ##### Ajout produit par référence
 
 Le commercial peut ajouter d'autres produits au devis. L'interface à cet effet dispose d'un champ de saisie de référence catalogue, et d'un champ quantité.
-
-Le commercial peut ajouter une ligne avec une référence identique dans le tableau.
-Dans le cas où un prix aurait bougé entre temps, la ligne reste. 
 
 *Informations*`saisie`::
 - [ ] référence produit
@@ -330,7 +314,6 @@ L'envoi du devis au client est envoyé par mél.
 Le devis édité a une date de validité de `XXX` jours à compter de son édition.
 
 *Actions*::
-- [ ] _Bouton_ *Enregistrer*
 - [ ] _Bouton_ *Envoyer au client*
 
 
@@ -445,7 +428,6 @@ Lors du clic sur *J'ai fini, indiquer mes options de livraison*, la modale de li
 *Actions*::
 - [ ] Valider ces informations => fermeture de la modale
 
-Calcul de frais de livraison à faire. Selon le poids, et le département
 
 NOTE: Sur la maquette p.3, il y a les boutons *demande de devis* et *J'ai fini, indiquer mes options de livraison*. ça me chagrine. Je préférerai n'afficher que *J'ai fini*
 
@@ -560,12 +542,6 @@ NOTE: Bouton imprimer ou télécharger. Est-ce nécessaire vu la section documen
 
 
 #### Mes devis
-
-Statuts :
-* expirée : supérieur à 30 jours
-* 
-
-Si on passe commande, on se retrouve sur le récapitulatif de commande (maquette p.5) pour la valider.
 
 .Exemple d'entrées du tableau Mes devis
 [width="100%",options="header"]

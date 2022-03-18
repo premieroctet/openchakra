@@ -63,6 +63,14 @@
   "SUMMARY.border_shield_label": "Boucliers de flancs : ",
 
   "SUMMARY.contact_expert": "Être contacté par un expert",
-  "SUMMARY.receive_quotation": "Recevoir ma configuration"
+  "SUMMARY.receive_quotation": "Recevoir ma configuration",
+
+
+  "LOGIN.title": "Connexion",
+  "LOGIN.input_label": "Email",
+  "LOGIN.input_password": "Mot de passe",
+  "LOGIN.button": "Se connecter",
+  "LOGIN.forgotten_password": "Mot de passe oublié",
+  "LOGIN.request_access": "Demander des accès"
 
 }

@@ -14,7 +14,7 @@ const {
   FIX_TYPES,
   MACHINE_TYPES,
   PIN,
-} = require('../../../utils/feurst_consts')
+} = require('../../../utils/consts')
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
 

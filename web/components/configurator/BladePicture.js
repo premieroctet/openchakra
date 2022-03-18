@@ -2,8 +2,7 @@ const {
   DELTA,
   DROITE,
   SEMI_DELTA,
-  UNKNOWN,
-} = require('../../utils/feurst_consts')
+} = require('../../utils/consts')
 
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'

@@ -108,6 +108,10 @@ h2, h3 {
   color: red;
 }
 
+.phonenumber {
+  white-space: nowrap;
+}
+
 .configurator > *,
 h2,
 .MuiTypography-root {

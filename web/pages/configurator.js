@@ -2,7 +2,7 @@ const {
   BLADE_SHAPES,
   FIX_TYPES,
   PELLE_BUTTE,
-} = require('../utils/feurst_consts')
+} = require('../utils/consts')
 import React from 'react'
 
 import '../static/feurst.css'
