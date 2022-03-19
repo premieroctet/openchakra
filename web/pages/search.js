@@ -29,7 +29,7 @@ const BasePage=require('./basePage')
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')
 const SearchResults=withSlide(withGrid(CardService))
-const {getLoggedUserId, isB2BManager} =require('../utils/context')
+const {getLoggedUserId} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
 const lodash=require('lodash')
 
@@ -159,8 +159,7 @@ class SearchPage extends BasePage {
                 this.setState({isAdmin: user.is_admin})
                 st.user = user
 
-                const promise = isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
-                promise
+                Promise.resolve({data: user})
                   .then(res => {
                     let allAddresses = {'main': res.data.billing_address.gps}
                     res.data.service_address.forEach(addr => {

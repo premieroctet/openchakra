@@ -1,7 +1,7 @@
 import {withTranslation} from 'react-i18next'
 import React from 'react';
 import axios from 'axios'
-const {isB2BManager, getLoggedUser}=require('../../utils/context')
+const {getLoggedUser}=require('../../utils/context')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 
 class ContextTest extends React.Component {
@@ -30,14 +30,12 @@ class ContextTest extends React.Component {
   }
 
   render() {
-    const {user, server_context} = this.state
+    const {server_context} = this.state
 
     return(
       <>
         <h1>Valeur token</h1>
         <div>{JSON.stringify(getLoggedUser())}</div>
-        <h1>isB2BManager</h1>
-        <div>{isB2BManager(user) ? 'Oui' : 'Non'}</div>
         <h1>Contexte serveur</h1>
         <div>{JSON.stringify(server_context)}</div>
       </>

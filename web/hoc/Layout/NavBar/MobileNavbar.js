@@ -5,7 +5,6 @@ const {
 const {
   getLoggedUserId,
   getRole,
-  isB2BManager,
   isLoggedUserAlfredPro,
   isLoggedUserRegistered
 } = require('../../../utils/context');
@@ -101,8 +100,7 @@ class MobileNavbar extends React.Component {
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         const user=res.data
-        const promise = isB2BManager() ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
-        promise
+        Promise.resolve({data: user})
           .then(res => {
             let allAddresses = {'main': res.data.billing_address}
             res.data.service_address.forEach(addr => {

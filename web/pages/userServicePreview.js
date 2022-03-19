@@ -47,7 +47,7 @@ const {computeBookingReference} = require('../utils/text')
 const lodash = require('lodash')
 
 const moment = require('moment')
-const {isB2BManager, getRole, isModeCompany, isLoggedUserAdmin}=require('../utils/context')
+const {getRole, isModeCompany, isLoggedUserAdmin}=require('../utils/context')
 
 moment.locale('fr')
 registerLocale('fr', fr)

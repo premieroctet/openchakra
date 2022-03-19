@@ -11,7 +11,7 @@ const moment = require('moment')
 const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay')
 const {maskIban} = require('../../../utils/text')
 moment.locale('fr')
-const {isB2BManager, isB2BEmployee, isModeCompany}=require('../../utils/serverContext')
+const {isB2BEmployee, isModeCompany}=require('../../utils/serverContext')
 const {computeUrl} = require('../../../config/config')
 const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
@@ -381,7 +381,7 @@ router.get('/active-cards', passport.authenticate('jwt', {session: false}), (req
     .then(result => {
       let cards=result
       // B2B manager or employee : retain only cards allowed for group
-      const group_mode=isB2BManager(req) ? MICROSERVICE_MODE : isB2BEmployee(req) ? CARETAKER_MODE : null
+      const group_mode=isB2BEmployee(req) ? CARETAKER_MODE : null
       if (group_mode) {
         Group.findOne({members: req.user.id, type: group_mode}, 'cards')
           .then(group => {

@@ -31,16 +31,12 @@ const getRole = req => {
   return null
 }
 
-const isB2BManager = req => {
-  return MANAGER == getRole(req)
-}
-
 const isB2BEmployee = req => {
   return EMPLOYEE == getRole(req)
 }
 
 const isModeCompany = req => {
-  return isB2BManager(req)
+  return false
 }
 
 // Create JWT cookie with user credentials
@@ -106,6 +102,6 @@ const serverContextFromRequest = req => {
   return new RequestServerContext(req)
 }
 
-module.exports = {get_logged_id, getRole, isB2BManager,
+module.exports = {get_logged_id, getRole,
   isB2BEmployee, isModeCompany, send_cookie, get_token, serverContextFromRequest,
 }
