@@ -18,7 +18,7 @@ import InfoIcon from '@material-ui/icons/Info'
 import ViewComfyIcon from '@material-ui/icons/ViewComfy'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import {MY_PROFIL} from '../../utils/i18n'
-const {isB2BAdmin, getRole}=require('../../utils/context')
+const {getRole}=require('../../utils/context')
 const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 
 
@@ -28,7 +28,7 @@ class myProfile extends CompanyComponent {
     super(props)
     this.state={
       user: null,
-      company: null
+      company: null,
     }
 
   }
@@ -111,38 +111,24 @@ class myProfile extends CompanyComponent {
               :
               null
             }
-            { isB2BAdmin() ?
-              <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
-                <CustomButton
-                  className={classes.button}
-                  startIcon={<SettingsIcon />}
-                  onClick={() => Router.push('/company/dashboard/companyDashboard')}
-                >
-                  {ReactHtmlParser(this.props.t('MY_PROFIL.dashboard'))}
-                </CustomButton>
-              </Grid>
-              :
-              <>
-                <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
-                  <CustomButton
-                    className={classes.button}
-                    startIcon={<ContactMailIcon />}
-                    onClick={() => Router.push('/account/personalInformation')}
-                  >
-                    {ReactHtmlParser(this.props.t('MY_PROFIL.my_informations'))}
-                  </CustomButton>
-                </Grid>
-                <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
-                  <CustomButton
-                    className={classes.button}
-                    startIcon={<SettingsIcon />}
-                    onClick={() => Router.push('/account/parameters')}
-                  >
-                    {ReactHtmlParser(this.props.t('MY_PROFIL.my_settings'))}
-                  </CustomButton>
-                </Grid>
-              </>
-            }
+            <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
+              <CustomButton
+                className={classes.button}
+                startIcon={<ContactMailIcon />}
+                onClick={() => Router.push('/account/personalInformation')}
+              >
+                {ReactHtmlParser(this.props.t('MY_PROFIL.my_informations'))}
+              </CustomButton>
+            </Grid>
+            <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
+              <CustomButton
+                className={classes.button}
+                startIcon={<SettingsIcon />}
+                onClick={() => Router.push('/account/parameters')}
+              >
+                {ReactHtmlParser(this.props.t('MY_PROFIL.my_settings'))}
+              </CustomButton>
+            </Grid>
           </Grid>
           { user.is_admin ?
             <Grid>

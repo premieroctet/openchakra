@@ -41,18 +41,13 @@ const isB2BEmployee = () => {
   return is_employee
 }
 
-const isB2BAdmin = () => {
-  const is_admin = getRole() == ADMIN
-  return is_admin
-}
-
 const isB2BManager = () => {
   const is_manager = getRole() == MANAGER
   return is_manager
 }
 
 const isModeCompany = () => {
-  return isB2BAdmin() || isB2BManager()
+  return isB2BManager()
 }
 
 const hideEmptyEvaluations = () => {
@@ -129,7 +124,7 @@ const isEditableUser = user => {
 }
 
 module.exports = {
-  isB2BEmployee, isB2BAdmin, isB2BManager, isModeCompany, isApplication, isMobile,
+  isB2BEmployee, isB2BManager, isModeCompany, isApplication, isMobile,
   getRole, setAlfredRegistering, removeAlfredRegistering, isAlfredRegistering,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,

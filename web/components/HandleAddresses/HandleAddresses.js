@@ -19,7 +19,6 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogActions from '@material-ui/core/DialogActions'
 import Router from 'next/router'
-import {isB2BAdmin} from '../../utils/context'
 import {clearAuthenticationToken, setAxiosAuthentication} from '../../utils/authentication'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
@@ -30,9 +29,7 @@ class HandleAddresses extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      pro_mode: false,
       user: null,
-      company_name: null,
       suggestion_current: null,
       new_label: '',
       edit_label: '',
@@ -41,15 +38,11 @@ class HandleAddresses extends React.Component {
       open: false,
       selected_address: null,
       delete_address_id: '',
-      isDashboard: false,
     }
   }
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    if(Router.pathname === '/company/dashboard/companyDashboard') {
-      this.setState({isDashboard: true})
-    }
     this.loadData()
   }
 
@@ -72,27 +65,6 @@ class HandleAddresses extends React.Component {
         this.service_address_put_url = '/myAlfred/api/users/profile/serviceAddress'
         this.service_address_edit_url = '/myAlfred/api/users/profile/address/'
         this.service_address_delete_url = '/myAlfred/api/users/profile/address/'
-        if (isB2BAdmin(user)) {
-          axios.get('/myAlfred/api/companies/current')
-            .then(res => {
-              let company = res.data
-              this.setState({
-                company_name: company.name,
-                billing_address: company.billing_address,
-                service_address: company.service_address,
-                new_label: '',
-                edit_label: '',
-                selected_address: null,
-                delete_address_id: '',
-                pro_mode: true,
-              })
-              this.address_get_url = '/myAlfred/api/companies/profile/address/'
-              this.main_address_put_url = '/myAlfred/api/companies/profile/billingAddress'
-              this.service_address_put_url = '/myAlfred/api/companies/profile/serviceAddress'
-              this.service_address_edit_url = '/myAlfred/api/companies/profile/address/'
-              this.service_address_delete_url = '/myAlfred/api/companies/profile/address/'
-            })
-        }
       })
       .catch(err => {
         console.error(err)
@@ -272,53 +244,50 @@ class HandleAddresses extends React.Component {
   };
 
   render() {
-    const {billing_address, selected_address, pro_mode, isDashboard, user, open}=this.state
+    const {billing_address, selected_address, user, open}=this.state
     const {classes} = this.props
 
     return(
       <Grid>
-        {
-          !isDashboard ?
+        <Grid>
+          <Grid>
             <Grid>
-              <Grid>
-                <Grid>
-                  <h3 className={'customhandleaddressestitle'}>{ pro_mode ? ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.title_b2b')) : ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.title'))}</h3>
-                </Grid>
-                {this.addressLabel(billing_address)}
+              <h3 className={'customhandleaddressestitle'}>{ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.title'))}</h3>
+            </Grid>
+            {this.addressLabel(billing_address)}
+          </Grid>
+          <Grid style={{marginTop: '5vh'}}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} xl={12} lg={12} md={12} sm={12}>
+                <AlgoliaPlaces
+                  className={'customhandleaddressesalgolia'}
+                  placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.placeholder_algo'))}
+                  options={{
+                    appId: 'plKATRG826CP',
+                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                    language: 'fr',
+                    countries: ['fr'],
+                    type: 'address',
+                  }}
+                  onChange={suggestion => this.onMainAddressChange(suggestion)}
+                />
               </Grid>
-              <Grid style={{marginTop: '5vh'}}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} xl={12} lg={12} md={12} sm={12}>
-                    <AlgoliaPlaces
-                      className={'customhandleaddressesalgolia'}
-                      placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.placeholder_algo'))}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'address',
-                      }}
-                      onChange={suggestion => this.onMainAddressChange(suggestion)}
-                    />
-                  </Grid>
-                  <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
-                    <CustomButton disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained"
-                      classes={{root: `customhandleaddressessavebutton ${classes.buttonSave}`}} onClick={this.onSubmitMain}>
-                      {ReactHtmlParser(this.props.t('COMMON.btn_validate'))}
-                    </CustomButton>
-                  </Grid>
-                </Grid>
+              <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
+                <CustomButton disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained"
+                  classes={{root: `customhandleaddressessavebutton ${classes.buttonSave}`}} onClick={this.onSubmitMain}>
+                  {ReactHtmlParser(this.props.t('COMMON.btn_validate'))}
+                </CustomButton>
               </Grid>
-            </Grid> : null
-        }
+            </Grid>
+          </Grid>
+        </Grid>
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3 className={'customhandleaddressesbooktitle'}>{ pro_mode ? ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.book_title_b2b')) : ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.book_title'))}</h3>
+              <h3 className={'customhandleaddressesbooktitle'}>{ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.book_title'))}</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.setState({addNewMode: !this.state.addNewMode, selected_address: null})}>
@@ -328,7 +297,7 @@ class HandleAddresses extends React.Component {
           </Grid>
           <Grid>
             <Typography className={'customhandleaddressessubtitlebook'} style={{color: 'rgba(39,37,37,35%)'}}>
-              {isB2BAdmin(user) ? ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.b2b_title_add_sites')) : ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.title_add_sites'))}
+              {ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.title_add_sites'))}
             </Typography>
           </Grid>
         </Grid>
@@ -412,7 +381,7 @@ class HandleAddresses extends React.Component {
                 name={'new_label'}
                 placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.textfield_name_placeholder_add_sites'))}
                 variant={'outlined'}
-                label={ pro_mode ? ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.textfield_name_site')) : ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.textfield_name_addresses'))}
+                label={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.textfield_name_addresses'))}
                 className={`customhandleaddressesaddnewname ${classes.textField}`}
               />
             </Grid>

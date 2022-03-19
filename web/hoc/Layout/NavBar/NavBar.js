@@ -44,7 +44,7 @@ import Switch from "@material-ui/core/Switch"
 import {DateRangePicker} from "react-dates"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
 import ClearIcon from "@material-ui/icons/Clear"
-import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BAdmin, isB2BManager, removeAlfredRegistering, setAlfredRegistering, getRole} from "../../../utils/context"
+import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BManager, removeAlfredRegistering, setAlfredRegistering, getRole} from "../../../utils/context"
 const {formatAddress} = require("../../../utils/text.js")
 import Slider from "@material-ui/core/Slider"
 import "../../../static/assets/css/custom.css"
@@ -136,7 +136,7 @@ class NavBar extends Component {
       .then(res => {
         const user = res.data
         this.setState({user: user})
-        const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get("/myAlfred/api/companies/current") : Promise.resolve({data: user})
+        const promise = isB2BManager(user) ? axios.get("/myAlfred/api/companies/current") : Promise.resolve({data: user})
         promise
           .then(res => {
             let allAddresses = {"main": res.data.billing_address}
@@ -770,7 +770,7 @@ class NavBar extends Component {
             <Grid>
               <MenuItem disabled={true} style={{opacity: 1}}>{`${ReactHtmlParser(this.props.t("SEARCHBAR.hello")) } ${ user.firstname}`} !</MenuItem>
               <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_profil"))}</MenuItem>
-              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? "/account/editProfileCompany" : "/account/editProfile")}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_settings"))}</MenuItem>
+              <MenuItem onClick={() => Router.push("/account/editProfile")}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_settings"))}</MenuItem>
               {
                 !user.is_employee ?
                   user.is_alfred ?
@@ -783,10 +783,6 @@ class NavBar extends Component {
               <MenuItem onClick={() => Router.push("/reservations/reservations")}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_resa"))}</MenuItem>
               {user.is_admin ?
                 <MenuItem onClick={() => Router.push("/dashboard")}>{ReactHtmlParser(this.props.t("SEARCHBAR.dashboard_alfred"))}</MenuItem>
-                : null
-              }
-              {isB2BAdmin(user) ?
-                <MenuItem onClick={() => Router.push("/company/dashboard/companyDashboard")}>{ReactHtmlParser(this.props.t("SEARCHBAR.dashboard"))}</MenuItem>
                 : null
               }
               <MenuItem onClick={this.logout}>{ReactHtmlParser(this.props.t("SEARCHBAR.log_out"))}</MenuItem>

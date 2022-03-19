@@ -47,7 +47,7 @@ const {computeBookingReference} = require('../utils/text')
 const lodash = require('lodash')
 
 const moment = require('moment')
-const {isB2BAdmin, isB2BManager, getRole, isModeCompany, isLoggedUserAdmin}=require('../utils/context')
+const {isB2BManager, getRole, isModeCompany, isLoggedUserAdmin}=require('../utils/context')
 
 moment.locale('fr')
 registerLocale('fr', fr)
@@ -184,7 +184,7 @@ class UserServicesPreview extends BasePage {
 
             }
             st.user=user
-            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
+            const promise = Promise.resolve({data: user})
             promise
               .then(res => {
                 if (res.data) {

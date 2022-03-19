@@ -6,7 +6,6 @@ import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import Layout from './Layout'
 import axios from 'axios'
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import {isB2BAdmin} from '../../utils/context'
 import styles from '../../static/css/components/LayoutAccount/LayoutAccount'
 import '../../static/assets/css/custom.css'
 import {withStyles} from '@material-ui/core/styles'
@@ -29,14 +28,14 @@ class LayoutAccount extends React.Component {
           items: [
             {
               label: ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.my_informations')),
-              url: isB2BAdmin(user) ? '/editProfileCompany' : '/editProfile',
+              url: '/editProfile',
             },
             {
               label: ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.payment_method')),
               url: '/paymentMethod',
             },
             {
-              label: isB2BAdmin(user) ? ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.my_sites')) : ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.my_adresses')),
+              label: ReactHtmlParser(this.props.t('LAYOUT_ACCOUNT.my_adresses')),
               url: '/myAddresses',
             },
             {
