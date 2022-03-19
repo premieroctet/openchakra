@@ -31,10 +31,6 @@ const getRole = req => {
   return null
 }
 
-const isB2BEmployee = req => {
-  return EMPLOYEE == getRole(req)
-}
-
 const isModeCompany = req => {
   return false
 }
@@ -103,5 +99,5 @@ const serverContextFromRequest = req => {
 }
 
 module.exports = {get_logged_id, getRole,
-  isB2BEmployee, isModeCompany, send_cookie, get_token, serverContextFromRequest,
+  isModeCompany, send_cookie, get_token, serverContextFromRequest,
 }

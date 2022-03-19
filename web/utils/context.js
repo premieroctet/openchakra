@@ -36,11 +36,6 @@ const getRole = () => {
   return token.role
 }
 
-const isB2BEmployee = () => {
-  const is_employee = getRole() == EMPLOYEE
-  return is_employee
-}
-
 const isModeCompany = () => {
   return false
 }
@@ -119,7 +114,7 @@ const isEditableUser = user => {
 }
 
 module.exports = {
-  isB2BEmployee, isModeCompany, isApplication, isMobile,
+  isModeCompany, isApplication, isMobile,
   getRole, setAlfredRegistering, removeAlfredRegistering, isAlfredRegistering,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
