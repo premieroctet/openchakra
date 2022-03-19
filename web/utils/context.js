@@ -36,10 +36,6 @@ const getRole = () => {
   return token.role
 }
 
-const isModeCompany = () => {
-  return false
-}
-
 const hideEmptyEvaluations = () => {
   return Boolean(HIDE_EMPTY_EVALUATIONS)
 }
@@ -114,7 +110,7 @@ const isEditableUser = user => {
 }
 
 module.exports = {
-  isModeCompany, isApplication, isMobile,
+  isApplication, isMobile,
   getRole, setAlfredRegistering, removeAlfredRegistering, isAlfredRegistering,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,

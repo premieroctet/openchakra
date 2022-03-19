@@ -31,10 +31,6 @@ const getRole = req => {
   return null
 }
 
-const isModeCompany = req => {
-  return false
-}
-
 // Create JWT cookie with user credentials
 const send_cookie = (user, role, res, logged_as=null) => {
   const payload = {
@@ -99,5 +95,5 @@ const serverContextFromRequest = req => {
 }
 
 module.exports = {get_logged_id, getRole,
-  isModeCompany, send_cookie, get_token, serverContextFromRequest,
+  send_cookie, get_token, serverContextFromRequest,
 }

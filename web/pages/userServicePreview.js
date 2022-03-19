@@ -47,7 +47,7 @@ const {computeBookingReference} = require('../utils/text')
 const lodash = require('lodash')
 
 const moment = require('moment')
-const {getRole, isModeCompany, isLoggedUserAdmin}=require('../utils/context')
+const {getRole, isLoggedUserAdmin}=require('../utils/context')
 
 moment.locale('fr')
 registerLocale('fr', fr)
@@ -159,7 +159,7 @@ class UserServicesPreview extends BasePage {
             serviceUser.prestations=serviceUser.prestations.filter(p => {
               const company=p.prestation.private_company
               if (company) {
-                return isLoggedUserAdmin() || (isModeCompany() && user && user.company==company)
+                return isLoggedUserAdmin()
               }
               return true
             })

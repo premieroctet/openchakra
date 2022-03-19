@@ -14,7 +14,7 @@ import MobileNavbar from './NavBar/MobileNavbar'
 import styles from '../../static/css/components/Layout/LayoutMobileProfile/LayoutMobileProfile'
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import UserAvatar from '../../components/Avatar/UserAvatar'
-import {isEditableUser, isModeCompany} from '../../utils/context'
+import {isEditableUser} from '../../utils/context'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
 class LayoutMobileProfile extends React.Component {
@@ -87,35 +87,26 @@ class LayoutMobileProfile extends React.Component {
           </Grid>
           <Grid className={classes.layoutMobileLayoutProfileHeader}>
             <Grid className={classes.profilLayoutAvatar}>
-              <UserAvatar alt={!isModeCompany(user) ? user.firstname : company ? company.name : ''} user={!isModeCompany(user) ? user : company ? company : ''}/>
+              <UserAvatar alt={user.firstname} user={user}/>
             </Grid>
           </Grid>
           <Grid style={{display: 'flex', height: '40%', alignItems: 'center', marginTop: '10vh', marginLeft: '5vh'}}>
             <Grid style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
-                {isModeCompany(user) ?
-                  <h3>{company ? company.name : ''}</h3>
-                  :
-                  <h3>{user ? ReactHtmlParser(this.props.t('LAYOUT_PROFIL.name')) + user.firstname : ''}</h3>
-                }
+                <h3>{user ? ReactHtmlParser(this.props.t('LAYOUT_PROFIL.name')) + user.firstname : ''}</h3>
               </Grid>
-              {isModeCompany(user) ? null :
-                <Grid>
-                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('LAYOUT_ABOUT.text'))}</Typography>
-                </Grid>
-              }
+              <Grid>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('LAYOUT_ABOUT.text'))}</Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
         <Grid style={{marginTop: '5vh'}}>
           <Divider/>
         </Grid>
-        {
-          isModeCompany(user) ? null :
-            <Grid className={classes.profilLayoutScrollMenu}>
-              <ScrollMenu categories={menuItems} mode={'profile'} extraParams={{user: this.props.user}}/>
-            </Grid>
-        }
+        <Grid className={classes.profilLayoutScrollMenu}>
+          <ScrollMenu categories={menuItems} mode={'profile'} extraParams={{user: this.props.user}}/>
+        </Grid>
         <Grid style={{padding: '10%'}}>
           {children}
         </Grid>

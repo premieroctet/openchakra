@@ -11,7 +11,6 @@ const moment = require('moment')
 const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay')
 const {maskIban} = require('../../../utils/text')
 moment.locale('fr')
-const {isModeCompany}=require('../../utils/serverContext')
 const {computeUrl} = require('../../../config/config')
 const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
@@ -115,10 +114,8 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
   const amount = req.body.amount * 100
   const returnUrl= `/paymentSuccess?booking_id=${req.body.booking_id}`
 
-  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-
   let mangopay_id=0
-  promise
+  User.findById(req.user.id)
     .then(entity => {
       console.log(entity)
       mangopay_id=entity.id_mangopay
@@ -245,8 +242,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
   browserInfo.AcceptHeader=req.headers.accept
   const ipAddress=req.connection.remoteAddress
 
-  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-  promise
+  User.findById(req.user.id)
     .then(entity => {
       const id_mangopay = entity.id_mangopay
       mangoApi.Users.getWallets(id_mangopay)
@@ -296,8 +292,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
 router.post('/bank-accounts', passport.authenticate('jwt', {session: false}), (req, res) => {
   const {iban, bic} = req.body
 
-  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-  promise
+  User.findById(req.user.id)
     .then(entity => {
       const mangopay_id = entity.mangopay_provider_id || entity.id_mangopay
 
@@ -344,8 +339,7 @@ router.post('/bank-accounts', passport.authenticate('jwt', {session: false}), (r
 
 const get_cards = req => {
   return new Promise((resolve, reject) => {
-    const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-    promise
+    User.findById(req.user.id)
       .then(entity => {
         mangoApi.Users.getCards(entity.id_mangopay, {parameters: {per_page: 100}})
           .then(cards => {
