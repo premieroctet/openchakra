@@ -27,16 +27,19 @@ function CustomTabMenu(props) {
       {tabs ?
         <Tabs value={false} aria-label="simple tabs example">
           {
-            Object.keys(tabs).map((res, index) => (
-              <a href={tabs[res].url} style={{textTransform: 'initial'}}>
-                <Tab
-                  key={index}
-                  classes={{root: `customnavbartab ${classes.navbarTabRoot}`}}
-                  label={tabs[res].label}
-                  onClick={tabs[res].callFunction}
-                />
-              </a>
-            ))
+            Object.keys(tabs).map((res, index) => {
+              const data=tabs[res]
+              return (
+                <a href={data.url} style={{textTransform: 'initial'}}>
+                  <Tab
+                    key={index}
+                    classes={{root: `${data.classname} customnavbartab ${classes.navbarTabRoot}`}}
+                    label={data.label}
+                    onClick={data.callFunction}
+                  />
+                </a>
+              )
+            })
           }
         </Tabs>
         : null

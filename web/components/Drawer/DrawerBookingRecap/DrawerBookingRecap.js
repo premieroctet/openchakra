@@ -42,7 +42,7 @@ class DrawerBookingRecap extends React.Component {
           <Grid>
             <Grid>
               <Typography>{bookingObj.service.label}
-                {!bookingObj.is_service && `par ${alfred.firstname}}`}
+                {!bookingObj.is_service && `par ${alfred?.firstname}}`}
               </Typography>
             </Grid>
             <Grid>

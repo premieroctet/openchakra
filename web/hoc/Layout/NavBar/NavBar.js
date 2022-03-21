@@ -1057,22 +1057,27 @@ class NavBar extends Component {
       {
         label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEPrestation')),
         url: '/search',
+        classname: 'NAVBAR_MENU_allEPrestation',
       },
       {
         label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEWork')),
         url: '/footer/addService',
+        classname: 'NAVBAR_MENU_allEWork',
       },
       {
         label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEntrepreneur')),
         url: '/footer/ourCommunity',
+        classname: 'NAVBAR_MENU_allEntrepreneur',
       },
       {
         label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEBecome')),
         url: '/footer/becomeAlfred',
+        classname: 'NAVBAR_MENU_allEBecome',
       },
       {
         label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEContact')),
         url: '/contact',
+        classname: 'NAVBAR_MENU_allEContact',
       },
     ]
 
