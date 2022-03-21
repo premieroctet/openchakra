@@ -1,8 +1,9 @@
 import React, {useState, useMemo} from 'react'
 import regeneratorRuntime from 'regenerator-runtime' // Needed for react-table
 import {useTable, useSortBy, useFilters, useGlobalFilter} from 'react-table'
-import GlobalFilter from './TableFilter'
+import {GlobalFilter} from './TableFilter'
 import {fuzzyTextFilterFn} from './table-helper'
+import TableDialogFilter from './TableDialogFilter'
 
 
 function DefaultColumnFilter({
@@ -21,6 +22,31 @@ function DefaultColumnFilter({
   )
 }
 
+function dateBetweenFilterFn(rows, id, filterValues) {
+  const sd = filterValues[0] ? new Date(filterValues[0]) : undefined
+  const ed = filterValues[1] ? new Date(filterValues[1]) : undefined
+
+  if (ed || sd) {
+    return rows.filter(r => {
+      const cellDate = new Date(r.values[id])
+
+      if (ed && sd) {
+        return cellDate >= sd && cellDate <= ed
+      }
+      else if (sd) {
+        return cellDate >= sd
+      }
+      else if (ed) {
+        return cellDate <= ed
+      }
+    })
+  }
+  return rows
+  
+}
+
+dateBetweenFilterFn.autoRemove = val => !val
+
 
 const Table = ({data, columns}) => {
 
@@ -28,6 +54,7 @@ const Table = ({data, columns}) => {
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
+      dateBetween: dateBetweenFilterFn,
       // Or, override the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
@@ -75,59 +102,60 @@ const Table = ({data, columns}) => {
     useGlobalFilter, // useGlobalFilter!
     useSortBy,
   )
-    
-
-  // We don't want to render all of the rows for this example, so cap
-  // it for this use case
-  const firstPageRows = rows.slice(0, 10)
-
-
+  
   return (
     <>
+      <GlobalFilter
+        preGlobalFilteredRows={preGlobalFilteredRows}
+        globalFilter={state.globalFilter}
+        setGlobalFilter={setGlobalFilter}
+      />
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column, i) => (
                 <th {...column.getHeaderProps()}>
-                  {column.render('Header')}
-                  {/* Add a sort direction indicator */}
-                  <button {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? ' 🔽'
-                        : ' 🔼'
-                      : 'trier'}
-                  </button>
-                  {/* Render the columns filter UI */}
-                  <div>{console.log(column)}</div>
-                  <div>{column.canFilter ? column.render('Filter') : null}</div>
+                  
+                  {column.render('Header') !== '' ?
+                    <>
+                      <button {...column.getHeaderProps(column.getSortByToggleProps())}>
+                        {column.render('Header')}
+                        {column.isSorted
+                          ? column.isSortedDesc
+                            ? ' 🔽'
+                            : ' 🔼'
+                          : ''}
+                      </button>
+                      {column.canFilter ?
+                        <>
+                          <TableDialogFilter>
+                            {column.render('Filter')}
+                          </TableDialogFilter>
+                          {column.filterValue ?
+                            <div>column.filterValue  <button onClick={() => column.setFilter(null)}>
+                           Reset
+                            </button>
+                            </div> : null}
+                          
+                        </>
+                        : null}
+                    </>
+                    : null}
+                  
                 </th>
               ))}
             </tr>
           ))}
-          <tr>
-            <th
-              colSpan={visibleColumns.length}
-              style={{
-                textAlign: 'left',
-              }}
-            >
-              <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                globalFilter={state.globalFilter}
-                setGlobalFilter={setGlobalFilter}
-              />
-            </th>
-          </tr>
+          
         </thead>
         <tbody {...getTableBodyProps()}>
-          {firstPageRows.map((row, i) => {
+          {rows.map(row => {
             prepareRow(row)
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
-                  console.log(cell)
+                  // console.log(cell)
                   return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                 })}
               </tr>
