@@ -50,7 +50,7 @@ class ServicePreview extends PreviewBase {
 
   getStuffTitle = () => {
     const {serviceUser}=this.state
-    return serviceUser && ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_stuff_summary')) + serviceUser.label || ''
+    return serviceUser && ReactHtmlParser(this.props.t('SERVICEPREVIEW.topic_title_stuff_summary')) + serviceUser.label || ''
   }
 
   setDefaultLocation = () => {
