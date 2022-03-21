@@ -290,7 +290,7 @@ class DrawerBooking extends React.Component {
                     </Grid>
                   }
                   {
-                    (serviceMode || (serviceUser.location && serviceUser.location.alfred && alfred.firstname)) &&
+                    serviceUser.location && serviceUser.location.alfred &&
                       <Grid>
                         <ButtonSwitch
                           key={moment()}
