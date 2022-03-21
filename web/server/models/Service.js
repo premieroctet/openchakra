@@ -19,6 +19,9 @@ const ServiceSchema = new Schema({
   picture: {
     type: String,
   },
+  tag: {
+    type: String,
+  },
   description: {
     type: String,
   },

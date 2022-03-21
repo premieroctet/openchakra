@@ -965,6 +965,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
       }
       const newService={
         label: req.body.label,
+        tag: req.body.tag,
         s_label: normalize(req.body.label),
         category: mongoose.Types.ObjectId(req.body.category),
         equipments: JSON.parse(req.body.equipments),
@@ -1084,7 +1085,7 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
     {
       $set: {
         label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
-        s_label: normalize(req.body.label),
+        s_label: normalize(req.body.label), tag: req.body.tag,
         description: req.body.description, majoration: req.body.majoration, location: req.body.location,
         travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax,
         professional_access: req.body.professional_access, particular_access: req.body.particular_access,
