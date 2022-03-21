@@ -25,6 +25,7 @@ class ServiceTopic extends React.Component {
       return null
     }
 
+
     return(
       <Grid className={classes.categoryMainContainer}>
         <Grid className={classes.categoryContainer}>
@@ -35,9 +36,6 @@ class ServiceTopic extends React.Component {
             <Grid className={classes.categoryTextContainer}>
               <Grid>
                 <p className={`customslideh1 ${classes.categoryTitle}`}>{label}</p>
-              </Grid>
-              <Grid>
-                <p className={`customslidetext ${classes.categoryText}`}>{ReactHtmlParser(this.props.t('CATEGORY.text'))}</p>
               </Grid>
             </Grid>
           </Grid>
