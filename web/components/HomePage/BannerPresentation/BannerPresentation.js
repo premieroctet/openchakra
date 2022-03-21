@@ -5,7 +5,6 @@ import React, {useEffect, useState} from 'react'
 import Grid from '@material-ui/core/Grid'
 import {BANNER_PRESENTATION, BANNER_B2B_PRESENTATION} from '../../../utils/i18n'
 import {Link} from '@material-ui/core'
-import {isB2BStyle} from '../../../utils/context.js'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 const {setAxiosAuthentication}=require('../../../utils/authentication')
@@ -115,10 +114,10 @@ function BannerPresentation(props) {
   const classes = useStyles()
   const {t} = props
   const [user, setUser] = useState({})
-  const title = isB2BStyle(user) ? ReactHtmlParser(t('BANNER_B2B_PRESENTATION.title')) : ReactHtmlParser(t('BANNER_PRESENTATION.title'))
-  const subTitle = isB2BStyle(user) ? ReactHtmlParser(t('BANNER_B2B_PRESENTATION.subTitle')) : ReactHtmlParser(t('BANNER_PRESENTATION.subTitle'))
-  const text = isB2BStyle(user) ? ReactHtmlParser(t('BANNER_B2B_PRESENTATION.text')) : ReactHtmlParser(t('BANNER_PRESENTATION.text'))
-  
+  const title = ReactHtmlParser(t('BANNER_PRESENTATION.title'))
+  const subTitle = ReactHtmlParser(t('BANNER_PRESENTATION.subTitle'))
+  const text = ReactHtmlParser(t('BANNER_PRESENTATION.text'))
+
   useEffect(() => {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current').then(res => {
@@ -154,13 +153,6 @@ function BannerPresentation(props) {
           </Link>
         </Grid>
       </Grid>
-      {
-        isB2BStyle(user) ?
-          <Grid item xs={6} className={classes.illuContainer}>
-            <img title={'illuB2b'} alt={'illuB2b'} src={`/static/assets/img/homePage/${isB2BStyle(user) ? 'b2bIllu.svg' : 'illuHeader.png'}`} className={classes.illuStyle}/>
-          </Grid>
-          : null
-      }
     </Grid>
   )
 }

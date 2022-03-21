@@ -1,4 +1,5 @@
-import { canAlfredSelfRegister } from '../../config/config';
+const BasePage = require('../../pages/basePage')
+import {canAlfredSelfRegister} from '../../config/config'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -7,15 +8,13 @@ import Layout from '../../hoc/Layout/Layout'
 import Grid from '@material-ui/core/Grid'
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import axios from 'axios'
-const {isEditableUser, isB2BStyle}=require('../../utils/context')
+const {isEditableUser}=require('../../utils/context')
 import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayout'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Typography from '@material-ui/core/Typography'
 import UserAvatar from '../../components/Avatar/UserAvatar'
-const CompanyComponent = require('../b2b/CompanyComponent')
-import {LAYOUT_ABOUT} from '../../utils/i18n'
 
-class ProfileLayout extends CompanyComponent {
+class ProfileLayout extends BasePage {
 
   constructor(props) {
     super(props)
@@ -88,10 +87,10 @@ class ProfileLayout extends CompanyComponent {
             <Grid className={classes.profilLayoutBackgroundContainer}>
               <Grid className={classes.profilLayoutMargin}>
                 <Grid className={classes.profilLayoutBox}>
-                  <Grid className={`customprofilbanner ${isB2BStyle() ? classes.profilLayoutBannerImgPro : classes.profilLayoutBannerImg}`}>
+                  <Grid className={`customprofilbanner ${classes.profilLayoutBannerImg}`}>
                     <Grid className={`customprofilbanneravatar ${classes.profilLayoutAvatar}`}>
-                      <UserAvatar alt={!this.isModeCompany() ? user.firstname : company ? company.name : ''} user={!this.isModeCompany() ? user : company ? company : ''} fireRefresh={this.componentDidMount}
-                         animateStartup={true}
+                      <UserAvatar alt={user.firstname} user={user} fireRefresh={this.componentDidMount}
+                        animateStartup={true}
                       />
                     </Grid>
                   </Grid>
@@ -103,21 +102,19 @@ class ProfileLayout extends CompanyComponent {
                   }}>
                     <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Grid>
-                        {this.isModeCompany() ? <h3>{company ? company.name : ''}</h3> : <h3 className={'customprofilbannertitle'}>{ReactHtmlParser(this.props.t('LAYOUT_ABOUT.my_name_is', {firstname: user ?user.firstname : ''}))}</h3>
-                        }
+                        <h3 className={'customprofilbannertitle'}>
+                          {ReactHtmlParser(this.props.t('LAYOUT_ABOUT.my_name_is', {firstname: user ?user.firstname : ''}))}
+                        </h3>
                       </Grid>
-                      {this.isModeCompany() ? null : <Grid>
+                      <Grid>
                         <Typography className={'customprofilbannertext'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('LAYOUT_ABOUT.text'))}</Typography>
                       </Grid>
-                      }
-
                     </Grid>
                   </Grid>
-                  {
-                    !this.isModeCompany() ? <Grid className={classes.profilLayoutScrollMenu}>
-                      <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index}
-                        extraParams={{user: this.props.user}}/>
-                    </Grid> : null}
+                  <Grid className={classes.profilLayoutScrollMenu}>
+                    <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index}
+                      extraParams={{user: this.props.user}}/>
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid className={classes.profilLayoutChildren}>

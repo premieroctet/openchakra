@@ -1,58 +1,55 @@
-import AutoCompleteTextField from
-"../../../components/Search/AutoCompleteTextField"
-import {canAlfredSelfRegister, isB2BDisabled} from "../../../config/config"
-import CustomButton from "../../../components/CustomButton/CustomButton"
-import ReactHtmlParser from "react-html-parser"
-import {withTranslation} from "react-i18next"
-const {clearAuthenticationToken, setAxiosAuthentication} = require("../../../utils/authentication")
-import React, {Component} from "react"
-import AppBar from "@material-ui/core/AppBar"
-import Toolbar from "@material-ui/core/Toolbar"
-import IconButton from "@material-ui/core/IconButton"
-import MenuItem from "@material-ui/core/MenuItem"
-import Menu from "@material-ui/core/Menu"
-import Router from "next/router"
-import Grid from "@material-ui/core/Grid"
-import MultipleSelect from "react-select"
-import moment from "moment"
-import LogIn from "../../../components/LogIn/LogIn"
-import Register from "../../../components/Register/Register"
-import Dialog from "@material-ui/core/Dialog"
-import DialogContent from "@material-ui/core/DialogContent"
-import Slide from "@material-ui/core/Slide"
-import MuiDialogTitle from "@material-ui/core/DialogTitle"
-import CloseIcon from "@material-ui/icons/Close"
-import Paper from "@material-ui/core/Paper"
-import Divider from "@material-ui/core/Divider"
-import MenuIcon from "@material-ui/icons/Menu"
-import SearchIcon from "@material-ui/icons/Search"
-import AlgoliaPlaces from "algolia-places-react"
-import {SEARCHBAR, NAVBAR_MENU} from "../../../utils/i18n"
-import DatePicker from "react-datepicker"
-import TextField from "@material-ui/core/TextField"
-import Select from "@material-ui/core/Select"
-import FormControl from "@material-ui/core/FormControl"
-import axios from "axios"
-import withStyles from "@material-ui/core/styles/withStyles"
-import styles from "../../../static/css/components/NavBar/NavBar"
-import {Typography} from "@material-ui/core"
-import TuneIcon from "@material-ui/icons/Tune"
-import InputLabel from "@material-ui/core/InputLabel"
-import DialogActions from "@material-ui/core/DialogActions"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Switch from "@material-ui/core/Switch"
-import {DateRangePicker} from "react-dates"
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
-import ClearIcon from "@material-ui/icons/Clear"
-import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeAlfredRegistering, setAlfredRegistering, getRole} from "../../../utils/context"
-const {formatAddress} = require("../../../utils/text.js")
-import Slider from "@material-ui/core/Slider"
-import "../../../static/assets/css/custom.css"
-const {PRO, PART, EMPLOYEE}=require("../../../utils/consts")
-import Logo from "../../../components/Logo/Logo"
-import CustomIcon from "../../../components/CustomIcon/CustomIcon"
-import Hidden from "@material-ui/core/Hidden"
-import CustomTabMenu from "../../../components/CustomTabMenu/CustomTabMenu"
+import AutoCompleteTextField from '../../../components/Search/AutoCompleteTextField'
+import {canAlfredSelfRegister} from '../../../config/config'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import ReactHtmlParser from 'react-html-parser'
+import {withTranslation} from 'react-i18next'
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
+import React, {Component} from 'react'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import MenuItem from '@material-ui/core/MenuItem'
+import Menu from '@material-ui/core/Menu'
+import Router from 'next/router'
+import Grid from '@material-ui/core/Grid'
+import MultipleSelect from 'react-select'
+import moment from 'moment'
+import LogIn from '../../../components/LogIn/LogIn'
+import Register from '../../../components/Register/Register'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import Slide from '@material-ui/core/Slide'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import CloseIcon from '@material-ui/icons/Close'
+import Paper from '@material-ui/core/Paper'
+import Divider from '@material-ui/core/Divider'
+import MenuIcon from '@material-ui/icons/Menu'
+import SearchIcon from '@material-ui/icons/Search'
+import AlgoliaPlaces from 'algolia-places-react'
+import DatePicker from 'react-datepicker'
+import TextField from '@material-ui/core/TextField'
+import Select from '@material-ui/core/Select'
+import FormControl from '@material-ui/core/FormControl'
+import axios from 'axios'
+import withStyles from '@material-ui/core/styles/withStyles'
+import styles from '../../../static/css/components/NavBar/NavBar'
+import {Typography} from '@material-ui/core'
+import TuneIcon from '@material-ui/icons/Tune'
+import InputLabel from '@material-ui/core/InputLabel'
+import DialogActions from '@material-ui/core/DialogActions'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
+import {DateRangePicker} from 'react-dates'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import ClearIcon from '@material-ui/icons/Clear'
+import {getLoggedUserId, isLoggedUserRegistered, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
+const {formatAddress} = require('../../../utils/text.js')
+import Slider from '@material-ui/core/Slider'
+import '../../../static/assets/css/custom.css'
+const {PART, EMPLOYEE}=require('../../../utils/consts')
+import Logo from '../../../components/Logo/Logo'
+import Hidden from '@material-ui/core/Hidden'
+import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
 import lodash from 'lodash'
 
 const Transition = React.forwardRef((props, ref) => {
@@ -84,10 +81,10 @@ class NavBar extends Component {
       setOpenRegister: null,
       user: null,
       activeStep: 0,
-      keyword: "",
+      keyword: '',
       city: undefined,
-      gps: "",
-      dateSelected: "",
+      gps: '',
+      dateSelected: '',
       ifHomePage: false,
       modalMobileSearchBarInput: false,
       mobileStepSearch: 0,
@@ -109,21 +106,21 @@ class NavBar extends Component {
       allAddresses: [],
       keywords: [],
     }
-    this.radius_marks=[1, 5, 10, 15, 20, 30, 50, 100, 200, 300].map(v => ({value: v, label: v>1 && v<50? "" : `${v}km`}))
+    this.radius_marks=[1, 5, 10, 15, 20, 30, 50, 100, 200, 300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
   }
 
   componentDidMount() {
     let query = Router.query
-    if (Router.pathname === "/") {
+    if (Router.pathname === '/') {
       this.setState({ifHomePage: true})
     }
-    if (Router.pathname === "/company/dashboard/companyDashboard") {
+    if (Router.pathname === '/company/dashboard/companyDashboard') {
       this.setState({companyPage: true})
     }
-    if (Router.pathname === "/search") {
+    if (Router.pathname === '/search') {
       this.setState({ifSearchPage: true})
     }
-    if (query.login === "true") {
+    if (query.login === 'true') {
       this.handleOpenLogin()
     }
     if (query.register && !getLoggedUserId()) {
@@ -131,20 +128,19 @@ class NavBar extends Component {
     }
 
     setAxiosAuthentication()
-    axios.get("/myAlfred/api/users/current")
+    axios.get('/myAlfred/api/users/current')
       .then(res => {
         const user = res.data
         this.setState({user: user})
-        const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get("/myAlfred/api/companies/current") : Promise.resolve({data: user})
-        promise
+        Promise.resolve({data: user})
           .then(res => {
-            let allAddresses = {"main": res.data.billing_address}
+            let allAddresses = {'main': res.data.billing_address}
             res.data.service_address.forEach(addr => {
               allAddresses[addr._id] = addr
             })
             this.setState({
               allAddresses: allAddresses,
-              selectedAddress: this.props.selectedAddress || "main", keyword: this.props.keyword || "",
+              selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
             })
           })
       })
@@ -153,7 +149,7 @@ class NavBar extends Component {
       })
 
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/category/${isB2BStyle() ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${PART}`)
       .then(res => {
         let categories = res.data
         this.setState({allCategories: categories.map(c => ({value: c._id, label: c.label}))})
@@ -161,7 +157,7 @@ class NavBar extends Component {
       .catch(err => {
         console.error(err)
       })
-    axios.get("/myAlfred/api/service/all")
+    axios.get('/myAlfred/api/service/all')
       .then(res => {
         const services=res.data.map(s => ({value: s._id, label: s.label, category: s.category._id}))
         this.setState({allServices: services, filteredServices: services})
@@ -170,7 +166,7 @@ class NavBar extends Component {
         console.error(err)
       })
 
-    axios.get("/myAlfred/api/serviceUser/keywords/particular")
+    axios.get('/myAlfred/api/serviceUser/keywords/particular')
       .then(res => {
         this.setState({keywords: res.data})
       })
@@ -178,13 +174,13 @@ class NavBar extends Component {
 
   logout = () => {
     clearAuthenticationToken()
-    localStorage.removeItem("path")
+    localStorage.removeItem('path')
     removeAlfredRegistering()
     if (this.state.ifHomePage) {
       window.location.reload(false)
     }
     else {
-      Router.push("/")
+      Router.push('/')
     }
   };
 
@@ -199,7 +195,7 @@ class NavBar extends Component {
   };
 
   handleCloseLogin = (event, reason) => {
-    if (reason=="backdropClick") { return }
+    if (reason=='backdropClick') { return }
     this.setState({setOpenLogin: false})
   };
 
@@ -209,10 +205,10 @@ class NavBar extends Component {
   };
 
   handleCloseRegister = (event, reason) => {
-    if (reason=="backdropClick") { return }
+    if (reason=='backdropClick') { return }
     if (this.state.activeStep === 2) {
       removeAlfredRegistering()
-      this.setState({setOpenRegister: null}, () => Router.push("/search"))
+      this.setState({setOpenRegister: null}, () => Router.push('/search'))
     }
     else {
       removeAlfredRegistering()
@@ -222,9 +218,9 @@ class NavBar extends Component {
 
   needRefresh = () => {
     this.setState({setOpenLogin: false})
-    const path = localStorage.getItem("path")
+    const path = localStorage.getItem('path')
     if (path) {
-      localStorage.removeItem("path")
+      localStorage.removeItem('path')
       Router.push(path)
     }
     else if (!isLoggedUserRegistered() && getRole()==EMPLOYEE) {
@@ -232,15 +228,8 @@ class NavBar extends Component {
       clearAuthenticationToken()
       this.handleOpenRegister(user_id)
     }
-    // Alfred pro && b2b_site => on redirige vers le profil
-    else if (isB2BStyle() && isLoggedUserAlfredPro()) {
-      Router.push(`/profile/about?user=${getLoggedUserId()}`)
-    }
-    else if (isB2BAdmin()) {
-      Router.push("/company/dashboard/companyDashboard")
-    }
     else {
-      Router.push("/search")
+      Router.push('/search')
     }
   };
 
@@ -255,13 +244,13 @@ class NavBar extends Component {
   onChange = e => {
     let {name, value} = e.target
     this.setState({[name]: value})
-    if (name === "selectedAddress") {
-      if (value === "addAddress") {
-        Router.push("/account/myAddresses")
+    if (name === 'selectedAddress') {
+      if (value === 'addAddress') {
+        Router.push('/account/myAddresses')
       }
       else {
         this.setState({
-          gps: value === "all" ? null : value === "main" ? this.state.allAddresses.main.gps : {
+          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses.main.gps : {
             lat: this.state.allAddresses[value].lat,
             lng: this.state.allAddresses[value].lng,
           },
@@ -349,7 +338,7 @@ class NavBar extends Component {
     if (this.state.selectedAddress) {
       queryParams.selectedAddress = this.state.selectedAddress
     }
-    Router.push({pathname: "/search", query: queryParams})
+    Router.push({pathname: '/search', query: queryParams})
   };
 
   onChangeCity({suggestion}) {
@@ -395,22 +384,22 @@ class NavBar extends Component {
   mobileSearchBarInput = classes => {
     return (
       <Grid
-        style={{width: "100%"}}
+        style={{width: '100%'}}
         onClick={this.handleModalSearchBarInput}
       >
         <Paper classes={{root: classes.navbarSearch}}>
-          <Grid container style={{margin: 0, width: "100%"}}>
+          <Grid container style={{margin: 0, width: '100%'}}>
             <Grid item xs={2}>
               <IconButton
                 classes={{root: classes.iconButton}}
-                style={{backgroundColor: isB2BStyle(this.state.user) ? "#b0cdc8" : "rgba(248, 207, 97, 1)"}}
+                style={{backgroundColor: 'rgba(248, 207, 97, 1)'}}
                 aria-label="search"
               >
                 <SearchIcon/>
               </IconButton>
             </Grid>
-            <Grid item xs={10} style={{display: "flex", alignItems: "center"}}>
-              <Typography style={{marginLeft: "2vh"}}>{ReactHtmlParser(this.props.t("SEARCHBAR.begin_search"))}</Typography>
+            <Grid item xs={10} style={{display: 'flex', alignItems: 'center'}}>
+              <Typography style={{marginLeft: '2vh'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.begin_search'))}</Typography>
             </Grid>
           </Grid>
         </Paper>
@@ -422,7 +411,7 @@ class NavBar extends Component {
 
     return (
       <SwipeableDrawer
-        anchor={"bottom"}
+        anchor={'bottom'}
         open={this.state.modalMobileSearchBarInput}
         onOpen={() => this.setState({modalMobileSearchBarInput: true})}
         onClose={() => this.setState({
@@ -430,12 +419,12 @@ class NavBar extends Component {
           mobileStepSearch: 0,
           keyword: null,
           city: undefined,
-          gps: "",
+          gps: '',
         })}
         className={classes.drawerStyle}
       >
-        <Grid container style={{height: "100%"}}>
-          <Grid item style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+        <Grid container style={{height: '100%'}}>
+          <Grid item style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <Grid>
               <IconButton
                 aria-label="delete"
@@ -445,30 +434,30 @@ class NavBar extends Component {
                   mobileStepSearch: 0,
                   keyword: null,
                   city: undefined,
-                  gps: "",
+                  gps: '',
                 })}>
                 <ClearIcon/>
               </IconButton>
             </Grid>
             <Grid>
               <h3
-                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t("SEARCHBAR.what_service")) : this.state.mobileStepSearch === 1 ? ReactHtmlParser(this.props.t("SEARCHBAR.where_place")) : ReactHtmlParser(this.props.t("SEARCHBAR.dates"))}</h3>
+                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.what_service')) : this.state.mobileStepSearch === 1 ? ReactHtmlParser(this.props.t('SEARCHBAR.where_place')) : ReactHtmlParser(this.props.t('SEARCHBAR.dates'))}</h3>
             </Grid>
           </Grid>
-          <Grid item container spacing={3} style={{margin: 0, width: "100%"}}>
+          <Grid item container spacing={3} style={{margin: 0, width: '100%'}}>
             {
               this.state.mobileStepSearch === 0 ?
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                   <TextField
                     value={this.state.keyword}
                     onChange={this.onChange}
-                    name={"keyword"}
-                    label={ReactHtmlParser(this.props.t("SEARCHBAR.what_placeholder"))}
+                    name={'keyword'}
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.what_placeholder'))}
                     onKeyPress={e => {
-                      e.key === "Enter" && e.preventDefault()
+                      e.key === 'Enter' && e.preventDefault()
                     }}
                     variant="outlined"
-                    style={{width: "100%"}}
+                    style={{width: '100%'}}
                   />
                 </Grid>
                 :
@@ -477,8 +466,8 @@ class NavBar extends Component {
                     <FormControl variant="outlined">
                       <Select
                         id="outlined-select-currency"
-                        value={this.state.selectedAddress || "main"}
-                        name={"selectedAddress"}
+                        value={this.state.selectedAddress || 'main'}
+                        name={'selectedAddress'}
                         onChange={e => {
                           this.onChange(e)
                         }}
@@ -486,15 +475,15 @@ class NavBar extends Component {
                       >
                         {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                           <MenuItem value={_id} key={index}>
-                            { _id=="main" ? ReactHtmlParser(this.props.t("SEARCHBAR.main_adress")) : `${value.label }, `} {formatAddress(value)}
+                            { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
                           </MenuItem>
                         ))}
-                        <MenuItem value={"all"}>
-                          {ReactHtmlParser(this.props.t("SEARCHBAR.find_everywhere"))}
+                        <MenuItem value={'all'}>
+                          {ReactHtmlParser(this.props.t('SEARCHBAR.find_everywhere'))}
                         </MenuItem>
-                        <MenuItem value={"addAddress"}>
-                          <Typography style={{color: "#2FBCD3", cursor: "pointer"}}>
-                            {ReactHtmlParser(this.props.t("SEARCHBAR.find_everywhere"))}
+                        <MenuItem value={'addAddress'}>
+                          <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                            {ReactHtmlParser(this.props.t('SEARCHBAR.find_everywhere'))}
                           </Typography>
                         </MenuItem>
                       </Select>
@@ -503,26 +492,26 @@ class NavBar extends Component {
                   :
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhereP}}>
                     <AlgoliaPlaces
-                      placeholder={ReactHtmlParser(this.props.t("SEARCHBAR.where"))}
+                      placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
                       options={{
-                        appId: "plKATRG826CP",
-                        apiKey: "dc50194119e4c4736a7c57350e9f32ec",
-                        language: "fr",
-                        countries: ["fr"],
-                        type: "city",
+                        appId: 'plKATRG826CP',
+                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                        language: 'fr',
+                        countries: ['fr'],
+                        type: 'city',
                       }}
                       onChange={suggestion => this.onChangeCity(suggestion)}
-                      onClear={() => this.setState({city: "", gps: null})}
+                      onClear={() => this.setState({city: '', gps: null})}
                     />
                   </Grid>
             }
           </Grid>
-          <Grid item xs={12} style={{display: "flex", justifyContent: "center"}}>
-            <Grid style={{width: "90%"}}>
+          <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+            <Grid style={{width: '90%'}}>
               <CustomButton
                 onClick={() => (this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService())}
-                color={"primary"} classes={{root: classes.buttonNextRoot}}
-                variant={"contained"}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t("SEARCHBAR.next_button")) : ReactHtmlParser(this.props.t("SEARCHBAR.find_button"))}
+                color={'primary'} classes={{root: classes.buttonNextRoot}}
+                variant={'contained'}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.next_button')) : ReactHtmlParser(this.props.t('SEARCHBAR.find_button'))}
               </CustomButton>
             </Grid>
           </Grid>
@@ -535,25 +524,25 @@ class NavBar extends Component {
     return (
       <Grid className={classes.navbarSearchContainerSearchPage}>
         <Paper classes={{root: classes.navbarSearch}}>
-          <Grid container style={{margin: 0, width: "100%"}}>
+          <Grid container style={{margin: 0, width: '100%'}}>
             <Grid item xs={2} onClick={this.handleModalSearchBarInput}>
               <IconButton
                 classes={{root: classes.iconButton}}
-                style={{backgroundColor: isB2BStyle(this.state.user) ? "#b0cdc8" : "rgba(248, 207, 97, 1)"}}
+                style={{backgroundColor: 'rgba(248, 207, 97, 1)'}}
                 aria-label="search"
                 onClick={this.handleModalSearchBarInput}
               >
                 <SearchIcon/>
               </IconButton>
             </Grid>
-            <Grid item xs={8} onClick={this.handleModalSearchBarInput} style={{cursor: "pointer", display: "flex", alignItems: "center"}}>
-              <Typography style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", marginLeft: "2vh"}}>{ReactHtmlParser(this.props.t("SEARCHBAR.begin_search"))}</Typography>
+            <Grid item xs={8} onClick={this.handleModalSearchBarInput} style={{cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
+              <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '2vh'}}>{ReactHtmlParser(this.props.t('SEARCHBAR.begin_search'))}</Typography>
             </Grid>
-            <Grid container item xs={2} style={{margin: 0, width: "100%"}}>
+            <Grid container item xs={2} style={{margin: 0, width: '100%'}}>
               <Grid item xs={1}>
                 <Divider orientation="vertical"/>
               </Grid>
-              <Grid item xs={11} style={{display: "flex", justifyContent: "center"}}>
+              <Grid item xs={11} style={{display: 'flex', justifyContent: 'center'}}>
                 <IconButton color="primary" aria-label="directions" onClick={() => this.setState({modalFilters: true})}>
                   <TuneIcon/>
                 </IconButton>
@@ -575,7 +564,7 @@ class NavBar extends Component {
           classes={{paper: classes.dialogNavbarMobileFilter}}
         >
           <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
-            {ReactHtmlParser(this.props.t("SEARCHBAR.filter"))}
+            {ReactHtmlParser(this.props.t('SEARCHBAR.filter'))}
           </DialogTitle>
           <DialogContent dividers>
             <Grid>
@@ -590,10 +579,10 @@ class NavBar extends Component {
                         }}
                         value={this.state.proSelected}
                         color="primary"
-                        name={"proSelected"}
+                        name={'proSelected'}
                       />
                     }
-                    label={ReactHtmlParser(this.props.t("SEARCHBAR.professional"))}
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.professional'))}
                   />
                 </Grid>
                 <Grid>
@@ -604,22 +593,22 @@ class NavBar extends Component {
                         onChange={this.statusFilterChanged}
                         value={this.state.individualSelected}
                         color="primary"
-                        name={"individualSelected"}
+                        name={'individualSelected'}
                       />
                     }
-                    label={ReactHtmlParser(this.props.t("SEARCHBAR.particular"))}
+                    label={ReactHtmlParser(this.props.t('SEARCHBAR.particular'))}
                   />
                 </Grid>
               </Grid>
               <Grid>
-                <Divider style={{width: "100%", marginTop: "2vh", marginBottom: "2vh"}}/>
+                <Divider style={{width: '100%', marginTop: '2vh', marginBottom: '2vh'}}/>
               </Grid>
               <Grid>
                 <DateRangePicker
                   startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                  startDatePlaceholderText={ReactHtmlParser(this.props.t("SEARCHBAR.start_date"))}
+                  startDatePlaceholderText={ReactHtmlParser(this.props.t('SEARCHBAR.start_date'))}
                   startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                  endDatePlaceholderText={ReactHtmlParser(this.props.t("SEARCHBAR.end_date"))}
+                  endDatePlaceholderText={ReactHtmlParser(this.props.t('SEARCHBAR.end_date'))}
                   endDate={this.state.endDate} // momentPropTypes.momentObj or null,
                   endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
                   onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
@@ -646,37 +635,37 @@ class NavBar extends Component {
                   classes={{root: classes.filterMenuControlLabel}}
                   control={
                     <Switch
-                      checked={locations.includes("client")}
+                      checked={locations.includes('client')}
                       onChange={this.onLocationFilterChanged}
                       color="primary"
-                      name={"client"}
+                      name={'client'}
                     />
                   }
-                  label={ReactHtmlParser(this.props.t("SEARCHBAR.at_home"))}
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.at_home'))}
                 />
                 <FormControlLabel
                   classes={{root: classes.filterMenuControlLabel}}
                   control={
                     <Switch
-                      checked={locations.includes("alfred")}
+                      checked={locations.includes('alfred')}
                       onChange={this.onLocationFilterChanged}
                       color="primary"
-                      name={"alfred"}
+                      name={'alfred'}
                     />
                   }
-                  label={ReactHtmlParser(this.props.t("SEARCHBAR.alfred_home"))}
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.alfred_home'))}
                 />
                 <FormControlLabel
                   classes={{root: classes.filterMenuControlLabel}}
                   control={
                     <Switch
-                      checked={locations.includes("visio")}
+                      checked={locations.includes('visio')}
                       onChange={this.onLocationFilterChanged}
                       color="primary"
-                      name={"visio"}
+                      name={'visio'}
                     />
                   }
-                  label={ReactHtmlParser(this.props.t("SEARCHBAR.remote"))}
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.remote'))}
                 />
               </Grid>
             </Grid>
@@ -689,7 +678,7 @@ class NavBar extends Component {
                 isMulti
                 isSearchable
                 closeMenuOnSelect={true}
-                placeholder={ReactHtmlParser(this.props.t("SEARCHBAR.labelCategory"))}
+                placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.labelCategory'))}
               />
             </Grid>
             <Grid className={classes.filterMenuContentMainStyleDateFilter}>
@@ -701,7 +690,7 @@ class NavBar extends Component {
                 isMulti
                 isSearchable
                 closeMenuOnSelect={true}
-                placeholder={ReactHtmlParser(this.props.t("SEARCHBAR.labelService"))}
+                placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.labelService'))}
               />
             </Grid>
           </DialogContent>
@@ -714,7 +703,7 @@ class NavBar extends Component {
               }}
               color="primary"
             >
-              {ReactHtmlParser(this.props.t("SEARCHBAR.display"))}
+              {ReactHtmlParser(this.props.t('SEARCHBAR.display'))}
             </CustomButton>
           </DialogActions>
         </Dialog>
@@ -744,7 +733,7 @@ class NavBar extends Component {
         <IconButton
           aria-label="open drawer"
           onClick={this.handleOpenMenuItem}
-          classes={{root: "custombgburger"}}
+          classes={{root: 'custombgburger'}}
         >
           <MenuIcon classes={{root: `customburgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}}/>
         </IconButton>
@@ -754,34 +743,30 @@ class NavBar extends Component {
           open={Boolean(anchorEl)}
           onClose={this.handleClosenMenuItem}
           getContentAnchorEl={null}
-          anchorOrigin={{vertical: "bottom", horizontal: "center"}}
-          transformOrigin={{vertical: "top", horizontal: "center"}}
-          classes={{paper: "customburger"}}
+          anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+          transformOrigin={{vertical: 'top', horizontal: 'center'}}
+          classes={{paper: 'customburger'}}
         >
           {user ?
             <Grid>
-              <MenuItem disabled={true} style={{opacity: 1}}>{`${ReactHtmlParser(this.props.t("SEARCHBAR.hello")) } ${ user.firstname}`} !</MenuItem>
-              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_profil"))}</MenuItem>
-              <MenuItem onClick={() => Router.push(isB2BAdmin(user) ? "/account/editProfileCompany" : "/account/editProfile")}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_settings"))}</MenuItem>
+              <MenuItem disabled={true} style={{opacity: 1}}>{`${ReactHtmlParser(this.props.t('SEARCHBAR.hello')) } ${ user.firstname}`} !</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_profil'))}</MenuItem>
+              <MenuItem onClick={() => Router.push('/account/editProfile')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_settings'))}</MenuItem>
               {
                 !user.is_employee ?
                   user.is_alfred ?
-                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_services"))}</MenuItem>
+                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_services'))}</MenuItem>
                     :
-                    canAlfredSelfRegister() && <MenuItem onClick={() => Router.push("/creaShop/creaShop")}>{ReactHtmlParser(this.props.t("SEARCHBAR.create_shop"))}</MenuItem>
+                    canAlfredSelfRegister() && <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
                   : null
               }
-              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_messages"))}</MenuItem>
-              <MenuItem onClick={() => Router.push("/reservations/reservations")}>{ReactHtmlParser(this.props.t("SEARCHBAR.my_resa"))}</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_messages'))}</MenuItem>
+              <MenuItem onClick={() => Router.push('/reservations/reservations')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_resa'))}</MenuItem>
               {user.is_admin ?
-                <MenuItem onClick={() => Router.push("/dashboard")}>{ReactHtmlParser(this.props.t("SEARCHBAR.dashboard_alfred"))}</MenuItem>
+                <MenuItem onClick={() => Router.push('/dashboard')}>{ReactHtmlParser(this.props.t('SEARCHBAR.dashboard_alfred'))}</MenuItem>
                 : null
               }
-              {isB2BAdmin(user) ?
-                <MenuItem onClick={() => Router.push("/company/dashboard/companyDashboard")}>{ReactHtmlParser(this.props.t("SEARCHBAR.dashboard"))}</MenuItem>
-                : null
-              }
-              <MenuItem onClick={this.logout}>{ReactHtmlParser(this.props.t("SEARCHBAR.log_out"))}</MenuItem>
+              <MenuItem onClick={this.logout}>{ReactHtmlParser(this.props.t('SEARCHBAR.log_out'))}</MenuItem>
             </Grid>
             :
             null
@@ -803,23 +788,23 @@ class NavBar extends Component {
         lg={!logged && !ifHomePage ? 3 : 1}
         md={ifHomePage && !logged ? 2 : !ifHomePage && !logged ? 3 : 10}
         sm={!ifHomePage ? 4 : 1}
-        className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerP}
+        className={ifHomePage ? classes.navbarButtonContainer : classes.navbarButtonContainerP}
       >
         <Grid>
           <CustomButton
             variant="outlined"
-            classes={{root: isB2BStyle(user) ? classes.navbarSignInB2B : classes.navbarSignIn}}
-            className={"custombuttonsignin"}
+            classes={{root: classes.navbarSignIn}}
+            className={'custombuttonsignin'}
             onClick={this.handleOpenRegister}>
-            {ReactHtmlParser(this.props.t("NAVBAR_MENU.signIn"))}
+            {ReactHtmlParser(this.props.t('NAVBAR_MENU.signIn'))}
           </CustomButton>
         </Grid>
         <Grid className={classes.navbarRegisterContainer}>
           <CustomButton
-            classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
-            className={"custombuttonlogin"}
+            classes={{root: classes.navBarlogIn}}
+            className={'custombuttonlogin'}
             onClick={this.handleOpenLogin}>
-            {ReactHtmlParser(this.props.t("NAVBAR_MENU.logIn"))}
+            {ReactHtmlParser(this.props.t('NAVBAR_MENU.logIn'))}
           </CustomButton>
         </Grid>
       </Grid>
@@ -831,97 +816,6 @@ class NavBar extends Component {
     this.handleOpenRegister(true)
   };
 
-  notLoggedButtonSectionB2b = classes => {
-    const{ifHomePage, user, anchorElB2b} = this.state
-
-    const logged = user != null
-
-    return(
-      <>
-        <Grid
-          className={classes.navbarMenuBurgerContainerB2B}
-          item
-          xl={ifHomePage ? 3 : 4}
-          lg={3}
-          md={ifHomePage ? 10 : 3}
-          sm={ifHomePage ? 10 : 1}
-        >
-          <IconButton
-            aria-label="open drawer"
-            onClick={this.handleOpenMenuItemB2b}
-          >
-            <MenuIcon style={{color: "white"}}/>
-          </IconButton>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorElB2b}
-            keepMounted
-            open={Boolean(anchorElB2b)}
-            onClose={this.handleClosenMenuItemB2b}
-            getContentAnchorEl={null}
-            anchorOrigin={{vertical: "bottom", horizontal: "center"}}
-            transformOrigin={{vertical: "top", horizontal: "center"}}
-          >
-            <MenuItem onClick={() => Router.push("/blog/elementor-211/")}>
-              <Typography>{ReactHtmlParser(this.props.t("SEARCHBAR.service_company"))}</Typography>
-            </MenuItem>
-            <MenuItem onClick={() => Router.push("/blog/services-aux-collaborateurs/")}>
-              <Typography>{ReactHtmlParser(this.props.t("SEARCHBAR.service_collab"))}</Typography>
-            </MenuItem>
-            <MenuItem onClick={() => Router.push("/blog/tarifs")}>
-              <Typography>{ReactHtmlParser(this.props.t("SEARCHBAR.price"))}</Typography>
-            </MenuItem>
-            <Grid style={{marginTop: "2vh", marginBottom: "2vh"}}>
-              <Divider/>
-            </Grid>
-            <MenuItem onClick={this.checkAndOpenRegister}>
-              <CustomButton variant="outlined" classes={{root: classes.buttonService}}>{ReactHtmlParser(this.props.t("SEARCHBAR.crea_service"))}</CustomButton>
-            </MenuItem>
-            <MenuItem onClick={this.handleOpenLogin}>
-              <CustomButton variant="outlined" classes={{root: classes.buttonLoginB2b}}>{ReactHtmlParser(this.props.t("SEARCHBAR.log_in"))}</CustomButton>
-            </MenuItem>
-            <MenuItem onClick={() => Router.push("/search")}>
-              <CustomButton variant="outlined" classes={{root: classes.buttonRegisterB2b}}>{ReactHtmlParser(this.props.t("SEARCHBAR.sign_in"))}</CustomButton>
-            </MenuItem>
-          </Menu>
-        </Grid>
-        <Grid
-          item
-          xl={!logged && ifHomePage ? 3 : 4}
-          lg={ifHomePage ? 3 : 4}
-          md={!logged && !ifHomePage ? 3 : 2}
-          sm={!ifHomePage ? 4 : 11}
-          className={ifHomePage ? isB2BStyle(user) ? classes.navbarButtonContainerB2B : classes.navbarButtonContainer : classes.navbarButtonContainerPB2B}
-        >
-          <Grid className={classes.navbarRegisterContainer}>
-            <CustomButton
-              variant="outlined"
-              classes={{root: classes.navbarSignInB2B}}
-              style={{whiteSpace: "nowrap"}}
-              onClick={this.checkAndOpenRegister}>
-              {ReactHtmlParser(this.props.t("SEARCHBAR.crea_service"))}
-            </CustomButton>
-          </Grid>
-          <Grid >
-            <CustomButton
-              variant="outlined"
-              classes={{root: isB2BStyle(user) ? classes.navbarSignInB2BContained : classes.navbarSignIn}}
-              onClick={() => Router.push("/blog/inscription-entreprise/")}>
-              {ReactHtmlParser(this.props.t("NAVBAR_MENU.signIn"))}
-            </CustomButton>
-          </Grid>
-          <Grid>
-            <CustomButton
-              classes={{root: isB2BStyle(user) ? classes.navBarlogInB2B : classes.navBarlogIn}}
-              onClick={this.handleOpenLogin}>
-              {ReactHtmlParser(this.props.t("NAVBAR_MENU.logIn"))}
-            </CustomButton>
-          </Grid>
-        </Grid>
-      </>
-    )
-  }
-
   searchBarInput = classes => {
     const logged = this.state.user != null
     const {ifHomePage, user} = this.state
@@ -931,9 +825,9 @@ class NavBar extends Component {
       return null
     }
     return (
-      <Grid className={ifHomePage ? isB2BStyle(user) ? classes.navbarSearchContainerB2B : classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
+      <Grid className={ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
         <Paper classes={{root: `customsearch ${classes.navbarSearch}`}}>
-          <Grid container style={{margin: 0, width: "100%"}}>
+          <Grid container style={{margin: 0, width: '100%'}}>
             <Grid
               container
               item
@@ -943,19 +837,19 @@ class NavBar extends Component {
               md={!logged ? !ifHomePage ? 5 : 4 : 5}
               xs={!logged ? !ifHomePage ? 5 : 4 : 5}
               spacing={1}
-              style={{margin: 0, width: "100%"}}
+              style={{margin: 0, width: '100%'}}
             >
-              <Grid item xl={11} lg={11} sm={11} md={11} xs={11} style={{display: "flex", alignItems: "center"}}>
+              <Grid item xl={11} lg={11} sm={11} md={11} xs={11} style={{display: 'flex', alignItems: 'center'}}>
                 <AutoCompleteTextField
                   options={this.state.keywords}
                   Component={TextField}
-                  placeholder={ReactHtmlParser(this.props.t("SEARCHBAR.what_placeholder"))}
-                  style={{width: "100%"}}
+                  placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.what_placeholder'))}
+                  style={{width: '100%'}}
                   value={this.state.keyword}
-                  onChange={v => this.onChange({target: {name: "keyword", value: v}})}
-                  label={ifHomePage ? ReactHtmlParser(this.props.t("SEARCHBAR.labelWhat")) : ""}
+                  onChange={v => this.onChange({target: {name: 'keyword', value: v}})}
+                  label={ifHomePage ? ReactHtmlParser(this.props.t('SEARCHBAR.labelWhat')) : ''}
                   onKeyPress={e => {
-                    if (e.key === "Enter") {
+                    if (e.key === 'Enter') {
                       e.preventDefault()
                       this.findService()
                     }
@@ -974,14 +868,14 @@ class NavBar extends Component {
                   <FormControl className={classes.navbarFormControlAddress}>
                     {this.state.ifHomePage ?
                       <InputLabel shrink id="demo-simple-select-placeholder-label-label">
-                        {ReactHtmlParser(this.props.t("SEARCHBAR.labelWhere"))}
+                        {ReactHtmlParser(this.props.t('SEARCHBAR.labelWhere'))}
                       </InputLabel> : null
                     }
                     <Select
                       disableUnderline
                       id="outlined-select-currency"
-                      value={this.state.selectedAddress || "main"}
-                      name={"selectedAddress"}
+                      value={this.state.selectedAddress || 'main'}
+                      name={'selectedAddress'}
                       onChange={e => {
                         this.onChange(e)
                       }}
@@ -989,15 +883,15 @@ class NavBar extends Component {
                     >
                       {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                         <MenuItem value={_id} key={index}>
-                          { _id=="main" ? ReactHtmlParser(this.props.t("SEARCHBAR.main_adress")) : `${value.label }, `} {formatAddress(value)}
+                          { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
                         </MenuItem>
                       ))}
-                      <MenuItem value={"all"}>
-                        {ReactHtmlParser(this.props.t("SEARCHBAR.find_everywhere"))}
+                      <MenuItem value={'all'}>
+                        {ReactHtmlParser(this.props.t('SEARCHBAR.find_everywhere'))}
                       </MenuItem>
-                      <MenuItem value={"addAddress"}>
-                        <Typography style={{color: "#2FBCD3", cursor: "pointer"}}>
-                          {ReactHtmlParser(this.props.t("SEARCHBAR.add_adresses"))}
+                      <MenuItem value={'addAddress'}>
+                        <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                          {ReactHtmlParser(this.props.t('SEARCHBAR.add_adresses'))}
                         </Typography>
                       </MenuItem>
                     </Select>
@@ -1007,7 +901,7 @@ class NavBar extends Component {
                 <Grid
                   container
                   spacing={1}
-                  style={{margin: 0, width: "100%"}}
+                  style={{margin: 0, width: '100%'}}
                   item
                   xl={!logged ? !ifHomePage ? 6 : 4 : 5}
                   lg={!logged ? !ifHomePage ? 6 : 4 : 5}
@@ -1015,25 +909,25 @@ class NavBar extends Component {
                   md={!logged ? !ifHomePage ? 6 : 4 : 5}
                   xs={!logged ? !ifHomePage ? 6 : 4 : 5}
                 >
-                  <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: "100%", display: "flex", alignItems: "center"}} >
+                  <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} style={{margin: 0, width: '100%', display: 'flex', alignItems: 'center'}} >
                     {
                       this.state.ifHomePage ?
                         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                          <InputLabel shrink>{ReactHtmlParser(this.props.t("SEARCHBAR.labelWhere"))}</InputLabel>
+                          <InputLabel shrink>{ReactHtmlParser(this.props.t('SEARCHBAR.labelWhere'))}</InputLabel>
                         </Grid> : null
                     }
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={"customsearch"} classes={{root: `${classes.navbarRootTextFieldWhere}`}}>
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsearch'} classes={{root: `${classes.navbarRootTextFieldWhere}`}}>
                       <AlgoliaPlaces
-                        placeholder={ReactHtmlParser(this.props.t("SEARCHBAR.where"))}
+                        placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
                         options={{
-                          appId: "plKATRG826CP",
-                          apiKey: "dc50194119e4c4736a7c57350e9f32ec",
-                          language: "fr",
-                          countries: ["fr"],
-                          type: "city",
+                          appId: 'plKATRG826CP',
+                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                          language: 'fr',
+                          countries: ['fr'],
+                          type: 'city',
                         }}
                         onChange={suggestion => this.onChangeCity(suggestion)}
-                        onClear={() => this.setState({city: "", gps: null})}
+                        onClear={() => this.setState({city: '', gps: null})}
                       />
                     </Grid>
                   </Grid>
@@ -1041,13 +935,13 @@ class NavBar extends Component {
             }
             {
               logged === false && this.state.ifHomePage ?
-                <Grid container item xl={3} lg={3} sm={3} md={3} xs={3} style={{margin: 0, width: "100%"}} spacing={1}>
+                <Grid container item xl={3} lg={3} sm={3} md={3} xs={3} style={{margin: 0, width: '100%'}} spacing={1}>
                   <Grid item xl={1} lg={1} sm={1} md={1} xs={1}>
                     <Divider orientation="vertical"/>
                   </Grid>
                   <Grid item xl={11} lg={11} sm={11} md={11} xs={11}>
                     <TextField
-                      label={this.state.ifHomePage ? ReactHtmlParser(this.props.t("SEARCHBAR.labelWhen")) : false}
+                      label={this.state.ifHomePage ? ReactHtmlParser(this.props.t('SEARCHBAR.labelWhen')) : false}
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -1060,13 +954,13 @@ class NavBar extends Component {
                               onChange={date => {
                                 this.setState({dateSelected: date})
                                 if (date === null) {
-                                  this.setState({dateSelected: ""})
+                                  this.setState({dateSelected: ''})
                                 }
                               }}
                               locale='fr'
                               showMonthDropdown
                               dateFormat="dd/MM/yyyy"
-                              placeholderText={ReactHtmlParser(this.props.t("SEARCHBAR.when"))}
+                              placeholderText={ReactHtmlParser(this.props.t('SEARCHBAR.when'))}
                               minDate={new Date()}
                             />)
                         },
@@ -1076,10 +970,10 @@ class NavBar extends Component {
                   </Grid>
                 </Grid> : null
             }
-            <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: "flex", flexDirection: "row-reverse", alignItems: "center"}}>
+            <Grid item xl={1} lg={1} sm={1} md={1} xs={1} style={{display: 'flex', flexDirection: 'row-reverse', alignItems: 'center'}}>
               <IconButton
                 classes={{root: classes.iconButton}}
-                className={`customsearchmagnify ${isB2BStyle(this.state.user) ? classes.iconColorB2b : classes.iconColor}`}
+                className={`customsearchmagnify ${classes.iconColor}`}
                 aria-label="search"
                 onClick={() => this.findService()}>
                 <SearchIcon/>
@@ -1093,7 +987,7 @@ class NavBar extends Component {
 
   triggerLogin = () => {
     return (
-      <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={"connect"} />
+      <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={'connect'} />
     )
   }
 
@@ -1108,9 +1002,9 @@ class NavBar extends Component {
         lg={ifHomePage ? 1 : 3}
         md={ifHomePage ? 10 : 3}
         sm={11}
-        onClick={() => Router.push("/")}
+        onClick={() => Router.push('/')}
       >
-        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: "no-repeat", height: 90, width: 200}}/>
+        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90, width: 200}}/>
       </Grid>
     )
   };
@@ -1118,53 +1012,53 @@ class NavBar extends Component {
   tabBar = classes => {
     const modeB2b = [
       {
-        label: ReactHtmlParser(this.props.t("SEARCHBAR.service_company")),
-        url: "/blog/elementor-211/",
+        label: ReactHtmlParser(this.props.t('SEARCHBAR.service_company')),
+        url: '/blog/elementor-211/',
       },
       {
-        label: ReactHtmlParser(this.props.t("SEARCHBAR.service_collab")),
-        url: "/blog/services-aux-collaborateurs/",
+        label: ReactHtmlParser(this.props.t('SEARCHBAR.service_collab')),
+        url: '/blog/services-aux-collaborateurs/',
       },
       {
-        label: ReactHtmlParser(this.props.t("SEARCHBAR.price")),
-        url: "/blog/tarifs",
+        label: ReactHtmlParser(this.props.t('SEARCHBAR.price')),
+        url: '/blog/tarifs',
       },
     ]
     const modeAlfred = [
       {
-        label: ReactHtmlParser(this.props.t("NAVBAR_MENU.ourServices")),
-        url: "/search",
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.ourServices')),
+        url: '/search',
       },
       {
-        label: ReactHtmlParser(this.props.t("NAVBAR_MENU.registerServices")),
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.registerServices')),
         callFunction: this.handleOpenRegister,
       },
     ]
 
     const modeAlle = [
       {
-        label: ReactHtmlParser(this.props.t("NAVBAR_MENU.allEPrestation")),
-        url: "/search",
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEPrestation')),
+        url: '/search',
       },
       {
-        label: ReactHtmlParser(this.props.t("NAVBAR_MENU.allEWork")),
-        url: "/footer/addService",
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEWork')),
+        url: '/footer/addService',
       },
       {
-        label: ReactHtmlParser(this.props.t("NAVBAR_MENU.allEntrepreneur")),
-        url: "/footer/ourCommunity",
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEntrepreneur')),
+        url: '/footer/ourCommunity',
       },
       {
-        label: ReactHtmlParser(this.props.t("NAVBAR_MENU.allEBecome")),
-        url: "/footer/becomeAlfred",
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEBecome')),
+        url: '/footer/becomeAlfred',
       },
       {
-        label: ReactHtmlParser(this.props.t("NAVBAR_MENU.allEContact")),
-        url: "/contact",
+        label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEContact')),
+        url: '/contact',
       },
     ]
 
-    const modeMenu = isB2BStyle() ? modeB2b : modeAlle
+    const modeMenu = modeAlle
 
     return(
       <Grid
@@ -1187,7 +1081,7 @@ class NavBar extends Component {
     const dialogLogin = () => {
       return(
         <Dialog
-          scroll={"paper"}
+          scroll={'paper'}
           aria-labelledby="scroll-dialog-title"
           aria-describedby="scroll-dialog-description"
           className={classes.navbarModal}
@@ -1210,7 +1104,7 @@ class NavBar extends Component {
     const dialogRegister = () => {
       return(
         <Dialog
-          scroll={"paper"}
+          scroll={'paper'}
           aria-labelledby="scroll-dialog-title"
           aria-describedby="scroll-dialog-description"
           className={classes.navbarModal}
@@ -1218,14 +1112,14 @@ class NavBar extends Component {
           onClose={this.handleCloseRegister}
           TransitionComponent={Transition}
           disableEscapeKeyDown={true}
-          classes={{paper: "customnavbarregisterdialog"}}
+          classes={{paper: 'customnavbarregisterdialog'}}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
           <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
             <div className={classes.navbarPaper}>
               <Register
                 callLogin={this.handleOpenLogin}
-                sendParentData={this.getData} id={"register"}
+                sendParentData={this.getData} id={'register'}
                 user_id={this.state.setOpenRegister}
               />
             </div>
@@ -1235,26 +1129,26 @@ class NavBar extends Component {
     }
 
     return (
-      <Grid className={this.state.ifHomePage ? isB2BStyle(user) ? classes.navbarMainSytleB2B : classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={"static"} className={isB2BStyle(user) && companyPage || this.state.ifHomePage ? `customappbarhomepage ${classes.navbarAppBarNoBg}` : isB2BStyle(user) && !companyPage ? `${classes.navbarAppBarWithBg}` : "customappbar"}>
+      <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
+        <AppBar position={'static'} className={this.state.ifHomePage ? `customappbarhomepage ${classes.navbarAppBarNoBg}` : 'customappbar'}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
-            <Hidden only={["xs"]}>
-              <Grid container style={{justifyContent: companyPage ? "flex-end" : "", width: "100%", margin: 0}}>
+            <Hidden only={['xs']}>
+              <Grid container style={{justifyContent: companyPage ? 'flex-end' : '', width: '100%', margin: 0}}>
                 {companyPage ? null : this.logoContainer(classes)}
                 {
                   companyPage ? null : ifHomePage ? this.tabBar(classes)
                     :
-                    <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage && !isB2BStyle(user) ? 8 : 11} style={{display: "flex", alignItems: "center"}}>
+                    <Grid item xl={4} lg={6} md={!logged && !ifHomePage ? 6 : 8} sm={!logged && !ifHomePage ? 8 : 11} style={{display: 'flex', alignItems: 'center'}}>
                       {this.searchBarInput(classes)}
                     </Grid>
                 }
-                {isB2BStyle(user) && !logged ? this.notLoggedButtonSectionB2b(classes) : logged === true ? this.burgerMenuLogged(classes) : this.notLoggedButtonSection(classes)}
+                {logged ? this.burgerMenuLogged(classes) : this.notLoggedButtonSection(classes)}
               </Grid>
               {
                 ifHomePage ? this.searchBarInput(classes) : null
               }
             </Hidden>
-            <Hidden only={["xl", "lg", "md", "sm"]}>
+            <Hidden only={['xl', 'lg', 'md', 'sm']}>
               {ifHomePage ? this.mobileSearchBarInput(classes) : null}
               {ifSearchPage ? this.mobileSearchBarInputSearchPage(classes) : null}
             </Hidden>
@@ -1269,4 +1163,4 @@ class NavBar extends Component {
   }
 }
 
-export default withTranslation("custom", {withRef: true})(withStyles(styles)(NavBar))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(NavBar))

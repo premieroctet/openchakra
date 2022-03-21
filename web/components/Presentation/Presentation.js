@@ -1,3 +1,4 @@
+const BasePage = require('../../pages/basePage')
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -20,7 +21,6 @@ import {isEditableUser} from '../../utils/context'
 import CreateIcon from '@material-ui/icons/Create'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
-const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 
 const moment = require('moment')
 
@@ -41,7 +41,7 @@ const DialogTitle = withStyles(styles)(props => {
 })
 
 
-class Presentation extends CompanyComponent {
+class Presentation extends BasePage {
 
   constructor(props) {
     super(props)
@@ -91,32 +91,11 @@ class Presentation extends CompanyComponent {
     const {newDescription} = this.state
     setAxiosAuthentication()
 
-    if(this.isModeCompany()) {
-      axios.put('/myAlfred/api/companies/profile/editProfile', {
-        activity: this.state.activityArea,
-        size: this.state.sizeCompany,
-        website: this.state.website,
-        name: this.state.companyName,
-        billing_address: this.state.billing_address,
-        description: newDescription !== '' && newDescription !== null ? newDescription : this.state.description,
-        siret: this.state.siret,
-        vat_number: this.state.vat_number,
-        vat_subject: this.state.vat_subject,
-      },
-      ).then(() => {
-        snackBarSuccess(ReactHtmlParser(this.props.t('CMP_PRESENTATION.snackbar_update_profil')))
-        this.setState({showEdition: false}, () => this.componentDidMount())
-      }).catch(err => {
-        snackBarError(err.response.data)
+    axios.put('/myAlfred/api/users/profile/description', {description: newDescription})
+      .then(() => {
+        this.loadUser()
+        this.setState({showEdition: false})
       })
-    }
-    else{
-      axios.put('/myAlfred/api/users/profile/description', {description: newDescription})
-        .then(() => {
-          this.loadUser()
-          this.setState({showEdition: false})
-        })
-    }
   }
 
   onTextChanged = event => {
@@ -190,7 +169,7 @@ class Presentation extends CompanyComponent {
     const {classes} = this.props
     const {user, company} = this.state
     const editable = isEditableUser(user)
-    const displayName=this.isModeCompany() ? company ? company.name : '' : user ? user.firstname : ''
+    const displayName=user ? user.firstname : ''
     const title = ReactHtmlParser(this.props.t('PROFIL.about', {firstname: displayName}))
 
     return (
@@ -207,13 +186,7 @@ class Presentation extends CompanyComponent {
         <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
           <Topic titleTopic={title}
             titleSummary={user ? ReactHtmlParser(this.props.t('CMP_PRESENTATION.member')) + moment(user.creation_date).format('MMMM YYYY') : ''}>
-            {user && !this.isModeCompany()?
-              <Typography style={{wordWrap: 'break-word'}}>{user.description}</Typography>
-              :
-              this.isModeCompany() && company ?
-                <Typography style={{wordWrap: 'break-word'}}>{company.description}</Typography>
-                : null
-            }
+            {user && <Typography style={{wordWrap: 'break-word'}}>{user.description}</Typography>}
           </Topic>
           <Grid>
             {this.modalEditDialog(classes)}

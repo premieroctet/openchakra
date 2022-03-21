@@ -1,3 +1,4 @@
+const BasePage = require('../../pages/basePage')
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -35,7 +36,6 @@ import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import {PROFIL, ABOUT} from '../../utils/i18n'
-const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import CustomIcon from '../CustomIcon/CustomIcon'
 
@@ -57,7 +57,7 @@ const DialogTitle = withStyles(styles)(props => {
   )
 })
 
-class About extends CompanyComponent {
+class About extends BasePage {
 
   constructor(props) {
     super(props)
@@ -142,40 +142,19 @@ class About extends CompanyComponent {
     const {newAddress, languages} = this.state
     setAxiosAuthentication()
 
-    if(this.isModeCompany()) {
-      axios.put('/myAlfred/api/companies/profile/editProfile', {
-        activity: this.state.activityArea,
-        size: this.state.sizeCompany,
-        website: this.state.website,
-        name: this.state.companyName,
-        billing_address: this.state.billing_address,
-        description: this.state.description,
-        siret: this.state.siret,
-        vat_number: this.state.vat_number,
-        vat_subject: this.state.vat_subject,
-      },
-      ).then(() => {
+    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(() => {
+      axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(() => {
         snackBarSuccess(ReactHtmlParser(this.props.t('ABOUT.snackbar_profil_update')))
-        this.componentDidMount()
-      }).catch(err => {
-        snackBarError(err.response.data)
-      })
-    }
-    else{
-      axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(() => {
-        axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(() => {
-          snackBarSuccess(ReactHtmlParser(this.props.t('ABOUT.snackbar_profil_update')))
-          setTimeout(this.componentDidMount, 1000)
-        },
-        ).catch(err => {
-          console.error(err)
-        })
+        setTimeout(this.componentDidMount, 1000)
       },
       ).catch(err => {
         console.error(err)
-      },
-      )
-    }
+      })
+    },
+    ).catch(err => {
+      console.error(err)
+    },
+    )
   };
 
   closeEditDialog = () => {
@@ -239,8 +218,8 @@ class About extends CompanyComponent {
         />
         <DialogContent>
           <Topic
-            titleTopic={this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.b2b_title_topic')) : ReactHtmlParser(this.props.t('ABOUT.title_topic'))}
-            titleSummary={this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.b2b_titlesummary_topic')) : ReactHtmlParser(this.props.t('ABOUT.titlesummary_topic'))}
+            titleTopic={ReactHtmlParser(this.props.t('ABOUT.title_topic'))}
+            titleSummary={ReactHtmlParser(this.props.t('ABOUT.titlesummary_topic'))}
             underline={true}/>
           <Grid container spacing={2} style={{width: '100%', margin: 0}}>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -249,36 +228,24 @@ class About extends CompanyComponent {
                   fontWeight: 'bold',
                   textTransform: 'initial',
                 }}>
-                  {this.isModeCompany() ? ReactHtmlParser(this.props.t('ABOUT.website')) : ReactHtmlParser(this.props.t('ABOUT.label_address'))}
+                  {ReactHtmlParser(this.props.t('ABOUT.label_address'))}
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                {
-                  this.isModeCompany() ?
-                    <TextField
-                      name={'website'}
-                      variant={'outlined'}
-                      label={ReactHtmlParser(this.props.t('ABOUT.textfield_website'))}
-                      value={website || ''}
-                      style={{width: '100%'}}
-                      onChange={this.handleChange}
-                    />
-                    :
-                    <AlgoliaPlaces
-                      key={moment()}
-                      placeholder={placeholder}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'address',
+                <AlgoliaPlaces
+                  key={moment()}
+                  placeholder={placeholder}
+                  options={{
+                    appId: 'plKATRG826CP',
+                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                    language: 'fr',
+                    countries: ['fr'],
+                    type: 'address',
 
-                      }}
-                      onChange={this.onAddressChanged}
-                      onClear={() => this.onAddressChanged(null)}
-                    />
-                }
+                  }}
+                  onChange={this.onAddressChanged}
+                  onClear={() => this.onAddressChanged(null)}
+                />
               </Grid>
             </Grid>
             <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
@@ -287,79 +254,29 @@ class About extends CompanyComponent {
                   style={{
                     fontWeight: 'bold',
                     textTransform: 'initial',
-                  }}>{this.isModeCompany() ? ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size')) : ReactHtmlParser(this.props.t('ABOUT.spoken_languages'))}</h3>
+                  }}>{ReactHtmlParser(this.props.t('ABOUT.spoken_languages'))}</h3>
               </Grid>
               <Grid item xs={12}>
-                {
-                  !this.isModeCompany() ?
-                    <MultipleSelect
-                      key={moment()}
-                      value={languages}
-                      onChange={this.onLanguagesChanged}
-                      options={LANGUAGES}
-                      styles={{
-                        menu: provided => ({...provided, zIndex: 2}),
-                      }}
-                      isMulti
-                      isSearchable
-                      closeMenuOnSelect={false}
-                      placeholder={ReactHtmlParser(this.props.t('ABOUT.textfield_languages'))}
-                      noOptionsMessage={() => ReactHtmlParser(this.props.t('ABOUT.option_message'))}
-                    /> :
-                    <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size'))}</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        value={sizeCompany}
-                        onChange={this.handleChange}
-                        label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size'))}
-                        name={'sizeCompany'}
-                        placeholder={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size'))}
-                      >
-                        {
-                          Object.keys(COMPANY_SIZE).map((res, index) => (
-                            <MenuItem key={index} value={res}>{COMPANY_SIZE[res]}</MenuItem>
-                          ))
-                        }
-                      </Select>
-                    </FormControl>
-                }
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size'))}</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={sizeCompany}
+                    onChange={this.handleChange}
+                    label={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size'))}
+                    name={'sizeCompany'}
+                    placeholder={ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size'))}
+                  >
+                    {
+                      Object.keys(COMPANY_SIZE).map((res, index) => (
+                        <MenuItem key={index} value={res}>{COMPANY_SIZE[res]}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
-            {
-              this.isModeCompany() ?
-                <Grid item container spacing={2} style={{width: '100%', margin: 0}} xl={12} lg={12} sm={12} md={12} xs={12}>
-                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <h3
-                      style={{
-                        fontWeight: 'bold',
-                        textTransform: 'initial',
-                      }}>{ReactHtmlParser(this.props.t('ABOUT.b2b_activity'))}</h3>
-                  </Grid>
-                  <Grid item xl={12} lg={12} sm={12} md={12} xs={12}>
-                    <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-outlined-label">{ReactHtmlParser(this.props.t('ABOUT.b2b_activity_label'))}</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        value={activityArea}
-                        onChange={this.handleChange}
-                        label={ReactHtmlParser(this.props.t('ABOUT.b2b_activity_label'))}
-                        name={'activityArea'}
-                        placeholder={ReactHtmlParser(this.props.t('ABOUT.b2b_activity_label'))}
-                      >
-                        {
-                          Object.keys(COMPANY_ACTIVITY).map((res, index) => (
-                            <MenuItem key={index} value={res}>{COMPANY_ACTIVITY[res]}</MenuItem>
-                          ))
-                        }
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                : null
-            }
             <Grid style={{marginTop: '2vh', width: '100%'}}>
               <Divider/>
               <Grid style={{marginTop: '2vh', width: '100%'}}>
@@ -370,7 +287,7 @@ class About extends CompanyComponent {
                   variant="contained"
                   classes={{root: classes.buttonSave}}
                   color={'primary'}
-                  disabled={!this.isModeCompany() ? enabledEdition : false}
+                  disabled={enabledEdition}
                 >
                   {ReactHtmlParser(this.props.t('ABOUT.button_update'))}
                 </CustomButton>
@@ -387,11 +304,11 @@ class About extends CompanyComponent {
     const {displayTitlePicture, classes} = this.props
     const {user, company, showEdition} = this.state
 
-    let place = this.isModeCompany() ? company ? company.billing_address.city : ReactHtmlParser(this.props.t('PROFIL.noaddresses')) : user ? user.billing_address.city : PROFIL.noaddresses
+    let place = user ? user.billing_address.city : ReactHtmlParser(this.props.t('PROFIL.noaddresses'))
 
     const editable = isEditableUser(user)
 
-    const wrapperComponentProps = !this.isModeCompany()?
+    const wrapperComponentProps =
       [
         {
           label: ReactHtmlParser(this.props.t('PROFIL.place')),
@@ -407,24 +324,6 @@ class About extends CompanyComponent {
           label: ReactHtmlParser(this.props.t('PROFIL.verification')),
           summary: user ? user.is_confirmed ? ReactHtmlParser(this.props.t('PROFIL.confirmed')) : ReactHtmlParser(this.props.t('PROFIL.nothing')) : ReactHtmlParser(this.props.t('PROFIL.unconfirmed')),
           IconName: user ? user.is_confirmed ? <CustomIcon className={'customaboutcheckcircleicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<CheckCircleOutlineIcon fontSize="large"/>}/> : <CustomIcon className={'customaboutuncheckcircleicon'} style={{height: 24, width: 24, backgroundSize: 'contain'}} materialIcon={<HighlightOffIcon fontSize={'large'}/>}/> : '',
-        },
-      ]
-      :
-      [
-        {
-          label: ReactHtmlParser(this.props.t('PROFIL.website')),
-          summary: company.website ? company.website : ReactHtmlParser(this.props.t('PROFIL.nothing')),
-          IconName: <LanguageIcon fontSize="large"/>,
-        },
-        {
-          label: ReactHtmlParser(this.props.t('ACCOUNT_COMPANY.size')),
-          summary: company.size !== '' ? Object.keys(COMPANY_SIZE).map(res => { if(res === company.size) { return COMPANY_SIZE[res] } }): ReactHtmlParser(this.props.t('PROFIL.nothing')),
-          IconName: <BusinessIcon fontSize="large"/>,
-        },
-        {
-          label: ReactHtmlParser(this.props.t('PROFIL.activity')),
-          summary: company.activity !== '' ? Object.keys(COMPANY_ACTIVITY).map(res => { if(res === company.activity) { return COMPANY_ACTIVITY[res] } }) : ReactHtmlParser(this.props.t('PROFIL.nothing')),
-          IconName: <WorkOutlineIcon fontSize="large"/>,
         },
       ]
 

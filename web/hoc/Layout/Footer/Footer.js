@@ -2,11 +2,10 @@ const {
   getLoggedUserId,
   isAndroid,
   isApplication,
-  isB2BStyle,
   isIOS,
-  isLoggedUserAlfredPro
-} = require('../../../utils/context');
-import { Link } from '@material-ui/core';
+  isLoggedUserAlfredPro,
+} = require('../../../utils/context')
+import {Link} from '@material-ui/core'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -26,7 +25,7 @@ import Dialog from '@material-ui/core/Dialog'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import {FOOTER} from '../../../utils/i18n'
-const {isB2BDisabled, mustDisplayChat} = require('../../../config/config')
+const {mustDisplayChat} = require('../../../config/config')
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose} = props
@@ -100,8 +99,8 @@ class Footer extends React.Component {
 
     return (
       <Grid container spacing={2} style={{width: '100%', margin: 0}}>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
-          lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3}
+          lg={3} md={3} sm={6} xs={6}>
           <Grid item className={'customfooterabout'}>
             <h3>{ReactHtmlParser(this.props.t('FOOTER.about'))}</h3>
           </Grid>
@@ -110,161 +109,62 @@ class Footer extends React.Component {
               <Typography>{ReactHtmlParser(this.props.t('FOOTER.myalfred'))}</Typography>
             </Link>
           </Grid>
-          {
-            isB2BStyle() ?
-              <>
-                <Grid item>
-                  <Link href={'/footer/apropos'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.presse'))}</Typography>
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href={'/footer/apropos'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.blog'))}</Typography>
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href={'/footer/apropos'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.cgv'))}</Typography>
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href={'/footer/apropos'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.faq'))}</Typography>
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href={'/footer/apropos'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.info'))}</Typography>
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href={'/particular'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.particular'))}</Typography>
-                  </Link>
-                </Grid>
-              </>
-              : null
-          }
-          {
-            !isB2BStyle() ?
-              <>
-                <Grid item className={'customfooterteam'}>
-                  <Link href={'/footer/ourTeam'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.team'))}</Typography>
-                  </Link>
-                </Grid>
-                <Grid item className={'customfootercontact'}>
-                  <Link href={'/contact'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.contact_us'))}</Typography>
-                  </Link>
-                </Grid>
-                <Grid item>
-                  { isB2BDisabled() ? null:
-                    <Link href={'/professional'}>
-                      <Typography>{ReactHtmlParser(this.props.t('FOOTER.professional'))}</Typography>
-                    </Link>
-                  }
-                </Grid>
-              </>
-              : null
-          }
+          <>
+            <Grid item className={'customfooterteam'}>
+              <Link href={'/footer/ourTeam'}>
+                <Typography>{ReactHtmlParser(this.props.t('FOOTER.team'))}</Typography>
+              </Link>
+            </Grid>
+            <Grid item className={'customfootercontact'}>
+              <Link href={'/contact'}>
+                <Typography>{ReactHtmlParser(this.props.t('FOOTER.contact_us'))}</Typography>
+              </Link>
+            </Grid>
+          </>
         </Grid>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
-          lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3}
+          lg={3} md={3} sm={6} xs={6}>
           <Grid item className={'customfootercommunity'}>
-            <h3>{isB2BStyle() ? ReactHtmlParser(this.props.t('FOOTER.company')) : ReactHtmlParser(this.props.t('FOOTER.community'))}</h3>
+            <h3>{ReactHtmlParser(this.props.t('FOOTER.community'))}</h3>
           </Grid>
-          {
-            !isB2BStyle() ?
-              <Grid item className={'customfooterourcommunity'}>
-                <Link href={'/footer/ourCommunity'}>
-                  <Typography>{ReactHtmlParser(this.props.t('FOOTER.our_community'))}</Typography>
-                </Link>
-              </Grid>
-              :
-              <>
-                <Grid item>
-                  <Link href={'/blog/tarifs'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.price'))}</Typography>
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href={'/blog/elementor-211/'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.service_company'))}</Typography>
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href={'/blog/services-aux-collaborateurs/'}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.service_collab'))}</Typography>
-                  </Link>
-                </Grid>
-              </>
-          }
+          <Grid item className={'customfooterourcommunity'}>
+            <Link href={'/footer/ourCommunity'}>
+              <Typography>{ReactHtmlParser(this.props.t('FOOTER.our_community'))}</Typography>
+            </Link>
+          </Grid>
         </Grid>
-        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={isB2BStyle() ? 4 : 3}
-          lg={isB2BStyle() ? 4 : 3} md={isB2BStyle() ? 4 : 3} sm={6} xs={6}>
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3}
+          lg={3} md={3} sm={6} xs={6}>
           <Grid item className={'customfooteralfred'}>
             <h3>{ReactHtmlParser(this.props.t('FOOTER.alfred'))}</h3>
           </Grid>
-          {
-            isB2BStyle() ? null :
-              <Grid item className={'customfooterbecome'}>
-                <Link href={'/footer/becomeAlfred'}>
-                  <Typography>{ReactHtmlParser(this.props.t('FOOTER.become_alfred'))}</Typography>
-                </Link>
-              </Grid>
-          }
-          {
-            getLoggedUserId() && !isLoggedUserAlfredPro() ? null :
-              isB2BStyle() ?
-                isLoggedUserAlfredPro() ?
-                  <Grid item>
-                    <Link href={'/creaShop/creaShop'}>
-                      <Typography>{ReactHtmlParser(this.props.t('FOOTER.crea_shop'))}</Typography>
-                    </Link>
-                  </Grid>
-
-                  :
-                  <Grid item onClick={this.handleOpenRegister} style={{cursor: 'pointer'}}>
-                    <Typography>{ReactHtmlParser(this.props.t('FOOTER.crea_shop'))}</Typography>
-                  </Grid>
-                : null
-          }
-          {
-            isB2BStyle() ?
-              <Grid item>
-                <Link href={'/footer/becomeAlfred'}>
-                  <Typography>{ReactHtmlParser(this.props.t('FOOTER.charte'))}</Typography>
-                </Link>
-              </Grid>
-              : null
-          }
+          <Grid item className={'customfooterbecome'}>
+            <Link href={'/footer/becomeAlfred'}>
+              <Typography>{ReactHtmlParser(this.props.t('FOOTER.become_alfred'))}</Typography>
+            </Link>
+          </Grid>
         </Grid>
-        {
-          isB2BStyle() ? null :
-            <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3} lg={3} md={3} sm={6}
-              xs={6}>
-              <Grid item className={'customfooterhelp'}>
-                <h3>{ReactHtmlParser(this.props.t('FOOTER.help'))}</h3>
-              </Grid>
-              <Grid item className={'customfooterresa'}>
-                <Link href={'/footer/addService'}>
-                  <Typography>{ReactHtmlParser(this.props.t('FOOTER.resa_service'))}</Typography>
-                </Link>
-              </Grid>
-              { mustDisplayChat() &&
+        <Grid container spacing={1} className={classes.containerSectionFooter} item xl={3} lg={3} md={3} sm={6}
+          xs={6}>
+          <Grid item className={'customfooterhelp'}>
+            <h3>{ReactHtmlParser(this.props.t('FOOTER.help'))}</h3>
+          </Grid>
+          <Grid item className={'customfooterresa'}>
+            <Link href={'/footer/addService'}>
+              <Typography>{ReactHtmlParser(this.props.t('FOOTER.resa_service'))}</Typography>
+            </Link>
+          </Grid>
+          { mustDisplayChat() &&
                 <Grid item onClick={() => Tawk_API.maximize()} className={`customfootertawlk ${classes.hiddenOnMobile}`}>
                   <Typography>{ReactHtmlParser(this.props.t('FOOTER.tawlk_human'))}</Typography>
                 </Grid>
-              }
-              <Grid item className={'customfooterfaq'}>
-                <Link href={'/faq'}>
-                  <Typography>{ReactHtmlParser(this.props.t('FOOTER.faq'))}</Typography>
-                </Link>
-              </Grid>
-            </Grid>
-        }
+          }
+          <Grid item className={'customfooterfaq'}>
+            <Link href={'/faq'}>
+              <Typography>{ReactHtmlParser(this.props.t('FOOTER.faq'))}</Typography>
+            </Link>
+          </Grid>
+        </Grid>
         {
           !isApplication() ?
 

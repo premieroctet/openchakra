@@ -2,7 +2,6 @@ const {hideStoreDialog} = require('../config/config')
 const {
   getLoggedUserId,
   isApplication,
-  isB2BStyle,
   isMobile,
 } = require('../utils/context')
 import LoggedAsBanner from '../components/LoggedAsBanner'
@@ -79,34 +78,32 @@ class Home extends React.Component {
       this.setState({open: true})
     }
 
-    if (this.state.logged) {
-      axios.get('/myAlfred/api/users/current')
-        .then(res => {
-          let data = res.data
-          this.setState({
-            user: data,
-            gps: data.billing_address ? data.billing_address.gps : null,
-          },
-          )
-        })
-        .catch(err => {
-          console.error((err))
-        })
-    
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        let data = res.data
+        this.setState({
+          user: data,
+          gps: data.billing_address ? data.billing_address.gps : null,
+        },
+        )
+      })
+      .catch(err => {
+        console.error((err))
+      })
 
-      axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
-        .then(res => {
-          let categories = lodash.shuffle(res.data)
-          this.setState({categories: categories})
-        }).catch(err => console.error(err))
+    axios.get(`/myAlfred/api/category/${PART}`)
+      .then(res => {
+        let categories = lodash.shuffle(res.data)
+        this.setState({categories: categories})
+      }).catch(err => console.error(err))
 
-      axios.get(`/myAlfred/api/serviceUser/home/${isB2BStyle(this.state.user) ? PRO : PART}`)
-        .then(response => {
-          let alfred = response.data
-          this.setState({alfred: alfred})
-        }).catch(err => console.error(err))
-    }
-    
+    axios.get(`/myAlfred/api/serviceUser/home/${PART}`)
+      .then(response => {
+        let alfred = response.data
+        this.setState({alfred: alfred})
+      }).catch(err => console.error(err))
+
+
     this.setState({mounted: true})
   }
 
@@ -184,7 +181,7 @@ class Home extends React.Component {
               sm={12}
               md={12}
               xs={12}
-              className={`custombanner ${isB2BStyle(user) ? classes.navbarAndBannerBackgroundb2b : classes.navbarAndBannerBackground}` }
+              className={`custombanner ${classes.navbarAndBannerBackground}` }
             >
               <Grid className={`customheader ${classes.navbarComponentPosition}`}>
                 <NavBar ref={this.child}/>
@@ -196,23 +193,12 @@ class Home extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          {
-            isB2BStyle(user) ? <iframe
-              onLoad={this.resizeFrame}
-              frameBorder="0"
-              scrolling="no"
-              id="myIframe"
-              src="/blog/accueil"
-              style={{width: '100%'}}
-            >
-            </iframe> : null
-          }
           <Grid container className={`customslidecat ${classes.mainContainerStyle}`}>
             <Grid className={classes.generalWidthContainer}>
               <CategoryTopic categories={categories}/>
             </Grid>
           </Grid>
-          <Grid container className={`${isB2BStyle(user) ? classes.howItWorksComponentB2b : classes.howItWorksComponent}`}>
+          <Grid container className={classes.howItWorksComponent}>
             {/* <HowItWorks/>*/}
             <Grid item xs={12} className={classes.howItWorksMainStyle}>
               <RandomBanner arrayText={this.state.arrayText} loop={false}/>
@@ -223,22 +209,17 @@ class Home extends React.Component {
               <OurAlfred alfred={alfred}/>
             </Grid>
           </Grid>
-          {
-            isB2BStyle(user) ? null :
-              <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
-                <Grid className={classes.generalWidthContainer}>
-                  <ResaService triggerLogin={this.callLogin}/>
-                </Grid>
-              </Grid>
-          }
+          <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
+            <Grid className={classes.generalWidthContainer}>
+              <ResaService triggerLogin={this.callLogin}/>
+            </Grid>
+          </Grid>
           <Grid className={`customnewsletter ${classes.newsLetterContainer}`}>
-            {
-              isB2BStyle(user) ? null : <Grid container className={classes.mainNewsLetterStyle}>
-                <Grid className={classes.generalWidthContainerNewsLtter}>
-                  <NewsLetter/>
-                </Grid>
+            <Grid container className={classes.mainNewsLetterStyle}>
+              <Grid className={classes.generalWidthContainerNewsLtter}>
+                <NewsLetter/>
               </Grid>
-            }
+            </Grid>
           </Grid>
           <Grid>
             <Divider/>

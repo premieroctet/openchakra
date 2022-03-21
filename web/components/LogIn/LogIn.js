@@ -13,7 +13,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
-const {PROVIDERS, ROLES} = require('../../utils/consts')
+const {ROLES} = require('../../utils/consts')
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
@@ -36,7 +36,7 @@ const Login = ({callRegister,
 }) => {
 
   const {errors, username, password, showPassword, roles, selectedRole} = state
-  
+
   const loginDisabled = roles == null || (roles.length>0 && !selectedRole) || !password
 
 
@@ -144,5 +144,5 @@ const Login = ({callRegister,
   </div>
 }
 
- 
+
 export default withLogin(withTranslation('custom', {withRef: true})(withStyles(styles)(Login)))

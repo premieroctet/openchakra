@@ -23,7 +23,6 @@ import DialogActions from '@material-ui/core/DialogActions'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
-import {isB2BAdmin} from '../../utils/context'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
 import {HANDLE_RIB} from '../../utils/i18n'
 
@@ -46,7 +45,6 @@ class HandleRIB extends React.Component {
     super(props)
     this.state={
       accounts: [],
-      is_pro: isB2BAdmin(),
       showDeleteRib: false,
       showAddRib: false,
       errors: {},
@@ -240,7 +238,7 @@ class HandleRIB extends React.Component {
 
   render() {
     const {classes} = this.props
-    const{accounts, is_pro, showAddRib, showDeleteRib, errors} = this.state
+    const{accounts, showAddRib, showDeleteRib, errors} = this.state
 
     return(
       <Grid>
@@ -257,7 +255,7 @@ class HandleRIB extends React.Component {
         <Grid>
           <Typography
             className={'customhandleribsubtitle'}
-            style={{color: 'rgba(39,37,37,35%)'}}>{is_pro ? ReactHtmlParser(this.props.t('HANDLE_RIB.subtitle_b2b')) : ReactHtmlParser(this.props.t('HANDLE_RIB.subtitle'))}</Typography>
+            style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('HANDLE_RIB.subtitle'))}</Typography>
         </Grid>
         {accounts.length>0 ?
           <Grid container style={{marginTop: '10vh', display: 'flex', alignItems: 'center'}}>
