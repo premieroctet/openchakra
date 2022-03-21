@@ -379,7 +379,7 @@ class DrawerBooking extends React.Component {
                       <Typography>{this.props.getLocationLabel()}</Typography>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
-                      <Typography>{prestation_date ? prestation_date.format('Le DD/MM/YYYY à HH:mm') : ''}</Typography>
+                      <Typography>{prestation_date ? prestation_date.format('[le] DD/MM/YYYY à HH:mm') : ''}</Typography>
                     </Grid>
                   </Grid>
                   <Grid style={{display: 'flex', flexDirection: 'column'}}>
