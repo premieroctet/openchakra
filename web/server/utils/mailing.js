@@ -1,14 +1,17 @@
-const User = require('../models/User')
 const {
   ENABLE_MAILING,
   computeUrl,
   getSibTemplates,
   get_host_url,
-  is_validation,
+  is_development,
 } = require('../../config/config')
+const User = require('../models/User')
 const {SIB} = require('./sendInBlue')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
+const lodash=require('lodash')
+
+const QUOTATION_CC=is_development() ? 'sebastien.auvray@alfredplace.io': 'florian.benetiere@safe-feurst.fr'
 
 // Templates
 const SIB_IDS=require(`./sib_templates/${getSibTemplates()}.js`)
@@ -32,13 +35,17 @@ const SMS_CONTENTS = {
   [SIB_IDS.BOOKING_EXPIRED_2_ALFRED]: 'La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée',
 }
 
-const sendNotification = (notif_index, destinee, params) => {
-  const msg = `Sending notif ${notif_index} to ${destinee._id} using ${JSON.stringify(params)}`
+const sendNotification = (notif_index, destinees, params, attachment=null) => {
+
+  const destinee=lodash.isArray(destinees) ? destinees[0]: destinees
+  const ccs=lodash.isArray(destinees) ? destinees.slice(1) : []
+
+  const msg = `Sending notif ${notif_index} to ${destinee.email}(${destinee._id}) using ${JSON.stringify(params)}`
 
   let enable_mails = ENABLE_MAILING
   const ALLOW_EMAILS=/@.*alfred/i
   // En validation, envoyer les notifications et SMS aux membres de @.*alfred.*
-  if (!enable_mails && is_validation() && ALLOW_EMAILS.test(destinee.email||'')) {
+  if (!enable_mails && ALLOW_EMAILS.test(destinee.email||'')) {
     console.log('Mailing disabled except for my-alfred.io mails on validation platform')
     enable_mails = true
   }
@@ -53,7 +60,7 @@ const sendNotification = (notif_index, destinee, params) => {
 
   // Send mail
   if (enable_mails && notif_index != SIB_IDS.CONFIRM_PHONE) {
-    resultMail = SIB.sendMail(notif_index, destinee.email, params)
+    resultMail = SIB.sendMail(notif_index, destinee.email, ccs, params, attachment)
   }
 
   // Send SMS
@@ -424,6 +431,40 @@ const sendRegisterInvitation = (admin, email, code, req) => {
   )
 }
 
+const sendAutoQuotation = (prospect_email, prospect_name, prospect_company, quotation_id, machine_description, data_buffer) => {
+
+  const attachment={
+    name: 'Préconisation Feurst.pdf',
+    content: data_buffer.toString('base64'),
+  }
+
+  sendNotification(
+    SIB_IDS.FEURST_AUTO_QUOTATION_2_CLIENT,
+    [{email: prospect_email}, QUOTATION_CC],
+    {
+      name: prospect_name,
+      quotation_id: quotation_id,
+      machine: machine_description,
+    },
+    attachment,
+  )
+
+}
+
+const sendCustomQuotation = (prospect_email, prospect_name, prospect_company, quotation_id, machine_description) => {
+
+  sendNotification(
+    SIB_IDS.FEURST_CUSTOM_QUOTATION_2_CLIENT,
+    [{email: prospect_email}, QUOTATION_CC],
+    {
+      name: prospect_name,
+      quotation_id: quotation_id,
+      machine: machine_description,
+    },
+  )
+
+}
+
 module.exports = {
   sendVerificationMail,
   sendShopDeleted,
@@ -452,4 +493,6 @@ module.exports = {
   sendBookingRefusedToAlfred,
   sendAdminsAlert,
   sendRegisterInvitation,
+  sendAutoQuotation,
+  sendCustomQuotation,
 }

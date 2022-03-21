@@ -21,8 +21,8 @@ import styles from '../../static/css/pages/creaShop/creaShopStyle'
 import Logo from '../../components/Logo/Logo'
 const {STEPS}=require('./creaShopSteps')
 const {getDefaultAvailability}=require('../../utils/dateutils')
-const {getLoggedUserId, isB2BStyle}=require('../../utils/context')
-const {is_development, isB2BDisabled, canAlfredParticularRegister}=require('../../config/config')
+const {getLoggedUserId}=require('../../utils/context')
+const {is_development, canAlfredParticularRegister}=require('../../config/config')
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 const {snackBarSuccess}=require('../../utils/notifications')
 import {SHOP} from '../../utils/i18n'
@@ -47,7 +47,7 @@ class creaShop extends BasePage {
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: 'Merci pour votre réservation!',
         cancel_mode: CANCEL_MODE.FLEXIBLE, // FLEXIBLE/MODERATE/STRICT
-        is_particular: !isB2BStyle() && canAlfredParticularRegister(), // true/false : particulier.pro
+        is_particular: canAlfredParticularRegister(), // true/false : particulier.pro
         company: {name: null, siret: null, vat_subject: false, vat_number: null},
         cesu: null,
         cis: false,
@@ -142,10 +142,8 @@ class creaShop extends BasePage {
                   shop.particular_access = su.particular_access
                   shop.professional_access = su.professional_access
 
-                  if (isB2BDisabled()) {
-                    shop.particular_access = true
-                    shop.professional_access = false
-                  }
+                  shop.particular_access = true
+                  shop.professional_access = false
 
                   shop.equipments = su.equipments.map(e => e._id)
                   if (su.diploma) {
@@ -366,10 +364,8 @@ class creaShop extends BasePage {
     shop.service = state.service
     shop.particular_access = state.particular_access || state.particular_professional_access
     shop.professional_access = state.professional_access || state.particular_professional_access
-    if (isB2BDisabled()) {
-      shop.particular_access = true
-      shop.professional_access = false
-    }
+    shop.particular_access = true
+    shop.professional_access = false
     this.setState({shop: shop})
   }
 
@@ -451,10 +447,8 @@ class creaShop extends BasePage {
       shop.particular_access=true
       shop.professional_access=true
     }
-    if (isB2BDisabled()) {
-      shop.particular_access=true
-      shop.professional_access=false
-    }
+    shop.particular_access=true
+    shop.professional_access=false
     this.setState({shop: shop})
   }
 

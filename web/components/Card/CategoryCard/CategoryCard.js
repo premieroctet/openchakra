@@ -6,7 +6,6 @@ import styles from '../../../static/css/components/Card/CategoryCard/CategoryCar
 import withStyles from '@material-ui/core/styles/withStyles'
 import {Link} from '@material-ui/core'
 import axios from 'axios'
-const {isB2BStyle}=require('../../../utils/context')
 import '../../../static/assets/css/custom.css'
 import Typography from '@material-ui/core/Typography'
 
@@ -38,7 +37,7 @@ class CategoryCard extends React.Component {
 
   render() {
     const {classes, item} = this.props
-    const {gps, user} = this.state
+    const {gps} = this.state
 
     if (!item) {
       return null
@@ -49,12 +48,12 @@ class CategoryCard extends React.Component {
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer'}}>
           <Grid className={classes.categoryCardMedia}>
             <Grid
-              style={{backgroundImage: `url("/${isB2BStyle(user) ? item.professional_picture : item.particular_picture}")`}}
+              style={{backgroundImage: `url("/${item.particular_picture}")`}}
               className={classes.categoryCardBackground}
             />
           </Grid>
           <Grid className={`customcardcat ${classes.textContainer}`}>
-            <Typography className={`customtypocardcat ${classes.typocardcat}`}>{isB2BStyle(user) ? item.professional_label : item.particular_label}</Typography>
+            <Typography className={`customtypocardcat ${classes.typocardcat}`}>{item.particular_label}</Typography>
           </Grid>
         </Grid>
       </Link>

@@ -1,4 +1,4 @@
-export default theme => ({
+export default () => ({
   layoutMobileProfilHeader: {
     backgroundImage: 'url(/assets/img/banner/bannerProfile.svg)',
     height: '30vh',
@@ -14,12 +14,6 @@ export default theme => ({
     backgroundSize: 'cover',
     position: 'relative',
     backgroundRepeat: 'no-repeat',
-  },
-  layoutMobileProfilHeaderB2b: {
-    backgroundColor: theme.palette.b2b.main,
-    height: '30vh',
-    position: 'relative',
-
   },
   layoutMobileLayoutProfileHeader: {
     position: 'absolute',

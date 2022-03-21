@@ -1,0 +1,68 @@
+{
+  "NAVIGATION.previous": "Précédent",
+  "NAVIGATION.next": "Suivant",
+
+  "PROGRESS_BAR.step_label": "Étape",
+
+  "MACHINE_TYPE.excavator": "Une excavatrice",
+  "MACHINE_TYPE.loader": "Une chargeuse",
+  "MACHINE_TYPE.shovel": "Une pelle-butte",
+
+  "BLADE_SHAPE.straight": "Droite",
+  "BLADE_SHAPE.semi_delta": "Semi-delta",
+  "BLADE_SHAPE.delta": "Delta",
+  "BLADE_SHAPE.unknown": "Je ne sais pas",
+
+  "FIX_TYPE.pin": "À claveter",
+  "FIX_TYPE.sold": "À souder",
+
+  "MACHINE_TYPE.title": "Bienvenue dans le configurateur",
+  "MACHINE_TYPE.info_text" : "Si vous ne trouvez pas votre machine, veuillez saisir les informations. Un de nos experts reviendra vers vous.",
+  "MACHINE_TYPE.type_label": "Quelle machine souhaitez-vous équiper ?",
+  "MACHINE_TYPE.brand_label": "Indiquez la marque de votre machine : ",
+  "MACHINE_TYPE.model_label": "Choisissez le modèle de votre machine : ",
+  "MACHINE_TYPE.weight_label": "Indiquez le tonnage de votre machine : ",
+  "MACHINE_TYPE.power_label": "Indiquez la puissance de votre machine : ",
+
+  "USE_CASE.title": "Vos conditions d'utilisation",
+  "USE_CASE.use_case_label": "Sélectionnez votre usage",
+
+  "BLADE_DIMENSION.title": "A propos de votre godet",
+  "BLADE_DIMENSIONS.blade_shape_label": "Sélectionnez la forme de votre lame",
+  "BLADE_DIMENSION.blade_thickness_label": "Indiquez l'épaisseur de la lame",
+  "BLADE_DIMENSION.bucket_width_label": "Indiquez la largeur de votre godet",
+
+  "FIX_TYPES.title": "A propos de votre équipement",
+  "FIX_TYPES.fix_type_label": "Je souhaite une recommandation comprenant les équipements suivants : ",
+  "FIX_TYPES.teeth_fix_type": "Boucliers inter-dents : ",
+  "FIX_TYPES.borders_fix_type": "Boucliers de flancs : ",
+
+  "SUMMARY.title": "Résumé de recherche",
+  "SUMMARY.name_label": "Nom",
+  "SUMMARY.firstname_label": "Prénom",
+  "SUMMARY.company_label": "Société",
+  "SUMMARY.email_label": "Email",
+  "SUMMARY.phone_prefix": "Préfixe",
+  "SUMMARY.phone_label": "Téléphone",
+  "SUMMARY.phone_placeholder": "Saisissez votre numéro de téléphone",
+  "SUMMARY.receive_label": "Recevoir ma préconisation",
+  "SUMMARY.mandatory_label": " Champs obligatoires",
+  "SUMMARY.rgpdconditions": "Feurst® a besoin des coordonnées que vous nous fournissez pour vous contacter au sujet de nos produits et services. Vous pouvez vous désabonner de ces communications à tout moment. Consultez notre Politique de confidentialité pour en savoir plus sur nos modalités de désabonnement, ainsi que sur nos politiques de confidentialité et sur notre engagement vis-à-vis de la protection et de la vie privée.",
+  "SUMMARY.summary_label": "Récapitulatif de votre demande : ",
+  "SUMMARY.machine_label": "Votre machine : ",
+  "SUMMARY.use_case_label": "Votre usage : ",
+  "SUMMARY.quarrying_some": "Extraction de ",
+  "SUMMARY.blade_name": "Lame",
+  "SUMMARY.blade_width_abbr": "L",
+  "SUMMARY.blade_thickness_abbr": "E",
+  "SUMMARY.millimeter_abbr": "millimètres",
+
+  "SUMMARY.blade_label": "Votre godet :",
+  "SUMMARY.equipment_label": "Votre équipement :",
+  "SUMMARY.teeth_shield_label": "Boucliers inter-dents : ",
+  "SUMMARY.border_shield_label": "Boucliers de flancs : ",
+
+  "SUMMARY.contact_expert": "Être contacté par un expert",
+  "SUMMARY.receive_quotation": "Recevoir ma configuration"
+
+}

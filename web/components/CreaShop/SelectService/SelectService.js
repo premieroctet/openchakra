@@ -14,7 +14,6 @@ const {PART, PRO, CREASHOP_MODE} = require('../../../utils/consts')
 import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch'
 import moment from 'moment'
 import lodash from 'lodash'
-const {isB2BDisabled}=require('../../../config/config')
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -152,9 +151,7 @@ class SelectService extends React.Component {
 
     // Affichage choix part pro seulement si alfred pro et (creation/ajout ou (édition et service dispo pour part et pros))
     let displayAccess = !is_particular && (mode != CREASHOP_MODE.SERVICE_UPDATE || this.getSelectedServiceAccess().length == 2)
-    if (isB2BDisabled()) {
-      displayAccess = false
-    }
+    displayAccess = false
 
     let services_title = null
     if (particular_professional_access) {
@@ -166,9 +163,7 @@ class SelectService extends React.Component {
     else {
       services_title=ReactHtmlParser(this.props.t('SHOP.service.content_particular'))
     }
-    if (isB2BDisabled()) {
-      services_title=null
-    }
+    services_title=null
 
     return (
       <Grid container spacing={3} style={{margin: 0, width: '100%'}}>

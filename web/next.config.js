@@ -9,7 +9,7 @@ module.exports = withCSS({
       }
     }
     config.module.rules.push({
-      test: /\.(png|jp(e*)g|gif|svg)$/,
+      test: /\.(png|jp(e*)g|gif|svg|ttf|woff2)$/,
       exclude: /(node_modules)/,
       loader: require.resolve('url-loader'),
     })

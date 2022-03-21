@@ -46,7 +46,7 @@ const {computeBookingReference} = require('../utils/text')
 const lodash = require('lodash')
 
 const moment = require('moment')
-const {isB2BAdmin, isB2BManager, getRole, isModeCompany, isLoggedUserAdmin}=require('../utils/context')
+const {getRole, isLoggedUserAdmin}=require('../utils/context')
 
 moment.locale('fr')
 registerLocale('fr', fr)
@@ -149,7 +149,7 @@ class PreviewBase extends BasePage {
               serviceUser.prestations=serviceUser.prestations.filter(p => {
                 const company=p.prestation.private_company
                 if (company) {
-                  return isLoggedUserAdmin() || (isModeCompany() && user && user.company==company)
+                  return isLoggedUserAdmin()
                 }
                 return true
               })
@@ -175,8 +175,7 @@ class PreviewBase extends BasePage {
               }
             }
             st.user=user
-            const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
-            promise
+            Promise.resolve({data: user})
               .then(res => {
                 if (res.data) {
                   let allAddresses = {'main': {...res.data.billing_address, label: this.props.t('USERSERVICEPREVIEW.at_home')}}

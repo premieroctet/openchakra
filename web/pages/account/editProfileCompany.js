@@ -33,7 +33,6 @@ import ReactHtmlParser from 'react-html-parser'
 
 const moment=require('moment')
 
-const {isB2BAdmin} = require('../../utils/context')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 
@@ -81,9 +80,7 @@ class editProfileCompany extends BasePage {
           position: user.position,
           birthday: user.birthday ? moment(user.birthday).format('YYYY-MM-DD') : null,
         })
-        if(!isB2BAdmin(user)) {
-          Router.push({pathname: '/'})
-        }
+        Router.push({pathname: '/'})
       })
       .catch(err => {
         console.error(err)

@@ -5,9 +5,6 @@ const {
 const {
   getLoggedUserId,
   getRole,
-  isB2BAdmin,
-  isB2BManager,
-  isB2BStyle,
   isLoggedUserAlfredPro,
   isLoggedUserRegistered
 } = require('../../../utils/context');
@@ -103,8 +100,7 @@ class MobileNavbar extends React.Component {
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         const user=res.data
-        const promise = isB2BAdmin()||isB2BManager() ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
-        promise
+        Promise.resolve({data: user})
           .then(res => {
             let allAddresses = {'main': res.data.billing_address}
             res.data.service_address.forEach(addr => {
@@ -126,13 +122,6 @@ class MobileNavbar extends React.Component {
       const user_id=getLoggedUserId()
       clearAuthenticationToken()
       this.handleOpenRegister(user_id)
-    }
-    // Alfred pro && b2b_site => on redirige vers le profil
-    else if (isB2BStyle() && isLoggedUserAlfredPro()) {
-      Router.push(`/profile/about?user=${getLoggedUserId()}`)
-    }
-    else if (isB2BAdmin()) {
-      Router.push('/company/dashboard/companyDashboard')
     }
     else {
       Router.push('/search')
@@ -413,10 +402,6 @@ class MobileNavbar extends React.Component {
         {
           !logged ?
             <BottomNavigationAction onClick={this.handleOpenRegister} label={ReactHtmlParser(this.props.t('SEARCHBAR.label_signin'))} classes={{root: classes.navigationActionRoot, label: classes.label}} value={5} icon={ <GroupAddIcon/>}/> : null
-        }
-        {
-          !logged && isB2BStyle() ?
-            <BottomNavigationAction onClick={this.handleOpenRegister} label={ReactHtmlParser(this.props.t('SEARCHBAR.label_presta'))} classes={{root: classes.navigationActionRoot, label: classes.label}} value={6} icon={<BusinessIcon/>}/> : null
         }
         {setOpenLogin ? this.modalLogin(classes) : null}
         {setOpenRegister ? this.modalRegister(classes) : null}

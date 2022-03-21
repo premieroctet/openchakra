@@ -12,7 +12,7 @@ import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import axios from 'axios'
 import TrustAndSecurity from './TrustAndSecurity/TrustAndSecurity'
 import Divider from '@material-ui/core/Divider'
-const {getLoggedUserId, isB2BStyle}=require('../../utils/context')
+const {getLoggedUserId}=require('../../utils/context')
 const {PRO, PART}=require('../../utils/consts')
 
 class Layout extends React.Component {
@@ -40,12 +40,12 @@ class Layout extends React.Component {
         console.error((err))
       })
 
-    axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${PART}`)
       .then(res => {
         let cat = res.data
         // Set label en fonction de PRO PART
         cat.forEach(c => {
-          c.label=isB2BStyle(this.state.user) ? c.professional_label : c.particular_label
+          c.label=c.particular_label
         })
         this.setState({categories: cat})
       })

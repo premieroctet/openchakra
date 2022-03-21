@@ -29,8 +29,8 @@ const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage=require('./basePage')
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')
-const {getLoggedUserId, isB2BStyle, isB2BAdmin, isB2BManager} =require('../utils/context')
-const {PRO, PART}=require('../utils/consts')
+const {getLoggedUserId} =require('../utils/context')
+const {PART}=require('../utils/consts')
 const lodash=require('lodash')
 
 moment.locale('fr')
@@ -160,8 +160,7 @@ class SearchPage extends BasePage {
           let user = res.data
           this.setState({user: user})
 
-          const promise = isB2BAdmin(user)||isB2BManager(user) ? axios.get('/myAlfred/api/companies/current') : Promise.resolve({data: user})
-          promise
+          Promise.resolve({data: user})
             .then(res => {
               let allAddresses = {'main': res.data.billing_address.gps}
               res.data.service_address.forEach(addr => {
@@ -183,7 +182,7 @@ class SearchPage extends BasePage {
         })
     }
 
-    axios.get(`/myAlfred/api/category/${isB2BStyle(this.state.user) ? PRO : PART}`)
+    axios.get(`/myAlfred/api/category/${PART}`)
       .then(res => {
         this.setState({categories: res.data})
       })
@@ -326,7 +325,7 @@ class SearchPage extends BasePage {
       }
     }
 
-    filters.status = isB2BStyle() ? PRO : PART
+    filters.status = PART
     console.log(`GPS:${JSON.stringify(this.state.gps)}`)
     const search_url=this.isServiceSearch() ? '/myAlfred/api/service/search' : '/myAlfred/api/serviceUser/search'
     axios.post(search_url, filters)
