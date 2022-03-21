@@ -19,6 +19,7 @@ import styles from '../static/css/pages/homePage/index'
 import NavBar from '../hoc/Layout/NavBar/NavBar'
 import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation'
 import CategoryTopic from '../components/HomePage/Category/CategoryTopic'
+import ServiceTopic from '../components/HomePage/Service/ServiceTopic'
 import OurAlfred from '../components/HomePage/OurAlfred/OurAlfred'
 import NewsLetter from '../components/HomePage/NewsLetter/NewsLetter'
 import MobileNavbar from '../hoc/Layout/NavBar/MobileNavbar'
@@ -56,7 +57,8 @@ class Home extends React.Component {
     super(props)
     this.child = React.createRef()
     this.state = {
-      category: {},
+      categories: [],
+      services: {},
       alfred: {},
       logged: false,
       user: {},
@@ -96,6 +98,13 @@ class Home extends React.Component {
       .then(res => {
         let categories = lodash.shuffle(res.data)
         this.setState({categories: categories})
+      }).catch(err => console.error(err))
+
+    axios.get(`/myAlfred/api/service/all`)
+      .then(res => {
+        let services=res.data.filter(s => !!s.tag)
+        let groupedServices = lodash.groupBy(services, 'tag')
+        this.setState({services: groupedServices})
       }).catch(err => console.error(err))
 
     axios.get(`/myAlfred/api/serviceUser/home/${PART}`)
@@ -152,7 +161,7 @@ class Home extends React.Component {
 
   render() {
     const {classes, t} = this.props
-    const {mounted, categories, alfred, open, user} = this.state
+    const {mounted, categories, alfred, open, user, services} = this.state
 
     if (!mounted) {
       return null
@@ -209,6 +218,17 @@ class Home extends React.Component {
               <OurAlfred alfred={alfred}/>
             </Grid>
           </Grid>
+          {Object.entries(services).map(entry => {
+            const [tag, taggedServices]=entry
+            return (
+              <Grid container className={`customslideservices ${classes.mainContainerStyle}`}>
+                <Grid className={classes.generalWidthContainer}>
+                  <ServiceTopic label={tag} services={taggedServices.map(s => s._id)}/>
+                </Grid>
+              </Grid>
+            )
+          })
+          }
           <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
             <Grid className={classes.generalWidthContainer}>
               <ResaService triggerLogin={this.callLogin}/>
