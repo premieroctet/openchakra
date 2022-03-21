@@ -98,7 +98,7 @@ router.get('/allCount', (req, res) => {
 router.get('/:id', (req, res) => {
   Service.findById(req.params.id)
     .populate('category')
-    .populate({path: 'prestations', populate:{path: 'filter_presentation'}})
+    .populate({path: 'prestations', populate: {path: 'filter_presentation'}})
     .populate('equipments')
     .then(service => {
       if (!service) {
@@ -224,6 +224,7 @@ router.get('/partner/:partner_name', (req, res) => {
 router.post('/search', (req, res) => {
   const kw = req.body.keyword
   const status = req.body.status // PRO or PART
+  const category=req.body.category
 
   console.time(`Searching services`)
 
@@ -233,7 +234,11 @@ router.post('/search', (req, res) => {
       path: 'prestations', match: filter,
       populate: {path: 'job', select: 's_label'},
     })
+    .populate({
+      path: 'category', select: status==PRO ? 's_professional_label':'s_particular_label',
+    })
     .lean({virtuals: true})
+
     .then(result => {
       let services=result
       console.log(`Found ${services.length} services before filtering`)
@@ -245,6 +250,9 @@ router.post('/search', (req, res) => {
       }
       if (kw) {
         services = serviceFilters.filterServicesKeyword(services, kw, status)
+      }
+      if (category) {
+        services=services.filter(s => s.category._id==category)
       }
       console.log(`Remaining ${services.length} after keyword filtering`)
       console.timeEnd(`Searching services`)

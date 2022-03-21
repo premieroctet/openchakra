@@ -326,7 +326,7 @@ class SearchPage extends BasePage {
     }
 
     filters.status = PART
-    console.log(`GPS:${JSON.stringify(this.state.gps)}`)
+    console.log(`Filter:${JSON.stringify(filters)}`)
     const search_url=this.isServiceSearch() ? '/myAlfred/api/service/search' : '/myAlfred/api/serviceUser/search'
     axios.post(search_url, filters)
       .then(res => {
@@ -423,7 +423,10 @@ class SearchPage extends BasePage {
             <Grid className={classes.searchContainerDisplayResult}>
               <Grid className={classes.displayNbAvailable}>
                 {
-                  this.state.searching ? null : <Typography>{results.length || ReactHtmlParser(this.props.t('SEARCH.no_one'))} {ReactHtmlParser(this.props.t('SEARCH.alfred_avail'))}</Typography>
+                  this.state.searching ? null :
+                    <Typography>
+                      {ReactHtmlParser(this.props.t(results.length ? 'SEARCH.alfred_avail':'SEARCH.no_one', {count: `${results.length} `}))}
+                    </Typography>
                 }
               </Grid>
               <Grid container >
