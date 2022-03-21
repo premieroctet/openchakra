@@ -100,6 +100,7 @@ class PreviewBase extends BasePage {
     }
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
+    this.hasWarningSelf = this.hasWarningSelf.bind(this)
     this.book = this.book.bind(this)
     this.getClientAddress = this.getClientAddress.bind(this)
     this.isInPerimeter = this.isInPerimeter.bind(this)
@@ -529,7 +530,7 @@ class PreviewBase extends BasePage {
     return false
   }
 
-  hasWarningSelf = () => {
+  hasWarningSelf() {
     const {user, alfred}=this.state
     return user && alfred && user._id.toString()==alfred._id.toString()
   }
@@ -612,6 +613,7 @@ class PreviewBase extends BasePage {
       service: this.serviceMode ? this.state.serviceUser : this.state.serviceUser.service,
       serviceId: (this.serviceMode ? this.state.serviceUser : this.state.serviceUser.service)._id,
       address: avocotes_booking ? avocotes_booking.address : place,
+      equipments: this.state.availableEquipments,
       location: this.state.location,
       availableEquipments: this.state.serviceUser.equipments,
       amount: this.state.total,

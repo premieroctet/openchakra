@@ -226,7 +226,7 @@ router.post('/search', (req, res) => {
   const status = req.body.status // PRO or PART
   const category=req.body.category
 
-  console.time(`Searching services`)
+  console.log(`Searching serviceUser ${JSON.stringify(req.body)}`)
 
   const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
   Service.find(filter, 'prestations category description label')
@@ -255,7 +255,6 @@ router.post('/search', (req, res) => {
         services=services.filter(s => s.category._id==category)
       }
       console.log(`Remaining ${services.length} after keyword filtering`)
-      console.timeEnd(`Searching services`)
       return res.json(services)
     })
     .catch(err => {

@@ -14,6 +14,7 @@ import React from 'react'
 class UserServicePreview extends PreviewBase {
   constructor(props) {
     super(props, false)
+    this.hasWarningSelf=this.hasWarningSelf.bind(this)
   }
 
   loadData = () => {
@@ -62,10 +63,10 @@ class UserServicePreview extends PreviewBase {
   }
 
   readOnly = () => {
-    return !!this.getURLProps()
+    return !!this.getURLProps().booking_id
   }
 
-  hasWarningSelf = () => {
+  hasWarningSelf() {
     if (this.getURLProps().booking_id) {
       return false
     }

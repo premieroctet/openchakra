@@ -517,7 +517,7 @@ router.post('/search', (req, res) => {
     return {...su.service, prestations: su.prestations.map(p => p.prestation)}
   }
 
-  console.log(`Searching ${JSON.stringify(req.body)}`)
+  console.log(`Searching serviceUser ${JSON.stringify(req.body)}`)
 
   const filter = status==PRO ? {professional_access: true} : {particular_access: true}
   let serviceUsers=[]
