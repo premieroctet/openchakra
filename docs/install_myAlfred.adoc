@@ -21,9 +21,9 @@ Puis, dans le projet myalfred,
 []
 web/mode.js
 ----
-const MODE = 'development';
+const MODE = 'development'; /* 'production', 'development' */
 const TAWKTO_URL = 'https://embed.tawk.to/5de4db8c43be710e1d201adc/default'
-const SIB_TEMPLATES='all-inclusive'
+const SIB_TEMPLATES='all-inclusive' /* 'my-alfred', 'all-inclusive' */
 const DATABASE_NAME='test-myAlfred-V2'
 const MANGOPAY_CLIENTID='testmyalfredv2'
 const MANGOPAY_APIKEY='cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN'
