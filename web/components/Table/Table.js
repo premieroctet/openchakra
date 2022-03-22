@@ -48,7 +48,7 @@ function dateBetweenFilterFn(rows, id, filterValues) {
 dateBetweenFilterFn.autoRemove = val => !val
 
 
-const Table = ({data, columns}) => {
+const Table = ({data, columns, updateMyData = null}) => {
 
   const filterTypes = useMemo(
     () => ({
@@ -73,7 +73,7 @@ const Table = ({data, columns}) => {
 
   const defaultColumn = useMemo(
     () => ({
-      // Let's set up our default Filter UI
+      // default Filter UI
       Filter: DefaultColumnFilter,
     }),
     [],
@@ -94,15 +94,16 @@ const Table = ({data, columns}) => {
     {
       columns,
       data,
-      defaultColumn, // Be sure to pass the defaultColumn option
+      defaultColumn,
       filterTypes,
       visibleColumns: [],
+      updateMyData,
     },
-    useFilters, // useFilters!
-    useGlobalFilter, // useGlobalFilter!
+    useFilters,
+    useGlobalFilter,
     useSortBy,
   )
-  
+
   return (
     <>
       <GlobalFilter
@@ -132,14 +133,14 @@ const Table = ({data, columns}) => {
                           <TableDialogFilter>
                             {column.render('Filter')}
                           </TableDialogFilter>
-                          {column.filterValue ?
-                            <div>column.filterValue  <button onClick={() => column.setFilter(null)}>
-                           Reset
-                            </button>
-                            </div> : null}
-                          
                         </>
                         : null}
+
+                      {column.filterValue ?
+                        <div>{column.filterValue}  <button onClick={() => column.setFilter(undefined)}>
+                           Reset
+                        </button>
+                        </div> : null}
                     </>
                     : null}
                   

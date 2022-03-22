@@ -1,9 +1,15 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import Table from '../../components/Table/Table'
+import styled from 'styled-components'
 import {DateRangeColumnFilter} from '../../components/Table/TableFilter'
 
 import '../../static/feurst.css'
 
+const Styles = styled.div`
+  th {
+    position: relative;
+  }
+`
 
 function moneyFormatter({lang, value}) {
   return new Intl.NumberFormat(lang, {style: 'currency', currency: 'EUR'}).format(value) || ''
@@ -15,6 +21,37 @@ const ToTheBin = props => (
     <span role='image' alt="supprimer">🗑️</span>
   </button>
 )
+
+const EditableCell = ({
+  value: initialValue,
+  row: {index},
+  column: {id},
+  updateMyData, // This is a custom function that we supplied to our table instance
+}) => {
+  // We need to keep and update the state of the cell normally
+  const [value, setValue] = React.useState(initialValue)
+
+  const onChange = e => {
+    setValue(e.target.value)
+  }
+
+  // We'll only update the external data when the input is blurred
+  const onBlur = () => {
+    if (typeof updateMyData === 'function') {
+      updateMyData(index, id, value)
+    }
+    else {
+      console.error('React Table Data not updated. Did you forget the prop updateMyData on your table ?')
+    }
+  }
+
+  // If the initialValue is changed external, sync it up with our state
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  return <input value={value} onChange={onChange} onBlur={onBlur} />
+}
 
 function makeData() {
   const dataSample = [
@@ -60,6 +97,20 @@ const Orders = ({}) => {
   
   const [data, setData] = useState(useMemo(() => makeData(), []))
   const [language, setLanguage] = useState('fr')
+
+  const updateMyData = (rowIndex, columnId, value) => {
+    setData(old =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          }
+        }
+        return row
+      }),
+    )
+  }
   
   useEffect(() => {
     setLanguage(Navigator.language)
@@ -86,6 +137,7 @@ const Orders = ({}) => {
       {
         Header: 'Quantité',
         accessor: 'product_quantity',
+        Cell: EditableCell,
       },
       {
         Header: 'Poids',
@@ -124,7 +176,9 @@ const Orders = ({}) => {
   
   return (<>
     <h2>Ici, on commande</h2>
-    <Table data={data} columns={columns} />
+    <Styles>
+      <Table data={data} columns={columns} updateMyData={updateMyData} />
+    </Styles>
   </>)
 }
 
