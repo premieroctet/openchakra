@@ -90,7 +90,7 @@ class BookingDetail extends React.Component {
             total ?
               <Grid className={`custombookingtotal ${classes.flexContent}`} style={{fontWeight: 'bold'}}>
                 <Grid>
-                  <p>{customer_fee !== 0 ? ReactHtmlParser(this.props.t('BOOKING_DETAIL.total')) : ReactHtmlParser(this.props.t('BOOKING_DETAIL.will_total'))}</p>
+                  <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.total'))}</p>
                 </Grid>
                 <Grid>
                   <p>{total.toFixed(2)}€</p>
