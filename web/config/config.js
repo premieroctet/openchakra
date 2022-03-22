@@ -7,7 +7,7 @@ const {
 const isEmpty = require('../server/validation/is-empty')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
   SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY,
-  SITE_MODE}=require('../mode')
+  SITE_MODE, IGNORE_FAILED_PAYMENT}=require('../mode')
 
 const MONGO_BASE_URI='mongodb://localhost/'
 
@@ -66,6 +66,17 @@ const get_host_url = () => {
   const port=is_validation() ? ':3122' : ''
   const host_url=`${protocol}://${hostname}${port}/`
   return host_url
+}
+
+/**
+ONLY DEV & VALIDATION MODES
+Consider failed payment succeeded
+*/
+const ignoreFailedPayment = () => {
+  if (is_production()) {
+    return false
+  }
+  return !!IGNORE_FAILED_PAYMENT
 }
 
 const MANGOPAY_CONFIG = {
@@ -193,5 +204,5 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
-  isPlatform, isMarketplace,
+  isPlatform, isMarketplace, ignoreFailedPayment,
 }
