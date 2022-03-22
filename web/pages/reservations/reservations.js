@@ -241,7 +241,7 @@ class AllReservations extends BasePage {
                     </Grid>
                     <Grid item xl={5} lg={5} md={6} sm={6} xs={8} className={classes.descriptionContainer}>
                       <Grid className={classes.bookingNameContainer}>
-                        <Typography><strong> {booking.status} - {booking.is_service ? booking.service.label : alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
+                        <Typography><strong> {booking.status==BOOK_STATUS.CUSTOMER_PAID ? 'Payée' : booking.status} - {booking.is_service ? booking.service.label : alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
                       </Grid>
                       <Grid>
                         <Typography>
