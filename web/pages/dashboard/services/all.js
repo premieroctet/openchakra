@@ -17,6 +17,7 @@ class all extends DataPage {
       {headerName: '_id', field: '_id', width: 0},
       models.textColumn({headerName: 'Label', field: 'label'}),
       models.textColumn({headerName: 'Catégorie', field: 'category_label'}),
+      models.textColumn({headerName: 'Tag', field: 'tag'}),
       models.booleanColumn({headerName: 'Pros', field: 'professional_access'}),
       models.booleanColumn({headerName: 'Particuliers', field: 'particular_access'}),
       models.booleanColumn({headerName: 'Frais dep.', field: 'travel_tax'}),
