@@ -18,6 +18,7 @@ const lodash = require('lodash')
 const {snackBarError, snackBarSuccess} = require('../utils/notifications')
 const validateFeurstProspect=require('../server/validation/feurstProspect')
 import parsePhoneNumber from 'libphonenumber-js'
+import i18n from '../server/utils/i18n_init'
 
 export const feurstImgPath = './static/assets/img/feurst'
 
@@ -63,6 +64,10 @@ class Configurator extends React.Component {
       type: 'resize',
       height: document.body.scrollHeight,
     }, '*')
+  }
+
+  changeLanguage = lng => {
+    i18n.changeLanguage(lng)
   }
 
   componentDidMount = () => {
@@ -368,6 +373,12 @@ class Configurator extends React.Component {
       <Grid
         className="configurator relative"
       >
+        {/**
+        <>
+          <button onClick={() => this.changeLanguage('fr')}>fr</button>
+          <button onClick={() => this.changeLanguage('en')}>en</button>
+        </>
+        *}
         <a ref={this.titleFocus.ref} href='#'></a> {/* Lien pour remonter le focus suite actions "précédent" "suivant" */}
         <h1 className='whereami'>{t(menu)}</h1>
         <ProgressBar value={step} max={STEPS.length} label={t('PROGRESS_BAR.step_label')}/>
