@@ -1,6 +1,17 @@
+const {
+  canAlfredParticularRegister,
+  canAlfredSelfRegister,
+} = require('../../../config/config')
+import {
+  getLoggedUserId,
+  isLoggedUserRegistered,
+  removeAlfredRegistering,
+  setAlfredRegistering,
+  getRole,
+} from '../../../utils/context'
+const {PART, EMPLOYEE, ACCEPT_COOKIE_NAME} = require('../../../utils/consts')
 import AutoCompleteTextField from
 '../../../components/Search/AutoCompleteTextField'
-import {canAlfredSelfRegister} from '../../../config/config'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -27,7 +38,6 @@ import Divider from '@material-ui/core/Divider'
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
 import AlgoliaPlaces from 'algolia-places-react'
-import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n'
 import DatePicker from 'react-datepicker'
 import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
@@ -44,14 +54,11 @@ import Switch from '@material-ui/core/Switch'
 import {DateRangePicker} from 'react-dates'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ClearIcon from '@material-ui/icons/Clear'
-import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
 const {formatAddress} = require('../../../utils/text.js')
 import Slider from '@material-ui/core/Slider'
 import '../../../static/assets/css/custom.css'
-const {PRO, PART, EMPLOYEE, ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
 import {getCookieConsentValue, resetCookieConsentValue} from 'react-cookie-consent'
 import Logo from '../../../components/Logo/Logo'
-import CustomIcon from '../../../components/CustomIcon/CustomIcon'
 import Hidden from '@material-ui/core/Hidden'
 import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
 import lodash from 'lodash'
@@ -775,7 +782,7 @@ class NavBar extends Component {
                   user.is_alfred ?
                     <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_services'))}</MenuItem>
                     :
-                    canAlfredSelfRegister() && <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
+                    canAlfredSelfRegister() && (!!user.professional || canAlfredParticularRegister()) && <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
                   : null
               }
               <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_messages'))}</MenuItem>
