@@ -8,6 +8,10 @@
   "MACHINE_TYPE.loader": "Une chargeuse",
   "MACHINE_TYPE.shovel": "Une pelle-butte",
 
+  "EXCAVATRICE": "Excavatrice",
+  "CHARGEUSE": "Chargeuse",
+  "PELLE-BUTTE": "Pelle-butte",
+
   "BLADE_SHAPE.straight": "Droite",
   "BLADE_SHAPE.semi_delta": "Semi-delta",
   "BLADE_SHAPE.delta": "Delta",
@@ -39,9 +43,13 @@
 
   "SUMMARY.title": "Résumé de recherche",
   "SUMMARY.name_label": "Nom",
+  "SUMMARY.name_placeholder": "Saisissez votre nom",
   "SUMMARY.firstname_label": "Prénom",
+  "SUMMARY.firstname_placeholder": "Saisissez votre prénom",
   "SUMMARY.company_label": "Société",
+  "SUMMARY.company_placeholder": "Saisissez votre société",
   "SUMMARY.email_label": "Email",
+  "SUMMARY.email_placeholder": "Saisissez votre email",
   "SUMMARY.phone_prefix": "Préfixe",
   "SUMMARY.phone_label": "Téléphone",
   "SUMMARY.phone_placeholder": "Saisissez votre numéro de téléphone",
@@ -63,6 +71,27 @@
   "SUMMARY.border_shield_label": "Boucliers de flancs : ",
 
   "SUMMARY.contact_expert": "Être contacté par un expert",
-  "SUMMARY.receive_quotation": "Recevoir ma configuration"
+  "SUMMARY.receive_quotation": "Recevoir ma configuration",
+
+  "TERRE": "Terre",
+  "CHARBON": "Charbon",
+  "CRAIE": "Craie",
+  "MINERAIS (PEU ABRASIF)": "Minerais (peu abrasif)",
+  "SABLE": "Sable",
+  "TERRE  (TERRE PIERRE)": "Terre  (terre pierre)",
+  "TOUT VENANT": "Tout venant",
+  "ARGILE": "Argile",
+  "CALCAIRE": "Calcaire",
+  "BASALTE": "Basalte",
+  "SCHISTE": "Schiste",
+  "QUARTZ": "Quartz",
+  "SILICE": "Silice",
+  "POUZZOLLANE": "Pouzzollane",
+  "GRANITE": "Granite",
+  "GNEISS": "Gneiss",
+  "PORPHYRE": "Porphyre",
+  "AMPHIBOLITE": "Amphibolite",
+  "LEPTYNITE": "Leptynite",
+  "RHYOLITE": "Rhyolite"
 
 }

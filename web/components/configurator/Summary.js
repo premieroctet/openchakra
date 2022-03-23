@@ -125,7 +125,7 @@ function Summary(props) {
   const formInputs = [
     {
       label: props.t('SUMMARY.name_label'),
-      placeholder: 'Saisissez votre nom',
+      placeholder: props.t('SUMMARY.name_placeholder'),
       name: 'name',
       id: 'name',
       autoComplete: 'family-name',
@@ -134,7 +134,7 @@ function Summary(props) {
     },
     {
       label: props.t('SUMMARY.firstname_label'),
-      placeholder: 'Saisissez votre prénom',
+      placeholder: props.t('SUMMARY.firstname_placeholder'),
       name: 'firstname',
       id: 'firstname',
       autoComplete: 'given-name',
@@ -144,7 +144,7 @@ function Summary(props) {
     {
       type: 'email',
       label: props.t('SUMMARY.email_label'),
-      placeholder: 'Saisissez votre email',
+      placeholder: props.t('SUMMARY.email_placeholder'),
       name: 'email',
       id: 'email',
       autoComplete: 'email',
@@ -153,7 +153,7 @@ function Summary(props) {
     },
     {
       label: props.t('SUMMARY.company_label'),
-      placeholder: 'Saisissez votre société',
+      placeholder: props.t('SUMMARY.company_placeholder'),
       name: 'company',
       id: 'company',
       autoComplete: 'organization',
@@ -212,7 +212,7 @@ function Summary(props) {
         <div>
           <dl className='text-lg dl-inline mb-6'>
             <dt className='text-gray-500'>{props.t('SUMMARY.machine_label')}</dt>
-            <dd>{type} {mark} {model}</dd>
+            <dd>{props.t(type.toUpperCase())} {mark} {model}</dd>
             <dt className='text-gray-500'>{props.t('SUMMARY.use_case_label')}</dt>
             <dd>{props.t('SUMMARY.quarrying_some')} {ground.toLowerCase()}</dd>
             <dt className='text-gray-500'>{props.t('SUMMARY.blade_label')}</dt>
