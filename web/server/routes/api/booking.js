@@ -304,10 +304,11 @@ router.get('/:id/ics', (req, res) => {
   Booking.findById(req.params.id)
     .populate({path: 'user', select: 'firstname'})
     .populate({path: 'alfred', select: 'firstname'})
+    .populate({path: 'service', select: 'label'})
     .then(booking => {
-      title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
-      const start=booking.prestation_date
-      const end=booking.end_date
+      title=`${booking.service.label} ${booking.alfred ? `par ${booking.alfred.firstname}`:''} pour ${booking.user.firstname}`
+      const start=moment(booking.prestation_date)
+      const end= booking.end_date ? moment(booking.end_date) : null
       return ics.createEvent({
         uid: booking._id.toString(),
         title: title,
@@ -341,9 +342,9 @@ router.get('/:id/google_calendar', (req, res) => {
   Booking.findById(req.params.id)
     .populate({path: 'user', select: 'firstname'})
     .populate({path: 'alfred', select: 'firstname'})
+    .populate({path: 'service', select: 'label'})
     .then(booking => {
-      console.log(`Type date:${typeof booking.prestation_date}`)
-      title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
+      title=`${booking.service.label} ${booking.alfred ? `par ${booking.alfred.firstname}`:''} pour ${booking.user.firstname}`
       const start=booking.prestation_date.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z')
       const end=booking.end_date ? booking.end_date.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z') : start
       console.log(start)
