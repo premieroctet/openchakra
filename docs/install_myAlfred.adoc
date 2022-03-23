@@ -12,7 +12,8 @@ Récupérer images du projet avec filezilla
 
 git clone https://github.com/SebastienAuvray/myAlfred
 
-Puis, dans le projet myalfred,
+Puis, dans le projet myalfred :
+
 . passer sur branche b2b/validation 
 . aller dans le dossier web
 
@@ -21,18 +22,29 @@ Puis, dans le projet myalfred,
 []
 web/mode.js
 ----
-const MODE = 'development';
+const MODE = 'development' /* validation (3122, 3123) démarre sur le port 22, ['production', 'development'] */
 const TAWKTO_URL = 'https://embed.tawk.to/5de4db8c43be710e1d201adc/default'
-const SIB_TEMPLATES='all-inclusive'
+const SIB_TEMPLATES='my-alfred' /* Pour l'envoi de méls, envoi des templates via sendinblue ['all-inclusive', 'my-alfred'] */
 const DATABASE_NAME='test-myAlfred-V2'
 const MANGOPAY_CLIENTID='testmyalfredv2'
 const MANGOPAY_APIKEY='cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN'
 const SITE_MODE='platform'
+const DATA_MODEL='feurst'
 
-module.exports = {MODE, TAWKTO_URL, SIB_TEMPLATES, DATABASE_NAME, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, SITE_MODE}
+module.exports = {MODE, TAWKTO_URL, SIB_TEMPLATES, DATABASE_NAME, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, SITE_MODE, DATA_MODEL}
 ----
 
 TIP: Afin de pouvoir utiliser Node sous le port 1024, `sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\`` `
+
+## build
+
+Passer dans le fichier `mode.js` le MODE en `'production'`
+[source, bash]
+----
+$ yarn build
+
+# Puis, yarn start
+----
 
 ## Go 
 
