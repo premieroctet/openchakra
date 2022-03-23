@@ -14,7 +14,7 @@ git clone https://github.com/SebastienAuvray/myAlfred
 
 Puis, dans le projet myalfred :
 
-. passer sur branche b2b/validation 
+. passer sur branche adéquate (suivant plateforme)
 . aller dans le dossier web
 
 ### créer le fichier mode.js
