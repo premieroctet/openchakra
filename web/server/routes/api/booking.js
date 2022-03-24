@@ -7,15 +7,13 @@ const mongoose = require('mongoose')
 const crypto = require('crypto')
 const moment = require('moment')
 const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
-const {getKeyDate} = require('../../utils/booking')
-const {invoiceFormat} = require('../../../utils/converters')
 const {payBooking} = require('../../utils/mangopay')
 const CronJob = require('cron').CronJob
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
-  sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert,
+  sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert, sendBillingToAlfred,
 } = require('../../utils/mailing')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
 const {connectionPool}=require('../../utils/database')
@@ -25,7 +23,6 @@ const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
 const uuidv4 = require('uuid/v4')
-const {inspect} = require('util')
 const {stateMachineFactory} = require('../../../utils/BookingStateMachine')
 moment.locale('fr')
 
@@ -499,7 +496,7 @@ router.post('/avocotes', (req, res) => {
     })
 })
 
-new CronJob('0 */15 * * * *', (() => {
+new CronJob('0 * * * * *', (() => {
   console.log('Checking terminated bookings')
   const getNextNumber = (context, type, key) => {
     return new Promise((resolve, reject) => {
@@ -547,6 +544,10 @@ new CronJob('0 */15 * * * *', (() => {
               .then(bo => {
                 sendLeaveCommentForAlfred(bo)
                 sendLeaveCommentForClient(bo)
+                // Avocotes : send billing mail to provider
+                if (bo.customer_booking) {
+                  sendBillingToAlfred(bo)
+                }
               })
               .catch(err => console.error(err))
           }

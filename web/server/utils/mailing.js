@@ -1,8 +1,8 @@
-const {SIB} = require('./sendInBlue');
+const {SIB} = require('./sendInBlue')
 
-const {computeUrl, get_host_url, is_validation, ENABLE_MAILING} = require('../../config/config');
-const {booking_datetime_str} = require('../../utils/dateutils');
-const {fillSms} = require('../../utils/sms');
+const {computeUrl, get_host_url, is_validation, ENABLE_MAILING} = require('../../config/config')
+const {booking_datetime_str} = require('../../utils/dateutils')
+const {fillSms} = require('../../utils/sms')
 
 // Templates
 
@@ -11,32 +11,33 @@ const {fillSms} = require('../../utils/sms');
  */
 
 // FIX 4, 17, 18
-const NEW_BOOKING_MANUAL = 4;
-const CONFIRM_EMAIL = 5;
-const ASKING_INFO = 6;
-const NEW_MESSAGE_ALFRED = 7;
-const BOOKING_CANCELLED_BY_CLIENT = 8;
-const TRANSFER_TO_ALFRED = 10; // NOK
-const LEAVE_COMMENT_FOR_CLIENT = 11;
-const LEAVE_COMMENT_FOR_ALFRED = 12;
-const NEW_MESSAGE_CLIENT = 13;
-const BOOKING_CANCELLED_BY_ALFRED = 14;
-const SHOP_DELETED = 15;
-const ASKINFO_PREAPPROVED = 16;
-const BOOKING_REFUSED_2_ALFRED = 17;
-const BOOKING_REFUSED_2_CLIENT = 18; // OK
-const BOOKING_CONFIRMED = 19;
-const SHOP_ONLINE = 20; // OK
-const RESET_PASSWORD = 22;
-const NEW_BOOKING = 23;
-const BOOKING_INFOS_RECAP = 24;
-const BOOKING_DETAILS = 26;
-const BOOKING_EXPIRED_2_CLIENT = 30;
-const BOOKING_EXPIRED_2_ALFRED = 31;
-const B2B_ACCOUNT_CREATED = 58;
-const ALERT = 59;
+const NEW_BOOKING_MANUAL = 4
+const CONFIRM_EMAIL = 5
+const ASKING_INFO = 6
+const NEW_MESSAGE_ALFRED = 7
+const BOOKING_CANCELLED_BY_CLIENT = 8
+const TRANSFER_TO_ALFRED = 10 // NOK
+const LEAVE_COMMENT_FOR_CLIENT = 11
+const LEAVE_COMMENT_FOR_ALFRED = 12
+const NEW_MESSAGE_CLIENT = 13
+const BOOKING_CANCELLED_BY_ALFRED = 14
+const SHOP_DELETED = 15
+const ASKINFO_PREAPPROVED = 16
+const BOOKING_REFUSED_2_ALFRED = 17
+const BOOKING_REFUSED_2_CLIENT = 18 // OK
+const BOOKING_CONFIRMED = 19
+const SHOP_ONLINE = 20 // OK
+const RESET_PASSWORD = 22
+const NEW_BOOKING = 23
+const BOOKING_INFOS_RECAP = 24
+const BOOKING_DETAILS = 26
+const BOOKING_EXPIRED_2_CLIENT = 30
+const BOOKING_EXPIRED_2_ALFRED = 31
+const B2B_ACCOUNT_CREATED = 58
+const ALERT = 59
+const BILLING_2_ALFRED = 104
 
-const CONFIRM_PHONE = -1;
+const CONFIRM_PHONE = -1
 
 const SMS_CONTENTS = {
   [NEW_BOOKING_MANUAL]: '{{ params.client_firstname }} a effectué une demande de réservation de votre service {{ params.service_label }}',
@@ -51,46 +52,47 @@ const SMS_CONTENTS = {
   [NEW_BOOKING]: '{{ params.client_firstname }} a réservé votre service {{ params.service_label }}',
   [BOOKING_EXPIRED_2_CLIENT]: 'Votre réservation du service {{ params.service_label }} par {{ params.alfred_firstname }} est expirée',
   [BOOKING_EXPIRED_2_ALFRED]: 'La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée',
-};
+}
 
 const sendNotification = (notif_index, destinee, params) => {
   const msg = `Sending notif ${notif_index} to ${destinee._id} using ${JSON.stringify(params)}`
 
-  var enable_mails = ENABLE_MAILING
+  let enable_mails = ENABLE_MAILING
   // En validation, envoyer les notifications et SMS aux membres de @my-alfred.io
   if (!enable_mails && is_validation() && (destinee.email||'').toLowerCase().includes('@my-alfred.io')) {
-    console.log(`Mailing disabled except for my-alfred.io mails on validation platform`)
+    console.log('Mailing disabled except for my-alfred.io mails on validation platform')
     enable_mails = true
   }
-  var enable_sms = ENABLE_MAILING
+  let enable_sms = enable_mails
 
   if (!enable_sms && !enable_mails) {
     console.log(`Mailing disabled:${msg}`)
     return true
   }
 
-  var resultMail = true, resultSms = true;
+  let resultMail = true, resultSms = true
 
   // Send mail
   if (enable_mails && notif_index != CONFIRM_PHONE) {
-    resultMail = SIB.sendMail(notif_index, destinee.email, params);
+    resultMail = SIB.sendMail(notif_index, destinee.email, params)
   }
 
   // Send SMS
   if (enable_sms && destinee.phone && SMS_CONTENTS[notif_index.toString()]) {
-    console.log('Sending SMS');
-    const smsContents = fillSms(SMS_CONTENTS[notif_index.toString()], params);
-    console.log('SMS contents is ' + smsContents);
+    console.log('Sending SMS')
+    const smsContents = fillSms(SMS_CONTENTS[notif_index.toString()], params)
+    console.log(`SMS contents is ${ smsContents}`)
     if (!smsContents) {
-      console.error(`Error creating SMS ${notif_index} to ${destinee.phone} with params ${JSON.stringify(params)}`);
-      result = false;
-    } else {
-      console.log('Calling SIB.sendSms');
-      resultSms = SIB.sendSms(destinee.phone, smsContents);
+      console.error(`Error creating SMS ${notif_index} to ${destinee.phone} with params ${JSON.stringify(params)}`)
+      result = false
+    }
+    else {
+      console.log('Calling SIB.sendSms')
+      resultSms = SIB.sendSms(destinee.phone, smsContents)
     }
   }
-  return resultMail && resultSms;
-};
+  return resultMail && resultSms
+}
 
 const sendVerificationMail = (user, req) => {
   sendNotification(
@@ -100,9 +102,9 @@ const sendVerificationMail = (user, req) => {
       link_confirmemail: new URL(`/validateAccount?user=${user._id}`, computeUrl(req)),
       user_firstname: user.firstname,
     },
-  );
-  return true;
-};
+  )
+  return true
+}
 
 const sendVerificationSMS = user => {
   const result = sendNotification(
@@ -111,9 +113,9 @@ const sendVerificationSMS = user => {
     {
       sms_code: user.sms_code,
     },
-  );
-  return true;
-};
+  )
+  return true
+}
 
 const sendShopDeleted = (user, req) => {
   sendNotification(
@@ -122,8 +124,8 @@ const sendShopDeleted = (user, req) => {
     {
       user_firstname: user.firstname,
     },
-  );
-};
+  )
+}
 
 const sendBookingConfirmed = booking => {
   sendNotification(
@@ -136,8 +138,8 @@ const sendBookingConfirmed = booking => {
       service_datetime: booking_datetime_str(booking),
       total_cost: parseFloat(booking.amount).toFixed(2),
     },
-  );
-};
+  )
+}
 
 const sendBookingCancelledByAlfred = (booking, req) => {
   sendNotification(
@@ -148,11 +150,11 @@ const sendBookingCancelledByAlfred = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      link_findnewalfred: new URL(`/search`, computeUrl(req)),
+      link_findnewalfred: new URL('/search', computeUrl(req)),
 
     },
-  );
-};
+  )
+}
 
 const sendBookingCancelledByClient = booking => {
   sendNotification(
@@ -164,8 +166,8 @@ const sendBookingCancelledByClient = booking => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
     },
-  );
-};
+  )
+}
 
 const sendLeaveCommentForClient = booking => {
   sendNotification(
@@ -177,8 +179,8 @@ const sendLeaveCommentForClient = booking => {
       service_label: booking.service,
       link_reviewsclient: new URL(`/evaluateClient?booking=${booking._id}&id=${booking.serviceUserId}&client=${booking.user._id}`, get_host_url()),
     },
-  );
-};
+  )
+}
 
 const sendLeaveCommentForAlfred = booking => {
   sendNotification(
@@ -190,8 +192,8 @@ const sendLeaveCommentForAlfred = booking => {
       service_label: booking.service,
       link_reviewsalfred: new URL(`/evaluate?booking=${booking._id}&id=${booking.serviceUserId}`, get_host_url()),
     },
-  );
-};
+  )
+}
 
 const sendResetPassword = (user, token, req) => {
   sendNotification(
@@ -201,8 +203,8 @@ const sendResetPassword = (user, token, req) => {
       user_firstname: user.firstname,
       link_initiatenewpassword: new URL(`/resetPassword?token=${token}`, computeUrl(req)),
     },
-  );
-};
+  )
+}
 
 const sendBookingExpiredToAlfred = booking => {
   sendNotification(
@@ -214,8 +216,8 @@ const sendBookingExpiredToAlfred = booking => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
     },
-  );
-};
+  )
+}
 
 const sendBookingExpiredToClient = booking => {
   sendNotification(
@@ -226,10 +228,10 @@ const sendBookingExpiredToClient = booking => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      link_booknewalfred: new URL(`/search`, get_host_url()),
+      link_booknewalfred: new URL('/search', get_host_url()),
     },
-  );
-};
+  )
+}
 
 const sendBookingDetails = booking => {
   sendNotification(
@@ -242,8 +244,8 @@ const sendBookingDetails = booking => {
       service_datetime: booking_datetime_str(booking),
       total_cost: parseFloat(booking.amount).toFixed(2),
     },
-  );
-};
+  )
+}
 
 const sendBookingInfosRecap = booking => {
   sendNotification(
@@ -257,8 +259,8 @@ const sendBookingInfosRecap = booking => {
       total_cost: parseFloat(booking.amount).toFixed(2),
       link_requestinformation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
-  );
-};
+  )
+}
 
 const sendNewBooking = (booking, req) => {
   sendNotification(
@@ -273,8 +275,8 @@ const sendNewBooking = (booking, req) => {
       link_showreservation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
 
     },
-  );
-};
+  )
+}
 
 const sendShopOnline = (alfred, req) => {
   sendNotification(
@@ -284,8 +286,8 @@ const sendShopOnline = (alfred, req) => {
       alfred_firstname: alfred.firstname,
       link_manageshop: new URL(`/profile/services?user=${alfred._id}`, computeUrl(req)),
     },
-  );
-};
+  )
+}
 
 const sendBookingRefusedToClient = (booking, req) => {
   sendNotification(
@@ -296,10 +298,10 @@ const sendBookingRefusedToClient = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      link_booknewalfred: new URL(`/search`, computeUrl(req)),
+      link_booknewalfred: new URL('/search', computeUrl(req)),
     },
-  );
-};
+  )
+}
 
 const sendBookingRefusedToAlfred = (booking, req) => {
   sendNotification(
@@ -311,8 +313,8 @@ const sendBookingRefusedToAlfred = (booking, req) => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
     },
-  );
-};
+  )
+}
 
 const sendAskingInfo = (booking, req) => {
   sendNotification(
@@ -326,8 +328,8 @@ const sendAskingInfo = (booking, req) => {
       total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
       link_requestinformation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
-  );
-};
+  )
+}
 
 const sendNewMessageToAlfred = (booking, chatroom_id, req) => {
   sendNotification(
@@ -339,8 +341,8 @@ const sendNewMessageToAlfred = (booking, chatroom_id, req) => {
       service_label: booking.service,
       link_showclientmessage: new URL(`/profile/messages?user=${booking.alfred._id}&relative=${booking.user._id}`, computeUrl(req)),
     },
-  );
-};
+  )
+}
 
 const sendNewMessageToClient = (booking, chatroom_id, req) => {
   sendNotification(
@@ -352,8 +354,8 @@ const sendNewMessageToClient = (booking, chatroom_id, req) => {
       service_label: booking.service,
       link_showalfredmessage: new URL(`/profile/messages?user=${booking.user._id}&relative=${booking.alfred._id}`, computeUrl(req)),
     },
-  );
-};
+  )
+}
 
 const sendAskInfoPreapproved = (booking, req) => {
   sendNotification(
@@ -365,8 +367,8 @@ const sendAskInfoPreapproved = (booking, req) => {
       service_label: booking.service,
       link_confirmbooking: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
-  );
-};
+  )
+}
 
 const sendNewBookingManual = (booking, req) => {
   sendNotification(
@@ -380,8 +382,8 @@ const sendNewBookingManual = (booking, req) => {
       total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
       link_confirmbooking: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
-  );
-};
+  )
+}
 
 const sendAlert = (user, subject, message) => {
   sendNotification(
@@ -392,8 +394,8 @@ const sendAlert = (user, subject, message) => {
       alert_message: message,
       user_firstname: user.firstname,
     },
-  );
-};
+  )
+}
 
 const sendB2BAccount = (user, email, role, company, token, req) => {
   sendNotification(
@@ -406,7 +408,7 @@ const sendB2BAccount = (user, email, role, company, token, req) => {
       user_email: email,
       link_initiatenewpassword: new URL(`/resetPassword?token=${token}`, computeUrl(req)),
     },
-  );
+  )
 }
 
 const sendB2BRegistration = (user, email, role, company, req) => {
@@ -420,7 +422,20 @@ const sendB2BRegistration = (user, email, role, company, req) => {
       user_email: email,
       link_initiatenewpassword: new URL(`?register=${user._id}`, computeUrl(req)),
     },
-  );
+  )
+}
+
+const sendBillingToAlfred = booking => {
+  sendNotification(
+    BILLING_2_ALFRED,
+    booking.alfred,
+    {
+      firstname: booking.alfred.firstname,
+      city: booking.address.city,
+      prestation_date: booking.date_prestation,
+      alfred_amount: booking.alfred_amount,
+    },
+  )
 }
 
 module.exports = {
@@ -448,4 +463,5 @@ module.exports = {
   sendB2BAccount,
   sendAlert,
   sendB2BRegistration,
-};
+  sendBillingToAlfred,
+}
