@@ -1249,7 +1249,7 @@ router.get('/hook', (req, res) => {
 
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!
-//if (is_production() || is_validation()) {
+// if (is_production() || is_validation()) {
 if (false) {
   new CronJob('0 */15 * * * *', () => {
     console.log('Customers who need mango account')
