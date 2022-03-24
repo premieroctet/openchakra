@@ -14,8 +14,6 @@ import Router from 'next/router'
 import Grid from '@material-ui/core/Grid'
 import MultipleSelect from 'react-select'
 import moment from 'moment'
-import LogIn from '../../../components/LogIn/LogIn'
-import Register from '../../../components/Register/Register'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import Slide from '@material-ui/core/Slide'
@@ -51,6 +49,7 @@ import Logo from '../../../components/Logo/Logo'
 import Hidden from '@material-ui/core/Hidden'
 import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
 import lodash from 'lodash'
+import dynamic from 'next/dynamic'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -70,6 +69,20 @@ const DialogTitle = withStyles(styles)(props => {
   )
 })
 
+
+const Register = dynamic(
+  () => import('../../../components/Register/Register'),
+  {
+    loading: () => <p>...</p>,
+  },
+)
+
+const LogIn = dynamic(
+  () => import('../../../components/LogIn/LogIn'),
+  {
+    loading: () => <p>...</p>,
+  },
+)
 
 class NavBar extends Component {
   constructor(props) {
