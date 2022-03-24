@@ -496,7 +496,7 @@ router.post('/avocotes', (req, res) => {
     })
 })
 
-new CronJob('0 * * * * *', (() => {
+new CronJob('0 0 * * * *', (() => {
   console.log('Checking terminated bookings')
   const getNextNumber = (context, type, key) => {
     return new Promise((resolve, reject) => {
