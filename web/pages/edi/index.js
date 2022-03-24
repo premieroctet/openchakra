@@ -1,6 +1,8 @@
 import React, {useEffect} from 'react'
 import {useRouter} from 'next/router'
 import Header from '../../components/Feurst/Header'
+import {getLoggedUser, getLoggedAs} from '../../utils/context'
+import dynamic from 'next/dynamic'
 
 import '../../static/feurst.css'
 
@@ -19,19 +21,30 @@ const accessRights = {
   ],
 }
 
-const Edi = () => {
-  // const access = true
-  // const router = useRouter()
+const DynamicLogin = dynamic(
+  () => import('./login'),
+  {
+    loading: () => <p>...</p>,
+    ssr: false,
+  },
+)
 
-  // useEffect(() => {
-  //   !access
-  //     ? router.push('/edi/login')
-  //     : router.push('/edi/orders')
-  // }, [access])
+const Edi = () => {
+  
+  const router = useRouter()
+
+  const isLogged = getLoggedUser()
+
+  useEffect(() => {
+    !isLogged
+      ? router.push('/edi/login')
+      : router.push('/edi/orders')
+  }, [isLogged])
 
   return (
     <>
       <Header accessRights={accessRights.client} />
+      <DynamicLogin />
     </>
   )
 }
