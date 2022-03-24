@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-const EDINav = ({accessRights}) => {
+const Nav = ({accessRights}) => {
   return (
     <div className='flex gap-x-4 items-center'>
       {accessRights.map((link, index) => (<Link key={`nav${index}`} href={link.url}>{link.label}</Link>))}
@@ -9,4 +9,4 @@ const EDINav = ({accessRights}) => {
   )
 }
 
-export default EDINav
+export default Nav

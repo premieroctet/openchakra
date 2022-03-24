@@ -282,11 +282,12 @@ router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: fal
         note: req.body.note,
         phone_address: req.body.phone,
       }
-      user.service_address.push(address)
-
+      
+      if (user?.service_address) {
+        Object.assign(user.service_address, [...user.service_address, address])
+      }
 
       user.save().then(user => res.json(user)).catch(err => console.error(err))
-
 
     })
 })

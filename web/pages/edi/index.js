@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {useRouter} from 'next/router'
-import EDIHeader from '../../components/Feurst/EDIHeader'
+import Header from '../../components/Feurst/Header'
 
 import '../../static/feurst.css'
 
@@ -31,7 +31,7 @@ const Edi = () => {
 
   return (
     <>
-      <EDIHeader accessRights={accessRights.client} />
+      <Header accessRights={accessRights.client} />
     </>
   )
 }

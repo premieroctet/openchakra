@@ -1,12 +1,12 @@
 import React from 'react'
-import FeurstLogin from '../../components/Feurst/FeurstLogin'
+import Login from '../../components/Feurst/Login'
 
-const Login = ({}) => {
+const LoginPage = ({}) => {
   
   return (<>
-    <FeurstLogin />
+    <Login />
   </>)
 }
   
-export default Login
+export default LoginPage
   

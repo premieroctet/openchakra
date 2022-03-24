@@ -4,7 +4,7 @@ import {withTranslation} from 'react-i18next'
 import {withStyles} from '@material-ui/core/styles'
 import ReactHtmlParser from 'react-html-parser'
 import Grid from '@material-ui/core/Grid'
-import styles from '../../components/LogIn/LogInStyle'
+import styles from '../LogIn/LogInStyle'
 import CustomButton from '../CustomButton/CustomButton'
 import withLogin from '../../hoc/withLogin'
 import IconButton from '@material-ui/core/IconButton'
@@ -26,7 +26,7 @@ const FeurstLogin = ({
   const {errors, username, password, showPassword, roles, selectedRole} = state
   const loginDisabled = roles == null || (roles.length>0 && !selectedRole) || !password
 
-  return <div>
+  return <>
     <h2 className={classes.titleRegister}>{ReactHtmlParser(t('LOGIN.title'))}</h2>
     
     <div className='grid justify-center gap-y-4'>
@@ -109,13 +109,10 @@ const FeurstLogin = ({
       <CustomButton onClick={onSubmit} disabled={loginDisabled} variant="contained" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>
         {ReactHtmlParser(t('LOGIN.button'))}
       </CustomButton>
-      
-        
-      <a onClick={callRegister} className={`customloginredirectionlink ${classes.redirectionSignin}` }>{ReactHtmlParser(t('LOGIN.request_access'))}</a>
         
       
     </div>
-  </div>
+  </>
 }
 
 

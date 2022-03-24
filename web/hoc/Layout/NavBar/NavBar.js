@@ -131,14 +131,16 @@ class NavBar extends Component {
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         const user = res.data
-        this.setState({user: user})
         Promise.resolve({data: user})
           .then(res => {
             let allAddresses = {'main': res.data.billing_address}
-            res.data.service_address.forEach(addr => {
-              allAddresses[addr._id] = addr
-            })
+            if (res.data?.service_address) {
+              res.data.service_address.forEach(addr => {
+                allAddresses[addr._id] = addr
+              })
+            }
             this.setState({
+              user: user,
               allAddresses: allAddresses,
               selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
             })

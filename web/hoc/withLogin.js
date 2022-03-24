@@ -1,5 +1,4 @@
 import React from 'react'
-const {isB2BStyle}=require('../utils/context')
 const {setAuthToken, setAxiosAuthentication}=require('../utils/authentication')
 import Validator from 'validator'
 import axios from 'axios'
@@ -29,7 +28,6 @@ function withLogin(WrappedComponent) {
     }
   
     checkRoles = e => {
-      console.log(e)
       const {name, value} = e.target
       const newState = {...this.state, [name]: value}
   
@@ -41,18 +39,22 @@ function withLogin(WrappedComponent) {
           axios.get(`/myAlfred/api/users/roles/${usermail}`)
             .then(res => {
               const roles = res.data
-              const filteredRoles = roles.filter(r => (isB2BStyle() ? r != EMPLOYEE : r == EMPLOYEE))
+              const filteredRoles = roles.filter(r => (r == EMPLOYEE))
               const selectedRole = filteredRoles.length == 1 ? filteredRoles[0] : null
               // console.log({roles: filteredRoles, selectedRole: selectedRole})
               Object.assign(newState, {roles: filteredRoles, selectedRole: selectedRole})
+              this.setState(newState)
             })
             .catch(err => {
               console.error(err)
               Object.assign(newState, {selectedRole: null, roles: ''})
+              this.setState(newState)
             })
         }
       }
-      this.setState({...newState})
+      else {
+        this.setState(newState)
+      }
     }
   
     onSubmit = e => {
@@ -62,7 +64,6 @@ function withLogin(WrappedComponent) {
         username: this.state.username,
         password: this.state.password,
         role: this.state.selectedRole,
-        b2b_login: isB2BStyle(),
       }
   
       axios.post('/myAlfred/api/users/login', user)
