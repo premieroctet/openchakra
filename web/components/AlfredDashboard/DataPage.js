@@ -77,6 +77,7 @@ class DataPage extends React.Component {
           <Grid style={{width: '90%'}}>
             <Paper style={{width: '100%'}}>
               <BigList
+                importURL={this.importURL && this.importURL()}
                 data={data}
                 columnDefs={columnDefs}
                 classes={classes}

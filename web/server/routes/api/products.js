@@ -1,3 +1,4 @@
+const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const Product = require('../../models/Product')
 const express = require('express')
 
@@ -5,8 +6,11 @@ const router = express.Router()
 const passport = require('passport')
 const moment = require('moment')
 const {validateProduct}=require('../../validation/product')
-
+const {csvImport}=require('../../utils/import')
 moment.locale('fr')
+
+// PRODUCTS
+const uploadProducts = createMemoryMulter(TEXT_FILTER)
 
 // @Route GET /myAlfred/api/products
 // View all products
@@ -40,7 +44,7 @@ router.get('/:product_id', passport.authenticate('jwt', {session: false}), (req,
 })
 
 // @Route POST /myAlfred/api/products
-// CReate a product
+// Create a product
 // @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   const {errors, isValid}=validateProduct(req.body)
@@ -91,6 +95,36 @@ router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (r
       console.error(err)
       res.status(500).json(err)
     })
+})
+
+// @Route POST /myAlfred/api/products/import
+// Imports products from csv
+router.post('/import', passport.authenticate('admin', {session: false}), (req, res) => {
+  uploadProducts.single('buffer')(req, res, err => {
+    if (err) {
+      console.error(err)
+      return res.status(404).json({errors: err.message})
+    }
+    // db field => import field
+    const DB_MAPPING={
+      'reference': 'Code article',
+      'description_2': 'Description 2',
+      'production_line': 'Ligne prod.',
+      'group': 'Grpe',
+      'family': 'Famille',
+      'description': 'Description',
+      'weight': "Poids d'expédition",
+    }
+
+    csvImport(Product, req.file.buffer, DB_MAPPING, {delimiter: ',', key: 'reference'})
+      .then(result => {
+        res.json(result)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(500).error(err)
+      })
+  })
 })
 
 module.exports = router

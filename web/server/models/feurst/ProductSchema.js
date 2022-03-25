@@ -11,6 +11,18 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
+  description_2: {
+    type: String,
+  },
+  group: {
+    type: String,
+  },
+  production_line: {
+    type: String,
+  },
+  family: {
+    type: String,
+  },
   weight: {
     type: Number,
     min: 0,
@@ -19,7 +31,7 @@ const ProductSchema = new Schema({
   price: {
     type: Number,
     min: 0,
-    required: true,
+    // required: true, TODO make mandatory then import
   },
 })
 
