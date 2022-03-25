@@ -66,7 +66,7 @@
   "SUMMARY.receive_quotation": "Recevoir ma configuration",
 
 
-  "LOGIN.title": "Connexion",
+  "LOGIN.title": "Pour accéder à l’espace revendeur, veuillez vous connecter :",
   "LOGIN.input_label": "Email",
   "LOGIN.input_password": "Mot de passe",
   "LOGIN.button": "Se connecter",

@@ -1,9 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react'
+import withEdiAuth from '../../hoc/withEdiAuth'
 import Table from '../../components/Table/Table'
 import styled from 'styled-components'
 import {DateRangeColumnFilter} from '../../components/Table/TableFilter'
-
-import '../../static/feurst.css'
 
 const Styles = styled.div`
   th {
@@ -182,4 +181,4 @@ const Orders = ({}) => {
   </>)
 }
 
-export default Orders
+export default withEdiAuth(Orders, {pathAfterFailure: '/edi/login'})

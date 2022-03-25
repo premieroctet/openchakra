@@ -3,7 +3,6 @@ const {setAuthToken, setAxiosAuthentication}=require('../utils/authentication')
 import Validator from 'validator'
 import axios from 'axios'
 const {snackBarError}=require('../utils/notifications')
-import {EMPLOYEE} from '../utils/consts'
 
 function withLogin(WrappedComponent) {
   
@@ -24,7 +23,11 @@ function withLogin(WrappedComponent) {
   
     onChange = e => {
       const {name, value} = e.target
-      this.setState({...this.state, [name]: value})
+      const newState = {...this.state, [name]: value}
+      if(name === 'username') {
+        Object.assign(newState, {roles: null, selectedRole: null})
+      }
+      this.setState(newState)
     }
   
     checkRoles = e => {
@@ -32,22 +35,19 @@ function withLogin(WrappedComponent) {
       const newState = {...this.state, [name]: value}
   
       if(name === 'username') {
-        Object.assign(newState, {roles: null})
         // TODO aller chercher les rôles au bout d'une tepo, sinon GET /roles trop nombreux
         const usermail = e.target.value
         if (Validator.isEmail(usermail)) {
           axios.get(`/myAlfred/api/users/roles/${usermail}`)
             .then(res => {
               const roles = res.data
-              const filteredRoles = roles.filter(r => (r == EMPLOYEE))
-              const selectedRole = filteredRoles.length == 1 ? filteredRoles[0] : null
-              // console.log({roles: filteredRoles, selectedRole: selectedRole})
-              Object.assign(newState, {roles: filteredRoles, selectedRole: selectedRole})
+              const selectedRole = roles.length == 1 ? roles[0] : null
+              Object.assign(newState, {roles, selectedRole})
               this.setState(newState)
             })
             .catch(err => {
               console.error(err)
-              Object.assign(newState, {selectedRole: null, roles: ''})
+              Object.assign(newState, {selectedRole: null, roles: null})
               this.setState(newState)
             })
         }
