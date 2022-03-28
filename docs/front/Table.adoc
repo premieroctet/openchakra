@@ -1,0 +1,193 @@
+# React-table
+
+## useTable, la base
+
+Les attributs `columns` et `data` fournis doivent être des objets mémoizés.
+
+[source, JavaScript]
+----
+ const data = useMemo(
+    () => [
+      {
+        col1: 'Hello',
+        col2: <Component />,
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: '',
+      },
+    ],
+    [],
+  )
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: <HeaderComponent />,
+        accessor: 'col1', // accessor est la clé dans [data]
+        disableFilters: true
+      },
+      {
+        Header: 'Column 2',
+        Footer: <FooterComponent />,
+        accessor: 'col2',
+        Cell: ({ cell: { value } }) => value || "-",
+      },
+    ],
+    [],
+  )
+----
+
+
+## Options table
+
+### defaultColumn
+
+Utile pour passer des propriétés spécifiques à la colonne. 
+
+On lui renvoie par exemple un composant de filtre. 
+
+[source, JavaScript]
+----
+  const {
+   getTableProps,
+   getTableBodyProps,
+   headerGroups,
+   rows,
+   state,
+   visibleColumns,
+   prepareRow,
+   setGlobalFilter,
+   preGlobalFilteredRows,
+ } = useTable(
+   {
+     columns,
+     data,
+     defaultColumn: { Filter: DefaultFilterForColumn },
+   },
+   useFilters,
+   useGlobalFilter
+ );
+----
+
+Pour rendre ce composant de filtre, on appellera la fonction render
+
+[source, JavaScript]
+----
+ {headerGroups.map((headerGroup) => (
+    <tr {...headerGroup.getHeaderGroupProps()}>
+    {headerGroup.headers.map((column) => (
+        <th {...column.getHeaderProps()}>
+        {column.render("Header")}
+        {/* Rendering Default Column Filter */}
+        <div>
+            {column.canFilter ? column.render("Filter") 
+            :null}
+        </div>
+        </th>
+    ))}
+    </tr>
+))}
+----
+
+
+## Propriétés de colonne 
+
+Sur chaque objet `column`
+
+id::
+L'id de colonne qui vient soit de l'accessor, soit de la propriété id
+
+isVisible::
+Si la colonne doit être visible ou pas.
+
+render::
+Fonction utilisée pour rendre du content avec le contexte d'une colonne. Si on file une string au render, ça rendra la donnée en utilisant le colum[type]. React Table envoie par défaut un Header et un Footer. On peut balancer Filter ou Aggregated via plugin hooks
+
+## Propriétés de lignes
+
+
+
+
+
+
+
+## Objet row
+
+{
+  // Row-level props
+  row: Object, // the materialized row of data
+  original: , // the original row of data
+  index: '', // the index of the row in the original array
+  viewIndex: '', // the index of the row relative to the current view
+  level: '', // the nesting level of this row
+  nestingPath: '', // the nesting path of this row
+  aggregated: '', // true if this row's values were aggregated
+  groupedByPivot: '', // true if this row was produced by a pivot
+  subRows: '', // any sub rows defined by the `subRowKey` prop
+
+  // Cells-level props
+  isExpanded: '', // true if this row is expanded
+  value: '', // the materialized value of this cell
+  resized: '', // the resize information for this cell's column
+  show: '', // true if the column is visible
+  width: '', // the resolved width of this cell
+  maxWidth: '', // the resolved maxWidth of this cell
+  tdProps: '', // the resolved tdProps from `getTdProps` for this cell
+  columnProps: '', // the resolved column props from 'getProps' for this cell's column
+  classes: '', // the resolved array of classes for this cell
+  styles: '' // the resolved styles for this cell
+}
+
+
+## Tris
+
+Spécifier l'utilisation du hook useSortBy en tant que paramètre dans useTable
+
+[source, JavaScript]
+----
+const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state,
+    visibleColumns,
+    preGlobalFilteredRows,
+    setGlobalFilter,
+  } = useTable(
+    {
+      columns,
+      data,
+      defaultColumn, // Be sure to pass the defaultColumn option
+      filterTypes,
+      visibleColumns: [],
+    },
+    useSortBy,
+  )
+----
+
+Dans les colonnes, spécifier deux paramètres : sortType et optionnellement Cell
+
+[source, JavaScript]
+----
+const columns = useMemo(
+    () => [
+      {
+        Header: 'Date commande',
+        accessor: 'order_date',
+        Cell: ({cell: {value}}) => <div>{value.toLocaleDateString()}</div>,
+        sortType: 'datetime',
+      },
+      
+----
+
+Types possibles:: 
+string, number, basic, datetime, alphanumeric. Par défaut alphanumeric
+
+

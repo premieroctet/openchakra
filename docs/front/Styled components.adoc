@@ -1,0 +1,118 @@
+# Styled components 
+
+## Base
+
+On indique la balise souhaitée précédée de `.styled` et on lui adjoint du style comme dans une feuille de style classique.
+
+[source, JavaScript]
+----
+import styled from 'styled-components'
+
+const ButtonWithBorder = styled.button`
+  font-size: 1.2rem;
+  border: 1px solid blue;
+` 
+----
+
+## Étendre un composant
+
+[source, JavaScript]
+----
+import styled from 'styled-components'
+
+const ButtonWithBigBorder = styled.ButtonWithBorder`
+  font-size: 1.2rem;
+  border: 10px solid blue;
+` 
+----
+
+## Variants avec props
+
+
+[source, JavaScript]
+----
+const Section = styled.section`
+  color: white;
+
+  /* Pass variables as inputs */
+  padding: 3em;
+
+  /* Adjust the background from the properties */
+  background: ${props => props.background || 'yellow'};
+`
+
+render(
+  <Section background="cornflowerblue">
+    ✨ Magic
+  </Section>
+)
+----
+
+
+## Theme 
+
+[source, JavaScript]
+----
+const Button = styled.button`
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border-radius: 3px;
+
+  /* Color the border and text with theme.main */
+  color: ${props => props.theme.main};
+  border: 2px solid ${props => props.theme.main};
+`;
+
+// We are passing a default theme for Buttons that arent wrapped in the ThemeProvider
+Button.defaultProps = {
+  theme: {
+    main: "palevioletred"
+  }
+}
+
+// Define what props.theme will look like
+const theme = {
+  main: "mediumseagreen"
+};
+
+render(
+  <div>
+    <Button>Normal</Button>
+
+    <ThemeProvider theme={theme}>
+      <Button>Themed</Button>
+    </ThemeProvider>
+  </div>
+);
+----
+
+## Feuille de style globale
+
+Si des styles se retrouvent dans de multiples composants, on peut adjoindre une feuille de style globale.
+Si une classe n'est pas utilisée dans l'app, elle ne sera pas compilée. 
+
+[source, JavaScript]
+----
+import { createGlobalStyle, ThemeProvider } from 'styled-components'
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    color: ${props => (props.whiteColor ? 'white' : 'black')};
+    font-family: ${props => props.theme.fontFamily};
+  }
+`
+
+// later in your app
+
+<ThemeProvider theme={{ fontFamily: 'Helvetica Neue' }}>
+  <React.Fragment>
+    <Navigation /> {/* example of other top-level stuff */}
+    <GlobalStyle whiteColor />
+  </React.Fragment>
+</ThemeProvider>
+----
+
+## useTheme
+
+Pourra éventuellement être travaillé pour un style de départ pour un élémentor.
