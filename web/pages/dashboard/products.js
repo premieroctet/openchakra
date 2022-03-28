@@ -5,6 +5,7 @@ const models=require('../../components/BigList/models')
 import axios from 'axios'
 const moment = require('moment')
 moment.locale('fr')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 
 class all extends DataPage {
 
@@ -27,6 +28,7 @@ class all extends DataPage {
   }
 
   loadData = () => {
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/products')
       .then(response => {
         let bookings = response.data

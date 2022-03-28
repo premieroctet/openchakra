@@ -29,7 +29,7 @@ const FeurstLogin = ({
   return <>
     <h2 className={classes.titleRegister}>{ReactHtmlParser(t('LOGIN.title'))}</h2>
     
-    <div className='grid justify-center gap-y-4'>
+    <form onSubmit={onSubmit} className='grid justify-center gap-y-4'>
       
       <TextField
         id="username"
@@ -106,12 +106,12 @@ const FeurstLogin = ({
         </a>
       </Link>
       
-      <CustomButton onClick={onSubmit} disabled={loginDisabled} variant="contained" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>
+      <CustomButton type="submit" onClick={onSubmit} disabled={loginDisabled} variant="contained" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>
         {ReactHtmlParser(t('LOGIN.button'))}
       </CustomButton>
         
       
-    </div>
+    </form>
   </>
 }
 

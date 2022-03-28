@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import Nav from './Nav'
-import {feurstImgPath, feurstPhoneNumber} from '../../hoc/withEdiAuth'
+import {feurstPhoneNumber} from '../../hoc/withEdiAuth'
 
 
 const Header = ({accessRights = []}) => {
@@ -11,7 +11,7 @@ const Header = ({accessRights = []}) => {
         <a className='phonenumber' href={`tel:${feurstPhoneNumber.replace(/\s+/g, '')}`}>{feurstPhoneNumber}</a>
       </div>
       <Link href="/edi">
-        <a><img className='img-responsive max-w-350' src={`${feurstImgPath}/logo-feurst.webp`} alt='' width={350} height={104} /></a>
+        <a><img className='img-responsive max-w-350' src="https://feurst.fr/wp-content/uploads/2022/01/logo-feurst-01.svg" alt='' width={350} height={104} /></a>
       </Link>
       <Nav accessRights={accessRights} />
     </div>

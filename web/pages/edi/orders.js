@@ -1,14 +1,9 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import withEdiAuth from '../../hoc/withEdiAuth'
 import Table from '../../components/Table/Table'
-import styled from 'styled-components'
 import {DateRangeColumnFilter} from '../../components/Table/TableFilter'
+import Button from '../../components/Feurst/Button'
 
-const Styles = styled.div`
-  th {
-    position: relative;
-  }
-`
 
 function moneyFormatter({lang, value}) {
   return new Intl.NumberFormat(lang, {style: 'currency', currency: 'EUR'}).format(value) || ''
@@ -174,10 +169,13 @@ const Orders = ({}) => {
   )
   
   return (<>
+    
+    
     <h2>Ici, on commande</h2>
-    <Styles>
-      <Table data={data} columns={columns} updateMyData={updateMyData} />
-    </Styles>
+    <Button >Importer un fichier Excel</Button>
+    <Button size="full-width">Importer un fichier Excel</Button>
+    <Table data={data} columns={columns} updateMyData={updateMyData} />
+    
   </>)
 }
 

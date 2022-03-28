@@ -2,7 +2,9 @@ import React from 'react'
 import Header from '../components/Feurst/Header'
 import Router from 'next/router'
 import {getLoggedUser} from '../utils/context'
+import {ThemeProvider} from 'styled-components'
 import '../static/feurst.css'
+import {theme, GlobalStyleEdi} from '../styles/feurst.theme'
 
 export const feurstImgPath = '../../static/assets/img/feurst'
 export const feurstPhoneNumber = '+33 4 77 27 40 63'
@@ -36,7 +38,7 @@ const withEdiAuth = (Component = null, options = {}) => {
     };
 
     componentDidMount() {
-
+      // TODO Fetch user rights
       const isLoggedUser = getLoggedUser()
       if (isLoggedUser) {
         this.setState({loading: false, user: isLoggedUser, role: 'FEURST_ADMIN'})
@@ -53,10 +55,11 @@ const withEdiAuth = (Component = null, options = {}) => {
         return <div>...</div>
       }
 
-      return (<>
+      return (<ThemeProvider theme={theme}>
         <Header accessRights={access[this.state.role]} />
         <Component {...this.props}/>
-      </>)
+        <GlobalStyleEdi />
+      </ThemeProvider>)
     }
   }
 
