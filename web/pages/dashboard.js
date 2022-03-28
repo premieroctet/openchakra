@@ -77,6 +77,7 @@ class home extends React.Component {
                 <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
                 <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                 <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
+                <Link href="/dashboard/products"><a>Produits</a></Link><br/>
               </Grid>
               <Grid item xs={6}>
                 <Typography style={{fontSize: 30}}>Maintenance</Typography>

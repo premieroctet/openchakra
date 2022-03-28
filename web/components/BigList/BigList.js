@@ -1,3 +1,4 @@
+const DataImport = require('../DataImport/DataImport')
 import React from 'react'
 import {AgGridReact} from 'ag-grid-react'
 import {Typography} from '@material-ui/core'
@@ -20,6 +21,7 @@ class BigList extends React.Component {
     super(props)
     this.gridRef=React.createRef()
     this.fitColumns=this.fitColumns.bind(this)
+    this.fileRef=React.createRef()
   }
 
   fitColumns = () => {
@@ -70,7 +72,7 @@ class BigList extends React.Component {
 
   render = () => {
 
-    const {data, columnDefs, classes, title, header} = this.props
+    const {data, columnDefs, classes, title, header, importURL} = this.props
 
     const frameworkComponents={
       'statusRenderer': models.StatusRenderer,
@@ -116,6 +118,7 @@ class BigList extends React.Component {
               null
             }
             <IconButton onClick={this.onDownloadClick}><GetAppIcon/></IconButton>
+            { importURL && <DataImport importURL={importURL}/> }
           </Grid>
           {header && <Grid>{header}</Grid>}
           <Paper style={{height: '600px', width: '100%'}} className={'ag-theme-balham'}>
