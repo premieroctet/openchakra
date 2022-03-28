@@ -11,13 +11,14 @@ class all extends DataPage {
   getColumnDefs = () => {
     return [
       {headerName: '_id', field: '_id', width: 0},
-      models.dateTimeColumn({headerName: 'Code article', field: 'reference'}),
-      models.dateTimeColumn({headerName: 'Description', field: 'description'}),
+      models.textColumn({headerName: 'Code article', field: 'reference'}),
+      models.textColumn({headerName: 'Description', field: 'description'}),
       models.textColumn({headerName: 'Description 2', field: 'description_2'}),
       models.textColumn({headerName: 'Groupe', field: 'group'}),
       models.textColumn({headerName: 'Ligne de production', field: 'production_line'}),
       models.textColumn({headerName: 'Famille', field: 'family'}),
-      models.textColumn({headerName: 'Poids', field: 'weight'}),
+      models.currencyColumn({headerName: 'Tarif', field: 'price'}),
+      {headerName: 'Poids', field: 'weight'},
     ]
   }
 

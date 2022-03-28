@@ -1,19 +1,15 @@
-import {Link, Typography} from '@material-ui/core'
+import {Typography} from '@material-ui/core'
 const {TEXT_FILTER} = require('../../server/utils/filesystem')
 import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import axios from 'axios'
-const {setAxiosAuthentication, clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 
 import React from 'react'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
-import DashboardLayout from '../../hoc/Layout/DashboardLayout'
 import Router from 'next/router'
-import Paper from '@material-ui/core/Paper'
-import HomeIcon from '@material-ui/icons/Home'
-import TextField from '@material-ui/core/TextField'
-const {BigList}=require('../../components/BigList/BigList')
+const lodash=require('lodash')
 
 class DataImport extends React.Component {
   constructor(props) {
@@ -58,10 +54,12 @@ class DataImport extends React.Component {
     data.append('buffer', this.state.selectedFile)
     axios.post(importURL, data)
       .then(response => {
-        this.setState({comments: response.data})
+        alert('ok)')
+        this.setState({...response.data})
       })
       .catch(err => {
-        this.setState({errors: err.response.data.errors})
+        alert('nok')
+        this.setState({...err.response.data})
       })
     // Clear input file to avoid ERR_UPLOAD_FILE_CHANGED
     this.fileRef.current.value=''
@@ -80,14 +78,16 @@ class DataImport extends React.Component {
         <Grid item style={{display: 'flex', justifyContent: 'center'}}>
               Sélectionnez un fichier .csv ou .txt, séparateur point-virgule
         </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
-          <input ref={this.fileRef} type="file" name="file" id="file" onChange={this.onFileChange}/>
+        <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+          <input ref={this.fileRef} type="file" name="file" id="file" onChange={this.onFileChange} accept='.csv,.xlsx'/>
         </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
-          {comments}
-          <em style={{color: 'red'}}>{errors}</em>
-        </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
+        { (!lodash.isEmpty(comments) || !lodash.isEmpty(errors)) &&
+          <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+            {comments && comments.join(',')}
+            <em style={{color: 'red'}}>{errors && errors.join(',')}</em>
+          </Grid>
+        }
+        <Grid item style={{display: 'flex', justifyContent: 'center'}}>
           <CustomButton disabled={!selectedFile} onClick={this.onImportClick}>Importer</CustomButton>
         </Grid>
       </Card>
