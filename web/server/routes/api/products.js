@@ -127,4 +127,54 @@ router.post('/import', passport.authenticate('admin', {session: false}), (req, r
   })
 })
 
+// @Route POST /myAlfred/api/products/import-price
+// Imports prices from csv
+router.post('/import-price', passport.authenticate('admin', {session: false}), (req, res) => {
+  uploadProducts.single('buffer')(req, res, err => {
+    if (err) {
+      console.error(err)
+      return res.status(404).json({errors: err.message})
+    }
+    // db field => import field
+    const DB_MAPPING={
+      'reference': 'CODE ARTICCLE',
+      'price': 'PRIX 2022',
+    }
+
+    csvImport(Product, req.file.buffer, DB_MAPPING, {delimiter: ',', key: 'reference', update: true})
+      .then(result => {
+        res.json(result)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(500).error(err)
+      })
+  })
+})
+
+// @Route POST /myAlfred/api/products/import-stock
+// Imports stock from csv
+router.post('/import-stock', passport.authenticate('admin', {session: false}), (req, res) => {
+  uploadProducts.single('buffer')(req, res, err => {
+    if (err) {
+      console.error(err)
+      return res.status(404).json({errors: err.message})
+    }
+    // db field => import field
+    const DB_MAPPING={
+      'reference': 'Code article',
+      'stock': 'FSTMG',
+    }
+
+    csvImport(Product, req.file.buffer, DB_MAPPING, {delimiter: ',', key: 'reference', update: true})
+      .then(result => {
+        res.json(result)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(500).error(err)
+      })
+  })
+})
+
 module.exports = router

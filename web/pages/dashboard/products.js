@@ -18,6 +18,7 @@ class all extends DataPage {
       models.textColumn({headerName: 'Ligne de production', field: 'production_line'}),
       models.textColumn({headerName: 'Famille', field: 'family'}),
       models.currencyColumn({headerName: 'Tarif', field: 'price'}),
+      {headerName: 'Stock', field: 'stock'},
       {headerName: 'Poids', field: 'weight'},
     ]
   }
@@ -42,8 +43,12 @@ class all extends DataPage {
       })
   }
 
-  importURL = () => {
-    return '/myAlfred/api/products/import'
+  importURLS = () => {
+    return [
+      {title: 'Import articles', url: '/myAlfred/api/products/import'},
+      {title: 'Import tarifs', url: '/myAlfred/api/products/import-price'},
+      {title: 'Import stock', url: '/myAlfred/api/products/import-stock'},
+    ]
   }
 
   onCellClicked = (data, field) => {

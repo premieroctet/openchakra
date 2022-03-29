@@ -1,6 +1,15 @@
 const {getDataModel} = require('../../config/config')
 const mongoose = require('mongoose')
 
-const BookingSchema=require(`./${getDataModel()}/BookingSchema`)
+let BookingSchema=null
 
-module.exports = mongoose.model('booking', BookingSchema)
+try {
+  BookingSchema=require(`./${getDataModel()}/BookingSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw e
+  }
+}
+
+module.exports = BookingSchema ? mongoose.model('booking', BookingSchema) : null

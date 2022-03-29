@@ -1,4 +1,7 @@
+const DialogBase = require('../Dialog/DialogBase')
+
 const DataImport = require('../DataImport/DataImport')
+const CustomButton = require('../CustomButton/CustomButton')
 import React from 'react'
 import {AgGridReact} from 'ag-grid-react'
 import {Typography} from '@material-ui/core'
@@ -19,6 +22,9 @@ class BigList extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state={
+      importInfo: null,
+    }
     this.gridRef=React.createRef()
     this.fitColumns=this.fitColumns.bind(this)
     this.fileRef=React.createRef()
@@ -72,7 +78,8 @@ class BigList extends React.Component {
 
   render = () => {
 
-    const {data, columnDefs, classes, title, header, importURL} = this.props
+    const {data, columnDefs, classes, title, header, importURLS} = this.props
+    const {importInfo}=this.state
 
     const frameworkComponents={
       'statusRenderer': models.StatusRenderer,
@@ -118,7 +125,13 @@ class BigList extends React.Component {
               null
             }
             <IconButton onClick={this.onDownloadClick}><GetAppIcon/></IconButton>
-            { importURL && <DataImport importURL={importURL}/> }
+            <>
+              { importURLS && importURLS.map(importInfo => {
+                return (
+                  <CustomButton onClick={() => this.setState({importInfo: importInfo})}>{importInfo.title}</CustomButton>
+                )
+              })}
+            </>
           </Grid>
           {header && <Grid>{header}</Grid>}
           <Paper style={{height: '600px', width: '100%'}} className={'ag-theme-balham'}>
@@ -156,6 +169,11 @@ class BigList extends React.Component {
             />
           </Paper>
         </Grid>
+        {importInfo &&
+          <DialogBase open={true}>
+            <DataImport title={importInfo.title} subTitle={importInfo.subTitle} importURL={importInfo.url}/>
+          </DialogBase>
+        }
       </>
     )
   }

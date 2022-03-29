@@ -1,3 +1,5 @@
+const lodash=require('lodash')
+
 const EXCAVATRICE='EXCAVATRICE'
 const CHARGEUSE='CHARGEUSE'
 const PELLE_BUTTE='PELLE-BUTTE'
@@ -48,21 +50,57 @@ const BOOK_STATUS={
 
 const FEURST_ADMIN='FEURST_ADMIN'
 const FEURST_ADV='FEURST_ADV'
-const CUSTOMER_MASTER='CUSTOMER_MASTER'
+const FEURST_SALES='FEURST_SALES'
+const CUSTOMER_ADMIN='CUSTOMER_ADMIN'
 const CUSTOMER_SLAVE='CUSTOMER_SLAVE'
 
 
 const ROLES = {
   [FEURST_ADMIN]: 'Administrateur Feurst',
   [FEURST_ADV]: 'ADV',
-  [CUSTOMER_MASTER]: 'Administrateur client',
+  [FEURST_SALES]: 'Commercial Feurst',
+  [CUSTOMER_ADMIN]: 'Administrateur client',
   [CUSTOMER_SLAVE]: 'Client',
+}
+
+const [ORDER, QUOTATION, ACCOUNT]=['ORDER', 'QUOTATION', 'ACCOUNT']
+const [VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]=['VIEW', 'CREATE', 'UPDATE', 'DELETE', 'VALIDATE', 'CONVERT']
+const [ALL, MINE, COMPANY]=['ALL', 'MINE', 'COMPANY']
+const MODELS=[ORDER, QUOTATION, ACCOUNT]
+const ACTIONS=[VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]
+const VISIBILITY=[ALL, MINE, COMPANY]
+
+const createUserAction= (model, action, extra={}) => {
+  return {model: model, action: action, ...extra}
+}
+
+const USER_ACTIONS={
+  [FEURST_ADMIN]: lodash.flattenDeep([
+    [VIEW, CREATE, UPDATE, DELETE].map(action => [FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
+    [VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+  ]),
+  [FEURST_ADV]: lodash.flattenDeep([
+    [CREATE, VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+  ]),
+  [FEURST_SALES]: lodash.flattenDeep([
+    [CREATE, VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
+    [CREATE, VIEW].map(action => createUserAction(ORDER, action, {visibility: MINE})),
+  ]),
+  [CUSTOMER_ADMIN]: lodash.flattenDeep([
+    [VIEW, CREATE, UPDATE, DELETE].map(action => [CUSTOMER_ADMIN, CUSTOMER_SLAVE].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
+    [CREATE, VIEW, UPDATE, CONVERT].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
+    [CREATE, VIEW, UPDATE].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
+  ]),
+  [CUSTOMER_SLAVE]: lodash.flattenDeep([
+    [CREATE, VIEW, UPDATE, CONVERT].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
+    [CREATE, VIEW, UPDATE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
+  ]),
 }
 
 module.exports={
   PIN, SOLD, FIX_TYPES,
   DROITE, DELTA, SEMI_DELTA, UNKNOWN, BLADE_SHAPES,
   EXCAVATRICE, CHARGEUSE, PELLE_BUTTE, MACHINE_TYPES,
-  BOOK_STATUS, QUOTATION_STATUS, FEURST_ADMIN, FEURST_ADV, CUSTOMER_MASTER, CUSTOMER_SLAVE,
-  ROLES,
+  BOOK_STATUS, QUOTATION_STATUS, FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN, CUSTOMER_SLAVE,
+  ROLES, USER_ACTIONS, ORDER, QUOTATION, ACCOUNT, VIEW, CREATE,
 }

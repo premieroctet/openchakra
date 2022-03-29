@@ -1,3 +1,5 @@
+const FeurstRegister = require('../../components/Feurst/Register')
+const {getDataModel} = require('../../config/config')
 import {Typography} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
 import RegisterInvitation from '../../components/RegisterInvitation/RegisterInvitation'
@@ -43,7 +45,11 @@ class Invitation extends React.Component {
         <Grid container className={classes.signupContainer} style={{width: '100%'}}>
           <Grid style={{width: '90%'}}>
             <Paper style={{width: '100%', alignItems: 'center'}}>
-              <RegisterInvitation />
+              {getDataModel() == 'feurst' ?
+                <FeurstRegister />
+                :
+                <RegisterInvitation />
+              }
             </Paper>
           </Grid>
         </Grid>
