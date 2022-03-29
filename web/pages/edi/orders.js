@@ -2,7 +2,8 @@ import React, {useEffect, useMemo, useState} from 'react'
 import withEdiAuth from '../../hoc/withEdiAuth'
 import Table from '../../components/Table/Table'
 import {DateRangeColumnFilter} from '../../components/Table/TableFilter'
-import Button from '../../components/Feurst/Button'
+import {Button, PleasantButton} from '../../components/Feurst/Button'
+import useAsync from '../../hooks/use-async.hook'
 
 
 function moneyFormatter({lang, value}) {
@@ -88,6 +89,16 @@ function makeData() {
 
 
 const Orders = ({}) => {
+
+  // const {
+  //   data,
+  //   setData,
+  //   error,
+  //   isLoading,
+  //   isError,
+  //   isSuccess,
+  //   run,
+  // } = useAsync({ data: [] });
   
   const [data, setData] = useState(useMemo(() => makeData(), []))
   const [language, setLanguage] = useState('fr')
@@ -169,11 +180,8 @@ const Orders = ({}) => {
   )
   
   return (<>
-    
-    
     <h2>Ici, on commande</h2>
-    <Button >Importer un fichier Excel</Button>
-    <Button size="full-width">Importer un fichier Excel</Button>
+    <PleasantButton bgColor={'#141953'} textColor={'white'} size="full-width">Importer un fichier Excel</PleasantButton>
     <Table data={data} columns={columns} updateMyData={updateMyData} />
     
   </>)

@@ -116,3 +116,18 @@ const GlobalStyle = createGlobalStyle`
 ## useTheme
 
 Pourra éventuellement être travaillé pour un style de départ pour un élémentor.
+
+
+## Context
+
+[source, JavaScript]
+----
+import { ThemeContext } from "styled-components";
+
+const ThemedButton = () => {
+   const theme = useContext(ThemeContext);
+   return(
+      <StyledButton bgColor={theme.colors.plum} color={theme.colors.white}>I am a themed button 😜</StyledButton>
+   )
+}
+----
