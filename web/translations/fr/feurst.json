@@ -76,6 +76,7 @@
   "TERRE": "Terre",
   "CHARBON": "Charbon",
   "CRAIE": "Craie",
+  "GRAVIER": "Gravier",
   "MINERAIS (PEU ABRASIF)": "Minerais (peu abrasif)",
   "SABLE": "Sable",
   "TERRE  (TERRE PIERRE)": "Terre  (terre pierre)",
@@ -86,12 +87,19 @@
   "SCHISTE": "Schiste",
   "QUARTZ": "Quartz",
   "SILICE": "Silice",
-  "POUZZOLLANE": "Pouzzollane",
+  "POUZOLLANE": "Pouzzollane",
   "GRANITE": "Granite",
   "GNEISS": "Gneiss",
   "PORPHYRE": "Porphyre",
   "AMPHIBOLITE": "Amphibolite",
   "LEPTYNITE": "Leptynite",
-  "RHYOLITE": "Rhyolite"
+  "RHYOLITE": "Rhyolite",
+  "GRANITES": "Granites",
 
+  "STANDARD": "STANDARD",
+  "DUR": "DUR",
+  "TRES ABRASIF": "TRES ABRASIF",
+  "TRES DUR": "TRES DUR",
+  "ABRASIF": "ABRASIF",
+  "TRES ABRASIF": "TRES ABRASIF"
 }
