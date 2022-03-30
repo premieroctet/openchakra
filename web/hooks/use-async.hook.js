@@ -37,9 +37,9 @@ function useAsync(initialState) {
       }
       safeSetState({status: 'pending'})
       return promise.then(
-        dataa => {
-          setData(dataa)
-          return dataa
+        data => {
+          setData(data)
+          return data
         },
         error => {
           setError(error)

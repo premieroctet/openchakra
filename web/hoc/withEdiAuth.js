@@ -3,28 +3,26 @@ import Header from '../components/Feurst/Header'
 import Router from 'next/router'
 import {getLoggedUser} from '../utils/context'
 import {ThemeProvider} from 'styled-components'
-import '../static/feurst.css'
 import {theme, GlobalStyleEdi} from '../styles/feurst.theme'
+import {URL_BASEPATH} from '../mode'
 
 export const feurstImgPath = '../../static/assets/img/feurst'
 export const feurstPhoneNumber = '+33 4 77 27 40 63'
 export const basePathEdi = '/edi'
 
 
-const url = 'https://localhost'
-
 const access = {
   FEURST_ADMIN: [
     {
-      url: `${url}/edi/orders`,
+      url: `${URL_BASEPATH}/edi/orders`,
       label: 'Commandes',
     },
     {
-      url: `${url}/edi/account`,
+      url: `${URL_BASEPATH}/edi/account`,
       label: 'Mon compte',
     },
     {
-      url: `${url}/edi/login?out`,
+      url: `${URL_BASEPATH}/edi/login?out`,
       label: 'Se déconnecter',
     },
   ],
