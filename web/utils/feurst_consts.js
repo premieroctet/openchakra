@@ -11,10 +11,12 @@ const MACHINE_TYPES={
 
 const PIN='PIN'
 const SOLD='SOLD'
+const NONE='NONE'
 
 const FIX_TYPES={
   [PIN]: 'FIX_TYPE.pin',
   [SOLD]: 'FIX_TYPE.sold',
+  [NONE]: 'FIX_TYPE.none',
 }
 
 const DROITE='DROITE'
@@ -29,7 +31,7 @@ const BLADE_SHAPES={
 }
 
 module.exports={
-  PIN, SOLD, FIX_TYPES,
+  PIN, SOLD, NONE, FIX_TYPES,
   DROITE, DELTA, SEMI_DELTA, UNKNOWN, BLADE_SHAPES,
   EXCAVATRICE, CHARGEUSE, PELLE_BUTTE, MACHINE_TYPES,
 }

@@ -12,20 +12,20 @@ function BladePicture({shape, teeth_count, width, height}) {
 
   const BLADES = {
     [DROITE]: {
-      path: `${feurstImgPath}/lame-droite-${teeth_count}.svg`,
-      alt_path: `${feurstImgPath}/lame-droite-4.svg`,
+      path: `${feurstImgPath}/lame-droite-${teeth_count}.png`,
+      alt_path: `${feurstImgPath}/lame-droite-4.png`,
       width: '120',
       height: '74',
     },
     [SEMI_DELTA]: {
-      path: `${feurstImgPath}/lame-semidelta-${teeth_count}.svg`,
-      alt_path: `${feurstImgPath}/lame-semidelta-4.svg`,
+      path: `${feurstImgPath}/lame-semidelta-${teeth_count}.png`,
+      alt_path: `${feurstImgPath}/lame-semidelta-4.png`,
       width: '120',
       height: '74',
     },
     [DELTA]: {
-      path: `${feurstImgPath}/lame-delta-${teeth_count}.svg`,
-      alt_path: `${feurstImgPath}/lame-delta.svg`,
+      path: `${feurstImgPath}/lame-delta-${teeth_count}.png`,
+      alt_path: `${feurstImgPath}/lame-delta.png`,
       width: '120',
       height: '74',
     },
@@ -36,7 +36,7 @@ function BladePicture({shape, teeth_count, width, height}) {
     return null
   }
   return (
-    <img src={blade_data.path} alt="" width={width || blade_data.width} height={height || blade_data.height}
+    <img className="img-responsive" src={blade_data.path} alt="" width={width || blade_data.width} height={height || blade_data.height}
       onError={({currentTarget}) => {
         currentTarget.onError = null
         currentTarget.src=blade_data.alt_path

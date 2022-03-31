@@ -96,14 +96,14 @@ function UseCase(props) {
                   <span>
                     <img src={groundImages[hardness]} alt="" width={80} height={80} />
                   </span>
-                  <span>{hardness}</span>
+                  <span>{props.t(hardness.toUpperCase())}</span>
                 </AccordionSummary>
                 <AccordionDetails className='flex flex-col'>
                   {groundTypes.map(groundType => (
                     <div key={groundType} className='flex items-center'>
                       <label htmlFor={groundType.replace(/\s/g, '')}>
                         <IOSSwitch name="ground" id={groundType.replace(/\s/g, '')} value={groundType} checked={props.ground === groundType } onChange={ev => { props.onGroundChange(ev.target.value) }} />
-                        <span className='materialName'>{groundType}</span>
+                        <span className='materialName'>{props.t(groundType.toUpperCase())}</span>
                       </label>
                     </div>
                   ))}

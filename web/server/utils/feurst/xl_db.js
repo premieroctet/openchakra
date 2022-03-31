@@ -14,6 +14,7 @@ const {
   FIX_TYPES,
   MACHINE_TYPES,
   PIN,
+  SOLD,
 } = require('../../../utils/feurst_consts')
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
@@ -41,16 +42,17 @@ const GROUPS= (teeth, bladeShape, borderShieldFixType, teethShieldFixType) => {
       'BOUCLIER A CLAVETER DROITE': delta ? 1 : 0,
       'BOUCLIER A CLAVETER GAUCHE': delta ? 1 : 0,
       'CLE BOUCLIER': 1,
-    }:
+    }: teethShieldFixType==SOLD ?
       {
         'BOUCLIER A SOUDER': teeth-1,
         'BOUCLIER A SOUDER DROITE': delta ? 1 : 0,
         'BOUCLIER A SOUDER GAUCHE': delta ? 1 : 0,
-      },
+      }:
+      {},
     'Bouclier flanc': {
-      [teethShieldFixType==PIN ? 'BOUCLIER DE FLANC': undefined]: '2 ou 4',
-      [borderShieldFixType==PIN ? 'BOUCLIER DE FLANC A CLAVETER' : 'BOUCLIER DE FLANC A SOUDER']: '2 ou 4',
-      [teethShieldFixType==PIN ? 'BASE A SOUDER': undefined]: '2 ou 4',
+      [borderShieldFixType==PIN ? 'BOUCLIER DE FLANC': undefined]: '2 ou 4',
+      [borderShieldFixType==PIN ? 'BOUCLIER DE FLANC A CLAVETER' : borderShieldFixType==SOLD ?'BOUCLIER DE FLANC A SOUDER' : undefined]: '2 ou 4',
+      [borderShieldFixType==PIN ? 'BASE A SOUDER': undefined]: '2 ou 4',
     },
     'Bouclier talon': {
       'BOUCLIER DE TALON DE GODET': 10,

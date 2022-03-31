@@ -125,7 +125,7 @@ function Summary(props) {
   const formInputs = [
     {
       label: props.t('SUMMARY.name_label'),
-      placeholder: 'Saisissez votre nom',
+      placeholder: props.t('SUMMARY.name_placeholder'),
       name: 'name',
       id: 'name',
       autoComplete: 'family-name',
@@ -134,7 +134,7 @@ function Summary(props) {
     },
     {
       label: props.t('SUMMARY.firstname_label'),
-      placeholder: 'Saisissez votre prénom',
+      placeholder: props.t('SUMMARY.firstname_placeholder'),
       name: 'firstname',
       id: 'firstname',
       autoComplete: 'given-name',
@@ -144,7 +144,7 @@ function Summary(props) {
     {
       type: 'email',
       label: props.t('SUMMARY.email_label'),
-      placeholder: 'Saisissez votre email',
+      placeholder: props.t('SUMMARY.email_placeholder'),
       name: 'email',
       id: 'email',
       autoComplete: 'email',
@@ -153,7 +153,7 @@ function Summary(props) {
     },
     {
       label: props.t('SUMMARY.company_label'),
-      placeholder: 'Saisissez votre société',
+      placeholder: props.t('SUMMARY.company_placeholder'),
       name: 'company',
       id: 'company',
       autoComplete: 'organization',
@@ -207,12 +207,12 @@ function Summary(props) {
       <p className='feurstconditions mb-6'>{props.t('SUMMARY.rgpdconditions')}</p>
 
       <h2 className='text-2xl pl-4'>{props.t('SUMMARY.summary_label')}</h2>
-      <div className='recap grid grid-cols-2 gap-x-4'>
+      <div className='recap grid grid-cols-1 md-grid-cols-2 gap-x-4'>
 
         <div>
           <dl className='text-lg dl-inline mb-6'>
             <dt className='text-gray-500'>{props.t('SUMMARY.machine_label')}</dt>
-            <dd>{type} {mark} {model}</dd>
+            <dd>{props.t(type.toUpperCase())} {mark} {model}</dd>
             <dt className='text-gray-500'>{props.t('SUMMARY.use_case_label')}</dt>
             <dd>{props.t('SUMMARY.quarrying_some')} {ground.toLowerCase()}</dd>
             <dt className='text-gray-500'>{props.t('SUMMARY.blade_label')}</dt>
@@ -221,15 +221,16 @@ function Summary(props) {
 
           <h3>{props.t('SUMMARY.equipment_label')}</h3>
 
-          <dl className='text-lg dl-inline ml-12'>
+          <dl className='text-lg dl-inline md-ml-12'>
             <dt className='text-gray-500'>{props.t('SUMMARY.teeth_shield_label')}</dt>
             <dd>{props.t(FIX_TYPES[teethShieldFixType])}</dd>
             <dt className='text-gray-500'>{props.t('SUMMARY.border_shield_label')}</dt>
             <dd>{props.t(FIX_TYPES[borderShieldFixType])}</dd>
           </dl>
         </div>
-
-        <BladePicture width={400} height={265} shape={props.bladeShape} teeth_count={props.teeth_count} />
+        <div>
+          <BladePicture width={400} height={265} shape={props.bladeShape} teeth_count={props.teeth_count} />
+        </div>
       </div>
 
       {precos?.accessories && is_development() &&
