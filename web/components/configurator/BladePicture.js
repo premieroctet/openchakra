@@ -12,20 +12,20 @@ function BladePicture({shape, teeth_count, width, height}) {
 
   const BLADES = {
     [DROITE]: {
-      path: `${feurstImgPath}/lame-droite-${teeth_count}.svg`,
-      alt_path: `${feurstImgPath}/lame-droite-4.svg`,
+      path: `${feurstImgPath}/lame-droite-${teeth_count}.png`,
+      alt_path: `${feurstImgPath}/lame-droite-4.png`,
       width: '120',
       height: '74',
     },
     [SEMI_DELTA]: {
-      path: `${feurstImgPath}/lame-semidelta-${teeth_count}.svg`,
-      alt_path: `${feurstImgPath}/lame-semidelta-4.svg`,
+      path: `${feurstImgPath}/lame-semidelta-${teeth_count}.png`,
+      alt_path: `${feurstImgPath}/lame-semidelta-4.png`,
       width: '120',
       height: '74',
     },
     [DELTA]: {
-      path: `${feurstImgPath}/lame-delta-${teeth_count}.svg`,
-      alt_path: `${feurstImgPath}/lame-delta.svg`,
+      path: `${feurstImgPath}/lame-delta-${teeth_count}.png`,
+      alt_path: `${feurstImgPath}/lame-delta.png`,
       width: '120',
       height: '74',
     },
