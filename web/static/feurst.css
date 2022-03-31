@@ -156,6 +156,10 @@ h2,
   display: grid !important;
 }
 
+.grid-cols-1{
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -437,6 +441,13 @@ h2,
   min-width: 100px !important;
 }
 
+.previous:disabled,
+.next:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5;
+  pointer-events: all !important;
+}
+
 .next {
   background: var(--bg-blue-700) !important;
 }
@@ -500,7 +511,7 @@ h2,
 .summary .recap dl {
   margin: 0;
   display: grid;
-  grid-template-columns: max-content auto;;
+  grid-template-columns: 1fr;
 } 
 
 dd {
@@ -543,8 +554,16 @@ dl {
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .summary .recap dl {
+    grid-template-columns: max-content auto;
+  }
+
   .md-gap-y-8 {
     row-gap: 4rem;
+  }
+
+  .md-grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .md-col-span-2 {
@@ -557,6 +576,10 @@ dl {
 
   .md-flex-wrap {
     flex-wrap: wrap;
+  }
+
+  .md-ml-12 {
+    margin-left: 3rem !important;
   }
 }
 
@@ -595,13 +618,6 @@ dl {
 
   .contactexpert {
     justify-self: end;
-  }
-
-  .previous:disabled,
-  .next:disabled {
-    cursor: not-allowed !important;
-    opacity: 0.5;
-    pointer-events: all !important;
   }
 
   /* hack input */
