@@ -19,6 +19,7 @@
 
   "FIX_TYPE.pin": "À claveter",
   "FIX_TYPE.sold": "À souder",
+  "FIX_TYPE.none": "Aucun",
 
   "MACHINE_TYPE.title": "Bienvenue dans le configurateur",
   "MACHINE_TYPE.info_text" : "Si vous ne trouvez pas votre machine, veuillez saisir les informations. Un de nos experts reviendra vers vous.",

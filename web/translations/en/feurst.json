@@ -17,8 +17,9 @@
   "BLADE_SHAPE.delta": "Delta blade",
   "BLADE_SHAPE.unknown": "",
 
-  "FIX_TYPE.pin": "",
-  "FIX_TYPE.sold": "",
+  "FIX_TYPE.pin": "Pin",
+  "FIX_TYPE.sold": "Sold",
+  "FIX_TYPE.none": "None",
 
   "MACHINE_TYPE.title": "Your machine",
   "MACHINE_TYPE.info_text" : "If you don't find your machine, please enter the information. An expert will contact you.",

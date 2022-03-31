@@ -1,21 +1,29 @@
-const RequiredField = require('../misc/RequiredField');
+const RequiredField = require('../misc/RequiredField')
 const {withTranslation} = require('react-i18next')
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
+const {PIN, SOLD, NONE} = require('../../utils/feurst_consts')
 
 
 function FixTypes(props) {
 
   const BORDER_FIXTURES = {
-    PIN: {
+    [PIN]: {
       label: props.t('FIX_TYPE.pin'),
       path: `${feurstImgPath}/bouclier_flanc_claveter.svg`,
       width: '120',
       height: '74',
     },
-    SOLD: {
+    [SOLD]: {
       label: props.t('FIX_TYPE.sold'),
       path: `${feurstImgPath}/bouclier_flanc_souder.svg`,
+      width: '120',
+      height: '74',
+
+    },
+    [NONE]: {
+      label: props.t('FIX_TYPE.none'),
+      path: `${feurstImgPath}/aucun_bouclier.svg`,
       width: '120',
       height: '74',
 
@@ -23,21 +31,25 @@ function FixTypes(props) {
   }
 
   const TEETH_FIXTURES = {
-    PIN: {
+    [PIN]: {
       label: props.t('FIX_TYPE.pin'),
       path: `${feurstImgPath}/bouclier_dent_claveter.svg`,
       width: '120',
       height: '74',
     },
-    SOLD: {
+    [SOLD]: {
       label: props.t('FIX_TYPE.sold'),
       path: `${feurstImgPath}/bouclier_dent_souder.svg`,
       width: '120',
       height: '74',
-
+    },
+    [NONE]: {
+      label: props.t('FIX_TYPE.none'),
+      path: `${feurstImgPath}/aucun_bouclier.svg`,
+      width: '120',
+      height: '74',
     },
   }
-
 
   return (
     <div className='fixtypes'>
@@ -57,7 +69,8 @@ function FixTypes(props) {
                   <span className='text-center'>{TEETH_FIXTURES[fixType].label}</span>
                 </div>
               </label>
-            ))}
+            ),
+            )}
           </div>
         </div>
 
