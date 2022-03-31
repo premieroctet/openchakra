@@ -375,7 +375,7 @@ class Configurator extends React.Component {
           <div className="rounded-container m-4 p-4" >
             {component({...this.state, ...this})}
           </div>
-          <div className='flex justify-between w-full bg-white p-4 mb-6'>
+          <div className='flex gap-y-4 justify-between flex-wrap w-full bg-white p-4 mb-6'>
             {step !== 0 ?
               <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
                 {t('NAVIGATION.previous')}
@@ -386,7 +386,7 @@ class Configurator extends React.Component {
 
 
             {STEPS.length - 1 === step &&
-          <div className='flex gap-x-4'>
+          <div className='flex flex-wrap gap-x-4 gap-y-4'>
             <Button className='previous' disabled={!validator(this.state)} onClick={this.sendCustomQuotation}>
               {t('SUMMARY.contact_expert')}
             </Button>
@@ -398,7 +398,7 @@ class Configurator extends React.Component {
           </div>
         </div>
       </Grid>)
-
+      
   }
 }
 

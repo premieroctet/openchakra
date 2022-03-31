@@ -36,7 +36,7 @@ function BladePicture({shape, teeth_count, width, height}) {
     return null
   }
   return (
-    <img src={blade_data.path} alt="" width={width || blade_data.width} height={height || blade_data.height}
+    <img className="img-responsive" src={blade_data.path} alt="" width={width || blade_data.width} height={height || blade_data.height}
       onError={({currentTarget}) => {
         currentTarget.onError = null
         currentTarget.src=blade_data.alt_path
