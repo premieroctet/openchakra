@@ -1,44 +1,46 @@
-import { createGlobalStyle } from "styled-components";
-import { screen } from "./screenWidths";
+import {createGlobalStyle} from 'styled-components'
+import {screen} from './screenWidths'
 
 // const blueFeurst = '#141953'
-const blueFeurst = "hsl(210.6, 50.9%, 41.6%)";
+const blueFeurst = 'hsl(210.6, 50.9%, 41.6%)'
 
 export const theme = {
   accentColor: blueFeurst /* Default color for inputs */,
   colors: {
     blue: blueFeurst, // Feurst blue
-    white: "#FFF", // pure white
-    redAlert: "red",
+    white: '#FFF', // pure white
+    redAlert: 'red',
+    yellow: '#e0ba14',
   },
+  containerSize: 'min(100% - 2rem, 60rem)',
   //   space: [0, 4, 8, 16, 24, 32, 48, 64, 128, 256, 512],
   fontSizes: {
-    xs: "0.75rem",
-    sm: "0.875rem",
-    base: "1rem",
-    lg: "1.125rem",
+    xs: '0.75rem',
+    sm: '0.875rem',
+    base: '1rem',
+    lg: '1.125rem',
   },
-  fontFamily: "Roboto",
+  fontFamily: 'Roboto',
   fontWeights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
   lineHeights: {
     normal: 1,
     title: 1.25,
     paragraph: 1.5,
   },
-  radii: ["0px", "2px", "4px", "8px", "16px", "48px"],
+  radii: ['0px', '2px', '4px', '8px', '16px', '48px'],
   rounded: {
-    xl: "0.75rem",
-    "2xl": "1rem",
-    "3xl": "1.5rem",
-    full: "9999px",
+    xl: '0.75rem',
+    '2xl': '1rem',
+    '3xl': '1.5rem',
+    full: '9999px',
   },
-};
+}
 
 export const GlobalStyleEdi = createGlobalStyle`
   
   :root {
-    accent-color: ${(props) => props.theme.accentColor || "auto"};
-    caret-color: ${(props) => props.theme.accentColor || "auto"};
+    accent-color: ${props => props.theme.accentColor || 'auto'};
+    caret-color: ${props => props.theme.accentColor || 'auto'};
     --brand-color: #182d45;
     --bg-blue-700: #2b3760;
     --bg-yellow-500: rgb(218, 187, 66);
@@ -54,6 +56,28 @@ export const GlobalStyleEdi = createGlobalStyle`
     --text-2xl: 1.5rem;
     --text-3xl: 1.875rem;
     --text-4xl: 2.25rem;
+    --font-normal: 400;
+    --font-medium	: 500;
+    --font-semibold	: 600;
+    --font-bold	: 700;
+    --delayIn: .3s;
+    --delayOut: .5s;
+    --spc-1: 
+    --spc-0.5: 0.125rem;
+    --spc-1: 0.25rem;
+    --spc-1-5: 0.375rem;
+    --spc-2: 0.5rem;
+    --spc-2-5: 0.625rem;
+    --spc-3: 0.75rem;
+    --spc-3-5: 0.875rem;
+    --spc-4: 1rem;
+    --spc-5: 1.25rem;
+    --spc-6: 1.5rem;
+    --spc-7: 1.75rem;
+    --spc-8: 2rem;
+    --spc-9: 2.25rem;
+    --spc-10: 2.5rem;
+
 
   }
 
@@ -65,8 +89,13 @@ export const GlobalStyleEdi = createGlobalStyle`
     padding: 0;
     margin: 0;
     min-height: 100vh;
-    color: ${(props) => (props.whiteColor ? "white" : "black")};
-    font-family: ${(props) => props.theme.fontFamily};
+    color: ${props => (props.whiteColor ? 'white' : 'black')};
+    font-family: ${props => props.theme.fontFamily};
+  }
+
+  .container {
+    width: ${props => (props.theme.containerSize ? props.theme.containerSize : 'min(100% - 2rem, 50rem)')}; 
+    margin-inline: auto;
   }
 
 
@@ -124,7 +153,13 @@ export const GlobalStyleEdi = createGlobalStyle`
 .text-right {
   text-align: right;
 }
-  
+
+.no-underline	{text-decoration-line: none;}
+
+/* Disposition */
+
+.block {display: block;}
+
 .grid {
   display: grid !important;
 }
@@ -256,6 +291,10 @@ export const GlobalStyleEdi = createGlobalStyle`
   margin-right: 2rem;
 }
 
+.mb-4 {
+  margin-bottom: 1rem !important;
+}
+
 .mb-6 {
   margin-bottom: 1.5rem !important;
 }
@@ -290,7 +329,7 @@ export const GlobalStyleEdi = createGlobalStyle`
 /* Backgrounds */
 
 .bg-white {
-  background-color: #fff;
+  background-color: ${props => props.theme.colors.white || '#FFF'};
 }
 
 /* Arrondis */
@@ -299,16 +338,14 @@ export const GlobalStyleEdi = createGlobalStyle`
   border-radius: 0.75rem;
 }
 
-  input:focus-visible    {
-    outline-color: ${(props) => props.theme.accentColor};
-    outline-offset: 2px;
-    outline-style: solid;
-  }
+input:focus-visible    {
+  outline-color: ${props => props.theme.accentColor};
+  outline-offset: 2px;
+  outline-style: solid;
+}
 
- 
+table {
+  border: 2px solid #111;
+}
 
-  table {
-    border: 2px solid #111;
-  }
-
-`;
+`

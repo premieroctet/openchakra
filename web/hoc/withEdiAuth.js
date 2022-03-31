@@ -55,7 +55,9 @@ const withEdiAuth = (Component = null, options = {}) => {
 
       return (<ThemeProvider theme={theme}>
         <Header accessRights={access[this.state.role]} />
-        <Component {...this.props}/>
+        <div className='container'>
+          <Component {...this.props}/>
+        </div>
         <GlobalStyleEdi />
       </ThemeProvider>)
     }

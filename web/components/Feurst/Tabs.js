@@ -1,42 +1,82 @@
 import React, {useState, Fragment} from 'react'
 import {Tab} from '@headlessui/react'
-import OrderCreate from './OrderCreate'
-import MyOrders from './MyOrders'
-import MyQuotations from './MyQuotations'
+import styled from 'styled-components'
+import dynamic from 'next/dynamic'
+
+
+const Tabstyled = styled(Tab.List)`
+  
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-inline: auto;
+  margin-bottom: var(--spc-10);
+  
+  button, button::after, button[aria-selected=true]::after{
+    transition: background-color ease-in-out var(--delayIn), color ease-in-out var(--delayIn), border ease-in-out var(--delayIn);
+    will-change: 'background-color, color, border'; 
+  }
+
+  button {
+    flex-basis: 300px;
+    padding: .5rem 2rem;
+    border:0;
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    position: relative;
+    outline:none;
+  }
+
+  button[aria-selected=true] {
+    background: ${props => props.theme.colors.yellow || 'yellow'};
+    color: ${props => props.theme.colors.white || '#FFF'};
+  }
+
+  button[aria-selected=true]::after {
+    --trianglebase: 10px;
+    --trianglepeak: 15px;
+    position: absolute;
+    left: calc(50% - var(--trianglebase));
+    bottom: calc(var(--trianglepeak) * -1);
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: var(--trianglebase) solid transparent;
+    border-right: var(--trianglebase) solid transparent;
+    border-top: var(--trianglepeak) solid ${props => props.theme.colors.yellow || 'yellow'};
+  }
+  
+`
+const DynamicOrderCreate = dynamic(() => import('./OrderCreate'))
+const DynamicMyOrders = dynamic(() => import('./MyOrders'))
+const DynamicMyQuotations = dynamic(() => import('./MyQuotations'))
+
 
 const tabsContent = [
   {
     title: 'Créer une commande',
-    component: <OrderCreate />,
+    component: <DynamicOrderCreate />,
   },
   {
     title: 'Mes commandes',
-    component: <MyOrders />,
+    component: <DynamicMyOrders />,
   },
   {
     title: 'Mes devis',
-    component: <MyQuotations />,
+    component: <DynamicMyQuotations />,
   },
 ]
 
 const Tabs = props => {
 
-
   return (
-    <Tab.Group >
-      <Tab.List>
+    <Tab.Group>
+      <Tabstyled>
         {tabsContent.map((elem, i) => (
-          <Tab key={`tab${i}`} as={Fragment}>
-            {({selected}) => (
-              <button
-                className={
-                  selected ? 'bg-blue-500 text-white' : 'bg-white text-black'
-                }
-              >{elem.title}</button>
-            )}
+          <Tab key={`tab${i}`}>
+            {elem.title}
           </Tab>
         ))}
-      </Tab.List>
+      </Tabstyled>
       <Tab.Panels>
         {tabsContent.map((elem, i) => (
           <Tab.Panel key={`panel${i}`}>

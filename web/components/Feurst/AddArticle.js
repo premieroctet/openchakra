@@ -4,9 +4,10 @@ import {TextField} from '@material-ui/core'
 import useAsync from '../../hooks/use-async.hook'
 import {client} from '../../utils/client'
 import {getPureAuthToken} from '../../utils/authentication'
+import {PleasantButton} from './Button'
 
 
-const AddArticle = () => {
+const AddArticle = ({checkProduct}) => {
 
   const {
     data,
@@ -25,10 +26,11 @@ const AddArticle = () => {
   }
   , [run, client])
 
-  return (<>
-    {isLoading ? (<span>...</span>) : null}
-    {isError ? (<span>Une erreur s'est produite</span>) : null}
+  if (isLoading) { return (<span>...</span>) }
 
+  if(isError) { return (<span>Une erreur s'est produite</span>) }
+
+  return (<>
     <Autocomplete
       options={data.map(p => p.description_2)}
       value={''}
@@ -36,6 +38,10 @@ const AddArticle = () => {
       onChange={(ev, value) => console.log(ev, value)}
       onInputChange={(ev, value) => console.log(ev, value)}
     />
+
+    <input type="number" />
+
+    <PleasantButton onClick={e => checkProduct(e)}>Vérifier</PleasantButton>
 
   </>
   )

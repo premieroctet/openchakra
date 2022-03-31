@@ -1,6 +1,6 @@
 import React, {useMemo, useState, useEffect} from 'react'
-import {Button, PleasantButton} from './Button'
 import AddArticle from './AddArticle'
+import ImportExcelFile from './ImportExcelFile'
 import {DateRangeColumnFilter} from '../../components/Table/TableFilter'
 import Table from '../Table/Table'
 import EditableCell from '../Table/EditableCell'
@@ -136,11 +136,14 @@ const OrderCreate = () => {
     [data, language],
   )
 
+  function checkProduct(e) {
+    console.log(e)
+  }
+
 
   return (<>
-    <PleasantButton bgColor={'#141953'} textColor={'white'} size="full-width">Importer un fichier Excel</PleasantButton>
-
-    <AddArticle />
+    <ImportExcelFile />
+    <AddArticle checkProduct={checkProduct} />
     <Table data={data} columns={columns} updateMyData={updateMyData} />
   </>
   )

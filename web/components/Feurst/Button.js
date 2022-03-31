@@ -25,9 +25,6 @@ const Button = styled.button.attrs(props => ({
   }
 }};
   font-size: ${props => props.theme.fontSizes.lg};
-  background-color: ${props => props.theme.colors.blue};
-  color: ${props => props.theme.colors.white};
-  border-radius: ${props => props.theme.rounded.xl};
 `
 
 Button.defaultProps = {
@@ -52,6 +49,8 @@ const StyledButton = styled(Button).attrs(props => ({
   outline-offset: 4px;
   transition: filter 250ms;
   border-radius: ${props => props.theme.rounded['3xl']};
+  color: ${props => props.theme.colors.white};
+  border-radius: ${props => props.theme.rounded.xl};
 
   &:hover {
     filter: brightness(110%);
@@ -131,12 +130,16 @@ const PleasantButton = ({
   bgColor,
   textColor,
   children,
+  className,
+  onClick,
 }) => {
-  
+
   return (
     <StyledButton
       type={type}
       size={size}
+      className={className}
+      onClick={onClick}
     >
       <ButtonShadow />
       <ButtonEdge bgColor={bgColor} />
