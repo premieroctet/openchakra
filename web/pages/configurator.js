@@ -382,19 +382,20 @@ class Configurator extends React.Component {
         <a ref={this.titleFocus.ref} href='#'></a> {/* Lien pour remonter le focus suite actions "précédent" "suivant" */}
         <h1 className='whereami'>{t(menu)}</h1>
         <ProgressBar value={step} max={STEPS.length} label={t('PROGRESS_BAR.step_label')}/>
-        <div className='app-container flex flex-col justify-between'>
-          <div className="rounded-container m-4 p-4" >
+        <div className='app-container flex flex-col  justify-between'>
+          <div className="rounded-container p-4 md-m-4" >
             {component({...this.state, ...this})}
           </div>
-          <div className='flex gap-y-4 justify-between flex-wrap w-full bg-white p-4 mb-6'>
+          <div className={`flex gap-y-4 justify-between flex-wrap w-full bg-white p-4 mb-6 ${STEPS.length - 1 === step ?'flex-column-reverse md-flex-row' : ''}`}>
+            
             {step !== 0 ?
-              <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
+              <Button className='previous w-fit' disabled={step == 0} onClick={this.previousPage}>
                 {t('NAVIGATION.previous')}
               </Button> : <div></div>}
             {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
               {t('NAVIGATION.next')}
             </Button> : null}
-
+            
 
             {STEPS.length - 1 === step &&
           <div className='flex flex-wrap gap-x-4 gap-y-4'>
