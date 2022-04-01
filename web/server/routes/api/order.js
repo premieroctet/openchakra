@@ -1,3 +1,4 @@
+const {addItem} = require('../../utils/commands')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 const Order = require('../../models/Order')
 const express = require('express')
@@ -5,8 +6,8 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const moment = require('moment')
-const {validateOrder}=require('../../validation/order')
-const {ORDER, CREATE, UPDATE, VIEW}=require('../../../utils/consts')
+const {validateOrder, validateOrderItem}=require('../../validation/order')
+const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
 
 moment.locale('fr')
 
@@ -25,7 +26,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   if (!req.body.user) {
-    req.body.user=req.user
+    req.body.user=req.user._id
   }
 
   Order.create(req.body)
@@ -34,7 +35,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      return res.status(404).json(err)
+      return res.status(500).json(err)
     })
 })
 
@@ -57,19 +58,24 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
     return res.status(301)
   }
 
+  const {errors, isValid}=validateOrderItem(req.body)
+  if (!isValid) {
+    return res.status(500).json(errors)
+  }
+
   const order_id=req.params.id
-  const {product_id, quantity}=req.body
+  const {product, quantity}=req.body
 
   Order.findOne({_id: order_id, ...getDataFilter(req.user.roles, ORDER, UPDATE)})
-    .then(result => {
-      if (!result) {
+    .then(order => {
+      if (!order) {
         console.error(`No order #${order_id}`)
         return res.status(404)
       }
-      return addItem(result, product_id, quantity)
+      return addItem(order, product, quantity)
     })
-    .then(data => {
-      return data.save()
+    .then(order => {
+      return order.save()
     })
     .then(data => {
       return res.json(data)
@@ -83,18 +89,21 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
 // @Route PUT /myAlfred/api/orders/:id/item
 // Removes item from a order
 // @Access private
-router.delete('/:order_id/item/:item_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, ORDER, DELETE)) {
+  if (!isActionAllowed(req.user.roles, ORDER, UPDATE)) {
     return res.status(301)
   }
 
   const order_id=req.params.order_id
   const item_id=req.params.item_id
 
-  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user.roles, ORDER, DELETE)}, {$pull: {items: {_id: item_id}}}, {runValidators: true})
-    .then(() => {
-      res.json()
+  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user.roles, ORDER, DELETE)}, {$pull: {items: {_id: item_id}}})
+    .then(result => {
+      if (!result) {
+        return res.status(404).json(`Order #${order_id} not found`)
+      }
+      return res.json()
     })
     .catch(err => {
       console.error(err)
@@ -121,7 +130,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
 })
 
-// @Route GET /myAlfred/orders/:id
+// @Route GET /myAlfred/api/orders/:id
 // View one booking
 // @Access public
 router.get('/:order_id', (req, res) => {

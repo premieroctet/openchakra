@@ -18,7 +18,7 @@ const BookingItemSchema = new Schema({
     type: Number,
     min: 0,
     max: 1.0,
-    required: true,
+    default: 0,
   },
   // Catalog price
   catalog_price: {

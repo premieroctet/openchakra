@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const lodash=require('lodash')
 
 function validateOrder(data) {
@@ -19,4 +20,22 @@ function validateOrder(data) {
   }
 }
 
-module.exports={validateOrder}
+function validateOrderItem(data) {
+
+  let errors = {}
+
+  if (!mongoose.isValidObjectId(data.product)) {
+    errors.product = "L'article est invalide"
+  }
+
+  if (!(lodash.isInteger(data.quantity) && data.quantity>0)) {
+    errors.quantity = 'La quantité est invalide'
+  }
+
+  return {
+    errors,
+    isValid: lodash.isEmpty(errors),
+  }
+}
+
+module.exports={validateOrder, validateOrderItem}

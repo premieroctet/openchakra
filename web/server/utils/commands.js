@@ -1,19 +1,19 @@
+const {computeDiscount} = require('./discount')
 
-const addItem = (data, product, quantity) => {
+const addItem = (data, product_id, quantity) => {
 
   return new Promise((resolve, reject) => {
-    const product_id=product._id
-    let item=data.items.filter(item => item._id ==product_id)
+    let item=data.items.find(item => item.product._id.toString() ==product_id.toString())
     if (item) {
       item.quantity += quantity
     }
     else {
-      item = {product: product_id, quantity: quantity, catalog_price: product.price}
+      item = {product: product_id, quantity: quantity, catalog_price: 30 || product.price}
       data.items.push(item)
     }
-    computeDiscount(product._id, item.quantity)
+    computeDiscount(product_id, item.quantity)
       .then(res => {
-        item.discount=res
+        item.discount=res || 0
         resolve(data)
       })
       .catch(err => {
