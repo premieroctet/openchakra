@@ -25,4 +25,4 @@ const FeurstProspectSchema = new Schema({
   },
 }, {toJSON: {virtuals: true, getters: true}})
 
-module.exports = FeurstProspect = mongoose.model('feurstProspect', FeurstProspectSchema)
+module.exports = mongoose.model('feurstProspect', FeurstProspectSchema)

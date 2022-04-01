@@ -39,4 +39,4 @@ AvailabilitySchema.virtual('as_text').get(function() {
   return `Du ${moment(this.period.begin).format('L')} au ${moment(this.period.end).format('L')}`
 })
 
-module.exports = Availability = mongoose.model('availability', AvailabilitySchema)
+module.exports = mongoose.model('availability', AvailabilitySchema)

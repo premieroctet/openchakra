@@ -28,4 +28,4 @@ const CustomizationSchema = new Schema({
   },
 })
 
-module.exports = Customization = mongoose.model('customization', CustomizationSchema)
+module.exports = mongoose.model('customization', CustomizationSchema)

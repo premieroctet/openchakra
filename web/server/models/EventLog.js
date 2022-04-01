@@ -73,4 +73,4 @@ const EventLogSchema = new Schema({
 }, {toJSON: {virtuals: true, getters: true}})
 
 
-module.exports = EventLog = mongoose.model('eventLog', EventLogSchema)
+module.exports = mongoose.model('eventLog', EventLogSchema)

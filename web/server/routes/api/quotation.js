@@ -47,15 +47,21 @@ router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, re
   }
 
   const quotation_id=req.params.id
-  const item=req.body
+  const {product_id, quantity}=req.body
 
-  Quotation.findOneAndUpdate({_id: quotation_id, ...getDataFilter(req.user.roles, QUOTATION, UPDATE)}, {$push: {items: item}}, {runValidators: true})
+  Quotation.findOne({_id: quotation_id, ...getDataFilter(req.user.roles, QUOTATION, UPDATE)})
     .then(result => {
       if (!result) {
         console.error(`No quotation #${quotation_id}`)
         return res.status(404)
       }
-      return res.json()
+      return addItem(result, product_id, quantity)
+    })
+    .then(data => {
+      return data.save()
+    })
+    .then(data => {
+      return res.json(data)
     })
     .catch(err => {
       console.error(err)

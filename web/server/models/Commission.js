@@ -31,4 +31,4 @@ const CommissionSchema = new Schema({
   },
 })
 
-module.exports = Commission = mongoose.model('commission', CommissionSchema)
+module.exports = mongoose.model('commission', CommissionSchema)

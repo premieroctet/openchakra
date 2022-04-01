@@ -6,7 +6,7 @@ const {BOOK_STATUS, ROLES} = require('../../../utils/consts')
 const OrderSchema = extendSchema(BaseSchema, {
   reference: {
     type: String,
-    required: true,
+    required: false, // Required but let user create without one
   },
   status: {
     type: String,
