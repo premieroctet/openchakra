@@ -1,5 +1,3 @@
-
-import {URL_BASEPATH} from '../mode'
 import {clearAuthenticationToken} from './authentication'
 
 async function client(
@@ -17,12 +15,12 @@ async function client(
     ...customConfig,
   }
 
-  return window.fetch(`${URL_BASEPATH}/${endpoint}`, config).then(async response => {
+  return window.fetch(`/${endpoint}`, config).then(async response => {
     if (response.status === 401) {
       // queryCache.clear()
       clearAuthenticationToken()
       // refresh the page for them
-      // window.location.assign(window.location)
+      window.location.assign(window.location)
       return Promise.reject({message: 'Please re-authenticate.'})
     }
     const data = await response.json()

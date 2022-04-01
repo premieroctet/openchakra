@@ -2,14 +2,19 @@ import React, {useState, Fragment} from 'react'
 import {Tab} from '@headlessui/react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-
+import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
+import {screen} from '../../styles/screenWidths'
 
 const Tabstyled = styled(Tab.List)`
   
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: var(--grid-cols-1);
   margin-inline: auto;
   margin-bottom: var(--spc-10);
+
+  @media (${screen.md}) {
+    grid-template-columns: var(--grid-cols-3);
+  }
   
   button, button::after, button[aria-selected=true]::after{
     transition: background-color ease-in-out var(--delayIn), color ease-in-out var(--delayIn), border ease-in-out var(--delayIn);
@@ -46,9 +51,12 @@ const Tabstyled = styled(Tab.List)`
   }
   
 `
-const DynamicOrderCreate = dynamic(() => import('./OrderCreate'))
-const DynamicMyOrders = dynamic(() => import('./MyOrders'))
-const DynamicMyQuotations = dynamic(() => import('./MyQuotations'))
+
+const dynamicParams = {loading: () => <SpinnerEllipsis />}
+
+const DynamicOrderCreate = dynamic(() => import('./OrderCreate'), dynamicParams)
+const DynamicMyOrders = dynamic(() => import('./MyOrders'), dynamicParams)
+const DynamicMyQuotations = dynamic(() => import('./MyQuotations'), dynamicParams)
 
 
 const tabsContent = [

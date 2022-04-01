@@ -118,6 +118,7 @@
     "tmp": "^0.2.1",
     "url-loader": "^4.1.1",
     "url-parse": "^1.5.1",
+    "use-local-storage-state": "^17.0.0",
     "uuid": "^3.3.3",
     "validator": "^10.11.0",
     "xoauth2": "^1.2.0"

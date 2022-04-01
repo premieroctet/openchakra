@@ -1,16 +1,18 @@
 import {createGlobalStyle} from 'styled-components'
 import {screen} from './screenWidths'
 
-// const blueFeurst = '#141953'
+const blue = '#141953'
 const blueFeurst = 'hsl(210.6, 50.9%, 41.6%)'
 
 export const theme = {
   accentColor: blueFeurst /* Default color for inputs */,
   colors: {
-    blue: blueFeurst, // Feurst blue
+    blue: blue,
+    blueFeurst: blueFeurst, // Logo
     white: '#FFF', // pure white
     redAlert: 'red',
     yellow: '#e0ba14',
+    black: '#111',
   },
   containerSize: 'min(100% - 2rem, 60rem)',
   //   space: [0, 4, 8, 16, 24, 32, 48, 64, 128, 256, 512],
@@ -50,6 +52,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     --bg-selectedZone: #bcc0cd;
     --text-selectedZone: #fff;
     --text-gray-500: #747474;
+    --text-sm: 0.875rem;
     --text-base: 1rem;
     --text-lg: 1.125rem;
     --text-xl: 1.25rem;
@@ -63,7 +66,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     --delayIn: .3s;
     --delayOut: .5s;
     --spc-1: 
-    --spc-0.5: 0.125rem;
+    --spc-0-5: 0.125rem;
     --spc-1: 0.25rem;
     --spc-1-5: 0.375rem;
     --spc-2: 0.5rem;
@@ -77,8 +80,9 @@ export const GlobalStyleEdi = createGlobalStyle`
     --spc-8: 2rem;
     --spc-9: 2.25rem;
     --spc-10: 2.5rem;
-
-
+    --grid-cols-1: repeat(1, minmax(0, 1fr));
+    --grid-cols-2: repeat(2, minmax(0, 1fr));
+    --grid-cols-3: repeat(3, minmax(0, 1fr));
   }
 
   html {
@@ -112,12 +116,6 @@ export const GlobalStyleEdi = createGlobalStyle`
     min-height: 50px;
     width: 100%;
     height: auto;
-  }
-  /* media query example  */
-  @media (${screen.md}) {
-    /* input {
-      border: 2px solid red !important;
-    } */
   }
   
 .text-sm {
@@ -165,7 +163,7 @@ export const GlobalStyleEdi = createGlobalStyle`
 }
 
 .grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: var(--grid-cols-2);
 }
 
 .grid-cols-1-2 {
@@ -347,5 +345,15 @@ input:focus-visible    {
 table {
   border: 2px solid #111;
 }
+
+
+ /* media query example  */
+@media (${screen.lg}) {
+  
+  .${screen.lg}-grid-cols-3 {
+    grid-template-columns: var(--grid-cols-3)
+  }
+}
+
 
 `
