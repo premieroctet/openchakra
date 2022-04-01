@@ -6,7 +6,7 @@ const {BOOK_STATUS, ROLES} = require('../../../utils/consts')
 const OrderSchema = extendSchema(BaseSchema, {
   reference: {
     type: String,
-    required: false, // Required but let user create without one
+    required: false, // TODO Required for a valid order
   },
   status: {
     type: String,
@@ -26,7 +26,8 @@ const OrderSchema = extendSchema(BaseSchema, {
   shipping_fee: {
     type: Number,
     min: 0,
-    required: true,
+    default: 0,
+    required: false, // TODO Required for a valid order
   },
 }, {toJSON: {virtuals: true, getters: true}})
 

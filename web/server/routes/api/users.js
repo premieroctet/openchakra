@@ -1,4 +1,6 @@
-const {getActionForRoles} = require('../../utils/userAccess')
+const Company = require('../../models/Company')
+const validateAddress = require('../../validation/address')
+const {getActionsForRoles} = require('../../utils/userAccess')
 const User = require('../../models/User')
 const ServiceUser = require('../../models/ServiceUser')
 require('../../models/ResetToken')
@@ -141,7 +143,7 @@ router.post('/register', (req, res) => {
 
 
 router.get('/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
-  let actions=getActionForRoles(req.context.getUser().roles)
+  let actions=getActionsForRoles(req.context.getUser().roles)
   if (req.query.model) {
     actions=actions.filter(a => a.model==req.query.model)
   }
@@ -1258,6 +1260,52 @@ router.get('/hook', (req, res) => {
     })
 })
 
+// TODO Feurst only - make it general later
+router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!req.user.company) {
+    return res.status(400).json(`User has no company`)
+  }
+
+  Company.findById(req.user.company, {addresses: 1})
+    .then(company => {
+      if (!company) {
+        return res.status(404).json('Company not found')
+      }
+      return res.json(company.addresses)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+})
+
+router.post('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!req.user.company) {
+    return res.status(400).json(`User has no company`)
+  }
+  const {errors, isValid} = validateAddress(req.body)
+
+  if (!isValid) {
+    return res.status(400).json(errors)
+  }
+
+  if (!req.user.company) {
+    return res.status(400).json(`User has no company`)
+  }
+
+  Company.findByIdAndUpdate(req.user.company, {$push: {addresses: req.body}}, {new: true})
+    .then(company => {
+      if (!company) {
+        return res.status(404).json('Company not found')
+      }
+      return res.json(company)
+    })
+    .catch(err => {
+      return res.status(500).json(err)
+    })
+
+})
 
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!

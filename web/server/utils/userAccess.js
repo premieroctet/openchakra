@@ -1,17 +1,20 @@
 const lodash=require('lodash')
 
-const {USER_ACTIONS, ALL} = require('../../utils/consts')
+const {USER_ACTIONS, ALL, COMPANY, MINE} = require('../../utils/consts')
 
-const getActions = (role, model, action) => {
+const getActions = (roles, model, action) => {
   const actions=lodash.flattenDeep(roles.map(role => USER_ACTIONS[role]))
   if (!actions) {
     return []
   }
-  return userActions.filter(userAction => userAction.model==model && userAction.action==action)
+  return actions.filter(a => a.model==model && a.action==action)
 }
 
 const isActionAllowed = (roles, model, action) => {
-  return getActions(roles, model, action).length>0
+  const actions=getActions(roles, model, action)
+  const allowed=actions.length>0
+  console.log(`Allowed ${[roles, model, action]} amongst ${JSON.stringify(actions)} => ${allowed}`)
+  return allowed
 }
 
 const getDataFilter = (roles, model, action) => {
@@ -28,10 +31,10 @@ const getDataFilter = (roles, model, action) => {
   return {noway: true}
 }
 
-const getActionForRoles = roles => {
+const getActionsForRoles = roles => {
   let actions=lodash.flattenDeep(roles.map(role => USER_ACTIONS[role]))
   actions=lodash.uniq(actions)
   return actions
 }
 
-module.exports={isActionAllowed, getDataFilter, getActionForRoles}
+module.exports={isActionAllowed, getDataFilter, getActionsForRoles}

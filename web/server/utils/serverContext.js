@@ -83,10 +83,6 @@ class RequestServerContext {
     this.payment=new MarketplacePayment()
   }
 
-  getUser = () => {
-    return this.user
-  }
-
   isAdmin = () => {
     return get_token(this.request) && get_token(this.request).is_admin
   }

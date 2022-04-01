@@ -1,3 +1,4 @@
+const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 const Quotation = require('../../models/Quotation')
 const express = require('express')
 
@@ -5,7 +6,7 @@ const router = express.Router()
 const passport = require('passport')
 const moment = require('moment')
 const {validateQuotation}=require('../../validation/quotation')
-const {QUOTATION, CREATE}=require('../../../utils/consts')
+const {QUOTATION, CREATE, VIEW}=require('../../../utils/consts')
 
 moment.locale('fr')
 

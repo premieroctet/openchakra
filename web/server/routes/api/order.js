@@ -1,3 +1,4 @@
+const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 const Order = require('../../models/Order')
 const express = require('express')
 
@@ -5,15 +6,14 @@ const router = express.Router()
 const passport = require('passport')
 const moment = require('moment')
 const {validateOrder}=require('../../validation/order')
-const {ORDER, CREATE, UPDATE}=require('../../../utils/consts')
+const {ORDER, CREATE, UPDATE, VIEW}=require('../../../utils/consts')
 
 moment.locale('fr')
 
 // @Route POST /myAlfred/api/orders/
 // Add a new order
 // @Access private
-// router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
-router.post('/', (req, res) => {
+router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, ORDER, CREATE)) {
     return res.status(301)
@@ -25,16 +25,16 @@ router.post('/', (req, res) => {
   }
 
   if (!req.body.user) {
-    req.body.user=req.get_logged_id()
+    req.body.user=req.user
   }
 
   Order.create(req.body)
     .then(order => {
-      res.json(order)
+      return res.json(order)
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      return res.status(404).json(err)
     })
 })
 
@@ -51,7 +51,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 // @Route PUT /myAlfred/api/orders/:id/item
 // Add item to a order {product_id, quantity, discount?}
 // @Access private
-router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, ORDER, UPDATE)) {
     return res.status(301)
