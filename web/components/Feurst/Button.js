@@ -41,7 +41,7 @@ Button.defaultProps = {
 const StyledButton = styled(Button).attrs(props => ({
   size: props.size || '',
   bgColor: props.bgColor || props.theme.colors.blue,
-  textColor: props.textColor || 'black',
+  textColor: props.textColor || props.theme.colors.white,
 }))`
   position: relative;
   border: 0;
@@ -98,7 +98,7 @@ const ButtonEdge = styled.span.attrs(props => ({
 
 const ButtonFront = styled.span.attrs(props => ({
   bgColor: props.bgColor || props.theme.colors.blue,
-  textColor: props.textColor || '#000',
+  textColor: props.textColor || props.theme.colors.white,
 }))`
   display: block;
   position: relative;

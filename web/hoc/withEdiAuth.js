@@ -4,7 +4,6 @@ import Router from 'next/router'
 import {getLoggedUser} from '../utils/context'
 import {ThemeProvider} from 'styled-components'
 import {theme, GlobalStyleEdi} from '../styles/feurst.theme'
-import {URL_BASEPATH} from '../mode'
 
 export const feurstImgPath = '../../static/assets/img/feurst'
 export const feurstPhoneNumber = '+33 4 77 27 40 63'
@@ -14,15 +13,15 @@ export const basePathEdi = '/edi'
 const access = {
   FEURST_ADMIN: [
     {
-      url: `${URL_BASEPATH}/edi/orders`,
+      url: `/edi/orders`,
       label: 'Commandes',
     },
     {
-      url: `${URL_BASEPATH}/edi/account`,
+      url: `/edi/account`,
       label: 'Mon compte',
     },
     {
-      url: `${URL_BASEPATH}/edi/login?out`,
+      url: `/edi/login?out`,
       label: 'Se déconnecter',
     },
   ],

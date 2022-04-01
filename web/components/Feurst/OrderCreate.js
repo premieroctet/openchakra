@@ -4,6 +4,14 @@ import ImportExcelFile from './ImportExcelFile'
 import {DateRangeColumnFilter} from '../../components/Table/TableFilter'
 import Table from '../Table/Table'
 import EditableCell from '../Table/EditableCell'
+import {
+  getRole,
+  getRoles,
+} from '../../utils/context'
+import {client} from '../../utils/client'
+import axios from 'axios'
+import {getPureAuthToken, getAuthToken} from '../../utils/authentication'
+import useLocalStorageState from 'use-local-storage-state'
 
 
 function moneyFormatter({lang, value}) {
@@ -20,7 +28,6 @@ const ToTheBin = props => (
 function makeData() {
   return [
     {
-      order_date: new Date(2020, 1, 3),
       product_ref: 'TKNZZZ',
       product_name: 'TKN13 - PE',
       product_quantity: 4,
@@ -31,7 +38,6 @@ function makeData() {
       product_delete: '',
     },
     {
-      order_date: new Date(2022, 1),
       product_ref: 'TKNAAA',
       product_name: 'TKN13 - PT',
       product_quantity: 40,
@@ -42,7 +48,6 @@ function makeData() {
       product_delete: '',
     },
     {
-      order_date: new Date(2021, 1),
       product_ref: 'TKNBBB',
       product_name: 'TKN14 - PT',
       product_quantity: 21,
@@ -59,6 +64,8 @@ const OrderCreate = () => {
 
   const [data, setData] = useState(useMemo(() => makeData(), []))
   const [language, setLanguage] = useState('fr')
+  const [orderID, setOrderId, {removeItem}] = useLocalStorageState('orderid', {defaultValue: null})
+  const dataToken = getAuthToken()
 
   const updateMyData = (rowIndex, columnId, value) => {
     setData(old =>
@@ -73,21 +80,46 @@ const OrderCreate = () => {
       }),
     )
   }
+
+  async function createOrderId() {
+    const postData = new FormData()
+    postData.append('user', dataToken)
+
+    try {
+      const {_id} = await client('myAlfred/api/orders', {'data': dataToken, token: getPureAuthToken()})
+      setOrderId(_id)
+    }
+    catch(e) { console.error(e, 'Cant create an order') }
+  }
+
+  async function getOrderId() {
+    try {
+      const All = await client(`myAlfred/api/orders/${orderID}`, {token: getPureAuthToken()}) // TODO: Il me manque le user
+      // Passage des infos de la commande
+    }
+    catch(e) { console.error(e, 'Cant create an order') }
+  }
   
   useEffect(() => {
     setLanguage(Navigator.language)
+
+
   }, [language])
+
+  useEffect(() => {
+
+    if (!orderID) {
+      createOrderId()
+    }
+    else {
+      getOrderId(orderID)
+    }
+    
+
+  }, [createOrderId, getOrderId, orderID])
 
   const columns = useMemo(
     () => [
-      {
-        Header: 'Date commande',
-        accessor: 'order_date',
-        Cell: ({cell: {value}}) => <div>{value.toLocaleDateString()}</div>,
-        sortType: 'datetime',
-        Filter: DateRangeColumnFilter,
-        filter: 'dateBetween', /* Custom Filter Type */
-      },
       {
         Header: 'Réf. catalogue',
         accessor: 'product_ref',
@@ -136,8 +168,26 @@ const OrderCreate = () => {
     [data, language],
   )
 
-  function checkProduct(e) {
-    console.log(e)
+  function checkProduct({item, qty}) {
+    const {
+      reference,
+      description,
+      description_2,
+      weight,
+    } = item
+
+    const articleToAdd = {
+      product_ref: reference,
+      product_name: `${description}, ${description_2}`,
+      product_quantity: qty,
+      product_weight: weight,
+      product_price: 2000,
+      product_discount: 40,
+      product_totalprice: 38.93,
+      product_delete: '',
+    }
+
+    setData([...data, articleToAdd])
   }
 
 
