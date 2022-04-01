@@ -28,7 +28,7 @@ const getDataFilter = (roles, model, action) => {
   return {noway: true}
 }
 
-getActionForRoles = roles => {
+const getActionForRoles = roles => {
   let actions=lodash.flattenDeep(roles.map(role => USER_ACTIONS[role]))
   actions=lodash.uniq(actions)
   return actions

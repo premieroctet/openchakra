@@ -5,14 +5,15 @@ const router = express.Router()
 const passport = require('passport')
 const moment = require('moment')
 const {validateOrder}=require('../../validation/order')
-const {ORDER, CREATE}=require('../../../utils/consts')
+const {ORDER, CREATE, UPDATE}=require('../../../utils/consts')
 
 moment.locale('fr')
 
 // @Route POST /myAlfred/api/orders/
 // Add a new order
 // @Access private
-router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
+// router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/', (req, res) => {
 
   if (!isActionAllowed(req.user.roles, ORDER, CREATE)) {
     return res.status(301)
@@ -37,8 +38,18 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
 })
 
+// @Route PUT /myAlfred/api/orders/:id
+// Add item to a order {address_id?, reference?}
+// @Access private
+router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, ORDER, UPDATE)) {
+    return res.status(301)
+  }
+
+})
 // @Route PUT /myAlfred/api/orders/:id/item
-// Add item to a order
+// Add item to a order {product_id, quantity, discount?}
 // @Access private
 router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, res) => {
 
@@ -47,15 +58,21 @@ router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, re
   }
 
   const order_id=req.params.id
-  const item=req.body
+  const {product_id, quantity}=req.body
 
-  Quotation.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user.roles, ORDER, UPDATE)}, {$push: {items: item}}, {runValidators: true})
+  Order.findOne({_id: order_id, ...getDataFilter(req.user.roles, ORDER, UPDATE)})
     .then(result => {
       if (!result) {
         console.error(`No order #${order_id}`)
         return res.status(404)
       }
-      return res.json()
+      return addItem(result, product_id, quantity)
+    })
+    .then(data => {
+      return data.save()
+    })
+    .then(data => {
+      return res.json(data)
     })
     .catch(err => {
       console.error(err)

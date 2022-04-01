@@ -2,6 +2,7 @@ const Validator = require('validator')
 const lodash=require('lodash')
 
 function validateOrder(data) {
+
   let errors = {}
 
   if (Validator.isEmpty(data.reference)) {

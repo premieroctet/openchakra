@@ -48,4 +48,4 @@ UIConfigurationSchema.virtual('type_label').get(function() {
   return this.type=='content' ? `${this.classname}.${this.type}` : this.classname
 })
 
-module.exports = UIConfiguration = mongoose.model('uiconfiguration', UIConfigurationSchema)
+module.exports = mongoose.model('uiconfiguration', UIConfigurationSchema)

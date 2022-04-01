@@ -1,4 +1,4 @@
-const { canAlfredParticularRegister } = require('../../config/config');
+const {canAlfredParticularRegister} = require('../../config/config')
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
@@ -127,4 +127,4 @@ ShopSchema.virtual('insurance_text').get(function() {
 })
 
 
-module.exports = Shop = mongoose.model('shop', ShopSchema)
+module.exports = mongoose.model('shop', ShopSchema)

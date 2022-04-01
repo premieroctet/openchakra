@@ -24,7 +24,7 @@ class all extends DataPage {
   }
 
   getTitle = () => {
-    return 'Articles'
+    return 'Produits'
   }
 
   loadData = () => {
