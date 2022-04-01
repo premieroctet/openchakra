@@ -2,13 +2,13 @@ const {MONGOOSE_OPTIONS} = require('../../utils/database')
 const lodash=require('lodash')
 
 const ProductSchema = require('./ProductSchema')
-const BookingSchema = require('./BookingSchema')
+const OrderSchema = require('./OrderSchema')
 const mongoose = require('mongoose')
 
-const Booking=mongoose.model('booking', BookingSchema)
+const Order=mongoose.model('order', OrderSchema)
 const Product=mongoose.model('product', ProductSchema)
 
-describe('Feurst Booking/Products test', () => {
+describe('Feurst Order/Products test', () => {
 
   const PRODUCTS=[
     {description: 'Produit 1', reference: 'ref1', weight: 12, price: 12},
@@ -21,7 +21,7 @@ describe('Feurst Booking/Products test', () => {
         return Product.create(PRODUCTS)
       })
       .then(() => {
-        return Booking.create({
+        return Order.create({
           reference: 'hopla',
           shipping_fee: 0,
         })
@@ -31,21 +31,21 @@ describe('Feurst Booking/Products test', () => {
   afterAll(() => {
     return Product.deleteMany({})
       .then(() => {
-        return Booking.deleteMany({})
+        return Order.deleteMany({})
       })
   })
 
-  test('Booking amount properly computed', () => {
+  test('Order amount properly computed', () => {
     return Product.find()
       .then(products => {
         const items=products.map(p => ({product: p, catalog_price: p.price, discount: 0.1}))
-        return Booking.updateOne({}, {$set: {items: items}}, {new: true})
+        return Order.updateOne({}, {$set: {items: items}}, {new: true})
       })
       .then(() => {
-        return Booking.findOne()
+        return Order.findOne()
       })
-      .then(book => {
-        return expect(book.total_amount).toBe(24.3)
+      .then(order => {
+        return expect(order.total_amount).toBe(24.3)
       })
   })
 

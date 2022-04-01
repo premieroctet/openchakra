@@ -31,6 +31,14 @@ const getRole = req => {
   return null
 }
 
+const getRoles = req => {
+  const token = get_token(req)
+  if (token) {
+    return token.roles
+  }
+  return null
+}
+
 // Create JWT cookie with user credentials
 const send_cookie = (user, role, res, logged_as=null) => {
   const payload = {
@@ -41,6 +49,7 @@ const send_cookie = (user, role, res, logged_as=null) => {
     is_alfred: user.is_alfred,
     is_alfred_pro: user.shop && user.shop.length==1 && !user.shop[0].is_particular,
     role: role,
+    roles: user.roles,
     is_registered: user.is_registered,
     logged_as: logged_as,
   } // Create JWT payload
@@ -94,6 +103,6 @@ const serverContextFromRequest = req => {
   return new RequestServerContext(req)
 }
 
-module.exports = {get_logged_id, getRole,
+module.exports = {get_logged_id, getRole, getRoles,
   send_cookie, get_token, serverContextFromRequest,
 }

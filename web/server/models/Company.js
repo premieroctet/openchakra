@@ -1,4 +1,6 @@
+const AddressSchema = require('./AddressSchema')
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../utils/consts')
 const {hideIllegal} = require('../../utils/text')
@@ -15,47 +17,10 @@ const CompanySchema = new Schema({
   siret: {
     type: String,
   },
-  billing_address: {
-    address: {
-      type: String,
-    },
-    city: {
-      type: String,
-    },
-    zip_code: {
-      type: String,
-    },
-    country: {
-      type: String,
-    },
-    gps: {
-      lat: Number,
-      lng: Number,
-    },
-  },
-  service_address: [{
-    address: {
-      type: String,
-    },
-    city: {
-      type: String,
-    },
-    zip_code: {
-      type: String,
-    },
-    lat: {
-      type: Number,
-    },
-    lng: {
-      type: Number,
-    },
-    label: {
-      type: String,
-    },
-  }],
+  // Main adress is always the first one
+  addresses: [AddressSchema],
   vat_subject: {
     type: Boolean,
-    required: true,
     default: false,
   },
   vat_number: {
@@ -63,11 +28,11 @@ const CompanySchema = new Schema({
   },
   activity: {
     type: String,
-    enum: Object.keys(COMPANY_ACTIVITY),
+    required: false,
   },
   size: {
     type: String,
-    enum: Object.keys(COMPANY_SIZE),
+    required: false,
   },
   description: {
     type: String,

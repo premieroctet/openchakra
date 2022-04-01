@@ -537,7 +537,7 @@ router.post('/avocotes', (req, res) => {
 })
 
 // Check bookings to set to FINISHED
-new CronJob('0 */35 * * * *', (() => {
+Booking && new CronJob('0 */35 * * * *', (() => {
   console.log('Checking terminated bookings')
   const date = moment().startOf('day')
 
@@ -566,7 +566,7 @@ new CronJob('0 */35 * * * *', (() => {
 }), null, true, 'Europe/Paris')
 
 // Check bookings to pay
-new CronJob('0 0 * * * *', (() => {
+Booking && new CronJob('0 0 * * * *', (() => {
   console.log('Checking bookings to pay')
   Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
     .populate('user')
@@ -588,7 +588,7 @@ new CronJob('0 0 * * * *', (() => {
 // Expiration réervation en attente de confirmation :
 // - soit EXPIRATION_DELAY jours après la date de création de la réservation
 // - soit après la date de prestation
-new CronJob('0 */15 * * * *', (() => {
+Booking && new CronJob('0 */15 * * * *', (() => {
   console.log('Checking expired bookings')
   const currentDate = moment().startOf('day')
   Booking.find({$or: [{status: BOOK_STATUS.TO_CONFIRM}, {status: BOOK_STATUS.TO_PAY}]})

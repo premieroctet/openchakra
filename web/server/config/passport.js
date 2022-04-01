@@ -6,6 +6,7 @@ const keys = require('../config/keys')
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const {ADMIN, ROLES} = require('../../utils/consts')
+const {FEURST_ADMIN} = require('../../utils/consts')
 
 const jwt_opts = {
   passReqToCallback: true,
@@ -56,7 +57,7 @@ passport.use('jwt', new JwtStrategy(jwt_opts, (req, payload, done) => {
 passport.use('admin', new JwtStrategy(jwt_opts, (req, payload, done) => {
   User.findById(payload.id)
     .then(user => {
-      if (user && user.is_admin) {
+      if (user && (user.is_admin || (user.roles && user.roles.includes(FEURST_ADMIN)))) {
         return done(null, user)
       }
       return done(null, false, 'Vous devez être administrateur')

@@ -33,6 +33,11 @@ const ProductSchema = new Schema({
     min: 0,
     // required: true, TODO make mandatory then import
   },
+  stock: {
+    type: Number,
+    min: 0,
+    // required: true, TODO make mandatory then import
+  },
 })
 
 module.exports=ProductSchema

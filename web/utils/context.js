@@ -1,3 +1,4 @@
+const {FEURST_ADMIN} = require('./consts')
 const {isAndroid, isIOS, getUA}=require('react-device-detect')
 const isWebview = require('is-webview')
 const {getAuthToken} = require('./authentication')
@@ -33,6 +34,14 @@ const getRole = () => {
     return null
   }
   return token.role
+}
+
+const getRoles = () => {
+  const token = getAuthToken()
+  if (!token) {
+    return null
+  }
+  return token.roles
 }
 
 const hideEmptyEvaluations = () => {
@@ -80,11 +89,11 @@ const getLoggedUserId = () => {
 
 const isLoggedUserAdmin = () => {
   const logged=getLoggedUser()
-  return logged && logged.is_admin
+  return logged && (logged.is_admin || (getRoles() && getRoles().includes(FEURST_ADMIN)))
 }
 
 const isUserSuperAdmin = user => {
-  return user && user.is_admin && user.email.match(/@my-alfred\.io$/)
+  return user && (user.is_admin && user.email.match(/@my-alfred\.io$/) || (getRoles() && getRoles().includes(FEURST_ADMIN)))
 }
 
 const isLoggedUserAlfred = () => {

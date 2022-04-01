@@ -18,22 +18,10 @@ class DataImport extends React.Component {
       selectedFile: null,
       comments: null,
       errors: null,
-      fields: [],
+      created: null,
+      updated: null,
     }
     this.fileRef = React.createRef()
-  }
-
-  componentDidMount() {
-    localStorage.setItem('path', Router.pathname)
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/admin/prospect/fields')
-      .then(response => {
-        const fields=response.data
-        this.setState(fields)
-      })
-      .catch(err => {
-        console.error(err)
-      })
   }
 
   onFileChange = event => {
@@ -54,11 +42,9 @@ class DataImport extends React.Component {
     data.append('buffer', this.state.selectedFile)
     axios.post(importURL, data)
       .then(response => {
-        alert('ok)')
         this.setState({...response.data})
       })
       .catch(err => {
-        alert('nok')
         this.setState({...err.response.data})
       })
     // Clear input file to avoid ERR_UPLOAD_FILE_CHANGED
@@ -68,19 +54,19 @@ class DataImport extends React.Component {
 
 
   render() {
-    const {comments, errors, selectedFile} = this.state
+    const {comments, errors, selectedFile, created, updated} = this.state
+    const {title, subTitle}=this.props
 
     return (
       <Card>
         <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-          <Typography style={{fontSize: 30}}>Import Excel</Typography>
+          <Typography style={{fontSize: 30}}>{title}</Typography>
         </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-              Sélectionnez un fichier .csv ou .txt, séparateur point-virgule
-        </Grid>
+        <Grid item style={{display: 'flex', justifyContent: 'center'}}>{subTitle}</Grid>
         <Grid item style={{display: 'flex', justifyContent: 'center'}}>
           <input ref={this.fileRef} type="file" name="file" id="file" onChange={this.onFileChange} accept='.csv,.xlsx'/>
         </Grid>
+        {(!!created || !!updated) && `${created} ajouts, ${updated} mises à jour`}
         { (!lodash.isEmpty(comments) || !lodash.isEmpty(errors)) &&
           <Grid item style={{display: 'flex', justifyContent: 'center'}}>
             {comments && comments.join(',')}

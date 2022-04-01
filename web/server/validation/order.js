@@ -1,7 +1,12 @@
+const Validator = require('validator')
 const lodash=require('lodash')
 
-function validateQuotation(data) {
+function validateOrder(data) {
   let errors = {}
+
+  if (Validator.isEmpty(data.reference)) {
+    errors.label = 'Une référence est requise'
+  }
 
   if (lodash.isEmpty(data.address)) {
     errors.label = 'Une adresse est requise'
@@ -17,4 +22,4 @@ function validateQuotation(data) {
   }
 }
 
-module.exports={validateQuotation}
+module.exports={validateOrder}

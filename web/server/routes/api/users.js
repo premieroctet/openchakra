@@ -1,3 +1,4 @@
+const {getActionForRoles} = require('../../utils/userAccess')
 const User = require('../../models/User')
 const ServiceUser = require('../../models/ServiceUser')
 require('../../models/ResetToken')
@@ -136,6 +137,18 @@ router.post('/register', (req, res) => {
     .catch(err => {
       console.error(err)
     })
+})
+
+
+router.get('/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
+  let actions=getActionForRoles(req.context.getUser().roles)
+  if (req.query.model) {
+    actions=actions.filter(a => a.model==req.query.model)
+  }
+  if (req.query.action) {
+    actions=actions.filter(a => a.action==req.query.action)
+  }
+  res.json(actions)
 })
 
 // @Route GET /myAlfred/api/users/sendMailVerification
@@ -282,7 +295,7 @@ router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: fal
         note: req.body.note,
         phone_address: req.body.phone,
       }
-      
+
       if (user?.service_address) {
         Object.assign(user.service_address, [...user.service_address, address])
       }
@@ -504,7 +517,7 @@ router.post('/login', (req, res) => {
 
   // Find user by email
   User.findOne({email: new RegExp(`^${email}$`, 'i')})
-    .populate('shop', 'is_particular')
+    .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
     .then(user => {
       // Check for user
       if (!user) {
@@ -554,7 +567,7 @@ router.post('/login', (req, res) => {
 
 router.get('/token', passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findById(req.user.id)
-    .populate('shop', 'is_particular')
+    .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
     .then(user => {
       send_cookie(user, null, res, req.context.getLoggedAs())
     })
@@ -772,32 +785,30 @@ router.post('/forgotPassword', (req, res) => {
 router.post('/resetPassword', (req, res) => {
   const password = req.body.password
   const token = req.body.token
+  let resetToken=null
   ResetToken.findOne({token: token})
-    .then(resetToken => {
-      User.findOne({resetToken: resetToken._id})
-        .then(user => {
-          if (!user) {
-            throw 'No user'
-          }
-          bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(password, salt, (err, hash) => {
-              if (err) {
-                throw err
-              }
-              user.updateOne({password: hash, resetToken: undefined})
-                .then(result => res.json(user))
-                .catch(err => console.error(err))
-            })
-          })
-        })
-        .catch(err => {
-          console.error(err)
-          res.status(400).json({msg: 'Token expiré'})
-        })
+    .then(result => {
+      if (!result) {
+        return Promise.reject('Token expiré')
+      }
+      resetToken=result
+      return bcrypt.hash(password, 10)
+    })
+    .then(hash => {
+      return User.findOneAndUpdate({resetToken: resetToken._id}, {$set: {password: hash, resetToken: null}})
+    })
+    .then(result => {
+      if (!result) {
+        return Promise.reject('Token invalide')
+      }
+      return ResetToken.findOneAndRemove({token: token})
+    })
+    .then(() => {
+      return res.json()
     })
     .catch(err => {
       console.error(err)
-      res.status(400).json({msg: 'Token invalide'})
+      res.status(400).json(err)
     })
 })
 

@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const extendSchema = require('mongoose-extend-schema')
+const BaseSchema=require('./QuotationBookingBaseSchema')
 
 // TODO To complete
-const QuotationSchema = new Schema({
+const QuotationSchema = extendSchema(BaseSchema, {
 }, {toJSON: {virtuals: true, getters: true}})
 
 module.exports = QuotationSchema

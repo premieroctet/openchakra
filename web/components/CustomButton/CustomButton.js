@@ -14,4 +14,4 @@ function CustomButton(props) {
 
 }
 
-export default CustomButton
+module.exports=CustomButton

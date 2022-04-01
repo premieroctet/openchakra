@@ -17,57 +17,22 @@ const UserSchema = new Schema({
     unique: true,
     set: v => v.toLowerCase().trim(),
   },
+  active: {
+    type: Boolean,
+    default: true,
+  },
   password: {
     type: String,
+    default: 'INVALID',
     required: true,
-  },
-  phone: {
-    type: String,
-  },
-  sms_code: {
-    type: String,
-  },
-  billing_address: {
-    address: {
-      type: String,
-    },
-    city: {
-      type: String,
-    },
-    zip_code: {
-      type: String,
-    },
-    country: {
-      type: String,
-    },
-    gps: {
-      lat: Number,
-      lng: Number,
-    },
   },
   creation_date: {
     type: Date,
     default: Date.now,
   },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  is_confirmed: {
-    type: Boolean,
-    default: false,
-  },
-  phone_confirmed: {
-    type: Boolean,
-    default: false,
-  },
   last_login: [{
     type: Date,
   }],
-  is_admin: {
-    type: Boolean,
-    default: false,
-  },
   resetToken: {
     type: Schema.Types.ObjectId,
     ref: 'resetToken',
