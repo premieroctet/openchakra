@@ -1,13 +1,9 @@
-import React, {useMemo, useState, useEffect} from 'react'
+import React, {useMemo, useState, useEffect, useCallback} from 'react'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {DateRangeColumnFilter} from '../../components/Table/TableFilter'
 import Table from '../Table/Table'
 import EditableCell from '../Table/EditableCell'
-import {
-  getRole,
-  getRoles,
-} from '../../utils/context'
 import {client} from '../../utils/client'
 import axios from 'axios'
 import {getPureAuthToken, getAuthToken} from '../../utils/authentication'
@@ -27,36 +23,6 @@ const ToTheBin = props => (
 
 function makeData() {
   return [
-    {
-      product_ref: 'TKNZZZ',
-      product_name: 'TKN13 - PE',
-      product_quantity: 4,
-      product_weight: 1400,
-      product_price: 65.87,
-      product_discount: 40,
-      product_totalprice: 46,
-      product_delete: '',
-    },
-    {
-      product_ref: 'TKNAAA',
-      product_name: 'TKN13 - PT',
-      product_quantity: 40,
-      product_weight: 2700,
-      product_price: 64.88,
-      product_discount: 40,
-      product_totalprice: 38.93,
-      product_delete: '',
-    },
-    {
-      product_ref: 'TKNBBB',
-      product_name: 'TKN14 - PT',
-      product_quantity: 21,
-      product_weight: 21700,
-      product_price: 165.57,
-      product_discount: 40,
-      product_totalprice: 38.93,
-      product_delete: '',
-    },
   ]
 }
 
@@ -81,42 +47,76 @@ const OrderCreate = () => {
     )
   }
 
-  async function createOrderId() {
+  const drawTable = ({items}) => {
+    const newSet = items.map(item => {
+
+      const {
+        _id,
+        product,
+        discount,
+        quantity,
+        catalog_price,
+      } = item
+      
+      const {
+        reference,
+        description,
+        description_2,
+        family,
+        weight,
+      } = product
+  
+      const articleToAdd = {
+        product_ref: reference,
+        product_name: `${description}, ${description_2}`,
+        product_quantity: quantity,
+        product_weight: weight,
+        product_price: catalog_price,
+        product_discount: discount,
+        product_totalprice: 38.93,
+        product_delete: _id,
+      }
+      
+      return articleToAdd
+    })
+    setData(newSet)
+  }
+
+  const createOrderId = useCallback(async() => {
     const postData = new FormData()
     postData.append('user', dataToken)
 
-    try {
-      const {_id} = await client('myAlfred/api/orders', {'data': dataToken, token: getPureAuthToken()})
-      setOrderId(_id)
-    }
-    catch(e) { console.error(e, 'Cant create an order') }
-  }
+    
+    const {_id} = await client('myAlfred/api/orders', {'data': dataToken, token: getPureAuthToken()})
+      .catch(e => console.error(e, `Can't create an order`))
+    
+    setOrderId(_id)
+    
+  }, [dataToken, setOrderId])
 
-  async function getOrderId() {
-    try {
-      const All = await client(`myAlfred/api/orders/${orderID}`, {token: getPureAuthToken()}) // TODO: Il me manque le user
-      // Passage des infos de la commande
-    }
-    catch(e) { console.error(e, 'Cant create an order') }
-  }
+  const getOrderId = useCallback(async() => {
+    
+    const currentOrder = await client(`myAlfred/api/orders/${orderID}`, {token: getPureAuthToken()})
+      .catch(e => console.error(e, `Can't get an order`))
+
+    // drawTable(currentOrder)
+    
+  }, [orderID])
+  
+
+  // useEffect(() => {
+  //   console.log('lang')
+  //   setLanguage(Navigator.language)
+  // }, [language])
   
   useEffect(() => {
-    setLanguage(Navigator.language)
-
-
-  }, [language])
-
-  useEffect(() => {
-
     if (!orderID) {
       createOrderId()
     }
     else {
       getOrderId(orderID)
     }
-    
-
-  }, [createOrderId, getOrderId, orderID])
+  }, [orderID, createOrderId, getOrderId])
 
   const columns = useMemo(
     () => [
@@ -168,32 +168,27 @@ const OrderCreate = () => {
     [data, language],
   )
 
-  function checkProduct({item, qty}) {
+  const checkProduct = async({item, qty}) => {
+
+  }
+
+  const AddProduct = async({item, qty}) => {
     const {
-      reference,
-      description,
-      description_2,
-      weight,
+      _id,
     } = item
-
-    const articleToAdd = {
-      product_ref: reference,
-      product_name: `${description}, ${description_2}`,
-      product_quantity: qty,
-      product_weight: weight,
-      product_price: 2000,
-      product_discount: 40,
-      product_totalprice: 38.93,
-      product_delete: '',
-    }
-
-    setData([...data, articleToAdd])
+    
+    
+    const afterNewProduct = await client(`myAlfred/api/orders/${orderID}/items`, {data: {product: _id, quantity: qty}, token: getPureAuthToken(), method: 'PUT'})
+      .catch(e => console.error(`Can't add product ${e}`))
+      
+    getOrderId(orderID)
+    
   }
 
 
   return (<>
     <ImportExcelFile />
-    <AddArticle checkProduct={checkProduct} />
+    <AddArticle checkProduct={checkProduct} addProduct={AddProduct} />
     <Table data={data} columns={columns} updateMyData={updateMyData} />
   </>
   )

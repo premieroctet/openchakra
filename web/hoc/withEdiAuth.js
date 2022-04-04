@@ -4,13 +4,15 @@ import Router from 'next/router'
 import {getLoggedUser} from '../utils/context'
 import {ThemeProvider} from 'styled-components'
 import {theme, GlobalStyleEdi} from '../styles/feurst.theme'
+import {client} from '../utils/client'
+import {getPureAuthToken} from '../utils/authentication'
 
 export const feurstImgPath = '../../static/assets/img/feurst'
 export const feurstPhoneNumber = '+33 4 77 27 40 63'
 export const basePathEdi = '/edi'
 
 
-const access = {
+const availableSections = {
   FEURST_ADMIN: [
     {
       url: `/edi/orders`,
@@ -25,6 +27,16 @@ const access = {
       label: 'Se déconnecter',
     },
   ],
+  CUSTOMER_SLAVE: [
+    {
+      url: `/edi/orders`,
+      label: 'Commandes',
+    },
+    {
+      url: `/edi/login?out`,
+      label: 'Se déconnecter',
+    },
+  ],
 }
 
 
@@ -32,13 +44,26 @@ const withEdiAuth = (Component = null, options = {}) => {
   class WithEdiAuth extends React.Component {
     state = {
       loading: true,
+      role: null,
+      userRights: [],
     };
+    
+    
+    async getUserRoles() {
+      return await client('myAlfred/api/users/actions', {token: getPureAuthToken()})
+        .catch(e => {
+          console.error(e, 'Cant fetch users roles')
+          return []
+        })
+    }
 
-    componentDidMount() {
-      // TODO Fetch user rights
+    async componentDidMount() {
+      
       const isLoggedUser = getLoggedUser()
       if (isLoggedUser) {
-        this.setState({loading: false, user: isLoggedUser, role: 'FEURST_ADMIN'})
+        const userRights = await this.getUserRoles()
+          .catch(e => console.error(e))
+        this.setState({loading: false, user: isLoggedUser, userRights})
       }
       else {
         Router.push(options.pathAfterFailure || '/edi/login')
@@ -46,16 +71,17 @@ const withEdiAuth = (Component = null, options = {}) => {
     }
 
     render() {
-      const {loading} = this.state
+      const {loading, userRights, user} = this.state
+      const sectionRights = user?.role ? availableSections[user.role] : []
 
       if (loading) {
         return <div>...</div>
       }
 
       return (<ThemeProvider theme={theme}>
-        <Header accessRights={access[this.state.role]} />
+        <Header accessRights={sectionRights} />
         <div className='container'>
-          <Component {...this.props}/>
+          <Component userRights={userRights} {...this.props}/>
         </div>
         <GlobalStyleEdi />
       </ThemeProvider>)

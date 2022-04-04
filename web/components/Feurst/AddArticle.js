@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Autocomplete} from '@material-ui/lab'
 import {TextField} from '@material-ui/core'
 import useAsync from '../../hooks/use-async.hook'
@@ -23,7 +23,7 @@ const FormAddArticle = styled.form`
 
 `
 
-const AddArticle = ({checkProduct}) => {
+const AddArticle = ({addProduct, checkProduct}) => {
 
   const [article, setArticle] = useState({
     item: null,
@@ -42,7 +42,7 @@ const AddArticle = ({checkProduct}) => {
   useEffect(() => {
     run(client('myAlfred/api/products', {token: getPureAuthToken()}))
   }
-  , [run, client])
+  , [run])
 
   if (isLoading) { return (<SpinnerEllipsis />) }
   if(isError) { return (<p>Les produits ne se sont pas chargés.</p>) }
@@ -66,7 +66,7 @@ const AddArticle = ({checkProduct}) => {
         <input type="number" id='articleQty' value={article.qty} onChange={ev => setArticle({...article, qty: ev.target.value})} />
       </label>
 
-      <PleasantButton onClick={() => checkProduct(article)}>Ajouter</PleasantButton>
+      <PleasantButton onClick={() => addProduct(article)}>Ajouter</PleasantButton>
 
     </FormAddArticle>
   )
