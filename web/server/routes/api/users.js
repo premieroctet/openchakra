@@ -143,7 +143,7 @@ router.post('/register', (req, res) => {
 
 
 router.get('/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
-  let actions=getActionsForRoles(req.context.getUser().roles)
+  let actions=getActionsForRoles(req.context.user.roles)
   if (req.query.model) {
     actions=actions.filter(a => a.model==req.query.model)
   }
