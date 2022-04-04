@@ -86,8 +86,8 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   const {product, quantity}=req.body
 
   Order.findOne({_id: order_id, ...getDataFilter(req.context.user.roles, DATA_TYPE, UPDATE)})
-    .then(order => {
-      if (!order) {
+    .then(data => {
+      if (!data) {
         console.error(`No order #${order_id}`)
         return res.status(404)
       }
