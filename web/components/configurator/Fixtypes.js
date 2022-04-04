@@ -10,20 +10,20 @@ function FixTypes(props) {
   const BORDER_FIXTURES = {
     [PIN]: {
       label: props.t('FIX_TYPE.pin'),
-      path: `${feurstImgPath}/bouclier_flanc_claveter.png`,
+      path: `${feurstImgPath}/bouclier_flanc_claveter.svg`,
       width: '120',
       height: '74',
     },
     [SOLD]: {
       label: props.t('FIX_TYPE.sold'),
-      path: `${feurstImgPath}/bouclier_flanc_souder.png`,
+      path: `${feurstImgPath}/bouclier_flanc_souder.svg`,
       width: '120',
       height: '74',
 
     },
     [NONE]: {
       label: props.t('FIX_TYPE.none'),
-      path: `${feurstImgPath}/aucun_bouclier.png`,
+      path: `${feurstImgPath}/aucun_bouclier.svg`,
       width: '120',
       height: '74',
 
@@ -33,19 +33,19 @@ function FixTypes(props) {
   const TEETH_FIXTURES = {
     [PIN]: {
       label: props.t('FIX_TYPE.pin'),
-      path: `${feurstImgPath}/bouclier_dent_claveter.png`,
+      path: `${feurstImgPath}/bouclier_dent_claveter.svg`,
       width: '120',
       height: '74',
     },
     [SOLD]: {
       label: props.t('FIX_TYPE.sold'),
-      path: `${feurstImgPath}/bouclier_dent_souder.png`,
+      path: `${feurstImgPath}/bouclier_dent_souder.svg`,
       width: '120',
       height: '74',
     },
     [NONE]: {
       label: props.t('FIX_TYPE.none'),
-      path: `${feurstImgPath}/aucun_bouclier.png`,
+      path: `${feurstImgPath}/aucun_bouclier.svg`,
       width: '120',
       height: '74',
     },
