@@ -53,13 +53,7 @@ const QuotationBookingBaseSchema=new Schema({
     type: Date,
     default: Date.now,
   },
-})
-
-
-QuotationBookingBaseSchema.virtual('total_amount').get(function() {
-  const items_amount=lodash.sumBy(this.items, 'target_price')
-  return items_amount+this.shipping_fee
-})
+}, {toJSON: {virtuals: true, getters: true}})
 
 
 module.exports=QuotationBookingBaseSchema

@@ -16,7 +16,7 @@ moment.locale('fr')
 // @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, ORDER, CREATE)) {
+  if (!isActionAllowed(req.context.user.roles, ORDER, CREATE)) {
     return res.status(301)
   }
 
@@ -26,7 +26,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   if (!req.body.user) {
-    req.body.user=req.user._id
+    req.body.user=req.context.user._id
   }
 
   Order.create(req.body)
@@ -44,7 +44,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 // @Access private
 router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, ORDER, UPDATE)) {
+  if (!isActionAllowed(req.context.user.roles, ORDER, UPDATE)) {
     return res.status(301)
   }
 
@@ -54,7 +54,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 // @Access private
 router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, ORDER, UPDATE)) {
+  if (!isActionAllowed(req.context.user.roles, ORDER, UPDATE)) {
     return res.status(301)
   }
 
@@ -66,12 +66,13 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   const order_id=req.params.id
   const {product, quantity}=req.body
 
-  Order.findOne({_id: order_id, ...getDataFilter(req.user.roles, ORDER, UPDATE)})
+  Order.findOne({_id: order_id, ...getDataFilter(req.context.user.roles, ORDER, UPDATE)})
     .then(order => {
       if (!order) {
         console.error(`No order #${order_id}`)
         return res.status(404)
       }
+      console.log(`Order:${JSON.stringify(order)}`)
       return addItem(order, product, quantity)
     })
     .then(order => {
@@ -91,14 +92,14 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
 // @Access private
 router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, ORDER, UPDATE)) {
+  if (!isActionAllowed(req.context.user.roles, ORDER, UPDATE)) {
     return res.status(301)
   }
 
   const order_id=req.params.order_id
   const item_id=req.params.item_id
 
-  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user.roles, ORDER, DELETE)}, {$pull: {items: {_id: item_id}}})
+  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.context.user.roles, ORDER, DELETE)}, {$pull: {items: {_id: item_id}}})
     .then(result => {
       if (!result) {
         return res.status(404).json(`Order #${order_id} not found`)
@@ -116,11 +117,12 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, ORDER, VIEW)) {
+  if (!isActionAllowed(req.context.user.roles, ORDER, VIEW)) {
     return res.status(301)
   }
 
-  Order.find(getDataFilter(req.user.roles, ORDER, VIEW))
+  Order.find(getDataFilter(req.context.user.roles, ORDER, VIEW))
+    .populate('items.product')
     .then(orders => {
       return res.json(orders)
     })
@@ -135,11 +137,12 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 // @Access public
 router.get('/:order_id', (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, ORDER, VIEW)) {
+  if (!isActionAllowed(req.context.user.roles, ORDER, VIEW)) {
     return res.status(301)
   }
 
-  Order.findOne({_id: req.params.order_id, ...getDataFilter(req.user.roles, ORDER, VIEW)})
+  Order.findOne({_id: req.params.order_id, ...getDataFilter(req.context.user.roles, ORDER, VIEW)})
+    .populate('items.product')
     .then(order => {
       if (order) {
         return res.json(order)
@@ -157,11 +160,11 @@ router.get('/:order_id', (req, res) => {
 // @Access private
 router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, ORDER, DELETE)) {
+  if (!isActionAllowed(req.context.user.roles, ORDER, DELETE)) {
     return res.status(301)
   }
 
-  Order.findOneAndDelete({_id: req.params.order_id, ...getDataFilter(req.user.roles, ORDER, VIEW)})
+  Order.findOneAndDelete({_id: req.params.order_id, ...getDataFilter(req.context.user.roles, ORDER, VIEW)})
     .then(() => {
       return res.json()
     })
@@ -169,13 +172,6 @@ router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req
       console.error(err)
       return res.status(500).json(err)
     })
-})
-
-router.post('/:order_id/convert', passport.authenticate('jwt', {session: false}), (req, res) => {
-  if (!isActionAllowed(reQ.user.roles, ORDER, CONVERT)) {
-    return res.status(301)
-  }
-
 })
 
 module.exports = router

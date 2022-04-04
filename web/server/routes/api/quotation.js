@@ -15,7 +15,7 @@ moment.locale('fr')
 // @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, QUOTATION, CREATE)) {
+  if (!isActionAllowed(req.context.user.roles, QUOTATION, CREATE)) {
     return res.status(301)
   }
 
@@ -43,14 +43,14 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 // @Access private
 router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, QUOTATION, CREATE) || !isActionAllowed(req.user.roles, QUOTATION, UPDATE)) {
+  if (!isActionAllowed(req.context.user.roles, QUOTATION, CREATE) || !isActionAllowed(req.context.user.roles, QUOTATION, UPDATE)) {
     return res.status(301)
   }
 
   const quotation_id=req.params.id
   const {product_id, quantity}=req.body
 
-  Quotation.findOne({_id: quotation_id, ...getDataFilter(req.user.roles, QUOTATION, UPDATE)})
+  Quotation.findOne({_id: quotation_id, ...getDataFilter(req.context.user.roles, QUOTATION, UPDATE)})
     .then(result => {
       if (!result) {
         console.error(`No quotation #${quotation_id}`)
@@ -75,14 +75,14 @@ router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, re
 // @Access private
 router.delete('/:quotation_id/item/:item_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, QUOTATION, DELETE)) {
+  if (!isActionAllowed(req.context.user.roles, QUOTATION, DELETE)) {
     return res.status(301)
   }
 
   const quotation_id=req.params.quotation_id
   const item_id=req.params.item_id
 
-  Quotation.findOneAndUpdate({_id: quotation_id, ...getDataFilter(req.user.roles, QUOTATION, DELETE)}, {$pull: {items: {_id: item_id}}}, {runValidators: true})
+  Quotation.findOneAndUpdate({_id: quotation_id, ...getDataFilter(req.context.user.roles, QUOTATION, DELETE)}, {$pull: {items: {_id: item_id}}}, {runValidators: true})
     .then(() => {
       res.json()
     })
@@ -97,11 +97,12 @@ router.delete('/:quotation_id/item/:item_id', passport.authenticate('jwt', {sess
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, QUOTATION, VIEW)) {
+  if (!isActionAllowed(req.context.user.roles, QUOTATION, VIEW)) {
     return res.status(301)
   }
 
-  Quotation.find(getDataFilter(req.user.roles, QUOTATION, VIEW))
+  Quotation.find(getDataFilter(req.context.user.roles, QUOTATION, VIEW))
+    .populate('items.product')
     .then(quotations => {
       return res.json(quotations)
     })
@@ -116,11 +117,12 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 // @Access public
 router.get('/:quotation_id', (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, QUOTATION, VIEW)) {
+  if (!isActionAllowed(req.context.user.roles, QUOTATION, VIEW)) {
     return res.status(301)
   }
 
-  Quotation.findOne({_id: req.params.quotation_id, ...getDataFilter(req.user.roles, QUOTATION, VIEW)})
+  Quotation.findOne({_id: req.params.quotation_id, ...getDataFilter(req.context.user.roles, QUOTATION, VIEW)})
+    .populate('items.product')
     .then(quotation => {
       if (quotation) {
         return res.json(quotation)
@@ -138,11 +140,11 @@ router.get('/:quotation_id', (req, res) => {
 // @Access private
 router.delete('/:quotation_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, QUOTATION, DELETE)) {
+  if (!isActionAllowed(req.context.user.roles, QUOTATION, DELETE)) {
     return res.status(301)
   }
 
-  Quotation.findOneAndDelete({_id: req.params.quotation_id, ...getDataFilter(req.user.roles, QUOTATION, VIEW)})
+  Quotation.findOneAndDelete({_id: req.params.quotation_id, ...getDataFilter(req.context.user.roles, QUOTATION, VIEW)})
     .then(() => {
       return res.json()
     })

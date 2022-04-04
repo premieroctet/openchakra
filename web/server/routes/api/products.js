@@ -15,6 +15,21 @@ const uploadProducts = createMemoryMulter(TEXT_FILTER)
 // @Route GET /myAlfred/api/products
 // View all products
 // @Access private
+// router.get('/search', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/search', (req, res) => {
+  console.log(req.query.pattern)
+  const re=new RegExp(req.query.pattern, 'i')
+  Product.find({reference: re})
+    .then(products => {
+      res.json(products)
+    })
+    .catch(err => {
+      console.error(err)
+    })
+})
+// @Route GET /myAlfred/api/products
+// View all products
+// @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   Product.find({})
     .then(products => {

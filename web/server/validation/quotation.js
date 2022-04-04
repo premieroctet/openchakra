@@ -13,7 +13,7 @@ function validateQuotation(data) {
 
   return {
     errors,
-    isValid: isEmpty(errors),
+    isValid: lodash.isEmpty(errors),
   }
 }
 
