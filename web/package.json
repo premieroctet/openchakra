@@ -68,6 +68,7 @@
     "multer": "^1.4.1",
     "next": "^8.1.0",
     "next-routes": "^1.4.2",
+    "node-xlsx": "^0.21.0",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth": "^2.0.0",
