@@ -1,8 +1,7 @@
 const MarketplacePayment = require('../plugins/payment/marketplacePayment')
-const PlatformPayment = require('../plugins/payment/platformPayment')
+// const PlatformPayment = require('../plugins/payment/platformPayment')
 const User=require('../models/User')
 const jwt = require('jsonwebtoken')
-const {ADMIN, MANAGER, EMPLOYEE} = require('../../utils/consts')
 const keys = require('../config/keys')
 
 const get_token = req => {
@@ -70,17 +69,25 @@ class RequestServerContext {
   constructor(request) {
     this.request=request
     this.user=null
-    const user_id=get_logged_id(request)
-    if (user_id) {
+    this.payment=new MarketplacePayment()
+  }
+
+  init = () => {
+    return new Promise((resolve, reject) => {
+      const user_id=get_logged_id(this.request)
+      if (!user_id) {
+        return resolve(null)
+      }
       User.findById(user_id)
         .then(user => {
           this.user=user
+          return resolve(null)
         })
         .catch(err => {
           console.error(err)
+          return reject(err)
         })
-    }
-    this.payment=new MarketplacePayment()
+    })
   }
 
   isAdmin = () => {
@@ -96,7 +103,16 @@ class RequestServerContext {
 
 
 const serverContextFromRequest = req => {
-  return new RequestServerContext(req)
+  return new Promise((resolve, reject) => {
+    ctx=new RequestServerContext(req)
+    ctx.init()
+      .then(() => {
+        resolve(ctx)
+      })
+      .catch(err => {
+        reject(err)
+      })
+  })
 }
 
 module.exports = {get_logged_id, getRole, getRoles,

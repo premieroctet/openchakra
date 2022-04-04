@@ -85,11 +85,22 @@ checkConfig()
 
     // Context handling
     app.use((req, res, next) => {
+      serverContextFromRequest(req)
+        .then(context => {
+          req.context=context
+          return next()
+        })
+        .catch(err => {
+          console.error(err)
+          return res.status(500).json(err)
+        })
+    })
 
+    // Hide test pages
+    app.use((req, res, next) => {
       if (!is_development() && req.url.match(/^\/test\//)) {
         return res.sendStatus(404)
       }
-      req.context=serverContextFromRequest(req)
       return next()
     })
 
