@@ -49,7 +49,7 @@ const OrdersTest = props => {
     axios.post('/myAlfred/api/orders')
       .then(res => {
         const order=res.data
-        return axios.put(`/myAlfred/api/orders/${order._id}/items`, {product_id: '6241d1af4114df91590fa72b', quantity: 2})
+        return axios.put(`/myAlfred/api/orders/${order._id}/items`, {product: '6241d1af4114df91590fa72b', quantity: 2})
       })
       .then(() => {
         toggle()
@@ -149,7 +149,7 @@ const OrdersTest = props => {
       >
         {orders.map(o => (
           <MenuItem id={o._id} value={o._id} key={o._id}>
-            {JSON.stringify({_id: o._id, items: o.items.map(it => lodash.pick(it, 'product quantity'.split(' ')))})}
+            {JSON.stringify({_id: o._id, total_amount: o.total_amount, items: o.items.map(it => lodash.pick(it, 'product quantity'.split(' ')))})}
           </MenuItem>))}
       </Select>
     </>
