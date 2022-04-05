@@ -1,19 +1,28 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useState, useEffect} from 'react'
 import _ from 'lodash'
 
-export const useDebounce = (obj = null, wait = 1000) => {
-  const [state, setState] = useState(obj)
+const useDebounce = (value = null, delay = 1000) => {
+  // State and setters for debounced value
+  const [debouncedValue, setDebouncedValue] = useState(value)
 
-  const setDebouncedState = _val => {
-    debounce(_val)
-  }
+  useEffect(
+    () => {
+      // Update debounced value after delay
+      const handler = setTimeout(() => {
+        setDebouncedValue(value)
+      }, delay)
 
-  const debounce = useCallback(
-    _.debounce(_prop => {
-      setState(_prop)
-    }, wait),
-    [],
+      // Cancel the timeout if value changes (also on delay change or unmount)
+      // This is how we prevent debounced value from updating if value is changed ...
+      // .. within the delay period. Timeout gets cleared and restarted.
+      return () => {
+        clearTimeout(handler)
+      }
+    },
+    [value, delay], // Only re-call effect if value or delay changes
   )
 
-  return [state, setDebouncedState]
+  return debouncedValue
 }
+
+export default useDebounce

@@ -5,8 +5,7 @@ import {DateRangeColumnFilter} from '../../components/Table/TableFilter'
 import Table from '../Table/Table'
 import EditableCell from '../Table/EditableCell'
 import {client} from '../../utils/client'
-import axios from 'axios'
-import {getPureAuthToken, getAuthToken} from '../../utils/authentication'
+import {getAuthToken} from '../../utils/authentication'
 import useLocalStorageState from 'use-local-storage-state'
 
 
@@ -21,102 +20,13 @@ const ToTheBin = props => (
   </button>
 )
 
-function makeData() {
-  return [
-  ]
-}
 
 const OrderCreate = () => {
 
-  const [data, setData] = useState(useMemo(() => makeData(), []))
+  const [data, setData] = useState(useMemo(() => [], []))
   const [language, setLanguage] = useState('fr')
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState('orderid', {defaultValue: null})
   const dataToken = getAuthToken()
-
-  const updateMyData = (rowIndex, columnId, value) => {
-    setData(old =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...old[rowIndex],
-            [columnId]: value,
-          }
-        }
-        return row
-      }),
-    )
-  }
-
-  const drawTable = ({items}) => {
-    const newSet = items.map(item => {
-
-      const {
-        _id,
-        product,
-        discount,
-        quantity,
-        catalog_price,
-      } = item
-      
-      const {
-        reference,
-        description,
-        description_2,
-        family,
-        weight,
-      } = product
-  
-      const articleToAdd = {
-        product_ref: reference,
-        product_name: `${description}, ${description_2}`,
-        product_quantity: quantity,
-        product_weight: weight,
-        product_price: catalog_price,
-        product_discount: discount,
-        product_totalprice: 38.93,
-        product_delete: _id,
-      }
-      
-      return articleToAdd
-    })
-    setData(newSet)
-  }
-
-  const createOrderId = useCallback(async() => {
-    const postData = new FormData()
-    postData.append('user', dataToken)
-
-    
-    const {_id} = await client('myAlfred/api/orders', {'data': dataToken, token: getPureAuthToken()})
-      .catch(e => console.error(e, `Can't create an order`))
-    
-    setOrderId(_id)
-    
-  }, [dataToken, setOrderId])
-
-  const getOrderId = useCallback(async() => {
-    
-    const currentOrder = await client(`myAlfred/api/orders/${orderID}`, {token: getPureAuthToken()})
-      .catch(e => console.error(e, `Can't get an order`))
-
-    // drawTable(currentOrder)
-    
-  }, [orderID])
-  
-
-  // useEffect(() => {
-  //   console.log('lang')
-  //   setLanguage(Navigator.language)
-  // }, [language])
-  
-  useEffect(() => {
-    if (!orderID) {
-      createOrderId()
-    }
-    else {
-      getOrderId(orderID)
-    }
-  }, [orderID, createOrderId, getOrderId])
 
   const columns = useMemo(
     () => [
@@ -168,6 +78,75 @@ const OrderCreate = () => {
     [data, language],
   )
 
+  const updateMyData = (rowIndex, columnId, value) => {
+    setData(old =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          }
+        }
+        return row
+      }),
+    )
+  }
+
+  const drawTable = ({items}) => {
+    const newSet = items.map(item => {
+
+      const {
+        _id,
+        product,
+        discount,
+        quantity,
+        catalog_price,
+      } = item
+      
+      const {
+        reference,
+        description,
+        description_2,
+        weight,
+      } = product
+  
+      const articleToAdd = {
+        product_ref: reference,
+        product_name: `${description}, ${description_2}`,
+        product_quantity: quantity,
+        product_weight: weight,
+        product_price: catalog_price,
+        product_discount: discount,
+        product_totalprice: 38.93,
+        product_delete: _id,
+      }
+      
+      return articleToAdd
+    })
+    setData(newSet)
+  }
+
+  const createOrderId = useCallback(async() => {
+    const postData = new FormData()
+    postData.append('user', dataToken)
+
+    const {_id} = await client('myAlfred/api/orders', {'data': dataToken})
+      .catch(e => console.error(e, `Can't create an order`))
+    
+    setOrderId(_id)
+    
+  }, [dataToken, setOrderId])
+
+  const getOrderId = useCallback(async id => {
+    
+    const currentOrder = id ? await client(`myAlfred/api/orders/${id}`) : []
+      .catch(e => console.error(e, `Can't get an order`))
+
+    drawTable(currentOrder)
+    
+  }, [])
+
+
   const checkProduct = async({item, qty}) => {
 
   }
@@ -177,13 +156,24 @@ const OrderCreate = () => {
       _id,
     } = item
     
-    
-    const afterNewProduct = await client(`myAlfred/api/orders/${orderID}/items`, {data: {product: _id, quantity: qty}, token: getPureAuthToken(), method: 'PUT'})
+    const afterNewProduct = await client(`myAlfred/api/orders/${orderID}/items`, {data: {product: _id, quantity: qty}, method: 'PUT'})
       .catch(e => console.error(`Can't add product ${e}`))
-      
-    getOrderId(orderID)
     
+    getOrderId(orderID)
   }
+
+  // Init language and order
+  useEffect(() => {
+    setLanguage(Navigator.language)
+    if (!orderID) {
+      createOrderId()
+    }
+  }, [orderID, createOrderId, language])
+
+  // Init table
+  useEffect(() => {
+    if (orderID) { getOrderId(orderID) }
+  }, [getOrderId, orderID])
 
 
   return (<>
