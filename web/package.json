@@ -64,7 +64,6 @@
     "moment": "^2.29.1",
     "moment-range": "^4.0.2",
     "mongoose": "^6.2.9",
-    "mongoose-extend-schema": "^1.0.0",
     "multer": "^1.4.1",
     "next": "^8.1.0",
     "next-routes": "^1.4.2",

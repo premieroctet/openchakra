@@ -1492,7 +1492,7 @@ router.delete('/companies/:id', passport.authenticate('admin', {session: false})
     })
 })
 
-router.get('/context', passport.authenticate('admin', {session: false}), (req, res) => {
+router.get('/context', passport.authenticate('jwt', {session: false}), (req, res) => {
   res.json(get_token(req))
 })
 

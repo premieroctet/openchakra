@@ -201,7 +201,8 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
       if (!quotation) {
         return res.status(404)
       }
-      const attributes=lodash.omi(quotation, ['_id', 'id'])
+      const attributes=lodash.omit(quotation, ['_id', 'id'])
+      attributes.source_quotation=quotation
       return Order.create(attributes)
     })
     .then(order => {
@@ -211,7 +212,6 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
       console.error(err)
       res.status(500).json(err)
     })
-  throw new Error('Not implemented')
 })
 
 module.exports = router
