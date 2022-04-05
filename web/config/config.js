@@ -1,7 +1,7 @@
 const isEmpty = require('../server/validation/is-empty')
 const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
-  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY}=require('../mode')
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, SKIP_FAILED_PAYMENT}=require('../mode')
 const source = require('./client_id.json')
 
 const MONGO_BASE_URI='mongodb://localhost/'
@@ -183,6 +183,9 @@ const hideStoreDialog = () => {
   return !!HIDE_STORE_DIALOG
 }
 
+const skipFailedPayment = () => {
+  return !is_production() && !!SKIP_FAILED_PAYMENT
+}
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -199,4 +202,5 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
+  skipFailedPayment,
 }

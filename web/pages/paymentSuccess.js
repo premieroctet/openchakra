@@ -1,3 +1,4 @@
+const {skipFailedPayment} = require('../config/config')
 const {delayedPromise} = require('../utils/promise')
 const {snackBarError} = require('../utils/notifications')
 import ReactHtmlParser from 'react-html-parser'
@@ -53,7 +54,7 @@ class paymentSuccess extends BasePage {
         return axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {mangopay_payin_status: transaction.Status})
       })
       .then(() => {
-        if (transaction.Status != 'SUCCEEDED') {
+        if (transaction.Status != 'SUCCEEDED' && !skipFailedPayment()) {
           return Router.push(`/paymentFailed?booking_id=${booking_id}`)
         }
         this.setState({success: true})
