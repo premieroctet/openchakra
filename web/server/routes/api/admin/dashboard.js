@@ -1,13 +1,13 @@
-const Prestation = require('../../../models/Prestation');
-const Service = require('../../../models/Service');
-const Equipment = require('../../../models/Equipment');
-const Category = require('../../../models/Category');
-const Job = require('../../../models/Job');
-const FilterPresentation = require('../../../models/FilterPresentation');
-const ServiceUser = require('../../../models/ServiceUser');
-const moment = require('moment');
-const { BOOK_STATUS } = require('../../../../utils/consts');
-const { mangoApi } = require('../../../utils/mangopay');
+const Prestation = require('../../../models/Prestation')
+const Service = require('../../../models/Service')
+const Equipment = require('../../../models/Equipment')
+const Category = require('../../../models/Category')
+const Job = require('../../../models/Job')
+const FilterPresentation = require('../../../models/FilterPresentation')
+const ServiceUser = require('../../../models/ServiceUser')
+const moment = require('moment')
+const {BOOK_STATUS} = require('../../../../utils/consts')
+const {mangoApi} = require('../../../utils/mangopay')
 const Review = require('../../../models/Review')
 const EventLog = require('../../../models/EventLog')
 const Commission = require('../../../models/Commission')
@@ -640,16 +640,10 @@ router.put('/filterPresentation/all/:id', passport.authenticate('admin', {sessio
 // Add job for prestation
 // @Access private
 router.post('/job/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  const {errors, isValid} = validateBillingInput(req.body)
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-
-  Job.findOne({label: req.body.label})
+  Job.findOne({label: new RegExp(req.body.label, 'i')})
     .then(job => {
       if (job) {
-        errors.label = 'Ce métier existe déjà'
-        return res.status(400).json(errors)
+        return res.status(400).json({label: 'Ce métier existe déjà'})
       }
       const newJob={
         label: req.body.label,
@@ -711,11 +705,18 @@ router.delete('/job/:id', passport.authenticate('admin', {session: false}), (req
 // Update a job
 // @Access private
 router.put('/job/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
-  Job.findOneAndUpdate({_id: req.params.id}, {$set: {label: req.body.label}}, {new: true})
+  const jobId = req.params.id
+  Job.exists({label: new RegExp(req.body.label, 'i'), _id: {$ne: jobId}})
     .then(job => {
-      res.json(job)
+      if (job) {
+        return res.status(400).json({label: 'Ce métier existe déjà'})
+      }
+      Job.findOneAndUpdate({_id: jobId}, {$set: {label: req.body.label}}, {new: true})
+        .then(job => {
+          res.json(job)
+        })
+        .catch(() => res.status(404).json({jobnotfound: 'No job found'}))
     })
-    .catch(() => res.status(404).json({jobnotfound: 'No job found'}))
 })
 
 // @Route POST /myAlfred/api/admin/category/all
