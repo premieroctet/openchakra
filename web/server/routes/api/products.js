@@ -18,7 +18,14 @@ const uploadProducts = createMemoryMulter(TEXT_FILTER)
 // @Access private
 // router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.get('/', (req, res) => {
-  const filter=req.query.pattern ? {reference: new RegExp(req.query.pattern, 'i')}: {}
+  const pattern = new RegExp(req.query.pattern, 'i')
+  const filter=req.query.pattern ? {
+    $or: [
+      {reference: pattern},
+      {description: pattern},
+      {description_2: pattern},
+    ],
+  }: {}
   Product.find(filter)
     .then(products => {
       res.json(products)
