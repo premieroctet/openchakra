@@ -1,3 +1,7 @@
+const {
+  snackBarError,
+  snackBarSuccess,
+} = require('../../../utils/notifications')
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
@@ -13,7 +17,6 @@ import BasePage from '../../basePage'
 import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
-const {snackBarSuccess} = require('../../../utils/notifications')
 
 const styles = theme => ({
   loginContainer: {
@@ -81,7 +84,8 @@ class View extends BasePage {
 
     const {label} = this.state.job
     const id = this.getURLProps().id
-    axios.put(`/myAlfred/api/admin/job/all/${id}`, {label})
+    const promise=id ? axios.put(`/myAlfred/api/admin/job/all/${id}`, {label}) : axios.post(`/myAlfred/api/admin/job/all`, {label})
+    promise
       .then(() => {
         snackBarSuccess('Métier modifié avec succès')
         Router.push({pathname: '/dashboard/job/all'})
@@ -92,6 +96,9 @@ class View extends BasePage {
           clearAuthenticationToken()
           Router.push({pathname: '/'})
         }
+        else {
+          snackBarError(err.response.data)
+        }
       })
   }
 
@@ -99,8 +106,8 @@ class View extends BasePage {
     const id = this.getURLProps().id
     axios.delete(`/myAlfred/api/admin/job/all/${id}`)
       .then(res => {
-        snackBarSuccess('Métier supprimé avec succès');
-        Router.push({pathname: '/dashboard/job/all'});
+        snackBarSuccess('Métier supprimé avec succès')
+        Router.push({pathname: '/dashboard/job/all'})
       })
       .catch(err => {
         console.error(err)
@@ -119,11 +126,15 @@ class View extends BasePage {
     const {job} = this.state
 
 
+    const newJob=!this.getURLProps().id
     return (
       <DashboardLayout>
         <Grid container className={classes.loginContainer}>
           <Card className={classes.card}>
             <Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                <Typography style={{fontSize: 30}}>{newJob ? 'Ajouter un métier' : 'Modifier le métier'}</Typography>
+              </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                 <Typography style={{fontSize: 30}}>{job.label}</Typography>
               </Grid>
@@ -142,12 +153,13 @@ class View extends BasePage {
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                   <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
-                    Modifier
+                    {newJob ? 'Ajouter' : 'Modifier'}
                   </CustomButton>
-                  <CustomButton type="button" variant="contained" classes={{root: classes.cancelButton}} style={{width: '100%'}}
+                  {!newJob && <CustomButton type="button" variant="contained" classes={{root: classes.cancelButton}} style={{width: '100%'}}
                     onClick={this.handleClick}>
                     Supprimer
                   </CustomButton>
+                  }
                 </Grid>
               </form>
             </Grid>
