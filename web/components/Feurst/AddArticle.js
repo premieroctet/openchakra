@@ -259,9 +259,14 @@ const AddArticle = ({addProduct, checkProduct}) => {
       
       <Refquantity>
         <Label htmlFor="articleQty">Quantité</Label>
-        <Input type="number" id='articleQty' value={article.qty} onChange={ev => setArticle({...article, qty: ev.target.value})} />
+        <Input 
+          type="number" 
+          id='articleQty'
+          placeholder='Qté souhaitée' 
+          value={article.qty} 
+          onChange={ev => setArticle({...article, qty: ev.target.value})} />
       </Refquantity>
-      <PleasantButton onClick={() => addProduct(article)}>Ajouter</PleasantButton>
+      <PleasantButton rounded={'full'} onClick={() => addProduct(article)}>Ajouter</PleasantButton>
 
     </FormAddArticle>
   )

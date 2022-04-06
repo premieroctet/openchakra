@@ -150,7 +150,7 @@ const OrderCreate = () => {
 
   }
 
-  const AddProduct = async({item, qty}) => {
+  const AddProduct = async({item, qty = 1}) => {
     if (!item) { return }
     
     const {

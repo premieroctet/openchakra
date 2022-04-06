@@ -30,24 +30,19 @@ export const theme = {
     paragraph: 1.5,
   },
   radii: ['0px', '2px', '4px', '8px', '16px', '48px'],
-  rounded: {
-    xl: '0.75rem',
-    '2xl': '1rem',
-    '3xl': '1.5rem',
-    full: '9999px',
-  },
 }
 
 export const GlobalStyleEdi = createGlobalStyle`
   
   :root {
     /* Colors */
-    accent-color: ${props => props.theme.accentColor || 'auto'};
-    caret-color: ${props => props.theme.accentColor || 'auto'};
+    accent-color: ${props => props.theme?.accentColor || 'auto'};
+    caret-color: ${props => props.theme?.accentColor || 'auto'};
     --brand-color: #182d45;
     --bg-blue-700: #2b3760;
     --gray-800: rgb(190, 190, 190);
-    --white: ${props => props.theme.colors.white || '#FFF'};
+    --black: #111;
+    --white: ${props => props.theme?.colors?.white || '#FFF'};
     --yellow-500: rgb(218, 187, 66);
     --bg-app: #f5f5f5;
     --bg-input: #f2f2f2;
@@ -88,11 +83,24 @@ export const GlobalStyleEdi = createGlobalStyle`
     --spc-8: 2rem;
     --spc-9: 2.25rem;
     --spc-10: 2.5rem;
+    --spc-11: 2.75rem;
+    --spc-12: 3rem;
+    --spc-24: 6rem;
+    --spc-32: 8rem;
 
     /* Grid */
     --grid-cols-1: repeat(1, minmax(0, 1fr));
     --grid-cols-2: repeat(2, minmax(0, 1fr));
     --grid-cols-3: repeat(3, minmax(0, 1fr));
+
+    /* BorderRadius */
+    --rounded: 0.25rem;
+    --rounded-md: 0.375rem;
+    --rounded-xl: 0.75rem;
+    --rounded-2xl: 1rem;
+    --rounded-3xl: 1.5rem;
+    --rounded-7xl: 3.5rem;
+    --rounded-full: 9999px;
 
     /* Miscellaneous */
     --minTapSize: 44px;
@@ -112,11 +120,11 @@ export const GlobalStyleEdi = createGlobalStyle`
     margin: 0;
     min-height: 100vh;
     color: ${props => (props.whiteColor ? 'white' : 'black')};
-    font-family: ${props => props.theme.fontFamily};
+    font-family: ${props => props.theme?.fontFamily};
   }
 
   .container {
-    width: ${props => (props.theme.containerSize ? props.theme.containerSize : 'min(100% - 2rem, 50rem)')}; 
+    width: ${props => (props.theme?.containerSize ? props.theme.containerSize : 'min(100% - 2rem, 50rem)')}; 
     margin-inline: auto;
   }
 
