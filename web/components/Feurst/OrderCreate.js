@@ -1,7 +1,6 @@
 import React, {useMemo, useState, useEffect, useCallback} from 'react'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
-import {DateRangeColumnFilter} from '../../components/Table/TableFilter'
 import Table from '../Table/Table'
 import EditableCell from '../Table/EditableCell'
 import {client} from '../../utils/client'
@@ -152,6 +151,8 @@ const OrderCreate = () => {
   }
 
   const AddProduct = async({item, qty}) => {
+    if (!item) { return }
+    
     const {
       _id,
     } = item

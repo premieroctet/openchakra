@@ -41,17 +41,22 @@ export const theme = {
 export const GlobalStyleEdi = createGlobalStyle`
   
   :root {
+    /* Colors */
     accent-color: ${props => props.theme.accentColor || 'auto'};
     caret-color: ${props => props.theme.accentColor || 'auto'};
     --brand-color: #182d45;
     --bg-blue-700: #2b3760;
-    --bg-yellow-500: rgb(218, 187, 66);
+    --gray-800: rgb(190, 190, 190);
+    --white: ${props => props.theme.colors.white || '#FFF'};
+    --yellow-500: rgb(218, 187, 66);
     --bg-app: #f5f5f5;
     --bg-input: #f2f2f2;
     --text-input: #707070;
     --bg-selectedZone: #bcc0cd;
     --text-selectedZone: #fff;
     --text-gray-500: #747474;
+
+    /* text */
     --text-sm: 0.875rem;
     --text-base: 1rem;
     --text-lg: 1.125rem;
@@ -63,9 +68,12 @@ export const GlobalStyleEdi = createGlobalStyle`
     --font-medium	: 500;
     --font-semibold	: 600;
     --font-bold	: 700;
+
+    /* Animation delays */
     --delayIn: .3s;
     --delayOut: .5s;
-    --spc-1: 
+
+    /* Spacing */
     --spc-0-5: 0.125rem;
     --spc-1: 0.25rem;
     --spc-1-5: 0.375rem;
@@ -80,13 +88,23 @@ export const GlobalStyleEdi = createGlobalStyle`
     --spc-8: 2rem;
     --spc-9: 2.25rem;
     --spc-10: 2.5rem;
+
+    /* Grid */
     --grid-cols-1: repeat(1, minmax(0, 1fr));
     --grid-cols-2: repeat(2, minmax(0, 1fr));
     --grid-cols-3: repeat(3, minmax(0, 1fr));
+
+    /* Miscellaneous */
+    --minTapSize: 44px;
   }
 
   html {
     height: -webkit-fill-available;
+    box-sizing: border-box;
+  }
+
+  *, *:before, *:after {
+    box-sizing: inherit;
   }
 
   body {
@@ -153,6 +171,13 @@ export const GlobalStyleEdi = createGlobalStyle`
 }
 
 .no-underline	{text-decoration-line: none;}
+
+/* Forms */
+
+input:focus:not(:focus-visible) {
+  outline: none;
+}
+
 
 /* Disposition */
 
@@ -327,19 +352,13 @@ export const GlobalStyleEdi = createGlobalStyle`
 /* Backgrounds */
 
 .bg-white {
-  background-color: ${props => props.theme.colors.white || '#FFF'};
+  background-color: var(--white);
 }
 
 /* Arrondis */
 
 .rounded-xl {
   border-radius: 0.75rem;
-}
-
-input:focus-visible    {
-  outline-color: ${props => props.theme.accentColor};
-  outline-offset: 2px;
-  outline-style: solid;
 }
 
 table {

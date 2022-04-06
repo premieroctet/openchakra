@@ -4,7 +4,7 @@ import Nav from './Nav'
 import {feurstPhoneNumber} from '../../hoc/withEdiAuth'
 import styled from 'styled-components'
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled.header`
   a {
     text-decoration-line: none; 
     font-size: var(--text-sm);
@@ -27,7 +27,7 @@ const HeaderContainer = styled.div`
 
 const Header = ({accessRights = []}) => {
   return (
-    <HeaderContainer className='container flex flex-wrap justify-evenly gap-x-8 mb-6'>
+    <HeaderContainer role="banner" className='container flex flex-wrap justify-evenly gap-x-8 mb-6'>
       <div className='flex items-center'>
         <a className='phonenumber' href={`tel:${feurstPhoneNumber.replace(/\s+/g, '')}`}>{feurstPhoneNumber}</a>
       </div>

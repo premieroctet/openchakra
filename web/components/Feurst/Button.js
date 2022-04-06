@@ -46,7 +46,6 @@ const StyledButton = styled(Button).attrs(props => ({
   position: relative;
   border: 0;
   padding: 0;
-  outline-offset: 4px;
   transition: filter 250ms;
   border-radius: ${props => props.theme.rounded['3xl']};
   color: ${props => props.theme.colors.white};

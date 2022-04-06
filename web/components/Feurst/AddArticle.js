@@ -11,19 +11,140 @@ import {screen} from '../../styles/screenWidths'
 const FormAddArticle = styled.form`
   display: grid;
   grid-template-columns: var(--grid-cols-1);
-  align-items: center;
-  justify-content: space-around;
-  width: 100%;
+  row-gap: var(--spc-2);
   margin-bottom: var(--spc-10);
 
   @media (${screen.lg}) {
-    grid-template-columns: var(--grid-cols-3);
+    grid-template-columns: 2fr 2fr 1fr;
+    align-items: baseline;
+    column-gap: var(--spc-5)
+  }
+`
+
+const Label = styled.label`
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  width: max-content;
+`
+
+const Input = styled.input`
+  transition: border var(--delayIn) ease-in-out;
+  padding: var(--spc-2);
+  min-height: var(--minTapSize);
+  outline: none;
+  border: 1px solid var(--gray-800);
+  width: min-content;
+
+  &:focus {
+    border-color: var(--brand-color);
+  }
+`
+
+const Refquantity = styled.div`
+  display: grid;
+  align-items:center;
+  column-gap: var(--spc-2);
+  row-gap: var(--spc-2);
+  grid-template-columns: 1fr;
+  
+  @media (${screen.sm}) {
+    grid-template-columns: auto 1fr;
+  }
+`
+
+const Refcatalog = styled.div`
+  
+  display: grid;
+  align-items:center;
+  column-gap: var(--spc-2);
+  grid-template-columns: 1fr;
+  grid-template-areas: 'downlabel' 
+                       'downinput' 
+                       'loading'
+                       'downresults';
+  position: relative;
+
+  .loading {
+    top: 0;
+    position: absolute;
+    grid-area: loading;
   }
 
+  label {
+    grid-area: downlabel;
+  }
+  
+  /* Container for input */
+  [role="combobox"] {
+    width: min-content;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    grid-area: downinput;
+    position: relative;
+    & input {
+      padding-right: 60px;
+      color: var(--gray-800);
+    }
+  }
+
+  [aria-expanded="true"] + [role="listbox"] {
+    border: 1px solid var(--gray-800);
+    border-top: 0;
+  }
+  
+  [role="listbox"] {
+    border-bottom-left-radius: var(--spc-2);
+    border-bottom-right-radius: var(--spc-2);
+    transition: all ease-in 1s;
+    list-style-type: none;
+    grid-area: downresults;
+    max-height: 300px;
+    overflow-y: scroll;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: var(--white);
+    margin-top: 0;
+    padding-inline: var(--spc-3);
+
+    & li {
+      font-size: var(--text-base);
+      padding: var(--spc-2);
+      border-bottom: 1px solid var(--gray-800);
+    }
+  }
+
+  button {
+    position: absolute;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    min-height: var(--minTapSize);
+    background: none;
+    border: 0;
+    font-size: var(--text-lg);
+    color: var(--gray-800);
+  }
+
+  button + button {
+    right: 0px;
+  }
+
+  @media (${screen.sm}) {
+    grid-template-columns: max-content auto;
+    grid-template-areas: 'downlabel downinput' 
+    'loading downresults';
+  }
+  @media (${screen.lg}) {
+    grid-template-columns: auto auto;
+  }
 `
 
 const AddArticle = ({addProduct, checkProduct}) => {
-
 
   const [article, setArticle] = useState({
     item: null,
@@ -39,7 +160,7 @@ const AddArticle = ({addProduct, checkProduct}) => {
  
 
   const [query, setQuery] = useState('')
-  const debouncedQuery = useDebounce(query, 1000)
+  const debouncedQuery = useDebounce(query, 700)
 
 
   const {
@@ -53,19 +174,14 @@ const AddArticle = ({addProduct, checkProduct}) => {
     getItemProps,
     selectedItem,
     getMenuProps,
-    reset,
   } = useCombobox({
     items: data,
     itemToString: item => (item ? `${item.reference}` : ''),
-    onInputValueChange: ({inputValue, type, selectedItem}) => {
-      // Si ce n'est pas un reset
-      // Si on ne vient pas de taper entrée et qu'on a un item
-      if (
-        type !== '__function_reset__' ||
-        (type !== '__input_keydown_enter__' && selectedItem !== null)
-      ) {
-        setQuery(inputValue)
+    onInputValueChange: ({inputValue, selectedItem}) => {
+      if (selectedItem && inputValue.trim() === selectedItem.reference) {
+        return
       }
+      setQuery(inputValue)
     },
     onSelectedItemChange: ({selectedItem}) => {
       setArticle({...article, item: selectedItem})
@@ -73,62 +189,57 @@ const AddArticle = ({addProduct, checkProduct}) => {
   })
 
   useEffect(() => {
-
-    if (debouncedQuery) {
+    if (debouncedQuery && query.length > 0) {
       run(client(`myAlfred/api/products?pattern=${query}`))
     }
   }
   , [debouncedQuery, query, run, selectedItem])
 
-  if (isLoading) { return (<SpinnerEllipsis />) }
-  if(isError) { return (<p>Les produits ne se sont pas chargés.</p>) }
 
+  console.log(getToggleButtonProps())
 
   return (
     <FormAddArticle>
-
-      <div className="grid grid-cols-1">
+      
+      <Refcatalog>
+        {isError ? <p>Les produits ne se sont pas chargés.</p> : null }
+        {isLoading ? (<SpinnerEllipsis />) : <span className='loading'></span>}
        
-        <label {...getLabelProps} htmlFor="address" className="mb-4">
-          <span className="font-mono text-sm">
+        <Label {...getLabelProps} htmlFor="refcatalog">
           Réf. Catalogue
-          </span></label>
-        <div {...getComboboxProps()} className="flex mt-1">
-          <input
+        </Label>
+        <div {...getComboboxProps()}>
+          <Input
             {...getInputProps()}
-            className="flex-1 inline-block h-12 border-orange-600 border-2 focus:ring-2 ring-orange-700 p-2"
+            id="refcatalog"
             placeholder="Ex: 001357NE00…"
           />
           <button
             {...getToggleButtonProps()}
             type="button"
-            aria-label="toggle menu"
+            aria-label="afficher la liste des références"
           >
-            &#8595;
+            <span role="img">&#9661;</span>
           </button>
           <button
-            className="w-12 grid place-items-center border-orange-600 border-2 focus:ring-2 ring-orange-700 hover:bg-orange-400"
+            className=""
             type="button"
             onClick={() => {
               selectItem(null)
               setQuery('')
-              // setArticle({...article, item: null})
-              // resetData()
-              // reset()
+              setArticle({...article, item: null})
             }}
-            aria-label="effacer l'addresse"
+            aria-label="effacer"
           >
-              x
+            <span role="img">✕</span>
           </button>
             
         </div>
-        <div />
+        
         <ul
           {...getMenuProps()}
-          className="leading-10 divide-y-2 divide-dotted divide-orange-700"
         >
-          {
-            isOpen &&
+          {isOpen &&
           data.map((item, index) => (
             <li
               key={`${item.reference}-${index}`}
@@ -139,30 +250,17 @@ const AddArticle = ({addProduct, checkProduct}) => {
                   : {}
               }
             >
-              <span>{item.reference} {item.description}</span>
+              <span>{item.reference} - {item.description} {item.description_2}</span>
             </li>
           ))
           }
         </ul>
-      </div>
-        
-      {/* <DropdownCombobox formLabel={'Réf. Catalogue'} items={data} query={query} setQuery={setQuery} itemToString={itemToString} selectedItem={article} clickedItem={setArticle}/> */}
-      {/* <Autocomplete
-          id='articleRef'
-          getOptionLabel={option => `${option.reference} - ${option.description} ${option.description_2}`}
-          variant="outlined"
-          options={data}
-          value={article.item}
-          onChange={(ev, value) => setArticle({...article, item: value})}
-          onInputChange={(ev, value) => setQuery(value)}
-          renderInput={params => (<TextField {...params} />)}
-          renderOption={option => <span>{option.reference} - {option.description} {option.description_2}</span>}
-        /> */}
-
-      <label htmlFor="articleQty">Quantité
-        <input type="number" id='articleQty' value={article.qty} onChange={ev => setArticle({...article, qty: ev.target.value})} />
-      </label>
-
+      </Refcatalog>
+      
+      <Refquantity>
+        <Label htmlFor="articleQty">Quantité</Label>
+        <Input type="number" id='articleQty' value={article.qty} onChange={ev => setArticle({...article, qty: ev.target.value})} />
+      </Refquantity>
       <PleasantButton onClick={() => addProduct(article)}>Ajouter</PleasantButton>
 
     </FormAddArticle>

@@ -5,7 +5,6 @@ import {getLoggedUser} from '../utils/context'
 import {ThemeProvider} from 'styled-components'
 import {theme, GlobalStyleEdi} from '../styles/feurst.theme'
 import {client} from '../utils/client'
-import {getPureAuthToken} from '../utils/authentication'
 
 export const feurstImgPath = '../../static/assets/img/feurst'
 export const feurstPhoneNumber = '+33 4 77 27 40 63'
@@ -50,7 +49,7 @@ const withEdiAuth = (Component = null, options = {}) => {
     
     
     async getUserRoles() {
-      return await client('myAlfred/api/users/actions', {token: getPureAuthToken()})
+      return await client('myAlfred/api/users/actions')
         .catch(e => {
           console.error(e, 'Cant fetch users roles')
           return []
