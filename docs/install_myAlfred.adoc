@@ -8,6 +8,10 @@
 clés ssh en place
 Récupérer images du projet avec filezilla
 
+## Packages global
+
+yarn global add nodemon pm2
+
 ## Récupérer le projet
 
 git clone https://github.com/SebastienAuvray/myAlfred
@@ -19,7 +23,7 @@ Puis, dans le projet myalfred :
 
 ### créer le fichier mode.js
 
-[]
+[source, JavaScript]
 web/mode.js
 ----
 const MODE = 'development'; /* 'production', 'development' */
