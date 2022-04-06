@@ -36,8 +36,6 @@ class all extends DataPage {
   onAddClicked = () => {
     window.open('/dashboard/job/view', '_blank')
   }
-
-
 }
 
 export default withTranslation('custom', {withRef: true})(withStyles(styles)(all))
