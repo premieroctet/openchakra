@@ -5,8 +5,6 @@ const {
 } = require('../utils/feurst_consts')
 import React from 'react'
 
-import '../static/feurst.css'
-
 const {is_development} = require('../config/config')
 const axios = require('axios')
 const {setAxiosAuthentication} = require('../utils/authentication')
@@ -16,6 +14,7 @@ const {STEPS} = require('./configurator/configuratorSteps')
 const ProgressBar = require('../components/ProgressBar/ProgressBar')
 const lodash = require('lodash')
 const {snackBarError, snackBarSuccess} = require('../utils/notifications')
+import {Styles, MyGlobalStyle} from '../components/configurator/Styles'
 const validateFeurstProspect=require('../server/validation/feurstProspect')
 import parsePhoneNumber from 'libphonenumber-js'
 import i18n from '../server/utils/i18n_init'
@@ -370,9 +369,10 @@ class Configurator extends React.Component {
     const {component, validator, menu} = STEPS[step]
 
     return (
-      <Grid
+      <Styles
         className="configurator relative"
       >
+        <MyGlobalStyle />
         {/**
         <>
           <button onClick={() => this.changeLanguage('fr')}>fr</button>
@@ -409,7 +409,7 @@ class Configurator extends React.Component {
             }
           </div>
         </div>
-      </Grid>)
+      </Styles>)
       
   }
 }
