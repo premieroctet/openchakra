@@ -33,6 +33,11 @@ class all extends DataPage {
     window.open(`/dashboard/job/view?id=${data._id}`, '_blank')
   }
 
+  onAddClicked = () => {
+    window.open('/dashboard/job/view', '_blank')
+  }
+
+
 }
 
 export default withTranslation('custom', {withRef: true})(withStyles(styles)(all))
