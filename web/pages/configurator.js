@@ -5,8 +5,6 @@ const {
 } = require('../utils/consts')
 import React from 'react'
 
-import '../static/feurst.css'
-
 const {is_development} = require('../config/config')
 const axios = require('axios')
 const {setAxiosAuthentication} = require('../utils/authentication')
@@ -16,8 +14,10 @@ const {STEPS} = require('./configurator/configuratorSteps')
 const ProgressBar = require('../components/ProgressBar/ProgressBar')
 const lodash = require('lodash')
 const {snackBarError, snackBarSuccess} = require('../utils/notifications')
+import {Styles, MyGlobalStyle} from '../components/configurator/Styles'
 const validateFeurstProspect=require('../server/validation/feurstProspect')
 import parsePhoneNumber from 'libphonenumber-js'
+import i18n from '../server/utils/i18n_init'
 
 export const feurstImgPath = './static/assets/img/feurst'
 
@@ -63,6 +63,10 @@ class Configurator extends React.Component {
       type: 'resize',
       height: document.body.scrollHeight,
     }, '*')
+  }
+
+  changeLanguage = lng => {
+    i18n.changeLanguage(lng)
   }
 
   componentDidMount = () => {
@@ -365,28 +369,36 @@ class Configurator extends React.Component {
     const {component, validator, menu} = STEPS[step]
 
     return (
-      <Grid
+      <Styles
         className="configurator relative"
       >
+        <MyGlobalStyle />
+        {/**
+        <>
+          <button onClick={() => this.changeLanguage('fr')}>fr</button>
+          <button onClick={() => this.changeLanguage('en')}>en</button>
+        </>
+        *}
         <a ref={this.titleFocus.ref} href='#'></a> {/* Lien pour remonter le focus suite actions "précédent" "suivant" */}
         <h1 className='whereami'>{t(menu)}</h1>
         <ProgressBar value={step} max={STEPS.length} label={t('PROGRESS_BAR.step_label')}/>
-        <div className='app-container flex flex-col justify-between'>
-          <div className="rounded-container m-4 p-4" >
+        <div className='app-container flex flex-col  justify-between'>
+          <div className="rounded-container p-4 md-m-4" >
             {component({...this.state, ...this})}
           </div>
-          <div className='flex justify-between w-full bg-white p-4 mb-6'>
+          <div className={`flex gap-y-4 justify-between flex-wrap w-full bg-white p-4 mb-6 ${STEPS.length - 1 === step ?'flex-column-reverse md-flex-row' : ''}`}>
+            
             {step !== 0 ?
-              <Button className='previous' disabled={step == 0} onClick={this.previousPage}>
+              <Button className='previous w-fit' disabled={step == 0} onClick={this.previousPage}>
                 {t('NAVIGATION.previous')}
               </Button> : <div></div>}
             {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
               {t('NAVIGATION.next')}
             </Button> : null}
-
+            
 
             {STEPS.length - 1 === step &&
-          <div className='flex gap-x-4'>
+          <div className='flex flex-wrap gap-x-4 gap-y-4'>
             <Button className='previous' disabled={!validator(this.state)} onClick={this.sendCustomQuotation}>
               {t('SUMMARY.contact_expert')}
             </Button>
@@ -397,8 +409,8 @@ class Configurator extends React.Component {
             }
           </div>
         </div>
-      </Grid>)
-
+      </Styles>)
+      
   }
 }
 

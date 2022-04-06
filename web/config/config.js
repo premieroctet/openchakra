@@ -1,6 +1,6 @@
 const isEmpty = require('../server/validation/is-empty')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
-  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, DATA_MODEL}=require('../mode')
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, DATA_MODEL, SKIP_FAILED_PAYMENT}=require('../mode')
 
 const MODES={
   PRODUCTION: 'production',
@@ -178,6 +178,9 @@ const hideStoreDialog = () => {
   return !!HIDE_STORE_DIALOG
 }
 
+const skipFailedPayment = () => {
+  return !is_production() && !!SKIP_FAILED_PAYMENT
+}
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -191,5 +194,5 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
-  getDataModel,
+  getDataModel, skipFailedPayment,
 }
