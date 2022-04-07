@@ -8,7 +8,7 @@ const moment = require('moment')
 const Quotation = require('../../models/Quotation')
 const {validateOrderItem} = require('../../validation/order')
 const {validateQuotation}=require('../../validation/quotation')
-const {QUOTATION, CREATE, VIEW}=require('../../../utils/consts')
+const {QUOTATION, CREATE, UPDATE, VIEW}=require('../../../utils/consts')
 
 moment.locale('fr')
 
@@ -76,7 +76,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   if (!isActionAllowed(req.context.user.roles, DATA_TYPE, UPDATE)) {
     return res.status(301)
   }
-
+  
   const {errors, isValid}=validateOrderItem(req.body)
   if (!isValid) {
     return res.status(500).json(errors)
@@ -86,8 +86,8 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   const {product, quantity}=req.body
 
   Quotation.findOne({_id: quotation_id, ...getDataFilter(req.context.user.roles, DATA_TYPE, UPDATE)})
-    .then(result => {
-      if (!result) {
+    .then(data => {
+      if (!data) {
         console.error(`No quotation #${quotation_id}`)
         return res.status(404)
       }
