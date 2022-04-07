@@ -261,7 +261,8 @@ const AddArticle = ({addProduct, checkProduct}) => {
           id='articleQty'
           placeholder='Qté souhaitée'
           value={article.qty}
-          onChange={ev => setArticle({...article, qty: ev.target.value})} />
+          onChange={ev => !isNaN(parseInt(ev.target.value)) && setArticle({...article, qty: parseInt(ev.target.value)})}
+        />
       </Refquantity>
       <PleasantButton rounded={'full'} onClick={() => addProduct(article)}>Ajouter</PleasantButton>
 

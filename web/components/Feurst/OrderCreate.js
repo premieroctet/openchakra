@@ -96,7 +96,7 @@ const OrderCreate = ({storage, preorder}) => {
 
   }
 
-  const AddProduct = async({item, qty = 1}) => {
+  const AddProduct = async({item, qty}) => {
     if (!item) { return }
     
     const {
