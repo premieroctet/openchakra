@@ -62,7 +62,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 // @Access private
 router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
+  if (!isActionAllowed(req.context.user.roles, DATA_TYPE, UPDATE)) {
     return res.status(301)
   }
   throw new Error('Not implemented')
