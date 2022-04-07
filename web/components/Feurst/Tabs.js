@@ -62,15 +62,22 @@ const DynamicMyQuotations = dynamic(() => import('./MyQuotations'), dynamicParam
 const tabsContent = [
   {
     title: 'Créer une commande',
-    component: <DynamicOrderCreate />,
+    component: DynamicOrderCreate,
+    props: {
+      storage: 'orderid',
+    },
   },
   {
     title: 'Mes commandes',
-    component: <DynamicMyOrders />,
+    component: DynamicMyOrders,
   },
   {
     title: 'Mes devis',
-    component: <DynamicMyQuotations />,
+    component: DynamicOrderCreate,
+    props: {
+      storage: 'quotationid',
+      preorder: true,
+    },
   },
 ]
 
@@ -88,7 +95,7 @@ const Tabs = props => {
       <Tab.Panels>
         {tabsContent.map((elem, i) => (
           <Tab.Panel key={`panel${i}`}>
-            {elem.component}
+            {elem?.props ? <elem.component {...elem.props} {...props} /> : <elem.component {...props} /> }
           </Tab.Panel>
         ))}
       </Tab.Panels>

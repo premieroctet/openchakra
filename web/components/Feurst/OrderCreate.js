@@ -1,79 +1,26 @@
 import React, {useMemo, useState, useEffect, useCallback} from 'react'
+import {getAuthToken} from '../../utils/authentication'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import Table from '../Table/Table'
-import EditableCell from '../Table/EditableCell'
 import {client} from '../../utils/client'
-import {getAuthToken} from '../../utils/authentication'
 import useLocalStorageState from 'use-local-storage-state'
+import {orderColumns} from './tablestructures'
+import {snackBarError} from '../../utils/notifications'
 
 
-function moneyFormatter({lang, value}) {
-  return new Intl.NumberFormat(lang, {style: 'currency', currency: 'EUR'}).format(value) || ''
-}
-
-
-const ToTheBin = props => (
-  <button {...props}>
-    <span role='image' alt="supprimer">🗑️</span>
-  </button>
-)
-
-
-const OrderCreate = () => {
+const OrderCreate = ({storage, preorder}) => {
 
   const [data, setData] = useState(useMemo(() => [], []))
   const [language, setLanguage] = useState('fr')
-  const [orderID, setOrderId, {removeItem}] = useLocalStorageState('orderid', {defaultValue: null})
+  const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const dataToken = getAuthToken()
 
+  /* Do we order or... */
+  const endpoint = preorder ? 'quotations' : 'orders'
+
   const columns = useMemo(
-    () => [
-      {
-        Header: 'Réf. catalogue',
-        accessor: 'product_ref',
-      },
-      {
-        Header: 'Désignation',
-        accessor: 'product_name',
-      },
-      {
-        Header: 'Quantité',
-        accessor: 'product_quantity',
-        Cell: EditableCell,
-      },
-      {
-        Header: 'Poids',
-        accessor: 'product_weight',
-      },
-      {
-        Header: 'Prix catalogue',
-        accessor: 'product_price',
-        Cell: ({cell: {value}}) => moneyFormatter({lang: language, value}),
-        sortType: 'number',
-      },
-      {
-        Header: 'Remise',
-        accessor: 'product_discount',
-      },
-      {
-        Header: 'Votre prix',
-        accessor: 'product_totalprice',
-        sortType: 'number',
-      },
-      {
-        Header: '',
-        id: 'product_delete',
-        accessor: 'product_delete',
-        Cell: tableProps => (
-          <ToTheBin onClick={() => {
-            const dataCopy = [...data]
-            dataCopy.splice(tableProps.row.index, 1)
-            setData(dataCopy)
-          }}/>
-        ),
-      },
-    ],
+    () => orderColumns({language, data, setData: setData}),
     [data, language],
   )
 
@@ -126,24 +73,23 @@ const OrderCreate = () => {
   }
 
   const createOrderId = useCallback(async() => {
-    const postData = new FormData()
-    postData.append('user', dataToken)
+    const creation = await client(`myAlfred/api/${endpoint}`, {data: {...dataToken, user: dataToken.id}})
+      .catch(e => console.error(e, `Can't create ${endpoint}`))
+    
+    creation && setOrderId(creation?._id)
+    
+  }, [dataToken, endpoint, setOrderId])
 
-    const {_id} = await client('myAlfred/api/orders', {'data': dataToken})
-      .catch(e => console.error(e, `Can't create an order`))
+  const getContentFrom = useCallback(async id => {
     
-    setOrderId(_id)
-    
-  }, [dataToken, setOrderId])
+    const currentOrder = id ?
+      await client(`myAlfred/api/${endpoint}/${id}`)
+        .catch(err => snackBarError(err.msg))
+      : []
 
-  const getOrderId = useCallback(async id => {
+    currentOrder && drawTable(currentOrder)
     
-    const currentOrder = id ? await client(`myAlfred/api/orders/${id}`) : []
-      .catch(e => console.error(e, `Can't get an order`))
-
-    drawTable(currentOrder)
-    
-  }, [])
+  }, [endpoint])
 
 
   const checkProduct = async({item, qty}) => {
@@ -157,10 +103,10 @@ const OrderCreate = () => {
       _id,
     } = item
     
-    const afterNewProduct = await client(`myAlfred/api/orders/${orderID}/items`, {data: {product: _id, quantity: qty}, method: 'PUT'})
+    const afterNewProduct = await client(`myAlfred/api/${endpoint}/${orderID}/items`, {data: {product: _id, quantity: qty}, method: 'PUT'})
       .catch(e => console.error(`Can't add product ${e}`))
     
-    getOrderId(orderID)
+    afterNewProduct && getContentFrom(orderID)
   }
 
   // Init language and order
@@ -173,8 +119,8 @@ const OrderCreate = () => {
 
   // Init table
   useEffect(() => {
-    if (orderID) { getOrderId(orderID) }
-  }, [getOrderId, orderID])
+    if (orderID) { getContentFrom(orderID) }
+  }, [getContentFrom, orderID])
 
 
   return (<>

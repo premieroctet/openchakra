@@ -195,9 +195,6 @@ const AddArticle = ({addProduct, checkProduct}) => {
   }
   , [debouncedQuery, query, run, selectedItem])
 
-
-  console.log(getToggleButtonProps())
-
   return (
     <FormAddArticle>
       
@@ -259,11 +256,11 @@ const AddArticle = ({addProduct, checkProduct}) => {
       
       <Refquantity>
         <Label htmlFor="articleQty">Quantité</Label>
-        <Input 
-          type="number" 
+        <Input
+          type="number"
           id='articleQty'
-          placeholder='Qté souhaitée' 
-          value={article.qty} 
+          placeholder='Qté souhaitée'
+          value={article.qty}
           onChange={ev => setArticle({...article, qty: ev.target.value})} />
       </Refquantity>
       <PleasantButton rounded={'full'} onClick={() => addProduct(article)}>Ajouter</PleasantButton>

@@ -43,7 +43,6 @@ const withEdiAuth = (Component = null, options = {}) => {
   class WithEdiAuth extends React.Component {
     state = {
       loading: true,
-      role: null,
       userRights: [],
     };
     
@@ -59,6 +58,7 @@ const withEdiAuth = (Component = null, options = {}) => {
     async componentDidMount() {
       
       const isLoggedUser = getLoggedUser()
+
       if (isLoggedUser) {
         const userRights = await this.getUserRoles()
           .catch(e => console.error(e))
@@ -80,7 +80,7 @@ const withEdiAuth = (Component = null, options = {}) => {
       return (<ThemeProvider theme={theme}>
         <Header accessRights={sectionRights} />
         <div className='container'>
-          <Component userRights={userRights} {...this.props}/>
+          <Component userRights={userRights} />
         </div>
         <GlobalStyleEdi />
       </ThemeProvider>)
