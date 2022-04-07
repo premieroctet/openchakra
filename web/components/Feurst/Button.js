@@ -3,6 +3,23 @@ import styled, {css} from 'styled-components'
 
 let convert = require('color-convert')
 
+const applyBorderRadius =  props => {
+  switch (props.rounded) {
+    case 'full':
+      return 'var(--rounded-full)'
+    case '3xl':
+      return 'var(--rounded-3xl)';
+    case '2xl':
+      return 'var(--rounded-2xl)';
+    case 'xl':
+      return 'var(--rounded-xl)';
+    case 'md':
+      return 'var(--rounded-md)';
+    default:
+      return 'var(--rounded)'
+    }
+  };
+
 /* TODO : Util to move */
 function darkerColor(hexColor, percentLower=15) {
   const [h, s, l] = convert.hex.hsl(hexColor)
@@ -11,6 +28,7 @@ function darkerColor(hexColor, percentLower=15) {
 
 const Button = styled.button.attrs(props => ({
   size: props.size || '',
+  rounded: props.rounded || 'var(--rounded-xl)'
 }))`
   appearance: none;
   background: none;
@@ -24,6 +42,7 @@ const Button = styled.button.attrs(props => ({
       return 'fit-content'
   }
 }};
+  border-radius: ${(props) => applyBorderRadius};
   font-size: ${props => props.theme.fontSizes.lg};
 `
 
@@ -31,10 +50,6 @@ Button.defaultProps = {
   theme: {
     colors: {blue: 'blue', white: '#FFF'},
     fontSizes: {lg: '1rem'},
-    rounded: {
-      xl: '0.75rem',
-      '3xl': '1.5rem',
-    },
   },
 }
 
@@ -42,15 +57,14 @@ const StyledButton = styled(Button).attrs(props => ({
   size: props.size || '',
   bgColor: props.bgColor || props.theme.colors.blue,
   textColor: props.textColor || props.theme.colors.white,
+  rounded: props.rounded || 'var(--rounded-xl)'
 }))`
   position: relative;
   border: 0;
   padding: 0;
-  outline-offset: 4px;
   transition: filter 250ms;
-  border-radius: ${props => props.theme.rounded['3xl']};
   color: ${props => props.theme.colors.white};
-  border-radius: ${props => props.theme.rounded.xl};
+  border-radius: ${(props) => applyBorderRadius};
 
   &:hover {
     filter: brightness(110%);
@@ -62,13 +76,15 @@ const StyledButton = styled(Button).attrs(props => ({
 `
 
 
-const ButtonShadow = styled.span`
+const ButtonShadow = styled.span.attrs(props => ({
+  rounded: props.rounded || 'var(--rounded-xl)'
+}))`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: ${props => props.theme.rounded['3xl']};
+  border-radius: ${(props) => applyBorderRadius};
   background: hsl(0deg 0% 0% / 0.25);
   will-change: transform;
   transform: translateY(2px);
@@ -82,28 +98,30 @@ const ButtonShadow = styled.span`
     transform: translateY(1px);
     transition: transform 34ms;
   }
-`
+  `
 
 const ButtonEdge = styled.span.attrs(props => ({
   bgColor: props.bgColor || props.theme.colors.blue,
+  rounded: props.rounded || 'var(--rounded-xl)'
 }))`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: ${props => props.theme.rounded['3xl']};
+  border-radius: ${(props) => applyBorderRadius};
   background-color: ${props => darkerColor(props.bgColor)};
   `
 
 const ButtonFront = styled.span.attrs(props => ({
   bgColor: props.bgColor || props.theme.colors.blue,
   textColor: props.textColor || props.theme.colors.white,
+  rounded: props.rounded || 'var(--rounded-xl)'
 }))`
   display: block;
   position: relative;
   padding: 12px 42px;
-  border-radius: ${props => props.theme.rounded['3xl']};
+  border-radius: ${(props) => applyBorderRadius};
   font-size: 1.25rem;
   will-change: transform;
   transform: translateY(-4px);
@@ -127,6 +145,7 @@ ButtonFront.defaultProps = ButtonEdge.defaultProps = ButtonShadow.defaultProps =
 const PleasantButton = ({
   type = 'button',
   size,
+  rounded,
   bgColor,
   textColor,
   children,
@@ -138,12 +157,13 @@ const PleasantButton = ({
     <StyledButton
       type={type}
       size={size}
+      rounded={rounded}
       className={className}
       onClick={onClick}
     >
-      <ButtonShadow />
-      <ButtonEdge bgColor={bgColor} />
-      <ButtonFront bgColor={bgColor} textColor={textColor} >{children}</ButtonFront>
+      <ButtonShadow rounded={rounded} />
+      <ButtonEdge bgColor={bgColor} rounded={rounded} />
+      <ButtonFront bgColor={bgColor} textColor={textColor} rounded={rounded} >{children}</ButtonFront>
     </StyledButton>
   )
 }

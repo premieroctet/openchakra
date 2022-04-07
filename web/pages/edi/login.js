@@ -4,6 +4,9 @@ import styled from 'styled-components'
 import {useRouter} from 'next/router'
 import Header from '../../components/Feurst/Header'
 import {basePathEdi} from '../../hoc/withEdiAuth'
+import {ThemeProvider} from 'styled-components'
+import {theme, GlobalStyleEdi} from '../../styles/feurst.theme'
+import {screen} from '../../styles/screenWidths'
 
 const {
   removeAlfredRegistering,
@@ -12,11 +15,12 @@ const {clearAuthenticationToken} = require('../../utils/authentication')
 
 const HomeGrid = styled.div`
   display: grid;
-  column-gap: 2rem;
+  column-gap: var(--spc-12);
   grid-template-columns: 1fr;
   justify-items: center;
-  @media (min-width: 560px) {
-    grid-template-columns: 1fr 1fr
+
+  @media (${screen.lg}) {
+    grid-template-columns: 3fr 2fr;
   }
 `
 
@@ -28,7 +32,6 @@ const ResponsiveImg = styled.img`
 
 const LoginPage = () => {
 
-  
   const router = useRouter()
   
   useEffect(() => {
@@ -52,17 +55,14 @@ const LoginPage = () => {
 
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <GlobalStyleEdi />
       <Header />
-    
       <HomeGrid>
-    
         <ResponsiveImg src="" alt='' width={500} height={500} />
-        <div>
-          <Login login={redirect}/>
-        </div>
+        <Login login={redirect}/>
       </HomeGrid>
-    </>)
+    </ThemeProvider>)
 }
   
 export default LoginPage

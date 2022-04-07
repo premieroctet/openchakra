@@ -63,7 +63,7 @@ const SpinnerEllipsisAnimation = styled.div`
 
 
 const SpinnerEllipsis = () => (
-  <SpinnerEllipsisAnimation ><div></div><div></div><div></div><div></div></SpinnerEllipsisAnimation>
+  <SpinnerEllipsisAnimation className='loading' ><div></div><div></div><div></div><div></div></SpinnerEllipsisAnimation>
 )
 
 
