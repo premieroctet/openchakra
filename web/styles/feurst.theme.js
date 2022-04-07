@@ -30,28 +30,28 @@ export const theme = {
     paragraph: 1.5,
   },
   radii: ['0px', '2px', '4px', '8px', '16px', '48px'],
-  rounded: {
-    xl: '0.75rem',
-    '2xl': '1rem',
-    '3xl': '1.5rem',
-    full: '9999px',
-  },
 }
 
 export const GlobalStyleEdi = createGlobalStyle`
   
   :root {
-    accent-color: ${props => props.theme.accentColor || 'auto'};
-    caret-color: ${props => props.theme.accentColor || 'auto'};
+    /* Colors */
+    accent-color: ${props => props.theme?.accentColor || 'auto'};
+    caret-color: ${props => props.theme?.accentColor || 'auto'};
     --brand-color: #182d45;
     --bg-blue-700: #2b3760;
-    --bg-yellow-500: rgb(218, 187, 66);
+    --gray-800: rgb(190, 190, 190);
+    --black: #111;
+    --white: ${props => props.theme?.colors?.white || '#FFF'};
+    --yellow-500: rgb(218, 187, 66);
     --bg-app: #f5f5f5;
     --bg-input: #f2f2f2;
     --text-input: #707070;
     --bg-selectedZone: #bcc0cd;
     --text-selectedZone: #fff;
     --text-gray-500: #747474;
+
+    /* text */
     --text-sm: 0.875rem;
     --text-base: 1rem;
     --text-lg: 1.125rem;
@@ -63,9 +63,12 @@ export const GlobalStyleEdi = createGlobalStyle`
     --font-medium	: 500;
     --font-semibold	: 600;
     --font-bold	: 700;
+
+    /* Animation delays */
     --delayIn: .3s;
     --delayOut: .5s;
-    --spc-1: 
+
+    /* Spacing */
     --spc-0-5: 0.125rem;
     --spc-1: 0.25rem;
     --spc-1-5: 0.375rem;
@@ -80,13 +83,36 @@ export const GlobalStyleEdi = createGlobalStyle`
     --spc-8: 2rem;
     --spc-9: 2.25rem;
     --spc-10: 2.5rem;
+    --spc-11: 2.75rem;
+    --spc-12: 3rem;
+    --spc-24: 6rem;
+    --spc-32: 8rem;
+
+    /* Grid */
     --grid-cols-1: repeat(1, minmax(0, 1fr));
     --grid-cols-2: repeat(2, minmax(0, 1fr));
     --grid-cols-3: repeat(3, minmax(0, 1fr));
+
+    /* BorderRadius */
+    --rounded: 0.25rem;
+    --rounded-md: 0.375rem;
+    --rounded-xl: 0.75rem;
+    --rounded-2xl: 1rem;
+    --rounded-3xl: 1.5rem;
+    --rounded-7xl: 3.5rem;
+    --rounded-full: 9999px;
+
+    /* Miscellaneous */
+    --minTapSize: 44px;
   }
 
   html {
     height: -webkit-fill-available;
+    box-sizing: border-box;
+  }
+
+  *, *:before, *:after {
+    box-sizing: inherit;
   }
 
   body {
@@ -94,11 +120,11 @@ export const GlobalStyleEdi = createGlobalStyle`
     margin: 0;
     min-height: 100vh;
     color: ${props => (props.whiteColor ? 'white' : 'black')};
-    font-family: ${props => props.theme.fontFamily};
+    font-family: ${props => props.theme?.fontFamily};
   }
 
   .container {
-    width: ${props => (props.theme.containerSize ? props.theme.containerSize : 'min(100% - 2rem, 50rem)')}; 
+    width: ${props => (props.theme?.containerSize ? props.theme.containerSize : 'min(100% - 2rem, 50rem)')}; 
     margin-inline: auto;
   }
 
@@ -153,6 +179,13 @@ export const GlobalStyleEdi = createGlobalStyle`
 }
 
 .no-underline	{text-decoration-line: none;}
+
+/* Forms */
+
+input:focus:not(:focus-visible) {
+  outline: none;
+}
+
 
 /* Disposition */
 
@@ -327,19 +360,13 @@ export const GlobalStyleEdi = createGlobalStyle`
 /* Backgrounds */
 
 .bg-white {
-  background-color: ${props => props.theme.colors.white || '#FFF'};
+  background-color: var(--white);
 }
 
 /* Arrondis */
 
 .rounded-xl {
   border-radius: 0.75rem;
-}
-
-input:focus-visible    {
-  outline-color: ${props => props.theme.accentColor};
-  outline-offset: 2px;
-  outline-style: solid;
 }
 
 table {

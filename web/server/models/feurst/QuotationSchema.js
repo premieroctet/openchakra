@@ -1,5 +1,6 @@
 const extendSchema = require('mongoose-extend-schema')
 const BaseSchema=require('./QuotationBookingBaseSchema')
+const lodash=require('lodash')
 
 // TODO To complete
 const QuotationSchema = extendSchema(BaseSchema, {
