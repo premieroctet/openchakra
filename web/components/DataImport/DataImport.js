@@ -70,7 +70,7 @@ class DataImport extends React.Component {
         { (!lodash.isEmpty(comments) || !lodash.isEmpty(errors)) &&
           <Grid item style={{display: 'flex', justifyContent: 'center'}}>
             {comments && comments.join(',')}
-            <em style={{color: 'red'}}>{errors && errors.join(',')}</em>
+            <em style={{color: 'red'}}>{errors && (errors.join ? errors.join(',') : errors)}</em>
           </Grid>
         }
         <Grid item style={{display: 'flex', justifyContent: 'center'}}>
