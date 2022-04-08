@@ -8,7 +8,7 @@ const moment = require('moment')
 const Quotation = require('../../models/Quotation')
 const {validateOrderItem} = require('../../validation/order')
 const {validateQuotation}=require('../../validation/quotation')
-const {QUOTATION, CREATE, VIEW}=require('../../../utils/consts')
+const {QUOTATION, CREATE, VIEW, UPDATE}=require('../../../utils/consts')
 
 moment.locale('fr')
 

@@ -1,3 +1,5 @@
+const {SHIPRATE, CREATE} = require('../../utils/consts')
+
 import {withTranslation} from 'react-i18next'
 const {DataPage, styles}=require('../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles'
@@ -12,7 +14,8 @@ class all extends DataPage {
   getColumnDefs = () => {
     return [
       {headerName: '_id', field: '_id', width: 0},
-      models.textColumn({headerName: 'Département', field: 'zipcode'}),
+      models.textColumn({headerName: 'Code postal', field: 'zipcode'}),
+      models.textColumn({headerName: 'Département', field: 'province'}),
       models.booleanColumn({headerName: 'Express', field: 'express'}),
       {headerName: 'Poids minimum', field: 'min_weight'},
       {headerName: 'Poids maximum', field: 'max_weight'},
@@ -29,21 +32,17 @@ class all extends DataPage {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/shiprates')
       .then(response => {
-        let bookings = response.data
-        // Hide avocotes bookings
-        bookings = bookings.filter(b => !b.company_customer)
-        bookings.forEach(b => {
-          b.date = b.date ? moment(b.date) : null
-          if (b.customer_booking) {
-            b.user.full_name = `${b.user.full_name} pour ${b.customer_booking.user.full_name}`
-          }
-        })
-        this.setState({data: bookings})
+        this.setState({data: response.data})
+      })
+    axios.get('/myAlfred/api/users/actions')
+      .then(response => {
+        this.setState({actions: response.data})
       })
   }
 
   importURLS = () => {
-    return [
+    const {actions}=this.state
+    return actions?.find(a => a.model==SHIPRATE && a.action==CREATE) && [
       {title: 'Import', url: '/myAlfred/api/shiprates/import'},
     ]
   }

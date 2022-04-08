@@ -8,6 +8,10 @@ const ShipRateSchema = new Schema({
     type: Number,
     required: true,
   },
+  province: {
+    type: String,
+    required: true,
+  },
   min_weight: {
     type: Number,
     required: true,

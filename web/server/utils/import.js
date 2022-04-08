@@ -106,6 +106,7 @@ const shipRatesImport = buffer => {
         const records=result.records
         records.forEach(r => {
           const zipcode=parseInt(r[0])
+          const province=r[1]
           const base_0_30_exp=parseFloat(r[2].replace(',', '.'))
           const perkg_0_30_exp=parseFloat(r[3].replace(',', '.'))
           const base_0_30=parseFloat(r[4].replace(',', '.'))
@@ -117,22 +118,22 @@ const shipRatesImport = buffer => {
           const perkg_99_=parseFloat(r[10].replace(',', '.'))
           const coef_99_=parseFloat(r[11].replace(',', '.'))
           if (base_0_30_exp && perkg_0_30_exp) {
-            shiprates.push({zipcode: zipcode, express: true, min_weight: 0, max_weight: 30, fixed_price: base_0_30_exp, per_kg_price: perkg_0_30_exp})
+            shiprates.push({province: province, zipcode: zipcode, express: true, min_weight: 0, max_weight: 30, fixed_price: base_0_30_exp, per_kg_price: perkg_0_30_exp})
           }
           if (base_0_30 || perkg_0_30) {
-            shiprates.push({zipcode: zipcode, express: false, min_weight: 0, max_weight: 30, fixed_price: base_0_30, per_kg_price: perkg_0_30})
+            shiprates.push({province: province, zipcode: zipcode, express: false, min_weight: 0, max_weight: 30, fixed_price: base_0_30, per_kg_price: perkg_0_30})
           }
           if (base_30_99 || perkg_30_99) {
-            shiprates.push({zipcode: zipcode, express: false, min_weight: 30, max_weight: 99, fixed_price: base_30_99, per_kg_price: perkg_30_99})
+            shiprates.push({province: province, zipcode: zipcode, express: false, min_weight: 30, max_weight: 99, fixed_price: base_30_99, per_kg_price: perkg_30_99})
           }
           if ((base_30_99 || perkg_30_99) && coef_30_99) {
-            shiprates.push({zipcode: zipcode, express: true, min_weight: 30, max_weight: 99, fixed_price: base_30_99*coef_30_99, per_kg_price: perkg_30_99*coef_30_99})
+            shiprates.push({province: province, zipcode: zipcode, express: true, min_weight: 30, max_weight: 99, fixed_price: base_30_99*coef_30_99, per_kg_price: perkg_30_99*coef_30_99})
           }
           if (base_99_ || perkg_99_) {
-            shiprates.push({zipcode: zipcode, express: false, min_weight: 99, max_weight: MAX_WEIGHT, fixed_price: base_99_, per_kg_price: perkg_99_})
+            shiprates.push({province: province, zipcode: zipcode, express: false, min_weight: 99, max_weight: MAX_WEIGHT, fixed_price: base_99_, per_kg_price: perkg_99_})
           }
           if ((base_99_ || perkg_99_) && coef_99_) {
-            shiprates.push({zipcode: zipcode, express: true, min_weight: 99, max_weight: MAX_WEIGHT, fixed_price: base_99_*coef_99_, per_kg_price: perkg_99_*coef_99_})
+            shiprates.push({province: province, zipcode: zipcode, express: true, min_weight: 99, max_weight: MAX_WEIGHT, fixed_price: base_99_*coef_99_, per_kg_price: perkg_99_*coef_99_})
           }
         })
 

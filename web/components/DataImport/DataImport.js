@@ -17,9 +17,7 @@ class DataImport extends React.Component {
     this.state = {
       selectedFile: null,
       comments: null,
-      errors: null,
-      created: null,
-      updated: null,
+      result: null,
     }
     this.fileRef = React.createRef()
   }
@@ -42,7 +40,7 @@ class DataImport extends React.Component {
     data.append('buffer', this.state.selectedFile)
     axios.post(importURL, data)
       .then(response => {
-        this.setState({...response.data})
+        this.setState({result: response.data})
       })
       .catch(err => {
         this.setState({...err.response.data})

@@ -1,3 +1,5 @@
+import {Link, Typography} from '@material-ui/core'
+const {SHIPRATE, PRODUCT} = require('../utils/consts')
 import axios from 'axios'
 import {isLoggedUserAdmin, isUserSuperAdmin} from '../utils/context'
 import {withTranslation} from 'react-i18next'
@@ -6,11 +8,9 @@ import React from 'react'
 
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
-import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import Router from 'next/router'
 import DashboardLayout from '../hoc/Layout/DashboardLayout'
-import {Link} from '@material-ui/core'
 
 const styles = () => ({
   signupContainer: {
@@ -40,6 +40,7 @@ class home extends React.Component {
     super(props)
     this.state={
       user: null,
+      actions: [],
     }
   }
 
@@ -53,6 +54,14 @@ class home extends React.Component {
       .then(response => {
         this.setState({user: response.data})
       })
+    axios.get('/myAlfred/api/users/actions')
+      .then(response => {
+        this.setState({actions: response.data})
+      })
+  }
+
+  hasModelAccess = model => {
+    return !!this.state.actions.find(a => a.model==model)
   }
 
   render() {
@@ -77,8 +86,8 @@ class home extends React.Component {
                 <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
                 <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                 <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
-                <Link href="/dashboard/products"><a>Produits</a></Link><br/>
-                <Link href="/dashboard/shiprates"><a>Frais de livraison</a></Link>
+                {this.hasModelAccess(PRODUCT) && <><Link href="/dashboard/products"><a>Produits</a></Link><br/></>}
+                {this.hasModelAccess(SHIPRATE) && <Link href="/dashboard/shiprates"><a>Frais de livraison</a></Link>}
               </Grid>
               <Grid item xs={6}>
                 <Typography style={{fontSize: 30}}>Maintenance</Typography>
