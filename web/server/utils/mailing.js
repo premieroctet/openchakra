@@ -3,7 +3,7 @@ const {SIB} = require('./sendInBlue')
 const {computeUrl, get_host_url, is_validation, ENABLE_MAILING} = require('../../config/config')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
-
+const lodash=require('lodash')
 // Templates
 
 /**
@@ -54,16 +54,20 @@ const SMS_CONTENTS = {
   [BOOKING_EXPIRED_2_ALFRED]: 'La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée',
 }
 
-const sendNotification = (notif_index, destinee, params) => {
-  const msg = `Sending notif ${notif_index} to ${destinee._id} using ${JSON.stringify(params)}`
+const sendNotification = (notif_index, destinees, params, attachment=null) => {
 
+  const destinee=lodash.isArray(destinees) ? destinees[0]: destinees
+  const ccs=lodash.isArray(destinees) ? destinees.slice(1) : []
+
+  const msg = `Sending notif ${notif_index} to ${destinee.email}(${destinee._id}) ccs:${JSON.stringify(ccs)} using ${JSON.stringify(params)}`
   let enable_mails = ENABLE_MAILING
-  // En validation, envoyer les notifications et SMS aux membres de @my-alfred.io
-  if (!enable_mails && is_validation() && (destinee.email||'').toLowerCase().includes('@my-alfred.io')) {
+  const ALLOW_EMAILS=/@.*alfred|auvray/i
+  // En validation, envoyer les notifications et SMS aux membres de @.*alfred.*
+  if (!enable_mails && ALLOW_EMAILS.test(destinee.email||'')) {
     console.log('Mailing disabled except for my-alfred.io mails on validation platform')
     enable_mails = true
   }
-  let enable_sms = enable_mails
+  let enable_sms = ENABLE_MAILING
 
   if (!enable_sms && !enable_mails) {
     console.log(`Mailing disabled:${msg}`)
@@ -74,7 +78,7 @@ const sendNotification = (notif_index, destinee, params) => {
 
   // Send mail
   if (enable_mails && notif_index != CONFIRM_PHONE) {
-    resultMail = SIB.sendMail(notif_index, destinee.email, params)
+    resultMail = SIB.sendMail(notif_index, destinee.email, ccs, params, attachment)
   }
 
   // Send SMS
@@ -428,7 +432,7 @@ const sendB2BRegistration = (user, email, role, company, req) => {
 const sendBillingToAlfred = booking => {
   sendNotification(
     BILLING_2_ALFRED,
-    booking.alfred,
+    [booking.alfred, booking.user.email],
     {
       firstname: booking.alfred.firstname,
       city: booking.address.city,
