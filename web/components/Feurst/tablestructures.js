@@ -11,7 +11,7 @@ const ToTheBin = props => (
   </button>
 )
 
-const orderColumns = ({language, data, setData}) => [
+const orderColumns = ({language, data, setData, deleteProduct}) => [
   {
     Header: 'Réf. catalogue',
     accessor: 'product_ref',
@@ -48,11 +48,9 @@ const orderColumns = ({language, data, setData}) => [
     Header: '',
     id: 'product_delete',
     accessor: 'product_delete',
-    Cell: tableProps => (
+    Cell: ({cell: {value}}) => (
       <ToTheBin onClick={() => {
-        const dataCopy = [...data]
-        dataCopy.splice(tableProps.row.index, 1)
-        setData(dataCopy)
+        deleteProduct({idItem: value})
       }}/>
     ),
   },
