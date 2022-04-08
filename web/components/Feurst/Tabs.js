@@ -6,7 +6,7 @@ import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
 import {screen} from '../../styles/screenWidths'
 
 const Tabstyled = styled(Tab.List)`
-  
+
   display: grid;
   grid-template-columns: var(--grid-cols-1);
   margin-inline: auto;
@@ -15,10 +15,10 @@ const Tabstyled = styled(Tab.List)`
   @media (${screen.md}) {
     grid-template-columns: var(--grid-cols-3);
   }
-  
+
   button, button::after, button[aria-selected=true]::after{
     transition: background-color ease-in-out var(--delayIn), color ease-in-out var(--delayIn), border ease-in-out var(--delayIn);
-    will-change: 'background-color, color, border'; 
+    will-change: 'background-color, color, border';
   }
 
   button {
@@ -49,7 +49,7 @@ const Tabstyled = styled(Tab.List)`
     border-right: var(--trianglebase) solid transparent;
     border-top: var(--trianglepeak) solid ${props => props.theme.colors.yellow || 'yellow'};
   }
-  
+
 `
 
 const dynamicParams = {loading: () => <SpinnerEllipsis />}
@@ -57,6 +57,7 @@ const dynamicParams = {loading: () => <SpinnerEllipsis />}
 const DynamicOrderCreate = dynamic(() => import('./OrderCreate'), dynamicParams)
 const DynamicMyOrders = dynamic(() => import('./MyOrders'), dynamicParams)
 const DynamicMyQuotations = dynamic(() => import('./MyQuotations'), dynamicParams)
+const DynamicQuotationCreate = dynamic(() => import('./QuotationCreate'), dynamicParams)
 
 
 const tabsContent = [
@@ -72,8 +73,15 @@ const tabsContent = [
     component: DynamicMyOrders,
   },
   {
+    title: 'Créer un devis',
+    component: DynamicQuotationCreate,
+    props: {
+      storage: 'quotationid',
+    },
+  },
+  {
     title: 'Mes devis',
-    component: DynamicOrderCreate,
+    component: DynamicMyQuotations,
     props: {
       storage: 'quotationid',
       preorder: true,
@@ -100,7 +108,7 @@ const Tabs = props => {
         ))}
       </Tab.Panels>
     </Tab.Group>
-  
+
   )
 }
 export default Tabs

@@ -1,5 +1,6 @@
 const {Schema}=require('mongoose')
 const lodash=require('lodash')
+const {roundCurrency} = require('../../../utils/converters')
 const AddressSchema = require('../AddressSchema')
 
 const BookingItemSchema = new Schema({
@@ -36,6 +37,13 @@ BookingItemSchema.virtual('target_price').get(function() {
   return this.catalog_price*(1.0-this.discount)
 })
 
+BookingItemSchema.virtual('total_weight').get(function() {
+  if (!this.product) {
+    return 0
+  }
+  return this.product.weight*this.quantity
+})
+
 
 const QuotationBookingBaseSchema=new Schema({
   user: {
@@ -49,6 +57,11 @@ const QuotationBookingBaseSchema=new Schema({
     required: false,
   },
   items: [BookingItemSchema],
+  shipping_fee: {
+    type: Number,
+    default: 0,
+    get: v => roundCurrency(v),
+  },
   address: AddressSchema,
   creation_date: {
     type: Date,
@@ -59,6 +72,11 @@ const QuotationBookingBaseSchema=new Schema({
 QuotationBookingBaseSchema.virtual('total_amount').get(function() {
   const items_amount=lodash.sumBy(this.items, i => i.catalog_price*i.quantity*(1.0-i.discount))
   return items_amount+this.shipping_fee
+})
+
+QuotationBookingBaseSchema.virtual('total_weight').get(function() {
+  const total_weight=lodash.sumBy(this.items, i => i.total_weight)
+  return total_weight
 })
 
 module.exports=QuotationBookingBaseSchema

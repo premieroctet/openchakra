@@ -1,5 +1,5 @@
-const {roundCurrency} = require('../../../utils/converters')
 const mongoose = require('mongoose')
+const {roundCurrency} = require('../../../utils/converters')
 
 const Schema = mongoose.Schema
 
