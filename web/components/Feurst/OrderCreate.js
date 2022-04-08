@@ -1,14 +1,14 @@
-import React, {useMemo, useState, useEffect, useCallback} from 'react'
+import React, {useState, useRef, useMemo, useEffect, useCallback} from 'react'
+import useLocalStorageState from 'use-local-storage-state'
 import {getAuthToken} from '../../utils/authentication'
-import AddArticle from './AddArticle'
-import ImportExcelFile from './ImportExcelFile'
 import Table from '../Table/Table'
 import {client} from '../../utils/client'
-import useLocalStorageState from 'use-local-storage-state'
-import {orderColumns} from './tablestructures'
 import {snackBarError} from '../../utils/notifications'
+import DialogAddress from './DialogAddress'
+import AddArticle from './AddArticle'
+import ImportExcelFile from './ImportExcelFile'
+import {orderColumns} from './tablestructures'
 import {PleasantButton} from './Button'
-import styled from 'styled-components'
 
 
 const OrderCreate = ({storage, preorder}) => {
@@ -17,6 +17,7 @@ const OrderCreate = ({storage, preorder}) => {
   const [language, setLanguage] = useState('fr')
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const dataToken = getAuthToken()
+  const [isOpenDialog, setIsOpenDialog] = useState(false)
 
   /* Do we order or... */
   const endpoint = preorder ? 'quotations' : 'orders'
@@ -118,6 +119,12 @@ const OrderCreate = ({storage, preorder}) => {
     getContentFrom(orderID)
   }, [endpoint, getContentFrom, orderID])
 
+  
+  const setOrderFormAdress = () => {
+    
+  }
+
+
   // Init language and order
   useEffect(() => {
     setLanguage(Navigator.language)
@@ -143,8 +150,11 @@ const OrderCreate = ({storage, preorder}) => {
     
     <Table data={data} columns={columns} updateMyData={updateMyData} />
     <div className='flex m-8'>
-      <PleasantButton >J'ai fini, indiquer mes options de livraison</PleasantButton>
+      <PleasantButton onClick={() => setIsOpenDialog(true)}>J'ai fini, indiquer mes options de livraison</PleasantButton>
+      
     </div>
+
+    <DialogAddress isOpenDialog={isOpenDialog} setIsOpenDialog={setIsOpenDialog} />
   </>
   )
 }

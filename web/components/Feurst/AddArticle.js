@@ -3,8 +3,8 @@ import {useCombobox} from 'downshift'
 import useAsync from '../../hooks/use-async.hook'
 import useDebounce from '../../hooks/use-debounce.hook'
 import {client} from '../../utils/client'
-import {PleasantButton} from './Button'
 import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
+import {PleasantButton} from './Button'
 import {FormAddArticle, Label, Input, Refquantity, Refcatalog} from './AddArticle.styles'
 
 const AddArticle = ({addProduct, checkProduct}) => {
