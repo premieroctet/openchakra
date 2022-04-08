@@ -8,6 +8,7 @@ import {snackBarError} from '../../utils/notifications'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
+import DialogAddress from './DialogAddress'
 
 
 const BaseCreateTable = ({storage, endpoint, columns}) => {
@@ -16,6 +17,7 @@ const BaseCreateTable = ({storage, endpoint, columns}) => {
   const [language, setLanguage] = useState('fr')
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const dataToken = getAuthToken()
+  const [isOpenDialog, setIsOpenDialog] = useState(false)
 
   const updateMyData = (rowIndex, columnId, value) => {
     setData(old =>
@@ -79,6 +81,11 @@ const BaseCreateTable = ({storage, endpoint, columns}) => {
     getContentFrom(orderID)
   }, [endpoint, getContentFrom, orderID])
 
+
+  const setOrderFormAdress = () => {
+
+  }
+
   // Init language and order
   useEffect(() => {
     setLanguage(Navigator.language)
@@ -104,8 +111,10 @@ const BaseCreateTable = ({storage, endpoint, columns}) => {
 
     <Table data={data} columns={columnsMemo} updateMyData={updateMyData} />
     <div className='flex m-8'>
-      <PleasantButton >J'ai fini, indiquer mes options de livraison</PleasantButton>
+      <PleasantButton onClick={() => setIsOpenDialog(true)}>J'ai fini, indiquer mes options de livraison</PleasantButton>
     </div>
+
+    <DialogAddress isOpenDialog={isOpenDialog} setIsOpenDialog={setIsOpenDialog} />
   </>
   )
 }
