@@ -1,3 +1,5 @@
+const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
+const {PRODUCT, VIEW} = require('../../../utils/consts')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const Product = require('../../models/Product')
 const express = require('express')
@@ -12,12 +14,19 @@ moment.locale('fr')
 // PRODUCTS
 const uploadProducts = createMemoryMulter(TEXT_FILTER)
 
+const DATA_TYPE=PRODUCT
+
 // @Route GET /myAlfred/api/products
 // View all products
 // optional ?pattern=XX filters on reference
 // @Access private
 // router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.get('/', (req, res) => {
+
+  if (!isActionAllowed(req.context.user.roles, DATA_TYPE, VIEW)) {
+    return res.status(301)
+  }
+
   const pattern = new RegExp(req.query.pattern, 'i')
   const filter=req.query.pattern ? {
     $or: [
@@ -26,7 +35,7 @@ router.get('/', (req, res) => {
       {description_2: pattern},
     ],
   }: {}
-  Product.find(filter)
+  Product.find({filter, ...getDataFilter(req.context.user.roles, DATA_TYPE, VIEW)})
     .then(products => {
       res.json(products)
     })
@@ -126,7 +135,7 @@ router.post('/import', passport.authenticate('admin', {session: false}), (req, r
       'weight': "Poids d'expédition",
     }
 
-    csvImport(Product, req.file.buffer, DB_MAPPING, {delimiter: ',', key: 'reference'})
+    csvImport(Product, req.file.buffer, DB_MAPPING, {key: 'reference'})
       .then(result => {
         res.json(result)
       })
@@ -151,7 +160,7 @@ router.post('/import-price', passport.authenticate('admin', {session: false}), (
       'price': 'PRIX 2022',
     }
 
-    csvImport(Product, req.file.buffer, DB_MAPPING, {delimiter: ',', key: 'reference', update: true})
+    csvImport(Product, req.file.buffer, DB_MAPPING, {key: 'reference', update: true})
       .then(result => {
         res.json(result)
       })
@@ -176,7 +185,7 @@ router.post('/import-stock', passport.authenticate('admin', {session: false}), (
       'stock': 'FSTMG',
     }
 
-    csvImport(Product, req.file.buffer, DB_MAPPING, {delimiter: ',', key: 'reference', update: true})
+    csvImport(Product, req.file.buffer, DB_MAPPING, {key: 'reference', update: true, from_line: 3})
       .then(result => {
         res.json(result)
       })

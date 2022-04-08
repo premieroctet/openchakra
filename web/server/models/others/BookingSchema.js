@@ -225,11 +225,11 @@ BookingSchema.virtual('calendar_display').get(function() {
 })
 
 BookingSchema.virtual('customer_fee').get(function() {
-  return lodash.sum(this.customer_fees.map(c => c.amount))
+  return lodash.sum((this.customer_fees || []).map(c => c.amount))
 })
 
 BookingSchema.virtual('provider_fee').get(function() {
-  return lodash.sum(this.provider_fees.map(c => c.amount))
+  return lodash.sum((this.provider_fees||[]).map(c => c.amount))
 })
 
 

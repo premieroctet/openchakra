@@ -1,9 +1,11 @@
+const {PRODUCT, CREATE} = require('../../utils/consts')
 import {withTranslation} from 'react-i18next'
 const {DataPage, styles}=require('../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles'
 const models=require('../../components/BigList/models')
 import axios from 'axios'
 const moment = require('moment')
+
 moment.locale('fr')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 
@@ -32,21 +34,18 @@ class all extends DataPage {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/products')
       .then(response => {
-        let bookings = response.data
-        // Hide avocotes bookings
-        bookings = bookings.filter(b => !b.company_customer)
-        bookings.forEach(b => {
-          b.date = b.date ? moment(b.date) : null
-          if (b.customer_booking) {
-            b.user.full_name = `${b.user.full_name} pour ${b.customer_booking.user.full_name}`
-          }
-        })
-        this.setState({data: bookings})
+        this.setState({data: response.data})
+      })
+    setAxiosAuthentication()
+    axios.get('/myAlfred/api/users/actions')
+      .then(response => {
+        this.setState({actions: response.data})
       })
   }
 
   importURLS = () => {
-    return [
+    const {actions}=this.state
+    return actions?.find(a => a.model==PRODUCT && a.action==CREATE) && [
       {title: 'Import articles', url: '/myAlfred/api/products/import'},
       {title: 'Import tarifs', url: '/myAlfred/api/products/import-price'},
       {title: 'Import stock', url: '/myAlfred/api/products/import-stock'},

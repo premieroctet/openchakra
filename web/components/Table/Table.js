@@ -1,10 +1,9 @@
-import React, {useState, useMemo} from 'react'
-import regeneratorRuntime from 'regenerator-runtime' // Needed for react-table
+import React, {useMemo} from 'react'
 import {useTable, useSortBy, useFilters, useGlobalFilter} from 'react-table'
+import lodash from 'lodash'
 import {GlobalFilter} from './TableFilter'
 import {fuzzyTextFilterFn} from './table-helper'
 import TableDialogFilter from './TableDialogFilter'
-
 
 function DefaultColumnFilter({
   column: {filterValue, preFilteredRows, setFilter},
@@ -42,7 +41,7 @@ function dateBetweenFilterFn(rows, id, filterValues) {
     })
   }
   return rows
-  
+
 }
 
 dateBetweenFilterFn.autoRemove = val => !val
@@ -78,7 +77,6 @@ const Table = ({data, columns, updateMyData = null}) => {
     }),
     [],
   )
-
 
   const {
     getTableProps,
@@ -117,7 +115,7 @@ const Table = ({data, columns, updateMyData = null}) => {
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, i) => (
                 <th {...column.getHeaderProps()}>
-                  
+
                   {column.render('Header') !== '' ?
                     <>
                       <button {...column.getHeaderProps(column.getSortByToggleProps())}>
@@ -143,12 +141,12 @@ const Table = ({data, columns, updateMyData = null}) => {
                         </div> : null}
                     </>
                     : null}
-                  
+
                 </th>
               ))}
             </tr>
           ))}
-          
+
         </thead>
         <tbody {...getTableBodyProps()}>
           {rows.map(row => {

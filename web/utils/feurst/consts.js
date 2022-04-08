@@ -65,10 +65,10 @@ const ROLES = {
   [CUSTOMER_SLAVE]: 'Client',
 }
 
-const [ORDER, QUOTATION, ACCOUNT]=['ORDER', 'QUOTATION', 'ACCOUNT']
+const [ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT]=['ORDER', 'QUOTATION', 'ACCOUNT', 'SHIPRATE', 'PRODUCT']
 const [VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]=['VIEW', 'CREATE', 'UPDATE', 'DELETE', 'VALIDATE', 'CONVERT']
 const [ALL, MINE, COMPANY]=['ALL', 'MINE', 'COMPANY']
-const MODELS=[ORDER, QUOTATION, ACCOUNT]
+const MODELS=[ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT]
 const ACTIONS=[VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]
 const VISIBILITY=[ALL, MINE, COMPANY]
 
@@ -79,7 +79,9 @@ const createUserAction= (model, action, extra={}) => {
 const USER_ACTIONS={
   [FEURST_ADMIN]: lodash.flattenDeep([
     [VIEW, CREATE, UPDATE, DELETE].map(action => [FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
-    [VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    [CREATE, VIEW, UPDATE, DELETE, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    [VIEW, CREATE].map(action => createUserAction(SHIPRATE, action, {visibility: ALL})),
+    [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
     [CREATE, VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
@@ -94,10 +96,13 @@ const USER_ACTIONS={
     [CREATE, VIEW, UPDATE].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
   ]),
   [CUSTOMER_SLAVE]: lodash.flattenDeep([
-    [CREATE, VIEW, UPDATE, CONVERT].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
-    [CREATE, VIEW, UPDATE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
+    [CREATE, VIEW, UPDATE, CONVERT, DELETE].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
+    [CREATE, VIEW, UPDATE, DELETE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
   ]),
 }
+
+// Max weight limit for ship fee (i.e. no max limit)
+const MAX_WEIGHT=1000000
 
 module.exports={
   PIN, SOLD, NONE, FIX_TYPES,
@@ -105,4 +110,5 @@ module.exports={
   EXCAVATRICE, CHARGEUSE, PELLE_BUTTE, MACHINE_TYPES,
   BOOK_STATUS, QUOTATION_STATUS, FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN, CUSTOMER_SLAVE,
   ROLES, USER_ACTIONS, ORDER, QUOTATION, ACCOUNT, VIEW, CREATE, UPDATE, DELETE,
+  SHIPRATE, MAX_WEIGHT, PRODUCT,
 }

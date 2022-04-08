@@ -11,37 +11,38 @@ const ToTheBin = props => (
   </button>
 )
 
-const orderColumns = ({language, data, setData, deleteProduct}) => [
+const orderColumns = ({language, deleteProduct}) => [
   {
     Header: 'Réf. catalogue',
-    accessor: 'product_ref',
+    accessor: 'product.reference',
   },
   {
     Header: 'Désignation',
-    accessor: 'product_name',
+    accessor: item => `${item.product.description} ${item.product.description_2}`,
   },
   {
     Header: 'Quantité',
-    accessor: 'product_quantity',
+    accessor: 'quantity',
     Cell: EditableCell,
   },
   {
     Header: 'Poids',
-    accessor: 'product_weight',
+    accessor: 'product.weight',
   },
   {
     Header: 'Prix catalogue',
-    accessor: 'product_price',
+    accessor: 'catalog_price',
     Cell: ({cell: {value}}) => moneyFormatter({lang: language, value}),
     sortType: 'number',
   },
   {
     Header: 'Remise',
-    accessor: 'product_discount',
+    accessor: 'discount',
+    sortType: 'number',
   },
   {
     Header: 'Votre prix',
-    accessor: 'product_totalprice',
+    accessor: 'target_price',
     sortType: 'number',
   },
   {
@@ -55,5 +56,5 @@ const orderColumns = ({language, data, setData, deleteProduct}) => [
     ),
   },
 ]
- 
+
 export {orderColumns}

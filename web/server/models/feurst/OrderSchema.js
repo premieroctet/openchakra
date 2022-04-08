@@ -1,9 +1,10 @@
-const BaseSchema = require('./QuotationBookingBaseSchema')
-const extendSchema = require('mongoose-extend-schema')
+const mongoose=require('mongoose')
 const {BOOK_STATUS, ROLES} = require('../../../utils/consts')
-const lodash=require('lodash')
+const BaseSchema = require('./QuotationBookingBaseSchema')
 
-const OrderSchema = extendSchema(BaseSchema, {
+const OrderSchema = BaseSchema.clone()
+
+OrderSchema.add({
   reference: {
     type: String,
     required: false, // TODO Required for a valid order
@@ -29,12 +30,11 @@ const OrderSchema = extendSchema(BaseSchema, {
     default: 0,
     required: false, // TODO Required for a valid order
   },
-}, {toJSON: {virtuals: true, getters: true}})
-
-OrderSchema.virtual('total_amount').get(function() {
-  console.log('Computing')
-  const items_amount=lodash.sumBy(this.items, i => i.catalog_price*i.quantity*(1.0-i.discount))
-  return items_amount+this.shipping_fee
+  source_quotation: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'quotation',
+    required: false,
+  },
 })
 
 module.exports = OrderSchema

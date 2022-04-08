@@ -1,3 +1,5 @@
+const {roundCurrency} = require('../../utils/converters')
+const ShipRate = require('../models/ShipRate')
 const {computeDiscount} = require('./discount')
 
 const addItem = (data, product_id, quantity) => {
@@ -23,4 +25,23 @@ const addItem = (data, product_id, quantity) => {
   })
 }
 
-module.exports = {addItem}
+/**
+Computes Ship rate depending on zipcode, wieght and express (true||false)
+*/
+const computeShipFee = (zipcode, weight, express) => {
+  return new Promise((resolve, reject) => {
+    ShipRate.findOne({zipcode: zipcode, express: express, min_weight: {$lte: weight}, max_weight: {$gt: weight}})
+      .then(rate => {
+        if (!rate) {
+          return reject(`No rate found for zipcode:${zipcode} weight:${weight} express:${express}`)
+        }
+        const fee=rate.fixed_price+rate.per_kg_price*parseInt(weight)
+        return resolve(roundCurrency(fee))
+      })
+      .catch(err => {
+        return reject(err)
+      })
+  })
+}
+
+module.exports = {addItem, computeShipFee}
