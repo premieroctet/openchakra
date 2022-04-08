@@ -1,6 +1,6 @@
+const express = require('express')
 const {addItem} = require('../../utils/commands')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
-const express = require('express')
 
 const router = express.Router()
 const passport = require('passport')
@@ -74,7 +74,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.context.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301)
+    return res.status(301).json()
   }
 
   const {errors, isValid}=validateOrderItem(req.body)

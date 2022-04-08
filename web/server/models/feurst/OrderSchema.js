@@ -1,6 +1,6 @@
 const mongoose=require('mongoose')
-const BaseSchema = require('./QuotationBookingBaseSchema')
 const {BOOK_STATUS, ROLES} = require('../../../utils/consts')
+const BaseSchema = require('./QuotationBookingBaseSchema')
 
 const OrderSchema = BaseSchema.clone()
 
@@ -33,7 +33,7 @@ OrderSchema.add({
   source_quotation: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'quotation',
-    required: true,
+    required: false,
   },
 })
 

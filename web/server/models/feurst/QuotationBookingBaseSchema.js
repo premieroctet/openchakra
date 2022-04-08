@@ -1,5 +1,6 @@
-const AddressSchema = require('../AddressSchema')
 const {Schema}=require('mongoose')
+const lodash=require('lodash')
+const AddressSchema = require('../AddressSchema')
 
 const BookingItemSchema = new Schema({
   product: {
@@ -26,7 +27,7 @@ const BookingItemSchema = new Schema({
     min: 0,
     required: true,
   },
-})
+}, {toJSON: {virtuals: true, getters: true}})
 
 BookingItemSchema.virtual('target_price').get(function() {
   if (!this.catalog_price) {
