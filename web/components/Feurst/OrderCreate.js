@@ -7,6 +7,8 @@ import {client} from '../../utils/client'
 import useLocalStorageState from 'use-local-storage-state'
 import {orderColumns} from './tablestructures'
 import {snackBarError} from '../../utils/notifications'
+import {PleasantButton} from './Button'
+import styled from 'styled-components'
 
 
 const OrderCreate = ({storage, preorder}) => {
@@ -19,10 +21,6 @@ const OrderCreate = ({storage, preorder}) => {
   /* Do we order or... */
   const endpoint = preorder ? 'quotations' : 'orders'
 
-  const columns = useMemo(
-    () => orderColumns({language, data, setData: setData}),
-    [data, language],
-  )
 
   const updateMyData = (rowIndex, columnId, value) => {
     setData(old =>
@@ -96,7 +94,7 @@ const OrderCreate = ({storage, preorder}) => {
 
   }
 
-  const AddProduct = async({item, qty = 1}) => {
+  const addProduct = async({item, qty}) => {
     if (!item) { return }
     
     const {
@@ -108,6 +106,17 @@ const OrderCreate = ({storage, preorder}) => {
     
     afterNewProduct && getContentFrom(orderID)
   }
+
+  const deleteProduct = useCallback(async({idItem}) => {
+    console.log(idItem)
+    if (!idItem) { return }
+    
+    const afterDeleteProduct = await client(`myAlfred/api/${endpoint}/${orderID}/items/${idItem}`, {method: 'DELETE'})
+      .catch(e => console.error(`Can't delete product ${e}`))
+    
+    // TODO verif delete
+    getContentFrom(orderID)
+  }, [endpoint, getContentFrom, orderID])
 
   // Init language and order
   useEffect(() => {
@@ -122,11 +131,20 @@ const OrderCreate = ({storage, preorder}) => {
     if (orderID) { getContentFrom(orderID) }
   }, [getContentFrom, orderID])
 
+  const columns = useMemo(
+    () => orderColumns({language, data, setData, deleteProduct: deleteProduct}),
+    [data, deleteProduct, language],
+  )
+
 
   return (<>
     <ImportExcelFile />
-    <AddArticle checkProduct={checkProduct} addProduct={AddProduct} />
+    <AddArticle checkProduct={checkProduct} addProduct={addProduct} />
+    
     <Table data={data} columns={columns} updateMyData={updateMyData} />
+    <div className='flex m-8'>
+      <PleasantButton >J'ai fini, indiquer mes options de livraison</PleasantButton>
+    </div>
   </>
   )
 }

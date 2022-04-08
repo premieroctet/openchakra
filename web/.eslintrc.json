@@ -1,5 +1,5 @@
 {
-  "plugins": ["react", "react-hooks"],
+  "plugins": ["react", "react-hooks", "import"],
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 2018
@@ -146,6 +146,7 @@
     "prefer-template": 1,
     "require-yield": 2,
     "react-hooks/rules-of-hooks": "error", // Vérifie les règles des Hooks
-    "react-hooks/exhaustive-deps": "warn"  // Vérifie les tableaux de dépendances
+    "react-hooks/exhaustive-deps": "warn",  // Vérifie les tableaux de dépendances
+    "import/order": 1
   }
 }

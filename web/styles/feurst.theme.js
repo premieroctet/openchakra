@@ -307,45 +307,23 @@ input:focus:not(:focus-visible) {
 
 /* Espacements */
 
-.m-4 {
-  margin: 1em;
-}
-.m-8 {
-  margin: 2em;
-}
+.m-4 {margin: 1em;}
+.m-8 {margin: 2em;}
 
-.mx-auto {
-  margin: 0 auto;
-}
+.mx-auto {margin: 0 auto;}
 
-.mr-8 {
-  margin-right: 2rem;
-}
+.mr-8 {margin-right: 2rem;}
 
-.mb-4 {
-  margin-bottom: 1rem !important;
-}
+.mb-4 {margin-bottom: 1rem !important;}
+.mb-6 {margin-bottom: 1.5rem !important;}
 
-.mb-6 {
-  margin-bottom: 1.5rem !important;
-}
+.ml-12 {margin-left: 3rem;}
 
-.ml-12 {
-  margin-left: 3rem;
-}
+.p-2 {padding: 0.5rem;}
+.p-4 {padding: 1rem;}
 
-.p-2 {
-  padding: 0.5rem;
-}
-.p-4 {
-  padding: 1rem;
-}
-.pl-4 {
-  padding-left: 1rem;
-}
-.pl-6 {
-  padding-left: 1.5rem;
-}
+.pl-4 {padding-left: 1rem;}
+.pl-6 {padding-left: 1.5rem;}
 
 .px-1 {
   padding-left: 0.25rem;
