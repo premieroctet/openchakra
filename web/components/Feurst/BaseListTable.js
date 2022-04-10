@@ -62,10 +62,9 @@ const BaseListTable = ({endpoint, columns}) => {
   }, [getContentFrom])
 
   const columnsMemo = useMemo(
-    () => columns({language, data, setData, deleteProduct: deleteProduct}),
+    () => columns({language, data, setData, deleteProduct: deleteProduct}).map(c => ({...c, Header: c.label, accessor: c.attribute})),
     [data, deleteProduct, language],
   )
-
 
   return (<>
     <Table data={data} columns={columnsMemo} updateMyData={updateMyData} />

@@ -116,32 +116,31 @@ const Table = ({data, columns, updateMyData = null}) => {
               {headerGroup.headers.map((column, i) => (
                 <th {...column.getHeaderProps()}>
 
-                  {column.render('Header') !== '' ?
+                  {column.render('Header') !== '' &&
                     <>
                       <button {...column.getHeaderProps(column.getSortByToggleProps())}>
                         {column.render('Header')}
-                        {column.isSorted
-                          ? column.isSortedDesc
+                        {column.isSorted &&(
+                          column.isSortedDesc
                             ? ' 🔽'
-                            : ' 🔼'
-                          : ''}
+                            : ' 🔼')
+                          }
                       </button>
-                      {column.canFilter ?
+                      {column.canFilter &&
                         <>
                           <TableDialogFilter>
                             {column.render('Filter')}
                           </TableDialogFilter>
                         </>
-                        : null}
+                        }
 
-                      {column.filterValue ?
+                      {column.filterValue &&
                         <div>{column.filterValue}  <button onClick={() => column.setFilter(undefined)}>
                            Reset
                         </button>
-                        </div> : null}
+                        </div>}
                     </>
-                    : null}
-
+                    }
                 </th>
               ))}
             </tr>

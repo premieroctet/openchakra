@@ -100,7 +100,7 @@ const BaseCreateTable = ({storage, endpoint, columns}) => {
   }, [getContentFrom, orderID])
 
   const columnsMemo = useMemo(
-    () => columns({language, data, setData, deleteProduct: deleteProduct}),
+    () => columns({language, data, setData, deleteProduct: deleteProduct}).map(c => ({...c, Header: c.label, accessor: c.attribute})),
     [data, deleteProduct, language],
   )
 
