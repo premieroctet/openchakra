@@ -20,10 +20,9 @@ const DATA_TYPE=PRODUCT
 // View all products
 // optional ?pattern=XX filters on reference
 // @Access private
-// router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
-router.get('/', (req, res) => {
+router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.context.user.roles, DATA_TYPE, VIEW)) {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
     return res.status(301)
   }
 
@@ -35,7 +34,7 @@ router.get('/', (req, res) => {
       {description_2: pattern},
     ],
   }: {}
-  Product.find({filter, ...getDataFilter(req.context.user.roles, DATA_TYPE, VIEW)})
+  Product.find({filter, ...getDataFilter(req.user.roles, DATA_TYPE, VIEW)})
     .then(products => {
       res.json(products)
     })

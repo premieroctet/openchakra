@@ -405,7 +405,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
 
 router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   const obj = req.body
-  const canceller_id = req.context.user._id
+  const canceller_id = req.user._id
 
   console.log(`Booking ${req.params.id}: setting booking:${JSON.stringify(obj)}`)
   Booking.findById(req.params.id)

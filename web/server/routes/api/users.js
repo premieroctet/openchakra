@@ -143,7 +143,7 @@ router.post('/register', (req, res) => {
 
 
 router.get('/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
-  let actions=getActionsForRoles(req.context.user.roles)
+  let actions=getActionsForRoles(req.user.roles)
   if (req.query.model) {
     actions=actions.filter(a => a.model==req.query.model)
   }
@@ -240,7 +240,7 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
             ServiceUser.updateMany({user: user.id}, {service_address: user.billing_address})
             createMangoClient(user)
             if (user.mangopay_provider_id) {
-              req.context.getModel('Shop').findOne({alfred: user._id})
+              Shop.findOne({alfred: user._id})
                 .then(shop => {
                   createMangoProvider(user, shop)
                 })
