@@ -223,4 +223,15 @@ const productsColumns = ({language}) => [
   {label: 'Poids', attribute: 'weight'},
 ]
 
-export {orderColumns, ordersColumns, quotationColumns, quotationsColumns, accountsColumns, productsColumns}
+const shipratesColumns = ({language}) => [
+  {label: 'Code postal', attribute: 'zipcode'},
+  {label: 'Département', attribute: 'province'},
+  {label: 'Express', attribute: 'express', Cell: ({cell: {value}}) => (value ? 'Oui' : 'Non')},
+  {label: 'Poids minimum', attribute: 'min_weight'},
+  {label: 'Poids maximum', attribute: 'max_weight'},
+  {label: 'Forfait', attribute: 'fixed_price'},
+  {label: 'Par kg', attribute: 'per_kg_price'},
+]
+
+module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
+  accountsColumns, productsColumns, shipratesColumns}
