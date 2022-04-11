@@ -3,10 +3,10 @@ import BaseCreateTable from'./BaseCreateTable'
 const {orderColumns} = require('./tablestructures')
 
 
-const OrderCreate = ({storage}) => {
+const OrderCreate = ({storage, accessRights}) => {
 
   return (
-    <BaseCreateTable storage={storage} endpoint='orders' columns={orderColumns} />
+    <BaseCreateTable storage={storage} endpoint='orders' columns={orderColumns} accessRights={accessRights}/>
   )
 }
 

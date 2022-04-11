@@ -11,7 +11,7 @@ import {PleasantButton} from './Button'
 import DialogAddress from './DialogAddress'
 
 
-const BaseCreateTable = ({storage, endpoint, columns}) => {
+const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
   const [data, setData] = useState(useMemo(() => [], []))
   const [language, setLanguage] = useState('fr')
@@ -114,7 +114,7 @@ const BaseCreateTable = ({storage, endpoint, columns}) => {
       <PleasantButton onClick={() => setIsOpenDialog(true)}>J'ai fini, indiquer mes options de livraison</PleasantButton>
     </div>
 
-    <DialogAddress isOpenDialog={isOpenDialog} setIsOpenDialog={setIsOpenDialog} />
+    <DialogAddress isOpenDialog={isOpenDialog} setIsOpenDialog={setIsOpenDialog} accessRights={accessRights}/>
   </>
   )
 }

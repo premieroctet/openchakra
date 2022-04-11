@@ -24,9 +24,9 @@ const InitialDialog = styled(Dialog)`
 `
 
 
-const DialogAddress = ({isOpenDialog, setIsOpenDialog, ...props}) => {
+const DialogAddress = ({isOpenDialog, setIsOpenDialog, setAddress, accessRights}) => {
   
-  console.log(props)
+  console.log(accessRights)
 
   const completeButtonRef = useRef(null)
 
