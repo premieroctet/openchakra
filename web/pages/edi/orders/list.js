@@ -10,4 +10,4 @@ const Orders = ({accessRights}) => {
   </>)
 }
 
-module.exports=withEdiAuth(Orders, {model: ORDER, action: VIEW, pathAfterFailure: '/edi/login'})
+module.exports=withEdiAuth(Orders, {model: ORDER, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})

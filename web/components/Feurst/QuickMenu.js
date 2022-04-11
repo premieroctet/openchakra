@@ -2,23 +2,28 @@ import React from 'react'
 import Link from 'next/link'
 import ContactUs from './ContactUs'
 const {getLoggedUser} = require('../../utils/context')
-const {ORDER, QUOTATION} = require('../../utils/consts')
+const {ORDER, QUOTATION, BASEPATH_EDI, PRODUCT} = require('../../utils/consts')
 
 const MENUS=[
   {
     access: models => models.includes(ORDER),
     label: 'Mes commandes',
-    url: `/edi/orders`,
+    url: `${BASEPATH_EDI}/orders`,
   },
   {
     access: models => models.includes(QUOTATION),
     label: 'Mes devis',
-    url: `/edi/quotations`,
+    url: `${BASEPATH_EDI}/quotations`,
+  },
+  {
+    access: models => models.includes(PRODUCT),
+    label: 'Produits',
+    url: `${BASEPATH_EDI}/products`,
   },
   {
     access: () => !!getLoggedUser(),
     label: 'Se déconnecter',
-    url: `/edi/quotations`,
+    url: `${BASEPATH_EDI}/quotations`,
   },
 ]
 

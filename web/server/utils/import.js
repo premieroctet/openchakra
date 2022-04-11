@@ -1,8 +1,8 @@
+const csv_parse = require('csv-parse/lib/sync')
+const lodash=require('lodash')
 const {MAX_WEIGHT} = require('../../utils/feurst/consts')
 const ShipRate = require('../models/ShipRate')
 const {bufferToString} = require('../../utils/text')
-const csv_parse = require('csv-parse/lib/sync')
-const lodash=require('lodash')
 
 const toFloat = value => {
   try {
@@ -54,7 +54,7 @@ const dataImport=(model, headers, records, mapping, options) => {
     })
 
     const promises=formattedRecords.map(record =>
-      model.update({[uniqueKey]: record[uniqueKey]}, record, {upsert: !updateOnly && true}),
+      model.updateOne({[uniqueKey]: record[uniqueKey]}, record, {upsert: !updateOnly && true}),
     )
 
     Promise.allSettled(promises)

@@ -1,15 +1,15 @@
 import {Typography} from '@material-ui/core'
-const {TEXT_FILTER} = require('../../server/utils/filesystem')
-import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import axios from 'axios'
-const {setAxiosAuthentication}=require('../../utils/authentication')
 
 import React from 'react'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
+import CustomButton from '../../components/CustomButton/CustomButton'
 const lodash=require('lodash')
+const {setAxiosAuthentication}=require('../../utils/authentication')
+const {TEXT_FILTER} = require('../../server/utils/filesystem')
 
 class DataImport extends React.Component {
   constructor(props) {
@@ -38,6 +38,7 @@ class DataImport extends React.Component {
     this.setState({comments: null, errors: null})
     const data = new FormData()
     data.append('buffer', this.state.selectedFile)
+    setAxiosAuthentication()
     axios.post(importURL, data)
       .then(response => {
         this.setState({result: response.data})
