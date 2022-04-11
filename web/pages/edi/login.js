@@ -1,12 +1,11 @@
+import styled, {ThemeProvider} from 'styled-components'
 import React, {useEffect} from 'react'
-import Login from '../../components/Feurst/Login'
-import styled from 'styled-components'
 import {useRouter} from 'next/router'
+import Login from '../../components/Feurst/Login'
 import Header from '../../components/Feurst/Header'
-import {basePathEdi} from '../../hoc/withEdiAuth'
-import {ThemeProvider} from 'styled-components'
 import {theme, GlobalStyleEdi} from '../../styles/feurst.theme'
 import {screen} from '../../styles/screenWidths'
+const {BASEPATH_EDI} = require('../../utils/consts')
 
 const {
   removeAlfredRegistering,
@@ -33,7 +32,7 @@ const ResponsiveImg = styled.img`
 const LoginPage = () => {
 
   const router = useRouter()
-  
+
   useEffect(() => {
     if (router.query?.out) {
       clearAuthenticationToken()
@@ -49,7 +48,7 @@ const LoginPage = () => {
       router.push(path)
     }
     else {
-      router.push(basePathEdi)
+      router.push(BASEPATH_EDI)
     }
   }
 
@@ -64,6 +63,5 @@ const LoginPage = () => {
       </HomeGrid>
     </ThemeProvider>)
 }
-  
+
 export default LoginPage
-  
