@@ -65,7 +65,18 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
     return res.status(301)
   }
-  throw new Error('Not implemented')
+
+  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user.roles, DATA_TYPE, UPDATE)}, req.body)
+    .then(result => {
+      if (!result) {
+        return res.status(404).json(`Order #${order_id} not found`)
+      }
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
 })
 
 // @Route PUT /myAlfred/api/orders/:id/item

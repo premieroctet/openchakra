@@ -24,11 +24,12 @@ const moment = require('moment')
 moment.locale('fr')
 const crypto = require('crypto')
 const axios = require('axios')
-const {ROLES}=require('../../../utils/consts')
+const {ROLES, ACCOUNT, VIEW}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
 const gifFrames = require('gif-frames')
 const fs = require('fs').promises
+const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 
 axios.defaults.withCredentials = true
 
@@ -50,6 +51,24 @@ router.get('/check_register_code/:code', (req, res) => {
     .catch(err => {
       console.error(err)
       res.status(400).json(err)
+    })
+})
+
+const DATA_TYPE=ACCOUNT
+// @Route POST /myAlfred/api/users/register
+// Register
+router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
+    return res.status(301)
+  }
+
+  User.find(getDataFilter(req.user.roles, DATA_TYPE, VIEW))
+    .populate('company')
+    .then(data => {
+      res.json(data)
+    })
+    .catch(err => {
+      res.status(500).json(err)
     })
 })
 

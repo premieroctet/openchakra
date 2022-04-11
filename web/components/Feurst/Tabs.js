@@ -1,9 +1,7 @@
 import React from 'react'
 import {Tab} from '@headlessui/react'
 import styled from 'styled-components'
-import dynamic from 'next/dynamic'
 import Router from 'next/router'
-import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
 import {screen} from '../../styles/screenWidths'
 const {BASEPATH_EDI} = require('../../utils/feurst/consts')
 const {CREATE, ORDER, QUOTATION, VIEW} = require('../../utils/consts')

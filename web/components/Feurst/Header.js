@@ -1,9 +1,9 @@
-const {ORDER } = require('../../utils/consts');
-const QuickMenu = require('./QuickMenu');
 import React from 'react'
 import Link from 'next/link'
-import {feurstPhoneNumber} from '../../hoc/withEdiAuth'
 import styled from 'styled-components'
+import {feurstPhoneNumber} from '../../hoc/withEdiAuth'
+const {ORDER} = require('../../utils/consts')
+const QuickMenu = require('./QuickMenu')
 
 const HeaderContainer = styled.header`
 
@@ -48,4 +48,4 @@ const Header = ({accessRights}) => {
   )
 }
 
-export default Header
+module.exports=Header

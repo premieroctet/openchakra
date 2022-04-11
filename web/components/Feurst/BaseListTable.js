@@ -10,7 +10,7 @@ import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
 
 
-const BaseListTable = ({endpoint, columns}) => {
+const BaseListTable = ({endpoint, columns, displayAdd, refresh}) => {
 
   const [data, setData] = useState(useMemo(() => [], []))
   const [language, setLanguage] = useState('fr')
@@ -37,7 +37,7 @@ const BaseListTable = ({endpoint, columns}) => {
 
     data && setData(data)
 
-  }, [endpoint])
+  }, [endpoint, refresh])
 
 
   const deleteProduct = useCallback(async({idItem}) => {
@@ -64,10 +64,8 @@ const BaseListTable = ({endpoint, columns}) => {
   const cols= columns({language, data, setData, deleteProduct: deleteProduct})
 
   return (<>
+    <span onClick={() => displayAdd()}>Ajouter</span>
     <Table data={data} columns={cols} updateMyData={updateMyData} />
-    <div className='flex m-8'>
-      <PleasantButton >J'ai fini, indiquer mes options de livraison</PleasantButton>
-    </div>
   </>
   )
 }

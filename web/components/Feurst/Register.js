@@ -1,7 +1,9 @@
-const {CUSTOMER_ADMIN, ROLES, ACCOUNT, CREATE} = require('../../utils/consts')
-const Validator = require('validator')
-const {normalize} = require('../../utils/text')
-const {Autocomplete} = require('@material-ui/lab')
+import axios from 'axios'
+import React, {useState, useEffect} from 'react'
+import Grid from '@material-ui/core/Grid'
+import {withTranslation} from 'react-i18next'
+import {snackBarError, snackBarSuccess} from '../../utils/notifications'
+import {setAxiosAuthentication} from '../../utils/authentication'
 const {
   Button,
   MenuItem,
@@ -9,14 +11,12 @@ const {
   TextField,
   Typography,
 } = require('@material-ui/core')
-import {setAxiosAuthentication} from '../../utils/authentication'
-import axios from 'axios'
-import {snackBarError, snackBarSuccess} from '../../utils/notifications'
-import React, {useState, useEffect} from 'react'
-import Grid from '@material-ui/core/Grid'
-import {withTranslation} from 'react-i18next'
+const {Autocomplete} = require('@material-ui/lab')
+const Validator = require('validator')
+const {normalize} = require('../../utils/text')
+const {CUSTOMER_ADMIN, ROLES, ACCOUNT, CREATE} = require('../../utils/consts')
 
-function FeurstRegister({className, style}) {
+function FeurstRegister({className, style, onSuccess}) {
 
   const [name, setName] = useState('')
   const [firstname, setFirstname] = useState('')
@@ -46,6 +46,7 @@ function FeurstRegister({className, style}) {
     axios.post('/myAlfred/api/admin/feurst_register', {firstname, name, email, role, company})
       .then(() => {
         snackBarSuccess('L\'invitation a été envoyée')
+        onSuccess && onSuccess()
       })
       .catch(err => {
         console.error(err)

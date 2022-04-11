@@ -1,6 +1,7 @@
 import React from 'react'
 import EditableCell from '../Table/EditableCell'
 const moment = require('moment')
+const {ROLES} = require('../../utils/consts')
 const {DateRangeColumnFilter} = require('../Table/TableFilter')
 
 function moneyFormatter({lang, value}) {
@@ -185,4 +186,28 @@ const quotationsColumns = ({language, deleteProduct}) => [
   },
 ]
 
-export {orderColumns, ordersColumns, quotationColumns, quotationsColumns}
+const accountsColumns = ({language}) => [
+  {
+    label: 'Prénom',
+    attribute: 'firstname',
+  },
+  {
+    label: 'Nom',
+    attribute: 'name',
+  },
+  {
+    label: 'Email',
+    attribute: 'email',
+  },
+  {
+    label: 'Société',
+    attribute: 'company.name',
+  },
+  {
+    label: 'Roles',
+    attribute: 'roles',
+    Cell: ({cell: {value}}) => value.map(r => ROLES[r]).join(','),
+  },
+]
+
+export {orderColumns, ordersColumns, quotationColumns, quotationsColumns, accountsColumns}

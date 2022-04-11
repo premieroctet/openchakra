@@ -12,33 +12,6 @@ export const feurstImgPath = '../../static/assets/img/feurst'
 export const feurstPhoneNumber = '+33 4 77 27 40 63'
 
 
-const availableSections = {
-  FEURST_ADMIN: [
-    {
-      url: `/edi/orders`,
-      label: 'Commandes',
-    },
-    {
-      url: `/edi/account`,
-      label: 'Mon compte',
-    },
-    {
-      url: `/edi/login?out`,
-      label: 'Se déconnecter',
-    },
-  ],
-  CUSTOMER_SLAVE: [
-    {
-      url: `/edi/orders`,
-      label: 'Commandes',
-    },
-    {
-      url: `/edi/login?out`,
-      label: 'Se déconnecter',
-    },
-  ],
-}
-
 class AccessRights {
   constructor(model, action, actions) {
     this.actions=actions
@@ -47,7 +20,7 @@ class AccessRights {
   }
 
   getModels= () => {
-    return lodash.uniqBy(this.actions, a => a.model)
+    return lodash.uniqBy(this.actions, a => a.model).map(a => a.model)
   }
   hasModel= model => {
     return !!this.actions.find(a => a.model==model)
@@ -95,8 +68,7 @@ const withEdiAuth = (Component = null, options = {}) => {
     }
 
     render() {
-      const {loading, actions, user} = this.state
-      const sectionRights = user?.role ? availableSections[user.role] : []
+      const {loading, actions} = this.state
 
       if (loading) {
         return <div>...</div>
@@ -118,4 +90,4 @@ const withEdiAuth = (Component = null, options = {}) => {
   return WithEdiAuth
 }
 
-export default withEdiAuth
+module.exports=withEdiAuth
