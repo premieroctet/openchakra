@@ -2,10 +2,10 @@ import React, {useEffect, useMemo, useState} from 'react'
 import withEdiAuth from '../../hoc/withEdiAuth'
 import Tabs from '../../components/Feurst/Tabs'
 
-const Orders = ({userRights}) => {
-  
+const Orders = ({accessRights}) => {
+
   return (<>
-    <Tabs userRights={userRights} />
+    <Tabs accessRights={accessRights} />
   </>)
 }
 

@@ -1,4 +1,5 @@
-import React, {useState, Fragment} from 'react'
+const { CREATE, ORDER, QUOTATION, VIEW } = require('../../utils/consts');
+import React from 'react';
 import {Tab} from '@headlessui/react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
@@ -67,10 +68,14 @@ const tabsContent = [
     props: {
       storage: 'orderid',
     },
+    model: ORDER,
+    action: CREATE,
   },
   {
     title: 'Mes commandes',
     component: DynamicMyOrders,
+    model: ORDER,
+    action: VIEW,
   },
   {
     title: 'Créer un devis',
@@ -78,6 +83,8 @@ const tabsContent = [
     props: {
       storage: 'quotationid',
     },
+    model: QUOTATION,
+    action: CREATE,
   },
   {
     title: 'Mes devis',
@@ -86,22 +93,25 @@ const tabsContent = [
       storage: 'quotationid',
       preorder: true,
     },
+    model: QUOTATION,
+    action: VIEW,
   },
 ]
 
 const Tabs = props => {
 
+  const filteredContents=tabsContent.filter(c => props.accessRights.isActionAllowed(c.model, c.action))
   return (
     <Tab.Group>
       <Tabstyled>
-        {tabsContent.map((elem, i) => (
+        {filteredContents.map((elem, i) => (
           <Tab key={`tab${i}`}>
             {elem.title}
           </Tab>
         ))}
       </Tabstyled>
       <Tab.Panels>
-        {tabsContent.map((elem, i) => (
+        {filteredContents.map((elem, i) => (
           <Tab.Panel key={`panel${i}`}>
             {elem?.props ? <elem.component {...elem.props} {...props} /> : <elem.component {...props} /> }
           </Tab.Panel>
