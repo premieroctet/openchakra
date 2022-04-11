@@ -99,17 +99,19 @@ const BaseCreateTable = ({storage, endpoint, columns}) => {
     if (orderID) { getContentFrom(orderID) }
   }, [getContentFrom, orderID])
 
+  /**
   const columnsMemo = useMemo(
     () => columns({language, data, setData, deleteProduct: deleteProduct}).map(c => ({...c, Header: c.label, accessor: c.attribute})),
     [data, deleteProduct, language],
   )
-
+  */
+  const cols=columns({language, data, setData, deleteProduct: deleteProduct})
 
   return (<>
     <ImportExcelFile />
     <AddArticle checkProduct={checkProduct} addProduct={addProduct} />
 
-    <Table data={data} columns={columnsMemo} updateMyData={updateMyData} />
+    <Table data={data} columns={cols} updateMyData={updateMyData} />
     <div className='flex m-8'>
       <PleasantButton onClick={() => setIsOpenDialog(true)}>J'ai fini, indiquer mes options de livraison</PleasantButton>
     </div>

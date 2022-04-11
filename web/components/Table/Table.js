@@ -78,6 +78,8 @@ const Table = ({data, columns, updateMyData = null}) => {
     [],
   )
 
+  const cols=useMemo(() => columns.map(c => ({...c, Header: c.label, accessor: c.attribute})), [columns])
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -90,7 +92,7 @@ const Table = ({data, columns, updateMyData = null}) => {
     setGlobalFilter,
   } = useTable(
     {
-      columns,
+      columns: cols,
       data,
       defaultColumn,
       filterTypes,
@@ -124,7 +126,7 @@ const Table = ({data, columns, updateMyData = null}) => {
                           column.isSortedDesc
                             ? ' 🔽'
                             : ' 🔼')
-                          }
+                        }
                       </button>
                       {column.canFilter &&
                         <>
@@ -132,7 +134,7 @@ const Table = ({data, columns, updateMyData = null}) => {
                             {column.render('Filter')}
                           </TableDialogFilter>
                         </>
-                        }
+                      }
 
                       {column.filterValue &&
                         <div>{column.filterValue}  <button onClick={() => column.setFilter(undefined)}>
@@ -140,7 +142,7 @@ const Table = ({data, columns, updateMyData = null}) => {
                         </button>
                         </div>}
                     </>
-                    }
+                  }
                 </th>
               ))}
             </tr>
