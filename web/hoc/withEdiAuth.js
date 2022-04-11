@@ -6,6 +6,8 @@ import {getLoggedUser} from '../utils/context'
 import {theme, GlobalStyleEdi} from '../styles/feurst.theme'
 import {client} from '../utils/client'
 const lodash=require('lodash')
+const Tabs = require('../components/Feurst/Tabs')
+
 export const feurstImgPath = '../../static/assets/img/feurst'
 export const feurstPhoneNumber = '+33 4 77 27 40 63'
 
@@ -38,11 +40,13 @@ const availableSections = {
 }
 
 class AccessRights {
-  constructor(actions) {
+  constructor(model, action, actions) {
     this.actions=actions
+    this.model=model
+    this.action=action
   }
+
   getModels= () => {
-    console.log(`MOdels:${this.actions.map(a => a.model)}`)
     return lodash.uniqBy(this.actions, a => a.model)
   }
   hasModel= model => {
@@ -50,6 +54,12 @@ class AccessRights {
   }
   isActionAllowed = (model, action) => {
     return !!this.actions.find(a => a.model==model && a.action==action)
+  }
+  getModel = () => {
+    return this.model
+  }
+  getAction = () => {
+    return this.action
   }
 }
 
@@ -92,9 +102,11 @@ const withEdiAuth = (Component = null, options = {}) => {
         return <div>...</div>
       }
 
-      const accessRights=new AccessRights(actions)
+      const accessRights=new AccessRights(options.model, options.action, actions)
       return (<ThemeProvider theme={theme}>
+        <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}`}</h1>
         <Header accessRights={accessRights} />
+        <Tabs accessRights={accessRights} />
         <div className='container'>
           <Component accessRights={accessRights} />
         </div>

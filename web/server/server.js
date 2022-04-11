@@ -62,6 +62,7 @@ const {serverContextFromRequest}=require('./utils/serverContext')
 // checkConfig
 checkConfig()
   .then(() => {
+    mongoose.set('debug', 'true')
     return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
   })
 // Connect to MongoDB

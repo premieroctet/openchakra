@@ -1,13 +1,13 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import Tabs from '../../../components/Feurst/Tabs'
+const {ORDER, VIEW} = require('../../../utils/consts')
+const MyOrders = require('../../../components/Feurst/MyOrders')
 
 const Orders = ({accessRights}) => {
 
-  alert('dans l index')
   return (<>
-    <Tabs accessRights={accessRights} />
+    <MyOrders accessRights={accessRights} />
   </>)
 }
 
-export default withEdiAuth(Orders, {pathAfterFailure: '/edi/login'})
+module.exports=withEdiAuth(Orders, {model: ORDER, action: VIEW, pathAfterFailure: '/edi/login'})

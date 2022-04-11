@@ -3,10 +3,10 @@ import BaseCreateTable from'./BaseCreateTable'
 const {quotationColumns} = require('./tablestructures')
 
 
-const QuotationCreate = ({storage}) => {
+const QuotationCreate = ({}) => {
 
   return (
-    <BaseCreateTable storage={storage} endpoint='quotations' columns={quotationColumns}/>
+    <BaseCreateTable storage={'quotation'} endpoint='quotations' columns={quotationColumns}/>
   )
 }
 

@@ -1,10 +1,12 @@
-const { CREATE, ORDER, QUOTATION, VIEW } = require('../../utils/consts');
-import React from 'react';
+import React from 'react'
 import {Tab} from '@headlessui/react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import Router from 'next/router'
 import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
 import {screen} from '../../styles/screenWidths'
+const {BASEPATH_EDI} = require('../../utils/feurst/consts')
+const {CREATE, ORDER, QUOTATION, VIEW} = require('../../utils/consts')
 
 const Tabstyled = styled(Tab.List)`
 
@@ -53,56 +55,40 @@ const Tabstyled = styled(Tab.List)`
 
 `
 
-const dynamicParams = {loading: () => <SpinnerEllipsis />}
-
-const DynamicOrderCreate = dynamic(() => import('./OrderCreate'), dynamicParams)
-const DynamicMyOrders = dynamic(() => import('./MyOrders'), dynamicParams)
-const DynamicMyQuotations = dynamic(() => import('./MyQuotations'), dynamicParams)
-const DynamicQuotationCreate = dynamic(() => import('./QuotationCreate'), dynamicParams)
-
-
 const tabsContent = [
   {
     title: 'Créer une commande',
-    component: DynamicOrderCreate,
-    props: {
-      storage: 'orderid',
-    },
+    url: `${BASEPATH_EDI}/orders/create`,
     model: ORDER,
     action: CREATE,
   },
   {
     title: 'Mes commandes',
-    component: DynamicMyOrders,
+    url: `${BASEPATH_EDI}/orders`,
     model: ORDER,
     action: VIEW,
   },
   {
     title: 'Créer un devis',
-    component: DynamicQuotationCreate,
-    props: {
-      storage: 'quotationid',
-    },
+    url: `${BASEPATH_EDI}/quotations/create`,
     model: QUOTATION,
     action: CREATE,
   },
   {
     title: 'Mes devis',
-    component: DynamicMyQuotations,
-    props: {
-      storage: 'quotationid',
-      preorder: true,
-    },
+    url: `${BASEPATH_EDI}/quotations`,
     model: QUOTATION,
     action: VIEW,
   },
 ]
 
 const Tabs = props => {
+  const {accessRights}=props
 
-  const filteredContents=tabsContent.filter(c => props.accessRights.isActionAllowed(c.model, c.action))
+  const filteredContents=tabsContent // .filter(c => props.accessRights.isActionAllowed(c.model, c.action))
+  const selIndex=filteredContents.findIndex(m => m.model==accessRights.getModel() && m.action==accessRights.getAction())
   return (
-    <Tab.Group>
+    <Tab.Group onChange={ index => Router.push(filteredContents[index].url)} defaultIndex={selIndex}>
       <Tabstyled>
         {filteredContents.map((elem, i) => (
           <Tab key={`tab${i}`}>
@@ -110,15 +96,8 @@ const Tabs = props => {
           </Tab>
         ))}
       </Tabstyled>
-      <Tab.Panels>
-        {filteredContents.map((elem, i) => (
-          <Tab.Panel key={`panel${i}`}>
-            {elem?.props ? <elem.component {...elem.props} {...props} /> : <elem.component {...props} /> }
-          </Tab.Panel>
-        ))}
-      </Tab.Panels>
     </Tab.Group>
 
   )
 }
-export default Tabs
+module.exports=Tabs

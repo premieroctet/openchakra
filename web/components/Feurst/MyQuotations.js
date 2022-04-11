@@ -9,4 +9,4 @@ const MyQuotations = () => {
   )
 }
 
-export default MyQuotations
+module.exports=MyQuotations

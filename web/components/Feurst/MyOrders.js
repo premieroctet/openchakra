@@ -9,4 +9,4 @@ const MyOrders = () => {
   )
 }
 
-export default MyOrders
+module.exports=MyOrders

@@ -1,8 +1,8 @@
+const express = require('express')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 const {PRODUCT, VIEW} = require('../../../utils/consts')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const Product = require('../../models/Product')
-const express = require('express')
 
 const router = express.Router()
 const passport = require('passport')
@@ -34,6 +34,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
       {description_2: pattern},
     ],
   }: {}
+
   Product.find({filter, ...getDataFilter(req.user.roles, DATA_TYPE, VIEW)})
     .then(products => {
       res.json(products)
