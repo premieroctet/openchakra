@@ -80,9 +80,7 @@ const USER_ACTIONS={
   [FEURST_ADMIN]: lodash.flattenDeep([
     [VIEW, CREATE, UPDATE, DELETE].map(action => [FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
     [VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
-    /*
     [VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: ALL})),
-    */
     [VIEW, CREATE].map(action => createUserAction(SHIPRATE, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
   ]),
@@ -101,6 +99,8 @@ const USER_ACTIONS={
   [CUSTOMER_SLAVE]: lodash.flattenDeep([
     [CREATE, VIEW, UPDATE, CONVERT, DELETE].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
     [CREATE, VIEW, UPDATE, DELETE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
+    [CREATE, VIEW, UPDATE, DELETE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
+    [VIEW].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
   ]),
 }
 
