@@ -210,4 +210,17 @@ const accountsColumns = ({language}) => [
   },
 ]
 
-export {orderColumns, ordersColumns, quotationColumns, quotationsColumns, accountsColumns}
+const productsColumns = ({language}) => [
+  {label: '_id', attribute: '_id'},
+  {label: 'Code article', attribute: 'reference'},
+  {label: 'Description', attribute: 'description'},
+  {label: 'Description 2', attribute: 'description_2'},
+  {label: 'Groupe', attribute: 'group'},
+  {label: 'Ligne de production', attribute: 'production_line'},
+  {label: 'Famille', attribute: 'family'},
+  {label: 'Tarif', attribute: 'price'},
+  {label: 'Stock', attribute: 'stock'},
+  {label: 'Poids', attribute: 'weight'},
+]
+
+export {orderColumns, ordersColumns, quotationColumns, quotationsColumns, accountsColumns, productsColumns}

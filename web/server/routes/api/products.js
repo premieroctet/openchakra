@@ -1,12 +1,12 @@
 const express = require('express')
+const passport = require('passport')
+const moment = require('moment')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
-const {PRODUCT, VIEW} = require('../../../utils/consts')
+const {PRODUCT, VIEW, CREATE} = require('../../../utils/consts')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const Product = require('../../models/Product')
 
 const router = express.Router()
-const passport = require('passport')
-const moment = require('moment')
 const {validateProduct}=require('../../validation/product')
 const {csvImport}=require('../../utils/import')
 moment.locale('fr')
@@ -102,6 +102,9 @@ router.put('/:product_id', passport.authenticate('jwt', {session: false}), (req,
 // @Access private
 router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
+    return res.status(301).json()
+  }
 
   Product.findByIdAndDelete(req.params.product_id, {runValidators: true, new: true})
     .then(product => {
@@ -118,7 +121,12 @@ router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (r
 
 // @Route POST /myAlfred/api/products/import
 // Imports products from csv
-router.post('/import', passport.authenticate('admin', {session: false}), (req, res) => {
+router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
+    return res.status(301).json()
+  }
+
   uploadProducts.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
@@ -148,7 +156,12 @@ router.post('/import', passport.authenticate('admin', {session: false}), (req, r
 
 // @Route POST /myAlfred/api/products/import-price
 // Imports prices from csv
-router.post('/import-price', passport.authenticate('admin', {session: false}), (req, res) => {
+router.post('/import-price', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
+    return res.status(301).json()
+  }
+
   uploadProducts.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
@@ -173,7 +186,13 @@ router.post('/import-price', passport.authenticate('admin', {session: false}), (
 
 // @Route POST /myAlfred/api/products/import-stock
 // Imports stock from csv
-router.post('/import-stock', passport.authenticate('admin', {session: false}), (req, res) => {
+router.post('/import-stock', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  console.log(`Actions:${JSON.stringify(req.user.roles, null, 2)}`)
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
+    return res.status(401).json()
+  }
+
   uploadProducts.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
@@ -185,7 +204,7 @@ router.post('/import-stock', passport.authenticate('admin', {session: false}), (
       'stock': 'FSTMG',
     }
 
-    csvImport(Product, req.file.buffer, DB_MAPPING, {key: 'reference', update: true, from_line: 3})
+    csvImport(Product, req.file.buffer, DB_MAPPING, {key: 'reference', update: true})
       .then(result => {
         res.json(result)
       })

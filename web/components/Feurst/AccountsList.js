@@ -7,18 +7,14 @@ const BaseListTable = require('./BaseListTable')
 
 const AccountsList = ({accessRights}) => {
 
-  const [showAdd, setShowAdd]=useState(false)
   const [refresh, setRefresh]=useState(false)
 
   const toggleRefresh= () => setRefresh(!refresh)
-  const displayAdd = useCallback(() => setShowAdd(true), [])
 
   return (
     <>
-      {showAdd &&
-        <FeurstRegister onSuccess={toggleRefresh}/>
-      }
-      <BaseListTable key={moment()} endpoint='users' columns={accountsColumns} displayAdd={displayAdd} refresh={refresh}/>
+      <FeurstRegister onSuccess={toggleRefresh}/>
+      <BaseListTable key={moment()} endpoint='users' columns={accountsColumns} refresh={refresh}/>
     </>
   )
 }

@@ -1,6 +1,6 @@
+const passport = require('passport')
 const User = require('../models/User')
 const {MANAGER} = require('../../utils/consts')
-const passport = require('passport')
 const keys = require('../config/keys')
 
 const JwtStrategy = require('passport-jwt').Strategy

@@ -10,7 +10,7 @@ import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
 
 
-const BaseListTable = ({endpoint, columns, displayAdd, refresh}) => {
+const BaseListTable = ({endpoint, columns, refresh}) => {
 
   const [data, setData] = useState(useMemo(() => [], []))
   const [language, setLanguage] = useState('fr')
@@ -64,7 +64,6 @@ const BaseListTable = ({endpoint, columns, displayAdd, refresh}) => {
   const cols= columns({language, data, setData, deleteProduct: deleteProduct})
 
   return (<>
-    <span onClick={() => displayAdd()}>Ajouter</span>
     <Table data={data} columns={cols} updateMyData={updateMyData} />
   </>
   )

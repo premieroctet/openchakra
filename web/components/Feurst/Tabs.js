@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Router from 'next/router'
 import {screen} from '../../styles/screenWidths'
 const {BASEPATH_EDI} = require('../../utils/feurst/consts')
-const {CREATE, ORDER, QUOTATION, VIEW} = require('../../utils/consts')
+const {CREATE, ORDER, QUOTATION, VIEW, PRODUCT} = require('../../utils/consts')
 
 const Tabstyled = styled(Tab.List)`
 
@@ -76,6 +76,12 @@ const tabsContent = [
     title: 'Mes devis',
     url: `${BASEPATH_EDI}/quotations`,
     model: QUOTATION,
+    action: VIEW,
+  },
+  {
+    title: 'Articles',
+    url: `${BASEPATH_EDI}/products`,
+    model: PRODUCT,
     action: VIEW,
   },
 ]

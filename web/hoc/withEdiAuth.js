@@ -6,6 +6,7 @@ import {getLoggedUser} from '../utils/context'
 import {theme, GlobalStyleEdi} from '../styles/feurst.theme'
 import {client} from '../utils/client'
 const lodash=require('lodash')
+const {is_development} = require('../config/config')
 const Tabs = require('../components/Feurst/Tabs')
 
 export const feurstImgPath = '../../static/assets/img/feurst'
@@ -63,7 +64,7 @@ const withEdiAuth = (Component = null, options = {}) => {
         this.setState({loading: false, user: isLoggedUser, actions})
       }
       else {
-        Router.push(options.pathAfterFailure || '/edi/login')
+        Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
       }
     }
 
@@ -76,7 +77,7 @@ const withEdiAuth = (Component = null, options = {}) => {
 
       const accessRights=new AccessRights(options.model, options.action, actions)
       return (<ThemeProvider theme={theme}>
-        <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}`}</h1>
+        {is_development() && <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}`}</h1>}
         <Header accessRights={accessRights} />
         <Tabs accessRights={accessRights} />
         <div className='container'>
