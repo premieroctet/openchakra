@@ -107,7 +107,7 @@ const USER_ACTIONS={
 // Max weight limit for ship fee (i.e. no max limit)
 const MAX_WEIGHT=1000000
 
-export const BASEPATH_EDI = '/edi'
+const BASEPATH_EDI = '/edi'
 
 module.exports={
   PIN, SOLD, NONE, FIX_TYPES,
