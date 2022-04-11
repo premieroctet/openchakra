@@ -7,7 +7,15 @@ import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
 import {Label, Input} from '../Feurst/AddArticle.styles'
 
 
-const Autocomplete = ({paramsCombobox, errorMsg, urlToFetch}) => {
+const Autocomplete = ({
+  paramsCombobox,
+  urlToFetch,
+  dbSearchField,
+  errorMsg,
+  label,
+  placeholder,
+  formattingResult,
+} = {placeholder: '…'}) => {
 
   const {
     data,
@@ -33,7 +41,7 @@ const Autocomplete = ({paramsCombobox, errorMsg, urlToFetch}) => {
   } = useCombobox({
     items: data,
     onInputValueChange: ({inputValue, selectedItem}) => {
-      if (selectedItem && inputValue.trim() === selectedItem.reference) {
+      if (selectedItem && inputValue.trim() === selectedItem[dbSearchField]) {
         return
       }
       setSearchTerm(inputValue)
@@ -48,24 +56,24 @@ const Autocomplete = ({paramsCombobox, errorMsg, urlToFetch}) => {
   }
   , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch])
 
+
   return (
     <>
       {isError ? <p>{errorMsg}</p> : null }
-      {isLoading ? (<SpinnerEllipsis />) : <span className='loading'></span>}
        
-      <Label {...getLabelProps} htmlFor="refcatalog">
-          Réf. Catalogue
+      <Label {...getLabelProps} htmlFor={`auto${dbSearchField}`}>
+        {label} {isLoading ? (<SpinnerEllipsis />) : null}
       </Label>
       <div {...getComboboxProps()}>
         <Input
           {...getInputProps()}
-          id="refcatalog"
-          placeholder="Ex: 001357NE00…"
+          id={`auto${dbSearchField}`}
+          placeholder={placeholder}
         />
         <button
           {...getToggleButtonProps()}
           type="button"
-          aria-label="afficher la liste des références"
+          aria-label="afficher la liste"
         >
           <span role="img">&#9661;</span>
         </button>
@@ -92,7 +100,7 @@ const Autocomplete = ({paramsCombobox, errorMsg, urlToFetch}) => {
               key={`searchres-${index}`}
               {...getItemProps({item, index})}
             >
-              {item.reference} - {item.description} {item.description_2}
+              {formattingResult(item)}
             </li>
           ))
         }

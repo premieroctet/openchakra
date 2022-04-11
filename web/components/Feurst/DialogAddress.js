@@ -1,7 +1,10 @@
-import React, {useRef} from 'react'
+import React, {useRef, useState} from 'react'
 import {Dialog} from '@headlessui/react'
 import styled from 'styled-components'
+import {TextField} from '@material-ui/core'
 import Address from '../Address/Address'
+import DeliveryAddresses from '../Feurst/DeliveryAddresses'
+
 
 const InitialDialog = styled(Dialog)`
   
@@ -25,10 +28,10 @@ const InitialDialog = styled(Dialog)`
 
 
 const DialogAddress = ({isOpenDialog, setIsOpenDialog, setAddress, accessRights}) => {
-  
-  console.log(accessRights)
 
   const completeButtonRef = useRef(null)
+
+  const [orderref, setOrderref] = useState('')
 
   return (
     <InitialDialog
@@ -42,7 +45,10 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, setAddress, accessRights}
         <button ref={completeButtonRef} onClick={() => setIsOpenDialog(false)}>Fermer</button>
         <Dialog.Description>
 
+          <TextField value={orderref} onChange={ev => setOrderref(ev.target.value)} placeholder={'Référence'} />
 
+          <h3>Indiquez l'adresse de livraison</h3>
+          <DeliveryAddresses />
           <Address />
             
         </Dialog.Description>

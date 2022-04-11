@@ -5,7 +5,7 @@ import useDebounce from '../../hooks/use-debounce.hook'
 import {client} from '../../utils/client'
 import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
 import {PleasantButton} from './Button'
-import {FormAddArticle, Label, Input, Refquantity, Refcatalog} from './AddArticle.styles'
+import {FormAddArticle, Label, Input, Refquantity, Autocomplete} from './AddArticle.styles'
 
 const AddArticle = ({addProduct, checkProduct}) => {
 
@@ -61,7 +61,7 @@ const AddArticle = ({addProduct, checkProduct}) => {
   return (
     <FormAddArticle>
       
-      <Refcatalog>
+      <Autocomplete>
         {isError ? <p>Les produits ne se sont pas chargés.</p> : null }
         {isLoading ? (<SpinnerEllipsis />) : <span className='loading'></span>}
        
@@ -110,7 +110,7 @@ const AddArticle = ({addProduct, checkProduct}) => {
           ))
           }
         </ul>
-      </Refcatalog>
+      </Autocomplete>
       
       <Refquantity>
         <Label htmlFor="articleQty">Quantité</Label>

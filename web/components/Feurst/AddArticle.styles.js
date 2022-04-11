@@ -21,7 +21,7 @@ const Label = styled.label`
 `
 
 const Input = styled.input`
-  transition: border var(--delayIn) ease-in-out;
+  transition: border var(--delayIn) ease-in-out, outline var(--delayIn) ease-in-out;
   padding: var(--spc-2);
   min-height: var(--minTapSize);
   outline: none;
@@ -29,6 +29,7 @@ const Input = styled.input`
   width: min-content;
 
   &:focus {
+    outline: 2px solid var(--yellow-500);
     border-color: var(--brand-color);
   }
 `
@@ -45,7 +46,7 @@ const Refquantity = styled.div`
   }
 `
 
-const Refcatalog = styled.div`
+const Autocomplete = styled.div`
   
   display: grid;
   align-items:center;
@@ -141,4 +142,4 @@ const Refcatalog = styled.div`
   }
 `
 
-export {FormAddArticle, Label, Input, Refquantity, Refcatalog}
+export {FormAddArticle, Label, Input, Refquantity, Autocomplete}

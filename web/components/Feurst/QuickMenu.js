@@ -23,16 +23,17 @@ const MENUS=[
 ]
 
 const QuickMenu = ({accessRights}) => {
-  const menus=MENUS.filter(m => m.access(accessRights.getModels()))
+  const menus= accessRights ? MENUS.filter(m => m.access(accessRights.getModels())) : []
 
   if (menus.length==0) {
     return (<ContactUs />)
   }
   return (
     <>
-      {menus.map(menu => (
-        <div className='flex gap-x-4 items-center'>
+      {menus.map((menu, i) => (
+        <div key={`menu${i}`} className='flex gap-x-4 items-center'>
           <Link key={menu} href={menu.url}><a>{menu.label}</a></Link>
+          
         </div>
       ))}
     </>
