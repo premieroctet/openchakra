@@ -15,6 +15,15 @@ moment.locale('fr')
 const DATA_TYPE=ORDER
 const MODEL=Order
 
+router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
+  Order.find({...getDataFilter(req.user.roles, DATA_TYPE, VIEW)}, {address: 1})
+    .then(orders => {
+      const uniques=lodash.uniqBy(orders, lodash.isEqual)
+      return res.json(uniques)
+    })
+})
+
+
 // @Route GET /myAlfred/api/orders/template
 // Returns an order xlsx template for import
 // @Access private
