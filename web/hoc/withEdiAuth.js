@@ -1,14 +1,13 @@
 import React from 'react'
-import Header from '../components/Feurst/Header'
 import Router from 'next/router'
-import {getLoggedUser} from '../utils/context'
 import {ThemeProvider} from 'styled-components'
+import Header from '../components/Feurst/Header'
+import {getLoggedUser} from '../utils/context'
 import {theme, GlobalStyleEdi} from '../styles/feurst.theme'
 import {client} from '../utils/client'
 const lodash=require('lodash')
 export const feurstImgPath = '../../static/assets/img/feurst'
 export const feurstPhoneNumber = '+33 4 77 27 40 63'
-export const basePathEdi = '/edi'
 
 
 const availableSections = {
@@ -43,7 +42,7 @@ class AccessRights {
     this.actions=actions
   }
   getModels= () => {
-    console.log(`MOdels:${this.actions.map(a=> a.model)}`)
+    console.log(`MOdels:${this.actions.map(a => a.model)}`)
     return lodash.uniqBy(this.actions, a => a.model)
   }
   hasModel= model => {
