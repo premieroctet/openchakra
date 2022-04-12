@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs')
 const axios = require('axios')
 const Validator = require('validator')
 const lodash=require('lodash')
+const {is_development} = require('../../../../config/config')
 const Prestation = require('../../../models/Prestation')
 const Service = require('../../../models/Service')
 const Equipment = require('../../../models/Equipment')
@@ -1681,6 +1682,7 @@ router.post('/feurst_register', passport.authenticate('admin', {session: false})
     return res.status(400).json(errors)
   }
 
+  let currUser=null
   User.findOne({email: new RegExp(email, 'i')})
     .then(user => {
       if (user) {
@@ -1693,7 +1695,11 @@ router.post('/feurst_register', passport.authenticate('admin', {session: false})
       return User.create({firstname: firstname, name: name, email: email, roles: role, company: company})
     })
     .then(user => {
-      return res.json(user)
+      currUser=user
+      return axios.post(new URL('/myAlfred/api/users/forgotPassword', computeUrl(req)).toString(), {email: user.email})
+    })
+    .then(() => {
+      res.json(currUser)
     })
     .catch(err => {
       console.error(err)

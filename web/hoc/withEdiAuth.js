@@ -11,8 +11,6 @@ const {is_development} = require('../config/config')
 const Tabs = require('../components/Feurst/Tabs')
 
 export const feurstImgPath = '../../static/assets/img/feurst'
-export const feurstPhoneNumber = '+33 4 77 27 40 63'
-
 
 class AccessRights {
   constructor(model, action, actions) {

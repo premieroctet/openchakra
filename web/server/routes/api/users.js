@@ -795,6 +795,7 @@ router.post('/forgotPassword', (req, res) => {
         sendB2BAccount(user, user.email, ROLES[role], user.company.name, token, req)
       }
       else {
+        // TODO: prévoir un template pour feurst
         sendResetPassword(user, token, req)
       }
       res.json(user)

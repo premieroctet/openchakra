@@ -1,3 +1,4 @@
+const lodash=require('lodash')
 const {
   ENABLE_MAILING,
   computeUrl,
@@ -6,10 +7,9 @@ const {
   is_development,
 } = require('../../config/config')
 const User = require('../models/User')
-const {SIB} = require('./sendInBlue')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
-const lodash=require('lodash')
+const {SIB} = require('./sendInBlue')
 
 const QUOTATION_CC=is_development() ? 'sebastien.auvray@alfredplace.io': 'florian.benetiere@safe-feurst.fr'
 

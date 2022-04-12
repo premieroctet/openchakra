@@ -23,12 +23,12 @@ const MENUS=[
   {
     enabled: () => !!getLoggedUser(),
     label: 'Se déconnecter',
-    url: `${BASEPATH_EDI}/quotations`,
+    url: `${BASEPATH_EDI}/login?out=true`,
   },
 ]
 
 const QuickMenu = ({accessRights}) => {
-  const menus=MENUS.filter(m => m.enabled(accessRights))
+  const menus=MENUS.filter(m => accessRights && m.enabled(accessRights))
 
   if (menus.length==0) {
     return (<ContactUs />)

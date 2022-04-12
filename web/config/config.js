@@ -181,6 +181,12 @@ const hideStoreDialog = () => {
 const skipFailedPayment = () => {
   return !is_production() && !!SKIP_FAILED_PAYMENT
 }
+
+// DEV mode: allow https without certificate
+if (is_development()) {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+}
+
 // Public API
 module.exports = {
   databaseName: databaseName,

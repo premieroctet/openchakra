@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
-import {feurstPhoneNumber} from '../../hoc/withEdiAuth'
+const {FEURST_PHONE} = require('../../utils/feurst/consts')
 const {BASEPATH_EDI} = require('../../utils/consts')
 const QuickMenu = require('./QuickMenu')
 
@@ -38,7 +38,7 @@ const Header = ({accessRights}) => {
   return (
     <HeaderContainer role="banner">
       <div className='flex items-center'>
-        <a className='phonenumber' href={`tel:${feurstPhoneNumber.replace(/\s+/g, '')}`}>{feurstPhoneNumber}</a>
+        <a className='phonenumber' href={`tel:${FEURST_PHONE.replace(/\s+/g, '')}`}>{FEURST_PHONE}</a>
       </div>
       <Link href={`${BASEPATH_EDI}`}>
         <a><img className='img-responsive max-w-350' src="https://feurst.fr/wp-content/uploads/2022/01/logo-feurst-01.svg" alt='' width={350} height={104} /></a>
