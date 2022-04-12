@@ -214,4 +214,47 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
     })
 })
 
+// @Route GET /myAlfred/api/quotations/:id/shipping-fee?zipcode
+// Computes shipping fees
+// @Access private
+router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
+    return res.status(301)
+  }
+
+  const zipCode=req.query.zipcode
+
+  const {errors, isValid}=validateZipCode(zipCode)
+  if (!isValid) {
+    return res.status(500).json(errors)
+  }
+
+  const department=parseInt(String(zipCode).slice(0, -3))
+
+  const fee={express: 0, standard: 0}
+  let order=null
+  Order.findOne({_id: req.params.id, ...getDataFilter(req.user.roles, DATA_TYPE, UPDATE)})
+    .populate('items.product')
+    .then(result => {
+      if (!result) {
+        return res.status(404).json()
+      }
+      order=result
+      return computeShipFee(department, order.total_weight, false)
+    })
+    .then(standard => {
+      fee.standard=standard
+      return computeShipFee(department, order.total_weight, true)
+    })
+    .then(express => {
+      fee.express=express
+      return res.json(fee)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+})
+
 module.exports = router

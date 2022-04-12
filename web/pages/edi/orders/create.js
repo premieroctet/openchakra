@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
+const {BASEPATH_EDI} = require('../../../utils/feurst/consts')
 const {CREATE, ORDER} = require('../../../utils/consts')
 const OrderCreate = require('../../../components/Feurst/OrderCreate')
 

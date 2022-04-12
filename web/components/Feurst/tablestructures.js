@@ -211,7 +211,6 @@ const accountsColumns = ({language}) => [
 ]
 
 const productsColumns = ({language}) => [
-  {label: '_id', attribute: '_id'},
   {label: 'Code article', attribute: 'reference'},
   {label: 'Description', attribute: 'description'},
   {label: 'Description 2', attribute: 'description_2'},

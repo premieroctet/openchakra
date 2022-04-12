@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const checkZipCode=require('i18n-zipcodes')
 
 function validateOrder(data) {
 
@@ -38,4 +39,15 @@ function validateOrderItem(data) {
   }
 }
 
-module.exports={validateOrder, validateOrderItem}
+const validateZipCode = zipcode => {
+  let errors = {}
+  if (!checkZipCode('fr', String(zipcode))) {
+    errors.zipcode=`Le code postal est invalide`
+  }
+  return {
+    errors,
+    isValid: lodash.isEmpty(errors),
+  }
+}
+
+module.exports={validateOrder, validateOrderItem, validateZipCode}
