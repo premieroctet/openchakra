@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react'
+import {BASEPATH_EDI} from '../../utils/consts'
 import withEdiAuth from '../../hoc/withEdiAuth'
 
 

@@ -23,7 +23,7 @@ const MENUS=[
   {
     enabled: () => !!getLoggedUser(),
     label: 'Se déconnecter',
-    url: `${BASEPATH_EDI}/quotations`,
+    url: `${BASEPATH_EDI}/login?out`,
   },
 ]
 
