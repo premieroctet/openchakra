@@ -26,7 +26,7 @@ const getDataFilter = (roles, model, action) => {
     return {company: req.user.company._id}
   }
   if (userActions.some(userAction => userAction.visibility==MINE)) {
-    return {user: re.user._id}
+    return {user: req.user._id}
   }
   return {noway: true}
 }

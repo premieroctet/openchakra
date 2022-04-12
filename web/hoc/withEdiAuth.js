@@ -6,6 +6,7 @@ import {getLoggedUser} from '../utils/context'
 import {theme, GlobalStyleEdi} from '../styles/feurst.theme'
 import {client} from '../utils/client'
 const lodash=require('lodash')
+const {BASEPATH_EDI} = require('../utils/consts')
 const {is_development} = require('../config/config')
 const Tabs = require('../components/Feurst/Tabs')
 

@@ -3,8 +3,7 @@ import {Tab} from '@headlessui/react'
 import styled from 'styled-components'
 import Router from 'next/router'
 import {screen} from '../../styles/screenWidths'
-const {BASEPATH_EDI} = require('../../utils/feurst/consts')
-const {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE} = require('../../utils/consts')
+const {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, BASEPATH_EDI} = require('../../utils/consts')
 
 const Tabstyled = styled(Tab.List)`
 
@@ -76,6 +75,12 @@ const tabsContent = [
     title: 'Mes devis',
     url: `${BASEPATH_EDI}/quotations`,
     model: QUOTATION,
+    action: VIEW,
+  },
+  {
+    title: 'Comptes',
+    url: `${BASEPATH_EDI}/accounts`,
+    model: ACCOUNT,
     action: VIEW,
   },
   {
