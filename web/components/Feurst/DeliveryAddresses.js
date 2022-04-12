@@ -1,28 +1,27 @@
 
 import React, {useState} from 'react'
 import Autocomplete from '../Autocomplete/Autocomplete'
+import {StyledAutocomplete} from '../Autocomplete/Autocomplete.styles'
 
 const DeliveryAddresses = () => {
 
-  const [article, setArticle] = useState({
+  const [userAddress, setUserAddress] = useState({
     item: null,
-    qty: 1,
   })
 
   const paramsCombobox = {
     itemToString: item => (item ? `${item.reference}` : ''),
     onSelectedItemChange: ({selectedItem}) => {
-      setArticle({...article, item: selectedItem})
+      setUserAddress({item: selectedItem})
     },
   }
 
   return (
-    <div>
-        
+    <StyledAutocomplete noborder={true}>
       <Autocomplete
-        urlToFetch={`myAlfred/api/products?pattern=`}
-        item={article}
-        setItem={setArticle}
+        urlToFetch={`myAlfred/api/users/addresses`}
+        item={userAddress}
+        setItem={setUserAddress}
         paramsCombobox={paramsCombobox}
         errorMsg= 'Aucune adresse trouvée'
         dbSearchField= 'reference'
@@ -30,8 +29,7 @@ const DeliveryAddresses = () => {
         placeholder='1 rue de la poupée'
         formattingResult={item => `${item.reference} - ${item.description} ${item.description_2}`}
       />
-        
-    </div>
+    </StyledAutocomplete>
   )
     
 }

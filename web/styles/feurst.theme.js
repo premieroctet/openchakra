@@ -50,6 +50,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     --gray-800: rgb(190, 190, 190);
     --gray-500: #747474;
     --metal-gray: ${props => props.theme?.colors?.metalGray || 'gray'};
+    --gray-200: #f8f8f8;
 
     /* text */
     --text-sm: 0.875rem;

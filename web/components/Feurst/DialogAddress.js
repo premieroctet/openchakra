@@ -4,65 +4,41 @@ import styled from 'styled-components'
 import {TextField} from '@material-ui/core'
 import Address from '../Address/Address'
 import DeliveryAddresses from '../Feurst/DeliveryAddresses'
-
-
-const InitialDialog = styled(Dialog)`
-  
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  background: rgba(50,50,50,0.8);
-
-
-  .dialogcontent {
-    padding: var(--spc-6);
-    width: min(100% - 2rem, 40rem);
-    background-color: white;
-    margin-inline: auto;
-    z-index: 1;
-    position: relative;
-    border-radius: var(--rounded-xl)
-  }
-`
+import PureDialog from '../Dialog/PureDialog'
 
 
 const DialogAddress = ({isOpenDialog, setIsOpenDialog, setAddress, accessRights}) => {
 
-  const completeButtonRef = useRef(null)
-
   const [orderref, setOrderref] = useState('')
+  
 
   return (
-    <InitialDialog
-      open={isOpenDialog}
+    <PureDialog
+      // open={isOpenDialog}
+      open={true}
       onClose={() => setIsOpenDialog(false)}
-      initialFocus={completeButtonRef}
     >
-      <Dialog.Overlay />
-      <div className='dialogcontent'>
-        <Dialog.Title>Pour valider votre commande, veuillez&nbsp;:</Dialog.Title>
-        <button ref={completeButtonRef} onClick={() => setIsOpenDialog(false)}>Fermer</button>
-        <Dialog.Description>
+      <div className='m-8 bg-'>
+      
 
-          <TextField value={orderref} onChange={ev => setOrderref(ev.target.value)} placeholder={'Référence'} />
+        <div>
+          <p>Certaines quantités ne sont pas disponibles dans votre commande.</p>
+          <p>Le service ADV reviendra vers vous avec un délai de livraison dès le
+traitement de votre commande.</p>
+        </div>
 
-          <h3>Indiquez l'adresse de livraison</h3>
-          <DeliveryAddresses />
-          <Address />
-            
-        </Dialog.Description>
+        <h2>Pour valider votre commande, veuillez&nbsp;:</h2>
+        <h3>Indiquez une référence</h3>
+        <TextField value={orderref} onChange={ev => setOrderref(ev.target.value)} placeholder={'Référence'} />
+
+        <h3>Indiquez l'adresse de livraison</h3>
+        <DeliveryAddresses />
+        <Address />
 
         <button onClick={() => setAddress}></button>
-        
-
-        {/*
-        You can render additional buttons to dismiss your dialog by setting
-        `isOpen` to `false`.
-      */}
-          
       </div>
-    </InitialDialog>
+
+    </PureDialog>
   )
 
 }

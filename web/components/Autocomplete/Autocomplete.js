@@ -51,7 +51,7 @@ const Autocomplete = ({
     
   useEffect(() => {
     if (debouncedQuery && searchTerm.length > 0) {
-      run(client(`${urlToFetch}${searchTerm}`))
+      run(client(`${urlToFetch}`))
     }
   }
   , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch])
@@ -62,7 +62,7 @@ const Autocomplete = ({
       {isError ? <p>{errorMsg}</p> : null }
        
       <Label {...getLabelProps} htmlFor={`auto${dbSearchField}`}>
-        {label} {isLoading ? (<SpinnerEllipsis />) : null}
+        {label}
       </Label>
       <div {...getComboboxProps()}>
         <Input
@@ -70,6 +70,7 @@ const Autocomplete = ({
           id={`auto${dbSearchField}`}
           placeholder={placeholder}
         />
+        <span className='loading'>{isLoading ? <SpinnerEllipsis /> : null}</span>
         <button
           {...getToggleButtonProps()}
           type="button"

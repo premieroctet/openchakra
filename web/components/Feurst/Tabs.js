@@ -26,6 +26,7 @@ const Tabstyled = styled.div`
   }
 
   a {
+    color: var(--black);
     display: inherit;
     align-items: center;
     height: 100%;

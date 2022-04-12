@@ -159,8 +159,7 @@ const PleasantButton = ({
   bgColor,
   textColor,
   children,
-  className,
-  onClick,
+  ...rest
 }) => {
 
   return (
@@ -168,8 +167,7 @@ const PleasantButton = ({
       type={type}
       size={size}
       rounded={rounded}
-      className={className}
-      onClick={onClick}
+      {...rest}
     >
       <ButtonShadow rounded={rounded} />
       <ButtonEdge bgColor={bgColor} rounded={rounded} />

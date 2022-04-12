@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-const {CREATE, QUOTATION} = require('../../../utils/consts')
+const {CREATE, QUOTATION, BASEPATH_EDI} = require('../../../utils/consts')
 const Quotationcreate = require('../../../components/Feurst/QuotationCreate')
 
 const Orders = ({accessRights}) => {

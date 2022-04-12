@@ -1,7 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
-import {FEURST_PHONE_NUMBER, BASEPATH_EDI} from '../../utils/feurst/consts'
+
+const {BASEPATH_EDI, FEURST_PHONE_NUMBER} = require('../../utils/consts')
 const QuickMenu = require('./QuickMenu')
 
 const HeaderContainer = styled.header`
