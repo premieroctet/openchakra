@@ -10,7 +10,8 @@ const StyledAutocomplete = styled.div.attrs(props => ({
   justify-content: start;
   column-gap: var(--spc-2);
   grid-template-columns: 1fr;
-  grid-template-areas: 'downlabel' 
+  grid-template-areas: 'downerror'
+                       'downlabel' 
                        'downinput'
                        'downresults';
   position: relative;
@@ -23,6 +24,10 @@ const StyledAutocomplete = styled.div.attrs(props => ({
     top:0;
     right: 0;
     position: absolute;
+  }
+
+  .error {
+    grid-area: downerror;
   }
   
   /* Container for input */
@@ -96,7 +101,8 @@ const StyledAutocomplete = styled.div.attrs(props => ({
 
   @media (${screen.sm}) {
     grid-template-columns: max-content 1fr;
-    grid-template-areas: 'downlabel downinput' 
+    grid-template-areas: 'downerror downerror'
+    'downlabel downinput' 
     '. downresults';
   }
   @media (${screen.lg}) {

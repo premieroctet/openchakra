@@ -14,8 +14,7 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, setAddress, accessRights}
 
   return (
     <PureDialog
-      // open={isOpenDialog}
-      open={true}
+      open={isOpenDialog}
       onClose={() => setIsOpenDialog(false)}
     >
       <div className='m-8 bg-'>

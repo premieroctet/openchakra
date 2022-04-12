@@ -25,8 +25,10 @@ const DeliveryAddresses = () => {
         paramsCombobox={paramsCombobox}
         errorMsg= 'Aucune adresse trouvée'
         dbSearchField= 'reference'
+        enableFilter={false}
         label={null}
         placeholder='1 rue de la poupée'
+        onChange={e => console.log(e)}
         formattingResult={item => `${item.reference} - ${item.description} ${item.description_2}`}
       />
     </StyledAutocomplete>

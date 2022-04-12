@@ -14,8 +14,10 @@ const Autocomplete = ({
   errorMsg,
   label,
   placeholder,
+  disableFilter,
   formattingResult,
-} = {placeholder: '…'}) => {
+  onChange,
+} = {placeholder: '…', disableFilter: false}) => {
 
   const {
     data,
@@ -26,7 +28,7 @@ const Autocomplete = ({
      
 
   const [searchTerm, setSearchTerm] = useState('')
-  const debouncedQuery = useDebounce(searchTerm, 700)
+  const debouncedQuery = useDebounce(searchTerm, 1000)
 
   const {
     isOpen,
@@ -45,21 +47,22 @@ const Autocomplete = ({
         return
       }
       setSearchTerm(inputValue)
+      onChange && onChange(inputValue)
     },
     ...paramsCombobox,
   })
     
   useEffect(() => {
     if (debouncedQuery && searchTerm.length > 0) {
-      run(client(`${urlToFetch}`))
+      run(client(`${urlToFetch}${disableFilter ? '' : searchTerm}`))
     }
   }
-  , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch])
+  , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch, disableFilter])
 
 
   return (
     <>
-      {isError ? <p>{errorMsg}</p> : null }
+      {isError ? <p className='error'>{errorMsg}</p> : null }
        
       <Label {...getLabelProps} htmlFor={`auto${dbSearchField}`}>
         {label}
