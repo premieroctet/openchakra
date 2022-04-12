@@ -28,17 +28,18 @@ const MENUS=[
 ]
 
 const QuickMenu = ({accessRights}) => {
-  const menus=MENUS.filter(m => m.enabled(accessRights))
 
-  if (menus.length==0) {
+  if (!accessRights) {
     return (<ContactUs />)
   }
+  
+  const menus=MENUS.filter(m => m.enabled(accessRights))
+
   return (
     <>
       {menus.map((menu, i) => (
         <div key={`menu${i}`} className='flex gap-x-4 items-center'>
           <Link key={menu} href={menu.url}><a>{menu.label}</a></Link>
-          
         </div>
       ))}
     </>
