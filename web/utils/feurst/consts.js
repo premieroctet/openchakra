@@ -95,6 +95,7 @@ const USER_ACTIONS={
     [VIEW, CREATE, UPDATE, DELETE].map(action => [CUSTOMER_ADMIN, CUSTOMER_SLAVE].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
     [CREATE, VIEW, UPDATE, CONVERT].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
     [CREATE, VIEW, UPDATE].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
+    [VIEW].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
   ]),
   [CUSTOMER_SLAVE]: lodash.flattenDeep([
     [CREATE, VIEW, UPDATE, CONVERT, DELETE].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),

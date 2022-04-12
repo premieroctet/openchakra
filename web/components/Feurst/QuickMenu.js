@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import ContactUs from './ContactUs'
 const {getLoggedUser} = require('../../utils/context')
-const {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE} = require('../../utils/consts')
+const {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT} = require('../../utils/consts')
 
 const MENUS=[
   {
@@ -16,9 +16,9 @@ const MENUS=[
     url: `${BASEPATH_EDI}/quotations`,
   },
   {
-    enabled: rights => rights.isActionAllowed(PRODUCT, CREATE) || rights.isActionAllowed(SHIPRATE, CREATE),
+    enabled: rights => rights.isActionAllowed(PRODUCT, CREATE) || rights.isActionAllowed(SHIPRATE, CREATE) || rights.isActionAllowed(ACCOUNT, CREATE),
     label: 'Administration',
-    url: `${BASEPATH_EDI}/products`,
+    url: `${BASEPATH_EDI}/accounts`,
   },
   {
     enabled: () => !!getLoggedUser(),

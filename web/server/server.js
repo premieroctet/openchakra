@@ -202,6 +202,7 @@ checkConfig()
         io.to(bookingName).emit('displayStatus', booking)
       })
     })
+
   })
   .catch(err => {
     console.error(`**** Démarrage impossible:${err}`)

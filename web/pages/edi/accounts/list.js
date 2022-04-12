@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import {BASEPATH_EDI} from '../../../utils/consts'
+const {BASEPATH_EDI, ACCOUNT, VIEW} = require('../../../utils/consts')
 const AccountsList = require('../../../components/Feurst/AccountsList')
 
 const Accounts = ({accessRights}) => {
@@ -10,4 +10,4 @@ const Accounts = ({accessRights}) => {
   </>)
 }
 
-module.exports=withEdiAuth(Accounts, {pathAfterFailure: `${BASEPATH_EDI}/login`})
+module.exports=withEdiAuth(Accounts, {model: ACCOUNT, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
