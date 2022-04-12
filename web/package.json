@@ -49,6 +49,7 @@
     "gif-frames": "^1.0.1",
     "glob": "^7.1.4",
     "google-calendar-url": "^0.0.5",
+    "i18n-zipcodes": "^4.0.0",
     "i18next": "^20.6.0",
     "i18next-browser-languagedetector": "^6.1.4",
     "ics": "^2.31.0",
