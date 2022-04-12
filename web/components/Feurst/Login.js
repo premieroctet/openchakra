@@ -1,17 +1,17 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Link from 'next/link'
 import {withTranslation} from 'react-i18next'
 import {withStyles} from '@material-ui/core/styles'
 import ReactHtmlParser from 'react-html-parser'
 import Grid from '@material-ui/core/Grid'
-import styles from '../LogIn/LogInStyle'
-import CustomButton from '../CustomButton/CustomButton'
-import {PleasantButton} from './Button'
-import withLogin from '../../hoc/withLogin'
 import IconButton from '@material-ui/core/IconButton'
 import {TextField} from '@material-ui/core'
 import styled from 'styled-components'
+import withLogin from '../../hoc/withLogin'
+import CustomButton from '../CustomButton/CustomButton'
+import styles from '../LogIn/LogInStyle'
 import {screen} from '../../styles/screenWidths'
+import {PleasantButton} from './Button'
 
 const LoginStyles = styled.div`
   color: var(--black);
@@ -71,20 +71,18 @@ const LoginInputs = styled.div`
 
  
 const FeurstLogin = ({
-  callRegister,
   t,
-  classes,
   onChange,
   onSubmit,
   checkRoles,
-  showRoles,
   handleClickShowPassword,
   handleMouseDownPassword,
   state,
 }) => {
 
-  const {errors, username, password, showPassword, roles, selectedRole} = state
-  const loginDisabled = roles == null || (roles.length>0 && !selectedRole) || !password
+  const {errors, username, password, showPassword, roles} = state
+  const loginDisabled = roles === null || roles.length === 0 || !password
+
 
   return <LoginStyles>
     <h1>{ReactHtmlParser(t('LOGIN.title'))}</h1>
@@ -94,76 +92,46 @@ const FeurstLogin = ({
       <h2>Connexion</h2>
       
       <LoginInputs>
-      <TextField
-        id="username"
-        name="username"
-        label={t('LOGIN.input_label')}
-        variant="outlined"
-        value={username}
-        autoComplete="email"
-        onChange={onChange}
-        onBlur={checkRoles}
-        error={errors.username}
-      />
-      <em>{errors.username}</em>
+        <TextField
+          id="username"
+          name="username"
+          label={t('LOGIN.input_label')}
+          variant="outlined"
+          value={username}
+          autoComplete="email"
+          onChange={onChange}
+          onBlur={checkRoles}
+          error={errors.username}
+        />
+        <em>{errors.username}</em>
 
-      <TextField
-        id="standard-with-placeholder"
-        label={ReactHtmlParser(t('LOGIN.input_password'))}
-        variant="outlined"
-        type={showPassword ? 'text' : 'password'}
-        name="password"
-        value={password}
-        autoComplete="current-password"
-        onChange={onChange}
-        error={errors.password}
-        InputProps={{
-          endAdornment: (
-            <IconButton
-              tabIndex="-1"
-              aria-label="toggle password visibility"
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-            >
-              {showPassword ? 'cacher' : 'afficher'}
-            </IconButton>
-          ),
-        }}
-      />
+        <TextField
+          id="standard-with-placeholder"
+          label={ReactHtmlParser(t('LOGIN.input_password'))}
+          variant="outlined"
+          type={showPassword ? 'text' : 'password'}
+          name="password"
+          value={password}
+          autoComplete="current-password"
+          onChange={onChange}
+          error={errors.password}
+          InputProps={{
+            endAdornment: (
+              <IconButton
+                tabIndex="-1"
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+              >
+                {showPassword ? 'cacher' : 'afficher'}
+              </IconButton>
+            ),
+          }}
+        />
 
-      <em>{errors.password}</em>
+        <em>{errors.password}</em>
       
       </LoginInputs>
-
-      {showRoles ?
-        <Grid item className={classes.margin}>
-          <Grid container className={classes.genericContainer}>
-            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-              <Grid item>
-                <GroupOutlinedIcon className={classes.colorIcon}/>
-              </Grid>
-              <Grid item className={classes.widthTextField}>
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-label">{ReactHtmlParser(t('LOGIN.input_role'))}</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={selectedRole}
-                    onChange={onChange}
-                    name={'selectedRole'}
-                  >
-                    {
-                      Object.keys(roles).map((role, index) => (
-                        <MenuItem key={index} value={roles[role]}>{ROLES[roles[role]]}</MenuItem>
-                      ))
-                    }
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid> : null
-      }
 
       <Link href={'/forgotPassword'}>
         <a>
@@ -172,7 +140,7 @@ const FeurstLogin = ({
       </Link>
       
       <PleasantButton type="submit" onClick={onSubmit} disabled={loginDisabled} size="full-width">
-      {ReactHtmlParser(t('LOGIN.button'))}
+        {ReactHtmlParser(t('LOGIN.button'))}
       </PleasantButton>
       
     </LoginForm>

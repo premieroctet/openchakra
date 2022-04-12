@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react'
+import React from 'react'
+import {BASEPATH_EDI} from '../../utils/consts'
 import withEdiAuth from '../../hoc/withEdiAuth'
-const {BASEPATH_EDI} = require('../../utils/consts')
 
 
 const HomeEdi = ({user}) => {

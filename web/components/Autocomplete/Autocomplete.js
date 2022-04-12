@@ -7,7 +7,17 @@ import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
 import {Label, Input} from '../Feurst/AddArticle.styles'
 
 
-const Autocomplete = ({paramsCombobox, errorMsg, urlToFetch}) => {
+const Autocomplete = ({
+  paramsCombobox,
+  urlToFetch,
+  dbSearchField,
+  errorMsg,
+  label,
+  placeholder,
+  disableFilter,
+  formattingResult,
+  onChange,
+} = {placeholder: '…', disableFilter: false}) => {
 
   const {
     data,
@@ -18,7 +28,7 @@ const Autocomplete = ({paramsCombobox, errorMsg, urlToFetch}) => {
      
 
   const [searchTerm, setSearchTerm] = useState('')
-  const debouncedQuery = useDebounce(searchTerm, 700)
+  const debouncedQuery = useDebounce(searchTerm, 1000)
 
   const {
     isOpen,
@@ -33,39 +43,41 @@ const Autocomplete = ({paramsCombobox, errorMsg, urlToFetch}) => {
   } = useCombobox({
     items: data,
     onInputValueChange: ({inputValue, selectedItem}) => {
-      if (selectedItem && inputValue.trim() === selectedItem.reference) {
+      if (selectedItem && inputValue.trim() === selectedItem[dbSearchField]) {
         return
       }
       setSearchTerm(inputValue)
+      onChange && onChange(inputValue)
     },
     ...paramsCombobox,
   })
     
   useEffect(() => {
     if (debouncedQuery && searchTerm.length > 0) {
-      run(client(`${urlToFetch}${searchTerm}`))
+      run(client(`${urlToFetch}${disableFilter ? '' : searchTerm}`))
     }
   }
-  , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch])
+  , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch, disableFilter])
+
 
   return (
     <>
-      {isError ? <p>{errorMsg}</p> : null }
-      {isLoading ? (<SpinnerEllipsis />) : <span className='loading'></span>}
+      {isError ? <p className='error'>{errorMsg}</p> : null }
        
-      <Label {...getLabelProps} htmlFor="refcatalog">
-          Réf. Catalogue
+      <Label {...getLabelProps} htmlFor={`auto${dbSearchField}`}>
+        {label}
       </Label>
       <div {...getComboboxProps()}>
         <Input
           {...getInputProps()}
-          id="refcatalog"
-          placeholder="Ex: 001357NE00…"
+          id={`auto${dbSearchField}`}
+          placeholder={placeholder}
         />
+        <span className='loading'>{isLoading ? <SpinnerEllipsis /> : null}</span>
         <button
           {...getToggleButtonProps()}
           type="button"
-          aria-label="afficher la liste des références"
+          aria-label="afficher la liste"
         >
           <span role="img">&#9661;</span>
         </button>
@@ -92,7 +104,7 @@ const Autocomplete = ({paramsCombobox, errorMsg, urlToFetch}) => {
               key={`searchres-${index}`}
               {...getItemProps({item, index})}
             >
-              {item.reference} - {item.description} {item.description_2}
+              {formattingResult(item)}
             </li>
           ))
         }

@@ -90,11 +90,11 @@ const ButtonShadow = styled.span.attrs(props => ({
   transform: translateY(2px);
   transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
 
-  ${StyledButton}:hover && {
+  ${StyledButton}:not(:disabled):hover && {
     transform: translateY(4px);
     transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
   }
-  ${StyledButton}:active && {
+  ${StyledButton}:not(:disabled):active && {
     transform: translateY(1px);
     transition: transform 34ms;
   }
@@ -103,6 +103,7 @@ const ButtonShadow = styled.span.attrs(props => ({
 const ButtonEdge = styled.span.attrs(props => ({
   bgColor: props.bgColor || props.theme.colors.blue,
   rounded: props.rounded || 'var(--rounded-xl)',
+  bgColorDisabled: props.bgColorDisabled || props.theme.colors.metalGray,
 }))`
   position: absolute;
   top: 0;
@@ -111,10 +112,15 @@ const ButtonEdge = styled.span.attrs(props => ({
   height: 100%;
   border-radius: ${() => applyBorderRadius};
   background-color: ${props => darkerColor(props.bgColor)};
+
+  ${StyledButton}:disabled && {
+    background-color: ${props => darkerColor(props.bgColorDisabled)};
+  }
   `
 
 const ButtonFront = styled.span.attrs(props => ({
   bgColor: props.bgColor || props.theme.colors.blue,
+  bgColorDisabled: props.bgColorDisabled || props.theme.colors.metalGray,
   textColor: props.textColor || props.theme.colors.white,
   rounded: props.rounded || 'var(--rounded-xl)',
 }))`
@@ -129,14 +135,18 @@ const ButtonFront = styled.span.attrs(props => ({
   background-color: ${props => props.bgColor};
   color: ${props => props.textColor};
 
-  ${StyledButton}:hover && {
+  ${StyledButton}:not(:disabled):hover && {
     transform: translateY(-6px);
     transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
   }
 
-  ${StyledButton}:active && {
+  ${StyledButton}:not(:disabled):active && {
     transform: translateY(-2px);
     transition: transform 34ms;
+  }
+
+  ${StyledButton}:disabled && {
+    background-color: ${props => props.bgColorDisabled};
   }
   `
 
@@ -149,8 +159,7 @@ const PleasantButton = ({
   bgColor,
   textColor,
   children,
-  className,
-  onClick,
+  ...rest
 }) => {
 
   return (
@@ -158,8 +167,7 @@ const PleasantButton = ({
       type={type}
       size={size}
       rounded={rounded}
-      className={className}
-      onClick={onClick}
+      {...rest}
     >
       <ButtonShadow rounded={rounded} />
       <ButtonEdge bgColor={bgColor} rounded={rounded} />

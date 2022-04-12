@@ -25,6 +25,7 @@ async function client(
       return Promise.reject({message: 'Please re-authenticate.'})
     }
     const data = await response.json()
+      .catch(e => console.log(`Error when fetching ${e}`))
     if (response.ok) {
       return data
     }

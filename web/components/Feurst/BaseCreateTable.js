@@ -113,7 +113,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
     <Table data={data} columns={cols} updateMyData={updateMyData} />
     <div className='flex m-8'>
-      <PleasantButton onClick={() => setIsOpenDialog(true)}>J'ai fini, indiquer mes options de livraison</PleasantButton>
+      <PleasantButton disabled={data.length === 0} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
     </div>
 
     <DialogAddress isOpenDialog={isOpenDialog} setIsOpenDialog={setIsOpenDialog} accessRights={accessRights}/>

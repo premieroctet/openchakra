@@ -1,11 +1,9 @@
 import React, {useState, useEffect} from 'react'
-import {useCombobox} from 'downshift'
-import useAsync from '../../hooks/use-async.hook'
-import useDebounce from '../../hooks/use-debounce.hook'
-import {client} from '../../utils/client'
-import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
+import Autocomplete from '../Autocomplete/Autocomplete'
+import {StyledAutocomplete} from '../Autocomplete/Autocomplete.styles'
 import {PleasantButton} from './Button'
-import {FormAddArticle, Label, Input, Refquantity, Refcatalog} from './AddArticle.styles'
+import {FormAddArticle, Label, Input, Refquantity} from './AddArticle.styles'
+
 
 const AddArticle = ({addProduct, checkProduct}) => {
 
@@ -14,103 +12,30 @@ const AddArticle = ({addProduct, checkProduct}) => {
     qty: 1,
   })
 
-  const {
-    data,
-    isLoading,
-    isError,
-    run,
-  } = useAsync({data: []})
- 
-
-  const [query, setQuery] = useState('')
-  const debouncedQuery = useDebounce(query, 700)
-
-
-  const {
-    isOpen,
-    getToggleButtonProps,
-    selectItem,
-    getLabelProps,
-    getInputProps,
-    getComboboxProps,
-    highlightedIndex,
-    getItemProps,
-    selectedItem,
-    getMenuProps,
-  } = useCombobox({
-    items: data,
+  const paramsCombobox = {
     itemToString: item => (item ? `${item.reference}` : ''),
-    onInputValueChange: ({inputValue, selectedItem}) => {
-      if (selectedItem && inputValue.trim() === selectedItem.reference) {
-        return
-      }
-      setQuery(inputValue)
-    },
     onSelectedItemChange: ({selectedItem}) => {
       setArticle({...article, item: selectedItem})
     },
-  })
-
-  useEffect(() => {
-    if (debouncedQuery && query.length > 0) {
-      run(client(`myAlfred/api/products?pattern=${query}`))
-    }
   }
-  , [debouncedQuery, query, run, selectedItem])
+
 
   return (
     <FormAddArticle>
       
-      <Refcatalog>
-        {isError ? <p>Les produits ne se sont pas chargés.</p> : null }
-        {isLoading ? (<SpinnerEllipsis />) : <span className='loading'></span>}
-       
-        <Label {...getLabelProps} htmlFor="refcatalog">
-          Réf. Catalogue
-        </Label>
-        <div {...getComboboxProps()}>
-          <Input
-            {...getInputProps()}
-            id="refcatalog"
-            placeholder="Ex: 001357NE00…"
-          />
-          <button
-            {...getToggleButtonProps()}
-            type="button"
-            aria-label="afficher la liste des références"
-          >
-            <span role="img">&#9661;</span>
-          </button>
-          <button
-            className=""
-            type="button"
-            onClick={() => {
-              selectItem(null)
-              setQuery('')
-              setArticle({...article, item: null})
-            }}
-            aria-label="effacer"
-          >
-            <span role="img">✕</span>
-          </button>
-            
-        </div>
-        
-        <ul
-          {...getMenuProps()}
-        >
-          {isOpen &&
-          data.map((item, index) => (
-            <li
-              key={`${item.reference}-${index}`}
-              {...getItemProps({item, index})}
-            >
-              {item.reference} - {item.description} {item.description_2}
-            </li>
-          ))
-          }
-        </ul>
-      </Refcatalog>
+      <StyledAutocomplete>
+        <Autocomplete
+          urlToFetch={`myAlfred/api/products?pattern=`}
+          item={article}
+          setItem={setArticle}
+          paramsCombobox={paramsCombobox}
+          errorMsg= 'Aucune adresse trouvée'
+          dbSearchField= 'reference'
+          label={'Réf. catalogue'}
+          placeholder='1 rue de la poupée'
+          formattingResult={item => `${item.reference} - ${item.description} ${item.description_2}`}
+        />
+      </StyledAutocomplete>
       
       <Refquantity>
         <Label htmlFor="articleQty">Quantité</Label>

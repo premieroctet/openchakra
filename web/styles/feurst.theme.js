@@ -13,6 +13,8 @@ export const theme = {
     redAlert: 'red',
     yellow: '#e0ba14',
     black: '#111',
+    metalGray: '#a8a9ab',
+    lightGray: '#e4e4e4',
   },
   containerSize: 'min(100% - 2rem, 60rem)',
   //   space: [0, 4, 8, 16, 24, 32, 48, 64, 128, 256, 512],
@@ -39,17 +41,16 @@ export const GlobalStyleEdi = createGlobalStyle`
     accent-color: ${props => props.theme?.accentColor || 'auto'};
     caret-color: ${props => props.theme?.accentColor || 'auto'};
     --brand-color: #182d45;
-    --bg-blue-700: #2b3760;
-    --gray-800: rgb(190, 190, 190);
+    --brand-color: ${props => props.theme?.colors?.blue || 'blue'};
     --black: #111;
     --white: ${props => props.theme?.colors?.white || '#FFF'};
     --yellow-500: rgb(218, 187, 66);
-    --bg-app: #f5f5f5;
-    --bg-input: #f2f2f2;
-    --text-input: #707070;
     --bg-selectedZone: #bcc0cd;
     --text-selectedZone: #fff;
-    --text-gray-500: #747474;
+    --gray-800: rgb(190, 190, 190);
+    --gray-500: #747474;
+    --metal-gray: ${props => props.theme?.colors?.metalGray || 'gray'};
+    --gray-200: #f8f8f8;
 
     /* text */
     --text-sm: 0.875rem;
@@ -65,7 +66,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     --font-bold	: 700;
 
     /* Animation delays */
-    --delayIn: .3s;
+    --delayIn: .2s;
     --delayOut: .5s;
 
     /* Spacing */
@@ -164,10 +165,6 @@ export const GlobalStyleEdi = createGlobalStyle`
 }
 .text-4xl {
   font-size: var(--text-4xl);
-}
-
-.text-gray-500 {
-  color: var(--text-gray-500);
 }
 
 .text-center {

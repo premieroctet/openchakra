@@ -1,42 +1,50 @@
 import React from 'react'
 import {Tab} from '@headlessui/react'
 import styled from 'styled-components'
-import Router from 'next/router'
+import Router, {useRouter} from 'next/router'
+import Link from 'next/link'
 import {screen} from '../../styles/screenWidths'
 const {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, BASEPATH_EDI} = require('../../utils/consts')
 
-const Tabstyled = styled(Tab.List)`
+const Tabstyled = styled.div`
 
   display: grid;
   grid-template-columns: var(--grid-cols-1);
   margin-inline: auto;
   margin-bottom: var(--spc-10);
+  align-items: center;
+  align-content: center;
 
   @media (${screen.md}) {
-    grid-template-columns: var(--grid-cols-3);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 
-  button, button::after, button[aria-selected=true]::after{
+  a, a::after {
     transition: background-color ease-in-out var(--delayIn), color ease-in-out var(--delayIn), border ease-in-out var(--delayIn);
     will-change: 'background-color, color, border';
   }
 
-  button {
-    flex-basis: 300px;
-    padding: .5rem 2rem;
+  a {
+    color: var(--black);
+    display: inherit;
+    align-items: center;
+    height: 100%;
+    padding: .5rem .5rem;
     border:0;
     font-size: var(--text-lg);
     font-weight: var(--font-semibold);
     position: relative;
-    outline:none;
+    text-align: center;
+    text-decoration: none;
+    background: ${props => props.theme?.colors?.lightGray || 'gray'};
   }
 
-  button[aria-selected=true] {
-    background: ${props => props.theme.colors.yellow || 'yellow'};
-    color: ${props => props.theme.colors.white || '#FFF'};
+  a.highlight {
+    background: ${props => props.theme?.colors?.yellow || 'yellow'};
+    color: ${props => props.theme?.colors?.white || '#FFF'} !important;
   }
 
-  button[aria-selected=true]::after {
+  a.highlight::after {
     --trianglebase: 10px;
     --trianglepeak: 15px;
     position: absolute;
@@ -100,19 +108,21 @@ const tabsContent = [
 const Tabs = props => {
   const {accessRights}=props
 
+  const router = useRouter()
+
   const filteredContents=tabsContent // .filter(c => props.accessRights.isActionAllowed(c.model, c.action))
-  const selIndex=filteredContents.findIndex(m => m.model==accessRights.getModel() && m.action==accessRights.getAction())
+  
   return (
-    <Tab.Group onChange={ index => Router.push(filteredContents[index].url)} defaultIndex={selIndex}>
-      <Tabstyled>
+    <>
+      <Tabstyled className='container'>
         {filteredContents.map((elem, i) => (
-          <Tab key={`tab${i}`}>
-            {elem.title}
-          </Tab>
+          <Link key={`tab${i}`} href={elem.url} passHref>
+            <a className={router.pathname == elem.url ? 'highlight' : ''}>{elem.title}</a>
+          </Link>
         ))}
       </Tabstyled>
-    </Tab.Group>
 
+    </>
   )
 }
 module.exports=Tabs

@@ -10,8 +10,6 @@ const {BASEPATH_EDI} = require('../utils/consts')
 const {is_development} = require('../config/config')
 const Tabs = require('../components/Feurst/Tabs')
 
-export const feurstImgPath = '../../static/assets/img/feurst'
-
 class AccessRights {
   constructor(model, action, actions) {
     this.actions=actions
@@ -75,15 +73,17 @@ const withEdiAuth = (Component = null, options = {}) => {
       }
 
       const accessRights=new AccessRights(options.model, options.action, actions)
-      return (<ThemeProvider theme={theme}>
-        {is_development() && <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}`}</h1>}
-        <Header accessRights={accessRights} />
-        <Tabs accessRights={accessRights} />
-        <div className='container'>
-          <Component accessRights={accessRights} />
-        </div>
-        <GlobalStyleEdi />
-      </ThemeProvider>)
+      return (
+        <ThemeProvider theme={theme}>
+          {is_development() && <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}`}</h1>}
+          <Header accessRights={accessRights} />
+          <Tabs accessRights={accessRights} />
+          <div className='container'>
+            <Component accessRights={accessRights} />
+          </div>
+          <GlobalStyleEdi />
+        </ThemeProvider>
+      )
     }
   }
 
