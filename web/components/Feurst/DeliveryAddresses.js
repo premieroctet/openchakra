@@ -25,7 +25,7 @@ const DeliveryAddresses = () => {
         paramsCombobox={paramsCombobox}
         errorMsg= 'Aucune adresse trouvée'
         dbSearchField= 'reference'
-        enableFilter={false}
+        disableFilter={true}
         label={null}
         placeholder='1 rue de la poupée'
         onChange={e => console.log(e)}
