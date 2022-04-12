@@ -2,33 +2,33 @@ import React from 'react'
 import Link from 'next/link'
 import ContactUs from './ContactUs'
 const {getLoggedUser} = require('../../utils/context')
-const {ORDER, QUOTATION, BASEPATH_EDI, PRODUCT} = require('../../utils/consts')
+const {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE} = require('../../utils/consts')
 
 const MENUS=[
   {
-    access: models => models.includes(ORDER),
+    enabled: rights => rights.hasModel(ORDER),
     label: 'Mes commandes',
     url: `${BASEPATH_EDI}/orders`,
   },
   {
-    access: models => models.includes(QUOTATION),
+    enabled: rights => rights.hasModel(QUOTATION),
     label: 'Mes devis',
     url: `${BASEPATH_EDI}/quotations`,
   },
   {
-    access: models => models.includes(PRODUCT),
-    label: 'Produits',
+    enabled: rights => rights.isActionAllowed(PRODUCT, CREATE) || rights.isActionAllowed(SHIPRATE, CREATE),
+    label: 'Administration',
     url: `${BASEPATH_EDI}/products`,
   },
   {
-    access: () => !!getLoggedUser(),
+    enabled: () => !!getLoggedUser(),
     label: 'Se déconnecter',
     url: `${BASEPATH_EDI}/quotations`,
   },
 ]
 
 const QuickMenu = ({accessRights}) => {
-  const menus= accessRights ? MENUS.filter(m => m.access(accessRights.getModels())) : []
+  const menus=MENUS.filter(m => m.enabled(accessRights))
 
   if (menus.length==0) {
     return (<ContactUs />)

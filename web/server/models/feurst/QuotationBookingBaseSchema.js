@@ -41,7 +41,8 @@ BookingItemSchema.virtual('total_weight').get(function() {
   if (!this.product) {
     return 0
   }
-  return this.product.weight*this.quantity
+  const total_weight=this.product.weight*this.quantity
+  return total_weight
 })
 
 
@@ -75,6 +76,9 @@ QuotationBookingBaseSchema.virtual('total_amount').get(function() {
 })
 
 QuotationBookingBaseSchema.virtual('total_weight').get(function() {
+  if (lodash.isEmpty(this.items)) {
+    return 0
+  }
   const total_weight=lodash.sumBy(this.items, i => i.total_weight)
   return total_weight
 })

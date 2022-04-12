@@ -1,11 +1,11 @@
-const {SHIPRATE, CREATE} = require('../../utils/consts')
 
 import {withTranslation} from 'react-i18next'
-const {DataPage, styles}=require('../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles'
-const models=require('../../components/BigList/models')
 import axios from 'axios'
 const moment = require('moment')
+const models=require('../../components/BigList/models')
+const {DataPage, styles}=require('../../components/AlfredDashboard/DataPage')
+const {SHIPRATE, CREATE} = require('../../utils/consts')
 moment.locale('fr')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 
