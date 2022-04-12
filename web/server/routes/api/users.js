@@ -1,3 +1,12 @@
+const crypto = require('crypto')
+const fs = require('fs').promises
+const express = require('express')
+const passport = require('passport')
+const bcrypt = require('bcryptjs')
+const CronJob = require('cron').CronJob
+const moment = require('moment')
+const axios = require('axios')
+const gifFrames = require('gif-frames')
 const Company = require('../../models/Company')
 const validateAddress = require('../../validation/address')
 const {getActionsForRoles} = require('../../utils/userAccess')
@@ -10,26 +19,18 @@ const {checkRegisterCodeValidity, setRegisterCodeUsed}=require('../../utils/regi
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
-const express = require('express')
 
 const router = express.Router()
-const passport = require('passport')
-const bcrypt = require('bcryptjs')
 const {is_production, is_validation, computeUrl}=require('../../../config/config')
-const CronJob = require('cron').CronJob
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
-const moment = require('moment')
 moment.locale('fr')
-const crypto = require('crypto')
-const axios = require('axios')
 const {ROLES, ACCOUNT, VIEW}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
-const gifFrames = require('gif-frames')
-const fs = require('fs').promises
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
+const ResetToken = require('../../../server/models/ResetToken')
 
 axios.defaults.withCredentials = true
 
