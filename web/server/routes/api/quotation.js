@@ -85,7 +85,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   const quotation_id=req.params.id
   const {product, quantity}=req.body
 
-  Quotation.findOne({_id: quotation_id, ...getDataFilter(req.user.roles, DATA_TYPE, UPDATE)})
+  Quotation.findOne({_id: quotation_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
     .then(data => {
       if (!data) {
         console.error(`No quotation #${quotation_id}`)
@@ -117,7 +117,7 @@ router.delete('/:quotation_id/items/:item_id', passport.authenticate('jwt', {ses
   const quotation_id=req.params.quotation_id
   const item_id=req.params.item_id
 
-  Quotation.findOneAndUpdate({_id: quotation_id, ...getDataFilter(req.user.roles, DATA_TYPE, DELETE)}, {$pull: {items: {_id: item_id}}}, {runValidators: true})
+  Quotation.findOneAndUpdate({_id: quotation_id, ...getDataFilter(req.user, DATA_TYPE, DELETE)}, {$pull: {items: {_id: item_id}}}, {runValidators: true})
     .then(() => {
       res.json()
     })
@@ -136,7 +136,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     return res.status(301)
   }
 
-  Quotation.find(getDataFilter(req.user.roles, DATA_TYPE, VIEW))
+  Quotation.find(getDataFilter(req.user, DATA_TYPE, VIEW))
     .populate('items.product')
     .then(quotations => {
       return res.json(quotations)
@@ -156,7 +156,7 @@ router.get('/:quotation_id', passport.authenticate('jwt', {session: false}), (re
     return res.status(301)
   }
 
-  Quotation.findOne({_id: req.params.quotation_id, ...getDataFilter(req.user.roles, DATA_TYPE, VIEW)})
+  Quotation.findOne({_id: req.params.quotation_id, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
     .populate('items.product')
     .then(quotation => {
       if (quotation) {
@@ -179,7 +179,7 @@ router.delete('/:quotation_id', passport.authenticate('jwt', {session: false}), 
     return res.status(301)
   }
 
-  Quotation.findOneAndDelete({_id: req.params.quotation_id, ...getDataFilter(req.user.roles, DATA_TYPE, VIEW)})
+  Quotation.findOneAndDelete({_id: req.params.quotation_id, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
     .then(() => {
       return res.json()
     })
@@ -234,7 +234,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
 
   const fee={express: 0, standard: 0}
   let order=null
-  Order.findOne({_id: req.params.id, ...getDataFilter(req.user.roles, DATA_TYPE, UPDATE)})
+  Order.findOne({_id: req.params.id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
     .populate('items.product')
     .then(result => {
       if (!result) {

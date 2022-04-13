@@ -35,7 +35,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     ],
   }: {}
 
-  Product.find({filter, ...getDataFilter(req.user.roles, DATA_TYPE, VIEW)})
+  Product.find({filter, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
     .then(products => {
       res.json(products)
     })

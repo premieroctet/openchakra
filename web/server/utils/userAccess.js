@@ -17,16 +17,16 @@ const isActionAllowed = (roles, model, action) => {
   return allowed
 }
 
-const getDataFilter = (roles, model, action) => {
-  const userActions=getActions(roles, model, action)
+const getDataFilter = (user, model, action) => {
+  const userActions=getActions(user.roles, model, action)
   if (userActions.some(userAction => userAction.visibility==ALL)) {
     return {}
   }
   if (userActions.some(userAction => userAction.visibility==COMPANY)) {
-    return {company: req.user.company._id}
+    return {company: user.company}
   }
   if (userActions.some(userAction => userAction.visibility==MINE)) {
-    return {user: req.user._id}
+    return {user: user}
   }
   return {noway: true}
 }

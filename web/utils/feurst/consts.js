@@ -100,7 +100,6 @@ const USER_ACTIONS={
   [CUSTOMER_SLAVE]: lodash.flattenDeep([
     [CREATE, VIEW, UPDATE, CONVERT, DELETE].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
     [CREATE, VIEW, UPDATE, DELETE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
-    [CREATE, VIEW, UPDATE, DELETE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
     [VIEW].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
   ]),
 }
@@ -119,4 +118,5 @@ module.exports={
   BOOK_STATUS, QUOTATION_STATUS, FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN, CUSTOMER_SLAVE,
   ROLES, USER_ACTIONS, ORDER, QUOTATION, ACCOUNT, VIEW, CREATE, UPDATE, DELETE,
   SHIPRATE, MAX_WEIGHT, PRODUCT, BASEPATH_EDI, ALL, FEURST_PHONE_NUMBER, FEURST_IMG_PATH,
+  COMPANY, MINE,
 }
