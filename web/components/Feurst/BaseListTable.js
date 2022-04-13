@@ -33,7 +33,7 @@ const BaseListTable = ({endpoint, columns, refresh}) => {
   const getContentFrom = useCallback(async() => {
 
     const data = await client(`myAlfred/api/${endpoint}`)
-      .catch(err => snackBarError(err.msg))
+      .catch(err => snackBarError(err?.msg))
 
     data && setData(data)
 

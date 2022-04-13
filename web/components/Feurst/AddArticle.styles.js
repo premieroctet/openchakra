@@ -9,7 +9,7 @@ const FormAddArticle = styled.form`
 
   @media (${screen.lg}) {
     grid-template-columns: 2fr 2fr 1fr;
-    align-items: baseline;
+    align-items: flex-start;
     column-gap: var(--spc-5)
   }
 `

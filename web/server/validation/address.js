@@ -13,7 +13,7 @@ const validateAddress = data => {
     errors.zip_code='Un code postal est requis'
   }
   if (lodash.isEmpty(data.country)) {
-    errors.country='Un pays est requi'
+    errors.country='Un pays est requis'
   }
 
   return {

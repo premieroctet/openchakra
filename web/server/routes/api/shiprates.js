@@ -1,4 +1,8 @@
 const express = require('express')
+const passport = require('passport')
+const lodash=require('lodash')
+const moment = require('moment')
+const xlsx=require('node-xlsx')
 const {extractCsv, shipRatesImport} = require('../../utils/import')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {SHIPRATE} = require('../../../utils/feurst/consts')
@@ -7,11 +11,7 @@ const {addItem} = require('../../utils/commands')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 
 const router = express.Router()
-const passport = require('passport')
-const moment = require('moment')
 const {VIEW}=require('../../../utils/consts')
-const xlsx=require('node-xlsx')
-const lodash=require('lodash')
 
 moment.locale('fr')
 
@@ -35,8 +35,8 @@ router.get('/template', passport.authenticate('jwt', {session: false}), (req, re
   res.end(buffer, 'binary')
 })
 
-// @Route GET /myAlfred/api/orders
-// View all orders
+// @Route GET /myAlfred/api/shiprates
+// View all shiprates
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
@@ -44,7 +44,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     return res.status(301)
   }
 
-  MODEL.find(getDataFilter(req.user.roles, DATA_TYPE, VIEW))
+  MODEL.find(getDataFilter(req.user, DATA_TYPE, VIEW))
     .then(data => {
       return res.json(data)
     })

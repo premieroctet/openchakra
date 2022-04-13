@@ -41,6 +41,7 @@ const PureDialog = ({
       open={open}
       onClose={onClose}
       initialFocus={completeButtonRef}
+      {...rest}
     >
       <Overlay />
       <div className='dialogcontent' >

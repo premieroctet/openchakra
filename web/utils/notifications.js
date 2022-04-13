@@ -1,6 +1,6 @@
-import SnackBar from '../components/SnackBar/SnackBar'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import SnackBar from '../components/SnackBar/SnackBar'
 const lodash=require('lodash')
 
 const createBar = (severity, message) => {

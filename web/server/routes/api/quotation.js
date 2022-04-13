@@ -1,10 +1,11 @@
-const {addItem} = require('../../utils/commands')
-const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 const express = require('express')
-
-const router = express.Router()
 const passport = require('passport')
 const moment = require('moment')
+const {addItem, computeShipFee} = require('../../utils/commands')
+const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
+const {validateZipCode} = require('../../validation/order')
+
+const router = express.Router()
 const Quotation = require('../../models/Quotation')
 const {validateOrderItem} = require('../../validation/order')
 const {validateQuotation}=require('../../validation/quotation')
@@ -234,7 +235,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
 
   const fee={express: 0, standard: 0}
   let order=null
-  Order.findOne({_id: req.params.id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
+  MODEL.findOne({_id: req.params.id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
     .populate('items.product')
     .then(result => {
       if (!result) {

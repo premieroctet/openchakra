@@ -32,7 +32,7 @@ const AddArticle = ({addProduct, checkProduct}) => {
           errorMsg= 'Aucune adresse trouvée'
           dbSearchField= 'reference'
           label={'Réf. catalogue'}
-          placeholder='1 rue de la poupée'
+          placeholder='Saissisez la référence du produit'
           formattingResult={item => `${item.reference} - ${item.description} ${item.description_2}`}
         />
       </StyledAutocomplete>

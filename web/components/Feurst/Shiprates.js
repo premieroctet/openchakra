@@ -22,11 +22,11 @@ const ShipratesList = ({accessRights}) => {
   return (
     <>
       <div>
-        { accessRights.isActionAllowed(SHIPRATE, CREATE) && IMPORTS.map(imp => (
-          <PleasantButton onClick={() => setImportInfo(imp)}>{imp.title}</PleasantButton>
+        { accessRights.isActionAllowed(SHIPRATE, CREATE) && IMPORTS.map((imp, i) => (
+          <PleasantButton key={`action${i}`} onClick={() => setImportInfo(imp)}>{imp.title}</PleasantButton>
         ))}
       </div>
-      <BaseListTable endpoint='shiprates' columns={shipratesColumns} />
+      <BaseListTable endpoint='shiprates' columns={shipratesColumns} accessRights={accessRights}/>
       {importInfo &&
         <DialogBase open={true}>
           <DataImport title={importInfo.title} subTitle={importInfo.subTitle} importURL={importInfo.url}/>

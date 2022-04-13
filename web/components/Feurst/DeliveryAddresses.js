@@ -3,16 +3,12 @@ import React, {useState} from 'react'
 import Autocomplete from '../Autocomplete/Autocomplete'
 import {StyledAutocomplete} from '../Autocomplete/Autocomplete.styles'
 
-const DeliveryAddresses = () => {
-
-  const [userAddress, setUserAddress] = useState({
-    item: null,
-  })
+const DeliveryAddresses = ({address, setAddress}) => {
 
   const paramsCombobox = {
-    itemToString: item => (item ? `${item.reference}` : ''),
+    itemToString: item => (item ? `${item.address}, ${item.zip_code} ${item.city}` : ''),
     onSelectedItemChange: ({selectedItem}) => {
-      setUserAddress({item: selectedItem})
+      setAddress(selectedItem)
     },
   }
 
@@ -20,16 +16,14 @@ const DeliveryAddresses = () => {
     <StyledAutocomplete noborder={true}>
       <Autocomplete
         urlToFetch={`myAlfred/api/users/addresses`}
-        item={userAddress}
-        setItem={setUserAddress}
+        item={address}
+        setItem={setAddress}
         paramsCombobox={paramsCombobox}
         errorMsg= 'Aucune adresse trouvée'
-        dbSearchField= 'reference'
-        disableFilter={true}
         label={null}
-        placeholder='1 rue de la poupée'
+        placeholder={`Nom de l'adresse`}
         onChange={e => console.log(e)}
-        formattingResult={item => `${item.reference} - ${item.description} ${item.description_2}`}
+        formattingResult={item => `${item.address}, ${item.zip_code} ${item.city}`}
       />
     </StyledAutocomplete>
   )

@@ -5,6 +5,7 @@ import useDebounce from '../../hooks/use-debounce.hook'
 import {client} from '../../utils/client'
 import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
 import {Label, Input} from '../Feurst/AddArticle.styles'
+import isEmpty from '../../server/validation/is-empty'
 
 
 const Autocomplete = ({
@@ -14,10 +15,9 @@ const Autocomplete = ({
   errorMsg,
   label,
   placeholder,
-  disableFilter,
   formattingResult,
   onChange,
-} = {placeholder: '…', disableFilter: false}) => {
+} = {placeholder: '…', dbSearchField: false}) => {
 
   const {
     data,
@@ -25,7 +25,6 @@ const Autocomplete = ({
     isError,
     run,
   } = useAsync({data: []})
-     
 
   const [searchTerm, setSearchTerm] = useState('')
   const debouncedQuery = useDebounce(searchTerm, 1000)
@@ -54,10 +53,10 @@ const Autocomplete = ({
     
   useEffect(() => {
     if (debouncedQuery && searchTerm.length > 0) {
-      run(client(`${urlToFetch}${disableFilter ? '' : searchTerm}`))
+      run(client(`${urlToFetch}${isEmpty(dbSearchField) ? '' : searchTerm}`))
     }
   }
-  , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch, disableFilter])
+  , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch, dbSearchField])
 
 
   return (

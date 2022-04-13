@@ -116,7 +116,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       <PleasantButton disabled={data.length === 0} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
     </div>
 
-    <DialogAddress isOpenDialog={isOpenDialog} setIsOpenDialog={setIsOpenDialog} accessRights={accessRights}/>
+    <DialogAddress id={orderID} endpoint={endpoint} isOpenDialog={isOpenDialog} setIsOpenDialog={setIsOpenDialog} accessRights={accessRights}/>
   </>
   )
 }
