@@ -1,10 +1,10 @@
+const express = require('express')
 const {extractCsv, shipRatesImport} = require('../../utils/import')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {SHIPRATE} = require('../../../utils/feurst/consts')
 const ShipRate = require('../../models/ShipRate')
 const {addItem} = require('../../utils/commands')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
-const express = require('express')
 
 const router = express.Router()
 const passport = require('passport')
@@ -40,11 +40,11 @@ router.get('/template', passport.authenticate('jwt', {session: false}), (req, re
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.context.user.roles, DATA_TYPE, VIEW)) {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
     return res.status(301)
   }
 
-  MODEL.find(getDataFilter(req.context.user.roles, DATA_TYPE, VIEW))
+  MODEL.find(getDataFilter(req.user.roles, DATA_TYPE, VIEW))
     .then(data => {
       return res.json(data)
     })

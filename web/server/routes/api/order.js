@@ -17,7 +17,7 @@ const DATA_TYPE=ORDER
 const MODEL=Order
 
 router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Order.find({...getDataFilter(req.user.roles, DATA_TYPE, VIEW)}, {address: 1})
+  Order.find({...getDataFilter(req.user, DATA_TYPE, VIEW)}, {address: 1})
     .then(orders => {
       const uniques=lodash.uniqBy(orders, lodash.isEqual)
       return res.json(uniques)
@@ -76,7 +76,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     return res.status(301)
   }
 
-  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user.roles, DATA_TYPE, UPDATE)}, req.body)
+  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)}, req.body)
     .then(result => {
       if (!result) {
         return res.status(404).json(`Order #${order_id} not found`)
@@ -107,7 +107,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   const order_id=req.params.id
   const {product, quantity}=req.body
 
-  Order.findOne({_id: order_id, ...getDataFilter(req.user.roles, DATA_TYPE, UPDATE)})
+  Order.findOne({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
     .then(data => {
       if (!data) {
         console.error(`No order #${order_id}`)
@@ -139,7 +139,7 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
   const order_id=req.params.order_id
   const item_id=req.params.item_id
 
-  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user.roles, DATA_TYPE, DELETE)}, {$pull: {items: {_id: item_id}}})
+  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, DELETE)}, {$pull: {items: {_id: item_id}}})
     .then(result => {
       if (!result) {
         return res.status(404).json(`Order #${order_id} not found`)
@@ -158,10 +158,10 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.status(401)
   }
 
-  Order.find(getDataFilter(req.user.roles, DATA_TYPE, VIEW))
+  Order.find(getDataFilter(req.user, DATA_TYPE, VIEW))
     .populate('items.product')
     .then(orders => {
       return res.json(orders)
@@ -181,7 +181,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
     return res.status(301)
   }
 
-  Order.findOne({_id: req.params.order_id, ...getDataFilter(req.user.roles, DATA_TYPE, VIEW)})
+  Order.findOne({_id: req.params.order_id, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
     .populate('items.product')
     .then(order => {
       if (order) {
@@ -204,7 +204,7 @@ router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req
     return res.status(301)
   }
 
-  Order.findOneAndDelete({_id: req.params.order_id, ...getDataFilter(req.user.roles, DATA_TYPE, VIEW)})
+  Order.findOneAndDelete({_id: req.params.order_id, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
     .then(() => {
       return res.json()
     })
@@ -234,7 +234,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
 
   const fee={express: 0, standard: 0}
   let order=null
-  Order.findOne({_id: req.params.id, ...getDataFilter(req.user.roles, DATA_TYPE, UPDATE)})
+  Order.findOne({_id: req.params.id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
     .populate('items.product')
     .then(result => {
       if (!result) {

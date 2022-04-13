@@ -1,4 +1,7 @@
+const Shop = require('../../models/Shop')
+const {is_development} = require('../../../config/config')
 const crypto = require('crypto')
+
 const fs = require('fs').promises
 const express = require('express')
 const passport = require('passport')
@@ -62,7 +65,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     return res.status(301)
   }
 
-  User.find(getDataFilter(req.user.roles, DATA_TYPE, VIEW))
+  User.find(getDataFilter(req.user, DATA_TYPE, VIEW))
     .populate('company')
     .then(data => {
       res.json(data)
@@ -1326,6 +1329,45 @@ router.post('/addresses', passport.authenticate('jwt', {session: false}), (req, 
     })
 
 })
+
+
+// DEV tricks : set any atribute, log without password
+if (is_development()) {
+  router.put('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
+    User.findByIdAndUpdate(req.user, req.body)
+      .then(() => {
+        return res.json()
+      })
+      .catch(err => {
+        return res.status(500).json(err)
+      })
+  })
+
+  router.post('/force-login', (req, res) => {
+    const email = req.body.username.toLowerCase().trim()
+    // Find user by email
+    User.findOne({email: new RegExp(`^${email}$`, 'i')})
+      .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
+      .then(user => {
+        if (!user) {
+          return res.status(400).json({username: `Email '${email}' incorrect`})
+        }
+        user.last_login.unshift(Date.now())
+        while (user.last_login.length>10) {
+          user.last_login.pop()
+        }
+        return user.save()
+      })
+      .then(user => {
+        send_cookie(user, null, res)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(500).json(err)
+      })
+  })
+
+}
 
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!
