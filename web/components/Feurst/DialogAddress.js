@@ -1,5 +1,4 @@
-import React, {useRef, useState} from 'react'
-import {Dialog} from '@headlessui/react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import styled from 'styled-components'
 import {TextField} from '@material-ui/core'
 import Address from '../Address/Address'
@@ -28,14 +27,14 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
   const [shippingfees, setShippingFees] = useState({})
   const [errors, setErrors] = useState()
 
-  const getShippingFees = async zipcode => {
+  const getShippingFees = useCallback(async zipcode => {
     const res_shippingfees = await client(`myAlfred/api/${endpoint}/${id}/shipping-fee?zipcode=${zipcode}`)
       .catch(e => {
         console.error(e, `Can't get shipping fees ${e}`)
       })
       
     res_shippingfees && setShippingFees(res_shippingfees)
-  }
+  }, [endpoint, id])
     
   const validateAddress = async e => {
     e.preventDefault()
@@ -48,13 +47,20 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
         })
       recordAddress && setAddress(recordAddress[recordAddress.length - 1])
     }
-
+      
     // then bind to the current order/quotation
-    const bindAddress = await client(`myAlfred/api/${endpoint}/${id}`, {data: address})
+    const bindAddressAndShipping = await client(`myAlfred/api/${endpoint}/${id}`, {data: {address}, method: 'PUT'})
+      .catch(e => {
+        console.error(e, `Can't bind address to order/quotation ${e}`)
+        setErrors(e)
+      })
 
-    bindAddress && setIsOpenDialog(false)
-
+    bindAddressAndShipping && setIsOpenDialog(false)
   }
+
+  useEffect(() => {
+    address?.zip_code && getShippingFees(address?.zip_code)
+  }, [address?.zip_code, getShippingFees])
 
   return (
     <StyledDialog
@@ -81,6 +87,7 @@ traitement de votre commande.</p>
         <Address address={address} setAddress={setAddress} getShippingFees={getShippingFees} errors={errors} />
           
         {/* order shipping fees */}
+        <h3>Indiquez l'option de livraison</h3>
         <ShippingFees shippingoptions={shippingfees} />
 
         <PleasantButton type='submit' onSubmit={() => validateAddress}>Valider ces informations</PleasantButton>

@@ -1,12 +1,9 @@
 import React from 'react'
 import EditableCell from '../Table/EditableCell'
+import {localeMoneyFormat} from '../../utils/converters'
 const moment = require('moment')
 const {ROLES} = require('../../utils/consts')
 const {DateRangeColumnFilter} = require('../Table/TableFilter')
-
-function moneyFormatter({lang, value}) {
-  return new Intl.NumberFormat(lang, {style: 'currency', currency: 'EUR'}).format(value) || ''
-}
 
 const ToTheBin = props => (
   <button {...props}>
@@ -35,7 +32,7 @@ const orderColumns = ({language, deleteProduct}) => [
   {
     label: 'Prix catalogue',
     attribute: 'catalog_price',
-    Cell: ({cell: {value}}) => moneyFormatter({lang: language, value}),
+    Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
     sortType: 'number',
   },
   {
@@ -47,7 +44,7 @@ const orderColumns = ({language, deleteProduct}) => [
   {
     label: 'Votre prix',
     attribute: 'target_price',
-    Cell: ({cell: {value}}) => moneyFormatter({lang: language, value}),
+    Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
     sortType: 'number',
   },
   {
@@ -122,7 +119,7 @@ const quotationColumns = ({language, deleteProduct}) => [
   {
     label: 'Prix catalogue',
     attribute: 'catalog_price',
-    Cell: ({cell: {value}}) => moneyFormatter({lang: language, value}),
+    Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
     sortType: 'number',
   },
   {

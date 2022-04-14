@@ -1,5 +1,9 @@
 import {getPureAuthToken, clearAuthenticationToken} from './authentication'
 
+const blobContentTypes = [
+  'application/vnd.openxmlformats',
+]
+
 async function client(
   endpoint,
   {data, token, headers: customHeaders, ...customConfig} = {},
@@ -24,14 +28,24 @@ async function client(
       window.location.assign(window.location)
       return Promise.reject({message: 'Please re-authenticate.'})
     }
-    const data = await response.json()
-      .catch(e => console.log(`Error when fetching ${e}`))
     if (response.ok) {
+      const headers = [...response.headers].reduce((a, v) => ({...a, [v[0]]: v[1]}), {})
+
+      /* if content-type is part of data considered as files... */
+      if (blobContentTypes.includes(headers['content-type'])) {
+        const blob = await response.blob()
+          .catch(e => console.log(`Error when fetching blob ${e}`))
+        return blob
+      }
+
+      const data = await response.json()
+        .catch(e => console.log(`Error when fetching ${e}`))
       return data
     }
     return Promise.reject(data)
     
   })
 }
+
 
 export {client}

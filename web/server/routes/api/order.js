@@ -1,15 +1,15 @@
 const express = require('express')
+const passport = require('passport')
+const moment = require('moment')
+const xlsx=require('node-xlsx')
 const {validateZipCode} = require('../../validation/order')
 const {addItem, computeShipFee} = require('../../utils/commands')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 
 const router = express.Router()
-const passport = require('passport')
-const moment = require('moment')
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
 const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
-const xlsx=require('node-xlsx')
 
 moment.locale('fr')
 
@@ -76,12 +76,14 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     return res.status(301)
   }
 
+  const order_id=req.params.id
+
   Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)}, req.body)
     .then(result => {
       if (!result) {
         return res.status(404).json(`Order #${order_id} not found`)
       }
-      return res.json()
+      return res.json(result)
     })
     .catch(err => {
       console.error(err)

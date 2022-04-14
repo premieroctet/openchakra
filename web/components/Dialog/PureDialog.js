@@ -1,7 +1,6 @@
 import React, {Children, useRef, useState} from 'react'
 import {Dialog} from '@headlessui/react'
 import styled from 'styled-components'
-import {BorderLeft} from '@material-ui/icons'
 
 const BaseDialog = styled(Dialog)`
   position: fixed;
@@ -18,6 +17,22 @@ const BaseDialog = styled(Dialog)`
     z-index: 1;
     position: relative;
     border-radius: var(--rounded-7xl)
+  }
+
+  .close {
+    position: absolute;
+    top: 1rem;
+    right:1rem;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    width: var(--minTapSize);
+    height: var(--minTapSize);
+    
+    span {
+      font-size: var(--text-2xl);
+      color: var(--black);
+    }
   }
 `
 
@@ -45,7 +60,8 @@ const PureDialog = ({
     >
       <Overlay />
       <div className='dialogcontent' >
-        <button ref={completeButtonRef} onClick={onClose}>Fermer</button>
+
+        <button aria-label='fermer' className='close' ref={completeButtonRef} onClick={onClose}><span role={'img'}>✕</span></button>
         {title ? <Dialog.Title>{title}</Dialog.Title> : null}
         {children}
       </div>
