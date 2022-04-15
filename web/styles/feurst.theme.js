@@ -44,7 +44,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     --brand-color: ${props => props.theme?.colors?.blue || 'blue'};
     --black: #111;
     --white: ${props => props.theme?.colors?.white || '#FFF'};
-    --yellow-500: rgb(218, 187, 66);
+    --yellow-500: ${props => props.theme?.colors?.yellow || rgb(218, 187, 66)};
     --bg-selectedZone: #bcc0cd;
     --text-selectedZone: #fff;
     --gray-800: rgb(190, 190, 190);
@@ -196,6 +196,10 @@ input:focus:not(:focus-visible) {
   grid-template-columns: var(--grid-cols-2);
 }
 
+.grid-cols-3 {
+  grid-template-columns: var(--grid-cols-3);
+}
+
 .grid-cols-1-2 {
   grid-template-columns: 1fr 2fr;
 }
@@ -336,6 +340,9 @@ input:focus:not(:focus-visible) {
 
 .bg-white {
   background-color: var(--white);
+}
+.bg-gray-200 {
+  background-color: var(--gray-200);
 }
 
 /* Arrondis */

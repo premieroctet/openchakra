@@ -17,7 +17,8 @@ const Autocomplete = ({
   placeholder,
   formattingResult,
   onChange,
-} = {placeholder: '…', dbSearchField: false}) => {
+  disabled,
+} = {placeholder: '…', dbSearchField: false, disabled: false}) => {
 
   const {
     data,
@@ -54,9 +55,12 @@ const Autocomplete = ({
   useEffect(() => {
     if (debouncedQuery && searchTerm.length > 0) {
       run(client(`${urlToFetch}${isEmpty(dbSearchField) ? '' : searchTerm}`))
+        .catch(e => {
+          console.error(`Can't fetch data in autocomplete`)
+        })
     }
   }
-  , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch, dbSearchField])
+  , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch, dbSearchField, errorMsg])
 
 
   return (
@@ -71,18 +75,21 @@ const Autocomplete = ({
           {...getInputProps()}
           id={`auto${dbSearchField}`}
           placeholder={placeholder}
+          disabled={disabled}
         />
         <span className='loading'>{isLoading ? <SpinnerEllipsis /> : null}</span>
         <button
           {...getToggleButtonProps()}
           type="button"
+          disabled={disabled}
           aria-label="afficher la liste"
         >
           <span role="img">&#9661;</span>
         </button>
         <button
-          className=""
           type="button"
+          disabled={disabled}
+          className=""
           onClick={() => {
             selectItem(null)
             setSearchTerm('')

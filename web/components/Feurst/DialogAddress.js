@@ -6,6 +6,7 @@ import DeliveryAddresses from '../Feurst/DeliveryAddresses'
 import ShippingFees from '../Feurst/ShippingFees'
 import PureDialog from '../Dialog/PureDialog'
 import {client} from '../../utils/client'
+import isEmpty from '../../server/validation/is-empty'
 import {PleasantButton} from './Button'
 
 const StyledDialog = styled(PureDialog)`
@@ -25,6 +26,7 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
   const [orderref, setOrderref] = useState('')
   const [address, setAddress] = useState({})
   const [shippingfees, setShippingFees] = useState({})
+  const [shippingOption, setShippingOption] = useState('')
   const [errors, setErrors] = useState()
 
   const getShippingFees = useCallback(async zipcode => {
@@ -49,7 +51,7 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
     }
       
     // then bind to the current order/quotation
-    const bindAddressAndShipping = await client(`myAlfred/api/${endpoint}/${id}`, {data: {address}, method: 'PUT'})
+    const bindAddressAndShipping = await client(`myAlfred/api/${endpoint}/${id}`, {data: {address, reference: orderref}, method: 'PUT'})
       .catch(e => {
         console.error(e, `Can't bind address to order/quotation ${e}`)
         setErrors(e)
@@ -87,8 +89,11 @@ traitement de votre commande.</p>
         <Address address={address} setAddress={setAddress} getShippingFees={getShippingFees} errors={errors} />
           
         {/* order shipping fees */}
-        <h3>Indiquez l'option de livraison</h3>
-        <ShippingFees shippingoptions={shippingfees} />
+        {!isEmpty(shippingfees) ? (<>
+          <h3>Indiquez l'option de livraison</h3>
+          <ShippingFees shippingOption={shippingOption} setShippingOption={setShippingOption} shippingoptions={shippingfees} />
+        </>) : null
+        }
 
         <PleasantButton type='submit' onSubmit={() => validateAddress}>Valider ces informations</PleasantButton>
       </form>

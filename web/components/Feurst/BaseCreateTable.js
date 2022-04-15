@@ -66,13 +66,16 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     } = item
 
     const afterNewProduct = await client(`myAlfred/api/${endpoint}/${orderID}/items`, {data: {product: _id, quantity: qty}, method: 'PUT'})
-      .catch(e => console.error(`Can't add product ${e}`))
+      .catch(() => {
+        console.error(`Can't add product`)
+        return false
+      })
 
     afterNewProduct && getContentFrom(orderID)
+    return afterNewProduct
   }
 
   const deleteProduct = useCallback(async({idItem}) => {
-    console.log(idItem)
     if (!idItem) { return }
 
     const afterDeleteProduct = await client(`myAlfred/api/${endpoint}/${orderID}/items/${idItem}`, {method: 'DELETE'})
@@ -110,7 +113,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
   return (<>
     <ImportExcelFile />
-    <AddArticle checkProduct={checkProduct} addProduct={addProduct} />
+    <AddArticle addProduct={addProduct} />
 
     <Table data={data} columns={cols} updateMyData={updateMyData} />
     <div className='flex m-8'>
