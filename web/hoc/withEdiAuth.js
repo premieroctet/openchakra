@@ -3,7 +3,7 @@ import Router from 'next/router'
 import {ThemeProvider} from 'styled-components'
 import Header from '../components/Feurst/Header'
 import {getLoggedUser} from '../utils/context'
-import {theme, GlobalStyleEdi} from '../styles/feurst.theme'
+import {theme, GlobalStyleEdi} from '../styles/feurst/feurst.theme'
 import {client} from '../utils/client'
 const lodash=require('lodash')
 const {BASEPATH_EDI} = require('../utils/consts')

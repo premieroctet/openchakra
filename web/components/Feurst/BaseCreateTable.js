@@ -3,7 +3,7 @@ import useLocalStorageState from 'use-local-storage-state'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {getAuthToken} from '../../utils/authentication'
-import Table from '../Table/Table'
+import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
 import AddArticle from './AddArticle'
@@ -115,7 +115,12 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     <ImportExcelFile />
     <AddArticle addProduct={addProduct} />
 
-    <Table data={data} columns={cols} updateMyData={updateMyData} />
+    <FeurstTable
+      caption="Détails de la commande en cours :"
+      data={data}
+      columns={cols}
+      updateMyData={updateMyData}
+    />
     <div className='flex m-8'>
       <PleasantButton disabled={data.length === 0} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
     </div>

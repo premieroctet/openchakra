@@ -15,6 +15,7 @@ const orderColumns = ({language, deleteProduct}) => [
   {
     label: 'Réf. catalogue',
     attribute: 'product.reference',
+    disableFilters: true,
   },
   {
     label: 'Désignation',
@@ -51,9 +52,9 @@ const orderColumns = ({language, deleteProduct}) => [
     label: '',
     id: 'product_delete',
     attribute: 'product_delete',
-    Cell: ({cell: {value}}) => (
+    Cell: ({cell: {row}}) => (
       <ToTheBin onClick={() => {
-        deleteProduct({idItem: value})
+        deleteProduct({idItem: row.original.product._id})
       }}/>
     ),
   },

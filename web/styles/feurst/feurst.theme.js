@@ -1,5 +1,5 @@
 import {createGlobalStyle} from 'styled-components'
-import {screen} from './screenWidths'
+import {screen} from '../screenWidths'
 
 const blue = '#141953'
 const blueFeurst = 'hsl(210.6, 50.9%, 41.6%)'
@@ -50,7 +50,19 @@ export const GlobalStyleEdi = createGlobalStyle`
     --gray-800: rgb(190, 190, 190);
     --gray-500: #747474;
     --metal-gray: ${props => props.theme?.colors?.metalGray || 'gray'};
+    --gray-400 : #dedddd;
     --gray-200: #f8f8f8;
+
+    --stone-50: #FAFAF9;
+    --stone-100: #F5F5F4;
+    --stone-200: #E7E5E4;
+    --stone-300: #D6D3D1;
+    --stone-400: #A8A29E;
+    --stone-500: #78716C;
+    --stone-600: #57534E;
+    --stone-700: #44403C;
+    --stone-800: #292524;
+    --stone-700: #1C1917;
 
     /* text */
     --text-sm: 0.875rem;
@@ -351,17 +363,10 @@ input:focus:not(:focus-visible) {
   border-radius: 0.75rem;
 }
 
-table {
-  border: 2px solid #111;
-}
-
 
  /* media query example  */
 @media (${screen.lg}) {
   
-  .${screen.lg}-grid-cols-3 {
-    grid-template-columns: var(--grid-cols-3)
-  }
 }
 
 

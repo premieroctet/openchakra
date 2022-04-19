@@ -16,7 +16,7 @@ function DefaultColumnFilter({
       onChange={e => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}
-      placeholder={`Search ${count} records...`}
+      placeholder={`Rechercher dans les ${count} lignes`}
     />
   )
 }
@@ -47,7 +47,7 @@ function dateBetweenFilterFn(rows, id, filterValues) {
 dateBetweenFilterFn.autoRemove = val => !val
 
 
-const Table = ({data, columns, updateMyData = null}) => {
+const Table = ({data, columns, caption = null, updateMyData = null, globalfilter=null}) => {
 
   const filterTypes = useMemo(
     () => ({
@@ -105,21 +105,24 @@ const Table = ({data, columns, updateMyData = null}) => {
   )
 
   return (
-    <>
-      <GlobalFilter
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        globalFilter={state.globalFilter}
-        setGlobalFilter={setGlobalFilter}
-      />
+    <div>
+      {globalfilter ?
+        <GlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          globalFilter={state.globalFilter}
+          setGlobalFilter={setGlobalFilter}
+        />
+        : null
+      }
       <table {...getTableProps()}>
+        {caption ? <caption>{caption}</caption> : null}
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, i) => (
                 <th {...column.getHeaderProps()}>
-
                   {column.render('Header') !== '' &&
-                    <>
+                    <div className='header'>
                       <button {...column.getHeaderProps(column.getSortByToggleProps())}>
                         {column.render('Header')}
                         {column.isSorted &&(
@@ -138,10 +141,10 @@ const Table = ({data, columns, updateMyData = null}) => {
 
                       {column.filterValue &&
                         <div>{column.filterValue}  <button onClick={() => column.setFilter(undefined)}>
-                           Reset
+                           Supprimer ce filtre
                         </button>
                         </div>}
-                    </>
+                    </div>
                   }
                 </th>
               ))}
@@ -163,7 +166,7 @@ const Table = ({data, columns, updateMyData = null}) => {
           })}
         </tbody>
       </table>
-    </>
+    </div>
   )
 }
 

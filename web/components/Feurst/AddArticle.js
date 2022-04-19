@@ -55,7 +55,6 @@ const AddArticle = ({addProduct}) => {
             label={'Réf. catalogue'}
             placeholder='Saissisez la référence du produit'
             formattingResult={item => `${item.reference} - ${item.description} ${item.description_2}`}
-            disabled={article.showArticlePanel}
           />
         </StyledAutocomplete>
       

@@ -12,7 +12,7 @@ const BaseDialog = styled(Dialog)`
 
   .dialogcontent {
     padding: var(--spc-6);
-    width: min(100% - 2rem, 40rem);
+    width: min(100% - 2rem, 35rem);
     background-color: white;
     margin-inline: auto;
     z-index: 1;

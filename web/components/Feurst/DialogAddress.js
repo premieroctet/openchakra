@@ -7,6 +7,7 @@ import ShippingFees from '../Feurst/ShippingFees'
 import PureDialog from '../Dialog/PureDialog'
 import {client} from '../../utils/client'
 import isEmpty from '../../server/validation/is-empty'
+import {API_PATH} from '../../utils/consts'
 import {PleasantButton} from './Button'
 
 const StyledDialog = styled(PureDialog)`
@@ -30,7 +31,7 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
   const [errors, setErrors] = useState()
 
   const getShippingFees = useCallback(async zipcode => {
-    const res_shippingfees = await client(`myAlfred/api/${endpoint}/${id}/shipping-fee?zipcode=${zipcode}`)
+    const res_shippingfees = await client(`${API_PATH}/${endpoint}/${id}/shipping-fee?zipcode=${zipcode}`)
       .catch(e => {
         console.error(e, `Can't get shipping fees ${e}`)
       })
@@ -42,7 +43,7 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
     e.preventDefault()
     // save address for this user if not exists
     if (!address?._id) {
-      const recordAddress = await client(`myAlfred/api/users/addresses`, {data: address})
+      const recordAddress = await client(`${API_PATH}/users/addresses`, {data: address})
         .catch(e => {
           console.error(e, `Can't save address for user ${e}`)
           setErrors(e)
@@ -51,7 +52,7 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
     }
       
     // then bind to the current order/quotation
-    const bindAddressAndShipping = await client(`myAlfred/api/${endpoint}/${id}`, {data: {address, reference: orderref}, method: 'PUT'})
+    const bindAddressAndShipping = await client(`${API_PATH}/${endpoint}/${id}`, {data: {address, reference: orderref}, method: 'PUT'})
       .catch(e => {
         console.error(e, `Can't bind address to order/quotation ${e}`)
         setErrors(e)
