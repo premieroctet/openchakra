@@ -15,6 +15,7 @@ const TablesStyles = styled.div`
     margin: 0 auto;
     overflow-x: auto;
     white-space: nowrap;
+    margin-bottom: 1rem;
   }
 
   @media (${screen.lg}) {

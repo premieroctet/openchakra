@@ -9,19 +9,28 @@ import {snackBarError} from '../../utils/notifications'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
+import Delivery from './Delivery'
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
 
 const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
-  const [data, setData] = useState(useMemo(() => [], []))
+  const [state, setState] = useState({
+    items: useMemo(() => [], []),
+    deliveryAddress: {},
+    reference: null,
+    shipping: {},
+  })
+  
+
+  // const [data, setData] = useState(useMemo(() => [], []))
   const [language, setLanguage] = useState('fr')
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const dataToken = getAuthToken()
   const [isOpenDialog, setIsOpenDialog] = useState(false)
 
   const updateMyData = (rowIndex, columnId, value) => {
-    setData(old =>
+    setState({...state, items: old =>
       old.map((row, index) => {
         if (index === rowIndex) {
           return {
@@ -31,7 +40,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         }
         return row
       }),
-    )
+    })
   }
 
   const createOrderId = useCallback(async() => {
@@ -49,7 +58,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         .catch(err => snackBarError(err.msg))
       : []
 
-    currentOrder && setData(currentOrder.items)
+    currentOrder && setState({...state, items: currentOrder.items, deliveryAddress: currentOrder?.address})
 
   }, [endpoint])
 
@@ -109,7 +118,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     [data, deleteProduct, language],
   )
   */
-  const cols=columns({language, data, setData, deleteProduct: deleteProduct})
+  const cols=columns({language, ...state.items, setState, deleteProduct: deleteProduct})
 
   return (<>
     <ImportExcelFile />
@@ -117,15 +126,20 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
     <FeurstTable
       caption="Détails de la commande en cours :"
-      data={data}
+      data={state.items}
       columns={cols}
       updateMyData={updateMyData}
     />
-    <div className='flex m-8'>
-      <PleasantButton disabled={data.length === 0} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
+    
+    <Delivery address={state.deliveryAddress} />
+
+    <div className='flex justify-between'>
+      <PleasantButton bgColor={'#fff'} textColor={'#141953'} style={{border: '1px solid #141953'}} disabled={state.items.length === 0} onClick={() => setIsOpenDialog(true)}>Demande de devis</PleasantButton>
+      <PleasantButton disabled={state.items.length === 0} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
     </div>
 
     <DialogAddress id={orderID} endpoint={endpoint} isOpenDialog={isOpenDialog} setIsOpenDialog={setIsOpenDialog} accessRights={accessRights}/>
+
   </>
   )
 }
