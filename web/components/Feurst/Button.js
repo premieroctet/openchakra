@@ -103,6 +103,7 @@ const ButtonShadow = styled.span.attrs(props => ({
 const ButtonEdge = styled.span.attrs(props => ({
   bgColor: props.bgColor || props.theme.colors.blue,
   rounded: props.rounded || 'var(--rounded-xl)',
+  borderColor: props.borderColor || `1px solid transparent`,
   bgColorDisabled: props.bgColorDisabled || props.theme.colors.metalGray,
 }))`
   position: absolute;
@@ -112,6 +113,8 @@ const ButtonEdge = styled.span.attrs(props => ({
   height: 100%;
   border-radius: ${() => applyBorderRadius};
   background-color: ${props => darkerColor(props.bgColor)};
+  border: ${props => props.borderColor};
+  
 
   ${StyledButton}:disabled && {
     background-color: ${props => darkerColor(props.bgColorDisabled)};
@@ -121,6 +124,7 @@ const ButtonEdge = styled.span.attrs(props => ({
 const ButtonFront = styled.span.attrs(props => ({
   bgColor: props.bgColor || props.theme.colors.blue,
   bgColorDisabled: props.bgColorDisabled || props.theme.colors.metalGray,
+  borderColor: props.borderColor || `1px solid transparent`,
   textColor: props.textColor || props.theme.colors.white,
   rounded: props.rounded || 'var(--rounded-xl)',
 }))`
@@ -134,6 +138,7 @@ const ButtonFront = styled.span.attrs(props => ({
   transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
   background-color: ${props => props.bgColor};
   color: ${props => props.textColor};
+  border: ${props => props.borderColor};
 
   ${StyledButton}:not(:disabled):hover && {
     transform: translateY(-6px);
@@ -157,6 +162,7 @@ const PleasantButton = ({
   size,
   rounded,
   bgColor,
+  borderColor,
   textColor,
   children,
   ...rest
@@ -170,8 +176,8 @@ const PleasantButton = ({
       {...rest}
     >
       <ButtonShadow rounded={rounded} />
-      <ButtonEdge bgColor={bgColor} rounded={rounded} />
-      <ButtonFront bgColor={bgColor} textColor={textColor} rounded={rounded} >{children}</ButtonFront>
+      <ButtonEdge bgColor={bgColor} rounded={rounded} borderColor={borderColor} />
+      <ButtonFront bgColor={bgColor} textColor={textColor} borderColor={borderColor} rounded={rounded} >{children}</ButtonFront>
     </StyledButton>
   )
 }

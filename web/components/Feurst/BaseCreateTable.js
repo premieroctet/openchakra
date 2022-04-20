@@ -17,24 +17,24 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
   const [state, setState] = useState({
     items: useMemo(() => [], []),
-    deliveryAddress: {},
+    deliveryAddress: null,
     reference: null,
-    shipping: {},
+    shipping: null,
   })
-  
 
-  // const [data, setData] = useState(useMemo(() => [], []))
   const [language, setLanguage] = useState('fr')
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const dataToken = getAuthToken()
   const [isOpenDialog, setIsOpenDialog] = useState(false)
 
   const updateMyData = (rowIndex, columnId, value) => {
-    setState({...state, items: old =>
-      old.map((row, index) => {
+
+    setState({
+      ...state,
+      items: state.items.map((row, index) => {
         if (index === rowIndex) {
           return {
-            ...old[rowIndex],
+            ...state.items[rowIndex],
             [columnId]: value,
           }
         }
@@ -58,7 +58,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         .catch(err => snackBarError(err.msg))
       : []
 
-    currentOrder && setState({...state, items: currentOrder.items, deliveryAddress: currentOrder?.address})
+    currentOrder && setState({...state, items: currentOrder.items, deliveryAddress: currentOrder?.address ? currentOrder.address : null})
 
   }, [endpoint])
 
@@ -133,9 +133,9 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     
     <Delivery address={state.deliveryAddress} />
 
-    <div className='flex justify-between'>
-      <PleasantButton bgColor={'#fff'} textColor={'#141953'} style={{border: '1px solid #141953'}} disabled={state.items.length === 0} onClick={() => setIsOpenDialog(true)}>Demande de devis</PleasantButton>
-      <PleasantButton disabled={state.items.length === 0} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
+    <div className='flex flex-wrap justify-between gap-y-4'>
+      <PleasantButton rounded={'full'} bgColor={'#fff'} textColor={'#141953'} borderColor={'1px solid #141953'} disabled={state.items.length === 0} onClick={() => true}>Demande de devis</PleasantButton>
+      <PleasantButton rounded={'full'} disabled={state.items.length === 0} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
     </div>
 
     <DialogAddress id={orderID} endpoint={endpoint} isOpenDialog={isOpenDialog} setIsOpenDialog={setIsOpenDialog} accessRights={accessRights}/>
