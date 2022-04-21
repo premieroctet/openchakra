@@ -20,6 +20,7 @@ const {getDatabase}=require('../../../utils/feurst/xl_db')
 const lodash=require('lodash')
 const validateFeurstProspect=require('../../../validation/feurstProspect')
 const i18n=require('../../../utils/i18n_init')
+const countryList=require('react-select-country-list')
 
 // @Route GET /feurst/api/database
 // Google callback
@@ -66,9 +67,11 @@ router.post('/auto_quotation', (req, res) => {
   let precos=null
   const t=i18n.default.getFixedT(null, 'feurst')
   const data={...req.body,
+    type: t(req.body.type),
     bladeShape: t(BLADE_SHAPES[req.body.bladeShape]),
     teethShieldFixType: t(FIX_TYPES[req.body.teethShieldFixType]),
     borderShieldFixType: t(FIX_TYPES[req.body.borderShieldFixType]),
+    country: countryList().getLabel(req.body.country),
   }
 
   computePrecos(req.body)
@@ -87,7 +90,7 @@ router.post('/auto_quotation', (req, res) => {
         prospect.company,
         req.body.quotation_id,
         // TODO Composer la description de la machine
-        computeDescription({...req.body, ...precos}),
+        computeDescription({...data, ...precos}),
         buffer,
       )
       return res.json()
@@ -105,13 +108,22 @@ router.post('/custom_quotation', (req, res) => {
     return res.status(400).json(errors)
   }
 
+  const t=i18n.default.getFixedT(null, 'feurst')
+  const data={...req.body,
+    type: t(req.body.type),
+    bladeShape: t(BLADE_SHAPES[req.body.bladeShape]),
+    teethShieldFixType: t(FIX_TYPES[req.body.teethShieldFixType]),
+    borderShieldFixType: t(FIX_TYPES[req.body.borderShieldFixType]),
+    country: countryList().getLabel(req.body.country),
+  }
+
   sendCustomQuotation(
     req.body.email,
     req.body.name,
     req.body.company,
     req.body.quotation_id,
     // TODO Composer la description de la machine
-    computeDescription(req.body, true),
+    computeDescription(data, true),
   )
   return res.json()
 })
@@ -135,6 +147,7 @@ router.get('/thicknesses', (req, res) => {
       res.status(500).json(err)
     })
 })
+
 is_development() &&
 router.post('/quotation', (req, res) => {
 

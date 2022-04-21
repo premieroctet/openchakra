@@ -51,8 +51,8 @@
   "SUMMARY.company_placeholder": "Saisissez votre société",
   "SUMMARY.email_label": "Email",
   "SUMMARY.email_placeholder": "Saisissez votre email",
-  "SUMMARY.postcode_label": "Code postal",
-  "SUMMARY.postcode_placeholder": "Saisissez votre code postal",
+  "SUMMARY.zipcode_label": "Code postal",
+  "SUMMARY.zipcode_placeholder": "Saisissez votre code postal",
   "SUMMARY.country_label": "Pays",
   "SUMMARY.country_placeholder": "Saisissez votre pays",
   "SUMMARY.phone_prefix": "Préfixe",
@@ -103,7 +103,6 @@
 
   "STANDARD": "STANDARD",
   "DUR": "DUR",
-  "TRES ABRASIF": "TRES ABRASIF",
   "TRES DUR": "TRES DUR",
   "ABRASIF": "ABRASIF",
   "TRES ABRASIF": "TRES ABRASIF"

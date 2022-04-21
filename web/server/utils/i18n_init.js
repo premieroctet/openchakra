@@ -16,9 +16,9 @@ i18n
   .use(initReactI18next) // bind react-i18next to the instance
   .init({
     languages: ['fr', 'en'],
-    //defaultLanguage: 'fr',
+    // defaultLanguage: 'fr',
     fallbackLng: 'fr',
-    //lng: 'fr',
+    // lng: 'fr',
     resources: {
       fr: {
         custom: customfr,
@@ -30,7 +30,6 @@ i18n
     },
     ns: ['custom', 'feurst'],
     defaultNS: 'custom',
-    debug: is_development(),
     react: {
       useSuspense: false,
     },
