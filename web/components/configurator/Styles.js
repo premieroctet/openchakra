@@ -61,6 +61,8 @@ const Styles = styled.div`
   height: auto;
 }
 
+.max-w-md	{max-width: 28rem;}
+.max-w-lg	{max-width: 32rem;} 
 
 /* textes */
 

@@ -279,7 +279,7 @@ function Summary(props) {
             <dd>{props.t(FIX_TYPES[borderShieldFixType])}</dd>
           </dl>
         </div>
-        <div>
+        <div className='max-w-lg'>
           <BladePicture width={400} height={265} shape={props.bladeShape} teeth_count={props.teeth_count} />
         </div>
       </div>
