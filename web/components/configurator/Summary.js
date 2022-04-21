@@ -105,6 +105,7 @@ function Summary(props) {
 
   const formRef = useRef()
   const countryOptions = useMemo(() => countryList().getData(), [])
+  const nativeCountries = useMemo(() => countryList().native(), [])
 
   const {
     error,
@@ -224,15 +225,15 @@ function Summary(props) {
             >
               {countryOptions.map(({label, value}) => (
                 <MenuItem key={value} value={value}>
-                  {label}
+                  {label} {nativeCountries.getLabel(value) != label ? `(${nativeCountries.getLabel(value)})`:''}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
-       
+
           { country === 'FR' ?
             <FormControl variant="standard">
-              <label htmlFor='zipcode'>{props.t('SUMMARY.postcode_label')} <RequiredField /></label>
+              <label htmlFor='zipcode'>{props.t('SUMMARY.zipcode_label')} <RequiredField /></label>
               <TextField
                 value={zipcode}
                 name="zipcode"
@@ -241,14 +242,8 @@ function Summary(props) {
                 required
                 autoComplete='postal-code'
                 onChange={ev => onValueChange({inputName: 'zipcode', value: ev.target.value})}
-                placeholder={props.t('SUMMARY.postcode_placeholder')}
-              >
-                {countryOptions.map(({label, value}) => (
-                  <MenuItem key={value} value={value}>
-                    {label}
-                  </MenuItem>
-                ))}
-              </TextField>
+                placeholder={props.t('SUMMARY.zipcode_placeholder')}
+              />
             </FormControl> : null}
         </div>
 

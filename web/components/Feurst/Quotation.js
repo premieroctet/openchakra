@@ -47,6 +47,7 @@ class Quotation extends React.Component {
               <Text>{data.company}</Text>
               <Text>{data.email}</Text>
               <Text>{data.phone}</Text>
+              <Text>{data.zipcode ? `${data.zipcode}, `:''} {data.country}</Text>
             </View>
           </View>
           <Text style={styles.title}>Préconisation - Configuration de vos équipements Feurst</Text>
