@@ -18,14 +18,12 @@ import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 const {snackBarError}=require('../../utils/notifications')
 const {PROVIDERS, ROLES} = require('../../utils/consts')
-const {ENABLE_GF_LOGIN} = require('../../config/config')
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
 import {EMPLOYEE} from '../../utils/consts'
-const {isB2BStyle}=require('../../utils/context')
 import CustomIcon from '../CustomIcon/CustomIcon'
 
 class LogIn extends React.Component {
@@ -51,7 +49,7 @@ class LogIn extends React.Component {
       axios.get(`/myAlfred/api/users/roles/${e.target.value}`)
         .then(res => {
           const roles = res.data
-          const filteredRoles = roles.filter(r => (isB2BStyle() ? r != EMPLOYEE : r == EMPLOYEE))
+          const filteredRoles = roles.filter(r => (r == EMPLOYEE))
           const selectedRole = filteredRoles.length == 1 ? filteredRoles[0] : null
           console.log({roles: filteredRoles, selectedRole: selectedRole})
           this.setState({roles: filteredRoles, selectedRole: selectedRole})
@@ -71,7 +69,6 @@ class LogIn extends React.Component {
       username: this.state.username,
       password: this.state.password,
       role: this.state.selectedRole,
-      b2b_login: isB2BStyle(),
     }
 
     axios.post('/myAlfred/api/users/login', user)
@@ -100,7 +97,7 @@ class LogIn extends React.Component {
   render() {
     const {classes, callRegister} = this.props
     const {errors, username, password, showPassword, roles, selectedRole} = this.state
-    const showRoles = isB2BStyle() && roles && roles.length >= 1
+    const showRoles = false && roles && roles.length >= 1
 
     const loginDisabled = roles==null || (roles.length>0 && !selectedRole) || !password
 
@@ -111,34 +108,6 @@ class LogIn extends React.Component {
             <Grid>
               <h2 className={classes.titleRegister}>{ReactHtmlParser(this.props.t('LOGIN.title'))}</h2>
             </Grid>
-            {ENABLE_GF_LOGIN ?
-              <Grid className={classes.margin}>
-                <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-                  <Grid className={classes.margin}>
-                    <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
-                      <Grid style={{width: '100%'}}>
-                        {PROVIDERS.map(provider =>
-                          <OAuth
-                            login={true}
-                            provider={provider}
-                            key={provider}
-                          />,
-                        )}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid className={classes.margin}>
-                    <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
-                      <Grid>
-                        <h3 style={{color: 'rgba(84,89,95,0.95)', fontWeight: 'bold', letterSpacing: -1}}>Ou</h3>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              :
-              null
-            }
             <Grid container spacing={3} className={classes.containerDialogContent}>
               <Grid item className={classes.margin}>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>

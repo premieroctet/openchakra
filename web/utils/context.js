@@ -2,7 +2,6 @@ const {isAndroid, isIOS, getUA}=require('react-device-detect')
 const isWebview = require('is-webview')
 const {getAuthToken} = require('./authentication')
 const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
-const {isB2BDisabled} = require('../config/config')
 const jwt = require('jsonwebtoken')
 const {HIDE_EMPTY_EVALUATIONS}=require('../mode')
 
@@ -29,21 +28,7 @@ const getLoggedAs = () => {
   return logged && logged.logged_as
 }
 
-const isB2BSite = () => {
-  if (isB2BDisabled()) {
-    return false
-  }
-  if (typeof localStorage == 'undefined') {
-    return false
-  }
-  const is_b2b = localStorage.getItem('b2b') === 'true'
-  return is_b2b
-}
-
 const getRole = () => {
-  if (isB2BDisabled()) {
-    return null
-  }
   const token = getAuthToken()
   if (!token) {
     return null
@@ -51,52 +36,8 @@ const getRole = () => {
   return token.role
 }
 
-const isB2BEmployee = () => {
-  const is_employee = getRole() == EMPLOYEE
-  return is_employee
-}
-
-const isB2BAdmin = () => {
-  const is_admin = getRole() == ADMIN
-  return is_admin
-}
-
-const isB2BManager = () => {
-  const is_manager = getRole() == MANAGER
-  return is_manager
-}
-
-const isModeCompany = () => {
-  return isB2BAdmin() || isB2BManager()
-}
-
 const hideEmptyEvaluations = () => {
   return Boolean(HIDE_EMPTY_EVALUATIONS)
-}
-
-const isB2BStyle = () => {
-  if (isB2BDisabled()) {
-    return false
-  }
-  // User non loggué : return isB2BSite (localStorage)
-  // Loggué :
-  // - b2b admin ou b2b manager : true
-  // - b2b employé : false
-  // - alfred pro : return isB2BSite (localStorage)
-  // - sans rôle : false
-  if (!getLoggedUser()) {
-    return isB2BSite()
-  }
-  if (isB2BAdmin() || isB2BManager()) {
-    return true
-  }
-  if (isB2BEmployee()) {
-    return false
-  }
-  if (isLoggedUserAlfredPro()) {
-    return isB2BSite()
-  }
-  return false
 }
 
 const isApplication = () => {
@@ -169,7 +110,7 @@ const isEditableUser = user => {
 }
 
 module.exports = {
-  isB2BStyle, isB2BEmployee, isB2BAdmin, isB2BManager, isModeCompany, isApplication, isMobile,
+  isApplication, isMobile,
   getRole, setAlfredRegistering, removeAlfredRegistering, isAlfredRegistering,
   getLoggedUserId, getLoggedUser,
   isLoggedUserAdmin, isUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,

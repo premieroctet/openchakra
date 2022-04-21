@@ -223,7 +223,7 @@ class BooleanRenderer extends React.Component {
         type="checkbox"
         onClick={this.checkedHandler}
         checked={this.props.value}
-        disabled={!this.props.editable}
+        disabled={!this.props.colDef.editable}
       />
     )
   }

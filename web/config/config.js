@@ -1,8 +1,7 @@
 const isEmpty = require('../server/validation/is-empty')
-const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
+const {MODES, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
   SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY}=require('../mode')
-const source = require('./client_id.json')
 
 const MONGO_BASE_URI='mongodb://localhost/'
 
@@ -47,10 +46,6 @@ const SERVER_PROD = is_production() || is_development()
 
 const ENABLE_MAILING = is_production()
 
-const isB2BDisabled = () => {
-  return true
-}
-
 const get_host_url = () => {
   const protocol='https'
   const hostname=is_development() ? LOCAL_HOST : AMAZON_HOST
@@ -92,14 +87,6 @@ const completeConfig = {
 
 }
 
-const mailConfig = {
-  user: 'sebastien.auvray@my-alfred.io',
-  clientId: source.web.client_id,
-  clientSecret: source.web.client_secret,
-  refreshToken: '1//040qqd968fTUmCgYIARAAGAQSNwF-L9Iry-KzNeNu-Eg4YJGYtS9_zn5K4rnt7hxvcsPvh69BEUwhoqslW3oAETeYWLWBxo8zKtk',
-  accessToken: 'ya29.Il-7B9vPQ9meRKDhLu1cARHVXyGEiGiIidmgeLCB7LLszjByPxRVWJ8mw_u2AQh5ZXeUiXgPyAX9H-KjgXX7pwArP6Bp_TC1OrMR-fOFAMITK0OuOPWKjk11Z0AUhP4dxw',
-}
-
 // TODO computeUrl (req, path) => https://hostname/path
 const computeUrl = req => {
   return `https://${req.headers.host}`
@@ -110,11 +97,6 @@ const SIRET = {
   siretUrl: 'https://api.insee.fr/entreprises/sirene/V3/siret',
   sirenUrl: 'https://api.insee.fr/entreprises/sirene/V3/siren',
 }
-
-// Enable.disable Google & Facebook login
-const ENABLE_GF_LOGIN = false
-
-const PROVIDERS = ENABLE_GF_LOGIN ? [GOOGLE_PROVIDER, FACEBOOK_PROVIDER] : []
 
 const canAlfredSelfRegister = () => {
   return !DISABLE_ALFRED_SELF_REGISTER
@@ -185,14 +167,11 @@ module.exports = {
   databaseName: databaseName,
   config: {...completeConfig.default, ...completeConfig[process.env.NODE_ENV]},
   completeConfig,
-  mailConfig,
   computeUrl,
   SIRET,
-  ENABLE_GF_LOGIN,
-  GOOGLE_PROVIDER, FACEBOOK_PROVIDER, PROVIDERS,
   is_production, is_validation, is_development, is_development_nossl, SERVER_PROD,
   get_host_url, MANGOPAY_CONFIG,
-  ENABLE_MAILING, isB2BDisabled,
+  ENABLE_MAILING,
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,

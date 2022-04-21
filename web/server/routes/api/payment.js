@@ -11,7 +11,6 @@ const moment = require('moment')
 const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay')
 const {maskIban} = require('../../../utils/text')
 moment.locale('fr')
-const {isB2BAdmin, isB2BManager, isB2BEmployee, isModeCompany}=require('../../utils/serverContext')
 const {computeUrl} = require('../../../config/config')
 const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
@@ -30,7 +29,6 @@ TRANSFER_REFUND_CREATED TRANSFER_REFUND_SUCCEEDED TRANSFER_REFUND_FAILED'.split(
 
 install_hooks(HOOK_TYPES, '/myAlfred/api/payment/hook')
 
-// TODO Gérer les get/post/put des comptes (account) pour le b2b
 /**
 MANGOPAY 3DS schema : https://support.mangopay.com/s/article/How-does-3DS-work-with-the-API?language=fr
 */
@@ -92,16 +90,9 @@ router.get('/hook', (req, res) => {
 // Create credit card
 // @access private b2b admin
 router.post('/cards', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const b2b = isB2BAdmin(req)
-  if (b2b) {
-    console.log(`Creating card for company ${req.user.company}`)
-  }
-  else {
-    console.log(`Creating card for user ${req.user.id}`)
-  }
+  console.log(`Creating card for user ${req.user.id}`)
 
-  const promise = b2b ? Company.findById(req.user.company) : User.findById(req.user.id)
-  promise
+  User.findById(req.user.id)
     .then(entity => {
       let id_mangopay = entity.id_mangopay
       const {card_number, expiration_date, csv} = req.body
@@ -123,10 +114,8 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
   const amount = req.body.amount * 100
   const returnUrl= `/paymentSuccess?booking_id=${req.body.booking_id}`
 
-  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-
   let mangopay_id=0
-  promise
+  User.findById(req.user.id)
     .then(entity => {
       console.log(entity)
       mangopay_id=entity.id_mangopay
@@ -253,8 +242,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
   browserInfo.AcceptHeader=req.headers.accept
   const ipAddress=req.connection.remoteAddress
 
-  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-  promise
+  User.findById(req.user.id)
     .then(entity => {
       const id_mangopay = entity.id_mangopay
       mangoApi.Users.getWallets(id_mangopay)
@@ -304,8 +292,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
 router.post('/bank-accounts', passport.authenticate('jwt', {session: false}), (req, res) => {
   const {iban, bic} = req.body
 
-  const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-  promise
+  User.findById(req.user.id)
     .then(entity => {
       const mangopay_id = entity.mangopay_provider_id || entity.id_mangopay
 
@@ -352,8 +339,7 @@ router.post('/bank-accounts', passport.authenticate('jwt', {session: false}), (r
 
 const get_cards = req => {
   return new Promise((resolve, reject) => {
-    const promise=isModeCompany(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-    promise
+    User.findById(req.user.id)
       .then(entity => {
         mangoApi.Users.getCards(entity.id_mangopay, {parameters: {per_page: 100}})
           .then(cards => {
@@ -388,14 +374,6 @@ router.get('/active-cards', passport.authenticate('jwt', {session: false}), (req
   get_cards(req)
     .then(result => {
       let cards=result
-      // B2B manager or employee : retain only cards allowed for group
-      const group_mode=isB2BManager(req) ? MICROSERVICE_MODE : isB2BEmployee(req) ? CARETAKER_MODE : null
-      if (group_mode) {
-        Group.findOne({members: req.user.id, type: group_mode}, 'cards')
-          .then(group => {
-            cards = cards.filter(c => group.cards.includes(c.Id))
-          })
-      }
       res.json(cards)
     })
     .catch(err => {
@@ -409,8 +387,7 @@ router.get('/active-cards', passport.authenticate('jwt', {session: false}), (req
 // @access private
 router.get('/bank-accounts', passport.authenticate('jwt', {session: false}), (req, res) => {
   const allAccount = []
-  const promise = isB2BAdmin(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-  promise
+  User.findById(req.user.id)
     .then(entity => {
       const id_mangopay = entity.mangopay_provider_id || entity.id_mangopay
       mangoApi.Users.getBankAccounts(id_mangopay, {parameters: {per_page: 100}})
@@ -455,8 +432,7 @@ router.get('/payin/:payin_id', (req, res) => {
 // @access private
 router.delete('/bank-accounts/:bank_account_id', passport.authenticate('jwt', {session: false}), (req, res) => {
   const account_id = req.params.bank_account_id
-  const promise = isB2BAdmin(req) ? Company.findById(req.user.company) : User.findById(req.user.id)
-  promise
+  User.findById(req.user.id)
     .then(entity => {
       const mangopay_id = entity.mangopay_provider_id || entity.id_mangopay
       mangoApi.Users.deactivateBankAccount(mangopay_id, account_id)

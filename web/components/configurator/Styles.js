@@ -1,4 +1,8 @@
-@font-face {
+import styled, { createGlobalStyle } from 'styled-components'
+
+
+const MyGlobalStyle = createGlobalStyle`
+ @font-face {
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
@@ -39,11 +43,6 @@ body {
   min-height: 100vh;
 }
 
-.img-responsive {
-  width: 100%;
-  height: auto;
-}
-
 /* Avoid Chrome to see Safari hack */
 @supports (-webkit-touch-callout: none) {
   body {
@@ -51,6 +50,17 @@ body {
     min-height: -webkit-fill-available;
   }
 }
+`;
+
+
+const Styles = styled.div`
+
+
+.img-responsive {
+  width: 100%;
+  height: auto;
+}
+
 
 /* textes */
 
@@ -677,3 +687,7 @@ dl {
     flex-direction: column;
   }
 }
+
+`
+
+export {Styles, MyGlobalStyle}

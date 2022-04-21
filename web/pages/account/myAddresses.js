@@ -15,7 +15,6 @@ import LayoutAccount from '../../hoc/Layout/LayoutAccount'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
-const {isB2BAdmin}=require('../../utils/context')
 import '../../static/assets/css/custom.css'
 
 moment.locale('fr')
@@ -24,9 +23,7 @@ class myAddresses extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      pro_mode: false,
       user: null,
-      company_name: null,
 
     }
   }
@@ -41,16 +38,6 @@ class myAddresses extends React.Component {
         this.setState({
           user: user,
         })
-        if (isB2BAdmin(user)) {
-          axios.get('/myAlfred/api/companies/current')
-            .then(res => {
-              let company = res.data
-              this.setState({
-                company_name: company.name,
-                pro_mode: true,
-              })
-            })
-        }
       })
       .catch(err => {
         console.error(err)
@@ -64,15 +51,14 @@ class myAddresses extends React.Component {
 
 
   content = () => {
-    const {pro_mode, company_name}=this.state
     return(
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2 className={'customadressestitle'}>{ pro_mode ? ReactHtmlParser(this.props.t('MY_ADDRESSES.title_b2b')) : ReactHtmlParser(this.props.t('MY_ADDRESSES.title'))}</h2>
+            <h2 className={'customadressestitle'}>{ ReactHtmlParser(this.props.t('MY_ADDRESSES.title'))}</h2>
           </Grid>
           <Grid>
-            <Typography className={'customadressessubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{pro_mode ? ReactHtmlParser(this.props.t('MY_ADDRESSES.subtitle_b2b')) + {company_name} : ReactHtmlParser(this.props.t('MY_ADDRESSES.subtitle'))}.</Typography>
+            <Typography className={'customadressessubtitle'} style={{color: 'rgba(39,37,37,35%)'}}>{ReactHtmlParser(this.props.t('MY_ADDRESSES.subtitle'))}.</Typography>
           </Grid>
         </Grid>
         <Grid>

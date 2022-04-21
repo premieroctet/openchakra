@@ -511,7 +511,6 @@ router.post('/login', (req, res) => {
   const email = req.body.username.toLowerCase().trim()
   const password = req.body.password
   let role = req.body.role
-  let b2b_login = req.body.b2b_login
 
   // Find user by email
   User.findOne({email: new RegExp(`^${email}$`, 'i')})
@@ -539,11 +538,6 @@ router.post('/login', (req, res) => {
         return res.status(400).json(errors)
       }
 
-      // Cas Alfred pro en b2b_login
-      if (b2b_login && !role && !(user.shop && user.shop.length>0 && !user.shop[0].is_particular)) {
-        errors.email = 'Accès réservé aux professionnels'
-        return res.status(400).json(errors)
-      }
       // Check password
       bcrypt.compare(password, user.password)
         .then(isMatch => {
@@ -1266,7 +1260,7 @@ router.get('/hook', (req, res) => {
 
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!
-//if (is_production() || is_validation()) {
+// if (is_production() || is_validation()) {
 if (false) {
   new CronJob('0 */15 * * * *', () => {
     console.log('Customers who need mango account')
