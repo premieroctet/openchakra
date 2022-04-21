@@ -2,6 +2,7 @@ const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
+const {EXPRESS_SHIPPING} = require('../../../utils/feurst/consts')
 const {validateZipCode} = require('../../validation/order')
 const {addItem, computeShipFee} = require('../../utils/commands')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
@@ -78,11 +79,21 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 
   const order_id=req.params.id
 
-  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)}, req.body)
+  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)}, req.body, {new: true})
     .then(result => {
       if (!result) {
         return res.status(404).json(`Order #${order_id} not found`)
       }
+      if (lodash.isEmpty(result.address) || lodash.isEmpty(result.shipping_mode)) {
+        return Promise.resolve(result)
+      }
+      const department=parseInt(String(zipCode).slice(0, -3))
+      return computeShipFee(department, result.total_weight, result.shipping_mode==EXPRESS_SHIPPING)
+        .then(fee => {
+          return Order.findOneAndUpdate({_id: order_id}, {shipping_fee: fee}, {new: true})
+        })
+    })
+    .then(result => {
       return res.json(result)
     })
     .catch(err => {

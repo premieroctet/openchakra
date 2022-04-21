@@ -1,12 +1,19 @@
-const {MONGOOSE_OPTIONS} = require('../../utils/database')
 const lodash=require('lodash')
+const mongoose = require('mongoose')
+const {
+  ORDER_CREATED,
+  ORDER_FULFILLED,
+  ORDER_VALID,
+} = require('../../../utils/feurst/consts')
+const {MONGOOSE_OPTIONS} = require('../../utils/database')
 
 const ProductSchema = require('./ProductSchema')
 const OrderSchema = require('./OrderSchema')
-const mongoose = require('mongoose')
+const UserSchema = require('./UserSchema')
 
 const Order=mongoose.model('order', OrderSchema)
 const Product=mongoose.model('product', ProductSchema)
+const User=mongoose.model('user', UserSchema)
 
 describe('Feurst Order/Products test', () => {
 
@@ -21,9 +28,12 @@ describe('Feurst Order/Products test', () => {
         return Product.create(PRODUCTS)
       })
       .then(() => {
+        return User.create({firstname: 'test', name: 'test', email: 'test@test.com'})
+      })
+      .then(user => {
         return Order.create({
           reference: 'hopla',
-          shipping_fee: 0,
+          user: user,
         })
       })
   })
@@ -33,22 +43,50 @@ describe('Feurst Order/Products test', () => {
       .then(() => {
         return Order.deleteMany({})
       })
+      .then(() => {
+        return User.deleteMany({})
+      })
   })
 
   test('Order amount properly computed', () => {
     return Product.find()
       .then(products => {
-        const items=products.map(p => ({product: p, catalog_price: p.price, discount: 0.1}))
+        const items=products.map(p => ({product: p, catalog_price: p.price, discount: 0.1, quantity: 2}))
         return Order.updateOne({}, {$set: {items: items}}, {new: true})
       })
       .then(() => {
         return Order.findOne()
       })
       .then(order => {
-        return expect(order.total_amount).toBe(24.3)
+        return expect(order.total_amount).toBe(48.6)
       })
   })
 
+  test('Order status properly computed', () => {
+    let order=null
+    return User.findOne()
+      .then(user => {
+        return Order.create({user: user})
+      })
+      .then(res => {
+        order=res
+        expect(order.status).toBe(ORDER_CREATED)
+        return Product.findOne()
+      })
+      .then(product => {
+        const items=[{product: product._id, catalog_price: product.price, discount: 0.1}]
+        return Order.findByIdAndUpdate(order._id, {$set: {items: items}}, {new: true})
+      })
+      .then(order => {
+        expect(order.status).toBe(ORDER_FULFILLED)
+        return Order.findByIdAndUpdate(order._id, {$set: {address: {address: 'Rue'}, shipping_mode: 'express'}}, {new: true})
+      })
+      .then(order => {
+        expect(order.status).toBe(ORDER_VALID)
+      })
+  })
+
+  /**
   const ATT_CASES='reference,description,weight,price'.split(',').map(a => ({product: PRODUCTS[0], attribute: a}))
 
   test.each(ATT_CASES)(
@@ -56,4 +94,5 @@ describe('Feurst Order/Products test', () => {
     ({product, attribute}) => {
       return expect(Product.create(lodash.omit(product, [attribute]))).rejects.not.toBeNull()
     })
+  */
 })

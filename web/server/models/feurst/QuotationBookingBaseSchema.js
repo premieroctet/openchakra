@@ -1,5 +1,6 @@
 const {Schema}=require('mongoose')
 const lodash=require('lodash')
+const {SHIPPING_MODES} = require('../../../utils/feurst/consts')
 const {roundCurrency} = require('../../../utils/converters')
 const AddressSchema = require('../AddressSchema')
 
@@ -63,6 +64,11 @@ const QuotationBookingBaseSchema=new Schema({
     default: 0,
     get: v => roundCurrency(v),
   },
+  shipping_mode: {
+    type: String,
+    enum: Object.keys(SHIPPING_MODES),
+    required: false,
+  },
   address: AddressSchema,
   creation_date: {
     type: Date,
@@ -71,7 +77,7 @@ const QuotationBookingBaseSchema=new Schema({
 }, {toJSON: {virtuals: true, getters: true}})
 
 QuotationBookingBaseSchema.virtual('total_amount').get(function() {
-  const items_amount=lodash.sumBy(this.items, i => i.catalog_price*i.quantity*(1.0-i.discount))
+  const items_amount=lodash.sumBy(this.items||[], i => i.catalog_price*i.quantity*(1.0-i.discount))
   return items_amount+this.shipping_fee
 })
 
