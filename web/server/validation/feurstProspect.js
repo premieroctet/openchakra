@@ -10,6 +10,8 @@ module.exports = function validateFeurstProspect(data) {
   data.email = data.email || ''
   data.phone = data.phone || ''
   data.company = data.company || ''
+  data.country = data.country || ''
+  data.zipcode = data.zipcode || ''
 
 
   if (Validator.isEmpty(data.firstname)) {
@@ -36,6 +38,19 @@ module.exports = function validateFeurstProspect(data) {
 
   if (Validator.isEmpty(data.company)) {
     errors.company = 'La compagnie doit être renseignée'
+  }
+  
+  if (Validator.isEmpty(data.country)) {
+    errors.country = 'Le pays doit être renseigné'
+  }
+  
+  if (!Validator.isEmpty(data.country) && data.country == 'FR') {
+    if (Validator.isEmpty(data.zipcode)) {
+      errors.zipcode = 'Le code postal doit être renseigné'
+    }
+    else if (!data.zipcode.match(/[0-9]{5}/)) {
+      errors.zipcode = 'Ex. code postal : 73000'
+    }
   }
 
   return {

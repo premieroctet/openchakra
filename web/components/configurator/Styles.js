@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components'
+import styled, {createGlobalStyle} from 'styled-components'
 
 
 const MyGlobalStyle = createGlobalStyle`
@@ -50,7 +50,7 @@ body {
     min-height: -webkit-fill-available;
   }
 }
-`;
+`
 
 
 const Styles = styled.div`
@@ -203,6 +203,10 @@ h2,
 
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.grow	{
+  flex-grow: 1;
 }
 
 .place-items-center {
