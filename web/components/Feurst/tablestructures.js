@@ -54,7 +54,7 @@ const orderColumns = ({language, deleteProduct}) => [
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
       <ToTheBin onClick={() => {
-        deleteProduct({idItem: row.original.product._id})
+        deleteProduct({idItem: row.original._id})
       }}/>
     ),
   },
