@@ -13,7 +13,6 @@ const getActions = (roles, model, action) => {
 const isActionAllowed = (roles, model, action) => {
   const actions=getActions(roles, model, action)
   const allowed=actions.length>0
-  console.log(`Allowed ${[roles, model, action]} amongst ${JSON.stringify(actions)} => ${allowed}`)
   return allowed
 }
 

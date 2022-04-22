@@ -39,6 +39,7 @@
     "cron": "^1.7.2",
     "csstree-validator": "^2.0.1",
     "csv-parse": "^4.15.3",
+    "csv-string": "^4.1.0",
     "date-fns": "^2.17.0",
     "downshift": "^6.1.7",
     "exceljs": "^4.3.0",

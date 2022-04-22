@@ -1,3 +1,4 @@
+const csv_string = require('csv-string')
 const stripBom = require('strip-bom')
 const moment=require('moment')
 
@@ -46,7 +47,7 @@ const matches = (str, keywords) => {
 }
 
 const formatIban = iban => {
-  const result = iban.split('').map((l, idx) => (idx + 1) % 4 == 0 ? l + ' ' : l).join('')
+  const result = iban.split('').map((l, idx) => ((idx + 1) % 4 == 0 ? `${l } ` : l)).join('')
   return result
 }
 
@@ -74,7 +75,7 @@ const normalizePhone = p => {
 }
 
 const bufferToString = buff => {
-  var text = buff.toString('utf-8')
+  let text = buff.toString('utf-8')
   // For MAC files
   text = stripBom(text)
   return text
@@ -123,7 +124,7 @@ const compute_vat_number = siren => {
   if (siren_compact.length!=9) {
     return ''
   }
-  const siren_int = parseInt(siren_compact+'12')
+  const siren_int = parseInt(`${siren_compact}12`)
   if (isNaN(siren_int)) {
     return ''
   }
@@ -144,7 +145,7 @@ const isSiretSirenLength = value => {
   return lengthOk
 }
 
-const insensitiveComparator = (a,b) => {
+const insensitiveComparator = (a, b) => {
   return (a||'').localeCompare(b, 'fr')
 }
 
@@ -162,12 +163,16 @@ const getWordAt = (text, position) => {
 }
 
 const computeBookingReference = (user, alfred) => {
-  var reference = user.avatar_letters + alfred.avatar_letters + '_' + moment().format('DDMMYYYY')
+  let reference = `${user.avatar_letters + alfred.avatar_letters }_${ moment().format('DDMMYYYY')}`
   return reference
 }
 
 const capitalize = text => {
   return text ? text[0].toUpperCase()+text.slice(1) : text
+}
+
+const guessSeparator = text => {
+  return csv_string.detect(text)
 }
 
 module.exports = {
@@ -189,4 +194,5 @@ module.exports = {
   computeBookingReference,
   capitalize,
   getWordAt,
+  guessSeparator,
 }

@@ -73,6 +73,35 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
 })
 
+// @Route PUT /myAlfred/api/orders/:id/rewrite
+// Resets address && shipping_mode to allow edition
+// @Access private
+router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
+    return res.status(301)
+  }
+
+  const order_id=req.params.id
+  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)}, {address: null, shipping_mode: null}, {new: true})
+    .populate('items.product')
+    .then(result => {
+      if (!result) {
+        return res.status(404).json(`Order #${order_id} not found`)
+      }
+      return updateShipFee(result)
+    })
+    .then(result => {
+      return result.save()
+    })
+    .then(result => {
+      return res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+})
 // @Route PUT /myAlfred/api/orders/:id
 // Add item to a order {address_id?, reference?}
 // @Access private
