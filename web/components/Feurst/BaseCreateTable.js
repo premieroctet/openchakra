@@ -6,6 +6,7 @@ import {getAuthToken} from '../../utils/authentication'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
+import {ORDER_FULFILLED, ORDER_VALID} from '../../utils/consts'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
@@ -20,6 +21,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     deliveryAddress: null,
     reference: null,
     shipping: null,
+    status: null,
   })
 
   const [language, setLanguage] = useState('fr')
@@ -58,7 +60,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         .catch(err => snackBarError(err.msg))
       : []
 
-    currentOrder && setState({...state, items: currentOrder.items, deliveryAddress: currentOrder?.address ? currentOrder.address : null})
+    currentOrder && setState({...state, status: currentOrder.status, items: currentOrder.items, deliveryAddress: currentOrder?.address ? currentOrder.address : null})
 
   }, [endpoint])
 
@@ -131,11 +133,13 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       updateMyData={updateMyData}
     />
     
-    <Delivery address={state.deliveryAddress} />
+    {state.status === ORDER_VALID ?
+      <Delivery address={state.deliveryAddress} /> : null
+    }
 
     <div className='flex flex-wrap justify-between gap-y-4'>
       <PleasantButton rounded={'full'} bgColor={'#fff'} textColor={'#141953'} borderColor={'1px solid #141953'} disabled={state.items.length === 0} onClick={() => true}>Demande de devis</PleasantButton>
-      <PleasantButton rounded={'full'} disabled={state.items.length === 0} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
+      <PleasantButton rounded={'full'} disabled={state.status !== ORDER_FULFILLED} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
     </div>
 
     <DialogAddress id={orderID} endpoint={endpoint} isOpenDialog={isOpenDialog} setIsOpenDialog={setIsOpenDialog} accessRights={accessRights}/>

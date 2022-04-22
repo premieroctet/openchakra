@@ -3,7 +3,7 @@ import React, {useEffect} from 'react'
 import {useRouter} from 'next/router'
 import Login from '../../components/Feurst/Login'
 import Header from '../../components/Feurst/Header'
-import {theme, GlobalStyleEdi} from '../../styles/feurst.theme'
+import {theme, GlobalStyleEdi} from '../../styles/feurst/feurst.theme'
 import {screen} from '../../styles/screenWidths'
 const {BASEPATH_EDI} = require('../../utils/consts')
 
