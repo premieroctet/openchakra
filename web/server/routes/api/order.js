@@ -1,17 +1,22 @@
+const mongoose = require('mongoose')
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
+const lodash=require('lodash')
+const {
+  addItem,
+  computeShipFee,
+  updateShipFee,
+} = require('../../utils/commands')
 const {EXPRESS_SHIPPING} = require('../../../utils/feurst/consts')
 const {validateZipCode} = require('../../validation/order')
-const {addItem, computeShipFee} = require('../../utils/commands')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 
 const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
 const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
-
 moment.locale('fr')
 
 const DATA_TYPE=ORDER
@@ -78,20 +83,16 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
   }
 
   const order_id=req.params.id
-
   Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)}, req.body, {new: true})
+    .populate('items.product')
     .then(result => {
       if (!result) {
         return res.status(404).json(`Order #${order_id} not found`)
       }
-      if (lodash.isEmpty(result.address) || lodash.isEmpty(result.shipping_mode)) {
-        return Promise.resolve(result)
-      }
-      const department=parseInt(String(zipCode).slice(0, -3))
-      return computeShipFee(department, result.total_weight, result.shipping_mode==EXPRESS_SHIPPING)
-        .then(fee => {
-          return Order.findOneAndUpdate({_id: order_id}, {shipping_fee: fee}, {new: true})
-        })
+      return updateShipFee(result)
+    })
+    .then(result => {
+      return result.save()
     })
     .then(result => {
       return res.json(result)
@@ -121,6 +122,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   const {product, quantity}=req.body
 
   Order.findOne({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
+    .populate('items.product')
     .then(data => {
       if (!data) {
         console.error(`No order #${order_id}`)
@@ -129,7 +131,10 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
       return addItem(data, product, quantity)
     })
     .then(data => {
-      return data.save()
+      return updateShipFee(data)
+    })
+    .then(result => {
+      return result.save()
     })
     .then(data => {
       return res.json(data)
@@ -152,12 +157,19 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
   const order_id=req.params.order_id
   const item_id=req.params.item_id
 
-  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, DELETE)}, {$pull: {items: {_id: item_id}}})
+  Order.findOneAndUpdate({_id: order_id}, {$pull: {items: item_id}}, {new: true})
+    .populate('items.product')
     .then(result => {
       if (!result) {
         return res.status(404).json(`Order #${order_id} not found`)
       }
-      return res.json()
+      return updateShipFee(result)
+    })
+    .then(result => {
+      return result.save()
+    })
+    .then(result => {
+      return res.json(result)
     })
     .catch(err => {
       console.error(err)
