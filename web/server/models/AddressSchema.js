@@ -1,6 +1,10 @@
 const {Schema}=require('mongoose')
 
 const AddressSchema=new Schema({
+  label: {
+    type: String,
+    required: false,
+  },
   address: {
     type: String,
   },

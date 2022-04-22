@@ -78,7 +78,8 @@ const QuotationBookingBaseSchema=new Schema({
 
 QuotationBookingBaseSchema.virtual('total_amount').get(function() {
   const items_amount=lodash.sumBy(this.items||[], i => i.catalog_price*i.quantity*(1.0-i.discount))
-  return items_amount+this.shipping_fee
+  const total_amount=roundCurrency(items_amount+this.shipping_fee)
+  return total_amount
 })
 
 QuotationBookingBaseSchema.virtual('total_weight').get(function() {
@@ -86,7 +87,7 @@ QuotationBookingBaseSchema.virtual('total_weight').get(function() {
     return 0
   }
   const total_weight=lodash.sumBy(this.items, i => i.total_weight)
-  return total_weight
+  return parseInt(total_weight)
 })
 
 module.exports=QuotationBookingBaseSchema

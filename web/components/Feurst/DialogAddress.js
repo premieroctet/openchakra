@@ -29,37 +29,34 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
   const [shippingfees, setShippingFees] = useState({})
   const [shippingOption, setShippingOption] = useState('')
   const [errors, setErrors] = useState()
+  const [valid, setValid] = useState(false)
 
   const getShippingFees = useCallback(async zipcode => {
     const res_shippingfees = await client(`${API_PATH}/${endpoint}/${id}/shipping-fee?zipcode=${zipcode}`)
       .catch(e => {
         console.error(e, `Can't get shipping fees ${e}`)
       })
+
       
     res_shippingfees && setShippingFees(res_shippingfees)
   }, [endpoint, id])
+
     
   const validateAddress = async e => {
     e.preventDefault()
-    // save address for this user if not exists
-    if (!address?._id) {
-      const recordAddress = await client(`${API_PATH}/users/addresses`, {data: address})
-        .catch(e => {
-          console.error(e, `Can't save address for user ${e}`)
-          setErrors(e)
-        })
-      recordAddress && setAddress(recordAddress[recordAddress.length - 1])
-    }
-      
+
     // then bind to the current order/quotation
     const bindAddressAndShipping = await client(`${API_PATH}/${endpoint}/${id}`, {data: {address, reference: orderref}, method: 'PUT'})
       .catch(e => {
         console.error(e, `Can't bind address to order/quotation ${e}`)
         setErrors(e)
       })
-
     bindAddressAndShipping && setIsOpenDialog(false)
   }
+
+  useEffect(() => {
+    setValid(address?.label && address?.address && address?.zip_code&& address?.city && address?.country && orderref && shippingOption)
+  }, [address, shippingOption, orderref])
 
   useEffect(() => {
     address?.zip_code && getShippingFees(address?.zip_code)
@@ -86,8 +83,9 @@ traitement de votre commande.</p>
 
         {/* order address */}
         <h3>Indiquez l'adresse de livraison</h3>
-        <DeliveryAddresses address={address} setAddress={setAddress} />
+        <DeliveryAddresses address={address} setAddress={setAddress} onChange={e => setAddress({...address, label: e})}/>
         <Address address={address} setAddress={setAddress} getShippingFees={getShippingFees} errors={errors} />
+
           
         {/* order shipping fees */}
         {!isEmpty(shippingfees) ? (<>
@@ -96,7 +94,7 @@ traitement de votre commande.</p>
         </>) : null
         }
 
-        <PleasantButton type='submit' onSubmit={() => validateAddress}>Valider ces informations</PleasantButton>
+        <PleasantButton disabled={!valid} type='submit' onSubmit={() => validateAddress}>Valider ces informations</PleasantButton>
       </form>
 
     </StyledDialog>
