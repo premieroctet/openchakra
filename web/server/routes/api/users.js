@@ -1,5 +1,3 @@
-const Shop = require('../../models/Shop')
-const {is_development} = require('../../../config/config')
 const crypto = require('crypto')
 
 const fs = require('fs').promises
@@ -10,8 +8,11 @@ const CronJob = require('cron').CronJob
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
-const Company = require('../../models/Company')
-const validateAddress = require('../../validation/address')
+const {ORDER, QUOTATION} = require('../../../utils/feurst/consts')
+const Order = require('../../models/Order')
+const Quotation = require('../../models/Quotation')
+const Shop = require('../../models/Shop')
+const {is_development} = require('../../../config/config')
 const {getActionsForRoles} = require('../../utils/userAccess')
 const User = require('../../models/User')
 const ServiceUser = require('../../models/ServiceUser')
@@ -23,7 +24,7 @@ const {logEvent}=require('../../utils/events')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
 
 const router = express.Router()
-const {is_production, is_validation, computeUrl}=require('../../../config/config')
+const {is_production, computeUrl}=require('../../../config/config')
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
@@ -1286,50 +1287,26 @@ router.get('/hook', (req, res) => {
 // TODO Feurst only - make it general later
 router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!req.user.company) {
-    return res.status(400).json(`User has no company`)
+  if (!isActionAllowed(req.user.roles, ORDER, VIEW) || !isActionAllowed(req.user.roles, QUOTATION, VIEW)) {
+    return res.status(401)
   }
 
-  Company.findById(req.user.company, {addresses: 1})
-    .then(company => {
-      if (!company) {
-        return res.status(404).json('Company not found')
-      }
-      return res.json(company.addresses)
+  let addresses=[]
+  Order.find(getDataFilter(req.user, ORDER, VIEW), {address: true})
+    .then(result => {
+      addresses=[...addresses, ...result.map(o => o.address)]
+      return Quotation.find(getDataFilter(req.user, ORDER, VIEW), {address: true})
+    })
+    .then(result => {
+      addresses=[...addresses, ...result.map(q => q.address)]
+      addresses=addresses.filter(a => !!a)
+      return res.json(addresses)
     })
     .catch(err => {
       console.error(err)
-      return res.status(500).json(err)
+      res.status(500).json(err)
     })
 })
-
-router.post('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
-  if (!req.user.company) {
-    return res.status(400).json(`User has no company`)
-  }
-  const {errors, isValid} = validateAddress(req.body)
-
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-
-  if (!req.user.company) {
-    return res.status(400).json(`User has no company`)
-  }
-
-  Company.findByIdAndUpdate(req.user.company, {$push: {addresses: req.body}}, {new: true})
-    .then(company => {
-      if (!company) {
-        return res.status(404).json('Company not found')
-      }
-      return res.json(company)
-    })
-    .catch(err => {
-      return res.status(500).json(err)
-    })
-
-})
-
 
 // DEV tricks : set any atribute, log without password
 if (is_development()) {

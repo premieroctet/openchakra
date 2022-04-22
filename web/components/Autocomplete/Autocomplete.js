@@ -51,6 +51,7 @@ const Autocomplete = ({
     },
     ...paramsCombobox,
   })
+
     
   useEffect(() => {
     if (debouncedQuery && searchTerm.length > 0) {
@@ -66,6 +67,7 @@ const Autocomplete = ({
   return (
     <>
       {isError ? <p className='error'>{errorMsg}</p> : null }
+
        
       <Label {...getLabelProps} htmlFor={`auto${dbSearchField}`}>
         {label}
@@ -98,8 +100,10 @@ const Autocomplete = ({
         >
           <span role="img">✕</span>
         </button>
+
             
       </div>
+
         
       <ul
         {...getMenuProps()}

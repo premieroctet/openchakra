@@ -11,7 +11,7 @@ const MyTextField = styled(TextField)`
 const Address = ({t, address, setAddress, getShippingFees, errors}) => {
 
   const changeAddress = e => setAddress({...address, [e.target.name]: e.target.value})
-  const isEnabled = !!address?._id
+  const isDisabled = false
 
   return (
     <>
@@ -19,7 +19,7 @@ const Address = ({t, address, setAddress, getShippingFees, errors}) => {
         {JSON.stringify(errors)}
         <em>{errors?.address}</em>
         <MyTextField
-          disabled={isEnabled}
+          disabled={isDisabled}
           placeholder={'rue'}
           variant='outlined'
           name="address"
@@ -32,7 +32,7 @@ const Address = ({t, address, setAddress, getShippingFees, errors}) => {
       <div className='zip_code'>
         <em>{errors?.zip_code}</em>
         <MyTextField
-          disabled={isEnabled}
+          disabled={isDisabled}
           placeholder={'code postal'}
           variant='outlined'
           type="text"
@@ -48,7 +48,7 @@ const Address = ({t, address, setAddress, getShippingFees, errors}) => {
       <div className='city'>
         <em>{errors?.zip_code}</em>
         <MyTextField
-          disabled={isEnabled}
+          disabled={isDisabled}
           placeholder={'ville'}
           variant='outlined'
           type="text"
@@ -62,7 +62,7 @@ const Address = ({t, address, setAddress, getShippingFees, errors}) => {
       <div className='country'>
         <em>{errors?.country}</em>
         <MyTextField
-          disabled={isEnabled}
+          disabled={isDisabled}
           placeholder={'pays'}
           variant='outlined'
           type="text"
@@ -73,6 +73,7 @@ const Address = ({t, address, setAddress, getShippingFees, errors}) => {
           error={errors?.city}
         />
       </div>
+
     
     </>
   )
