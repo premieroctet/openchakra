@@ -27,7 +27,7 @@ const AddArticle = ({addProduct}) => {
   }
 
   const checkProduct = async article => {
-    
+
     if (article?.item?._id) {
       const articleInfoCheck = await client(`${API_PATH}/products/${article.item._id}`)
         .catch(error => `Cant fetch article info ${error}`)
@@ -35,7 +35,7 @@ const AddArticle = ({addProduct}) => {
       setArticle({...article, info: articleInfoCheck, showArticlePanel: true})
       return
     }
-    
+
     snackBarError('Veuillez renseigner une référence')
   }
 
@@ -43,21 +43,21 @@ const AddArticle = ({addProduct}) => {
   return (
     <>
       <FormAddArticle>
-      
+
         <StyledAutocomplete>
           <Autocomplete
-            urlToFetch={`myAlfred/api/products?pattern=`}
+            urlToFetch={`${API_PATH}/products?pattern=`}
             item={article}
             setItem={setArticle}
             paramsCombobox={paramsCombobox}
-            errorMsg= 'Aucune adresse trouvée'
+            errorMsg= 'Aucun article trouvé'
             dbSearchField= 'reference'
             label={'Réf. catalogue'}
             placeholder='Saissisez la référence du produit'
             formattingResult={item => `${item.reference} - ${item.description} ${item.description_2}`}
           />
         </StyledAutocomplete>
-      
+
         <Refquantity>
           <Label htmlFor="articleQty">Quantité</Label>
           <Input

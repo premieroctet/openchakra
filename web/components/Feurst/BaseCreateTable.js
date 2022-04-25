@@ -6,9 +6,16 @@ import {getAuthToken} from '../../utils/authentication'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
+<<<<<<< HEAD
 import {ORDER_CREATED, ORDER_FULFILLED, ORDER_VALID, ORDER_COMPLETE} from '../../utils/consts'
 import {API_PATH} from '../../utils/consts'
 import {H2confirm} from './components.styles'
+||||||| 23d294f3e
+import {ORDER_FULFILLED, ORDER_VALID, ORDER_COMPLETE} from '../../utils/consts'
+=======
+import {ORDER_FULFILLED, ORDER_VALID, ORDER_COMPLETE} from '../../utils/consts'
+import {API_PATH} from '../../utils/consts'
+>>>>>>> sau-feature/942827-feurst-edi
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
@@ -103,7 +110,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
   const validateAddress = async e => {
     e.preventDefault()
-    
+
     // then bind to the current order/quotation
     const bindAddressAndShipping = await client(`${API_PATH}/${endpoint}/${orderID}`, {data: {address: state.address, reference: state.orderref, shipping_mode: state.shippingOption}, method: 'PUT'})
       .catch(e => {
@@ -112,9 +119,9 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       })
     bindAddressAndShipping && setIsOpenDialog(false)
   }
-  
+
   const resetAddress = async() => {
-    
+
     const shotAddress = await client(`${API_PATH}/${endpoint}/${orderID}/rewrite`, {method: 'PUT'})
       .catch(e => {
         console.error(e, `Can't unbind address to order/quotation ${e}`)
@@ -146,10 +153,13 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   */
   const cols=columns({language, ...state.items, setState, deleteProduct: deleteProduct})
 
+  const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
+  const templateURL=`${API_PATH}/${endpoint}/template`
+
   return (<>
     {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) ?
       <>
-        <ImportExcelFile />
+        <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
         <AddArticle addProduct={addProduct} />
       </> : <H2confirm>Récapitulatif de votre commande</H2confirm>}
 
@@ -159,7 +169,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       columns={cols}
       updateMyData={updateMyData}
     />
-    
+
     {[ORDER_VALID, ORDER_COMPLETE].includes(state.status) ?
       <Delivery address={state.deliveryAddress} /> : null
     }
@@ -189,8 +199,8 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         Demande de devis
         </PleasantButton>
       }
-      
-     
+
+
       <PleasantButton
         rounded={'full'}
         disabled={![ORDER_FULFILLED, ORDER_VALID].includes(state.status)}

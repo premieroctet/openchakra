@@ -21,7 +21,7 @@ async function client(
     ...customConfig,
   }
 
-  return window.fetch(`/${endpoint}`, config).then(async response => {
+  return window.fetch(endpoint, config).then(async response => {
     if (response.status === 401) {
       clearAuthenticationToken()
       // refresh the page for them
@@ -43,7 +43,7 @@ async function client(
       return data
     }
     return Promise.reject(data)
-    
+
   })
 }
 
