@@ -7,10 +7,10 @@ import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
 import {ORDER_FULFILLED, ORDER_VALID, ORDER_COMPLETE} from '../../utils/consts'
+import {API_PATH} from '../../utils/consts'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
-import {API_PATH} from '../../utils/consts'
 import Delivery from './Delivery'
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
@@ -24,7 +24,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     address: {},
     shippingOption: null,
     status: null,
-    errors: null
+    errors: null,
   })
 
   const [language, setLanguage] = useState('fr')
@@ -102,7 +102,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
   const validateAddress = async e => {
     e.preventDefault()
-    
+
     // then bind to the current order/quotation
     const bindAddressAndShipping = await client(`${API_PATH}/${endpoint}/${orderID}`, {data: {address: state.address, reference: state.orderref}, method: 'PUT'})
       .catch(e => {
@@ -134,10 +134,13 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   */
   const cols=columns({language, ...state.items, setState, deleteProduct: deleteProduct})
 
+  const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
+  const templateURL=`${API_PATH}/${endpoint}/template`
+
   return (<>
-    {state.status !== ORDER_COMPLETE ? 
+    {state.status !== ORDER_COMPLETE ?
       <>
-        <ImportExcelFile />
+        <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
         <AddArticle addProduct={addProduct} />
       </> : null}
 
@@ -147,7 +150,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       columns={cols}
       updateMyData={updateMyData}
     />
-    
+
     {state.status === ORDER_VALID ?
       <Delivery address={state.deliveryAddress} /> : null
     }
@@ -157,16 +160,16 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       <PleasantButton rounded={'full'} disabled={state.status !== ORDER_FULFILLED} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
     </div>
 
-    <DialogAddress 
-      id={orderID} 
-      endpoint={endpoint} 
-      isOpenDialog={isOpenDialog} 
-      setIsOpenDialog={setIsOpenDialog} 
+    <DialogAddress
+      id={orderID}
+      endpoint={endpoint}
+      isOpenDialog={isOpenDialog}
+      setIsOpenDialog={setIsOpenDialog}
       accessRights={accessRights}
       state={state}
       setState={setState}
       validateAddress={validateAddress}
-      />
+    />
 
   </>
   )

@@ -1,13 +1,8 @@
 import React, {useMemo, useState, useEffect, useCallback} from 'react'
-import useLocalStorageState from 'use-local-storage-state'
-import styled from 'styled-components'
 import {getAuthToken} from '../../utils/authentication'
 import Table from '../Table/Table'
 import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
-import AddArticle from './AddArticle'
-import ImportExcelFile from './ImportExcelFile'
-import {PleasantButton} from './Button'
 
 
 const BaseListTable = ({endpoint, columns, refresh}) => {

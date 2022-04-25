@@ -1,15 +1,15 @@
-const mongoose = require('mongoose')
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
+const {lineItemsImport} = require('../../utils/import')
+const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {
   addItem,
   computeShipFee,
   updateShipFee,
 } = require('../../utils/commands')
-const {EXPRESS_SHIPPING} = require('../../../utils/feurst/consts')
 const {validateZipCode} = require('../../validation/order')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 
@@ -21,6 +21,9 @@ moment.locale('fr')
 
 const DATA_TYPE=ORDER
 const MODEL=Order
+
+// PRODUCTS
+const uploadItems = createMemoryMulter(TEXT_FILTER)
 
 router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
   Order.find({...getDataFilter(req.user, DATA_TYPE, VIEW)}, {address: 1})
@@ -36,7 +39,7 @@ router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, r
 // @Access private
 router.get('/template', passport.authenticate('jwt', {session: false}), (req, res) => {
   const data = [
-    ['Réference', 'Quantité'],
+    ['Référence', 'Quantité'],
     ['AAAXXXZ', 6],
   ]
   let buffer = xlsx.build([{data: data}])
@@ -44,6 +47,46 @@ router.get('/template', passport.authenticate('jwt', {session: false}), (req, re
   res.setHeader('Content-Disposition', 'attachment; filename=order_template.xlsx')
   res.end(buffer, 'binary')
 })
+
+// @Route POST /myAlfred/api/orders/import
+// Imports products from csv
+router.post('/:order_id/import', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
+    return res.status(301).json()
+  }
+
+  uploadItems.single('buffer')(req, res, err => {
+    if (err) {
+      console.error(err)
+      return res.status(404).json({errors: err.message})
+    }
+
+    const order_id=req.params.order_id
+    Order.findOne({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
+      .populate('items.product')
+      .then(data => {
+        if (!data) {
+          console.error(`No order #${order_id}`)
+          return res.status(404)
+        }
+        // db field => import field
+        const DB_MAPPING={
+          'reference': 'Référence',
+          'quantity': 'Quantité',
+        }
+        return lineItemsImport(data, req.file.buffer, DB_MAPPING)
+      })
+      .then(result => {
+        res.json(result)
+      })
+      .catch(err => {
+        console.error(err)
+        return res.status(500).json(err)
+      })
+  })
+})
+
 
 // @Route POST /myAlfred/api/orders/
 // Add a new order
@@ -157,7 +200,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
         console.error(`No order #${order_id}`)
         return res.status(404)
       }
-      return addItem(data, product, quantity)
+      return addItem(data, product, null, quantity)
     })
     .then(data => {
       return updateShipFee(data)

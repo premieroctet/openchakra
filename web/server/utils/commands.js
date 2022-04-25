@@ -3,16 +3,25 @@ const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
 
-const addItem = (data, product_id, quantity) => {
+const addItem = (data, product_id, reference, quantity) => {
   return new Promise((resolve, reject) => {
-    Product.findById(product_id)
+    if (isNaN(parseInt(quantity))) {
+      return reject(`Article ${reference}: quantité ${quantity} incorrect`)
+    }
+    Product.findOne({$or: [{_id: product_id}, {reference: reference}]})
       .then(product => {
-        let item=data.items.find(item => item.product._id.toString()==product_id.toString())
+        if (!product) {
+          return reject(`Article ${reference} inconnu`)
+        }
+        if (isNaN(product.price)) {
+          return reject(`Le prix de l'article ${reference} est inconnu`)
+        }
+        let item=data.items.find(item => item.product._id.toString()==product._id.toString())
         if (item) {
-          item.quantity += quantity
+          item.quantity += parseInt(quantity)
         }
         else {
-          item = {product: product, quantity: quantity, catalog_price: product.price}
+          item = {product: product, quantity: parseInt(quantity), catalog_price: product.price}
           data.items.push(item)
         }
         return resolve(data)

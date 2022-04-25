@@ -3,6 +3,7 @@ const lodash=require('lodash')
 const {MAX_WEIGHT} = require('../../utils/feurst/consts')
 const ShipRate = require('../models/ShipRate')
 const {bufferToString} = require('../../utils/text')
+const {addItem, updateShipFee} = require('./commands')
 
 const toFloat = value => {
   try {
@@ -14,6 +15,11 @@ const toFloat = value => {
   }
 }
 
+const getMissingColumns = (mandatory, columns) => {
+  const missingColumns=mandatory.filter(f => !columns.includes(f))
+  return missingColumns
+}
+
 const mapRecord=(record, mapping) => {
   let newRecord=lodash.fromPairs(Object.keys(mapping).map(dbKey => [dbKey, record[mapping[dbKey]]]))
   newRecord=newRecord.price ? {...newRecord, price: toFloat(newRecord.price)} : newRecord
@@ -21,6 +27,7 @@ const mapRecord=(record, mapping) => {
 }
 
 const dataImport=(model, headers, records, mapping, options) => {
+  console.trace('Data import')
   const updateOnly=!!options.update
   const uniqueKey=options.key
   return new Promise((resolve, reject) => {
@@ -30,7 +37,7 @@ const dataImport=(model, headers, records, mapping, options) => {
     const fileMandatoryFields=mandatoryFields.map(f => mapping[f])
 
     // Check missing columns
-    const missingColumns=fileMandatoryFields.filter(f => !headers.includes(f))
+    const missingColumns=getMissingColumns(fileMandatoryFields, headers)
     if (!lodash.isEmpty(missingColumns)) {
       console.error(`Missing: ${missingColumns}`)
       return reject({imported: 0, warnings: [], errors: missingColumns.map(f => `Colonne ${f} manquante`)})
@@ -61,7 +68,7 @@ const dataImport=(model, headers, records, mapping, options) => {
       .then(res => {
         const fulfilled=res.filter(r => r.status=='fulfilled').map(r => r.value)
         const updated=lodash.sum(fulfilled.map(f => f.nModified))
-        const created=lodash.sum(fulfilled.map(f => (f.upserted ? f.upserted.length : 0)))
+        const created=lodash.sumerror(fulfilled.map(f => (f.upserted ? f.upserted.length : 0)))
         const result={updated: updated, created: created, warnings: null, errors: null}
         return resolve(result)
       })
@@ -151,5 +158,40 @@ const shipRatesImport = buffer => {
   })
 }
 
+const lineItemsImport = (model, buffer, mapping) => {
+  return new Promise((resolve, reject) => {
+    const importResult={imported: 0, warning: [], errors: []}
+    extractCsv(buffer, {})
+      .then(data => {
+        const headers=data.headers
+        const mandatoryColumns=Object.values(mapping)
+        const missingColumns=getMissingColumns(mandatoryColumns, headers)
+        if (!lodash.isEmpty(missingColumns)) {
+          console.error(`Missing: ${missingColumns}`)
+          return reject({imported: 0, warnings: [], errors: missingColumns.map(f => `Colonne ${f} manquante`)})
+        }
+        data.records=data.records.map(r => mapRecord(r, mapping))
+        const promises=data.records.map(r => addItem(model, null, r.reference, parseInt(r.quantity)))
+        return Promise.allSettled(promises)
+      })
+      .then(res => {
+        importResult.imported+=res.filter(r => r.status=='fulfilled').length
+        importResult.warning.push(...res.filter(r => r.status=='rejected').map(r => r.reason))
+      })
+      .then(() => {
+        return updateShipFee(model)
+      })
+      .then(model => {
+        return model.save()
+      })
+      .then(() => {
+        return resolve(importResult)
+      })
+      .catch(err => {
+        console.error(err)
+        return reject(err)
+      })
+  })
+}
 
-module.exports={csvImport, extractCsv, shipRatesImport}
+module.exports={csvImport, extractCsv, shipRatesImport, lineItemsImport}

@@ -1,6 +1,10 @@
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
+const {
+  EXPRESS_SHIPPING,
+  STANDARD_SHIPPING,
+} = require('../../../utils/feurst/consts')
 const {addItem, computeShipFee} = require('../../utils/commands')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 const {validateZipCode} = require('../../validation/order')
@@ -245,11 +249,11 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
       return computeShipFee(department, order.total_weight, false)
     })
     .then(standard => {
-      fee.standard=standard
+      fee[STANDARD_SHIPPING]=standard
       return computeShipFee(department, order.total_weight, true)
     })
     .then(express => {
-      fee.express=express
+      fee[EXPRESS_SHIPPING]=express
       return res.json(fee)
     })
     .catch(err => {

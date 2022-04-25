@@ -125,7 +125,7 @@ const SHIPPING_MODES={
 
 const BASEPATH_EDI = '/edi'
 const FEURST_IMG_PATH = '/static/assets/img/feurst'
-const API_PATH = 'myAlfred/api'
+const API_PATH = '/myAlfred/api'
 const FEURST_PHONE_NUMBER = '+33 4 77 27 40 63'
 
 module.exports={

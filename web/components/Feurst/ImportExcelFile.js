@@ -1,15 +1,16 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import {client} from '../../utils/client'
 import {API_PATH} from '../../utils/consts'
 import {PleasantButton} from './Button'
 const {FormControl, TextField} = require('@material-ui/core')
 const lodash=require('lodash')
 const axios = require('axios')
 const csv_parse = require('csv-parse/lib/sync')
+const {setAxiosAuthentication} = require('../../utils/authentication')
+const {client} = require('../../utils/client')
+const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const {guessSeparator} = require('../../utils/text')
-const {snackBarError} = require('../../utils/notifications')
 
 const PureDialog = dynamic(() => import('../Dialog//PureDialog'))
 
@@ -20,7 +21,7 @@ const DownloadExampleFile = styled.button`
   width: 100%;
 `
 
-const ImportExcelFile = () => {
+const ImportExcelFile = ({importURL, templateURL}) => {
 
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [file, setFile]=useState(null)
@@ -34,7 +35,7 @@ const ImportExcelFile = () => {
   }
 
   const fetchTemplate = async() => {
-    const exampleFile = await client(`${API_PATH}/orders/template`)
+    const exampleFile = await client(templateURL)
       .catch(e => {
         console.error(e)
         snackBarError('Téléchargement échoué')
@@ -76,6 +77,18 @@ const ImportExcelFile = () => {
       })
   }
 
+  const submitData = () => {
+    const data = new FormData()
+    data.append('buffer', file)
+    setAxiosAuthentication()
+    axios.post(importURL, data)
+      .then(result => {
+        snackBarSuccess(result)
+      })
+      .catch(err => {
+        snackBarError(err)
+      })
+  }
 
   return (<>
     <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} className="mb-4" bgColor={'#141953'} textColor={'white'} size="full-width">Importer un fichier Excel</PleasantButton>
@@ -102,7 +115,7 @@ const ImportExcelFile = () => {
             ))}
           </table>
         </>}
-      <PleasantButton size={'full-width'}>Importer ce fichier</PleasantButton>
+      <PleasantButton size={'full-width'} onClick={submitData}>Importer ce fichier</PleasantButton>
     </PureDialog>
     <DownloadExampleFile type='button' className='block text-lg no-underline text-center mb-6' href='#' onClick={fetchTemplate} >Télécharger le modèle de fichier</DownloadExampleFile>
   </>
