@@ -27,6 +27,7 @@ const ShippingFees = ({state, setState, shippingoptions}) => {
 
   return (
     <ShippingOptions>
+      {/* {SHIPPING_MODES} */}
       {Object.entries(shippingoptions).map(([key, value]) => (
         <label key={key}>
           <input
@@ -34,7 +35,7 @@ const ShippingFees = ({state, setState, shippingoptions}) => {
             name={'shippingOption'}
             value={key}
             checked={key == state.shippingOption}
-            onChange={(e) => setState({...state, shippingOption: e.target.value})}
+            onChange={e => setState({...state, shippingOption: e.target.value})}
           />
           <span>Livraison {key} - environ {localeMoneyFormat({value})}</span>
         </label>

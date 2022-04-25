@@ -6,11 +6,12 @@ import {getAuthToken} from '../../utils/authentication'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
-import {ORDER_FULFILLED, ORDER_VALID, ORDER_COMPLETE} from '../../utils/consts'
+import {ORDER_CREATED, ORDER_FULFILLED, ORDER_VALID, ORDER_COMPLETE} from '../../utils/consts'
+import {API_PATH} from '../../utils/consts'
+import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
-import {API_PATH} from '../../utils/consts'
 import Delivery from './Delivery'
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
@@ -24,7 +25,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     address: {},
     shippingOption: null,
     status: null,
-    errors: null
+    errors: null,
   })
 
   const [language, setLanguage] = useState('fr')
@@ -104,12 +105,23 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     e.preventDefault()
     
     // then bind to the current order/quotation
-    const bindAddressAndShipping = await client(`${API_PATH}/${endpoint}/${orderID}`, {data: {address: state.address, reference: state.orderref}, method: 'PUT'})
+    const bindAddressAndShipping = await client(`${API_PATH}/${endpoint}/${orderID}`, {data: {address: state.address, reference: state.orderref, shipping_mode: state.shippingOption}, method: 'PUT'})
       .catch(e => {
         console.error(e, `Can't bind address to order/quotation ${e}`)
-        setErrors(e)
+        setState({...state, errors: e})
       })
     bindAddressAndShipping && setIsOpenDialog(false)
+  }
+  
+  const resetAddress = async() => {
+    
+    const shotAddress = await client(`${API_PATH}/${endpoint}/${orderID}/rewrite`, {method: 'PUT'})
+      .catch(e => {
+        console.error(e, `Can't unbind address to order/quotation ${e}`)
+        setState({...state, errors: e})
+      })
+    shotAddress && setState({...state, status: shotAddress.status})
+
   }
 
 
@@ -135,11 +147,11 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   const cols=columns({language, ...state.items, setState, deleteProduct: deleteProduct})
 
   return (<>
-    {state.status !== ORDER_COMPLETE ? 
+    {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) ?
       <>
         <ImportExcelFile />
         <AddArticle addProduct={addProduct} />
-      </> : null}
+      </> : <H2confirm>Récapitulatif de votre commande</H2confirm>}
 
     <FeurstTable
       caption="Détails de la commande en cours :"
@@ -148,25 +160,56 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       updateMyData={updateMyData}
     />
     
-    {state.status === ORDER_VALID ?
+    {[ORDER_VALID, ORDER_COMPLETE].includes(state.status) ?
       <Delivery address={state.deliveryAddress} /> : null
     }
 
     <div className='flex flex-wrap justify-between gap-y-4'>
-      <PleasantButton rounded={'full'} disabled={state.status !== ORDER_FULFILLED} bgColor={'#fff'} textColor={'#141953'} borderColor={'1px solid #141953'} onClick={() => true}>Demande de devis</PleasantButton>
-      <PleasantButton rounded={'full'} disabled={state.status !== ORDER_FULFILLED} onClick={() => setIsOpenDialog(true)}>Valider ma commande</PleasantButton>
+      {state.status === ORDER_VALID
+        ?
+        <PleasantButton
+          rounded={'full'}
+          disabled={![ORDER_FULFILLED, ORDER_VALID].includes(state.status)}
+          bgColor={'#fff'}
+          textColor={'#141953'}
+          borderColor={'1px solid #141953'}
+          onClick={resetAddress}
+        >
+        Revenir à la saisie
+        </PleasantButton>
+        :
+        <PleasantButton
+          rounded={'full'}
+          disabled={![ORDER_FULFILLED, ORDER_VALID].includes(state.status)}
+          bgColor={'#fff'}
+          textColor={'#141953'}
+          borderColor={'1px solid #141953'}
+          onClick={() => true}
+        >
+        Demande de devis
+        </PleasantButton>
+      }
+      
+     
+      <PleasantButton
+        rounded={'full'}
+        disabled={![ORDER_FULFILLED, ORDER_VALID].includes(state.status)}
+        onClick={() => (state.status === ORDER_FULFILLED ? setIsOpenDialog(true) : submitOrder())}
+      >
+        Valider ma commande
+      </PleasantButton>
     </div>
 
-    <DialogAddress 
-      id={orderID} 
-      endpoint={endpoint} 
-      isOpenDialog={isOpenDialog} 
-      setIsOpenDialog={setIsOpenDialog} 
+    <DialogAddress
+      id={orderID}
+      endpoint={endpoint}
+      isOpenDialog={isOpenDialog}
+      setIsOpenDialog={setIsOpenDialog}
       accessRights={accessRights}
       state={state}
       setState={setState}
       validateAddress={validateAddress}
-      />
+    />
 
   </>
   )
