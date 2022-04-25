@@ -2,6 +2,7 @@
 import React, {useState} from 'react'
 import Autocomplete from '../Autocomplete/Autocomplete'
 import {StyledAutocomplete} from '../Autocomplete/Autocomplete.styles'
+import isEmpty from '../../server/validation/is-empty'
 
 const DeliveryAddresses = ({address, setAddress, onChange}) => {
 
@@ -10,11 +11,13 @@ const DeliveryAddresses = ({address, setAddress, onChange}) => {
     onSelectedItemChange: ({selectedItem}) => {
       setAddress(selectedItem)
     },
+    selectedItem: !isEmpty(address) ? address : null
   }
 
   return (
     <StyledAutocomplete noborder={true}>
       <Autocomplete
+        noborder
         urlToFetch={`myAlfred/api/users/addresses`}
         item={address}
         setItem={setAddress}

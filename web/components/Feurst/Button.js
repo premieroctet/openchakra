@@ -140,6 +140,11 @@ const ButtonFront = styled.span.attrs(props => ({
   color: ${props => props.textColor};
   border: ${props => props.borderColor};
 
+  ${StyledButton}:disabled && {
+    color: ${props => props.theme.colors.white};
+    border: 0;
+  }
+
   ${StyledButton}:not(:disabled):hover && {
     transform: translateY(-6px);
     transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);

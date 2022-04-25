@@ -65,6 +65,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     --stone-700: #1C1917;
 
     /* text */
+    --text-xs: 0.75rem;
     --text-sm: 0.875rem;
     --text-base: 1rem;
     --text-lg: 1.125rem;
@@ -363,6 +364,20 @@ input:focus:not(:focus-visible) {
   border-radius: 0.75rem;
 }
 
+
+/* A11Y */
+
+.sr-only {	
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
 
  /* media query example  */
 @media (${screen.lg}) {

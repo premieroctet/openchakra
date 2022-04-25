@@ -186,7 +186,7 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
   const order_id=req.params.order_id
   const item_id=req.params.item_id
 
-  Order.findOneAndUpdate({_id: order_id}, {$pull: {items: item_id}}, {new: true})
+  Order.findOneAndUpdate({_id: order_id}, {$pull: {items: {_id: item_id}}}, {new: true})
     .populate('items.product')
     .then(result => {
       if (!result) {
