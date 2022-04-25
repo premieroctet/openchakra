@@ -1,12 +1,8 @@
 import React, {useState} from 'react'
 import {withTranslation} from 'react-i18next'
-import {TextField} from '@material-ui/core'
 import styled from 'styled-components'
+import { Input } from '../Feurst/components.styles'
 
-const MyTextField = styled(TextField)`
-  background: white;
-  width: 100%;
-`
 
 const Address = ({t, address, setAddress, getShippingFees, errors}) => {
 
@@ -14,27 +10,25 @@ const Address = ({t, address, setAddress, getShippingFees, errors}) => {
   const isDisabled = false
 
   return (
-    <>
+    <div className='full-address'>
       <div className='address'>
-        {JSON.stringify(errors)}
         <em>{errors?.address}</em>
-        <MyTextField
+        <Input
+          noborder
           disabled={isDisabled}
           placeholder={'rue'}
-          variant='outlined'
           name="address"
           autoComplete='street-address'
           value={address?.address}
           onChange={changeAddress}
-          error={errors?.address}
         />
       </div>
       <div className='zip_code'>
         <em>{errors?.zip_code}</em>
-        <MyTextField
+        <Input
+          noborder
           disabled={isDisabled}
-          placeholder={'code postal'}
-          variant='outlined'
+          placeholder={'CP'}
           type="text"
           name="zip_code"
           autoComplete='postal-code'
@@ -42,40 +36,50 @@ const Address = ({t, address, setAddress, getShippingFees, errors}) => {
           // onChange={e => { changeAddress(e); getShippingFees(e.target.value) }}
           onChange={e => { changeAddress(e) }}
           onBlur={e => getShippingFees(e.target.value)}
-          error={errors?.zip_code}
         />
       </div>
       <div className='city'>
         <em>{errors?.zip_code}</em>
-        <MyTextField
+        <Input
+          noborder
           disabled={isDisabled}
           placeholder={'ville'}
-          variant='outlined'
           type="text"
           name="city"
           autoComplete='address-level2'
           value={address?.city}
           onChange={changeAddress}
-          error={errors?.city}
         />
       </div>
       <div className='country'>
         <em>{errors?.country}</em>
-        <MyTextField
+        <Input
+          noborder
           disabled={isDisabled}
           placeholder={'pays'}
-          variant='outlined'
           type="text"
           name="country"
           autoComplete='country'
           value={address?.country}
           onChange={changeAddress}
-          error={errors?.city}
         />
       </div>
 
-    
-    </>
+      <div className='phone'>
+        <em>{errors?.phone}</em>
+        <Input
+          noborder
+          disabled={isDisabled}
+          placeholder={'Numéro de téléphone pour la livraison (optionnel)'}
+          type="tel"
+          name="phone"
+          autoComplete='phone'
+          value={address?.phone}
+          onChange={changeAddress}
+        />
+      </div>
+
+    </div>
   )
 }
 

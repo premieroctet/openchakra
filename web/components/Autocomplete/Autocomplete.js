@@ -4,7 +4,6 @@ import useAsync from '../../hooks/use-async.hook'
 import useDebounce from '../../hooks/use-debounce.hook'
 import {client} from '../../utils/client'
 import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
-import {Label, Input} from '../Feurst/AddArticle.styles'
 import isEmpty from '../../server/validation/is-empty'
 
 
@@ -63,19 +62,19 @@ const Autocomplete = ({
   }
   , [debouncedQuery, searchTerm, run, selectedItem, urlToFetch, dbSearchField, errorMsg])
 
+  const labelAutocomplete = dbSearchField ? dbSearchField : 'complete'
 
   return (
     <>
       {isError ? <p className='error'>{errorMsg}</p> : null }
-
        
-      <Label {...getLabelProps} htmlFor={`auto${dbSearchField}`}>
+      <label {...getLabelProps} htmlFor={`auto${labelAutocomplete}`}>
         {label}
-      </Label>
+      </label>
       <div {...getComboboxProps()}>
-        <Input
+        <input
           {...getInputProps()}
-          id={`auto${dbSearchField}`}
+          id={`auto${labelAutocomplete}`}
           placeholder={placeholder}
           disabled={disabled}
         />

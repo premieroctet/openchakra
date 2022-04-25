@@ -1,6 +1,7 @@
 const isEmpty = require('../server/validation/is-empty')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
-  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, DATA_MODEL, SKIP_FAILED_PAYMENT}=require('../mode')
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, DATA_MODEL, SKIP_FAILED_PAYMENT,
+  SIB_APIKEY}=require('../mode')
 
 const MODES={
   PRODUCTION: 'production',
@@ -160,6 +161,9 @@ const checkConfig = () => {
     if (isEmpty(DATA_MODEL)) {
       reject(`DATA_MODEL non renseigné`)
     }
+    if (isEmpty(SIB_APIKEY)) {
+      reject(`SIB_APIKEY non renseigné`)
+    }
     displayConfig()
     resolve('Configuration OK')
   })
@@ -182,6 +186,10 @@ const skipFailedPayment = () => {
   return !is_production() && !!SKIP_FAILED_PAYMENT
 }
 
+const getSibApiKey = () => {
+  return SIB_APIKEY
+}
+
 // DEV mode: allow https without certificate
 if (is_development()) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
@@ -201,4 +209,5 @@ module.exports = {
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
   getDataModel, skipFailedPayment,
+  getSibApiKey,
 }
