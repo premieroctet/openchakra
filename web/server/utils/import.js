@@ -168,7 +168,8 @@ const lineItemsImport = (model, buffer, mapping) => {
         const missingColumns=getMissingColumns(mandatoryColumns, headers)
         if (!lodash.isEmpty(missingColumns)) {
           console.error(`Missing: ${missingColumns}`)
-          return reject({imported: 0, warnings: [], errors: missingColumns.map(f => `Colonne ${f} manquante`)})
+          importResult.errors=missingColumns.map(f => `Colonne ${f} manquante`)
+          return reject("break")
         }
         data.records=data.records.map(r => mapRecord(r, mapping))
         const promises=data.records.map(r => addItem(model, null, r.reference, parseInt(r.quantity)))
@@ -189,7 +190,7 @@ const lineItemsImport = (model, buffer, mapping) => {
       })
       .catch(err => {
         console.error(err)
-        return reject(err)
+        return err=='break' ? resolve(importResult) : reject(err)
       })
   })
 }
