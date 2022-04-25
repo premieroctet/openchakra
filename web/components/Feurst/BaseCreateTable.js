@@ -1,21 +1,18 @@
 import React, {useMemo, useState, useEffect, useCallback} from 'react'
 import useLocalStorageState from 'use-local-storage-state'
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import {
+  API_PATH,
+  ORDER_COMPLETE,
+  ORDER_CREATED,
+  ORDER_FULFILLED,
+  ORDER_VALID,
+} from '../../utils/consts'
 import {getAuthToken} from '../../utils/authentication'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
-<<<<<<< HEAD
-import {ORDER_CREATED, ORDER_FULFILLED, ORDER_VALID, ORDER_COMPLETE} from '../../utils/consts'
-import {API_PATH} from '../../utils/consts'
 import {H2confirm} from './components.styles'
-||||||| 23d294f3e
-import {ORDER_FULFILLED, ORDER_VALID, ORDER_COMPLETE} from '../../utils/consts'
-=======
-import {ORDER_FULFILLED, ORDER_VALID, ORDER_COMPLETE} from '../../utils/consts'
-import {API_PATH} from '../../utils/consts'
->>>>>>> sau-feature/942827-feurst-edi
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
