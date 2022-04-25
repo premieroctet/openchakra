@@ -46,6 +46,11 @@ const StyledAutocomplete = styled.div.attrs(props => ({
 
   input {
     border: ${props => (props.noborder ? '0' : '1px solid var(--gray-800)')};
+    transition: border var(--delayIn) ease-in-out, outline var(--delayIn) ease-in-out;
+    padding: var(--spc-2);
+    min-height: var(--minTapSize);
+    outline: none;
+    width: min-content;
   }
 
   [aria-expanded="true"] + [role="listbox"] {

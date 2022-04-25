@@ -5,7 +5,7 @@ import {API_PATH} from '../../utils/consts'
 import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
 import {PleasantButton} from './Button'
-import {FormAddArticle, Label, Input, Refquantity} from './AddArticle.styles'
+import {FormAddArticle, Label, Input, Refquantity} from './components.styles'
 import CheckingProduct from './CheckingProduct'
 
 const AddArticle = ({addProduct}) => {

@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import {screen} from '../../styles/screenWidths'
 
+
 const FormAddArticle = styled.form`
   display: grid;
   grid-template-columns: var(--grid-cols-1);
@@ -20,13 +21,16 @@ const Label = styled.label`
   width: max-content;
 `
 
-const Input = styled.input`
+const Input = styled.input.attrs(props => ({
+  noborder: props.noborder,
+}))`
   transition: border var(--delayIn) ease-in-out, outline var(--delayIn) ease-in-out;
   padding: var(--spc-2);
   min-height: var(--minTapSize);
   outline: none;
-  border: 1px solid var(--gray-800);
+  border: ${props => (props.noborder ? '0' : '1px solid var(--gray-800)')};
   width: min-content;
+  color: var(--gray-800);
 
   &:focus {
     outline: 2px solid var(--yellow-500);

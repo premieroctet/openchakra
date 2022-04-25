@@ -4,16 +4,15 @@ import {localeMoneyFormat} from '../../utils/converters'
 
 const ShippingOptions = styled.div`
 
-  display: flex;
-  flex-direction: column;
-  row-gap: var(--spc-2);
-
-  label {
-    accent-color: var(--black);
-    display: block;
-    background: var(--white);
-    padding: var(--spc-4);
-    color: var(--black);
+label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--spc-3);
+  accent-color: var(--black);
+  background: var(--white);
+  padding: var(--spc-4);
+  color: var(--black);
+  margin-bottom: var(--spc-2);
   }
 
   input {
@@ -24,20 +23,20 @@ const ShippingOptions = styled.div`
 
 `
 
-const ShippingFees = ({shippingOption, setShippingOption, shippingoptions}) => {
+const ShippingFees = ({state, setState, shippingoptions}) => {
 
   return (
     <ShippingOptions>
       {Object.entries(shippingoptions).map(([key, value]) => (
-        <label>
+        <label key={key}>
           <input
             type={'radio'}
             name={'shippingOption'}
             value={key}
-            checked={key == shippingOption}
-            onChange={() => setShippingOption(key)}
+            checked={key == state.shippingOption}
+            onChange={(e) => setState({...state, shippingOption: e.target.value})}
           />
-          Livraison {key} - environ {localeMoneyFormat({value})}
+          <span>Livraison {key} - environ {localeMoneyFormat({value})}</span>
         </label>
       ),
       )}
