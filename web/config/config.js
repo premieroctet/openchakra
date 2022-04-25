@@ -1,5 +1,5 @@
 const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
-const {MODE}=require('../mode')
+const {MODE, SIB_APIKEY}=require('../mode')
 const source = require('./client_id.json')
 
 const get_mode = () => {
@@ -62,7 +62,7 @@ const MANGOPAY_CONFIG_TEST = {
   clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
   sandbox: true,
   logClass: () => {},
-  errorHandler: (options, err) => {}
+  errorHandler: (options, err) => {},
 }
 
 const MANGOPAY_CONFIG = is_production() ? MANGOPAY_CONFIG_PROD : MANGOPAY_CONFIG_TEST
@@ -109,6 +109,13 @@ const SIRET = {
   sirenUrl: 'https://api.insee.fr/entreprises/sirene/V3/siren',
 }
 
+const getSibApiKey = () => {
+  if (!SIB_APIKEY) {
+    throw new Error('Undefined SIB_APIKEY')
+  }
+  return SIB_APIKEY
+}
+
 // Enable.disable Google & Facebook login
 const ENABLE_GF_LOGIN = false
 
@@ -139,4 +146,5 @@ module.exports = {
   is_production, is_validation, is_development, is_development_nossl, SERVER_PROD,
   get_host_url, MANGOPAY_CONFIG, displayConfig,
   ENABLE_MAILING, isB2BDisabled,
+  getSibApiKey,
 }
