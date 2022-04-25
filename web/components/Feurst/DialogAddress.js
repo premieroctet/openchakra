@@ -98,7 +98,7 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
 
 
   useEffect(() => {
-    setValid( address?.address && address?.zip_code&& address?.city && address?.country && orderref && shippingOption)
+    setValid(address?.address && address?.zip_code&& address?.city && address?.country && orderref && shippingOption)
   }, [address, shippingOption, orderref])
 
   useEffect(() => {
@@ -119,17 +119,17 @@ traitement de votre commande.</p>
 
       <form ref={formData} onSubmit={validateAddress}>
 
-      <h2>Pour valider votre commande, veuillez&nbsp;:</h2>
-      <h3>Indiquer une référence</h3>
+        <h2>Pour valider votre commande, veuillez&nbsp;:</h2>
+        <h3>Indiquer une référence</h3>
 
         {/* order ref */}
         <label htmlFor='reforder' className='sr-only'>Référence</label>
-        <Input noborder id="reforder" className='ref' value={orderref} onChange={ev => setState({...state, orderref:  ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
+        <Input noborder id="reforder" className='ref' value={orderref} onChange={ev => setState({...state, orderref: ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
 
         {/* order address */}
         <h3>Indiquer l'adresse de livraison</h3>
-        <DeliveryAddresses address={address} setAddress={(e) => setState({...state, address: e})} onChange={(e) => setState({...state, address: {...address, label: e} })} />
-        <Address address={address} setAddress={(e) => setState({...state, address: e})} getShippingFees={getShippingFees} errors={errors} />
+        <DeliveryAddresses state={state} setState={setState} />
+        <Address state={state} setState={setState} getShippingFees={getShippingFees} errors={errors} />
 
           
         {/* order shipping fees */}
@@ -139,7 +139,7 @@ traitement de votre commande.</p>
         </>) : null
         }
 
-        <PleasantButton disabled={!valid} type='submit' onSubmit={() => validateAddress(formData.current)}>Valider ces informations</PleasantButton>
+        <PleasantButton disabled={!valid} type='submit' onSubmit={() => validateAddress()}>Valider ces informations</PleasantButton>
       </form>
 
     </StyledDialog>

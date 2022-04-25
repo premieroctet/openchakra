@@ -1,12 +1,14 @@
 import React, {useState} from 'react'
 import {withTranslation} from 'react-i18next'
 import styled from 'styled-components'
-import { Input } from '../Feurst/components.styles'
+import {Input} from '../Feurst/components.styles'
 
 
-const Address = ({t, address, setAddress, getShippingFees, errors}) => {
+const Address = ({t, state, setState, getShippingFees, errors}) => {
 
-  const changeAddress = e => setAddress({...address, [e.target.name]: e.target.value})
+  const changeAddress = e => setState({...state, address: {...state.address, [e.target.name]: e.target.value}})
+
+  const {address} = state
   const isDisabled = false
 
   return (
