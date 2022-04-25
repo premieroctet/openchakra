@@ -1,6 +1,7 @@
 const SibApiV3Sdk = require('sib-api-v3-sdk')
+const {getSibApiKey} = require('../../config/config')
 
-const SIB_API_KEY_V3 = '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'
+const SIB_API_KEY_V3 = getSibApiKey()
 
 class SIB_V3 {
 
