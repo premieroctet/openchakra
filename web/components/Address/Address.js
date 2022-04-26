@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import {Input} from '../Feurst/components.styles'
 
 
-const Address = ({t, state, setState, getShippingFees, errors}) => {
+const Address = ({t, state, setState, errors}) => {
 
   const changeAddress = e => setState({...state, address: {...state.address, [e.target.name]: e.target.value}})
 
@@ -35,9 +35,7 @@ const Address = ({t, state, setState, getShippingFees, errors}) => {
           name="zip_code"
           autoComplete='postal-code'
           value={address?.zip_code || ''}
-          // onChange={e => { changeAddress(e); getShippingFees(e.target.value) }}
-          onChange={e => { changeAddress(e) }}
-          onBlur={e => getShippingFees(e.target.value)}
+          onChange={changeAddress}
         />
       </div>
       <div className='city'>

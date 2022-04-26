@@ -6,12 +6,11 @@ import {screen} from '../screenWidths'
 const TablesStyles = styled.div`
 
   table {
-    display: block;
+    display: table;
     border: 1px solid var(--stone-300);
     border-collapse: collapse;
     text-align: center;
     width: 100%;
-    max-width: fit-content;
     margin: 0 auto;
     overflow-x: auto;
     white-space: nowrap;
@@ -46,6 +45,7 @@ const TablesStyles = styled.div`
 
   tr {
     border-top: 1px solid var(--stone-300);
+    height: var(--spc-12);
   }
 
   tr:nth-child(2n + 2) {

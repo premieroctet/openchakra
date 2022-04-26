@@ -42,8 +42,7 @@ async function client(
         .catch(e => console.log(`Error when fetching ${e}`))
       return data
     }
-    return Promise.reject(data)
-
+    return Promise.reject(response)
   })
 }
 

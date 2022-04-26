@@ -81,9 +81,9 @@ const withEdiAuth = (Component = null, options = {}) => {
           }
           <Header accessRights={accessRights} />
           <Tabs accessRights={accessRights} />
-          <div className='container'>
-            <Component accessRights={accessRights} />
-          </div>
+          
+          <Component accessRights={accessRights} />
+          
           <GlobalStyleEdi />
         </ThemeProvider>
       )
