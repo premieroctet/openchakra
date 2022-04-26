@@ -1,4 +1,5 @@
 const lodash=require('lodash')
+const {RELATED} = require('../../utils/feurst/consts')
 
 const {USER_ACTIONS, ALL, COMPANY, MINE} = require('../../utils/consts')
 
@@ -20,6 +21,9 @@ const getDataFilter = (user, model, action) => {
   const userActions=getActions(user.roles, model, action)
   if (userActions.some(userAction => userAction.visibility==ALL)) {
     return {}
+  }
+  if (userActions.some(userAction => userAction.visibility==RELATED)) {
+    return {company: {$in: [user.companies]}}
   }
   if (userActions.some(userAction => userAction.visibility==COMPANY)) {
     return {company: user.company}

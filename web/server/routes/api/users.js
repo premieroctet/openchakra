@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+const {ACCOUNT, LINK, VIEW} = require('../../../utils/feurst/consts')
 const crypto = require('crypto')
 
 const fs = require('fs').promises
@@ -29,7 +31,7 @@ const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile,
 const validateLoginInput = require('../../validation/login')
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
 moment.locale('fr')
-const {ROLES, ACCOUNT, VIEW}=require('../../../utils/consts')
+const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
@@ -68,6 +70,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   User.find(getDataFilter(req.user, DATA_TYPE, VIEW))
     .populate('company')
+    .populate('companies')
     .then(data => {
       res.json(data)
     })
@@ -1206,6 +1209,24 @@ router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), 
   Album.findOneAndUpdate({user: req.user.id}, {$push: {pictures: req.file.path}}, {new: true, upsert: true})
     .then(() => {
       res.json({})
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+router.put('/:user_id/companies', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, LINK)) {
+    return res.status(301)
+  }
+
+  const user_id=req.params.user_id
+
+  User.findByIdAndUpdate(user_id, {companies: req.body.companies.map(c => mongoose.Types.ObjectId(c))})
+    .then(result => {
+      res.json()
     })
     .catch(err => {
       console.error(err)

@@ -65,7 +65,7 @@ function FeurstRegister({className, style, onSuccess}) {
         <TextField style={{margin: '0px 10px 0px 10px'}} name={'firstname'} value={firstname} onChange={ev => setFirstname(ev.target.value)} placeholder={'Prénom'} />
         <TextField style={{margin: '0px 10px 0px 10px'}} name={'name'} value={name} onChange={ev => setName(ev.target.value)} placeholder={'Nom'} />
         <TextField style={{margin: '0px 10px 0px 10px'}} name={'email'} value={email} onChange={ev => setEmail(ev.target.value)} placeholder={'Adresse email'} />
-        en tant que
+        <Typography>en tant que</Typography>
         <Select
           id="role"
           value={role}

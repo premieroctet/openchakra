@@ -265,6 +265,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   Order.find(getDataFilter(req.user, DATA_TYPE, VIEW))
     .populate('items.product')
+    .populate('user')
     .then(orders => {
       return res.json(orders)
     })
@@ -285,6 +286,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
 
   Order.findOne({_id: req.params.order_id, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
     .populate('items.product')
+    .populate('user')
     .then(order => {
       if (order) {
         return res.json(order)

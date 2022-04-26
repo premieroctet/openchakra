@@ -41,6 +41,9 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const dataToken = getAuthToken()
   const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const [refresh, setRefresh]=useState(false)
+
+  const toggleRefresh= () => setRefresh(!refresh)
 
   const updateMyData = (rowIndex, columnId, value) => {
 
@@ -70,17 +73,17 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
     const currentOrder = id ?
       await client(`${API_PATH}/${endpoint}/${id}`)
-        .catch(err => snackBarError(err.msg))
+        .catch(err => snackBarError(err))
       : []
 
     currentOrder && setState({...state, status: currentOrder.status, items: currentOrder.items, deliveryAddress: currentOrder?.address ? currentOrder.address : null})
 
   }, [endpoint])
 
+  useEffect(() => {
+    getContentFrom(orderID)
+  }, [refresh, orderID])
 
-  const checkProduct = async({item, qty}) => {
-
-  }
 
   const addProduct = async({item, qty}) => {
     if (!item) { return }
@@ -172,7 +175,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
     {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) &&
       <>
-        <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
+        <ImportExcelFile importURL={importURL} templateURL={templateURL} onImport={toggleRefresh}/>
         <AddArticle addProduct={addProduct} />
       </>}
 

@@ -1675,7 +1675,7 @@ router.post('/register_invitation', passport.authenticate('admin', {session: fal
     })
 })
 
-router.post('/feurst_register', passport.authenticate('admin', {session: false}), (req, res) => {
+router.post('/feurst_register', passport.authenticate('jwt', {session: false}), (req, res) => {
   const {firstname, name, email, role, company}=req.body
   const {errors, isValid}=validateFeurstRegister(req.body)
   if (!isValid) {
@@ -1688,7 +1688,7 @@ router.post('/feurst_register', passport.authenticate('admin', {session: false})
       if (user) {
         return Promise.reject('Un compte avec cet email existe déjà')
       }
-      return company ? Company.findOneAndUpdate({name: new RegExp(company, 'i')}, {name: company}, {upsert: true, new: true}) : Promise.resolve(null)
+      return (company || req.user.company) ? Company.findOneAndUpdate({name: new RegExp(company, 'i')}, {name: company}, {upsert: true, new: true}) : Promise.resolve(null)
     })
     .then(company => {
       console.log(`Company is ${company}`)

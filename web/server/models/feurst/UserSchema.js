@@ -47,6 +47,11 @@ const UserSchema = new Schema({
   }],
   // Comments for admins
   comment: String,
+  // For Feurst adv
+  companies: [{
+    type: Schema.Types.ObjectId,
+    ref: 'company',
+  }],
 }, {toJSON: {virtuals: true, getters: true}})
 
 UserSchema.virtual('avatar_letters').get(function() {
