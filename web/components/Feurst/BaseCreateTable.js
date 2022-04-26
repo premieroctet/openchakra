@@ -28,7 +28,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     orderref: null,
     address: {},
     shippingOption: null,
-    status: null,
+    status: ORDER_CREATED,
     errors: null,
   })
 
@@ -114,7 +114,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         console.error(e, `Can't bind address to order/quotation ${e}`)
         setState({...state, errors: e})
       })
-    bindAddressAndShipping && setIsOpenDialog(false)
+    bindAddressAndShipping && setState({...state, status: bindAddressAndShipping.status, deliveryAddress: bindAddressAndShipping?.address}) && setIsOpenDialog(false)
   }
 
   const resetAddress = async() => {
@@ -152,16 +152,16 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
   const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
-  
-  return (<>
 
+  return (<>
+    
     {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) &&
       <>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
         <AddArticle addProduct={addProduct} />
       </>}
 
-    {[ORDER_COMPLETE].includes(state.status) && <H2confirm>Récapitulatif de votre commande</H2confirm>}
+    {[ORDER_COMPLETE].includes(state?.status) && <H2confirm>Récapitulatif de votre commande</H2confirm>}
 
 
     <FeurstTable
@@ -171,16 +171,14 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       updateMyData={updateMyData}
     />
 
-    {[ORDER_VALID, ORDER_COMPLETE].includes(state.status) ?
+    {[ORDER_VALID, ORDER_COMPLETE].includes(state?.status) ?
       <Delivery address={state.deliveryAddress} /> : null
     }
 
     <div className='flex flex-wrap justify-between gap-y-4 mb-6'>
-      {state.status === ORDER_VALID
-        ?
+      {[ORDER_COMPLETE].includes(state.status) ?
         <PleasantButton
           rounded={'full'}
-          disabled={![ORDER_FULFILLED, ORDER_VALID].includes(state.status)}
           bgColor={'#fff'}
           textColor={'#141953'}
           borderColor={'1px solid #141953'}
@@ -191,7 +189,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         :
         <PleasantButton
           rounded={'full'}
-          disabled={![ORDER_FULFILLED, ORDER_VALID].includes(state.status)}
+          disabled={[ORDER_CREATED].includes(state.status)}
           bgColor={'#fff'}
           textColor={'#141953'}
           borderColor={'1px solid #141953'}
@@ -204,7 +202,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
       <PleasantButton
         rounded={'full'}
-        disabled={![ORDER_FULFILLED, ORDER_VALID].includes(state.status)}
+        disabled={[ORDER_CREATED].includes(state.status)}
         onClick={() => (state.status === ORDER_FULFILLED ? setIsOpenDialog(true) : submitOrder())}
       >
         Valider ma commande
