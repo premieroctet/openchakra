@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
 const lodash=require('lodash')
+const {ORDER_COMPLETE} = require('../../../utils/feurst/consts')
 const {ORDER_VALID, ORDER_FULFILLED, ORDER_CREATED, ROLES} = require('../../../utils/consts')
 const BaseSchema = require('./QuotationBookingBaseSchema')
 
@@ -30,7 +31,7 @@ OrderSchema.add({
 
 OrderSchema.virtual('status').get(function() {
   if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode)) {
-    return ORDER_VALID
+    return this.user_validated ? ORDER_VALID : ORDER_COMPLETE
   }
   if (this.items?.length>0) {
     return ORDER_FULFILLED

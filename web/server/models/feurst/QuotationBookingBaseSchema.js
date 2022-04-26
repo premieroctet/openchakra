@@ -74,6 +74,10 @@ const QuotationBookingBaseSchema=new Schema({
     type: Date,
     default: Date.now,
   },
+  user_validated: {
+    type: Boolean,
+    default: false,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 QuotationBookingBaseSchema.virtual('total_amount').get(function() {

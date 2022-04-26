@@ -3,7 +3,10 @@ const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
-const {STANDARD_SHIPPING} = require('../../../utils/feurst/consts')
+const {
+  EXPRESS_SHIPPING,
+  STANDARD_SHIPPING,
+} = require('../../../utils/feurst/consts')
 const {lineItemsImport} = require('../../utils/import')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {
@@ -127,7 +130,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
   }
 
   const order_id=req.params.id
-  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)}, {address: null, shipping_mode: null}, {new: true})
+  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)}, {address: null, shipping_mode: null, user_validated: false}, {new: true})
     .populate('items.product')
     .then(result => {
       if (!result) {
@@ -312,6 +315,37 @@ router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req
     })
 })
 
+// @Route DELETE /myAlfred/orders/:id
+// Delete one order
+// @Access private
+router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, VALIDATE)) {
+    return res.status(301)
+  }
+
+  const order_id=req.params.order_id
+  
+  Order.findById(order_id)
+    .then(o => {
+      if (!o) {
+        return res.status(404).json(`Order ${req.params.order_id} not found`)
+      }
+      if (lodash.isEmpty(this.address) || lodash.isEmpty(this.shipping_mode)) {
+        return res.status(400).json(`Address and shipping mode are required to validate`)
+      }
+      o.user_validated=true
+      return o.save()
+    })
+    .then(() => {
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+})
+
 // @Route GET /myAlfred/api/orders/:id/shipping-fee?zipcode
 // Computes shipping fees
 // @Access private
@@ -346,7 +380,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
       return computeShipFee(department, order.total_weight, true)
     })
     .then(express => {
-      fee[EXPRESS_MODE]=express
+      fee[EXPRESS_SHIPPING]=express
       return res.json(fee)
     })
     .catch(err => {

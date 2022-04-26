@@ -152,9 +152,9 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
   const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
-
+  
   return (<>
-    
+
     {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) &&
       <>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>

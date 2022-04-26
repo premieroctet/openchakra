@@ -28,7 +28,7 @@ const orderColumns = ({language, deleteProduct}) => [
   },
   {
     label: 'Poids',
-    attribute: 'product.weight',
+    attribute: 'total_weight',
   },
   {
     label: 'Prix catalogue',

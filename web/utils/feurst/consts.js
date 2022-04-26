@@ -46,6 +46,7 @@ const QUOTATION_STATUS={
 
 const ORDER_CREATED='CREATED'
 const ORDER_FULFILLED='FULFILLED'
+const ORDER_COMPLETE='COMPLETE'
 const ORDER_VALID='VALID'
 const ORDER_PARTIALLY_HANDLED='PARTIALLY_HANDLED'
 const ORDER_HANDLED='HANDLED'
@@ -53,6 +54,7 @@ const ORDER_HANDLED='HANDLED'
 const ORDER_STATUS={
   [ORDER_CREATED]: 'ORDER_STATUS.created',
   [ORDER_FULFILLED]: 'ORDER_STATUS.fulfilled',
+  [ORDER_COMPLETE]: 'ORDER_STATUS.complete',
   [ORDER_VALID]: 'ORDER_STATUS.valid',
   [ORDER_PARTIALLY_HANDLED]: 'ORDER_STATUS.partially_handled',
   [ORDER_HANDLED]: 'ORDER_STATUS.partially_handled',
@@ -101,13 +103,13 @@ const USER_ACTIONS={
   ]),
   [CUSTOMER_ADMIN]: lodash.flattenDeep([
     [VIEW, CREATE, UPDATE, DELETE].map(action => [CUSTOMER_ADMIN, CUSTOMER_SLAVE].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
-    [CREATE, VIEW, UPDATE, CONVERT].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
+    [CREATE, VIEW, UPDATE, CONVERT, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
     [CREATE, VIEW, UPDATE].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
     [VIEW].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
   ]),
   [CUSTOMER_SLAVE]: lodash.flattenDeep([
-    [CREATE, VIEW, UPDATE, CONVERT, DELETE].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
-    [CREATE, VIEW, UPDATE, DELETE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
+    [CREATE, VIEW, UPDATE, CONVERT, DELETE, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
+    [CREATE, VIEW, UPDATE, DELETE, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
     [VIEW].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
   ]),
 }
@@ -137,4 +139,5 @@ module.exports={
   SHIPRATE, MAX_WEIGHT, PRODUCT, STANDARD_SHIPPING, EXPRESS_SHIPPING, BASEPATH_EDI, ALL, FEURST_PHONE_NUMBER, FEURST_IMG_PATH, API_PATH,
   COMPANY, MINE,
   ORDER_CREATED, ORDER_FULFILLED, ORDER_VALID, ORDER_PARTIALLY_HANDLED, ORDER_HANDLED, SHIPPING_MODES,
+  ORDER_COMPLETE,
 }
