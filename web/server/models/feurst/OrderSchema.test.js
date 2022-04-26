@@ -1,6 +1,7 @@
 const lodash=require('lodash')
 const mongoose = require('mongoose')
 const {
+  EXPRESS_SHIPPING,
   ORDER_CREATED,
   ORDER_FULFILLED,
   ORDER_VALID,
@@ -79,7 +80,7 @@ describe('Feurst Order/Products test', () => {
       })
       .then(order => {
         expect(order.status).toBe(ORDER_FULFILLED)
-        return Order.findByIdAndUpdate(order._id, {$set: {address: {address: 'Rue'}, shipping_mode: 'express'}}, {new: true})
+        return Order.findByIdAndUpdate(order._id, {$set: {address: {address: 'Rue'}, shipping_mode: EXPRESS_SHIPPING}}, {new: true})
       })
       .then(order => {
         expect(order.status).toBe(ORDER_VALID)

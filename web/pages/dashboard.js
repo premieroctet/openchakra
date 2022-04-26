@@ -1,16 +1,17 @@
 import {Link, Typography} from '@material-ui/core'
-const {SHIPRATE, PRODUCT} = require('../utils/consts')
 import axios from 'axios'
-import {isLoggedUserAdmin, isUserSuperAdmin} from '../utils/context'
 import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
 
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import Router from 'next/router'
+import {isLoggedUserAdmin, isUserSuperAdmin} from '../utils/context'
 import DashboardLayout from '../hoc/Layout/DashboardLayout'
+const {API_PATH} = require('../utils/feurst/consts')
+const {setAxiosAuthentication}=require('../utils/authentication')
+const {SHIPRATE, PRODUCT} = require('../utils/consts')
 
 const styles = () => ({
   signupContainer: {
@@ -54,7 +55,7 @@ class home extends React.Component {
       .then(response => {
         this.setState({user: response.data})
       })
-    axios.get('/myAlfred/api/users/actions')
+    axios.get(`${API_PATH}/actions`)
       .then(response => {
         this.setState({actions: response.data})
       })

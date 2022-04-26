@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import {API_PATH} from '../../utils/consts'
 import {PleasantButton} from './Button'
 const {FormControl, TextField} = require('@material-ui/core')
 const lodash=require('lodash')
 const axios = require('axios')
 const csv_parse = require('csv-parse/lib/sync')
+const document = require('../../pages/_document')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 const {client} = require('../../utils/client')
 const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
@@ -21,6 +21,24 @@ const DownloadExampleFile = styled.button`
   width: 100%;
 `
 
+const ImportResult = ({result}) => {
+  return (
+    <>
+      <div>Données créées : {result.created}</div>
+      <div>Données mises à jour : {result.updated}</div>
+      {!lodash.isEmpty(result.errors) &&
+        <><h2>Erreurs:</h2>
+          {result.errors.map(err => (<div>{err}</div>))}
+        </>
+      }
+      {!lodash.isEmpty(result.warnings) &&
+        <><h2>Warnings:</h2>
+          {result.warnings.map(war => (<div>{war}</div>))}
+        </>
+      }
+    </>
+  )
+}
 const ImportExcelFile = ({importURL, templateURL}) => {
 
   const [isOpenDialog, setIsOpenDialog] = useState(false)
@@ -28,6 +46,7 @@ const ImportExcelFile = ({importURL, templateURL}) => {
   const [rawData, setRawData]=useState(null)
   const [sample, setSample] = useState(null)
   const [separator, setSeparator] = useState(';')
+  const [importResult, setImportResult] = useState(null)
   // WARNING: first is 1, not 0
   const [firstLine, setFirstLine] = useState(1)
   const uploadFile = () => {
@@ -78,12 +97,13 @@ const ImportExcelFile = ({importURL, templateURL}) => {
   }
 
   const submitData = () => {
+    setImportResult(null)
     const data = new FormData()
     data.append('buffer', file)
     setAxiosAuthentication()
     axios.post(importURL, data)
       .then(result => {
-        snackBarSuccess(result)
+        setImportResult(result.data)
       })
       .catch(err => {
         snackBarError(err)
@@ -115,6 +135,7 @@ const ImportExcelFile = ({importURL, templateURL}) => {
             ))}
           </table>
         </>}
+      {importResult && <ImportResult result={importResult}/>}
       <PleasantButton size={'full-width'} onClick={submitData}>Importer ce fichier</PleasantButton>
     </PureDialog>
     <DownloadExampleFile type='button' className='block text-lg no-underline text-center mb-6' href='#' onClick={fetchTemplate} >Télécharger le modèle de fichier</DownloadExampleFile>
