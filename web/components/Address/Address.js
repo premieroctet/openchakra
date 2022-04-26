@@ -21,7 +21,7 @@ const Address = ({t, state, setState, getShippingFees, errors}) => {
           placeholder={'rue'}
           name="address"
           autoComplete='street-address'
-          value={address?.address}
+          value={address?.address || ''}
           onChange={changeAddress}
         />
       </div>
@@ -34,7 +34,7 @@ const Address = ({t, state, setState, getShippingFees, errors}) => {
           type="text"
           name="zip_code"
           autoComplete='postal-code'
-          value={address?.zip_code}
+          value={address?.zip_code || ''}
           // onChange={e => { changeAddress(e); getShippingFees(e.target.value) }}
           onChange={e => { changeAddress(e) }}
           onBlur={e => getShippingFees(e.target.value)}
@@ -49,7 +49,7 @@ const Address = ({t, state, setState, getShippingFees, errors}) => {
           type="text"
           name="city"
           autoComplete='address-level2'
-          value={address?.city}
+          value={address?.city || ''}
           onChange={changeAddress}
         />
       </div>
@@ -62,7 +62,7 @@ const Address = ({t, state, setState, getShippingFees, errors}) => {
           type="text"
           name="country"
           autoComplete='country'
-          value={address?.country}
+          value={address?.country || ''}
           onChange={changeAddress}
         />
       </div>
@@ -76,7 +76,7 @@ const Address = ({t, state, setState, getShippingFees, errors}) => {
           type="tel"
           name="phone"
           autoComplete='phone'
-          value={address?.phone}
+          value={address?.phone || ''}
           onChange={changeAddress}
         />
       </div>
