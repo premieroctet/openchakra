@@ -66,42 +66,49 @@ const tabsContent = [
     url: `${BASEPATH_EDI}/orders/create`,
     model: ORDER,
     action: CREATE,
+    visible: [ORDER, QUOTATION],
   },
   {
     title: 'Mes commandes',
     url: `${BASEPATH_EDI}/orders`,
     model: ORDER,
     action: VIEW,
+    visible: [ORDER, QUOTATION],
   },
   {
     title: 'Créer un devis',
     url: `${BASEPATH_EDI}/quotations/create`,
     model: QUOTATION,
     action: CREATE,
+    visible: [ORDER, QUOTATION],
   },
   {
     title: 'Mes devis',
     url: `${BASEPATH_EDI}/quotations`,
     model: QUOTATION,
     action: VIEW,
+    visible: [ORDER, QUOTATION],
   },
   {
     title: 'Comptes',
     url: `${BASEPATH_EDI}/accounts`,
     model: ACCOUNT,
     action: VIEW,
+    visible: [ACCOUNT, PRODUCT, SHIPRATE],
   },
   {
     title: 'Articles',
     url: `${BASEPATH_EDI}/products`,
     model: PRODUCT,
     action: VIEW,
+    visible: [ACCOUNT, PRODUCT, SHIPRATE],
   },
   {
     title: 'Frais de livraison',
     url: `${BASEPATH_EDI}/shiprates`,
     model: SHIPRATE,
     action: VIEW,
+    visible: [ACCOUNT, PRODUCT, SHIPRATE],
   },
 ]
 
@@ -109,9 +116,11 @@ const Tabs = props => {
   const {accessRights}=props
 
   const router = useRouter()
+  // const filteredContents=tabsContent // .filter(c => props.accessRights.isActionAllowed(c.model, c.action))
+  const filteredContents=tabsContent
+    .filter(c => accessRights.isActionAllowed(c.model, c.action))
+    .filter(c => c.visible.includes(accessRights.getModel()))
 
-  const filteredContents=tabsContent // .filter(c => props.accessRights.isActionAllowed(c.model, c.action))
-  
   return (
     <>
       <Tabstyled className='container'>

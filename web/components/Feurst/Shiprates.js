@@ -26,7 +26,7 @@ const ShipratesList = ({accessRights}) => {
           <PleasantButton key={`action${i}`} onClick={() => setImportInfo(imp)}>{imp.title}</PleasantButton>
         ))}
       </div>
-      <BaseListTable endpoint='shiprates' columns={shipratesColumns} accessRights={accessRights}/>
+      <BaseListTable caption='Frais de livraison' endpoint='shiprates' columns={shipratesColumns} accessRights={accessRights}/>
       {importInfo &&
         <DialogBase open={true}>
           <DataImport title={importInfo.title} subTitle={importInfo.subTitle} importURL={importInfo.url}/>

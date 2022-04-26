@@ -5,7 +5,7 @@ const BaseListTable = require('./BaseListTable')
 const MyOrders = () => {
 
   return (
-    <BaseListTable endpoint='orders' columns={ordersColumns} />
+    <BaseListTable caption='Historique des commandes' endpoint='orders' columns={ordersColumns} />
   )
 }
 
