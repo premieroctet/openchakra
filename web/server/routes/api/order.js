@@ -3,6 +3,7 @@ const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
+const {STANDARD_SHIPPING} = require('../../../utils/feurst/consts')
 const {lineItemsImport} = require('../../utils/import')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {
@@ -341,11 +342,11 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
       return computeShipFee(department, order.total_weight, false)
     })
     .then(standard => {
-      fee.standard=standard
+      fee[STANDARD_SHIPPING]=standard
       return computeShipFee(department, order.total_weight, true)
     })
     .then(express => {
-      fee.express=express
+      fee[EXPRESS_MODE]=express
       return res.json(fee)
     })
     .catch(err => {

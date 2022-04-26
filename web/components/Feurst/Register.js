@@ -13,6 +13,7 @@ const {
 } = require('@material-ui/core')
 const {Autocomplete} = require('@material-ui/lab')
 const Validator = require('validator')
+const {API_PATH} = require('../../utils/feurst/consts')
 const {normalize} = require('../../utils/text')
 const {CUSTOMER_ADMIN, ROLES, ACCOUNT, CREATE} = require('../../utils/consts')
 
@@ -33,7 +34,7 @@ function FeurstRegister({className, style, onSuccess}) {
         setCompanies(result.data.map(c => c.name))
       })
       .catch(err => console.error(err))
-    axios.get('/myAlfred/api/users/actions', {params: {model: ACCOUNT, action: CREATE}})
+    axios.get(`${API_PATH}/actions`, {params: {model: ACCOUNT, action: CREATE}})
       .then(result => {
         const rls=result.data.filter(a => a.model==ACCOUNT && a.action==CREATE).map(a => a.type)
         setRoles(rls)

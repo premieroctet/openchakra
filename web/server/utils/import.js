@@ -40,7 +40,7 @@ const dataImport=(model, headers, records, mapping, options) => {
     const missingColumns=getMissingColumns(fileMandatoryFields, headers)
     if (!lodash.isEmpty(missingColumns)) {
       console.error(`Missing: ${missingColumns}`)
-      return reject({imported: 0, warnings: [], errors: missingColumns.map(f => `Colonne ${f} manquante`)})
+      return reject({created: 0, updated: 0, warnings: [], errors: missingColumns.map(f => `Colonne ${f} manquante`)})
     }
 
     // Check empty mandatory fields in records
@@ -53,7 +53,7 @@ const dataImport=(model, headers, records, mapping, options) => {
     })
 
     if (!lodash.isEmpty(warnings)) {
-      return reject({imported: 0, warnings: warnings, errors: null})
+      return reject({created: 0, updated: 0, warnings: warnings, errors: null})
     }
 
     const formattedRecords=records.map(record => {
@@ -94,10 +94,7 @@ const csvImport= (model, bufferData, mapping, options) => {
     // data buffer to CSV
     extractCsv(bufferData, options)
       .then(({headers, records}) => {
-        return dataImport(model, headers, records, mapping, options)
-      })
-      .then(result => {
-        resolve(result)
+        resolve(dataImport(model, headers, records, mapping, options))
       })
       .catch(err => {
         resolve({errors: [err]})
@@ -160,7 +157,7 @@ const shipRatesImport = buffer => {
 
 const lineItemsImport = (model, buffer, mapping) => {
   return new Promise((resolve, reject) => {
-    const importResult={imported: 0, warning: [], errors: []}
+    const importResult={created: 0, updated: 0, warnings: [], errors: []}
     extractCsv(buffer, {})
       .then(data => {
         const headers=data.headers
@@ -168,15 +165,16 @@ const lineItemsImport = (model, buffer, mapping) => {
         const missingColumns=getMissingColumns(mandatoryColumns, headers)
         if (!lodash.isEmpty(missingColumns)) {
           console.error(`Missing: ${missingColumns}`)
-          return reject({imported: 0, warnings: [], errors: missingColumns.map(f => `Colonne ${f} manquante`)})
+          importResult.errors=missingColumns.map(f => `Colonne ${f} manquante`)
+          return reject('break')
         }
         data.records=data.records.map(r => mapRecord(r, mapping))
         const promises=data.records.map(r => addItem(model, null, r.reference, parseInt(r.quantity)))
         return Promise.allSettled(promises)
       })
       .then(res => {
-        importResult.imported+=res.filter(r => r.status=='fulfilled').length
-        importResult.warning.push(...res.filter(r => r.status=='rejected').map(r => r.reason))
+        importResult.created+=res.filter(r => r.status=='fulfilled').length
+        importResult.warnings.push(...res.filter(r => r.status=='rejected').map(r => r.reason))
       })
       .then(() => {
         return updateShipFee(model)
@@ -189,7 +187,7 @@ const lineItemsImport = (model, buffer, mapping) => {
       })
       .catch(err => {
         console.error(err)
-        return reject(err)
+        return err=='break' ? resolve(importResult) : reject(err)
       })
   })
 }

@@ -34,7 +34,7 @@ class all extends DataPage {
       .then(response => {
         this.setState({data: response.data})
       })
-    axios.get('/myAlfred/api/users/actions')
+    axios.get(`${API_PATH}/actions`)
       .then(response => {
         this.setState({actions: response.data})
       })

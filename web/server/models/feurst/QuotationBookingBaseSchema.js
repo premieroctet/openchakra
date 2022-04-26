@@ -66,7 +66,7 @@ const QuotationBookingBaseSchema=new Schema({
   },
   shipping_mode: {
     type: String,
-    enum: Object.keys(SHIPPING_MODES),
+    enum: [null, ...Object.keys(SHIPPING_MODES)],
     required: false,
   },
   address: AddressSchema,
