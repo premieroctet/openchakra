@@ -364,7 +364,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
 
   const department=parseInt(String(zipCode).slice(0, -3))
 
-  const fee={EXPRESS_SHIPPING: 0, STANDARD_SHIPPING: 0}
+  const fee={[EXPRESS_SHIPPING]: 0, [STANDARD_SHIPPING]: 0}
   let order=null
   Order.findOne({_id: req.params.id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
     .populate('items.product')
