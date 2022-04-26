@@ -5,7 +5,7 @@ const {quotationsColumns} = require('./tablestructures')
 const MyQuotations = () => {
 
   return (
-    <BaseListTable endpoint='quotations' columns={quotationsColumns} />
+    <BaseListTable caption='Historique des devis' endpoint='quotations' columns={quotationsColumns} />
   )
 }
 

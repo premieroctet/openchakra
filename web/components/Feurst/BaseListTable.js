@@ -1,12 +1,12 @@
 import React, {useMemo, useState, useEffect, useCallback} from 'react'
 import {getAuthToken} from '../../utils/authentication'
-import Table from '../Table/Table'
 import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
+const FeurstTable = require('../../styles/feurst/FeurstTable')
 const {API_PATH} = require('../../utils/feurst/consts')
 
 
-const BaseListTable = ({endpoint, columns, refresh}) => {
+const BaseListTable = ({endpoint, columns, refresh, caption}) => {
 
   const [data, setData] = useState(useMemo(() => [], []))
   const [language, setLanguage] = useState('fr')
@@ -60,7 +60,8 @@ const BaseListTable = ({endpoint, columns, refresh}) => {
   const cols= columns({language, data, setData, deleteProduct: deleteProduct})
 
   return (<>
-    <Table data={data} columns={cols} updateMyData={updateMyData} />
+    <FeurstTable caption={caption}
+      data={data} columns={cols} updateMyData={updateMyData} />
   </>
   )
 }

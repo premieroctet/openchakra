@@ -119,6 +119,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         console.error(e, `Can't bind address to order/quotation ${e}`)
         setState({...state, errors: e})
       })
+
     bindAddressAndShipping && setState({...state, status: bindAddressAndShipping.status, deliveryAddress: bindAddressAndShipping?.address}) && setIsOpenDialog(false)
   }
 

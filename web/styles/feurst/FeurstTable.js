@@ -25,7 +25,7 @@ const TablesStyles = styled.div`
       white-space: unset;
     }
   }
-  
+
   caption {
     caption-side: top;
     background: var(--brand-color);
@@ -33,17 +33,17 @@ const TablesStyles = styled.div`
     padding-block: var(--spc-1);
     font-weight: var(--font-bold);
   }
-  
+
   button {
     background: none;
     border: 0;
   }
-  
+
   th, td {
     border-left: 1px solid var(--stone-300);
     padding: var(--spc-2);
   }
-  
+
   tr {
     border-top: 1px solid var(--stone-300);
   }
@@ -96,7 +96,7 @@ const TablesStyles = styled.div`
       font-weight: var(--font-bold);
       font-size: var(--text-sm);
     }
-    
+
   }
 `
 
@@ -109,4 +109,4 @@ const FeurstTable = props => {
 }
 
 
-export default FeurstTable
+module.exports=FeurstTable

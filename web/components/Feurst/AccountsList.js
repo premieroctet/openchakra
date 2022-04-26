@@ -14,7 +14,7 @@ const AccountsList = ({accessRights}) => {
   return (
     <>
       <FeurstRegister onSuccess={toggleRefresh}/>
-      <BaseListTable key={moment()} endpoint='users' columns={accountsColumns} refresh={refresh}/>
+      <BaseListTable caption='Liste des comptes' key={moment()} endpoint='users' columns={accountsColumns} refresh={refresh}/>
     </>
   )
 }
