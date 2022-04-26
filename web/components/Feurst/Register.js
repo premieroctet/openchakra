@@ -34,7 +34,7 @@ function FeurstRegister({className, style, onSuccess}) {
         setCompanies(result.data.map(c => c.name))
       })
       .catch(err => console.error(err))
-    axios.get(`${API_PATH}/actions`, {params: {model: ACCOUNT, action: CREATE}})
+    axios.get(`${API_PATH}/users/actions`, {params: {model: ACCOUNT, action: CREATE}})
       .then(result => {
         const rls=result.data.filter(a => a.model==ACCOUNT && a.action==CREATE).map(a => a.type)
         setRoles(rls)

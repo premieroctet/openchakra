@@ -55,7 +55,7 @@ class home extends React.Component {
       .then(response => {
         this.setState({user: response.data})
       })
-    axios.get(`${API_PATH}/actions`)
+    axios.get(`${API_PATH}/users/actions`)
       .then(response => {
         this.setState({actions: response.data})
       })

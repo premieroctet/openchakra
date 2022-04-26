@@ -6,6 +6,7 @@ const lodash=require('lodash')
 const {
   EXPRESS_SHIPPING,
   STANDARD_SHIPPING,
+  VALIDATE,
 } = require('../../../utils/feurst/consts')
 const {lineItemsImport} = require('../../utils/import')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
@@ -327,15 +328,15 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
   const order_id=req.params.order_id
 
   Order.findById(order_id)
-    .then(o => {
-      if (!o) {
-        return res.status(404).json(`Order ${req.params.order_id} not found`)
+    .then(data => {
+      if (!data) {
+        return res.status(404).json(`Order ${order_id} not found`)
       }
-      if (lodash.isEmpty(this.address) || lodash.isEmpty(this.shipping_mode)) {
+      if (lodash.isEmpty(data.address) || lodash.isEmpty(data.shipping_mode)) {
         return res.status(400).json(`Address and shipping mode are required to validate`)
       }
-      o.user_validated=true
-      return o.save()
+      data.user_validated=true
+      return data.save()
     })
     .then(() => {
       return res.json()

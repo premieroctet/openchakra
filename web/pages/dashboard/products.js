@@ -37,7 +37,7 @@ class all extends DataPage {
         this.setState({data: response.data})
       })
     setAxiosAuthentication()
-    axios.get(`${API_PATH}/actions`)
+    axios.get(`${API_PATH}/users/actions`)
       .then(response => {
         this.setState({actions: response.data})
       })

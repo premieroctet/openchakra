@@ -3,6 +3,7 @@ import {getAuthToken} from '../../utils/authentication'
 import Table from '../Table/Table'
 import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
+const {API_PATH} = require('../../utils/feurst/consts')
 
 
 const BaseListTable = ({endpoint, columns, refresh}) => {
@@ -27,7 +28,7 @@ const BaseListTable = ({endpoint, columns, refresh}) => {
 
   const getContentFrom = useCallback(async() => {
 
-    const data = await client(`myAlfred/api/${endpoint}`)
+    const data = await client(`${API_PATH}/${endpoint}`)
       .catch(err => snackBarError(err?.msg))
 
     data && setData(data)
@@ -39,7 +40,7 @@ const BaseListTable = ({endpoint, columns, refresh}) => {
     console.log(idItem)
     if (!idItem) { return }
 
-    const afterDeleteProduct = await client(`myAlfred/api/${endpoint}/${idItem}`, {method: 'DELETE'})
+    const afterDeleteProduct = await client(`${API_PATH}/${endpoint}/${idItem}`, {method: 'DELETE'})
       .catch(e => console.error(`Can't delete product ${e}`))
 
     // TODO verif delete

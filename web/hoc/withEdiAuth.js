@@ -45,7 +45,7 @@ const withEdiAuth = (Component = null, options = {}) => {
 
 
     async getUserRoles() {
-      return await client(`${API_PATH}/actions`)
+      return await client(`${API_PATH}/users/actions`)
         .catch(e => {
           console.error(e, 'Cant fetch users roles')
           return []

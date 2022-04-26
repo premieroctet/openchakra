@@ -1,6 +1,7 @@
 import React, {useMemo, useState, useEffect, useCallback} from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 import dynamic from 'next/dynamic'
+import Router from 'next/router'
 import {
   API_PATH,
   ORDER_COMPLETE,
@@ -8,15 +9,19 @@ import {
   ORDER_FULFILLED,
   ORDER_VALID,
 } from '../../utils/consts'
-import {getAuthToken} from '../../utils/authentication'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
-import {snackBarError} from '../../utils/notifications'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
 import Delivery from './Delivery'
+const axios = require('axios')
+const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
+const {
+  getAuthToken,
+  setAxiosAuthentication,
+} = require('../../utils/authentication')
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
 
@@ -142,6 +147,15 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     if (orderID) { getContentFrom(orderID) }
   }, [getContentFrom, orderID])
 
+  const submitOrder = () => {
+    setAxiosAuthentication()
+    axios.post(`${API_PATH}/${endpoint}/${orderID}/validate`)
+      .then(() => {
+        removeItem()
+        snackBarSuccess('Validation OK')
+        Router.push(`/edi/${endpoint}`)
+      })
+  }
   /**
   const columnsMemo = useMemo(
     () => columns({language, data, setData, deleteProduct: deleteProduct}).map(c => ({...c, Header: c.label, accessor: c.attribute})),
@@ -152,7 +166,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
   const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
-  
+
   return (<>
 
     {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) &&
@@ -176,11 +190,10 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     }
 
     <div className='flex flex-wrap justify-between gap-y-4 mb-6'>
-      {state.status === ORDER_VALID
+      {state.status === ORDER_COMPLETE
         ?
         <PleasantButton
           rounded={'full'}
-          disabled={![ORDER_FULFILLED, ORDER_VALID].includes(state.status)}
           bgColor={'#fff'}
           textColor={'#141953'}
           borderColor={'1px solid #141953'}
@@ -204,7 +217,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
       <PleasantButton
         rounded={'full'}
-        disabled={![ORDER_FULFILLED, ORDER_VALID].includes(state.status)}
+        disabled={![ORDER_FULFILLED, ORDER_COMPLETE].includes(state.status)}
         onClick={() => (state.status === ORDER_FULFILLED ? setIsOpenDialog(true) : submitOrder())}
       >
         Valider ma commande
