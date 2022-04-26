@@ -325,7 +325,7 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
   }
 
   const order_id=req.params.order_id
-  
+
   Order.findById(order_id)
     .then(o => {
       if (!o) {
@@ -364,7 +364,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
 
   const department=parseInt(String(zipCode).slice(0, -3))
 
-  const fee={express: 0, standard: 0}
+  const fee={EXPRESS_SHIPPING: 0, STANDARD_SHIPPING: 0}
   let order=null
   Order.findOne({_id: req.params.id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
     .populate('items.product')
