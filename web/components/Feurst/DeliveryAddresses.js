@@ -42,7 +42,7 @@ const DeliveryAddresses = ({state, setState}) => {
     onSelectedItemChange: ({selectedItem}) => {
       // setState({...state, address: {...state.address, ...selectedItem}})
     },
-    selectedItem: !isEmpty(state.address) ? state.address : null,
+    // selectedItem: !isEmpty(state.address) ? state.address : null,
   })
   
       
@@ -62,7 +62,7 @@ const DeliveryAddresses = ({state, setState}) => {
     <StyledAutocomplete noborder={true}>
       {isError ? <p className='error'>{errorMsg}</p> : null }
          
-      <label {...getLabelProps} htmlFor={`auto${labelAutocomplete}`}>
+      <label {...getLabelProps} htmlFor={`auto${labelAutocomplete}`} className="sr-only">
         Adresse
       </label>
       <div {...getComboboxProps()}>

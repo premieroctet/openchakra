@@ -1,7 +1,7 @@
 import React, {useMemo, useState, useEffect, useCallback} from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 import dynamic from 'next/dynamic'
-import Router from 'next/router'
+import {useRouter} from 'next/router'
 import {
   API_PATH,
   ORDER_COMPLETE,
@@ -41,6 +41,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const dataToken = getAuthToken()
   const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const router = useRouter()
 
   const updateMyData = (rowIndex, columnId, value) => {
 
@@ -59,12 +60,12 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   }
 
   const createOrderId = useCallback(async() => {
-    const creation = await client(`${API_PATH}/${endpoint}`, {data: {...dataToken, user: dataToken.id}})
+    const creation = await client(`${API_PATH}/${endpoint}`, {data: {user: dataToken.id}})
       .catch(e => console.error(e, `Can't create ${endpoint}`))
 
-    creation && setOrderId(creation?._id)
+    creation && setOrderId(creation?._id) && setState({...state, status: ORDER_CREATED})
 
-  }, [dataToken, endpoint, setOrderId])
+  }, [dataToken, endpoint, setOrderId, state])
 
   const getContentFrom = useCallback(async id => {
 
@@ -119,7 +120,8 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         console.error(e, `Can't bind address to order/quotation ${e}`)
         setState({...state, errors: e})
       })
-    bindAddressAndShipping && setState({...state, status: bindAddressAndShipping.status, deliveryAddress: bindAddressAndShipping?.address}) && setIsOpenDialog(false)
+    setState({...state, status: bindAddressAndShipping.status, deliveryAddress: bindAddressAndShipping.address})
+    bindAddressAndShipping && setIsOpenDialog(false) && getContentFrom(orderID)
   }
 
   const resetAddress = async() => {
@@ -131,6 +133,16 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       })
     shotAddress && setState({...state, status: shotAddress.status})
 
+  }
+
+  const submitOrder = () => {
+    setAxiosAuthentication()
+    axios.post(`${API_PATH}/${endpoint}/${orderID}/validate`)
+      .then(() => {
+        removeItem()
+        snackBarSuccess('Validation OK')
+        router.push(`/edi/${endpoint}`)
+      })
   }
 
 
@@ -147,15 +159,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     if (orderID) { getContentFrom(orderID) }
   }, [getContentFrom, orderID])
 
-  const submitOrder = () => {
-    setAxiosAuthentication()
-    axios.post(`${API_PATH}/${endpoint}/${orderID}/validate`)
-      .then(() => {
-        removeItem()
-        snackBarSuccess('Validation OK')
-        Router.push(`/edi/${endpoint}`)
-      })
-  }
+  
   /**
   const columnsMemo = useMemo(
     () => columns({language, data, setData, deleteProduct: deleteProduct}).map(c => ({...c, Header: c.label, accessor: c.attribute})),

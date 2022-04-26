@@ -102,7 +102,7 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
   }, [address, shippingOption, orderref])
 
   useEffect(() => {
-    address?.zip_code && getShippingFees(address?.zip_code)
+    address?.zip_code?.length == 5 && getShippingFees(address?.zip_code)
   }, [address?.zip_code, getShippingFees])
 
   return (
