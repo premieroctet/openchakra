@@ -3,6 +3,7 @@ import useLocalStorageState from 'use-local-storage-state'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
 import {
+  BASEPATH_EDI,
   API_PATH,
   ORDER_COMPLETE,
   ORDER_CREATED,
@@ -11,16 +12,15 @@ import {
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
+import {localeMoneyFormat} from '../../utils/converters'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
 import Delivery from './Delivery'
-const axios = require('axios')
 const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const {
   getAuthToken,
-  setAxiosAuthentication,
 } = require('../../utils/authentication')
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
@@ -29,8 +29,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
   const [state, setState] = useState({
     items: useMemo(() => [], []),
-    deliveryAddress: null,
-    orderref: null,
+    reference: null,
     address: {},
     shippingOption: null,
     status: ORDER_CREATED,
@@ -60,12 +59,15 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   }
 
   const createOrderId = useCallback(async() => {
-    const creation = await client(`${API_PATH}/${endpoint}`, {data: {user: dataToken.id}})
-      .catch(e => console.error(e, `Can't create ${endpoint}`))
 
-    creation && setOrderId(creation?._id) && setState({...state, status: ORDER_CREATED})
+    if (state.status !== ORDER_COMPLETE) { // Prevent order creation juste after submitting an order
+      const creation = await client(`${API_PATH}/${endpoint}`, {data: {user: dataToken.id}})
+        .catch(e => console.error(e, `Can't create ${endpoint}`))
+  
+      creation && setOrderId(creation?._id)
+    }
 
-  }, [dataToken, endpoint, setOrderId, state])
+  }, [dataToken.id, endpoint, setOrderId, state.status])
 
   const getContentFrom = useCallback(async id => {
 
@@ -74,14 +76,9 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         .catch(err => snackBarError(err.msg))
       : []
 
-    currentOrder && setState({...state, status: currentOrder.status, items: currentOrder.items, deliveryAddress: currentOrder?.address ? currentOrder.address : null})
+    currentOrder && setState({...state, ...currentOrder})
 
   }, [endpoint])
-
-
-  const checkProduct = async({item, qty}) => {
-
-  }
 
   const addProduct = async({item, qty}) => {
     if (!item) { return }
@@ -90,58 +87,61 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       _id,
     } = item
 
-    const afterNewProduct = await client(`${API_PATH}/${endpoint}/${orderID}/items`, {data: {product: _id, quantity: qty}, method: 'PUT'})
+    await client(`${API_PATH}/${endpoint}/${orderID}/items`, {data: {product: _id, quantity: qty}, method: 'PUT'})
+      .then(() => getContentFrom(orderID))
       .catch(() => {
         console.error(`Can't add product`)
         return false
       })
-
-    afterNewProduct && getContentFrom(orderID)
-    return afterNewProduct
   }
 
   const deleteProduct = useCallback(async({idItem}) => {
     if (!idItem) { return }
 
-    const afterDeleteProduct = await client(`${API_PATH}/${endpoint}/${orderID}/items/${idItem}`, {method: 'DELETE'})
+    await client(`${API_PATH}/${endpoint}/${orderID}/items/${idItem}`, {method: 'DELETE'})
+      .then(() => getContentFrom(orderID))
       .catch(e => console.error(`Can't delete product ${e}`))
-
-    // TODO verif delete
-    getContentFrom(orderID)
+    
   }, [endpoint, getContentFrom, orderID])
 
-
+  // bind address, shipping info and ref to the current order/quotation
   const validateAddress = async e => {
     e.preventDefault()
 
-    // then bind to the current order/quotation
-    const bindAddressAndShipping = await client(`${API_PATH}/${endpoint}/${orderID}`, {data: {address: state.address, reference: state.orderref, shipping_mode: state.shippingOption}, method: 'PUT'})
+    await client(`${API_PATH}/${endpoint}/${orderID}`, {data: {address: state.address, reference: state.reference, shipping_mode: state.shippingOption}, method: 'PUT'})
+      .then(() => {
+        getContentFrom(orderID)
+        setIsOpenDialog(false)
+      })
       .catch(e => {
-        console.error(e, `Can't bind address to order/quotation ${e}`)
+        console.error(`Can't bind address to order/quotation`, e)
         setState({...state, errors: e})
       })
-    setState({...state, status: bindAddressAndShipping.status, deliveryAddress: bindAddressAndShipping.address})
-    bindAddressAndShipping && setIsOpenDialog(false) && getContentFrom(orderID)
   }
 
   const resetAddress = async() => {
 
-    const shotAddress = await client(`${API_PATH}/${endpoint}/${orderID}/rewrite`, {method: 'PUT'})
+    await client(`${API_PATH}/${endpoint}/${orderID}/rewrite`, {method: 'PUT'})
+      .then(res => setState({...state, status: res.status}))
       .catch(e => {
-        console.error(e, `Can't unbind address to order/quotation ${e}`)
+        console.error(`Can't unbind address to order/quotation`, e)
         setState({...state, errors: e})
       })
-    shotAddress && setState({...state, status: shotAddress.status})
 
   }
 
-  const submitOrder = () => {
-    setAxiosAuthentication()
-    axios.post(`${API_PATH}/${endpoint}/${orderID}/validate`)
+  const submitOrder = async() => {
+
+    await client(`${API_PATH}/${endpoint}/${orderID}/validate`, {method: 'POST'})
       .then(() => {
         removeItem()
-        snackBarSuccess('Validation OK')
-        router.push(`/edi/${endpoint}`)
+        snackBarSuccess('Enregistré')
+        router.push(`${BASEPATH_EDI}/${endpoint}`)
+      })
+      .catch(() => {
+        console.error(`Didn't submit order`)
+        snackBarError(`Problème d'enregistrement`)
+        return
       })
   }
 
@@ -171,7 +171,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
-  return (<>
+  return (<div className='container-lg'>
 
     {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) &&
       <>
@@ -190,7 +190,10 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     />
 
     {[ORDER_VALID, ORDER_COMPLETE].includes(state?.status) ?
-      <Delivery address={state.deliveryAddress} /> : null
+      <div className='flex justify-between items-end mb-8'>
+        <Delivery address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee}} />
+        <h4 className='text-2xl mb-0 text-black'>Total de votre commande : {localeMoneyFormat({value: state.total_amount})}</h4>
+      </div>: null
     }
 
     <div className='flex flex-wrap justify-between gap-y-4 mb-6'>
@@ -221,7 +224,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
 
       <PleasantButton
         rounded={'full'}
-        disabled={![ORDER_FULFILLED, ORDER_COMPLETE].includes(state.status)}
+        disabled={[ORDER_CREATED].includes(state.status)}
         onClick={() => (state.status === ORDER_FULFILLED ? setIsOpenDialog(true) : submitOrder())}
       >
         Valider ma commande
@@ -239,7 +242,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       validateAddress={validateAddress}
     />
 
-  </>
+  </div>
   )
 }
 

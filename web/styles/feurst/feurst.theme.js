@@ -16,7 +16,11 @@ export const theme = {
     metalGray: '#a8a9ab',
     lightGray: '#e4e4e4',
   },
-  containerSize: 'min(100% - 2rem, 60rem)',
+  containerSize: {
+    base: 'min(100% - 2rem, 60rem)',
+    lg: 'min(100% - 2rem, 70rem)',
+    xl: 'min(100% - 2rem, 80rem)',
+  },
   //   space: [0, 4, 8, 16, 24, 32, 48, 64, 128, 256, 512],
   fontSizes: {
     xs: '0.75rem',
@@ -101,6 +105,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     --spc-12: 3rem;
     --spc-24: 6rem;
     --spc-32: 8rem;
+    --spc-96: 24rem;
 
     /* Grid */
     --grid-cols-1: repeat(1, minmax(0, 1fr));
@@ -138,7 +143,17 @@ export const GlobalStyleEdi = createGlobalStyle`
   }
 
   .container {
-    width: ${props => (props.theme?.containerSize ? props.theme.containerSize : 'min(100% - 2rem, 50rem)')}; 
+    width: ${props => (props.theme?.containerSize?.base ? props.theme.containerSize.base : 'min(100% - 2rem, 50rem)')}; 
+    margin-inline: auto;
+  }
+  
+  .container-lg {
+    width: ${props => (props.theme?.containerSize?.lg ? props.theme.containerSize.lg : 'min(100% - 2rem, 50rem)')}; 
+    margin-inline: auto;
+  }
+
+  .container-xl {
+    width: ${props => (props.theme?.containerSize?.xl ? props.theme.containerSize.xl : 'min(100% - 2rem, 50rem)')}; 
     margin-inline: auto;
   }
 
@@ -158,6 +173,8 @@ export const GlobalStyleEdi = createGlobalStyle`
     height: auto;
   }
   
+
+/* font-sizes */
 .text-sm {
   font-size: 0.875rem;
 }
@@ -186,6 +203,11 @@ export const GlobalStyleEdi = createGlobalStyle`
 
 .text-right {
   text-align: right;
+}
+
+/* font-colors */
+.text-black {
+  color: var(--black);
 }
 
 .no-underline	{text-decoration-line: none;}
@@ -238,6 +260,10 @@ input:focus:not(:focus-visible) {
 
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.grow {
+  flex-grow: 1;
 }
 
 .place-items-center {
@@ -328,8 +354,10 @@ input:focus:not(:focus-visible) {
 
 .mr-8 {margin-right: 2rem;}
 
+.mb-0 {margin-bottom: 0}
 .mb-4 {margin-bottom: 1rem !important;}
 .mb-6 {margin-bottom: 1.5rem !important;}
+.mb-8 {margin-bottom: 2rem !important;}
 
 .ml-12 {margin-left: 3rem;}
 

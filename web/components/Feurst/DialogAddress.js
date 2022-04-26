@@ -8,6 +8,7 @@ import PureDialog from '../Dialog/PureDialog'
 import {client} from '../../utils/client'
 import isEmpty from '../../server/validation/is-empty'
 import {API_PATH} from '../../utils/consts'
+import {ORDER_CREATED} from '../../utils/feurst/consts'
 import {PleasantButton} from './Button'
 import {Input} from './components.styles'
 
@@ -36,8 +37,12 @@ const StyledDialog = styled(PureDialog)`
   }
 
   input {
-    font-style: italic;
     width: 100%;
+    color: var(--black);
+  }
+
+  input:placeholder-shown {
+    font-style: italic;
   }
 
   button[type="submit"] {
@@ -103,7 +108,7 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
 
   useEffect(() => {
     address?.zip_code?.length == 5 && getShippingFees(address?.zip_code)
-  }, [address?.zip_code, getShippingFees])
+  }, [address?.zip_code, getShippingFees, state?.status])
 
   return (
     <StyledDialog
@@ -124,7 +129,7 @@ traitement de votre commande.</p>
 
         {/* order ref */}
         <label htmlFor='reforder' className='sr-only'>Référence</label>
-        <Input noborder id="reforder" className='ref' value={orderref} onChange={ev => setState({...state, orderref: ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
+        <Input noborder id="reforder" className='ref' value={orderref || ''} onChange={ev => setState({...state, orderref: ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
 
         {/* order address */}
         <h3>Indiquer l'adresse de livraison</h3>

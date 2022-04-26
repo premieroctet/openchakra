@@ -18,7 +18,6 @@ const DeliveryAddresses = ({state, setState}) => {
   } = useAsync({data: []})
   
   const [searchTerm, setSearchTerm] = useState('')
-  const [labelAddress, setLabelAddress] = useState('')
   const debouncedQuery = useDebounce(searchTerm, 1000)
   
   const {
@@ -34,15 +33,16 @@ const DeliveryAddresses = ({state, setState}) => {
   } = useCombobox({
     items: data,
     onInputValueChange: ({inputValue, selectedItem}) => {
-
-      setState({...state, address: {...state.address, label: inputValue}})
+      if (!selectedItem) {
+        setState({...state, address: {...state.address, label: inputValue}})
+      }
       setSearchTerm(inputValue)
     },
     itemToString: item => (item ? `${item.label}` : ''),
     onSelectedItemChange: ({selectedItem}) => {
-      // setState({...state, address: {...state.address, ...selectedItem}})
+      setState({...state, address: {...state.address, ...selectedItem}})
     },
-    // selectedItem: !isEmpty(state.address) ? state.address : null,
+    inputValue: state?.address?.label || '',
   })
   
       
@@ -50,7 +50,7 @@ const DeliveryAddresses = ({state, setState}) => {
     if (debouncedQuery && searchTerm.length > 0) {
       run(client(`${API_PATH}/users/addresses`))
         .catch(e => {
-          console.error(`Can't fetch addresses in autocomplete`)
+          console.error(`Can't fetch addresses in autocomplete ${e}`)
         })
     }
   }
@@ -104,7 +104,7 @@ const DeliveryAddresses = ({state, setState}) => {
                 key={`searchres-${index}`}
                 {...getItemProps({item, index})}
               >
-                {item => `${item.label} : ${item.address}, ${item.zip_code} ${item.city}`}
+                {`${item.label} : ${item.address}, ${item.zip_code} ${item.city}`}
               </li>
             ))
         }

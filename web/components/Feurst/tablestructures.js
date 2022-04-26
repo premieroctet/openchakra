@@ -74,19 +74,23 @@ const ordersColumns = ({language, deleteProduct}) => [
     attribute: 'reference',
   },
   {
-    label: 'Poids total',
+    label: 'Quantité',
     attribute: 'total_weight',
   },
   {
-    label: 'Frais de livraison',
+    label: 'Prix total',
     attribute: 'shipping_fee',
   },
   {
-    label: 'Montant total',
-    attribute: 'total_amount',
+    label: 'Détails',
+    attribute: 'details',
   },
   {
-    label: '',
+    label: 'Statut',
+    attribute: 'status',
+  },
+  {
+    label: 'Recommander',
     id: 'product_delete',
     attribute: 'product_delete',
     Cell: tableProps => (
