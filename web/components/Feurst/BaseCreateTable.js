@@ -154,11 +154,15 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   const templateURL=`${API_PATH}/${endpoint}/template`
 
   return (<>
-    {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) ?
+    
+    {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) &&
       <>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
         <AddArticle addProduct={addProduct} />
-      </> : <H2confirm>Récapitulatif de votre commande</H2confirm>}
+      </>}
+
+    {[ORDER_COMPLETE].includes(state.status) && <H2confirm>Récapitulatif de votre commande</H2confirm>}
+
 
     <FeurstTable
       caption="Détails de la commande en cours :"
@@ -171,7 +175,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       <Delivery address={state.deliveryAddress} /> : null
     }
 
-    <div className='flex flex-wrap justify-between gap-y-4'>
+    <div className='flex flex-wrap justify-between gap-y-4 mb-6'>
       {state.status === ORDER_VALID
         ?
         <PleasantButton

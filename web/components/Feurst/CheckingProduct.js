@@ -30,6 +30,7 @@ const CheckingProductArea = styled.div`
   dl {
       display: grid;
       grid-template-columns: max-content auto;
+      align-content: center;
       column-gap: var(--spc-2);
       row-gap: var(--spc-2);
       padding: var(--spc-2);
@@ -75,18 +76,18 @@ const CheckingProduct = ({article, setArticle, addProduct}) => {
       <dl>
         <dt>Désignation du produit :</dt>
         <dd>{info.description} {info.description_2}</dd>
-        <dt>Poids unitaire :</dt>
-        <dd>{info.weight.toLocaleString()} kg</dd>
+        <dt>Référence :</dt>
+        <dd>{info.reference}</dd>
         <dt>Quantité disponible :</dt>
         <dd>{qty > info.stock ? `${info.stock} sur ${qty} ⚠️ stock partiel` : `${qty} sur ${qty}`} </dd>
       </dl>
       <dl>
         <dt>Prix catalogue :</dt>
         <dd>{localeMoneyFormat({value: info.price})}</dd>
-        <dt>Votre remise :</dt>
-        <dd>???</dd>
-        <dt>Votre prix :</dt>
-        <dd>{localeMoneyFormat({value: info.price})}</dd>
+        <dt>Poids unitaire :</dt>
+        <dd>{info.weight.toLocaleString()} kg</dd>
+        {/* <dt>Votre prix :</dt> // TODO SI CALCUL DE REMISE EN LIVE
+        <dd>{localeMoneyFormat({value: info.price})}</dd> */}
       </dl>
       
       <PleasantButton
