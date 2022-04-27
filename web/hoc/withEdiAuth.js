@@ -79,9 +79,9 @@ const withEdiAuth = (Component = null, options = {}) => {
           {is_development() && <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}`}</h1>}
           <Header accessRights={accessRights} />
           <Tabs accessRights={accessRights} />
-          
-          <Component accessRights={accessRights} />
-          
+          <div className='container-lg'>
+            <Component accessRights={accessRights} />
+          </div>
           <GlobalStyleEdi />
         </ThemeProvider>
       )

@@ -1,4 +1,5 @@
 import React from 'react'
+import UpdateCell from '../Table/UpdateCell'
 import EditableCell from '../Table/EditableCell'
 import {localeMoneyFormat} from '../../utils/converters'
 const moment = require('moment')
@@ -24,7 +25,7 @@ const orderColumns = ({language, deleteProduct}) => [
   {
     label: 'Quantité',
     attribute: 'quantity',
-    Cell: EditableCell,
+    Cell: UpdateCell,
   },
   {
     label: 'Poids',

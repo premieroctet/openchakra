@@ -60,15 +60,10 @@ const CheckingProduct = ({article, setArticle, addProduct}) => {
   const {info, qty} = article
 
   const confirmAdd = async() => {
-    const addTo = await addProduct(article)
+    await addProduct(article)
+      .then(() => setArticle({...article, showArticlePanel: false}))
       .catch(() => snackBarError(`Ajout de l'article non effectué`))
 
-    if (addTo) {
-      setArticle({...article, showArticlePanel: false})
-    }
-    else {
-      snackBarError(`Ajout de l'article non effectué`)
-    }
   }
   
   return (

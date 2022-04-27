@@ -42,51 +42,37 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const router = useRouter()
 
-  const updateMyData = (rowIndex, columnId, value) => {
-
-    setState({
-      ...state,
-      items: state.items.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...state.items[rowIndex],
-            [columnId]: value,
-          }
-        }
-        return row
-      }),
-    })
-  }
-
+  
   const createOrderId = useCallback(async() => {
-
+    
     if (state.status !== ORDER_COMPLETE) { // Prevent order creation juste after submitting an order
       const creation = await client(`${API_PATH}/${endpoint}`, {data: {user: dataToken.id}})
         .catch(e => console.error(e, `Can't create ${endpoint}`))
-  
+      
       creation && setOrderId(creation?._id)
     }
-
+    
   }, [dataToken.id, endpoint, setOrderId, state.status])
-
+  
   const getContentFrom = useCallback(async id => {
-
+    
     const currentOrder = id ?
       await client(`${API_PATH}/${endpoint}/${id}`)
         .catch(err => snackBarError(err.msg))
       : []
-
+    
     currentOrder && setState({...state, ...currentOrder})
-
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [endpoint])
-
+  
   const addProduct = async({item, qty}) => {
     if (!item) { return }
-
+    
     const {
       _id,
     } = item
-
+    
     await client(`${API_PATH}/${endpoint}/${orderID}/items`, {data: {product: _id, quantity: qty}, method: 'PUT'})
       .then(() => getContentFrom(orderID))
       .catch(() => {
@@ -94,7 +80,11 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         return false
       })
   }
-
+ 
+  const updateMyData = data => {
+    addProduct(data)
+  }
+  
   const deleteProduct = useCallback(async({idItem}) => {
     if (!idItem) { return }
 
@@ -171,13 +161,13 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
-  return (<div className='container-lg'>
+  return (<>
 
     {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) &&
-      <>
+      <div className='container-base'>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
         <AddArticle addProduct={addProduct} />
-      </>}
+      </div>}
 
     {[ORDER_COMPLETE].includes(state?.status) && <H2confirm>Récapitulatif de votre commande</H2confirm>}
 
@@ -242,7 +232,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       validateAddress={validateAddress}
     />
 
-  </div>
+  </>
   )
 }
 
