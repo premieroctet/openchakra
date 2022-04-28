@@ -44,7 +44,7 @@ const UpdateCell = ({
   // We'll only update the external data when the input is blurred
   const onBlur = () => {
     if (typeof updateMyData === 'function') {
-      updateMyData({item: itemToUpdate, qty})
+      updateMyData({item: itemToUpdate, qty, replace: true})
     }
     else {
       console.error('React Table Data not updated. Did you forget the prop updateMyData on your table ?')

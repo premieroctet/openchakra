@@ -75,14 +75,14 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   }, [refresh, orderID])
 
 
-  const addProduct = async({item, qty}) => {
+  const addProduct = async({item, qty, replace = false}) => {
     if (!item) { return }
     
     const {
       _id,
     } = item
     
-    await client(`${API_PATH}/${endpoint}/${orderID}/items`, {data: {product: _id, quantity: qty}, method: 'PUT'})
+    await client(`${API_PATH}/${endpoint}/${orderID}/items`, {data: {product: _id, quantity: qty, replace}, method: 'PUT'})
       .then(() => getContentFrom(orderID))
       .catch(() => {
         console.error(`Can't add product`)
