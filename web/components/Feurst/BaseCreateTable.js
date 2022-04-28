@@ -9,6 +9,10 @@ import {
   ORDER_CREATED,
   ORDER_FULFILLED,
   ORDER_VALID,
+  QUOTATION_CREATED,
+  QUOTATION_FULFILLED,
+  QUOTATION_COMPLETE,
+  QUOTATION_VALID,
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
@@ -18,15 +22,17 @@ import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
 import Delivery from './Delivery'
+const {withTranslation} = require('react-i18next')
 const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const {
   getAuthToken,
 } = require('../../utils/authentication')
 
+
 const DialogAddress = dynamic(() => import('./DialogAddress'))
 
-const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
-
+const BaseCreateTable = ({storage, endpoint, columns, accessRights, wordingSection, t}) => {
+  
   const [state, setState] = useState({
     items: useMemo(() => [], []),
     reference: null,
@@ -41,12 +47,15 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   const dataToken = getAuthToken()
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [refresh, setRefresh]=useState(false)
-
-  const toggleRefresh= () => setRefresh(!refresh)
-
-  const router = useRouter()
-
   
+  const toggleRefresh= () => setRefresh(!refresh)
+  
+  const router = useRouter()
+  
+  const canAdd = [ORDER_CREATED, ORDER_FULFILLED, QUOTATION_CREATED, QUOTATION_FULFILLED].includes(state.status)
+  const canValidate = [ORDER_COMPLETE, ORDER_VALID, QUOTATION_VALID, QUOTATION_COMPLETE].includes(state.status)
+
+
   const createOrderId = useCallback(async() => {
     
     if (state.status !== ORDER_COMPLETE) { // Prevent order creation juste after submitting an order
@@ -69,10 +78,6 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [endpoint])
-
-  useEffect(() => {
-    getContentFrom(orderID)
-  }, [refresh, orderID])
 
 
   const addProduct = async({item, qty, replace = false}) => {
@@ -158,6 +163,10 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     if (orderID) { getContentFrom(orderID) }
   }, [getContentFrom, orderID])
 
+  useEffect(() => {
+    getContentFrom(orderID)
+  }, [refresh, orderID])
+
 
   /**
   const columnsMemo = useMemo(
@@ -165,38 +174,38 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     [data, deleteProduct, language],
   )
   */
-  const cols=columns({language, ...state.items, setState, deleteProduct: deleteProduct})
+  const cols=columns({language, setState, deleteProduct: canAdd ? deleteProduct : null})
 
   const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
   return (<>
 
-    {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) &&
+    {canAdd &&
       <div className='container-base'>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
-        <AddArticle addProduct={addProduct} />
+        <AddArticle addProduct={addProduct} wordingSection={wordingSection} />
       </div>}
 
-    {[ORDER_COMPLETE].includes(state?.status) && <H2confirm>Récapitulatif de votre commande</H2confirm>}
-
+    {canValidate && <H2confirm>Récapitulatif de votre commande</H2confirm>}
 
     <FeurstTable
-      caption="Détails de la commande en cours :"
+      caption={t(`${wordingSection}.details`)}
       data={state.items}
       columns={cols}
+      footer={canValidate}
       updateMyData={updateMyData}
     />
 
-    {[ORDER_VALID, ORDER_COMPLETE].includes(state?.status) ?
+    {canValidate ?
       <div className='flex justify-between items-end mb-8'>
         <Delivery address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee}} />
-        <h4 className='text-2xl mb-0 text-black'>Total de votre commande : {localeMoneyFormat({value: state.total_amount})}</h4>
+        <h4 className='text-2xl mb-0 text-black'>{t(`${wordingSection}.total`)} : {localeMoneyFormat({value: state.total_amount})}</h4>
       </div>: null
     }
 
     <div className='flex flex-wrap justify-between gap-y-4 mb-6'>
-      {state.status === ORDER_COMPLETE
+      {canValidate
         ?
         <PleasantButton
           rounded={'full'}
@@ -226,7 +235,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
         disabled={[ORDER_CREATED].includes(state.status)}
         onClick={() => (state.status === ORDER_FULFILLED ? setIsOpenDialog(true) : submitOrder())}
       >
-        Valider ma commande
+        {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
       </PleasantButton>
     </div>
 
@@ -239,10 +248,11 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
       state={state}
       setState={setState}
       validateAddress={validateAddress}
+      wordingSection={wordingSection}
     />
 
   </>
   )
 }
 
-module.exports=BaseCreateTable
+module.exports=withTranslation('feurst', {withRef: true})(BaseCreateTable)

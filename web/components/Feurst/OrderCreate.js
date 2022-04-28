@@ -6,7 +6,7 @@ const {orderColumns} = require('./tablestructures')
 const OrderCreate = ({accessRights}) => {
 
   return (
-    <BaseCreateTable storage={'order'} endpoint='orders' columns={orderColumns} accessRights={accessRights}/>
+    <BaseCreateTable storage={'order'} endpoint='orders' columns={orderColumns} wordingSection={'EDI.ORDER'} accessRights={accessRights}/>
   )
 }
 
