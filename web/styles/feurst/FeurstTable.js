@@ -52,6 +52,12 @@ const TablesStyles = styled.div`
     background: var(--stone-200);
   }
 
+  tfoot {
+    background-color: var(--stone-600);
+    color: var(--white);
+    font-weight: var(--font-bold);
+  }
+
 
   input {
     max-width: var(--spc-24);

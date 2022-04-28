@@ -47,7 +47,16 @@ function dateBetweenFilterFn(rows, id, filterValues) {
 dateBetweenFilterFn.autoRemove = val => !val
 
 
-const Table = ({data, columns, caption = null, updateMyData = null, globalfilter=null}) => {
+const Table = (
+  {
+    data,
+    columns,
+    caption = null,
+    footer = null,
+    updateMyData = null,
+    globalfilter=null,
+  },
+) => {
 
   const filterTypes = useMemo(
     () => ({
@@ -84,6 +93,7 @@ const Table = ({data, columns, caption = null, updateMyData = null, globalfilter
     getTableProps,
     getTableBodyProps,
     headerGroups,
+    footerGroups,
     rows,
     prepareRow,
     state,
@@ -158,13 +168,23 @@ const Table = ({data, columns, caption = null, updateMyData = null, globalfilter
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
-                  // console.log(cell)
                   return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                 })}
               </tr>
             )
           })}
         </tbody>
+        {footer ?
+          <tfoot>
+            {footerGroups.map(group => (
+              <tr {...group.getFooterGroupProps()}>
+                {group.headers.map(column => (
+                  <td {...column.getFooterProps()}>{column.render('Footer')}</td>
+                ))}
+              </tr>
+            ))}
+          </tfoot>
+          : null}
       </table>
     </div>
   )

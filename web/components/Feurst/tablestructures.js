@@ -6,50 +6,83 @@ const {ROLES} = require('../../utils/consts')
 const {DateRangeColumnFilter} = require('../Table/TableFilter')
 const {PleasantButton} = require('./Button')
 
+const datetime = (a, b) => {
+  let a1 = new Date(a).getTime()
+  let b1 = new Date(b).getTime()
+  if(a1<b1) { return 1 }
+  else if(a1>b1) { return -1 }
+  return 0
+}
+
 const ToTheBin = props => (
   <button {...props}>
     <span role='image' alt="supprimer">🗑️</span>
   </button>
 )
 
-const orderColumns = ({language, deleteProduct}) => [
-  {
-    label: 'Réf. catalogue',
-    attribute: 'product.reference',
-    disableFilters: true,
-  },
-  {
-    label: 'Désignation',
-    attribute: item => `${item.product.description} ${item.product.description_2}`,
-  },
-  {
-    label: 'Quantité',
-    attribute: 'quantity',
-    Cell: UpdateCell,
-  },
-  {
-    label: 'Poids',
-    attribute: 'total_weight',
-  },
-  {
-    label: 'Prix catalogue',
-    attribute: 'catalog_price',
-    Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
-    sortType: 'number',
-  },
-  {
-    label: 'Remise',
-    attribute: 'discount',
-    Cell: ({cell: {value}}) => `${value}%`,
-    sortType: 'number',
-  },
-  {
-    label: 'Votre prix',
-    attribute: 'target_price',
-    Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
-    sortType: 'number',
-  },
-  {
+const orderColumns = ({language, deleteProduct}) => {
+
+  const orderColumnsBase = [
+    {
+      label: 'Réf. catalogue',
+      attribute: 'product.reference',
+      disableFilters: true,
+      Footer: 'Total',
+    },
+    {
+      label: 'Désignation',
+      attribute: item => `${item.product.description} ${item.product.description_2}`,
+    },
+    {
+      label: 'Quantité',
+      attribute: 'quantity',
+      Cell: UpdateCell,
+    },
+    {
+      label: 'Poids',
+      attribute: 'total_weight',
+      Footer: info => {
+        const total = React.useMemo(
+          () =>
+            info.rows.reduce((sum, row) => row.values.total_weight + sum, 0),
+          [info.rows],
+        )
+    
+        return <>{total} kg</>
+      },
+      
+    },
+    {
+      label: 'Prix catalogue',
+      attribute: 'catalog_price',
+      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
+      sortType: 'number',
+    },
+    {
+      label: 'Remise',
+      attribute: 'discount',
+      Cell: ({cell: {value}}) => `${value}%`,
+      sortType: 'number',
+    },
+    {
+      label: 'Votre prix',
+      attribute: 'target_price',
+      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
+      sortType: 'number',
+      Footer: info => {
+        const total = React.useMemo(
+          () =>
+            info.rows.reduce((sum, row) => row.values.target_price + sum, 0),
+          [info.rows],
+        )
+  
+        return <>{localeMoneyFormat({lang: language, value: total})}</>
+      },
+    },
+    
+  ]
+
+  const deleteItem = {
     label: '',
     id: 'product_delete',
     attribute: 'product_delete',
@@ -58,15 +91,17 @@ const orderColumns = ({language, deleteProduct}) => [
         deleteProduct({idItem: row.original._id})
       }}/>
     ),
-  },
-]
+  }
+
+  return deleteProduct ? [...orderColumnsBase, deleteItem] : orderColumnsBase
+}
 
 const ordersColumns = ({language, deleteProduct}) => [
   {
     label: 'Date commande',
     attribute: 'creation_date',
-    Cell: ({cell: {value}}) => <div>{new Date(value).toLocaleString()}</div>,
-    sortType: 'datetime',
+    Cell: ({cell: {value}}) => new Date(value).toLocaleDateString(),
+    sortType: datetime,
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
   },
@@ -250,7 +285,7 @@ const shipratesColumns = ({language}) => [
 const HandledOrderDescription = order => {
   return (
     <div alignItems='left'>
-      <h1>{order.address.label} par {order.user.full_name}</h1>
+      <h1>{order?.address?.label} par {order.user.full_name}</h1>
       <div>Numéro de commande: {order.reference}</div>
       <div>Date de commande: {order.creation_date}</div>
     </div>
@@ -268,8 +303,16 @@ const HandledOrderStatus = order => {
 }
 
 const handledOrdersColumns = ({language}) => [
-  {label: 'Description', attribute: o => o, Cell: ({cell: {value}}) => HandledOrderDescription(value)},
-  {label: 'Etat', attribute: o => o, Cell: ({cell: {value}}) => HandledOrderStatus(value)},
+  {
+    label: 'Description',
+    attribute: o => o,
+    Cell: ({cell: {value}}) => HandledOrderDescription(value),
+  },
+  {
+    label: 'Etat',
+    attribute: o => o,
+    Cell: ({cell: {value}}) => HandledOrderStatus(value),
+  },
 
 ]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
