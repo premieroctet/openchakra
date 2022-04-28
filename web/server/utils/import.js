@@ -5,14 +5,25 @@ const ShipRate = require('../models/ShipRate')
 const {bufferToString} = require('../../utils/text')
 const {addItem, updateShipFee} = require('./commands')
 
-const toFloat = value => {
-  try {
-    return value.replace(',', '.')
-  }
-  catch(err) {
-    console.error(err)
-    return value
-  }
+const extractCsv=(bufferData, options) => {
+  return new Promise((resolve, reject) => {
+    const contents = bufferToString(bufferData)
+    try {
+      const opts={columns: true, bom: true, ...options}
+      const records=csv_parse(contents, opts)
+      if (opts.columns) {
+        const headers=Object.keys(records[0])
+        resolve({headers: headers, records: records})
+      }
+      else {
+        const headers=records[0]
+        resolve({headers: headers, records: records.slice(1)})
+      }
+    }
+    catch(err) {
+      reject(err)
+    }
+  })
 }
 
 const getMissingColumns = (mandatory, columns) => {
@@ -21,71 +32,64 @@ const getMissingColumns = (mandatory, columns) => {
 }
 
 const mapRecord=(record, mapping) => {
-  let newRecord=lodash.fromPairs(Object.keys(mapping).map(dbKey => [dbKey, record[mapping[dbKey]]]))
-  newRecord=newRecord.price ? {...newRecord, price: toFloat(newRecord.price)} : newRecord
+  let newRecord={}
+  // Apply tranforms if any
+  Object.entries(mapping).forEach(([key, dest]) => {
+    let column=lodash.isString(dest) ? dest : dest.column
+    let transform = lodash.isObject(dest) && dest.transform || lodash.identity
+    newRecord[key]=transform(record[column])
+  })
   return newRecord
 }
 
 const dataImport=(model, headers, records, mapping, options) => {
-  console.trace('Data import')
   const updateOnly=!!options.update
   const uniqueKey=options.key
+  const result={created: 0, updated: 0, warnings: [], errors: []}
   return new Promise((resolve, reject) => {
     const modelObj = model.schema.obj
     const modelFields=Object.keys(modelObj)
     const mandatoryFields = updateOnly ? [uniqueKey] : modelFields.filter(f => !!modelObj[f].required)
-    const fileMandatoryFields=mandatoryFields.map(f => mapping[f])
+    const fileMandatoryFields=mandatoryFields.map(f => mapping[f].column || mapping[f])
 
     // Check missing columns
     const missingColumns=getMissingColumns(fileMandatoryFields, headers)
     if (!lodash.isEmpty(missingColumns)) {
       console.error(`Missing: ${missingColumns}`)
-      return reject({created: 0, updated: 0, warnings: [], errors: missingColumns.map(f => `Colonne ${f} manquante`)})
+      result.errors=missingColumns.map(f => `Colonne ${f} manquante`)
+      return resolve(result)
     }
 
     // Check empty mandatory fields in records
-    const warnings=[]
     records.forEach((record, idx) => {
-      const missingFields=fileMandatoryFields.filter(mandField => lodash.isEmpty(record[mandField]))
+      const missingFields=fileMandatoryFields.filter(mandField => !record[mandField])
       if (!lodash.isEmpty(missingFields)) {
-        warnings.push(`Ligne ${idx+2}: Valeur(s) vide(s) pour ${missingFields.join(',')}`)
+        result.warnings.push(`Ligne ${idx+2}: Valeur(s) vide(s) pour ${missingFields.join(',')}`)
+        return resolve(result)
       }
     })
-
-    if (!lodash.isEmpty(warnings)) {
-      return reject({created: 0, updated: 0, warnings: warnings, errors: null})
-    }
 
     const formattedRecords=records.map(record => {
       return mapRecord(record, mapping)
     })
 
     const promises=formattedRecords.map(record =>
-      model.updateOne({[uniqueKey]: record[uniqueKey]}, record, {upsert: !updateOnly && true}),
+      model.updateOne({[uniqueKey]: record[uniqueKey]}, record, {upsert: true}),
     )
 
     Promise.allSettled(promises)
       .then(res => {
         const fulfilled=res.filter(r => r.status=='fulfilled').map(r => r.value)
-        const updated=lodash.sum(fulfilled.map(f => f.nModified))
-        const created=lodash.sumerror(fulfilled.map(f => (f.upserted ? f.upserted.length : 0)))
-        const result={updated: updated, created: created, warnings: null, errors: null}
+        const rejected=res.filter(r => r.status=='rejected').map(r => r.reason)
+        result.updated=lodash.sum(fulfilled.map(f => f.modifiedCount))
+        result.created=lodash.sum(fulfilled.map(f => f.upsertedCount))
+        result.errors.push(...rejected.map(r => r.message))
         return resolve(result)
       })
-  })
-}
-
-const extractCsv=(bufferData, options) => {
-  return new Promise((resolve, reject) => {
-    const contents = bufferToString(bufferData)
-    try {
-      const records=csv_parse(contents, {columns: true, delimiter: ';', ...options})
-      const input_fields = Object.keys(records[0]).sort()
-      resolve({headers: input_fields, records: records})
-    }
-    catch(err) {
-      reject(err)
-    }
+      .catch(err => {
+        result.errors.push(err)
+        return resolve(result)
+      })
   })
 }
 
@@ -94,10 +98,10 @@ const csvImport= (model, bufferData, mapping, options) => {
     // data buffer to CSV
     extractCsv(bufferData, options)
       .then(({headers, records}) => {
-        resolve(dataImport(model, headers, records, mapping, options))
+        return resolve(dataImport(model, headers, records, mapping, options))
       })
       .catch(err => {
-        resolve({errors: [err]})
+        return resolve({created: 0, updated: 0, errors: [String(err)], warnings: []})
       })
   })
 }
@@ -105,7 +109,7 @@ const csvImport= (model, bufferData, mapping, options) => {
 const shipRatesImport = buffer => {
   return new Promise((resolve, reject) => {
     let shiprates=[]
-    extractCsv(buffer, {columns: false, from_line: 4})
+    extractCsv(buffer, {columns: false, from_line: 4, delimiter: ';'})
       .then(result => {
         const records=result.records
         records.forEach(r => {
@@ -147,7 +151,7 @@ const shipRatesImport = buffer => {
         return ShipRate.insertMany(shiprates)
       })
       .then(result => {
-        resolve({updated: 0, created: result.length, warnings: null, errors: null})
+        return resolve({updated: 0, created: result.length, warnings: [], errors: []})
       })
       .catch(err => {
         reject(err)

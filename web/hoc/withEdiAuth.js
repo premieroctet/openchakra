@@ -76,7 +76,9 @@ const withEdiAuth = (Component = null, options = {}) => {
       const accessRights=new AccessRights(options.model, options.action, actions)
       return (
         <ThemeProvider theme={theme}>
-          {is_development() && <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}`}</h1>}
+          {is_development() &&
+            <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}, compte:${['firstname', 'name'].map(a => getLoggedUser()[a])}`}</h1>
+          }
           <Header accessRights={accessRights} />
           <Tabs accessRights={accessRights} />
           <div className='container-lg'>

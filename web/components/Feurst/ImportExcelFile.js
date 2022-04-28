@@ -2,7 +2,12 @@ import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {PleasantButton} from './Button'
-const {FormControl, TextField} = require('@material-ui/core')
+const {
+  FormControl,
+  Grid,
+  TextField,
+  Typography,
+} = require('@material-ui/core')
 const lodash=require('lodash')
 const axios = require('axios')
 const csv_parse = require('csv-parse/lib/sync')
@@ -39,7 +44,7 @@ const ImportResult = ({result}) => {
     </>
   )
 }
-const ImportExcelFile = ({importURL, templateURL}) => {
+const ImportExcelFile = ({importURL, templateURL, onImport}) => {
 
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [file, setFile]=useState(null)
@@ -104,6 +109,7 @@ const ImportExcelFile = ({importURL, templateURL}) => {
     axios.post(importURL, data)
       .then(result => {
         setImportResult(result.data)
+        onImport && onImport()
       })
       .catch(err => {
         snackBarError(err)
@@ -117,23 +123,27 @@ const ImportExcelFile = ({importURL, templateURL}) => {
       <input type={'file'} onSubmit={() => uploadFile} onChange={onFileChange} accept='.csv'/>
       {sample &&
         <>
-          <FormControl variant="standard">
-            <label htmlFor='separator'>Séparateur:</label>
-            <TextField maxLength={1} defaultValue={separator} id='separator'
-              onChange={ev => !lodash.isEmpty(ev.target.value?.trim()) && setSeparator(ev.target.value.trim())}
-            />
-          </FormControl>
-          <FormControl variant="standard">
-            <label htmlFor='firstLine'>Commencer en ligne:</label>
-            <TextField type='number' defaultValue={firstLine} id='firstLine'
-              onChange={ev => !isNaN(parseInt(ev.target.value)) && setFirstLine(parseInt(event.target.value))}
-            /></FormControl>
-          <table border='1'>
-            <tr>{sample[0].map(h => (<th>{h}</th>))}</tr>
-            {sample.slice(1, 5).map(r => (
-              <tr>{r.map(v => <td>{v}</td>)}</tr>
-            ))}
-          </table>
+          <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <FormControl variant="standard">
+              <Typography><label htmlFor='separator'>Séparateur:</label></Typography>
+              <TextField maxLength={1} defaultValue={separator} id='separator'
+                onChange={ev => !lodash.isEmpty(ev.target.value?.trim()) && setSeparator(ev.target.value.trim())}
+              />
+            </FormControl>
+            <FormControl variant="standard">
+              <Typography><label htmlFor='firstLine'>Commencer en ligne:</label></Typography>
+              <TextField type='number' defaultValue={firstLine} id='firstLine'
+                onChange={ev => !isNaN(parseInt(ev.target.value)) && setFirstLine(parseInt(event.target.value))}
+              /></FormControl>
+          </Grid>
+          <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
+            <table border='1'>
+              <thead><tr>{sample[0].map(h => (<th>{h}</th>))}</tr></thead>
+              <tbody>{sample.slice(1, 5).map(r => (
+                <tr>{r.map(v => <td>{v}</td>)}</tr>
+              ))}</tbody>
+            </table>
+          </Grid>
         </>}
       {importResult && <ImportResult result={importResult}/>}
       <PleasantButton size={'full-width'} onClick={submitData}>Importer ce fichier</PleasantButton>

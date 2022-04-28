@@ -180,9 +180,9 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     })
 })
 
-
 // @Route PUT /myAlfred/api/orders/:id/item
-// Add item to a order {product_id, quantity, discount?}
+// Add item to a order {product_id, quantity, discount?, replace}
+// Adds quantity if replace is false else sets quantity
 // @Access private
 router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, res) => {
 
@@ -196,7 +196,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   }
 
   const order_id=req.params.id
-  const {product, quantity}=req.body
+  const {product, quantity, replace=false}=req.body
 
   Order.findOne({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
     .populate('items.product')
@@ -205,7 +205,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
         console.error(`No order #${order_id}`)
         return res.status(404)
       }
-      return addItem(data, product, null, quantity)
+      return addItem(data, product, null, quantity, replace)
     })
     .then(data => {
       return updateShipFee(data)
@@ -265,6 +265,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   Order.find(getDataFilter(req.user, DATA_TYPE, VIEW))
     .populate('items.product')
+    .populate('user')
     .then(orders => {
       return res.json(orders)
     })
@@ -285,6 +286,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
 
   Order.findOne({_id: req.params.order_id, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
     .populate('items.product')
+    .populate('user')
     .then(order => {
       if (order) {
         return res.json(order)

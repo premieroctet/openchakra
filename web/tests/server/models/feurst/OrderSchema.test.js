@@ -1,16 +1,16 @@
-const lodash=require('lodash')
 const mongoose = require('mongoose')
 const {
   EXPRESS_SHIPPING,
+  ORDER_COMPLETE,
   ORDER_CREATED,
   ORDER_FULFILLED,
   ORDER_VALID,
-} = require('../../../utils/feurst/consts')
-const {MONGOOSE_OPTIONS} = require('../../utils/database')
+} = require('../../../../utils/feurst/consts')
+const {MONGOOSE_OPTIONS} = require('../../../../server/utils/database')
 
-const ProductSchema = require('./ProductSchema')
-const OrderSchema = require('./OrderSchema')
-const UserSchema = require('./UserSchema')
+const ProductSchema = require('../../../../server/models/feurst/ProductSchema')
+const OrderSchema = require('../../../../server/models/feurst/OrderSchema')
+const UserSchema = require('../../../../server/models/feurst/UserSchema')
 
 const Order=mongoose.model('order', OrderSchema)
 const Product=mongoose.model('product', ProductSchema)
@@ -81,6 +81,10 @@ describe('Feurst Order/Products test', () => {
       .then(order => {
         expect(order.status).toBe(ORDER_FULFILLED)
         return Order.findByIdAndUpdate(order._id, {$set: {address: {address: 'Rue'}, shipping_mode: EXPRESS_SHIPPING}}, {new: true})
+      })
+      .then(order => {
+        expect(order.status).toBe(ORDER_COMPLETE)
+        return Order.findByIdAndUpdate(order._id, {$set: {user_validated: true}}, {new: true})
       })
       .then(order => {
         expect(order.status).toBe(ORDER_VALID)

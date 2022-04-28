@@ -94,4 +94,12 @@ QuotationBookingBaseSchema.virtual('total_weight').get(function() {
   return parseInt(total_weight)
 })
 
+QuotationBookingBaseSchema.virtual('total_quantity').get(function() {
+  if (lodash.isEmpty(this.items)) {
+    return 0
+  }
+  const total_quantity=lodash.sumBy(this.items, i => i.quantity)
+  return total_quantity
+})
+
 module.exports=QuotationBookingBaseSchema

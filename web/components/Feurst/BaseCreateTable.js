@@ -40,6 +40,10 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const dataToken = getAuthToken()
   const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const [refresh, setRefresh]=useState(false)
+
+  const toggleRefresh= () => setRefresh(!refresh)
+
   const router = useRouter()
 
   
@@ -58,14 +62,19 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     
     const currentOrder = id ?
       await client(`${API_PATH}/${endpoint}/${id}`)
-        .catch(err => snackBarError(err.msg))
+        .catch(err => snackBarError(err))
       : []
     
     currentOrder && setState({...state, ...currentOrder})
     
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [endpoint])
-  
+
+  useEffect(() => {
+    getContentFrom(orderID)
+  }, [refresh, orderID])
+
+
   const addProduct = async({item, qty}) => {
     if (!item) { return }
     
@@ -91,7 +100,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     await client(`${API_PATH}/${endpoint}/${orderID}/items/${idItem}`, {method: 'DELETE'})
       .then(() => getContentFrom(orderID))
       .catch(e => console.error(`Can't delete product ${e}`))
-    
+
   }, [endpoint, getContentFrom, orderID])
 
   // bind address, shipping info and ref to the current order/quotation
@@ -149,7 +158,7 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     if (orderID) { getContentFrom(orderID) }
   }, [getContentFrom, orderID])
 
-  
+
   /**
   const columnsMemo = useMemo(
     () => columns({language, data, setData, deleteProduct: deleteProduct}).map(c => ({...c, Header: c.label, accessor: c.attribute})),

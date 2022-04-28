@@ -38,10 +38,20 @@ Quotation & book status :
 - Booking: CREATED, PARTIALLY_HANDLED, HANDLED
 */
 
+const QUOTATION_CREATED='QUOTATION_CREATED'
+const QUOTATION_FULFILLED='QUOTATION_FULFILLED'
+const QUOTATION_COMPLETE='QUOTATION_COMPLETE'
+const QUOTATION_VALID='QUOTATION_VALID'
+const QUOTATION_PARTIALLY_HANDLED='QUOTATION_PARTIALLY_HANDLED'
+const QUOTATION_HANDLED='QUOTATION_HANDLED'
+
 const QUOTATION_STATUS={
-  CREATED: 'QUOTATION_STATUS.created',
-  HANDLED: 'QUOTATION_STATUS.handled',
-  EXPIRED: 'QUOTATION_STATUS.expired',
+  [QUOTATION_CREATED]: 'QUOTATION_STATUS.created',
+  [QUOTATION_FULFILLED]: 'QUOTATION_STATUS.fulfilled',
+  [QUOTATION_COMPLETE]: 'QUOTATION_STATUS.complete',
+  [QUOTATION_VALID]: 'QUOTATION_STATUS.valid',
+  [QUOTATION_PARTIALLY_HANDLED]: 'QUOTATION_STATUS.partially_handled',
+  [QUOTATION_HANDLED]: 'QUOTATION_STATUS.partially_handled',
 }
 
 const ORDER_CREATED='CREATED'
@@ -76,11 +86,11 @@ const ROLES = {
 }
 
 const [ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT]=['ORDER', 'QUOTATION', 'ACCOUNT', 'SHIPRATE', 'PRODUCT']
-const [VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]=['VIEW', 'CREATE', 'UPDATE', 'DELETE', 'VALIDATE', 'CONVERT']
-const [ALL, MINE, COMPANY]=['ALL', 'MINE', 'COMPANY']
+const [VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT, LINK, HANDLE]=['VIEW', 'CREATE', 'UPDATE', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'HANDLE']
+const [ALL, MINE, COMPANY, RELATED]=['ALL', 'MINE', 'COMPANY', 'RELATED']
 const MODELS=[ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT]
 const ACTIONS=[VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]
-const VISIBILITY=[ALL, MINE, COMPANY]
+const VISIBILITY=[ALL, MINE, COMPANY, RELATED]
 
 const createUserAction= (model, action, extra={}) => {
   return {model: model, action: action, ...extra}
@@ -88,7 +98,7 @@ const createUserAction= (model, action, extra={}) => {
 
 const USER_ACTIONS={
   [FEURST_ADMIN]: lodash.flattenDeep([
-    [VIEW, CREATE, UPDATE, DELETE].map(action => [FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
+    [VIEW, CREATE, UPDATE, DELETE, LINK].map(action => [FEURST_ADMIN, FEURST_ADV, FEURST_SALES, CUSTOMER_ADMIN].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
     [VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: ALL})),
     [VIEW, CREATE].map(action => createUserAction(SHIPRATE, action, {visibility: ALL})),
@@ -98,8 +108,8 @@ const USER_ACTIONS={
     [CREATE, VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
   ]),
   [FEURST_SALES]: lodash.flattenDeep([
-    [CREATE, VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
-    [CREATE, VIEW].map(action => createUserAction(ORDER, action, {visibility: MINE})),
+    [CREATE, VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
+    [CREATE, VIEW].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
   ]),
   [CUSTOMER_ADMIN]: lodash.flattenDeep([
     [VIEW, CREATE, UPDATE, DELETE].map(action => [CUSTOMER_ADMIN, CUSTOMER_SLAVE].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
@@ -137,7 +147,8 @@ module.exports={
   ORDER_STATUS, QUOTATION_STATUS, FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN, CUSTOMER_SLAVE,
   ROLES, USER_ACTIONS, ORDER, QUOTATION, ACCOUNT, VIEW, CREATE, UPDATE, DELETE, VALIDATE,
   SHIPRATE, MAX_WEIGHT, PRODUCT, STANDARD_SHIPPING, EXPRESS_SHIPPING, BASEPATH_EDI, ALL, FEURST_PHONE_NUMBER, FEURST_IMG_PATH, API_PATH,
-  COMPANY, MINE,
+  COMPANY, MINE, RELATED,
   ORDER_CREATED, ORDER_FULFILLED, ORDER_VALID, ORDER_PARTIALLY_HANDLED, ORDER_HANDLED, SHIPPING_MODES,
-  ORDER_COMPLETE,
+  ORDER_COMPLETE, LINK, FEURST_SALES, QUOTATION_VALID, QUOTATION_COMPLETE, QUOTATION_FULFILLED, QUOTATION_CREATED,
+  HANDLE,
 }

@@ -7,12 +7,12 @@ const {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT} = req
 const MENUS=[
   {
     enabled: rights => rights.hasModel(ORDER),
-    label: 'Mes commandes',
+    label: 'Commandes',
     url: `${BASEPATH_EDI}/orders`,
   },
   {
     enabled: rights => rights.hasModel(QUOTATION),
-    label: 'Mes devis',
+    label: 'Devis',
     url: `${BASEPATH_EDI}/quotations`,
   },
   {

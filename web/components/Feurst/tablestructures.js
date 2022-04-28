@@ -2,9 +2,9 @@ import React from 'react'
 import UpdateCell from '../Table/UpdateCell'
 import EditableCell from '../Table/EditableCell'
 import {localeMoneyFormat} from '../../utils/converters'
-const moment = require('moment')
 const {ROLES} = require('../../utils/consts')
 const {DateRangeColumnFilter} = require('../Table/TableFilter')
+const {PleasantButton} = require('./Button')
 
 const ToTheBin = props => (
   <button {...props}>
@@ -71,11 +71,19 @@ const ordersColumns = ({language, deleteProduct}) => [
     filter: 'dateBetween', /* Custom Filter Type */
   },
   {
+    label: 'Créateur',
+    attribute: 'user.full_name',
+  },
+  {
     label: 'Référence',
     attribute: 'reference',
   },
   {
     label: 'Quantité',
+    attribute: 'total_quantity',
+  },
+  {
+    label: 'Poids total',
     attribute: 'total_weight',
   },
   {
@@ -207,6 +215,10 @@ const accountsColumns = ({language}) => [
     attribute: 'company.name',
   },
   {
+    label: 'Client(s)',
+    attribute: u => u.companies.map(u => (<div>{u.name}</div>)),
+  },
+  {
     label: 'Roles',
     attribute: 'roles',
     Cell: ({cell: {value}}) => value.map(r => ROLES[r]).join(','),
@@ -235,5 +247,30 @@ const shipratesColumns = ({language}) => [
   {label: 'Par kg', attribute: 'per_kg_price'},
 ]
 
+const HandledOrderDescription = order => {
+  return (
+    <div alignItems='left'>
+      <h1>{order.address.label} par {order.user.full_name}</h1>
+      <div>Numéro de commande: {order.reference}</div>
+      <div>Date de commande: {order.creation_date}</div>
+    </div>
+  )
+}
+
+const HandledOrderStatus = order => {
+  return (
+    <div alignItems='left'>
+      <h1>Status de la commande</h1>
+      <div>{order.status}</div>
+      <PleasantButton>Voir la commande</PleasantButton>
+    </div>
+  )
+}
+
+const handledOrdersColumns = ({language}) => [
+  {label: 'Description', attribute: o => o, Cell: ({cell: {value}}) => HandledOrderDescription(value)},
+  {label: 'Etat', attribute: o => o, Cell: ({cell: {value}}) => HandledOrderStatus(value)},
+
+]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
-  accountsColumns, productsColumns, shipratesColumns}
+  accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns}

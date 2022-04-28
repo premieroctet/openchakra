@@ -1,7 +1,6 @@
+import {useRouter} from 'next/router'
 import React from 'react'
-import {Tab} from '@headlessui/react'
 import styled from 'styled-components'
-import Router, {useRouter} from 'next/router'
 import Link from 'next/link'
 import {screen} from '../../styles/screenWidths'
 const {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, BASEPATH_EDI} = require('../../utils/consts')
@@ -62,6 +61,13 @@ const Tabstyled = styled.div`
 
 const tabsContent = [
   {
+    title: 'Commandes à traiter',
+    url: `${BASEPATH_EDI}/orders/handle`,
+    model: ORDER,
+    action: CREATE,
+    visible: [ORDER, QUOTATION],
+  },
+  {
     title: 'Créer une commande',
     url: `${BASEPATH_EDI}/orders/create`,
     model: ORDER,
@@ -116,7 +122,7 @@ const Tabs = props => {
   const {accessRights}=props
 
   const router = useRouter()
-  // const filteredContents=tabsContent // .filter(c => props.accessRights.isActionAllowed(c.model, c.action))
+
   const filteredContents=tabsContent
     .filter(c => accessRights.isActionAllowed(c.model, c.action))
     .filter(c => c.visible.includes(accessRights.getModel()))

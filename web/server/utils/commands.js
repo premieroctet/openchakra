@@ -3,7 +3,11 @@ const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
 
-const addItem = (data, product_id, reference, quantity) => {
+/** Adds product to the order :
+If product is present, adds quantity if replace is false else sets quantity
+If product is not present, adds the item to the order
+*/
+const addItem = (data, product_id, reference, quantity, replace=false) => {
   return new Promise((resolve, reject) => {
     if (isNaN(parseInt(quantity))) {
       return reject(`Article ${reference}: quantité ${quantity} incorrect`)
@@ -18,7 +22,7 @@ const addItem = (data, product_id, reference, quantity) => {
         }
         let item=data.items.find(item => item.product._id.toString()==product._id.toString())
         if (item) {
-          item.quantity += parseInt(quantity)
+          item.quantity = replace ? parseInt(quantity) : item.quantity+parseInt(quantity)
         }
         else {
           item = {product: product, quantity: parseInt(quantity), catalog_price: product.price}
@@ -34,7 +38,6 @@ const addItem = (data, product_id, reference, quantity) => {
 Computes Ship rate depending on zipcode, wieght and express (true||false)
 */
 const computeShipFee = (zipcode, weight, express) => {
-  console.log(`Computing ship fee ${zipcode}, ${weight}, ${express}`)
   return new Promise((resolve, reject) => {
     ShipRate.findOne({zipcode: zipcode, express: express, min_weight: {$lte: weight}, max_weight: {$gt: weight}})
       .then(rate => {
