@@ -2,6 +2,25 @@ import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import Tooltip from '../Tooltip.js/Tooltip'
 
+const AlertStockMsgTrigger = props => <span {...props}>⚠️</span>
+const StyledAlertStockTrigger = styled(AlertStockMsgTrigger)`
+  margin-inline: var(--spc-2);
+  padding: var(--spc-1);
+  border-radius: var(--rounded-full);
+  background-color: #cc6e29;
+  `
+
+const AlertStockMsg = ({className, row}) => <div className={className}><span>Qté disponible&nbsp;: {row.original.product.stock}</span></div>
+  
+const StyledAlertStockMsg = styled(AlertStockMsg)`
+    background: #cc6e29;
+    padding: var(--spc-2);
+    color: var(--white);
+    width: max-content;
+    left: 50%;
+    top: 0;
+    transform: translate(calc(-50% + 1rem), 0);
+`
 
 const UpdateCell = ({
   value: initialValue,
@@ -13,13 +32,10 @@ const UpdateCell = ({
   // We need to keep and update the state of the cell normally
   const [value, setValue] = useState(initialValue)
 
-  // const alertStock = row?.original?.product?.stock && value > row.original.product.stock
-  //   ? (<div className='stockalert'>⚠️<span>Qté disponible&nbsp;: {row.original.product.stock}</span></div>)
-  //   : null
-
-
   const itemToUpdate = row?.original?.product
   const qty = !isNaN(parseInt(value)) && parseInt(value)
+
+  const isAvailableStock = !!(row?.original?.product?.stock && qty > row.original.product.stock)
 
   const onChange = e => {
     setValue(e.target.value)
@@ -40,7 +56,10 @@ const UpdateCell = ({
     setValue(initialValue)
   }, [initialValue])
 
-  return <><input type={'number'} value={value} onChange={onChange} onBlur={onBlur} /> <Tooltip trigger={() => '⚠️'} content={() => '2'}/> </>
+  return <div className='flex items-center'>
+    <input className='grow' type={'number'} value={value} onChange={onChange} onBlur={onBlur} />
+    {isAvailableStock && <Tooltip trigger={<StyledAlertStockTrigger />} content={<StyledAlertStockMsg row={row} qty={qty} />}/>}
+  </div>
   
 }
 

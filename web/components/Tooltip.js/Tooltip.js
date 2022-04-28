@@ -21,11 +21,11 @@ const Tooltip = ({trigger: TriggerComponent, content: ContentComponent}) => {
       onBlur={() => setVisibility(false)}
       tabIndex="0"
     >
-      <TriggerComponent />
+      {TriggerComponent}
     </div>
     {visibility ?
       <div role={'tooltip'} id={tooltipId}>
-        <ContentComponent />
+        {ContentComponent}
       </div>
       : null}
   </div>)

@@ -408,10 +408,6 @@ input:focus:not(:focus-visible) {
 [role=tooltip] {
   visibility: hidden;
   position: absolute;
-  top: 2rem;
-  left: 2rem;
-  background: black;
-  color: white;
 }
 [aria-describedby]:hover,
 [aria-describedby]:focus {

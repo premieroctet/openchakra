@@ -54,7 +54,8 @@ const TablesStyles = styled.div`
 
 
   input {
-    max-width: 80%;
+    max-width: var(--spc-24);
+    padding: var(--spc-2) var(--spc-4);
     background: inherit;
     border: 1px solid var(--stone-400);
   }
