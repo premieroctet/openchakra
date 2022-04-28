@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import styled from 'styled-components'
-import {TextField} from '@material-ui/core'
+import {withTranslation} from 'react-i18next'
+import ReactHtmlParser from 'react-html-parser'
 import Address from '../Address/Address'
 import DeliveryAddresses from '../Feurst/DeliveryAddresses'
 import ShippingFees from '../Feurst/ShippingFees'
@@ -8,7 +9,6 @@ import PureDialog from '../Dialog/PureDialog'
 import {client} from '../../utils/client'
 import isEmpty from '../../server/validation/is-empty'
 import {API_PATH} from '../../utils/consts'
-import {ORDER_CREATED} from '../../utils/feurst/consts'
 import {PleasantButton} from './Button'
 import {Input} from './components.styles'
 
@@ -78,18 +78,34 @@ const StyledDialog = styled(PureDialog)`
   }
   .phone {
     grid-area: phone;
-  }
-
-  
+  }  
 `
 
 
-const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoint, state, setState, validateAddress}) => {
+const DialogAddress = ({
+  isOpenDialog,
+  setIsOpenDialog,
+  accessRights,
+  id,
+  endpoint,
+  state,
+  setState,
+  validateAddress,
+  wordingSection,
+  t,
+}) => {
 
   const {orderref, address, shippingOption, errors} = state
   const [shippingfees, setShippingFees] = useState({})
   const [valid, setValid] = useState(false)
   const formData = useRef()
+
+  const isAllItemsAvailable = state?.items.map(item => {
+    const desiredQuantity = item.quantity
+    const availableQuantities = item?.product?.stock || 0
+    return !(desiredQuantity > availableQuantities)
+  }).every(av => av === true)
+
 
   const getShippingFees = useCallback(async zipcode => {
     const res_shippingfees = await client(`${API_PATH}/${endpoint}/${id}/shipping-fee?zipcode=${zipcode}`)
@@ -115,16 +131,19 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
       open={isOpenDialog}
       onClose={() => setIsOpenDialog(false)}
     >
-
-      <div className='disclaimer'>
-        <p>Certaines quantités ne sont pas disponibles dans votre commande.</p>
-        <p>Le service ADV reviendra vers vous avec un délai de livraison dès le
+      {!isAllItemsAvailable
+        ?
+        <div className='disclaimer'>
+          <p>Certaines quantités ne sont pas disponibles dans votre commande.</p>
+          <p>Le service ADV reviendra vers vous avec un délai de livraison dès le
 traitement de votre commande.</p>
-      </div>
+        </div>
+        : null
+      }
 
       <form ref={formData} onSubmit={validateAddress}>
 
-        <h2>Pour valider votre commande, veuillez&nbsp;:</h2>
+        <h2>{ReactHtmlParser(t(`${wordingSection}.dialogAddressValid`))}</h2>
         <h3>Indiquer une référence</h3>
 
         {/* order ref */}
@@ -152,4 +171,4 @@ traitement de votre commande.</p>
 
 }
 
-export default DialogAddress
+export default withTranslation('feurst', {withRef: true})(DialogAddress)
