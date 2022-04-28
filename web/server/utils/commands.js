@@ -34,7 +34,6 @@ const addItem = (data, product_id, reference, quantity) => {
 Computes Ship rate depending on zipcode, wieght and express (true||false)
 */
 const computeShipFee = (zipcode, weight, express) => {
-  console.log(`Computing ship fee ${zipcode}, ${weight}, ${express}`)
   return new Promise((resolve, reject) => {
     ShipRate.findOne({zipcode: zipcode, express: express, min_weight: {$lte: weight}, max_weight: {$gt: weight}})
       .then(rate => {

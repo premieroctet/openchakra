@@ -1,8 +1,8 @@
-const {MONGOOSE_OPTIONS} = require('../../utils/database')
 const lodash=require('lodash')
-
-const UserSchema = require('./UserSchema')
 const mongoose = require('mongoose')
+const {MONGOOSE_OPTIONS} = require('../../../../server/utils/database')
+
+const UserSchema = require('../../../../server/models/feurst/UserSchema')
 
 const User=mongoose.model('user', UserSchema)
 
