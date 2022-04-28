@@ -1,9 +1,27 @@
 const csv_parse = require('csv-parse/lib/sync')
 const lodash=require('lodash')
-const {MAX_WEIGHT} = require('../../utils/feurst/consts')
+const ExcelJS = require('exceljs')
+const {MAX_WEIGHT, TEXT_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
 const ShipRate = require('../models/ShipRate')
 const {bufferToString} = require('../../utils/text')
 const {addItem, updateShipFee} = require('./commands')
+
+const guessFileType = buffer => {
+  return new ExcelJS.Workbook().xlsx.load(buffer)
+    .then(() => {
+      return XL_TYPE
+    })
+    .catch(() => {
+      return TEXT_TYPE
+    })
+}
+
+const getTabs = buffer => {
+  return new ExcelJS.Workbook().xlsx.load(buffer)
+    .then(wb => {
+      return wb.worksheets.map(w => w.name)
+    })
+}
 
 const extractCsv=(bufferData, options) => {
   return new Promise((resolve, reject) => {
@@ -24,6 +42,37 @@ const extractCsv=(bufferData, options) => {
       reject(err)
     }
   })
+}
+
+const extractXls=(bufferData, options) => {
+  if (!options.tab) {
+    return Promise.reject(`XLS loading: missing options.tab`)
+  }
+  return new ExcelJS.Workbook().xlsx.load(bufferData)
+    .then(workbook => {
+      const sheet=workbook.worksheets.find(w => w.name==options.tab)
+      if (!sheet) {
+        return Promise.reject(`XLS loading: sheet ${options.tab} not found`)
+      }
+      const first_line=options.from_line || 1
+      const columnsRange=lodash.range(1, sheet.actualColumnCount+1)
+      const rowsRange=lodash.range(first_line+1, sheet.actualRowCount+1)
+      const headers=columnsRange.map(colIdx => sheet.getRow(first_line).getCell(colIdx).value)
+      const records=rowsRange.map(rowIdx => columnsRange.map(colIdx => sheet.getRow(rowIdx).getCell(colIdx).value))
+      if (!options.columns) {
+        return {headers: headers, records: records}
+      }
+      let mappedRecords=records.map(r => Object.fromEntries(lodash.zip(headers, r)))
+      return {headers: headers, records: mappedRecords}
+    })
+}
+
+const extractData = (bufferData, options) => {
+  options={columns: true, ...options}
+  if (!options.format || ![XL_TYPE, TEXT_TYPE].includes(options.format)) {
+    return Promise.reject(`Null or invalid options.format:${options.format}`)
+  }
+  return options.format==XL_TYPE ? extractXls(bufferData, options):extractCsv(bufferData, options)
 }
 
 const getMissingColumns = (mandatory, columns) => {
@@ -73,6 +122,14 @@ const dataImport=(model, headers, records, mapping, options) => {
       return mapRecord(record, mapping)
     })
 
+    // Check duplicates keys
+    if (options.key) {
+      const duplicates=lodash(formattedRecords).groupBy(options.key).pickBy(x => x.length > 1).keys().value()
+      if (!lodash.isEmpty(duplicates)) {
+        return reject(`Valeurs dupliquées dans la colonne '${mapping[options.key]}':${duplicates.join(', ')}`)
+      }
+    }
+
     const promises=formattedRecords.map(record =>
       model.updateOne({[uniqueKey]: record[uniqueKey]}, record, {upsert: true}),
     )
@@ -93,23 +150,20 @@ const dataImport=(model, headers, records, mapping, options) => {
   })
 }
 
-const csvImport= (model, bufferData, mapping, options) => {
-  return new Promise((resolve, reject) => {
-    // data buffer to CSV
-    extractCsv(bufferData, options)
-      .then(({headers, records}) => {
-        return resolve(dataImport(model, headers, records, mapping, options))
-      })
-      .catch(err => {
-        return resolve({created: 0, updated: 0, errors: [String(err)], warnings: []})
-      })
-  })
+const fileImport= (model, bufferData, mapping, options) => {
+  return extractData(bufferData, options)
+    .then(({headers, records}) => {
+      return dataImport(model, headers, records, mapping, options)
+    })
+    .catch(err => {
+      return ({created: 0, updated: 0, errors: [String(err)], warnings: []})
+    })
 }
 
 const shipRatesImport = buffer => {
   return new Promise((resolve, reject) => {
     let shiprates=[]
-    extractCsv(buffer, {columns: false, from_line: 4, delimiter: ';'})
+    extractCsv(buffer, {columns: false, from_line: 3, delimiter: ';'})
       .then(result => {
         const records=result.records
         records.forEach(r => {
@@ -196,4 +250,5 @@ const lineItemsImport = (model, buffer, mapping) => {
   })
 }
 
-module.exports={csvImport, extractCsv, shipRatesImport, lineItemsImport}
+module.exports={fileImport, extractCsv, shipRatesImport, lineItemsImport,
+  guessFileType, getTabs}

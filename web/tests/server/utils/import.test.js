@@ -1,13 +1,15 @@
+const {guessFileType} = require('../../../server/utils/import')
+const {TEXT_TYPE, XL_TYPE} = require('../../../utils/feurst/consts')
+
 const fs = require('fs').promises
 const mongoose = require('mongoose')
 
 const ProductSchema = require('../../../server/models/feurst/ProductSchema')
 const ShipRateSchema = require('../../../server/models/feurst/ShipRateSchema')
-const {csvImport, shipRatesImport} = require('../../../server/utils/import')
+const {fileImport, shipRatesImport} = require('../../../server/utils/import')
 const {computeShipFee} = require('../../../server/utils/commands')
 
 const Product=mongoose.model('product', ProductSchema)
-const ShipRate=mongoose.model('user', ShipRateSchema)
 
 describe('Ship rates import test', () => {
 
@@ -16,7 +18,26 @@ describe('Ship rates import test', () => {
   })
 
   afterAll(() => {
-    return mongoose.connection.db.dropDatabase()
+    // return mongoose.connection.db.dropDatabase()
+  })
+
+  afterEach(() => {
+    return Product.deleteMany({})
+  })
+
+  describe('Guess files types', () => {
+    const cases=[['shiprates.csv', TEXT_TYPE], ['products.xlsx', XL_TYPE]]
+    test.each(cases)(
+      'File %p expected to be type %p',
+      (fname, fileType) => {
+        return fs.readFile(`tests/data/${fname}`)
+          .then(contents => {
+            return guessFileType(contents)
+          })
+          .then(filetype => {
+            return expect(filetype).toBe(fileType)
+          })
+      })
   })
 
   test('Import rates', () => {
@@ -24,34 +45,54 @@ describe('Ship rates import test', () => {
       .then(contents => {
         return shipRatesImport(contents)
       })
-      .then(() => {
-        return ShipRate.count()
-      })
       .then(result => {
-        expect(result).toBe(558)
+        expect(result.created).toBe(564)
       })
   })
 
-  test('Import products', () => {
+  test('Import products csv', () => {
     return fs.readFile(`tests/data/products.csv`)
       .then(contents => {
         const DB_MAPPING={
           'reference': 'Code article',
           'description_2': 'Description 2',
-          'production_line': 'Ligne prod.',
+          // 'production_line': 'Ligne prod.',
           'group': 'Grpe',
           'family': 'Famille',
           'description': 'Description',
           'weight': {column: "Poids d'expédition", transform: v => parseFloat(v.replace(',', '.')) || null},
         }
 
-        return csvImport(Product, contents, DB_MAPPING, {key: 'reference', delimiter: ';'})
+        return fileImport(Product, contents, DB_MAPPING, {key: 'reference', delimiter: ';', format: TEXT_TYPE})
       })
       .then(result => {
         expect(result.warnings.length).toBe(0)
         expect(result.errors.length).toBe(0)
         expect(result.created).toBe(1014)
-        expect(result.updated).toBe(6)
+        expect(result.updated).toBe(0)
+      })
+  })
+
+  test('Import products xlsx', () => {
+    return fs.readFile(`tests/data/products.xlsx`)
+      .then(contents => {
+        const DB_MAPPING={
+          'reference': 'Code article',
+          'description_2': 'Description 2',
+          // 'production_line': 'Ligne prod.',
+          'group': 'Grpe',
+          'family': 'Famille',
+          'description': 'Description',
+          'weight': {column: "Poids d'expédition", transform: v => parseFloat(String(v).replace(',', '.')) || null},
+        }
+
+        return fileImport(Product, contents, DB_MAPPING, {key: 'reference', delimiter: ';', format: XL_TYPE, tab: 'Travail'})
+      })
+      .then(result => {
+        expect(result.warnings.length).toBe(0)
+        expect(result.errors.length).toBe(0)
+        expect(result.created).toBe(1014)
+        expect(result.updated).toBe(0)
       })
   })
 
