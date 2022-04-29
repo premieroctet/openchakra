@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import UpdateCell from '../Table/UpdateCell'
 import EditableCell from '../Table/EditableCell'
 import {localeMoneyFormat} from '../../utils/converters'
@@ -96,6 +97,82 @@ const orderColumns = ({language, deleteProduct}) => {
   return deleteProduct ? [...orderColumnsBase, deleteItem] : orderColumnsBase
 }
 
+const orderViewColumns = ({language, deleteProduct}) => {
+
+  const orderColumnsBase = [
+    {
+      label: 'Réf. catalogue',
+      attribute: 'product.reference',
+      disableFilters: true,
+      Footer: 'Total',
+    },
+    {
+      label: 'Désignation',
+      attribute: item => `${item.product.description} ${item.product.description_2}`,
+    },
+    {
+      label: 'Quantité',
+      attribute: 'quantity',
+    },
+    {
+      label: 'Poids',
+      attribute: 'total_weight',
+      Cell: ({cell: {value}}) => `${value} kg`,
+      Footer: info => {
+        const total = React.useMemo(
+          () =>
+            info.rows.reduce((sum, row) => row.values.total_weight + sum, 0),
+          [info.rows],
+        )
+    
+        return <>{total} kg</>
+      },
+      
+    },
+    {
+      label: 'Prix catalogue',
+      attribute: 'catalog_price',
+      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
+      sortType: 'number',
+    },
+    {
+      label: 'Remise',
+      attribute: 'discount',
+      Cell: ({cell: {value}}) => `${value}%`,
+      sortType: 'number',
+    },
+    {
+      label: 'Votre prix',
+      attribute: 'target_price',
+      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
+      sortType: 'number',
+      Footer: info => {
+        const total = React.useMemo(
+          () =>
+            info.rows.reduce((sum, row) => row.values.target_price + sum, 0),
+          [info.rows],
+        )
+  
+        return <>{localeMoneyFormat({lang: language, value: total})}</>
+      },
+    },
+    
+  ]
+
+  const deleteItem = {
+    label: '',
+    id: 'product_delete',
+    attribute: 'product_delete',
+    Cell: ({cell: {row}}) => (
+      <ToTheBin onClick={() => {
+        deleteProduct({idItem: row.original._id})
+      }}/>
+    ),
+  }
+
+  return deleteProduct ? [...orderColumnsBase, deleteItem] : orderColumnsBase
+}
+
 const ordersColumns = ({language, deleteProduct}) => [
   {
     label: 'Date commande',
@@ -120,14 +197,17 @@ const ordersColumns = ({language, deleteProduct}) => [
   {
     label: 'Poids total',
     attribute: 'total_weight',
-  },
-  {
-    label: 'Prix total',
-    attribute: 'shipping_fee',
+    Cell: ({value}) => `${value} kg`,
   },
   {
     label: 'Détails',
-    attribute: 'details',
+    attribute: '_id',
+    Cell: ({value}) => (<Link href={`/edi/orders/view/${value}`}>voir</Link>),
+  },
+  {
+    label: 'Prix total',
+    attribute: 'total_amount',
+    Cell: ({value}) => localeMoneyFormat({lang: language, value}),
   },
   {
     label: 'Statut',
@@ -217,6 +297,11 @@ const quotationsColumns = ({language, deleteProduct}) => [
   {
     label: 'Montant total',
     attribute: 'total_amount',
+  },
+  {
+    label: 'Détails',
+    attribute: '_id',
+    Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>voir</Link>),
   },
   {
     label: '',
@@ -315,5 +400,5 @@ const handledOrdersColumns = ({language}) => [
   },
 
 ]
-module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
+module.exports={orderColumns, orderViewColumns, ordersColumns, quotationColumns, quotationsColumns,
   accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns}

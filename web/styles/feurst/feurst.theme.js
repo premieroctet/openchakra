@@ -179,7 +179,17 @@ export const GlobalStyleEdi = createGlobalStyle`
     width: 100%;
     height: auto;
   }
-  
+
+/* Text */
+
+.dl-inline dt {
+  float: left;
+  clear: left;
+  margin-right: 10px;
+}
+.dl-inline dd {
+  margin-left: 0px;
+}
 
 /* font-sizes */
 .text-sm {
@@ -210,6 +220,12 @@ export const GlobalStyleEdi = createGlobalStyle`
 
 .text-right {
   text-align: right;
+}
+
+/* font-weight */
+
+.font-semibold {
+  font-weight: var(--font-semibold);
 }
 
 /* font-colors */
