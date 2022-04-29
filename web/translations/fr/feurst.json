@@ -90,9 +90,14 @@
   "EDI.QUOTATION.valid": "Valider mon devis",
   "EDI.ORDER.dialogAddressValid": "Pour valider votre commande, veuillez&nbsp;:",
   "EDI.QUOTATION.dialogAddressValid": "Pour valider votre devis, veuillez&nbsp;:",
-  "EDI.QUOTATION.addTo": "Ajouter au devis",
   "EDI.ORDER.addTo": "Ajouter à la commande",
+  "EDI.QUOTATION.addTo": "Ajouter au devis",
   "EDI.ORDER.total": "Total de votre commande",
+  "EDI.QUOTATION.total": "Total de votre devis",
+  "EDI.ORDER.name": "Nom de la commande :",
+  "EDI.QUOTATION.name": "Nom du devis :",
+  "EDI.ORDER.date": "Date de la commande :",
+  "EDI.QUOTATION.date": "Date du devis :",
   "EDI.delivery": "Livraison"
   
 
