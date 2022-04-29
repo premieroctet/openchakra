@@ -8,7 +8,7 @@ import {PleasantButton} from './Button'
 import {FormAddArticle, Label, Input, Refquantity} from './components.styles'
 import CheckingProduct from './CheckingProduct'
 
-const AddArticle = ({addProduct, wordingSection}) => {
+const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}) => {
 
 
   const [article, setArticle] = useState({
@@ -73,7 +73,7 @@ const AddArticle = ({addProduct, wordingSection}) => {
 
 
       </FormAddArticle>
-      {article.showArticlePanel ? <CheckingProduct article={article} setArticle={setArticle} addProduct={addProduct} wordingSection={wordingSection} /> : null}
+      {article.showArticlePanel ? <CheckingProduct endpoint={endpoint} orderid={orderid} updateTable={updateTable} article={article} setArticle={setArticle} addProduct={addProduct} wordingSection={wordingSection} /> : null}
 
     </>
   )

@@ -22,6 +22,7 @@ import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
 import {localeMoneyFormat} from '../../utils/converters'
 import isEmpty from '../../server/validation/is-empty'
+import withEdiRequest from '../../hoc/withEdiRequest'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
@@ -36,7 +37,19 @@ const {
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
 
-const BaseCreateTable = ({id, storage, endpoint, columns, accessRights, wordingSection, t}) => {
+const BaseCreateTable = ({
+  id,
+  storage,
+  endpoint,
+  columns,
+  accessRights,
+  wordingSection,
+  t,
+  createOrderId,
+  getContentFrom,
+  addProduct,
+  deleteProduct,
+}) => {
   
   const [state, setState] = useState({
     items: useMemo(() => [], []),
@@ -61,8 +74,8 @@ const BaseCreateTable = ({id, storage, endpoint, columns, accessRights, wordingS
   const canValidate = [ORDER_COMPLETE, QUOTATION_COMPLETE].includes(state.status)
   const isView = [ORDER_VALID, ORDER_PARTIALLY_HANDLED, ORDER_HANDLED, QUOTATION_VALID, QUOTATION_PARTIALLY_HANDLED, QUOTATION_HANDLED].includes(state.status)
 
-
-  const createOrderId = useCallback(async() => {
+  
+  const createOrderIdOld = useCallback(async() => {
     
     if (state.status !== ORDER_COMPLETE) { // Prevent order creation juste after submitting an order
       const creation = await client(`${API_PATH}/${endpoint}`, {data: {user: dataToken.id}})
@@ -72,8 +85,9 @@ const BaseCreateTable = ({id, storage, endpoint, columns, accessRights, wordingS
     }
     
   }, [dataToken.id, endpoint, setOrderId, state.status])
-  
-  const getContentFrom = useCallback(async id => {
+
+
+  const getContentFromOld = useCallback(async id => {
     
     const currentOrder = id ?
       await client(`${API_PATH}/${endpoint}/${id}`)
@@ -85,8 +99,12 @@ const BaseCreateTable = ({id, storage, endpoint, columns, accessRights, wordingS
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [endpoint])
 
+  const updateTable = useCallback(async() => {
+    await getContentFrom({endpoint, orderid: orderID})
+      .then(data => setState({...state, ...data}))
+  }, [endpoint, getContentFrom, orderID, state])
 
-  const addProduct = async({item, qty, replace = false}) => {
+  const addProductOld = async({item, qty, replace = false}) => {
     if (!item) { return }
     
     const {
@@ -94,7 +112,7 @@ const BaseCreateTable = ({id, storage, endpoint, columns, accessRights, wordingS
     } = item
     
     await client(`${API_PATH}/${endpoint}/${orderID}/items`, {data: {product: _id, quantity: qty, replace}, method: 'PUT'})
-      .then(() => getContentFrom(orderID))
+      .then(() => updateTable)
       .catch(() => {
         console.error(`Can't add product`)
         return false
@@ -105,14 +123,14 @@ const BaseCreateTable = ({id, storage, endpoint, columns, accessRights, wordingS
     addProduct(data)
   }
   
-  const deleteProduct = useCallback(async({idItem}) => {
+  const deleteProductOld = useCallback(async({idItem}) => {
     if (!idItem) { return }
 
     await client(`${API_PATH}/${endpoint}/${orderID}/items/${idItem}`, {method: 'DELETE'})
-      .then(() => getContentFrom(orderID))
+      .then(() => updateTable)
       .catch(e => console.error(`Can't delete product ${e}`))
 
-  }, [endpoint, getContentFrom, orderID])
+  }, [endpoint, updateTable, orderID])
 
   // bind address, shipping info and ref to the current order/quotation
   const validateAddress = async e => {
@@ -120,7 +138,7 @@ const BaseCreateTable = ({id, storage, endpoint, columns, accessRights, wordingS
 
     await client(`${API_PATH}/${endpoint}/${orderID}`, {data: {address: state.address, reference: state.reference, shipping_mode: state.shippingOption}, method: 'PUT'})
       .then(() => {
-        getContentFrom(orderID)
+        updateTable()
         setIsOpenDialog(false)
       })
       .catch(e => {
@@ -163,13 +181,16 @@ const BaseCreateTable = ({id, storage, endpoint, columns, accessRights, wordingS
 
   // Init table
   useEffect(() => {
+    updateTable()
+  }, [])
+
+  useEffect(() => {
     if (isEmpty(orderID)) {
-      createOrderId()
+      createOrderId({endpoint, status: state.status, userid: dataToken.id}).then(res => {
+        res && setOrderId(res?._id)
+      })
     }
-    else {
-      getContentFrom(orderID)
-    }
-  }, [createOrderId, getContentFrom, orderID, refresh])
+  }, [createOrderId, dataToken.id, endpoint, orderID, setOrderId, state.status])
 
   /* supplied id for a view ? */
   useEffect(() => {
@@ -193,7 +214,7 @@ const BaseCreateTable = ({id, storage, endpoint, columns, accessRights, wordingS
     {canAdd &&
       <div className='container-base'>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
-        <AddArticle addProduct={addProduct} wordingSection={wordingSection} />
+        <AddArticle endpoint={endpoint} orderid={orderID} updateTable={updateTable} addProduct={addProduct} wordingSection={wordingSection} />
       </div>}
 
     {canValidate && <H2confirm>Récapitulatif de votre commande</H2confirm>}
@@ -275,4 +296,4 @@ const BaseCreateTable = ({id, storage, endpoint, columns, accessRights, wordingS
   )
 }
 
-module.exports=withTranslation('feurst', {withRef: true})(BaseCreateTable)
+module.exports=withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))
