@@ -1,5 +1,5 @@
-const {getDataModel} = require('../../config/config')
 const mongoose = require('mongoose')
+const {getDataModel} = require('../../config/config')
 
 let BookingSchema=null
 

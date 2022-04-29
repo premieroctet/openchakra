@@ -229,9 +229,7 @@ const productsColumns = ({language}) => [
   {label: 'Description', attribute: 'description'},
   {label: 'Description 2', attribute: 'description_2'},
   {label: 'Groupe', attribute: 'group'},
-  {label: 'Ligne de production', attribute: 'production_line'},
   {label: 'Famille', attribute: 'family'},
-  {label: 'Tarif', attribute: 'price'},
   {label: 'Stock', attribute: 'stock'},
   {label: 'Poids', attribute: 'weight'},
 ]
@@ -244,6 +242,12 @@ const shipratesColumns = ({language}) => [
   {label: 'Poids maximum', attribute: 'max_weight'},
   {label: 'Forfait', attribute: 'fixed_price'},
   {label: 'Par kg', attribute: 'per_kg_price'},
+]
+
+const pricesColumns = ({language}) => [
+  {label: 'Liste', attribute: 'name'},
+  {label: 'Réference', attribute: 'reference'},
+  {label: 'Tarif', attribute: 'price'},
 ]
 
 const HandledOrderDescription = order => {
@@ -272,4 +276,5 @@ const handledOrdersColumns = ({language}) => [
 
 ]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
-  accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns}
+  accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns,
+  pricesColumns}

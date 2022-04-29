@@ -18,7 +18,6 @@ class all extends DataPage {
       models.textColumn({headerName: 'Description', field: 'description'}),
       models.textColumn({headerName: 'Description 2', field: 'description_2'}),
       models.textColumn({headerName: 'Groupe', field: 'group'}),
-      models.textColumn({headerName: 'Ligne de production', field: 'production_line'}),
       models.textColumn({headerName: 'Famille', field: 'family'}),
       models.currencyColumn({headerName: 'Tarif', field: 'price'}),
       {headerName: 'Stock', field: 'stock'},

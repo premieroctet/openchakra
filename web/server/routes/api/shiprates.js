@@ -63,7 +63,9 @@ router.post('/import', passport.authenticate('admin', {session: false}), (req, r
       return res.status(404).json({errors: err.message})
     }
 
-    shipRatesImport(req.file.buffer)
+    const options=JSON.parse(req.body.options)
+
+    shipRatesImport(req.file.buffer, options)
       .then(result => {
         res.json(result)
       })

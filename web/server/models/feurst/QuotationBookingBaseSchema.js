@@ -17,25 +17,25 @@ const BookingItemSchema = new Schema({
     min: 1,
     required: true,
   },
-  discount: {
-    type: Number,
-    min: 0,
-    max: 1.0,
-    default: 0,
-  },
   // Catalog price
   catalog_price: {
     type: Number,
     min: 0,
     required: true,
   },
+  // Price after discount (or from price list)
+  net_price: {
+    type: Number,
+    min: 0,
+    required: true,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
-BookingItemSchema.virtual('target_price').get(function() {
-  if (!this.catalog_price) {
+BookingItemSchema.virtual('discount').get(function() {
+  if (!this.catalog_price || !this.net_price) {
     return 0
   }
-  return this.catalog_price*this.quantity*(1.0-this.discount)
+  return (this.catalog_price-this.net_price)/100.0
 })
 
 BookingItemSchema.virtual('total_weight').get(function() {

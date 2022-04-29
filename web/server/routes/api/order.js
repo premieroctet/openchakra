@@ -9,7 +9,7 @@ const {
   VALIDATE,
 } = require('../../../utils/feurst/consts')
 const {lineItemsImport} = require('../../utils/import')
-const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
+const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {
   addItem,
   computeShipFee,
@@ -28,7 +28,7 @@ const DATA_TYPE=ORDER
 const MODEL=Order
 
 // PRODUCTS
-const uploadItems = createMemoryMulter(TEXT_FILTER)
+const uploadItems = createMemoryMulter(XL_FILTER)
 
 router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
   Order.find({...getDataFilter(req.user, DATA_TYPE, VIEW)}, {address: 1})
@@ -68,6 +68,8 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
     }
 
     const order_id=req.params.order_id
+    const options=JSON.parse(req.body.options)
+
     Order.findOne({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
       .populate('items.product')
       .then(data => {
@@ -80,7 +82,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
           'reference': 'Référence',
           'quantity': 'Quantité',
         }
-        return lineItemsImport(data, req.file.buffer, DB_MAPPING)
+        return lineItemsImport(data, req.file.buffer, DB_MAPPING, options)
       })
       .then(result => {
         res.json(result)

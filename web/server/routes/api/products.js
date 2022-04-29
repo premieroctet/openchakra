@@ -1,9 +1,11 @@
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
+const PriceList = require('../../models/PriceList')
+const {fileImport, priceListImport} = require('../../utils/import')
+const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 const {PRODUCT, VIEW, CREATE} = require('../../../utils/consts')
-const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const Product = require('../../models/Product')
 
 const router = express.Router()
@@ -12,7 +14,7 @@ const {csvImport}=require('../../utils/import')
 moment.locale('fr')
 
 // PRODUCTS
-const uploadProducts = createMemoryMulter(TEXT_FILTER)
+const uploadProducts = createMemoryMulter(XL_FILTER)
 
 const DATA_TYPE=PRODUCT
 
@@ -35,7 +37,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     ],
   }: {}
 
-  Product.find({...filter, ...getDataFilter(req.user, DATA_TYPE, VIEW), price: {$gt: 0}, weight: {$gt: 0}})
+  Product.find(filter)
     .then(products => {
       res.json(products)
     })
@@ -136,44 +138,15 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
     const DB_MAPPING={
       'reference': 'Code article',
       'description_2': 'Description 2',
-      'production_line': 'Ligne prod.',
       'group': 'Grpe',
       'family': 'Famille',
       'description': 'Description',
       'weight': "Poids d'expédition",
     }
 
-    csvImport(Product, req.file.buffer, DB_MAPPING, {key: 'reference'})
-      .then(result => {
-        res.json(result)
-      })
-      .catch(err => {
-        console.error(err)
-        res.status(500).error(err)
-      })
-  })
-})
+    const options=JSON.parse(req.body.options)
 
-// @Route POST /myAlfred/api/products/import-price
-// Imports prices from csv
-router.post('/import-price', passport.authenticate('jwt', {session: false}), (req, res) => {
-
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.status(301).json()
-  }
-
-  uploadProducts.single('buffer')(req, res, err => {
-    if (err) {
-      console.error(err)
-      return res.status(404).json({errors: err.message})
-    }
-    // db field => import field
-    const DB_MAPPING={
-      'reference': 'CODE ARTICCLE',
-      'price': 'PRIX 2022',
-    }
-
-    csvImport(Product, req.file.buffer, DB_MAPPING, {key: 'reference', update: true})
+    fileImport(Product, req.file.buffer, DB_MAPPING, {...options, key: 'reference'})
       .then(result => {
         res.json(result)
       })
@@ -204,7 +177,8 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
       'stock': 'FSTMG',
     }
 
-    csvImport(Product, req.file.buffer, DB_MAPPING, {key: 'reference', update: true})
+    const options=JSON.parse(req.body.options)
+    fileImport(Product, req.file.buffer, DB_MAPPING, {...options, key: 'reference', update: true})
       .then(result => {
         res.json(result)
       })

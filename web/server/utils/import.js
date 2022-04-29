@@ -1,79 +1,9 @@
-const csv_parse = require('csv-parse/lib/sync')
+const util=require('util')
 const lodash=require('lodash')
-const ExcelJS = require('exceljs')
-const {MAX_WEIGHT, TEXT_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
+const {extractData} = require('../../utils/import')
+const {MAX_WEIGHT} = require('../../utils/feurst/consts')
 const ShipRate = require('../models/ShipRate')
-const {bufferToString} = require('../../utils/text')
 const {addItem, updateShipFee} = require('./commands')
-
-const guessFileType = buffer => {
-  return new ExcelJS.Workbook().xlsx.load(buffer)
-    .then(() => {
-      return XL_TYPE
-    })
-    .catch(() => {
-      return TEXT_TYPE
-    })
-}
-
-const getTabs = buffer => {
-  return new ExcelJS.Workbook().xlsx.load(buffer)
-    .then(wb => {
-      return wb.worksheets.map(w => w.name)
-    })
-}
-
-const extractCsv=(bufferData, options) => {
-  return new Promise((resolve, reject) => {
-    const contents = bufferToString(bufferData)
-    try {
-      const opts={columns: true, bom: true, ...options}
-      const records=csv_parse(contents, opts)
-      if (opts.columns) {
-        const headers=Object.keys(records[0])
-        resolve({headers: headers, records: records})
-      }
-      else {
-        const headers=records[0]
-        resolve({headers: headers, records: records.slice(1)})
-      }
-    }
-    catch(err) {
-      reject(err)
-    }
-  })
-}
-
-const extractXls=(bufferData, options) => {
-  if (!options.tab) {
-    return Promise.reject(`XLS loading: missing options.tab`)
-  }
-  return new ExcelJS.Workbook().xlsx.load(bufferData)
-    .then(workbook => {
-      const sheet=workbook.worksheets.find(w => w.name==options.tab)
-      if (!sheet) {
-        return Promise.reject(`XLS loading: sheet ${options.tab} not found`)
-      }
-      const first_line=options.from_line || 1
-      const columnsRange=lodash.range(1, sheet.actualColumnCount+1)
-      const rowsRange=lodash.range(first_line+1, sheet.actualRowCount+1)
-      const headers=columnsRange.map(colIdx => sheet.getRow(first_line).getCell(colIdx).value)
-      const records=rowsRange.map(rowIdx => columnsRange.map(colIdx => sheet.getRow(rowIdx).getCell(colIdx).value))
-      if (!options.columns) {
-        return {headers: headers, records: records}
-      }
-      let mappedRecords=records.map(r => Object.fromEntries(lodash.zip(headers, r)))
-      return {headers: headers, records: mappedRecords}
-    })
-}
-
-const extractData = (bufferData, options) => {
-  options={columns: true, ...options}
-  if (!options.format || ![XL_TYPE, TEXT_TYPE].includes(options.format)) {
-    return Promise.reject(`Null or invalid options.format:${options.format}`)
-  }
-  return options.format==XL_TYPE ? extractXls(bufferData, options):extractCsv(bufferData, options)
-}
 
 const getMissingColumns = (mandatory, columns) => {
   const missingColumns=mandatory.filter(f => !columns.includes(f))
@@ -131,8 +61,10 @@ const dataImport=(model, headers, records, mapping, options) => {
     }
 
     const promises=formattedRecords.map(record =>
-      model.updateOne({[uniqueKey]: record[uniqueKey]}, record, {upsert: true}),
+      model.updateOne({[uniqueKey]: record[uniqueKey]}, record, {upsert: true, new: true}),
     )
+
+    console.log(JSON.stringify(promises.length))
 
     Promise.allSettled(promises)
       .then(res => {
@@ -160,10 +92,10 @@ const fileImport= (model, bufferData, mapping, options) => {
     })
 }
 
-const shipRatesImport = buffer => {
+const shipRatesImport = (buffer, options) => {
   return new Promise((resolve, reject) => {
     let shiprates=[]
-    extractCsv(buffer, {columns: false, from_line: 3, delimiter: ';'})
+    extractData(buffer, {...options, columns: false})
       .then(result => {
         const records=result.records
         records.forEach(r => {
@@ -213,10 +145,10 @@ const shipRatesImport = buffer => {
   })
 }
 
-const lineItemsImport = (model, buffer, mapping) => {
+const lineItemsImport = (model, buffer, mapping, options) => {
   return new Promise((resolve, reject) => {
     const importResult={created: 0, updated: 0, warnings: [], errors: []}
-    extractCsv(buffer, {})
+    extractData(buffer, options)
       .then(data => {
         const headers=data.headers
         const mandatoryColumns=Object.values(mapping)
@@ -224,7 +156,7 @@ const lineItemsImport = (model, buffer, mapping) => {
         if (!lodash.isEmpty(missingColumns)) {
           console.error(`Missing: ${missingColumns}`)
           importResult.errors=missingColumns.map(f => `Colonne ${f} manquante`)
-          return reject('break')
+          return Promise.reject('break')
         }
         data.records=data.records.map(r => mapRecord(r, mapping))
         const promises=data.records.map(r => addItem(model, null, r.reference, parseInt(r.quantity)))
@@ -250,5 +182,30 @@ const lineItemsImport = (model, buffer, mapping) => {
   })
 }
 
-module.exports={fileImport, extractCsv, shipRatesImport, lineItemsImport,
-  guessFileType, getTabs}
+const priceListImport = (model, buffer, mapping, options) => {
+  let importResult={created: 0, updated: 0, errors: [], warnings: []}
+  return new Promise((resolve, reject) => {
+    extractData(buffer, {...options, columns: false})
+      .then(({headers, records}) => {
+        const keyIdx=0
+        const firstListIdx=headers.findIndex(i => i=='PVCDIS')
+        const listsRange=lodash.range(firstListIdx, headers.length+1)
+        const lists=records.map(records => {
+          return listsRange.map(idx => (
+            {reference: records[keyIdx], name: headers[idx], price: records[idx]}
+          ))
+        })
+        const prices=lodash.flattenDeep(lists).filter(a => !!a.name && !!a.price)
+        const promises=prices.map(p => model.findOneAndUpdate({reference: p.reference, name: p.name}, p, {upsert: true}))
+        Promise.allSettled(promises)
+          .then(res => {
+            importResult.created +=res.filter(r => r.status=='fulfilled').length
+            importResult.warnings.push(...res.filter(r => r.status=='rejected').map(r => r.reason))
+            return resolve(importResult)
+          })
+      })
+  })
+}
+
+module.exports={fileImport, shipRatesImport, lineItemsImport,
+  priceListImport}

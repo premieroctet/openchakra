@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import {screen} from '../../styles/screenWidths'
-const {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, BASEPATH_EDI} = require('../../utils/consts')
+const {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, BASEPATH_EDI, PRICELIST} = require('../../utils/consts')
 
 const Tabstyled = styled.div`
 
@@ -100,21 +100,28 @@ const tabsContent = [
     url: `${BASEPATH_EDI}/accounts`,
     model: ACCOUNT,
     action: VIEW,
-    visible: [ACCOUNT, PRODUCT, SHIPRATE],
+    visible: [ACCOUNT, PRODUCT, SHIPRATE, PRICELIST],
   },
   {
     title: 'Articles',
     url: `${BASEPATH_EDI}/products`,
     model: PRODUCT,
     action: VIEW,
-    visible: [ACCOUNT, PRODUCT, SHIPRATE],
+    visible: [ACCOUNT, PRODUCT, SHIPRATE, PRICELIST],
+  },
+  {
+    title: 'Tarifs',
+    url: `${BASEPATH_EDI}/prices`,
+    model: PRICELIST,
+    action: VIEW,
+    visible: [ACCOUNT, PRODUCT, SHIPRATE, PRICELIST],
   },
   {
     title: 'Frais de livraison',
     url: `${BASEPATH_EDI}/shiprates`,
     model: SHIPRATE,
     action: VIEW,
-    visible: [ACCOUNT, PRODUCT, SHIPRATE],
+    visible: [ACCOUNT, PRODUCT, SHIPRATE, PRICELIST],
   },
 ]
 

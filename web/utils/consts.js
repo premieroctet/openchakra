@@ -1,5 +1,5 @@
-const {getDataModel} = require('../config/config')
 const crypto = require('crypto')
+const {getDataModel} = require('../config/config')
 
 const ALL_SERVICES = ['Tous les services', null]
 
@@ -167,6 +167,7 @@ const PENDING_REASONS= {
 
 const IMAGE_EXTENSIONS='.png .jpg .gif .jpeg .pdf .svg'.toLowerCase().split(' ')
 const TEXT_EXTENSIONS='.csv .txt'.toLowerCase().split(' ')
+const XL_EXTENSIONS='.xlsx .csv .txt'.toLowerCase().split(' ')
 
 const INSURANCE_TYPES={
   RC: 'RC professionnelle',
@@ -193,5 +194,5 @@ module.exports = {
   COMPANY_PRIVATE_FLTR, PENDING_REASONS, YEARS_RANGE,
   IMAGE_EXTENSIONS, TEXT_EXTENSIONS, INSURANCE_TYPES,
   REVIEW_STATUS, COMMISSION_SOURCE, TRANSACTION_CREATED, TRANSACTION_FAILED,
-  TRANSACTION_SUCCEEDED, ...PLUGIN_CONSTS,
+  TRANSACTION_SUCCEEDED, ...PLUGIN_CONSTS, XL_EXTENSIONS,
 }
