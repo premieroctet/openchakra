@@ -1,12 +1,11 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {withTranslation} from 'react-i18next'
-import styled from 'styled-components'
 import {Input} from '../Feurst/components.styles'
 
 
-const Address = ({t, state, setState, errors}) => {
+const Address = ({t, state, requestUpdate, errors}) => {
 
-  const changeAddress = e => setState({...state, address: {...state.address, [e.target.name]: e.target.value}})
+  const changeAddress = e => requestUpdate({address: {...state.address, [e.target.name]: e.target.value}})
 
   const {address} = state
   const isDisabled = false
@@ -83,4 +82,4 @@ const Address = ({t, state, setState, errors}) => {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(Address)
+export default withTranslation('feurst', {withRef: true})(Address)

@@ -1,19 +1,19 @@
 import React, {useState, useEffect} from 'react'
 import {useCombobox} from 'downshift'
 import {StyledAutocomplete} from '../Autocomplete/Autocomplete.styles'
-import isEmpty from '../../server/validation/is-empty'
 import useAsync from '../../hooks/use-async.hook'
 import useDebounce from '../../hooks/use-debounce.hook'
 import {client} from '../../utils/client'
 import {API_PATH} from '../../utils/consts'
 import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
 
-const DeliveryAddresses = ({state, setState}) => {
+const DeliveryAddresses = ({state, requestUpdate}) => {
   
   const {
     data,
     isLoading,
     isError,
+    error,
     run,
   } = useAsync({data: []})
   
@@ -34,13 +34,13 @@ const DeliveryAddresses = ({state, setState}) => {
     items: data,
     onInputValueChange: ({inputValue, selectedItem}) => {
       if (!selectedItem) {
-        setState({...state, address: {...state.address, label: inputValue}})
+        requestUpdate({address: {...state.address, label: inputValue}})
       }
       setSearchTerm(inputValue)
     },
     itemToString: item => (item ? `${item.label}` : ''),
     onSelectedItemChange: ({selectedItem}) => {
-      setState({...state, address: {...state.address, ...selectedItem}})
+      requestUpdate({address: {...state.address, ...selectedItem}})
     },
     inputValue: state?.address?.label || '',
   })
@@ -60,7 +60,7 @@ const DeliveryAddresses = ({state, setState}) => {
   
   return (
     <StyledAutocomplete noborder={true}>
-      {isError ? <p className='error'>{errorMsg}</p> : null }
+      {isError ? <p className='error'>{error}</p> : null }
          
       <label {...getLabelProps} htmlFor={`auto${labelAutocomplete}`} className="sr-only">
         Adresse
