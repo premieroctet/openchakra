@@ -1,16 +1,22 @@
-import React, {useMemo, useState, useEffect, useCallback} from 'react'
-import {getAuthToken} from '../../utils/authentication'
-import {client} from '../../utils/client'
-import {snackBarError} from '../../utils/notifications'
+import React, {useState, useEffect} from 'react'
+import withEdiRequest from '../../hoc/withEdiRequest'
+const {withTranslation} = require('react-i18next')
 const FeurstTable = require('../../styles/feurst/FeurstTable')
 const {API_PATH} = require('../../utils/feurst/consts')
 
 
-const BaseListTable = ({endpoint, columns, refresh, caption}) => {
+const BaseListTable = ({
+  endpoint,
+  columns,
+  refresh,
+  caption,
+  getList,
+  deleteOrder,
+  state,
+}) => {
 
-  const [data, setData] = useState(useMemo(() => [], []))
+
   const [language, setLanguage] = useState('fr')
-  const dataToken = getAuthToken()
 
   const updateMyData = (rowIndex, columnId, value) => {
     setData(old =>
@@ -26,26 +32,6 @@ const BaseListTable = ({endpoint, columns, refresh, caption}) => {
     )
   }
 
-  const getContentFrom = useCallback(async() => {
-
-    const data = await client(`${API_PATH}/${endpoint}`)
-      .catch(err => snackBarError(err?.msg))
-
-    data && setData(data)
-
-  }, [endpoint, refresh])
-
-
-  const deleteProduct = useCallback(async({idItem}) => {
-    console.log(idItem)
-    if (!idItem) { return }
-
-    const afterDeleteProduct = await client(`${API_PATH}/${endpoint}/${idItem}`, {method: 'DELETE'})
-      .catch(e => console.error(`Can't delete product ${e}`))
-
-    // TODO verif delete
-    getContentFrom()
-  }, [endpoint, getContentFrom])
 
   // Init language and order
   useEffect(() => {
@@ -54,16 +40,19 @@ const BaseListTable = ({endpoint, columns, refresh, caption}) => {
 
   // Init table
   useEffect(() => {
-    getContentFrom()
-  }, [getContentFrom])
+    getList({endpoint})
+  }, [endpoint, getList])
 
-  const cols= columns({language, data, setData, deleteProduct: deleteProduct})
+  const cols= columns({language, endpoint, deleteOrder})
 
-  return (<>
-    <FeurstTable caption={caption}
-      data={data} columns={cols} updateMyData={updateMyData} />
-  </>
+  return (
+    <FeurstTable
+      caption={caption}
+      data={state.orders}
+      columns={cols}
+      updateMyData={updateMyData}
+    />
   )
 }
 
-module.exports=BaseListTable
+module.exports=withTranslation('feurst', {withRef: true})(withEdiRequest(BaseListTable))
