@@ -1,5 +1,6 @@
+const {filterData} = require('../../utils/userAccess')
+const {CREATE} = require('../../../utils/feurst/consts')
 const mongoose = require('mongoose')
-const {ACCOUNT, LINK, VIEW} = require('../../../utils/feurst/consts')
 const crypto = require('crypto')
 
 const fs = require('fs').promises
@@ -10,6 +11,9 @@ const CronJob = require('cron').CronJob
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
+const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
+const {accountsImport} = require('../../utils/import')
+const {ACCOUNT, LINK, VIEW} = require('../../../utils/feurst/consts')
 const {ORDER, QUOTATION} = require('../../../utils/feurst/consts')
 const Order = require('../../models/Order')
 const Quotation = require('../../models/Quotation')
@@ -68,13 +72,15 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     return res.status(301)
   }
 
-  User.find(getDataFilter(req.user, DATA_TYPE, VIEW))
+  User.find()
     .populate('company')
     .populate('companies')
     .then(data => {
+      data=filterData(data, DATA_TYPE, req.user, VIEW)
       res.json(data)
     })
     .catch(err => {
+      console.error(err)
       res.status(500).json(err)
     })
 })
@@ -1328,6 +1334,36 @@ router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, r
       console.error(err)
       res.status(500).json(err)
     })
+})
+
+// PRODUCTS
+const uploadAccounts = createMemoryMulter(XL_FILTER)
+
+// @Route POST /myAlfred/api/products/import
+// Imports products from csv
+router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
+    return res.status(301).json()
+  }
+
+  uploadAccounts.single('buffer')(req, res, err => {
+    if (err) {
+      console.error(err)
+      return res.status(404).json({errors: err.message})
+    }
+
+    const options=JSON.parse(req.body.options)
+
+    accountsImport(User, req.file.buffer, null, options)
+      .then(result => {
+        res.json(result)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(500).error(err)
+      })
+  })
 })
 
 // DEV tricks : set any atribute, log without password

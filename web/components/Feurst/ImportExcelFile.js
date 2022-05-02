@@ -156,12 +156,13 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
   }
 
   const cap = caption || 'Importer un fichier Excel'
+
   return (<>
     <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} className="mb-4" bgColor={'#141953'} textColor={'white'} size="full-width">
       {cap}
     </PleasantButton>
     <PureDialog title={cap} open={isOpenDialog}
-      onClose={() => setIsOpenDialog(false)}>
+      onClose={() => setIsOpenDialog(false)} height='90%'>
       {is_development() && <h1>{fileType},{delimiter},{tabs},{tab},{firstLine},</h1>}
       <input type={'file'} onSubmit={() => uploadFile} onChange={onFileChange} accept={XL_EXTENSIONS.join(',')}/>
       {sample &&
@@ -187,9 +188,9 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         </div>
         <div style={{overflowX: 'auto', overflowY: 'auto'}}>
           <table border='1'>
-            <thead><tr>{sample[0].map(h => (<th>{h}</th>))}</tr></thead>
+            <thead><tr>{sample[0].map(h => (<th>{String(h).slice(0, 10)}</th>))}</tr></thead>
             <tbody>{sample.slice(1, 5).map(r => (
-              <tr>{r.map(v => <td>{v}</td>)}</tr>
+              <tr>{r.map(v => <td>{String(v).slice(0, 10)}</td>)}</tr>
             ))}</tbody>
           </table>
         </div>

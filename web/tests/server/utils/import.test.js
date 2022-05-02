@@ -1,10 +1,13 @@
+const {accountsImport} = require('../../../server/utils/import')
+
+const fs = require('fs').promises
+const mongoose = require('mongoose')
+const UserSchema = require('../../../server/models/feurst/UserSchema')
 const {guessFileType} = require('../../../utils/import')
 const PriceListSchema =
   require('../../../server/models/feurst/PriceListSchema')
 const {priceListImport} = require('../../../server/utils/import')
 
-const fs = require('fs').promises
-const mongoose = require('mongoose')
 const {TEXT_TYPE, XL_TYPE} = require('../../../utils/feurst/consts')
 
 
@@ -14,6 +17,7 @@ const {computeShipFee} = require('../../../server/utils/commands')
 
 const Product=mongoose.model('product', ProductSchema)
 const PriceList=mongoose.model('priceList', PriceListSchema)
+const User=mongoose.model('user', UserSchema)
 // const PriceList=mongoose.model('priceList', PriceListSchema)
 
 describe('XL & CSV imports', () => {
@@ -23,7 +27,7 @@ describe('XL & CSV imports', () => {
   })
 
   afterAll(() => {
-    return mongoose.connection.db.dropDatabase()
+    // return mongoose.connection.db.dropDatabase()
   })
 
   afterEach(() => {
@@ -108,6 +112,19 @@ describe('XL & CSV imports', () => {
         expect(result.warnings.length).toBe(0)
         expect(result.errors.length).toBe(0)
         expect(result.created).toBe(7524)
+        expect(result.updated).toBe(0)
+      })
+  }, 10000)
+
+  test.only('Import clients/compagnies/tarifs', () => {
+    return fs.readFile(`tests/data/clients.xlsx`)
+      .then(contents => {
+        return accountsImport(User, contents, null, {format: XL_TYPE, tab: 'DONNEES CLIENT FEURST'})
+      })
+      .then(result => {
+        expect(result.warnings.length).toBe(0)
+        expect(result.errors.length).toBe(0)
+        expect(result.created).toBe(64)
         expect(result.updated).toBe(0)
       })
   }, 10000)

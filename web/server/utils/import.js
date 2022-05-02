@@ -1,7 +1,15 @@
-const util=require('util')
+const Validator = require('validator')
 const lodash=require('lodash')
+const bcrypt = require('bcryptjs')
+const {
+  CUSTOMER_ADMIN,
+  LINKED_ROLES,
+  MAX_WEIGHT,
+} = require('../../utils/feurst/consts')
+const PriceList = require('../models/PriceList')
+const User = require('../models/User')
+const Company = require('../models/Company')
 const {extractData} = require('../../utils/import')
-const {MAX_WEIGHT} = require('../../utils/feurst/consts')
 const ShipRate = require('../models/ShipRate')
 const {addItem, updateShipFee} = require('./commands')
 
@@ -159,7 +167,7 @@ const lineItemsImport = (model, buffer, mapping, options) => {
           return Promise.reject('break')
         }
         data.records=data.records.map(r => mapRecord(r, mapping))
-        const promises=data.records.map(r => addItem(model, null, r.reference, parseInt(r.quantity)))
+        const promises=data.records.map(r => addItem(model.user._id, model, null, r.reference, parseInt(r.quantity)))
         return Promise.allSettled(promises)
       })
       .then(res => {
@@ -207,5 +215,71 @@ const priceListImport = (model, buffer, mapping, options) => {
   })
 }
 
+const accountsImport = (model, buffer, mapping, options) => {
+  let importResult={created: 0, updated: 0, errors: [], warnings: []}
+  return new Promise((resolve, reject) => {
+    const firstLine=options.from_line || 1
+    extractData(buffer, {...options, columns: true})
+      .then(({headers, records}) => {
+        const promises=records.map((record, row) => {
+          const msg=label => {
+            return `Ligne:${row+firstLine+1}:${label}`
+          }
+          const address=lodash.range(4).map(key => record[`Adresse ${key}`]).filter(i => !!i).join(',')
+          const zip_code=record['Code postal'].match(/\d+/)[0]
+          const city=record.Ville
+          if (!address|| !zip_code || !city) { return Promise.reject(msg('Adresse incorrecte')) }
+          const addr={label: 'Principale', address, zip_code, city, country: 'France'}
+          const companyName=record.Adresse
+          const deliverZipCodesValues=record['Zone de chalandise']
+          if (!deliverZipCodesValues) { return Promise.reject(msg(`Zone de chalandise incorrecte:${deliverZipCodesValues}`)) }
+          const delivery_zip_codes=String(deliverZipCodesValues).trim().split(/\s+/).map(i => parseInt(i))
+          if (lodash.isEmpty(delivery_zip_codes)) { return Promise.reject(msg(`Zone de chalandise incorrecte:${deliverZipCodesValues}`)) }
+          if (!companyName) { return Promise.reject(msg('Société incorrecte')) }
+          const francoKey=Object.keys(record).find(k => k.match(/franco/i))
+          if (!francoKey) { return Promise.reject('Colonne franco introuvable') }
+          const franco=record[francoKey]
+          if (lodash.isNil(franco)) { return Promise.reject(msg(`Valeur franco incorrect:${franco}`)) }
+          const catalogPrices=record.PVC
+          const netPrices=record['Liste de prix net']
+          return PriceList.find({name: {$in: [catalogPrices, netPrices]}})
+            .then(prices => {
+              const pvc=prices.find(p => p.name==catalogPrices)
+              const discount=prices.find(p => p.name==netPrices)
+              if (!pvc || !discount) { return Promise.reject(msg('Liste de prix inconnue, avez-vous importé les tarifs?')) }
+              return Company.findOneAndUpdate({name: companyName},
+                {addresses: [addr], catalog_prices: catalogPrices, net_prices: netPrices, franco: franco, delivery_zip_codes},
+                {upsert: true, new: true})
+                .then(company => {
+                  if (!company) {
+                    return Promise.reject(msg('Compagnie inconnue'))
+                  }
+                  const email=(record.Messagerie.text || record.Messagerie).trim()
+                  const [firstname, name]=record['Administrateur (Prénom et Nom)'].replace(/\s+/, '|').split('|')
+                  if (!(email && firstname && name && Validator.isEmail(email))) {
+                    return Promise.reject(msg(`Erreur nom, prénom ou email`))
+                  }
+                  return User.findOneAndUpdate({email},
+                    {$set: {firstname, name, company: company, email, roles: LINKED_ROLES[CUSTOMER_ADMIN]},
+                      $setOnInsert: {password: bcrypt.hashSync('Alfred123;', 10)}},
+                    {upsert: true, new: true},
+                  )
+                })
+
+            })
+        })
+        Promise.allSettled(promises)
+          .then(res => {
+            importResult.created +=res.filter(r => r.status=='fulfilled').length
+            importResult.warnings.push(...res.filter(r => r.status=='rejected').map(r => r.reason))
+            return resolve(importResult)
+          })
+      })
+      .catch(err => {
+        return reject(err)
+      })
+  })
+}
+
 module.exports={fileImport, shipRatesImport, lineItemsImport,
-  priceListImport}
+  priceListImport, accountsImport}

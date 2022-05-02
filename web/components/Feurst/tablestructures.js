@@ -1,6 +1,7 @@
 import React from 'react'
 import EditableCell from '../Table/EditableCell'
 import {localeMoneyFormat} from '../../utils/converters'
+const {formatPercent} = require('../../utils/text')
 const {ROLES} = require('../../utils/consts')
 const {DateRangeColumnFilter} = require('../Table/TableFilter')
 const {PleasantButton} = require('./Button')
@@ -38,13 +39,12 @@ const orderColumns = ({language, deleteProduct}) => [
   },
   {
     label: 'Remise',
-    attribute: 'discount',
-    Cell: ({cell: {value}}) => `${value}%`,
+    attribute: v => formatPercent(v.discount),
     sortType: 'number',
   },
   {
     label: 'Votre prix',
-    attribute: 'target_price',
+    attribute: 'net_price',
     Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
     sortType: 'number',
   },
@@ -215,12 +215,11 @@ const accountsColumns = ({language}) => [
   },
   {
     label: 'Client(s)',
-    attribute: u => u.companies.map(u => (<div>{u.name}</div>)),
+    attribute: u => u.companies.map(u => u.name).join(','),
   },
   {
     label: 'Roles',
-    attribute: 'roles',
-    Cell: ({cell: {value}}) => value.map(r => ROLES[r]).join(','),
+    attribute: u => u.roles.map(r => ROLES[r]).join(','),
   },
 ]
 

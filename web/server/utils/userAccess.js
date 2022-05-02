@@ -17,21 +17,21 @@ const isActionAllowed = (roles, model, action) => {
   return allowed
 }
 
-const getDataFilter = (user, model, action) => {
+const filterData = (data, model, user, action) => {
   const userActions=getActions(user.roles, model, action)
   if (userActions.some(userAction => userAction.visibility==ALL)) {
-    return {}
+    return data
   }
   if (userActions.some(userAction => userAction.visibility==RELATED)) {
-    return {company: {$in: [user.companies]}}
+    return data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.user.company._id)))
   }
   if (userActions.some(userAction => userAction.visibility==COMPANY)) {
-    return {company: user.company}
+    return data.filter(d => String(d.user.company._id)==String(user.company._id))
   }
   if (userActions.some(userAction => userAction.visibility==MINE)) {
-    return {user: user}
+    return data.filter(d => String(d.user._id)==String(user._id))
   }
-  return {noway: true}
+  return []
 }
 
 const getActionsForRoles = roles => {
@@ -40,4 +40,4 @@ const getActionsForRoles = roles => {
   return actions
 }
 
-module.exports={isActionAllowed, getDataFilter, getActionsForRoles}
+module.exports={isActionAllowed, filterData, getActionsForRoles}

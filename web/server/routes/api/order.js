@@ -4,6 +4,10 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  filterData,
+  isActionAllowed,
+} = require('../../utils/userAccess')
+const {
   EXPRESS_SHIPPING,
   STANDARD_SHIPPING,
   VALIDATE,
@@ -16,7 +20,6 @@ const {
   updateShipFee,
 } = require('../../utils/commands')
 const {validateZipCode} = require('../../validation/order')
-const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 
 const router = express.Router()
 const Order = require('../../models/Order')
@@ -31,8 +34,9 @@ const MODEL=Order
 const uploadItems = createMemoryMulter(XL_FILTER)
 
 router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Order.find({...getDataFilter(req.user, DATA_TYPE, VIEW)}, {address: 1})
+  Order.find({}, {address: 1})
     .then(orders => {
+      orders=filterData(orders, req.user, VIEW)
       const uniques=lodash.uniqBy(orders, lodash.isEqual)
       return res.json(uniques)
     })
@@ -70,7 +74,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
     const order_id=req.params.order_id
     const options=JSON.parse(req.body.options)
 
-    Order.findOne({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
+    Order.findOneById(order_id)
       .populate('items.product')
       .then(data => {
         if (!data) {
@@ -100,7 +104,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
 // @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)||!isActionAllowed(req.user.roles, DATA_TYPE, CREATE_FOR)) {
     return res.status(301)
   }
 
@@ -109,11 +113,20 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     return res.status(500).json(errors)
   }
 
-  if (!req.body.user) {
-    req.body.user=req.user._id
+  let attributes=req.body
+  // Customer
+  if (isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
+    attributes={...attributes, user: req.user}
+  }
+  // Feurst sales
+  else {
+    if (!req.query.user) {
+      return res.status(400).json(`User id is required`)
+    }
+    attributes={...attributes, user: req.query.user, created_by: req.user}
   }
 
-  MODEL.create(req.body)
+  MODEL.create(attributes)
     .then(data => {
       return res.json(data)
     })
@@ -133,7 +146,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
   }
 
   const order_id=req.params.id
-  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)}, {address: null, shipping_mode: null, user_validated: false}, {new: true})
+  Order.findByIdAndUpdate(order_id, {address: null, shipping_mode: null, user_validated: false}, {new: true})
     .populate('items.product')
     .then(result => {
       if (!result) {
@@ -162,7 +175,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
   }
 
   const order_id=req.params.id
-  Order.findOneAndUpdate({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)}, req.body, {new: true})
+  Order.findByIdAndUpdate(order_id, req.body, {new: true})
     .populate('items.product')
     .then(result => {
       if (!result) {
@@ -200,14 +213,14 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   const order_id=req.params.id
   const {product, quantity, replace=false}=req.body
 
-  Order.findOne({_id: order_id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
+  Order.findById(order_id)
     .populate('items.product')
     .then(data => {
       if (!data) {
         console.error(`No order #${order_id}`)
         return res.status(404)
       }
-      return addItem(data, product, null, quantity, replace)
+      return addItem(data.user._id, data, product, null, quantity, replace)
     })
     .then(data => {
       return updateShipFee(data)
@@ -265,10 +278,11 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     return res.status(401)
   }
 
-  Order.find(getDataFilter(req.user, DATA_TYPE, VIEW))
+  Order.find()
     .populate('items.product')
-    .populate('user')
+    .populate({path: 'user', populate: 'company'})
     .then(orders => {
+      orders=filterData(orders, DATA_TYPE, req.user, VIEW)
       return res.json(orders)
     })
     .catch(err => {
@@ -286,7 +300,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
     return res.status(301)
   }
 
-  Order.findOne({_id: req.params.order_id, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
+  Order.findOne()
     .populate('items.product')
     .populate('user')
     .then(order => {
@@ -310,7 +324,7 @@ router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req
     return res.status(301)
   }
 
-  Order.findOneAndDelete({_id: req.params.order_id, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
+  Order.findOneAndDelete()
     .then(() => {
       return res.json()
     })
@@ -371,7 +385,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
 
   const fee={[EXPRESS_SHIPPING]: 0, [STANDARD_SHIPPING]: 0}
   let order=null
-  Order.findOne({_id: req.params.id, ...getDataFilter(req.user, DATA_TYPE, UPDATE)})
+  Order.findById(req.params.id)
     .populate('items.product')
     .then(result => {
       if (!result) {

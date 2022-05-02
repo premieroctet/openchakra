@@ -177,6 +177,11 @@ const guessDelimiter = text => {
   return delimiter
 }
 
+const formatPercent = value => {
+  if (!value) { return null }
+  return `${parseInt(value)/100}%`
+}
+
 module.exports = {
   normalize,
   matches,
@@ -197,4 +202,5 @@ module.exports = {
   capitalize,
   getWordAt,
   guessDelimiter,
+  formatPercent,
 }

@@ -47,6 +47,15 @@ const CompanySchema = new Schema({
     type: String,
     default: null,
   },
+  // Standard prices list name (cf. PriceList)
+  catalog_prices: {
+    type: String,
+  },
+  // Discount prices list name (cf. PriceList)
+  net_prices: {
+    type: String,
+  },
+  delivery_zip_codes: [Number],
 }, {toJSON: {virtuals: true, getters: true}})
 
 CompanySchema.virtual('full_name').get(function() {

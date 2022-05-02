@@ -78,10 +78,9 @@ const extractData = (bufferData, options) => {
 }
 
 const extractSample = (rawData, options) => {
-  console.log(`Options:${JSON.stringify(options)}`)
   return extractData(rawData, {...options, columns: false})
     .then(({headers, records}) => {
-      return [headers, ...records.slice(0, 5)]
+      return [headers, ...records.slice(0, 4)]
     })
 }
 

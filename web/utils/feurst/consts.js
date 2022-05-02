@@ -85,6 +85,14 @@ const ROLES = {
   [CUSTOMER_SLAVE]: 'Client',
 }
 
+// Auto associated roles
+const LINKED_ROLES={
+  [FEURST_ADMIN]: [FEURST_ADMIN, FEURST_ADV, FEURST_SALES],
+  [FEURST_SALES]: [FEURST_SALES],
+  [FEURST_ADV]: [FEURST_ADV, FEURST_SALES],
+  [CUSTOMER_ADMIN]: [CUSTOMER_ADMIN, CUSTOMER_SLAVE],
+  [CUSTOMER_SLAVE]: [CUSTOMER_SLAVE],
+}
 const [ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST]=['ORDER', 'QUOTATION', 'ACCOUNT', 'SHIPRATE', 'PRODUCT', 'PRICELIST']
 const [VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT, LINK, HANDLE]=['VIEW', 'CREATE', 'UPDATE', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'HANDLE']
 const [ALL, MINE, COMPANY, RELATED]=['ALL', 'MINE', 'COMPANY', 'RELATED']
@@ -106,11 +114,13 @@ const USER_ACTIONS={
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRICELIST, action, {visibility: ALL})),
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
-    [CREATE, VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    createUserAction(PRODUCT, VIEW, {visibility: ALL}),
+    [CREATE_FOR, VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: ALL})),
+    [CREATE_FOR, VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
   ]),
   [FEURST_SALES]: lodash.flattenDeep([
-    [CREATE, VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
-    [CREATE, VIEW].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
+    [CREATE_FOR, VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
+    [CREATE_FOR, VIEW].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
   ]),
   [CUSTOMER_ADMIN]: lodash.flattenDeep([
     [VIEW, CREATE, UPDATE, DELETE].map(action => [CUSTOMER_ADMIN, CUSTOMER_SLAVE].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
@@ -154,5 +164,5 @@ module.exports={
   COMPANY, MINE, RELATED,
   ORDER_CREATED, ORDER_FULFILLED, ORDER_VALID, ORDER_PARTIALLY_HANDLED, ORDER_HANDLED, SHIPPING_MODES,
   ORDER_COMPLETE, LINK, FEURST_SALES, QUOTATION_VALID, QUOTATION_COMPLETE, QUOTATION_FULFILLED, QUOTATION_CREATED,
-  HANDLE, XL_TYPE, TEXT_TYPE, PRICELIST,
+  HANDLE, XL_TYPE, TEXT_TYPE, PRICELIST, LINKED_ROLES,
 }

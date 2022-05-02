@@ -1,16 +1,16 @@
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
-const PriceList = require('../../models/PriceList')
-const {fileImport, priceListImport} = require('../../utils/import')
+const {getProductPrices} = require('../../utils/commands')
+const {fileImport} = require('../../utils/import')
+const {isActionAllowed} = require('../../utils/userAccess')
+const {DELETE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
 const {PRODUCT, VIEW, CREATE} = require('../../../utils/consts')
 const Product = require('../../models/Product')
 
 const router = express.Router()
 const {validateProduct}=require('../../validation/product')
-const {csvImport}=require('../../utils/import')
 moment.locale('fr')
 
 // PRODUCTS
@@ -51,11 +51,24 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 // View one product
 // @Access private
 router.get('/:product_id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Product.findById(req.params.product_id)
-    .then(product => {
-      if (!product) {
+  const user_id=req.user._id // req.query.user
+  if (!user_id) {
+    return res.status(500).json('Missing user_id parameter')
+  }
+  const product_id=req.params.product_id
+  let product=null
+  Product.findById(product_id)
+    .lean()
+    .then(result => {
+      if (!result) {
         return res.status(404).json()
       }
+      product=result
+      return getProductPrices(product.reference, user_id)
+    })
+    .then(prices => {
+      product.catalog_price=prices.catalog_price
+      product.net_price=prices.net_price
       return res.json(product)
     })
     .catch(err => {

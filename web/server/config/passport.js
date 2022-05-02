@@ -40,6 +40,8 @@ if (ROLES && Object.keys(ROLES).length>0) {
 passport.use('jwt', new JwtStrategy(jwt_opts, (req, payload, done) => {
   try {
     User.findById(payload.id)
+      .populate('company')
+      .populate('companies')
       .then(user => {
         if (user) {
           return done(null, user)

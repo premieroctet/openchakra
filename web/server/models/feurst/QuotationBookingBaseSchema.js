@@ -48,11 +48,13 @@ BookingItemSchema.virtual('total_weight').get(function() {
 
 
 const QuotationBookingBaseSchema=new Schema({
+  // Order destinee
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
     required: true,
   },
+  // Order creator (i.e. Feurst sales, may be null)
   created_by: {
     type: Schema.Types.ObjectId,
     ref: 'user',

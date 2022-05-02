@@ -1,37 +1,65 @@
+const PriceList = require('../models/PriceList')
+const User = require('../models/User')
 const Product = require('../models/Product')
 const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
 
+
+const getProductPrices = (product_ref, user_id) => {
+  const result={catalog_price: 0, net_price: 0}
+  let company=null
+  return User.findById(user_id)
+    .populate({path: 'company', populate: 'catalog_prices net_prices'})
+    .then(user => {
+      if (!user) { return Promise.reject('User not found') }
+      company=user.company
+      return PriceList.findOne({reference: product_ref, name: company.catalog_prices})
+    })
+    .then(price => {
+      if (!price) { return Promise.reject(`Prix catalogue introuvable pour ${product_ref}`) }
+      result.catalog_price=price.price
+      return PriceList.findOne({reference: product_ref, name: company.net_prices})
+    })
+    .then(price => {
+      if (!price) { return Promise.reject(`Prix remisé introuvable pour ${product_ref}`) }
+      result.net_price=price.price
+      return Promise.resolve(result)
+    })
+}
 /** Adds product to the order :
 If product is present, adds quantity if replace is false else sets quantity
 If product is not present, adds the item to the order
 */
-const addItem = (data, product_id, reference, quantity, replace=false) => {
-  return new Promise((resolve, reject) => {
-    if (isNaN(parseInt(quantity))) {
-      return reject(`Article ${reference}: quantité ${quantity} incorrect`)
-    }
-    Product.findOne({$or: [{_id: product_id}, {reference: reference}]})
-      .then(product => {
-        if (!product) {
-          return reject(`Article ${reference} inconnu`)
-        }
-        if (isNaN(product.price)) {
-          return reject(`Le prix de l'article ${reference} est inconnu`)
-        }
-        let item=data.items.find(item => item.product._id.toString()==product._id.toString())
-        if (item) {
-          item.quantity = replace ? parseInt(quantity) : item.quantity+parseInt(quantity)
-        }
-        else {
-          item = {product: product, quantity: parseInt(quantity), catalog_price: product.price}
-          data.items.push(item)
-        }
-        return resolve(data)
-      })
-      .catch(err => { return reject(err) })
-  })
+const addItem = (user_id, data, product_id, reference, quantity, replace=false) => {
+  if (isNaN(parseInt(quantity))) {
+    return Promise.reject(`Article ${reference}: quantité ${quantity} incorrect`)
+  }
+  let product=null
+  return Product.findOne({$or: [{_id: product_id}, {reference: reference}]})
+    .then(result => {
+      if (!result) {
+        return Promise.reject(`Article ${reference} inconnu`)
+      }
+      product=result
+      return getProductPrices(product.reference, user_id)
+    })
+    .then(prices => {
+      if (!prices) { return Promise.reject(`Tarif inconnu pour ${product.reference}`) }
+      let item=data.items.find(item => item.product._id.toString()==product._id.toString())
+      if (item) {
+        item.quantity = replace ? parseInt(quantity) : item.quantity+parseInt(quantity)
+      }
+      else {
+        item = {product: product, quantity: parseInt(quantity), catalog_price: prices.catalog_price, net_price: prices.net_price}
+        data.items.push(item)
+      }
+      return Promise.resolve(data)
+    })
+    .catch(err => {
+      console.error(err)
+      return Promise.reject(err)
+    })
 }
 
 /**
@@ -79,7 +107,8 @@ Updates shipping fee depending on ShipRate
 Data is an Order or a Quotation
 */
 const updateDiscount = data => {
-  return Promise.resolve(data)
+  throw new Error('Not implemented')
 }
 
-module.exports = {addItem, computeShipFee, updateShipFee, updateDiscount}
+
+module.exports = {addItem, computeShipFee, updateShipFee, updateDiscount, getProductPrices}

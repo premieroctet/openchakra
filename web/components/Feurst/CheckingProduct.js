@@ -37,7 +37,7 @@ const CheckingProductArea = styled.div`
   }
 
   dd {
-    margin-left: 0;  
+    margin-left: 0;
     border-bottom: 1px solid var(--black);
     width: fit-content;
   }
@@ -70,7 +70,7 @@ const CheckingProduct = ({article, setArticle, addProduct}) => {
       snackBarError(`Ajout de l'article non effectué`)
     }
   }
-  
+
   return (
     <CheckingProductArea role={'status'} aria-live='polite'>
       <dl>
@@ -83,13 +83,13 @@ const CheckingProduct = ({article, setArticle, addProduct}) => {
       </dl>
       <dl>
         <dt>Prix catalogue :</dt>
-        <dd>{localeMoneyFormat({value: info.price})}</dd>
+        <dd>{localeMoneyFormat({value: info.catalog_price})}</dd>
         <dt>Poids unitaire :</dt>
         <dd>{info.weight.toLocaleString()} kg</dd>
-        {/* <dt>Votre prix :</dt> // TODO SI CALCUL DE REMISE EN LIVE
-        <dd>{localeMoneyFormat({value: info.price})}</dd> */}
+        <dt>Votre prix :</dt>
+        <dd>{localeMoneyFormat({value: info.net_price})}</dd>
       </dl>
-      
+
       <PleasantButton
         bgColor={`#dabb42`}
         rounded={'full'}
@@ -97,7 +97,7 @@ const CheckingProduct = ({article, setArticle, addProduct}) => {
       >
         Ajouter&nbsp;à&nbsp;ma commande
       </PleasantButton>
-      
+
     </CheckingProductArea>
   )
 }

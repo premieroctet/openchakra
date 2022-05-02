@@ -44,7 +44,7 @@ function FeurstRegister({className, style, onSuccess}) {
 
   const sendInvitation = () => {
     setAxiosAuthentication()
-    axios.post('/myAlfred/api/admin/feurst_register', {firstname, name, email, role, company})
+    axios.post(`${API_PATH}/admin/feurst_register`, {firstname, name, email, role, company})
       .then(() => {
         snackBarSuccess('L\'invitation a été envoyée')
         onSuccess && onSuccess()
