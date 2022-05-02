@@ -116,7 +116,7 @@ const BaseCreateTable = ({
     [data, deleteProduct, language],
   )
   */
-  const cols=columns({language, deleteProduct: canAdd ? deleteProduct : null})
+  const cols=columns({language, endpoint, orderid: orderID, deleteProduct: canAdd ? deleteProduct : null})
 
   const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
